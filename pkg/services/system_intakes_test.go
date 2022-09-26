@@ -251,7 +251,7 @@ func (s *ServicesTestSuite) TestSystemIntakeArchiver() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
-	sendWithdrawEmail := func(ctx context.Context, requestName string) error {
+	sendWithdrawEmail := func(_ context.Context, _ string) error {
 		return nil
 	}
 
@@ -367,14 +367,14 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	feedbackForEmailText := ""
 
 	singleReviewEmailSent := false
-	fnSendLCIDEmail := func(_ context.Context, recipients models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
+	fnSendLCIDEmail := func(_ context.Context, recipients models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
 		singleReviewEmailSent = true
 		return nil
 	}
 
 	multipleReviewEmailsSent := false
-	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ *time.Time, _ string, _ string, _ string, emailText string) error {
+	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, emailText string) error {
 		feedbackForEmailText = emailText
 		multipleReviewEmailsSent = true
 		return nil
@@ -619,10 +619,10 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+	fnSendLCIDEmailErr := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
-	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
 		return errors.New("error sending to multiple recipients")
 	}
 	fnSendIntakeInvalidEUAIDEmailErr := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
@@ -755,14 +755,14 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	singleReviewEmailSent := false
 
 	feedbackForEmailText := ""
-	fnSendRejectRequestEmail := func(ctx context.Context, recipientAddress models.EmailAddress, reason string, nextSteps string, feedback string) error {
+	fnSendRejectRequestEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string, _ string, feedback string) error {
 		feedbackForEmailText = feedback
 		singleReviewEmailSent = true
 		return nil
 	}
 
 	multipleReviewEmailsSent := false
-	fnSendRejectRequestEmailToMulipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ string, feedback string) error {
+	fnSendRejectRequestEmailToMulipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ string, feedback string) error {
 		feedbackForEmailText = feedback
 		multipleReviewEmailsSent = true
 		return nil
@@ -989,22 +989,22 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 
 	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
 	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
-	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	fnFetchErr := func(_ context.Context, _ uuid.UUID) (*models.SystemIntake, error) {
 		return nil, errors.New("fetch error")
 	}
-	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+	fnUpdateErr := func(_ context.Context, _ *models.SystemIntake) (*models.SystemIntake, error) {
 		return nil, errors.New("update error")
 	}
-	fnSaveActionErr := func(c context.Context, a *models.Action) error {
+	fnSaveActionErr := func(_ context.Context, _ *models.Action) error {
 		return errors.New("action error")
 	}
-	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+	fnFetchUserInfoErr := func(_ context.Context, _ string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendRejectRequestEmailErr := func(ctx context.Context, recipientAddress models.EmailAddress, reason string, nextSteps string, feedback string) error {
+	fnSendRejectRequestEmailErr := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
-	fnSendRejectRequestEmailToMulipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ string, _ string, _ string) error {
+	fnSendRejectRequestEmailToMulipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ string, _ string) error {
 		return errors.New("send email to multiple recipients error")
 	}
 	fnSendIntakeInvalidEUAIDEmailErr := func(_ context.Context, _ string, _ string, _ uuid.UUID) error {
@@ -1118,11 +1118,11 @@ func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 			}
 		}
 
-		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
-		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
@@ -1180,11 +1180,11 @@ func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 			}
 		}
 
-		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
-		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
@@ -1240,11 +1240,11 @@ func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 			return &models.UserInfo{}, nil
 		}
 
-		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
-		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
@@ -1300,11 +1300,11 @@ func (s *ServicesTestSuite) TestProvideGRTFeedback() {
 			return &models.UserInfo{}, nil
 		}
 
-		sendReviewEmail := func(c context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		sendReviewEmail := func(_ context.Context, _ models.EmailAddress, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
-		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ string, _ models.EmailNotificationRecipients, _ uuid.UUID) error {
+		sendReviewEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string) error {
 			return nil
 		}
 
