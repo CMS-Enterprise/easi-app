@@ -167,7 +167,7 @@ function RequestForm() {
         {!view && (
           <FormHeader step={stepNum} breadcrumbItems={breadcrumbItems} />
         )}
-        <GridContainer className="width-full margin-bottom-10">
+        <GridContainer className="width-full">
           <FormStepComponent step={stepNum} request={request} />
         </GridContainer>
       </>
