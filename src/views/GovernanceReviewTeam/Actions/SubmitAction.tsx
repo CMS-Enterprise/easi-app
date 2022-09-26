@@ -34,6 +34,10 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('action');
   const history = useHistory();
+
+  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
+
+  // Requester object and loading state
   const {
     contacts: {
       data: { requester },
@@ -41,7 +45,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
     }
   } = useSystemIntakeContacts(systemId);
 
-  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
+  // Active contact for adding/verifying recipients
   const [
     activeContact,
     setActiveContact

@@ -12,7 +12,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import useSystemIntake from 'hooks/useSystemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import MarkReadyForGRBQuery from 'queries/MarkReadyForGRBQuery';
 import {
   AddGRTFeedback,
@@ -28,13 +28,22 @@ import EmailRecipientsFields from './EmailRecipientsFields';
 
 const ProvideGRTRecommendationsToGRB = () => {
   const { systemId } = useParams<{ systemId: string }>();
-  const { systemIntake } = useSystemIntake(systemId);
   const history = useHistory();
   const { t } = useTranslation('action');
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(
     MarkReadyForGRBQuery
   );
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
+
+  // Requester object and loading state
+  const {
+    contacts: {
+      data: { requester },
+      loading
+    }
+  } = useSystemIntakeContacts(systemId);
+
+  // Active contact for adding/verifying recipients
   const [
     activeContact,
     setActiveContact
@@ -46,7 +55,7 @@ const ProvideGRTRecommendationsToGRB = () => {
     grtFeedback: '',
     emailBody: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!],
+      regularRecipientEmails: requester.id ? [requester.email] : [],
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: false
     }
@@ -68,6 +77,9 @@ const ProvideGRTRecommendationsToGRB = () => {
       history.push(`/governance-review-team/${systemId}/notes`);
     });
   };
+
+  // Wait for contacts to load before returning form
+  if (loading) return null;
 
   return (
     <Formik

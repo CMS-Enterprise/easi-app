@@ -19,7 +19,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import useSystemIntake from 'hooks/useSystemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import CreateSystemIntakeActionExtendLifecycleIdQuery from 'queries/CreateSystemIntakeActionExtendLifecycleIdQuery';
 import {
   CreateSystemIntakeActionExtendLifecycleId,
@@ -71,8 +71,22 @@ const ExtendLifecycleId = ({
 }: ExtendLifecycleIdProps) => {
   const { t } = useTranslation('action');
   const { systemId } = useParams<{ systemId: string }>();
-  const { systemIntake } = useSystemIntake(systemId);
   const history = useHistory();
+
+  // Requester object and loading state
+  const {
+    contacts: {
+      data: { requester },
+      loading
+    }
+  } = useSystemIntakeContacts(systemId);
+
+  // Active contact for adding/verifying recipients
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
+
   const initialValues: ExtendLCIDForm = {
     currentExpiresAt: lcidExpiresAt,
     expirationDateDay: '',
@@ -86,7 +100,7 @@ const ExtendLifecycleId = ({
     newCostBaseline: '',
     feedback: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!],
+      regularRecipientEmails: requester.id ? [requester.email] : [],
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: true
     }
@@ -98,11 +112,6 @@ const ExtendLifecycleId = ({
   >(CreateSystemIntakeActionExtendLifecycleIdQuery);
 
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
-
-  const [
-    activeContact,
-    setActiveContact
-  ] = useState<SystemIntakeContactProps | null>(null);
 
   const handleSubmit = (values: ExtendLCIDForm) => {
     const {
@@ -138,6 +147,9 @@ const ExtendLifecycleId = ({
       }
     });
   };
+
+  // Wait for contacts to load before returning form
+  if (loading) return null;
 
   return (
     <Formik

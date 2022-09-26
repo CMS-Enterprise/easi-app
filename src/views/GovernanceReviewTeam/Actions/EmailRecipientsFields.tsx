@@ -46,7 +46,10 @@ const Recipient = ({
   const [isActive, setActive] = useState(false);
 
   return (
-    <div className="recipient-container" data-testid={`recipient-${euaUserId}`}>
+    <div
+      className="recipient-container"
+      data-testid={`recipient-${role.replaceAll(' ', '')}-${euaUserId}`}
+    >
       {/* Checkbox with label */}
       <CheckboxField
         id={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
@@ -87,7 +90,9 @@ const Recipient = ({
           <Label htmlFor="test" className="text-normal margin-y-05">
             {t('emailRecipients.recipientName')}
           </Label>
-          <HelpText>{t('emailRecipients.verifyHelpText')}</HelpText>
+          <HelpText className="margin-bottom-1">
+            {t('emailRecipients.verifyHelpText')}
+          </HelpText>
           <CedarContactSelect
             id="IntakeForm-ContactCommonName"
             name="systemIntakeContact.commonName"

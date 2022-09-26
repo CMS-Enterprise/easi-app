@@ -340,7 +340,9 @@ exports[`Submit Action actions renders additional contacts 1`] = `
         >
           Selected action
         </div>
-        <div>
+        <div
+          data-testid="grtSelectedAction"
+        >
           Not an IT governance request 
           <a
             href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
@@ -364,7 +366,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
               </h3>
               <div
                 class="usa-alert usa-alert--warning usa-alert--slim"
-                data-testid="alert-unverified"
+                data-testid="alert_unverified-recipients"
               >
                 <div
                   class="usa-alert__body"
@@ -397,22 +399,27 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                   id="EmailRecipients-ContactsList"
                 >
                   <div
-                    class="easi-checkbox usa-checkbox"
+                    class="recipient-container"
+                    data-testid="recipient-Requester-SF13"
                   >
-                    <input
-                      checked=""
-                      class="usa-checkbox__input"
-                      id="contact-requester"
-                      name="contact-requester"
-                      type="checkbox"
-                      value="sf13@local.fake"
-                    />
-                    <label
-                      class="usa-checkbox__label"
-                      for="contact-requester"
+                    <div
+                      class="easi-checkbox usa-checkbox"
                     >
-                      Jerry Seinfeld, Center for Medicaid and CHIP Services (Requester)
-                    </label>
+                      <input
+                        checked=""
+                        class="usa-checkbox__input"
+                        id="SF13-Requester"
+                        name="SF13-Requester"
+                        type="checkbox"
+                        value="sf13@local.fake"
+                      />
+                      <label
+                        class="usa-checkbox__label"
+                        for="SF13-Requester"
+                      >
+                        Jerry Seinfeld, Center for Medicaid and CHIP Services (Requester)
+                      </label>
+                    </div>
                   </div>
                   <div
                     class="easi-checkbox usa-checkbox"
@@ -451,55 +458,171 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                     </label>
                   </div>
                   <div
-                    class="easi-checkbox usa-checkbox easy-checkbox--disabled"
+                    class="recipient-container"
+                    data-testid="recipient-ProductManager-"
                   >
-                    <input
-                      class="usa-checkbox__input"
-                      disabled=""
-                      id="ABCD-ProductManager"
-                      name="ABCD-ProductManager"
-                      type="checkbox"
-                      value="abcd@local.fake"
-                    />
-                    <label
-                      class="usa-checkbox__label"
-                      for="ABCD-ProductManager"
+                    <div
+                      class="easi-checkbox usa-checkbox easy-checkbox--disabled"
                     >
-                      Jane Doe, Center for Program Integrity (Product Manager)
-                    </label>
-                  </div>
-                  <div
-                    class="margin-left-4 margin-top-1 margin-bottom-2"
-                  >
-                    <p
-                      class="text-base display-flex flex-align-center margin-y-1"
-                    >
-                      <svg
-                        class="usa-icon text-warning margin-right-1"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <input
+                        class="usa-checkbox__input"
+                        disabled=""
+                        id="contact-ProductManager"
+                        name="-ProductManager"
+                        type="checkbox"
+                        value=""
+                      />
+                      <label
+                        class="usa-checkbox__label"
+                        for="contact-ProductManager"
                       >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
-                        />
-                      </svg>
-                      Unverified recipient. Use the link below to find this individual in EUA.
-                    </p>
-                    <button
-                      class="usa-button usa-button--unstyled"
-                      data-testid="button_verify-recipient"
-                      type="button"
+                        Cosmo Kramer, Center for Program Integrity (Product Manager)
+                      </label>
+                    </div>
+                    <div
+                      class="usa-form-group margin-left-4 margin-top-1 margin-bottom-2"
                     >
-                      Verify recipient
-                    </button>
+                      <h4
+                        class="margin-bottom-05 margin-top-2"
+                      >
+                        Verify recipient
+                      </h4>
+                      <label
+                        class="usa-label text-normal margin-y-05"
+                        data-testid="label"
+                        for="test"
+                      >
+                        Recipient Name
+                      </label>
+                      <div
+                        class="easi-help-text margin-bottom-1"
+                      >
+                        Click in the field below to confirm this EUA contact
+                      </div>
+                      <div
+                        class="cedar-contact-select usa-combo-box cedar-contact-select__warning cedar-contact-select__loading css-b62m3t-container"
+                        id="IntakeForm-ContactCommonName"
+                      >
+                        <span
+                          class="css-1f43avz-a11yText-A11yText"
+                          id="react-select-IntakeForm-ContactCommonName-live-region"
+                        />
+                        <span
+                          aria-atomic="false"
+                          aria-live="polite"
+                          aria-relevant="additions text"
+                          class="css-1f43avz-a11yText-A11yText"
+                        />
+                        <div
+                          class="cedar-contact-select__control css-1b5q38d-control"
+                        >
+                          <div
+                            class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-319lph-ValueContainer"
+                          >
+                            <div
+                              class="cedar-contact-select__input-container css-1pndypt-Input"
+                              data-value="Cosmo Kramer"
+                            >
+                              <input
+                                aria-autocomplete="list"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                aria-label="Cedar-Users"
+                                autocapitalize="none"
+                                autocomplete="off"
+                                autocorrect="off"
+                                class="cedar-contact-select__input"
+                                id="react-select-IntakeForm-ContactCommonName-input"
+                                role="combobox"
+                                spellcheck="false"
+                                style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                                tabindex="0"
+                                type="text"
+                                value="Cosmo Kramer"
+                              />
+                            </div>
+                          </div>
+                          <div
+                            class="cedar-contact-select__indicators css-1hb7zxy-IndicatorsContainer"
+                          >
+                            <span
+                              aria-valuetext="Loading"
+                              class="easi-spinner easi-spinner--small"
+                              role="progressbar"
+                            />
+                            <div
+                              aria-hidden="true"
+                              class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1e245h0-indicatorContainer"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="css-tj5bde-Svg"
+                                focusable="false"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                width="20"
+                              >
+                                <path
+                                  d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"
+                                />
+                              </svg>
+                            </div>
+                            <span
+                              class="cedar-contact-select__indicator-separator css-1okebmr-indicatorSeparator"
+                            />
+                            <div
+                              aria-hidden="true"
+                              class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-1e245h0-indicatorContainer"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="css-tj5bde-Svg"
+                                focusable="false"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                width="20"
+                              >
+                                <path
+                                  d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                        <input
+                          name="systemIntakeContact.commonName"
+                          type="hidden"
+                          value="[object Object]"
+                        />
+                      </div>
+                      <ul
+                        class="usa-button-group margin-top-2"
+                      >
+                        <li
+                          class="usa-button-group__item"
+                        >
+                          <button
+                            class="usa-button"
+                            data-testid="button"
+                            disabled=""
+                            type="button"
+                          >
+                            Save
+                          </button>
+                        </li>
+                        <li
+                          class="usa-button-group__item"
+                        >
+                          <button
+                            class="usa-button usa-button--outline"
+                            data-testid="button"
+                            type="button"
+                          >
+                            Cancel
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                   <button
                     class="usa-button usa-button--unstyled truncated-content-button display-flex flex-align-center margin-top-105"
@@ -526,39 +649,49 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                      Show 2 fewer recipients
                   </button>
                   <div
-                    class="easi-checkbox usa-checkbox"
+                    class="recipient-container"
+                    data-testid="recipient-BusinessOwner-SF13"
                   >
-                    <input
-                      checked=""
-                      class="usa-checkbox__input"
-                      id="SF13-BusinessOwner"
-                      name="SF13-BusinessOwner"
-                      type="checkbox"
-                      value="sf13@local.fake"
-                    />
-                    <label
-                      class="usa-checkbox__label"
-                      for="SF13-BusinessOwner"
+                    <div
+                      class="easi-checkbox usa-checkbox"
                     >
-                      Jerry Seinfeld, Center for Medicaid and CHIP Services (Business Owner)
-                    </label>
+                      <input
+                        checked=""
+                        class="usa-checkbox__input"
+                        id="SF13-BusinessOwner"
+                        name="SF13-BusinessOwner"
+                        type="checkbox"
+                        value="sf13@local.fake"
+                      />
+                      <label
+                        class="usa-checkbox__label"
+                        for="SF13-BusinessOwner"
+                      >
+                        Jerry Seinfeld, Center for Medicaid and CHIP Services (Business Owner)
+                      </label>
+                    </div>
                   </div>
                   <div
-                    class="easi-checkbox usa-checkbox"
+                    class="recipient-container"
+                    data-testid="recipient-ISSO-WXYZ"
                   >
-                    <input
-                      class="usa-checkbox__input"
-                      id="WXYZ-ISSO"
-                      name="WXYZ-ISSO"
-                      type="checkbox"
-                      value="wxyz@local.fake"
-                    />
-                    <label
-                      class="usa-checkbox__label"
-                      for="WXYZ-ISSO"
+                    <div
+                      class="easi-checkbox usa-checkbox"
                     >
-                      John Smith, CMS Wide (ISSO)
-                    </label>
+                      <input
+                        class="usa-checkbox__input"
+                        id="WXYZ-ISSO"
+                        name="WXYZ-ISSO"
+                        type="checkbox"
+                        value="wxyz@local.fake"
+                      />
+                      <label
+                        class="usa-checkbox__label"
+                        for="WXYZ-ISSO"
+                      >
+                        John Smith, CMS Wide (ISSO)
+                      </label>
+                    </div>
                   </div>
                   <div
                     class="system-intake-contacts margin-top-3"
@@ -595,6 +728,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
               <button
                 class="usa-button margin-top-2"
                 data-testid="button"
+                disabled=""
                 type="submit"
               >
                 Complete action and send email
@@ -602,8 +736,9 @@ exports[`Submit Action actions renders additional contacts 1`] = `
             </div>
             <div>
               <button
-                class="usa-button usa-button--unstyled margin-top-2 line-height-body-5"
+                class="usa-button usa-button--unstyled margin-top-2 line-height-body-5 text-gray-30"
                 data-testid="button"
+                disabled=""
                 type="button"
               >
                 Complete action without sending an email

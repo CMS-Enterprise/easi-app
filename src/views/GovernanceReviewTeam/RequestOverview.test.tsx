@@ -5,8 +5,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
-import grtActions from 'constants/grtActions';
 import { businessCaseInitialData } from 'data/businessCase';
+import { grtActions } from 'data/mock/grtActions';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';

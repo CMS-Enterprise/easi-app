@@ -2,15 +2,12 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
+import { contactQueries, mockData } from 'data/mock/grtActions';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
@@ -22,8 +19,19 @@ import Notes from 'views/GovernanceReviewTeam/Notes';
 import RequestOverview from '../RequestOverview';
 
 const waitForPageLoad = async () => {
-  await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+  await waitFor(() => {
+    expect(screen.getByTestId('provide-feedback-biz-case')).toBeInTheDocument();
+  });
 };
+// Mock system intake and contacts data
+const {
+  systemIntake,
+  contacts: { requester }
+} = mockData;
+const systemIntakeId = systemIntake.id;
+
+// Mock contact queries
+const { getSystemIntakeContactsQuery } = contactQueries;
 
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -49,86 +57,12 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
     request: {
       query: GetSystemIntakeQuery,
       variables: {
-        id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+        id: systemIntakeId
       }
     },
     result: {
       data: {
-        systemIntake: {
-          id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
-          euaUserId: 'ABCD',
-          adminLead: null,
-          businessNeed: 'Test business need',
-          businessSolution: 'Test business solution',
-          businessOwner: {
-            component: 'Center for Medicaid and CHIP Services',
-            name: 'ABCD'
-          },
-          contract: {
-            contractor: 'Contractor Name',
-            endDate: {
-              day: '31',
-              month: '12',
-              year: '2023'
-            },
-            hasContract: 'HAVE_CONTRACT',
-            startDate: {
-              day: '1',
-              month: '1',
-              year: '2021'
-            },
-            vehicle: 'Sole source',
-            number: '123456-7890'
-          },
-          costs: {
-            isExpectingIncrease: 'YES',
-            expectedIncreaseAmount: '10 million dollars'
-          },
-          currentStage: 'I have done some initial research',
-          decisionNextSteps: null,
-          grbDate: null,
-          grtDate: null,
-          grtFeedbacks: [],
-          governanceTeams: {
-            isPresent: true,
-            teams: []
-          },
-          isso: {
-            isPresent: true,
-            name: 'ISSO Name'
-          },
-          existingFunding: true,
-          fundingSources: [{ fundingNumber: '123456', source: 'Research' }],
-          lcid: null,
-          lcidExpiresAt: null,
-          lcidScope: null,
-          lcidCostBaseline: null,
-          needsEaSupport: true,
-          productManager: {
-            component: 'Center for Program Integrity',
-            name: 'Project Manager'
-          },
-          rejectionReason: null,
-          requester: {
-            component: 'Center for Medicaid and CHIP Services',
-            email: 'abcd@local.fake',
-            name: 'User ABCD'
-          },
-          requestName: 'TACO',
-          requestType: 'NEW',
-          status: 'INTAKE_SUBMITTED',
-          createdAt: null,
-          submittedAt: null,
-          updatedAt: null,
-          archivedAt: null,
-          decidedAt: null,
-          businessCaseId: null,
-          lastAdminNote: {
-            content: null,
-            createdAt: null
-          },
-          grtReviewEmailBody: null
-        }
+        systemIntake
       }
     }
   };
@@ -137,7 +71,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
     request: {
       query: GetAdminNotesAndActionsQuery,
       variables: {
-        id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+        id: systemIntakeId
       }
     },
     result: {
@@ -225,13 +159,13 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeID: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -239,13 +173,14 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
         result: {
           data: {
             addGRTFeedbackAndRequestBusinessCase: {
-              id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              id: systemIntakeId
             }
           }
         }
       };
       renderActionPage('provide-feedback-need-biz-case', [
         intakeQuery,
+        getSystemIntakeContactsQuery,
         provideFeedbackNeedBizCaseMutation,
         noteActionQuery
       ]);
@@ -275,13 +210,13 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeID: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -289,7 +224,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
         result: {
           data: {
             addGRTFeedbackAndKeepBusinessCaseInDraft: {
-              id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              id: systemIntakeId
             }
           }
         }
@@ -297,6 +232,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
 
       renderActionPage('provide-feedback-keep-draft', [
         intakeQuery,
+        getSystemIntakeContactsQuery,
         provideFeedbackKeepDraftBizCaseMutation,
         noteActionQuery
       ]);
@@ -328,13 +264,13 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeID: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -342,7 +278,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
         result: {
           data: {
             addGRTFeedbackAndProgressToFinalBusinessCase: {
-              id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+              id: systemIntakeId
             }
           }
         }
@@ -350,6 +286,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
 
       renderActionPage('provide-feedback-need-final', [
         intakeQuery,
+        getSystemIntakeContactsQuery,
         provideFeedbackProgressToFinalBizCaseMutation,
         noteActionQuery
       ]);

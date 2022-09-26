@@ -21,7 +21,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import useSystemIntake from 'hooks/useSystemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
 import {
   IssueLifecycleId as IssueLifecycleIdType,
@@ -39,7 +39,6 @@ const RADIX = 10;
 
 const IssueLifecycleId = () => {
   const { systemId } = useParams<{ systemId: string }>();
-  const { systemIntake } = useSystemIntake(systemId);
   const history = useHistory();
   const { t } = useTranslation('action');
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
@@ -51,6 +50,15 @@ const IssueLifecycleId = () => {
     errorPolicy: 'all'
   });
 
+  // Requester object and loading state
+  const {
+    contacts: {
+      data: { requester },
+      loading
+    }
+  } = useSystemIntakeContacts(systemId);
+
+  // Active contact for adding/verifying recipients
   const [
     activeContact,
     setActiveContact
@@ -67,11 +75,14 @@ const IssueLifecycleId = () => {
     newLifecycleId: undefined,
     feedback: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!],
+      regularRecipientEmails: requester.id ? [requester.email] : [],
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: true
     }
   };
+
+  // Wait for contacts to load before returning form
+  if (loading) return null;
 
   const onSubmit = (values: SubmitLifecycleIdForm) => {
     const {
