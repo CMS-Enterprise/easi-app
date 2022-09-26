@@ -54,8 +54,7 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 	// return attendee, nil
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_request_attendees
-		SET id = :id,
-			role = :role,
+		SET role = :role,
 			component = :component,
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
