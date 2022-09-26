@@ -1539,7 +1539,7 @@ input CreateTRBRequestAttendeeInput {
   euaUserId: String!
   trbRequestId: UUID!
   component: String!
-  role: String!
+  role: PersonRole!
 }
 
 """
@@ -1548,7 +1548,7 @@ Represents an EUA user who is included as an attendee for a TRB request
 input UpdateTRBRequestAttendeeInput {
   id: UUID!
   component: String!
-  role: String!
+  role: PersonRole!
 }
 
 """

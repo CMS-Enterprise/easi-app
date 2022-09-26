@@ -21,3 +21,5 @@ CREATE TABLE trb_request_attendees (
     modified_by TEXT CHECK (modified_by ~ '^[A-Z0-9]{4}$'),
     modified_at TIMESTAMP WITH TIME ZONE
 );
+
+CREATE UNIQUE INDEX trb_request_attendeess_unique_idx ON trb_request_attendees(eua_user_id, trb_request_id);

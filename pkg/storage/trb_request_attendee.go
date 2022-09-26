@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 
@@ -50,23 +51,48 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, attendee *models.T
 
 // UpdateTRBRequestAttendee updates a TRB request attendee record in the database
 func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
-	const sql = `
+	// return attendee, nil
+	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_request_attendees
-		SET
+		SET id = :id,
 			role = :role,
 			component = :component,
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
-		WHERE trb_request_attendees.id = :id
-	`
-	_, err := s.db.NamedExecContext(ctx, sql, attendee)
-
+		WHERE id = :id
+		RETURNING
+			id,
+			role,
+			component,
+			trb_request_id,
+			created_by,
+			created_at,
+			modified_by,
+			modified_at;
+		`)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to create TRB request attendee with error %s", zap.Error(err))
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update TRB request attendee %s", err),
+			zap.String("id", attendee.ID.String()),
+		)
 		return nil, err
 	}
+	updated := models.TRBRequestAttendee{}
 
-	return attendee, nil
+	err = stmt.Get(&updated, attendee)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update TRB request attendee %s", err),
+			zap.String("id", attendee.ID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     attendee,
+			Operation: apperrors.QueryUpdate,
+		}
+	}
+
+	return &updated, err
 }
 
 // GetTRBRequestAttendeesByTRBRequestID queries the DB for all the TRB request attendee records
@@ -88,17 +114,42 @@ func (s *Store) GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbReq
 }
 
 // DeleteTRBRequestAttendee deletes an existing TRB request attendee record in the database
-func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) error {
-	const deleteTRBRequestAttendeeSQL = `
+func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error) {
+	stmt, err := s.db.PrepareNamed(`
 		DELETE FROM trb_request_attendees
-		WHERE id = $1;`
-
-	_, err := s.db.Exec(deleteTRBRequestAttendeeSQL, id)
-
+		WHERE id = $1
+		RETURNING
+			:id,
+			:eua_user_id,
+			:trb_request_id,
+			:role,
+			:component,
+			:created_by,
+			:modified_by;
+		`)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to delete TRB request attendee with error %s", zap.Error(err))
-		return err
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update TRB request attendee %s", err),
+			zap.String("id", id.String()),
+		)
+		return nil, err
+	}
+	toDelete := models.TRBRequestAttendee{}
+	toDelete.ID = id
+	deleted := models.TRBRequestAttendee{}
+
+	err = stmt.Get(&deleted, &toDelete)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update TRB request attendee %s", err),
+			zap.String("id", id.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     toDelete,
+			Operation: apperrors.QueryUpdate,
+		}
 	}
 
-	return nil
+	return &deleted, err
 }

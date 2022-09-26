@@ -6700,7 +6700,7 @@ input CreateTRBRequestAttendeeInput {
   euaUserId: String!
   trbRequestId: UUID!
   component: String!
-  role: String!
+  role: PersonRole!
 }
 
 """
@@ -6709,7 +6709,7 @@ Represents an EUA user who is included as an attendee for a TRB request
 input UpdateTRBRequestAttendeeInput {
   id: UUID!
   component: String!
-  role: String!
+  role: PersonRole!
 }
 
 """
@@ -35901,7 +35901,7 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestAttendeeInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
-			it.Role, err = ec.unmarshalNString2string(ctx, v)
+			it.Role, err = ec.unmarshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -37497,7 +37497,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestAttendeeInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
-			it.Role, err = ec.unmarshalNString2string(ctx, v)
+			it.Role, err = ec.unmarshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx, v)
 			if err != nil {
 				return it, err
 			}

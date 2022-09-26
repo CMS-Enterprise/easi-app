@@ -35,13 +35,11 @@ func UpdateTRBRequestAttendee(ctx context.Context, store *storage.Store, attende
 
 // DeleteTRBRequestAttendee deletes a TRBRequestAttendee record from the database
 func DeleteTRBRequestAttendee(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestAttendee, error) {
-	err := store.DeleteTRBRequestAttendee(ctx, id)
+	deleted, err := store.DeleteTRBRequestAttendee(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	attendee := &models.TRBRequestAttendee{}
-	attendee.ID = id
-	return attendee, nil
+	return deleted, nil
 }
 
 // GetTRBRequestAttendeesByTRBRequestID retrieves a list of attendees associated with a TRB request
