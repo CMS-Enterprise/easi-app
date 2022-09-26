@@ -102,7 +102,7 @@ function Steps() {
       <div className="margin-top-1">
         <UswdsReactLink
           to="/trb/start"
-          className="usa-button usa-button--outline"
+          className="usa-button usa-button--outline margin-bottom-1 tablet:margin-bottom-0"
           variant="unstyled"
         >
           {t('steps.back')}
