@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams /* , useRouteMatch */ } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -24,6 +24,8 @@ import {
 // import UpdateTrbRequestQuery from 'queries/UpdateTrbRequestQuery';
 import { TRBRequestType } from 'types/graphql-global-types';
 import { NotFoundPartial } from 'views/NotFound';
+
+import Breadcrumbs from '../Breadcrumbs';
 
 import Attendees from './Attendees';
 import Basic from './Basic';
@@ -138,6 +140,18 @@ function RequestForm() {
     step
   ]);
 
+  const defaultBreadcrumbs = useMemo(
+    () => (
+      <Breadcrumbs
+        items={[
+          { text: t('heading'), url: '/trb' },
+          { text: t('breadcrumbs.taskList'), url: '/trb/task-list' },
+          { text: t('requestForm.heading') }
+        ]}
+      />
+    ),
+    [t]
+  );
   if (getResult.loading || createResult.loading) {
     return <PageLoading />;
   }
@@ -155,18 +169,10 @@ function RequestForm() {
 
   const FormStepComponent = formStepComponents[stepNum - 1];
 
-  const breadcrumbItems = [
-    { text: t('heading'), url: '/trb' },
-    { text: 'Task List', url: '/trb/task-list' },
-    { text: 'TRB Request' }
-  ];
-
   if (FormStepComponent && request) {
     return (
       <>
-        {!view && (
-          <FormHeader step={stepNum} breadcrumbItems={breadcrumbItems} />
-        )}
+        {!view && <FormHeader step={stepNum} topElement={defaultBreadcrumbs} />}
         <GridContainer className="width-full">
           <FormStepComponent step={stepNum} request={request} />
         </GridContainer>

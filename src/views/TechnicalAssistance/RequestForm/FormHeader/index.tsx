@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Grid,
   GridContainer,
   IconArrowBack,
   StepIndicator,
@@ -12,13 +13,11 @@ import { StepIndicatorStepProps } from '@trussworks/react-uswds/lib/components/s
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 
-import Breadcrumbs, { BreadcrumbsProps } from '../../Breadcrumbs';
-
 import './index.scss';
 
 export interface FormHeaderProps {
   step: number;
-  breadcrumbItems?: BreadcrumbsProps['items'];
+  topElement?: JSX.Element;
 }
 
 type RequestFormText = {
@@ -31,7 +30,7 @@ type RequestFormText = {
   }[];
 };
 
-function FormHeader({ step, breadcrumbItems }: FormHeaderProps) {
+function FormHeader({ step, topElement }: FormHeaderProps) {
   const { t } = useTranslation('technicalAssistance');
   const text = t<RequestFormText>('requestForm', {
     returnObjects: true
@@ -44,22 +43,28 @@ function FormHeader({ step, breadcrumbItems }: FormHeaderProps) {
     <div className="trb-form-header">
       <div className="bg-gray-5 padding-bottom-6">
         <GridContainer>
-          {breadcrumbItems?.length && <Breadcrumbs items={breadcrumbItems} />}
+          <Grid row>
+            <Grid col>
+              {topElement}
 
-          <PageHeading className="margin-bottom-0">{text.heading}</PageHeading>
-          <div className="font-body-lg line-height-body-5 text-light">
-            {text.description[0]}
-          </div>
-          <div className="margin-top-2 line-height-body-5">
-            {text.description[1]}
-          </div>
+              <PageHeading className="margin-bottom-0">
+                {text.heading}
+              </PageHeading>
+              <div className="font-body-lg line-height-body-5 text-light">
+                {text.description[0]}
+              </div>
+              <div className="margin-top-2 line-height-body-5">
+                {text.description[1]}
+              </div>
 
-          <div className="margin-top-3">
-            <UswdsReactLink to="/trb">
-              <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-              {t('button.saveAndExit')}
-            </UswdsReactLink>
-          </div>
+              <div className="margin-top-3">
+                <UswdsReactLink to="/trb">
+                  <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+                  {t('button.saveAndExit')}
+                </UswdsReactLink>
+              </div>
+            </Grid>
+          </Grid>
         </GridContainer>
       </div>
 

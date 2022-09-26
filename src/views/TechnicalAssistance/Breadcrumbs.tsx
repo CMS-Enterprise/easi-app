@@ -7,7 +7,11 @@ import {
 } from '@trussworks/react-uswds';
 
 export interface BreadcrumbsProps {
-  items: { text: string; url?: string }[];
+  items: {
+    text: string;
+    url?: string;
+    onClick?: () => void;
+  }[];
 }
 
 /**
@@ -22,16 +26,18 @@ function Breadcrumbs({ items }: BreadcrumbsProps) {
       {items.map((link, idx) => {
         if (idx === items.length - 1) {
           return (
-            // eslint-disable-next-line react/no-array-index-key
-            <Breadcrumb key={idx} current>
+            <Breadcrumb key={link.text} current>
               <span>{link.text}</span>
             </Breadcrumb>
           );
         }
         return (
-          // eslint-disable-next-line react/no-array-index-key
-          <Breadcrumb key={idx}>
-            <BreadcrumbLink asCustom={Link} to={link.url!}>
+          <Breadcrumb key={link.text}>
+            <BreadcrumbLink
+              asCustom={Link}
+              to={link.url!}
+              onClick={link.onClick}
+            >
               <span>{link.text}</span>
             </BreadcrumbLink>
           </Breadcrumb>
