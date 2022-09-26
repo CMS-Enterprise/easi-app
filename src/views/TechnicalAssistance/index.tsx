@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   Redirect,
   Route,
@@ -11,7 +10,6 @@ import {
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
-import Breadcrumbs from './Breadcrumbs';
 import Homepage from './Homepage';
 import RequestForm from './RequestForm';
 import StartRequest from './StartRequest';
@@ -28,11 +26,10 @@ function RequestTypeRequired({ children }: { children: React.ReactNode }) {
 }
 
 function TechnicalAssistance() {
-  const { path, url } = useRouteMatch();
-  const { t } = useTranslation('technicalAssistance');
+  const { path } = useRouteMatch();
 
   return (
-    <MainContent className="technical-assistance grid-container margin-bottom-10">
+    <MainContent className="technical-assistance margin-bottom-10">
       <Switch>
         <Route exact path={path}>
           <Homepage />
@@ -40,24 +37,12 @@ function TechnicalAssistance() {
 
         {/* Start a request */}
         <Route exact path={`${path}/start`}>
-          <Breadcrumbs
-            items={[
-              { text: t('heading'), url },
-              { text: t('breadcrumbs.startTrbRequest') }
-            ]}
-          />
           <StartRequest />
         </Route>
 
         {/* Start request steps that require `requestType` to be set */}
         <Route exact path={`${path}/steps`}>
           <RequestTypeRequired>
-            <Breadcrumbs
-              items={[
-                { text: t('heading'), url },
-                { text: t('breadcrumbs.startTrbRequest') }
-              ]}
-            />
             <Steps />
           </RequestTypeRequired>
         </Route>

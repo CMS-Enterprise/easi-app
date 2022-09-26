@@ -15,7 +15,7 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
-import { Button, Table } from '@trussworks/react-uswds';
+import { Button, GridContainer, Table } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -113,7 +113,7 @@ function Homepage() {
   }
 
   return (
-    <div>
+    <GridContainer className="width-full">
       <PageHeading>{t('heading')}</PageHeading>
 
       <UswdsReactLink
@@ -214,7 +214,7 @@ function Homepage() {
           {currentTableSortDescription(headerGroups[0])}
         </div>
       </div>
-    </div>
+    </GridContainer>
   );
 }
 

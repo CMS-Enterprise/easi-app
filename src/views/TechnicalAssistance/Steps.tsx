@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import {
+  GridContainer,
   ProcessList,
   ProcessListHeading,
   ProcessListItem
@@ -9,6 +10,8 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+
+import Breadcrumbs from './Breadcrumbs';
 
 function Steps() {
   const { state } = useLocation<{ requestType: string }>();
@@ -23,7 +26,13 @@ function Steps() {
   });
 
   return (
-    <div>
+    <GridContainer className="width-full">
+      <Breadcrumbs
+        items={[
+          { text: t('heading'), url: '/trb' },
+          { text: t('breadcrumbs.startTrbRequest') }
+        ]}
+      />
       <PageHeading className="margin-bottom-0">
         {t('steps.heading')}
       </PageHeading>
@@ -118,7 +127,7 @@ function Steps() {
           {t('steps.continue')}
         </UswdsReactLink>
       </div>
-    </div>
+    </GridContainer>
   );
 }
 
