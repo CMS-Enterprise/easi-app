@@ -129,11 +129,19 @@ export default function CedarContactSelect({
   // Show warning if autosearch returns multiple or no results
   const showWarning = autoSearch && !value?.euaUserId && contacts.length !== 1;
 
+  /** Query CEDAR by common name and update contacts */
+  const queryContacts = (query: string) => {
+    setSearchTerm(query);
+    if (query.length > 1) {
+      queryCedarContacts(query.split(',')[0]);
+    }
+  };
+
   /** Update contact and reset search term */
   const updateContact = (contact?: CedarContactProps | null) => {
     onChange(contact || null);
     selectedContact.current = contact?.euaUserId;
-    setSearchTerm(contact ? formatLabel(contact) : '');
+    queryContacts(contact ? formatLabel(contact) : '');
   };
 
   // React Select styles object
@@ -207,19 +215,12 @@ export default function CedarContactSelect({
       ...provided,
       visibility: 'visible'
     }),
-    option: (provided, { isFocused }) => ({
+    option: provided => ({
       ...provided,
       backgroundColor: 'transparent',
       color: 'inherit'
     })
   };
-
-  // Update contacts when search term changes
-  useEffect(() => {
-    if (searchTerm && searchTerm.length > 1) {
-      queryCedarContacts(searchTerm.split(',')[0]);
-    }
-  }, [searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update contact when value changes
   // Fix for 'same as requester' checkboxes in system intake form
@@ -271,7 +272,7 @@ export default function CedarContactSelect({
       }}
       onInputChange={(newValue, { action }) => {
         if (action !== 'input-blur' && action !== 'menu-close') {
-          setSearchTerm(newValue);
+          queryContacts(newValue);
         }
       }}
       defaultInputValue={searchTerm}
