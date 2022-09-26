@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -43,15 +43,7 @@ const Recipient = ({
 }: RecipientProps) => {
   const { t } = useTranslation('action');
   const { commonName, euaUserId, role, component, email, id } = { ...contact };
-  const isActive = useMemo(() => {
-    // Unverified contacts do not have unique IDs, so check against all other fields to see if currently being verified
-    return (
-      activeContact?.systemIntakeId &&
-      activeContact?.commonName === commonName &&
-      activeContact?.component === component &&
-      activeContact?.role === role
-    );
-  }, [activeContact, commonName, component, role]);
+  const [isActive, setActive] = useState(false);
 
   return (
     <div className="recipient-container" data-testid={`recipient-${euaUserId}`}>
@@ -79,6 +71,7 @@ const Recipient = ({
             unstyled
             onClick={() => {
               setActiveContact(contact);
+              setActive(true);
             }}
           >
             {t('emailRecipients.verifyRecipient')}
@@ -113,6 +106,7 @@ const Recipient = ({
               onClick={() => {
                 createContact(activeContact!);
                 setActiveContact(null);
+                setActive(false);
               }}
             >
               {t('Save')}
@@ -122,6 +116,7 @@ const Recipient = ({
               outline
               onClick={() => {
                 setActiveContact(null);
+                setActive(false);
               }}
             >
               {t('Cancel')}
