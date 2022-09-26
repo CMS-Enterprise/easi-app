@@ -43,13 +43,13 @@ function Breadcrumbs({ items }: { items: { text: string; url?: string }[] }) {
       {items.map((link, idx) => {
         if (idx === items.length - 1) {
           return (
-            <Breadcrumb current>
+            <Breadcrumb key={link.text} current>
               <span>{link.text}</span>
             </Breadcrumb>
           );
         }
         return (
-          <Breadcrumb>
+          <Breadcrumb key="last">
             <BreadcrumbLink asCustom={Link} to={link.url!}>
               <span>{link.text}</span>
             </BreadcrumbLink>
