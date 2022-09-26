@@ -44,6 +44,6 @@ func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
 	s.Run("fetches TRB request attendees", func() {
 		fetched, err := GetTRBRequestAttendeesByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
 		s.NoError(err)
-		s.True(len(fetched) > 0)
+		s.True(len(fetched) == 1)
 	})
 }
