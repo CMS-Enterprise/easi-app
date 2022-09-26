@@ -392,11 +392,35 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
   const { cedarSystem, cmsComponent } = fields;
 
   if (loading) {
-    return <PageLoading />;
+    if (!modalProps) {
+      return <PageLoading />;
+    }
+    return (
+      <Modal
+        title={t('System Profile')}
+        isOpen={isOpen}
+        closeModal={closeModal}
+        shouldCloseOnOverlayClick
+      >
+        <PageLoading />
+      </Modal>
+    );
   }
 
   if (error || !systemProfileData || !cedarSystem) {
-    return <NotFound />;
+    if (!modalProps) {
+      return <NotFound />;
+    }
+    return (
+      <Modal
+        title={t('System Profile')}
+        isOpen={isOpen}
+        closeModal={closeModal}
+        shouldCloseOnOverlayClick
+      >
+        <NotFound />
+      </Modal>
+    );
   }
 
   const { businessOwners, productionLocation } = systemProfileData;
