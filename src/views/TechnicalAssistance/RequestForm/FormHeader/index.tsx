@@ -12,7 +12,7 @@ import { StepIndicatorStepProps } from '@trussworks/react-uswds/lib/components/s
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 
-import Breadcrumbs, { BreadcrumbsProps } from '../Breadcrumbs';
+import Breadcrumbs, { BreadcrumbsProps } from '../../Breadcrumbs';
 
 import './index.scss';
 

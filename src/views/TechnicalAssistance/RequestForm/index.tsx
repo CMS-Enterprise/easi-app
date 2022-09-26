@@ -25,12 +25,11 @@ import {
 import { TRBRequestType } from 'types/graphql-global-types';
 import { NotFoundPartial } from 'views/NotFound';
 
-import FormHeader from '../FormHeader';
-
 import Attendees from './Attendees';
 import Basic from './Basic';
 import Check from './Check';
 import Documents from './Documents';
+import FormHeader from './FormHeader';
 import SubjectAreas from './SubjectAreas';
 
 export interface FormStepComponentProps {
