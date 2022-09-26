@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { IconArrowBack } from '@trussworks/react-uswds';
 import cx from 'classnames';
 
@@ -21,9 +22,8 @@ export function Pager({
   nextDisabled,
   saveExitDisabled
 }: Props) {
-  // todo
-  // back defaults to style outline
-  // next option
+  const { t } = useTranslation('technicalAssistance');
+
   return (
     <div className="border-base-light border-top-1px">
       <div className="margin-top-2">
@@ -33,7 +33,7 @@ export function Pager({
             className="usa-button usa-button--outline"
             to={back.url}
           >
-            {back.text ?? 'Back'}
+            {back.text ?? t('button.back')}
           </UswdsReactLink>
         )}
         {next && (
@@ -45,7 +45,7 @@ export function Pager({
             })}
             to={next.url}
           >
-            {next.text ?? 'Next'}
+            {next.text ?? t('button.next')}
           </UswdsReactLink>
         )}
       </div>
@@ -53,7 +53,7 @@ export function Pager({
         <div className="margin-top-2">
           <UswdsReactLink to="/trb">
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            Save and exit
+            {t('button.saveAndExit')}
           </UswdsReactLink>
         </div>
       )}

@@ -57,7 +57,7 @@ function FormHeader({ step, breadcrumbItems }: FormHeaderProps) {
           <div className="margin-top-3">
             <UswdsReactLink to="/trb">
               <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-              Save and exit
+              {t('button.saveAndExit')}
             </UswdsReactLink>
           </div>
         </GridContainer>
