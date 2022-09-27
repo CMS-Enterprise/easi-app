@@ -77,11 +77,11 @@ function Homepage() {
     gotoPage,
     headerGroups,
     nextPage,
+    page,
     pageCount,
     pageOptions,
     prepareRow,
     previousPage,
-    rows,
     setGlobalFilter,
     setPageSize,
     state
@@ -135,7 +135,7 @@ function Homepage() {
           globalFilter={state.globalFilter}
           pageIndex={state.pageIndex}
           pageSize={state.pageSize}
-          filteredRowLength={rows.length}
+          filteredRowLength={page.length}
           rowLength={trbRequests.length}
           className="margin-bottom-4"
         />
@@ -170,7 +170,7 @@ function Homepage() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map(row => {
+            {page.map(row => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
