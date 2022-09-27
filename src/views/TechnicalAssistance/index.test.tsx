@@ -64,7 +64,7 @@ describe('TRB Subview snapshots', () => {
   });
   it('matches Steps', () => {
     const { asFragment } = render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[{ state: { requestType: 'NEED_HELP' } }]}>
         <Steps />
       </MemoryRouter>
     );

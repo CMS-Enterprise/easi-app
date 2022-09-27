@@ -786,7 +786,12 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                 <td
                   role="cell"
                 >
-                  My excellent question
+                  <a
+                    class="usa-link"
+                    href="/trb/requests/1afc9242-f244-47a3-9f91-4d6fedd8eb91"
+                  >
+                    My excellent question
+                  </a>
                 </td>
                 <td
                   role="cell"
@@ -805,7 +810,12 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                 <td
                   role="cell"
                 >
-                  TACO Review
+                  <a
+                    class="usa-link"
+                    href="/trb/requests/9841c768-bdcd-4856-bae2-62cfdaffacf6"
+                  >
+                    TACO Review
+                  </a>
                 </td>
                 <td
                   role="cell"
