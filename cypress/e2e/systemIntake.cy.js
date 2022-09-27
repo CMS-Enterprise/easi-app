@@ -86,6 +86,7 @@ describe('The System Intake Form', () => {
 
     cy.get('#IntakeForm-IssoCommonName input')
       .type('Jerry Seinfeld')
+      .wait(1000) // Fix for GH action tests failing
       .type('{downArrow}{enter}')
       .should('have.value', 'Jerry Seinfeld, SF13');
 
@@ -98,6 +99,7 @@ describe('The System Intake Form', () => {
 
     cy.get('#IntakeForm-ContactCommonName input')
       .type('Jerry Seinfeld')
+      .wait(1000) // Fix for GH action tests failing
       .type('{downArrow}{enter}')
       .should('have.value', 'Jerry Seinfeld, SF13');
 

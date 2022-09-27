@@ -7,6 +7,7 @@ cy.systemIntake = {
 
       cy.get('#react-select-IntakeForm-BusinessOwnerName-input')
         .type('Jerry Seinfeld')
+        .wait(1000) // Fix for GH action tests failing
         .type('{downarrow}{enter}')
         .should('have.value', 'Jerry Seinfeld, SF13');
 
@@ -16,6 +17,7 @@ cy.systemIntake = {
 
       cy.get('#react-select-IntakeForm-ProductManagerName-input')
         .type('Jerry Seinfeld')
+        .wait(1000) // Fix for GH action tests failing
         .type('{downArrow}{enter}')
         .should('have.value', 'Jerry Seinfeld, SF13');
 
