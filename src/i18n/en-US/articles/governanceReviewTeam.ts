@@ -219,6 +219,7 @@ const governanceReviewTeam = {
       'Matthew Schmid',
       'Valerie Hartz',
       'Jaime Cadwell',
+      'Alex Smith',
       'Leilani Fields',
       'Ashley Marks',
       'Leah Nguyen'
