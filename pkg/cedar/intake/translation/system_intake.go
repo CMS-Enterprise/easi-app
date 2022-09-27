@@ -26,7 +26,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 	fundingSources := make([]*intakemodels.EASIFundingSource, 0, len(si.FundingSources))
 	for _, fundingSource := range si.FundingSources {
 		fundingSources = append(fundingSources, &intakemodels.EASIFundingSource{
-			FundingSourceID: si.ID.String(),
+			FundingSourceID: fundingSource.ID.String(),
 			Source:          fundingSource.Source.Ptr(),
 			FundingNumber:   fundingSource.FundingNumber.Ptr(),
 		})
