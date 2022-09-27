@@ -21,7 +21,6 @@ import { startCase } from 'lodash';
 import { DateTime } from 'luxon';
 
 import MainContent from 'components/MainContent';
-import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -312,18 +311,15 @@ export function showVal(
   return val;
 }
 
-type ModalPropsType = {
-  id: string;
-  isOpen: boolean;
-  closeModal: () => void;
+type SystemProfileProps = {
+  id?: string;
+  modal?: boolean;
 };
 
-const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
+const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
-
-  const { id, isOpen = false, closeModal = () => null } = modalProps || {};
 
   const params = useParams<{
     subinfo: SubpageKey;
@@ -392,39 +388,11 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
   const { cedarSystem, cmsComponent } = fields;
 
   if (loading) {
-    if (!modalProps) {
-      return <PageLoading />;
-    }
-    return (
-      <Modal
-        overlayClassName="easi-modal_system-profile"
-        alignment="right"
-        title={t('System Profile')}
-        isOpen={isOpen}
-        closeModal={closeModal}
-        shouldCloseOnOverlayClick
-      >
-        <PageLoading />
-      </Modal>
-    );
+    return <PageLoading />;
   }
 
   if (error || !systemProfileData || !cedarSystem) {
-    if (!modalProps) {
-      return <NotFound />;
-    }
-    return (
-      <Modal
-        overlayClassName="easi-modal_system-profile"
-        alignment="right"
-        title={t('System Profile')}
-        isOpen={isOpen}
-        closeModal={closeModal}
-        shouldCloseOnOverlayClick
-      >
-        <NotFound />
-      </Modal>
-    );
+    return <NotFound />;
   }
 
   const { businessOwners, productionLocation } = systemProfileData;
@@ -437,7 +405,7 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(subComponents).map(
     (key: string) => {
-      if (modalProps)
+      if (modal)
         return (
           <Button
             key={key}
@@ -471,7 +439,7 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
 
   const subComponent = subComponents[subpageKey];
 
-  const SystemProfileView = () => (
+  return (
     <MainContent>
       <div id="system-profile">
         <SummaryBox
@@ -481,10 +449,10 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
           <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
             <Grid
               className={classnames('grid-container', {
-                'maxw-none': !!modalProps
+                'maxw-none': modal
               })}
             >
-              {!modalProps && (
+              {!modal && (
                 <BreadcrumbBar
                   variant="wrap"
                   className="bg-transparent padding-0"
@@ -630,12 +598,12 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
           subinfo={subpageKey}
           system={systemProfileData}
           systemProfileHiddenFields={flags.systemProfileHiddenFields}
-          modal={!!modalProps}
+          modal={modal}
           setModalSubpage={setModalSubpage}
         />
 
         <SectionWrapper className="margin-top-5 margin-bottom-5">
-          <GridContainer className={classnames({ 'maxw-none': !!modalProps })}>
+          <GridContainer className={classnames({ 'maxw-none': modal })}>
             <Grid row gap>
               {!isMobile && (
                 <Grid
@@ -645,7 +613,7 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
                   {/* Side navigation for single system */}
                   <SideNav items={subNavigationLinks} />
                   {/* Setting a ref here to reference the grid width for the fixed side nav */}
-                  {modalProps && (
+                  {modal && (
                     <>
                       <div className="top-divider margin-top-4" />
                       <PointsOfContactSidebar
@@ -663,12 +631,12 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
                   <GridContainer className="padding-left-0 padding-right-0">
                     <Grid row gap>
                       {/* Central component */}
-                      <Grid desktop={{ col: modalProps ? 12 : 8 }}>
+                      <Grid desktop={{ col: modal ? 12 : 8 }}>
                         {subComponent.component}
                       </Grid>
 
                       {/* Contact info sidebar */}
-                      {!modalProps && (
+                      {!modal && (
                         <Grid
                           desktop={{ col: 4 }}
                           className={classnames({
@@ -695,21 +663,6 @@ const SystemProfile = ({ modalProps }: { modalProps?: ModalPropsType }) => {
         </SectionWrapper>
       </div>
     </MainContent>
-  );
-
-  return modalProps ? (
-    <Modal
-      overlayClassName="easi-modal_system-profile"
-      alignment="right"
-      title={t('System Profile')}
-      isOpen={isOpen}
-      closeModal={closeModal}
-      shouldCloseOnOverlayClick
-    >
-      <SystemProfileView />
-    </Modal>
-  ) : (
-    <SystemProfileView />
   );
 };
 
