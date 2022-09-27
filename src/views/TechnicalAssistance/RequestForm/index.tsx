@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams /* , useRouteMatch */ } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { GridContainer } from '@trussworks/react-uswds';
 
@@ -51,22 +51,22 @@ const formStepComponents: ((props: FormStepComponentProps) => JSX.Element)[] = [
 
 /**
  * This is a component base for the TRB request form.
- * There are multiple query types handled: create, get, update.
+ * Route param `id` is either `new` or a TrbRequest id.
  */
 function RequestForm() {
   const { t } = useTranslation('technicalAssistance');
 
   const history = useHistory();
-  // const { path, url } = useRouteMatch();
-  // console.log(path, url);
+
+  // New requests require `requestType`
+  const location = useLocation<{ requestType: string }>();
+  const requestType = location.state?.requestType as TRBRequestType;
 
   const { id, step, view } = useParams<{
     id: string;
     step?: string;
     view?: string;
   }>();
-
-  const requestType: TRBRequestType = TRBRequestType.FOLLOWUP; // temp
 
   const [create, createResult] = useMutation<
     CreateTrbRequest,
@@ -102,6 +102,7 @@ function RequestForm() {
   useEffect(() => {
     // Create a new request if `id` is new and go to it
     if (id === 'new') {
+      // Request type must be defined for new requests
       if (requestType) {
         if (!createResult.called) {
           // Create the new request
@@ -114,7 +115,7 @@ function RequestForm() {
         }
       }
       // Redirect to the start if there's no request type
-      else history.push(`/trb`);
+      else history.push('/trb/start');
     }
     // Fetch request data if not new
     else if (!request && !createResult.called && !getResult.called) {
@@ -152,6 +153,7 @@ function RequestForm() {
     ),
     [t]
   );
+
   if (getResult.loading || createResult.loading) {
     return <PageLoading />;
   }

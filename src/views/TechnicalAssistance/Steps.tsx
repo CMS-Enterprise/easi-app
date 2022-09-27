@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import {
   GridContainer,
   ProcessList,
@@ -14,10 +14,14 @@ import PageHeading from 'components/PageHeading';
 import Breadcrumbs from './Breadcrumbs';
 
 function Steps() {
+  const { t } = useTranslation('technicalAssistance');
   const { state } = useLocation<{ requestType: string }>();
+
   const requestType = state?.requestType;
 
-  const { t } = useTranslation('technicalAssistance');
+  // Redirect to start if `requestType` isn't set
+  if (!requestType) return <Redirect to="/trb/start" />;
+
   const infoText = t<Record<string, string[]>>('steps.info', {
     returnObjects: true
   });

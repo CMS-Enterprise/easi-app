@@ -16,6 +16,11 @@ import PageHeading from 'components/PageHeading';
 
 import Breadcrumbs from './Breadcrumbs';
 
+/**
+ * This component is the start of a new Trb Request.
+ * The user selects a request type, from `TRBRequestType`,
+ * which is set in location state as `requestType`.
+ */
 function StartRequest() {
   const { t } = useTranslation('technicalAssistance');
   return (
@@ -91,7 +96,8 @@ function StartRequest() {
             <UswdsReactLink
               to={{
                 pathname: '/trb/steps',
-                state: { requestType: 'Other' }
+                // Reuse a request type until there is one defined for "other"
+                state: { requestType: 'NEED_HELP' }
               }}
             >
               {t('newRequest.services.other')}
