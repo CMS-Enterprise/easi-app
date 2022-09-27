@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
 import {
+  CellProps,
   Column,
   useFilters,
   useGlobalFilter,
@@ -54,7 +55,18 @@ function Homepage() {
     return [
       {
         Header: t<string>('table.header.requestName'),
-        accessor: 'name'
+        accessor: 'name',
+        Cell: ({
+          value,
+          row
+        }: // eslint-disable-next-line camelcase
+        CellProps<GetTrbRequests_trbRequestCollection, string>) => {
+          return (
+            <UswdsReactLink to={`/trb/requests/${row.original.id}`}>
+              {value}
+            </UswdsReactLink>
+          );
+        }
       },
       {
         Header: t<string>('table.header.submissionDate'),
@@ -82,6 +94,7 @@ function Homepage() {
     pageOptions,
     prepareRow,
     previousPage,
+    rows,
     setGlobalFilter,
     setPageSize,
     state
@@ -170,7 +183,8 @@ function Homepage() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map(row => {
+            {/* todo using the correct `page` rows will break the global filter */}
+            {rows.map(row => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
