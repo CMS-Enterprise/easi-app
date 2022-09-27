@@ -84,11 +84,13 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('#IntakeForm-IssoCommonName input')
+    cy.get('#react-select-IntakeForm-IssoName-input')
       .type('Jerry Seinfeld')
-      .wait(1000) // Fix for GH action tests failing
-      .type('{downArrow}{enter}')
-      .should('have.value', 'Jerry Seinfeld, SF13');
+      .type('{downArrow}{enter}');
+    cy.get('#react-select-IntakeForm-IssoName-input').should(
+      'have.value',
+      'Jerry Seinfeld, SF13'
+    );
 
     cy.get('#IntakeForm-IssoComponent')
       .select('Center for Medicare')
@@ -97,11 +99,13 @@ describe('The System Intake Form', () => {
     // Add another contact
     cy.contains('button', 'Add another contact').click();
 
-    cy.get('#IntakeForm-ContactCommonName input')
+    cy.get('#react-select-IntakeForm-ContactCommonName-input')
       .type('Jerry Seinfeld')
-      .wait(1000) // Fix for GH action tests failing
-      .type('{downArrow}{enter}')
-      .should('have.value', 'Jerry Seinfeld, SF13');
+      .type('{downArrow}{enter}');
+    cy.get('#react-select-IntakeForm-ContactCommonName-input').should(
+      'have.value',
+      'Jerry Seinfeld, SF13'
+    );
 
     cy.get('#IntakeForm-ContactComponent')
       .select('Center for Medicare')

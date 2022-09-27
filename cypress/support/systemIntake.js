@@ -7,9 +7,11 @@ cy.systemIntake = {
 
       cy.get('#react-select-IntakeForm-BusinessOwnerName-input')
         .type('Jerry Seinfeld')
-        .wait(1000) // Fix for GH action tests failing
-        .type('{downarrow}{enter}')
-        .should('have.value', 'Jerry Seinfeld, SF13');
+        .type('{downarrow}{enter}');
+      cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
+        'have.value',
+        'Jerry Seinfeld, SF13'
+      );
 
       cy.get('#IntakeForm-BusinessOwnerComponent')
         .select('Center for Medicare')
@@ -17,9 +19,11 @@ cy.systemIntake = {
 
       cy.get('#react-select-IntakeForm-ProductManagerName-input')
         .type('Jerry Seinfeld')
-        .wait(1000) // Fix for GH action tests failing
-        .type('{downArrow}{enter}')
-        .should('have.value', 'Jerry Seinfeld, SF13');
+        .type('{downArrow}{enter}');
+      cy.get('#react-select-IntakeForm-ProductManagerName-input').should(
+        'have.value',
+        'Jerry Seinfeld, SF13'
+      );
 
       cy.get('#IntakeForm-ProductManagerComponent')
         .select('Center for Medicare')
