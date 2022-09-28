@@ -115,7 +115,7 @@ func (s *Store) GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbReq
 func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error) {
 	stmt, err := s.db.PrepareNamed(`
 		DELETE FROM trb_request_attendees
-		WHERE id = :1
+		WHERE id = :id
 		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
