@@ -37,16 +37,7 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, attendee *models.T
 			:created_by,
 			:modified_by
 		)
-		RETURNING
-			id,
-			eua_user_id,
-			role,
-			component,
-			trb_request_id,
-			created_by,
-			created_at,
-			modified_by,
-			modified_at;`)
+		RETURNING *;`)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -76,16 +67,7 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
 		WHERE id = :id
-		RETURNING
-			id,
-			eua_user_id,
-			role,
-			component,
-			trb_request_id,
-			created_by,
-			created_at,
-			modified_by,
-			modified_at;
+		RETURNING *;
 		`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -135,15 +117,7 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 	stmt, err := s.db.PrepareNamed(`
 		DELETE FROM trb_request_attendees
 		WHERE id = $1
-		RETURNING
-			:id,
-			:eua_user_id,
-			:trb_request_id,
-			:role,
-			:component,
-			:created_by,
-			:modified_by;
-		`)
+		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB request attendee %s", err),
