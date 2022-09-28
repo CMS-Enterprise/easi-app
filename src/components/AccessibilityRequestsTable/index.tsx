@@ -278,21 +278,20 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             );
           })}
         </tbody>
-
-        <TablePagination
-          gotoPage={gotoPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
-          canNextPage={canNextPage}
-          pageIndex={state.pageIndex}
-          pageOptions={pageOptions}
-          canPreviousPage={canPreviousPage}
-          pageCount={pageCount}
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-          page={[]}
-        />
       </Table>
+      <TablePagination
+        gotoPage={gotoPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        canNextPage={canNextPage}
+        pageIndex={state.pageIndex}
+        pageOptions={pageOptions}
+        canPreviousPage={canPreviousPage}
+        pageCount={pageCount}
+        pageSize={state.pageSize}
+        setPageSize={setPageSize}
+        page={[]}
+      />
       <div
         className="usa-sr-only usa-table__announcement-region"
         aria-live="polite"
