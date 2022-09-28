@@ -28,6 +28,12 @@ function Steps() {
   const stepsText = t<Record<string, string | string[]>[]>('steps.list', {
     returnObjects: true
   });
+  const requestTypeText = t<Record<string, { heading: string }>>(
+    'newRequest.type',
+    {
+      returnObjects: true
+    }
+  );
 
   return (
     <GridContainer className="width-full">
@@ -42,7 +48,7 @@ function Steps() {
       </PageHeading>
       <div>
         <span className="line-height-body-5 text-base margin-right-2">
-          {t('steps.problemWithSystem')}
+          {requestTypeText[requestType].heading}
         </span>
         <span>
           <UswdsReactLink to="/trb/start">

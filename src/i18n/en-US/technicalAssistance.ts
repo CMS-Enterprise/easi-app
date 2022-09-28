@@ -72,7 +72,6 @@ const technicalAssistance = {
   },
   steps: {
     heading: 'Get technical assistance',
-    problemWithSystem: 'I’m having a problem with my system',
     changeRequestType: 'Change request type',
     description:
       'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.',
