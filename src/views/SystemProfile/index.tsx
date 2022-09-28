@@ -311,16 +311,26 @@ export function showVal(
   return val;
 }
 
-const SystemProfile = () => {
+type SystemProfileProps = {
+  id?: string;
+  modal?: boolean;
+};
+
+const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
 
-  const { systemId, subinfo, top } = useParams<{
+  const params = useParams<{
     subinfo: SubpageKey;
     systemId: string;
     top: string;
   }>();
+
+  const { subinfo, top } = params;
+  const systemId = id || params.systemId;
+
+  const [modalSubpage, setModalSubpage] = useState<SubpageKey>('home');
 
   // Scroll to top if redirect
   useLayoutEffect(() => {
@@ -394,21 +404,38 @@ const SystemProfile = () => {
 
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(subComponents).map(
-    (key: string) => (
-      <NavLink
-        to={subComponents[key].route}
-        key={key}
-        activeClassName="usa-current"
-        className={classnames({
-          'nav-group-border': subComponents[key].groupEnd
-        })}
-      >
-        {t(`navigation.${key}`)}
-      </NavLink>
-    )
+    (key: string) => {
+      if (modal)
+        return (
+          <Button
+            key={key}
+            className={classnames({
+              'nav-group-border': subComponents[key].groupEnd,
+              'usa-current': modalSubpage === key
+            })}
+            type="button"
+            onClick={() => setModalSubpage(key as SubpageKey)}
+            unstyled
+          >
+            {t(`navigation.${key}`)}
+          </Button>
+        );
+      return (
+        <NavLink
+          to={subComponents[key].route}
+          key={key}
+          activeClassName="usa-current"
+          className={classnames({
+            'nav-group-border': subComponents[key].groupEnd
+          })}
+        >
+          {t(`navigation.${key}`)}
+        </NavLink>
+      );
+    }
   );
 
-  const subpageKey: SubpageKey = subinfo || 'home';
+  const subpageKey: SubpageKey = subinfo || modalSubpage || 'home';
 
   const subComponent = subComponents[subpageKey];
 
@@ -420,18 +447,24 @@ const SystemProfile = () => {
           className="padding-0 border-0 bg-primary-lighter"
         >
           <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
-            <Grid className="grid-container">
-              <BreadcrumbBar
-                variant="wrap"
-                className="bg-transparent padding-0"
-              >
-                <Breadcrumb>
-                  <span>&larr; </span>
-                  <BreadcrumbLink asCustom={RouterLink} to="/systems">
-                    <span>{t('singleSystem.summary.back')}</span>
-                  </BreadcrumbLink>
-                </Breadcrumb>
-              </BreadcrumbBar>
+            <Grid
+              className={classnames('grid-container', {
+                'maxw-none': modal
+              })}
+            >
+              {!modal && (
+                <BreadcrumbBar
+                  variant="wrap"
+                  className="bg-transparent padding-0"
+                >
+                  <Breadcrumb>
+                    <span>&larr; </span>
+                    <BreadcrumbLink asCustom={RouterLink} to="/systems">
+                      <span>{t('singleSystem.summary.back')}</span>
+                    </BreadcrumbLink>
+                  </Breadcrumb>
+                </BreadcrumbBar>
+              )}
 
               <PageHeading className="margin-top-2">
                 <IconBookmark size={4} className="text-primary" />{' '}
@@ -562,13 +595,15 @@ const SystemProfile = () => {
         </SummaryBox>
 
         <SystemSubNav
-          subinfo={subinfo}
+          subinfo={subpageKey}
           system={systemProfileData}
           systemProfileHiddenFields={flags.systemProfileHiddenFields}
+          modal={modal}
+          setModalSubpage={setModalSubpage}
         />
 
         <SectionWrapper className="margin-top-5 margin-bottom-5">
-          <GridContainer>
+          <GridContainer className={classnames({ 'maxw-none': modal })}>
             <Grid row gap>
               {!isMobile && (
                 <Grid
@@ -577,6 +612,17 @@ const SystemProfile = () => {
                 >
                   {/* Side navigation for single system */}
                   <SideNav items={subNavigationLinks} />
+                  {/* Setting a ref here to reference the grid width for the fixed side nav */}
+                  {modal && (
+                    <>
+                      <div className="top-divider margin-top-4" />
+                      <PointsOfContactSidebar
+                        subpageKey={subpageKey}
+                        system={systemProfileData}
+                        systemId={systemId}
+                      />
+                    </>
+                  )}
                 </Grid>
               )}
 
@@ -585,25 +631,29 @@ const SystemProfile = () => {
                   <GridContainer className="padding-left-0 padding-right-0">
                     <Grid row gap>
                       {/* Central component */}
-                      <Grid desktop={{ col: 8 }}>{subComponent.component}</Grid>
+                      <Grid desktop={{ col: modal ? 12 : 8 }}>
+                        {subComponent.component}
+                      </Grid>
 
                       {/* Contact info sidebar */}
-                      <Grid
-                        desktop={{ col: 4 }}
-                        className={classnames({
-                          'sticky-nav': !isMobile
-                        })}
-                      >
-                        {/* Setting a ref here to reference the grid width for the fixed side nav */}
-                        <div className="side-divider">
-                          <div className="top-divider" />
-                          <PointsOfContactSidebar
-                            subpageKey={subpageKey}
-                            system={systemProfileData}
-                            systemId={systemId}
-                          />
-                        </div>
-                      </Grid>
+                      {!modal && (
+                        <Grid
+                          desktop={{ col: 4 }}
+                          className={classnames({
+                            'sticky-nav': !isMobile
+                          })}
+                        >
+                          {/* Setting a ref here to reference the grid width for the fixed side nav */}
+                          <div className="side-divider">
+                            <div className="top-divider" />
+                            <PointsOfContactSidebar
+                              subpageKey={subpageKey}
+                              system={systemProfileData}
+                              systemId={systemId}
+                            />
+                          </div>
+                        </Grid>
+                      )}
                     </Grid>
                   </GridContainer>
                 </div>

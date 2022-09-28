@@ -5,6 +5,8 @@ import { render, waitForElementToBeRemoved } from '@testing-library/react';
 
 import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
 
+import StartRequest from './StartRequest';
+import Steps from './Steps';
 import TechnicalAssistance from '.';
 
 describe('Technical Assistance (TRB) homepage', () => {
@@ -47,6 +49,25 @@ describe('Technical Assistance (TRB) homepage', () => {
 
     await waitForElementToBeRemoved(() => getByTestId('page-loading'));
 
+    expect(asFragment()).toMatchSnapshot();
+  });
+});
+
+describe('TRB Subview snapshots', () => {
+  it('matches NewRequest', () => {
+    const { asFragment } = render(
+      <MemoryRouter>
+        <StartRequest />
+      </MemoryRouter>
+    );
+    expect(asFragment()).toMatchSnapshot();
+  });
+  it('matches Steps', () => {
+    const { asFragment } = render(
+      <MemoryRouter>
+        <Steps />
+      </MemoryRouter>
+    );
     expect(asFragment()).toMatchSnapshot();
   });
 });

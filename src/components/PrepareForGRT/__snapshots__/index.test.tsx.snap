@@ -213,7 +213,7 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
         The following are important items to have with you at the GRT meeting:
       </div>
       <ul
-        class="list-style-none bullet-list line-height-body-5 padding-0"
+        class="list-style-middot-inner line-height-body-5"
       >
         <li>
           a copy of your Business Case
@@ -454,7 +454,7 @@ exports[`Prepare for GRT renders without crashing 1`] = `
         The following are important items to have with you at the GRT meeting:
       </div>
       <ul
-        class="list-style-none bullet-list line-height-body-5 padding-0"
+        class="list-style-middot-inner line-height-body-5"
       >
         <li>
           a copy of your Business Case

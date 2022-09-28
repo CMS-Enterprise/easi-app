@@ -28,15 +28,16 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		UserEUA:                bc.EUAUserID,
 		BusinessCaseID:         bc.ID.String(),
 		IntakeID:               pStr(bc.SystemIntakeID.String()),
-		ProjectName:            bc.ProjectName.Ptr(),
-		Requester:              bc.Requester.Ptr(),
+		ProjectName:            bc.ProjectName.ValueOrZero(), // will always have a value by the time a draft business case is submitted
+		Requester:              bc.Requester.ValueOrZero(),   // will always have a value by the time a draft business case is submitted
 		RequesterPhoneNumber:   bc.RequesterPhoneNumber.Ptr(),
-		BusinessOwner:          bc.BusinessOwner.Ptr(),
+		BusinessOwner:          bc.BusinessOwner.ValueOrZero(), // will always have a value by the time a draft business case is submitted
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
 		CurrentSolutionSummary: bc.CurrentSolutionSummary.Ptr(),
 		CmsBenefit:             bc.CMSBenefit.Ptr(),
 		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
 		SuccessIndicators:      bc.SuccessIndicators.Ptr(),
+		Status:                 string(bc.Status),
 
 		ArchivedAt: pStr(strDateTime(bc.ArchivedAt)),
 
@@ -61,7 +62,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.PreferredPros.Ptr(),
 		Cons:                    bc.PreferredCons.Ptr(),
 		CostSavings:             bc.PreferredCostSavings.Ptr(),
-		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
+		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
 	}
 
 	// TODO: do we need to check if alternative a and b are filled out?
@@ -82,7 +83,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.AlternativeAPros.Ptr(),
 		Cons:                    bc.AlternativeACons.Ptr(),
 		CostSavings:             bc.AlternativeACostSavings.Ptr(),
-		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
+		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
 	}
 
 	// Alternative b (optional)
@@ -100,17 +101,17 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 		Pros:                    bc.AlternativeBPros.Ptr(),
 		Cons:                    bc.AlternativeBCons.Ptr(),
 		CostSavings:             bc.AlternativeBCostSavings.Ptr(),
-		LifecycleCostLines:      []*intakemodels.EASILifecycleCost{},
+		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
 	}
 
 	// Add lifecycle cost lines to business solutions
 	bcID := bc.ID.String()
 
 	for _, line := range bc.LifecycleCostLines {
-		lc := &intakemodels.EASILifecycleCost{
-			ID:       pStr(bcID),
-			Solution: pStr(string(line.Solution)),
-			Year:     pStr(string(line.Year)),
+		lc := intakemodels.EASILifecycleCost{
+			ID:       bcID,
+			Solution: string(line.Solution),
+			Year:     string(line.Year),
 		}
 
 		phase := ""

@@ -18,7 +18,6 @@ import { useQuery } from '@apollo/client';
 import { Button, Table } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import GlobalClientFilter from 'components/TableFilter';
@@ -114,12 +113,12 @@ function Homepage() {
   }
 
   return (
-    <MainContent className="technical-assistance grid-container">
+    <div>
       <PageHeading>{t('heading')}</PageHeading>
 
       <UswdsReactLink
-        to={`${url}/request-type`}
-        className="usa-button"
+        to={`${url}/start`}
+        className="usa-button margin-bottom-5"
         variant="unstyled"
       >
         {t('nextStep')}
@@ -215,7 +214,7 @@ function Homepage() {
           {currentTableSortDescription(headerGroups[0])}
         </div>
       </div>
-    </MainContent>
+    </div>
   );
 }
 
