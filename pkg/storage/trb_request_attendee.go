@@ -39,6 +39,7 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, attendee *models.T
 		)
 		RETURNING
 			id,
+			eua_user_id,
 			role,
 			component,
 			trb_request_id,
@@ -77,6 +78,7 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 		WHERE id = :id
 		RETURNING
 			id,
+			eua_user_id,
 			role,
 			component,
 			trb_request_id,
