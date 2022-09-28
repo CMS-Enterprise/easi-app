@@ -117,6 +117,11 @@ function Homepage() {
     usePagination
   );
 
+  // Temp fix for `globalFilterCellText` to work with `page` rows
+  // The filter function requires all rows to be prepped so that
+  // `Column.Cell` is available during filtering
+  rows.map(row => prepareRow(row));
+
   if (loading) {
     return <PageLoading />;
   }
@@ -183,9 +188,8 @@ function Homepage() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {/* todo using the correct `page` rows will break the global filter */}
-            {rows.map(row => {
-              prepareRow(row);
+            {page.map(row => {
+              // prepareRow(row); // Temp prepare all rows before render out, until fixed
               return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell, index) => {
