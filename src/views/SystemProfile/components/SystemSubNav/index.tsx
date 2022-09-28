@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
-import { IconExpandLess, IconExpandMore } from '@trussworks/react-uswds';
+import {
+  Button,
+  IconExpandLess,
+  IconExpandMore
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import { SystemProfileData } from 'types/systemProfile';
+import { SubpageKey, SystemProfileData } from 'types/systemProfile';
 
 import sideNavItems from '..';
 
@@ -15,12 +19,16 @@ type SystemSubNavProps = {
   subinfo: string;
   system: SystemProfileData;
   systemProfileHiddenFields: boolean;
+  modal?: boolean;
+  setModalSubpage?: (key: SubpageKey) => void;
 };
 
 const SystemSubNav = ({
   subinfo,
   system,
-  systemProfileHiddenFields
+  systemProfileHiddenFields,
+  modal,
+  setModalSubpage
 }: SystemSubNavProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
@@ -66,18 +74,35 @@ const SystemSubNav = ({
                     )[key].groupEnd
                   })}
                 >
-                  <NavLink
-                    to={
-                      sideNavItems(system, systemProfileHiddenFields)[key].route
-                    }
-                    key={key}
-                    className={classnames({
-                      'subNav--current': key === subinfo
-                    })}
-                    onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-                  >
-                    {t(`navigation.${key}`)}
-                  </NavLink>
+                  {modal && setModalSubpage ? (
+                    <Button
+                      className={classnames({
+                        'subNav--current': key === subinfo
+                      })}
+                      type="button"
+                      onClick={() => {
+                        setModalSubpage(key as SubpageKey);
+                        setIsAccordionOpen(!isAccordionOpen);
+                      }}
+                      unstyled
+                    >
+                      {t(`navigation.${key}`)}
+                    </Button>
+                  ) : (
+                    <NavLink
+                      to={
+                        sideNavItems(system, systemProfileHiddenFields)[key]
+                          .route
+                      }
+                      key={key}
+                      className={classnames({
+                        'subNav--current': key === subinfo
+                      })}
+                      onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+                    >
+                      {t(`navigation.${key}`)}
+                    </NavLink>
+                  )}
                 </li>
               )
             )}
