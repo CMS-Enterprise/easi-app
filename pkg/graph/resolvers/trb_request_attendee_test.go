@@ -28,14 +28,14 @@ func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
 
 		createdAttendee.Role = models.PersonRoleCloudNavigator
 		createdAttendee.ModifiedBy = &anonEua
-		updatedAttendee, err := UpdateTRBRequestAttendee(ctx, s.testConfigs.Store, &attendee)
+		updatedAttendee, err := UpdateTRBRequestAttendee(ctx, s.testConfigs.Store, createdAttendee)
 		s.NoError(err)
 		s.EqualValues(updatedAttendee.Role, models.PersonRoleCloudNavigator)
 		s.EqualValues(updatedAttendee.ModifiedBy, &anonEua)
 
 		createdAttendee.Component = "The Citadel of Ricks"
 		createdAttendee.ModifiedBy = &anonEua
-		updatedAttendee, err = UpdateTRBRequestAttendee(ctx, s.testConfigs.Store, &attendee)
+		updatedAttendee, err = UpdateTRBRequestAttendee(ctx, s.testConfigs.Store, createdAttendee)
 		s.NoError(err)
 		s.EqualValues(updatedAttendee.Component, "The Citadel of Ricks")
 		s.EqualValues(updatedAttendee.ModifiedBy, &anonEua)
