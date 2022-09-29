@@ -16,6 +16,21 @@ enum RequestType {
 }
 
 """
+PersonRole is an enumeration of values for a person's role
+"""
+enum PersonRole {
+  PRODUCT_OWNER
+  SYSTEM_OWNER
+  SYSTEM_MAINTAINER
+  CONTRACT_OFFICE_RSREPRESENTATIVE
+  CLOUD_NAVIGATOR
+  PRIVACY_ADVISOR
+  CRA
+  OTHER
+  UNKNOWN
+}
+
+"""
 Represents a request being made with the EASi system
 """
 type Request {
@@ -1474,21 +1489,24 @@ input SendReportAProblemEmailInput {
   howSevereWasTheProblem: String!
 }
 
+"""
+Represents a request for support from the Technical Review Board (TRB)
+"""
 type TRBRequest {
-    id: UUID!
-    name: String!
-    archived: Boolean!
-    type: TRBRequestType!
-    status: TRBRequestStatus!
-
-    createdBy: String!
-    createdAt: Time!
-    modifiedBy: String
-    modifiedAt: Time
+  id: UUID!
+  name: String!
+  archived: Boolean!
+  type: TRBRequestType!
+  status: TRBRequestStatus!
+  attendees: [TRBRequestAttendee!]!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
 }
 
 """
-TRBRequestChanges represents the possible changes you can make to a trb request when updating it.
+TRBRequestChanges represents the possible changes you can make to a TRB request when updating it.
 Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
 https://gqlgen.com/reference/changesets/
 """
@@ -1497,6 +1515,40 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     archived: Boolean
     type: TRBRequestType
     status: TRBRequestStatus 
+}
+
+"""
+Represents an EUA user who is included as an attendee for a TRB request
+"""
+type TRBRequestAttendee {
+  id: UUID!
+  euaUserId: String!
+  trbRequestId: UUID!
+  component: String!
+  role: PersonRole!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+The data needed add a TRB request attendee to a TRB request
+"""
+input CreateTRBRequestAttendeeInput {
+  euaUserId: String!
+  trbRequestId: UUID!
+  component: String!
+  role: PersonRole!
+}
+
+"""
+Represents an EUA user who is included as an attendee for a TRB request
+"""
+input UpdateTRBRequestAttendeeInput {
+  id: UUID!
+  component: String!
+  role: PersonRole!
 }
 
 """
@@ -1606,10 +1658,11 @@ type Mutation {
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
-  
   createTRBRequest(requestType: TRBRequestType!): TRBRequest!
-  
   updateTRBRequest(id: UUID!, changes: TRBRequestChanges): TRBRequest!
+  createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
+  updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
+  deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
 }
 
 """
@@ -1639,8 +1692,9 @@ type Query {
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
-  trbRequestCollection(archived: Boolean! = false): [TRBRequest!]!
+  trbRequests(archived: Boolean! = false): [TRBRequest!]!
 }
+
 enum TRBRequestType {
   NEED_HELP
   BRAINSTORM
@@ -1652,6 +1706,7 @@ enum TRBRequestStatus {
   OPEN
   CLOSED
 }
+
 """
 UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
 """
@@ -1674,7 +1729,6 @@ directive @goModel(
   model: String
   models: [String!]
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
-
 
 """
 A user role associated with a job code

@@ -1,6 +1,6 @@
 package models
 
-//TRBRequest represents a TRB request object
+// TRBRequest represents a TRB request object
 type TRBRequest struct {
 	baseStruct
 	Name     string           `json:"name" db:"name"`
@@ -9,7 +9,7 @@ type TRBRequest struct {
 	Status   TRBRequestStatus `json:"status" db:"status"` //TODO should this be a type?
 }
 
-//NewTRBRequest returns a new trb request object
+// NewTRBRequest returns a new trb request object
 func NewTRBRequest(createdBy string) *TRBRequest {
 	return &TRBRequest{
 		Name:       "Draft",
@@ -21,7 +21,7 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 // TRBRequestType represents the types of TRBRequestType types.
 type TRBRequestType string
 
-//These are the options for TRBRequestType
+// These are the options for TRBRequestType
 const (
 	TRBTNeedHelp     TRBRequestType = "NEED_HELP"
 	TRBTBrainstorm   TRBRequestType = "BRAINSTORM"
@@ -32,7 +32,7 @@ const (
 // TRBRequestStatus represents the types of TRBRequestStatus types.
 type TRBRequestStatus string
 
-//These are the options for TRBRequestStatus
+// These are the options for TRBRequestStatus
 const (
 	TRBSOpen   TRBRequestStatus = "OPEN"
 	TRBSClosed TRBRequestStatus = "CLOSED"
