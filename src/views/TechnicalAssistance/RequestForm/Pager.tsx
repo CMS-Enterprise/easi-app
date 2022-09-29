@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconArrowBack } from '@trussworks/react-uswds';
+import { Button, IconArrowBack } from '@trussworks/react-uswds';
 import cx from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -10,14 +10,21 @@ type Props = {
   next?:
     | {
         text?: string;
-        url: string;
+        url?: string;
         disabled?: boolean;
-        style?: 'outline';
+        outline?: boolean;
+        submit?: boolean;
       }
     | false;
   saveExitDisabled?: boolean;
 };
 
+/**
+ * Next and back nav links for form step components.
+ * Also a save and exit button.
+ * The `next` button also has a `submit` option to render a form submit.
+ * See `formStepComponents` for example uses.
+ */
 export function Pager({ back, next, saveExitDisabled }: Props) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -35,18 +42,29 @@ export function Pager({ back, next, saveExitDisabled }: Props) {
             {back.text ?? t('button.back')}
           </UswdsReactLink>
         )}
-        {next && (
-          <UswdsReactLink
-            variant="unstyled"
-            className={cx('usa-button', {
-              'usa-button--outline': next.style === 'outline',
-              'usa-button--disabled': next.disabled
-            })}
-            to={next.url}
-          >
-            {next.text ?? t('button.next')}
-          </UswdsReactLink>
-        )}
+        {next && [
+          next.submit && (
+            <Button
+              type="submit"
+              outline={next.outline}
+              disabled={next.disabled}
+            >
+              {next.text ?? t('button.next')}
+            </Button>
+          ),
+          next.url && (
+            <UswdsReactLink
+              variant="unstyled"
+              className={cx('usa-button', {
+                'usa-button--outline': next.outline,
+                'usa-button--disabled': next.disabled
+              })}
+              to={next.url}
+            >
+              {next.text ?? t('button.next')}
+            </UswdsReactLink>
+          )
+        ]}
       </div>
       {!saveExitDisabled && (
         <div className="margin-top-2">

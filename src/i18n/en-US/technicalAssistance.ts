@@ -169,7 +169,54 @@ const technicalAssistance = {
   // Form step components
   //
   basic: {
-    labels: {}
+    labels: {
+      requestName: 'Request name',
+      requestComponent: 'Request component',
+      whatTechnicalAssistance: 'What do you need technical assistance with?',
+      doHaveSolution: 'Do you have a solution in mind already?',
+      describeSolution: 'Describe your proposed solution.',
+      whereInProcess: 'Where are you in your process?',
+      solutionDate:
+        'Does your solution have an expected start and/or end date?',
+      expectedStartDate: 'Expected start date',
+      expectedLiveDate: 'Expected go live date',
+      selectOitGroups:
+        'Select any other OIT groups that you have met with or collaborated with.',
+      whenMeet: 'When did you meet with them?',
+      whichGroups: 'Which other group(s)?'
+    },
+    hint: {
+      requestComponent:
+        'Let the TRB know which CMS component this request originates from.',
+      whatTechnicalAssistance:
+        'Describe the type of help you need from the TRB as well as the project purpose (the “why”) and objectives of your work, if applicable.',
+      whereInProcess:
+        'This helps the TRB provide the right type of support for your request.',
+      whenMeet:
+        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.'
+    },
+    options: {
+      select: 'Select',
+      yes: 'Yes',
+      no: 'No',
+      other: 'Other',
+      whereInProcess: {
+        idea: 'I have an idea and want to brainstorm',
+        contracting:
+          'Contracting work has started, but a contractor has not been selected',
+        developmentRecently: 'Development has recently started',
+        developmentSignificantly: 'Development is significantly underway',
+        system: 'The system is in Operation and Maintenance'
+      },
+      selectOitGroups: {
+        security: 'Security',
+        ea: 'Enterprise Architecture (EA)',
+        cloud: 'Cloud',
+        privacy: 'Privacy',
+        grbot: 'Governance Review Board (GRB) or Governance Review Team (GRT)'
+      }
+    },
+    allFieldsMandatory: 'All fields are mandatory'
   },
   subjectAreas: {},
   attendees: {
