@@ -36,7 +36,7 @@ const (
 	IntakeInputSchemaEASIActionVersion SchemaVersion = "EASIActionV01"
 
 	// IntakeInputSchemaEASIBizCaseVersion captures the current schema version for Business Cases
-	IntakeInputSchemaEASIBizCaseVersion SchemaVersion = "EASIBizCaseV04"
+	IntakeInputSchemaEASIBizCaseVersion SchemaVersion = "EASIBizCaseV03"
 
 	// IntakeInputSchemaEASIGrtFeedbackVersion captures the current schema version for GRT Feedback
 	IntakeInputSchemaEASIGrtFeedbackVersion SchemaVersion = "EASIGrtFeedbackV02"
