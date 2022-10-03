@@ -4,7 +4,7 @@ const technicalAssistance = {
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request',
-    taskList: 'Task List'
+    taskList: 'Task list'
   },
   // Common button text
   button: {
