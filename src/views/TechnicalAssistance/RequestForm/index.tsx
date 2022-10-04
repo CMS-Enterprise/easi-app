@@ -127,13 +127,13 @@ function RequestForm() {
           create({ variables: { requestType } }).then(res => {
             // Update the url with the request id
             if (res.data) {
-              history.push(`/trb/requests/${res.data.createTRBRequest.id}`);
+              history.replace(`/trb/requests/${res.data.createTRBRequest.id}`);
             }
           });
         }
       }
       // Redirect to the start if there's no request type
-      else history.push('/trb/start');
+      else history.replace('/trb/start');
     }
     // Fetch request data if not new
     else if (!request && !createResult.called && !getResult.called) {
@@ -144,7 +144,7 @@ function RequestForm() {
     else if (request) {
       // Check step param, redirect to the first step if invalid
       if (!step || !formSteps.includes(step)) {
-        history.push(`/trb/requests/${id}/${formSteps[0]}`);
+        history.replace(`/trb/requests/${id}/${formSteps[0]}`);
       }
     }
   }, [
