@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -12,6 +12,7 @@ import { FormStepComponentProps } from '.';
 function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
+  const history = useHistory();
 
   // Temp example vars to demo adding attendees
   const [numExample, setNumExample] = useState(0);
@@ -50,14 +51,21 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
           </div>
 
           <Pager
-            back={{ url: stepUrl.back }}
+            back={{
+              onClick: () => {
+                history.push(stepUrl.back);
+              }
+            }}
             next={{
-              url: stepUrl.next,
+              type: 'submit',
+              onClick: e => {
+                history.push(stepUrl.next);
+              },
               // Demo next button based on attendees
               ...(numExample === 0
                 ? {
                     text: t('attendees.continueWithoutAdding'),
-                    style: 'outline'
+                    outline: true
                   }
                 : {})
             }}

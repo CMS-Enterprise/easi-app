@@ -1,51 +1,57 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconArrowBack } from '@trussworks/react-uswds';
-import cx from 'classnames';
+import { Button, IconArrowBack } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 
+type PageButtonProps =
+  | {
+      text?: string;
+      disabled?: boolean;
+      outline?: boolean;
+      type?: 'button' | 'submit';
+      onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+    }
+  | false;
+
 type Props = {
-  back?: { text?: string; url?: string; disabled?: boolean } | false;
-  next?:
-    | {
-        text?: string;
-        url?: string;
-        disabled?: boolean;
-        style?: 'outline';
-      }
-    | false;
+  back?: PageButtonProps;
+  next?: PageButtonProps;
   saveExitDisabled?: boolean;
 };
 
+/**
+ * Common form step footer pager elements.
+ * Buttons default to type `button`.
+ * Button `text` has a default text fallback.
+ * The `back` button defaults to `outline` unless it's set.
+ * The save and exit option is wip.
+ */
 export function Pager({ back, next, saveExitDisabled }: Props) {
   const { t } = useTranslation('technicalAssistance');
 
   return (
     <div className="border-base-light border-top-1px">
       <div className="margin-top-2">
-        {back && typeof back.url === 'string' && (
-          <UswdsReactLink
-            variant="unstyled"
-            className={cx('usa-button usa-button--outline', {
-              'usa-button--disabled': back.disabled
-            })}
-            to={back.url}
+        {back && (
+          <Button
+            type={back.type ?? 'button'}
+            outline={'outline' in back ? back.outline : true}
+            disabled={back.disabled}
+            onClick={back.onClick}
           >
             {back.text ?? t('button.back')}
-          </UswdsReactLink>
+          </Button>
         )}
-        {next && typeof next.url === 'string' && (
-          <UswdsReactLink
-            variant="unstyled"
-            className={cx('usa-button', {
-              'usa-button--outline': next.style === 'outline',
-              'usa-button--disabled': next.disabled
-            })}
-            to={next.url}
+        {next && (
+          <Button
+            type={next.type ?? 'button'}
+            outline={next.outline}
+            disabled={next.disabled}
+            onClick={next.onClick}
           >
             {next.text ?? t('button.next')}
-          </UswdsReactLink>
+          </Button>
         )}
       </div>
       {!saveExitDisabled && (

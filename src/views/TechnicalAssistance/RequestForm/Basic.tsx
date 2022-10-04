@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
 function Basic({ request, stepUrl }: FormStepComponentProps) {
   const [done, setDone] = useState<boolean>(false);
+  const history = useHistory();
 
   return (
-    <>
+    <form
+      onSubmit={() => {
+        history.push(stepUrl.next);
+      }}
+    >
       {/* <label>Request name</label> */}
       <input
         type="text"
@@ -19,11 +25,11 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
 
       <Pager
         next={{
-          url: stepUrl.next,
+          type: 'submit',
           disabled: !done
         }}
       />
-    </>
+    </form>
   );
 }
 

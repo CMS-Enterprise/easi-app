@@ -11,7 +11,7 @@ type UswdsReactLinkProps = {
   rel?: 'noopener noreferrer';
   'data-testid'?: string;
   children: React.ReactNode | string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 };
 
 const UswdsReactLink = ({
