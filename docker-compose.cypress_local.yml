@@ -82,5 +82,6 @@ services:
     network_mode: 'service:easi_client'
     volumes:
       - ./cypress:/cypress
+      - ./minio_config.json:/root/.mc/config.json
     depends_on:
       - easi_client

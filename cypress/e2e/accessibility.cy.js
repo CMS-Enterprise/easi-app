@@ -75,7 +75,7 @@ describe('Accessibility Requests', () => {
     cy.contains('h1', 'Request 508 testing');
   });
 
-  it.only('adds and removes a document from a 508 request as the owner', () => {
+  it('adds and removes a document from a 508 request as the owner', () => {
     cy.localLogin({ name: 'CMSU' });
     cy.seedAccessibilityRequest({ euaUserID: 'CMSU', name: 'TACO' }).then(
       data => {
