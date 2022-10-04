@@ -17,7 +17,7 @@ import './index.scss';
 
 export interface FormHeaderProps {
   step: number;
-  topElement?: JSX.Element;
+  breadcrumbs?: JSX.Element;
 }
 
 type RequestFormText = {
@@ -30,7 +30,7 @@ type RequestFormText = {
   }[];
 };
 
-function FormHeader({ step, topElement }: FormHeaderProps) {
+function FormStepHeader({ step, breadcrumbs }: FormHeaderProps) {
   const { t } = useTranslation('technicalAssistance');
   const text = t<RequestFormText>('requestForm', {
     returnObjects: true
@@ -45,7 +45,7 @@ function FormHeader({ step, topElement }: FormHeaderProps) {
         <GridContainer>
           <Grid row>
             <Grid col>
-              {topElement}
+              {breadcrumbs}
 
               <PageHeading className="margin-bottom-0">
                 {text.heading}
@@ -103,4 +103,4 @@ function FormHeader({ step, topElement }: FormHeaderProps) {
   );
 }
 
-export default FormHeader;
+export default FormStepHeader;

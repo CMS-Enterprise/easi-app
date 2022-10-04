@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Basic({ request, step }: FormStepComponentProps) {
+function Basic({ request, stepUrl }: FormStepComponentProps) {
   const [done, setDone] = useState<boolean>(false);
 
   return (
@@ -19,7 +19,7 @@ function Basic({ request, step }: FormStepComponentProps) {
 
       <Pager
         next={{
-          url: `/trb/requests/${request.id}/${step + 1}`,
+          url: stepUrl.next,
           disabled: !done
         }}
       />

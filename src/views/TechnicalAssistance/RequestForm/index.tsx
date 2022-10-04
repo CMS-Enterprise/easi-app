@@ -31,23 +31,38 @@ import Attendees from './Attendees';
 import Basic from './Basic';
 import Check from './Check';
 import Documents from './Documents';
-import FormHeader from './FormHeader';
+import Done from './Done';
+import FormStepHeader from './FormStepHeader';
 import SubjectAreas from './SubjectAreas';
 
 export interface FormStepComponentProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
-  step: number;
+  stepUrl: {
+    current: string;
+    next: string;
+    back: string;
+  };
+  breadcrumbs?: JSX.Element;
 }
 
-/** Form view components for each form request step */
-const formStepComponents: ((props: FormStepComponentProps) => JSX.Element)[] = [
-  Basic,
-  SubjectAreas,
-  Attendees,
-  Documents,
-  Check
-];
+/** Form view components with step url slugs for each form request step */
+export const formStepComponents: Readonly<
+  {
+    component: (props: FormStepComponentProps) => JSX.Element;
+    step: string;
+  }[]
+> = [
+  { component: Basic, step: 'basic' },
+  { component: SubjectAreas, step: 'subject' },
+  { component: Attendees, step: 'attendees' },
+  { component: Documents, step: 'documents' },
+  { component: Check, step: 'check' },
+  { component: Done, step: 'done' }
+] as const;
+
+/** Mapped form step slugs from `formStepComponents` */
+const formSteps = formStepComponents.map(f => f.step);
 
 /**
  * This is a component base for the TRB request form.
@@ -63,8 +78,11 @@ function RequestForm() {
   const requestType = location.state?.requestType as TRBRequestType;
 
   const { id, step, view } = useParams<{
+    /** Request id */
     id: string;
+    /** Form step slug */
     step?: string;
+    /** Form step subview */
     view?: string;
   }>();
 
@@ -124,9 +142,9 @@ function RequestForm() {
     // Get or create request was successful
     // Continue any other effects with request data
     else if (request) {
-      // Check step param, redirect to step 1 if invalid
-      if (!step?.match(RegExp(`[1-${formStepComponents.length}]|(done)`))) {
-        history.push(`/trb/requests/${id}/1`);
+      // Check step param, redirect to the first step if invalid
+      if (!step || !formSteps.includes(step)) {
+        history.push(`/trb/requests/${id}/${formSteps[0]}`);
       }
     }
   }, [
@@ -158,25 +176,42 @@ function RequestForm() {
     return <PageLoading />;
   }
 
-  if (getResult.error || createResult.error) {
+  if (!step || getResult.error || createResult.error) {
     return <NotFoundPartial />;
   }
 
-  // If form steps completed
-  if (step === 'done') {
-    return <>Done</>;
-  }
+  const stepIdx = formSteps.indexOf(step);
+  const stepNum = stepIdx + 1;
 
-  const stepNum = Number(step);
-
-  const FormStepComponent = formStepComponents[stepNum - 1];
+  const FormStepComponent = formStepComponents[stepIdx].component;
 
   if (FormStepComponent && request) {
+    const formProps = {
+      request,
+      stepUrl: {
+        current: `/trb/requests/${request.id}/${formSteps[stepIdx]}`,
+        // No bounds checking on formSteps since invalid views are redirected earlier
+        // and bad urls can be ignored
+        next: `/trb/requests/${request.id}/${formSteps[stepIdx + 1]}`,
+        back: `/trb/requests/${request.id}/${formSteps[stepIdx - 1]}`
+      }
+    };
+
+    // `Done` does not use `FormStepHeader` and is handled seperately
+    if (step === 'done') {
+      return (
+        <FormStepComponent {...formProps} breadcrumbs={defaultBreadcrumbs} />
+      );
+    }
+
     return (
       <>
-        {!view && <FormHeader step={stepNum} topElement={defaultBreadcrumbs} />}
+        {!view && (
+          // Do not render the common header if a step subview is used
+          <FormStepHeader step={stepNum} breadcrumbs={defaultBreadcrumbs} />
+        )}
         <GridContainer className="width-full">
-          <FormStepComponent step={stepNum} request={request} />
+          <FormStepComponent {...formProps} />
         </GridContainer>
       </>
     );

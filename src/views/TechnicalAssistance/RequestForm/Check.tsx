@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Check({ request, step }: FormStepComponentProps) {
+function Check({ request, stepUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   return (
     <Pager
-      back={{ url: `/trb/requests/${request.id}/${step - 1}` }}
+      back={{ url: stepUrl.back }}
       next={{
-        url: `/trb/requests/${request.id}/done`,
+        url: stepUrl.next,
         text: t('check.submit')
       }}
     />

@@ -2,11 +2,11 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import FormHeader from '.';
+import FormStepHeader from '.';
 
 export default {
   title: 'TRB Form Header',
-  component: FormHeader,
+  component: FormStepHeader,
   argTypes: {
     step: {
       type: 'number',
@@ -14,11 +14,11 @@ export default {
       options: [1, 2, 3, 4, 5]
     }
   }
-} as ComponentMeta<typeof FormHeader>;
+} as ComponentMeta<typeof FormStepHeader>;
 
-const Template: ComponentStory<typeof FormHeader> = (args: any) => (
+const Template: ComponentStory<typeof FormStepHeader> = (args: any) => (
   <MemoryRouter>
-    <FormHeader {...args} />
+    <FormStepHeader {...args} />
   </MemoryRouter>
 );
 

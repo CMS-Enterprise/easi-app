@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Documents({ request, step }: FormStepComponentProps) {
+function Documents({ request, stepUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   return (
     <Pager
-      back={{ url: `/trb/requests/${request.id}/${step - 1}` }}
+      back={{ url: stepUrl.back }}
       next={{
-        url: `/trb/requests/${request.id}/${step + 1}`,
+        url: stepUrl.next,
         text: t('documents.continueWithoutAdding'),
         style: 'outline'
       }}
