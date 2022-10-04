@@ -14,4 +14,14 @@ fi
 # mc_commands=
 
 # docker-compose run --entrypoint="mc alias set local http://minio:9000 minioadmin minioadmin" minio_mc
-docker-compose run --entrypoint="mc tag set local$bucket_and_file av-status=$tag" minio_mc
+# docker-compose run --entrypoint="mc tag set local$bucket_and_file av-status=$tag" minio_mc
+
+# Check if docker-compose is installed
+if ! command -v docker-compose &> /dev/null
+then
+  # if it's not installed, we're running inside Cypress container, install and use mc binary
+  mc tag set "local$bucket_and_file" "av-status=$tag"
+else
+  # docker-compose exists, so we're running on host (presumably on a local machine, not CI), so use existing minio_mc service
+  docker-compose run --entrypoint="mc tag set local$bucket_and_file av-status=$tag" minio_mc
+fi
