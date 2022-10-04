@@ -36,6 +36,7 @@ export function Pager({ back, next, saveExitDisabled }: Props) {
         {back && (
           <Button
             type={back.type ?? 'button'}
+            className="margin-bottom-1 mobile-lg:margin-bottom-0"
             outline={'outline' in back ? back.outline : true}
             disabled={back.disabled}
             onClick={back.onClick}
