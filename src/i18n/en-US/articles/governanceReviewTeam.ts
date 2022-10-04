@@ -220,9 +220,9 @@ const governanceReviewTeam = {
       'Valerie Hartz',
       'Jaime Cadwell',
       'Alex Smith',
-      'Ann Rudolph',
-      'Kyle Miller',
-      'Leilani Fields'
+      'Leilani Fields',
+      'Ashley Marks',
+      'Leah Nguyen'
     ]
   }
 };
