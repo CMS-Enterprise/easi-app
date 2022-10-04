@@ -9,7 +9,7 @@ import { TRBRequestStatus } from "./../../types/graphql-global-types";
 // GraphQL query operation: GetTrbRequests
 // ====================================================
 
-export interface GetTrbRequests_trbRequestCollection {
+export interface GetTrbRequests_trbRequests {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
@@ -18,5 +18,5 @@ export interface GetTrbRequests_trbRequestCollection {
 }
 
 export interface GetTrbRequests {
-  trbRequestCollection: GetTrbRequests_trbRequestCollection[];
+  trbRequests: GetTrbRequests_trbRequests[];
 }

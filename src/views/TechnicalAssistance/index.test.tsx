@@ -22,7 +22,7 @@ describe('Technical Assistance (TRB) homepage', () => {
                 },
                 result: {
                   data: {
-                    trbRequestCollection: [
+                    trbRequests: [
                       {
                         id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
                         name: 'My excellent question',
