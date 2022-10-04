@@ -24,7 +24,8 @@ COPY cypress /cypress
 COPY cypress.config.ts /
 COPY tsconfig.json /
 COPY src /src
-COPY scripts/tag_minio_file /scripts/tag_minio_file
+# COPY scripts/tag_minio_file /scripts/tag_minio_file
+COPY scripts/tag_mc_minio_file /scripts/tag_mc_minio_file
 COPY scripts/seed_database /scripts/seed_database
 COPY --from=build /easi/bin/seed /build/seed
 
