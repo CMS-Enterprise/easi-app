@@ -2,8 +2,9 @@ import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { GridContainer } from '@trussworks/react-uswds';
+import { GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import CreateTrbRequestQuery from 'queries/CreateTrbRequestQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -25,6 +26,9 @@ import {
 import { TRBRequestType } from 'types/graphql-global-types';
 import { NotFoundPartial } from 'views/NotFound';
 
+import StepHeader, {
+  StepHeaderStepProps
+} from '../../../components/StepHeader';
 import Breadcrumbs from '../Breadcrumbs';
 
 import Attendees from './Attendees';
@@ -32,7 +36,6 @@ import Basic from './Basic';
 import Check from './Check';
 import Documents from './Documents';
 import Done from './Done';
-import FormStepHeader from './FormStepHeader';
 import SubjectAreas from './SubjectAreas';
 
 export interface FormStepComponentProps {
@@ -43,7 +46,7 @@ export interface FormStepComponentProps {
     next: string;
     back: string;
   };
-  breadcrumbs?: JSX.Element;
+  breadcrumbs?: React.ReactNode;
 }
 
 /** Form view components with step url slugs for each form request step */
@@ -63,6 +66,73 @@ export const formStepComponents: Readonly<
 
 /** Mapped form step slugs from `formStepComponents` */
 const formSteps = formStepComponents.map(f => f.step);
+
+type RequestFormText = {
+  heading: string;
+  description: string[];
+  steps: {
+    name: string;
+    description?: string;
+    longName?: string;
+  }[];
+};
+
+function Header({
+  step,
+  request,
+  breadcrumbs
+}: {
+  step: number;
+  // eslint-disable-next-line camelcase
+  request: CreateTrbRequest_createTRBRequest;
+  breadcrumbs: React.ReactNode;
+}) {
+  const { t } = useTranslation('technicalAssistance');
+  const history = useHistory();
+
+  const text = t<RequestFormText>('requestForm', {
+    returnObjects: true
+  });
+
+  const steps: StepHeaderStepProps[] = text.steps.map((stp, idx) => {
+    return {
+      key: stp.name,
+
+      // todo
+      // Handle links to completed steps only once there is more data to check against
+      onClick:
+        idx < step - 1
+          ? e => {
+              history.push(`/trb/requests/${request.id}/${formSteps[idx]}`);
+            }
+          : undefined,
+
+      label: (
+        <>
+          <span className="name">{stp.name}</span>
+          <span className="long">{stp.longName ?? stp.name}</span>
+        </>
+      ),
+      description: stp.description
+    };
+  });
+
+  return (
+    <StepHeader
+      heading={text.heading}
+      text={text.description[0]}
+      subText={text.description[1]}
+      step={step}
+      steps={steps}
+      breadcrumbBar={breadcrumbs}
+    >
+      <UswdsReactLink to="/trb">
+        <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+        {t('button.saveAndExit')}
+      </UswdsReactLink>
+    </StepHeader>
+  );
+}
 
 /**
  * This is a component base for the TRB request form.
@@ -208,7 +278,11 @@ function RequestForm() {
       <>
         {!view && (
           // Do not render the common header if a step subview is used
-          <FormStepHeader step={stepNum} breadcrumbs={defaultBreadcrumbs} />
+          <Header
+            step={stepNum}
+            breadcrumbs={defaultBreadcrumbs}
+            request={request}
+          />
         )}
         <GridContainer className="width-full">
           <FormStepComponent {...formProps} />

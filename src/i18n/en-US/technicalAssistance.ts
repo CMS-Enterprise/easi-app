@@ -171,7 +171,7 @@ const technicalAssistance = {
   basic: {
     labels: {}
   },
-  subjectAreas: {},
+  subject: {},
   attendees: {
     addAnAttendee: 'Add an attendee',
     addAttendee: 'Add attendee',
