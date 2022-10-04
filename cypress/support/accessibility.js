@@ -28,7 +28,8 @@ cy.accessibility = {
         const path = new URL(url).pathname;
 
         // Mark file as passing virus scan
-        cy.exec(`scripts/tag_minio_file ${path} CLEAN`);
+        // cy.exec(`scripts/tag_minio_file ${path} CLEAN`);
+        cy.exec(`scripts/tag_mc_minio_file ${path} CLEAN`);
       });
 
     cy.reload();
