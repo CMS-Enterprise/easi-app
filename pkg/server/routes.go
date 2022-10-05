@@ -394,7 +394,6 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					store.UpdateBusinessCase,
 					emailClient.SendBusinessCaseSubmissionEmail,
-					publisher.PublishBusinessCase,
 					models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED,
 				),
 				models.ActionTypeSUBMITFINALBIZCASE: services.NewSubmitBusinessCase(
@@ -406,7 +405,6 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					store.UpdateBusinessCase,
 					emailClient.SendBusinessCaseSubmissionEmail,
-					publisher.PublishBusinessCase,
 					models.SystemIntakeStatusBIZCASEFINALSUBMITTED,
 				), models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
 					serviceConfig,

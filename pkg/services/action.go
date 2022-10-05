@@ -165,7 +165,6 @@ func NewSubmitBusinessCase(
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
 	sendEmail func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
-	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
 	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -232,15 +231,6 @@ func NewSubmitBusinessCase(
 		err = sendEmail(ctx, businessCase.ProjectName.String, businessCase.SystemIntakeID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
-		}
-
-		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
-		// need to check intake.Status, *not* businessCase.SystemIntakeStatus - intake is what gets returned from calling updateIntake()
-		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
-			err = submitToCEDAR(ctx, *businessCase)
-			if err != nil {
-				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(err))
-			}
 		}
 
 		return nil
