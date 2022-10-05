@@ -29,7 +29,7 @@ https://github.com/microsoft/TypeScript/issues/50161
     filterValue: string
   ): Row<T>[] {
   ...
-  globalFilter: useMemo(() => globalFilterCellText<GetTrbRequests_trbRequestCollection>, []),
+  globalFilter: useMemo(() => globalFilterCellText<GetTrbRequests_trbRequests>, []),
   ...
 */
 export default function globalFilterCellText(

@@ -29,7 +29,7 @@ import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
 import {
   GetTrbRequests,
   // eslint-disable-next-line camelcase
-  GetTrbRequests_trbRequestCollection
+  GetTrbRequests_trbRequests
 } from 'queries/types/GetTrbRequests';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -48,10 +48,10 @@ function Homepage() {
     GetTrbRequestsQuery
   );
 
-  const trbRequests = data?.trbRequestCollection || [];
+  const trbRequests = data?.trbRequests || [];
 
   // eslint-disable-next-line camelcase
-  const columns = useMemo<Column<GetTrbRequests_trbRequestCollection>[]>(() => {
+  const columns = useMemo<Column<GetTrbRequests_trbRequests>[]>(() => {
     return [
       {
         Header: t<string>('table.header.requestName'),
@@ -60,7 +60,7 @@ function Homepage() {
           value,
           row
         }: // eslint-disable-next-line camelcase
-        CellProps<GetTrbRequests_trbRequestCollection, string>) => {
+        CellProps<GetTrbRequests_trbRequests, string>) => {
           return (
             <UswdsReactLink to={`/trb/requests/${row.original.id}`}>
               {value}
