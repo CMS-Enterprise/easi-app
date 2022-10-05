@@ -207,67 +207,32 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	saveAction := func(ctx context.Context, action *models.Action) error {
 		return nil
 	}
+	submitEmailCount := 0
+	sendSubmitEmail := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+		submitEmailCount++
+		return nil
+	}
 
 	s.Run("golden path submit Biz Case", func() {
-		submitEmailCount := 0
-		sendSubmitEmailMock := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			submitEmailCount++
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			saveAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailMock,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		s.Equal(0, submitEmailCount)
 
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.NoError(err)
 		s.Equal(1, submitEmailCount)
+
+		submitEmailCount = 0
 	})
 
 	s.Run("submit Biz Case sets the intake status to the value passed", func() {
-		submitEmailCount := 0
-		sendSubmitEmailMock := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			submitEmailCount++
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEFINALSUBMITTED
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			saveAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailMock,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		s.Equal(0, submitEmailCount)
 
 		err := submitBusinessCase(ctx, &intake, &action)
@@ -275,17 +240,11 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		s.NoError(err)
 		s.Equal(1, submitEmailCount)
 		s.Equal(intake.Status, status)
+
+		submitEmailCount = 0
 	})
 
 	s.Run("returns error from authorization if authorization fails", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
@@ -293,98 +252,39 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, authorizationError
 		}
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			failAuthorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			saveAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailStub,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, failAuthorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.Equal(authorizationError, err)
 	})
 
 	s.Run("returns unauthorized error if authorization denied", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
 		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			unauthorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			saveAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailStub,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, unauthorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 	})
 
 	s.Run("returns error if fails to save action", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
 		failCreateAction := func(ctx context.Context, action *models.Action) error {
 			return errors.New("error")
 		}
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			failCreateAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailStub,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, failCreateAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
 	s.Run("does not return error for validation if status is not biz case final", func() {
-		submitEmailCount := 0
-		sendSubmitEmailMock := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			submitEmailCount++
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusBIZCASEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
@@ -395,35 +295,16 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 				Model:   businessCase,
 			}
 		}
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			failValidation,
-			saveAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailMock,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, failValidation, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.NoError(err)
 		s.Equal(1, submitEmailCount)
+
+		submitEmailCount = 0
 	})
 
 	s.Run("returns error when status is biz case final and validation fails", func() {
-		submitEmailCount := 0
-		sendSubmitEmailMock := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			submitEmailCount++
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusBIZCASEFINALNEEDED}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEFINALSUBMITTED
@@ -437,18 +318,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		fetchOpenBusinessCase = func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 			return &models.BusinessCase{SystemIntakeStatus: intake.Status}, nil
 		}
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			failValidation,
-			saveAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailMock,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, failValidation, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.ValidationError{}, err)
@@ -456,133 +326,29 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	})
 
 	s.Run("returns query error if update intake fails", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
 		failUpdateIntake := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("update error")
 		}
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			saveAction,
-			failUpdateIntake,
-			updateBusinessCase,
-			sendSubmitEmailStub,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, saveAction, failUpdateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
 	s.Run("returns query error if update biz case fails", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			return nil
-		}
-
-		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
-			return nil
-		}
-
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
 		failUpdateBizCase := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("update error")
 		}
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			saveAction,
-			updateIntake,
-			failUpdateBizCase,
-			sendSubmitEmailStub,
-			submitToCEDARStub,
-			status,
-		)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, failUpdateBizCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
-	})
-
-	s.Run("Submits business case data to CEDAR when submitting draft business case", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			return nil
-		}
-
-		submitToCEDARCount := 0
-		submitToCEDARMock := func(ctx context.Context, bc models.BusinessCase) error {
-			submitToCEDARCount++
-			return nil
-		}
-
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
-		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
-
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			saveAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailStub,
-			submitToCEDARMock,
-			status,
-		)
-		s.Equal(0, submitToCEDARCount)
-
-		err := submitBusinessCase(ctx, &intake, &action)
-
-		s.NoError(err)
-		s.Equal(1, submitToCEDARCount)
-	})
-
-	s.Run("Error submitting business case data to CEDAR when submitting draft business case does not return overall error", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			return nil
-		}
-
-		failSubmitToCEDAR := func(ctx context.Context, bc models.BusinessCase) error {
-			return errors.New("Could not submit business case to CEDAR")
-		}
-
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
-		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
-
-		submitBusinessCase := NewSubmitBusinessCase(
-			serviceConfig,
-			authorize,
-			fetchOpenBusinessCase,
-			validateForSubmit,
-			saveAction,
-			updateIntake,
-			updateBusinessCase,
-			sendSubmitEmailStub,
-			failSubmitToCEDAR,
-			status,
-		)
-
-		err := submitBusinessCase(ctx, &intake, &action)
-
-		s.NoError(err)
 	})
 }
 
