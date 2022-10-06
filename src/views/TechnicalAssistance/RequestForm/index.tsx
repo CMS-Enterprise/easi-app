@@ -116,6 +116,7 @@ function Header({
 
         // todo
         // Handle links to completed steps only, once there is more data to check against
+        completed: idx < step - 1,
         onClick:
           request && idx < step - 1
             ? e => {

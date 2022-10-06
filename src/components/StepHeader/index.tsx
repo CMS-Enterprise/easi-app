@@ -16,6 +16,7 @@ export type StepHeaderStepProps = {
   key: string;
   label: React.ReactNode;
   description?: string;
+  completed?: boolean;
   onClick?: React.MouseEventHandler<HTMLLIElement>;
 };
 
@@ -90,12 +91,11 @@ function StepHeader({
             {steps.map((stp, idx) => {
               let status: StepIndicatorStepProps['status'];
               if (stepIdx === idx) status = 'current';
-              if (stepIdx > idx) status = 'complete';
+              else if (stp.completed) status = 'complete';
               return (
                 <StepIndicatorStep
                   key={stp.key}
                   status={status}
-                  // Handle clicks on completed steps
                   onClick={stp.onClick ? stp.onClick : undefined}
                   className={
                     stp.onClick ? 'usa-step-indicator__segment--clickable' : ''
