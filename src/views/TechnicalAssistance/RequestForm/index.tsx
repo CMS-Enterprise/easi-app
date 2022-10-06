@@ -1,9 +1,11 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { GridContainer } from '@trussworks/react-uswds';
+import { GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import CreateTrbRequestQuery from 'queries/CreateTrbRequestQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -25,29 +27,116 @@ import {
 import { TRBRequestType } from 'types/graphql-global-types';
 import { NotFoundPartial } from 'views/NotFound';
 
+import StepHeader from '../../../components/StepHeader';
 import Breadcrumbs from '../Breadcrumbs';
 
 import Attendees from './Attendees';
 import Basic from './Basic';
 import Check from './Check';
 import Documents from './Documents';
-import FormHeader from './FormHeader';
+import Done from './Done';
 import SubjectAreas from './SubjectAreas';
 
 export interface FormStepComponentProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
-  step: number;
+  stepUrl: {
+    current: string;
+    next: string;
+    back: string;
+  };
 }
 
-/** Form view components for each form request step */
-const formStepComponents: ((props: FormStepComponentProps) => JSX.Element)[] = [
-  Basic,
-  SubjectAreas,
-  Attendees,
-  Documents,
-  Check
-];
+/** Form view components with step url slugs for each form request step */
+export const formStepComponents: Readonly<
+  {
+    component: (props: FormStepComponentProps) => JSX.Element;
+    step: string;
+  }[]
+> = [
+  { component: Basic, step: 'basic' },
+  { component: SubjectAreas, step: 'subject' },
+  { component: Attendees, step: 'attendees' },
+  { component: Documents, step: 'documents' },
+  { component: Check, step: 'check' }
+] as const;
+
+/**
+ * Mapped form step slugs from `formStepComponents`.
+ * The last `done` slug is not a form step and is handled separately.
+ */
+const formStepSlugs = formStepComponents.map(f => f.step).concat('done');
+
+type RequestFormText = {
+  heading: string;
+  description: string[];
+  steps: {
+    name: string;
+    description?: string;
+    longName?: string;
+  }[];
+};
+
+/**
+ * Wrap StepHeader with TRB text.
+ */
+function Header({
+  step,
+  request,
+  breadcrumbBar
+}: {
+  step: number;
+  /** Unassigned request is used as a loading state toggle. */
+  // eslint-disable-next-line camelcase
+  request?: CreateTrbRequest_createTRBRequest;
+  breadcrumbBar: React.ReactNode;
+}) {
+  const history = useHistory();
+
+  const { t } = useTranslation('technicalAssistance');
+  const text = t<RequestFormText>('requestForm', {
+    returnObjects: true
+  });
+
+  return (
+    <StepHeader
+      heading={text.heading}
+      text={text.description[0]}
+      subText={text.description[1]}
+      step={step}
+      steps={text.steps.map((stp, idx) => ({
+        key: stp.name,
+        label: (
+          <>
+            <span className="name">{stp.name}</span>
+            <span className="long">{stp.longName ?? stp.name}</span>
+          </>
+        ),
+        description: stp.description,
+
+        // todo
+        // Handle links to completed steps only, once there is more data to check against
+        onClick:
+          request && idx < step - 1
+            ? e => {
+                history.push(
+                  `/trb/requests/${request.id}/${formStepSlugs[idx]}`
+                );
+              }
+            : undefined
+      }))}
+      hideSteps={!request}
+      breadcrumbBar={breadcrumbBar}
+    >
+      {request && (
+        <UswdsReactLink to="/trb">
+          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          {t('button.saveAndExit')}
+        </UswdsReactLink>
+      )}
+    </StepHeader>
+  );
+}
 
 /**
  * This is a component base for the TRB request form.
@@ -63,8 +152,11 @@ function RequestForm() {
   const requestType = location.state?.requestType as TRBRequestType;
 
   const { id, step, view } = useParams<{
+    /** Request id */
     id: string;
+    /** Form step slug from `formStepSlugs` */
     step?: string;
+    /** Form step subview */
     view?: string;
   }>();
 
@@ -81,23 +173,12 @@ function RequestForm() {
   //   UpdateTrbRequest,
   //   UpdateTrbRequestVariables
   // >(UpdateTrbRequestQuery);
-  // todo update, updateResult
 
   // Assign request data from the first available query response
   // Prioritize by latest type: update, get, create
   // eslint-disable-next-line camelcase
   const request: CreateTrbRequest_createTRBRequest | undefined =
     getResult.data?.trbRequest || createResult.data?.createTRBRequest;
-  // const data = useMemo(() => {
-  //   if (getResult.data) {
-  //     return getResult.data.trbRequest;
-  //   }
-  //   if (createResult.data) {
-  //     return createResult.data.createTRBRequest;
-  //   }
-  //   return undefined;
-  // }, [getResult, createResult]);
-  // console.log('data', request);
 
   useEffect(() => {
     // Create a new request if `id` is new and go to it
@@ -109,13 +190,13 @@ function RequestForm() {
           create({ variables: { requestType } }).then(res => {
             // Update the url with the request id
             if (res.data) {
-              history.push(`/trb/requests/${res.data.createTRBRequest.id}`);
+              history.replace(`/trb/requests/${res.data.createTRBRequest.id}`);
             }
           });
         }
       }
       // Redirect to the start if there's no request type
-      else history.push('/trb/start');
+      else history.replace('/trb/start');
     }
     // Fetch request data if not new
     else if (!request && !createResult.called && !getResult.called) {
@@ -124,9 +205,9 @@ function RequestForm() {
     // Get or create request was successful
     // Continue any other effects with request data
     else if (request) {
-      // Check step param, redirect to step 1 if invalid
-      if (!step?.match(RegExp(`[1-${formStepComponents.length}]|(done)`))) {
-        history.push(`/trb/requests/${id}/1`);
+      // Check step param, redirect to the first step if invalid
+      if (!step || !formStepSlugs.includes(step)) {
+        history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
       }
     }
   }, [
@@ -154,35 +235,58 @@ function RequestForm() {
     [t]
   );
 
-  if (getResult.loading || createResult.loading) {
-    return <PageLoading />;
+  if (!step) {
+    return null;
+  }
+
+  // `Done` has a different layout and is handled seperately
+  if (step === 'done') {
+    return <Done breadcrumbBar={defaultBreadcrumbs} />;
   }
 
   if (getResult.error || createResult.error) {
-    return <NotFoundPartial />;
-  }
-
-  // If form steps completed
-  if (step === 'done') {
-    return <>Done</>;
-  }
-
-  const stepNum = Number(step);
-
-  const FormStepComponent = formStepComponents[stepNum - 1];
-
-  if (FormStepComponent && request) {
     return (
-      <>
-        {!view && <FormHeader step={stepNum} topElement={defaultBreadcrumbs} />}
-        <GridContainer className="width-full">
-          <FormStepComponent step={stepNum} request={request} />
-        </GridContainer>
-      </>
+      <GridContainer className="width-full">
+        <NotFoundPartial />
+      </GridContainer>
     );
   }
 
-  return null;
+  const stepIdx = formStepSlugs.indexOf(step);
+  const stepNum = stepIdx + 1;
+
+  const FormStepComponent = formStepComponents[stepIdx].component;
+
+  const loading = getResult.loading || createResult.loading;
+
+  return (
+    <>
+      {!view && (
+        // Do not render the common header if a step subview is used
+        <Header
+          step={stepNum}
+          breadcrumbBar={defaultBreadcrumbs}
+          request={request}
+        />
+      )}
+      {request ? (
+        <GridContainer className="width-full">
+          <FormStepComponent
+            request={request}
+            stepUrl={{
+              current: `/trb/requests/${request.id}/${formStepSlugs[stepIdx]}`,
+              // No bounds checking on steps since invalid ones are redirected earlier
+              // and bad urls can be ignored
+              next: `/trb/requests/${request.id}/${formStepSlugs[stepIdx + 1]}`,
+              back: `/trb/requests/${request.id}/${formStepSlugs[stepIdx - 1]}`
+            }}
+          />
+        </GridContainer>
+      ) : (
+        loading && <PageLoading />
+      )}
+    </>
+  );
 }
 
 export default RequestForm;

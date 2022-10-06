@@ -1,29 +1,31 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, IconArrowBack } from '@trussworks/react-uswds';
-import cx from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 
+type PageButtonProps =
+  | {
+      text?: string;
+      disabled?: boolean;
+      outline?: boolean;
+      type?: 'button' | 'submit';
+      onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+    }
+  | false;
+
 type Props = {
-  back?: { text?: string; url: string; disabled?: boolean } | false;
-  next?:
-    | {
-        text?: string;
-        url?: string;
-        disabled?: boolean;
-        outline?: boolean;
-        submit?: boolean;
-      }
-    | false;
+  back?: PageButtonProps;
+  next?: PageButtonProps;
   saveExitDisabled?: boolean;
 };
 
 /**
- * Next and back nav links for form step components.
- * Also a save and exit button.
- * The `next` button also has a `submit` option to render a form submit.
- * See `formStepComponents` for example uses.
+ * Common form step footer pager elements.
+ * Buttons default to type `button`.
+ * Button `text` has a default text fallback.
+ * The `back` button defaults to `outline`.
+ * The save and exit option is wip.
  */
 export function Pager({ back, next, saveExitDisabled }: Props) {
   const { t } = useTranslation('technicalAssistance');
@@ -32,39 +34,26 @@ export function Pager({ back, next, saveExitDisabled }: Props) {
     <div className="border-base-light border-top-1px">
       <div className="margin-top-2">
         {back && (
-          <UswdsReactLink
-            variant="unstyled"
-            className={cx('usa-button usa-button--outline', {
-              'usa-button--disabled': back.disabled
-            })}
-            to={back.url}
+          <Button
+            type={back.type ?? 'button'}
+            className="margin-bottom-1 mobile-lg:margin-bottom-0"
+            outline={back.outline !== undefined ? back.outline : true}
+            disabled={back.disabled}
+            onClick={back.onClick}
           >
             {back.text ?? t('button.back')}
-          </UswdsReactLink>
+          </Button>
         )}
-        {next && [
-          next.submit && (
-            <Button
-              type="submit"
-              outline={next.outline}
-              disabled={next.disabled}
-            >
-              {next.text ?? t('button.next')}
-            </Button>
-          ),
-          next.url && (
-            <UswdsReactLink
-              variant="unstyled"
-              className={cx('usa-button', {
-                'usa-button--outline': next.outline,
-                'usa-button--disabled': next.disabled
-              })}
-              to={next.url}
-            >
-              {next.text ?? t('button.next')}
-            </UswdsReactLink>
-          )
-        ]}
+        {next && (
+          <Button
+            type={next.type ?? 'submit'}
+            outline={next.outline}
+            disabled={next.disabled}
+            onClick={next.onClick}
+          >
+            {next.text ?? t('button.next')}
+          </Button>
+        )}
       </div>
       {!saveExitDisabled && (
         <div className="margin-top-2">

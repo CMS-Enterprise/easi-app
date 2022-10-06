@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -9,9 +9,10 @@ import AttendeesList from './AttendeesList';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Attendees({ request, step }: FormStepComponentProps) {
+function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
+  const history = useHistory();
 
   // Temp example vars to demo adding attendees
   const [numExample, setNumExample] = useState(0);
@@ -19,10 +20,10 @@ function Attendees({ request, step }: FormStepComponentProps) {
   return (
     <div className="trb-attendees">
       <Switch>
-        <Route exact path={`${path}/attendees`}>
+        <Route exact path={`${path}/list`}>
           <AttendeesList
             request={request}
-            backToFormUrl={`/trb/requests/${request.id}/${step}`}
+            backToFormUrl={stepUrl.current}
             addExample={() => {
               setNumExample(numExample + 1);
             }}
@@ -35,7 +36,7 @@ function Attendees({ request, step }: FormStepComponentProps) {
             <UswdsReactLink
               variant="unstyled"
               className="usa-button"
-              to={`${url}/attendees`}
+              to={`${url}/list`}
             >
               {t('attendees.addAnAttendee')}
             </UswdsReactLink>
@@ -50,14 +51,20 @@ function Attendees({ request, step }: FormStepComponentProps) {
           </div>
 
           <Pager
-            back={{ url: `/trb/requests/${request.id}/${step - 1}` }}
+            back={{
+              onClick: () => {
+                history.push(stepUrl.back);
+              }
+            }}
             next={{
-              url: `/trb/requests/${request.id}/${step + 1}`,
+              onClick: e => {
+                history.push(stepUrl.next);
+              },
               // Demo next button based on attendees
               ...(numExample === 0
                 ? {
                     text: t('attendees.continueWithoutAdding'),
-                    style: 'outline'
+                    outline: true
                   }
                 : {})
             }}

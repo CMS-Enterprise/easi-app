@@ -4,7 +4,7 @@ const technicalAssistance = {
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request',
-    taskList: 'Task List'
+    taskList: 'Task list'
   },
   // Common button text
   button: {
@@ -218,7 +218,7 @@ const technicalAssistance = {
     },
     allFieldsMandatory: 'All fields are mandatory'
   },
-  subjectAreas: {},
+  subject: {},
   attendees: {
     addAnAttendee: 'Add an attendee',
     addAttendee: 'Add attendee',
@@ -232,6 +232,18 @@ const technicalAssistance = {
   },
   check: {
     submit: 'Submit request'
+  },
+  done: {
+    success: {
+      heading: 'Success!',
+      info:
+        'Your TRB Request has been submitted. you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
+    },
+    error: {
+      heading: 'Something went wrong.',
+      info:
+        'Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.'
+    }
   }
 };
 

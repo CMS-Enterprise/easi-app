@@ -458,7 +458,7 @@ export interface SystemIntakeRequesterWithComponentInput {
 }
 
 /**
- * TRBRequestChanges represents the possible changes you can make to a trb request when updating it.
+ * TRBRequestChanges represents the possible changes you can make to a TRB request when updating it.
  * Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
  * https: // gqlgen.com/reference/changesets/
  */

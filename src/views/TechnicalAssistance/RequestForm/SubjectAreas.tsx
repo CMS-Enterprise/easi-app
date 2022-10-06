@@ -1,13 +1,23 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function SubjectAreas({ request, step }: FormStepComponentProps) {
+function SubjectAreas({ request, stepUrl }: FormStepComponentProps) {
+  const history = useHistory();
   return (
     <Pager
-      back={{ url: `/trb/requests/${request.id}/${step - 1}` }}
-      next={{ url: `/trb/requests/${request.id}/${step + 1}` }}
+      back={{
+        onClick: () => {
+          history.push(stepUrl.back);
+        }
+      }}
+      next={{
+        onClick: () => {
+          history.push(stepUrl.next);
+        }
+      }}
     />
   );
 }

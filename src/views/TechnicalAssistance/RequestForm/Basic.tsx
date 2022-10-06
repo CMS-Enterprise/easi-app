@@ -22,7 +22,7 @@ import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivi
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Basic({ request, step }: FormStepComponentProps) {
+function Basic({ request, stepUrl }: FormStepComponentProps) {
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
 
@@ -39,7 +39,7 @@ function Basic({ request, step }: FormStepComponentProps) {
         <Form
           className="maxw-full"
           onSubmit={() => {
-            history.push(`/trb/requests/${request.id}/${step + 1}`);
+            history.push(stepUrl.next);
           }}
         >
           <Alert type="info" slim>
@@ -266,8 +266,7 @@ function Basic({ request, step }: FormStepComponentProps) {
 
           <Pager
             next={{
-              disabled: !done,
-              submit: true
+              disabled: !done
             }}
           />
         </Form>
