@@ -399,9 +399,19 @@ func dumpPayload() {
 	testData := makeTestData()
 
 	fmt.Println("Dumping business case data")
-	intakeObject := translation.TranslatableBusinessCase(*testData.businessCase)
-	dumpIntakeObject(&intakeObject, execDir)
+	businessCaseIntakeObject := translation.TranslatableBusinessCase(*testData.businessCase)
+	dumpIntakeObject(&businessCaseIntakeObject, execDir)
 	fmt.Println("Business case data dumped inside " + execDir + string(filepath.Separator))
+
+	fmt.Println("Dumping GRT feedback data")
+	feedbackIntakeObject := translation.TranslatableFeedback(*testData.feedback)
+	dumpIntakeObject(&feedbackIntakeObject, execDir)
+	fmt.Println("GRT feedback data dumped inside " + execDir + string(filepath.Separator))
+
+	fmt.Println("Dumping system intake data")
+	systemIntakeIntakeObject := translation.TranslatableSystemIntake(*testData.systemIntake)
+	dumpIntakeObject(&systemIntakeIntakeObject, execDir)
+	fmt.Println("System intake data dumped inside " + execDir + string(filepath.Separator))
 }
 
 var submitCmd = &cobra.Command{
