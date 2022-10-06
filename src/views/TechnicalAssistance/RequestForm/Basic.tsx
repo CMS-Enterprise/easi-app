@@ -25,7 +25,6 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
 
       <Pager
         next={{
-          type: 'submit',
           disabled: !done
         }}
       />

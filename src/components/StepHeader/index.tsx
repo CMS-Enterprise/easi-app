@@ -22,6 +22,7 @@ export type StepHeaderStepProps = {
 export interface StepHeaderProps {
   step: number;
   steps: StepHeaderStepProps[];
+  hideSteps?: boolean;
   breadcrumbBar?: React.ReactNode;
   heading: string;
   text?: string;
@@ -46,6 +47,7 @@ export interface StepHeaderProps {
 function StepHeader({
   step,
   steps,
+  hideSteps,
   breadcrumbBar,
   heading,
   text,
@@ -79,35 +81,39 @@ function StepHeader({
         </GridContainer>
       </div>
 
-      <GridContainer>
-        <StepIndicator
-          headingLevel="h4"
-          className="margin-top-4 margin-bottom-2"
-        >
-          {steps.map((stp, idx) => {
-            let status: StepIndicatorStepProps['status'];
-            if (stepIdx === idx) status = 'current';
-            if (stepIdx > idx) status = 'complete';
-            return (
-              <StepIndicatorStep
-                key={stp.key}
-                status={status}
-                // Handle clicks on completed steps
-                onClick={stp.onClick ? stp.onClick : undefined}
-                className={
-                  stp.onClick ? 'usa-step-indicator__segment--clickable' : ''
-                }
-                // `label` expects a string but can render jsx
-                label={(stp.label as unknown) as string}
-              />
-            );
-          })}
-        </StepIndicator>
+      {!hideSteps && (
+        <GridContainer>
+          <StepIndicator
+            headingLevel="h4"
+            className="margin-top-4 margin-bottom-2"
+          >
+            {steps.map((stp, idx) => {
+              let status: StepIndicatorStepProps['status'];
+              if (stepIdx === idx) status = 'current';
+              if (stepIdx > idx) status = 'complete';
+              return (
+                <StepIndicatorStep
+                  key={stp.key}
+                  status={status}
+                  // Handle clicks on completed steps
+                  onClick={stp.onClick ? stp.onClick : undefined}
+                  className={
+                    stp.onClick ? 'usa-step-indicator__segment--clickable' : ''
+                  }
+                  // `label` expects a string but can render jsx
+                  label={(stp.label as unknown) as string}
+                />
+              );
+            })}
+          </StepIndicator>
 
-        {stepDescription && (
-          <div className="line-height-body-5 text-light">{stepDescription}</div>
-        )}
-      </GridContainer>
+          {stepDescription && (
+            <div className="line-height-body-5 text-light">
+              {stepDescription}
+            </div>
+          )}
+        </GridContainer>
+      )}
     </div>
   );
 }

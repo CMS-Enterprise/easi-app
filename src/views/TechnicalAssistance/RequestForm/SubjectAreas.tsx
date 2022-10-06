@@ -14,7 +14,6 @@ function SubjectAreas({ request, stepUrl }: FormStepComponentProps) {
         }
       }}
       next={{
-        type: 'submit',
         onClick: () => {
           history.push(stepUrl.next);
         }

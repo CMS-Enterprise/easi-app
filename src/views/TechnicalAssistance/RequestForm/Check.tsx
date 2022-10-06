@@ -16,7 +16,6 @@ function Check({ request, stepUrl }: FormStepComponentProps) {
         }
       }}
       next={{
-        type: 'submit',
         onClick: () => {
           history.push(stepUrl.next);
         },

@@ -24,7 +24,7 @@ type Props = {
  * Common form step footer pager elements.
  * Buttons default to type `button`.
  * Button `text` has a default text fallback.
- * The `back` button defaults to `outline` unless it's set.
+ * The `back` button defaults to `outline`.
  * The save and exit option is wip.
  */
 export function Pager({ back, next, saveExitDisabled }: Props) {
@@ -37,7 +37,7 @@ export function Pager({ back, next, saveExitDisabled }: Props) {
           <Button
             type={back.type ?? 'button'}
             className="margin-bottom-1 mobile-lg:margin-bottom-0"
-            outline={'outline' in back ? back.outline : true}
+            outline={back.outline !== undefined ? back.outline : true}
             disabled={back.disabled}
             onClick={back.onClick}
           >
@@ -46,7 +46,7 @@ export function Pager({ back, next, saveExitDisabled }: Props) {
         )}
         {next && (
           <Button
-            type={next.type ?? 'button'}
+            type={next.type ?? 'submit'}
             outline={next.outline}
             disabled={next.disabled}
             onClick={next.onClick}

@@ -4,14 +4,12 @@ import { Grid, GridContainer } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 
-import { FormStepComponentProps } from '.';
-
 /**
  * The last form step for confirmation.
  * This component does not use `FormStepHeader` or `Pager` like
  * the other `FormStepComponent`s.
  */
-function Done({ request, breadcrumbs }: FormStepComponentProps) {
+function Done({ breadcrumbBar }: { breadcrumbBar: React.ReactNode }) {
   const { t } = useTranslation('technicalAssistance');
 
   return (
@@ -19,7 +17,7 @@ function Done({ request, breadcrumbs }: FormStepComponentProps) {
       <GridContainer>
         <Grid row>
           <Grid col>
-            {breadcrumbs}
+            {breadcrumbBar}
 
             <PageHeading className="margin-bottom-0">
               {t('done.success.heading')}

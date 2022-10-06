@@ -16,7 +16,6 @@ function Documents({ request, stepUrl }: FormStepComponentProps) {
         }
       }}
       next={{
-        type: 'submit',
         onClick: e => {
           history.push(stepUrl.next);
         },
