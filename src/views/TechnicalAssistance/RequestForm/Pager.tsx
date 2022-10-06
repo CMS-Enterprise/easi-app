@@ -18,6 +18,7 @@ type Props = {
   back?: PageButtonProps;
   next?: PageButtonProps;
   saveExitDisabled?: boolean;
+  className?: string;
 };
 
 /**
@@ -27,19 +28,19 @@ type Props = {
  * The `back` button defaults to `outline`.
  * The save and exit option is wip.
  */
-export function Pager({ back, next, saveExitDisabled }: Props) {
+export function Pager({ back, next, saveExitDisabled, className }: Props) {
   const { t } = useTranslation('technicalAssistance');
 
   return (
-    <div className="border-base-light border-top-1px">
+    <div className={`border-base-light border-top-1px ${className || ''}`}>
       <div className="margin-top-2">
         {back && (
           <Button
             type={back.type ?? 'button'}
-            className="margin-bottom-1 mobile-lg:margin-bottom-0"
             outline={back.outline !== undefined ? back.outline : true}
             disabled={back.disabled}
             onClick={back.onClick}
+            className="margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
           >
             {back.text ?? t('button.back')}
           </Button>
@@ -50,6 +51,7 @@ export function Pager({ back, next, saveExitDisabled }: Props) {
             outline={next.outline}
             disabled={next.disabled}
             onClick={next.onClick}
+            className="margin-top-0"
           >
             {next.text ?? t('button.next')}
           </Button>
