@@ -257,8 +257,7 @@ function RequestForm() {
 
   const FormStepComponent = formStepComponents[stepIdx].component;
 
-  // const loading = getResult.loading || createResult.loading;
-  const loading = true;
+  const loading = getResult.loading || createResult.loading;
 
   return (
     <>
