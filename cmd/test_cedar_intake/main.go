@@ -250,22 +250,26 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 		models.LifecycleCostPhaseOTHER,
 	}
 
-	costAmount := 1
+	increasingCost := 1
 
 	for _, solution := range possibleSolutions {
 		for _, year := range possibleYears {
 			for _, phase := range possiblePhases {
 				phase := phase
+
+				// make a copy, so when we increment costAmount, previously created lifecycleCost.Cost's don't point to the updated value
+				cost := increasingCost
+
 				lifecycleCost := models.EstimatedLifecycleCost{
 					ID:             uuid.New(),
 					BusinessCaseID: businessCase.ID,
 					Solution:       solution,
 					Year:           year,
 					Phase:          &phase,
-					Cost:           &costAmount,
+					Cost:           &cost,
 				}
 				businessCase.LifecycleCostLines = append(businessCase.LifecycleCostLines, lifecycleCost)
-				costAmount++
+				increasingCost++
 			}
 		}
 	}
