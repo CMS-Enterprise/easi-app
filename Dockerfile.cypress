@@ -15,13 +15,15 @@ COPY pkg ./pkg
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/seed ./cmd/seed
 
-FROM cypress/base:12.19.0
+FROM cypress/included:10.7.0
 
 # mc - minio client, used for tagging uploaded files
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
 
 COPY package.json /
-RUN npm install --dev --silent
+COPY yarn.lock /
+# use --production=false to include dev dependencies
+RUN yarn install --frozen-lockfile --production=false
 
 COPY cypress /cypress
 COPY cypress.config.ts /
