@@ -34,14 +34,14 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
   const [done, setDone] = useState<boolean>(true);
 
   return (
-    <Grid row className="trb-form-basic">
-      <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-        <Form
-          className="maxw-full"
-          onSubmit={() => {
-            history.push(stepUrl.next);
-          }}
-        >
+    <Form
+      className="trb-form-basic maxw-full"
+      onSubmit={() => {
+        history.push(stepUrl.next);
+      }}
+    >
+      <Grid row>
+        <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           <Alert type="info" slim>
             {t('basic.allFieldsMandatory')}
           </Alert>
@@ -263,15 +263,16 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
               </FormGroup>
             </Fieldset>
           </FormGroup>
-
-          <Pager
-            next={{
-              disabled: !done
-            }}
-          />
-        </Form>
+        </Grid>
       </Grid>
-    </Grid>
+
+      <Pager
+        className="margin-top-5"
+        next={{
+          disabled: !done
+        }}
+      />
+    </Form>
   );
 }
 
