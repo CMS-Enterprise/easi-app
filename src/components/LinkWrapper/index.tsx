@@ -11,6 +11,7 @@ type UswdsReactLinkProps = {
   rel?: 'noopener noreferrer';
   'data-testid'?: string;
   children: React.ReactNode | string;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 };
 
 const UswdsReactLink = ({
@@ -20,7 +21,8 @@ const UswdsReactLink = ({
   target,
   rel,
   'data-testid': datatestid,
-  children
+  children,
+  onClick
 }: UswdsReactLinkProps) => {
   return (
     <UswdsLink
@@ -31,6 +33,7 @@ const UswdsReactLink = ({
       variant={variant}
       asCustom={RouterLink}
       className={classnames(className)}
+      onClick={onClick}
     >
       {children}
     </UswdsLink>

@@ -1,15 +1,23 @@
 const technicalAssistance = {
   heading: 'Technical Assistance',
   nextStep: 'Start a new request',
+  // Misc breadcrumb items
+  breadcrumbs: {
+    startTrbRequest: 'Start a TRB Request',
+    taskList: 'Task list'
+  },
+  // Common button text
+  button: {
+    back: 'Back',
+    next: 'Next',
+    saveAndExit: 'Save and exit'
+  },
   table: {
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission date',
       status: 'Status'
     }
-  },
-  breadcrumbs: {
-    startTrbRequest: 'Start a TRB Request'
   },
   newRequest: {
     heading: 'Start a technical assistance request',
@@ -64,7 +72,6 @@ const technicalAssistance = {
   },
   steps: {
     heading: 'Get technical assistance',
-    problemWithSystem: 'I’m having a problem with my system',
     changeRequestType: 'Change request type',
     description:
       'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.',
@@ -128,6 +135,68 @@ const technicalAssistance = {
     ],
     back: 'Back',
     continue: 'Continue'
+  },
+  requestForm: {
+    heading: 'TRB Request',
+    description: [
+      'Tell the Technical Review Board (TRB) what type of technical support you need. The information you provide on this form helps the TRB understand context around your request in order to offer more targeted help.',
+      'After submitting this form, you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
+    ],
+    steps: [
+      { name: 'Basic request details' },
+      {
+        name: 'Subject areas',
+        description:
+          'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.'
+      },
+      {
+        name: 'Attendees',
+        description:
+          'As the primary requester, please add your CMS component and role on the project. You may also add the names and contact information for any additional individuals who should be present at the IT Tech Lounge or other meetings.'
+      },
+      {
+        name: 'Supporting documents',
+        description:
+          'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.'
+      },
+      {
+        name: 'Check and submit',
+        longName: 'Check your answers and submit your TRB Request'
+      }
+    ]
+  },
+  //
+  // Form step components
+  //
+  basic: {
+    labels: {}
+  },
+  subject: {},
+  attendees: {
+    addAnAttendee: 'Add an attendee',
+    addAttendee: 'Add attendee',
+    remove: 'Remove',
+    cancel: 'Cancel',
+    continueWithoutAdding: 'Continue without adding attendees',
+    dontAddAndReturn: 'Don’t add and return to previous page'
+  },
+  documents: {
+    continueWithoutAdding: 'Continue without adding documents'
+  },
+  check: {
+    submit: 'Submit request'
+  },
+  done: {
+    success: {
+      heading: 'Success!',
+      info:
+        'Your TRB Request has been submitted. you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
+    },
+    error: {
+      heading: 'Something went wrong.',
+      info:
+        'Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.'
+    }
   }
 };
 

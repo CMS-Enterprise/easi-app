@@ -6,6 +6,7 @@ import {
   CardFooter,
   CardGroup,
   CardHeader,
+  GridContainer,
   IconArrowBack,
   IconArrowForward
 } from '@trussworks/react-uswds';
@@ -13,10 +14,23 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 
+import Breadcrumbs from './Breadcrumbs';
+
+/**
+ * This component is the start of a new Trb Request.
+ * The user selects a request type, from `TRBRequestType`,
+ * which is set in location state as `requestType`.
+ */
 function StartRequest() {
   const { t } = useTranslation('technicalAssistance');
   return (
-    <div>
+    <GridContainer className="width-full">
+      <Breadcrumbs
+        items={[
+          { text: t('heading'), url: '/trb' },
+          { text: t('breadcrumbs.startTrbRequest') }
+        ]}
+      />
       <PageHeading className="margin-bottom-0">
         {t('newRequest.heading')}
       </PageHeading>
@@ -82,7 +96,8 @@ function StartRequest() {
             <UswdsReactLink
               to={{
                 pathname: '/trb/steps',
-                state: { requestType: 'Other' }
+                // Reuse a request type until there is one defined for "other"
+                state: { requestType: 'NEED_HELP' }
               }}
             >
               {t('newRequest.services.other')}
@@ -91,7 +106,7 @@ function StartRequest() {
           </li>
         </ul>
       </div>
-    </div>
+    </GridContainer>
   );
 }
 
