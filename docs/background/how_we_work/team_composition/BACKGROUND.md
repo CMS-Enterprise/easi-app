@@ -101,6 +101,7 @@ We have also identified a frontend lead and a backend lead who serve as resource
 - 2 backend engineers 
 - 2 frontend engineers
 - 1 backend lead
+
 The team has developed the MINT product for CMMI from the ground up. This application manages the payment model intake process. The team is building out the MVP of this product and currently working towards getting an ATO to be able to deploy it to production.
 
 #### Pronking Springboks (EASi Team)
