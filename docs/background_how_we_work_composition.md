@@ -56,24 +56,24 @@ The EASi System surfaces comprehensive system data for all CMS systems (over 150
 ## How we work 
 
 ### Team composition
-| Name                | Role                 | Company | Team                                                |
-|---------------------|----------------------|---------|-----------------------------------------------------|
-| Clay Benson         | Engineering Lead     | Oddball | Shared Leadership Team                              |
-| Jeff Dunn           | Product Manager      | Oddball | Shared Leadership Team                              |
-| Zoë Symon           | User Experience Lead | Oddball | Shared Leadership Team                              |
-| Bill Wanamaker      | Program Manager      | Oddball | Shared Leadership Team                              |
-| Azeez Salu          | DevOps Engineer      | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
-| Dylan Sprague       | Back End Engineer    | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
-| Jeremy Strang       | Back End Engineer    | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
-| Adam Suharja        | Front End Engineer   | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
-| Ashley Terstriep    | Front End Engineer   | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
-| Riley Anderson      | Back End Engineer    | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
-| Tom Brooks          | Back End Engineer    | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
-| Alfred Brown        | DevSecOps Engineer   | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
-| Natasha Huckleberry | UX Designer          | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
-| Patrick Segura      | Front End Lead       | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
-| Steven Wade         | Back End Lead        | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
-| Gary Zhao           | Front End Engineer   | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
+| Role                 | Company | Team                                                |
+|----------------------|---------|-----------------------------------------------------|
+| Engineering Lead     | Oddball | Shared Leadership Team                              |
+| Product Manager      | Oddball | Shared Leadership Team                              |
+| User Experience Lead | Oddball | Shared Leadership Team                              |
+| Program Manager      | Oddball | Shared Leadership Team                              |
+| DevOps Engineer      | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
+| Back End Engineer    | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
+| Back End Engineer    | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
+| Front End Engineer   | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
+| Front End Engineer   | Oddball | Low-key Glorious Porpoises: Scrum Team 1 (OIT EASi) |
+| Back End Engineer    | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
+| Back End Engineer    | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
+| DevSecOps Engineer   | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
+| UX Designer          | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
+| Front End Lead       | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
+| Back End Lead        | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
+| Front End Engineer   | Oddball | Pronking Springboks: Scrum Team 2 (CMMI MINT)       |
 
 
 ### Leadership Team
@@ -99,8 +99,10 @@ We have also identified a frontend lead and a backend lead who serve as resource
 
 - UX Designer
 - 2 backend engineers 
-- 2 frontend engineers
+- 1 frontend engineer
+- 1 frontend lead
 - 1 backend lead
+- 1 devops Engineer 
 
 The team has developed the MINT product for CMMI from the ground up. This application manages the payment model intake process. The team is building out the MVP of this product and currently working towards getting an ATO to be able to deploy it to production.
 
@@ -108,8 +110,7 @@ The team has developed the MINT product for CMMI from the ground up. This applic
 5 plus the leadership team
 
 - 2 backend engineers
-- 1 frontend engineer
-- 1 frontend lead
+- 2 frontend engineers
 - 1 devsecops engineer
 
 The team has been maintaining and building new functionality into the EASi application since the start of the program. The team meets with users to design new features, builds those features and supports them.
