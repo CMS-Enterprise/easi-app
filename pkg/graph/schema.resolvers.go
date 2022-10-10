@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/lib/pq"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"golang.org/x/sync/errgroup"
 
@@ -1908,6 +1909,46 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 	return resolvers.DeleteTRBRequestAttendee(ctx, r.store, id)
 }
 
+// CreateTRBRequestForm is the resolver for the createTRBRequestForm field.
+func (r *mutationResolver) CreateTRBRequestForm(ctx context.Context, input model.CreateTRBRequestFormInput) (*models.TRBRequestForm, error) {
+	collabGroups := make([]string, len(input.CollabGroups))
+	for _, cg := range input.CollabGroups {
+		collabGroups = append(collabGroups, string(cg))
+	}
+	return resolvers.CreateTRBRequestForm(ctx, r.store, &models.TRBRequestForm{
+		TRBRequestID:             input.TrbRequestID,
+		Component:                input.Component,
+		NeedsAssistanceWith:      input.NeedsAssistanceWith,
+		HasSolutionInMind:        input.HasSolutionInMind,
+		WhereInProcess:           input.WhereInProcess,
+		HasExpectedStartEndDates: input.HasExpectedStartEndDates,
+		CollabGroups:             pq.StringArray(collabGroups),
+	})
+}
+
+// UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
+func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input model.UpdateTRBRequestFormInput) (*models.TRBRequestForm, error) {
+	collabGroups := make([]string, len(input.CollabGroups))
+	for _, cg := range input.CollabGroups {
+		collabGroups = append(collabGroups, string(cg))
+	}
+	form := &models.TRBRequestForm{
+		TRBRequestID:             input.TrbRequestID,
+		Component:                input.Component,
+		NeedsAssistanceWith:      input.NeedsAssistanceWith,
+		HasSolutionInMind:        input.HasSolutionInMind,
+		WhereInProcess:           input.WhereInProcess,
+		HasExpectedStartEndDates: input.HasExpectedStartEndDates,
+		CollabGroups:             pq.StringArray(collabGroups),
+	}
+	return resolvers.UpdateTRBRequestForm(ctx, r.store, form)
+}
+
+// DeleteTRBRequestForm is the resolver for the deleteTRBRequestForm field.
+func (r *mutationResolver) DeleteTRBRequestForm(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
+	return resolvers.DeleteTRBRequestForm(ctx, r.store, trbRequestID)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2645,6 +2686,17 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
+// Form is the resolver for the form field.
+func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
+	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+}
+
+// CollabGroups is the resolver for the collabGroups field.
+func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error) {
+	collabGroups := models.ConvertEnums[models.TRBCollabGroupOption](obj.CollabGroups)
+	return collabGroups, nil
+}
+
 // Email is the resolver for the email field.
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return string(obj.Email), nil
@@ -2719,6 +2771,11 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 // TRBRequest returns generated.TRBRequestResolver implementation.
 func (r *Resolver) TRBRequest() generated.TRBRequestResolver { return &tRBRequestResolver{r} }
 
+// TRBRequestForm returns generated.TRBRequestFormResolver implementation.
+func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
+	return &tRBRequestFormResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2739,4 +2796,5 @@ type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
+type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

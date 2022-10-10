@@ -1,6 +1,9 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"github.com/lib/pq"
+)
 
 // TRBWhereInProcessOption is an enumeration of possible responses to the "where are you in the
 // process" question on the TRB request form
@@ -29,17 +32,6 @@ const (
 	TRBWhereInProcessOptionUnknown TRBWhereInProcessOption = "UNKNOWN"
 )
 
-// TRBRequestForm represents the data entered into the TRB request form
-type TRBRequestForm struct {
-	baseStruct
-	TRBRequestID             uuid.UUID               `json:"trbRequestId" db:"trb_request_id"`
-	Component                string                  `json:"component" db:"component"`
-	NeedsAssistanceWith      string                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
-	HasSolutionInMind        bool                    `json:"hasSolutionInMind" db:"has_solutionin_mind"`
-	WhereInProcess           TRBWhereInProcessOption `json:"whereInProcess" db:"where_in_process"`
-	HasExpectedStartEndDates bool                    `json:"hasExpectedStartEndDates" db:"has_expected_start_end_dates"`
-}
-
 // TRBCollabGroupOption is an enumeration of the possible OIT collaboration groups that can be
 // selected for a TRB request form
 type TRBCollabGroupOption string
@@ -64,9 +56,14 @@ const (
 	TRBCollabGroupOptionOther TRBCollabGroupOption = "OTHER"
 )
 
-// TRBCollabGroup represents one OIT collaboration group that is selected in the TRB request form
-type TRBCollabGroup struct {
+// TRBRequestForm represents the data entered into the TRB request form
+type TRBRequestForm struct {
 	baseStruct
-	TRBRequestID uuid.UUID            `json:"trbRequestId" db:"trb_request_id"`
-	CollabGroup  TRBCollabGroupOption `json:"collabGroup" db:"collab_group"`
+	TRBRequestID             uuid.UUID               `json:"trbRequestId" db:"trb_request_id"`
+	Component                string                  `json:"component" db:"component"`
+	NeedsAssistanceWith      string                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
+	HasSolutionInMind        bool                    `json:"hasSolutionInMind" db:"has_solutionin_mind"`
+	WhereInProcess           TRBWhereInProcessOption `json:"whereInProcess" db:"where_in_process"`
+	HasExpectedStartEndDates bool                    `json:"hasExpectedStartEndDates" db:"has_expected_start_end_dates"`
+	CollabGroups             pq.StringArray          `json:"collabGroups" db:"collab_groups"`
 }

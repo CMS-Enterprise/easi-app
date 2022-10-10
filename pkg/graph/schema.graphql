@@ -1499,6 +1499,7 @@ type TRBRequest {
   type: TRBRequestType!
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
+  form: TRBRequestForm!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -1549,6 +1550,76 @@ input UpdateTRBRequestAttendeeInput {
   id: UUID!
   component: String!
   role: PersonRole!
+}
+
+"""
+Represents a lifecycle cost phase
+"""
+enum TRBWhereInProcessOption {
+  I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM
+  CONTRACTING_WORK_HAS_STARTED
+  DEVELOPMENT_HAS_RECENTLY_STARTED
+  DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY
+  THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE
+  OTHER
+  UNKNOWN
+}
+
+"""
+Represents a lifecycle cost phase
+"""
+enum TRBCollabGroupOption {
+  SECURITY
+  ENTERPRISE_ARCHITECTURE
+  CLOUD
+  PRIVACY_ADVISOR
+  GOVERNANCE_REVIEW_BOARD
+  OTHER
+}
+
+"""
+Represents an EUA user who is included as an form for a TRB request
+"""
+type TRBRequestForm {
+  id: UUID!
+  trbRequestId: UUID!
+  component: String
+  needsAssistanceWith: String
+  hasSolutionInMind: Boolean
+  whereInProcess: TRBWhereInProcessOption
+  hasExpectedStartEndDates: Boolean
+  collabGroups: [TRBCollabGroupOption!]!
+
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+The data needed add a TRB request form to a TRB request
+"""
+input CreateTRBRequestFormInput {
+  trbRequestId: UUID!
+  component: String!
+  needsAssistanceWith: String!
+  hasSolutionInMind: Boolean!
+  whereInProcess: TRBWhereInProcessOption!
+  hasExpectedStartEndDates: Boolean!
+  collabGroups: [TRBCollabGroupOption!]!
+}
+
+"""
+Represents an EUA user who is included as an form for a TRB request
+"""
+input UpdateTRBRequestFormInput {
+  trbRequestId: UUID!
+  component: String!
+  needsAssistanceWith: String!
+  hasSolutionInMind: Boolean!
+  whereInProcess: TRBWhereInProcessOption!
+  hasExpectedStartEndDates: Boolean!
+  collabGroups: [TRBCollabGroupOption!]!
 }
 
 """
@@ -1663,6 +1734,9 @@ type Mutation {
   createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
   updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
+  createTRBRequestForm(input: CreateTRBRequestFormInput!): TRBRequestForm!
+  updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
+  deleteTRBRequestForm(trbRequestId: UUID!): TRBRequestForm!
 }
 
 """

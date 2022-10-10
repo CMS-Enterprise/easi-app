@@ -224,6 +224,17 @@ type CreateTRBRequestAttendeeInput struct {
 	Role         models.PersonRole `json:"role"`
 }
 
+// The data needed add a TRB request form to a TRB request
+type CreateTRBRequestFormInput struct {
+	TrbRequestID             uuid.UUID                      `json:"trbRequestId"`
+	Component                string                         `json:"component"`
+	NeedsAssistanceWith      string                         `json:"needsAssistanceWith"`
+	HasSolutionInMind        bool                           `json:"hasSolutionInMind"`
+	WhereInProcess           models.TRBWhereInProcessOption `json:"whereInProcess"`
+	HasExpectedStartEndDates bool                           `json:"hasExpectedStartEndDates"`
+	CollabGroups             []models.TRBCollabGroupOption  `json:"collabGroups"`
+}
+
 // The input required to add a test date/score to a 508/accessibility request
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
@@ -682,6 +693,17 @@ type UpdateTRBRequestAttendeeInput struct {
 	ID        uuid.UUID         `json:"id"`
 	Component string            `json:"component"`
 	Role      models.PersonRole `json:"role"`
+}
+
+// Represents an EUA user who is included as an form for a TRB request
+type UpdateTRBRequestFormInput struct {
+	TrbRequestID             uuid.UUID                      `json:"trbRequestId"`
+	Component                string                         `json:"component"`
+	NeedsAssistanceWith      string                         `json:"needsAssistanceWith"`
+	HasSolutionInMind        bool                           `json:"hasSolutionInMind"`
+	WhereInProcess           models.TRBWhereInProcessOption `json:"whereInProcess"`
+	HasExpectedStartEndDates bool                           `json:"hasExpectedStartEndDates"`
+	CollabGroups             []models.TRBCollabGroupOption  `json:"collabGroups"`
 }
 
 // The input required to update a test date/score
