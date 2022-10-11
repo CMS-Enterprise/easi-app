@@ -16,6 +16,8 @@ import (
 // CreateTRBRequestForm creates a new TRB request form record in the database
 func (s *Store) CreateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
 	form.ID = uuid.New()
+	fmt.Println("\n\n~~~~~~~~~~~~~~~\n\n")
+	fmt.Println(form)
 	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_request_forms (
 			id,

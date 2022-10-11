@@ -1599,7 +1599,7 @@ type TRBRequestForm {
 """
 The data needed add a TRB request form to a TRB request
 """
-input CreateTRBRequestFormInput {
+input CreateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
   component: String!
   needsAssistanceWith: String!
@@ -1612,7 +1612,7 @@ input CreateTRBRequestFormInput {
 """
 Represents an EUA user who is included as an form for a TRB request
 """
-input UpdateTRBRequestFormInput {
+input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
   component: String!
   needsAssistanceWith: String!

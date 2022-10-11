@@ -1,4 +1,4 @@
-CREATE TYPE trb_where_in_process AS ENUM (
+CREATE TYPE trb_where_in_process_option AS ENUM (
     'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
     'CONTRACTING_WORK_HAS_STARTED',
     'DEVELOPMENT_HAS_RECENTLY_STARTED',
@@ -23,7 +23,7 @@ CREATE TABLE trb_request_forms (
     component TEXT NOT NULL,
     needs_assistance_with TEXT NOT NULL,
     has_solution_in_mind BOOLEAN,
-    where_in_process trb_where_in_process NOT NULL DEFAULT 'UNKNOWN',
+    where_in_process trb_where_in_process_option NOT NULL DEFAULT 'UNKNOWN',
     has_expected_start_end_dates BOOLEAN,
     collab_groups trb_collab_group_option[],
 

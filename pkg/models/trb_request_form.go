@@ -62,7 +62,7 @@ type TRBRequestForm struct {
 	TRBRequestID             uuid.UUID               `json:"trbRequestId" db:"trb_request_id"`
 	Component                string                  `json:"component" db:"component"`
 	NeedsAssistanceWith      string                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
-	HasSolutionInMind        bool                    `json:"hasSolutionInMind" db:"has_solutionin_mind"`
+	HasSolutionInMind        bool                    `json:"hasSolutionInMind" db:"has_solution_in_mind"`
 	WhereInProcess           TRBWhereInProcessOption `json:"whereInProcess" db:"where_in_process"`
 	HasExpectedStartEndDates bool                    `json:"hasExpectedStartEndDates" db:"has_expected_start_end_dates"`
 	CollabGroups             pq.StringArray          `json:"collabGroups" db:"collab_groups"`

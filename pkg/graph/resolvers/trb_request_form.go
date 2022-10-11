@@ -2,18 +2,36 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/applychanges"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
+// func CreateTRBRequestForm(ctx context.Context, store *storage.Store, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
+// 	form.CreatedBy = appcontext.Principal(ctx).ID()
+// 	createdForm, err := store.CreateTRBRequestForm(ctx, form)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return createdForm, nil
+// }
+
 // CreateTRBRequestForm creates a TRBRequestForm in the database
-func CreateTRBRequestForm(ctx context.Context, store *storage.Store, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
+func CreateTRBRequestForm(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBRequestForm, error) {
+	form := models.TRBRequestForm{}
+	fmt.Println("\n****1****\n")
+	err := applychanges.ApplyChanges(input, &form)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("\n****2****\n")
 	form.CreatedBy = appcontext.Principal(ctx).ID()
-	createdForm, err := store.CreateTRBRequestForm(ctx, form)
+	createdForm, err := store.CreateTRBRequestForm(ctx, &form)
 	if err != nil {
 		return nil, err
 	}
@@ -21,11 +39,14 @@ func CreateTRBRequestForm(ctx context.Context, store *storage.Store, form *model
 }
 
 // UpdateTRBRequestForm updates a TRBRequestForm record in the database
-func UpdateTRBRequestForm(ctx context.Context, store *storage.Store, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
-	modifiedBy := appcontext.Principal(ctx).ID()
-	form.ModifiedBy = &modifiedBy
+func UpdateTRBRequestForm(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBRequestForm, error) {
+	form := models.TRBRequestForm{}
+	err := ApplyChangesAndMetaData(input, &form, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
 
-	updatedForm, err := store.UpdateTRBRequestForm(ctx, form)
+	updatedForm, err := store.UpdateTRBRequestForm(ctx, &form)
 	if err != nil {
 		return nil, err
 	}

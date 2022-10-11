@@ -506,7 +506,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
 		CreateTRBRequest                                 func(childComplexity int, requestType models.TRBRequestType) int
 		CreateTRBRequestAttendee                         func(childComplexity int, input model.CreateTRBRequestAttendeeInput) int
-		CreateTRBRequestForm                             func(childComplexity int, input model.CreateTRBRequestFormInput) int
+		CreateTRBRequestForm                             func(childComplexity int, input map[string]interface{}) int
 		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
 		DeleteAccessibilityRequest                       func(childComplexity int, input model.DeleteAccessibilityRequestInput) int
 		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
@@ -535,7 +535,7 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTRBRequest                                 func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
 		UpdateTRBRequestAttendee                         func(childComplexity int, input model.UpdateTRBRequestAttendeeInput) int
-		UpdateTRBRequestForm                             func(childComplexity int, input model.UpdateTRBRequestFormInput) int
+		UpdateTRBRequestForm                             func(childComplexity int, input map[string]interface{}) int
 		UpdateTestDate                                   func(childComplexity int, input model.UpdateTestDateInput) int
 	}
 
@@ -1021,8 +1021,8 @@ type MutationResolver interface {
 	CreateTRBRequestAttendee(ctx context.Context, input model.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error)
 	UpdateTRBRequestAttendee(ctx context.Context, input model.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error)
 	DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error)
-	CreateTRBRequestForm(ctx context.Context, input model.CreateTRBRequestFormInput) (*models.TRBRequestForm, error)
-	UpdateTRBRequestForm(ctx context.Context, input model.UpdateTRBRequestFormInput) (*models.TRBRequestForm, error)
+	CreateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
+	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
 	DeleteTRBRequestForm(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error)
 }
 type QueryResolver interface {
@@ -3395,7 +3395,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateTRBRequestForm(childComplexity, args["input"].(model.CreateTRBRequestFormInput)), true
+		return e.complexity.Mutation.CreateTRBRequestForm(childComplexity, args["input"].(map[string]interface{})), true
 
 	case "Mutation.createTestDate":
 		if e.complexity.Mutation.CreateTestDate == nil {
@@ -3743,7 +3743,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBRequestForm(childComplexity, args["input"].(model.UpdateTRBRequestFormInput)), true
+		return e.complexity.Mutation.UpdateTRBRequestForm(childComplexity, args["input"].(map[string]interface{})), true
 
 	case "Mutation.updateTestDate":
 		if e.complexity.Mutation.UpdateTestDate == nil {
@@ -5217,7 +5217,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateSystemIntakeInput,
 		ec.unmarshalInputCreateSystemIntakeNoteInput,
 		ec.unmarshalInputCreateTRBRequestAttendeeInput,
-		ec.unmarshalInputCreateTRBRequestFormInput,
 		ec.unmarshalInputCreateTestDateInput,
 		ec.unmarshalInputDeleteAccessibilityRequestDocumentInput,
 		ec.unmarshalInputDeleteAccessibilityRequestInput,
@@ -5253,7 +5252,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
 		ec.unmarshalInputUpdateTRBRequestAttendeeInput,
-		ec.unmarshalInputUpdateTRBRequestFormInput,
 		ec.unmarshalInputUpdateTestDateInput,
 	)
 	first := true
@@ -6916,7 +6914,7 @@ type TRBRequestForm {
 """
 The data needed add a TRB request form to a TRB request
 """
-input CreateTRBRequestFormInput {
+input CreateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
   component: String!
   needsAssistanceWith: String!
@@ -6929,7 +6927,7 @@ input CreateTRBRequestFormInput {
 """
 Represents an EUA user who is included as an form for a TRB request
 """
-input UpdateTRBRequestFormInput {
+input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
   component: String!
   needsAssistanceWith: String!
@@ -7476,10 +7474,10 @@ func (ec *executionContext) field_Mutation_createTRBRequestAttendee_args(ctx con
 func (ec *executionContext) field_Mutation_createTRBRequestForm_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CreateTRBRequestFormInput
+	var arg0 map[string]interface{}
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateTRBRequestFormInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBRequestFormInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateTRBRequestFormInput2map(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7911,10 +7909,10 @@ func (ec *executionContext) field_Mutation_updateTRBRequestAttendee_args(ctx con
 func (ec *executionContext) field_Mutation_updateTRBRequestForm_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UpdateTRBRequestFormInput
+	var arg0 map[string]interface{}
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateTRBRequestFormInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestFormInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateTRBRequestFormInput2map(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -24757,7 +24755,7 @@ func (ec *executionContext) _Mutation_createTRBRequestForm(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateTRBRequestForm(rctx, fc.Args["input"].(model.CreateTRBRequestFormInput))
+		return ec.resolvers.Mutation().CreateTRBRequestForm(rctx, fc.Args["input"].(map[string]interface{}))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24838,7 +24836,7 @@ func (ec *executionContext) _Mutation_updateTRBRequestForm(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTRBRequestForm(rctx, fc.Args["input"].(model.UpdateTRBRequestFormInput))
+		return ec.resolvers.Mutation().UpdateTRBRequestForm(rctx, fc.Args["input"].(map[string]interface{}))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -37014,82 +37012,6 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestAttendeeInput(ctx cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateTRBRequestFormInput(ctx context.Context, obj interface{}) (model.CreateTRBRequestFormInput, error) {
-	var it model.CreateTRBRequestFormInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"trbRequestId", "component", "needsAssistanceWith", "hasSolutionInMind", "whereInProcess", "hasExpectedStartEndDates", "collabGroups"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "trbRequestId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-			it.TrbRequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "component":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
-			it.Component, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "needsAssistanceWith":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("needsAssistanceWith"))
-			it.NeedsAssistanceWith, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "hasSolutionInMind":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasSolutionInMind"))
-			it.HasSolutionInMind, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "whereInProcess":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whereInProcess"))
-			it.WhereInProcess, err = ec.unmarshalNTRBWhereInProcessOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "hasExpectedStartEndDates":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasExpectedStartEndDates"))
-			it.HasExpectedStartEndDates, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "collabGroups":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabGroups"))
-			it.CollabGroups, err = ec.unmarshalNTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOptionᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Context, obj interface{}) (model.CreateTestDateInput, error) {
 	var it model.CreateTestDateInput
 	asMap := map[string]interface{}{}
@@ -38677,82 +38599,6 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestAttendeeInput(ctx cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
 			it.Role, err = ec.unmarshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateTRBRequestFormInput(ctx context.Context, obj interface{}) (model.UpdateTRBRequestFormInput, error) {
-	var it model.UpdateTRBRequestFormInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"trbRequestId", "component", "needsAssistanceWith", "hasSolutionInMind", "whereInProcess", "hasExpectedStartEndDates", "collabGroups"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "trbRequestId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-			it.TrbRequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "component":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
-			it.Component, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "needsAssistanceWith":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("needsAssistanceWith"))
-			it.NeedsAssistanceWith, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "hasSolutionInMind":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasSolutionInMind"))
-			it.HasSolutionInMind, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "whereInProcess":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whereInProcess"))
-			it.WhereInProcess, err = ec.unmarshalNTRBWhereInProcessOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "hasExpectedStartEndDates":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasExpectedStartEndDates"))
-			it.HasExpectedStartEndDates, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "collabGroups":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabGroups"))
-			it.CollabGroups, err = ec.unmarshalNTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOptionᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -46694,9 +46540,8 @@ func (ec *executionContext) unmarshalNCreateTRBRequestAttendeeInput2githubᚗcom
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateTRBRequestFormInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBRequestFormInput(ctx context.Context, v interface{}) (model.CreateTRBRequestFormInput, error) {
-	res, err := ec.unmarshalInputCreateTRBRequestFormInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) unmarshalNCreateTRBRequestFormInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
+	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDateInput(ctx context.Context, v interface{}) (model.CreateTestDateInput, error) {
@@ -47998,9 +47843,8 @@ func (ec *executionContext) unmarshalNUpdateTRBRequestAttendeeInput2githubᚗcom
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateTRBRequestFormInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestFormInput(ctx context.Context, v interface{}) (model.UpdateTRBRequestFormInput, error) {
-	res, err := ec.unmarshalInputUpdateTRBRequestFormInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) unmarshalNUpdateTRBRequestFormInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
+	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) unmarshalNUpdateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDateInput(ctx context.Context, v interface{}) (model.UpdateTestDateInput, error) {
