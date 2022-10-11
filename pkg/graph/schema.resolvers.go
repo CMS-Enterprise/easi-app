@@ -2649,7 +2649,7 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
 	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	return userInfo, nil
 }
