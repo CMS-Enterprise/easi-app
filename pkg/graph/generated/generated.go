@@ -6696,7 +6696,7 @@ Represents an EUA user who is included as an attendee for a TRB request
 type TRBRequestAttendee {
   id: UUID!
   euaUserId: String! # Sort of duplicative, as this is also in UserInfo
-  userInfo: UserInfo!
+  userInfo: UserInfo
   trbRequestId: UUID!
   component: String!
   role: PersonRole!
@@ -32295,14 +32295,11 @@ func (ec *executionContext) _TRBRequestAttendee_userInfo(ctx context.Context, fi
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*models.UserInfo)
 	fc.Result = res
-	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+	return ec.marshalOUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestAttendee_userInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -43845,9 +43842,6 @@ func (ec *executionContext) _TRBRequestAttendee(ctx context.Context, sel ast.Sel
 					}
 				}()
 				res = ec._TRBRequestAttendee_userInfo(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -46595,10 +46589,6 @@ func (ec *executionContext) marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑ
 	return ec._UserError(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUserInfo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx context.Context, sel ast.SelectionSet, v models.UserInfo) graphql.Marshaler {
-	return ec._UserInfo(ctx, sel, &v)
-}
-
 func (ec *executionContext) marshalNUserInfo2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfoᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.UserInfo) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -47697,6 +47687,13 @@ func (ec *executionContext) marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasi
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalOUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx context.Context, sel ast.SelectionSet, v *models.UserInfo) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UserInfo(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

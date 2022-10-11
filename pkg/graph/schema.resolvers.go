@@ -2648,7 +2648,10 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
 	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
-	return userInfo, err
+	if err != nil {
+		return nil, nil
+	}
+	return userInfo, nil
 }
 
 // Email is the resolver for the email field.
