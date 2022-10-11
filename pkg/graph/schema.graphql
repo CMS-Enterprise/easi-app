@@ -1522,7 +1522,8 @@ Represents an EUA user who is included as an attendee for a TRB request
 """
 type TRBRequestAttendee {
   id: UUID!
-  euaUserId: String!
+  euaUserId: String! # Sort of duplicative, as this is also in UserInfo
+  userInfo: UserInfo!
   trbRequestId: UUID!
   component: String!
   role: PersonRole!
