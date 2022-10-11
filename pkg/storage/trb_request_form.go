@@ -27,7 +27,9 @@ func (s *Store) CreateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			has_solution_in_mind,
 			where_in_process,
 			has_expected_start_end_dates,
-			collab_groups
+			collab_groups,
+			created_by,
+			modified_by
 		)
 		VALUES (
 			:id,
@@ -37,7 +39,9 @@ func (s *Store) CreateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			:has_solution_in_mind,
 			:where_in_process,
 			:has_expected_start_end_dates,
-			:collab_groups
+			:collab_groups,
+			:created_by,
+			:modified_by
 		)
 		RETURNING *;`)
 

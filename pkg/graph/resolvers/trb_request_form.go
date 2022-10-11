@@ -25,6 +25,7 @@ import (
 func CreateTRBRequestForm(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBRequestForm, error) {
 	form := models.TRBRequestForm{}
 	fmt.Println("\n****1****\n")
+	input["trbRequestId"] = nil
 	err := applychanges.ApplyChanges(input, &form)
 	if err != nil {
 		return nil, err
