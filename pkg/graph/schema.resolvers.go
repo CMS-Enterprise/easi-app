@@ -2645,6 +2645,15 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
+// UserInfo is the resolver for the userInfo field.
+func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
+	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
+	if err != nil {
+		return nil, err
+	}
+	return userInfo, nil
+}
+
 // Email is the resolver for the email field.
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return string(obj.Email), nil
@@ -2719,6 +2728,11 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 // TRBRequest returns generated.TRBRequestResolver implementation.
 func (r *Resolver) TRBRequest() generated.TRBRequestResolver { return &tRBRequestResolver{r} }
 
+// TRBRequestAttendee returns generated.TRBRequestAttendeeResolver implementation.
+func (r *Resolver) TRBRequestAttendee() generated.TRBRequestAttendeeResolver {
+	return &tRBRequestAttendeeResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2739,4 +2753,5 @@ type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
+type tRBRequestAttendeeResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
