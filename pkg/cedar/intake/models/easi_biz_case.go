@@ -47,7 +47,6 @@ type EASIBusinessSolution struct {
 // EASILifecycleCost represents a lifecycle cost item submitted through EASi as part of a business case
 type EASILifecycleCost struct {
 	Cost     *string `json:"cost,omitempty" jsonschema:"description=Fiscal year cost,example=10000"`
-	ID       string  `json:"id" jsonschema:"description=Unique ID of this cost line created by concatenating business case ID + solution + phase + year,example=c7f3495e-f990-4483-a227-2bd9850f36ee_Preferred_Development_1"`
 	Phase    *string `json:"phase,omitempty" jsonschema:"description=Type of work to be performed (can be more then one),example=Development,example=Operations and Maintenance"`
 	Solution string  `json:"solution" jsonschema:"description=Which solution is this (preferred or alternatives),example=Preferred"`
 	Year     string  `json:"year" jsonschema:"description=Which fiscal year does this line pertain to,example=3"`

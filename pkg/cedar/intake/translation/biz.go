@@ -3,7 +3,6 @@ package translation
 import (
 	"encoding/json"
 	"strconv"
-	"strings"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
@@ -109,19 +108,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 	bcID := bc.ID.String()
 
 	for _, line := range bc.LifecycleCostLines {
-		// we can't use line.ID as a stable ID over time; those UUIDs get regenerated every time a business case is updated,
-		// pkg/storage/business_case.go UpdateBusinessCase() drops all lifecycle cost lines, then recreates them based on the updated business case
-		// instead, use a concatenation of (business case ID, solution, phase, year), which will always be unique and stable over time
-
-		phaseID := "UnknownPhase"
-		if line.Phase != nil {
-			phaseID = string(*line.Phase)
-		}
-
-		lcID := strings.Join([]string{bcID, string(line.Solution), phaseID, string(line.Year)}, "_")
-
 		lc := intakemodels.EASILifecycleCost{
-			ID:       lcID,
 			Solution: string(line.Solution),
 			Year:     string(line.Year),
 		}
