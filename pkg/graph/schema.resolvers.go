@@ -1910,37 +1910,11 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 
 // CreateTRBRequestForm is the resolver for the createTRBRequestForm field.
 func (r *mutationResolver) CreateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
-	// collabGroups := make([]string, len(input.CollabGroups))
-	// for _, cg := range input.CollabGroups {
-	// 	collabGroups = append(collabGroups, string(cg))
-	// }
-	// return resolvers.CreateTRBRequestForm(ctx, r.store, &models.TRBRequestForm{
-	// 	TRBRequestID:             input.TrbRequestID,
-	// 	Component:                input.Component,
-	// 	NeedsAssistanceWith:      input.NeedsAssistanceWith,
-	// 	HasSolutionInMind:        input.HasSolutionInMind,
-	// 	WhereInProcess:           input.WhereInProcess,
-	// 	HasExpectedStartEndDates: input.HasExpectedStartEndDates,
-	// 	CollabGroups:             pq.StringArray(collabGroups),
-	// })
 	return resolvers.CreateTRBRequestForm(ctx, r.store, input)
 }
 
 // UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
 func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
-	// collabGroups := make([]string, len(input.CollabGroups))
-	// for _, cg := range input.CollabGroups {
-	// 	collabGroups = append(collabGroups, string(cg))
-	// }
-	// form := &models.TRBRequestForm{
-	// 	TRBRequestID:             input.TrbRequestID,
-	// 	Component:                input.Component,
-	// 	NeedsAssistanceWith:      input.NeedsAssistanceWith,
-	// 	HasSolutionInMind:        input.HasSolutionInMind,
-	// 	WhereInProcess:           input.WhereInProcess,
-	// 	HasExpectedStartEndDates: input.HasExpectedStartEndDates,
-	// 	CollabGroups:             pq.StringArray(collabGroups),
-	// }
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
 }
 
