@@ -61,9 +61,11 @@ const ProvideGRTRecommendationsToGRB = () => {
     }
   };
 
-  const onSubmit = (values: ProvideGRTFeedbackForm) => {
+  const onSubmit = async (values: ProvideGRTFeedbackForm) => {
     const { grtFeedback, emailBody, notificationRecipients } = values;
-    mutate({
+
+    // GQL mutation to submit action
+    const response = await mutate({
       variables: {
         input: {
           emailBody,
@@ -73,9 +75,12 @@ const ProvideGRTRecommendationsToGRB = () => {
           notificationRecipients
         }
       }
-    }).then(() => {
-      history.push(`/governance-review-team/${systemId}/notes`);
     });
+
+    // If no errors, view intake action notes
+    if (!response.errors) {
+      history.push(`/governance-review-team/${systemId}/notes`);
+    }
   };
 
   // Wait for contacts to load before returning form

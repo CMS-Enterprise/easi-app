@@ -66,9 +66,10 @@ const RejectIntake = () => {
     }
   };
 
-  const onSubmit = (values: RejectIntakeForm) => {
+  const onSubmit = async (values: RejectIntakeForm) => {
     const { feedback, nextSteps, reason, notificationRecipients } = values;
 
+    // Mutation input
     const input = {
       feedback,
       intakeId: systemId,
@@ -78,13 +79,15 @@ const RejectIntake = () => {
       notificationRecipients
     };
 
-    mutate({
+    // GQL mutation to reject intake
+    const response = await mutate({
       variables: { input }
-    }).then(response => {
-      if (!response.errors) {
-        history.push(`/governance-review-team/${systemId}/notes`);
-      }
     });
+
+    // If no errors, view intake action notes
+    if (!response.errors) {
+      history.push(`/governance-review-team/${systemId}/notes`);
+    }
   };
 
   // Wait for contacts to load before returning form

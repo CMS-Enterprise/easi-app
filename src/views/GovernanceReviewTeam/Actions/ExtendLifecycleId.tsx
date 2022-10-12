@@ -113,7 +113,7 @@ const ExtendLifecycleId = ({
 
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const handleSubmit = (values: ExtendLCIDForm) => {
+  const handleSubmit = async (values: ExtendLCIDForm) => {
     const {
       expirationDateMonth = '',
       expirationDateDay = '',
@@ -123,12 +123,16 @@ const ExtendLifecycleId = ({
       newCostBaseline = '',
       notificationRecipients
     } = values;
+
+    // Get expiration date
     const expiresAt = DateTime.utc(
       parseInt(expirationDateYear, RADIX),
       parseInt(expirationDateMonth, RADIX),
       parseInt(expirationDateDay, RADIX)
     ).toISO();
-    extendLifecycleID({
+
+    // GQL mutation to extend lifecycle ID
+    const response = await extendLifecycleID({
       variables: {
         input: {
           id: systemId,
@@ -140,12 +144,13 @@ const ExtendLifecycleId = ({
           notificationRecipients
         }
       }
-    }).then(response => {
-      if (!response.errors) {
-        history.push(`/governance-review-team/${systemId}/notes`);
-        onSubmit();
-      }
     });
+
+    // If no errors, view intake action notes
+    if (!response.errors) {
+      history.push(`/governance-review-team/${systemId}/notes`);
+      onSubmit();
+    }
   };
 
   // Wait for contacts to load before returning form

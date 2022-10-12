@@ -84,7 +84,7 @@ const IssueLifecycleId = () => {
   // Wait for contacts to load before returning form
   if (loading) return null;
 
-  const onSubmit = (values: SubmitLifecycleIdForm) => {
+  const onSubmit = async (values: SubmitLifecycleIdForm) => {
     const {
       feedback,
       expirationDateMonth = '',
@@ -96,11 +96,14 @@ const IssueLifecycleId = () => {
       lifecycleId,
       notificationRecipients
     } = values;
+    // Expiration date
     const expiresAt = DateTime.utc(
       parseInt(expirationDateYear, RADIX),
       parseInt(expirationDateMonth, RADIX),
       parseInt(expirationDateDay, RADIX)
     );
+
+    // Mutation input
     const input = {
       intakeId: systemId,
       expiresAt: expiresAt.toISO(),
@@ -113,13 +116,15 @@ const IssueLifecycleId = () => {
       notificationRecipients
     };
 
-    mutate({
+    // GQL mutation to issue lifecycle ID
+    const response = await mutate({
       variables: { input }
-    }).then(response => {
-      if (!response.errors) {
-        history.push(`/governance-review-team/${systemId}/notes`);
-      }
     });
+
+    // If no errors, view intake action notes
+    if (!response.errors) {
+      history.push(`/governance-review-team/${systemId}/notes`);
+    }
   };
 
   return (

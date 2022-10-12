@@ -55,9 +55,11 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
 
   const { pathname } = useLocation();
 
-  const dispatchSave = (values: ActionForm) => {
+  const dispatchSave = async (values: ActionForm) => {
     const { feedback, notificationRecipients } = values;
-    mutate({
+
+    // GQL mutation to submit action
+    const response = await mutate({
       variables: {
         input: {
           intakeId: systemId,
@@ -66,11 +68,12 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
           notificationRecipients
         }
       }
-    }).then(response => {
-      if (!response.errors) {
-        history.push(`/governance-review-team/${systemId}/intake-request`);
-      }
     });
+
+    // If no errors, view intake request
+    if (!response.errors) {
+      history.push(`/governance-review-team/${systemId}/intake-request`);
+    }
   };
 
   const initialValues: ActionForm = {
