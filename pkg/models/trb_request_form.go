@@ -10,25 +10,27 @@ import (
 type TRBWhereInProcessOption string
 
 const (
-	// TRBWhereInProcessOptionIHaveAnIdeaAndWantToBrainstorm TODO
+	// TRBWhereInProcessOptionIHaveAnIdeaAndWantToBrainstorm represents selection indicating the "I
+	// have an idea and want to brainstorm" option
 	TRBWhereInProcessOptionIHaveAnIdeaAndWantToBrainstorm TRBWhereInProcessOption = "I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM"
 
-	// TRBWhereInProcessOptionContractingWorkHasStarted TODO
+	// TRBWhereInProcessOptionContractingWorkHasStarted  represents selection indicating the "contracting work has started" option
 	TRBWhereInProcessOptionContractingWorkHasStarted TRBWhereInProcessOption = "CONTRACTING_WORK_HAS_STARTED"
 
-	// TRBWhereInProcessOptionDevelopmentHasRecentlyStarted TODO
+	// TRBWhereInProcessOptionDevelopmentHasRecentlyStarted  represents selection indicating the "development has recently started" option
 	TRBWhereInProcessOptionDevelopmentHasRecentlyStarted TRBWhereInProcessOption = "DEVELOPMENT_HAS_RECENTLY_STARTED"
 
-	// TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway TODO
+	// TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway  represents selection indicating
+	// the "development is significantly underway" option
 	TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway TRBWhereInProcessOption = "DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY"
 
-	// TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance TODO
+	// TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance  represents selection indicating the "the system is in operation and maintenance" option
 	TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance TRBWhereInProcessOption = "THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE"
 
-	// TRBWhereInProcessOptionOther TODO
+	// TRBWhereInProcessOptionOther  represents selection indicating the "other" option
 	TRBWhereInProcessOptionOther TRBWhereInProcessOption = "OTHER"
 
-	// TRBWhereInProcessOptionUnknown TODO
+	// TRBWhereInProcessOptionUnknown  represents selection indicating the "unknown" option
 	TRBWhereInProcessOptionUnknown TRBWhereInProcessOption = "UNKNOWN"
 )
 

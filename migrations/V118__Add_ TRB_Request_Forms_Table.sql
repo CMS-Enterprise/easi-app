@@ -33,4 +33,4 @@ CREATE TABLE trb_request_forms (
     modified_at TIMESTAMP WITH TIME ZONE
 );
 
-CREATE UNIQUE INDEX trb_request_forms_unique_idx ON trb_request_forms(id, trb_request_id);
+CREATE UNIQUE INDEX trb_request_forms_unique_idx ON trb_request_forms(trb_request_id);
