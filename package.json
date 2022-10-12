@@ -125,7 +125,7 @@
     "@types/uuid": "^8.3.4",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2",
     "babel-loader": "8.1.0",
-    "cypress": "^10.7.0",
+    "cypress": "10.9.0",
     "cypress-otp": "^1.0.2",
     "enzyme": "^3.10.0",
     "eslint": "^7.11.0",
