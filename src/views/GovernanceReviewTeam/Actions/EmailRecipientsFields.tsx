@@ -260,15 +260,17 @@ export default ({
               buttonClassName="margin-top-105"
             >
               {/* Requester */}
-              <Recipient
-                contact={requester}
+              <CheckboxField
+                id={`${requester.euaUserId}-requester`}
+                name={`${requester.euaUserId}-requester`}
+                label={`${requester.commonName}, ${requester.component} (Requester)`}
+                value={requester.email}
+                onChange={e => updateRecipients(e.target.value)}
+                onBlur={() => null}
                 checked={recipients.regularRecipientEmails.includes(
                   requester.email
                 )}
-                updateRecipients={updateRecipients}
-                activeContact={activeContact}
-                setActiveContact={setActiveContact}
-                createContact={createContact}
+                disabled={!requester.email} // Disable if no email provided - only applies to test data
               />
               {/* IT Governance */}
               <CheckboxField

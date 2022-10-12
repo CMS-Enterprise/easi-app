@@ -399,27 +399,22 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                   id="EmailRecipients-ContactsList"
                 >
                   <div
-                    class="recipient-container"
-                    data-testid="recipient-Requester-SF13"
+                    class="easi-checkbox usa-checkbox"
                   >
-                    <div
-                      class="easi-checkbox usa-checkbox"
+                    <input
+                      checked=""
+                      class="usa-checkbox__input"
+                      id="SF13-requester"
+                      name="SF13-requester"
+                      type="checkbox"
+                      value="sf13@local.fake"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="SF13-requester"
                     >
-                      <input
-                        checked=""
-                        class="usa-checkbox__input"
-                        id="SF13-Requester"
-                        name="SF13-Requester"
-                        type="checkbox"
-                        value="sf13@local.fake"
-                      />
-                      <label
-                        class="usa-checkbox__label"
-                        for="SF13-Requester"
-                      >
-                        Jerry Seinfeld, Center for Medicaid and CHIP Services (Requester)
-                      </label>
-                    </div>
+                      Jerry Seinfeld, Center for Medicaid and CHIP Services (Requester)
+                    </label>
                   </div>
                   <div
                     class="easi-checkbox usa-checkbox"
