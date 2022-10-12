@@ -16,8 +16,6 @@ import (
 // CreateTRBRequestForm creates a new TRB request form record in the database
 func (s *Store) CreateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
 	form.ID = uuid.New()
-	fmt.Println("\n\n~~~~~~~~~~~~~~~\n\n")
-	fmt.Println(form)
 	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_request_forms (
 			id,
@@ -74,7 +72,7 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			has_solution_in_mind = :has_solution_in_mind,
 			where_in_process = :where_in_process,
 			has_expected_start_end_dates = :has_expected_start_end_dates,
-			collab_groups = :collab_groups
+			collab_groups = :collab_groups,
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
 		WHERE trb_request_id = :trb_request_id
@@ -108,11 +106,11 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 // matching the given TRB request ID
 func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
 	form := models.TRBRequestForm{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_forms WHERE trb_request_id=$1`)
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_forms WHERE trb_request_id=:trb_request_id`)
 	if err != nil {
 		return nil, err
 	}
-	arg := map[string]interface{}{"id": trbRequestID}
+	arg := map[string]interface{}{"trb_request_id": trbRequestID}
 	err = stmt.Get(&form, arg)
 
 	if err != nil {

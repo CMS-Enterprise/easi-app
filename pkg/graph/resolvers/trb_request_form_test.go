@@ -17,29 +17,50 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 	s.NoError(err)
 
 	s.Run("create/update/fetch TRB request forms", func() {
-		form := models.TRBRequestForm{
-			TRBRequestID: trbRequest.ID,
+		form := map[string]interface{}{
+			"trbRequestId":             trbRequest.ID,
+			"needsAssistanceWith":      "All the things",
+			"hasSolutionInMind":        false,
+			"whereInProcess":           models.TRBWhereInProcessOptionUnknown,
+			"hasExpectedStartEndDates": false,
+			"collabGroups": []models.TRBCollabGroupOption{
+				models.TRBCollabGroupOptionSecurity,
+				models.TRBCollabGroupOptionCloud,
+			},
+			"component": "Taco Cart",
+			"createdBy": anonEua,
 		}
-		form.CreatedBy = anonEua
-		createdForm, err := CreateTRBRequestForm(ctx, s.testConfigs.Store, &form)
+		createdForm, err := CreateTRBRequestForm(ctx, s.testConfigs.Store, form)
 		s.NoError(err)
+		s.EqualValues(createdForm.NeedsAssistanceWith, form["needsAssistanceWith"])
+		s.EqualValues(createdForm.HasSolutionInMind, form["hasSolutionInMind"])
+		s.EqualValues(createdForm.WhereInProcess, form["whereInProcess"])
+		s.EqualValues(createdForm.HasExpectedStartEndDates, form["hasExpectedStartEndDates"])
+		// s.EqualValues(createdForm.CollabGroups, form["collabGroups"])
 
-		// createdForm.Role = models.PersonRoleCloudNavigator
 		createdForm.ModifiedBy = &anonEua
-		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, createdForm)
+		formChanges := map[string]interface{}{
+			"trbRequestId":             trbRequest.ID,
+			"needsAssistanceWith":      "Some of the things",
+			"hasSolutionInMind":        true,
+			"whereInProcess":           models.TRBWhereInProcessOptionContractingWorkHasStarted,
+			"hasExpectedStartEndDates": true,
+			"collabGroups": []models.TRBCollabGroupOption{
+				models.TRBCollabGroupOptionSecurity,
+				models.TRBCollabGroupOptionCloud,
+				models.TRBCollabGroupOptionPrivacyAdvisor,
+			},
+			"component": "Taco Cart",
+		}
+		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, formChanges)
 		s.NoError(err)
-		// s.EqualValues(updatedForm.Role, models.PersonRoleCloudNavigator)
 		s.EqualValues(updatedForm.ModifiedBy, &anonEua)
+		s.EqualValues(createdForm.NeedsAssistanceWith, form["needsAssistanceWith"])
+		s.EqualValues(createdForm.HasSolutionInMind, form["hasSolutionInMind"])
+		s.EqualValues(createdForm.WhereInProcess, form["whereInProcess"])
+		s.EqualValues(createdForm.HasExpectedStartEndDates, form["hasExpectedStartEndDates"])
+		// s.EqualValues(createdForm.CollabGroups, form["collabGroups"])
 
-		createdForm.Component = "The Citadel of Ricks"
-		createdForm.ModifiedBy = &anonEua
-		updatedForm, err = UpdateTRBRequestForm(ctx, s.testConfigs.Store, createdForm)
-		s.NoError(err)
-		s.EqualValues(updatedForm.Component, "The Citadel of Ricks")
-		s.EqualValues(updatedForm.ModifiedBy, &anonEua)
-	})
-
-	s.Run("fetches TRB request forms", func() {
 		fetched, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
 		s.NoError(err)
 		s.NotNil(fetched)

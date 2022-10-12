@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 
@@ -12,25 +11,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-// func CreateTRBRequestForm(ctx context.Context, store *storage.Store, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
-// 	form.CreatedBy = appcontext.Principal(ctx).ID()
-// 	createdForm, err := store.CreateTRBRequestForm(ctx, form)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return createdForm, nil
-// }
-
 // CreateTRBRequestForm creates a TRBRequestForm in the database
 func CreateTRBRequestForm(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBRequestForm, error) {
 	form := models.TRBRequestForm{}
-	fmt.Println("\n****1****\n")
-	input["trbRequestId"] = nil
 	err := applychanges.ApplyChanges(input, &form)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("\n****2****\n")
 	form.CreatedBy = appcontext.Principal(ctx).ID()
 	createdForm, err := store.CreateTRBRequestForm(ctx, &form)
 	if err != nil {
