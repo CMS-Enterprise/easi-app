@@ -5,7 +5,7 @@ When discussing [EASI-1538](https://jiraent.cms.gov/browse/EASI-1538) with the C
 ## Considered Alternatives
 
 * Ensure that every entity submitted to CEDAR, even sub-entities, has a unique, stable ID.
-* Don't bother with creating and sending IDs for sub-entities; CEDAR and Alfabet can delete and regenerate the sub-entities when a top-level entity is updated.
+* Don't need to always create and send IDs for sub-entities; CEDAR and Alfabet can delete and regenerate the sub-entities when a top-level entity is updated.
 
 ## Decision Outcome
 
@@ -15,6 +15,6 @@ When discussing [EASI-1538](https://jiraent.cms.gov/browse/EASI-1538) with the C
 
 ### Create unique, stable ID for all entities submitted to CEDAR Intake, even sub-entities.
 
-* `+` Would always allow CEDAR and Alfabet to tie entities in their databases to unique entities within EASi.
-* `-` CEDAR would need more complicated logic in their mapping code to accommodate for which sub-entities to update when a top-level entity was updated.
+* `+` Would always allow CEDAR and Alfabet to tie sub-entities they store to unique entities in EASi's database.
+* `-` CEDAR would need more complicated logic in their mapping code to check for which sub-entities to update when a top-level entity was updated.
 * `-` Would require greater engineering work for us (both in generating unique IDs and possibly in reworking our data model(s)) without a clear benefit.
