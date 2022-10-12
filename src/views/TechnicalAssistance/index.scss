@@ -21,6 +21,7 @@
       .usa-label {
         max-width: none;
         .usa-hint {
+          display: block; /* line break between label and hint */
           font-weight: normal;
         }
       }
@@ -50,6 +51,7 @@
         }
       }
       */
+
     }
     /* Overrides */
     .usa-error-message {
