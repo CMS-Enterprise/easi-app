@@ -7,57 +7,35 @@ import (
 	"github.com/lib/pq"
 )
 
-// TRBWhereInProcessOption is an enumeration of possible responses to the "where are you in the
-// process" question on the TRB request form
+// TRBWhereInProcessOption is an enumeration of possible responses to the "Where are you in
+// your process?" question on the TRB request form
 type TRBWhereInProcessOption string
 
+// These are the individual options for the response to the "Where are you in your process?"
+// question on the TRB request form
 const (
-	// TRBWhereInProcessOptionIHaveAnIdeaAndWantToBrainstorm represents selection indicating the "I
-	// have an idea and want to brainstorm" option
-	TRBWhereInProcessOptionIHaveAnIdeaAndWantToBrainstorm TRBWhereInProcessOption = "I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM"
-
-	// TRBWhereInProcessOptionContractingWorkHasStarted  represents selection indicating the "contracting work has started" option
-	TRBWhereInProcessOptionContractingWorkHasStarted TRBWhereInProcessOption = "CONTRACTING_WORK_HAS_STARTED"
-
-	// TRBWhereInProcessOptionDevelopmentHasRecentlyStarted  represents selection indicating the "development has recently started" option
-	TRBWhereInProcessOptionDevelopmentHasRecentlyStarted TRBWhereInProcessOption = "DEVELOPMENT_HAS_RECENTLY_STARTED"
-
-	// TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway  represents selection indicating
-	// the "development is significantly underway" option
-	TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway TRBWhereInProcessOption = "DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY"
-
-	// TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance  represents selection indicating the "the system is in operation and maintenance" option
+	TRBWhereInProcessOptionIHaveAnIdeaAndWantToBrainstorm       TRBWhereInProcessOption = "I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM"
+	TRBWhereInProcessOptionContractingWorkHasStarted            TRBWhereInProcessOption = "CONTRACTING_WORK_HAS_STARTED"
+	TRBWhereInProcessOptionDevelopmentHasRecentlyStarted        TRBWhereInProcessOption = "DEVELOPMENT_HAS_RECENTLY_STARTED"
+	TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway   TRBWhereInProcessOption = "DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY"
 	TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance TRBWhereInProcessOption = "THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE"
-
-	// TRBWhereInProcessOptionOther  represents selection indicating the "other" option
-	TRBWhereInProcessOptionOther TRBWhereInProcessOption = "OTHER"
-
-	// TRBWhereInProcessOptionUnknown  represents selection indicating the "unknown" option
-	TRBWhereInProcessOptionUnknown TRBWhereInProcessOption = "UNKNOWN"
+	TRBWhereInProcessOptionOther                                TRBWhereInProcessOption = "OTHER"
+	TRBWhereInProcessOptionUnknown                              TRBWhereInProcessOption = "UNKNOWN"
 )
 
 // TRBCollabGroupOption is an enumeration of the possible OIT collaboration groups that can be
 // selected for a TRB request form
 type TRBCollabGroupOption string
 
+// These are the individual options for responses to the "Select any other OIT groups that you
+// have met with or collaborated with" on the TRB request form
 const (
-	// TRBCollabGroupOptionSecurity TODO
-	TRBCollabGroupOptionSecurity TRBCollabGroupOption = "SECURITY"
-
-	// TRBCollabGroupOptionEnterpriseArchitecture TODO
+	TRBCollabGroupOptionSecurity               TRBCollabGroupOption = "SECURITY"
 	TRBCollabGroupOptionEnterpriseArchitecture TRBCollabGroupOption = "ENTERPRISE_ARCHITECTURE"
-
-	// TRBCollabGroupOptionCloud TODO
-	TRBCollabGroupOptionCloud TRBCollabGroupOption = "CLOUD"
-
-	// TRBCollabGroupOptionPrivacyAdvisor TODO
-	TRBCollabGroupOptionPrivacyAdvisor TRBCollabGroupOption = "PRIVACY_ADVISOR"
-
-	// TRBCollabGroupOptionGovernanceReviewBoard TODO
-	TRBCollabGroupOptionGovernanceReviewBoard TRBCollabGroupOption = "GOVERNANCE_REVIEW_BOARD"
-
-	// TRBCollabGroupOptionOther TODO
-	TRBCollabGroupOptionOther TRBCollabGroupOption = "OTHER"
+	TRBCollabGroupOptionCloud                  TRBCollabGroupOption = "CLOUD"
+	TRBCollabGroupOptionPrivacyAdvisor         TRBCollabGroupOption = "PRIVACY_ADVISOR"
+	TRBCollabGroupOptionGovernanceReviewBoard  TRBCollabGroupOption = "GOVERNANCE_REVIEW_BOARD"
+	TRBCollabGroupOptionOther                  TRBCollabGroupOption = "OTHER"
 )
 
 // TRBRequestForm represents the data entered into the TRB request form
