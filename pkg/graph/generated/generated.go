@@ -6994,9 +6994,19 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   component: String!
   needsAssistanceWith: String!
   hasSolutionInMind: Boolean!
+  proposedSolutionDescription: String
   whereInProcess: TRBWhereInProcessOption!
   hasExpectedStartEndDates: Boolean!
+  expectedStartDate: Time
+  expectedEndDate: Time
   collabGroups: [TRBCollabGroupOption!]!
+  collabDateSecurity: Time
+  collabDateEnterpriseArchitecture: Time
+  collabDateCloud: Time
+  collabDatePrivacyAdvisor: Time
+  collabDateGovernanceReviewBoard: Time
+  collabDateOther: Time
+  collabGroupOtherDescription: String
 }
 
 """

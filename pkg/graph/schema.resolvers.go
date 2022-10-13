@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2653,22 +2652,27 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
-	panic(fmt.Errorf("not implemented"))
+	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
-	panic(fmt.Errorf("not implemented"))
+	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
+	if err != nil {
+		return nil, err
+	}
+	return userInfo, nil
 }
 
 // CollabGroups is the resolver for the collabGroups field.
 func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error) {
-	panic(fmt.Errorf("not implemented"))
+	collabGroups := models.ConvertEnums[models.TRBCollabGroupOption](obj.CollabGroups)
+	return collabGroups, nil
 }
 
 // Email is the resolver for the email field.
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return string(obj.Email), nil
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
