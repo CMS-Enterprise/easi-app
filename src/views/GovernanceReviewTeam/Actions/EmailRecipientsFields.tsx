@@ -33,16 +33,29 @@ type RecipientProps = {
   createContact: CreateContactType;
 };
 
+/**
+ * Individual recipient component with verify recipient form
+ */
 const Recipient = ({
+  /** Contact object */
   contact,
+  /** Whether contact is selected */
   checked,
+  /** Update notification recipients */
   updateRecipients,
+  /** Current active contact, set when adding or verifying */
   activeContact,
+  /** Set active contact when verifying */
   setActiveContact,
+  /** Create new system intake contact */
   createContact
 }: RecipientProps) => {
   const { t } = useTranslation('action');
+
+  // Properties from contact object
   const { commonName, euaUserId, role, component, email, id } = { ...contact };
+
+  // Whether or not to show verify recipient form
   const [isActive, setActive] = useState(false);
 
   return (
@@ -61,13 +74,14 @@ const Recipient = ({
         checked={checked}
         disabled={!id}
       />
-      {/* Unverified alert with button to verify */}
+      {/* Unverified recipient alert */}
       {!id && !isActive && (
         <div className="margin-left-4 margin-top-1 margin-bottom-2">
           <p className="text-base display-flex flex-align-center margin-y-1">
             <IconWarning className="text-warning margin-right-1" />
             {t('emailRecipients.unverifiedRecipient')}
           </p>
+          {/* Button to open form to verify recipient */}
           <Button
             type="button"
             data-testid="button_verify-recipient"
@@ -81,7 +95,7 @@ const Recipient = ({
           </Button>
         </div>
       )}
-      {/* CEDAR Contact select field to verify */}
+      {/* CEDAR contact select field to verify recipient */}
       {!id && isActive && (
         <FieldGroup className="margin-left-4 margin-top-1 margin-bottom-2">
           <h4 className="margin-bottom-05 margin-top-2">
@@ -98,6 +112,7 @@ const Recipient = ({
             name="systemIntakeContact.commonName"
             value={activeContact}
             onChange={cedarContact => {
+              // Add info from CEDAR to active contact
               setActiveContact(
                 cedarContact ? { ...activeContact!, ...cedarContact } : null
               );
@@ -105,21 +120,27 @@ const Recipient = ({
             autoSearch
           />
           <ButtonGroup className="margin-top-2">
+            {/* Save recipient */}
             <Button
               type="button"
+              // Disable if contact object does not include EUA or email
               disabled={!(activeContact?.euaUserId && activeContact?.email)}
               onClick={() => {
+                // Create system intake contact
                 createContact(activeContact!);
+                // Close verify recipient form
                 setActiveContact(null);
                 setActive(false);
               }}
             >
               {t('Save')}
             </Button>
+            {/* Cancel */}
             <Button
               type="button"
               outline
               onClick={() => {
+                // Close verify recipient form
                 setActiveContact(null);
                 setActive(false);
               }}
@@ -133,16 +154,29 @@ const Recipient = ({
   );
 };
 
+/**
+ * Email recipient fields with functionality to verify and add recipients
+ */
 export default ({
+  /** Whether email is optional */
   optional = true,
+  /** Container className */
   className,
+  /** Header className */
   headerClassName,
+  /** Alert className */
   alertClassName,
+  /** System intake ID */
   systemIntakeId,
+  /** Current active contact, set when adding or verifying */
   activeContact,
+  /** Set active contact */
   setActiveContact,
+  /** Email notification recipients object */
   recipients,
+  /** Set email notification recipients */
   setRecipients,
+  /** Field error */
   error
 }: EmailRecipientsFieldsProps) => {
   const { t } = useTranslation('action');
@@ -150,6 +184,8 @@ export default ({
 
   // Contacts query
   const { contacts, createContact } = useSystemIntakeContacts(systemIntakeId);
+
+  // Contact objects from query response
   const {
     requester,
     businessOwner,
@@ -158,6 +194,7 @@ export default ({
     additionalContacts
   } = contacts.data;
 
+  /** Initial default recipients */
   const defaultRecipients = useRef(recipients).current;
 
   /** Formatted array of contacts in order of display */
@@ -169,18 +206,20 @@ export default ({
     additionalContacts
   ].flat();
 
+  /** Number of unverified recipients */
   const unverifiedRecipients = contactsArray.filter(({ id }) => !id);
 
-  // Default recipients count
+  /** Number of default recipients */
   const defaultRecipientsCount =
     (defaultRecipients.shouldNotifyITInvestment ? 3 : 2) +
     unverifiedRecipients.filter(({ role }) => role !== 'Requester').length;
-  // Possible recipients count
+  /** Number of total possible recipients */
   const contactsCount = contactsArray.length + 2;
-  // Selected recipients count
+  /** Number of selected recipients from contacts array */
   const selectedContacts = contactsArray.filter(({ email }) =>
     recipients.regularRecipientEmails.includes(email!)
   ).length;
+  /** Total number of selected recipients */
   const selectedCount =
     selectedContacts +
     Number(recipients.shouldNotifyITGovernance) +
@@ -212,6 +251,9 @@ export default ({
 
   // Check if contacts have loaded
   if (contacts.loading) return null;
+
+  // Number of contacts to hide behind view more button
+  const hiddenContactsCount = contactsCount - defaultRecipientsCount;
 
   return (
     <div className={classnames(className)}>
@@ -250,12 +292,14 @@ export default ({
             <TruncatedContent
               initialCount={defaultRecipientsCount}
               labelMore={t(
-                `Show ${contactsCount - defaultRecipientsCount} more recipients`
+                `Show ${
+                  hiddenContactsCount > 0 ? `${hiddenContactsCount} ` : ''
+                }more recipients`
               )}
               labelLess={t(
                 `Show ${
-                  contactsCount - defaultRecipientsCount
-                } fewer recipients`
+                  hiddenContactsCount > 0 ? `${hiddenContactsCount} ` : ''
+                }fewer recipients`
               )}
               buttonClassName="margin-top-105"
             >
