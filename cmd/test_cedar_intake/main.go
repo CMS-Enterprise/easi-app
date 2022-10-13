@@ -4,10 +4,13 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 	"gopkg.in/launchdarkly/go-server-sdk.v5/ldcomponents"
@@ -16,8 +19,17 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake"
+	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
+
+func noErr(err error) {
+	if err != nil {
+		fmt.Println("Error!")
+		fmt.Println(err)
+		panic("Aborting")
+	}
+}
 
 type testData struct {
 	action       *models.Action
@@ -238,22 +250,26 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 		models.LifecycleCostPhaseOTHER,
 	}
 
-	costAmount := 1
+	increasingCost := 1
 
 	for _, solution := range possibleSolutions {
 		for _, year := range possibleYears {
 			for _, phase := range possiblePhases {
 				phase := phase
+
+				// make a copy, so when we increment costAmount, previously created lifecycleCost.Cost's don't point to the updated value
+				cost := increasingCost
+
 				lifecycleCost := models.EstimatedLifecycleCost{
 					ID:             uuid.New(),
 					BusinessCaseID: businessCase.ID,
 					Solution:       solution,
 					Year:           year,
 					Phase:          &phase,
-					Cost:           &costAmount,
+					Cost:           &cost,
 				}
 				businessCase.LifecycleCostLines = append(businessCase.LifecycleCostLines, lifecycleCost)
-				costAmount++
+				increasingCost++
 			}
 		}
 	}
@@ -324,15 +340,7 @@ func makeCedarIntakeClient() *intake.Client {
 	return client
 }
 
-func noErr(err error) {
-	if err != nil {
-		fmt.Println("Error!")
-		fmt.Println(err)
-		panic("Aborting")
-	}
-}
-
-func main() {
+func submitToCEDAR() {
 	zapLogger, err := zap.NewDevelopment()
 	noErr(err)
 
@@ -370,4 +378,78 @@ func main() {
 	err = client.PublishSystemIntake(ctx, *testData.systemIntake)
 	noErr(err)
 	fmt.Println("Successfully sent system intake")
+}
+
+func dumpIntakeObject(obj translation.IntakeObject, directory string) {
+	filename := filepath.Join(directory, obj.ObjectType()+".json")
+
+	intakeModel, err := obj.CreateIntakeModel()
+	noErr(err)
+
+	err = os.WriteFile(filename, []byte(*intakeModel.Body), 0600)
+	noErr(err)
+}
+
+func dumpPayload() {
+	// os.Executable() doesn't work properly with "go run", so use runtime.Caller() instead
+	// see https://stackoverflow.com/a/70491592
+	_, sourceFilename, _, _ := runtime.Caller(0)
+	execDir := filepath.Dir(sourceFilename)
+
+	testData := makeTestData()
+
+	fmt.Println("Dumping business case data")
+	businessCaseIntakeObject := translation.TranslatableBusinessCase(*testData.businessCase)
+	dumpIntakeObject(&businessCaseIntakeObject, execDir)
+	fmt.Println("Business case data dumped inside " + execDir + string(filepath.Separator))
+
+	fmt.Println("Dumping GRT feedback data")
+	feedbackIntakeObject := translation.TranslatableFeedback(*testData.feedback)
+	dumpIntakeObject(&feedbackIntakeObject, execDir)
+	fmt.Println("GRT feedback data dumped inside " + execDir + string(filepath.Separator))
+
+	fmt.Println("Dumping system intake data")
+	systemIntakeIntakeObject := translation.TranslatableSystemIntake(*testData.systemIntake)
+	dumpIntakeObject(&systemIntakeIntakeObject, execDir)
+	fmt.Println("System intake data dumped inside " + execDir + string(filepath.Separator))
+}
+
+var submitCmd = &cobra.Command{
+	Use:   "submit",
+	Short: "Submit test data to CEDAR Intake",
+	Long:  "Submit test data to CEDAR Intake",
+	Run: func(cmd *cobra.Command, args []string) {
+		submitToCEDAR()
+	},
+}
+
+var dumpCmd = &cobra.Command{
+	Use:   "dump",
+	Short: "Dump test data payloads to local files",
+	Long:  "Dump test data payloads to local files",
+	Run: func(cmd *cobra.Command, args []string) {
+		dumpPayload()
+	},
+}
+
+var rootCmd = &cobra.Command{
+	Use:   "test_cedar_intake",
+	Short: "Utility for testing functionality related to the CEDAR Intake API",
+	Long:  `Utility for either submitting test data to the CEDAR Intake API or dumping the JSON payload that would be submitted to a local file`,
+}
+
+func init() {
+	rootCmd.AddCommand(submitCmd)
+	rootCmd.AddCommand(dumpCmd)
+}
+
+func execute() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func main() {
+	execute()
 }
