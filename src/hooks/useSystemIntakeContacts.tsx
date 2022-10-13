@@ -8,7 +8,10 @@ import {
   GetSystemIntakeContactsQuery,
   UpdateSystemIntakeContact
 } from 'queries/SystemIntakeContactsQueries';
-import { GetSystemIntakeContacts } from 'queries/types/GetSystemIntakeContacts';
+import {
+  GetSystemIntakeContacts,
+  GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact
+} from 'queries/types/GetSystemIntakeContacts';
 import {
   CreateSystemIntakeContactInput,
   DeleteSystemIntakeContactInput,
@@ -52,14 +55,16 @@ function useSystemIntakeContacts(
    * Formatted system intake contacts object
    * */
   const contacts = useMemo<FormattedContacts>(() => {
-    // Get systemIntakeContacts
+    /** Array of system intake contacts */
     const systemIntakeContacts = data?.systemIntakeContacts
       ?.systemIntakeContacts as SystemIntakeContactProps[];
 
     // Return null if no systemIntakeContacts
     if (!systemIntakeContacts || !systemIntake) return initialContactsObject;
 
-    // Merge initial contacts object with possible legacy data from system intake
+    /**
+     * Merge initial contacts object with possible legacy data from system intake
+     */
     const mergedContactsObject = {
       ...initialContactsObject,
       requester: {
@@ -129,22 +134,28 @@ function useSystemIntakeContacts(
    * */
   const createContact = async (contact: SystemIntakeContactProps) => {
     const { euaUserId, component, role } = contact;
-    return createSystemIntakeContact({
-      variables: {
-        input: {
-          euaUserId: euaUserId.toUpperCase(),
-          component,
-          role,
-          systemIntakeId
+    return (
+      createSystemIntakeContact({
+        variables: {
+          input: {
+            euaUserId: euaUserId.toUpperCase(),
+            component,
+            role,
+            systemIntakeId
+          }
         }
-      }
-    })
-      .then(refetch)
-      .then((response: ApolloQueryResult<GetSystemIntakeContacts>) =>
-        response?.data?.systemIntakeContacts?.systemIntakeContacts.find(
-          obj => obj.role === role
+      })
+        // Refetch contacts
+        .then(refetch)
+        // Return new contact
+        .then((response: ApolloQueryResult<GetSystemIntakeContacts>) =>
+          response?.data?.systemIntakeContacts?.systemIntakeContacts.find(
+            obj => obj.role === role
+          )
         )
-      );
+        // If error, return initial contact
+        .catch(() => contact as AugmentedSystemIntakeContact)
+    );
   };
 
   /**
@@ -152,40 +163,52 @@ function useSystemIntakeContacts(
    * */
   const updateContact = async (contact: SystemIntakeContactProps) => {
     const { id, euaUserId, component, role } = contact;
-    return updateSystemIntakeContact({
-      variables: {
-        input: {
-          id,
-          euaUserId: euaUserId.toUpperCase(),
-          component,
-          role,
-          systemIntakeId
+    return (
+      updateSystemIntakeContact({
+        variables: {
+          input: {
+            id,
+            euaUserId: euaUserId.toUpperCase(),
+            component,
+            role,
+            systemIntakeId
+          }
         }
-      }
-    })
-      .then(refetch)
-      .then(
-        (response: ApolloQueryResult<GetSystemIntakeContacts>) =>
-          response?.data?.systemIntakeContacts?.systemIntakeContacts
-      );
+      })
+        // Refetch contacts
+        .then(refetch)
+        // Return updated contacts
+        .then(
+          (response: ApolloQueryResult<GetSystemIntakeContacts>) =>
+            response?.data?.systemIntakeContacts?.systemIntakeContacts
+        )
+        // If error, return existing contacts
+        .catch(() => data?.systemIntakeContacts?.systemIntakeContacts)
+    );
   };
 
   /**
    * Delete system intake contact from database
    * */
   const deleteContact = async (id: string) => {
-    return deleteSystemIntakeContact({
-      variables: {
-        input: {
-          id
+    return (
+      deleteSystemIntakeContact({
+        variables: {
+          input: {
+            id
+          }
         }
-      }
-    })
-      .then(refetch)
-      .then(
-        (response: ApolloQueryResult<GetSystemIntakeContacts>) =>
-          response?.data?.systemIntakeContacts?.systemIntakeContacts
-      );
+      })
+        // Refetch contacts
+        .then(refetch)
+        // Return updated contacts
+        .then(
+          (response: ApolloQueryResult<GetSystemIntakeContacts>) =>
+            response?.data?.systemIntakeContacts?.systemIntakeContacts
+        )
+        // If error, return existing contacts
+        .catch(() => data?.systemIntakeContacts?.systemIntakeContacts)
+    );
   };
 
   return {
