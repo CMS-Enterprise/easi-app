@@ -71,7 +71,6 @@
         "archivedAt": {
           "type": "string",
           "description": "Timestamp of when request was archived",
-          "format": "date-time",
           "examples": [
             "2022-02-17T14:34:43Z"
           ]
@@ -157,7 +156,6 @@
         "decidedAt": {
           "type": "string",
           "description": "Timestamp of when decision was reached",
-          "format": "date-time",
           "examples": [
             "2022-02-17T14:34:43Z"
           ]
@@ -349,7 +347,6 @@
         "submittedAt": {
           "type": "string",
           "description": "Timestamp of when request was submitted",
-          "format": "date-time",
           "examples": [
             "2022-02-17T14:34:43Z"
           ]
