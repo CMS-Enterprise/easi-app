@@ -9,7 +9,7 @@ package models
 
 // EASIBizCase represents a business case for a system
 type EASIBizCase struct {
-	ArchivedAt             *string                 `json:"archivedAt,omitempty" jsonschema:"description=Timestamp of when request was archived,example=2023-02-27T14:34:43Z"`
+	ArchivedAt             *string                 `json:"archivedAt,omitempty" jsonschema:"description=Timestamp of when request was archived,example=2023-02-27T14:34:43Z,format=date"`
 	BusinessCaseID         string                  `json:"businessCaseId" jsonschema:"description=Unique ID of this business case,example=91e5c1f3-11fb-4124-805c-adbdd02c5395"`
 	BusinessNeed           *string                 `json:"businessNeed,omitempty" jsonschema:"description=Business Need for this effort,example=Process takes too long and holds up key stakeholders"`
 	BusinessOwner          *string                 `json:"businessOwner,omitempty" jsonschema:"description=Business owner of this request,example=John Doe"`
