@@ -216,6 +216,14 @@ type CreateSystemIntakeNoteInput struct {
 	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
+// The data needed add a TRB request attendee to a TRB request
+type CreateTRBRequestAttendeeInput struct {
+	EuaUserID    string            `json:"euaUserId"`
+	TrbRequestID uuid.UUID         `json:"trbRequestId"`
+	Component    string            `json:"component"`
+	Role         models.PersonRole `json:"role"`
+}
+
 // The input required to add a test date/score to a 508/accessibility request
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
@@ -667,6 +675,13 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	GrbDate *time.Time `json:"grbDate"`
 	GrtDate *time.Time `json:"grtDate"`
 	ID      uuid.UUID  `json:"id"`
+}
+
+// Represents an EUA user who is included as an attendee for a TRB request
+type UpdateTRBRequestAttendeeInput struct {
+	ID        uuid.UUID         `json:"id"`
+	Component string            `json:"component"`
+	Role      models.PersonRole `json:"role"`
 }
 
 // The input required to update a test date/score

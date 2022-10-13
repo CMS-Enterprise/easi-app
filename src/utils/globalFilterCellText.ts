@@ -14,6 +14,9 @@ function getJsxText(node: JSX.Element): string | undefined {
 
 /**
  * A react table global filter used to match against text values returned from `Column.Cell`.
+ *
+ * This filter requires that table rows have been prepped with `prepareRow` so that
+ * `Column.Cell` is available. Make sure to do this when using hooks such as pagination.
  */
 /*
 Note: This generic version is commented out because instantiation expressions aren't working at the moment
@@ -26,7 +29,7 @@ https://github.com/microsoft/TypeScript/issues/50161
     filterValue: string
   ): Row<T>[] {
   ...
-  globalFilter: useMemo(() => globalFilterCellText<GetTrbRequests_trbRequestCollection>, []),
+  globalFilter: useMemo(() => globalFilterCellText<GetTrbRequests_trbRequests>, []),
   ...
 */
 export default function globalFilterCellText(
@@ -37,6 +40,13 @@ export default function globalFilterCellText(
   const filterValueLower = filterValue.toLowerCase();
   return rows.filter(row =>
     row.cells.some(cell => {
+      // Unavailable column suggests the row is unprepared
+      // Cannot op, skip
+      if (!cell.column) {
+        // console.debug('Row filter skipped');
+        return true;
+      }
+
       const renderer = cell.column.Cell as Function;
       let renderedValue: string;
       // Use the Cell function if it's defined to get the cell's text value

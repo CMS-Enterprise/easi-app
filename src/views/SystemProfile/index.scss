@@ -85,16 +85,16 @@
 }
 
 .top-divider {
-    @media screen and (min-width: $desktop) {
-        height: .25rem;
-        width: 100%;
-        background-color: color($theme-color-primary-lighter);
-    }
+  @media screen and (min-width: $desktop) {
+      height: .25rem;
+      width: 100%;
+      background-color: color($theme-color-primary-lighter);
+  }
 }
 
 .side-divider {
-    padding-left: 2rem;
-    @media screen and (max-width: $desktop) {
-        border-left: .25rem solid color($theme-color-primary-lighter);
-    }
+  padding-left: 2rem;
+  @media screen and (max-width: $desktop) {
+      border-left: .25rem solid color($theme-color-primary-lighter);
+  }
 }

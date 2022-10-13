@@ -57,3 +57,5 @@ services:
     network_mode: 'service:easi_client'
     depends_on:
       - easi_client
+    volumes:
+      - ./minio_config.json:/root/.mc/config.json

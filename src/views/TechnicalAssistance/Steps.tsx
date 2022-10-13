@@ -1,7 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import {
+  GridContainer,
   ProcessList,
   ProcessListHeading,
   ProcessListItem
@@ -10,26 +11,44 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 
+import Breadcrumbs from './Breadcrumbs';
+
 function Steps() {
+  const { t } = useTranslation('technicalAssistance');
   const { state } = useLocation<{ requestType: string }>();
+
   const requestType = state?.requestType;
 
-  const { t } = useTranslation('technicalAssistance');
+  // Redirect to start if `requestType` isn't set
+  if (!requestType) return <Redirect to="/trb/start" />;
+
   const infoText = t<Record<string, string[]>>('steps.info', {
     returnObjects: true
   });
   const stepsText = t<Record<string, string | string[]>[]>('steps.list', {
     returnObjects: true
   });
+  const requestTypeText = t<Record<string, { heading: string }>>(
+    'newRequest.type',
+    {
+      returnObjects: true
+    }
+  );
 
   return (
-    <div>
+    <GridContainer className="width-full">
+      <Breadcrumbs
+        items={[
+          { text: t('heading'), url: '/trb' },
+          { text: t('breadcrumbs.startTrbRequest') }
+        ]}
+      />
       <PageHeading className="margin-bottom-0">
         {t('steps.heading')}
       </PageHeading>
       <div>
         <span className="line-height-body-5 text-base margin-right-2">
-          {t('steps.problemWithSystem')}
+          {requestTypeText[requestType].heading}
         </span>
         <span>
           <UswdsReactLink to="/trb/start">
@@ -109,7 +128,7 @@ function Steps() {
         </UswdsReactLink>
         <UswdsReactLink
           to={{
-            pathname: '/trb/new',
+            pathname: '/trb/requests/new',
             state: { requestType }
           }}
           className="usa-button"
@@ -118,7 +137,7 @@ function Steps() {
           {t('steps.continue')}
         </UswdsReactLink>
       </div>
-    </div>
+    </GridContainer>
   );
 }
 

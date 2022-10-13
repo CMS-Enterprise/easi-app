@@ -1875,12 +1875,37 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 
 // CreateTRBRequest is the resolver for the createTRBRequest field.
 func (r *mutationResolver) CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType) (*models.TRBRequest, error) {
-	return resolvers.TRBRequestCreate(ctx, requestType, r.store)
+	return resolvers.CreateTRBRequest(ctx, requestType, r.store)
 }
 
 // UpdateTRBRequest is the resolver for the updateTRBRequest field.
 func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}) (*models.TRBRequest, error) {
-	return resolvers.TRBRequestUpdate(ctx, id, changes, r.store)
+	return resolvers.UpdateTRBRequest(ctx, id, changes, r.store)
+}
+
+// CreateTRBRequestAttendee is the resolver for the createTRBRequestAttendee field.
+func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input model.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
+	return resolvers.CreateTRBRequestAttendee(ctx, r.store, &models.TRBRequestAttendee{
+		TRBRequestID: input.TrbRequestID,
+		EUAUserID:    input.EuaUserID,
+		Component:    input.Component,
+		Role:         models.PersonRole(input.Role),
+	})
+}
+
+// UpdateTRBRequestAttendee is the resolver for the updateTRBRequestAttendee field.
+func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input model.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
+	attendee := &models.TRBRequestAttendee{
+		Component: input.Component,
+		Role:      models.PersonRole(input.Role),
+	}
+	attendee.ID = input.ID
+	return resolvers.UpdateTRBRequestAttendee(ctx, r.store, attendee)
+}
+
+// DeleteTRBRequestAttendee is the resolver for the deleteTRBRequestAttendee field.
+func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error) {
+	return resolvers.DeleteTRBRequestAttendee(ctx, r.store, id)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
@@ -2229,12 +2254,12 @@ func (r *queryResolver) RelatedSystemIntakes(ctx context.Context, id uuid.UUID) 
 
 // TrbRequest is the resolver for the trbRequest field.
 func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
-	return resolvers.TRBRequestGetByID(ctx, id, r.store)
+	return resolvers.GetTRBRequestByID(ctx, id, r.store)
 }
 
-// TrbRequestCollection is the resolver for the trbRequestCollection field.
-func (r *queryResolver) TrbRequestCollection(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
-	return resolvers.TRBRequestCollectionGet(ctx, archived, r.store)
+// TrbRequests is the resolver for the trbRequests field.
+func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
+	return resolvers.GetTRBRequests(ctx, archived, r.store)
 }
 
 // Actions is the resolver for the actions field.
@@ -2615,6 +2640,20 @@ func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *mod
 	return obj.Source.Ptr(), nil
 }
 
+// Attendees is the resolver for the attendees field.
+func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
+	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
+}
+
+// UserInfo is the resolver for the userInfo field.
+func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
+	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
+	if err != nil {
+		return nil, err
+	}
+	return userInfo, nil
+}
+
 // Email is the resolver for the email field.
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return string(obj.Email), nil
@@ -2686,6 +2725,14 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 	return &systemIntakeFundingSourceResolver{r}
 }
 
+// TRBRequest returns generated.TRBRequestResolver implementation.
+func (r *Resolver) TRBRequest() generated.TRBRequestResolver { return &tRBRequestResolver{r} }
+
+// TRBRequestAttendee returns generated.TRBRequestAttendeeResolver implementation.
+func (r *Resolver) TRBRequestAttendee() generated.TRBRequestAttendeeResolver {
+	return &tRBRequestAttendeeResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2705,4 +2752,6 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
+type tRBRequestResolver struct{ *Resolver }
+type tRBRequestAttendeeResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

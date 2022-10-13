@@ -2,7 +2,40 @@
 
 exports[`TRB Subview snapshots matches NewRequest 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    class="grid-container width-full"
+    data-testid="gridContainer"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      class="usa-breadcrumb padding-bottom-0"
+      style="background-color: transparent;"
+    >
+      <ol
+        class="usa-breadcrumb__list"
+      >
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/trb"
+          >
+            <span>
+              Technical Assistance
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          class="usa-breadcrumb__list-item usa-current"
+        >
+          <span>
+            Start a TRB Request
+          </span>
+        </li>
+      </ol>
+    </nav>
     <h1
       aria-live="polite"
       class="easi-h1 margin-bottom-0"
@@ -298,7 +331,40 @@ exports[`TRB Subview snapshots matches NewRequest 1`] = `
 
 exports[`TRB Subview snapshots matches Steps 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    class="grid-container width-full"
+    data-testid="gridContainer"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      class="usa-breadcrumb padding-bottom-0"
+      style="background-color: transparent;"
+    >
+      <ol
+        class="usa-breadcrumb__list"
+      >
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/trb"
+          >
+            <span>
+              Technical Assistance
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          class="usa-breadcrumb__list-item usa-current"
+        >
+          <span>
+            Start a TRB Request
+          </span>
+        </li>
+      </ol>
+    </nav>
     <h1
       aria-live="polite"
       class="easi-h1 margin-bottom-0"
@@ -473,7 +539,7 @@ exports[`TRB Subview snapshots matches Steps 1`] = `
       </a>
       <a
         class="usa-button"
-        href="/trb/new"
+        href="/trb/requests/new"
       >
         Continue
       </a>
@@ -485,12 +551,15 @@ exports[`TRB Subview snapshots matches Steps 1`] = `
 exports[`Technical Assistance (TRB) homepage renders the homepage with a list of trb requests 1`] = `
 <DocumentFragment>
   <main
-    class="easi-main-content technical-assistance grid-container margin-bottom-10"
+    class="easi-main-content technical-assistance margin-bottom-10"
     id="main-content"
     role="main"
     tabindex="-1"
   >
-    <div>
+    <div
+      class="grid-container width-full"
+      data-testid="gridContainer"
+    >
       <h1
         aria-live="polite"
         class="easi-h1"
@@ -717,7 +786,12 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                 <td
                   role="cell"
                 >
-                  My excellent question
+                  <a
+                    class="usa-link"
+                    href="/trb/requests/1afc9242-f244-47a3-9f91-4d6fedd8eb91"
+                  >
+                    My excellent question
+                  </a>
                 </td>
                 <td
                   role="cell"
@@ -736,7 +810,12 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                 <td
                   role="cell"
                 >
-                  TACO Review
+                  <a
+                    class="usa-link"
+                    href="/trb/requests/9841c768-bdcd-4856-bae2-62cfdaffacf6"
+                  >
+                    TACO Review
+                  </a>
                 </td>
                 <td
                   role="cell"

@@ -1,18 +1,32 @@
 import React, { ReactNode, ReactNodeArray } from 'react';
 import ReactModal from 'react-modal';
 import { IconClose } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import noScroll from 'no-scroll';
 
 import './index.scss';
 
 type ModalProps = {
+  overlayClassName?: string;
+  alignment?: 'right' | 'left';
+  title?: string;
   children: ReactNode | ReactNodeArray;
   isOpen: boolean;
   openModal?: () => void;
   closeModal: () => void;
+  shouldCloseOnOverlayClick?: boolean;
 };
 
-const Modal = ({ children, isOpen, openModal, closeModal }: ModalProps) => {
+const Modal = ({
+  overlayClassName,
+  alignment,
+  title,
+  children,
+  isOpen,
+  openModal,
+  closeModal,
+  shouldCloseOnOverlayClick = false
+}: ModalProps) => {
   const handleOpenModal = () => {
     noScroll.on();
     if (openModal) {
@@ -23,12 +37,20 @@ const Modal = ({ children, isOpen, openModal, closeModal }: ModalProps) => {
   return (
     <ReactModal
       isOpen={isOpen}
-      overlayClassName="easi-modal__overlay"
-      className="easi-modal__content"
+      overlayClassName={classNames(
+        'easi-modal__overlay',
+        {
+          'easi-modal__has-title': !!title
+        },
+        overlayClassName
+      )}
+      className={classNames('easi-modal__content', {
+        [`easi-modal__align-${alignment}`]: !!alignment
+      })}
       onAfterOpen={handleOpenModal}
       onAfterClose={noScroll.off}
       onRequestClose={closeModal}
-      shouldCloseOnOverlayClick={false}
+      shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
       appElement={document.getElementById('root')!}
     >
       <button
@@ -37,7 +59,8 @@ const Modal = ({ children, isOpen, openModal, closeModal }: ModalProps) => {
         aria-label="Close Modal"
         onClick={closeModal}
       >
-        <IconClose />
+        <IconClose size={3} />
+        <h4 className="text-base margin-0 margin-left-1">{title}</h4>
       </button>
       <div className="easi-modal__body">{children}</div>
     </ReactModal>

@@ -1,3 +1,5 @@
+import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
+
 describe('Governance Review Team', () => {
   beforeEach(() => {
     cy.intercept('GET', '/api/v1/system_intakes?status=open').as(
@@ -20,11 +22,13 @@ describe('Governance Review Team', () => {
     );
     cy.get('[data-testid="admin-lead"]').contains('Not Assigned');
     cy.contains('button', 'Change').click();
-    cy.get('input[value="Ann Rudolph"]').check({ force: true });
+
+    const firstGovTeamMember = governaceReviewTeam.adminLeads.members[0];
+    cy.get(`input[value='${firstGovTeamMember}']`).check({ force: true });
 
     cy.get('[data-testid="button"]').contains('Save').click();
     cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
-    cy.get('span[data-testid="admin-lead"]').contains('Ann Rudolph');
+    cy.get('span[data-testid="admin-lead"]').contains(firstGovTeamMember);
   });
 
   it('can add GRT/GRB dates', () => {

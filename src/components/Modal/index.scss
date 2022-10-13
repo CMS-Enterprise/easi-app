@@ -9,6 +9,10 @@
     z-index: 400;
   }
 
+  &__has-title .easi-modal__x-button svg {
+    color: color('primary');
+  }
+
   &__content {
     position: absolute;
     width: 100%;
@@ -27,14 +31,25 @@
     }
   }
 
+  &__align-left {
+    min-width: 75%;
+    left: auto;
+    transform: translate(0, -50%);
+  }
+
+  &__align-right {
+    min-width: 75%;
+    right: 0;
+    left: auto;
+    transform: translate(0, -50%);
+  }
+
   &__x-button {
     display: block;
     margin: 1rem 1rem 1rem auto;
     padding: 0;
     background: none;
     border: 0;
-    font-size: 1.5rem;
-    line-height: 1.5rem;
     color: color('black');
 
     &:hover {
