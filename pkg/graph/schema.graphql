@@ -1586,27 +1586,24 @@ type TRBRequestForm {
   component: String
   needsAssistanceWith: String
   hasSolutionInMind: Boolean
+  proposedSolutionDescription: String
   whereInProcess: TRBWhereInProcessOption
   hasExpectedStartEndDates: Boolean
+  expectedStartDate: Time
+  expectedEndDate: Time
   collabGroups: [TRBCollabGroupOption!]!
+  collabDateSecurity: Time
+  collabDateEnterpriseArchitecture: Time
+  collabDateCloud: Time
+  collabDatePrivacyAdvisor: Time
+  collabDateGovernanceReviewBoard: Time
+  collabDateOther: Time
+  collabGroupOtherDescription: String
 
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
-}
-
-"""
-The data needed add a TRB request form to a TRB request
-"""
-input CreateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
-  trbRequestId: UUID!
-  component: String!
-  needsAssistanceWith: String!
-  hasSolutionInMind: Boolean!
-  whereInProcess: TRBWhereInProcessOption!
-  hasExpectedStartEndDates: Boolean!
-  collabGroups: [TRBCollabGroupOption!]!
 }
 
 """
@@ -1734,9 +1731,7 @@ type Mutation {
   createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
   updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
-  createTRBRequestForm(input: CreateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
-  deleteTRBRequestForm(trbRequestId: UUID!): TRBRequestForm!
 }
 
 """

@@ -4,8 +4,7 @@ CREATE TYPE trb_where_in_process_option AS ENUM (
     'DEVELOPMENT_HAS_RECENTLY_STARTED',
     'DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY',
     'THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE',
-    'OTHER',
-    'UNKNOWN'
+    'OTHER'
 );
 
 CREATE TYPE trb_collab_group_option AS ENUM (
@@ -20,12 +19,22 @@ CREATE TYPE trb_collab_group_option AS ENUM (
 CREATE TABLE trb_request_forms (
     id UUID PRIMARY KEY NOT NULL,
     trb_request_id uuid NOT NULL REFERENCES trb_request(id),
-    component TEXT NOT NULL,
-    needs_assistance_with TEXT NOT NULL,
+    component TEXT,
+    needs_assistance_with TEXT,
     has_solution_in_mind BOOLEAN,
-    where_in_process trb_where_in_process_option NOT NULL DEFAULT 'UNKNOWN',
+    proposed_solution_description TEXT,
+    where_in_process trb_where_in_process_option,
     has_expected_start_end_dates BOOLEAN,
+    expected_start_date TIMESTAMP,
+    expected_end_date TIMESTAMP,
     collab_groups trb_collab_group_option[],
+    collab_date_security TIMESTAMP,
+    collab_date_enterprise_architecture TIMESTAMP,
+    collab_date_cloud TIMESTAMP,
+    collab_date_privacy_advisor TIMESTAMP,
+    collab_date_governance_review_board TIMESTAMP,
+    collab_date_other TIMESTAMP,
+    collab_group_other_description TEXT,
 
     created_by TEXT NOT NULL CHECK (created_by ~ '^[A-Z0-9]{4}$'),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -70,9 +70,20 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			component = :component,
 			needs_assistance_with = :needs_assistance_with,
 			has_solution_in_mind = :has_solution_in_mind,
+			proposed_solution_description = :proposed_solution_description,
 			where_in_process = :where_in_process,
 			has_expected_start_end_dates = :has_expected_start_end_dates,
+			expected_start_date = :expected_start_date,
+			expected_end_date = :expected_end_date,
 			collab_groups = :collab_groups,
+			collab_date_security = :collab_date_security,
+			collab_date_enterprise_architecture = :collab_date_enterprise_architecture,
+			collab_date_cloud = :collab_date_cloud,
+			collab_date_privacy_advisor = :collab_date_privacy_advisor,
+			collab_date_governance_review_board = :collab_date_governance_review_board,
+			collab_date_other = :collab_date_other,
+			collab_group_other_description = :collab_group_other_description,
+
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
 		WHERE trb_request_id = :trb_request_id

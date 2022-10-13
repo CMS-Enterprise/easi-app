@@ -506,14 +506,12 @@ type ComplexityRoot struct {
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
 		CreateTRBRequest                                 func(childComplexity int, requestType models.TRBRequestType) int
 		CreateTRBRequestAttendee                         func(childComplexity int, input model.CreateTRBRequestAttendeeInput) int
-		CreateTRBRequestForm                             func(childComplexity int, input map[string]interface{}) int
 		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
 		DeleteAccessibilityRequest                       func(childComplexity int, input model.DeleteAccessibilityRequestInput) int
 		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
 		DeleteCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
 		DeleteSystemIntakeContact                        func(childComplexity int, input model.DeleteSystemIntakeContactInput) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
-		DeleteTRBRequestForm                             func(childComplexity int, trbRequestID uuid.UUID) int
 		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
@@ -779,18 +777,28 @@ type ComplexityRoot struct {
 	}
 
 	TRBRequestForm struct {
-		CollabGroups             func(childComplexity int) int
-		Component                func(childComplexity int) int
-		CreatedAt                func(childComplexity int) int
-		CreatedBy                func(childComplexity int) int
-		HasExpectedStartEndDates func(childComplexity int) int
-		HasSolutionInMind        func(childComplexity int) int
-		ID                       func(childComplexity int) int
-		ModifiedAt               func(childComplexity int) int
-		ModifiedBy               func(childComplexity int) int
-		NeedsAssistanceWith      func(childComplexity int) int
-		TRBRequestID             func(childComplexity int) int
-		WhereInProcess           func(childComplexity int) int
+		CollabDateCloud                  func(childComplexity int) int
+		CollabDateEnterpriseArchitecture func(childComplexity int) int
+		CollabDateGovernanceReviewBoard  func(childComplexity int) int
+		CollabDateOther                  func(childComplexity int) int
+		CollabDatePrivacyAdvisor         func(childComplexity int) int
+		CollabDateSecurity               func(childComplexity int) int
+		CollabGroupOtherDescription      func(childComplexity int) int
+		CollabGroups                     func(childComplexity int) int
+		Component                        func(childComplexity int) int
+		CreatedAt                        func(childComplexity int) int
+		CreatedBy                        func(childComplexity int) int
+		ExpectedEndDate                  func(childComplexity int) int
+		ExpectedStartDate                func(childComplexity int) int
+		HasExpectedStartEndDates         func(childComplexity int) int
+		HasSolutionInMind                func(childComplexity int) int
+		ID                               func(childComplexity int) int
+		ModifiedAt                       func(childComplexity int) int
+		ModifiedBy                       func(childComplexity int) int
+		NeedsAssistanceWith              func(childComplexity int) int
+		ProposedSolutionDescription      func(childComplexity int) int
+		TRBRequestID                     func(childComplexity int) int
+		WhereInProcess                   func(childComplexity int) int
 	}
 
 	TestDate struct {
@@ -1021,9 +1029,7 @@ type MutationResolver interface {
 	CreateTRBRequestAttendee(ctx context.Context, input model.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error)
 	UpdateTRBRequestAttendee(ctx context.Context, input model.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error)
 	DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error)
-	CreateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
 	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
-	DeleteTRBRequestForm(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -3385,18 +3391,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateTRBRequestAttendee(childComplexity, args["input"].(model.CreateTRBRequestAttendeeInput)), true
 
-	case "Mutation.createTRBRequestForm":
-		if e.complexity.Mutation.CreateTRBRequestForm == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createTRBRequestForm_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateTRBRequestForm(childComplexity, args["input"].(map[string]interface{})), true
-
 	case "Mutation.createTestDate":
 		if e.complexity.Mutation.CreateTestDate == nil {
 			break
@@ -3468,18 +3462,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteTRBRequestAttendee(childComplexity, args["id"].(uuid.UUID)), true
-
-	case "Mutation.deleteTRBRequestForm":
-		if e.complexity.Mutation.DeleteTRBRequestForm == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_deleteTRBRequestForm_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.DeleteTRBRequestForm(childComplexity, args["trbRequestId"].(uuid.UUID)), true
 
 	case "Mutation.deleteTestDate":
 		if e.complexity.Mutation.DeleteTestDate == nil {
@@ -4974,6 +4956,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestAttendee.TRBRequestID(childComplexity), true
 
+	case "TRBRequestForm.collabDateCloud":
+		if e.complexity.TRBRequestForm.CollabDateCloud == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.CollabDateCloud(childComplexity), true
+
+	case "TRBRequestForm.collabDateEnterpriseArchitecture":
+		if e.complexity.TRBRequestForm.CollabDateEnterpriseArchitecture == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.CollabDateEnterpriseArchitecture(childComplexity), true
+
+	case "TRBRequestForm.collabDateGovernanceReviewBoard":
+		if e.complexity.TRBRequestForm.CollabDateGovernanceReviewBoard == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.CollabDateGovernanceReviewBoard(childComplexity), true
+
+	case "TRBRequestForm.collabDateOther":
+		if e.complexity.TRBRequestForm.CollabDateOther == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.CollabDateOther(childComplexity), true
+
+	case "TRBRequestForm.collabDatePrivacyAdvisor":
+		if e.complexity.TRBRequestForm.CollabDatePrivacyAdvisor == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.CollabDatePrivacyAdvisor(childComplexity), true
+
+	case "TRBRequestForm.collabDateSecurity":
+		if e.complexity.TRBRequestForm.CollabDateSecurity == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.CollabDateSecurity(childComplexity), true
+
+	case "TRBRequestForm.collabGroupOtherDescription":
+		if e.complexity.TRBRequestForm.CollabGroupOtherDescription == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.CollabGroupOtherDescription(childComplexity), true
+
 	case "TRBRequestForm.collabGroups":
 		if e.complexity.TRBRequestForm.CollabGroups == nil {
 			break
@@ -5001,6 +5032,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequestForm.CreatedBy(childComplexity), true
+
+	case "TRBRequestForm.expectedEndDate":
+		if e.complexity.TRBRequestForm.ExpectedEndDate == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.ExpectedEndDate(childComplexity), true
+
+	case "TRBRequestForm.expectedStartDate":
+		if e.complexity.TRBRequestForm.ExpectedStartDate == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.ExpectedStartDate(childComplexity), true
 
 	case "TRBRequestForm.hasExpectedStartEndDates":
 		if e.complexity.TRBRequestForm.HasExpectedStartEndDates == nil {
@@ -5043,6 +5088,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequestForm.NeedsAssistanceWith(childComplexity), true
+
+	case "TRBRequestForm.proposedSolutionDescription":
+		if e.complexity.TRBRequestForm.ProposedSolutionDescription == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.ProposedSolutionDescription(childComplexity), true
 
 	case "TRBRequestForm.trbRequestId":
 		if e.complexity.TRBRequestForm.TRBRequestID == nil {
@@ -6901,27 +6953,24 @@ type TRBRequestForm {
   component: String
   needsAssistanceWith: String
   hasSolutionInMind: Boolean
+  proposedSolutionDescription: String
   whereInProcess: TRBWhereInProcessOption
   hasExpectedStartEndDates: Boolean
+  expectedStartDate: Time
+  expectedEndDate: Time
   collabGroups: [TRBCollabGroupOption!]!
+  collabDateSecurity: Time
+  collabDateEnterpriseArchitecture: Time
+  collabDateCloud: Time
+  collabDatePrivacyAdvisor: Time
+  collabDateGovernanceReviewBoard: Time
+  collabDateOther: Time
+  collabGroupOtherDescription: String
 
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
-}
-
-"""
-The data needed add a TRB request form to a TRB request
-"""
-input CreateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
-  trbRequestId: UUID!
-  component: String!
-  needsAssistanceWith: String!
-  hasSolutionInMind: Boolean!
-  whereInProcess: TRBWhereInProcessOption!
-  hasExpectedStartEndDates: Boolean!
-  collabGroups: [TRBCollabGroupOption!]!
 }
 
 """
@@ -7049,9 +7098,7 @@ type Mutation {
   createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
   updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
-  createTRBRequestForm(input: CreateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
-  deleteTRBRequestForm(trbRequestId: UUID!): TRBRequestForm!
 }
 
 """
@@ -7471,21 +7518,6 @@ func (ec *executionContext) field_Mutation_createTRBRequestAttendee_args(ctx con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_createTRBRequestForm_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 map[string]interface{}
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateTRBRequestFormInput2map(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_createTRBRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -7588,21 +7620,6 @@ func (ec *executionContext) field_Mutation_deleteTRBRequestAttendee_args(ctx con
 		}
 	}
 	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_deleteTRBRequestForm_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 uuid.UUID
-	if tmp, ok := rawArgs["trbRequestId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["trbRequestId"] = arg0
 	return args, nil
 }
 
@@ -24741,87 +24758,6 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBRequestAttendee(ctx c
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createTRBRequestForm(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createTRBRequestForm(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateTRBRequestForm(rctx, fc.Args["input"].(map[string]interface{}))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.TRBRequestForm)
-	fc.Result = res
-	return ec.marshalNTRBRequestForm2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestForm(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_createTRBRequestForm(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBRequestForm_id(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBRequestForm_trbRequestId(ctx, field)
-			case "component":
-				return ec.fieldContext_TRBRequestForm_component(ctx, field)
-			case "needsAssistanceWith":
-				return ec.fieldContext_TRBRequestForm_needsAssistanceWith(ctx, field)
-			case "hasSolutionInMind":
-				return ec.fieldContext_TRBRequestForm_hasSolutionInMind(ctx, field)
-			case "whereInProcess":
-				return ec.fieldContext_TRBRequestForm_whereInProcess(ctx, field)
-			case "hasExpectedStartEndDates":
-				return ec.fieldContext_TRBRequestForm_hasExpectedStartEndDates(ctx, field)
-			case "collabGroups":
-				return ec.fieldContext_TRBRequestForm_collabGroups(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBRequestForm_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBRequestForm_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBRequestForm_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBRequestForm_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestForm", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createTRBRequestForm_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_updateTRBRequestForm(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_updateTRBRequestForm(ctx, field)
 	if err != nil {
@@ -24871,12 +24807,32 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestForm(ctx conte
 				return ec.fieldContext_TRBRequestForm_needsAssistanceWith(ctx, field)
 			case "hasSolutionInMind":
 				return ec.fieldContext_TRBRequestForm_hasSolutionInMind(ctx, field)
+			case "proposedSolutionDescription":
+				return ec.fieldContext_TRBRequestForm_proposedSolutionDescription(ctx, field)
 			case "whereInProcess":
 				return ec.fieldContext_TRBRequestForm_whereInProcess(ctx, field)
 			case "hasExpectedStartEndDates":
 				return ec.fieldContext_TRBRequestForm_hasExpectedStartEndDates(ctx, field)
+			case "expectedStartDate":
+				return ec.fieldContext_TRBRequestForm_expectedStartDate(ctx, field)
+			case "expectedEndDate":
+				return ec.fieldContext_TRBRequestForm_expectedEndDate(ctx, field)
 			case "collabGroups":
 				return ec.fieldContext_TRBRequestForm_collabGroups(ctx, field)
+			case "collabDateSecurity":
+				return ec.fieldContext_TRBRequestForm_collabDateSecurity(ctx, field)
+			case "collabDateEnterpriseArchitecture":
+				return ec.fieldContext_TRBRequestForm_collabDateEnterpriseArchitecture(ctx, field)
+			case "collabDateCloud":
+				return ec.fieldContext_TRBRequestForm_collabDateCloud(ctx, field)
+			case "collabDatePrivacyAdvisor":
+				return ec.fieldContext_TRBRequestForm_collabDatePrivacyAdvisor(ctx, field)
+			case "collabDateGovernanceReviewBoard":
+				return ec.fieldContext_TRBRequestForm_collabDateGovernanceReviewBoard(ctx, field)
+			case "collabDateOther":
+				return ec.fieldContext_TRBRequestForm_collabDateOther(ctx, field)
+			case "collabGroupOtherDescription":
+				return ec.fieldContext_TRBRequestForm_collabGroupOtherDescription(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestForm_createdBy(ctx, field)
 			case "createdAt":
@@ -24897,87 +24853,6 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestForm(ctx conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateTRBRequestForm_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_deleteTRBRequestForm(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteTRBRequestForm(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteTRBRequestForm(rctx, fc.Args["trbRequestId"].(uuid.UUID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.TRBRequestForm)
-	fc.Result = res
-	return ec.marshalNTRBRequestForm2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestForm(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_deleteTRBRequestForm(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBRequestForm_id(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBRequestForm_trbRequestId(ctx, field)
-			case "component":
-				return ec.fieldContext_TRBRequestForm_component(ctx, field)
-			case "needsAssistanceWith":
-				return ec.fieldContext_TRBRequestForm_needsAssistanceWith(ctx, field)
-			case "hasSolutionInMind":
-				return ec.fieldContext_TRBRequestForm_hasSolutionInMind(ctx, field)
-			case "whereInProcess":
-				return ec.fieldContext_TRBRequestForm_whereInProcess(ctx, field)
-			case "hasExpectedStartEndDates":
-				return ec.fieldContext_TRBRequestForm_hasExpectedStartEndDates(ctx, field)
-			case "collabGroups":
-				return ec.fieldContext_TRBRequestForm_collabGroups(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBRequestForm_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBRequestForm_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBRequestForm_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBRequestForm_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestForm", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteTRBRequestForm_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -32568,12 +32443,32 @@ func (ec *executionContext) fieldContext_TRBRequest_form(ctx context.Context, fi
 				return ec.fieldContext_TRBRequestForm_needsAssistanceWith(ctx, field)
 			case "hasSolutionInMind":
 				return ec.fieldContext_TRBRequestForm_hasSolutionInMind(ctx, field)
+			case "proposedSolutionDescription":
+				return ec.fieldContext_TRBRequestForm_proposedSolutionDescription(ctx, field)
 			case "whereInProcess":
 				return ec.fieldContext_TRBRequestForm_whereInProcess(ctx, field)
 			case "hasExpectedStartEndDates":
 				return ec.fieldContext_TRBRequestForm_hasExpectedStartEndDates(ctx, field)
+			case "expectedStartDate":
+				return ec.fieldContext_TRBRequestForm_expectedStartDate(ctx, field)
+			case "expectedEndDate":
+				return ec.fieldContext_TRBRequestForm_expectedEndDate(ctx, field)
 			case "collabGroups":
 				return ec.fieldContext_TRBRequestForm_collabGroups(ctx, field)
+			case "collabDateSecurity":
+				return ec.fieldContext_TRBRequestForm_collabDateSecurity(ctx, field)
+			case "collabDateEnterpriseArchitecture":
+				return ec.fieldContext_TRBRequestForm_collabDateEnterpriseArchitecture(ctx, field)
+			case "collabDateCloud":
+				return ec.fieldContext_TRBRequestForm_collabDateCloud(ctx, field)
+			case "collabDatePrivacyAdvisor":
+				return ec.fieldContext_TRBRequestForm_collabDatePrivacyAdvisor(ctx, field)
+			case "collabDateGovernanceReviewBoard":
+				return ec.fieldContext_TRBRequestForm_collabDateGovernanceReviewBoard(ctx, field)
+			case "collabDateOther":
+				return ec.fieldContext_TRBRequestForm_collabDateOther(ctx, field)
+			case "collabGroupOtherDescription":
+				return ec.fieldContext_TRBRequestForm_collabGroupOtherDescription(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestForm_createdBy(ctx, field)
 			case "createdAt":
@@ -33260,9 +33155,9 @@ func (ec *executionContext) _TRBRequestForm_component(ctx context.Context, field
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_component(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33301,9 +33196,9 @@ func (ec *executionContext) _TRBRequestForm_needsAssistanceWith(ctx context.Cont
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_needsAssistanceWith(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33342,9 +33237,9 @@ func (ec *executionContext) _TRBRequestForm_hasSolutionInMind(ctx context.Contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_hasSolutionInMind(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33355,6 +33250,47 @@ func (ec *executionContext) fieldContext_TRBRequestForm_hasSolutionInMind(ctx co
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_proposedSolutionDescription(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_proposedSolutionDescription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProposedSolutionDescription, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_proposedSolutionDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -33383,9 +33319,9 @@ func (ec *executionContext) _TRBRequestForm_whereInProcess(ctx context.Context, 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(models.TRBWhereInProcessOption)
+	res := resTmp.(*models.TRBWhereInProcessOption)
 	fc.Result = res
-	return ec.marshalOTRBWhereInProcessOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx, field.Selections, res)
+	return ec.marshalOTRBWhereInProcessOption2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_whereInProcess(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33424,9 +33360,9 @@ func (ec *executionContext) _TRBRequestForm_hasExpectedStartEndDates(ctx context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_hasExpectedStartEndDates(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33437,6 +33373,88 @@ func (ec *executionContext) fieldContext_TRBRequestForm_hasExpectedStartEndDates
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_expectedStartDate(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_expectedStartDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExpectedStartDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_expectedStartDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_expectedEndDate(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_expectedEndDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExpectedEndDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_expectedEndDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -33481,6 +33499,293 @@ func (ec *executionContext) fieldContext_TRBRequestForm_collabGroups(ctx context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBCollabGroupOption does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_collabDateSecurity(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_collabDateSecurity(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollabDateSecurity, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_collabDateSecurity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_collabDateEnterpriseArchitecture(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_collabDateEnterpriseArchitecture(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollabDateEnterpriseArchitecture, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_collabDateEnterpriseArchitecture(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_collabDateCloud(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_collabDateCloud(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollabDateCloud, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_collabDateCloud(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_collabDatePrivacyAdvisor(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_collabDatePrivacyAdvisor(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollabDatePrivacyAdvisor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_collabDatePrivacyAdvisor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_collabDateGovernanceReviewBoard(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_collabDateGovernanceReviewBoard(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollabDateGovernanceReviewBoard, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_collabDateGovernanceReviewBoard(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_collabDateOther(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_collabDateOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollabDateOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_collabDateOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_collabGroupOtherDescription(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_collabGroupOtherDescription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollabGroupOtherDescription, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_collabGroupOtherDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -42624,28 +42929,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "createTRBRequestForm":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createTRBRequestForm(ctx, field)
-			})
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateTRBRequestForm":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTRBRequestForm(ctx, field)
-			})
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "deleteTRBRequestForm":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteTRBRequestForm(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
@@ -45000,6 +45287,10 @@ func (ec *executionContext) _TRBRequestForm(ctx context.Context, sel ast.Selecti
 
 			out.Values[i] = ec._TRBRequestForm_hasSolutionInMind(ctx, field, obj)
 
+		case "proposedSolutionDescription":
+
+			out.Values[i] = ec._TRBRequestForm_proposedSolutionDescription(ctx, field, obj)
+
 		case "whereInProcess":
 
 			out.Values[i] = ec._TRBRequestForm_whereInProcess(ctx, field, obj)
@@ -45007,6 +45298,14 @@ func (ec *executionContext) _TRBRequestForm(ctx context.Context, sel ast.Selecti
 		case "hasExpectedStartEndDates":
 
 			out.Values[i] = ec._TRBRequestForm_hasExpectedStartEndDates(ctx, field, obj)
+
+		case "expectedStartDate":
+
+			out.Values[i] = ec._TRBRequestForm_expectedStartDate(ctx, field, obj)
+
+		case "expectedEndDate":
+
+			out.Values[i] = ec._TRBRequestForm_expectedEndDate(ctx, field, obj)
 
 		case "collabGroups":
 			field := field
@@ -45028,6 +45327,34 @@ func (ec *executionContext) _TRBRequestForm(ctx context.Context, sel ast.Selecti
 				return innerFunc(ctx)
 
 			})
+		case "collabDateSecurity":
+
+			out.Values[i] = ec._TRBRequestForm_collabDateSecurity(ctx, field, obj)
+
+		case "collabDateEnterpriseArchitecture":
+
+			out.Values[i] = ec._TRBRequestForm_collabDateEnterpriseArchitecture(ctx, field, obj)
+
+		case "collabDateCloud":
+
+			out.Values[i] = ec._TRBRequestForm_collabDateCloud(ctx, field, obj)
+
+		case "collabDatePrivacyAdvisor":
+
+			out.Values[i] = ec._TRBRequestForm_collabDatePrivacyAdvisor(ctx, field, obj)
+
+		case "collabDateGovernanceReviewBoard":
+
+			out.Values[i] = ec._TRBRequestForm_collabDateGovernanceReviewBoard(ctx, field, obj)
+
+		case "collabDateOther":
+
+			out.Values[i] = ec._TRBRequestForm_collabDateOther(ctx, field, obj)
+
+		case "collabGroupOtherDescription":
+
+			out.Values[i] = ec._TRBRequestForm_collabGroupOtherDescription(ctx, field, obj)
+
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequestForm_createdBy(ctx, field, obj)
@@ -46538,10 +46865,6 @@ func (ec *executionContext) unmarshalNCreateSystemIntakeNoteInput2githubᚗcom�
 func (ec *executionContext) unmarshalNCreateTRBRequestAttendeeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBRequestAttendeeInput(ctx context.Context, v interface{}) (model.CreateTRBRequestAttendeeInput, error) {
 	res, err := ec.unmarshalInputCreateTRBRequestAttendeeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNCreateTRBRequestFormInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
-	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDateInput(ctx context.Context, v interface{}) (model.CreateTestDateInput, error) {
@@ -48822,14 +49145,20 @@ func (ec *executionContext) marshalOTRBRequestType2ᚖgithubᚗcomᚋcmsgovᚋea
 	return res
 }
 
-func (ec *executionContext) unmarshalOTRBWhereInProcessOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx context.Context, v interface{}) (models.TRBWhereInProcessOption, error) {
+func (ec *executionContext) unmarshalOTRBWhereInProcessOption2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx context.Context, v interface{}) (*models.TRBWhereInProcessOption, error) {
+	if v == nil {
+		return nil, nil
+	}
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.TRBWhereInProcessOption(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTRBWhereInProcessOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx context.Context, sel ast.SelectionSet, v models.TRBWhereInProcessOption) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
+func (ec *executionContext) marshalOTRBWhereInProcessOption2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx context.Context, sel ast.SelectionSet, v *models.TRBWhereInProcessOption) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalString(string(*v))
 	return res
 }
 

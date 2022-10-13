@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 )
@@ -61,11 +63,21 @@ const (
 // TRBRequestForm represents the data entered into the TRB request form
 type TRBRequestForm struct {
 	baseStruct
-	TRBRequestID             uuid.UUID               `json:"trbRequestId" db:"trb_request_id"`
-	Component                string                  `json:"component" db:"component"`
-	NeedsAssistanceWith      string                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
-	HasSolutionInMind        bool                    `json:"hasSolutionInMind" db:"has_solution_in_mind"`
-	WhereInProcess           TRBWhereInProcessOption `json:"whereInProcess" db:"where_in_process"`
-	HasExpectedStartEndDates bool                    `json:"hasExpectedStartEndDates" db:"has_expected_start_end_dates"`
-	CollabGroups             pq.StringArray          `json:"collabGroups" db:"collab_groups"`
+	TRBRequestID                     uuid.UUID                `json:"trbRequestId" db:"trb_request_id"`
+	Component                        *string                  `json:"component" db:"component"`
+	NeedsAssistanceWith              *string                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
+	HasSolutionInMind                *bool                    `json:"hasSolutionInMind" db:"has_solution_in_mind"`
+	ProposedSolutionDescription      *string                  `json:"proposedSolutionDescription" db:"proposed_solution_description"`
+	WhereInProcess                   *TRBWhereInProcessOption `json:"whereInProcess" db:"where_in_process"`
+	HasExpectedStartEndDates         *bool                    `json:"hasExpectedStartEndDates" db:"has_expected_start_end_dates"`
+	ExpectedStartDate                *time.Time               `json:"expectedStartDate" db:"expected_start_date"`
+	ExpectedEndDate                  *time.Time               `json:"expectedEndDate" db:"expected_end_date"`
+	CollabGroups                     pq.StringArray           `json:"collabGroups" db:"collab_groups"`
+	CollabDateSecurity               *time.Time               `json:"collabDateSecurity" db:"collab_date_security"`
+	CollabDateEnterpriseArchitecture *time.Time               `json:"collabDateEnterpriseArchitecture" db:"collab_date_enterprise_architecture"`
+	CollabDateCloud                  *time.Time               `json:"collabDateCloud" db:"collab_date_cloud"`
+	CollabDatePrivacyAdvisor         *time.Time               `json:"collabDatePrivacyAdvisor" db:"collab_date_privacy_advisor"`
+	CollabDateGovernanceReviewBoard  *time.Time               `json:"collabDateGovernanceReviewBoard" db:"collab_date_governance_review_board"`
+	CollabDateOther                  *time.Time               `json:"collabDateOther" db:"collab_date_other"`
+	CollabGroupOtherDescription      *string                  `json:"collabGroupOtherDescription" db:"collab_group_other_description"`
 }

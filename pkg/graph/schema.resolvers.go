@@ -1908,19 +1908,9 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 	return resolvers.DeleteTRBRequestAttendee(ctx, r.store, id)
 }
 
-// CreateTRBRequestForm is the resolver for the createTRBRequestForm field.
-func (r *mutationResolver) CreateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
-	return resolvers.CreateTRBRequestForm(ctx, r.store, input)
-}
-
 // UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
 func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
-}
-
-// DeleteTRBRequestForm is the resolver for the deleteTRBRequestForm field.
-func (r *mutationResolver) DeleteTRBRequestForm(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
-	return resolvers.DeleteTRBRequestForm(ctx, r.store, trbRequestID)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
