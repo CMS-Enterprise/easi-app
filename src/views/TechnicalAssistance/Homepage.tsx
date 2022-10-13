@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
 import {
+  CellProps,
   Column,
   useFilters,
   useGlobalFilter,
@@ -15,7 +16,7 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
-import { Button, Table } from '@trussworks/react-uswds';
+import { Button, GridContainer, Table } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -28,7 +29,7 @@ import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
 import {
   GetTrbRequests,
   // eslint-disable-next-line camelcase
-  GetTrbRequests_trbRequestCollection
+  GetTrbRequests_trbRequests
 } from 'queries/types/GetTrbRequests';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -47,14 +48,25 @@ function Homepage() {
     GetTrbRequestsQuery
   );
 
-  const trbRequests = data?.trbRequestCollection || [];
+  const trbRequests = data?.trbRequests || [];
 
   // eslint-disable-next-line camelcase
-  const columns = useMemo<Column<GetTrbRequests_trbRequestCollection>[]>(() => {
+  const columns = useMemo<Column<GetTrbRequests_trbRequests>[]>(() => {
     return [
       {
         Header: t<string>('table.header.requestName'),
-        accessor: 'name'
+        accessor: 'name',
+        Cell: ({
+          value,
+          row
+        }: // eslint-disable-next-line camelcase
+        CellProps<GetTrbRequests_trbRequests, string>) => {
+          return (
+            <UswdsReactLink to={`/trb/requests/${row.original.id}`}>
+              {value}
+            </UswdsReactLink>
+          );
+        }
       },
       {
         Header: t<string>('table.header.submissionDate'),
@@ -77,6 +89,7 @@ function Homepage() {
     gotoPage,
     headerGroups,
     nextPage,
+    page,
     pageCount,
     pageOptions,
     prepareRow,
@@ -104,6 +117,11 @@ function Homepage() {
     usePagination
   );
 
+  // Temp fix for `globalFilterCellText` to work with `page` rows
+  // The filter function requires all rows to be prepped so that
+  // `Column.Cell` is available during filtering
+  rows.map(row => prepareRow(row));
+
   if (loading) {
     return <PageLoading />;
   }
@@ -113,7 +131,7 @@ function Homepage() {
   }
 
   return (
-    <div>
+    <GridContainer className="width-full">
       <PageHeading>{t('heading')}</PageHeading>
 
       <UswdsReactLink
@@ -135,7 +153,7 @@ function Homepage() {
           globalFilter={state.globalFilter}
           pageIndex={state.pageIndex}
           pageSize={state.pageSize}
-          filteredRowLength={rows.length}
+          filteredRowLength={page.length}
           rowLength={trbRequests.length}
           className="margin-bottom-4"
         />
@@ -170,8 +188,8 @@ function Homepage() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map(row => {
-              prepareRow(row);
+            {page.map(row => {
+              // prepareRow(row); // Temp prepare all rows before render out, until fixed
               return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell, index) => {
@@ -214,7 +232,7 @@ function Homepage() {
           {currentTableSortDescription(headerGroups[0])}
         </div>
       </div>
-    </div>
+    </GridContainer>
   );
 }
 

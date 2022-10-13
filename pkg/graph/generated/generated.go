@@ -56,6 +56,7 @@ type ResolverRoot interface {
 	SystemIntake() SystemIntakeResolver
 	SystemIntakeFundingSource() SystemIntakeFundingSourceResolver
 	TRBRequest() TRBRequestResolver
+	TRBRequestAttendee() TRBRequestAttendeeResolver
 	TRBRequestForm() TRBRequestFormResolver
 	UserInfo() UserInfoResolver
 }
@@ -774,6 +775,7 @@ type ComplexityRoot struct {
 		ModifiedBy   func(childComplexity int) int
 		Role         func(childComplexity int) int
 		TRBRequestID func(childComplexity int) int
+		UserInfo     func(childComplexity int) int
 	}
 
 	TRBRequestForm struct {
@@ -1107,6 +1109,9 @@ type SystemIntakeFundingSourceResolver interface {
 type TRBRequestResolver interface {
 	Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error)
 	Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error)
+}
+type TRBRequestAttendeeResolver interface {
+	UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error)
 }
 type TRBRequestFormResolver interface {
 	CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error)
@@ -4956,6 +4961,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestAttendee.TRBRequestID(childComplexity), true
 
+	case "TRBRequestAttendee.userInfo":
+		if e.complexity.TRBRequestAttendee.UserInfo == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestAttendee.UserInfo(childComplexity), true
+
 	case "TRBRequestForm.collabDateCloud":
 		if e.complexity.TRBRequestForm.CollabDateCloud == nil {
 			break
@@ -6890,7 +6902,8 @@ Represents an EUA user who is included as an attendee for a TRB request
 """
 type TRBRequestAttendee {
   id: UUID!
-  euaUserId: String!
+  euaUserId: String! # Sort of duplicative, as this is also in UserInfo
+  userInfo: UserInfo
   trbRequestId: UUID!
   component: String!
   role: PersonRole!
@@ -24576,6 +24589,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequestAttendee(ctx c
 				return ec.fieldContext_TRBRequestAttendee_id(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_TRBRequestAttendee_euaUserId(ctx, field)
+			case "userInfo":
+				return ec.fieldContext_TRBRequestAttendee_userInfo(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBRequestAttendee_trbRequestId(ctx, field)
 			case "component":
@@ -24651,6 +24666,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestAttendee(ctx c
 				return ec.fieldContext_TRBRequestAttendee_id(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_TRBRequestAttendee_euaUserId(ctx, field)
+			case "userInfo":
+				return ec.fieldContext_TRBRequestAttendee_userInfo(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBRequestAttendee_trbRequestId(ctx, field)
 			case "component":
@@ -24726,6 +24743,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBRequestAttendee(ctx c
 				return ec.fieldContext_TRBRequestAttendee_id(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_TRBRequestAttendee_euaUserId(ctx, field)
+			case "userInfo":
+				return ec.fieldContext_TRBRequestAttendee_userInfo(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBRequestAttendee_trbRequestId(ctx, field)
 			case "component":
@@ -32373,6 +32392,8 @@ func (ec *executionContext) fieldContext_TRBRequest_attendees(ctx context.Contex
 				return ec.fieldContext_TRBRequestAttendee_id(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_TRBRequestAttendee_euaUserId(ctx, field)
+			case "userInfo":
+				return ec.fieldContext_TRBRequestAttendee_userInfo(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBRequestAttendee_trbRequestId(ctx, field)
 			case "component":
@@ -32737,6 +32758,55 @@ func (ec *executionContext) fieldContext_TRBRequestAttendee_euaUserId(ctx contex
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestAttendee_userInfo(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestAttendee) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestAttendee_userInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBRequestAttendee().UserInfo(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalOUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestAttendee_userInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestAttendee",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
 		},
 	}
 	return fc, nil
@@ -45188,49 +45258,66 @@ func (ec *executionContext) _TRBRequestAttendee(ctx context.Context, sel ast.Sel
 			out.Values[i] = ec._TRBRequestAttendee_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "euaUserId":
 
 			out.Values[i] = ec._TRBRequestAttendee_euaUserId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "userInfo":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequestAttendee_userInfo(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "trbRequestId":
 
 			out.Values[i] = ec._TRBRequestAttendee_trbRequestId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "component":
 
 			out.Values[i] = ec._TRBRequestAttendee_component(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "role":
 
 			out.Values[i] = ec._TRBRequestAttendee_role(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequestAttendee_createdBy(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdAt":
 
 			out.Values[i] = ec._TRBRequestAttendee_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "modifiedBy":
 
@@ -49300,6 +49387,13 @@ func (ec *executionContext) marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasi
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalOUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx context.Context, sel ast.SelectionSet, v *models.UserInfo) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UserInfo(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

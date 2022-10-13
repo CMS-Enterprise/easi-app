@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2652,18 +2653,22 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
-	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+	panic(fmt.Errorf("not implemented"))
+}
+
+// UserInfo is the resolver for the userInfo field.
+func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // CollabGroups is the resolver for the collabGroups field.
 func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error) {
-	collabGroups := models.ConvertEnums[models.TRBCollabGroupOption](obj.CollabGroups)
-	return collabGroups, nil
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Email is the resolver for the email field.
 func (r *userInfoResolver) Email(ctx context.Context, obj *models.UserInfo) (string, error) {
-	return string(obj.Email), nil
+	panic(fmt.Errorf("not implemented"))
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
@@ -2735,6 +2740,11 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 // TRBRequest returns generated.TRBRequestResolver implementation.
 func (r *Resolver) TRBRequest() generated.TRBRequestResolver { return &tRBRequestResolver{r} }
 
+// TRBRequestAttendee returns generated.TRBRequestAttendeeResolver implementation.
+func (r *Resolver) TRBRequestAttendee() generated.TRBRequestAttendeeResolver {
+	return &tRBRequestAttendeeResolver{r}
+}
+
 // TRBRequestForm returns generated.TRBRequestFormResolver implementation.
 func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
@@ -2760,5 +2770,6 @@ type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
+type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
