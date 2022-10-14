@@ -22,9 +22,9 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			component = :component,
 			needs_assistance_with = :needs_assistance_with,
 			has_solution_in_mind = :has_solution_in_mind,
-			proposed_solution_description = :proposed_solution_description,
+			proposed_solution = :proposed_solution,
 			where_in_process = :where_in_process,
-			where_in_process_other_description = :where_in_process_other_description,
+			where_in_process_other = :where_in_process_other,
 			has_expected_start_end_dates = :has_expected_start_end_dates,
 			expected_start_date = :expected_start_date,
 			expected_end_date = :expected_end_date,
@@ -35,7 +35,7 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			collab_date_privacy_advisor = :collab_date_privacy_advisor,
 			collab_date_governance_review_board = :collab_date_governance_review_board,
 			collab_date_other = :collab_date_other,
-			collab_group_other_description = :collab_group_other_description,
+			collab_group_other = :collab_group_other,
 
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
