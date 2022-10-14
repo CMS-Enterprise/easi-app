@@ -13,54 +13,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// CreateTRBRequestForm creates a new TRB request form record in the database
-func (s *Store) CreateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
-	form.ID = uuid.New()
-	stmt, err := s.db.PrepareNamed(`
-		INSERT INTO trb_request_forms (
-			id,
-			trb_request_id,
-			component,
-			needs_assistance_with,
-			has_solution_in_mind,
-			where_in_process,
-			has_expected_start_end_dates,
-			collab_groups,
-			created_by,
-			modified_by
-		)
-		VALUES (
-			:id,
-			:trb_request_id,
-			:component,
-			:needs_assistance_with,
-			:has_solution_in_mind,
-			:where_in_process,
-			:has_expected_start_end_dates,
-			:collab_groups,
-			:created_by,
-			:modified_by
-		)
-		RETURNING *;`)
-
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update TRB create form %s", err),
-			zap.String("id", form.ID.String()),
-		)
-		return nil, err
-	}
-
-	created := models.TRBRequestForm{}
-	err = stmt.Get(&created, form)
-
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to create TRB request form with error %s", zap.Error(err))
-		return nil, err
-	}
-	return &created, nil
-}
-
 // UpdateTRBRequestForm updates a TRB request form record in the database
 func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
 	// return form, nil
@@ -72,6 +24,7 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			has_solution_in_mind = :has_solution_in_mind,
 			proposed_solution_description = :proposed_solution_description,
 			where_in_process = :where_in_process,
+			where_in_process_other_description = :where_in_process_other_description,
 			has_expected_start_end_dates = :has_expected_start_end_dates,
 			expected_start_date = :expected_start_date,
 			expected_end_date = :expected_end_date,

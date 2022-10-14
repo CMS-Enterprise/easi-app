@@ -36,8 +36,9 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"component":                        "Taco Cart",
 			"needsAssistanceWith":              "Some of the things",
 			"hasSolutionInMind":                true,
-			"proposedSolutionDescription":      "Tinder, but for cats",
+			"proposedSolution":                 "Tinder, but for cats",
 			"whereInProcess":                   models.TRBWhereInProcessOptionContractingWorkHasStarted,
+			"whereInProcessOther":              "Fixing Wifi",
 			"hasExpectedStartEndDates":         true,
 			"expectedStartDate":                expectedStartDate,
 			"expectedEndDate":                  expectedEndDate,
@@ -48,15 +49,16 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"collabDatePrivacyAdvisor":         collabDatePrivacyAdvisor,
 			"collabDateGovernanceReviewBoard":  collabDateGovernanceReviewBoard,
 			"collabDateOther":                  collabDateOther,
-			"collabGroupOtherDescription":      "Geek Squad",
+			"collabGroupOther":                 "Geek Squad",
 		}
 		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, formChanges)
 		s.NoError(err)
 		s.EqualValues(&anonEua, updatedForm.ModifiedBy)
 		s.EqualValues(formChanges["needsAssistanceWith"], *updatedForm.NeedsAssistanceWith)
 		s.EqualValues(formChanges["hasSolutionInMind"], *updatedForm.HasSolutionInMind)
-		s.EqualValues(formChanges["proposedSolutionDescription"], *updatedForm.ProposedSolutionDescription)
+		s.EqualValues(formChanges["proposedSolution"], *updatedForm.ProposedSolution)
 		s.EqualValues(formChanges["whereInProcess"], *updatedForm.WhereInProcess)
+		s.EqualValues(formChanges["whereInProcessOther"], *updatedForm.WhereInProcessOther)
 		s.EqualValues(formChanges["hasExpectedStartEndDates"], *updatedForm.HasExpectedStartEndDates)
 		s.True((*updatedForm.ExpectedStartDate).Equal(expectedStartDate))
 		s.True((*updatedForm.ExpectedEndDate).Equal(expectedEndDate))
@@ -69,7 +71,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.True((*updatedForm.CollabDatePrivacyAdvisor).Equal(collabDatePrivacyAdvisor))
 		s.True((*updatedForm.CollabDateGovernanceReviewBoard).Equal(collabDateGovernanceReviewBoard))
 		s.True((*updatedForm.CollabDateOther).Equal(collabDateOther))
-		s.EqualValues(formChanges["collabGroupOtherDescription"], *updatedForm.CollabGroupOtherDescription)
+		s.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
 		s.EqualValues(3, len(updatedForm.CollabGroups))
 
 		fetched, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)

@@ -1575,7 +1575,6 @@ enum TRBCollabGroupOption {
   CLOUD
   PRIVACY_ADVISOR
   GOVERNANCE_REVIEW_BOARD
-  OTHER
 }
 
 """
@@ -1587,8 +1586,9 @@ type TRBRequestForm {
   component: String
   needsAssistanceWith: String
   hasSolutionInMind: Boolean
-  proposedSolutionDescription: String
+  proposedSolution: String
   whereInProcess: TRBWhereInProcessOption
+  whereInProcessOther: String
   hasExpectedStartEndDates: Boolean
   expectedStartDate: Time
   expectedEndDate: Time
@@ -1599,7 +1599,7 @@ type TRBRequestForm {
   collabDatePrivacyAdvisor: Time
   collabDateGovernanceReviewBoard: Time
   collabDateOther: Time
-  collabGroupOtherDescription: String
+  collabGroupOther: String
 
   createdBy: String!
   createdAt: Time!

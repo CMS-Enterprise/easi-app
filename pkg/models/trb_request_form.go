@@ -45,8 +45,9 @@ type TRBRequestForm struct {
 	Component                        *string                  `json:"component" db:"component"`
 	NeedsAssistanceWith              *string                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
 	HasSolutionInMind                *bool                    `json:"hasSolutionInMind" db:"has_solution_in_mind"`
-	ProposedSolutionDescription      *string                  `json:"proposedSolutionDescription" db:"proposed_solution_description"`
+	ProposedSolution                 *string                  `json:"proposedSolution" db:"proposed_solution"`
 	WhereInProcess                   *TRBWhereInProcessOption `json:"whereInProcess" db:"where_in_process"`
+	WhereInProcessOther              *string                  `json:"whereInProcessOther" db:"where_in_process_other"`
 	HasExpectedStartEndDates         *bool                    `json:"hasExpectedStartEndDates" db:"has_expected_start_end_dates"`
 	ExpectedStartDate                *time.Time               `json:"expectedStartDate" db:"expected_start_date"`
 	ExpectedEndDate                  *time.Time               `json:"expectedEndDate" db:"expected_end_date"`
@@ -57,5 +58,5 @@ type TRBRequestForm struct {
 	CollabDatePrivacyAdvisor         *time.Time               `json:"collabDatePrivacyAdvisor" db:"collab_date_privacy_advisor"`
 	CollabDateGovernanceReviewBoard  *time.Time               `json:"collabDateGovernanceReviewBoard" db:"collab_date_governance_review_board"`
 	CollabDateOther                  *time.Time               `json:"collabDateOther" db:"collab_date_other"`
-	CollabGroupOtherDescription      *string                  `json:"collabGroupOtherDescription" db:"collab_group_other_description"`
+	CollabGroupOther                 *string                  `json:"collabGroupOther" db:"collab_group_other"`
 }

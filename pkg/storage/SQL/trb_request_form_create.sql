@@ -4,8 +4,9 @@ INSERT INTO trb_request_forms (
     component,
     needs_assistance_with,
     has_solution_in_mind,
-    proposed_solution_description,
+    proposed_solution,
     where_in_process,
+    where_in_process_other,
     has_expected_start_end_dates,
     expected_start_date,
     expected_end_date,
@@ -16,7 +17,7 @@ INSERT INTO trb_request_forms (
     collab_date_privacy_advisor,
     collab_date_governance_review_board,
     collab_date_other,
-    collab_group_other_description,
+    collab_group_other,
     created_by,
     modified_by
 )
@@ -26,8 +27,9 @@ VALUES (
     :component,
     :needs_assistance_with,
     :has_solution_in_mind,
-    :proposed_solution_description,
+    :proposed_solution,
     :where_in_process,
+    :where_in_process_other,
     :has_expected_start_end_dates,
     :expected_start_date,
     :expected_end_date,
@@ -38,7 +40,7 @@ VALUES (
     :collab_date_privacy_advisor,
     :collab_date_governance_review_board,
     :collab_date_other,
-    :collab_group_other_description,
+    :collab_group_other,
     :created_by,
     :modified_by
 )
