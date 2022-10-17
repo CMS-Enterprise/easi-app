@@ -324,7 +324,7 @@ func makeCedarIntakeClient() *intake.Client {
 	cedarAPIKey := os.Getenv(appconfig.CEDARAPIKey)
 
 	td := ldtestdata.DataSource()
-	td.Update(td.Flag("emit-to-cedar").BooleanFlag().VariationForAllUsers(true))
+	td.Update(td.Flag("emit-to-cedar").BooleanFlag().VariationForAll(true))
 	config := ld.Config{
 		DataSource: td,
 		Events:     ldcomponents.NoEvents(),
