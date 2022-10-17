@@ -6961,6 +6961,7 @@ enum TRBCollabGroupOption {
   CLOUD
   PRIVACY_ADVISOR
   GOVERNANCE_REVIEW_BOARD
+  OTHER
 }
 
 """
