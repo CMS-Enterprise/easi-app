@@ -145,6 +145,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
     // Update contacts and system intake form
     return Promise.all([
+      updateSystemIntakeContact('requester'),
       updateSystemIntakeContact('businessOwner'),
       updateSystemIntakeContact('productManager'),
       updateSystemIntakeContact('isso')
