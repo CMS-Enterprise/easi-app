@@ -7032,7 +7032,7 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   collabDatePrivacyAdvisor: Time
   collabDateGovernanceReviewBoard: Time
   collabDateOther: Time
-  collabGroupOtherDescription: String
+  collabGroupOther: String
 }
 
 """
