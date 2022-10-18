@@ -1596,6 +1596,31 @@ type TRBRequestDocument {
 }
 
 """
+The data needed to upload a TRB document and attach it to a request with metadata
+"""
+input CreateTRBRequestDocumentInput {
+  requestID: UUID!
+  fileData: Upload!
+  documentType: TRBDocumentCommonType!
+  otherTypeDescription: String  # Needed if documentType == OTHER
+}
+
+"""
+Data returned after uploading a document to a TRB request
+"""
+type CreateTRBRequestDocumentPayload {
+  # TODO - anything else needed?
+  document: TRBRequestDocument
+}
+
+"""
+Data returned after deleting a document attached to a TRB request
+"""
+type DeleteTRBRequestDocumentPayload {
+  document: TRBRequestDocument
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -1707,6 +1732,8 @@ type Mutation {
   createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
   updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
+  createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
+  deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
 }
 
 """
@@ -1737,6 +1764,7 @@ type Query {
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
+  trbRequestDocument(documentId: UUID!): TRBRequestDocument
 }
 
 enum TRBRequestType {
@@ -1765,6 +1793,12 @@ scalar Time
 Email addresses are represented as strings
 """
 scalar EmailAddress
+
+"""
+https://gqlgen.com/reference/file-upload/
+Represents a multipart file upload
+"""
+scalar Upload
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 

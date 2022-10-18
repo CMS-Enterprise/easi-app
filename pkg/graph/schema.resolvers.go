@@ -1909,6 +1909,16 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 	return resolvers.DeleteTRBRequestAttendee(ctx, r.store, id)
 }
 
+// CreateTRBRequestDocument is the resolver for the createTRBRequestDocument field.
+func (r *mutationResolver) CreateTRBRequestDocument(ctx context.Context, input model.CreateTRBRequestDocumentInput) (*model.CreateTRBRequestDocumentPayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// DeleteTRBRequestDocument is the resolver for the deleteTRBRequestDocument field.
+func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2261,6 +2271,11 @@ func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.T
 // TrbRequests is the resolver for the trbRequests field.
 func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	return resolvers.GetTRBRequests(ctx, archived, r.store)
+}
+
+// TrbRequestDocument is the resolver for the trbRequestDocument field.
+func (r *queryResolver) TrbRequestDocument(ctx context.Context, documentID uuid.UUID) (*model.TRBRequestDocument, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Actions is the resolver for the actions field.
