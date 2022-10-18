@@ -799,6 +799,7 @@ type ComplexityRoot struct {
 		ModifiedBy                       func(childComplexity int) int
 		NeedsAssistanceWith              func(childComplexity int) int
 		ProposedSolution                 func(childComplexity int) int
+		Status                           func(childComplexity int) int
 		TRBRequestID                     func(childComplexity int) int
 		WhereInProcess                   func(childComplexity int) int
 		WhereInProcessOther              func(childComplexity int) int
@@ -5109,6 +5110,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.ProposedSolution(childComplexity), true
 
+	case "TRBRequestForm.status":
+		if e.complexity.TRBRequestForm.Status == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.Status(childComplexity), true
+
 	case "TRBRequestForm.trbRequestId":
 		if e.complexity.TRBRequestForm.TRBRequestID == nil {
 			break
@@ -6941,7 +6949,7 @@ input UpdateTRBRequestAttendeeInput {
 }
 
 """
-Represents a lifecycle cost phase
+Represents an option selected to the "where are you in the process?" TRB request form
 """
 enum TRBWhereInProcessOption {
   I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM
@@ -6953,7 +6961,7 @@ enum TRBWhereInProcessOption {
 }
 
 """
-Represents a lifecycle cost phase
+Represents an option selected for collaboration groups in the TRB request form
 """
 enum TRBCollabGroupOption {
   SECURITY
@@ -6965,11 +6973,21 @@ enum TRBCollabGroupOption {
 }
 
 """
+Represents the status of a TRB request form
+"""
+enum TRBFormStatus {
+  READY_TO_START
+  IN_PROGRESS
+  COMPLETED
+}
+
+"""
 Represents an EUA user who is included as an form for a TRB request
 """
 type TRBRequestForm {
   id: UUID!
   trbRequestId: UUID!
+  status: TRBFormStatus!
   component: String
   needsAssistanceWith: String
   hasSolutionInMind: Boolean
@@ -24838,6 +24856,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestForm(ctx conte
 				return ec.fieldContext_TRBRequestForm_id(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBRequestForm_trbRequestId(ctx, field)
+			case "status":
+				return ec.fieldContext_TRBRequestForm_status(ctx, field)
 			case "component":
 				return ec.fieldContext_TRBRequestForm_component(ctx, field)
 			case "needsAssistanceWith":
@@ -32478,6 +32498,8 @@ func (ec *executionContext) fieldContext_TRBRequest_form(ctx context.Context, fi
 				return ec.fieldContext_TRBRequestForm_id(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBRequestForm_trbRequestId(ctx, field)
+			case "status":
+				return ec.fieldContext_TRBRequestForm_status(ctx, field)
 			case "component":
 				return ec.fieldContext_TRBRequestForm_component(ctx, field)
 			case "needsAssistanceWith":
@@ -33219,6 +33241,50 @@ func (ec *executionContext) fieldContext_TRBRequestForm_trbRequestId(ctx context
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_status(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_status(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.TRBFormStatus)
+	fc.Result = res
+	return ec.marshalNTRBFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFormStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBFormStatus does not have child fields")
 		},
 	}
 	return fc, nil
@@ -45425,6 +45491,13 @@ func (ec *executionContext) _TRBRequestForm(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "status":
+
+			out.Values[i] = ec._TRBRequestForm_status(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "component":
 
 			out.Values[i] = ec._TRBRequestForm_component(ctx, field, obj)
@@ -47974,6 +48047,22 @@ func (ec *executionContext) marshalNTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsgo
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNTRBFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFormStatus(ctx context.Context, v interface{}) (models.TRBFormStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TRBFormStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFormStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBFormStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNTRBRequest2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequest(ctx context.Context, sel ast.SelectionSet, v models.TRBRequest) graphql.Marshaler {

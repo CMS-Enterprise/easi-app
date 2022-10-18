@@ -38,10 +38,21 @@ const (
 	TRBCollabGroupOptionOther                  TRBCollabGroupOption = "OTHER"
 )
 
+// TRBFormStatus is an enumeration of the possible statuses of a TRBRequestForm
+type TRBFormStatus string
+
+// These are the possible statuses for a TRB request form
+const (
+	TRBFormStatusReadyToStart TRBFormStatus = "READY_TO_START"
+	TRBFormStatusInProgress   TRBFormStatus = "IN_PROGRESS"
+	TRBFormStatusCompleted    TRBFormStatus = "COMPLETED"
+)
+
 // TRBRequestForm represents the data entered into the TRB request form
 type TRBRequestForm struct {
 	baseStruct
 	TRBRequestID                     uuid.UUID                `json:"trbRequestId" db:"trb_request_id"`
+	Status                           TRBFormStatus            `json:"status" db:"status"`
 	Component                        *string                  `json:"component" db:"component"`
 	NeedsAssistanceWith              *string                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
 	HasSolutionInMind                *bool                    `json:"hasSolutionInMind" db:"has_solution_in_mind"`

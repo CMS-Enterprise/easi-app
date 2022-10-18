@@ -58,6 +58,7 @@ func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 
 	form := models.TRBRequestForm{
 		TRBRequestID: retTRB.ID,
+		Status:       models.TRBFormStatusReadyToStart,
 		CollabGroups: pq.StringArray{},
 	}
 	form.ID = uuid.New()

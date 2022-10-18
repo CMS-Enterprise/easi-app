@@ -15,10 +15,11 @@ import (
 
 // UpdateTRBRequestForm updates a TRB request form record in the database
 func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
-	// return form, nil
+	form.Status = models.TRBFormStatusInProgress
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_request_forms
 		SET
+			status = :status,
 			component = :component,
 			needs_assistance_with = :needs_assistance_with,
 			has_solution_in_mind = :has_solution_in_mind,

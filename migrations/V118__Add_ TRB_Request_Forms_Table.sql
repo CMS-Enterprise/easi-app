@@ -16,9 +16,16 @@ CREATE TYPE trb_collab_group_option AS ENUM (
     'OTHER'
 );
 
+CREATE TYPE trb_form_status AS ENUM (
+    'READY_TO_START',
+    'IN_PROGRESS',
+    'COMPLETED'
+);
+
 CREATE TABLE trb_request_forms (
     id UUID PRIMARY KEY NOT NULL,
     trb_request_id uuid NOT NULL REFERENCES trb_request(id),
+    status trb_form_status NOT NULL DEFAULT 'READY_TO_START',
     component TEXT,
     needs_assistance_with TEXT,
     has_solution_in_mind BOOLEAN,
