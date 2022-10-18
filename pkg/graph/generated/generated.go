@@ -754,6 +754,7 @@ type ComplexityRoot struct {
 		Attendees  func(childComplexity int) int
 		CreatedAt  func(childComplexity int) int
 		CreatedBy  func(childComplexity int) int
+		Documents  func(childComplexity int) int
 		ID         func(childComplexity int) int
 		ModifiedAt func(childComplexity int) int
 		ModifiedBy func(childComplexity int) int
@@ -773,6 +774,20 @@ type ComplexityRoot struct {
 		Role         func(childComplexity int) int
 		TRBRequestID func(childComplexity int) int
 		UserInfo     func(childComplexity int) int
+	}
+
+	TRBRequestDocument struct {
+		DocumentType func(childComplexity int) int
+		FileName     func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Status       func(childComplexity int) int
+		URL          func(childComplexity int) int
+		UploadedAt   func(childComplexity int) int
+	}
+
+	TRBRequestDocumentType struct {
+		CommonType           func(childComplexity int) int
+		OtherTypeDescription func(childComplexity int) int
 	}
 
 	TestDate struct {
@@ -1079,6 +1094,7 @@ type SystemIntakeFundingSourceResolver interface {
 }
 type TRBRequestResolver interface {
 	Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error)
+	Documents(ctx context.Context, obj *models.TRBRequest) ([]*model.TRBRequestDocument, error)
 }
 type TRBRequestAttendeeResolver interface {
 	UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error)
@@ -4804,6 +4820,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.CreatedBy(childComplexity), true
 
+	case "TRBRequest.documents":
+		if e.complexity.TRBRequest.Documents == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.Documents(childComplexity), true
+
 	case "TRBRequest.id":
 		if e.complexity.TRBRequest.ID == nil {
 			break
@@ -4915,6 +4938,62 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequestAttendee.UserInfo(childComplexity), true
+
+	case "TRBRequestDocument.documentType":
+		if e.complexity.TRBRequestDocument.DocumentType == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocument.DocumentType(childComplexity), true
+
+	case "TRBRequestDocument.fileName":
+		if e.complexity.TRBRequestDocument.FileName == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocument.FileName(childComplexity), true
+
+	case "TRBRequestDocument.id":
+		if e.complexity.TRBRequestDocument.ID == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocument.ID(childComplexity), true
+
+	case "TRBRequestDocument.status":
+		if e.complexity.TRBRequestDocument.Status == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocument.Status(childComplexity), true
+
+	case "TRBRequestDocument.url":
+		if e.complexity.TRBRequestDocument.URL == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocument.URL(childComplexity), true
+
+	case "TRBRequestDocument.uploadedAt":
+		if e.complexity.TRBRequestDocument.UploadedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocument.UploadedAt(childComplexity), true
+
+	case "TRBRequestDocumentType.commonType":
+		if e.complexity.TRBRequestDocumentType.CommonType == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocumentType.CommonType(childComplexity), true
+
+	case "TRBRequestDocumentType.otherTypeDescription":
+		if e.complexity.TRBRequestDocumentType.OtherTypeDescription == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocumentType.OtherTypeDescription(childComplexity), true
 
 	case "TestDate.date":
 		if e.complexity.TestDate.Date == nil {
@@ -6672,6 +6751,7 @@ type TRBRequest {
   type: TRBRequestType!
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
+  documents: [TRBRequestDocument!]!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -6723,6 +6803,48 @@ input UpdateTRBRequestAttendeeInput {
   id: UUID!
   component: String!
   role: PersonRole!
+}
+
+"""
+Enumeration of the possible statuses of documents uploaded in the TRB workflow
+"""
+enum TRBRequestDocumentStatus {
+  AVAILABLE
+  PENDING
+  UNAVAILABLE
+}
+
+"""
+Represents the common options for document type that is attached to a
+508/accessibility request
+"""
+enum TRBDocumentCommonType {
+  ARCHITECTURE_DIAGRAM
+  PRESENTATION_SLIDE_DECK
+  BUSINESS_CASE
+  OTHER
+}
+
+"""
+Denotes the type of a document attached to a TRB request,
+which can be one of a number of common types, or a free-text user-specified type
+"""
+type TRBRequestDocumentType {
+  commonType: TRBDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""
+Represents a document attached to a TRB request
+"""
+type TRBRequestDocument {
+  documentType: TRBRequestDocumentType!
+  id: UUID!
+  fileName: String!
+  #  TODO - request ID?
+  status: TRBRequestDocumentStatus!
+  uploadedAt: Time!
+  url: String!
 }
 
 """
@@ -24149,6 +24271,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
 				return ec.fieldContext_TRBRequest_attendees(ctx, field)
+			case "documents":
+				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -24226,6 +24350,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
 				return ec.fieldContext_TRBRequest_attendees(ctx, field)
+			case "documents":
+				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -26047,6 +26173,8 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
 				return ec.fieldContext_TRBRequest_attendees(ctx, field)
+			case "documents":
+				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -26124,6 +26252,8 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
 				return ec.fieldContext_TRBRequest_attendees(ctx, field)
+			case "documents":
+				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -32016,6 +32146,64 @@ func (ec *executionContext) fieldContext_TRBRequest_attendees(ctx context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _TRBRequest_documents(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_documents(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBRequest().Documents(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.TRBRequestDocument)
+	fc.Result = res
+	return ec.marshalNTRBRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocumentᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_documents(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "documentType":
+				return ec.fieldContext_TRBRequestDocument_documentType(ctx, field)
+			case "id":
+				return ec.fieldContext_TRBRequestDocument_id(ctx, field)
+			case "fileName":
+				return ec.fieldContext_TRBRequestDocument_fileName(ctx, field)
+			case "status":
+				return ec.fieldContext_TRBRequestDocument_status(ctx, field)
+			case "uploadedAt":
+				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
+			case "url":
+				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBRequest_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBRequest_createdBy(ctx, field)
 	if err != nil {
@@ -32620,6 +32808,361 @@ func (ec *executionContext) fieldContext_TRBRequestAttendee_modifiedAt(ctx conte
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocument_documentType(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocument_documentType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DocumentType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.TRBRequestDocumentType)
+	fc.Result = res
+	return ec.marshalNTRBRequestDocumentType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocumentType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocument_documentType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonType":
+				return ec.fieldContext_TRBRequestDocumentType_commonType(ctx, field)
+			case "otherTypeDescription":
+				return ec.fieldContext_TRBRequestDocumentType_otherTypeDescription(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocumentType", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocument_id(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocument_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocument_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocument_fileName(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocument_fileName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FileName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocument_fileName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocument_status(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocument_status(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.TRBRequestDocumentStatus)
+	fc.Result = res
+	return ec.marshalNTRBRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocumentStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocument_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBRequestDocumentStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocument_uploadedAt(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UploadedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocument_uploadedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocument_url(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocument_url(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocument_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocumentType_commonType(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestDocumentType) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocumentType_commonType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CommonType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.TRBDocumentCommonType)
+	fc.Result = res
+	return ec.marshalNTRBDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBDocumentCommonType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocumentType_commonType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocumentType",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBDocumentCommonType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocumentType_otherTypeDescription(ctx context.Context, field graphql.CollectedField, obj *model.TRBRequestDocumentType) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocumentType_otherTypeDescription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OtherTypeDescription, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocumentType_otherTypeDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocumentType",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -43775,6 +44318,26 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 				return innerFunc(ctx)
 
 			})
+		case "documents":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_documents(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequest_createdBy(ctx, field, obj)
@@ -43891,6 +44454,101 @@ func (ec *executionContext) _TRBRequestAttendee(ctx context.Context, sel ast.Sel
 		case "modifiedAt":
 
 			out.Values[i] = ec._TRBRequestAttendee_modifiedAt(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var tRBRequestDocumentImplementors = []string{"TRBRequestDocument"}
+
+func (ec *executionContext) _TRBRequestDocument(ctx context.Context, sel ast.SelectionSet, obj *model.TRBRequestDocument) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBRequestDocumentImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TRBRequestDocument")
+		case "documentType":
+
+			out.Values[i] = ec._TRBRequestDocument_documentType(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "id":
+
+			out.Values[i] = ec._TRBRequestDocument_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "fileName":
+
+			out.Values[i] = ec._TRBRequestDocument_fileName(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "status":
+
+			out.Values[i] = ec._TRBRequestDocument_status(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "uploadedAt":
+
+			out.Values[i] = ec._TRBRequestDocument_uploadedAt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "url":
+
+			out.Values[i] = ec._TRBRequestDocument_url(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var tRBRequestDocumentTypeImplementors = []string{"TRBRequestDocumentType"}
+
+func (ec *executionContext) _TRBRequestDocumentType(ctx context.Context, sel ast.SelectionSet, obj *model.TRBRequestDocumentType) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBRequestDocumentTypeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TRBRequestDocumentType")
+		case "commonType":
+
+			out.Values[i] = ec._TRBRequestDocumentType_commonType(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "otherTypeDescription":
+
+			out.Values[i] = ec._TRBRequestDocumentType_otherTypeDescription(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -46260,6 +46918,16 @@ func (ec *executionContext) marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋe
 	return res
 }
 
+func (ec *executionContext) unmarshalNTRBDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBDocumentCommonType(ctx context.Context, v interface{}) (model.TRBDocumentCommonType, error) {
+	var res model.TRBDocumentCommonType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBDocumentCommonType(ctx context.Context, sel ast.SelectionSet, v model.TRBDocumentCommonType) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNTRBRequest2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequest(ctx context.Context, sel ast.SelectionSet, v models.TRBRequest) graphql.Marshaler {
 	return ec._TRBRequest(ctx, sel, &v)
 }
@@ -46374,6 +47042,80 @@ func (ec *executionContext) marshalNTRBRequestAttendee2ᚖgithubᚗcomᚋcmsgov�
 		return graphql.Null
 	}
 	return ec._TRBRequestAttendee(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNTRBRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.TRBRequestDocument) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTRBRequestDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocument(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNTRBRequestDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocument(ctx context.Context, sel ast.SelectionSet, v *model.TRBRequestDocument) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TRBRequestDocument(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTRBRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocumentStatus(ctx context.Context, v interface{}) (model.TRBRequestDocumentStatus, error) {
+	var res model.TRBRequestDocumentStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocumentStatus(ctx context.Context, sel ast.SelectionSet, v model.TRBRequestDocumentStatus) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) marshalNTRBRequestDocumentType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBRequestDocumentType(ctx context.Context, sel ast.SelectionSet, v *model.TRBRequestDocumentType) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TRBRequestDocumentType(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNTRBRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestStatus(ctx context.Context, v interface{}) (models.TRBRequestStatus, error) {

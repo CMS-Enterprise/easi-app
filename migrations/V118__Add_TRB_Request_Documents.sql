@@ -16,7 +16,7 @@ CREATE TABLE trb_request_documents (
     id UUID PRIMARY KEY NOT NULL,
     trb_request_id uuid NOT NULL REFERENCES trb_request(id),
 
-    -- user-visibile info
+    -- user-visible info
     file_name TEXT NOT NULL,
     document_type trb_request_document_type NOT NULL,
     other_type TEXT, -- used to represent user-entered document types

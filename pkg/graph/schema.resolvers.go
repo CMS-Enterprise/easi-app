@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2643,6 +2644,11 @@ func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *mod
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
+}
+
+// Documents is the resolver for the documents field.
+func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*model.TRBRequestDocument, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // UserInfo is the resolver for the userInfo field.
