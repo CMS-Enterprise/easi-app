@@ -36,21 +36,30 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
    * Create TRB request attendee
    */
   const [createAttendee] = useMutation<CreateTRBRequestAttendeeInput>(
-    CreateTRBRequestAttendee
+    CreateTRBRequestAttendee,
+    {
+      refetchQueries: ['GetTRBRequestAttendees']
+    }
   );
 
   /**
    * Update TRB request attendee
    */
   const [updateAttendee] = useMutation<UpdateTRBRequestAttendeeInput>(
-    UpdateTRBRequestAttendee
+    UpdateTRBRequestAttendee,
+    {
+      refetchQueries: ['GetTRBRequestAttendees']
+    }
   );
 
   /**
    * Delete TRB request attendee
    */
   const [deleteAttendee] = useMutation<{ id: string }>(
-    DeleteTRBRequestAttendee
+    DeleteTRBRequestAttendee,
+    {
+      refetchQueries: ['GetTRBRequestAttendees']
+    }
   );
 
   return {
@@ -59,6 +68,6 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
       createAttendee({ variables: { input: attendee } }),
     updateAttendee: (attendee: UpdateTRBRequestAttendeeInput) =>
       updateAttendee({ variables: { input: attendee } }),
-    deleteAttendee: (id: string) => deleteAttendee({ variables: { input: id } })
+    deleteAttendee: (id: string) => deleteAttendee({ variables: { id } })
   };
 }

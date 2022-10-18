@@ -63,7 +63,8 @@ const AttendeeFields = ({
             })
           }
         >
-          {cmsDivisionsAndOfficesOptions}
+          <option label={`- ${'Select'} -`} />
+          {cmsDivisionsAndOfficesOptions('trbAttendee-component')}
         </Dropdown>
       </FieldGroup>
       {/* Attendee role */}
@@ -82,8 +83,9 @@ const AttendeeFields = ({
             })
           }
         >
+          <option label={`- ${'Select'} -`} />
           {contactRoles.map(({ key, label }) => (
-            <option key={key} label={label} />
+            <option key={key} value={key} label={label} />
           ))}
         </Dropdown>
       </FieldGroup>

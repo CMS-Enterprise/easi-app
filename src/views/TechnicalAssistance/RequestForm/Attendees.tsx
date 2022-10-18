@@ -4,39 +4,19 @@ import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-// import useTRBAttendees from 'hooks/useTRBAttendees';
-import { TRBAttendee } from 'queries/types/TRBAttendee';
-import { PersonRole } from 'types/graphql-global-types';
 
 import { AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-const testAttendees: TRBAttendee[] = [
-  {
-    __typename: 'TRBRequestAttendee',
-    id: '2f78767e-c4fc-4abe-9db8-feaa8c058b6b',
-    trbRequestId: '426c93bc-431f-411c-9494-ddb40e7572d2',
-    userInfo: {
-      __typename: 'UserInfo',
-      commonName: 'Ashley Terstriep',
-      email: 'aterstriep@oddball.io',
-      euaUserId: 'TXJK'
-    },
-    component: 'CMS Wide',
-    role: PersonRole.PRODUCT_OWNER,
-    createdAt: ''
-  }
-];
-
 function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
 
-  let { attendees } = useTRBAttendees(request.id);
-  attendees = [...attendees, ...testAttendees];
+  // Get TRB attendees
+  const { attendees } = useTRBAttendees(request.id);
 
   return (
     <div className="trb-attendees">

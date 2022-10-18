@@ -4,8 +4,10 @@ import { IconArrowBack } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import useTRBAttendees from 'hooks/useTRBAttendees';
 // eslint-disable-next-line camelcase
 import { CreateTrbRequest_createTRBRequest } from 'queries/types/CreateTrbRequest';
+import { PersonRole } from 'types/graphql-global-types';
 import { AttendeeFormFields } from 'types/technicalAssistance';
 
 import Breadcrumbs from '../../Breadcrumbs';
@@ -32,6 +34,9 @@ function AttendeesForm({ request, backToFormUrl }: AttendeesFormProps) {
     ...initialAttendee,
     trbRequestId: request.id
   });
+
+  // Create attendee
+  const { createAttendee } = useTRBAttendees(request.id);
 
   if (backToFormUrl) {
     return (
@@ -71,7 +76,14 @@ function AttendeesForm({ request, backToFormUrl }: AttendeesFormProps) {
             variant="unstyled"
             className="usa-button"
             to={backToFormUrl}
-            onClick={() => null}
+            onClick={() =>
+              createAttendee({
+                trbRequestId: request.id,
+                euaUserId: activeAttendee.userInfo?.euaUserId || '',
+                component: activeAttendee.component,
+                role: activeAttendee.role as PersonRole
+              })
+            }
           >
             {t('attendees.addAttendee')}
           </UswdsReactLink>
