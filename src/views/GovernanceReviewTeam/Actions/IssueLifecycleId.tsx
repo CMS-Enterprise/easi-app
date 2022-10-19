@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
@@ -84,7 +84,10 @@ const IssueLifecycleId = () => {
   // Wait for contacts to load before returning form
   if (loading) return null;
 
-  const onSubmit = async (values: SubmitLifecycleIdForm) => {
+  const onSubmit = async (
+    values: SubmitLifecycleIdForm,
+    { setFieldError }: FormikHelpers<SubmitLifecycleIdForm>
+  ) => {
     const {
       feedback,
       expirationDateMonth = '',
@@ -117,14 +120,17 @@ const IssueLifecycleId = () => {
     };
 
     // GQL mutation to issue lifecycle ID
-    const response = await mutate({
+    mutate({
       variables: { input }
-    });
-
-    // If no errors, view intake action notes
-    if (!response.errors) {
-      history.push(`/governance-review-team/${systemId}/notes`);
-    }
+    })
+      .then(({ errors }) => {
+        if (!errors) {
+          // If no errors, view intake action notes
+          history.push(`/governance-review-team/${systemId}/notes`);
+        }
+      })
+      // Set Formik error to display alert
+      .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
 
   return (

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { ApolloQueryResult, useMutation } from '@apollo/client';
+import { ApolloError, ApolloQueryResult, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
@@ -113,7 +113,10 @@ const ExtendLifecycleId = ({
 
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const handleSubmit = async (values: ExtendLCIDForm) => {
+  const handleSubmit = (
+    values: ExtendLCIDForm,
+    { setFieldError }: FormikHelpers<ExtendLCIDForm>
+  ) => {
     const {
       expirationDateMonth = '',
       expirationDateDay = '',
@@ -132,7 +135,7 @@ const ExtendLifecycleId = ({
     ).toISO();
 
     // GQL mutation to extend lifecycle ID
-    const response = await extendLifecycleID({
+    extendLifecycleID({
       variables: {
         input: {
           id: systemId,
@@ -144,13 +147,16 @@ const ExtendLifecycleId = ({
           notificationRecipients
         }
       }
-    });
-
-    // If no errors, view intake action notes
-    if (!response.errors) {
-      history.push(`/governance-review-team/${systemId}/notes`);
-      onSubmit();
-    }
+    })
+      .then(({ errors }) => {
+        if (!errors) {
+          // If no errors, view intake action notes
+          history.push(`/governance-review-team/${systemId}/notes`);
+          onSubmit();
+        }
+      })
+      // Set Formik error to display alert
+      .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
 
   // Wait for contacts to load before returning form

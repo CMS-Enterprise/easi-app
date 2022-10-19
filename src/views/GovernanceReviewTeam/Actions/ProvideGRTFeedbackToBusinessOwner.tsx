@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { DocumentNode, useMutation } from '@apollo/client';
+import { ApolloError, DocumentNode, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -66,11 +66,14 @@ const ProvideGRTFeedbackToBusinessOwner = ({
     }
   };
 
-  const onSubmit = async (values: ProvideGRTFeedbackForm) => {
+  const onSubmit = (
+    values: ProvideGRTFeedbackForm,
+    { setFieldError }: FormikHelpers<ProvideGRTFeedbackForm>
+  ) => {
     const { grtFeedback, emailBody, notificationRecipients } = values;
 
     // GQL mutation to submit action
-    const response = await mutate({
+    mutate({
       variables: {
         input: {
           emailBody,
@@ -80,12 +83,15 @@ const ProvideGRTFeedbackToBusinessOwner = ({
           notificationRecipients
         }
       }
-    });
-
-    // If no errors, view intake action notes
-    if (!response.errors) {
-      history.push(`/governance-review-team/${systemId}/notes`);
-    }
+    })
+      .then(({ errors }) => {
+        if (!errors) {
+          // If no errors, view intake action notes
+          history.push(`/governance-review-team/${systemId}/notes`);
+        }
+      })
+      // Set Formik error to display alert
+      .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
 
   // Wait for contacts to load before returning form

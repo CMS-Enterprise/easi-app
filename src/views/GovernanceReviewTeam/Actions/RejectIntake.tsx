@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -66,7 +66,10 @@ const RejectIntake = () => {
     }
   };
 
-  const onSubmit = async (values: RejectIntakeForm) => {
+  const onSubmit = (
+    values: RejectIntakeForm,
+    { setFieldError }: FormikHelpers<RejectIntakeForm>
+  ) => {
     const { feedback, nextSteps, reason, notificationRecipients } = values;
 
     // Mutation input
@@ -80,14 +83,17 @@ const RejectIntake = () => {
     };
 
     // GQL mutation to reject intake
-    const response = await mutate({
+    mutate({
       variables: { input }
-    });
-
-    // If no errors, view intake action notes
-    if (!response.errors) {
-      history.push(`/governance-review-team/${systemId}/notes`);
-    }
+    })
+      .then(({ errors }) => {
+        if (!errors) {
+          // If no errors, view intake action notes
+          history.push(`/governance-review-team/${systemId}/notes`);
+        }
+      })
+      // Set Formik error to display alert
+      .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
 
   // Wait for contacts to load before returning form

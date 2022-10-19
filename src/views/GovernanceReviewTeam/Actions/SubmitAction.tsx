@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { DocumentNode, useMutation } from '@apollo/client';
+import { ApolloError, DocumentNode, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -51,15 +51,18 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
     setActiveContact
   ] = useState<SystemIntakeContactProps | null>(null);
 
-  const [mutate, mutationResult] = useMutation<ActionInput>(query);
+  const [mutate] = useMutation<ActionInput>(query);
 
   const { pathname } = useLocation();
 
-  const dispatchSave = async (values: ActionForm) => {
+  const dispatchSave = (
+    values: ActionForm,
+    { setFieldError }: FormikHelpers<ActionForm>
+  ) => {
     const { feedback, notificationRecipients } = values;
 
     // GQL mutation to submit action
-    const response = await mutate({
+    mutate({
       variables: {
         input: {
           intakeId: systemId,
@@ -68,12 +71,15 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
           notificationRecipients
         }
       }
-    });
-
-    // If no errors, view intake request
-    if (!response.errors) {
-      history.push(`/governance-review-team/${systemId}/intake-request`);
-    }
+    })
+      .then(({ errors }) => {
+        if (!errors) {
+          // If no errors, view intake request
+          history.push(`/governance-review-team/${systemId}/intake-request`);
+        }
+      })
+      // Set Formik error to display alert
+      .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
 
   const initialValues: ActionForm = {
@@ -128,14 +134,6 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                     />
                   );
                 })}
-              </ErrorAlert>
-            )}
-            {mutationResult && mutationResult.error && (
-              <ErrorAlert heading="Error">
-                <ErrorAlertMessage
-                  message={mutationResult.error.message}
-                  errorKey="systemIntake"
-                />
               </ErrorAlert>
             )}
             <PageHeading
