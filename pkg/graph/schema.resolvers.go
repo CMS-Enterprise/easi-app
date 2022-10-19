@@ -2274,7 +2274,7 @@ func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*mode
 }
 
 // TrbRequestDocument is the resolver for the trbRequestDocument field.
-func (r *queryResolver) TrbRequestDocument(ctx context.Context, documentID uuid.UUID) (*model.TRBRequestDocument, error) {
+func (r *queryResolver) TrbRequestDocument(ctx context.Context, documentID uuid.UUID) (*models.TRBRequestDocument, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -2662,7 +2662,7 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 }
 
 // Documents is the resolver for the documents field.
-func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*model.TRBRequestDocument, error) {
+func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -2673,6 +2673,16 @@ func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.T
 		return nil, err
 	}
 	return userInfo, nil
+}
+
+// DocumentType is the resolver for the documentType field.
+func (r *tRBRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.TRBRequestDocument) (*model.TRBRequestDocumentType, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// UploadedAt is the resolver for the uploadedAt field.
+func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.TRBRequestDocument) (*time.Time, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Email is the resolver for the email field.
@@ -2754,6 +2764,11 @@ func (r *Resolver) TRBRequestAttendee() generated.TRBRequestAttendeeResolver {
 	return &tRBRequestAttendeeResolver{r}
 }
 
+// TRBRequestDocument returns generated.TRBRequestDocumentResolver implementation.
+func (r *Resolver) TRBRequestDocument() generated.TRBRequestDocumentResolver {
+	return &tRBRequestDocumentResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2775,4 +2790,5 @@ type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
+type tRBRequestDocumentResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

@@ -227,15 +227,15 @@ type CreateTRBRequestAttendeeInput struct {
 
 // The data needed to upload a TRB document and attach it to a request with metadata
 type CreateTRBRequestDocumentInput struct {
-	RequestID            uuid.UUID             `json:"requestID"`
-	FileData             graphql.Upload        `json:"fileData"`
-	DocumentType         TRBDocumentCommonType `json:"documentType"`
-	OtherTypeDescription *string               `json:"otherTypeDescription"`
+	RequestID            uuid.UUID                    `json:"requestID"`
+	FileData             graphql.Upload               `json:"fileData"`
+	DocumentType         models.TRBDocumentCommonType `json:"documentType"`
+	OtherTypeDescription *string                      `json:"otherTypeDescription"`
 }
 
 // Data returned after uploading a document to a TRB request
 type CreateTRBRequestDocumentPayload struct {
-	Document *TRBRequestDocument `json:"document"`
+	Document *models.TRBRequestDocument `json:"document"`
 }
 
 // The input required to add a test date/score to a 508/accessibility request
@@ -297,7 +297,7 @@ type DeleteSystemIntakeContactPayload struct {
 
 // Data returned after deleting a document attached to a TRB request
 type DeleteTRBRequestDocumentPayload struct {
-	Document *TRBRequestDocument `json:"document"`
+	Document *models.TRBRequestDocument `json:"document"`
 }
 
 // The input required to delete a test date/score
@@ -598,21 +598,11 @@ type SystemIntakeRequesterWithComponentInput struct {
 	Component string `json:"component"`
 }
 
-// Represents a document attached to a TRB request
-type TRBRequestDocument struct {
-	DocumentType *TRBRequestDocumentType  `json:"documentType"`
-	ID           uuid.UUID                `json:"id"`
-	FileName     string                   `json:"fileName"`
-	Status       TRBRequestDocumentStatus `json:"status"`
-	UploadedAt   time.Time                `json:"uploadedAt"`
-	URL          string                   `json:"url"`
-}
-
 // Denotes the type of a document attached to a TRB request,
 // which can be one of a number of common types, or a free-text user-specified type
 type TRBRequestDocumentType struct {
-	CommonType           TRBDocumentCommonType `json:"commonType"`
-	OtherTypeDescription *string               `json:"otherTypeDescription"`
+	CommonType           models.TRBDocumentCommonType `json:"commonType"`
+	OtherTypeDescription *string                      `json:"otherTypeDescription"`
 }
 
 // Parameters for updating a 508/accessibility request's associated CEDAR system
@@ -909,96 +899,5 @@ func (e *SystemIntakeActionType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// Represents the common options for document type that is attached to a
-// 508/accessibility request
-type TRBDocumentCommonType string
-
-const (
-	TRBDocumentCommonTypeArchitectureDiagram   TRBDocumentCommonType = "ARCHITECTURE_DIAGRAM"
-	TRBDocumentCommonTypePresentationSlideDeck TRBDocumentCommonType = "PRESENTATION_SLIDE_DECK"
-	TRBDocumentCommonTypeBusinessCase          TRBDocumentCommonType = "BUSINESS_CASE"
-	TRBDocumentCommonTypeOther                 TRBDocumentCommonType = "OTHER"
-)
-
-var AllTRBDocumentCommonType = []TRBDocumentCommonType{
-	TRBDocumentCommonTypeArchitectureDiagram,
-	TRBDocumentCommonTypePresentationSlideDeck,
-	TRBDocumentCommonTypeBusinessCase,
-	TRBDocumentCommonTypeOther,
-}
-
-func (e TRBDocumentCommonType) IsValid() bool {
-	switch e {
-	case TRBDocumentCommonTypeArchitectureDiagram, TRBDocumentCommonTypePresentationSlideDeck, TRBDocumentCommonTypeBusinessCase, TRBDocumentCommonTypeOther:
-		return true
-	}
-	return false
-}
-
-func (e TRBDocumentCommonType) String() string {
-	return string(e)
-}
-
-func (e *TRBDocumentCommonType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TRBDocumentCommonType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TRBDocumentCommonType", str)
-	}
-	return nil
-}
-
-func (e TRBDocumentCommonType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// Enumeration of the possible statuses of documents uploaded in the TRB workflow
-type TRBRequestDocumentStatus string
-
-const (
-	TRBRequestDocumentStatusAvailable   TRBRequestDocumentStatus = "AVAILABLE"
-	TRBRequestDocumentStatusPending     TRBRequestDocumentStatus = "PENDING"
-	TRBRequestDocumentStatusUnavailable TRBRequestDocumentStatus = "UNAVAILABLE"
-)
-
-var AllTRBRequestDocumentStatus = []TRBRequestDocumentStatus{
-	TRBRequestDocumentStatusAvailable,
-	TRBRequestDocumentStatusPending,
-	TRBRequestDocumentStatusUnavailable,
-}
-
-func (e TRBRequestDocumentStatus) IsValid() bool {
-	switch e {
-	case TRBRequestDocumentStatusAvailable, TRBRequestDocumentStatusPending, TRBRequestDocumentStatusUnavailable:
-		return true
-	}
-	return false
-}
-
-func (e TRBRequestDocumentStatus) String() string {
-	return string(e)
-}
-
-func (e *TRBRequestDocumentStatus) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TRBRequestDocumentStatus(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TRBRequestDocumentStatus", str)
-	}
-	return nil
-}
-
-func (e TRBRequestDocumentStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

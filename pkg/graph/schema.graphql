@@ -1501,7 +1501,7 @@ type TRBRequest {
   attendees: [TRBRequestAttendee!]!
   documents: [TRBRequestDocument!]!
   createdBy: String!
-  createdAt: Time!
+  createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
   modifiedAt: Time
 }
