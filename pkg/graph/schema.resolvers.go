@@ -1908,6 +1908,11 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 	return resolvers.DeleteTRBRequestAttendee(ctx, r.store, id)
 }
 
+// UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
+func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
+	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2645,6 +2650,11 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
+// Form is the resolver for the form field.
+func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
+	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+}
+
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
 	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
@@ -2652,6 +2662,12 @@ func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.T
 		return nil, err
 	}
 	return userInfo, nil
+}
+
+// CollabGroups is the resolver for the collabGroups field.
+func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error) {
+	collabGroups := models.ConvertEnums[models.TRBCollabGroupOption](obj.CollabGroups)
+	return collabGroups, nil
 }
 
 // Email is the resolver for the email field.
@@ -2733,6 +2749,11 @@ func (r *Resolver) TRBRequestAttendee() generated.TRBRequestAttendeeResolver {
 	return &tRBRequestAttendeeResolver{r}
 }
 
+// TRBRequestForm returns generated.TRBRequestFormResolver implementation.
+func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
+	return &tRBRequestFormResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2754,4 +2775,5 @@ type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
+type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

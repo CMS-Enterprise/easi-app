@@ -71,5 +71,5 @@ func newTestServicesConfig(td *ldtestdata.TestDataSource) Config {
 }
 
 func setBoolFeatureFlag(td *ldtestdata.TestDataSource, flagName string, value bool) {
-	td.Update(td.Flag(flagName).BooleanFlag().VariationForAllUsers(value))
+	td.Update(td.Flag(flagName).BooleanFlag().VariationForAll(value))
 }

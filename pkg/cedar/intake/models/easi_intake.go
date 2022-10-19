@@ -30,11 +30,11 @@ type EASIIntake struct {
 	FundingNumber               *string              `json:"fundingNumber,omitempty" jsonschema:"description=six digit funding number,example=123456"`
 	FundingSource               *string              `json:"fundingSource,omitempty" jsonschema:"description=Source of funding,example=Prog Ops"`
 	FundingSources              []*EASIFundingSource `json:"fundingSources,omitempty" jsonschema:"description=Array of funding sources, which contain a source of funding and a six-digit funding number,example=N/A"`
-	GrbDate                     *string              `json:"grbDate,omitempty" jsonschema:"description=Scheduled date for the Governance Review Board (GRB) meeting,example=2025-12-12T00:00:00Z"`
-	GrtDate                     *string              `json:"grtDate,omitempty" jsonschema:"description=Scheduled date for the Governance Review Team (GRT) meeting,example=2025-10-20T00:00:00Z"` // TODO: doesn't seem like this is ever populated, remove?
+	GrbDate                     *string              `json:"grbDate,omitempty" jsonschema:"description=Scheduled date for the Governance Review Board (GRB) meeting,example=2025-12-12"`
+	GrtDate                     *string              `json:"grtDate,omitempty" jsonschema:"description=Scheduled date for the Governance Review Team (GRT) meeting,example=2025-10-20"` // TODO: doesn't seem like this is ever populated, remove?
 	IssoName                    *string              `json:"issoName,omitempty" jsonschema:"description=Information System Security Officer (ISSO) for the effort detailed in this request,example=John Doe"`
 	LifecycleCostBaseline       *string              `json:"lifecycleCostBaseline,omitempty" jsonschema:"description=Cost baseline associated with this LCID,example=about $10 million"`
-	LifecycleExpiresAt          *string              `json:"lifecycleExpiresAt,omitempty" jsonschema:"description=Expiration date for the LCID associated with this request,example=2030-12-23T00:00:00Z"`
+	LifecycleExpiresAt          *string              `json:"lifecycleExpiresAt,omitempty" jsonschema:"description=Expiration date for the LCID associated with this request,example=2030-12-23"`
 	LifecycleID                 *string              `json:"lifecycleID,omitempty" jsonschema:"description=LCID (if one is issued) associated with this request,example=220970"`
 	LifecycleScope              *string              `json:"lifecycleScope,omitempty" jsonschema:"description=Scope of LCID,example=This LCID covers development and operation of the application"`
 	OitSecurityCollaboratorName *string              `json:"oitSecurityCollaboratorName,omitempty" jsonschema:"description=OIT's Security and Privacy (ISPG) Collaborator,example=John Doe"`
