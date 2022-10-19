@@ -60,8 +60,7 @@ function useSystemIntakeContacts(
       fetchPolicy: 'cache-first',
       variables: {
         id: systemIntakeId
-      },
-      onCompleted: results => console.log(results)
+      }
     }
   );
   const { systemIntake } = intakeQuery?.data || {};
