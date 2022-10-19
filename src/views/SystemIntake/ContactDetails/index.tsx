@@ -132,11 +132,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
      * Create or update contact in database
      * */
     const updateSystemIntakeContact = async (type: SystemIntakeRoleKeys) => {
+      // Only run mutations when contact has been verified via CEDAR and component is set
       if (values[type].euaUserId && values[type].component) {
+        // If contact has ID, update values
         if (values?.[type].id) {
           return updateContact({ ...values[type] });
         }
+        // If contact does not have id, create new contact
         return createContact(values[type]).then(newContact => {
+          // Set ID field value from new contact data
           setFieldValue(`${type}.id`, newContact?.id);
         });
       }

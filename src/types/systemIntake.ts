@@ -267,7 +267,7 @@ export type CreateContactType = (
 /** Function to update system intake contact */
 export type UpdateContactType = (
   contact: SystemIntakeContactProps
-) => Promise<AugmentedSystemIntakeContact[] | undefined>;
+) => Promise<AugmentedSystemIntakeContact | undefined>;
 
 /** Function to delete system intake contact */
 export type DeleteContactType = (
