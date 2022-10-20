@@ -6922,6 +6922,7 @@ type TRBRequestDocument {
 The data needed to upload a TRB document and attach it to a request with metadata
 """
 input CreateTRBRequestDocumentInput {
+  # TODO - needs filename
   requestID: UUID!
   fileData: Upload!
   documentType: TRBDocumentCommonType!
@@ -7087,7 +7088,7 @@ type Query {
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
-  trbRequestDocument(documentId: UUID!): TRBRequestDocument
+  trbRequestDocument(documentId: UUID!): TRBRequestDocument # TODO - is this needed?
 }
 
 enum TRBRequestType {

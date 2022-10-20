@@ -1911,12 +1911,26 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 
 // CreateTRBRequestDocument is the resolver for the createTRBRequestDocument field.
 func (r *mutationResolver) CreateTRBRequestDocument(ctx context.Context, input model.CreateTRBRequestDocumentInput) (*model.CreateTRBRequestDocumentPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	doc, err := resolvers.CreateTRBRequestDocument(ctx, r.store /* TODO more parameters */)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.CreateTRBRequestDocumentPayload{
+		Document: doc,
+	}, nil
 }
 
 // DeleteTRBRequestDocument is the resolver for the deleteTRBRequestDocument field.
 func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	doc, err := resolvers.DeleteTRBRequestDocument(ctx, r.store, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteTRBRequestDocumentPayload{
+		Document: doc,
+	}, nil
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
@@ -2663,7 +2677,7 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 
 // Documents is the resolver for the documents field.
 func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error) {
-	panic(fmt.Errorf("not implemented"))
+	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
@@ -2677,12 +2691,15 @@ func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.T
 
 // DocumentType is the resolver for the documentType field.
 func (r *tRBRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.TRBRequestDocument) (*model.TRBRequestDocumentType, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.TRBRequestDocumentType{
+		CommonType:           obj.CommonDocumentType,
+		OtherTypeDescription: &obj.OtherType,
+	}, nil
 }
 
 // UploadedAt is the resolver for the uploadedAt field.
 func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.TRBRequestDocument) (*time.Time, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &obj.CreatedAt, nil
 }
 
 // Email is the resolver for the email field.
