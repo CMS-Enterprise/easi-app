@@ -15,7 +15,6 @@ import (
 
 // UpdateTRBRequestForm updates a TRB request form record in the database
 func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
-	form.Status = models.TRBFormStatusInProgress
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_request_forms
 		SET

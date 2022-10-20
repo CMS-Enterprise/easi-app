@@ -7186,15 +7186,17 @@ Represents an EUA user who is included as an form for a TRB request
 """
 input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
-  component: String!
-  needsAssistanceWith: String!
-  hasSolutionInMind: Boolean!
+  isSubmitted: Boolean
+  component: String
+  needsAssistanceWith: String
+  hasSolutionInMind: Boolean
   proposedSolution: String
-  whereInProcess: TRBWhereInProcessOption!
-  hasExpectedStartEndDates: Boolean!
+  whereInProcess: TRBWhereInProcessOption
+  whereInProcessOther: String
+  hasExpectedStartEndDates: Boolean
   expectedStartDate: Time
   expectedEndDate: Time
-  collabGroups: [TRBCollabGroupOption!]!
+  collabGroups: [TRBCollabGroupOption!]
   collabDateSecurity: Time
   collabDateEnterpriseArchitecture: Time
   collabDateCloud: Time
@@ -7202,6 +7204,13 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   collabDateGovernanceReviewBoard: Time
   collabDateOther: Time
   collabGroupOther: String
+  subjectAreaTechnicalReferenceArchitecture: TRBTechnicalReferenceArchitectureOption
+  subjectAreaNetworkAndSecurity: TRBNetworkAndSecurityOption
+  subjectAreaCloudAndInfrastructure: TRBCloudAndInfrastructureOption
+  subjectAreaApplicationDevelopment: TRBApplicationDevelopmentOption
+  subjectAreaDataAndDataManagement: TRBDataAndDataManagementOption
+  subjectAreaGovernmentProcessesAndPolicies: TRBGovernmentProcessesAndPoliciesOption
+  subjectAreaOtherTechnicalTopics: TRBOtherTechnicalTopicsOption
 }
 
 """
@@ -48739,22 +48748,6 @@ func (ec *executionContext) marshalNTRBRequestType2githubᚗcomᚋcmsgovᚋeasi�
 	return res
 }
 
-func (ec *executionContext) unmarshalNTRBWhereInProcessOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx context.Context, v interface{}) (models.TRBWhereInProcessOption, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBWhereInProcessOption(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNTRBWhereInProcessOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx context.Context, sel ast.SelectionSet, v models.TRBWhereInProcessOption) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TestDate) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -49891,6 +49884,73 @@ func (ec *executionContext) marshalOTRBCloudAndInfrastructureOption2ᚖgithubᚗ
 	}
 	res := graphql.MarshalString(string(*v))
 	return res
+}
+
+func (ec *executionContext) unmarshalOTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOptionᚄ(ctx context.Context, v interface{}) ([]models.TRBCollabGroupOption, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]models.TRBCollabGroupOption, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNTRBCollabGroupOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOption(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOptionᚄ(ctx context.Context, sel ast.SelectionSet, v []models.TRBCollabGroupOption) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTRBCollabGroupOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOption(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOTRBDataAndDataManagementOption2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBDataAndDataManagementOption(ctx context.Context, v interface{}) (*models.TRBDataAndDataManagementOption, error) {

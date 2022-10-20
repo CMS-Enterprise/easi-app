@@ -18,6 +18,14 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 	s.NoError(err)
 
 	s.Run("create/update/fetch TRB request forms", func() {
+		// fetch the form
+		fetched, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		s.NoError(err)
+		s.NotNil(fetched)
+
+		// confirm that the status is correctly marked "in progress"
+		s.True(fetched.Status == models.TRBFormStatusReadyToStart)
+
 		updatedCollabGroups := []models.TRBCollabGroupOption{
 			models.TRBCollabGroupOptionSecurity,
 			models.TRBCollabGroupOptionCloud,
@@ -32,7 +40,8 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		collabDateGovernanceReviewBoard, _ := time.Parse(time.RFC3339, "2021-10-24T12:00:00+00:00")
 		collabDateOther, _ := time.Parse(time.RFC3339, "2021-10-25T12:00:00+00:00")
 		formChanges := map[string]interface{}{
-			"trbRequestId":                              trbRequest.ID,
+			"isSubmitted":                               false,
+			"trbRequestId":                              trbRequest.ID.String(),
 			"component":                                 "Taco Cart",
 			"needsAssistanceWith":                       "Some of the things",
 			"hasSolutionInMind":                         true,
@@ -88,8 +97,15 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.EqualValues(formChanges["subjectAreaGovernmentProcessesAndPolicies"], *updatedForm.SubjectAreaGovernmentProcessesAndPolicies)
 		s.EqualValues(formChanges["subjectAreaOtherTechnicalTopics"], *updatedForm.SubjectAreaOtherTechnicalTopics)
 
-		fetched, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		// confirm that the status is correctly marked "in progress"
+		s.True(updatedForm.Status == models.TRBFormStatusInProgress)
+
+		submitChanges := map[string]interface{}{
+			"trbRequestId": trbRequest.ID.String(),
+			"isSubmitted":  true,
+		}
+		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, submitChanges)
 		s.NoError(err)
-		s.NotNil(fetched)
+		s.True(submittedForm.Status == models.TRBFormStatusCompleted)
 	})
 }
