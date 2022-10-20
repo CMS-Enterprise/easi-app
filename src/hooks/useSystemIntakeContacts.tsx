@@ -9,7 +9,10 @@ import {
   GetSystemIntakeContactsQuery,
   UpdateSystemIntakeContact
 } from 'queries/SystemIntakeContactsQueries';
-import { CreateSystemIntakeContact as CreateSystemIntakeContactPayload } from 'queries/types/CreateSystemIntakeContact';
+import {
+  CreateSystemIntakeContact as CreateSystemIntakeContactPayload,
+  CreateSystemIntakeContact_createSystemIntakeContact_systemIntakeContact as SystemIntakeContact
+} from 'queries/types/CreateSystemIntakeContact';
 import { DeleteSystemIntakeContact as DeleteSystemIntakeContactPayload } from 'queries/types/DeleteSystemIntakeContact';
 import {
   GetSystemIntake,
@@ -159,7 +162,10 @@ function useSystemIntakeContacts(
     const { euaUserId, component, role } = contact;
 
     /** New contact response from mutation */
-    const createContactResponse = await createSystemIntakeContact({
+    const newContact:
+      | SystemIntakeContact
+      | null
+      | undefined = await createSystemIntakeContact({
       variables: {
         input: {
           euaUserId: euaUserId.toUpperCase(),
@@ -168,24 +174,30 @@ function useSystemIntakeContacts(
           systemIntakeId
         }
       }
-    });
+    })
+      .then(response => {
+        // Return new contact data
+        return response?.data?.createSystemIntakeContact?.systemIntakeContact;
+      })
+      // If error, return null
+      .catch(() => null);
 
-    // New contact ID
-    const { id } =
-      createContactResponse?.data?.createSystemIntakeContact
-        ?.systemIntakeContact || {};
-
-    /** Updated contacts data */
-    const updatedContacts = await refetch();
-
-    // If errors, return initial contact data
-    if (createContactResponse.errors || updatedContacts.errors) {
+    // If contact is undefined, return mutation input without verifying contact
+    if (!newContact) {
       return contact as AugmentedSystemIntakeContact;
     }
 
-    // Return new contact by ID
-    return updatedContacts.data.systemIntakeContacts.systemIntakeContacts.find(
-      obj => obj.id === id
+    // Refetch contacts
+    return (
+      refetch()
+        .then(response => {
+          // Return new contact
+          return response.data.systemIntakeContacts.systemIntakeContacts.find(
+            obj => obj.id === newContact?.id
+          );
+        })
+        // If error, return mutation input without verifying contact
+        .catch(() => contact as AugmentedSystemIntakeContact)
     );
   };
 
@@ -197,8 +209,7 @@ function useSystemIntakeContacts(
   ): Promise<AugmentedSystemIntakeContact | undefined> => {
     const { id, component, euaUserId, role } = contact;
 
-    /** Updated contact response from mutation */
-    const updateContactResponse = await updateSystemIntakeContact({
+    return updateSystemIntakeContact({
       variables: {
         input: {
           id,
@@ -208,20 +219,9 @@ function useSystemIntakeContacts(
           systemIntakeId
         }
       }
-    });
-
-    /** Updated contacts data */
-    const updatedContacts = await refetch();
-
-    // If errors, return initial contact data
-    if (updateContactResponse.errors || updatedContacts.errors) {
-      return contact as AugmentedSystemIntakeContact;
-    }
-
-    // Return updated contact by ID
-    return updatedContacts?.data.systemIntakeContacts.systemIntakeContacts.find(
-      obj => obj.id === id
-    );
+    })
+      .then(() => contact as AugmentedSystemIntakeContact)
+      .catch(() => contact as AugmentedSystemIntakeContact);
   };
 
   /**
@@ -229,26 +229,21 @@ function useSystemIntakeContacts(
    * */
   const deleteContact = async (
     id: string
-  ): Promise<AugmentedSystemIntakeContact[] | undefined> => {
-    /** Deleted contact response from mutation */
-    const deleteContactResponse = await deleteSystemIntakeContact({
-      variables: {
-        input: {
-          id
+  ): Promise<FormattedContacts | undefined> => {
+    return (
+      deleteSystemIntakeContact({
+        variables: {
+          input: {
+            id
+          }
         }
-      }
-    });
-
-    /** Updated contacts data */
-    const updatedContacts = await refetch();
-
-    // If errors, return initial contacts data
-    if (deleteContactResponse.errors || updatedContacts.errors) {
-      return systemIntakeContacts;
-    }
-
-    // Return updated contacts after deleting contact
-    return updatedContacts?.data?.systemIntakeContacts?.systemIntakeContacts;
+      })
+        // Refetch contacts
+        .then(refetch)
+        // Return formatted contacts
+        .then(() => contacts)
+        .catch(() => contacts)
+    );
   };
 
   return {

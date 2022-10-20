@@ -43,12 +43,12 @@ const IssueLifecycleId = () => {
   const { t } = useTranslation('action');
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const [mutate, mutationResult] = useMutation<
-    IssueLifecycleIdType,
-    IssueLifecycleIdVariables
-  >(IssueLifecycleIdQuery, {
-    errorPolicy: 'all'
-  });
+  const [mutate] = useMutation<IssueLifecycleIdType, IssueLifecycleIdVariables>(
+    IssueLifecycleIdQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
 
   // Requester object and loading state
   const {
@@ -168,14 +168,6 @@ const IssueLifecycleId = () => {
                     />
                   );
                 })}
-              </ErrorAlert>
-            )}
-            {mutationResult.error && (
-              <ErrorAlert heading="Error issuing lifecycle id">
-                <ErrorAlertMessage
-                  message={mutationResult.error.message}
-                  errorKey="systemIntake"
-                />
               </ErrorAlert>
             )}
             <PageHeading

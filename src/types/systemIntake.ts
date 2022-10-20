@@ -272,7 +272,7 @@ export type UpdateContactType = (
 /** Function to delete system intake contact */
 export type DeleteContactType = (
   id: string
-) => Promise<AugmentedSystemIntakeContact[] | undefined>;
+) => Promise<FormattedContacts | undefined>;
 
 /** useSystemIntakeContacts custom hook return type */
 export type UseSystemIntakeContactsType = {

@@ -32,12 +32,12 @@ const RejectIntake = () => {
   const { t } = useTranslation('action');
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const [mutate, mutationResult] = useMutation<
-    RejectIntakeType,
-    RejectIntakeVariables
-  >(RejectIntakeQuery, {
-    errorPolicy: 'all'
-  });
+  const [mutate] = useMutation<RejectIntakeType, RejectIntakeVariables>(
+    RejectIntakeQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
 
   // Requester object and loading state
   const {
@@ -135,14 +135,6 @@ const RejectIntake = () => {
                     />
                   );
                 })}
-              </ErrorAlert>
-            )}
-            {mutationResult.error && (
-              <ErrorAlert heading="Error issuing lifecycle id">
-                <ErrorAlertMessage
-                  message={mutationResult.error.message}
-                  errorKey="systemIntake"
-                />
               </ErrorAlert>
             )}
             <PageHeading data-testid="not-approved">
