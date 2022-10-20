@@ -209,7 +209,8 @@ function useSystemIntakeContacts(
   ): Promise<AugmentedSystemIntakeContact | undefined> => {
     const { id, component, euaUserId, role } = contact;
 
-    return updateSystemIntakeContact({
+    /** Updated contact response from mutation */
+    const updatedContact = await updateSystemIntakeContact({
       variables: {
         input: {
           id,
@@ -220,6 +221,16 @@ function useSystemIntakeContacts(
         }
       }
     })
+      // If error, return null
+      .catch(() => null);
+
+    // If contact is undefined, return mutation input without updating
+    if (!updatedContact) {
+      return contact as AugmentedSystemIntakeContact;
+    }
+
+    // Refetch contacts
+    return refetch()
       .then(() => contact as AugmentedSystemIntakeContact)
       .catch(() => contact as AugmentedSystemIntakeContact);
   };
@@ -230,16 +241,26 @@ function useSystemIntakeContacts(
   const deleteContact = async (
     id: string
   ): Promise<FormattedContacts | undefined> => {
-    return (
-      deleteSystemIntakeContact({
-        variables: {
-          input: {
-            id
-          }
+    const deletedContact = await deleteSystemIntakeContact({
+      variables: {
+        input: {
+          id
         }
-      })
-        // Refetch contacts
-        .then(refetch)
+      }
+    })
+      // Return mutation response
+      .then(response => response)
+      // If error, return null
+      .catch(() => null);
+
+    // If deleted contact is undefined, return formatted contacts without deleting
+    if (!deletedContact?.data) {
+      return contacts;
+    }
+
+    // Refetch contacts
+    return (
+      refetch()
         // Return formatted contacts
         .then(() => contacts)
         .catch(() => contacts)
