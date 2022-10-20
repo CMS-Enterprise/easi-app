@@ -32,24 +32,31 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		collabDateGovernanceReviewBoard, _ := time.Parse(time.RFC3339, "2021-10-24T12:00:00+00:00")
 		collabDateOther, _ := time.Parse(time.RFC3339, "2021-10-25T12:00:00+00:00")
 		formChanges := map[string]interface{}{
-			"trbRequestId":                     trbRequest.ID,
-			"component":                        "Taco Cart",
-			"needsAssistanceWith":              "Some of the things",
-			"hasSolutionInMind":                true,
-			"proposedSolution":                 "Tinder, but for cats",
-			"whereInProcess":                   models.TRBWhereInProcessOptionContractingWorkHasStarted,
-			"whereInProcessOther":              "Fixing Wifi",
-			"hasExpectedStartEndDates":         true,
-			"expectedStartDate":                expectedStartDate,
-			"expectedEndDate":                  expectedEndDate,
-			"collabGroups":                     updatedCollabGroups,
-			"collabDateSecurity":               collabDateSecurity,
-			"collabDateEnterpriseArchitecture": collabDateEnterpriseArchitecture,
-			"collabDateCloud":                  collabDateCloud,
-			"collabDatePrivacyAdvisor":         collabDatePrivacyAdvisor,
-			"collabDateGovernanceReviewBoard":  collabDateGovernanceReviewBoard,
-			"collabDateOther":                  collabDateOther,
-			"collabGroupOther":                 "Geek Squad",
+			"trbRequestId":                              trbRequest.ID,
+			"component":                                 "Taco Cart",
+			"needsAssistanceWith":                       "Some of the things",
+			"hasSolutionInMind":                         true,
+			"proposedSolution":                          "Tinder, but for cats",
+			"whereInProcess":                            models.TRBWhereInProcessOptionContractingWorkHasStarted,
+			"whereInProcessOther":                       "Fixing Wifi",
+			"hasExpectedStartEndDates":                  true,
+			"expectedStartDate":                         expectedStartDate,
+			"expectedEndDate":                           expectedEndDate,
+			"collabGroups":                              updatedCollabGroups,
+			"collabDateSecurity":                        collabDateSecurity,
+			"collabDateEnterpriseArchitecture":          collabDateEnterpriseArchitecture,
+			"collabDateCloud":                           collabDateCloud,
+			"collabDatePrivacyAdvisor":                  collabDatePrivacyAdvisor,
+			"collabDateGovernanceReviewBoard":           collabDateGovernanceReviewBoard,
+			"collabDateOther":                           collabDateOther,
+			"collabGroupOther":                          "Geek Squad",
+			"subjectAreaTechnicalReferenceArchitecture": models.TRBTechnicalReferenceArchitectureOptionArchitectureChangeRequestProcessForTheTra,
+			"subjectAreaNetworkAndSecurity":             models.TRBNetworkAndSecurityOptionCmsCybersecurityIntegrationCenterIntegration,
+			"subjectAreaCloudAndInfrastructure":         models.TRBCloudAndInfrastructureOptionCloudIaasAndPaasInfrastructure,
+			"subjectAreaApplicationDevelopment":         models.TRBApplicationDevelopmentOptionAccessibilityCompliance,
+			"subjectAreaDataAndDataManagement":          models.TRBDataAndDataManagementOptionApisAndDataExchanges,
+			"subjectAreaGovernmentProcessesAndPolicies": models.TRBGovernmentProcessesAndPoliciesOptionSecurityAssessments,
+			"subjectAreaOtherTechnicalTopics":           models.TRBOtherTechnicalTopicsOptionArtificialIntelligence,
 		}
 		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, formChanges)
 		s.NoError(err)
@@ -73,6 +80,13 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.True((*updatedForm.CollabDateOther).Equal(collabDateOther))
 		s.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
 		s.EqualValues(3, len(updatedForm.CollabGroups))
+		s.EqualValues(formChanges["subjectAreaTechnicalReferenceArchitecture"], *updatedForm.SubjectAreaTechnicalReferenceArchitecture)
+		s.EqualValues(formChanges["subjectAreaNetworkAndSecurity"], *updatedForm.SubjectAreaNetworkAndSecurity)
+		s.EqualValues(formChanges["subjectAreaCloudAndInfrastructure"], *updatedForm.SubjectAreaCloudAndInfrastructure)
+		s.EqualValues(formChanges["subjectAreaApplicationDevelopment"], *updatedForm.SubjectAreaApplicationDevelopment)
+		s.EqualValues(formChanges["subjectAreaDataAndDataManagement"], *updatedForm.SubjectAreaDataAndDataManagement)
+		s.EqualValues(formChanges["subjectAreaGovernmentProcessesAndPolicies"], *updatedForm.SubjectAreaGovernmentProcessesAndPolicies)
+		s.EqualValues(formChanges["subjectAreaOtherTechnicalTopics"], *updatedForm.SubjectAreaOtherTechnicalTopics)
 
 		fetched, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
 		s.NoError(err)

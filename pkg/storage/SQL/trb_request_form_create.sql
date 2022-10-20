@@ -18,6 +18,13 @@ INSERT INTO trb_request_forms (
     collab_date_governance_review_board,
     collab_date_other,
     collab_group_other,
+    subject_area_technical_reference_architecture,
+    subject_area_network_and_security,
+    subject_area_cloud_and_infrastructure,
+    subject_area_application_development,
+    subject_area_data_and_data_management,
+    subject_area_government_processes_and_policies,
+    subject_area_other_technical_topics,
     created_by,
     modified_by
 )
@@ -41,6 +48,13 @@ VALUES (
     :collab_date_governance_review_board,
     :collab_date_other,
     :collab_group_other,
+    :subject_area_technical_reference_architecture,
+    :subject_area_network_and_security,
+    :subject_area_cloud_and_infrastructure,
+    :subject_area_application_development,
+    :subject_area_data_and_data_management,
+    :subject_area_government_processes_and_policies,
+    :subject_area_other_technical_topics,
     :created_by,
     :modified_by
 )
