@@ -33,5 +33,7 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store /*, docu
 
 // DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID
 func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestDocument, error) {
+	// TODO - should this delete from S3?
+
 	return store.DeleteTRBRequestDocument(appcontext.ZLogger(ctx), id)
 }
