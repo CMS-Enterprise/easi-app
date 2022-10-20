@@ -21,10 +21,10 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store
 	return documents, nil
 }
 
-// TODO rework parameters - takes a request ID, file data (graphql.Upload), DocumentType, and OtherTypeDescription; needs to save document to s3, then save to DB
-
 // CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database
 func CreateTRBRequestDocument(ctx context.Context, store *storage.Store /*, document *models.TRBRequestDocument*/) (*models.TRBRequestDocument, error) {
+	// TODO rework parameters - takes a request ID, file name, file data (graphql.Upload), DocumentType, and OtherTypeDescription; needs to save document to s3, then save to DB
+
 	// TODO - upload document to S3
 	panic("Not yet implemented")
 	// return store.CreateTRBRequestDocument(appcontext.ZLogger(ctx), document)

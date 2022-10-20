@@ -567,7 +567,6 @@ type ComplexityRoot struct {
 		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
 		Systems                  func(childComplexity int, after *string, first int) int
 		TrbRequest               func(childComplexity int, id uuid.UUID) int
-		TrbRequestDocument       func(childComplexity int, documentID uuid.UUID) int
 		TrbRequests              func(childComplexity int, archived bool) int
 		Urls                     func(childComplexity int, cedarSystemID string) int
 	}
@@ -1055,7 +1054,6 @@ type QueryResolver interface {
 	RelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error)
 	TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error)
 	TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
-	TrbRequestDocument(ctx context.Context, documentID uuid.UUID) (*models.TRBRequestDocument, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
@@ -3986,18 +3984,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.TrbRequest(childComplexity, args["id"].(uuid.UUID)), true
 
-	case "Query.trbRequestDocument":
-		if e.complexity.Query.TrbRequestDocument == nil {
-			break
-		}
-
-		args, err := ec.field_Query_trbRequestDocument_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.TrbRequestDocument(childComplexity, args["documentId"].(uuid.UUID)), true
-
 	case "Query.trbRequests":
 		if e.complexity.Query.TrbRequests == nil {
 			break
@@ -6922,8 +6908,8 @@ type TRBRequestDocument {
 The data needed to upload a TRB document and attach it to a request with metadata
 """
 input CreateTRBRequestDocumentInput {
-  # TODO - needs filename
   requestID: UUID!
+  fileName: String!
   fileData: Upload!
   documentType: TRBDocumentCommonType!
   otherTypeDescription: String  # Needed if documentType == OTHER
@@ -7088,7 +7074,6 @@ type Query {
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
-  trbRequestDocument(documentId: UUID!): TRBRequestDocument # TODO - is this needed?
 }
 
 enum TRBRequestType {
@@ -8258,21 +8243,6 @@ func (ec *executionContext) field_Query_systems_args(ctx context.Context, rawArg
 		}
 	}
 	args["first"] = arg1
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_trbRequestDocument_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 uuid.UUID
-	if tmp, ok := rawArgs["documentId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("documentId"))
-		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["documentId"] = arg0
 	return args, nil
 }
 
@@ -26653,72 +26623,6 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_trbRequestDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_trbRequestDocument(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().TrbRequestDocument(rctx, fc.Args["documentId"].(uuid.UUID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.TRBRequestDocument)
-	fc.Result = res
-	return ec.marshalOTRBRequestDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestDocument(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_trbRequestDocument(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "documentType":
-				return ec.fieldContext_TRBRequestDocument_documentType(ctx, field)
-			case "id":
-				return ec.fieldContext_TRBRequestDocument_id(ctx, field)
-			case "fileName":
-				return ec.fieldContext_TRBRequestDocument_fileName(ctx, field)
-			case "status":
-				return ec.fieldContext_TRBRequestDocument_status(ctx, field)
-			case "uploadedAt":
-				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
-			case "url":
-				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_trbRequestDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query___type(ctx, field)
 	if err != nil {
@@ -36970,7 +36874,7 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestDocumentInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"requestID", "fileData", "documentType", "otherTypeDescription"}
+	fieldsInOrder := [...]string{"requestID", "fileName", "fileData", "documentType", "otherTypeDescription"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -36982,6 +36886,14 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestDocumentInput(ctx cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
 			it.RequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "fileName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileName"))
+			it.FileName, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -43165,26 +43077,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return rrm(innerCtx)
-			})
-		case "trbRequestDocument":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_trbRequestDocument(ctx, field)
 				return res
 			}
 
