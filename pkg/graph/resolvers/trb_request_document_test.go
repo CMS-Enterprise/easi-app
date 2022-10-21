@@ -1,8 +1,12 @@
 package resolvers
 
 import (
+	"bytes"
+
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -20,11 +24,25 @@ func (suite *ResolverSuite) TestCreateTRBRequestDocument() {
 		FileName:           "create_and_get.pdf",
 		URL:                "http://www.example.com",
 		Bucket:             "bukkit",
-		FileKey:            uuid.NewString(),
+		S3Key:              uuid.NewString(),
 	}
 	docToBeCreated.CreatedBy = anonEua
 
-	createdDoc, err := CreateTRBRequestDocument(suite.testConfigs.Context, suite.testConfigs.Store /*, &docToBeCreated*/)
+	fileToUpload := bytes.NewReader([]byte("Test file content"))
+	gqlInput := model.CreateTRBRequestDocumentInput{
+		RequestID:            docToBeCreated.TRBRequestID,
+		DocumentType:         docToBeCreated.CommonDocumentType,
+		OtherTypeDescription: &docToBeCreated.OtherType,
+		FileName:             docToBeCreated.FileName,
+		FileData: graphql.Upload{
+			File:        fileToUpload,
+			Filename:    docToBeCreated.FileName,
+			Size:        fileToUpload.Size(),
+			ContentType: "application/pdf",
+		},
+	}
+
+	createdDoc, err := CreateTRBRequestDocument(suite.testConfigs.Context, suite.testConfigs.Store, gqlInput)
 	suite.NoError(err)
 	suite.NotNil(createdDoc)
 

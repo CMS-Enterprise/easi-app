@@ -27,7 +27,7 @@ CREATE TABLE trb_request_documents (
 
     -- storage info
     bucket TEXT NOT NULL,
-    file_key TEXT NOT NULL,
+    s3_key TEXT NOT NULL, -- key inside bucket; does *not* include bucket name
 
     -- general metadata
     created_by TEXT NOT NULL CHECK (created_by ~ '^[A-Z0-9]{4}$'),

@@ -8,7 +8,7 @@ RETURNING
   document_type,
   other_type,
   bucket,
-  file_key,
+  s3_key,
   created_by,
   created_at,
   modified_by,

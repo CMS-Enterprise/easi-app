@@ -1910,7 +1910,7 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 
 // CreateTRBRequestDocument is the resolver for the createTRBRequestDocument field.
 func (r *mutationResolver) CreateTRBRequestDocument(ctx context.Context, input model.CreateTRBRequestDocumentInput) (*model.CreateTRBRequestDocumentPayload, error) {
-	doc, err := resolvers.CreateTRBRequestDocument(ctx, r.store /* TODO more parameters */)
+	doc, err := resolvers.CreateTRBRequestDocument(ctx, r.store, input)
 	if err != nil {
 		return nil, err
 	}
