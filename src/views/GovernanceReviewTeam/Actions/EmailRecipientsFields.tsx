@@ -112,10 +112,17 @@ const Recipient = ({
             name="systemIntakeContact.commonName"
             value={activeContact}
             onChange={cedarContact => {
-              // Add info from CEDAR to active contact
-              setActiveContact(
-                cedarContact ? { ...activeContact!, ...cedarContact } : null
-              );
+              // If contact is selected, add commonName and euaUserId to activeContact
+              if (cedarContact) {
+                setActiveContact({ ...activeContact!, ...cedarContact });
+              } else {
+                // If select field is cleared, reset commonName and euaUserId
+                setActiveContact({
+                  ...activeContact!,
+                  commonName: '',
+                  euaUserId: ''
+                });
+              }
             }}
             autoSearch
           />
