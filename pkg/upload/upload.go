@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"io"
 	"mime"
 	"net/url"
 	"os"
@@ -133,4 +134,16 @@ func (c S3Client) TagValueForKey(key string, tagName string) (string, error) {
 		}
 	}
 	return "", nil
+}
+
+// UploadFile uploads a file to the configured bucket for saving documents.
+// Note that no extension will be added by this method; it assumes the caller has already added an extension, if desired.
+func (c S3Client) UploadFile(key string, body io.ReadSeeker, contentType string) error {
+	_, err := c.client.PutObject(&s3.PutObjectInput{
+		Bucket:      aws.String(c.config.Bucket),
+		Key:         aws.String(key),
+		ContentType: aws.String(contentType),
+	})
+
+	return err
 }
