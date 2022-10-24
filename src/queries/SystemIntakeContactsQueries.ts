@@ -20,6 +20,7 @@ export const CreateSystemIntakeContact = gql`
   mutation CreateSystemIntakeContact($input: CreateSystemIntakeContactInput!) {
     createSystemIntakeContact(input: $input) {
       systemIntakeContact {
+        id
         euaUserId
         systemIntakeId
         component

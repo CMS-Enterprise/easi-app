@@ -51,13 +51,7 @@ type ContactDetailsProps = {
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
-  const {
-    id,
-    requestType,
-    requester,
-    governanceTeams,
-    euaUserId
-  } = systemIntake;
+  const { id, requestType, governanceTeams } = systemIntake;
   const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
@@ -85,13 +79,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     updateContact,
     deleteContact
   } = useSystemIntakeContacts(id);
-  const { businessOwner, productManager, isso } = contacts || {};
+  const { requester, businessOwner, productManager, isso } = contacts.data;
 
-  const initialValues = {
-    requester: {
-      name: requester.name || '',
-      component: requester.component || ''
-    },
+  const initialValues: ContactDetailsForm = {
+    requester,
     businessOwner,
     productManager,
     isso: {
@@ -137,13 +128,19 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     values: ContactDetailsForm,
     { setFieldValue }: FormikHelpers<ContactDetailsForm>
   ) => {
-    /** Create or update contact in database */
+    /**
+     * Create or update contact in database
+     * */
     const updateSystemIntakeContact = async (type: SystemIntakeRoleKeys) => {
+      // Only run mutations when contact has been verified via CEDAR and component is set
       if (values[type].euaUserId && values[type].component) {
+        // If contact has ID, update values
         if (values?.[type].id) {
           return updateContact({ ...values[type] });
         }
+        // If contact does not have id, create new contact
         return createContact(values[type]).then(newContact => {
+          // Set ID field value from new contact data
           setFieldValue(`${type}.id`, newContact?.id);
         });
       }
@@ -152,6 +149,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
     // Update contacts and system intake form
     return Promise.all([
+      updateSystemIntakeContact('requester'),
       updateSystemIntakeContact('businessOwner'),
       updateSystemIntakeContact('productManager'),
       updateSystemIntakeContact('isso')
@@ -161,7 +159,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           input: {
             id,
             requester: {
-              name: values.requester.name,
+              name: values.requester.commonName,
               component: values.requester.component
             },
             businessOwner: {
@@ -176,7 +174,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               isPresent: values.isso.isPresent,
               name: values.isso.commonName
             },
-            governanceTeams: values.governanceTeams || []
+            governanceTeams: values.governanceTeams
           }
         }
       })
@@ -186,19 +184,19 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   // Set checkbox default values
   useEffect(() => {
     // Wait until contacts are loaded
-    if (!checkboxDefaultsSet.current && businessOwner && euaUserId) {
-      if (euaUserId === businessOwner.euaUserId) {
+    if (!checkboxDefaultsSet.current && businessOwner && requester.euaUserId) {
+      if (requester.euaUserId === businessOwner.euaUserId) {
         setReqAndBusOwnerSame(true);
       }
-      if (euaUserId === productManager?.euaUserId) {
+      if (requester.euaUserId === productManager?.euaUserId) {
         setReqAndProductManagerSame(true);
       }
       checkboxDefaultsSet.current = true;
     }
-  }, [businessOwner, productManager, euaUserId]);
+  }, [businessOwner, productManager, requester.euaUserId]);
 
   // Wait for contacts to load before returning form
-  if (!contacts) return null;
+  if (contacts.loading) return null;
 
   return (
     <Formik
@@ -214,17 +212,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         const { values, setFieldValue, errors } = formikProps;
         const flatErrors = flattenErrors(errors);
 
-        /** Set commonName, euaUserId, and email values from contact lookup */
+        /**
+         * Set commonName, euaUserId, and email values from contact lookup
+         * */
         const setContactFieldsFromName = (
           contact: CedarContactProps | null,
           role: SystemIntakeRoleKeys
         ) => {
-          setFieldValue(`${role}.commonName`, contact?.commonName || '');
-          setFieldValue(`${role}.euaUserId`, contact?.euaUserId || '');
-          setFieldValue(`${role}.email`, contact?.email || '');
+          if (contact) {
+            setFieldValue(`${role}.commonName`, contact.commonName);
+            setFieldValue(`${role}.euaUserId`, contact.euaUserId);
+            setFieldValue(`${role}.email`, contact.email);
+          } else {
+            // If contact is null, clear from intake form and database
+            clearContact(role);
+          }
         };
 
-        /** Clear contact values and delete from database */
+        /**
+         * Clear contact values and delete from database
+         * */
         const clearContact = (role: SystemIntakeRoleKeys) => {
           setFieldValue(role, {
             ...values[role],
@@ -241,20 +248,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           }
         };
 
-        /** Set contacts same as requester if checkbox is checked */
+        /**
+         * Set contacts same as requester if checkbox is checked
+         * */
         const setContactFromCheckbox = (
           role: 'businessOwner' | 'productManager',
           sameAsRequester: boolean
         ) => {
           if (sameAsRequester) {
-            setContactFieldsFromName(
-              {
-                euaUserId,
-                commonName: requester.name,
-                email: requester.email || ''
-              },
-              role
-            );
+            setContactFieldsFromName(requester, role);
             setFieldValue(`${role}.component`, values.requester.component);
           } else {
             clearContact(role);
@@ -295,19 +297,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Form>
                 {/* Requester Name */}
                 <FieldGroup
-                  scrollElement="requester.name"
-                  error={!!flatErrors['requester.name']}
+                  scrollElement="requester.commonName"
+                  error={!!flatErrors['requester.commonName']}
                 >
                   <Label htmlFor="IntakeForm-Requester">
                     {t('contactDetails.requester')}
                   </Label>
-                  <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
+                  <FieldErrorMsg>
+                    {flatErrors['requester.commonName']}
+                  </FieldErrorMsg>
                   <Field
                     as={TextInput}
-                    error={!!flatErrors['requester.name']}
+                    error={!!flatErrors['requester.commonName']}
                     id="IntakeForm-Requester"
                     maxLength={50}
-                    name="requester.name"
+                    name="requester.commonName"
                     disabled
                   />
                 </FieldGroup>
@@ -387,11 +391,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     name="businessOwner.commonName"
                     ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
                     onChange={contact => {
-                      if (contact !== null) {
-                        setContactFieldsFromName(contact, 'businessOwner');
-                      } else {
-                        clearContact('businessOwner');
-                      }
+                      setContactFieldsFromName(contact, 'businessOwner');
                     }}
                     value={
                       values.businessOwner?.euaUserId
@@ -480,10 +480,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     id="IntakeForm-ProductManagerName"
                     name="productManager.commonName"
                     ariaDescribedBy="IntakeForm-ProductManagerHelp"
-                    onChange={contact => {
-                      if (contact !== null)
-                        setContactFieldsFromName(contact, 'productManager');
-                    }}
+                    onChange={contact =>
+                      setContactFieldsFromName(contact, 'productManager')
+                    }
                     value={
                       values.productManager?.euaUserId
                         ? values.productManager

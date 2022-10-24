@@ -198,33 +198,38 @@ const ContactForm = ({
   );
 };
 
+type AdditionalContactsProps = {
+  systemIntakeId: string;
+  activeContact: SystemIntakeContactProps | null;
+  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  type?: 'recipient' | 'contact';
+  className?: string;
+};
+
 export default function AdditionalContacts({
   systemIntakeId,
   activeContact,
   setActiveContact,
   type = 'contact',
   className
-}: {
-  systemIntakeId: string;
-  activeContact: SystemIntakeContactProps | null;
-  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
-  type?: 'recipient' | 'contact';
-  className?: string;
-}) {
+}: AdditionalContactsProps) {
   const { t } = useTranslation('intake');
   const {
-    contacts,
+    contacts: {
+      data: { additionalContacts },
+      loading
+    },
     createContact,
     updateContact,
     deleteContact
   } = useSystemIntakeContacts(systemIntakeId);
 
   // Wait for contacts to load
-  if (!contacts?.additionalContacts) return null;
+  if (loading) return null;
 
   return (
     <div className={classNames('system-intake-contacts', className)}>
-      {contacts.additionalContacts.length > 0 && type === 'contact' && (
+      {type === 'contact' && (
         <>
           <h4>
             {t(
@@ -234,9 +239,13 @@ export default function AdditionalContacts({
             )}
           </h4>
           <div className="system-intake-contacts__contacts-list">
-            {contacts.additionalContacts.map(contact => {
+            {additionalContacts.map(contact => {
               // Show form if editing contact
-              if (activeContact && activeContact?.id === contact.id) {
+              if (
+                activeContact &&
+                activeContact?.id === contact.id &&
+                activeContact?.systemIntakeId
+              ) {
                 return (
                   <div key={contact.euaUserId}>
                     <ContactForm
@@ -275,7 +284,7 @@ export default function AdditionalContacts({
         </>
       )}
 
-      {activeContact && !activeContact.id && (
+      {activeContact && !activeContact.id && !activeContact.systemIntakeId && (
         <ContactForm
           activeContact={activeContact}
           setActiveContact={setActiveContact}
@@ -284,16 +293,11 @@ export default function AdditionalContacts({
         />
       )}
 
-      {(!activeContact || activeContact?.id) && (
+      {(!activeContact || activeContact?.systemIntakeId) && (
         <Button
           type="button"
           outline
-          onClick={() =>
-            setActiveContact({
-              ...(initialContactDetails as SystemIntakeContactProps),
-              systemIntakeId
-            })
-          }
+          onClick={() => setActiveContact(initialContactDetails)}
           disabled={!!activeContact?.id}
         >
           {t('contactDetails.additionalContacts.add', { type })}

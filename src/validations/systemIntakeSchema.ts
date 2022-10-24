@@ -7,7 +7,7 @@ const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
 const SystemIntakeValidationSchema: any = {
   contactDetails: Yup.object().shape({
     requester: Yup.object().shape({
-      name: Yup.string().trim().required('Enter a name for this request'),
+      commonName: Yup.string().trim().required('Enter a name for this request'),
       component: Yup.string().required("Select the Requester's component")
     }),
     businessOwner: Yup.object().shape({
