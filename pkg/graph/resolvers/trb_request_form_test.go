@@ -100,19 +100,19 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.EqualValues(formChanges["whereInProcessOther"], *updatedForm.WhereInProcessOther)
 		s.EqualValues(formChanges["hasExpectedStartEndDates"], *updatedForm.HasExpectedStartEndDates)
 
-		s.EqualValues(*updatedForm.ExpectedStartDate, expectedStartDate)
-		s.EqualValues(*updatedForm.ExpectedEndDate, expectedEndDate)
+		s.True((*updatedForm.ExpectedStartDate).Equal(expectedStartDate))
+		s.True((*updatedForm.ExpectedEndDate).Equal(expectedEndDate))
 
 		s.EqualValues(updatedCollabGroups[0], updatedForm.CollabGroups[0])
 		s.EqualValues(updatedCollabGroups[1], updatedForm.CollabGroups[1])
 		s.EqualValues(updatedCollabGroups[2], updatedForm.CollabGroups[2])
 
-		s.EqualValues(*updatedForm.CollabDateSecurity, collabDateSecurity)
-		s.EqualValues(*updatedForm.CollabDateEnterpriseArchitecture, collabDateEnterpriseArchitecture)
-		s.EqualValues(*updatedForm.CollabDateCloud, collabDateCloud)
-		s.EqualValues(*updatedForm.CollabDatePrivacyAdvisor, collabDatePrivacyAdvisor)
-		s.EqualValues(*updatedForm.CollabDateGovernanceReviewBoard, collabDateGovernanceReviewBoard)
-		s.EqualValues(*updatedForm.CollabDateOther, collabDateOther)
+		s.True((*updatedForm.CollabDateSecurity).Equal(collabDateSecurity))
+		s.True((*updatedForm.CollabDateEnterpriseArchitecture).Equal(collabDateEnterpriseArchitecture))
+		s.True((*updatedForm.CollabDateCloud).Equal(collabDateCloud))
+		s.True((*updatedForm.CollabDatePrivacyAdvisor).Equal(collabDatePrivacyAdvisor))
+		s.True((*updatedForm.CollabDateGovernanceReviewBoard).Equal(collabDateGovernanceReviewBoard))
+		s.True((*updatedForm.CollabDateOther).Equal(collabDateOther))
 
 		s.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
 		s.EqualValues(3, len(updatedForm.CollabGroups))
