@@ -1716,13 +1716,13 @@ type TRBRequestForm {
   collabDateGovernanceReviewBoard: Time
   collabDateOther: Time
   collabGroupOther: String
-  subjectAreaTechnicalReferenceArchitecture: TRBTechnicalReferenceArchitectureOption
-  subjectAreaNetworkAndSecurity: TRBNetworkAndSecurityOption
-  subjectAreaCloudAndInfrastructure: TRBCloudAndInfrastructureOption
-  subjectAreaApplicationDevelopment: TRBApplicationDevelopmentOption
-  subjectAreaDataAndDataManagement: TRBDataAndDataManagementOption
-  subjectAreaGovernmentProcessesAndPolicies: TRBGovernmentProcessesAndPoliciesOption
-  subjectAreaOtherTechnicalTopics: TRBOtherTechnicalTopicsOption
+  subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
+  subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
+  subjectAreaCloudAndInfrastructure: [TRBCloudAndInfrastructureOption!]
+  subjectAreaApplicationDevelopment: [TRBApplicationDevelopmentOption!]
+  subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
+  subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
+  subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
 
   createdBy: String!
   createdAt: Time!
@@ -1753,13 +1753,13 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   collabDateGovernanceReviewBoard: Time
   collabDateOther: Time
   collabGroupOther: String
-  subjectAreaTechnicalReferenceArchitecture: TRBTechnicalReferenceArchitectureOption
-  subjectAreaNetworkAndSecurity: TRBNetworkAndSecurityOption
-  subjectAreaCloudAndInfrastructure: TRBCloudAndInfrastructureOption
-  subjectAreaApplicationDevelopment: TRBApplicationDevelopmentOption
-  subjectAreaDataAndDataManagement: TRBDataAndDataManagementOption
-  subjectAreaGovernmentProcessesAndPolicies: TRBGovernmentProcessesAndPoliciesOption
-  subjectAreaOtherTechnicalTopics: TRBOtherTechnicalTopicsOption
+  subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
+  subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
+  subjectAreaCloudAndInfrastructure: [TRBCloudAndInfrastructureOption!]
+  subjectAreaApplicationDevelopment: [TRBApplicationDevelopmentOption!]
+  subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
+  subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
+  subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
 }
 
 """

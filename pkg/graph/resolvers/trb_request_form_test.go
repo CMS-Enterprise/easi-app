@@ -24,7 +24,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.NotNil(fetched)
 
 		// confirm that the status is correctly marked "in progress"
-		s.True(fetched.Status == models.TRBFormStatusReadyToStart)
+		s.EqualValues(fetched.Status, models.TRBFormStatusReadyToStart)
 
 		updatedCollabGroups := []models.TRBCollabGroupOption{
 			models.TRBCollabGroupOptionSecurity,
@@ -39,6 +39,29 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		collabDatePrivacyAdvisor, _ := time.Parse(time.RFC3339, "2021-10-23T12:00:00+00:00")
 		collabDateGovernanceReviewBoard, _ := time.Parse(time.RFC3339, "2021-10-24T12:00:00+00:00")
 		collabDateOther, _ := time.Parse(time.RFC3339, "2021-10-25T12:00:00+00:00")
+
+		subjectAreaTechnicalReferenceArchitecture := []models.TRBTechnicalReferenceArchitectureOption{
+			models.TRBTechnicalReferenceArchitectureOptionArchitectureChangeRequestProcessForTheTra,
+		}
+		subjectAreaNetworkAndSecurity := []models.TRBNetworkAndSecurityOption{
+			models.TRBNetworkAndSecurityOptionCmsCybersecurityIntegrationCenterIntegration,
+		}
+		subjectAreaCloudAndInfrastructure := []models.TRBCloudAndInfrastructureOption{
+			models.TRBCloudAndInfrastructureOptionCloudIaasAndPaasInfrastructure,
+		}
+		subjectAreaApplicationDevelopment := []models.TRBApplicationDevelopmentOption{
+			models.TRBApplicationDevelopmentOptionAccessibilityCompliance,
+		}
+		subjectAreaDataAndDataManagement := []models.TRBDataAndDataManagementOption{
+			models.TRBDataAndDataManagementOptionApisAndDataExchanges,
+		}
+		subjectAreaGovernmentProcessesAndPolicies := []models.TRBGovernmentProcessesAndPoliciesOption{
+			models.TRBGovernmentProcessesAndPoliciesOptionSecurityAssessments,
+		}
+		subjectAreaOtherTechnicalTopics := []models.TRBOtherTechnicalTopicsOption{
+			models.TRBOtherTechnicalTopicsOptionArtificialIntelligence,
+		}
+
 		formChanges := map[string]interface{}{
 			"isSubmitted":                               false,
 			"trbRequestId":                              trbRequest.ID.String(),
@@ -59,13 +82,13 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"collabDateGovernanceReviewBoard":           collabDateGovernanceReviewBoard,
 			"collabDateOther":                           collabDateOther,
 			"collabGroupOther":                          "Geek Squad",
-			"subjectAreaTechnicalReferenceArchitecture": models.TRBTechnicalReferenceArchitectureOptionArchitectureChangeRequestProcessForTheTra,
-			"subjectAreaNetworkAndSecurity":             models.TRBNetworkAndSecurityOptionCmsCybersecurityIntegrationCenterIntegration,
-			"subjectAreaCloudAndInfrastructure":         models.TRBCloudAndInfrastructureOptionCloudIaasAndPaasInfrastructure,
-			"subjectAreaApplicationDevelopment":         models.TRBApplicationDevelopmentOptionAccessibilityCompliance,
-			"subjectAreaDataAndDataManagement":          models.TRBDataAndDataManagementOptionApisAndDataExchanges,
-			"subjectAreaGovernmentProcessesAndPolicies": models.TRBGovernmentProcessesAndPoliciesOptionSecurityAssessments,
-			"subjectAreaOtherTechnicalTopics":           models.TRBOtherTechnicalTopicsOptionArtificialIntelligence,
+			"subjectAreaTechnicalReferenceArchitecture": subjectAreaTechnicalReferenceArchitecture,
+			"subjectAreaNetworkAndSecurity":             subjectAreaNetworkAndSecurity,
+			"subjectAreaCloudAndInfrastructure":         subjectAreaCloudAndInfrastructure,
+			"subjectAreaApplicationDevelopment":         subjectAreaApplicationDevelopment,
+			"subjectAreaDataAndDataManagement":          subjectAreaDataAndDataManagement,
+			"subjectAreaGovernmentProcessesAndPolicies": subjectAreaGovernmentProcessesAndPolicies,
+			"subjectAreaOtherTechnicalTopics":           subjectAreaOtherTechnicalTopics,
 		}
 		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, formChanges)
 		s.NoError(err)
@@ -76,29 +99,34 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.EqualValues(formChanges["whereInProcess"], *updatedForm.WhereInProcess)
 		s.EqualValues(formChanges["whereInProcessOther"], *updatedForm.WhereInProcessOther)
 		s.EqualValues(formChanges["hasExpectedStartEndDates"], *updatedForm.HasExpectedStartEndDates)
-		s.True((*updatedForm.ExpectedStartDate).Equal(expectedStartDate))
-		s.True((*updatedForm.ExpectedEndDate).Equal(expectedEndDate))
+
+		s.EqualValues(*updatedForm.ExpectedStartDate, expectedStartDate)
+		s.EqualValues(*updatedForm.ExpectedEndDate, expectedEndDate)
+
 		s.EqualValues(updatedCollabGroups[0], updatedForm.CollabGroups[0])
 		s.EqualValues(updatedCollabGroups[1], updatedForm.CollabGroups[1])
 		s.EqualValues(updatedCollabGroups[2], updatedForm.CollabGroups[2])
-		s.True((*updatedForm.CollabDateSecurity).Equal(collabDateSecurity))
-		s.True((*updatedForm.CollabDateEnterpriseArchitecture).Equal(collabDateEnterpriseArchitecture))
-		s.True((*updatedForm.CollabDateCloud).Equal(collabDateCloud))
-		s.True((*updatedForm.CollabDatePrivacyAdvisor).Equal(collabDatePrivacyAdvisor))
-		s.True((*updatedForm.CollabDateGovernanceReviewBoard).Equal(collabDateGovernanceReviewBoard))
-		s.True((*updatedForm.CollabDateOther).Equal(collabDateOther))
+
+		s.EqualValues(*updatedForm.CollabDateSecurity, collabDateSecurity)
+		s.EqualValues(*updatedForm.CollabDateEnterpriseArchitecture, collabDateEnterpriseArchitecture)
+		s.EqualValues(*updatedForm.CollabDateCloud, collabDateCloud)
+		s.EqualValues(*updatedForm.CollabDatePrivacyAdvisor, collabDatePrivacyAdvisor)
+		s.EqualValues(*updatedForm.CollabDateGovernanceReviewBoard, collabDateGovernanceReviewBoard)
+		s.EqualValues(*updatedForm.CollabDateOther, collabDateOther)
+
 		s.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
 		s.EqualValues(3, len(updatedForm.CollabGroups))
-		s.EqualValues(formChanges["subjectAreaTechnicalReferenceArchitecture"], *updatedForm.SubjectAreaTechnicalReferenceArchitecture)
-		s.EqualValues(formChanges["subjectAreaNetworkAndSecurity"], *updatedForm.SubjectAreaNetworkAndSecurity)
-		s.EqualValues(formChanges["subjectAreaCloudAndInfrastructure"], *updatedForm.SubjectAreaCloudAndInfrastructure)
-		s.EqualValues(formChanges["subjectAreaApplicationDevelopment"], *updatedForm.SubjectAreaApplicationDevelopment)
-		s.EqualValues(formChanges["subjectAreaDataAndDataManagement"], *updatedForm.SubjectAreaDataAndDataManagement)
-		s.EqualValues(formChanges["subjectAreaGovernmentProcessesAndPolicies"], *updatedForm.SubjectAreaGovernmentProcessesAndPolicies)
-		s.EqualValues(formChanges["subjectAreaOtherTechnicalTopics"], *updatedForm.SubjectAreaOtherTechnicalTopics)
+
+		s.EqualValues(subjectAreaTechnicalReferenceArchitecture[0], updatedForm.SubjectAreaTechnicalReferenceArchitecture[0])
+		s.EqualValues(subjectAreaNetworkAndSecurity[0], updatedForm.SubjectAreaNetworkAndSecurity[0])
+		s.EqualValues(subjectAreaCloudAndInfrastructure[0], updatedForm.SubjectAreaCloudAndInfrastructure[0])
+		s.EqualValues(subjectAreaApplicationDevelopment[0], updatedForm.SubjectAreaApplicationDevelopment[0])
+		s.EqualValues(subjectAreaDataAndDataManagement[0], updatedForm.SubjectAreaDataAndDataManagement[0])
+		s.EqualValues(subjectAreaGovernmentProcessesAndPolicies[0], updatedForm.SubjectAreaGovernmentProcessesAndPolicies[0])
+		s.EqualValues(subjectAreaOtherTechnicalTopics[0], updatedForm.SubjectAreaOtherTechnicalTopics[0])
 
 		// confirm that the status is correctly marked "in progress"
-		s.True(updatedForm.Status == models.TRBFormStatusInProgress)
+		s.EqualValues(updatedForm.Status, models.TRBFormStatusInProgress)
 
 		submitChanges := map[string]interface{}{
 			"trbRequestId": trbRequest.ID.String(),
@@ -106,6 +134,6 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		}
 		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, submitChanges)
 		s.NoError(err)
-		s.True(submittedForm.Status == models.TRBFormStatusCompleted)
+		s.EqualValues(submittedForm.Status, models.TRBFormStatusCompleted)
 	})
 }

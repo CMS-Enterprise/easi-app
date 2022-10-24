@@ -1,27 +1,3 @@
-CREATE TYPE trb_where_in_process_option AS ENUM (
-    'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
-    'CONTRACTING_WORK_HAS_STARTED',
-    'DEVELOPMENT_HAS_RECENTLY_STARTED',
-    'DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY',
-    'THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE',
-    'OTHER'
-);
-
-CREATE TYPE trb_collab_group_option AS ENUM (
-    'SECURITY',
-    'ENTERPRISE_ARCHITECTURE',
-    'CLOUD',
-    'PRIVACY_ADVISOR',
-    'GOVERNANCE_REVIEW_BOARD',
-    'OTHER'
-);
-
-CREATE TYPE trb_form_status AS ENUM (
-    'READY_TO_START',
-    'IN_PROGRESS',
-    'COMPLETED'
-);
-
 CREATE TYPE trb_technical_reference_architecture_option AS ENUM (
     'GENERAL_TRA_INFORMATION',
     'TRA_GUIDING_PRINCIPLES',
@@ -107,40 +83,10 @@ CREATE TYPE trb_other_technical_topics_option AS ENUM (
     'OTHER'
 );
 
-
-CREATE TABLE trb_request_forms (
-    id UUID PRIMARY KEY NOT NULL,
-    trb_request_id uuid NOT NULL REFERENCES trb_request(id),
-    status trb_form_status NOT NULL DEFAULT 'READY_TO_START',
-    component TEXT,
-    needs_assistance_with TEXT,
-    has_solution_in_mind BOOLEAN,
-    proposed_solution TEXT,
-    where_in_process trb_where_in_process_option,
-    where_in_process_other TEXT,
-    has_expected_start_end_dates BOOLEAN,
-    expected_start_date TIMESTAMP,
-    expected_end_date TIMESTAMP,
-    collab_groups trb_collab_group_option[],
-    collab_date_security TIMESTAMP,
-    collab_date_enterprise_architecture TIMESTAMP,
-    collab_date_cloud TIMESTAMP,
-    collab_date_privacy_advisor TIMESTAMP,
-    collab_date_governance_review_board TIMESTAMP,
-    collab_date_other TIMESTAMP,
-    collab_group_other TEXT,
-    subject_area_technical_reference_architecture trb_technical_reference_architecture_option,
-    subject_area_network_and_security trb_network_and_security_option,
-    subject_area_cloud_and_infrastructure trb_cloud_and_infrastructure_option,
-    subject_area_application_development trb_application_development_option,
-    subject_area_data_and_data_management trb_data_and_data_management_option,
-    subject_area_government_processes_and_policies trb_government_processes_and_policies_option,
-    subject_area_other_technical_topics trb_other_technical_topics_option,
-
-    created_by TEXT NOT NULL CHECK (created_by ~ '^[A-Z0-9]{4}$'),
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_by TEXT CHECK (modified_by ~ '^[A-Z0-9]{4}$'),
-    modified_at TIMESTAMP WITH TIME ZONE
-);
-
-CREATE UNIQUE INDEX trb_request_forms_unique_idx ON trb_request_forms(trb_request_id);
+ALTER TABLE trb_request_forms ADD COLUMN subject_area_technical_reference_architecture trb_technical_reference_architecture_option[];
+ALTER TABLE trb_request_forms ADD COLUMN subject_area_network_and_security trb_network_and_security_option[];
+ALTER TABLE trb_request_forms ADD COLUMN subject_area_cloud_and_infrastructure trb_cloud_and_infrastructure_option[];
+ALTER TABLE trb_request_forms ADD COLUMN subject_area_application_development trb_application_development_option[];
+ALTER TABLE trb_request_forms ADD COLUMN subject_area_data_and_data_management trb_data_and_data_management_option[];
+ALTER TABLE trb_request_forms ADD COLUMN subject_area_government_processes_and_policies trb_government_processes_and_policies_option[];
+ALTER TABLE trb_request_forms ADD COLUMN subject_area_other_technical_topics trb_other_technical_topics_option[];

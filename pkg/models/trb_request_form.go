@@ -171,30 +171,37 @@ const (
 // TRBRequestForm represents the data entered into the TRB request form
 type TRBRequestForm struct {
 	baseStruct
-	TRBRequestID                              uuid.UUID                                `json:"trbRequestId" db:"trb_request_id"`
-	Status                                    TRBFormStatus                            `json:"status" db:"status"`
-	Component                                 *string                                  `json:"component" db:"component"`
-	NeedsAssistanceWith                       *string                                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
-	HasSolutionInMind                         *bool                                    `json:"hasSolutionInMind" db:"has_solution_in_mind"`
-	ProposedSolution                          *string                                  `json:"proposedSolution" db:"proposed_solution"`
-	WhereInProcess                            *TRBWhereInProcessOption                 `json:"whereInProcess" db:"where_in_process"`
-	WhereInProcessOther                       *string                                  `json:"whereInProcessOther" db:"where_in_process_other"`
-	HasExpectedStartEndDates                  *bool                                    `json:"hasExpectedStartEndDates" db:"has_expected_start_end_dates"`
-	ExpectedStartDate                         *time.Time                               `json:"expectedStartDate" db:"expected_start_date"`
-	ExpectedEndDate                           *time.Time                               `json:"expectedEndDate" db:"expected_end_date"`
-	CollabGroups                              pq.StringArray                           `json:"collabGroups" db:"collab_groups"`
-	CollabDateSecurity                        *time.Time                               `json:"collabDateSecurity" db:"collab_date_security"`
-	CollabDateEnterpriseArchitecture          *time.Time                               `json:"collabDateEnterpriseArchitecture" db:"collab_date_enterprise_architecture"`
-	CollabDateCloud                           *time.Time                               `json:"collabDateCloud" db:"collab_date_cloud"`
-	CollabDatePrivacyAdvisor                  *time.Time                               `json:"collabDatePrivacyAdvisor" db:"collab_date_privacy_advisor"`
-	CollabDateGovernanceReviewBoard           *time.Time                               `json:"collabDateGovernanceReviewBoard" db:"collab_date_governance_review_board"`
-	CollabDateOther                           *time.Time                               `json:"collabDateOther" db:"collab_date_other"`
-	CollabGroupOther                          *string                                  `json:"collabGroupOther" db:"collab_group_other"`
-	SubjectAreaTechnicalReferenceArchitecture *TRBTechnicalReferenceArchitectureOption `json:"subjectAreaTechnicalReferenceArchitecture" db:"subject_area_technical_reference_architecture"`
-	SubjectAreaNetworkAndSecurity             *TRBNetworkAndSecurityOption             `json:"subjectAreaNetworkAndSecurity" db:"subject_area_network_and_security"`
-	SubjectAreaCloudAndInfrastructure         *TRBCloudAndInfrastructureOption         `json:"subjectAreaCloudAndInfrastructure" db:"subject_area_cloud_and_infrastructure"`
-	SubjectAreaApplicationDevelopment         *TRBApplicationDevelopmentOption         `json:"subjectAreaApplicationDevelopment" db:"subject_area_application_development"`
-	SubjectAreaDataAndDataManagement          *TRBDataAndDataManagementOption          `json:"subjectAreaDataAndDataManagement" db:"subject_area_data_and_data_management"`
-	SubjectAreaGovernmentProcessesAndPolicies *TRBGovernmentProcessesAndPoliciesOption `json:"subjectAreaGovernmentProcessesAndPolicies" db:"subject_area_government_processes_and_policies"`
-	SubjectAreaOtherTechnicalTopics           *TRBOtherTechnicalTopicsOption           `json:"subjectAreaOtherTechnicalTopics" db:"subject_area_other_technical_topics"`
+	TRBRequestID                              uuid.UUID                `json:"trbRequestId" db:"trb_request_id"`
+	Status                                    TRBFormStatus            `json:"status" db:"status"`
+	Component                                 *string                  `json:"component" db:"component"`
+	NeedsAssistanceWith                       *string                  `json:"needsAssistanceWith" db:"needs_assistance_with"`
+	HasSolutionInMind                         *bool                    `json:"hasSolutionInMind" db:"has_solution_in_mind"`
+	ProposedSolution                          *string                  `json:"proposedSolution" db:"proposed_solution"`
+	WhereInProcess                            *TRBWhereInProcessOption `json:"whereInProcess" db:"where_in_process"`
+	WhereInProcessOther                       *string                  `json:"whereInProcessOther" db:"where_in_process_other"`
+	HasExpectedStartEndDates                  *bool                    `json:"hasExpectedStartEndDates" db:"has_expected_start_end_dates"`
+	ExpectedStartDate                         *time.Time               `json:"expectedStartDate" db:"expected_start_date"`
+	ExpectedEndDate                           *time.Time               `json:"expectedEndDate" db:"expected_end_date"`
+	CollabGroups                              pq.StringArray           `json:"collabGroups" db:"collab_groups"`
+	CollabDateSecurity                        *time.Time               `json:"collabDateSecurity" db:"collab_date_security"`
+	CollabDateEnterpriseArchitecture          *time.Time               `json:"collabDateEnterpriseArchitecture" db:"collab_date_enterprise_architecture"`
+	CollabDateCloud                           *time.Time               `json:"collabDateCloud" db:"collab_date_cloud"`
+	CollabDatePrivacyAdvisor                  *time.Time               `json:"collabDatePrivacyAdvisor" db:"collab_date_privacy_advisor"`
+	CollabDateGovernanceReviewBoard           *time.Time               `json:"collabDateGovernanceReviewBoard" db:"collab_date_governance_review_board"`
+	CollabDateOther                           *time.Time               `json:"collabDateOther" db:"collab_date_other"`
+	CollabGroupOther                          *string                  `json:"collabGroupOther" db:"collab_group_other"`
+	SubjectAreaTechnicalReferenceArchitecture pq.StringArray           `json:"subjectAreaTechnicalReferenceArchitecture" db:"subject_area_technical_reference_architecture"`
+	SubjectAreaNetworkAndSecurity             pq.StringArray           `json:"subjectAreaNetworkAndSecurity" db:"subject_area_network_and_security"`
+	SubjectAreaCloudAndInfrastructure         pq.StringArray           `json:"subjectAreaCloudAndInfrastructure" db:"subject_area_cloud_and_infrastructure"`
+	SubjectAreaApplicationDevelopment         pq.StringArray           `json:"subjectAreaApplicationDevelopment" db:"subject_area_application_development"`
+	SubjectAreaDataAndDataManagement          pq.StringArray           `json:"subjectAreaDataAndDataManagement" db:"subject_area_data_and_data_management"`
+	SubjectAreaGovernmentProcessesAndPolicies pq.StringArray           `json:"subjectAreaGovernmentProcessesAndPolicies" db:"subject_area_government_processes_and_policies"`
+	SubjectAreaOtherTechnicalTopics           pq.StringArray           `json:"subjectAreaOtherTechnicalTopics" db:"subject_area_other_technical_topics"`
+	// SubjectAreaTechnicalReferenceArchitecture *TRBTechnicalReferenceArchitectureOption `json:"subjectAreaTechnicalReferenceArchitecture" db:"subject_area_technical_reference_architecture"`
+	// SubjectAreaNetworkAndSecurity             *TRBNetworkAndSecurityOption             `json:"subjectAreaNetworkAndSecurity" db:"subject_area_network_and_security"`
+	// SubjectAreaCloudAndInfrastructure         *TRBCloudAndInfrastructureOption         `json:"subjectAreaCloudAndInfrastructure" db:"subject_area_cloud_and_infrastructure"`
+	// SubjectAreaApplicationDevelopment         *TRBApplicationDevelopmentOption         `json:"subjectAreaApplicationDevelopment" db:"subject_area_application_development"`
+	// SubjectAreaDataAndDataManagement          *TRBDataAndDataManagementOption          `json:"subjectAreaDataAndDataManagement" db:"subject_area_data_and_data_management"`
+	// SubjectAreaGovernmentProcessesAndPolicies *TRBGovernmentProcessesAndPoliciesOption `json:"subjectAreaGovernmentProcessesAndPolicies" db:"subject_area_government_processes_and_policies"`
+	// SubjectAreaOtherTechnicalTopics           *TRBOtherTechnicalTopicsOption           `json:"subjectAreaOtherTechnicalTopics" db:"subject_area_other_technical_topics"`
 }
