@@ -2,15 +2,12 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
+import { contactQueries, grtActions, mockData } from 'data/mock/grtActions';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import CreateSystemIntakeActionBusinessCaseNeeded from 'queries/CreateSystemIntakeActionBusinessCaseNeededQuery';
 import CreateSystemIntakeActionBusinessCaseNeedsChanges from 'queries/CreateSystemIntakeActionBusinessCaseNeedsChangesQuery';
@@ -24,9 +21,21 @@ import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
 import RequestOverview from '../RequestOverview';
 
-const waitForPageLoad = async () => {
-  await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+const waitForPageLoad = async (testId: string = 'grt-submit-action-view') => {
+  await waitFor(() => {
+    expect(screen.getByTestId(testId)).toBeInTheDocument();
+  });
 };
+
+// Mock system intake and contacts data
+const {
+  systemIntake,
+  contacts: { requester, productManager }
+} = mockData;
+const systemIntakeId = systemIntake.id;
+
+// Mock contact queries
+const { getSystemIntakeContactsQuery, getCedarContactsQuery } = contactQueries;
 
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -45,6 +54,14 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
+jest.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => {
+    return {
+      notifyMultipleRecipients: true
+    };
+  }
+}));
+
 window.scrollTo = jest.fn();
 
 describe('Submit Action', () => {
@@ -52,86 +69,12 @@ describe('Submit Action', () => {
     request: {
       query: GetSystemIntakeQuery,
       variables: {
-        id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+        id: systemIntakeId
       }
     },
     result: {
       data: {
-        systemIntake: {
-          id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
-          euaUserId: 'ABCD',
-          adminLead: null,
-          businessNeed: 'Test business need',
-          businessSolution: 'Test business solution',
-          businessOwner: {
-            component: 'Center for Medicaid and CHIP Services',
-            name: 'ABCD'
-          },
-          contract: {
-            contractor: 'Contractor Name',
-            endDate: {
-              day: '31',
-              month: '12',
-              year: '2023'
-            },
-            hasContract: 'HAVE_CONTRACT',
-            startDate: {
-              day: '1',
-              month: '1',
-              year: '2021'
-            },
-            vehicle: 'Sole source',
-            number: '123456-7890'
-          },
-          costs: {
-            isExpectingIncrease: 'YES',
-            expectedIncreaseAmount: '10 million dollars'
-          },
-          currentStage: 'I have done some initial research',
-          decisionNextSteps: null,
-          grbDate: null,
-          grtDate: null,
-          grtFeedbacks: [],
-          governanceTeams: {
-            isPresent: true,
-            teams: []
-          },
-          isso: {
-            isPresent: true,
-            name: 'ISSO Name'
-          },
-          existingFunding: true,
-          fundingSources: [{ fundingNumber: '123456', source: 'Research' }],
-          lcid: null,
-          lcidExpiresAt: null,
-          lcidScope: null,
-          lcidCostBaseline: null,
-          needsEaSupport: true,
-          productManager: {
-            component: 'Center for Program Integrity',
-            name: 'Project Manager'
-          },
-          rejectionReason: null,
-          requester: {
-            component: 'Center for Medicaid and CHIP Services',
-            email: 'abcd@local.fake',
-            name: 'User ABCD'
-          },
-          requestName: 'TACO',
-          requestType: 'NEW',
-          status: 'INTAKE_SUBMITTED',
-          createdAt: null,
-          submittedAt: null,
-          updatedAt: null,
-          archivedAt: null,
-          decidedAt: null,
-          businessCaseId: null,
-          lastAdminNote: {
-            content: null,
-            createdAt: null
-          },
-          grtReviewEmailBody: null
-        }
+        systemIntake
       }
     }
   };
@@ -158,10 +101,10 @@ describe('Submit Action', () => {
   });
 
   const renderActionPage = (slug: string, mocks: any[]) => {
-    render(
+    return render(
       <MemoryRouter
         initialEntries={[
-          `/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions/${slug}`
+          `/governance-review-team/${systemIntakeId}/actions/${slug}`
         ]}
       >
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -192,21 +135,23 @@ describe('Submit Action', () => {
     ).toBeInTheDocument();
   });
 
-  test.each([
-    { action: 'not-it-request' },
-    { action: 'need-biz-case' },
-    { action: 'provide-feedback-need-biz-case' },
-    { action: 'ready-for-grt' },
-    { action: 'ready-for-grb' },
-    { action: 'no-governance' },
-    { action: 'issue-lcid' }
-    // { action: 'extend-lcid' } // tbd button label
-  ])(
+  const actionsList = [
+    'not-it-request',
+    'need-biz-case',
+    'provide-feedback-need-biz-case',
+    'ready-for-grt',
+    'ready-for-grb',
+    'no-governance',
+    'issue-lcid',
+    'extend-lcid'
+  ];
+
+  test.each(actionsList)(
     'renders submit action with and without email notification %j',
     // '$action' title sub did not work
-    async ({ action }) => {
+    async action => {
       renderActionPage(action, [intakeQuery]);
-      await waitForPageLoad();
+      await waitForPageLoad(grtActions[action as keyof typeof grtActions].view);
       expect(
         screen.getByRole('button', { name: /send email/i })
       ).toBeInTheDocument();
@@ -217,6 +162,29 @@ describe('Submit Action', () => {
   );
 
   describe('actions', () => {
+    it('renders additional contacts', async () => {
+      const { asFragment } = renderActionPage('not-it-request', [
+        intakeQuery,
+        getCedarContactsQuery,
+        getSystemIntakeContactsQuery
+      ]);
+
+      await waitForPageLoad();
+      screen.getByTestId('truncatedContentButton').click();
+
+      // Unverified recipients alert
+      expect(
+        screen.getByTestId('alert_unverified-recipients')
+      ).toBeInTheDocument();
+
+      screen.getByTestId('button_verify-recipient').click();
+      expect(screen.getByRole('combobox', { name: 'Cedar-Users' })).toHaveValue(
+        productManager.commonName
+      );
+
+      expect(asFragment()).toMatchSnapshot();
+    });
+
     it('executes not an IT request mutation', async () => {
       const notITRequestMutation = {
         request: {
@@ -224,12 +192,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: true
               },
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -238,7 +206,7 @@ describe('Submit Action', () => {
           data: {
             createSystemIntakeActionNotItRequest: {
               systemIntake: {
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                id: systemIntakeId,
                 status: 'NOT_IT_REQUEST'
               }
             }
@@ -246,12 +214,33 @@ describe('Submit Action', () => {
         }
       };
 
-      renderActionPage('not-it-request', [intakeQuery, notITRequestMutation]);
+      renderActionPage('not-it-request', [
+        intakeQuery,
+        getSystemIntakeContactsQuery,
+        notITRequestMutation
+      ]);
       await waitForPageLoad();
 
       expect(
         screen.getByText(/Not an IT governance request/i)
       ).toBeInTheDocument();
+
+      // Check requester is set as default recipient
+      expect(
+        screen.getByRole('checkbox', {
+          name: `${requester.commonName}, ${requester.component} (Requester)`
+        })
+      ).toBeChecked();
+
+      // Check IT Governance is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+      ).toBeChecked();
+
+      // Check IT Investment is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Investment Mailbox' })
+      ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -269,12 +258,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: true
               },
               feedback: '',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: false
             }
           }
@@ -284,7 +273,7 @@ describe('Submit Action', () => {
             createSystemIntakeActionNotItRequest: {
               systemIntake: {
                 status: 'NOT_IT_REQUEST',
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+                id: systemIntakeId
               }
             }
           }
@@ -305,12 +294,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -319,7 +308,7 @@ describe('Submit Action', () => {
           data: {
             createSystemIntakeActionBusinessCaseNeeded: {
               systemIntake: {
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                id: systemIntakeId,
                 status: 'NEED_BIZ_CASE'
               }
             }
@@ -327,12 +316,28 @@ describe('Submit Action', () => {
         }
       };
 
-      renderActionPage('need-biz-case', [intakeQuery, needBizCaseMutation]);
+      renderActionPage('need-biz-case', [
+        intakeQuery,
+        getSystemIntakeContactsQuery,
+        needBizCaseMutation
+      ]);
       await waitForPageLoad();
 
       expect(
         screen.getByText(/Request a draft business case/i)
       ).toBeInTheDocument();
+
+      // Check requester is set as default recipient
+      expect(
+        screen.getByRole('checkbox', {
+          name: `${requester.commonName}, ${requester.component} (Requester)`
+        })
+      ).toBeChecked();
+
+      // Check IT Governance is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+      ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -350,12 +355,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -364,7 +369,7 @@ describe('Submit Action', () => {
           data: {
             createSystemIntakeActionReadyForGRT: {
               systemIntake: {
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                id: systemIntakeId,
                 status: 'READY_FOR_GRT'
               }
             }
@@ -372,10 +377,26 @@ describe('Submit Action', () => {
         }
       };
 
-      renderActionPage('ready-for-grt', [intakeQuery, readyForGRTMutation]);
+      renderActionPage('ready-for-grt', [
+        intakeQuery,
+        getSystemIntakeContactsQuery,
+        readyForGRTMutation
+      ]);
       await waitForPageLoad();
 
       expect(screen.getByText(/Mark as ready for GRT/i)).toBeInTheDocument();
+
+      // Check requester is set as default recipient
+      expect(
+        screen.getByRole('checkbox', {
+          name: `${requester.commonName}, ${requester.component} (Requester)`
+        })
+      ).toBeChecked();
+
+      // Check IT Governance is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+      ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -393,12 +414,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -407,7 +428,7 @@ describe('Submit Action', () => {
           data: {
             createSystemIntakeActionBusinessCaseNeedsChanges: {
               systemIntake: {
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                id: systemIntakeId,
                 status: 'BIZ_CASE_CHANGES_NEEDED'
               }
             }
@@ -417,6 +438,7 @@ describe('Submit Action', () => {
 
       renderActionPage('biz-case-needs-changes', [
         intakeQuery,
+        getSystemIntakeContactsQuery,
         needsChangesMutation
       ]);
       await waitForPageLoad();
@@ -426,6 +448,18 @@ describe('Submit Action', () => {
           /Business case needs changes and is not ready for GRT/i
         )
       ).toBeInTheDocument();
+
+      // Check requester is set as default recipient
+      expect(
+        screen.getByRole('checkbox', {
+          name: `${requester.commonName}, ${requester.component} (Requester)`
+        })
+      ).toBeChecked();
+
+      // Check IT Governance is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+      ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -443,12 +477,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: true
               },
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -457,7 +491,7 @@ describe('Submit Action', () => {
           data: {
             createSystemIntakeActionNoGovernanceNeeded: {
               systemIntake: {
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                id: systemIntakeId,
                 status: 'NO_GOVERNANCE'
               }
             }
@@ -465,10 +499,31 @@ describe('Submit Action', () => {
         }
       };
 
-      renderActionPage('no-governance', [intakeQuery, noGovernanceMutation]);
+      renderActionPage('no-governance', [
+        intakeQuery,
+        getSystemIntakeContactsQuery,
+        noGovernanceMutation
+      ]);
       await waitForPageLoad();
 
       expect(screen.getByText(/Close project/i)).toBeInTheDocument();
+
+      // Check requester is set as default recipient
+      expect(
+        screen.getByRole('checkbox', {
+          name: `${requester.commonName}, ${requester.component} (Requester)`
+        })
+      ).toBeChecked();
+
+      // Check IT Governance is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+      ).toBeChecked();
+
+      // Check IT Investment is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Investment Mailbox' })
+      ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -487,12 +542,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -501,7 +556,7 @@ describe('Submit Action', () => {
           data: {
             createSystemIntakeActionSendEmail: {
               systemIntake: {
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                id: systemIntakeId,
                 status: 'SHUTDOWN_IN_PROGRESS'
               }
             }
@@ -509,8 +564,24 @@ describe('Submit Action', () => {
         }
       };
 
-      renderActionPage('send-email', [intakeQuery, sendEmailMutation]);
+      renderActionPage('send-email', [
+        intakeQuery,
+        getSystemIntakeContactsQuery,
+        sendEmailMutation
+      ]);
       await waitForPageLoad();
+
+      // Check requester is set as default recipient
+      expect(
+        screen.getByRole('checkbox', {
+          name: `${requester.commonName}, ${requester.component} (Requester)`
+        })
+      ).toBeChecked();
+
+      // Check IT Governance is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+      ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -528,12 +599,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -542,7 +613,7 @@ describe('Submit Action', () => {
           data: {
             createSystemIntakeActionGuideReceievedClose: {
               systemIntake: {
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                id: systemIntakeId,
                 status: 'SHUTDOWN_COMPLETE'
               }
             }
@@ -552,6 +623,7 @@ describe('Submit Action', () => {
 
       renderActionPage('guide-received-close', [
         intakeQuery,
+        getSystemIntakeContactsQuery,
         guideReceivedCloseMutation
       ]);
       await waitForPageLoad();
@@ -559,6 +631,18 @@ describe('Submit Action', () => {
       expect(
         screen.getByText(/Decomission guide received/i)
       ).toBeInTheDocument();
+
+      // Check requester is set as default recipient
+      expect(
+        screen.getByRole('checkbox', {
+          name: `${requester.commonName}, ${requester.component} (Requester)`
+        })
+      ).toBeChecked();
+
+      // Check IT Governance is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+      ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -576,12 +660,12 @@ describe('Submit Action', () => {
           variables: {
             input: {
               notificationRecipients: {
-                regularRecipientEmails: ['abcd@local.fake'],
+                regularRecipientEmails: [requester.email],
                 shouldNotifyITGovernance: true,
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+              intakeId: systemIntakeId,
               shouldSendEmail: true
             }
           }
@@ -590,7 +674,7 @@ describe('Submit Action', () => {
           data: {
             createSystemIntakeActionNotRespondingClose: {
               systemIntake: {
-                id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                id: systemIntakeId,
                 status: 'NO_GOVERNANCE'
               }
             }
@@ -600,6 +684,7 @@ describe('Submit Action', () => {
 
       renderActionPage('not-responding-close', [
         intakeQuery,
+        getSystemIntakeContactsQuery,
         notRespondingCloseMutation
       ]);
       await waitForPageLoad();
@@ -607,6 +692,18 @@ describe('Submit Action', () => {
       expect(
         screen.getByText(/Project team not responding/i)
       ).toBeInTheDocument();
+
+      // Check requester is set as default recipient
+      expect(
+        screen.getByRole('checkbox', {
+          name: `${requester.commonName}, ${requester.component} (Requester)`
+        })
+      ).toBeChecked();
+
+      // Check IT Governance is set as default recipient
+      expect(
+        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+      ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
