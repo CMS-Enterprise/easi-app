@@ -10,15 +10,14 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (suite *ResolverSuite) TestCreateTRBRequestDocument() {
-	anonEua := "ANON"
-
-	trbRequest := models.NewTRBRequest(anonEua)
-	returnedRequest, err := suite.testConfigs.Store.CreateTRBRequest(suite.testConfigs.Logger, trbRequest)
+func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
+	// general setup
+	trbRequest, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTFormalReview, suite.testConfigs.Store)
 	suite.NoError(err)
-	trbRequestID := returnedRequest.ID
+	suite.NotNil(trbRequest)
+	trbRequestID := trbRequest.ID
 
-	docToBeCreated := models.TRBRequestDocument{
+	documentToCreate := models.TRBRequestDocument{
 		TRBRequestID:       trbRequestID,
 		CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
 		FileName:           "create_and_get.pdf",
@@ -26,38 +25,84 @@ func (suite *ResolverSuite) TestCreateTRBRequestDocument() {
 		Bucket:             "bukkit",
 		S3Key:              uuid.NewString(),
 	}
-	docToBeCreated.CreatedBy = anonEua
+	// docToBeCreated.CreatedBy will be set based on principal in test config
 
+	createdDocumentID := createTRBRequestDocumentSubtest(suite, trbRequestID, documentToCreate)
+	getTRBRequestDocumentsByRequestIDSubtest(suite, trbRequestID, documentToCreate, createdDocumentID)
+}
+
+// subtests are regular functions, not suite methods, so we can guarantee they run sequentially
+
+func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUID, documentToCreate models.TRBRequestDocument) uuid.UUID {
 	fileToUpload := bytes.NewReader([]byte("Test file content"))
 	gqlInput := model.CreateTRBRequestDocumentInput{
-		RequestID:            docToBeCreated.TRBRequestID,
-		DocumentType:         docToBeCreated.CommonDocumentType,
-		OtherTypeDescription: &docToBeCreated.OtherType,
-		FileName:             docToBeCreated.FileName,
+		RequestID:            documentToCreate.TRBRequestID,
+		DocumentType:         documentToCreate.CommonDocumentType,
+		OtherTypeDescription: &documentToCreate.OtherType,
+		FileName:             documentToCreate.FileName,
 		FileData: graphql.Upload{
 			File:        fileToUpload,
-			Filename:    docToBeCreated.FileName,
+			Filename:    documentToCreate.FileName,
 			Size:        fileToUpload.Size(),
 			ContentType: "application/pdf",
 		},
 	}
 
-	createdDoc, err := CreateTRBRequestDocument(suite.testConfigs.Context, suite.testConfigs.Store, gqlInput)
+	createdDocument, err := CreateTRBRequestDocument(
+		suite.testConfigs.Context,
+		suite.testConfigs.Store,
+		suite.testConfigs.S3Client,
+		gqlInput,
+	)
 	suite.NoError(err)
-	suite.NotNil(createdDoc)
+	suite.NotNil(createdDocument)
 
 	// baseStruct fields
-	suite.NotNil(createdDoc.ID)
-	suite.EqualValues(anonEua, createdDoc.CreatedBy)
-	suite.NotNil(createdDoc.CreatedAt)
-	suite.Nil(createdDoc.ModifiedBy)
-	suite.Nil(createdDoc.ModifiedAt)
+	suite.NotNil(createdDocument.ID)
+	suite.EqualValues(suite.testConfigs.Principal.EUAID, createdDocument.CreatedBy)
+	suite.NotNil(createdDocument.CreatedAt)
+	suite.Nil(createdDocument.ModifiedBy)
+	suite.Nil(createdDocument.ModifiedAt)
 
 	// TRBRequestDocument-specific fields
-	suite.EqualValues(trbRequestID, createdDoc.TRBRequestID)
-	suite.EqualValues(models.TRBRequestDocumentCommonTypeArchitectureDiagram, createdDoc.CommonDocumentType)
-	suite.EqualValues("", createdDoc.OtherType)
-	suite.EqualValues("create_and_get.pdf", createdDoc.FileName)
+	suite.EqualValues(trbRequestID, createdDocument.TRBRequestID)
+	suite.EqualValues(documentToCreate.CommonDocumentType, createdDocument.CommonDocumentType)
+	suite.EqualValues(documentToCreate.OtherType, createdDocument.OtherType)
+	suite.EqualValues(documentToCreate.FileName, createdDocument.FileName)
 	// TODO - status?
 	// TODO - URL/Bucket/FileKey (come from S3)
+
+	// TODO - test that it was uploaded to S3? use a mock for S3Client?
+
+	return createdDocument.ID // used by other tests
+}
+
+func getTRBRequestDocumentsByRequestIDSubtest(suite *ResolverSuite, trbRequestID uuid.UUID, createdDocument models.TRBRequestDocument, createdDocumentID uuid.UUID) {
+	documents, err := GetTRBRequestDocumentsByRequestID(
+		suite.testConfigs.Context,
+		suite.testConfigs.Store,
+		suite.testConfigs.S3Client,
+		trbRequestID,
+	)
+	suite.NoError(err)
+	suite.Equal(1, len(documents))
+
+	fetchedDocument := documents[0]
+	suite.NotNil(fetchedDocument)
+
+	// baseStruct fields
+	suite.NotNil(fetchedDocument.ID)
+	suite.Equal(createdDocumentID, fetchedDocument.ID)
+	suite.EqualValues(suite.testConfigs.Principal.EUAID, fetchedDocument.CreatedBy)
+	suite.NotNil(fetchedDocument.CreatedAt)
+	suite.Nil(fetchedDocument.ModifiedBy)
+	suite.Nil(fetchedDocument.ModifiedAt)
+
+	// TRBRequestDocument-specific fields
+	suite.EqualValues(trbRequestID, fetchedDocument.TRBRequestID)
+	suite.EqualValues(createdDocument.CommonDocumentType, fetchedDocument.CommonDocumentType)
+	suite.EqualValues(createdDocument.OtherType, fetchedDocument.OtherType)
+	suite.EqualValues(createdDocument.FileName, fetchedDocument.FileName)
+
+	// TODO - test S3 URL validity?
 }

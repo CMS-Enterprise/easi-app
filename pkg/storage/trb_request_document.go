@@ -48,7 +48,6 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(logger *zap.Logger, requestID 
 	}
 
 	return documents, nil
-
 }
 
 // CreateTRBRequestDocument creates a record for a TRBRequestDocument in our database, *after* it's been uploaded to S3

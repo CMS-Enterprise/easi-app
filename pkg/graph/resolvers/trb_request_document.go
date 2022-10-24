@@ -10,21 +10,29 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 // GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID
-func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
+func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	documents, err := store.GetTRBRequestDocumentsByRequestID(appcontext.ZLogger(ctx), requestID)
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO - get presigned URLs for each document, populate each document.URL appropriately
+	for _, document := range documents {
+		presignedURL, err := s3Client.NewGetPresignedURL(document.S3Key)
+		if err != nil {
+			return nil, err
+		}
+		document.URL = presignedURL.URL
+	}
+
 	return documents, nil
 }
 
 // CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database
-func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, input model.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
+func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input model.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
 	s3Key := uuid.New().String()
 
 	// add file extension to key if we can get it from upload's MIME type

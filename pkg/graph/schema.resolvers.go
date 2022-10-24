@@ -1910,7 +1910,7 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 
 // CreateTRBRequestDocument is the resolver for the createTRBRequestDocument field.
 func (r *mutationResolver) CreateTRBRequestDocument(ctx context.Context, input model.CreateTRBRequestDocumentInput) (*model.CreateTRBRequestDocumentPayload, error) {
-	doc, err := resolvers.CreateTRBRequestDocument(ctx, r.store, input)
+	doc, err := resolvers.CreateTRBRequestDocument(ctx, r.store, r.s3Client, input)
 	if err != nil {
 		return nil, err
 	}
@@ -2671,7 +2671,7 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 
 // Documents is the resolver for the documents field.
 func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error) {
-	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
