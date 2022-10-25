@@ -7168,12 +7168,12 @@ type TRBRequestForm {
   expectedStartDate: Time
   expectedEndDate: Time
   collabGroups: [TRBCollabGroupOption!]!
-  collabDateSecurity: Time
-  collabDateEnterpriseArchitecture: Time
-  collabDateCloud: Time
-  collabDatePrivacyAdvisor: Time
-  collabDateGovernanceReviewBoard: Time
-  collabDateOther: Time
+  collabDateSecurity: String
+  collabDateEnterpriseArchitecture: String
+  collabDateCloud: String
+  collabDatePrivacyAdvisor: String
+  collabDateGovernanceReviewBoard: String
+  collabDateOther: String
   collabGroupOther: String
   subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
   subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
@@ -7205,12 +7205,12 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   expectedStartDate: Time
   expectedEndDate: Time
   collabGroups: [TRBCollabGroupOption!]
-  collabDateSecurity: Time
-  collabDateEnterpriseArchitecture: Time
-  collabDateCloud: Time
-  collabDatePrivacyAdvisor: Time
-  collabDateGovernanceReviewBoard: Time
-  collabDateOther: Time
+  collabDateSecurity: String
+  collabDateEnterpriseArchitecture: String
+  collabDateCloud: String
+  collabDatePrivacyAdvisor: String
+  collabDateGovernanceReviewBoard: String
+  collabDateOther: String
   collabGroupOther: String
   subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
   subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
@@ -33940,9 +33940,9 @@ func (ec *executionContext) _TRBRequestForm_collabDateSecurity(ctx context.Conte
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_collabDateSecurity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33952,7 +33952,7 @@ func (ec *executionContext) fieldContext_TRBRequestForm_collabDateSecurity(ctx c
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -33981,9 +33981,9 @@ func (ec *executionContext) _TRBRequestForm_collabDateEnterpriseArchitecture(ctx
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_collabDateEnterpriseArchitecture(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33993,7 +33993,7 @@ func (ec *executionContext) fieldContext_TRBRequestForm_collabDateEnterpriseArch
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -34022,9 +34022,9 @@ func (ec *executionContext) _TRBRequestForm_collabDateCloud(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_collabDateCloud(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -34034,7 +34034,7 @@ func (ec *executionContext) fieldContext_TRBRequestForm_collabDateCloud(ctx cont
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -34063,9 +34063,9 @@ func (ec *executionContext) _TRBRequestForm_collabDatePrivacyAdvisor(ctx context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_collabDatePrivacyAdvisor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -34075,7 +34075,7 @@ func (ec *executionContext) fieldContext_TRBRequestForm_collabDatePrivacyAdvisor
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -34104,9 +34104,9 @@ func (ec *executionContext) _TRBRequestForm_collabDateGovernanceReviewBoard(ctx 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_collabDateGovernanceReviewBoard(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -34116,7 +34116,7 @@ func (ec *executionContext) fieldContext_TRBRequestForm_collabDateGovernanceRevi
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -34145,9 +34145,9 @@ func (ec *executionContext) _TRBRequestForm_collabDateOther(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestForm_collabDateOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -34157,7 +34157,7 @@ func (ec *executionContext) fieldContext_TRBRequestForm_collabDateOther(ctx cont
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil

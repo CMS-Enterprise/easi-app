@@ -1709,12 +1709,12 @@ type TRBRequestForm {
   expectedStartDate: Time
   expectedEndDate: Time
   collabGroups: [TRBCollabGroupOption!]!
-  collabDateSecurity: Time
-  collabDateEnterpriseArchitecture: Time
-  collabDateCloud: Time
-  collabDatePrivacyAdvisor: Time
-  collabDateGovernanceReviewBoard: Time
-  collabDateOther: Time
+  collabDateSecurity: String
+  collabDateEnterpriseArchitecture: String
+  collabDateCloud: String
+  collabDatePrivacyAdvisor: String
+  collabDateGovernanceReviewBoard: String
+  collabDateOther: String
   collabGroupOther: String
   subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
   subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
@@ -1746,12 +1746,12 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   expectedStartDate: Time
   expectedEndDate: Time
   collabGroups: [TRBCollabGroupOption!]
-  collabDateSecurity: Time
-  collabDateEnterpriseArchitecture: Time
-  collabDateCloud: Time
-  collabDatePrivacyAdvisor: Time
-  collabDateGovernanceReviewBoard: Time
-  collabDateOther: Time
+  collabDateSecurity: String
+  collabDateEnterpriseArchitecture: String
+  collabDateCloud: String
+  collabDatePrivacyAdvisor: String
+  collabDateGovernanceReviewBoard: String
+  collabDateOther: String
   collabGroupOther: String
   subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
   subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]

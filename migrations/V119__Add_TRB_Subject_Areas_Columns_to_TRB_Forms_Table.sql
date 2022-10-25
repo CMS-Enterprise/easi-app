@@ -90,3 +90,10 @@ ALTER TABLE trb_request_forms ADD COLUMN subject_area_application_development tr
 ALTER TABLE trb_request_forms ADD COLUMN subject_area_data_and_data_management trb_data_and_data_management_option[];
 ALTER TABLE trb_request_forms ADD COLUMN subject_area_government_processes_and_policies trb_government_processes_and_policies_option[];
 ALTER TABLE trb_request_forms ADD COLUMN subject_area_other_technical_topics trb_other_technical_topics_option[];
+
+ALTER TABLE trb_request_forms ALTER COLUMN collab_date_security TYPE TEXT;
+ALTER TABLE trb_request_forms ALTER COLUMN collab_date_enterprise_architecture TYPE TEXT;
+ALTER TABLE trb_request_forms ALTER COLUMN collab_date_cloud TYPE TEXT;
+ALTER TABLE trb_request_forms ALTER COLUMN collab_date_privacy_advisor TYPE TEXT;
+ALTER TABLE trb_request_forms ALTER COLUMN collab_date_governance_review_board TYPE TEXT;
+ALTER TABLE trb_request_forms ALTER COLUMN collab_date_other TYPE TEXT;

@@ -33,12 +33,6 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		}
 		expectedStartDate, _ := time.Parse(time.RFC3339, "2022-10-10T12:00:00+00:00")
 		expectedEndDate, _ := time.Parse(time.RFC3339, "2050-10-10T12:00:00+00:00")
-		collabDateSecurity, _ := time.Parse(time.RFC3339, "2021-10-20T12:00:00+00:00")
-		collabDateEnterpriseArchitecture, _ := time.Parse(time.RFC3339, "2021-10-21T12:00:00+00:00")
-		collabDateCloud, _ := time.Parse(time.RFC3339, "2021-10-22T12:00:00+00:00")
-		collabDatePrivacyAdvisor, _ := time.Parse(time.RFC3339, "2021-10-23T12:00:00+00:00")
-		collabDateGovernanceReviewBoard, _ := time.Parse(time.RFC3339, "2021-10-24T12:00:00+00:00")
-		collabDateOther, _ := time.Parse(time.RFC3339, "2021-10-25T12:00:00+00:00")
 
 		subjectAreaTechnicalReferenceArchitecture := []models.TRBTechnicalReferenceArchitectureOption{
 			models.TRBTechnicalReferenceArchitectureOptionArchitectureChangeRequestProcessForTheTra,
@@ -75,12 +69,12 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"expectedStartDate":                         expectedStartDate,
 			"expectedEndDate":                           expectedEndDate,
 			"collabGroups":                              updatedCollabGroups,
-			"collabDateSecurity":                        collabDateSecurity,
-			"collabDateEnterpriseArchitecture":          collabDateEnterpriseArchitecture,
-			"collabDateCloud":                           collabDateCloud,
-			"collabDatePrivacyAdvisor":                  collabDatePrivacyAdvisor,
-			"collabDateGovernanceReviewBoard":           collabDateGovernanceReviewBoard,
-			"collabDateOther":                           collabDateOther,
+			"collabDateSecurity":                        "2021-10-20",
+			"collabDateEnterpriseArchitecture":          "2021-10-21",
+			"collabDateCloud":                           "2021-10-22",
+			"collabDatePrivacyAdvisor":                  "2021-10-23",
+			"collabDateGovernanceReviewBoard":           "2021-10-24",
+			"collabDateOther":                           "2021-10-25",
 			"collabGroupOther":                          "Geek Squad",
 			"subjectAreaTechnicalReferenceArchitecture": subjectAreaTechnicalReferenceArchitecture,
 			"subjectAreaNetworkAndSecurity":             subjectAreaNetworkAndSecurity,
@@ -107,12 +101,12 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.EqualValues(updatedCollabGroups[1], updatedForm.CollabGroups[1])
 		s.EqualValues(updatedCollabGroups[2], updatedForm.CollabGroups[2])
 
-		s.True((*updatedForm.CollabDateSecurity).Equal(collabDateSecurity))
-		s.True((*updatedForm.CollabDateEnterpriseArchitecture).Equal(collabDateEnterpriseArchitecture))
-		s.True((*updatedForm.CollabDateCloud).Equal(collabDateCloud))
-		s.True((*updatedForm.CollabDatePrivacyAdvisor).Equal(collabDatePrivacyAdvisor))
-		s.True((*updatedForm.CollabDateGovernanceReviewBoard).Equal(collabDateGovernanceReviewBoard))
-		s.True((*updatedForm.CollabDateOther).Equal(collabDateOther))
+		s.EqualValues(formChanges["collabDateSecurity"], *updatedForm.CollabDateSecurity)
+		s.EqualValues(formChanges["collabDateEnterpriseArchitecture"], *updatedForm.CollabDateEnterpriseArchitecture)
+		s.EqualValues(formChanges["collabDateCloud"], *updatedForm.CollabDateCloud)
+		s.EqualValues(formChanges["collabDatePrivacyAdvisor"], *updatedForm.CollabDatePrivacyAdvisor)
+		s.EqualValues(formChanges["collabDateGovernanceReviewBoard"], *updatedForm.CollabDateGovernanceReviewBoard)
+		s.EqualValues(formChanges["collabDateOther"], *updatedForm.CollabDateOther)
 
 		s.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
 		s.EqualValues(3, len(updatedForm.CollabGroups))

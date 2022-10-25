@@ -183,12 +183,12 @@ type TRBRequestForm struct {
 	ExpectedStartDate                         *time.Time               `json:"expectedStartDate" db:"expected_start_date"`
 	ExpectedEndDate                           *time.Time               `json:"expectedEndDate" db:"expected_end_date"`
 	CollabGroups                              pq.StringArray           `json:"collabGroups" db:"collab_groups"`
-	CollabDateSecurity                        *time.Time               `json:"collabDateSecurity" db:"collab_date_security"`
-	CollabDateEnterpriseArchitecture          *time.Time               `json:"collabDateEnterpriseArchitecture" db:"collab_date_enterprise_architecture"`
-	CollabDateCloud                           *time.Time               `json:"collabDateCloud" db:"collab_date_cloud"`
-	CollabDatePrivacyAdvisor                  *time.Time               `json:"collabDatePrivacyAdvisor" db:"collab_date_privacy_advisor"`
-	CollabDateGovernanceReviewBoard           *time.Time               `json:"collabDateGovernanceReviewBoard" db:"collab_date_governance_review_board"`
-	CollabDateOther                           *time.Time               `json:"collabDateOther" db:"collab_date_other"`
+	CollabDateSecurity                        *string                  `json:"collabDateSecurity" db:"collab_date_security"`
+	CollabDateEnterpriseArchitecture          *string                  `json:"collabDateEnterpriseArchitecture" db:"collab_date_enterprise_architecture"`
+	CollabDateCloud                           *string                  `json:"collabDateCloud" db:"collab_date_cloud"`
+	CollabDatePrivacyAdvisor                  *string                  `json:"collabDatePrivacyAdvisor" db:"collab_date_privacy_advisor"`
+	CollabDateGovernanceReviewBoard           *string                  `json:"collabDateGovernanceReviewBoard" db:"collab_date_governance_review_board"`
+	CollabDateOther                           *string                  `json:"collabDateOther" db:"collab_date_other"`
 	CollabGroupOther                          *string                  `json:"collabGroupOther" db:"collab_group_other"`
 	SubjectAreaTechnicalReferenceArchitecture pq.StringArray           `json:"subjectAreaTechnicalReferenceArchitecture" db:"subject_area_technical_reference_architecture"`
 	SubjectAreaNetworkAndSecurity             pq.StringArray           `json:"subjectAreaNetworkAndSecurity" db:"subject_area_network_and_security"`
@@ -197,11 +197,4 @@ type TRBRequestForm struct {
 	SubjectAreaDataAndDataManagement          pq.StringArray           `json:"subjectAreaDataAndDataManagement" db:"subject_area_data_and_data_management"`
 	SubjectAreaGovernmentProcessesAndPolicies pq.StringArray           `json:"subjectAreaGovernmentProcessesAndPolicies" db:"subject_area_government_processes_and_policies"`
 	SubjectAreaOtherTechnicalTopics           pq.StringArray           `json:"subjectAreaOtherTechnicalTopics" db:"subject_area_other_technical_topics"`
-	// SubjectAreaTechnicalReferenceArchitecture *TRBTechnicalReferenceArchitectureOption `json:"subjectAreaTechnicalReferenceArchitecture" db:"subject_area_technical_reference_architecture"`
-	// SubjectAreaNetworkAndSecurity             *TRBNetworkAndSecurityOption             `json:"subjectAreaNetworkAndSecurity" db:"subject_area_network_and_security"`
-	// SubjectAreaCloudAndInfrastructure         *TRBCloudAndInfrastructureOption         `json:"subjectAreaCloudAndInfrastructure" db:"subject_area_cloud_and_infrastructure"`
-	// SubjectAreaApplicationDevelopment         *TRBApplicationDevelopmentOption         `json:"subjectAreaApplicationDevelopment" db:"subject_area_application_development"`
-	// SubjectAreaDataAndDataManagement          *TRBDataAndDataManagementOption          `json:"subjectAreaDataAndDataManagement" db:"subject_area_data_and_data_management"`
-	// SubjectAreaGovernmentProcessesAndPolicies *TRBGovernmentProcessesAndPoliciesOption `json:"subjectAreaGovernmentProcessesAndPolicies" db:"subject_area_government_processes_and_policies"`
-	// SubjectAreaOtherTechnicalTopics           *TRBOtherTechnicalTopicsOption           `json:"subjectAreaOtherTechnicalTopics" db:"subject_area_other_technical_topics"`
 }
