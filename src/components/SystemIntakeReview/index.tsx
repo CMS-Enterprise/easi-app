@@ -9,6 +9,7 @@ import {
 } from 'components/shared/DescriptionGroup';
 import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { SystemIntakeStatus } from 'types/graphql-global-types';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
@@ -30,6 +31,11 @@ export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
   const { contract, status, submittedAt } = systemIntake;
+  const {
+    contacts: {
+      data: { requester, businessOwner, productManager, isso }
+    }
+  } = useSystemIntakeContacts(systemIntake.id);
   const { t } = useTranslation('intake');
 
   const fundingDefinition = () => {
@@ -74,9 +80,9 @@ export const SystemIntakeReview = ({
     );
   };
   const issoDefinition = () => {
-    const hasIsso = convertBoolToYesNo(systemIntake.isso.isPresent);
-    if (systemIntake.isso.isPresent) {
-      return `${hasIsso}, ${systemIntake.isso.name}`;
+    const hasIsso = convertBoolToYesNo(!!isso.commonName);
+    if (isso.commonName) {
+      return `${hasIsso}, ${isso.commonName}`;
     }
     return hasIsso;
   };
@@ -111,41 +117,31 @@ export const SystemIntakeReview = ({
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('fields.requester')} />
-            <DescriptionDefinition definition={systemIntake.requester.name} />
+            <DescriptionDefinition definition={requester.commonName} />
           </div>
           <div>
             <DescriptionTerm term={t('review.requesterComponent')} />
-            <DescriptionDefinition
-              definition={systemIntake.requester.component}
-            />
+            <DescriptionDefinition definition={requester.component} />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('review.cmsBusinessOwnerName')} />
-            <DescriptionDefinition
-              definition={systemIntake.businessOwner.name}
-            />
+            <DescriptionDefinition definition={businessOwner.commonName} />
           </div>
           <div>
             <DescriptionTerm term={t('review.cmsBusinessOwnerComponent')} />
-            <DescriptionDefinition
-              definition={systemIntake.businessOwner.component}
-            />
+            <DescriptionDefinition definition={businessOwner.component} />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('review.cmsProjectManagerName')} />
-            <DescriptionDefinition
-              definition={systemIntake.productManager.name}
-            />
+            <DescriptionDefinition definition={productManager.commonName} />
           </div>
           <div>
             <DescriptionTerm term={t('review.cmsProjectManagerComponent')} />
-            <DescriptionDefinition
-              definition={systemIntake.productManager.component}
-            />
+            <DescriptionDefinition definition={productManager.component} />
           </div>
         </ReviewRow>
         <ReviewRow>
