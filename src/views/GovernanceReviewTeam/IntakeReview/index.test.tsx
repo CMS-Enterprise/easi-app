@@ -1,6 +1,5 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import { DateTime } from 'luxon';
@@ -199,28 +198,39 @@ describe('The GRT intake review view', () => {
     expect(screen.getByTestId('intake-review')).toBeInTheDocument();
   });
 
-  it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
+  it('matches the snapshot', async () => {
+    const { asFragment } = render(
+      <MemoryRouter
+        initialEntries={[
+          `/governance-review-team/${systemIntake.id}/intake-request`
+        ]}
+      >
+        <MockedProvider
+          mocks={[systemIntakeQuery, getSystemIntakeContactsQuery]}
+          addTypename={false}
+        >
+          <Route path={['/governance-review-team/:systemId/intake-request']}>
             <IntakeReview systemIntake={systemIntake} />
-          </MockedProvider>
-        </MemoryRouter>
-      )
-      .toJSON();
+          </Route>
+        </MockedProvider>
+      </MemoryRouter>
+    );
 
-    expect(tree).toMatchSnapshot();
+    expect(
+      await screen.findByTestId(`contact-requester-${requester.id}`)
+    ).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders increased costs data', () => {
     const mockIntake: SystemIntake = {
       ...systemIntake,
       costs: {
+        __typename: 'SystemIntakeCosts',
         isExpectingIncrease: 'YES',
         expectedIncreaseAmount: 'less than $1 million'
       }
-    } as SystemIntake;
+    };
 
     render(
       <MemoryRouter>

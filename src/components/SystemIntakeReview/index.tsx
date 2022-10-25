@@ -115,7 +115,7 @@ export const SystemIntakeReview = ({
 
       <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
-          <div>
+          <div data-testid={`contact-requester-${requester.id}`}>
             <DescriptionTerm term={t('fields.requester')} />
             <DescriptionDefinition definition={requester.commonName} />
           </div>
