@@ -1,10 +1,18 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import {
+  SystemIntakeRequestType,
+  SystemIntakeStatus
+} from 'types/graphql-global-types';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 
 import IntakeReview from './index';
 
@@ -19,50 +27,103 @@ describe('The GRT intake review view', () => {
     dateSpy.mockRestore();
   });
 
-  const mockSystemIntake: SystemIntake = {
-    id: '53d762ea-0bc8-4af0-b24d-0b5844bacea5',
-    euaUserId: 'ABCD',
+  const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
+
+  const requester: SystemIntakeContactProps = {
+    systemIntakeId,
+    role: 'Requester',
+    euaUserId: 'SF13',
+    commonName: 'Jerry Seinfeld',
+    component: 'Center for Medicaid and CHIP Services',
+    email: 'sf13@local.fake',
+    id: 'dadffca7-35ef-4498-974b-e5fe95ff028e'
+  };
+
+  const businessOwner: SystemIntakeContactProps = {
+    systemIntakeId,
+    role: 'Business Owner',
+    euaUserId: 'SF13',
+    commonName: 'Jerry Seinfeld',
+    component: 'Center for Medicaid and CHIP Services',
+    email: 'sf13@local.fake',
+    id: 'b25bd13b-72a0-4d0e-b5be-7852a1a8259d'
+  };
+
+  const productManager: SystemIntakeContactProps = {
+    systemIntakeId,
+    euaUserId: 'KR14',
+    role: 'Product Manager',
+    commonName: 'Cosmo Kramer',
+    component: 'Center for Program Integrity',
+    email: 'kr14@local.fake',
+    id: '' // Leave out ID so contact shows as unverified
+  };
+
+  const isso: SystemIntakeContactProps = {
+    systemIntakeId,
+    euaUserId: 'WXYZ',
+    role: 'ISSO',
+    commonName: 'John Smith',
+    component: 'CMS Wide',
+    email: 'wxyz@local.fake',
+    id: '346eefa9-c635-4c0b-bc29-26f272c33d0c'
+  };
+
+  const systemIntake: SystemIntake = {
+    __typename: 'SystemIntake',
+    requestName: 'Mock System Intake Request',
+    id: systemIntakeId,
+    euaUserId: requester.euaUserId,
     adminLead: '',
-    status: 'INTAKE_SUBMITTED',
+    status: SystemIntakeStatus.INTAKE_SUBMITTED,
     requester: {
-      name: 'Jane Doe',
-      component: 'OIT',
-      email: 'jane@cms.gov'
+      __typename: 'SystemIntakeRequester',
+      name: requester.commonName,
+      component: requester.component,
+      email: requester.email
     },
-    requestType: 'NEW',
+    requestType: SystemIntakeRequestType.NEW,
     businessOwner: {
-      name: 'Jane Doe',
-      component: 'OIT'
+      __typename: 'SystemIntakeBusinessOwner',
+      name: businessOwner.commonName,
+      component: businessOwner.component
     },
     productManager: {
-      name: 'Jane Doe',
-      component: 'OIT'
+      __typename: 'SystemIntakeProductManager',
+      name: productManager.commonName,
+      component: productManager.component
     },
     isso: {
-      isPresent: false,
-      name: ''
+      __typename: 'SystemIntakeISSO',
+      isPresent: true,
+      name: isso.commonName
     },
     governanceTeams: {
+      __typename: 'SystemIntakeGovernanceTeam',
       isPresent: false,
       teams: null
     },
     existingFunding: false,
     fundingSources: [],
     costs: {
+      __typename: 'SystemIntakeCosts',
       expectedIncreaseAmount: '',
       isExpectingIncrease: 'NO'
     },
     contract: {
+      __typename: 'SystemIntakeContract',
       hasContract: 'IN_PROGRESS',
       contractor: 'TrussWorks, Inc.',
       vehicle: 'Sole Source',
       number: '123456-7890',
       startDate: {
+        __typename: 'ContractDate',
         month: '1',
         day: '',
         year: '2020'
       },
       endDate: {
+        __typename: 'ContractDate',
         month: '12',
         day: '',
         year: '2020'
@@ -75,13 +136,64 @@ describe('The GRT intake review view', () => {
     needsEaSupport: false,
     grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
     decidedAt: new Date().toISOString(),
-    submittedAt: DateTime.fromISO(new Date(2020, 8, 30).toISOString()).toISO()
-  } as SystemIntake;
+    submittedAt: DateTime.fromISO(new Date(2020, 8, 30).toISOString()).toISO(),
+    grbDate: null,
+    grtDate: null,
+    grtFeedbacks: [],
+    lcid: null,
+    lcidExpiresAt: null,
+    lcidScope: null,
+    lcidCostBaseline: null,
+    rejectionReason: null,
+    updatedAt: null,
+    createdAt: '2022-10-21T14:55:47.88283Z',
+    businessCaseId: null,
+    archivedAt: null,
+    lastAdminNote: {
+      __typename: 'LastAdminNote',
+      content: null,
+      createdAt: null
+    }
+  };
+
+  const getSystemIntakeContactsQuery = {
+    request: {
+      query: GetSystemIntakeContactsQuery,
+      variables: {
+        id: systemIntakeId
+      }
+    },
+    result: {
+      data: {
+        systemIntakeContacts: {
+          systemIntakeContacts: [requester, businessOwner, isso]
+        }
+      }
+    }
+  };
+
+  const systemIntakeQuery = {
+    request: {
+      query: GetSystemIntakeQuery,
+      variables: {
+        id: systemIntakeId
+      }
+    },
+    result: {
+      data: {
+        systemIntake
+      }
+    }
+  };
 
   it('renders without crashing', () => {
     render(
       <MemoryRouter>
-        <IntakeReview systemIntake={mockSystemIntake} />
+        <MockedProvider
+          mocks={[systemIntakeQuery, getSystemIntakeContactsQuery]}
+        >
+          <IntakeReview systemIntake={systemIntake} />
+        </MockedProvider>
       </MemoryRouter>
     );
     expect(screen.getByTestId('intake-review')).toBeInTheDocument();
@@ -91,7 +203,9 @@ describe('The GRT intake review view', () => {
     const tree = renderer
       .create(
         <MemoryRouter>
-          <IntakeReview systemIntake={mockSystemIntake} />{' '}
+          <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
+            <IntakeReview systemIntake={systemIntake} />
+          </MockedProvider>
         </MemoryRouter>
       )
       .toJSON();
@@ -101,7 +215,7 @@ describe('The GRT intake review view', () => {
 
   it('renders increased costs data', () => {
     const mockIntake: SystemIntake = {
-      ...mockSystemIntake,
+      ...systemIntake,
       costs: {
         isExpectingIncrease: 'YES',
         expectedIncreaseAmount: 'less than $1 million'
@@ -110,7 +224,9 @@ describe('The GRT intake review view', () => {
 
     render(
       <MemoryRouter>
-        <IntakeReview systemIntake={mockIntake} />
+        <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
+          <IntakeReview systemIntake={mockIntake} />
+        </MockedProvider>
       </MemoryRouter>
     );
 
