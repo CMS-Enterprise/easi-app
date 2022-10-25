@@ -78,7 +78,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easi-db-migrate
           GRT_EMAIL: success@simulator.amazonses.com
-          CYPRESS_GRT_EMAIL: success@simulator.amazonses.com # Used for Cypress tests; should be the same value as GRT_EMAIL
           IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
           ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
           EASI_HELP_EMAIL: success@simulator.amazonses.com

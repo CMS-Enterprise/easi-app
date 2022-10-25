@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -12,7 +12,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import useSystemIntake from 'hooks/useSystemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import RejectIntakeQuery from 'queries/RejectIntakeQuery';
 import {
   RejectIntake as RejectIntakeType,
@@ -28,18 +28,26 @@ import EmailRecipientsFields from './EmailRecipientsFields';
 
 const RejectIntake = () => {
   const { systemId } = useParams<{ systemId: string }>();
-  const { systemIntake } = useSystemIntake(systemId);
   const history = useHistory();
   const { t } = useTranslation('action');
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const [mutate, mutationResult] = useMutation<
-    RejectIntakeType,
-    RejectIntakeVariables
-  >(RejectIntakeQuery, {
-    errorPolicy: 'all'
-  });
+  const [mutate] = useMutation<RejectIntakeType, RejectIntakeVariables>(
+    RejectIntakeQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
 
+  // Requester object and loading state
+  const {
+    contacts: {
+      data: { requester },
+      loading
+    }
+  } = useSystemIntakeContacts(systemId);
+
+  // Active contact for adding/verifying recipients
   const [
     activeContact,
     setActiveContact
@@ -52,15 +60,19 @@ const RejectIntake = () => {
     nextSteps: '',
     reason: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!].filter(e => e),
+      regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: false
     }
   };
 
-  const onSubmit = (values: RejectIntakeForm) => {
+  const onSubmit = (
+    values: RejectIntakeForm,
+    { setFieldError }: FormikHelpers<RejectIntakeForm>
+  ) => {
     const { feedback, nextSteps, reason, notificationRecipients } = values;
 
+    // Mutation input
     const input = {
       feedback,
       intakeId: systemId,
@@ -70,14 +82,22 @@ const RejectIntake = () => {
       notificationRecipients
     };
 
+    // GQL mutation to reject intake
     mutate({
       variables: { input }
-    }).then(response => {
-      if (!response.errors) {
-        history.push(`/governance-review-team/${systemId}/notes`);
-      }
-    });
+    })
+      .then(({ errors }) => {
+        if (!errors) {
+          // If no errors, view intake action notes
+          history.push(`/governance-review-team/${systemId}/notes`);
+        }
+      })
+      // Set Formik error to display alert
+      .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
+
+  // Wait for contacts to load before returning form
+  if (loading) return null;
 
   return (
     <Formik
@@ -117,19 +137,11 @@ const RejectIntake = () => {
                 })}
               </ErrorAlert>
             )}
-            {mutationResult.error && (
-              <ErrorAlert heading="Error issuing lifecycle id">
-                <ErrorAlertMessage
-                  message={mutationResult.error.message}
-                  errorKey="systemIntake"
-                />
-              </ErrorAlert>
-            )}
             <PageHeading data-testid="not-approved">
               {t('rejectIntake.heading')}
             </PageHeading>
             <h3>{t('rejectIntake.subheading')}</h3>
-            <p>
+            <p data-testid="grtSelectedAction">
               {t('rejectIntake.actionDescription')}{' '}
               <Link to={backLink}>{t('rejectIntake.backLink')}</Link>
             </p>

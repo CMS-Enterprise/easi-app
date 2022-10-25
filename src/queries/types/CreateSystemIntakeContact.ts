@@ -11,6 +11,7 @@ import { CreateSystemIntakeContactInput } from "./../../types/graphql-global-typ
 
 export interface CreateSystemIntakeContact_createSystemIntakeContact_systemIntakeContact {
   __typename: "SystemIntakeContact";
+  id: UUID;
   euaUserId: string;
   systemIntakeId: UUID;
   component: string;

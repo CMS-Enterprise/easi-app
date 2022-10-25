@@ -1,66 +1,86 @@
 import { useMemo, useState } from 'react';
-import { ApolloQueryResult, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import { GetCedarContacts } from 'queries/types/GetCedarContacts';
 import { CedarContactProps } from 'types/systemIntake';
 
-function useCedarContactLookup(): [
-  CedarContactProps[],
-  (commonName: string) => void
-];
+function useCedarContactLookup(
+  query?: string | null
+): {
+  contacts: CedarContactProps[];
+  queryCedarContacts: (commonName: string) => void;
+  loading: boolean;
+};
 
 function useCedarContactLookup(
   query: string,
   euaUserId: string
 ): CedarContactProps | undefined;
 
-/** Custom hook for retrieving contacts from Cedar by common name */
+/**
+ * Custom hook for retrieving contacts from Cedar by common name
+ * */
 function useCedarContactLookup(
-  query?: string,
+  query?: string | null,
   euaUserId?: string
 ):
-  | [CedarContactProps[], (commonName: string) => void]
+  | {
+      contacts: CedarContactProps[];
+      queryCedarContacts: (commonName: string) => void;
+      loading: boolean;
+    }
   | CedarContactProps
   | undefined {
-  const { data, refetch } = useQuery<GetCedarContacts>(GetCedarContactsQuery, {
-    variables: { commonName: query },
-    skip: !query
-  });
-  const [contacts, setContacts] = useState<CedarContactProps[]>(
-    data?.cedarPersonsByCommonName || []
+  const [searchTerm, setSearchTerm] = useState<string | null | undefined>(
+    query
   );
 
+  const { data, previousData, loading } = useQuery<GetCedarContacts>(
+    GetCedarContactsQuery,
+    {
+      variables: { commonName: searchTerm },
+      skip: !query || query.length < 2
+    }
+  );
+
+  /**
+   * Update search term if query is more than 2 characters long
+   */
+  const updateQuery = (nameQuery: string) => {
+    if (nameQuery.length > 1) setSearchTerm(nameQuery);
+  };
+
+  /**
+   * Sorted list of contacts from CEDAR
+   * */
+  const contacts = useMemo<CedarContactProps[]>(() => {
+    // Prevent 'no results' message when loading
+    if (loading) return previousData?.cedarPersonsByCommonName || [];
+    // Sort and return contacts from query results
+    return sortCedarContacts(
+      data?.cedarPersonsByCommonName || [],
+      searchTerm || ''
+    );
+  }, [searchTerm, previousData, data?.cedarPersonsByCommonName, loading]);
+
+  /**
+   * CEDAR lookup by EUA user id
+   * */
   const contactByEuaUserId = useMemo<CedarContactProps | undefined>(() => {
     return data?.cedarPersonsByCommonName.find(
       contact => contact.euaUserId === euaUserId
     );
   }, [data?.cedarPersonsByCommonName, euaUserId]);
 
-  const queryCedarContacts = (commonName: string) => {
-    // Removes eua id from "John Doe, ABCD" format when querying
-    const commonNameQuery = commonName.trim().split(',')[0];
-
-    if (commonNameQuery.length > 1) {
-      refetch({ commonName: commonNameQuery })
-        .then((response: ApolloQueryResult<GetCedarContacts>) => {
-          setContacts(
-            sortCedarContacts(
-              response?.data?.cedarPersonsByCommonName,
-              commonNameQuery
-            )
-          );
-        })
-        .catch(() => {
-          // If error, set contacts to empty array
-          setContacts([]);
-        });
-    }
-  };
-
-  return euaUserId ? contactByEuaUserId : [contacts, queryCedarContacts];
+  return euaUserId
+    ? contactByEuaUserId
+    : { contacts, queryCedarContacts: updateQuery, loading };
 }
 
+/**
+ * Sort contacts based on query
+ * */
 const sortCedarContacts = (
   contacts: CedarContactProps[],
   query: string
