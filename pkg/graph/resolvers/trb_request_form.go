@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 
@@ -12,13 +13,42 @@ import (
 
 // UpdateTRBRequestForm updates a TRBRequestForm record in the database
 func UpdateTRBRequestForm(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBRequestForm, error) {
-	form := models.TRBRequestForm{}
-	err := ApplyChangesAndMetaData(input, &form, appcontext.Principal(ctx))
+	idStr, idFound := input["trbRequestId"]
+	if !idFound {
+		return nil, errors.New("missing required property trbRequestId")
+	}
+
+	id, err := uuid.Parse(idStr.(string))
 	if err != nil {
 		return nil, err
 	}
 
-	updatedForm, err := store.UpdateTRBRequestForm(ctx, &form)
+	isSubmitted := false
+	if isSubmittedVal, isSubmittedFound := input["isSubmitted"]; isSubmittedFound {
+		if isSubmittedBool, isSubmittedOk := isSubmittedVal.(bool); isSubmittedOk {
+			isSubmitted = isSubmittedBool
+			delete(input, "isSubmitted")
+		}
+	}
+
+	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	previousStatus := form.Status
+
+	err = ApplyChangesAndMetaData(input, form, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	if isSubmitted {
+		form.Status = models.TRBFormStatusCompleted
+	} else if previousStatus != models.TRBFormStatusCompleted {
+		form.Status = models.TRBFormStatusInProgress
+	}
+
+	updatedForm, err := store.UpdateTRBRequestForm(ctx, form)
 	if err != nil {
 		return nil, err
 	}
