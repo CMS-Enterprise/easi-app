@@ -40,7 +40,8 @@ const ProvideGRTRecommendationsToGRB = () => {
     contacts: {
       data: { requester },
       loading
-    }
+    },
+    createContact
   } = useSystemIntakeContacts(systemId);
 
   // Active contact for adding/verifying recipients
@@ -80,8 +81,14 @@ const ProvideGRTRecommendationsToGRB = () => {
       }
     })
       .then(({ errors }) => {
+        // Check for errors
         if (!errors) {
-          // If no errors, view intake action notes
+          // Create requester contact if it does not already exist
+          // Handles legacy intakes - created contacts have ID
+          if (!requester.id && requester.euaUserId && requester.email) {
+            createContact(requester);
+          }
+          // View system intake notes
           history.push(`/governance-review-team/${systemId}/notes`);
         }
       })
