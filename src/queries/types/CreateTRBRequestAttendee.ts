@@ -9,11 +9,18 @@ import { CreateTRBRequestAttendeeInput, PersonRole } from "./../../types/graphql
 // GraphQL mutation operation: CreateTRBRequestAttendee
 // ====================================================
 
+export interface CreateTRBRequestAttendee_createTRBRequestAttendee_userInfo {
+  __typename: "UserInfo";
+  commonName: string;
+  email: string;
+  euaUserId: string;
+}
+
 export interface CreateTRBRequestAttendee_createTRBRequestAttendee {
   __typename: "TRBRequestAttendee";
   id: UUID;
-  euaUserId: string;
   trbRequestId: UUID;
+  userInfo: CreateTRBRequestAttendee_createTRBRequestAttendee_userInfo | null;
   component: string;
   role: PersonRole;
   createdAt: Time;

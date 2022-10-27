@@ -9,11 +9,18 @@ import { PersonRole } from "./../../types/graphql-global-types";
 // GraphQL query operation: GetTRBRequestAttendees
 // ====================================================
 
+export interface GetTRBRequestAttendees_trbRequest_attendees_userInfo {
+  __typename: "UserInfo";
+  commonName: string;
+  email: string;
+  euaUserId: string;
+}
+
 export interface GetTRBRequestAttendees_trbRequest_attendees {
   __typename: "TRBRequestAttendee";
   id: UUID;
-  euaUserId: string;
   trbRequestId: UUID;
+  userInfo: GetTRBRequestAttendees_trbRequest_attendees_userInfo | null;
   component: string;
   role: PersonRole;
   createdAt: Time;

@@ -6,30 +6,22 @@
 import { PersonRole } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL mutation operation: DeleteTRBRequestAttendee
+// GraphQL fragment: TRBAttendee
 // ====================================================
 
-export interface DeleteTRBRequestAttendee_deleteTRBRequestAttendee_userInfo {
+export interface TRBAttendee_userInfo {
   __typename: "UserInfo";
   commonName: string;
   email: string;
   euaUserId: string;
 }
 
-export interface DeleteTRBRequestAttendee_deleteTRBRequestAttendee {
+export interface TRBAttendee {
   __typename: "TRBRequestAttendee";
   id: UUID;
   trbRequestId: UUID;
-  userInfo: DeleteTRBRequestAttendee_deleteTRBRequestAttendee_userInfo | null;
+  userInfo: TRBAttendee_userInfo | null;
   component: string;
   role: PersonRole;
   createdAt: Time;
-}
-
-export interface DeleteTRBRequestAttendee {
-  deleteTRBRequestAttendee: DeleteTRBRequestAttendee_deleteTRBRequestAttendee;
-}
-
-export interface DeleteTRBRequestAttendeeVariables {
-  id: UUID;
 }
