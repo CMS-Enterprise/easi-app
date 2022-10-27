@@ -170,5 +170,4 @@ func (s *Store) GetTRBRequests(logger *zap.Logger, archived bool) ([]*models.TRB
 		}
 	}
 	return trbRequests, err
-
 }
