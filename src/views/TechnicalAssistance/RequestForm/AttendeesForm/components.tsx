@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRouteMatch } from 'react-router-dom';
 import { Button, ButtonGroup, Dropdown, Label } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
+import UswdsReactLink from 'components/LinkWrapper';
 import FieldGroup from 'components/shared/FieldGroup';
 import InitialsIcon from 'components/shared/InitialsIcon';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
@@ -12,20 +14,23 @@ import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { AttendeeFormFields } from 'types/technicalAssistance';
+import { parseAsLocalTime } from 'utils/date';
 
 import './components.scss';
+
+type AttendeeFieldsProps = {
+  activeAttendee: AttendeeFormFields;
+  setActiveAttendee: (value: AttendeeFormFields) => void;
+  type: 'requester' | 'create' | 'edit';
+  className?: string;
+};
 
 const AttendeeFields = ({
   activeAttendee,
   setActiveAttendee,
   type,
   className
-}: {
-  activeAttendee: AttendeeFormFields;
-  setActiveAttendee: (value: AttendeeFormFields) => void;
-  type: 'requester' | 'attendee';
-  className?: string;
-}) => {
+}: AttendeeFieldsProps) => {
   const { t } = useTranslation('technicalAssistance');
   const { userInfo } = activeAttendee;
 
@@ -33,7 +38,9 @@ const AttendeeFields = ({
     <div className={classNames('margin-bottom-4', className)}>
       {/* Attendee name */}
       <FieldGroup>
-        <Label htmlFor="trbAttendee-name">{t(`attendees.${type}Name`)}</Label>
+        <Label htmlFor="trbAttendee-name">
+          {t(`attendees.fieldLabels.${type}.name`)}
+        </Label>
         <CedarContactSelect
           id="trbAttendee-name"
           name="trbAttendee-name"
@@ -45,12 +52,14 @@ const AttendeeFields = ({
               userInfo: cedarContact
             })
           }
+          // If editing attendee or requester, disable field
+          disabled={!(type === 'create')}
         />
       </FieldGroup>
       {/* Attendee component */}
       <FieldGroup>
         <Label htmlFor="trbAttendee-component">
-          {t(`attendees.${type}Component`)}
+          {t(`attendees.fieldLabels.${type}.component`)}
         </Label>
         <Dropdown
           id="trbAttendee-component"
@@ -70,7 +79,7 @@ const AttendeeFields = ({
       {/* Attendee role */}
       <FieldGroup>
         <Label htmlFor="trbAttendee-component">
-          {t(`attendees.${type}Role`)}
+          {t(`attendees.fieldLabels.${type}.role`)}
         </Label>
         <Dropdown
           id="trbAttendee-role"
@@ -93,12 +102,20 @@ const AttendeeFields = ({
   );
 };
 
-const Attendee = ({ attendee }: { attendee: TRBAttendee }) => {
+type AttendeeProps = {
+  attendee: TRBAttendee;
+  setActiveAttendee?: (activeAttendee: AttendeeFormFields) => void;
+  deleteAttendee?: (id: string) => void;
+};
+
+const Attendee = ({
+  attendee,
+  setActiveAttendee,
+  deleteAttendee
+}: AttendeeProps) => {
   const { t } = useTranslation();
   const { id, userInfo } = attendee;
-
-  // Delete attendee
-  const { deleteAttendee } = useTRBAttendees(attendee.trbRequestId);
+  const { url } = useRouteMatch();
 
   // Get role label from enum value
   const role =
@@ -125,38 +142,67 @@ const Attendee = ({ attendee }: { attendee: TRBAttendee }) => {
         </p>
         <p className="margin-y-05">{email}</p>
         <p className="margin-top-05 margin-bottom-0">{role}</p>
-        <ButtonGroup className="margin-y-0">
-          {/* Edit Attendee */}
-          <Button type="button" unstyled onClick={() => null}>
-            {t('Edit')}
-          </Button>
-          {/* Remove attendee */}
-          <Button
-            className="text-error"
-            type="button"
-            unstyled
-            onClick={() => deleteAttendee(id)}
-          >
-            {t('Remove')}
-          </Button>
-        </ButtonGroup>
+        {/* Attendee actions */}
+        {(setActiveAttendee || deleteAttendee) && (
+          <ButtonGroup className="margin-y-0">
+            {/* Edit Attendee */}
+            {setActiveAttendee && (
+              <UswdsReactLink
+                variant="unstyled"
+                onClick={() => setActiveAttendee(attendee)}
+                to={`${url}/list`}
+              >
+                {t('Edit')}
+              </UswdsReactLink>
+            )}
+            {/* Remove attendee */}
+            {deleteAttendee && (
+              <Button
+                className="text-error"
+                type="button"
+                unstyled
+                onClick={() => deleteAttendee(id)}
+              >
+                {t('Remove')}
+              </Button>
+            )}
+          </ButtonGroup>
+        )}
       </div>
     </li>
   );
 };
 
-const AttendeesList = ({
-  attendees,
-  id
-}: {
+type AttendeesListProps = {
   attendees: TRBAttendee[];
   id: string;
-}) => {
+  setActiveAttendee: (activeAttendee: AttendeeFormFields) => void;
+};
+
+const AttendeesList = ({
+  attendees,
+  id,
+  setActiveAttendee
+}: AttendeesListProps) => {
+  // Delete attendee
+  const { deleteAttendee } = useTRBAttendees(id);
+
   return (
     <ul className="trbAttendees-list usa-list usa-list--unstyled margin-y-3">
-      {attendees.map(attendee => (
-        <Attendee attendee={attendee} key={attendee.id} />
-      ))}
+      {[...attendees]
+        // Sort attendees by time created
+        .sort(
+          (a, b) =>
+            parseAsLocalTime(b.createdAt) - parseAsLocalTime(a.createdAt)
+        )
+        .map(attendee => (
+          <Attendee
+            attendee={attendee}
+            deleteAttendee={deleteAttendee}
+            setActiveAttendee={setActiveAttendee}
+            key={attendee.id}
+          />
+        ))}
     </ul>
   );
 };

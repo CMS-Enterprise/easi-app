@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconArrowBack } from '@trussworks/react-uswds';
 
@@ -18,25 +18,46 @@ interface AttendeesFormProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
   backToFormUrl?: string;
+  activeAttendee: AttendeeFormFields;
+  setActiveAttendee: (value: AttendeeFormFields) => void;
 }
 
-const initialAttendee: AttendeeFormFields = {
-  id: '',
-  trbRequestId: '',
-  userInfo: null,
-  component: '',
-  role: ''
-};
-
-function AttendeesForm({ request, backToFormUrl }: AttendeesFormProps) {
+function AttendeesForm({
+  request,
+  backToFormUrl,
+  activeAttendee,
+  setActiveAttendee
+}: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
-  const [activeAttendee, setActiveAttendee] = useState<AttendeeFormFields>({
-    ...initialAttendee,
-    trbRequestId: request.id
-  });
 
-  // Create attendee
-  const { createAttendee } = useTRBAttendees(request.id);
+  /** Initial attendee values before form values are updated */
+  const initialValues = useRef(activeAttendee).current;
+
+  // Attendee mutations
+  const { createAttendee, updateAttendee } = useTRBAttendees(request.id);
+
+  /** Create or update attendee with field values */
+  const onSubmit = () => {
+    /** Attendee component and role */
+    const input = {
+      component: activeAttendee.component,
+      role: activeAttendee.role as PersonRole
+    };
+    // If editing attendee, add ID to input and update attendee
+    if (initialValues.id) {
+      updateAttendee({
+        ...input,
+        id: initialValues.id
+      });
+    } else {
+      // If creating attendee, add EUA and TRB request id and create attendee
+      createAttendee({
+        ...input,
+        trbRequestId: request.id,
+        euaUserId: activeAttendee.userInfo?.euaUserId || ''
+      });
+    }
+  };
 
   if (backToFormUrl) {
     return (
@@ -50,16 +71,26 @@ function AttendeesForm({ request, backToFormUrl }: AttendeesFormProps) {
               url: backToFormUrl
             },
             {
-              text: t('attendees.addAnAttendee')
+              text: t(
+                initialValues.id
+                  ? 'attendees.editAttendee'
+                  : 'attendees.addAnAttendee'
+              )
             }
           ]}
         />
-        <PageHeading>{t('attendees.addAnAttendee')}</PageHeading>
+        <PageHeading>
+          {t(
+            initialValues.id
+              ? 'attendees.editAttendee'
+              : 'attendees.addAnAttendee'
+          )}
+        </PageHeading>
 
         <AttendeeFields
           activeAttendee={activeAttendee}
           setActiveAttendee={setActiveAttendee}
-          type="attendee"
+          type={initialValues.id ? 'edit' : 'create'}
         />
 
         <div>
@@ -76,22 +107,19 @@ function AttendeesForm({ request, backToFormUrl }: AttendeesFormProps) {
             variant="unstyled"
             className="usa-button"
             to={backToFormUrl}
-            onClick={() =>
-              createAttendee({
-                trbRequestId: request.id,
-                euaUserId: activeAttendee.userInfo?.euaUserId || '',
-                component: activeAttendee.component,
-                role: activeAttendee.role as PersonRole
-              })
-            }
+            onClick={() => onSubmit()}
           >
-            {t('attendees.addAttendee')}
+            {t(initialValues.id ? 'Save' : 'attendees.addAttendee')}
           </UswdsReactLink>
         </div>
         <div className="margin-top-2">
           <UswdsReactLink to={backToFormUrl}>
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            {t('attendees.dontAddAndReturn')}
+            {t(
+              initialValues.id
+                ? 'attendees.dontEditAndReturn'
+                : 'attendees.dontAddAndReturn'
+            )}
           </UswdsReactLink>
         </div>
       </div>

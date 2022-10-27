@@ -174,18 +174,31 @@ const technicalAssistance = {
   subject: {},
   attendees: {
     addAnAttendee: 'Add an attendee',
+    editAttendee: 'Edit attendee',
     addAttendee: 'Add attendee',
     addAnotherAttendee: 'Add another attendee',
     remove: 'Remove',
     cancel: 'Cancel',
     continueWithoutAdding: 'Continue without adding attendees',
-    dontAddAndReturn: 'Don’t add and return to previous page',
-    requesterName: 'Requester name',
-    requesterComponent: 'Requester component',
-    requesterRole: 'Requester role',
-    attendeeName: 'New attendee name',
-    attendeeComponent: 'New attendee component',
-    attendeeRole: 'New attendee role'
+    dontAddAndReturn: "Don't add and return to previous page",
+    dontEditAndReturn: "Don't edit and return to previous page",
+    fieldLabels: {
+      requester: {
+        name: 'Requester name',
+        component: 'Requester component',
+        role: 'Requester role'
+      },
+      create: {
+        name: 'New attendee name',
+        component: 'New attendee component',
+        role: 'New attendee role'
+      },
+      edit: {
+        name: 'Attendee name',
+        component: 'Attendee component',
+        role: 'Attendee role'
+      }
+    }
   },
   documents: {
     continueWithoutAdding: 'Continue without adding documents'

@@ -76,7 +76,7 @@ const IndicatorsContainer = (
 ) => {
   const {
     children,
-    selectProps: { className },
+    selectProps: { className, isDisabled },
     hasValue
   } = props;
 
@@ -87,6 +87,9 @@ const IndicatorsContainer = (
   // Whether to show warning icon based in className
   const resultsWarning =
     hasValue && className!.split(' ').includes('cedar-contact-select__warning');
+
+  // Hide indicators if field is disabled
+  if (isDisabled) return null;
 
   return (
     <components.IndicatorsContainer {...props}>
