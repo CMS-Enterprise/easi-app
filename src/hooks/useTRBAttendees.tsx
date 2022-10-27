@@ -6,17 +6,15 @@ import {
   GetTRBRequestAttendees,
   UpdateTRBRequestAttendee
 } from 'queries/TrbAttendeeQueries';
-import {
-  GetTRBRequestAttendees as RequestResult,
-  GetTRBRequestAttendees_trbRequest_attendees as Attendees
-} from 'queries/types/GetTRBRequestAttendees';
+import { GetTRBRequestAttendees as RequestResult } from 'queries/types/GetTRBRequestAttendees';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
   CreateTRBRequestAttendeeInput,
   UpdateTRBRequestAttendeeInput
 } from 'types/graphql-global-types';
 
 type UseTRBAttendees = {
-  attendees: Attendees[];
+  attendees: TRBAttendee[];
   createAttendee: (attendee: CreateTRBRequestAttendeeInput) => void;
   updateAttendee: (attendee: UpdateTRBRequestAttendeeInput) => void;
   deleteAttendee: (id: string) => void;

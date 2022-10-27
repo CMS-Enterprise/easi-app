@@ -1,0 +1,10 @@
+.trb-attendees-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+
+  > li {
+    display: flex;
+    gap: .5rem;
+  }
+}

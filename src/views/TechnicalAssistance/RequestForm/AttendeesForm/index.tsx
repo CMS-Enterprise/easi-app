@@ -9,22 +9,14 @@ import { CreateTrbRequest_createTRBRequest } from 'queries/types/CreateTrbReques
 
 import Breadcrumbs from '../../Breadcrumbs';
 
-interface AttendeesListProps {
+interface AttendeesFormProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
   backToFormUrl?: string;
-  addExample: () => void;
 }
 
-function AttendeesList({
-  request,
-  backToFormUrl,
-  addExample
-}: AttendeesListProps) {
+function AttendeesForm({ request, backToFormUrl }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
-
-  // This is a stub for the attendees list manager
-  // with examples to back out or add an attendee
 
   if (backToFormUrl) {
     return (
@@ -45,6 +37,7 @@ function AttendeesList({
         <PageHeading>{t('attendees.addAnAttendee')}</PageHeading>
 
         <div>
+          {/* Cancel */}
           <UswdsReactLink
             variant="unstyled"
             className="usa-button usa-button--outline"
@@ -52,13 +45,12 @@ function AttendeesList({
           >
             {t('attendees.cancel')}
           </UswdsReactLink>
+          {/* Add Attendee */}
           <UswdsReactLink
             variant="unstyled"
             className="usa-button"
             to={backToFormUrl}
-            onClick={() => {
-              addExample();
-            }}
+            onClick={() => null}
           >
             {t('attendees.addAttendee')}
           </UswdsReactLink>
@@ -76,4 +68,4 @@ function AttendeesList({
   return null;
 }
 
-export default AttendeesList;
+export default AttendeesForm;
