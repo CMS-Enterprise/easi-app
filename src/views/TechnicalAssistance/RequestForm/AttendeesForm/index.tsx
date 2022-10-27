@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconArrowBack } from '@trussworks/react-uswds';
 
@@ -6,8 +6,11 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 // eslint-disable-next-line camelcase
 import { CreateTrbRequest_createTRBRequest } from 'queries/types/CreateTrbRequest';
+import { AttendeeFormFields } from 'types/technicalAssistance';
 
 import Breadcrumbs from '../../Breadcrumbs';
+
+import { AttendeeFields } from './components';
 
 interface AttendeesFormProps {
   // eslint-disable-next-line camelcase
@@ -15,8 +18,20 @@ interface AttendeesFormProps {
   backToFormUrl?: string;
 }
 
+const initialAttendee: AttendeeFormFields = {
+  id: '',
+  trbRequestId: '',
+  userInfo: null,
+  component: '',
+  role: ''
+};
+
 function AttendeesForm({ request, backToFormUrl }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
+  const [activeAttendee, setActiveAttendee] = useState<AttendeeFormFields>({
+    ...initialAttendee,
+    trbRequestId: request.id
+  });
 
   if (backToFormUrl) {
     return (
@@ -35,6 +50,12 @@ function AttendeesForm({ request, backToFormUrl }: AttendeesFormProps) {
           ]}
         />
         <PageHeading>{t('attendees.addAnAttendee')}</PageHeading>
+
+        <AttendeeFields
+          activeAttendee={activeAttendee}
+          setActiveAttendee={setActiveAttendee}
+          type="attendee"
+        />
 
         <div>
           {/* Cancel */}

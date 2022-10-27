@@ -1,11 +1,11 @@
-import { UUID } from './graphql_scalars';
-import { PersonRole } from './graphql-global-types';
-
-export interface TRBRequestAttendee {
-  id: UUID | null;
-  euaUserId: string;
-  trbRequestId: UUID;
+export type AttendeeFormFields = {
+  id?: string;
+  trbRequestId: string;
+  userInfo: {
+    commonName: string;
+    euaUserId: string;
+    email?: string;
+  } | null;
   component: string;
-  role: PersonRole;
-  createdAt: string;
-}
+  role: string;
+};

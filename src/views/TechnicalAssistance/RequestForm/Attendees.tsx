@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import useTRBAttendees from 'hooks/useTRBAttendees';
 // import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
@@ -12,7 +13,7 @@ import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-const attendees: TRBAttendee[] = [
+const testAttendees: TRBAttendee[] = [
   {
     __typename: 'TRBRequestAttendee',
     id: '2f78767e-c4fc-4abe-9db8-feaa8c058b6b',
@@ -33,6 +34,9 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
+
+  let { attendees } = useTRBAttendees(request.id);
+  attendees = [...attendees, ...testAttendees];
 
   return (
     <div className="trb-attendees">

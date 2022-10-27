@@ -235,6 +235,7 @@ export default function CedarContactSelect({
       id={id}
       name={name}
       className={classNames(
+        'margin-top-1',
         'cedar-contact-select',
         'usa-combo-box',
         { 'cedar-contact-select__warning': showWarning },

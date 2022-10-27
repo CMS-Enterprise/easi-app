@@ -179,7 +179,13 @@ const technicalAssistance = {
     remove: 'Remove',
     cancel: 'Cancel',
     continueWithoutAdding: 'Continue without adding attendees',
-    dontAddAndReturn: 'Don’t add and return to previous page'
+    dontAddAndReturn: 'Don’t add and return to previous page',
+    requesterName: 'Requester name',
+    requesterComponent: 'Requester component',
+    requesterRole: 'Requester role',
+    attendeeName: 'New attendee name',
+    attendeeComponent: 'New attendee component',
+    attendeeRole: 'New attendee role'
   },
   documents: {
     continueWithoutAdding: 'Continue without adding documents'
