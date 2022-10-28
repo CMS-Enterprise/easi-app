@@ -66,6 +66,21 @@ export enum GRTFeedbackType {
 }
 
 /**
+ * PersonRole is an enumeration of values for a person's role
+ */
+export enum PersonRole {
+  CLOUD_NAVIGATOR = "CLOUD_NAVIGATOR",
+  CONTRACT_OFFICE_RSREPRESENTATIVE = "CONTRACT_OFFICE_RSREPRESENTATIVE",
+  CRA = "CRA",
+  OTHER = "OTHER",
+  PRIVACY_ADVISOR = "PRIVACY_ADVISOR",
+  PRODUCT_OWNER = "PRODUCT_OWNER",
+  SYSTEM_MAINTAINER = "SYSTEM_MAINTAINER",
+  SYSTEM_OWNER = "SYSTEM_OWNER",
+  UNKNOWN = "UNKNOWN",
+}
+
+/**
  * Indicates the type of a request being made with the EASi system
  */
 export enum RequestType {
@@ -379,6 +394,16 @@ export interface CreateSystemIntakeNoteInput {
   content: string;
   authorName: string;
   intakeId: UUID;
+}
+
+/**
+ * The data needed add a TRB request attendee to a TRB request
+ */
+export interface CreateTRBRequestAttendeeInput {
+  euaUserId: string;
+  trbRequestId: UUID;
+  component: string;
+  role: PersonRole;
 }
 
 /**
@@ -698,6 +723,15 @@ export interface UpdateTRBRequestFormInput {
   subjectAreaDataAndDataManagement?: TRBDataAndDataManagementOption[] | null;
   subjectAreaGovernmentProcessesAndPolicies?: TRBGovernmentProcessesAndPoliciesOption[] | null;
   subjectAreaOtherTechnicalTopics?: TRBOtherTechnicalTopicsOption[] | null;
+}
+
+ /**
+  * Represents an EUA user who is included as an attendee for a TRB request
+ */
+export interface UpdateTRBRequestAttendeeInput {
+  id: UUID;
+  component: string;
+  role: PersonRole;
 }
 
 /**

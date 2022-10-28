@@ -152,7 +152,7 @@ const technicalAssistance = {
       {
         name: 'Attendees',
         description:
-          'As the primary requester, please add your CMS component and role on the project. You may also add the names and contact information for any additional individuals who should be present at the IT Tech Lounge or other meetings.'
+          'As the primary requester, please add your CMS component and role on the project. If you wish to, you may also add the names and contact information for any additional individuals who should be present at the TRB consult session. If you’re not sure who should be present, you may add attendees later or share the calendar invite before the meeting.'
       },
       {
         name: 'Supporting documents',
@@ -232,12 +232,33 @@ const technicalAssistance = {
   },
   subject: {},
   attendees: {
+    additionalAttendees: 'Additional attendees',
     addAnAttendee: 'Add an attendee',
+    editAttendee: 'Edit attendee',
     addAttendee: 'Add attendee',
+    addAnotherAttendee: 'Add another attendee',
     remove: 'Remove',
     cancel: 'Cancel',
     continueWithoutAdding: 'Continue without adding attendees',
-    dontAddAndReturn: 'Don’t add and return to previous page'
+    dontAddAndReturn: "Don't add and return to previous page",
+    dontEditAndReturn: "Don't edit and return to previous page",
+    fieldLabels: {
+      requester: {
+        name: 'Requester name',
+        component: 'Requester component',
+        role: 'Requester role'
+      },
+      create: {
+        name: 'New attendee name',
+        component: 'New attendee component',
+        role: 'New attendee role'
+      },
+      edit: {
+        name: 'Attendee name',
+        component: 'Attendee component',
+        role: 'Attendee role'
+      }
+    }
   },
   documents: {
     continueWithoutAdding: 'Continue without adding documents'
