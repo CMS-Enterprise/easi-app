@@ -52,10 +52,19 @@
       }
       */
 
+      /* Errors messages under group field labels */
+      .usa-error-message {
+        padding-bottom: 0;
+      }
     }
-    /* Overrides */
-    .usa-error-message {
-      padding-bottom: 0;
+  }
+
+  /* Form level error alert */
+  .usa-alert--error {
+    button.usa-error-message {
+      padding: 0;
+      line-height: inherit;
+      text-align: left;
     }
   }
 }

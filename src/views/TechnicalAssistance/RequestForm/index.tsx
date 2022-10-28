@@ -1,9 +1,10 @@
-/* eslint-disable no-nested-ternary */
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import { isEqual } from 'lodash';
+import * as yup from 'yup';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
@@ -19,19 +20,16 @@ import {
   GetTrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-// import {
-//   UpdateTrbRequest,
-//   UpdateTrbRequestVariables
-// } from 'queries/types/UpdateTrbRequest';
-// import UpdateTrbRequestQuery from 'queries/UpdateTrbRequestQuery';
 import { TRBRequestType } from 'types/graphql-global-types';
+import nullFillObject from 'utils/nullFillObject';
+import { inputBasicSchema } from 'validations/trbRequestSchema';
 import { NotFoundPartial } from 'views/NotFound';
 
 import StepHeader from '../../../components/StepHeader';
 import Breadcrumbs from '../Breadcrumbs';
 
 import Attendees from './Attendees';
-import Basic from './Basic';
+import Basic, { basicBlankValues } from './Basic';
 import Check from './Check';
 import Documents from './Documents';
 import Done from './Done';
@@ -40,6 +38,7 @@ import SubjectAreas from './SubjectAreas';
 export interface FormStepComponentProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
+  refreshRequest: () => void;
   stepUrl: {
     current: string;
     next: string;
@@ -47,19 +46,31 @@ export interface FormStepComponentProps {
   };
 }
 
-/** Form view components with step url slugs for each form request step */
-export const formStepComponents: Readonly<
+/**
+ * Form view components with step url slugs for each form request step.
+ * `inputSchema` and `blankValues` are used to determine `stepsCompleted`.
+ * */
+// Temporary optional defs for inputSchema and blankValues used until dev is finished with all steps
+export const formStepComponents: {
+  component: (props: FormStepComponentProps) => JSX.Element;
+  step: string;
+  inputSchema?: yup.SchemaOf<any>;
+  blankValues?: any;
+}[] = [
   {
-    component: (props: FormStepComponentProps) => JSX.Element;
-    step: string;
-  }[]
-> = [
-  { component: Basic, step: 'basic' },
-  { component: SubjectAreas, step: 'subject' },
+    component: Basic,
+    step: 'basic',
+    inputSchema: inputBasicSchema,
+    blankValues: basicBlankValues
+  },
+  {
+    component: SubjectAreas,
+    step: 'subject'
+  },
   { component: Attendees, step: 'attendees' },
   { component: Documents, step: 'documents' },
   { component: Check, step: 'check' }
-] as const;
+];
 
 /**
  * Mapped form step slugs from `formStepComponents`.
@@ -83,13 +94,15 @@ type RequestFormText = {
 function Header({
   step,
   request,
-  breadcrumbBar
+  breadcrumbBar,
+  stepsCompleted
 }: {
   step: number;
   /** Unassigned request is used as a loading state toggle. */
   // eslint-disable-next-line camelcase
   request?: CreateTrbRequest_createTRBRequest;
   breadcrumbBar: React.ReactNode;
+  stepsCompleted: string[];
 }) {
   const history = useHistory();
 
@@ -114,11 +127,11 @@ function Header({
         ),
         description: stp.description,
 
-        // todo
-        // Handle links to completed steps only, once there is more data to check against
-        completed: idx < step - 1,
+        // Handle links to available steps determined by completed steps
+        // Indexing of the step text matches `stepsCompleted`
+        completed: idx < stepsCompleted.length,
         onClick:
-          request && idx < step - 1
+          request && idx <= stepsCompleted.length
             ? e => {
                 history.push(
                   `/trb/requests/${request.id}/${formStepSlugs[idx]}`
@@ -170,16 +183,58 @@ function RequestForm() {
     GetTrbRequestQuery
   );
 
-  // const [update, updateResult] = useMutation<
-  //   UpdateTrbRequest,
-  //   UpdateTrbRequestVariables
-  // >(UpdateTrbRequestQuery);
+  const getRequest = useCallback(() => {
+    get({ variables: { id } });
+  }, [get, id]);
 
   // Assign request data from the first available query response
-  // Prioritize by latest type: update, get, create
+  // Prioritize by latest type: get, create
   // eslint-disable-next-line camelcase
   const request: CreateTrbRequest_createTRBRequest | undefined =
     getResult.data?.trbRequest || createResult.data?.createTRBRequest;
+
+  // Determine the steps that are already completed by attempting to pre-validate them
+  const [stepsCompleted, setStepsCompleted] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!request) {
+      return;
+    }
+    (async () => {
+      // console.log('check completed', stepsCompleted);
+      const completed = [...stepsCompleted];
+
+      // Validate steps sequentially
+      // eslint-disable-next-line no-restricted-syntax
+      for (const stp of formStepComponents) {
+        if (
+          // Skip already validated
+          !completed.includes(stp.step) &&
+          // Temp check for blankValues and inputSchema
+          // Remove when these props are available for all steps
+          stp.blankValues &&
+          stp.inputSchema
+        ) {
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            await stp.inputSchema.validate(
+              nullFillObject(request.form, stp.blankValues),
+              {
+                strict: true
+              }
+            );
+          } catch (err) {
+            break;
+          }
+          // console.log('idx', stpIdx, stp.step);
+          completed.push(stp.step);
+        }
+      }
+
+      // console.log('completed', completed, stepsCompleted);
+      if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+    })();
+  }, [request, stepsCompleted]);
 
   useEffect(() => {
     // Create a new request if `id` is new and go to it
@@ -201,7 +256,7 @@ function RequestForm() {
     }
     // Fetch request data if not new
     else if (!request && !createResult.called && !getResult.called) {
-      get({ variables: { id } });
+      getRequest();
     }
     // Get or create request was successful
     // Continue any other effects with request data
@@ -215,6 +270,7 @@ function RequestForm() {
     create,
     createResult,
     get,
+    getRequest,
     getResult,
     history,
     id,
@@ -260,6 +316,8 @@ function RequestForm() {
 
   const loading = getResult.loading || createResult.loading;
 
+  // console.log('render request form');
+
   return (
     <>
       {!view && (
@@ -268,12 +326,14 @@ function RequestForm() {
           step={stepNum}
           breadcrumbBar={defaultBreadcrumbs}
           request={request}
+          stepsCompleted={stepsCompleted}
         />
       )}
       {request ? (
         <GridContainer className="width-full">
           <FormStepComponent
             request={request}
+            refreshRequest={getRequest}
             stepUrl={{
               current: `/trb/requests/${request.id}/${formStepSlugs[stepIdx]}`,
               // No bounds checking on steps since invalid ones are redirected earlier

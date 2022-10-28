@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   CharacterCount,
   Checkbox,
-  DatePicker,
   Dropdown,
-  // ErrorMessage,
+  ErrorMessage,
   Fieldset,
   Form,
   FormGroup,
@@ -18,72 +18,175 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
+import { camelCase, lowerFirst, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
-import { basicSchema } from 'validations/trbRequestSchema';
+import DatePickerFormatted from 'components/shared/DatePickerFormatted';
+import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import {
+  UpdateTrbRequestForm,
+  UpdateTrbRequestFormVariables
+} from 'queries/types/UpdateTrbRequestForm';
+import UpdateTrbRequestFormQuery from 'queries/UpdateTrbRequestFormQuery';
+import { TRBCollabGroupOption } from 'types/graphql-global-types';
+import nullFillObject from 'utils/nullFillObject';
+import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
 
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Basic({ request, stepUrl }: FormStepComponentProps) {
-  // const history = useHistory();
+export const basicBlankValues = {
+  component: '',
+  needsAssistanceWith: '',
+  hasSolutionInMind: null,
+  proposedSolution: '',
+  whereInProcess: '',
+  hasExpectedStartEndDates: null,
+  expectedStartDate: '',
+  expectedEndDate: '',
+  collabGroups: [],
+  collabDateSecurity: '',
+  collabDateEnterpriseArchitecture: '',
+  collabDateCloud: '',
+  collabDatePrivacyAdvisor: '',
+  collabDateGovernanceReviewBoard: '',
+  collabDateOther: '',
+  collabGroupOther: ''
+};
+
+function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
+  const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
 
-  const optionsText = t<any>('basic.options', {
-    returnObjects: true
-  });
+  const [updateForm] = useMutation<
+    UpdateTrbRequestForm,
+    UpdateTrbRequestFormVariables
+  >(UpdateTrbRequestFormQuery);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [done, setDone] = useState<boolean>(true);
+  const initialValues = nullFillObject(request.form, basicBlankValues);
 
   const {
     control,
     handleSubmit,
     watch,
-    formState: { errors }
-  } = useForm({
+    formState: { errors, isSubmitting, isDirty },
+    unregister
+  } = useForm<TrbRequestFormBasic>({
     resolver: yupResolver(basicSchema),
     defaultValues: {
-      requestName: request.name,
-      requestComponent: 'Center for Medicaid and CHIP Services',
-      whatTechnicalAssistance: 'what',
-      doHaveSolution: 'true',
-      describeSolution: 'solution',
-      whereInProcess: 'I have an idea and want to brainstorm',
-      solutionDate: 'true',
-      expectedStartDate: '10/12/2022',
-      expectedLiveDate: '10/13/2022'
-      // selectOitGroups: ['']
+      name: request.name,
+      ...initialValues
     }
-    /*
-    defaultValues: {
-      // testing
-      requestName: request.name,
-      // requestComponent: 'Center for Medicaid and CHIP Services',
-      requestComponent: '',
-      whatTechnicalAssistance: '',
-      doHaveSolution: undefined,
-      describeSolution: '',
-      whereInProcess: undefined,
-      solutionDate: undefined,
-      expectedStartDate: '',
-      expectedLiveDate: ''
-      // selectOitGroups: ['']
-    }
-    */
   });
 
-  console.log('values', watch());
-  console.log('errors', errors);
+  // console.log('values', watch());
+  // console.log('values', watch('selectOitGroups'));
+  // console.log('result', JSON.stringify(result.data));
+  // console.log('errors', errors);
+  // console.log('isdirty', isDirty);
+
+  // Scroll to the error summary when there are changes after submit
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      const err = document.querySelector('.usa-alert--error');
+      err?.scrollIntoView();
+    }
+  }, [errors]);
+
+  // Unbind fields that are toggled off
+
+  const hasSolutionInMind = watch('hasSolutionInMind');
+  useEffect(() => {
+    if (hasSolutionInMind === false) {
+      unregister('proposedSolution');
+    }
+  }, [hasSolutionInMind, unregister]);
+
+  const hasExpectedStartEndDates = watch('hasExpectedStartEndDates');
+  useEffect(() => {
+    if (hasExpectedStartEndDates === false) {
+      unregister('expectedStartDate');
+      unregister('expectedEndDate');
+    }
+  }, [hasExpectedStartEndDates, unregister]);
+
+  const collabGroups = watch('collabGroups');
+  useEffect(() => {
+    if (!collabGroups.includes(TRBCollabGroupOption.SECURITY)) {
+      unregister('collabDateSecurity');
+    } else if (
+      !collabGroups.includes(TRBCollabGroupOption.ENTERPRISE_ARCHITECTURE)
+    ) {
+      unregister('collabDateEnterpriseArchitecture');
+    } else if (!collabGroups.includes(TRBCollabGroupOption.CLOUD)) {
+      unregister('collabDateCloud');
+    } else if (!collabGroups.includes(TRBCollabGroupOption.PRIVACY_ADVISOR)) {
+      unregister('collabDatePrivacyAdvisor');
+    } else if (
+      !collabGroups.includes(TRBCollabGroupOption.GOVERNANCE_REVIEW_BOARD)
+    ) {
+      unregister('collabDateGovernanceReviewBoard');
+    } else if (!collabGroups.includes(TRBCollabGroupOption.OTHER)) {
+      unregister('collabDateOther');
+      unregister('collabGroupOther');
+    }
+  }, [collabGroups, unregister]);
+
+  // console.log('render basic form');
 
   return (
     <Form
       className="trb-form-basic maxw-full"
-      onSubmit={handleSubmit(data => {
-        console.log('submit', data);
-        // history.push(stepUrl.next);
+      onSubmit={handleSubmit(formData => {
+        if (isDirty) {
+          const { id } = request;
+          const { name } = formData;
+
+          const data: any = { ...formData };
+          data.trbRequestId = id;
+          delete data.name;
+
+          updateForm({
+            variables: { input: data, id, name }
+          }).then(() => {
+            refreshRequest();
+            history.push(stepUrl.next);
+          });
+        } else {
+          history.push(stepUrl.next);
+        }
       })}
     >
+      {/* Validation errors summary */}
+      {Object.keys(errors).length > 0 && (
+        <Alert
+          heading={t('basic.errors.checkFix')}
+          type="error"
+          className="margin-bottom-2"
+        >
+          {Object.keys(errors).map(fieldName => {
+            let msg: string;
+            if (fieldName.startsWith('collabDate')) {
+              // Error links to `collabDate` optional fields
+              msg = `${t(
+                `basic.options.collabGroups.${lowerFirst(
+                  fieldName.replace('collabDate', '')
+                )}`
+              )}: ${t(`basic.labels.whenMeet`)}`;
+            } else {
+              msg = t(`basic.labels.${fieldName}`);
+            }
+            return (
+              <ErrorAlertMessage
+                key={fieldName}
+                errorKey={fieldName}
+                message={msg}
+              />
+            );
+          })}
+        </Alert>
+      )}
+
       <Grid row>
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           <Alert type="info" slim>
@@ -92,17 +195,20 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
 
           {/* Request name */}
           <Controller
-            name="requestName"
+            name="name"
             control={control}
             render={({ field, fieldState: { error } }) => (
               <FormGroup className="margin-top-5" error={!!error}>
-                <Label htmlFor="requestName" error={!!error}>
-                  {t('basic.labels.requestName')}
+                <Label htmlFor="name" error={!!error}>
+                  {t('basic.labels.name')}
                 </Label>
+                {error && (
+                  <ErrorMessage>{t('basic.errors.fillBlank')}</ErrorMessage>
+                )}
                 <TextInput
                   {...field}
                   ref={null}
-                  id="requestName"
+                  id="name"
                   type="text"
                   validationStatus={error && 'error'}
                 />
@@ -112,20 +218,28 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
 
           {/* Request component */}
           <Controller
-            name="requestComponent"
+            name="component"
             control={control}
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
                 <Label
-                  htmlFor="requestComponent"
-                  hint={<div>{t('basic.hint.requestComponent')}</div>}
+                  htmlFor="component"
+                  hint={<div>{t('basic.hint.component')}</div>}
                   error={!!error}
                 >
-                  {t('basic.labels.requestComponent')}
+                  {t('basic.labels.component')}
                 </Label>
-                <Dropdown id="requestComponent" {...field} ref={null}>
+                {error && (
+                  <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
+                )}
+                <Dropdown
+                  id="component"
+                  data-testid="component"
+                  {...field}
+                  ref={null}
+                >
                   <option>- {t('basic.options.select')} -</option>
-                  {cmsDivisionsAndOfficesOptions('requestComponent')}
+                  {cmsDivisionsAndOfficesOptions('component')}
                 </Dropdown>
               </FormGroup>
             )}
@@ -133,26 +247,30 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
 
           {/* What do you need technical assistance with? */}
           <Controller
-            name="whatTechnicalAssistance"
+            name="needsAssistanceWith"
             control={control}
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
                 <Label
-                  htmlFor="whatTechnicalAssistance"
-                  hint={<div>{t('basic.hint.whatTechnicalAssistance')}</div>}
+                  htmlFor="needsAssistanceWith"
+                  hint={<div>{t('basic.hint.needsAssistanceWith')}</div>}
                   error={!!error}
                 >
-                  {t('basic.labels.whatTechnicalAssistance')}
+                  {t('basic.labels.needsAssistanceWith')}
                 </Label>
+                {error && (
+                  <ErrorMessage>
+                    {t('basic.errors.includeExplanation')}
+                  </ErrorMessage>
+                )}
                 <CharacterCount
                   {...field}
                   ref={null}
-                  defaultValue={undefined}
-                  id="whatTechnicalAssistance"
+                  id="needsAssistanceWith"
                   maxLength={2000}
                   isTextArea
                   rows={2}
-                  aria-describedby="whatTechnicalAssistance-info whatTechnicalAssistance-hint"
+                  aria-describedby="needsAssistanceWith-info needsAssistanceWith-hint"
                   error={!!error}
                 />
               </FormGroup>
@@ -161,40 +279,52 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
 
           {/* Do you have a solution in mind already? */}
           <Controller
-            name="doHaveSolution"
+            name="hasSolutionInMind"
             control={control}
             render={({ field, fieldState: { error }, formState }) => {
               return (
                 <FormGroup error={!!error}>
-                  <Fieldset legend={t('basic.labels.doHaveSolution')}>
+                  <Fieldset legend={t('basic.labels.hasSolutionInMind')}>
+                    {error && (
+                      <ErrorMessage>
+                        {t('basic.errors.makeSelection')}
+                      </ErrorMessage>
+                    )}
                     <Radio
                       {...field}
                       ref={null}
-                      id="doHaveSolution-yes"
+                      id="hasSolutionInMind-yes"
+                      data-testid="hasSolutionInMind-yes"
                       label={t('basic.options.yes')}
+                      onChange={() => field.onChange(true)}
                       value="true"
+                      checked={field.value === true}
                     />
 
                     {/* Describe your proposed solution */}
-                    {field.value === 'true' && (
+                    {field.value === true && (
                       <Controller
-                        name="describeSolution"
+                        name="proposedSolution"
                         control={control}
                         // eslint-disable-next-line no-shadow
                         render={({ field, fieldState: { error } }) => (
-                          <FormGroup error={!!error}>
-                            <Label htmlFor="describeSolution" error={!!error}>
-                              {t('basic.labels.describeSolution')}
+                          <FormGroup error={!!error} className="margin-left-4">
+                            <Label htmlFor="proposedSolution" error={!!error}>
+                              {t('basic.labels.proposedSolution')}
                             </Label>
+                            {error && (
+                              <ErrorMessage>
+                                {t('basic.errors.includeExplanation')}
+                              </ErrorMessage>
+                            )}
                             <CharacterCount
                               {...field}
                               ref={null}
-                              defaultValue={undefined}
-                              id="describeSolution"
+                              id="proposedSolution"
                               maxLength={2000}
                               isTextArea
                               rows={2}
-                              aria-describedby="describeSolution-info describeSolution-hint"
+                              aria-describedby="proposedSolution-info proposedSolution-hint"
                               error={!!error}
                             />
                           </FormGroup>
@@ -205,9 +335,12 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
                     <Radio
                       {...field}
                       ref={null}
-                      id="doHaveSolution-no"
+                      id="hasSolutionInMind-no"
+                      data-testid="hasSolutionInMind-no"
                       label={t('basic.options.no')}
+                      onChange={() => field.onChange(false)}
                       value="false"
+                      checked={field.value === false}
                     />
                   </Fieldset>
                 </FormGroup>
@@ -228,13 +361,27 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
                 >
                   {t('basic.labels.whereInProcess')}
                 </Label>
-                <Dropdown id="whereInProcess" {...field} ref={null}>
+                {error && (
+                  <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
+                )}
+                <Dropdown
+                  id="whereInProcess"
+                  data-testid="whereInProcess"
+                  {...field}
+                  ref={null}
+                >
                   <option> </option>
-                  {Object.entries(optionsText.whereInProcess).map(([k, v]) => {
-                    const val = v as string;
+                  {[
+                    'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
+                    'CONTRACTING_WORK_HAS_STARTED',
+                    'DEVELOPMENT_HAS_RECENTLY_STARTED',
+                    'DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY',
+                    'THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE',
+                    'OTHER'
+                  ].map(val => {
                     return (
                       <option key={val} value={val}>
-                        {val}
+                        {t(`basic.options.whereInProcess.${camelCase(val)}`)}
                       </option>
                     );
                   })}
@@ -245,20 +392,28 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
 
           {/* Does your solution have an expected start and/or end date? */}
           <Controller
-            name="solutionDate"
+            name="hasExpectedStartEndDates"
             control={control}
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
-                <Fieldset legend={t('basic.labels.solutionDate')}>
+                <Fieldset legend={t('basic.labels.hasExpectedStartEndDates')}>
+                  {error && (
+                    <ErrorMessage>
+                      {t('basic.errors.makeSelection')}
+                    </ErrorMessage>
+                  )}
                   <Radio
                     {...field}
                     ref={null}
-                    id="solutionDate-yes"
+                    id="hasExpectedStartEndDates-yes"
+                    data-testid="hasExpectedStartEndDates-yes"
+                    onChange={() => field.onChange(true)}
                     value="true"
                     label={t('basic.options.yes')}
+                    checked={field.value === true}
                   />
 
-                  {field.value === 'true' && (
+                  {field.value === true && (
                     // <div className="margin-left-4 mobile-lg:display-flex">
                     <div className="margin-left-4">
                       {/* Expected start date */}
@@ -275,32 +430,44 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
                             >
                               {t('basic.labels.expectedStartDate')}
                             </Label>
-                            <DatePicker
+                            {error && (
+                              <ErrorMessage>
+                                {t('basic.errors.fillDate')}
+                              </ErrorMessage>
+                            )}
+                            <DatePickerFormatted
                               id="expectedStartDate"
                               {...field}
                               ref={null}
+                              defaultValue={field.value}
                             />
                           </FormGroup>
                         )}
                       />
                       {/* Expected go live date */}
                       <Controller
-                        name="expectedLiveDate"
+                        name="expectedEndDate"
                         control={control}
                         // eslint-disable-next-line no-shadow
                         render={({ field, fieldState: { error } }) => (
                           <FormGroup error={!!error}>
                             <Label
-                              htmlFor="expectedLiveDate"
+                              htmlFor="expectedEndDate"
                               hint="mm/dd/yyyy"
                               error={!!error}
                             >
-                              {t('basic.labels.expectedLiveDate')}
+                              {t('basic.labels.expectedEndDate')}
                             </Label>
-                            <DatePicker
-                              id="expectedLiveDate"
+                            {error && (
+                              <ErrorMessage>
+                                {t('basic.errors.fillDate')}
+                              </ErrorMessage>
+                            )}
+                            <DatePickerFormatted
+                              id="expectedEndDate"
                               {...field}
                               ref={null}
+                              defaultValue={field.value}
                             />
                           </FormGroup>
                         )}
@@ -311,9 +478,12 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
                   <Radio
                     {...field}
                     ref={null}
-                    id="solutionDate-no"
+                    id="hasExpectedStartEndDates-no"
+                    data-testid="hasExpectedStartEndDates-no"
+                    onChange={() => field.onChange(false)}
                     value="false"
                     label={t('basic.options.no')}
+                    checked={field.value === false}
                   />
                 </Fieldset>
               </FormGroup>
@@ -321,115 +491,148 @@ function Basic({ request, stepUrl }: FormStepComponentProps) {
           />
 
           {/* Select any other OIT groups that you have met with or collaborated with. */}
-          {false && (
-            <Controller
-              name="selectOitGroups"
-              control={control}
-              render={({ field, fieldState: { error } }) => {
-                return (
-                  <FormGroup error={!!error}>
-                    <Fieldset legend={t('basic.labels.selectOitGroups')}>
-                      {Object.entries(optionsText.selectOitGroups).map(
-                        ([k, v]) => {
-                          const val = v as string;
-                          return (
-                            <Checkbox
-                              {...field}
-                              ref={null}
-                              key={k}
-                              id={`selectOitGroups-${k}`}
-                              label={val}
-                              value={val}
+          <Controller
+            name="collabGroups"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <FormGroup error={!!error}>
+                  <Fieldset legend={t('basic.labels.collabGroups')}>
+                    {error && (
+                      <ErrorMessage>
+                        {t('basic.errors.makeSelection')}
+                      </ErrorMessage>
+                    )}
+                    {[
+                      'SECURITY',
+                      'ENTERPRISE_ARCHITECTURE',
+                      'CLOUD',
+                      'PRIVACY_ADVISOR',
+                      'GOVERNANCE_REVIEW_BOARD',
+                      'OTHER'
+                    ].map((v, idx) => {
+                      const val = v as TRBCollabGroupOption;
+                      const optionKeyWordUpper = upperFirst(camelCase(v));
+                      return (
+                        <React.Fragment key={v}>
+                          <Checkbox
+                            name={field.name}
+                            id={`collabGroups-${optionKeyWordUpper}`}
+                            label={t(
+                              `basic.options.collabGroups.${camelCase(v)}`
+                            )}
+                            value={val}
+                            checked={field.value.includes(val)}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              field.onChange(
+                                e.target.checked
+                                  ? [...field.value, e.target.value]
+                                  : field.value.filter(
+                                      value => value !== e.target.value
+                                    )
+                              );
+                            }}
+                          />
+                          {/* Which other group(s)? */}
+                          {v === 'OTHER' && field.value.includes(val) && (
+                            <Controller
+                              name="collabGroupOther"
+                              control={control}
+                              // eslint-disable-next-line no-shadow
+                              render={({ field, fieldState: { error } }) => (
+                                <FormGroup
+                                  error={!!error}
+                                  className="margin-left-4"
+                                >
+                                  <Label
+                                    htmlFor="collabGroupOther"
+                                    error={!!error}
+                                  >
+                                    {t('basic.labels.collabGroupOther')}
+                                  </Label>
+                                  {error && (
+                                    <ErrorMessage>
+                                      {t('basic.errors.fillBlank')}
+                                    </ErrorMessage>
+                                  )}
+                                  <TextInput
+                                    {...field}
+                                    ref={null}
+                                    id="collabGroupOther"
+                                    type="text"
+                                    validationStatus={error && 'error'}
+                                  />
+                                </FormGroup>
+                              )}
                             />
-                          );
-                        }
-                      )}
-                    </Fieldset>
-                  </FormGroup>
-                );
-              }}
-            />
-          )}
-
-          {false && (
-            <FormGroup>
-              <Fieldset legend={t('basic.labels.selectOitGroups')}>
-                <Checkbox
-                  id="selectOitGroups-security"
-                  test-id="selectOitGroups-security"
-                  name="selectOitGroups-security"
-                  label={optionsText.selectOitGroups.security}
-                  value={optionsText.selectOitGroups.security}
-                />
-                {/* When did you meet with them? */}
-                <FormGroup className="margin-left-4">
-                  <Label
-                    htmlFor="whenMeet"
-                    hint={<div>{t('basic.hint.whenMeet')}</div>}
-                  >
-                    {t('basic.labels.whenMeet')}
-                  </Label>
-                  <TextInput
-                    id="whenMeet"
-                    name="whenMeet"
-                    type="text"
-                    placeholder="mm/dd/yyyy"
-                  />
+                          )}
+                          {/* When did you meet with them? */}
+                          {field.value.includes(val) &&
+                            (() => {
+                              const collabDateKey = `collabDate${optionKeyWordUpper}` as keyof Pick<
+                                TrbRequestFormBasic,
+                                | 'collabDateSecurity'
+                                | 'collabDateEnterpriseArchitecture'
+                                | 'collabDateCloud'
+                                | 'collabDatePrivacyAdvisor'
+                                | 'collabDateGovernanceReviewBoard'
+                                | 'collabDateOther'
+                              >;
+                              return (
+                                <Controller
+                                  name={collabDateKey}
+                                  control={control}
+                                  render={({
+                                    // eslint-disable-next-line no-shadow
+                                    field,
+                                    // eslint-disable-next-line no-shadow
+                                    fieldState: { error }
+                                  }) => (
+                                    <FormGroup
+                                      error={!!error}
+                                      className="margin-left-4"
+                                    >
+                                      <Label
+                                        htmlFor={collabDateKey}
+                                        hint={t('basic.hint.whenMeet')}
+                                        error={!!error}
+                                      >
+                                        {t('basic.labels.whenMeet')}
+                                      </Label>
+                                      {error && (
+                                        <ErrorMessage>
+                                          {t('basic.errors.fillDate')}
+                                        </ErrorMessage>
+                                      )}
+                                      <TextInput
+                                        {...field}
+                                        ref={null}
+                                        id={collabDateKey}
+                                        type="text"
+                                        validationStatus={error && 'error'}
+                                      />
+                                    </FormGroup>
+                                  )}
+                                />
+                              );
+                            })()}
+                        </React.Fragment>
+                      );
+                    })}
+                  </Fieldset>
                 </FormGroup>
-
-                <Checkbox
-                  id="selectOitGroups-ea"
-                  test-id="selectOitGroups-ea"
-                  name="selectOitGroups-ea"
-                  label={optionsText.selectOitGroups.ea}
-                  value={optionsText.selectOitGroups.ea}
-                />
-                <Checkbox
-                  id="selectOitGroups-cloud"
-                  test-id="selectOitGroups-cloud"
-                  name="selectOitGroups-cloud"
-                  label={optionsText.selectOitGroups.cloud}
-                  value={optionsText.selectOitGroups.cloud}
-                />
-                <Checkbox
-                  id="selectOitGroups-privacy"
-                  test-id="selectOitGroups-privacy"
-                  name="selectOitGroups-privacy"
-                  label={optionsText.selectOitGroups.privacy}
-                  value={optionsText.selectOitGroups.privacy}
-                />
-                <Checkbox
-                  id="selectOitGroups-grbot"
-                  test-id="selectOitGroups-grbot"
-                  name="selectOitGroups-grbot"
-                  label={optionsText.selectOitGroups.grbot}
-                  value={optionsText.selectOitGroups.grbot}
-                />
-
-                <Checkbox
-                  id="selectOitGroups-other"
-                  test-id="selectOitGroups-other"
-                  name="selectOitGroups-other"
-                  label={optionsText.other}
-                  value={optionsText.other}
-                />
-                {/* Which other group(s)? */}
-                <FormGroup className="margin-left-4">
-                  <Label htmlFor="whichGroups">
-                    {t('basic.labels.whichGroups')}
-                  </Label>
-                  <TextInput id="whichGroups" name="whenMeet" type="text" />
-                </FormGroup>
-              </Fieldset>
-            </FormGroup>
-          )}
+              );
+            }}
+          />
         </Grid>
       </Grid>
 
       <Pager
         className="margin-top-5"
         next={{
-          disabled: !done
+          disabled: isSubmitting
         }}
       />
     </Form>

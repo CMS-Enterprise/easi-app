@@ -1,0 +1,577 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Trb Request form: Basic submits the form successfully after a failed attempt 1`] = `
+<DocumentFragment>
+  <form
+    class="usa-form trb-form-basic maxw-full"
+    data-testid="form"
+  >
+    <div
+      class="grid-row"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <div
+          class="usa-alert usa-alert--info usa-alert--slim"
+          data-testid="alert"
+        >
+          <div
+            class="usa-alert__body"
+          >
+            <p
+              class="usa-alert__text"
+            >
+              All fields are mandatory
+            </p>
+          </div>
+        </div>
+        <div
+          class="usa-form-group margin-top-5"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="name"
+          >
+            Request name
+          </label>
+          <input
+            class="usa-input"
+            data-testid="textInput"
+            id="name"
+            name="name"
+            type="text"
+            value="Draft"
+          />
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="component"
+          >
+            Request component
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Let the TRB know which CMS component this request originates from.
+              </div>
+            </span>
+          </label>
+          <select
+            class="usa-select"
+            data-testid="component"
+            id="component"
+            name="component"
+          >
+            <option>
+              - Select -
+            </option>
+            <option
+              value="Center for Clinical Standards and Quality"
+            >
+              Center for Clinical Standards and Quality (CCSQ)
+            </option>
+            <option
+              value="Center for Consumer Information and Insurance Oversight"
+            >
+              Center for Consumer Information and Insurance Oversight (CCIIO)
+            </option>
+            <option
+              value="Center for Medicare"
+            >
+              Center for Medicare (CM)
+            </option>
+            <option
+              value="Center for Medicaid and CHIP Services"
+            >
+              Center for Medicaid and CHIP Services (CMCS)
+            </option>
+            <option
+              value="Center for Medicare and Medicaid Innovation"
+            >
+              Center for Medicare and Medicaid Innovation (CMMI)
+            </option>
+            <option
+              value="Center for Program Integrity"
+            >
+              Center for Program Integrity (CPI)
+            </option>
+            <option
+              value="CMS Wide"
+            >
+              CMS Wide (CMS)
+            </option>
+            <option
+              value="Emergency Preparedness and Response Operations"
+            >
+              Emergency Preparedness and Response Operations (EPRO)
+            </option>
+            <option
+              value="Federal Coordinated Health Care Office"
+            >
+              Federal Coordinated Health Care Office (FCHCO)
+            </option>
+            <option
+              value="Office of Acquisition and Grants Management"
+            >
+              Office of Acquisition and Grants Management (OAGM)
+            </option>
+            <option
+              value="Office of Burden Reduction and Health Informatics"
+            >
+              Office of Burden Reduction and Health Informatics (OBRHI)
+            </option>
+            <option
+              value="Office of Communications"
+            >
+              Office of Communications (OC)
+            </option>
+            <option
+              value="Office of Enterprise Data and Analytics"
+            >
+              Office of Enterprise Data and Analytics (OEDA)
+            </option>
+            <option
+              value="Office of Equal Opportunity and Civil Rights"
+            >
+              Office of Equal Opportunity and Civil Rights (OEOCR)
+            </option>
+            <option
+              value="Office of Financial Management"
+            >
+              Office of Financial Management (OFM)
+            </option>
+            <option
+              value="Office of Human Capital"
+            >
+              Office of Human Capital (OHC)
+            </option>
+            <option
+              value="Office of Information Technology"
+            >
+              Office of Information Technology (OIT)
+            </option>
+            <option
+              value="Office of Legislation"
+            >
+              Office of Legislation (OL)
+            </option>
+            <option
+              value="Office of Minority Health"
+            >
+              Office of Minority Health (OMH)
+            </option>
+            <option
+              value="Office of Program Operations and Local Engagement"
+            >
+              Office of Program Operations and Local Engagement (OPOLE)
+            </option>
+            <option
+              value="Office of Security, Facilities, and Logistics Operations"
+            >
+              Office of Security, Facilities, and Logistics Operations (OSFLO)
+            </option>
+            <option
+              value="Office of Strategic Operations and Regulatory Affairs"
+            >
+              Office of Strategic Operations and Regulatory Affairs (OSORA)
+            </option>
+            <option
+              value="Office of Strategy, Performance, and Results"
+            >
+              Office of Strategy, Performance, and Results (OSPR)
+            </option>
+            <option
+              value="Office of the Actuary"
+            >
+              Office of the Actuary (OA)
+            </option>
+            <option
+              value="Offices of Hearings and Inquiries"
+            >
+              Offices of Hearings and Inquiries (OHI)
+            </option>
+            <option
+              value="Other"
+            >
+              Other
+            </option>
+          </select>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="needsAssistanceWith"
+          >
+            What do you need technical assistance with?
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Describe the type of help you need from the TRB as well as the project purpose (the “why”) and objectives of your work, if applicable.
+              </div>
+            </span>
+          </label>
+          <textarea
+            aria-describedby="needsAssistanceWith-info needsAssistanceWith-hint"
+            class="usa-textarea usa-character-count__field"
+            data-testid="textarea"
+            id="needsAssistanceWith"
+            name="needsAssistanceWith"
+            rows="2"
+          />
+          <span
+            aria-live="polite"
+            class="usa-hint usa-character-count__message"
+            data-testid="characterCountMessage"
+            id="needsAssistanceWith-info"
+          >
+            2000 characters allowed
+          </span>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <fieldset
+            class="usa-fieldset"
+            data-testid="fieldset"
+          >
+            <legend
+              class="usa-legend"
+            >
+              Do you have a solution in mind already?
+            </legend>
+            <div
+              class="usa-radio"
+              data-testid="radio"
+            >
+              <input
+                class="usa-radio__input"
+                data-testid="hasSolutionInMind-yes"
+                id="hasSolutionInMind-yes"
+                name="hasSolutionInMind"
+                type="radio"
+                value="true"
+              />
+              <label
+                class="usa-radio__label"
+                for="hasSolutionInMind-yes"
+              >
+                Yes
+              </label>
+            </div>
+            <div
+              class="usa-radio"
+              data-testid="radio"
+            >
+              <input
+                class="usa-radio__input"
+                data-testid="hasSolutionInMind-no"
+                id="hasSolutionInMind-no"
+                name="hasSolutionInMind"
+                type="radio"
+                value="false"
+              />
+              <label
+                class="usa-radio__label"
+                for="hasSolutionInMind-no"
+              >
+                No
+              </label>
+            </div>
+          </fieldset>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="whereInProcess"
+          >
+            Where are you in your process?
+            <span
+              class="usa-hint"
+            >
+              This helps the TRB provide the right type of support for your request.
+            </span>
+          </label>
+          <select
+            class="usa-select"
+            data-testid="whereInProcess"
+            id="whereInProcess"
+            name="whereInProcess"
+          >
+            <option>
+               
+            </option>
+            <option
+              value="I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM"
+            >
+              I have an idea and want to brainstorm
+            </option>
+            <option
+              value="CONTRACTING_WORK_HAS_STARTED"
+            >
+              Contracting work has started, but a contractor has not been selected
+            </option>
+            <option
+              value="DEVELOPMENT_HAS_RECENTLY_STARTED"
+            >
+              Development has recently started
+            </option>
+            <option
+              value="DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY"
+            >
+              Development is significantly underway
+            </option>
+            <option
+              value="THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE"
+            >
+              The system is in Operation and Maintenance
+            </option>
+            <option
+              value="OTHER"
+            >
+              Other
+            </option>
+          </select>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <fieldset
+            class="usa-fieldset"
+            data-testid="fieldset"
+          >
+            <legend
+              class="usa-legend"
+            >
+              Does your solution have an expected start and/or end date?
+            </legend>
+            <div
+              class="usa-radio"
+              data-testid="radio"
+            >
+              <input
+                class="usa-radio__input"
+                data-testid="hasExpectedStartEndDates-yes"
+                id="hasExpectedStartEndDates-yes"
+                name="hasExpectedStartEndDates"
+                type="radio"
+                value="true"
+              />
+              <label
+                class="usa-radio__label"
+                for="hasExpectedStartEndDates-yes"
+              >
+                Yes
+              </label>
+            </div>
+            <div
+              class="usa-radio"
+              data-testid="radio"
+            >
+              <input
+                class="usa-radio__input"
+                data-testid="hasExpectedStartEndDates-no"
+                id="hasExpectedStartEndDates-no"
+                name="hasExpectedStartEndDates"
+                type="radio"
+                value="false"
+              />
+              <label
+                class="usa-radio__label"
+                for="hasExpectedStartEndDates-no"
+              >
+                No
+              </label>
+            </div>
+          </fieldset>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <fieldset
+            class="usa-fieldset"
+            data-testid="fieldset"
+          >
+            <legend
+              class="usa-legend"
+            >
+              Select any other OIT groups that you have met with or collaborated with.
+            </legend>
+            <div
+              class="usa-checkbox"
+              data-testid="checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="collabGroups-Security"
+                name="collabGroups"
+                type="checkbox"
+                value="SECURITY"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="collabGroups-Security"
+              >
+                Security
+              </label>
+            </div>
+            <div
+              class="usa-checkbox"
+              data-testid="checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="collabGroups-EnterpriseArchitecture"
+                name="collabGroups"
+                type="checkbox"
+                value="ENTERPRISE_ARCHITECTURE"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="collabGroups-EnterpriseArchitecture"
+              >
+                Enterprise Architecture (EA)
+              </label>
+            </div>
+            <div
+              class="usa-checkbox"
+              data-testid="checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="collabGroups-Cloud"
+                name="collabGroups"
+                type="checkbox"
+                value="CLOUD"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="collabGroups-Cloud"
+              >
+                Cloud
+              </label>
+            </div>
+            <div
+              class="usa-checkbox"
+              data-testid="checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="collabGroups-PrivacyAdvisor"
+                name="collabGroups"
+                type="checkbox"
+                value="PRIVACY_ADVISOR"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="collabGroups-PrivacyAdvisor"
+              >
+                Privacy
+              </label>
+            </div>
+            <div
+              class="usa-checkbox"
+              data-testid="checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="collabGroups-GovernanceReviewBoard"
+                name="collabGroups"
+                type="checkbox"
+                value="GOVERNANCE_REVIEW_BOARD"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="collabGroups-GovernanceReviewBoard"
+              >
+                Governance Review Board (GRB) or Governance Review Team (GRT)
+              </label>
+            </div>
+            <div
+              class="usa-checkbox"
+              data-testid="checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="collabGroups-Other"
+                name="collabGroups"
+                type="checkbox"
+                value="OTHER"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="collabGroups-Other"
+              >
+                Other
+              </label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-base-light border-top-1px margin-top-5"
+    >
+      <div
+        class="margin-top-2"
+      >
+        <button
+          class="usa-button margin-top-0"
+          data-testid="button"
+          type="submit"
+        >
+          Next
+        </button>
+      </div>
+      <div
+        class="margin-top-2"
+      >
+        <a
+          class="usa-link"
+          href="/trb"
+        >
+          <svg
+            class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+          Save and exit
+        </a>
+      </div>
+    </div>
+  </form>
+</DocumentFragment>
+`;

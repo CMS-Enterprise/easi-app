@@ -131,6 +131,18 @@ export enum SystemIntakeStatus {
   WITHDRAWN = "WITHDRAWN",
 }
 
+/**
+ * Represents an option selected for collaboration groups in the TRB request form
+ */
+export enum TRBCollabGroupOption {
+  CLOUD = "CLOUD",
+  ENTERPRISE_ARCHITECTURE = "ENTERPRISE_ARCHITECTURE",
+  GOVERNANCE_REVIEW_BOARD = "GOVERNANCE_REVIEW_BOARD",
+  OTHER = "OTHER",
+  PRIVACY_ADVISOR = "PRIVACY_ADVISOR",
+  SECURITY = "SECURITY",
+}
+
 export enum TRBRequestStatus {
   CLOSED = "CLOSED",
   OPEN = "OPEN",
@@ -141,6 +153,18 @@ export enum TRBRequestType {
   FOLLOWUP = "FOLLOWUP",
   FORMAL_REVIEW = "FORMAL_REVIEW",
   NEED_HELP = "NEED_HELP",
+}
+
+/**
+ * Represents an option selected to the "where are you in the process?" TRB request form
+ */
+export enum TRBWhereInProcessOption {
+  CONTRACTING_WORK_HAS_STARTED = "CONTRACTING_WORK_HAS_STARTED",
+  DEVELOPMENT_HAS_RECENTLY_STARTED = "DEVELOPMENT_HAS_RECENTLY_STARTED",
+  DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY = "DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY",
+  I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM = "I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM",
+  OTHER = "OTHER",
+  THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE = "THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE",
 }
 
 /**
@@ -458,18 +482,6 @@ export interface SystemIntakeRequesterWithComponentInput {
 }
 
 /**
- * TRBRequestChanges represents the possible changes you can make to a TRB request when updating it.
- * Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
- * https: // gqlgen.com/reference/changesets/
- */
-export interface TRBRequestChanges {
-  name?: string | null;
-  archived?: boolean | null;
-  type?: TRBRequestType | null;
-  status?: TRBRequestStatus | null;
-}
-
-/**
  * Parameters for updating a 508/accessibility request's associated CEDAR system
  */
 export interface UpdateAccessibilityRequestCedarSystemInput {
@@ -548,6 +560,29 @@ export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
   id: UUID;
+}
+
+/**
+ * Represents an EUA user who is included as an form for a TRB request
+ */
+export interface UpdateTRBRequestFormInput {
+  trbRequestId: UUID;
+  component: string;
+  needsAssistanceWith: string;
+  hasSolutionInMind: boolean;
+  proposedSolution?: string | null;
+  whereInProcess: TRBWhereInProcessOption;
+  hasExpectedStartEndDates: boolean;
+  expectedStartDate?: Time | null;
+  expectedEndDate?: Time | null;
+  collabGroups: TRBCollabGroupOption[];
+  collabDateSecurity?: Time | null;
+  collabDateEnterpriseArchitecture?: Time | null;
+  collabDateCloud?: Time | null;
+  collabDatePrivacyAdvisor?: Time | null;
+  collabDateGovernanceReviewBoard?: Time | null;
+  collabDateOther?: Time | null;
+  collabGroupOther?: string | null;
 }
 
 /**

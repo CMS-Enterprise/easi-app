@@ -170,25 +170,25 @@ const technicalAssistance = {
   //
   basic: {
     labels: {
-      requestName: 'Request name',
-      requestComponent: 'Request component',
-      whatTechnicalAssistance: 'What do you need technical assistance with?',
-      doHaveSolution: 'Do you have a solution in mind already?',
-      describeSolution: 'Describe your proposed solution.',
+      name: 'Request name',
+      component: 'Request component',
+      needsAssistanceWith: 'What do you need technical assistance with?',
+      hasSolutionInMind: 'Do you have a solution in mind already?',
+      proposedSolution: 'Describe your proposed solution.',
       whereInProcess: 'Where are you in your process?',
-      solutionDate:
+      hasExpectedStartEndDates:
         'Does your solution have an expected start and/or end date?',
       expectedStartDate: 'Expected start date',
-      expectedLiveDate: 'Expected go live date',
-      selectOitGroups:
+      expectedEndDate: 'Expected end date',
+      collabGroups:
         'Select any other OIT groups that you have met with or collaborated with.',
-      whenMeet: 'When did you meet with them?',
-      whichGroups: 'Which other group(s)?'
+      collabGroupOther: 'Which other group(s)?',
+      whenMeet: 'When did you meet with them?'
     },
     hint: {
-      requestComponent:
+      component:
         'Let the TRB know which CMS component this request originates from.',
-      whatTechnicalAssistance:
+      needsAssistanceWith:
         'Describe the type of help you need from the TRB as well as the project purpose (the “why”) and objectives of your work, if applicable.',
       whereInProcess:
         'This helps the TRB provide the right type of support for your request.',
@@ -201,20 +201,32 @@ const technicalAssistance = {
       no: 'No',
       other: 'Other',
       whereInProcess: {
-        idea: 'I have an idea and want to brainstorm',
-        contracting:
+        iHaveAnIdeaAndWantToBrainstorm: 'I have an idea and want to brainstorm',
+        contractingWorkHasStarted:
           'Contracting work has started, but a contractor has not been selected',
-        developmentRecently: 'Development has recently started',
-        developmentSignificantly: 'Development is significantly underway',
-        system: 'The system is in Operation and Maintenance'
+        developmentHasRecentlyStarted: 'Development has recently started',
+        developmentIsSignificantlyUnderway:
+          'Development is significantly underway',
+        theSystemIsInOperationAndMaintenance:
+          'The system is in Operation and Maintenance',
+        other: 'Other'
       },
-      selectOitGroups: {
+      collabGroups: {
         security: 'Security',
-        ea: 'Enterprise Architecture (EA)',
+        enterpriseArchitecture: 'Enterprise Architecture (EA)',
         cloud: 'Cloud',
-        privacy: 'Privacy',
-        grbot: 'Governance Review Board (GRB) or Governance Review Team (GRT)'
+        privacyAdvisor: 'Privacy',
+        governanceReviewBoard:
+          'Governance Review Board (GRB) or Governance Review Team (GRT)',
+        other: 'Other'
       }
+    },
+    errors: {
+      checkFix: 'Please check and fix the following',
+      fillBlank: 'Please fill in the blank',
+      fillDate: 'Please fill in the date',
+      includeExplanation: 'Please include an explanation',
+      makeSelection: 'Please make a selection'
     },
     allFieldsMandatory: 'All fields are mandatory'
   },
