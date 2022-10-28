@@ -215,14 +215,14 @@
           "type": "string",
           "description": "Scheduled date for the Governance Review Board (GRB) meeting",
           "examples": [
-            "2025-12-12T00:00:00Z"
+            "2025-12-12"
           ]
         },
         "grtDate": {
           "type": "string",
           "description": "Scheduled date for the Governance Review Team (GRT) meeting",
           "examples": [
-            "2025-10-20T00:00:00Z"
+            "2025-10-20"
           ]
         },
         "issoName": {
@@ -243,7 +243,7 @@
           "type": "string",
           "description": "Expiration date for the LCID associated with this request",
           "examples": [
-            "2030-12-23T00:00:00Z"
+            "2030-12-23"
           ]
         },
         "lifecycleID": {

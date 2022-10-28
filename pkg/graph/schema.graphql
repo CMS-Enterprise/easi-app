@@ -1500,6 +1500,7 @@ type TRBRequest {
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
   documents: [TRBRequestDocument!]!
+  form: TRBRequestForm!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -1622,6 +1623,215 @@ type DeleteTRBRequestDocumentPayload {
 }
 
 """
+Represents an option selected to the "where are you in the process?" TRB request form
+"""
+enum TRBWhereInProcessOption {
+  I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM
+  CONTRACTING_WORK_HAS_STARTED
+  DEVELOPMENT_HAS_RECENTLY_STARTED
+  DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY
+  THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE
+  OTHER
+}
+
+"""
+Represents an option selected for collaboration groups in the TRB request form
+"""
+enum TRBCollabGroupOption {
+  SECURITY
+  ENTERPRISE_ARCHITECTURE
+  CLOUD
+  PRIVACY_ADVISOR
+  GOVERNANCE_REVIEW_BOARD
+  OTHER
+}
+
+"""
+Represents the status of a TRB request form
+"""
+enum TRBFormStatus {
+  READY_TO_START
+  IN_PROGRESS
+  COMPLETED
+}
+
+"""
+The possible answers to the "technical reference architecture" input on the TRB "Subject Areas" page
+"""
+enum TRBTechnicalReferenceArchitectureOption {
+	GENERAL_TRA_INFORMATION
+	TRA_GUIDING_PRINCIPLES
+	CMS_PROCESSING_ENVIRONMENTS
+	CMS_TRA_MULTI_ZONE_ARCHITECTURE
+	CMS_TRA_BUSINESS_RULES
+	ABOUT_THE_TRB
+	ARCHITECTURE_CHANGE_REQUEST_PROCESS_FOR_THE_TRA
+	OTHER
+}
+
+"""
+The possible answers to the "network and security" input on the TRB "Subject Areas" page
+"""
+enum TRBNetworkAndSecurityOption {
+	GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION
+	SECURITY_SERVICES
+	CMS_CYBERSECURITY_INTEGRATION_CENTER_INTEGRATION
+	WIDE_AREA_NETWORK_SERVICES
+	ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
+	DOMAIN_NAME_SYSTEM_SERVICES
+	OTHER
+}
+
+"""
+The possible answers to the "cloud and infrastructure" input on the TRB "Subject Areas" page
+"""
+enum TRBCloudAndInfrastructureOption {
+	GENERAL_CLOUD_AND_INFRASTRUCTURE_SERVICES_INFORMATION
+	VIRTUALIZATION
+	CLOUD_IAAS_AND_PAAS_INFRASTRUCTURE
+	IT_PERFORMANCE_MANAGEMENT
+	FILE_TRANSFER
+	DATA_STORAGE_SERVICES
+	SOFTWARE_AS_A_SERVICE
+	KEYS_AND_SECRETS_MANAGEMENT
+	MOBILE_DEVICES_AND_APPLICATIONS
+	CLOUD_MIGRATION
+	DISASTER_RECOVERY
+	OTHER
+}
+
+"""
+The possible answers to the "application development" input on the TRB "Subject Areas" page
+"""
+enum TRBApplicationDevelopmentOption {
+	GENERAL_APPLICATION_DEVELOPMENT_SERVICES_INFORMATION
+	APPLICATION_DEVELOPMENT
+	WEB_SERVICES_AND_WEB_APIS
+	WEB_BASED_UI_SERVICES
+	OPEN_SOURCE_SOFTWARE
+	PORTAL_INTEGRATION
+	ACCESSIBILITY_COMPLIANCE
+	BUSINESS_INTELLIGENCE
+	CONTAINERS_AND_MICROSERVICES
+	ROBOTIC_PROCESS_AUTOMATION
+	SYSTEM_ARCHITECTURE_REVIEW
+	EMAIL_INTEGRATION
+	CONFIGURATION_MANAGEMENT
+	OTHER
+}
+
+"""
+The possible answers to the "data and data management" input on the TRB "Subject Areas" page
+"""
+enum TRBDataAndDataManagementOption {
+	GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION
+	ENTERPRISE_DATA_ENVIRONMENT_REVIEW
+	DATA_MART
+	DATA_WAREHOUSING
+	ANALYTIC_SANDBOXES
+	APIS_AND_DATA_EXCHANGES
+	FHIR
+	OTHER
+}
+
+"""
+The possible answers to the "government processes and policies" input on the TRB "Subject Areas" page
+"""
+enum TRBGovernmentProcessesAndPoliciesOption {
+	GENERAL_INFORMATION_ABOUT_CMS_PROCESSES_AND_POLICIES
+	OTHER_AVAILABLE_TRB_SERVICES
+	SECTION_508_AND_ACCESSIBILITY_TESTING
+	TARGET_LIFE_CYCLE
+	SYSTEM_DISPOSITION_PLANNING
+	INVESTMENT_AND_BUDGET_PLANNING
+	LIFECYCLE_IDS
+	CONTRACTING_AND_PROCUREMENT
+	SECURITY_ASSESSMENTS
+	INFRASTRUCTURE_AS_A_SERVICE
+	OTHER
+}
+
+"""
+The possible answers to the "other technical topics" input on the TRB "Subject Areas" page
+"""
+enum TRBOtherTechnicalTopicsOption {
+	ARTIFICIAL_INTELLIGENCE
+	MACHINE_LEARNING
+	ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT
+	OTHER
+}
+
+"""
+Represents an EUA user who is included as an form for a TRB request
+"""
+type TRBRequestForm {
+  id: UUID!
+  trbRequestId: UUID!
+  status: TRBFormStatus!
+  component: String
+  needsAssistanceWith: String
+  hasSolutionInMind: Boolean
+  proposedSolution: String
+  whereInProcess: TRBWhereInProcessOption
+  whereInProcessOther: String
+  hasExpectedStartEndDates: Boolean
+  expectedStartDate: Time
+  expectedEndDate: Time
+  collabGroups: [TRBCollabGroupOption!]!
+  collabDateSecurity: String
+  collabDateEnterpriseArchitecture: String
+  collabDateCloud: String
+  collabDatePrivacyAdvisor: String
+  collabDateGovernanceReviewBoard: String
+  collabDateOther: String
+  collabGroupOther: String
+  subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
+  subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
+  subjectAreaCloudAndInfrastructure: [TRBCloudAndInfrastructureOption!]
+  subjectAreaApplicationDevelopment: [TRBApplicationDevelopmentOption!]
+  subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
+  subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
+  subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
+
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+Represents an EUA user who is included as an form for a TRB request
+"""
+input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
+  trbRequestId: UUID!
+  isSubmitted: Boolean
+  component: String
+  needsAssistanceWith: String
+  hasSolutionInMind: Boolean
+  proposedSolution: String
+  whereInProcess: TRBWhereInProcessOption
+  whereInProcessOther: String
+  hasExpectedStartEndDates: Boolean
+  expectedStartDate: Time
+  expectedEndDate: Time
+  collabGroups: [TRBCollabGroupOption!]
+  collabDateSecurity: String
+  collabDateEnterpriseArchitecture: String
+  collabDateCloud: String
+  collabDatePrivacyAdvisor: String
+  collabDateGovernanceReviewBoard: String
+  collabDateOther: String
+  collabGroupOther: String
+  subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
+  subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
+  subjectAreaCloudAndInfrastructure: [TRBCloudAndInfrastructureOption!]
+  subjectAreaApplicationDevelopment: [TRBApplicationDevelopmentOption!]
+  subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
+  subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
+  subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -1735,6 +1945,7 @@ type Mutation {
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
+  updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
 }
 
 """

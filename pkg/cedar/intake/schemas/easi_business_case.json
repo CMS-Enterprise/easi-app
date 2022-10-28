@@ -1,11 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIBizCase",
-  "title": "EASIBizCaseV03",
+  "title": "EASIBizCaseV04",
   "definitions": {
     "EASIBizCase": {
       "required": [
         "businessCaseId",
+        "businessOwner",
+        "projectName",
+        "requester",
+        "status",
         "userEUA"
       ],
       "properties": {
@@ -93,6 +97,12 @@
           "examples": [
             "410-123-4567",
             "4431234567"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "examples": [
+            "OPEN"
           ]
         },
         "successIndicators": {
@@ -224,19 +234,16 @@
       "type": "object"
     },
     "EASILifecycleCost": {
+      "required": [
+        "solution",
+        "year"
+      ],
       "properties": {
         "cost": {
           "type": "string",
           "description": "Fiscal year cost",
           "examples": [
             "10000"
-          ]
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique ID of this cost line",
-          "examples": [
-            "17f51e0f-c9ab-4d8a-8d6f-03aef2d3404d"
           ]
         },
         "phase": {

@@ -3,7 +3,7 @@
 exports[`CedarContactSelect matches the snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="cedar-contact-select usa-combo-box css-b62m3t-container"
+    class="cedar-contact-select usa-combo-box cedar-contact-select__loading css-b62m3t-container"
     id="cedarContactSelect"
   >
     <span
@@ -48,6 +48,11 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
       <div
         class="cedar-contact-select__indicators css-1hb7zxy-IndicatorsContainer"
       >
+        <span
+          aria-valuetext="Loading"
+          class="easi-spinner easi-spinner--small"
+          role="progressbar"
+        />
         <div
           aria-hidden="true"
           class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1e245h0-indicatorContainer"

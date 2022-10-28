@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/google/uuid"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -56,6 +57,12 @@ func ApplyChanges(changes map[string]interface{}, to interface{}) error {
 			if b == reflect.TypeOf(time.Time{}) && a == reflect.TypeOf("") {
 				t, err := time.Parse(time.RFC3339Nano, v.(string))
 				return t, err
+			}
+
+			// If the destination is a uuid.UUID and we need to parse it from a string
+			if b == reflect.TypeOf(uuid.UUID{}) && a == reflect.TypeOf("") {
+				u, err := uuid.Parse(v.(string))
+				return u, err
 			}
 
 			// If the desination implements graphql.Unmarshaler

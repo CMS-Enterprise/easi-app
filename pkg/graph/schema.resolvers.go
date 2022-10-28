@@ -1932,6 +1932,11 @@ func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid
 	}, nil
 }
 
+// UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
+func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
+	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2674,6 +2679,11 @@ func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBReque
 	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
 }
 
+// Form is the resolver for the form field.
+func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
+	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+}
+
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
 	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
@@ -2694,6 +2704,54 @@ func (r *tRBRequestDocumentResolver) DocumentType(ctx context.Context, obj *mode
 // UploadedAt is the resolver for the uploadedAt field.
 func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.TRBRequestDocument) (*time.Time, error) {
 	return &obj.CreatedAt, nil
+}
+
+// CollabGroups is the resolver for the collabGroups field.
+func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error) {
+	collabGroups := models.ConvertEnums[models.TRBCollabGroupOption](obj.CollabGroups)
+	return collabGroups, nil
+}
+
+// SubjectAreaTechnicalReferenceArchitecture is the resolver for the subjectAreaTechnicalReferenceArchitecture field.
+func (r *tRBRequestFormResolver) SubjectAreaTechnicalReferenceArchitecture(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBTechnicalReferenceArchitectureOption, error) {
+	items := models.ConvertEnums[models.TRBTechnicalReferenceArchitectureOption](obj.SubjectAreaTechnicalReferenceArchitecture)
+	return items, nil
+}
+
+// SubjectAreaNetworkAndSecurity is the resolver for the subjectAreaNetworkAndSecurity field.
+func (r *tRBRequestFormResolver) SubjectAreaNetworkAndSecurity(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBNetworkAndSecurityOption, error) {
+	items := models.ConvertEnums[models.TRBNetworkAndSecurityOption](obj.SubjectAreaNetworkAndSecurity)
+	return items, nil
+}
+
+// SubjectAreaCloudAndInfrastructure is the resolver for the subjectAreaCloudAndInfrastructure field.
+func (r *tRBRequestFormResolver) SubjectAreaCloudAndInfrastructure(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCloudAndInfrastructureOption, error) {
+	items := models.ConvertEnums[models.TRBCloudAndInfrastructureOption](obj.SubjectAreaCloudAndInfrastructure)
+	return items, nil
+}
+
+// SubjectAreaApplicationDevelopment is the resolver for the subjectAreaApplicationDevelopment field.
+func (r *tRBRequestFormResolver) SubjectAreaApplicationDevelopment(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBApplicationDevelopmentOption, error) {
+	items := models.ConvertEnums[models.TRBApplicationDevelopmentOption](obj.SubjectAreaApplicationDevelopment)
+	return items, nil
+}
+
+// SubjectAreaDataAndDataManagement is the resolver for the subjectAreaDataAndDataManagement field.
+func (r *tRBRequestFormResolver) SubjectAreaDataAndDataManagement(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBDataAndDataManagementOption, error) {
+	items := models.ConvertEnums[models.TRBDataAndDataManagementOption](obj.SubjectAreaDataAndDataManagement)
+	return items, nil
+}
+
+// SubjectAreaGovernmentProcessesAndPolicies is the resolver for the subjectAreaGovernmentProcessesAndPolicies field.
+func (r *tRBRequestFormResolver) SubjectAreaGovernmentProcessesAndPolicies(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBGovernmentProcessesAndPoliciesOption, error) {
+	items := models.ConvertEnums[models.TRBGovernmentProcessesAndPoliciesOption](obj.SubjectAreaGovernmentProcessesAndPolicies)
+	return items, nil
+}
+
+// SubjectAreaOtherTechnicalTopics is the resolver for the subjectAreaOtherTechnicalTopics field.
+func (r *tRBRequestFormResolver) SubjectAreaOtherTechnicalTopics(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBOtherTechnicalTopicsOption, error) {
+	items := models.ConvertEnums[models.TRBOtherTechnicalTopicsOption](obj.SubjectAreaOtherTechnicalTopics)
+	return items, nil
 }
 
 // Email is the resolver for the email field.
@@ -2780,6 +2838,11 @@ func (r *Resolver) TRBRequestDocument() generated.TRBRequestDocumentResolver {
 	return &tRBRequestDocumentResolver{r}
 }
 
+// TRBRequestForm returns generated.TRBRequestFormResolver implementation.
+func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
+	return &tRBRequestFormResolver{r}
+}
+
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
@@ -2802,4 +2865,5 @@ type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
+type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

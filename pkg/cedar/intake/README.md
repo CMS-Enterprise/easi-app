@@ -27,4 +27,7 @@ The CEDAR team needs a schema of the data we send them in order to decode it for
 
 ## Manual Testing
 
-[`cmd/test_cedar_intake/main.go`](/cmd/test_cedar_intake/main.go) is a script for testing pushing data over to CEDAR Intake. It uses test data (based on the seed data used in `cmd/devdata/main.go`) and calls our Intake client to send data to CEDAR. It requires the `CEDAR_API_URL` and `CEDAR_API_KEY` environment variables to be set; these should be set in your .envrc.local, pointing to the CEDAR dev environment. Run the script with `go run cmd/test_cedar_intake/main.go`; any errors will be reported in the command line.
+[`cmd/test_cedar_intake/main.go`](/cmd/test_cedar_intake/main.go) is a script that creates test data (based on the seed data used in `cmd/devdata/main.go`), which can be used either for examining our translation of data locally or for testing pushing data over to CEDAR Intake, depending on whether the `dump` or `submit` subcommand is used.
+
+- `go run cmd/test_cedar_intake/main.go dump` will create JSON files for test business case, GRT feedback, and system intake data inside the `cmd/test_cedar_intake/` directory. These are examples of the payloads that will be marshaled and sent to CEDAR.
+- `go run cmd/test_cedar_intake/main.go submit` will call our Intake client to send data to CEDAR. It requires the `CEDAR_API_URL` and `CEDAR_API_KEY` environment variables to be set; these should be set in your .envrc.local, pointing to the CEDAR dev environment.

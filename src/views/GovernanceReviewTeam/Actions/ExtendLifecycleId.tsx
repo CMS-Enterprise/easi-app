@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { ApolloQueryResult, useMutation } from '@apollo/client';
+import { ApolloError, ApolloQueryResult, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
@@ -19,7 +19,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import useSystemIntake from 'hooks/useSystemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import CreateSystemIntakeActionExtendLifecycleIdQuery from 'queries/CreateSystemIntakeActionExtendLifecycleIdQuery';
 import {
   CreateSystemIntakeActionExtendLifecycleId,
@@ -71,8 +71,22 @@ const ExtendLifecycleId = ({
 }: ExtendLifecycleIdProps) => {
   const { t } = useTranslation('action');
   const { systemId } = useParams<{ systemId: string }>();
-  const { systemIntake } = useSystemIntake(systemId);
   const history = useHistory();
+
+  // Requester object and loading state
+  const {
+    contacts: {
+      data: { requester },
+      loading
+    }
+  } = useSystemIntakeContacts(systemId);
+
+  // Active contact for adding/verifying recipients
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
+
   const initialValues: ExtendLCIDForm = {
     currentExpiresAt: lcidExpiresAt,
     expirationDateDay: '',
@@ -86,7 +100,7 @@ const ExtendLifecycleId = ({
     newCostBaseline: '',
     feedback: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!].filter(e => e),
+      regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: true
     }
@@ -99,12 +113,10 @@ const ExtendLifecycleId = ({
 
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const [
-    activeContact,
-    setActiveContact
-  ] = useState<SystemIntakeContactProps | null>(null);
-
-  const handleSubmit = (values: ExtendLCIDForm) => {
+  const handleSubmit = (
+    values: ExtendLCIDForm,
+    { setFieldError }: FormikHelpers<ExtendLCIDForm>
+  ) => {
     const {
       expirationDateMonth = '',
       expirationDateDay = '',
@@ -114,11 +126,15 @@ const ExtendLifecycleId = ({
       newCostBaseline = '',
       notificationRecipients
     } = values;
+
+    // Get expiration date
     const expiresAt = DateTime.utc(
       parseInt(expirationDateYear, RADIX),
       parseInt(expirationDateMonth, RADIX),
       parseInt(expirationDateDay, RADIX)
     ).toISO();
+
+    // GQL mutation to extend lifecycle ID
     extendLifecycleID({
       variables: {
         input: {
@@ -131,13 +147,20 @@ const ExtendLifecycleId = ({
           notificationRecipients
         }
       }
-    }).then(response => {
-      if (!response.errors) {
-        history.push(`/governance-review-team/${systemId}/notes`);
-        onSubmit();
-      }
-    });
+    })
+      .then(({ errors }) => {
+        if (!errors) {
+          // If no errors, view intake action notes
+          history.push(`/governance-review-team/${systemId}/notes`);
+          onSubmit();
+        }
+      })
+      // Set Formik error to display alert
+      .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
+
+  // Wait for contacts to load before returning form
+  if (loading) return null;
 
   return (
     <Formik
@@ -178,7 +201,10 @@ const ExtendLifecycleId = ({
               </ErrorAlert>
             )}
 
-            <PageHeading className="margin-top-0 margin-bottom-3">
+            <PageHeading
+              data-testid="extend-lcid"
+              className="margin-top-0 margin-bottom-3"
+            >
               {t('extendLcid.heading')}
             </PageHeading>
             <h3 className="margin-top-3 margin-bottom-2">
@@ -187,7 +213,7 @@ const ExtendLifecycleId = ({
             <div className="margin-bottom-05 text-bold line-height-body-2">
               {t('extendLcid.selectedAction')}
             </div>
-            <div>
+            <div data-testid="grtSelectedAction">
               {t('extendLcid.action')}{' '}
               <Link to={`/governance-review-team/${systemId}/actions`}>
                 {t('extendLcid.back')}
