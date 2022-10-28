@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
-// GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID
+// GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID.
 func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	documents, err := store.GetTRBRequestDocumentsByRequestID(appcontext.ZLogger(ctx), requestID)
 	if err != nil {
@@ -31,7 +31,7 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store
 	return documents, nil
 }
 
-// CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database
+// CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database.
 func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input model.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
 	s3Key := uuid.New().String()
 
@@ -64,9 +64,9 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 	return store.CreateTRBRequestDocument(appcontext.ZLogger(ctx), &document)
 }
 
-// DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID
+// DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID.
+//
+// Does *not* delete the uploaded file from S3, following the example of 508/accessibility request documents.
 func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestDocument, error) {
-	// TODO - should this delete from S3?
-
 	return store.DeleteTRBRequestDocument(appcontext.ZLogger(ctx), id)
 }
