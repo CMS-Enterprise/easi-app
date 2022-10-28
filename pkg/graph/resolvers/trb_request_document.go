@@ -42,7 +42,10 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 		s3Key = s3Key + extensions[0]
 	}
 
-	// TODO - upload document to S3, calling s3Client.UploadFile(s3Key, input.FileData.File, mimeType)
+	err = s3Client.UploadFile(s3Key, input.FileData.File, mimeType)
+	if err != nil {
+		return nil, err
+	}
 
 	document := models.TRBRequestDocument{
 		TRBRequestID:       input.RequestID,

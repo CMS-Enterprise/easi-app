@@ -46,6 +46,10 @@ func NewS3Client(config Config) S3Client {
 			os.Getenv(appconfig.LocalMinioS3AccessKey),
 			os.Getenv(appconfig.LocalMinioS3SecretKey),
 			"")
+
+		// MinIO by default uses path-style access, which puts the bucket name in the URL, i.e. https://s3.region-code.amazonaws.com/bucket-name/key-name.
+		// It's possible to configure MinIO to use virtual-hosted style, but it's tricky to get working with our current Docker Compose setup, so we don't bother with it.
+		// See https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html and https://github.com/minio/minio/tree/master/docs/config#domain.
 		awsConfig.S3ForcePathStyle = aws.Bool(true)
 	}
 
@@ -111,7 +115,12 @@ func (c S3Client) NewGetPresignedURL(key string) (*models.PreSignedURL, error) {
 
 }
 
-// KeyFromURL extracts an S3 key from a URL.
+// KeyFromURL strips the configured bucket name from a URL, returning only the S3 key.
+//
+// This isn't always necessary for working with S3 buckets if they use virtual-hosted-style access, i.e. https://bucket-name.s3.region-code.amazonaws.com/key-name.
+// However, MinIO by default uses path-style access, which puts the bucket name in the URL, i.e. https://s3.region-code.amazonaws.com/bucket-name/key-name.
+// It's possible to configure MinIO to use virtual-hosted style, but it's tricky to get working with our current Docker Compose setup, so we don't bother with it.
+// See https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html and https://github.com/minio/minio/tree/master/docs/config#domain.
 func (c S3Client) KeyFromURL(url *url.URL) (string, error) {
 	return strings.Replace(url.Path, "/"+c.config.Bucket+"/", "", 1), nil
 }
@@ -137,7 +146,7 @@ func (c S3Client) TagValueForKey(key string, tagName string) (string, error) {
 }
 
 // UploadFile uploads a file to the configured bucket for saving documents.
-// Note that no extension will be added by this method; it assumes the caller has already added an extension, if desired.
+// Note that no file extension will be added to the key by this method; it assumes the caller has already added an extension, if desired.
 func (c S3Client) UploadFile(key string, body io.ReadSeeker, contentType string) error {
 	_, err := c.client.PutObject(&s3.PutObjectInput{
 		Bucket:      aws.String(c.config.Bucket),
