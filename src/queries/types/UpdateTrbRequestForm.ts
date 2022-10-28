@@ -27,12 +27,12 @@ export interface UpdateTrbRequestForm_updateTRBRequest_form {
   expectedStartDate: Time | null;
   expectedEndDate: Time | null;
   collabGroups: TRBCollabGroupOption[];
-  collabDateSecurity: Time | null;
-  collabDateEnterpriseArchitecture: Time | null;
-  collabDateCloud: Time | null;
-  collabDatePrivacyAdvisor: Time | null;
-  collabDateGovernanceReviewBoard: Time | null;
-  collabDateOther: Time | null;
+  collabDateSecurity: string | null;
+  collabDateEnterpriseArchitecture: string | null;
+  collabDateCloud: string | null;
+  collabDatePrivacyAdvisor: string | null;
+  collabDateGovernanceReviewBoard: string | null;
+  collabDateOther: string | null;
   collabGroupOther: string | null;
 }
 

@@ -84,9 +84,9 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('#IntakeForm-IssoCommonName input')
-      .type('Jerry')
-      .wait(1000)
+    cy.get('#react-select-IntakeForm-IssoName-input')
+      .type('Jerry Seinfeld')
+      .wait(1000) // Fix for GH action tests failing
       .type('{downArrow}{enter}')
       .should('have.value', 'Jerry Seinfeld, SF13');
 
@@ -97,9 +97,9 @@ describe('The System Intake Form', () => {
     // Add another contact
     cy.contains('button', 'Add another contact').click();
 
-    cy.get('#IntakeForm-ContactCommonName input')
-      .type('Jerry')
-      .wait(1000)
+    cy.get('#react-select-IntakeForm-ContactCommonName-input')
+      .type('Jerry Seinfeld')
+      .wait(1000) // Fix for GH action tests failing
       .type('{downArrow}{enter}')
       .should('have.value', 'Jerry Seinfeld, SF13');
 

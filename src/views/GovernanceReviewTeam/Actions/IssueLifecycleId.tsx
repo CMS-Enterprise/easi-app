@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
@@ -21,7 +21,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import useSystemIntake from 'hooks/useSystemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
 import {
   IssueLifecycleId as IssueLifecycleIdType,
@@ -39,18 +39,26 @@ const RADIX = 10;
 
 const IssueLifecycleId = () => {
   const { systemId } = useParams<{ systemId: string }>();
-  const { systemIntake } = useSystemIntake(systemId);
   const history = useHistory();
   const { t } = useTranslation('action');
   const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
-  const [mutate, mutationResult] = useMutation<
-    IssueLifecycleIdType,
-    IssueLifecycleIdVariables
-  >(IssueLifecycleIdQuery, {
-    errorPolicy: 'all'
-  });
+  const [mutate] = useMutation<IssueLifecycleIdType, IssueLifecycleIdVariables>(
+    IssueLifecycleIdQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
 
+  // Requester object and loading state
+  const {
+    contacts: {
+      data: { requester },
+      loading
+    }
+  } = useSystemIntakeContacts(systemId);
+
+  // Active contact for adding/verifying recipients
   const [
     activeContact,
     setActiveContact
@@ -67,13 +75,19 @@ const IssueLifecycleId = () => {
     newLifecycleId: undefined,
     feedback: '',
     notificationRecipients: {
-      regularRecipientEmails: [systemIntake?.requester?.email!].filter(e => e),
+      regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: true
     }
   };
 
-  const onSubmit = (values: SubmitLifecycleIdForm) => {
+  // Wait for contacts to load before returning form
+  if (loading) return null;
+
+  const onSubmit = async (
+    values: SubmitLifecycleIdForm,
+    { setFieldError }: FormikHelpers<SubmitLifecycleIdForm>
+  ) => {
     const {
       feedback,
       expirationDateMonth = '',
@@ -85,11 +99,14 @@ const IssueLifecycleId = () => {
       lifecycleId,
       notificationRecipients
     } = values;
+    // Expiration date
     const expiresAt = DateTime.utc(
       parseInt(expirationDateYear, RADIX),
       parseInt(expirationDateMonth, RADIX),
       parseInt(expirationDateDay, RADIX)
     );
+
+    // Mutation input
     const input = {
       intakeId: systemId,
       expiresAt: expiresAt.toISO(),
@@ -102,13 +119,18 @@ const IssueLifecycleId = () => {
       notificationRecipients
     };
 
+    // GQL mutation to issue lifecycle ID
     mutate({
       variables: { input }
-    }).then(response => {
-      if (!response.errors) {
-        history.push(`/governance-review-team/${systemId}/notes`);
-      }
-    });
+    })
+      .then(({ errors }) => {
+        if (!errors) {
+          // If no errors, view intake action notes
+          history.push(`/governance-review-team/${systemId}/notes`);
+        }
+      })
+      // Set Formik error to display alert
+      .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
 
   return (
@@ -148,14 +170,6 @@ const IssueLifecycleId = () => {
                 })}
               </ErrorAlert>
             )}
-            {mutationResult.error && (
-              <ErrorAlert heading="Error issuing lifecycle id">
-                <ErrorAlertMessage
-                  message={mutationResult.error.message}
-                  errorKey="systemIntake"
-                />
-              </ErrorAlert>
-            )}
             <PageHeading
               data-testid="issue-lcid"
               className="margin-top-0 margin-bottom-3"
@@ -163,7 +177,7 @@ const IssueLifecycleId = () => {
               {t('issueLCID.heading')}
             </PageHeading>
             <h3>{t('issueLCID.subheading')}</h3>
-            <p>
+            <p data-testid="grtSelectedAction">
               Approve request and issue Lifecycle ID{' '}
               <Link to={backLink}>Change</Link>
             </p>

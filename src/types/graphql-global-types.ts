@@ -132,6 +132,44 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * The possible answers to the "application development" input on the TRB "Subject Areas" page
+ */
+export enum TRBApplicationDevelopmentOption {
+  ACCESSIBILITY_COMPLIANCE = "ACCESSIBILITY_COMPLIANCE",
+  APPLICATION_DEVELOPMENT = "APPLICATION_DEVELOPMENT",
+  BUSINESS_INTELLIGENCE = "BUSINESS_INTELLIGENCE",
+  CONFIGURATION_MANAGEMENT = "CONFIGURATION_MANAGEMENT",
+  CONTAINERS_AND_MICROSERVICES = "CONTAINERS_AND_MICROSERVICES",
+  EMAIL_INTEGRATION = "EMAIL_INTEGRATION",
+  GENERAL_APPLICATION_DEVELOPMENT_SERVICES_INFORMATION = "GENERAL_APPLICATION_DEVELOPMENT_SERVICES_INFORMATION",
+  OPEN_SOURCE_SOFTWARE = "OPEN_SOURCE_SOFTWARE",
+  OTHER = "OTHER",
+  PORTAL_INTEGRATION = "PORTAL_INTEGRATION",
+  ROBOTIC_PROCESS_AUTOMATION = "ROBOTIC_PROCESS_AUTOMATION",
+  SYSTEM_ARCHITECTURE_REVIEW = "SYSTEM_ARCHITECTURE_REVIEW",
+  WEB_BASED_UI_SERVICES = "WEB_BASED_UI_SERVICES",
+  WEB_SERVICES_AND_WEB_APIS = "WEB_SERVICES_AND_WEB_APIS",
+}
+
+/**
+ * The possible answers to the "cloud and infrastructure" input on the TRB "Subject Areas" page
+ */
+export enum TRBCloudAndInfrastructureOption {
+  CLOUD_IAAS_AND_PAAS_INFRASTRUCTURE = "CLOUD_IAAS_AND_PAAS_INFRASTRUCTURE",
+  CLOUD_MIGRATION = "CLOUD_MIGRATION",
+  DATA_STORAGE_SERVICES = "DATA_STORAGE_SERVICES",
+  DISASTER_RECOVERY = "DISASTER_RECOVERY",
+  FILE_TRANSFER = "FILE_TRANSFER",
+  GENERAL_CLOUD_AND_INFRASTRUCTURE_SERVICES_INFORMATION = "GENERAL_CLOUD_AND_INFRASTRUCTURE_SERVICES_INFORMATION",
+  IT_PERFORMANCE_MANAGEMENT = "IT_PERFORMANCE_MANAGEMENT",
+  KEYS_AND_SECRETS_MANAGEMENT = "KEYS_AND_SECRETS_MANAGEMENT",
+  MOBILE_DEVICES_AND_APPLICATIONS = "MOBILE_DEVICES_AND_APPLICATIONS",
+  OTHER = "OTHER",
+  SOFTWARE_AS_A_SERVICE = "SOFTWARE_AS_A_SERVICE",
+  VIRTUALIZATION = "VIRTUALIZATION",
+}
+
+/**
  * Represents an option selected for collaboration groups in the TRB request form
  */
 export enum TRBCollabGroupOption {
@@ -141,6 +179,60 @@ export enum TRBCollabGroupOption {
   OTHER = "OTHER",
   PRIVACY_ADVISOR = "PRIVACY_ADVISOR",
   SECURITY = "SECURITY",
+}
+
+/**
+ * The possible answers to the "data and data management" input on the TRB "Subject Areas" page
+ */
+export enum TRBDataAndDataManagementOption {
+  ANALYTIC_SANDBOXES = "ANALYTIC_SANDBOXES",
+  APIS_AND_DATA_EXCHANGES = "APIS_AND_DATA_EXCHANGES",
+  DATA_MART = "DATA_MART",
+  DATA_WAREHOUSING = "DATA_WAREHOUSING",
+  ENTERPRISE_DATA_ENVIRONMENT_REVIEW = "ENTERPRISE_DATA_ENVIRONMENT_REVIEW",
+  FHIR = "FHIR",
+  GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION = "GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION",
+  OTHER = "OTHER",
+}
+
+/**
+ * The possible answers to the "government processes and policies" input on the TRB "Subject Areas" page
+ */
+export enum TRBGovernmentProcessesAndPoliciesOption {
+  CONTRACTING_AND_PROCUREMENT = "CONTRACTING_AND_PROCUREMENT",
+  GENERAL_INFORMATION_ABOUT_CMS_PROCESSES_AND_POLICIES = "GENERAL_INFORMATION_ABOUT_CMS_PROCESSES_AND_POLICIES",
+  INFRASTRUCTURE_AS_A_SERVICE = "INFRASTRUCTURE_AS_A_SERVICE",
+  INVESTMENT_AND_BUDGET_PLANNING = "INVESTMENT_AND_BUDGET_PLANNING",
+  LIFECYCLE_IDS = "LIFECYCLE_IDS",
+  OTHER = "OTHER",
+  OTHER_AVAILABLE_TRB_SERVICES = "OTHER_AVAILABLE_TRB_SERVICES",
+  SECTION_508_AND_ACCESSIBILITY_TESTING = "SECTION_508_AND_ACCESSIBILITY_TESTING",
+  SECURITY_ASSESSMENTS = "SECURITY_ASSESSMENTS",
+  SYSTEM_DISPOSITION_PLANNING = "SYSTEM_DISPOSITION_PLANNING",
+  TARGET_LIFE_CYCLE = "TARGET_LIFE_CYCLE",
+}
+
+/**
+ * The possible answers to the "network and security" input on the TRB "Subject Areas" page
+ */
+export enum TRBNetworkAndSecurityOption {
+  ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT",
+  CMS_CYBERSECURITY_INTEGRATION_CENTER_INTEGRATION = "CMS_CYBERSECURITY_INTEGRATION_CENTER_INTEGRATION",
+  DOMAIN_NAME_SYSTEM_SERVICES = "DOMAIN_NAME_SYSTEM_SERVICES",
+  GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION = "GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION",
+  OTHER = "OTHER",
+  SECURITY_SERVICES = "SECURITY_SERVICES",
+  WIDE_AREA_NETWORK_SERVICES = "WIDE_AREA_NETWORK_SERVICES",
+}
+
+/**
+ * The possible answers to the "other technical topics" input on the TRB "Subject Areas" page
+ */
+export enum TRBOtherTechnicalTopicsOption {
+  ARTIFICIAL_INTELLIGENCE = "ARTIFICIAL_INTELLIGENCE",
+  ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT",
+  MACHINE_LEARNING = "MACHINE_LEARNING",
+  OTHER = "OTHER",
 }
 
 export enum TRBRequestStatus {
@@ -153,6 +245,20 @@ export enum TRBRequestType {
   FOLLOWUP = "FOLLOWUP",
   FORMAL_REVIEW = "FORMAL_REVIEW",
   NEED_HELP = "NEED_HELP",
+}
+
+/**
+ * The possible answers to the "technical reference architecture" input on the TRB "Subject Areas" page
+ */
+export enum TRBTechnicalReferenceArchitectureOption {
+  ABOUT_THE_TRB = "ABOUT_THE_TRB",
+  ARCHITECTURE_CHANGE_REQUEST_PROCESS_FOR_THE_TRA = "ARCHITECTURE_CHANGE_REQUEST_PROCESS_FOR_THE_TRA",
+  CMS_PROCESSING_ENVIRONMENTS = "CMS_PROCESSING_ENVIRONMENTS",
+  CMS_TRA_BUSINESS_RULES = "CMS_TRA_BUSINESS_RULES",
+  CMS_TRA_MULTI_ZONE_ARCHITECTURE = "CMS_TRA_MULTI_ZONE_ARCHITECTURE",
+  GENERAL_TRA_INFORMATION = "GENERAL_TRA_INFORMATION",
+  OTHER = "OTHER",
+  TRA_GUIDING_PRINCIPLES = "TRA_GUIDING_PRINCIPLES",
 }
 
 /**
@@ -567,22 +673,31 @@ export interface UpdateSystemIntakeReviewDatesInput {
  */
 export interface UpdateTRBRequestFormInput {
   trbRequestId: UUID;
-  component: string;
-  needsAssistanceWith: string;
-  hasSolutionInMind: boolean;
+  isSubmitted?: boolean | null;
+  component?: string | null;
+  needsAssistanceWith?: string | null;
+  hasSolutionInMind?: boolean | null;
   proposedSolution?: string | null;
-  whereInProcess: TRBWhereInProcessOption;
-  hasExpectedStartEndDates: boolean;
+  whereInProcess?: TRBWhereInProcessOption | null;
+  whereInProcessOther?: string | null;
+  hasExpectedStartEndDates?: boolean | null;
   expectedStartDate?: Time | null;
   expectedEndDate?: Time | null;
-  collabGroups: TRBCollabGroupOption[];
-  collabDateSecurity?: Time | null;
-  collabDateEnterpriseArchitecture?: Time | null;
-  collabDateCloud?: Time | null;
-  collabDatePrivacyAdvisor?: Time | null;
-  collabDateGovernanceReviewBoard?: Time | null;
-  collabDateOther?: Time | null;
+  collabGroups?: TRBCollabGroupOption[] | null;
+  collabDateSecurity?: string | null;
+  collabDateEnterpriseArchitecture?: string | null;
+  collabDateCloud?: string | null;
+  collabDatePrivacyAdvisor?: string | null;
+  collabDateGovernanceReviewBoard?: string | null;
+  collabDateOther?: string | null;
   collabGroupOther?: string | null;
+  subjectAreaTechnicalReferenceArchitecture?: TRBTechnicalReferenceArchitectureOption[] | null;
+  subjectAreaNetworkAndSecurity?: TRBNetworkAndSecurityOption[] | null;
+  subjectAreaCloudAndInfrastructure?: TRBCloudAndInfrastructureOption[] | null;
+  subjectAreaApplicationDevelopment?: TRBApplicationDevelopmentOption[] | null;
+  subjectAreaDataAndDataManagement?: TRBDataAndDataManagementOption[] | null;
+  subjectAreaGovernmentProcessesAndPolicies?: TRBGovernmentProcessesAndPoliciesOption[] | null;
+  subjectAreaOtherTechnicalTopics?: TRBOtherTechnicalTopicsOption[] | null;
 }
 
 /**
