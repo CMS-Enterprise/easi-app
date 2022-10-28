@@ -173,6 +173,7 @@ const technicalAssistance = {
   },
   subject: {},
   attendees: {
+    additionalAttendees: 'Additional attendees',
     addAnAttendee: 'Add an attendee',
     editAttendee: 'Edit attendee',
     addAttendee: 'Add attendee',

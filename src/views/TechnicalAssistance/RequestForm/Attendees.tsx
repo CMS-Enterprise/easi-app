@@ -3,20 +3,34 @@ import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { AttendeeFormFields } from 'types/technicalAssistance';
 
-import { AttendeesList } from './AttendeesForm/components';
+import { AttendeeFields, AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-const initialAttendee: AttendeeFormFields = {
+/** Initial blank attendee object */
+export const initialAttendee: AttendeeFormFields = {
   id: '',
   trbRequestId: '',
   userInfo: null,
   component: '',
-  role: ''
+  role: null
+};
+
+/** Mock requester object for testing */
+const mockRequester: AttendeeFormFields = {
+  trbRequestId: '',
+  userInfo: {
+    commonName: 'Ashley Terstriep',
+    euaUserId: 'TXJK',
+    email: 'ashley.terstriep@oddball.io'
+  },
+  component: '',
+  role: null
 };
 
 function Attendees({ request, stepUrl }: FormStepComponentProps) {
@@ -27,6 +41,12 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   // Active attendee for form fields
   const [activeAttendee, setActiveAttendee] = useState<AttendeeFormFields>({
     ...initialAttendee,
+    trbRequestId: request.id
+  });
+
+  // TODO: Update requester state with actual form values
+  const [requester, setRequester] = useState<AttendeeFormFields>({
+    ...mockRequester,
     trbRequestId: request.id
   });
 
@@ -46,6 +66,17 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
         </Route>
 
         <Route exact path={`${path}`}>
+          {/* Requester fields */}
+          <AttendeeFields
+            activeAttendee={requester}
+            setActiveAttendee={setRequester}
+            type="requester"
+          />
+
+          <Divider className="margin-top-4" />
+
+          <h4>{t('attendees.additionalAttendees')}</h4>
+
           <div className="margin-y-2">
             <UswdsReactLink
               variant="unstyled"

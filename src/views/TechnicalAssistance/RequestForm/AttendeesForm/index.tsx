@@ -11,6 +11,7 @@ import { PersonRole } from 'types/graphql-global-types';
 import { AttendeeFormFields } from 'types/technicalAssistance';
 
 import Breadcrumbs from '../../Breadcrumbs';
+import { initialAttendee } from '../Attendees';
 
 import { AttendeeFields } from './components';
 
@@ -57,6 +58,7 @@ function AttendeesForm({
         euaUserId: activeAttendee.userInfo?.euaUserId || ''
       });
     }
+    setActiveAttendee(initialAttendee);
   };
 
   if (backToFormUrl) {

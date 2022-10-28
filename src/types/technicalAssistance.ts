@@ -1,3 +1,5 @@
+import { PersonRole } from './graphql-global-types';
+
 export type AttendeeFormFields = {
   id?: string;
   trbRequestId: string;
@@ -7,5 +9,5 @@ export type AttendeeFormFields = {
     email?: string;
   } | null;
   component: string;
-  role: string;
+  role: PersonRole | null;
 };

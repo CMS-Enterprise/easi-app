@@ -13,8 +13,11 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
+import { PersonRole } from 'types/graphql-global-types';
 import { AttendeeFormFields } from 'types/technicalAssistance';
 import { parseAsLocalTime } from 'utils/date';
+
+import { initialAttendee } from '../Attendees';
 
 import './components.scss';
 
@@ -84,11 +87,11 @@ const AttendeeFields = ({
         <Dropdown
           id="trbAttendee-role"
           name="trbAttendee-role"
-          value={activeAttendee?.role}
+          value={activeAttendee?.role || undefined}
           onChange={e =>
             setActiveAttendee({
               ...activeAttendee,
-              role: e.target.value
+              role: e.target.value as PersonRole
             })
           }
         >
@@ -105,7 +108,7 @@ const AttendeeFields = ({
 type AttendeeProps = {
   attendee: TRBAttendee;
   setActiveAttendee?: (activeAttendee: AttendeeFormFields) => void;
-  deleteAttendee?: (id: string) => void;
+  deleteAttendee?: () => void;
 };
 
 const Attendee = ({
@@ -114,7 +117,7 @@ const Attendee = ({
   deleteAttendee
 }: AttendeeProps) => {
   const { t } = useTranslation();
-  const { id, userInfo } = attendee;
+  const { userInfo } = attendee;
   const { url } = useRouteMatch();
 
   // Get role label from enum value
@@ -161,7 +164,7 @@ const Attendee = ({
                 className="text-error"
                 type="button"
                 unstyled
-                onClick={() => deleteAttendee(id)}
+                onClick={() => deleteAttendee()}
               >
                 {t('Remove')}
               </Button>
@@ -198,7 +201,10 @@ const AttendeesList = ({
         .map(attendee => (
           <Attendee
             attendee={attendee}
-            deleteAttendee={deleteAttendee}
+            deleteAttendee={() => {
+              deleteAttendee(attendee.id);
+              setActiveAttendee({ ...initialAttendee, trbRequestId: id });
+            }}
             setActiveAttendee={setActiveAttendee}
             key={attendee.id}
           />
