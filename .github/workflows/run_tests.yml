@@ -114,7 +114,6 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   e2e_tests:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -195,7 +194,6 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   lint:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -248,7 +246,6 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   client_test:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -279,7 +276,6 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   client_typecheck:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
