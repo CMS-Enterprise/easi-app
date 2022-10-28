@@ -1,7 +1,6 @@
 package storage
 
 import (
-	_ "embed"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -11,17 +10,24 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-//go:embed SQL/trb_request_document_get_by_request_id.sql
-var trbRequestDocumentsGetByRequestIDSQL string
-
-//go:embed SQL/trb_request_document_create.sql
-var trbRequestDocumentCreateSQL string
-
-//go:embed SQL/trb_request_document_delete.sql
-var trbRequestDocumentDeleteSQL string
-
 // GetTRBRequestDocumentsByRequestID queries the DB for all documents attached to the TRB request with the given ID
 func (s *Store) GetTRBRequestDocumentsByRequestID(logger *zap.Logger, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
+	const trbRequestDocumentsGetByRequestIDSQL = `
+		SELECT id,
+			trb_request_id,
+			file_name,
+			document_type,
+			other_type,
+			bucket,
+			s3_key,
+			created_by,
+			modified_by,
+			created_at,
+			modified_at
+		FROM trb_request_documents
+		WHERE trb_request_id = :trb_request_id
+	`
+
 	documents := []*models.TRBRequestDocument{}
 
 	stmt, err := s.db.PrepareNamed(trbRequestDocumentsGetByRequestIDSQL)
@@ -52,6 +58,41 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(logger *zap.Logger, requestID 
 
 // CreateTRBRequestDocument creates a record for a TRBRequestDocument in our database, *after* it's been uploaded to S3
 func (s *Store) CreateTRBRequestDocument(logger *zap.Logger, document *models.TRBRequestDocument) (*models.TRBRequestDocument, error) {
+	const trbRequestDocumentCreateSQL = `
+		INSERT INTO trb_request_documents (
+			id,
+			trb_request_id,
+			file_name,
+			document_type,
+			other_type,
+			bucket,
+			s3_key,
+			created_by,
+			modified_by
+		) VALUES (
+			:id,
+			:trb_request_id,
+			:file_name,
+			:document_type,
+			:other_type,
+			:bucket,
+			:s3_key,
+			:created_by,
+			:modified_by
+		) RETURNING
+			id,
+			trb_request_id,
+			file_name,
+			document_type,
+			other_type,
+			bucket,
+			s3_key,
+			created_by,
+			created_at,
+			modified_by,
+			modified_at
+	`
+
 	if document.ID == uuid.Nil {
 		document.ID = uuid.New()
 	}
@@ -81,6 +122,24 @@ func (s *Store) CreateTRBRequestDocument(logger *zap.Logger, document *models.TR
 
 // DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID
 func (s *Store) DeleteTRBRequestDocument(logger *zap.Logger, id uuid.UUID) (*models.TRBRequestDocument, error) {
+	const trbRequestDocumentDeleteSQL = `
+		DELETE
+		FROM trb_request_documents
+		WHERE id = :id
+		RETURNING
+			id,
+			trb_request_id,
+			file_name,
+			document_type,
+			other_type,
+			bucket,
+			s3_key,
+			created_by,
+			created_at,
+			modified_by,
+			modified_at
+	`
+
 	stmt, err := s.db.PrepareNamed(trbRequestDocumentDeleteSQL)
 	if err != nil {
 		return nil, err
