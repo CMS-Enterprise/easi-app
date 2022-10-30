@@ -25,14 +25,14 @@ type CedarLdapClient struct {
 func getMockUserData() []*models.UserInfo {
 	return []*models.UserInfo{
 		{
-			CommonName: "Mariana Ziemann",
-			Email:      "mariana.ziemann@local.fake",
-			EuaUserID:  "ZSAQ",
+			CommonName: "Jerry Seinfeld",
+			Email:      "jerry.seinfeld@local.fake",
+			EuaUserID:  "SF13",
 		},
 		{
-			CommonName: "Alize Mohr",
-			Email:      "alize.mohr@local.fake",
-			EuaUserID:  "MAZT",
+			CommonName: "Cosmo Kramer",
+			Email:      "cosmo.kramer@local.fake",
+			EuaUserID:  "KR14",
 		},
 		{
 			CommonName: "Kennedy Kuhic",
