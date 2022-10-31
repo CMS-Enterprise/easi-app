@@ -4,6 +4,7 @@ export default gql`
   fragment TrbRequestFormFields on TRBRequest {
     id
     name
+    createdBy
 
     form {
       id

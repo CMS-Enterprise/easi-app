@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import { AttendeeUserInfo, TRBAttendeeFields } from 'types/technicalAssistance';
+import { TRBAttendeeFields } from 'types/technicalAssistance';
 
 import { AttendeeFields, AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
@@ -21,17 +22,11 @@ export const initialAttendee: TRBAttendeeFields = {
   role: null
 };
 
-/** Mock requester info for testing */
-const requesterUserInfo: AttendeeUserInfo = {
-  commonName: 'Ashley Terstriep',
-  euaUserId: 'TXJK',
-  email: 'ashley.terstriep@oddball.io'
-};
-
 function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
+  const { authState, oktaAuth } = useOktaAuth();
 
   // Active attendee for form fields
   const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeFields>({
@@ -43,10 +38,35 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { attendees } = useTRBAttendees(request.id);
 
   // Form values
-  const [requester, setRequester] = useState<TRBAttendeeFields>({
-    ...initialAttendee,
-    userInfo: requesterUserInfo
-  });
+  const [requester, setRequester] = useState<TRBAttendeeFields>();
+
+  // Set initial requester data
+  useEffect(() => {
+    let isMounted = true;
+    if (authState?.isAuthenticated) {
+      oktaAuth.getUser().then(({ name, email }) => {
+        if (isMounted) {
+          setRequester({
+            trbRequestId: request.id,
+            userInfo: {
+              euaUserId: request.createdBy,
+              commonName: name || '',
+              email
+            },
+            component: '',
+            role: null
+          });
+        }
+      });
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [authState, oktaAuth, request.id, request.createdBy]);
+
+  // Wait until requester is set to return
+  if (!requester) return null;
 
   return (
     <div className="trb-attendees">

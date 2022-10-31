@@ -35,6 +35,7 @@ export interface CreateTrbRequest_createTRBRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
+  createdBy: string;
   form: CreateTrbRequest_createTRBRequest_form;
 }
 

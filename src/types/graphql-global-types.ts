@@ -694,6 +694,15 @@ export interface UpdateSystemIntakeReviewDatesInput {
 }
 
 /**
+ * Represents an EUA user who is included as an attendee for a TRB request
+ */
+export interface UpdateTRBRequestAttendeeInput {
+  id: UUID;
+  component: string;
+  role: PersonRole;
+}
+
+/**
  * Represents an EUA user who is included as an form for a TRB request
  */
 export interface UpdateTRBRequestFormInput {
@@ -723,15 +732,6 @@ export interface UpdateTRBRequestFormInput {
   subjectAreaDataAndDataManagement?: TRBDataAndDataManagementOption[] | null;
   subjectAreaGovernmentProcessesAndPolicies?: TRBGovernmentProcessesAndPoliciesOption[] | null;
   subjectAreaOtherTechnicalTopics?: TRBOtherTechnicalTopicsOption[] | null;
-}
-
- /**
-  * Represents an EUA user who is included as an attendee for a TRB request
- */
-export interface UpdateTRBRequestAttendeeInput {
-  id: UUID;
-  component: string;
-  role: PersonRole;
 }
 
 /**
