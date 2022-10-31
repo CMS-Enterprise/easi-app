@@ -24,6 +24,66 @@ type CedarLdapClient struct {
 func getMockUserData() []*models.UserInfo {
 	return []*models.UserInfo{
 		{
+			CommonName: "Adeline Aarons",
+			Email:      "adeline.aarons@local.fake",
+			EuaUserID:  "ABCD",
+		},
+		{
+			CommonName: "Terry Thompson",
+			Email:      "terry.thompson@local.fake",
+			EuaUserID:  "TEST",
+		},
+		{
+			CommonName: "Ally Anderson",
+			Email:      "ally.anderson@local.fake",
+			EuaUserID:  "A11Y",
+		},
+		{
+			CommonName: "Gary Gordon",
+			Email:      "gary.gordon@local.fake",
+			EuaUserID:  "GRTB",
+		},
+		{
+			CommonName: "Charlie Campbell",
+			Email:      "charlie.campbell@local.fake",
+			EuaUserID:  "CMSU",
+		},
+		{
+			CommonName: "Audrey Abrams",
+			Email:      "audrey.abrams@local.fake",
+			EuaUserID:  "ADMI",
+		},
+		{
+			CommonName: "Aaron Adams",
+			Email:      "aaron.adams@local.fake",
+			EuaUserID:  "ADMN",
+		},
+		{
+			CommonName: "User One",
+			Email:      "user.one@local.fake",
+			EuaUserID:  "USR1",
+		},
+		{
+			CommonName: "User Two",
+			Email:      "user.two@local.fake",
+			EuaUserID:  "USR2",
+		},
+		{
+			CommonName: "User Three",
+			Email:      "user.three@local.fake",
+			EuaUserID:  "USR3",
+		},
+		{
+			CommonName: "User Four",
+			Email:      "user.four@local.fake",
+			EuaUserID:  "USR4",
+		},
+		{
+			CommonName: "User Five",
+			Email:      "user.five@local.fake",
+			EuaUserID:  "USR5",
+		},
+		{
 			CommonName: "Jerry Seinfeld",
 			Email:      "jerry.seinfeld@local.fake",
 			EuaUserID:  "SF13",
