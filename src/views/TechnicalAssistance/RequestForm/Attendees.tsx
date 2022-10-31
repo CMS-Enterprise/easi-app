@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
-// import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
+import {
+  Dropdown,
+  Form,
+  FormGroup,
+  Label,
+  TextInput
+} from '@trussworks/react-uswds';
 
+import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
+import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
+import { PersonRole } from 'types/graphql-global-types';
 import { TRBAttendeeFields } from 'types/technicalAssistance';
 
-import { AttendeeFields, AttendeesList } from './AttendeesForm/components';
+import { AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
@@ -20,6 +30,11 @@ export const initialAttendee: TRBAttendeeFields = {
   userInfo: null,
   component: '',
   role: null
+};
+
+type TRBAttendeesForm = {
+  requester: TRBAttendeeFields;
+  attendees: TRBAttendeeFields[];
 };
 
 function Attendees({ request, stepUrl }: FormStepComponentProps) {
@@ -37,8 +52,25 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   // Get TRB attendees
   const { attendees } = useTRBAttendees(request.id);
 
-  // Form values
-  const [requester, setRequester] = useState<TRBAttendeeFields>();
+  const defaultValues: TRBAttendeesForm = {
+    // Requester
+    requester: {
+      ...initialAttendee,
+      trbRequestId: request.id,
+      userInfo: {
+        commonName: '',
+        euaUserId: request.createdBy
+      }
+    },
+    // Filter requester out of attendees array
+    attendees: attendees.filter(
+      attendee => attendee.userInfo?.euaUserId !== request.createdBy
+    )
+  };
+
+  const { control, setValue } = useForm<TRBAttendeesForm>({
+    defaultValues
+  });
 
   // Set initial requester data
   useEffect(() => {
@@ -46,16 +78,8 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     if (authState?.isAuthenticated) {
       oktaAuth.getUser().then(({ name, email }) => {
         if (isMounted) {
-          setRequester({
-            trbRequestId: request.id,
-            userInfo: {
-              euaUserId: request.createdBy,
-              commonName: name || '',
-              email
-            },
-            component: '',
-            role: null
-          });
+          setValue('requester.userInfo.commonName', name || '');
+          setValue('requester.userInfo.email', email);
         }
       });
     }
@@ -63,13 +87,10 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     return () => {
       isMounted = false;
     };
-  }, [authState, oktaAuth, request.id, request.createdBy]);
-
-  // Wait until requester is set to return
-  if (!requester) return null;
+  }, [authState, oktaAuth, setValue]);
 
   return (
-    <div className="trb-attendees">
+    <Form className="trb-attendees" onSubmit={() => null}>
       <Switch>
         <Route exact path={`${path}/list`}>
           <AttendeesForm
@@ -81,11 +102,76 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
         </Route>
 
         <Route exact path={`${path}`}>
-          {/* Requester fields */}
-          <AttendeeFields
-            activeAttendee={requester}
-            setActiveAttendee={setRequester}
-            type="requester"
+          {/* Requester name */}
+          <Controller
+            name="requester.userInfo.commonName"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <FormGroup>
+                  <Label htmlFor="requester.userInfo.commonName">
+                    {t(`attendees.fieldLabels.requester.role`)}
+                  </Label>
+                  <TextInput
+                    {...field}
+                    ref={null}
+                    id="requester.userInfo.commonName"
+                    type="text"
+                    validationStatus={error && 'error'}
+                    disabled
+                  />
+                </FormGroup>
+              );
+            }}
+          />
+          {/* Requester component */}
+          <Controller
+            name="requester.component"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <FormGroup>
+                  <Label htmlFor="requester.component">
+                    {t(`attendees.fieldLabels.requester.component`)}
+                  </Label>
+                  <Dropdown
+                    id="requester.component"
+                    data-testid="requester.component"
+                    {...field}
+                    ref={null}
+                  >
+                    <option label={`- ${t('basic.options.select')} -`} />
+                    {cmsDivisionsAndOfficesOptions('requester.component')}
+                  </Dropdown>
+                </FormGroup>
+              );
+            }}
+          />
+          {/* Requester role */}
+          <Controller
+            name="requester.role"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <FormGroup>
+                  <Label htmlFor="requester.role">
+                    {t(`attendees.fieldLabels.requester.role`)}
+                  </Label>
+                  <Dropdown
+                    id="requester.role"
+                    data-testid="requester.role"
+                    {...field}
+                    ref={null}
+                    value={(field.value as PersonRole) || ''}
+                  >
+                    <option label={`- ${t('basic.options.select')} -`} />
+                    {contactRoles.map(({ key, label }) => (
+                      <option key={key} value={key} label={label} />
+                    ))}
+                  </Dropdown>
+                </FormGroup>
+              );
+            }}
           />
 
           <Divider className="margin-top-4" />
@@ -134,7 +220,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
           />
         </Route>
       </Switch>
-    </div>
+    </Form>
   );
 }
 
