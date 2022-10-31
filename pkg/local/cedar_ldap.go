@@ -21,6 +21,8 @@ type CedarLdapClient struct {
 	logger *zap.Logger
 }
 
+// getMockUserData returns a slice of *models.UserInfo that represents a response from the CEDAR LDAP server.
+// Most of the data here is generated randomly, though some of it was curated specifically for the purpose of making tests pass.
 func getMockUserData() []*models.UserInfo {
 	return []*models.UserInfo{
 		{
