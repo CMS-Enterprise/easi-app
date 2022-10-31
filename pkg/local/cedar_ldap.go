@@ -3,7 +3,6 @@ package local
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 
 	"go.uber.org/zap"
@@ -287,11 +286,12 @@ func (c CedarLdapClient) FetchUserInfo(_ context.Context, euaID string) (*models
 		}
 	}
 	c.logger.Info("Mock FetchUserInfo from LDAP", zap.String("euaID", euaID))
-	return &models.UserInfo{
-		CommonName: fmt.Sprintf("%s Doe", strings.ToLower(euaID)),
-		Email:      models.NewEmailAddress(fmt.Sprintf("%s@local.fake", euaID)),
-		EuaUserID:  euaID,
-	}, nil
+	for _, mockUser := range getMockUserData() {
+		if mockUser.EuaUserID == euaID {
+			return mockUser, nil
+		}
+	}
+	return nil, nil
 }
 
 // FetchUserInfos fetches multiple users' personal details
@@ -300,12 +300,11 @@ func (c CedarLdapClient) FetchUserInfos(_ context.Context, euaIDs []string) ([]*
 
 	userInfos := make([]*models.UserInfo, len(euaIDs))
 	for i, euaID := range euaIDs {
-		userInfo := &models.UserInfo{
-			CommonName: fmt.Sprintf("%s Doe", strings.ToLower(euaID)),
-			Email:      models.NewEmailAddress(fmt.Sprintf("%s@local.fake", euaID)),
-			EuaUserID:  euaID,
+		for _, mockUser := range getMockUserData() {
+			if mockUser.EuaUserID == euaID {
+				userInfos[i] = mockUser
+			}
 		}
-		userInfos[i] = userInfo
 	}
 
 	return userInfos, nil
@@ -326,5 +325,5 @@ func (c CedarLdapClient) SearchCommonNameContains(_ context.Context, commonName 
 		}
 	}
 
-	return searchResults, nil // TODO: Actually filter this data based on the search criteria
+	return searchResults, nil
 }
