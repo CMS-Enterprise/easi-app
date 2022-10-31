@@ -14,16 +14,16 @@ import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
-import { AttendeeFormFields } from 'types/technicalAssistance';
-import { parseAsLocalTime } from 'utils/date';
+import { TRBAttendeeFields } from 'types/technicalAssistance';
 
+// import { parseAsLocalTime } from 'utils/date';
 import { initialAttendee } from '../Attendees';
 
 import './components.scss';
 
 type AttendeeFieldsProps = {
-  activeAttendee: AttendeeFormFields;
-  setActiveAttendee: (value: AttendeeFormFields) => void;
+  activeAttendee: TRBAttendeeFields;
+  setActiveAttendee: (value: TRBAttendeeFields) => void;
   type: 'requester' | 'create' | 'edit';
   className?: string;
 };
@@ -107,7 +107,7 @@ const AttendeeFields = ({
 
 type AttendeeProps = {
   attendee: TRBAttendee;
-  setActiveAttendee?: (activeAttendee: AttendeeFormFields) => void;
+  setActiveAttendee?: (activeAttendee: TRBAttendeeFields) => void;
   deleteAttendee?: () => void;
 };
 
@@ -179,7 +179,7 @@ const Attendee = ({
 type AttendeesListProps = {
   attendees: TRBAttendee[];
   id: string;
-  setActiveAttendee: (activeAttendee: AttendeeFormFields) => void;
+  setActiveAttendee: (activeAttendee: TRBAttendeeFields) => void;
 };
 
 const AttendeesList = ({
@@ -193,11 +193,11 @@ const AttendeesList = ({
   return (
     <ul className="trbAttendees-list usa-list usa-list--unstyled margin-y-3">
       {[...attendees]
-        // Sort attendees by time created
-        .sort(
-          (a, b) =>
-            parseAsLocalTime(b.createdAt) - parseAsLocalTime(a.createdAt)
-        )
+        // TODO: Fix sort attendees by time created
+        // .sort(
+        //   (a, b) =>
+        //     parseAsLocalTime(b.createdAt) - parseAsLocalTime(a.createdAt)
+        // )
         .map(attendee => (
           <Attendee
             attendee={attendee}

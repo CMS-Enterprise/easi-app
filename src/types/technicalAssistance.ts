@@ -1,13 +1,16 @@
 import { PersonRole } from './graphql-global-types';
 
-export type AttendeeFormFields = {
+export type AttendeeUserInfo = {
+  commonName: string;
+  euaUserId: string;
+  email?: string;
+} | null;
+
+/** TRB attendee fields allows null role in form */
+export type TRBAttendeeFields = {
   id?: string;
   trbRequestId: string;
-  userInfo: {
-    commonName: string;
-    euaUserId: string;
-    email?: string;
-  } | null;
+  userInfo: AttendeeUserInfo;
   component: string;
   role: PersonRole | null;
 };

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+// import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import { AttendeeFormFields } from 'types/technicalAssistance';
+import { AttendeeUserInfo, TRBAttendeeFields } from 'types/technicalAssistance';
 
 import { AttendeeFields, AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
@@ -13,24 +14,18 @@ import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
 /** Initial blank attendee object */
-export const initialAttendee: AttendeeFormFields = {
-  id: '',
+export const initialAttendee: TRBAttendeeFields = {
   trbRequestId: '',
   userInfo: null,
   component: '',
   role: null
 };
 
-/** Mock requester object for testing */
-const mockRequester: AttendeeFormFields = {
-  trbRequestId: '',
-  userInfo: {
-    commonName: 'Ashley Terstriep',
-    euaUserId: 'TXJK',
-    email: 'ashley.terstriep@oddball.io'
-  },
-  component: '',
-  role: null
+/** Mock requester info for testing */
+const requesterUserInfo: AttendeeUserInfo = {
+  commonName: 'Ashley Terstriep',
+  euaUserId: 'TXJK',
+  email: 'ashley.terstriep@oddball.io'
 };
 
 function Attendees({ request, stepUrl }: FormStepComponentProps) {
@@ -39,19 +34,19 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const history = useHistory();
 
   // Active attendee for form fields
-  const [activeAttendee, setActiveAttendee] = useState<AttendeeFormFields>({
+  const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeFields>({
     ...initialAttendee,
-    trbRequestId: request.id
-  });
-
-  // TODO: Update requester state with actual form values
-  const [requester, setRequester] = useState<AttendeeFormFields>({
-    ...mockRequester,
     trbRequestId: request.id
   });
 
   // Get TRB attendees
   const { attendees } = useTRBAttendees(request.id);
+
+  // Form values
+  const [requester, setRequester] = useState<TRBAttendeeFields>({
+    ...initialAttendee,
+    userInfo: requesterUserInfo
+  });
 
   return (
     <div className="trb-attendees">

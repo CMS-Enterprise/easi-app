@@ -31,6 +31,7 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
     fetchPolicy: 'cache-first',
     variables: { id: trbRequestId }
   });
+  const attendees: TRBAttendee[] = data?.trbRequest?.attendees || [];
 
   /**
    * Create TRB request attendee
@@ -63,7 +64,7 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
   );
 
   return {
-    attendees: data?.trbRequest?.attendees || [],
+    attendees,
     createAttendee: (attendee: CreateTRBRequestAttendeeInput) =>
       createAttendee({ variables: { input: attendee } }),
     updateAttendee: (attendee: UpdateTRBRequestAttendeeInput) =>

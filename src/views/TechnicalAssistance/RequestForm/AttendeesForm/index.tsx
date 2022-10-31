@@ -8,7 +8,7 @@ import useTRBAttendees from 'hooks/useTRBAttendees';
 // eslint-disable-next-line camelcase
 import { CreateTrbRequest_createTRBRequest } from 'queries/types/CreateTrbRequest';
 import { PersonRole } from 'types/graphql-global-types';
-import { AttendeeFormFields } from 'types/technicalAssistance';
+import { TRBAttendeeFields } from 'types/technicalAssistance';
 
 import Breadcrumbs from '../../Breadcrumbs';
 import { initialAttendee } from '../Attendees';
@@ -19,8 +19,8 @@ interface AttendeesFormProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
   backToFormUrl?: string;
-  activeAttendee: AttendeeFormFields;
-  setActiveAttendee: (value: AttendeeFormFields) => void;
+  activeAttendee: TRBAttendeeFields;
+  setActiveAttendee: (value: TRBAttendeeFields) => void;
 }
 
 function AttendeesForm({
@@ -118,7 +118,7 @@ function AttendeesForm({
           <UswdsReactLink to={backToFormUrl}>
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t(
-              initialValues.id
+              initialValues?.id
                 ? 'attendees.dontEditAndReturn'
                 : 'attendees.dontAddAndReturn'
             )}
