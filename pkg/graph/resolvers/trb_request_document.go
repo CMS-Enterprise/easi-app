@@ -2,7 +2,7 @@ package resolvers
 
 import (
 	"context"
-	"mime"
+	"path/filepath"
 
 	"github.com/google/uuid"
 
@@ -12,6 +12,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/upload"
 )
+
+const fallbackExtension = ".unknown"
 
 // GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID.
 func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
@@ -35,14 +37,14 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store
 func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input model.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
 	s3Key := uuid.New().String()
 
-	// add file extension to key if we can get it from upload's MIME type
-	mimeType := input.FileData.ContentType
-	extensions, err := mime.ExtensionsByType(mimeType)
-	if err == nil && len(extensions) > 0 {
-		s3Key = s3Key + extensions[0]
+	existingExtension := filepath.Ext(input.FileName)
+	if existingExtension != "" {
+		s3Key += existingExtension
+	} else {
+		s3Key += fallbackExtension
 	}
 
-	err = s3Client.UploadFile(s3Key, input.FileData.File, mimeType)
+	err := s3Client.UploadFile(s3Key, input.FileData.File)
 	if err != nil {
 		return nil, err
 	}
