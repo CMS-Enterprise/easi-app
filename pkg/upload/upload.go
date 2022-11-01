@@ -67,6 +67,11 @@ func NewS3ClientUsingClient(s3Client s3iface.S3API, config Config) S3Client {
 	}
 }
 
+// GetBucket is a getter for the S3Client's configured bucket.
+func (c S3Client) GetBucket() string {
+	return c.config.Bucket
+}
+
 // NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
 func (c S3Client) NewPutPresignedURL(fileType string) (*models.PreSignedURL, error) {
 	// generate a uuid for file name storage on s3

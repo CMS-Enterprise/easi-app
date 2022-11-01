@@ -54,9 +54,9 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 		CommonDocumentType: input.DocumentType,
 		FileName:           input.FileData.Filename,
 		S3Key:              s3Key,
+		Bucket:             s3Client.GetBucket(),
 		// Status - either field isn't needed, or assign it to "PENDING"
 		// URL - not saved to DB (generated only on retrieval, by calling S3)
-		// Bucket - TODO - comes from config
 	}
 	document.CreatedBy = appcontext.Principal(ctx).ID()
 	if input.OtherTypeDescription != nil {
