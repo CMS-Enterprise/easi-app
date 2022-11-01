@@ -37,7 +37,7 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store
 func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input model.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
 	s3Key := uuid.New().String()
 
-	existingExtension := filepath.Ext(input.FileName)
+	existingExtension := filepath.Ext(input.FileData.Filename)
 	if existingExtension != "" {
 		s3Key += existingExtension
 	} else {
@@ -52,7 +52,7 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 	document := models.TRBRequestDocument{
 		TRBRequestID:       input.RequestID,
 		CommonDocumentType: input.DocumentType,
-		FileName:           input.FileName,
+		FileName:           input.FileData.Filename,
 		S3Key:              s3Key,
 		// Status - either field isn't needed, or assign it to "PENDING"
 		// URL - not saved to DB (generated only on retrieval, by calling S3)

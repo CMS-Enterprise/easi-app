@@ -228,7 +228,6 @@ type CreateTRBRequestAttendeeInput struct {
 // The data needed to upload a TRB document and attach it to a request with metadata
 type CreateTRBRequestDocumentInput struct {
 	RequestID            uuid.UUID                    `json:"requestID"`
-	FileName             string                       `json:"fileName"`
 	FileData             graphql.Upload               `json:"fileData"`
 	DocumentType         models.TRBDocumentCommonType `json:"documentType"`
 	OtherTypeDescription *string                      `json:"otherTypeDescription"`

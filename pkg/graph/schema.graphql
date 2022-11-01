@@ -1601,7 +1601,6 @@ The data needed to upload a TRB document and attach it to a request with metadat
 """
 input CreateTRBRequestDocumentInput {
   requestID: UUID!
-  fileName: String!
   fileData: Upload!
   documentType: TRBDocumentCommonType!
   otherTypeDescription: String  # Needed if documentType == OTHER

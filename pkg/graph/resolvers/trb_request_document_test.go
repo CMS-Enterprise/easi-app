@@ -40,7 +40,6 @@ func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUI
 		RequestID:            documentToCreate.TRBRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
 		OtherTypeDescription: &documentToCreate.OtherType,
-		FileName:             documentToCreate.FileName,
 		FileData: graphql.Upload{
 			File:        fileToUpload,
 			Filename:    documentToCreate.FileName,

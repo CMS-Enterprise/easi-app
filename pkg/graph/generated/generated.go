@@ -7196,7 +7196,6 @@ The data needed to upload a TRB document and attach it to a request with metadat
 """
 input CreateTRBRequestDocumentInput {
   requestID: UUID!
-  fileName: String!
   fileData: Upload!
   documentType: TRBDocumentCommonType!
   otherTypeDescription: String  # Needed if documentType == OTHER
@@ -38910,7 +38909,7 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestDocumentInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"requestID", "fileName", "fileData", "documentType", "otherTypeDescription"}
+	fieldsInOrder := [...]string{"requestID", "fileData", "documentType", "otherTypeDescription"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -38922,14 +38921,6 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestDocumentInput(ctx cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
 			it.RequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "fileName":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileName"))
-			it.FileName, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
