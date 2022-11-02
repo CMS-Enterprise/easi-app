@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -59,7 +59,7 @@ function Basic({
   request,
   stepUrl,
   refreshRequest,
-  submitRef,
+  setStepSubmit,
   setIsStepSubmitting
 }: FormStepComponentProps) {
   const history = useHistory();
@@ -85,55 +85,75 @@ function Basic({
     }
   });
 
+  // Using this instead of formState.isValid since it's not the same
+  const hasErrors = Object.keys(errors).length > 0;
+
+  // Scroll to the error summary when there are changes after submit
+  useEffect(() => {
+    if (hasErrors) {
+      const err = document.querySelector('.usa-alert--error');
+      err?.scrollIntoView();
+    }
+  }, [errors, hasErrors]);
+
+  const submit = useCallback<StepSubmit>(() => {
+    return new Promise(resolve => {
+      // Start the submit promise
+      handleSubmit(
+        // Validation passed
+        async formData => {
+          // Submit the input only if there are changes
+          if (isDirty) {
+            // Some field adjustments before sending
+            const { id } = request;
+            const { name } = formData;
+
+            const data: any = { ...formData };
+            data.trbRequestId = id;
+            delete data.name;
+
+            await updateForm({
+              variables: { input: data, id, name }
+            });
+
+            // Refresh the RequestForm parent request query
+            // to update things like `stepsCompleted`
+            refreshRequest();
+          }
+        },
+        // Validation did not pass
+        () => {
+          // Need to throw from this error handler so that the promise is rejected
+          throw new Error();
+        }
+      )()
+        // Wait for submit to finish before continuing.
+        // This essentially makes sure any effects like
+        // `setIsStepSubmitting` are called before unmount.
+        .then(
+          () => {
+            if (!hasErrors) resolve(isDirty);
+          },
+          () => {} // Handle the thrown error
+        );
+    });
+  }, [handleSubmit, hasErrors, isDirty, refreshRequest, request, updateForm]);
+
+  useEffect(() => {
+    setStepSubmit(() => submit);
+  }, [setStepSubmit, submit]);
+
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
 
-  // Scroll to the error summary when there are changes after submit
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      const err = document.querySelector('.usa-alert--error');
-      err?.scrollIntoView();
-    }
-  }, [errors]);
-
-  function submit(): ReturnType<StepSubmit> {
-    return new Promise(resolve => {
-      handleSubmit(formData => {
-        if (isDirty) {
-          const { id } = request;
-          const { name } = formData;
-
-          const data: any = { ...formData };
-          data.trbRequestId = id;
-          delete data.name;
-
-          updateForm({
-            variables: { input: data, id, name }
-          }).then(() => {
-            refreshRequest();
-            resolve(true);
-          });
-        } else {
-          resolve(false);
-        }
-      })();
-    });
-  }
-
-  // eslint-disable-next-line no-param-reassign
-  if (submitRef) submitRef.current = submit;
-
   return (
     <Form
       className="trb-form-basic maxw-full"
-      onSubmit={e => {
-        e.preventDefault();
-        return false;
-      }}
+      onSubmit={e => e.preventDefault()}
     >
       {/* Validation errors summary */}
-      {Object.keys(errors).length > 0 && (
+      {hasErrors && (
         <Alert
           heading={t('basic.errors.checkFix')}
           type="error"

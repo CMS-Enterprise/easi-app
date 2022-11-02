@@ -122,6 +122,7 @@ describe('Trb Request form: Basic', () => {
             }}
             refreshRequest={() => {}}
             setIsStepSubmitting={() => {}}
+            setStepSubmit={() => {}}
           />
         </MockedProvider>
       </MemoryRouter>

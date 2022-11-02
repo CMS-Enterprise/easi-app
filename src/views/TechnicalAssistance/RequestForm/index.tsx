@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -48,18 +42,16 @@ import SubjectAreas from './SubjectAreas';
  */
 export type StepSubmit = () => Promise<boolean>;
 
-/**
- * A ref to the current form step component submit handler for places like the header.
- * Form step components need to reassign the reference.
- */
-type StepSubmitRef = React.MutableRefObject<StepSubmit | null>;
-
 export interface FormStepComponentProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
   /** Refresh the trb request from the form wrapper */
   refreshRequest: () => void;
-  submitRef?: StepSubmitRef;
+  /**
+   * Set the current form step component submit handler for places like the header.
+   * Form step components need to reassign the handler.
+   */
+  setStepSubmit: React.Dispatch<React.SetStateAction<StepSubmit | null>>;
   /** Set to update submitting state from step components to form wrapper */
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
   stepUrl: {
@@ -119,7 +111,7 @@ function Header({
   request,
   breadcrumbBar,
   stepsCompleted,
-  submitRef,
+  stepSubmit,
   isStepSubmitting
 }: {
   step: number;
@@ -128,7 +120,7 @@ function Header({
   request?: CreateTrbRequest_createTRBRequest;
   breadcrumbBar: React.ReactNode;
   stepsCompleted: string[];
-  submitRef?: StepSubmitRef;
+  stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
 }) {
   const history = useHistory();
@@ -175,10 +167,11 @@ function Header({
           unstyled
           disabled={isStepSubmitting}
           onClick={() => {
-            if (typeof submitRef?.current === 'function')
-              submitRef.current().then(() => {
+            if (stepSubmit) {
+              stepSubmit().then(() => {
                 history.push('/trb');
               });
+            }
           }}
         >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
@@ -326,7 +319,7 @@ function RequestForm() {
     [t]
   );
 
-  const submitRef: StepSubmitRef = useRef<StepSubmit | null>(null);
+  const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
   if (!step) {
@@ -353,8 +346,6 @@ function RequestForm() {
 
   const loading = getResult.loading || createResult.loading;
 
-  // console.log('render request form');
-
   return (
     <>
       {!view && (
@@ -364,7 +355,7 @@ function RequestForm() {
           breadcrumbBar={defaultBreadcrumbs}
           request={request}
           stepsCompleted={stepsCompleted}
-          submitRef={submitRef}
+          stepSubmit={stepSubmit}
           isStepSubmitting={isStepSubmitting}
         />
       )}
@@ -380,7 +371,7 @@ function RequestForm() {
               back: `/trb/requests/${request.id}/${formStepSlugs[stepIdx - 1]}`
             }}
             refreshRequest={getRequest}
-            submitRef={submitRef}
+            setStepSubmit={setStepSubmit}
             setIsStepSubmitting={setIsStepSubmitting}
           />
         </GridContainer>
