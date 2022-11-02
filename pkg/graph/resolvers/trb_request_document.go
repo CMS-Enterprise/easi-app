@@ -28,6 +28,21 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store
 			return nil, err
 		}
 		document.URL = presignedURL.URL
+
+		avStatus, err := s3Client.TagValueForKey(document.S3Key, upload.AVStatusTagName)
+		if err != nil {
+			return nil, err
+		}
+
+		// possible tag values come from virus scanning lambda
+		// this is the same logic as in schema.resolvers.go's Documents() method for 508 documents
+		if avStatus == "CLEAN" {
+			document.Status = models.TRBRequestDocumentStatusAvailable
+		} else if avStatus == "INFECTED" {
+			document.Status = models.TRBRequestDocumentStatusUnavailable
+		} else {
+			document.Status = models.TRBRequestDocumentStatusPending
+		}
 	}
 
 	return documents, nil

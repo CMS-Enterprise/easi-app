@@ -25,6 +25,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 // Documents is the resolver for the documents field.
@@ -47,7 +48,7 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		// another mechanism for doing that as a background job so that we don't need to do it here.
 		// Furthermore, locally this will always return "", since we are not interfacing with the
 		// real S3.
-		value, valueErr := r.s3Client.TagValueForKey(document.Key, "av-status")
+		value, valueErr := r.s3Client.TagValueForKey(document.Key, upload.AVStatusTagName)
 		if valueErr != nil {
 			return nil, valueErr
 		}

@@ -20,6 +20,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// AVStatusTagName is the name of the tag that stores virus scan results for uploaded files
+const AVStatusTagName = "av-status"
+
 // Config holds the configuration to interact with s3
 type Config struct {
 	Bucket  string
