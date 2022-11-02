@@ -9,6 +9,8 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+
+	ldapmodels "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 )
 
 // NewCedarLdapClient returns a fake Cedar LDAP client
@@ -353,7 +355,13 @@ func (c CedarLdapClient) FetchUserInfo(_ context.Context, euaID string) (*models
 			return mockUser, nil
 		}
 	}
-	return nil, nil
+	return nil, &apperrors.ExternalAPIError{
+		Err:       errors.New("failed to return person from CEDAR LDAP"),
+		ModelID:   euaID,
+		Model:     ldapmodels.Person{},
+		Operation: apperrors.Fetch,
+		Source:    "CEDAR LDAP",
+	}
 }
 
 // FetchUserInfos fetches multiple users' personal details
