@@ -75,9 +75,8 @@ function Basic({
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting, isDirty },
-    unregister
+    setValue
   } = useForm<FormFieldProps<TrbRequestFormBasic>>({
     resolver: yupResolver(basicSchema),
     defaultValues: {
@@ -90,13 +89,6 @@ function Basic({
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
 
-  // console.log('values', watch());
-  // console.log('values', watch('selectOitGroups'));
-  // console.log('result', JSON.stringify(result.data));
-  // console.log('errors', errors);
-  // console.log('isdirty', isDirty);
-  // console.log('isSubmitting', isSubmitting);
-
   // Scroll to the error summary when there are changes after submit
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -104,45 +96,6 @@ function Basic({
       err?.scrollIntoView();
     }
   }, [errors]);
-
-  // Unbind fields that are toggled off
-
-  const hasSolutionInMind = watch('hasSolutionInMind');
-  useEffect(() => {
-    if (hasSolutionInMind === false) {
-      unregister('proposedSolution');
-    }
-  }, [hasSolutionInMind, unregister]);
-
-  const hasExpectedStartEndDates = watch('hasExpectedStartEndDates');
-  useEffect(() => {
-    if (hasExpectedStartEndDates === false) {
-      unregister('expectedStartDate');
-      unregister('expectedEndDate');
-    }
-  }, [hasExpectedStartEndDates, unregister]);
-
-  const collabGroups = watch('collabGroups');
-  useEffect(() => {
-    if (!collabGroups.includes(TRBCollabGroupOption.SECURITY)) {
-      unregister('collabDateSecurity');
-    } else if (
-      !collabGroups.includes(TRBCollabGroupOption.ENTERPRISE_ARCHITECTURE)
-    ) {
-      unregister('collabDateEnterpriseArchitecture');
-    } else if (!collabGroups.includes(TRBCollabGroupOption.CLOUD)) {
-      unregister('collabDateCloud');
-    } else if (!collabGroups.includes(TRBCollabGroupOption.PRIVACY_ADVISOR)) {
-      unregister('collabDatePrivacyAdvisor');
-    } else if (
-      !collabGroups.includes(TRBCollabGroupOption.GOVERNANCE_REVIEW_BOARD)
-    ) {
-      unregister('collabDateGovernanceReviewBoard');
-    } else if (!collabGroups.includes(TRBCollabGroupOption.OTHER)) {
-      unregister('collabDateOther');
-      unregister('collabGroupOther');
-    }
-  }, [collabGroups, unregister]);
 
   function submit(): ReturnType<StepSubmit> {
     return new Promise(resolve => {
@@ -304,6 +257,9 @@ function Basic({
             name="hasSolutionInMind"
             control={control}
             render={({ field, fieldState: { error }, formState }) => {
+              if (field.value === false) {
+                setValue('proposedSolution', '');
+              }
               return (
                 <FormGroup error={!!error}>
                   <Fieldset legend={t('basic.labels.hasSolutionInMind')}>
@@ -328,6 +284,7 @@ function Basic({
                       <Controller
                         name="proposedSolution"
                         control={control}
+                        shouldUnregister
                         // eslint-disable-next-line no-shadow
                         render={({ field, fieldState: { error } }) => (
                           <FormGroup error={!!error} className="margin-left-4">
@@ -417,95 +374,103 @@ function Basic({
           <Controller
             name="hasExpectedStartEndDates"
             control={control}
-            render={({ field, fieldState: { error: startOrEndError } }) => (
-              <FormGroup error={!!startOrEndError}>
-                <Fieldset legend={t('basic.labels.hasExpectedStartEndDates')}>
-                  {startOrEndError && (
-                    <ErrorMessage>
-                      {startOrEndError.type === 'expected-start-or-end-date'
-                        ? startOrEndError.message
-                        : t('basic.errors.makeSelection')}
-                    </ErrorMessage>
-                  )}
-                  <Radio
-                    {...field}
-                    ref={null}
-                    id="hasExpectedStartEndDates-yes"
-                    data-testid="hasExpectedStartEndDates-yes"
-                    onChange={() => field.onChange(true)}
-                    value="true"
-                    label={t('basic.options.yes')}
-                    checked={field.value === true}
-                  />
+            render={({ field, fieldState: { error: startOrEndError } }) => {
+              if (field.value === false) {
+                setValue('expectedStartDate', '');
+                setValue('expectedEndDate', '');
+              }
+              return (
+                <FormGroup error={!!startOrEndError}>
+                  <Fieldset legend={t('basic.labels.hasExpectedStartEndDates')}>
+                    {startOrEndError && (
+                      <ErrorMessage>
+                        {startOrEndError.type === 'expected-start-or-end-date'
+                          ? startOrEndError.message
+                          : t('basic.errors.makeSelection')}
+                      </ErrorMessage>
+                    )}
+                    <Radio
+                      {...field}
+                      ref={null}
+                      id="hasExpectedStartEndDates-yes"
+                      data-testid="hasExpectedStartEndDates-yes"
+                      onChange={() => field.onChange(true)}
+                      value="true"
+                      label={t('basic.options.yes')}
+                      checked={field.value === true}
+                    />
 
-                  {field.value === true && (
-                    // <div className="margin-left-4 mobile-lg:display-flex">
-                    <div className="margin-left-4">
-                      {/* Expected start date */}
-                      <Controller
-                        name="expectedStartDate"
-                        control={control}
-                        // eslint-disable-next-line no-shadow
-                        render={({ field, fieldState: { error } }) => (
-                          <FormGroup
-                            error={!!(error || startOrEndError)}
-                            className="flex-1"
-                          >
-                            <Label
-                              htmlFor="expectedStartDate"
-                              hint="mm/dd/yyyy"
-                              error={!!error}
+                    {field.value === true && (
+                      // <div className="margin-left-4 mobile-lg:display-flex">
+                      <div className="margin-left-4">
+                        {/* Expected start date */}
+                        <Controller
+                          name="expectedStartDate"
+                          control={control}
+                          shouldUnregister
+                          // eslint-disable-next-line no-shadow
+                          render={({ field, fieldState: { error } }) => (
+                            <FormGroup
+                              error={!!(error || startOrEndError)}
+                              className="flex-1"
                             >
-                              {t('basic.labels.expectedStartDate')}
-                            </Label>
-                            <DatePickerFormatted
-                              id="expectedStartDate"
-                              {...field}
-                              ref={null}
-                              defaultValue={field.value}
-                            />
-                          </FormGroup>
-                        )}
-                      />
-                      {/* Expected go live date */}
-                      <Controller
-                        name="expectedEndDate"
-                        control={control}
-                        // eslint-disable-next-line no-shadow
-                        render={({ field, fieldState: { error } }) => (
-                          <FormGroup error={!!(error || startOrEndError)}>
-                            <Label
-                              htmlFor="expectedEndDate"
-                              hint="mm/dd/yyyy"
-                              error={!!error}
-                            >
-                              {t('basic.labels.expectedEndDate')}
-                            </Label>
-                            <DatePickerFormatted
-                              id="expectedEndDate"
-                              {...field}
-                              ref={null}
-                              defaultValue={field.value}
-                            />
-                          </FormGroup>
-                        )}
-                      />
-                    </div>
-                  )}
+                              <Label
+                                htmlFor="expectedStartDate"
+                                hint="mm/dd/yyyy"
+                                error={!!error}
+                              >
+                                {t('basic.labels.expectedStartDate')}
+                              </Label>
+                              <DatePickerFormatted
+                                id="expectedStartDate"
+                                {...field}
+                                ref={null}
+                                defaultValue={field.value}
+                              />
+                            </FormGroup>
+                          )}
+                        />
+                        {/* Expected end date */}
+                        <Controller
+                          name="expectedEndDate"
+                          control={control}
+                          shouldUnregister
+                          // eslint-disable-next-line no-shadow
+                          render={({ field, fieldState: { error } }) => (
+                            <FormGroup error={!!(error || startOrEndError)}>
+                              <Label
+                                htmlFor="expectedEndDate"
+                                hint="mm/dd/yyyy"
+                                error={!!error}
+                              >
+                                {t('basic.labels.expectedEndDate')}
+                              </Label>
+                              <DatePickerFormatted
+                                id="expectedEndDate"
+                                {...field}
+                                ref={null}
+                                defaultValue={field.value}
+                              />
+                            </FormGroup>
+                          )}
+                        />
+                      </div>
+                    )}
 
-                  <Radio
-                    {...field}
-                    ref={null}
-                    id="hasExpectedStartEndDates-no"
-                    data-testid="hasExpectedStartEndDates-no"
-                    onChange={() => field.onChange(false)}
-                    value="false"
-                    label={t('basic.options.no')}
-                    checked={field.value === false}
-                  />
-                </Fieldset>
-              </FormGroup>
-            )}
+                    <Radio
+                      {...field}
+                      ref={null}
+                      id="hasExpectedStartEndDates-no"
+                      data-testid="hasExpectedStartEndDates-no"
+                      onChange={() => field.onChange(false)}
+                      value="false"
+                      label={t('basic.options.no')}
+                      checked={field.value === false}
+                    />
+                  </Fieldset>
+                </FormGroup>
+              );
+            }}
           />
 
           {/* Select any other OIT groups that you have met with or collaborated with. */}
@@ -532,6 +497,22 @@ function Basic({
                     ].map((v, idx) => {
                       const val = v as TRBCollabGroupOption;
                       const optionKeyWordUpper = upperFirst(camelCase(v));
+
+                      const collabDateKey = `collabDate${optionKeyWordUpper}` as keyof Pick<
+                        TrbRequestFormBasic,
+                        | 'collabDateSecurity'
+                        | 'collabDateEnterpriseArchitecture'
+                        | 'collabDateCloud'
+                        | 'collabDatePrivacyAdvisor'
+                        | 'collabDateGovernanceReviewBoard'
+                        | 'collabDateOther'
+                      >;
+
+                      if (!field.value.includes(val)) {
+                        setValue(collabDateKey, '');
+                        if (val === 'OTHER') setValue('collabGroupOther', '');
+                      }
+
                       return (
                         <React.Fragment key={v}>
                           <Checkbox
@@ -590,15 +571,6 @@ function Basic({
                           {/* When did you meet with them? */}
                           {field.value.includes(val) &&
                             (() => {
-                              const collabDateKey = `collabDate${optionKeyWordUpper}` as keyof Pick<
-                                TrbRequestFormBasic,
-                                | 'collabDateSecurity'
-                                | 'collabDateEnterpriseArchitecture'
-                                | 'collabDateCloud'
-                                | 'collabDatePrivacyAdvisor'
-                                | 'collabDateGovernanceReviewBoard'
-                                | 'collabDateOther'
-                              >;
                               return (
                                 <Controller
                                   name={collabDateKey}
@@ -622,7 +594,7 @@ function Basic({
                                       </Label>
                                       {error && (
                                         <ErrorMessage>
-                                          {t('basic.errors.fillDate')}
+                                          {t('basic.errors.fillBlank')}
                                         </ErrorMessage>
                                       )}
                                       <TextInput
