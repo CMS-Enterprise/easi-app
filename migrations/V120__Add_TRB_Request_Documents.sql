@@ -5,13 +5,6 @@ CREATE TYPE trb_request_document_type AS ENUM (
   'OTHER'
 );
 
--- TODO - possibly not needed
-CREATE TYPE trb_request_document_status AS ENUM (
-  'AVAILABLE',
-  'UNAVAILABLE',
-  'PENDING'
-);
-
 CREATE TABLE trb_request_documents (
     -- PK, FK
     id UUID PRIMARY KEY NOT NULL,
@@ -21,9 +14,6 @@ CREATE TABLE trb_request_documents (
     file_name TEXT NOT NULL,
     document_type trb_request_document_type NOT NULL,
     other_type TEXT, -- used to represent user-entered document types
-
-    -- TODO - maybe get rid of, since we get this info from S3?
-    -- status trb_request_document_status NOT NULL,
 
     -- storage info
     bucket TEXT NOT NULL,

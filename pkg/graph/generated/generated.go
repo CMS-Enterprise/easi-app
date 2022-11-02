@@ -7185,7 +7185,6 @@ type TRBRequestDocument {
   documentType: TRBRequestDocumentType!
   id: UUID!
   fileName: String!
-  #  TODO - request ID?
   status: TRBRequestDocumentStatus!
   uploadedAt: Time!
   url: String!
@@ -7205,7 +7204,6 @@ input CreateTRBRequestDocumentInput {
 Data returned after uploading a document to a TRB request
 """
 type CreateTRBRequestDocumentPayload {
-  # TODO - anything else needed?
   document: TRBRequestDocument
 }
 

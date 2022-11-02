@@ -30,8 +30,8 @@ const (
 type TRBRequestDocument struct {
 	baseStruct
 	TRBRequestID       uuid.UUID                `json:"trbRequestId" db:"trb_request_id"`
-	CommonDocumentType TRBDocumentCommonType    `db:"document_type"` // TODO - does this need json annotation?
-	OtherType          string                   `db:"other_type"`    // TODO - does this need json annotation?
+	CommonDocumentType TRBDocumentCommonType    `db:"document_type"`
+	OtherType          string                   `db:"other_type"`
 	FileName           string                   `json:"fileName" db:"file_name"`
 	Status             TRBRequestDocumentStatus `json:"status"`
 	URL                string                   `json:"url"`
