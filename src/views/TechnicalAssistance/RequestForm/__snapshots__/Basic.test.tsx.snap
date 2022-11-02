@@ -547,9 +547,10 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
       <div
         class="margin-top-2"
       >
-        <a
-          class="usa-link"
-          href="/trb"
+        <button
+          class="usa-button usa-button--unstyled"
+          data-testid="button"
+          type="button"
         >
           <svg
             class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
@@ -569,7 +570,7 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             />
           </svg>
           Save and exit
-        </a>
+        </button>
       </div>
     </div>
   </form>

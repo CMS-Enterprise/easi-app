@@ -29,11 +29,12 @@ import {
 } from 'queries/types/UpdateTrbRequestForm';
 import UpdateTrbRequestFormQuery from 'queries/UpdateTrbRequestFormQuery';
 import { TRBCollabGroupOption } from 'types/graphql-global-types';
+import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
 import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
 
 import Pager from './Pager';
-import { FormStepComponentProps } from '.';
+import { FormStepComponentProps, StepSubmit } from '.';
 
 export const basicBlankValues = {
   component: '',
@@ -54,7 +55,13 @@ export const basicBlankValues = {
   collabGroupOther: ''
 };
 
-function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
+function Basic({
+  request,
+  stepUrl,
+  refreshRequest,
+  submitRef,
+  setIsStepSubmitting
+}: FormStepComponentProps) {
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
 
@@ -71,7 +78,7 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
     watch,
     formState: { errors, isSubmitting, isDirty },
     unregister
-  } = useForm<TrbRequestFormBasic>({
+  } = useForm<FormFieldProps<TrbRequestFormBasic>>({
     resolver: yupResolver(basicSchema),
     defaultValues: {
       name: request.name,
@@ -79,11 +86,16 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
     }
   });
 
+  useEffect(() => {
+    setIsStepSubmitting(isSubmitting);
+  }, [setIsStepSubmitting, isSubmitting]);
+
   // console.log('values', watch());
   // console.log('values', watch('selectOitGroups'));
   // console.log('result', JSON.stringify(result.data));
   // console.log('errors', errors);
   // console.log('isdirty', isDirty);
+  // console.log('isSubmitting', isSubmitting);
 
   // Scroll to the error summary when there are changes after submit
   useEffect(() => {
@@ -132,12 +144,9 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
     }
   }, [collabGroups, unregister]);
 
-  // console.log('render basic form');
-
-  return (
-    <Form
-      className="trb-form-basic maxw-full"
-      onSubmit={handleSubmit(formData => {
+  function submit(): ReturnType<StepSubmit> {
+    return new Promise(resolve => {
+      handleSubmit(formData => {
         if (isDirty) {
           const { id } = request;
           const { name } = formData;
@@ -150,12 +159,25 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
             variables: { input: data, id, name }
           }).then(() => {
             refreshRequest();
-            history.push(stepUrl.next);
+            resolve(true);
           });
         } else {
-          history.push(stepUrl.next);
+          resolve(false);
         }
-      })}
+      })();
+    });
+  }
+
+  // eslint-disable-next-line no-param-reassign
+  if (submitRef) submitRef.current = submit;
+
+  return (
+    <Form
+      className="trb-form-basic maxw-full"
+      onSubmit={e => {
+        e.preventDefault();
+        return false;
+      }}
     >
       {/* Validation errors summary */}
       {Object.keys(errors).length > 0 && (
@@ -371,6 +393,7 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
                   ref={null}
                 >
                   <option> </option>
+                  {/* {Object.keys(TRBWhereInProcessOption).map(val => { */}
                   {[
                     'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
                     'CONTRACTING_WORK_HAS_STARTED',
@@ -394,12 +417,14 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
           <Controller
             name="hasExpectedStartEndDates"
             control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup error={!!error}>
+            render={({ field, fieldState: { error: startOrEndError } }) => (
+              <FormGroup error={!!startOrEndError}>
                 <Fieldset legend={t('basic.labels.hasExpectedStartEndDates')}>
-                  {error && (
+                  {startOrEndError && (
                     <ErrorMessage>
-                      {t('basic.errors.makeSelection')}
+                      {startOrEndError.type === 'expected-start-or-end-date'
+                        ? startOrEndError.message
+                        : t('basic.errors.makeSelection')}
                     </ErrorMessage>
                   )}
                   <Radio
@@ -422,7 +447,10 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
                         control={control}
                         // eslint-disable-next-line no-shadow
                         render={({ field, fieldState: { error } }) => (
-                          <FormGroup error={!!error} className="flex-1">
+                          <FormGroup
+                            error={!!(error || startOrEndError)}
+                            className="flex-1"
+                          >
                             <Label
                               htmlFor="expectedStartDate"
                               hint="mm/dd/yyyy"
@@ -430,11 +458,6 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
                             >
                               {t('basic.labels.expectedStartDate')}
                             </Label>
-                            {error && (
-                              <ErrorMessage>
-                                {t('basic.errors.fillDate')}
-                              </ErrorMessage>
-                            )}
                             <DatePickerFormatted
                               id="expectedStartDate"
                               {...field}
@@ -450,7 +473,7 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
                         control={control}
                         // eslint-disable-next-line no-shadow
                         render={({ field, fieldState: { error } }) => (
-                          <FormGroup error={!!error}>
+                          <FormGroup error={!!(error || startOrEndError)}>
                             <Label
                               htmlFor="expectedEndDate"
                               hint="mm/dd/yyyy"
@@ -458,11 +481,6 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
                             >
                               {t('basic.labels.expectedEndDate')}
                             </Label>
-                            {error && (
-                              <ErrorMessage>
-                                {t('basic.errors.fillDate')}
-                              </ErrorMessage>
-                            )}
                             <DatePickerFormatted
                               id="expectedEndDate"
                               {...field}
@@ -503,6 +521,7 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
                         {t('basic.errors.makeSelection')}
                       </ErrorMessage>
                     )}
+                    {/* {Object.values(TRBCollabGroupOption).map(v =>{ */}
                     {[
                       'SECURITY',
                       'ENTERPRISE_ARCHITECTURE',
@@ -632,8 +651,15 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
       <Pager
         className="margin-top-5"
         next={{
-          disabled: isSubmitting
+          disabled: isSubmitting,
+          onClick: () => {
+            submit().then(() => {
+              history.push(stepUrl.next);
+            });
+          }
         }}
+        saveExitDisabled={isSubmitting}
+        submit={submit}
       />
     </Form>
   );

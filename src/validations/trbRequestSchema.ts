@@ -6,30 +6,24 @@ import {
   UpdateTRBRequestFormInput
 } from 'types/graphql-global-types';
 
-type NonNullableProps<T> = {
-  [P in keyof T]: NonNullable<T[P]>;
-};
-
-type TrbFormInputBasic = NonNullableProps<
-  Pick<
-    UpdateTRBRequestFormInput,
-    | 'component'
-    | 'needsAssistanceWith'
-    | 'hasSolutionInMind'
-    | 'proposedSolution'
-    | 'whereInProcess'
-    | 'hasExpectedStartEndDates'
-    | 'expectedStartDate'
-    | 'expectedEndDate'
-    | 'collabGroups'
-    | 'collabDateSecurity'
-    | 'collabDateEnterpriseArchitecture'
-    | 'collabDateCloud'
-    | 'collabDatePrivacyAdvisor'
-    | 'collabDateGovernanceReviewBoard'
-    | 'collabDateOther'
-    | 'collabGroupOther'
-  >
+type TrbFormInputBasic = Pick<
+  UpdateTRBRequestFormInput,
+  | 'component'
+  | 'needsAssistanceWith'
+  | 'hasSolutionInMind'
+  | 'proposedSolution'
+  | 'whereInProcess'
+  | 'hasExpectedStartEndDates'
+  | 'expectedStartDate'
+  | 'expectedEndDate'
+  | 'collabGroups'
+  | 'collabDateSecurity'
+  | 'collabDateEnterpriseArchitecture'
+  | 'collabDateCloud'
+  | 'collabDatePrivacyAdvisor'
+  | 'collabDateGovernanceReviewBoard'
+  | 'collabDateOther'
+  | 'collabGroupOther'
 >;
 
 export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
@@ -44,15 +38,20 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     .mixed<TRBWhereInProcessOption>()
     .oneOf(Object.values(TRBWhereInProcessOption))
     .required(),
-  hasExpectedStartEndDates: yup.boolean().nullable().required(),
-  expectedStartDate: yup.string().when('hasExpectedStartEndDates', {
-    is: true,
-    then: schema => schema.required()
-  }),
-  expectedEndDate: yup.string().when('hasExpectedStartEndDates', {
-    is: true,
-    then: schema => schema.required()
-  }),
+  hasExpectedStartEndDates: yup
+    .boolean()
+    .nullable()
+    .required()
+    .test(
+      'expected-start-or-end-date',
+      'Provide at least one expected start or end date',
+      (value, testContext) => {
+        const { expectedStartDate, expectedEndDate } = testContext.parent;
+        return !(value && !expectedStartDate && !expectedEndDate);
+      }
+    ),
+  expectedStartDate: yup.string(),
+  expectedEndDate: yup.string(),
   collabGroups: yup
     .array(
       yup

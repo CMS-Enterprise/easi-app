@@ -34,7 +34,7 @@ describe('Trb Request form: Basic', () => {
                     expectedStartDate: '',
                     expectedEndDate: '',
                     collabGroups: ['SECURITY'],
-                    collabDateSecurity: '2022-10-24T16:39:56.116105Z',
+                    collabDateSecurity: '10/2022',
                     collabDateEnterpriseArchitecture: '',
                     collabDateCloud: '',
                     collabDatePrivacyAdvisor: '',
@@ -64,7 +64,7 @@ describe('Trb Request form: Basic', () => {
                       expectedStartDate: null,
                       expectedEndDate: null,
                       collabGroups: ['SECURITY'],
-                      collabDateSecurity: '2022-10-24T16:39:56.116105Z',
+                      collabDateSecurity: '10/2022',
                       collabDateEnterpriseArchitecture: null,
                       collabDateCloud: null,
                       collabDatePrivacyAdvisor: null,
@@ -121,6 +121,7 @@ describe('Trb Request form: Basic', () => {
                 '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/undefined'
             }}
             refreshRequest={() => {}}
+            setIsStepSubmitting={() => {}}
           />
         </MockedProvider>
       </MemoryRouter>
@@ -154,10 +155,7 @@ describe('Trb Request form: Basic', () => {
     ]);
     userEvent.click(getByTestId('hasExpectedStartEndDates-no'));
     userEvent.click(getByLabelText('Security'));
-    userEvent.type(
-      getByLabelText(/When did you meet with them\?/),
-      '2022-10-24T16:39:56.116105Z'
-    );
+    userEvent.type(getByLabelText(/When did you meet with them\?/), '10/2022');
 
     // Submit success
     userEvent.click(submitButton);

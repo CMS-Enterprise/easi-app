@@ -10,10 +10,9 @@ describe('Technical Assistance', () => {
     // Continue through process steps
     cy.contains('a', 'Continue').click();
 
-    cy.contains(
-      '.usa-step-indicator__heading-text',
-      'Basic request details'
-    ).should('be.visible');
+    cy.contains('.usa-step-indicator__heading-text', 'Basic request details')
+      .should('be.visible')
+      .as('basicStepHeader');
 
     // Fill out the Basic form step
 
@@ -46,15 +45,41 @@ describe('Technical Assistance', () => {
     // Check that the error field is focused and fix it
     cy.focused()
       .should('have.attr', 'name', 'collabDateSecurity')
-      .type('2022-10-24T16:39:56.116105Z');
+      .type('October/November 2022');
 
     cy.get('@formError').should('not.exist');
 
     // Successful resubmit
+    cy.url().as('basicStepUrl');
     cy.get('@submit').click();
 
-    cy.contains('.usa-step-indicator__heading-text', 'Subject areas').should(
-      'be.visible'
-    );
+    cy.contains('.usa-step-indicator__heading-text', 'Subject areas')
+      .as('subjectStepHeader')
+      .should('be.visible');
+
+    // Go over the basic step again to test "save and exit" submits
+    cy.get('@basicStepUrl').then(url => cy.visit(url));
+    cy.get('@basicStepHeader').should('be.visible');
+
+    // Error on required field
+    cy.get('[name=name]').clear();
+    cy.contains('button', 'Save and exit').as('saveExit').click();
+    cy.get('@formError').should('exist');
+
+    // Fix the error and return
+    const requestName = '2nd request name';
+    cy.get('[name=name]').type(requestName);
+    cy.get('@saveExit').click();
+
+    // Check the update
+    cy.get('@basicStepUrl').then(url => cy.visit(url));
+    cy.get('[name=name]').should('have.value', requestName);
+
+    // Jump to the next available Subject step
+    cy.contains(
+      '.usa-step-indicator__segment--clickable',
+      'Subject areas'
+    ).click();
+    cy.get('@subjectStepHeader').should('be.visible');
   });
 });

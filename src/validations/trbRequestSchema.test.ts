@@ -9,35 +9,35 @@ describe('TRB Basic Form schema validation', () => {
     whereInProcess: 'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
     hasExpectedStartEndDates: false,
     collabGroups: ['SECURITY'],
-    collabDateSecurity: '2021-10-24T03:29:56.901Z'
+    collabDateSecurity: 'Fall 2021'
   };
 
   it('passes backend input validation', async () => {
     await expect(
-      basicSchema.validate(minimumRequiredForm)
-    ).resolves.toBeDefined();
+      basicSchema.isValid(minimumRequiredForm)
+    ).resolves.toBeTruthy();
   });
 
   it(`errors on an empty form`, async () => {
-    await expect(basicSchema.validate({})).rejects.toThrow();
+    await expect(basicSchema.isValid({})).resolves.toBeFalsy();
   });
 
   it.each(['whereInProcess', 'collabGroups'])(
     `errors on other values in enum based field: %s`,
     async inputKey => {
-      await expect(() => {
-        let optionVal: any = 'buz';
-        if (inputKey === 'collabGroups') {
-          optionVal = [optionVal];
-        }
-        return basicSchema.fields[
-          inputKey as keyof TrbRequestFormBasic
-        ].validate(optionVal);
-      }).rejects.toThrow();
+      let optionVal: any = 'buz';
+      if (inputKey === 'collabGroups') {
+        optionVal = [optionVal];
+      }
+      await expect(
+        basicSchema.fields[inputKey as keyof TrbRequestFormBasic].isValid(
+          optionVal
+        )
+      ).resolves.toBeFalsy();
     }
   );
 
-  const dateval = '2022-10-24T16:39:56.116105Z';
+  const freeTextDate = 'Q1 2021';
 
   it.each([
     {
@@ -50,17 +50,6 @@ describe('TRB Basic Form schema validation', () => {
       }
     },
     {
-      parent: { hasExpectedStartEndDates: true },
-      empty: {
-        expectedStartDate: '',
-        expectedEndDate: ''
-      },
-      filled: {
-        expectedStartDate: dateval,
-        expectedEndDate: dateval
-      }
-    },
-    {
       parent: {
         collabGroups: ['SECURITY']
       },
@@ -68,7 +57,7 @@ describe('TRB Basic Form schema validation', () => {
         collabDateSecurity: ''
       },
       filled: {
-        collabDateSecurity: dateval
+        collabDateSecurity: freeTextDate
       }
     },
     {
@@ -79,7 +68,7 @@ describe('TRB Basic Form schema validation', () => {
         collabDateEnterpriseArchitecture: ''
       },
       filled: {
-        collabDateEnterpriseArchitecture: dateval
+        collabDateEnterpriseArchitecture: freeTextDate
       }
     },
     {
@@ -90,7 +79,7 @@ describe('TRB Basic Form schema validation', () => {
         collabDateCloud: ''
       },
       filled: {
-        collabDateCloud: dateval
+        collabDateCloud: freeTextDate
       }
     },
     {
@@ -101,7 +90,7 @@ describe('TRB Basic Form schema validation', () => {
         collabDatePrivacyAdvisor: ''
       },
       filled: {
-        collabDatePrivacyAdvisor: dateval
+        collabDatePrivacyAdvisor: freeTextDate
       }
     },
     {
@@ -112,7 +101,7 @@ describe('TRB Basic Form schema validation', () => {
         collabDateGovernanceReviewBoard: ''
       },
       filled: {
-        collabDateGovernanceReviewBoard: dateval
+        collabDateGovernanceReviewBoard: freeTextDate
       }
     },
     {
@@ -124,7 +113,7 @@ describe('TRB Basic Form schema validation', () => {
         collabGroupOther: ''
       },
       filled: {
-        collabDateOther: dateval,
+        collabDateOther: freeTextDate,
         collabGroupOther: 'other group'
       }
     }
@@ -138,11 +127,38 @@ describe('TRB Basic Form schema validation', () => {
     ).rejects.toThrow('required field');
 
     await expect(
-      basicSchema.validate({
+      basicSchema.isValid({
         ...minimumRequiredForm,
         ...parent,
         ...filled
       })
-    ).resolves.toBeDefined();
+    ).resolves.toBeTruthy();
+  });
+
+  it('requires at least one expected start or end date', async () => {
+    await expect(
+      basicSchema.isValid({
+        ...minimumRequiredForm,
+        hasExpectedStartEndDates: true,
+        expectedStartDate: freeTextDate,
+        expectedEndDate: ''
+      })
+    ).resolves.toBeTruthy();
+    await expect(
+      basicSchema.isValid({
+        ...minimumRequiredForm,
+        hasExpectedStartEndDates: true,
+        expectedStartDate: '',
+        expectedEndDate: freeTextDate
+      })
+    ).resolves.toBeTruthy();
+    await expect(
+      basicSchema.isValid({
+        ...minimumRequiredForm,
+        hasExpectedStartEndDates: true,
+        expectedStartDate: '',
+        expectedEndDate: ''
+      })
+    ).resolves.toBeFalsy();
   });
 });
