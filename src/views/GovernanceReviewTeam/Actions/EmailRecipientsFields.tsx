@@ -214,7 +214,9 @@ export default ({
   ].flat();
 
   /** Number of unverified recipients */
-  const unverifiedRecipients = contactsArray.filter(({ id }) => !id);
+  const unverifiedRecipients = contactsArray.filter(
+    ({ id, role }) => !id && role !== 'Requester'
+  );
 
   /** Number of default recipients */
   const defaultRecipientsCount =
