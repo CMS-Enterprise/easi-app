@@ -58,11 +58,7 @@ func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUI
 	suite.NotNil(createdDocument)
 
 	checkDocumentEquality(suite, documentToCreate, suite.testConfigs.Principal.ID(), trbRequestID, createdDocument)
-
-	// TODO - status?
-	// TODO - URL/Bucket/FileKey (come from S3)
-
-	// TODO - test that it was uploaded to S3? use a mock for S3Client?
+	suite.EqualValues(suite.testConfigs.S3Client.GetBucket(), createdDocument.Bucket)
 
 	return createdDocument // used by other tests
 }
@@ -81,8 +77,6 @@ func getTRBRequestDocumentsByRequestIDSubtest(suite *ResolverSuite, trbRequestID
 	suite.NotNil(fetchedDocument)
 
 	checkDocumentEquality(suite, createdDocument, createdDocument.CreatedBy, createdDocument.TRBRequestID, fetchedDocument)
-
-	// TODO - test S3 URL validity?
 }
 
 func deleteTRBRequestDocumentSubtest(suite *ResolverSuite, createdDocument *models.TRBRequestDocument) {
