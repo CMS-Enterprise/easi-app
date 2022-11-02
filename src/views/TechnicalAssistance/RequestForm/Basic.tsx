@@ -350,7 +350,6 @@ function Basic({
                   ref={null}
                 >
                   <option> </option>
-                  {/* {Object.keys(TRBWhereInProcessOption).map(val => { */}
                   {[
                     'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
                     'CONTRACTING_WORK_HAS_STARTED',
@@ -486,7 +485,6 @@ function Basic({
                         {t('basic.errors.makeSelection')}
                       </ErrorMessage>
                     )}
-                    {/* {Object.values(TRBCollabGroupOption).map(v =>{ */}
                     {[
                       'SECURITY',
                       'ENTERPRISE_ARCHITECTURE',
