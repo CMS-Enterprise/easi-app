@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+gql_url="http://localhost:8080/api/graph/query"
+eua_id="ABCD"
+
+filename="upload_test_file_1.txt"
+full_filename="scripts/$filename"
+
+request_id="<insert TRB request ID here>"
+
+# use tr to replace newlines with spaces, transforming gql_query into a single line of text
+gql_query=$(tr '\n' ' ' <<EOF
+  mutation uploadDocument(\$input: CreateTRBRequestDocumentInput!) {
+    createTRBRequestDocument(input:\$input) {
+      document {
+        id
+        documentType {
+          commonType
+          otherTypeDescription
+        }
+        fileName
+      }
+    }
+  }
+EOF
+)
+
+function upload() {
+  operations_field=$(cat <<EOF
+    {
+      "query": "$gql_query",
+      "variables": {
+        "input": {
+          "requestID": "$request_id",
+          "documentType": "ARCHITECTURE_DIAGRAM",
+          "fileData": null
+        }
+      }
+    }
+EOF
+  )
+
+  map_field=$(cat <<EOF
+    {
+      "0": ["variables.input.fileData"]
+    }
+EOF
+  )
+
+  auth_header_value="Local {\"euaId\":\"$eua_id\", \"favorLocalAuth\":true}"
+
+  curl "$gql_url" \
+    --header "Authorization: $auth_header_value" \
+    --form operations="$operations_field" \
+    --form map="$map_field" \
+    --form 0="@$full_filename"
+}
+
+upload
