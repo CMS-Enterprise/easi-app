@@ -57,6 +57,7 @@ export type ActionState = {
 export type ActionForm = {
   feedback: string;
   notificationRecipients: EmailNotificationRecipients;
+  shouldSendEmail: boolean;
 };
 
 export type SubmitLifecycleIdForm = {
