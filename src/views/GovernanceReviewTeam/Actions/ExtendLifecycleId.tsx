@@ -26,7 +26,7 @@ import {
   CreateSystemIntakeActionExtendLifecycleIdVariables
 } from 'queries/types/CreateSystemIntakeActionExtendLifecycleId';
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
-import { EmailNotificationRecipients } from 'types/graphql-global-types';
+import { ActionForm } from 'types/action';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 import { formatDateAndIgnoreTimezone } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
@@ -35,7 +35,7 @@ import { sharedLifecycleIdSchema } from 'validations/actionSchema';
 import CompleteWithoutEmailButton from './CompleteWithoutEmailButton';
 import EmailRecipientsFields from './EmailRecipientsFields';
 
-type ExtendLCIDForm = {
+interface ExtendLCIDForm extends ActionForm {
   currentCostBaseline: string;
   currentExpiresAt: string;
   currentNextSteps: string;
@@ -46,9 +46,7 @@ type ExtendLCIDForm = {
   newCostBaseline: string;
   nextSteps: string;
   scope: string;
-  feedback: string;
-  notificationRecipients: EmailNotificationRecipients;
-};
+}
 
 type ExtendLifecycleIdProps = {
   lcid: string;
@@ -103,15 +101,14 @@ const ExtendLifecycleId = ({
       regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: true
-    }
+    },
+    shouldSendEmail: true
   };
 
   const [extendLifecycleID, extendLifecycleIDStatus] = useMutation<
     CreateSystemIntakeActionExtendLifecycleId,
     CreateSystemIntakeActionExtendLifecycleIdVariables
   >(CreateSystemIntakeActionExtendLifecycleIdQuery);
-
-  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const handleSubmit = (
     values: ExtendLCIDForm,
@@ -124,7 +121,8 @@ const ExtendLifecycleId = ({
       scope = '',
       nextSteps = '',
       newCostBaseline = '',
-      notificationRecipients
+      notificationRecipients,
+      shouldSendEmail
     } = values;
 
     // Get expiration date
@@ -134,19 +132,24 @@ const ExtendLifecycleId = ({
       parseInt(expirationDateDay, RADIX)
     ).toISO();
 
+    const variables: CreateSystemIntakeActionExtendLifecycleIdVariables = {
+      input: {
+        id: systemId,
+        expirationDate: expiresAt,
+        scope,
+        nextSteps,
+        costBaseline: newCostBaseline,
+        shouldSendEmail
+      }
+    };
+
+    if (shouldSendEmail) {
+      variables.input.notificationRecipients = notificationRecipients;
+    }
+
     // GQL mutation to extend lifecycle ID
     extendLifecycleID({
-      variables: {
-        input: {
-          id: systemId,
-          expirationDate: expiresAt,
-          scope,
-          nextSteps,
-          costBaseline: newCostBaseline,
-          shouldSendEmail,
-          notificationRecipients
-        }
-      }
+      variables
     })
       .then(({ errors }) => {
         if (!errors) {
@@ -180,6 +183,8 @@ const ExtendLifecycleId = ({
           setFieldValue
         } = formikProps;
         const flatErrors = flattenErrors(errors);
+
+        console.log(values);
 
         return (
           <>
@@ -415,7 +420,7 @@ const ExtendLifecycleId = ({
                     type="submit"
                     onClick={() => {
                       setErrors({});
-                      setShouldSendEmail(true);
+                      setFieldValue('shouldSendEmail', true);
                     }}
                     disabled={
                       extendLifecycleIDStatus.loading || !!activeContact
@@ -426,11 +431,9 @@ const ExtendLifecycleId = ({
                 </div>
                 <div>
                   <CompleteWithoutEmailButton
-                    onClick={() => {
-                      setErrors({});
-                      setShouldSendEmail(false);
-                      setTimeout(submitForm);
-                    }}
+                    setErrors={setErrors}
+                    setFieldValue={setFieldValue}
+                    submitForm={submitForm}
                     disabled={!!activeContact}
                   />
                 </div>

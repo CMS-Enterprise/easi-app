@@ -257,11 +257,6 @@ describe('Submit Action', () => {
           query: CreateSystemIntakeActionNotItRequest,
           variables: {
             input: {
-              notificationRecipients: {
-                regularRecipientEmails: [],
-                shouldNotifyITGovernance: true,
-                shouldNotifyITInvestment: true
-              },
               feedback: '',
               intakeId: systemIntakeId,
               shouldSendEmail: false

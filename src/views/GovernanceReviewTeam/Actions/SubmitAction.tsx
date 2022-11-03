@@ -94,7 +94,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
         pathname.endsWith('no-governance') ||
         pathname.endsWith('not-it-request')
     },
-    shouldSendEmail: false
+    shouldSendEmail: true
   };
 
   const backLink = `/governance-review-team/${systemId}/actions`;
@@ -211,11 +211,9 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                 </div>
                 <div>
                   <CompleteWithoutEmailButton
-                    onClick={() => {
-                      setErrors({});
-                      setFieldValue('shouldSendEmail', false);
-                      submitForm();
-                    }}
+                    setErrors={setErrors}
+                    setFieldValue={setFieldValue}
+                    submitForm={submitForm}
                     disabled={!!activeContact}
                   />
                 </div>
