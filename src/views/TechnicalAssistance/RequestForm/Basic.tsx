@@ -116,8 +116,10 @@ function Basic({
             input.trbRequestId = id; // Use the id from the request object
             variables.id = id;
 
-            delete input.name; // Move the name from input object to variables
-            variables.name = name; // Name is always required
+            delete input.name; // Move the name from the input object to changes
+            if ('name' in dirtyFields) {
+              variables.changes = { name };
+            }
 
             // Convert '' back to null for the backend
             // so that cleared inputs on the client are actually removed

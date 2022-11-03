@@ -7,12 +7,12 @@ export default gql`
   mutation UpdateTrbRequestForm(
     $input: UpdateTRBRequestFormInput!
     $id: UUID!
-    $name: String
+    $changes: TRBRequestChanges
   ) {
     updateTRBRequestForm(input: $input) {
       id
     }
-    updateTRBRequest(id: $id, changes: { name: $name }) {
+    updateTRBRequest(id: $id, changes: $changes) {
       ...TrbRequestFormFields
     }
   }
