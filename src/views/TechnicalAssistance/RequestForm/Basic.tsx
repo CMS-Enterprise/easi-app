@@ -96,8 +96,8 @@ function Basic({
     }
   }, [errors, hasErrors]);
 
-  const submit = useCallback<StepSubmit>(() => {
-    return new Promise(resolve => {
+  const submit = useCallback<StepSubmit>(
+    (callback?: () => void) =>
       // Start the submit promise
       handleSubmit(
         // Validation passed
@@ -132,12 +132,12 @@ function Basic({
         // `setIsStepSubmitting` are called before unmount.
         .then(
           () => {
-            if (!hasErrors) resolve(isDirty);
+            if (callback && !hasErrors) callback();
           },
           () => {} // Handle the thrown error
-        );
-    });
-  }, [handleSubmit, hasErrors, isDirty, refreshRequest, request, updateForm]);
+        ),
+    [handleSubmit, hasErrors, isDirty, refreshRequest, request, updateForm]
+  );
 
   useEffect(() => {
     setStepSubmit(() => submit);
@@ -643,7 +643,7 @@ function Basic({
         next={{
           disabled: isSubmitting,
           onClick: () => {
-            submit().then(() => {
+            submit(() => {
               history.push(stepUrl.next);
             });
           }

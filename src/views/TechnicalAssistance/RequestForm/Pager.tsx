@@ -75,11 +75,9 @@ export function Pager({
             unstyled
             disabled={saveExitDisabled}
             onClick={() => {
-              if (submit) {
-                submit().then(() => {
-                  history.push('/trb');
-                });
-              }
+              submit?.(() => {
+                history.push('/trb');
+              });
             }}
           >
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />

@@ -36,11 +36,10 @@ import SubjectAreas from './SubjectAreas';
 
 /**
  * A promise wrapper for form step submit handlers.
- * Resolve `true` when submission is complete with changes,
- * `false` if there are no changes.
- * Use this to change address urls after submissions are completed.
+ * Run the `onValid` callback after successful validation.
+ * Use this to change address urls after submissions are successfully completed.
  */
-export type StepSubmit = () => Promise<boolean>;
+export type StepSubmit = (onValid?: () => void) => Promise<void>;
 
 export interface FormStepComponentProps {
   // eslint-disable-next-line camelcase
@@ -167,11 +166,9 @@ function Header({
           unstyled
           disabled={isStepSubmitting}
           onClick={() => {
-            if (stepSubmit) {
-              stepSubmit().then(() => {
-                history.push('/trb');
-              });
-            }
+            stepSubmit?.(() => {
+              history.push('/trb');
+            });
           }}
         >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
