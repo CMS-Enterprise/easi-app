@@ -18,7 +18,7 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
-import { camelCase, lowerFirst, upperFirst } from 'lodash';
+import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
@@ -75,7 +75,7 @@ function Basic({
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting, isDirty, dirtyFields },
     setValue
   } = useForm<FormFieldProps<TrbRequestFormBasic>>({
     resolver: yupResolver(basicSchema),
@@ -104,17 +104,30 @@ function Basic({
         async formData => {
           // Submit the input only if there are changes
           if (isDirty) {
-            // Some field adjustments before sending
             const { id } = request;
             const { name } = formData;
 
-            const data: any = { ...formData };
-            data.trbRequestId = id;
-            delete data.name;
+            // Only send changed fields for a partial update to the input object
+            const input: any = pick(formData, Object.keys(dirtyFields));
 
-            await updateForm({
-              variables: { input: data, id, name }
+            // Some object adjustments
+            const variables: any = {};
+
+            input.trbRequestId = id; // Use the id from the request object
+            variables.id = id;
+
+            delete input.name; // Move the name from input object to variables
+            variables.name = name; // Name is always required
+
+            // Convert '' back to null for the backend
+            // so that cleared inputs on the client are actually removed
+            Object.entries(input).forEach(([key, value]) => {
+              if (value === '') input[key] = null;
             });
+
+            variables.input = input;
+
+            await updateForm({ variables });
 
             // Refresh the RequestForm parent request query
             // to update things like `stepsCompleted`
@@ -136,7 +149,15 @@ function Basic({
           },
           () => {} // Handle the thrown error
         ),
-    [handleSubmit, hasErrors, isDirty, refreshRequest, request, updateForm]
+    [
+      dirtyFields,
+      handleSubmit,
+      hasErrors,
+      isDirty,
+      refreshRequest,
+      request,
+      updateForm
+    ]
   );
 
   useEffect(() => {
