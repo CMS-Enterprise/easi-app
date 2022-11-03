@@ -18,6 +18,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
+import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 import { EmailRecipientsFieldsProps } from 'types/action';
 import {
   CreateContactType,
@@ -416,6 +417,32 @@ export default ({
                 systemIntakeId={systemIntakeId}
                 activeContact={activeContact}
                 setActiveContact={setActiveContact}
+                onCreateContact={(contact: SystemIntakeContactProps) => {
+                  // Create contact
+                  createContact(contact).then(
+                    (response: AugmentedSystemIntakeContact | undefined) => {
+                      if (
+                        // Check for CEDAR response
+                        response &&
+                        // Check if response from CEDAR includes email
+                        response.email &&
+                        // Check if recipient is already selected
+                        !recipients.regularRecipientEmails.includes(
+                          response.email
+                        )
+                      ) {
+                        // If recipient is not already selected, add email to recipients array
+                        setRecipients({
+                          ...recipients,
+                          regularRecipientEmails: [
+                            ...recipients.regularRecipientEmails,
+                            response.email
+                          ]
+                        });
+                      }
+                    }
+                  );
+                }}
                 type="recipient"
                 className="margin-top-3"
               />

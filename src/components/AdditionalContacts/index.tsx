@@ -202,6 +202,7 @@ type AdditionalContactsProps = {
   systemIntakeId: string;
   activeContact: SystemIntakeContactProps | null;
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  onCreateContact?: (contact: SystemIntakeContactProps) => any;
   type?: 'recipient' | 'contact';
   className?: string;
 };
@@ -210,6 +211,7 @@ export default function AdditionalContacts({
   systemIntakeId,
   activeContact,
   setActiveContact,
+  onCreateContact,
   type = 'contact',
   className
 }: AdditionalContactsProps) {
@@ -288,7 +290,7 @@ export default function AdditionalContacts({
         <ContactForm
           activeContact={activeContact}
           setActiveContact={setActiveContact}
-          onSubmit={createContact}
+          onSubmit={onCreateContact || createContact}
           type={type}
         />
       )}
