@@ -75,7 +75,7 @@ function Basic({
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty, dirtyFields }
+    formState: { errors, isValid, isSubmitting, isDirty, dirtyFields }
   } = useForm<FormFieldProps<TrbRequestFormBasic>>({
     resolver: yupResolver(basicSchema),
     defaultValues: {
@@ -96,7 +96,7 @@ function Basic({
   }, [errors, hasErrors]);
 
   const submit = useCallback<StepSubmit>(
-    (callback?: () => void) =>
+    callback =>
       // Start the submit promise
       handleSubmit(
         // Validation passed
@@ -168,15 +168,15 @@ function Basic({
         // `setIsStepSubmitting` are called before unmount.
         .then(
           () => {
-            if (callback && !hasErrors) callback();
+            if (callback && isValid) callback();
           },
           () => {} // Handle the thrown error
         ),
     [
       dirtyFields,
       handleSubmit,
-      hasErrors,
       isDirty,
+      isValid,
       refreshRequest,
       request,
       updateForm
@@ -457,7 +457,6 @@ function Basic({
                     />
 
                     {field.value === true && (
-                      // <div className="margin-left-4 mobile-lg:display-flex">
                       <div className="margin-left-4">
                         {/* Expected start date */}
                         <Controller
@@ -466,10 +465,7 @@ function Basic({
                           shouldUnregister
                           // eslint-disable-next-line no-shadow
                           render={({ field, fieldState: { error } }) => (
-                            <FormGroup
-                              error={!!(error || startOrEndError)}
-                              className="flex-1"
-                            >
+                            <FormGroup error={!!(error || startOrEndError)}>
                               <Label
                                 htmlFor="expectedStartDate"
                                 hint="mm/dd/yyyy"
@@ -480,8 +476,8 @@ function Basic({
                               <DatePickerFormatted
                                 id="expectedStartDate"
                                 {...field}
-                                ref={null}
                                 defaultValue={field.value}
+                                ref={null}
                               />
                             </FormGroup>
                           )}
@@ -504,8 +500,8 @@ function Basic({
                               <DatePickerFormatted
                                 id="expectedEndDate"
                                 {...field}
-                                ref={null}
                                 defaultValue={field.value}
+                                ref={null}
                               />
                             </FormGroup>
                           )}
