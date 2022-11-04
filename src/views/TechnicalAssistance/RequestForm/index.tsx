@@ -47,11 +47,12 @@ export interface FormStepComponentProps {
   /** Refresh the trb request from the form wrapper */
   refreshRequest: () => void;
   /**
-   * Set the current form step component submit handler for places like the header.
+   * Set the current form step component submit handler
+   * so that in can be used in other places like the header.
    * Form step components need to reassign the handler.
    */
   setStepSubmit: React.Dispatch<React.SetStateAction<StepSubmit | null>>;
-  /** Set to update submitting state from step components to form wrapper */
+  /** Set to update the submitting state from step components to the parent request form */
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
   stepUrl: {
     current: string;

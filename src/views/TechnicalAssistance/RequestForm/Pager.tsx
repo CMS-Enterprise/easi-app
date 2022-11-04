@@ -29,7 +29,7 @@ type Props = {
  * Buttons default to type `button`.
  * Button `text` has a default text fallback.
  * The `back` button defaults to `outline`.
- * The save and exit option is wip.
+ * The "Save and exit" button needs `submit` defined to function.
  */
 export function Pager({
   back,

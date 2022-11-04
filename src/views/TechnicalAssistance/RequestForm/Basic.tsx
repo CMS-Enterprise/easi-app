@@ -75,8 +75,7 @@ function Basic({
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty, dirtyFields },
-    setValue
+    formState: { errors, isSubmitting, isDirty, dirtyFields }
   } = useForm<FormFieldProps<TrbRequestFormBasic>>({
     resolver: yupResolver(basicSchema),
     defaultValues: {
@@ -110,22 +109,44 @@ function Basic({
             // Only send changed fields for a partial update to the input object
             const input: any = pick(formData, Object.keys(dirtyFields));
 
+            // Convert '' back to null for the backend
+            // so that cleared inputs on the client are actually removed
+            Object.entries(input).forEach(([key, value]) => {
+              if (value === '') input[key] = null;
+            });
+
+            // Handle the clearing out of toggled off fields.
+            // Unmounted fields are removed from the form data and do not get marked
+            // as dirty, so they need to be set to null to be cleared.
+            if (input.hasSolutionInMind === false) {
+              input.proposedSolution = null;
+            }
+            if (input.hasExpectedStartEndDates === false) {
+              input.expectedStartDate = null;
+              input.expectedEndDate = null;
+            }
+            if ('collabGroups' in input) {
+              Object.values(TRBCollabGroupOption).forEach(option => {
+                if (!input.collabGroups?.includes(option)) {
+                  input[`collabDate${upperFirst(camelCase(option))}`] = null;
+                  if (option === 'OTHER') {
+                    input.collabGroupOther = null;
+                  }
+                }
+              });
+            }
+
             // Some object adjustments
             const variables: any = {};
 
             input.trbRequestId = id; // Use the id from the request object
             variables.id = id;
 
-            delete input.name; // Move the name from the input object to changes
-            if ('name' in dirtyFields) {
+            // Move the name from the form fields object to changes
+            if ('name' in input) {
+              delete input.name;
               variables.changes = { name };
             }
-
-            // Convert '' back to null for the backend
-            // so that cleared inputs on the client are actually removed
-            Object.entries(input).forEach(([key, value]) => {
-              if (value === '') input[key] = null;
-            });
 
             variables.input = input;
 
@@ -300,9 +321,6 @@ function Basic({
             name="hasSolutionInMind"
             control={control}
             render={({ field, fieldState: { error }, formState }) => {
-              if (field.value === false) {
-                setValue('proposedSolution', '');
-              }
               return (
                 <FormGroup error={!!error}>
                   <Fieldset legend={t('basic.labels.hasSolutionInMind')}>
@@ -417,10 +435,6 @@ function Basic({
             name="hasExpectedStartEndDates"
             control={control}
             render={({ field, fieldState: { error: startOrEndError } }) => {
-              if (field.value === false) {
-                setValue('expectedStartDate', '');
-                setValue('expectedEndDate', '');
-              }
               return (
                 <FormGroup error={!!startOrEndError}>
                   <Fieldset legend={t('basic.labels.hasExpectedStartEndDates')}>
@@ -548,11 +562,6 @@ function Basic({
                         | 'collabDateGovernanceReviewBoard'
                         | 'collabDateOther'
                       >;
-
-                      if (!field.value.includes(val)) {
-                        setValue(collabDateKey, '');
-                        if (val === 'OTHER') setValue('collabGroupOther', '');
-                      }
 
                       return (
                         <React.Fragment key={v}>
