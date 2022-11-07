@@ -135,10 +135,13 @@ const Recipient = ({
               disabled={!(activeContact?.euaUserId && activeContact?.email)}
               onClick={() => {
                 // Create system intake contact
-                createContact(activeContact!);
-                // Close verify recipient form
-                setActiveContact(null);
-                setActive(false);
+                createContact(activeContact!).then(response => {
+                  if (response?.email) {
+                    updateRecipients(response.email);
+                    setActiveContact(null);
+                    setActive(false);
+                  }
+                });
               }}
             >
               {t('Save')}
