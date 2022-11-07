@@ -34,7 +34,6 @@ type TRBRequestDocument struct {
 	OtherType          string                   `db:"other_type"`
 	FileName           string                   `json:"fileName" db:"file_name"`
 	Status             TRBRequestDocumentStatus `json:"status"`
-	URL                string                   `json:"url"`
 	Bucket             string                   `json:"bucket" db:"bucket"`
 	S3Key              string                   `json:"s3Key" db:"s3_key"` // The document's key inside an S3 bucket; does *not* include the bucket name.
 }

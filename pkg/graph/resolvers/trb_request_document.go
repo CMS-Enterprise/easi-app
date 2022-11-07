@@ -23,12 +23,6 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store
 	}
 
 	for _, document := range documents {
-		presignedURL, err := s3Client.NewGetPresignedURL(document.S3Key)
-		if err != nil {
-			return nil, err
-		}
-		document.URL = presignedURL.URL
-
 		avStatus, err := s3Client.TagValueForKey(document.S3Key, upload.AVStatusTagName)
 		if err != nil {
 			return nil, err
@@ -46,6 +40,16 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store
 	}
 
 	return documents, nil
+}
+
+// GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
+func GetURLForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (string, error) {
+	presignedURL, err := s3Client.NewGetPresignedURL(s3Key)
+	if err != nil {
+		return "", err
+	}
+
+	return presignedURL.URL, nil
 }
 
 // CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database.

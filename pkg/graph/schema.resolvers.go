@@ -2707,6 +2707,11 @@ func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models
 	return &obj.CreatedAt, nil
 }
 
+// URL is the resolver for the url field.
+func (r *tRBRequestDocumentResolver) URL(ctx context.Context, obj *models.TRBRequestDocument) (string, error) {
+	return resolvers.GetURLForTRBRequestDocument(r.s3Client, obj.S3Key)
+}
+
 // CollabGroups is the resolver for the collabGroups field.
 func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error) {
 	collabGroups := models.ConvertEnums[models.TRBCollabGroupOption](obj.CollabGroups)

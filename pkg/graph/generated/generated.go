@@ -1155,6 +1155,7 @@ type TRBRequestDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.TRBRequestDocument) (*model.TRBRequestDocumentType, error)
 
 	UploadedAt(ctx context.Context, obj *models.TRBRequestDocument) (*time.Time, error)
+	URL(ctx context.Context, obj *models.TRBRequestDocument) (string, error)
 }
 type TRBRequestFormResolver interface {
 	CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error)
@@ -34140,7 +34141,7 @@ func (ec *executionContext) _TRBRequestDocument_url(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.URL, nil
+		return ec.resolvers.TRBRequestDocument().URL(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -34161,8 +34162,8 @@ func (ec *executionContext) fieldContext_TRBRequestDocument_url(ctx context.Cont
 	fc = &graphql.FieldContext{
 		Object:     "TRBRequestDocument",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -47057,12 +47058,25 @@ func (ec *executionContext) _TRBRequestDocument(ctx context.Context, sel ast.Sel
 
 			})
 		case "url":
+			field := field
 
-			out.Values[i] = ec._TRBRequestDocument_url(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequestDocument_url(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

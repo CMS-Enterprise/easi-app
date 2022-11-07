@@ -21,7 +21,6 @@ func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
 		TRBRequestID:       trbRequestID,
 		CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
 		FileName:           "create_and_get.pdf",
-		URL:                "http://www.example.com",
 		Bucket:             "bukkit",
 		S3Key:              uuid.NewString(),
 	}
@@ -77,6 +76,7 @@ func getTRBRequestDocumentsByRequestIDSubtest(suite *ResolverSuite, trbRequestID
 	suite.NotNil(fetchedDocument)
 
 	checkDocumentEquality(suite, createdDocument, createdDocument.CreatedBy, createdDocument.TRBRequestID, fetchedDocument)
+	// TODO - try downloading fetchedDocument.URL? compare content to fileToUpload from create subtest?
 }
 
 func deleteTRBRequestDocumentSubtest(suite *ResolverSuite, createdDocument *models.TRBRequestDocument) {
