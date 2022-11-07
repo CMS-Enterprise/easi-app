@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
@@ -60,7 +60,8 @@ function Basic({
   stepUrl,
   refreshRequest,
   setStepSubmit,
-  setIsStepSubmitting
+  setIsStepSubmitting,
+  setFormError
 }: FormStepComponentProps) {
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
@@ -90,7 +91,7 @@ function Basic({
   // Scroll to the error summary when there are changes after submit
   useEffect(() => {
     if (hasErrors) {
-      const err = document.querySelector('.usa-alert--error');
+      const err = document.querySelector('.trb-basic-fields-error');
       err?.scrollIntoView();
     }
   }, [errors, hasErrors]);
@@ -160,7 +161,7 @@ function Basic({
         // Validation did not pass
         () => {
           // Need to throw from this error handler so that the promise is rejected
-          throw new Error();
+          throw new Error('invalid basic form');
         }
       )()
         // Wait for submit to finish before continuing.
@@ -170,7 +171,11 @@ function Basic({
           () => {
             if (callback && isValid) callback();
           },
-          () => {} // Handle the thrown error
+          err => {
+            if (err instanceof ApolloError) {
+              setFormError(t<string>('basic.errors.submit'));
+            }
+          }
         ),
     [
       dirtyFields,
@@ -179,6 +184,8 @@ function Basic({
       isValid,
       refreshRequest,
       request,
+      setFormError,
+      t,
       updateForm
     ]
   );
@@ -199,9 +206,9 @@ function Basic({
       {/* Validation errors summary */}
       {hasErrors && (
         <Alert
-          heading={t('basic.errors.checkFix')}
+          heading={t('errors.checkFix')}
           type="error"
-          className="margin-bottom-2"
+          className="trb-basic-fields-error margin-bottom-2"
         >
           {Object.keys(errors).map(fieldName => {
             let msg: string;
@@ -241,9 +248,7 @@ function Basic({
                 <Label htmlFor="name" error={!!error}>
                   {t('basic.labels.name')}
                 </Label>
-                {error && (
-                  <ErrorMessage>{t('basic.errors.fillBlank')}</ErrorMessage>
-                )}
+                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
                 <TextInput
                   {...field}
                   ref={null}
@@ -269,7 +274,7 @@ function Basic({
                   {t('basic.labels.component')}
                 </Label>
                 {error && (
-                  <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
+                  <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                 )}
                 <Dropdown
                   id="component"
@@ -298,9 +303,7 @@ function Basic({
                   {t('basic.labels.needsAssistanceWith')}
                 </Label>
                 {error && (
-                  <ErrorMessage>
-                    {t('basic.errors.includeExplanation')}
-                  </ErrorMessage>
+                  <ErrorMessage>{t('errors.includeExplanation')}</ErrorMessage>
                 )}
                 <CharacterCount
                   {...field}
@@ -325,9 +328,7 @@ function Basic({
                 <FormGroup error={!!error}>
                   <Fieldset legend={t('basic.labels.hasSolutionInMind')}>
                     {error && (
-                      <ErrorMessage>
-                        {t('basic.errors.makeSelection')}
-                      </ErrorMessage>
+                      <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                     )}
                     <Radio
                       {...field}
@@ -354,7 +355,7 @@ function Basic({
                             </Label>
                             {error && (
                               <ErrorMessage>
-                                {t('basic.errors.includeExplanation')}
+                                {t('errors.includeExplanation')}
                               </ErrorMessage>
                             )}
                             <CharacterCount
@@ -402,7 +403,7 @@ function Basic({
                   {t('basic.labels.whereInProcess')}
                 </Label>
                 {error && (
-                  <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
+                  <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                 )}
                 <Dropdown
                   id="whereInProcess"
@@ -442,7 +443,7 @@ function Basic({
                       <ErrorMessage>
                         {startOrEndError.type === 'expected-start-or-end-date'
                           ? startOrEndError.message
-                          : t('basic.errors.makeSelection')}
+                          : t('errors.makeSelection')}
                       </ErrorMessage>
                     )}
                     <Radio
@@ -534,9 +535,7 @@ function Basic({
                 <FormGroup error={!!error}>
                   <Fieldset legend={t('basic.labels.collabGroups')}>
                     {error && (
-                      <ErrorMessage>
-                        {t('basic.errors.makeSelection')}
-                      </ErrorMessage>
+                      <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                     )}
                     {[
                       'SECURITY',
@@ -600,7 +599,7 @@ function Basic({
                                   </Label>
                                   {error && (
                                     <ErrorMessage>
-                                      {t('basic.errors.fillBlank')}
+                                      {t('errors.fillBlank')}
                                     </ErrorMessage>
                                   )}
                                   <TextInput
@@ -640,7 +639,7 @@ function Basic({
                                       </Label>
                                       {error && (
                                         <ErrorMessage>
-                                          {t('basic.errors.fillBlank')}
+                                          {t('errors.fillBlank')}
                                         </ErrorMessage>
                                       )}
                                       <TextInput

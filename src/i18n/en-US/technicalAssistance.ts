@@ -19,6 +19,15 @@ const technicalAssistance = {
       status: 'Status'
     }
   },
+  // Higher level errors
+  errors: {
+    checkFix: 'Please check and fix the following',
+    fillBlank: 'Please fill in the blank',
+    fillDate: 'Please fill in the date',
+    includeExplanation: 'Please include an explanation',
+    makeSelection: 'Please make a selection',
+    somethingWrong: 'Something went wrong.'
+  },
   newRequest: {
     heading: 'Start a technical assistance request',
     subhead: 'What is this request for?',
@@ -222,11 +231,8 @@ const technicalAssistance = {
       }
     },
     errors: {
-      checkFix: 'Please check and fix the following',
-      fillBlank: 'Please fill in the blank',
-      fillDate: 'Please fill in the date',
-      includeExplanation: 'Please include an explanation',
-      makeSelection: 'Please make a selection'
+      submit:
+        'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.'
     },
     allFieldsMandatory: 'All fields are mandatory'
   },

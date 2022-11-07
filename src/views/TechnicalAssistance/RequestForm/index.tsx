@@ -2,7 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { Button, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Button,
+  GridContainer,
+  IconArrowBack
+} from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 import * as yup from 'yup';
 
@@ -54,6 +59,8 @@ export interface FormStepComponentProps {
   setStepSubmit: React.Dispatch<React.SetStateAction<StepSubmit | null>>;
   /** Set to update the submitting state from step components to the parent request form */
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  /** Set a form level error message from step components */
+  setFormError: React.Dispatch<React.SetStateAction<string | false>>;
   stepUrl: {
     current: string;
     next: string;
@@ -112,7 +119,8 @@ function Header({
   breadcrumbBar,
   stepsCompleted,
   stepSubmit,
-  isStepSubmitting
+  isStepSubmitting,
+  formError
 }: {
   step: number;
   /** Unassigned request is used as a loading state toggle. */
@@ -122,6 +130,7 @@ function Header({
   stepsCompleted: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
+  formError: string | false;
 }) {
   const history = useHistory();
 
@@ -160,6 +169,17 @@ function Header({
       }))}
       hideSteps={!request}
       breadcrumbBar={breadcrumbBar}
+      errorAlert={
+        formError && (
+          <Alert
+            heading={t('errors.somethingWrong')}
+            type="error"
+            className="trb-form-error margin-top-3 margin-bottom-2"
+          >
+            {formError}
+          </Alert>
+        )
+      }
     >
       {request && (
         <Button
@@ -317,8 +337,25 @@ function RequestForm() {
     [t]
   );
 
+  // References to the submit handler and submitting state of the current form step
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
+
+  // Form level errors from step components
+  const [formError, setFormError] = useState<string | false>(false);
+
+  // Clear the form level error as implied when steps change
+  useEffect(() => {
+    setFormError(false);
+  }, [setFormError, step]);
+
+  // Scroll to the form error
+  useEffect(() => {
+    if (formError) {
+      const err = document.querySelector('.trb-form-error');
+      err?.scrollIntoView();
+    }
+  }, [formError]);
 
   if (!step) {
     return null;
@@ -355,6 +392,7 @@ function RequestForm() {
           stepsCompleted={stepsCompleted}
           stepSubmit={stepSubmit}
           isStepSubmitting={isStepSubmitting}
+          formError={formError}
         />
       )}
       {request ? (
@@ -371,6 +409,7 @@ function RequestForm() {
             refreshRequest={getRequest}
             setStepSubmit={setStepSubmit}
             setIsStepSubmitting={setIsStepSubmitting}
+            setFormError={setFormError}
           />
         </GridContainer>
       ) : (
