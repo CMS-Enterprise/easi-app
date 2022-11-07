@@ -1154,6 +1154,7 @@ type TRBRequestAttendeeResolver interface {
 type TRBRequestDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.TRBRequestDocument) (*model.TRBRequestDocumentType, error)
 
+	Status(ctx context.Context, obj *models.TRBRequestDocument) (models.TRBRequestDocumentStatus, error)
 	UploadedAt(ctx context.Context, obj *models.TRBRequestDocument) (*time.Time, error)
 	URL(ctx context.Context, obj *models.TRBRequestDocument) (string, error)
 }
@@ -34053,7 +34054,7 @@ func (ec *executionContext) _TRBRequestDocument_status(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
+		return ec.resolvers.TRBRequestDocument().Status(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -34074,8 +34075,8 @@ func (ec *executionContext) fieldContext_TRBRequestDocument_status(ctx context.C
 	fc = &graphql.FieldContext{
 		Object:     "TRBRequestDocument",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBRequestDocumentStatus does not have child fields")
 		},
@@ -47031,12 +47032,25 @@ func (ec *executionContext) _TRBRequestDocument(ctx context.Context, sel ast.Sel
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "status":
+			field := field
 
-			out.Values[i] = ec._TRBRequestDocument_status(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequestDocument_status(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "uploadedAt":
 			field := field
 

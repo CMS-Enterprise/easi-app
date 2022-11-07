@@ -2702,6 +2702,11 @@ func (r *tRBRequestDocumentResolver) DocumentType(ctx context.Context, obj *mode
 	}, nil
 }
 
+// Status is the resolver for the status field.
+func (r *tRBRequestDocumentResolver) Status(ctx context.Context, obj *models.TRBRequestDocument) (models.TRBRequestDocumentStatus, error) {
+	return resolvers.GetStatusForTRBRequestDocument(r.s3Client, obj.S3Key)
+}
+
 // UploadedAt is the resolver for the uploadedAt field.
 func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.TRBRequestDocument) (*time.Time, error) {
 	return &obj.CreatedAt, nil

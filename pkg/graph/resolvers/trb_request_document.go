@@ -17,29 +17,7 @@ const fallbackExtension = ".unknown"
 
 // GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID.
 func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
-	documents, err := store.GetTRBRequestDocumentsByRequestID(appcontext.ZLogger(ctx), requestID)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, document := range documents {
-		avStatus, err := s3Client.TagValueForKey(document.S3Key, upload.AVStatusTagName)
-		if err != nil {
-			return nil, err
-		}
-
-		// possible tag values come from virus scanning lambda
-		// this is the same logic as in schema.resolvers.go's Documents() method for 508 documents
-		if avStatus == "CLEAN" {
-			document.Status = models.TRBRequestDocumentStatusAvailable
-		} else if avStatus == "INFECTED" {
-			document.Status = models.TRBRequestDocumentStatusUnavailable
-		} else {
-			document.Status = models.TRBRequestDocumentStatusPending
-		}
-	}
-
-	return documents, nil
+	return store.GetTRBRequestDocumentsByRequestID(appcontext.ZLogger(ctx), requestID)
 }
 
 // GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
@@ -50,6 +28,24 @@ func GetURLForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (strin
 	}
 
 	return presignedURL.URL, nil
+}
+
+// GetStatusForTRBRequestDocument queries S3 for the virus-scanning status of a document with the given s3Key
+func GetStatusForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (models.TRBRequestDocumentStatus, error) {
+	avStatus, err := s3Client.TagValueForKey(s3Key, upload.AVStatusTagName)
+	if err != nil {
+		return "", err
+	}
+
+	// possible tag values come from virus scanning lambda
+	// this is the same logic as in schema.resolvers.go's Documents() method for 508 documents
+	if avStatus == "CLEAN" {
+		return models.TRBRequestDocumentStatusAvailable, nil
+	} else if avStatus == "INFECTED" {
+		return models.TRBRequestDocumentStatusUnavailable, nil
+	} else {
+		return models.TRBRequestDocumentStatusPending, nil
+	}
 }
 
 // CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database.
