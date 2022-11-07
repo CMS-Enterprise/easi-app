@@ -184,8 +184,6 @@ const ExtendLifecycleId = ({
         } = formikProps;
         const flatErrors = flattenErrors(errors);
 
-        console.log(values);
-
         return (
           <>
             {Object.keys(errors).length > 0 && (
