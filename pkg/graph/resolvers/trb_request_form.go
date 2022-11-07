@@ -42,8 +42,22 @@ func UpdateTRBRequestForm(ctx context.Context, store *storage.Store, input map[s
 		return nil, err
 	}
 
-	if isSubmitted {
+	if isSubmitted && previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusCompleted
+
+		trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+		if err != nil {
+			return nil, err
+		}
+
+		trbChanges := map[string]interface{}{
+			"feedbackStatus": models.TRBFeedbackStatusInReview,
+		}
+		err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+		if err != nil {
+			return nil, err
+		}
+		store.UpdateTRBRequest(appcontext.ZLogger(ctx), trb)
 	} else if previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusInProgress
 	}

@@ -224,6 +224,15 @@ type CreateTRBRequestAttendeeInput struct {
 	Role         models.PersonRole `json:"role"`
 }
 
+// The data needed add feedback to a TRB request
+type CreateTRBRequestFeedbackInput struct {
+	TrbRequestID    uuid.UUID                `json:"trbRequestId"`
+	FeedbackMessage string                   `json:"feedbackMessage"`
+	CopyTrbMailbox  bool                     `json:"copyTrbMailbox"`
+	NotifyEuaIds    []string                 `json:"notifyEuaIds"`
+	FeedbackStatus  models.TRBFeedbackStatus `json:"feedbackStatus"`
+}
+
 // The input required to add a test date/score to a 508/accessibility request
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`

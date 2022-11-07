@@ -4,6 +4,7 @@ SET id = :id,
     archived = :archived,
     type = :type,
     status = :status,
+    feedback_status = :feedback_status,
     modified_by = :modified_by,
     modified_at = CURRENT_TIMESTAMP
 WHERE trb_request.id = :id
@@ -12,7 +13,7 @@ RETURNING
     name,
     archived,
     type,
-    status,
+    feedback_status,
     created_by,
     created_at,
     modified_by,

@@ -4,6 +4,7 @@ INSERT INTO trb_request(
         archived,
         type,
         status,
+        feedback_status,
         created_by,
         modified_by
     )
@@ -13,6 +14,7 @@ VALUES (
         :archived,
         :type,
         :status,
+        :feedback_status,
         :created_by,
         :modified_by
     )
@@ -22,6 +24,7 @@ RETURNING
     archived,
     type,
     status,
+    feedback_status,
     created_by,
     created_at,
     modified_by,

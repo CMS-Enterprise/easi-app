@@ -1499,6 +1499,8 @@ type TRBRequest {
   type: TRBRequestType!
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
+  feedback: [TRBRequestFeedback]!
+  feedbackStatus: TRBFeedbackStatus!
   form: TRBRequestForm!
   createdBy: String!
   createdAt: Time!
@@ -1763,6 +1765,32 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
 }
 
 """
+Represents feedback added to a TRB request
+"""
+type TRBRequestFeedback {
+  id: UUID!
+  trbRequestId: UUID!
+  feedbackMessage: String!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+The data needed add feedback to a TRB request
+"""
+input CreateTRBRequestFeedbackInput {
+  trbRequestId: UUID!
+  feedbackMessage: String!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
+  feedbackStatus: TRBFeedbackStatus!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -1875,6 +1903,7 @@ type Mutation {
   updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
+  createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
 }
 
 """
@@ -1917,6 +1946,13 @@ enum TRBRequestType {
 enum TRBRequestStatus {
   OPEN
   CLOSED
+}
+
+enum TRBFeedbackStatus {
+  CANNOT_START_YET
+  IN_REVIEW
+  EDITS_REQUESTED
+  COMPLETED
 }
 
 """

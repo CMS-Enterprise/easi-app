@@ -1913,6 +1913,18 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
 }
 
+// CreateTRBRequestFeedback is the resolver for the createTRBRequestFeedback field.
+func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error) {
+	notifyEuas := models.ConvertEnums[string](input.NotifyEuaIds)
+	return resolvers.CreateTRBRequestFeedback(ctx, r.store, &models.TRBRequestFeedback{
+		TRBRequestID:    input.TrbRequestID,
+		FeedbackMessage: input.FeedbackMessage,
+		CopyTRBMailbox:  input.CopyTrbMailbox,
+		NotifyEUAIDs:    notifyEuas,
+		Status:          input.Status,
+	})
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2650,6 +2662,11 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
+// Feedback is the resolver for the feedback field.
+func (r *tRBRequestResolver) Feedback(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestFeedback, error) {
+	return resolvers.GetTRBRequestFeedbackByTRBRequestID(ctx, r.store, obj.ID)
+}
+
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
 	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
@@ -2662,6 +2679,12 @@ func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.T
 		return nil, err
 	}
 	return userInfo, nil
+}
+
+// NotifyEuaIds is the resolver for the notifyEuaIds field.
+func (r *tRBRequestFeedbackResolver) NotifyEuaIds(ctx context.Context, obj *models.TRBRequestFeedback) ([]string, error) {
+	ids := models.ConvertEnums[string](obj.NotifyEUAIDs)
+	return ids, nil
 }
 
 // CollabGroups is the resolver for the collabGroups field.
@@ -2791,6 +2814,11 @@ func (r *Resolver) TRBRequestAttendee() generated.TRBRequestAttendeeResolver {
 	return &tRBRequestAttendeeResolver{r}
 }
 
+// TRBRequestFeedback returns generated.TRBRequestFeedbackResolver implementation.
+func (r *Resolver) TRBRequestFeedback() generated.TRBRequestFeedbackResolver {
+	return &tRBRequestFeedbackResolver{r}
+}
+
 // TRBRequestForm returns generated.TRBRequestFormResolver implementation.
 func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
@@ -2817,5 +2845,6 @@ type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
+type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
