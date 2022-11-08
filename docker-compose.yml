@@ -61,7 +61,7 @@ services:
       - LAMBDA_ENDPOINT=http://prince:9001
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
-      - MINIO_ADDRESS=http://minio:9000
+      - MINIO_ADDRESS
       - SERVER_CERT
       - SERVER_KEY
       - USE_TLS
