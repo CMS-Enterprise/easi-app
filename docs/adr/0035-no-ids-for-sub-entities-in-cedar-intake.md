@@ -9,7 +9,10 @@ When discussing [EASI-1538](https://jiraent.cms.gov/browse/EASI-1538) with the C
 
 ## Decision Outcome
 
-* Chosen Alternative: Don't use IDs for sub-entities. It's probably easier for CEDAR and Alfabet to delete and regenerate all sub-entities, rather than figuring out which ones need to be updated/created/deleted from our JSON payload. Additionally, we don't have to worry about the redundancy and possible code duplication/inconsistency in generating unique IDs for each sub-entity, or the work involved in reworking our database/internal models to have unique, stable IDs for sub-entities.
+* Chosen Alternative: Don't use IDs for sub-entities. It's easier for CEDAR and Alfabet to delete and regenerate all sub-entities, rather than figuring out which ones need to be updated/created/deleted from our JSON payload.
+* Consequences for future work:
+  * Future sub-entities sent to CEDAR don't need to include their IDs.
+  * Existing sub-entities that currently include their IDs, such as funding sources on system intakes, don't need to be changed immediately; CEDAR can just ignore their IDs in their mapping code.
 
 ## Pros and Cons of the Alternatives
 
@@ -18,3 +21,7 @@ When discussing [EASI-1538](https://jiraent.cms.gov/browse/EASI-1538) with the C
 * `+` Would always allow CEDAR and Alfabet to tie sub-entities they store to unique entities in EASi's database.
 * `-` CEDAR would need more complicated logic in their mapping code to check for which sub-entities to update when a top-level entity was updated.
 * `-` Would require greater engineering work for us (both in generating unique IDs and possibly in reworking our data model(s)) without a clear benefit.
+
+### Don't send IDs for sub-entities
+* `+` Reduces the amount of work we have to do - we don't have to make sure there's a stable ID, or generate a synthetic ID (i.e. for lifecycle cost lines, concatenating business case ID, solution, phase, and year).
+* `-` CEDAR and Alfabet can't directly tie our sub-entities to rows in EASi's database. 
