@@ -99,10 +99,7 @@ export type SystemIntakeForm = {
 } & ContractDetailsForm;
 
 export type ContactDetailsForm = {
-  requester: {
-    name: string;
-    component: string;
-  };
+  requester: SystemIntakeContactProps;
   businessOwner: SystemIntakeContactProps;
   productManager: SystemIntakeContactProps;
   isso: SystemIntakeContactProps & { isPresent: boolean };
@@ -244,7 +241,7 @@ export type CedarContactProps = {
 
 /** System intake contact properties */
 export type SystemIntakeContactProps = {
-  id?: string;
+  id?: string | null;
   euaUserId: string;
   systemIntakeId: string;
   component: string;
@@ -255,6 +252,7 @@ export type SystemIntakeContactProps = {
 
 /** Formatted system intake contacts */
 export type FormattedContacts = {
+  requester: SystemIntakeContactProps;
   businessOwner: SystemIntakeContactProps;
   productManager: SystemIntakeContactProps;
   isso: SystemIntakeContactProps;
@@ -269,20 +267,24 @@ export type CreateContactType = (
 /** Function to update system intake contact */
 export type UpdateContactType = (
   contact: SystemIntakeContactProps
-) => Promise<AugmentedSystemIntakeContact[] | undefined>;
+) => Promise<AugmentedSystemIntakeContact | undefined>;
 
 /** Function to delete system intake contact */
 export type DeleteContactType = (
   id: string
-) => Promise<AugmentedSystemIntakeContact[] | undefined>;
+) => Promise<FormattedContacts | undefined>;
 
 /** useSystemIntakeContacts custom hook return type */
 export type UseSystemIntakeContactsType = {
-  contacts: FormattedContacts | null;
+  contacts: { data: FormattedContacts; loading: boolean };
   createContact: CreateContactType;
   updateContact: UpdateContactType;
   deleteContact: DeleteContactType;
 };
 
 /** System intake contact role keys */
-export type SystemIntakeRoleKeys = 'businessOwner' | 'productManager' | 'isso';
+export type SystemIntakeRoleKeys =
+  | 'businessOwner'
+  | 'productManager'
+  | 'isso'
+  | 'requester';

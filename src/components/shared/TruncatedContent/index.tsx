@@ -22,8 +22,14 @@ export default function TruncatedContent({
   buttonClassName
 }: TruncatedContentProps) {
   const [expanded, setExpanded] = useState(false);
-  const defaultContent = children.flat().slice(0, initialCount);
-  const expandedContent = children.flat().slice(initialCount);
+  const defaultContent = children
+    .filter(child => child) // Filter out conditional children
+    .flat()
+    .slice(0, initialCount);
+  const expandedContent = children
+    .filter(child => child) // Filter out conditional children
+    .flat()
+    .slice(initialCount);
   const Icon = expanded ? IconArrowDropUp : IconArrowDropDown;
   return (
     <>

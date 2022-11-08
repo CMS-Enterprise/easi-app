@@ -165,6 +165,7 @@ func NewSubmitBusinessCase(
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
 	sendEmail func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
+	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
 	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -231,6 +232,15 @@ func NewSubmitBusinessCase(
 		err = sendEmail(ctx, businessCase.ProjectName.String, businessCase.SystemIntakeID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
+		}
+
+		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
+		// need to check intake.Status, *not* businessCase.SystemIntakeStatus - intake is what gets returned from calling updateIntake()
+		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
+			err = submitToCEDAR(ctx, *businessCase)
+			if err != nil {
+				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(err))
+			}
 		}
 
 		return nil
@@ -449,8 +459,8 @@ func NewCreateActionExtendLifecycleID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	sendExtendLCIDEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, requester string, projectName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
-	sendExtendLCIDEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, requester string, projectName string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendExtendLCIDEmail func(ctx context.Context, recipient models.EmailAddress, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendExtendLCIDEmailToMultipleRecipients func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
 	sendIntakeInvalidEUAIDEmail func(ctx context.Context, projectName string, requesterEUAID string, intakeID uuid.UUID) error,
 	sendIntakeNoEUAIDEmail func(ctx context.Context, projectName string, intakeID uuid.UUID) error,
 ) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
@@ -507,8 +517,8 @@ func NewCreateActionExtendLifecycleID(
 				ctx,
 				*recipients,
 				id,
-				intake.Requester,
 				intake.ProjectName.ValueOrZero(),
+				intake.Requester,
 				expirationDate,
 				intake.LifecycleScope.ValueOrZero(),
 				intake.DecisionNextSteps.ValueOrZero(),
@@ -571,8 +581,8 @@ func NewCreateActionExtendLifecycleID(
 					ctx,
 					requesterInfo.Email,
 					id,
-					intake.Requester,
 					intake.ProjectName.String,
+					intake.Requester,
 					expirationDate,
 					scope,
 					intake.DecisionNextSteps.ValueOrZero(),
