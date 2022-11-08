@@ -1499,9 +1499,10 @@ type TRBRequest {
   type: TRBRequestType!
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
+  documents: [TRBRequestDocument!]!
   form: TRBRequestForm!
   createdBy: String!
-  createdAt: Time!
+  createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
   modifiedAt: Time
 }
@@ -1551,6 +1552,71 @@ input UpdateTRBRequestAttendeeInput {
   id: UUID!
   component: String!
   role: PersonRole!
+}
+
+"""
+Enumeration of the possible statuses of documents uploaded in the TRB workflow
+"""
+enum TRBRequestDocumentStatus {
+  AVAILABLE
+  PENDING
+  UNAVAILABLE
+}
+
+"""
+Represents the common options for document type that is attached to a
+508/accessibility request
+"""
+enum TRBDocumentCommonType {
+  ARCHITECTURE_DIAGRAM
+  PRESENTATION_SLIDE_DECK
+  BUSINESS_CASE
+  OTHER
+}
+
+"""
+Denotes the type of a document attached to a TRB request,
+which can be one of a number of common types, or a free-text user-specified type
+"""
+type TRBRequestDocumentType {
+  commonType: TRBDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""
+Represents a document attached to a TRB request
+"""
+type TRBRequestDocument {
+  documentType: TRBRequestDocumentType!
+  id: UUID!
+  fileName: String!
+  status: TRBRequestDocumentStatus!
+  uploadedAt: Time!
+  url: String!
+}
+
+"""
+The data needed to upload a TRB document and attach it to a request with metadata
+"""
+input CreateTRBRequestDocumentInput {
+  requestID: UUID!
+  fileData: Upload!
+  documentType: TRBDocumentCommonType!
+  otherTypeDescription: String  # Needed if documentType == OTHER
+}
+
+"""
+Data returned after uploading a document to a TRB request
+"""
+type CreateTRBRequestDocumentPayload {
+  document: TRBRequestDocument
+}
+
+"""
+Data returned after deleting a document attached to a TRB request
+"""
+type DeleteTRBRequestDocumentPayload {
+  document: TRBRequestDocument
 }
 
 """
@@ -1874,6 +1940,8 @@ type Mutation {
   createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
   updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
+  createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
+  deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
 }
 
@@ -1933,6 +2001,12 @@ scalar Time
 Email addresses are represented as strings
 """
 scalar EmailAddress
+
+"""
+https://gqlgen.com/reference/file-upload/
+Represents a multipart file upload
+"""
+scalar Upload
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 

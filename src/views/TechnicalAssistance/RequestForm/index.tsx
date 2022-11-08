@@ -1,11 +1,16 @@
-/* eslint-disable no-nested-ternary */
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Button,
+  GridContainer,
+  IconArrowBack
+} from '@trussworks/react-uswds';
+import { isEqual } from 'lodash';
+import * as yup from 'yup';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import CreateTrbRequestQuery from 'queries/CreateTrbRequestQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -19,27 +24,43 @@ import {
   GetTrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-// import {
-//   UpdateTrbRequest,
-//   UpdateTrbRequestVariables
-// } from 'queries/types/UpdateTrbRequest';
-// import UpdateTrbRequestQuery from 'queries/UpdateTrbRequestQuery';
 import { TRBRequestType } from 'types/graphql-global-types';
+import nullFillObject from 'utils/nullFillObject';
+import { inputBasicSchema } from 'validations/trbRequestSchema';
 import { NotFoundPartial } from 'views/NotFound';
 
 import StepHeader from '../../../components/StepHeader';
 import Breadcrumbs from '../Breadcrumbs';
 
 import Attendees from './Attendees';
-import Basic from './Basic';
+import Basic, { basicBlankValues } from './Basic';
 import Check from './Check';
 import Documents from './Documents';
 import Done from './Done';
 import SubjectAreas from './SubjectAreas';
 
+/**
+ * A promise wrapper for form step submit handlers.
+ * Run the `onValid` callback after successful validation.
+ * Use this to change address urls after submissions are successfully completed.
+ */
+export type StepSubmit = (onValid?: () => void) => Promise<void>;
+
 export interface FormStepComponentProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
+  /** Refresh the trb request from the form wrapper */
+  refreshRequest: () => void;
+  /**
+   * Set the current form step component submit handler
+   * so that in can be used in other places like the header.
+   * Form step components need to reassign the handler.
+   */
+  setStepSubmit: React.Dispatch<React.SetStateAction<StepSubmit | null>>;
+  /** Set to update the submitting state from step components to the parent request form */
+  setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  /** Set a form level error message from step components */
+  setFormError: React.Dispatch<React.SetStateAction<string | false>>;
   stepUrl: {
     current: string;
     next: string;
@@ -47,19 +68,31 @@ export interface FormStepComponentProps {
   };
 }
 
-/** Form view components with step url slugs for each form request step */
-export const formStepComponents: Readonly<
+/**
+ * Form view components with step url slugs for each form request step.
+ * `inputSchema` and `blankValues` are used to determine `stepsCompleted`.
+ * */
+// Temporary optional defs for inputSchema and blankValues used until dev is finished with all steps
+export const formStepComponents: {
+  component: (props: FormStepComponentProps) => JSX.Element;
+  step: string;
+  inputSchema?: yup.SchemaOf<any>;
+  blankValues?: any;
+}[] = [
   {
-    component: (props: FormStepComponentProps) => JSX.Element;
-    step: string;
-  }[]
-> = [
-  { component: Basic, step: 'basic' },
-  { component: SubjectAreas, step: 'subject' },
+    component: Basic,
+    step: 'basic',
+    inputSchema: inputBasicSchema,
+    blankValues: basicBlankValues
+  },
+  {
+    component: SubjectAreas,
+    step: 'subject'
+  },
   { component: Attendees, step: 'attendees' },
   { component: Documents, step: 'documents' },
   { component: Check, step: 'check' }
-] as const;
+];
 
 /**
  * Mapped form step slugs from `formStepComponents`.
@@ -83,13 +116,21 @@ type RequestFormText = {
 function Header({
   step,
   request,
-  breadcrumbBar
+  breadcrumbBar,
+  stepsCompleted,
+  stepSubmit,
+  isStepSubmitting,
+  formError
 }: {
   step: number;
   /** Unassigned request is used as a loading state toggle. */
   // eslint-disable-next-line camelcase
   request?: CreateTrbRequest_createTRBRequest;
   breadcrumbBar: React.ReactNode;
+  stepsCompleted: string[];
+  stepSubmit: StepSubmit | null;
+  isStepSubmitting: boolean;
+  formError: string | false;
 }) {
   const history = useHistory();
 
@@ -114,11 +155,11 @@ function Header({
         ),
         description: stp.description,
 
-        // todo
-        // Handle links to completed steps only, once there is more data to check against
-        completed: idx < step - 1,
+        // Handle links to available steps determined by completed steps
+        // Indexing of the step text matches `stepsCompleted`
+        completed: idx < stepsCompleted.length,
         onClick:
-          request && idx < step - 1
+          request && !isStepSubmitting && idx <= stepsCompleted.length
             ? e => {
                 history.push(
                   `/trb/requests/${request.id}/${formStepSlugs[idx]}`
@@ -128,12 +169,32 @@ function Header({
       }))}
       hideSteps={!request}
       breadcrumbBar={breadcrumbBar}
+      errorAlert={
+        formError && (
+          <Alert
+            heading={t('errors.somethingWrong')}
+            type="error"
+            className="trb-form-error margin-top-3 margin-bottom-2"
+          >
+            {formError}
+          </Alert>
+        )
+      }
     >
       {request && (
-        <UswdsReactLink to="/trb">
+        <Button
+          type="button"
+          unstyled
+          disabled={isStepSubmitting}
+          onClick={() => {
+            stepSubmit?.(() => {
+              history.push('/trb');
+            });
+          }}
+        >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('button.saveAndExit')}
-        </UswdsReactLink>
+        </Button>
       )}
     </StepHeader>
   );
@@ -170,16 +231,55 @@ function RequestForm() {
     GetTrbRequestQuery
   );
 
-  // const [update, updateResult] = useMutation<
-  //   UpdateTrbRequest,
-  //   UpdateTrbRequestVariables
-  // >(UpdateTrbRequestQuery);
+  const getRequest = useCallback(() => {
+    get({ variables: { id } });
+  }, [get, id]);
 
   // Assign request data from the first available query response
-  // Prioritize by latest type: update, get, create
+  // Prioritize by latest type: get, create
   // eslint-disable-next-line camelcase
   const request: CreateTrbRequest_createTRBRequest | undefined =
     getResult.data?.trbRequest || createResult.data?.createTRBRequest;
+
+  // Determine the steps that are already completed by attempting to pre-validate them
+  const [stepsCompleted, setStepsCompleted] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!request) {
+      return;
+    }
+    (async () => {
+      const completed = [...stepsCompleted];
+
+      // Validate steps sequentially
+      // eslint-disable-next-line no-restricted-syntax
+      for (const stp of formStepComponents) {
+        if (
+          // Skip already validated
+          !completed.includes(stp.step) &&
+          // Temp check for blankValues and inputSchema
+          // Remove when these props are available for all steps
+          stp.blankValues &&
+          stp.inputSchema
+        ) {
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            await stp.inputSchema.validate(
+              nullFillObject(request.form, stp.blankValues),
+              {
+                strict: true
+              }
+            );
+          } catch (err) {
+            break;
+          }
+          completed.push(stp.step);
+        }
+      }
+
+      if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+    })();
+  }, [request, stepsCompleted]);
 
   useEffect(() => {
     // Create a new request if `id` is new and go to it
@@ -201,7 +301,7 @@ function RequestForm() {
     }
     // Fetch request data if not new
     else if (!request && !createResult.called && !getResult.called) {
-      get({ variables: { id } });
+      getRequest();
     }
     // Get or create request was successful
     // Continue any other effects with request data
@@ -215,6 +315,7 @@ function RequestForm() {
     create,
     createResult,
     get,
+    getRequest,
     getResult,
     history,
     id,
@@ -235,6 +336,26 @@ function RequestForm() {
     ),
     [t]
   );
+
+  // References to the submit handler and submitting state of the current form step
+  const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
+  const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
+
+  // Form level errors from step components
+  const [formError, setFormError] = useState<string | false>(false);
+
+  // Clear the form level error as implied when steps change
+  useEffect(() => {
+    setFormError(false);
+  }, [setFormError, step]);
+
+  // Scroll to the form error
+  useEffect(() => {
+    if (formError) {
+      const err = document.querySelector('.trb-form-error');
+      err?.scrollIntoView();
+    }
+  }, [formError]);
 
   if (!step) {
     return null;
@@ -268,6 +389,10 @@ function RequestForm() {
           step={stepNum}
           breadcrumbBar={defaultBreadcrumbs}
           request={request}
+          stepsCompleted={stepsCompleted}
+          stepSubmit={stepSubmit}
+          isStepSubmitting={isStepSubmitting}
+          formError={formError}
         />
       )}
       {request ? (
@@ -281,6 +406,10 @@ function RequestForm() {
               next: `/trb/requests/${request.id}/${formStepSlugs[stepIdx + 1]}`,
               back: `/trb/requests/${request.id}/${formStepSlugs[stepIdx - 1]}`
             }}
+            refreshRequest={getRequest}
+            setStepSubmit={setStepSubmit}
+            setIsStepSubmitting={setIsStepSubmitting}
+            setFormError={setFormError}
           />
         </GridContainer>
       ) : (

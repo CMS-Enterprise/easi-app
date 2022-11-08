@@ -1,0 +1,70 @@
+.technical-assistance {
+  .usa-form {
+    /* Top margin for 1st level form groups */
+    > .usa-form-group {
+      margin-top: 2rem;
+
+    }
+    .usa-form-group {
+      /* Smaller top margin for nested form groups */
+      .usa-fieldset .usa-form-group {
+        margin-top: .5rem;
+      }
+
+      /* Labels and legends */
+      legend {
+        font-weight: 700;
+      }
+      .usa-legend {
+        margin-bottom: 0;
+      }
+      .usa-label {
+        max-width: none;
+        .usa-hint {
+          display: block; /* line break between label and hint */
+          font-weight: normal;
+        }
+      }
+      /* Radio & checkbox label spacing */
+      .usa-radio__label,
+      .usa-checkbox__label {
+        margin-top: .75rem;
+        letter-spacing: -.01em;
+      }
+
+      /* Text & textarea inputs expand to container width */
+      .usa-input,
+      .usa-textarea {
+        max-width: 100%;
+      }
+
+      /* Textarea max height */
+      .usa-textarea {
+        max-height: 155px;
+      }
+
+      /* Date picker undo width wrapping */
+      /*
+      .usa-date-picker__calendar {
+        @media (min-width: $desktop) {
+          width: 20rem;
+        }
+      }
+      */
+
+      /* Errors messages under group field labels */
+      .usa-error-message {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  /* Form level error alert */
+  .usa-alert--error {
+    button.usa-error-message {
+      padding: 0;
+      line-height: inherit;
+      text-align: left;
+    }
+  }
+}

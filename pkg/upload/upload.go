@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"io"
 	"mime"
 	"net/url"
 	"os"
@@ -18,6 +19,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
+
+// AVStatusTagName is the name of the tag that stores virus scan results for uploaded files
+const AVStatusTagName = "av-status"
 
 // Config holds the configuration to interact with s3
 type Config struct {
@@ -45,6 +49,10 @@ func NewS3Client(config Config) S3Client {
 			os.Getenv(appconfig.LocalMinioS3AccessKey),
 			os.Getenv(appconfig.LocalMinioS3SecretKey),
 			"")
+
+		// MinIO by default uses path-style access, which puts the bucket name in the URL, i.e. https://s3.region-code.amazonaws.com/bucket-name/key-name.
+		// It's possible to configure MinIO to use virtual-hosted style, but it's tricky to get working with our current Docker Compose setup, so we don't bother with it.
+		// See https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html and https://github.com/minio/minio/tree/master/docs/config#domain.
 		awsConfig.S3ForcePathStyle = aws.Bool(true)
 	}
 
@@ -60,6 +68,11 @@ func NewS3ClientUsingClient(s3Client s3iface.S3API, config Config) S3Client {
 		s3Client,
 		config,
 	}
+}
+
+// GetBucket is a getter for the S3Client's configured bucket.
+func (c S3Client) GetBucket() string {
+	return c.config.Bucket
 }
 
 // NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
@@ -110,7 +123,12 @@ func (c S3Client) NewGetPresignedURL(key string) (*models.PreSignedURL, error) {
 
 }
 
-// KeyFromURL extracts an S3 key from a URL.
+// KeyFromURL strips the configured bucket name from a URL, returning only the S3 key.
+//
+// This isn't always necessary for working with S3 buckets if they use virtual-hosted-style access, i.e. https://bucket-name.s3.region-code.amazonaws.com/key-name.
+// However, MinIO by default uses path-style access, which puts the bucket name in the URL, i.e. https://s3.region-code.amazonaws.com/bucket-name/key-name.
+// It's possible to configure MinIO to use virtual-hosted style, but it's tricky to get working with our current Docker Compose setup, so we don't bother with it.
+// See https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html and https://github.com/minio/minio/tree/master/docs/config#domain.
 func (c S3Client) KeyFromURL(url *url.URL) (string, error) {
 	return strings.Replace(url.Path, "/"+c.config.Bucket+"/", "", 1), nil
 }
@@ -133,4 +151,16 @@ func (c S3Client) TagValueForKey(key string, tagName string) (string, error) {
 		}
 	}
 	return "", nil
+}
+
+// UploadFile uploads a file to the configured bucket for saving documents.
+// Note that no file extension will be added to the key by this method; it assumes the caller has already added an extension, if desired.
+func (c S3Client) UploadFile(key string, body io.ReadSeeker) error {
+	_, err := c.client.PutObject(&s3.PutObjectInput{
+		Bucket: aws.String(c.config.Bucket),
+		Key:    aws.String(key),
+		Body:   body,
+	})
+
+	return err
 }

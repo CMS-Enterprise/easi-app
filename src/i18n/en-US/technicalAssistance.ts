@@ -19,6 +19,15 @@ const technicalAssistance = {
       status: 'Status'
     }
   },
+  // Higher level errors
+  errors: {
+    checkFix: 'Please check and fix the following',
+    fillBlank: 'Please fill in the blank',
+    fillDate: 'Please fill in the date',
+    includeExplanation: 'Please include an explanation',
+    makeSelection: 'Please make a selection',
+    somethingWrong: 'Something went wrong.'
+  },
   newRequest: {
     heading: 'Start a technical assistance request',
     subhead: 'What is this request for?',
@@ -169,7 +178,63 @@ const technicalAssistance = {
   // Form step components
   //
   basic: {
-    labels: {}
+    labels: {
+      name: 'Request name',
+      component: 'Request component',
+      needsAssistanceWith: 'What do you need technical assistance with?',
+      hasSolutionInMind: 'Do you have a solution in mind already?',
+      proposedSolution: 'Describe your proposed solution.',
+      whereInProcess: 'Where are you in your process?',
+      hasExpectedStartEndDates:
+        'Does your solution have an expected start and/or end date?',
+      expectedStartDate: 'Expected start date',
+      expectedEndDate: 'Expected end date',
+      collabGroups:
+        'Select any other OIT groups that you have met with or collaborated with.',
+      collabGroupOther: 'Which other group(s)?',
+      whenMeet: 'When did you meet with them?'
+    },
+    hint: {
+      component:
+        'Let the TRB know which CMS component this request originates from.',
+      needsAssistanceWith:
+        'Describe the type of help you need from the TRB as well as the project purpose (the “why”) and objectives of your work, if applicable.',
+      whereInProcess:
+        'This helps the TRB provide the right type of support for your request.',
+      whenMeet:
+        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.'
+    },
+    options: {
+      select: 'Select',
+      yes: 'Yes',
+      no: 'No',
+      other: 'Other',
+      whereInProcess: {
+        iHaveAnIdeaAndWantToBrainstorm: 'I have an idea and want to brainstorm',
+        contractingWorkHasStarted:
+          'Contracting work has started, but a contractor has not been selected',
+        developmentHasRecentlyStarted: 'Development has recently started',
+        developmentIsSignificantlyUnderway:
+          'Development is significantly underway',
+        theSystemIsInOperationAndMaintenance:
+          'The system is in Operation and Maintenance',
+        other: 'Other'
+      },
+      collabGroups: {
+        security: 'Security',
+        enterpriseArchitecture: 'Enterprise Architecture (EA)',
+        cloud: 'Cloud',
+        privacyAdvisor: 'Privacy',
+        governanceReviewBoard:
+          'Governance Review Board (GRB) or Governance Review Team (GRT)',
+        other: 'Other'
+      }
+    },
+    errors: {
+      submit:
+        'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.'
+    },
+    allFieldsMandatory: 'All fields are mandatory'
   },
   subject: {},
   attendees: {

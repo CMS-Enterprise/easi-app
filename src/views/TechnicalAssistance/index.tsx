@@ -9,6 +9,8 @@ import RequestForm from './RequestForm';
 import StartRequest from './StartRequest';
 import Steps from './Steps';
 
+import './index.scss';
+
 function TechnicalAssistance() {
   const { path } = useRouteMatch();
 

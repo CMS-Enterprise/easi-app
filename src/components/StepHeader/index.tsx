@@ -29,6 +29,7 @@ export interface StepHeaderProps {
   text?: string;
   subText?: string;
   children?: React.ReactNode;
+  errorAlert: React.ReactNode;
 }
 
 /**
@@ -53,7 +54,8 @@ function StepHeader({
   heading,
   text,
   subText,
-  children
+  children,
+  errorAlert
 }: StepHeaderProps) {
   const stepIdx = step - 1;
   const stepDescription = steps[stepIdx].description;
@@ -81,6 +83,8 @@ function StepHeader({
           </Grid>
         </GridContainer>
       </div>
+
+      {errorAlert && <GridContainer>{errorAlert}</GridContainer>}
 
       {!hideSteps && (
         <GridContainer>
