@@ -46,7 +46,7 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 					name
 				}
 			}
-		}`, &resp)
+		}`, &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.NotNil(resp.CreateSystemIntake.ID)
 	s.Equal("Test User", resp.CreateSystemIntake.Requester.Name)
@@ -765,7 +765,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 
 	s.Equal(respIntake.Requester.Name, "Iama Requester")
 	s.Equal(respIntake.Requester.Component, "CMS Office 3")
-	s.Equal(respIntake.Requester.Email, "TEST@local.fake")
+	s.Equal(respIntake.Requester.Email, "terry.thompson@local.fake")
 
 	s.Nil(respIntake.Isso.Name.Ptr())
 	s.False(respIntake.Isso.IsPresent)
@@ -1746,7 +1746,7 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 					status
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	respIntake := resp.SubmitIntake.SystemIntake
 	s.Equal(intake.ID.String(), respIntake.ID)
@@ -1850,7 +1850,7 @@ func (s *GraphQLTestSuite) TestExtendLifecycleId() {
 					path
 				}
 			}
-		}`, intake.ID, date(2025, 5, 14).Format(time.RFC3339), "New Scope", "New Next Steps", "New Cost Baseline"), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
+		}`, intake.ID, date(2025, 5, 14).Format(time.RFC3339), "New Scope", "New Next Steps", "New Cost Baseline"), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.Equal(0, len(resp.CreateSystemIntakeActionExtendLifecycleID.UserErrors))
 
@@ -1864,8 +1864,8 @@ func (s *GraphQLTestSuite) TestExtendLifecycleId() {
 	s.Equal(1, len(respIntake.Actions))
 	action := respIntake.Actions[0]
 	s.Equal("EXTEND_LCID", action.Type)
-	s.Equal("wwww Doe", action.Actor.Name)
-	s.Equal("WWWW@local.fake", action.Actor.Email)
+	s.Equal("Terry Thompson", action.Actor.Name)
+	s.Equal("terry.thompson@local.fake", action.Actor.Email)
 
 	s.Equal("2025-05-14T00:00:00Z", action.LcidExpirationChange.NewDate)
 	s.Equal("2021-12-01T00:00:00Z", action.LcidExpirationChange.PreviousDate)
