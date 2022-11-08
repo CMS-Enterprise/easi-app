@@ -1,8 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { Button, IconArrowBack } from '@trussworks/react-uswds';
 
-import UswdsReactLink from 'components/LinkWrapper';
+import { StepSubmit } from '.';
 
 type PageButtonProps =
   | {
@@ -17,7 +18,9 @@ type PageButtonProps =
 type Props = {
   back?: PageButtonProps;
   next?: PageButtonProps;
+  saveExitHidden?: boolean;
   saveExitDisabled?: boolean;
+  submit?: StepSubmit;
   className?: string;
 };
 
@@ -26,10 +29,18 @@ type Props = {
  * Buttons default to type `button`.
  * Button `text` has a default text fallback.
  * The `back` button defaults to `outline`.
- * The save and exit option is wip.
+ * The "Save and exit" button needs `submit` defined to function.
  */
-export function Pager({ back, next, saveExitDisabled, className }: Props) {
+export function Pager({
+  back,
+  next,
+  saveExitHidden,
+  saveExitDisabled,
+  submit,
+  className
+}: Props) {
   const { t } = useTranslation('technicalAssistance');
+  const history = useHistory();
 
   return (
     <div className={`border-base-light border-top-1px ${className || ''}`}>
@@ -57,12 +68,21 @@ export function Pager({ back, next, saveExitDisabled, className }: Props) {
           </Button>
         )}
       </div>
-      {!saveExitDisabled && (
+      {!saveExitHidden && (
         <div className="margin-top-2">
-          <UswdsReactLink to="/trb">
+          <Button
+            type="button"
+            unstyled
+            disabled={saveExitDisabled}
+            onClick={() => {
+              submit?.(() => {
+                history.push('/trb');
+              });
+            }}
+          >
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t('button.saveAndExit')}
-          </UswdsReactLink>
+          </Button>
         </div>
       )}
     </div>
