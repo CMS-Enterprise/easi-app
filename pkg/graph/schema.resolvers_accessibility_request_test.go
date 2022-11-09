@@ -18,6 +18,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		EUAUserID:              null.StringFrom("TEST"),
 		ProjectName:            null.StringFrom("Big Project"),
 		Status:                 models.SystemIntakeStatusLCIDISSUED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
@@ -55,7 +56,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	_, noteErr := s.store.CreateAccessibilityRequestNote(ctx, &models.AccessibilityRequestNote{
 		RequestID: accessibilityRequest.ID,
 		Note:      "I am a knot note, not a naughty note",
-		EUAUserID: "HEHE",
+		EUAUserID: "ABCD",
 	})
 	s.NoError(noteErr)
 
@@ -126,7 +127,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 					authorName
 				}
 			}
-		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("HEHE"))
+		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.Equal(accessibilityRequest.ID.String(), resp.AccessibilityRequest.ID)
 	s.Equal(intake.ID.String(), resp.AccessibilityRequest.System.ID)
@@ -149,7 +150,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	s.Equal("OPEN", responseStatusRecord.Status)
 
 	responseNote := resp.AccessibilityRequest.Notes[0]
-	s.Equal("hehe Doe", responseNote.AuthorName)
+	s.Equal("Adeline Aarons", responseNote.AuthorName)
 	s.Equal("I am a knot note, not a naughty note", responseNote.Note)
 }
 

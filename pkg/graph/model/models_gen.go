@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
 )
@@ -224,6 +225,19 @@ type CreateTRBRequestAttendeeInput struct {
 	Role         models.PersonRole `json:"role"`
 }
 
+// The data needed to upload a TRB document and attach it to a request with metadata
+type CreateTRBRequestDocumentInput struct {
+	RequestID            uuid.UUID                    `json:"requestID"`
+	FileData             graphql.Upload               `json:"fileData"`
+	DocumentType         models.TRBDocumentCommonType `json:"documentType"`
+	OtherTypeDescription *string                      `json:"otherTypeDescription"`
+}
+
+// Data returned after uploading a document to a TRB request
+type CreateTRBRequestDocumentPayload struct {
+	Document *models.TRBRequestDocument `json:"document"`
+}
+
 // The input required to add a test date/score to a 508/accessibility request
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
@@ -279,6 +293,11 @@ type DeleteSystemIntakeContactInput struct {
 // The payload when deleting a system intake contact
 type DeleteSystemIntakeContactPayload struct {
 	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
+}
+
+// Data returned after deleting a document attached to a TRB request
+type DeleteTRBRequestDocumentPayload struct {
+	Document *models.TRBRequestDocument `json:"document"`
 }
 
 // The input required to delete a test date/score
@@ -577,6 +596,13 @@ type SystemIntakeRequesterInput struct {
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Denotes the type of a document attached to a TRB request,
+// which can be one of a number of common types, or a free-text user-specified type
+type TRBRequestDocumentType struct {
+	CommonType           models.TRBDocumentCommonType `json:"commonType"`
+	OtherTypeDescription *string                      `json:"otherTypeDescription"`
 }
 
 // Parameters for updating a 508/accessibility request's associated CEDAR system
