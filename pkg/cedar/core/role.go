@@ -123,3 +123,58 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 
 	return retVal, nil
 }
+
+// GetRoleTypes queries CEDAR for the list of supported role types
+func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return []*models.CedarRoleType{}, nil
+	}
+
+	// Construct the parameters
+	params := apiroles.NewRoleTypeFindParams()
+	params.SetApplication(cedarRoleApplication)
+	params.HTTPClient = c.hc
+
+	// Make the API call
+	resp, err := c.sdk.Role.RoleTypeFind(params, c.auth)
+	if err != nil {
+		return []*models.CedarRoleType{}, err
+	}
+
+	if resp.Payload == nil {
+		return []*models.CedarRoleType{}, fmt.Errorf("no body received")
+	}
+
+	// Convert the auto-generated struct to our own pkg/models struct
+	retVal := []*models.CedarRoleType{}
+
+	for _, roleType := range resp.Payload.RoleTypes {
+		if roleType.Application == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role type; role type Application was null")
+			continue
+		}
+
+		if roleType.ID == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role type; role type ID was null")
+			continue
+		}
+
+		if roleType.Name == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role type; role type Name was null")
+			continue
+		}
+
+		retRoleType := &models.CedarRoleType{
+			ID:          *roleType.ID,
+			Application: *roleType.Application,
+			Name:        *roleType.Name,
+
+			Description: zero.StringFrom(roleType.Description),
+		}
+
+		retVal = append(retVal, retRoleType)
+	}
+
+	return retVal, nil
+}
