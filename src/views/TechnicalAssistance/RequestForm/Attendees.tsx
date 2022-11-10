@@ -85,7 +85,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     formState: { errors, isSubmitting, isDirty }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
-    defaultValues: requester
+    defaultValues: { ...requester, trbRequestId: request.id }
   });
 
   useEffect(() => {
