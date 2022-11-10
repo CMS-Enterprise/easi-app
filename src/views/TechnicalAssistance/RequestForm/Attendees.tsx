@@ -121,7 +121,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
             })}
           >
             {/* Requester validation errors summary */}
-            {errors && (
+            {Object.keys(errors).length > 0 && (
               <Alert
                 heading={t('basic.errors.checkFix')}
                 type="error"
