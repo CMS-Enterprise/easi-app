@@ -57,7 +57,8 @@ func NewDomainModelFindListOK() *DomainModelFindListOK {
 	return &DomainModelFindListOK{}
 }
 
-/* DomainModelFindListOK describes a response with status code 200, with default header values.
+/*
+	DomainModelFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -87,7 +88,8 @@ func NewDomainModelFindListBadRequest() *DomainModelFindListBadRequest {
 	return &DomainModelFindListBadRequest{}
 }
 
-/* DomainModelFindListBadRequest describes a response with status code 400, with default header values.
+/*
+	DomainModelFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -119,7 +121,8 @@ func NewDomainModelFindListUnauthorized() *DomainModelFindListUnauthorized {
 	return &DomainModelFindListUnauthorized{}
 }
 
-/* DomainModelFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+	DomainModelFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -151,7 +154,8 @@ func NewDomainModelFindListInternalServerError() *DomainModelFindListInternalSer
 	return &DomainModelFindListInternalServerError{}
 }
 
-/* DomainModelFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+	DomainModelFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

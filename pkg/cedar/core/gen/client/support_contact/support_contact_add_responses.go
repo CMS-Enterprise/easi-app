@@ -57,7 +57,8 @@ func NewSupportContactAddOK() *SupportContactAddOK {
 	return &SupportContactAddOK{}
 }
 
-/* SupportContactAddOK describes a response with status code 200, with default header values.
+/*
+	SupportContactAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewSupportContactAddBadRequest() *SupportContactAddBadRequest {
 	return &SupportContactAddBadRequest{}
 }
 
-/* SupportContactAddBadRequest describes a response with status code 400, with default header values.
+/*
+	SupportContactAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewSupportContactAddUnauthorized() *SupportContactAddUnauthorized {
 	return &SupportContactAddUnauthorized{}
 }
 
-/* SupportContactAddUnauthorized describes a response with status code 401, with default header values.
+/*
+	SupportContactAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewSupportContactAddInternalServerError() *SupportContactAddInternalServerE
 	return &SupportContactAddInternalServerError{}
 }
 
-/* SupportContactAddInternalServerError describes a response with status code 500, with default header values.
+/*
+	SupportContactAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

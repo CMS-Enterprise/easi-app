@@ -57,7 +57,8 @@ func NewUserFindListOK() *UserFindListOK {
 	return &UserFindListOK{}
 }
 
-/* UserFindListOK describes a response with status code 200, with default header values.
+/*
+	UserFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewUserFindListBadRequest() *UserFindListBadRequest {
 	return &UserFindListBadRequest{}
 }
 
-/* UserFindListBadRequest describes a response with status code 400, with default header values.
+/*
+	UserFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewUserFindListUnauthorized() *UserFindListUnauthorized {
 	return &UserFindListUnauthorized{}
 }
 
-/* UserFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+	UserFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewUserFindListInternalServerError() *UserFindListInternalServerError {
 	return &UserFindListInternalServerError{}
 }
 
-/* UserFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+	UserFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

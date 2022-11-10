@@ -53,10 +53,12 @@ func NewExchangeDeleteListParamsWithHTTPClient(client *http.Client) *ExchangeDel
 	}
 }
 
-/* ExchangeDeleteListParams contains all the parameters to send to the API endpoint
-   for the exchange delete list operation.
+/*
+ExchangeDeleteListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the exchange delete list operation.
+
+	Typically these are written to a http.Request.
 */
 type ExchangeDeleteListParams struct {
 

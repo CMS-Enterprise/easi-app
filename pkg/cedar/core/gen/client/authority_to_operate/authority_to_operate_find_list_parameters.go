@@ -53,10 +53,12 @@ func NewAuthorityToOperateFindListParamsWithHTTPClient(client *http.Client) *Aut
 	}
 }
 
-/* AuthorityToOperateFindListParams contains all the parameters to send to the API endpoint
-   for the authority to operate find list operation.
+/*
+AuthorityToOperateFindListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the authority to operate find list operation.
+
+	Typically these are written to a http.Request.
 */
 type AuthorityToOperateFindListParams struct {
 

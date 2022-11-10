@@ -63,7 +63,8 @@ func NewSupportContactDeleteListOK() *SupportContactDeleteListOK {
 	return &SupportContactDeleteListOK{}
 }
 
-/* SupportContactDeleteListOK describes a response with status code 200, with default header values.
+/*
+	SupportContactDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewSupportContactDeleteListBadRequest() *SupportContactDeleteListBadRequest
 	return &SupportContactDeleteListBadRequest{}
 }
 
-/* SupportContactDeleteListBadRequest describes a response with status code 400, with default header values.
+/*
+	SupportContactDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewSupportContactDeleteListUnauthorized() *SupportContactDeleteListUnauthor
 	return &SupportContactDeleteListUnauthorized{}
 }
 
-/* SupportContactDeleteListUnauthorized describes a response with status code 401, with default header values.
+/*
+	SupportContactDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewSupportContactDeleteListNotFound() *SupportContactDeleteListNotFound {
 	return &SupportContactDeleteListNotFound{}
 }
 
-/* SupportContactDeleteListNotFound describes a response with status code 404, with default header values.
+/*
+	SupportContactDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewSupportContactDeleteListInternalServerError() *SupportContactDeleteListI
 	return &SupportContactDeleteListInternalServerError{}
 }
 
-/* SupportContactDeleteListInternalServerError describes a response with status code 500, with default header values.
+/*
+	SupportContactDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

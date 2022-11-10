@@ -57,7 +57,8 @@ func NewDeploymentAddOK() *DeploymentAddOK {
 	return &DeploymentAddOK{}
 }
 
-/* DeploymentAddOK describes a response with status code 200, with default header values.
+/*
+	DeploymentAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewDeploymentAddBadRequest() *DeploymentAddBadRequest {
 	return &DeploymentAddBadRequest{}
 }
 
-/* DeploymentAddBadRequest describes a response with status code 400, with default header values.
+/*
+	DeploymentAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewDeploymentAddUnauthorized() *DeploymentAddUnauthorized {
 	return &DeploymentAddUnauthorized{}
 }
 
-/* DeploymentAddUnauthorized describes a response with status code 401, with default header values.
+/*
+	DeploymentAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewDeploymentAddInternalServerError() *DeploymentAddInternalServerError {
 	return &DeploymentAddInternalServerError{}
 }
 
-/* DeploymentAddInternalServerError describes a response with status code 500, with default header values.
+/*
+	DeploymentAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

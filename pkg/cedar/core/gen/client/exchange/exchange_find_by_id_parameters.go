@@ -52,10 +52,12 @@ func NewExchangeFindByIDParamsWithHTTPClient(client *http.Client) *ExchangeFindB
 	}
 }
 
-/* ExchangeFindByIDParams contains all the parameters to send to the API endpoint
-   for the exchange find by Id operation.
+/*
+ExchangeFindByIDParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the exchange find by Id operation.
+
+	Typically these are written to a http.Request.
 */
 type ExchangeFindByIDParams struct {
 

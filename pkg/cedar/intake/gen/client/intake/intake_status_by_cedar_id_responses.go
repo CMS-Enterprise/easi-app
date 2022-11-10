@@ -57,7 +57,8 @@ func NewIntakeStatusByCedarIDOK() *IntakeStatusByCedarIDOK {
 	return &IntakeStatusByCedarIDOK{}
 }
 
-/* IntakeStatusByCedarIDOK describes a response with status code 200, with default header values.
+/*
+	IntakeStatusByCedarIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewIntakeStatusByCedarIDBadRequest() *IntakeStatusByCedarIDBadRequest {
 	return &IntakeStatusByCedarIDBadRequest{}
 }
 
-/* IntakeStatusByCedarIDBadRequest describes a response with status code 400, with default header values.
+/*
+	IntakeStatusByCedarIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewIntakeStatusByCedarIDUnauthorized() *IntakeStatusByCedarIDUnauthorized {
 	return &IntakeStatusByCedarIDUnauthorized{}
 }
 
-/* IntakeStatusByCedarIDUnauthorized describes a response with status code 401, with default header values.
+/*
+	IntakeStatusByCedarIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewIntakeStatusByCedarIDInternalServerError() *IntakeStatusByCedarIDInterna
 	return &IntakeStatusByCedarIDInternalServerError{}
 }
 
-/* IntakeStatusByCedarIDInternalServerError describes a response with status code 500, with default header values.
+/*
+	IntakeStatusByCedarIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

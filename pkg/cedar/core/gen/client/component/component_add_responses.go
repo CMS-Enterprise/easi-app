@@ -57,7 +57,8 @@ func NewComponentAddOK() *ComponentAddOK {
 	return &ComponentAddOK{}
 }
 
-/* ComponentAddOK describes a response with status code 200, with default header values.
+/*
+	ComponentAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewComponentAddBadRequest() *ComponentAddBadRequest {
 	return &ComponentAddBadRequest{}
 }
 
-/* ComponentAddBadRequest describes a response with status code 400, with default header values.
+/*
+	ComponentAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewComponentAddUnauthorized() *ComponentAddUnauthorized {
 	return &ComponentAddUnauthorized{}
 }
 
-/* ComponentAddUnauthorized describes a response with status code 401, with default header values.
+/*
+	ComponentAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewComponentAddInternalServerError() *ComponentAddInternalServerError {
 	return &ComponentAddInternalServerError{}
 }
 
-/* ComponentAddInternalServerError describes a response with status code 500, with default header values.
+/*
+	ComponentAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

@@ -42,9 +42,9 @@ type ClientService interface {
 }
 
 /*
-  SystemDetailFindByID retrieves an existing system based on the provided id
+SystemDetailFindByID retrieves an existing system based on the provided id
 
-  Retrieve an existing system based on the provided id.
+Retrieve an existing system based on the provided id.
 */
 func (a *Client) SystemDetailFindByID(params *SystemDetailFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemDetailFindByIDOK, error) {
 	// TODO: Validate the params before sending
@@ -83,9 +83,9 @@ func (a *Client) SystemDetailFindByID(params *SystemDetailFindByIDParams, authIn
 }
 
 /*
-  SystemSummaryFindByID retrieves a system summary based on the provided id
+SystemSummaryFindByID retrieves a system summary based on the provided id
 
-  Retrieve a system summary based on the provided id.
+Retrieve a system summary based on the provided id.
 */
 func (a *Client) SystemSummaryFindByID(params *SystemSummaryFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemSummaryFindByIDOK, error) {
 	// TODO: Validate the params before sending
@@ -124,9 +124,9 @@ func (a *Client) SystemSummaryFindByID(params *SystemSummaryFindByIDParams, auth
 }
 
 /*
-  SystemSummaryFindList retrieves a system summary list this interface takes in state status version include in survey ids only and belongs to
+SystemSummaryFindList retrieves a system summary list this interface takes in state status version include in survey ids only and belongs to
 
-  Retrieve a system summary list. This interface takes in state, status, version, includeInSurvey, idsOnly and belongsTo.
+Retrieve a system summary list. This interface takes in state, status, version, includeInSurvey, idsOnly and belongsTo.
 */
 func (a *Client) SystemSummaryFindList(params *SystemSummaryFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemSummaryFindListOK, error) {
 	// TODO: Validate the params before sending
@@ -165,9 +165,9 @@ func (a *Client) SystemSummaryFindList(params *SystemSummaryFindListParams, auth
 }
 
 /*
-  SystemVersionFindByID retrieves all versions of a system based on the i c t object ID
+SystemVersionFindByID retrieves all versions of a system based on the i c t object ID
 
-  Retrieve all versions of a system based on the ICT Object ID.
+Retrieve all versions of a system based on the ICT Object ID.
 */
 func (a *Client) SystemVersionFindByID(params *SystemVersionFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SystemVersionFindByIDOK, error) {
 	// TODO: Validate the params before sending

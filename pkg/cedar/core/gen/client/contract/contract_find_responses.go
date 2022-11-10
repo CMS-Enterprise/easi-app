@@ -57,7 +57,8 @@ func NewContractFindOK() *ContractFindOK {
 	return &ContractFindOK{}
 }
 
-/* ContractFindOK describes a response with status code 200, with default header values.
+/*
+	ContractFindOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewContractFindBadRequest() *ContractFindBadRequest {
 	return &ContractFindBadRequest{}
 }
 
-/* ContractFindBadRequest describes a response with status code 400, with default header values.
+/*
+	ContractFindBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewContractFindUnauthorized() *ContractFindUnauthorized {
 	return &ContractFindUnauthorized{}
 }
 
-/* ContractFindUnauthorized describes a response with status code 401, with default header values.
+/*
+	ContractFindUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewContractFindInternalServerError() *ContractFindInternalServerError {
 	return &ContractFindInternalServerError{}
 }
 
-/* ContractFindInternalServerError describes a response with status code 500, with default header values.
+/*
+	ContractFindInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

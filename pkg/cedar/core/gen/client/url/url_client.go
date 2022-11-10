@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-  URLFindList retrieves a list of u r ls associated with an object in c e d a r
+URLFindList retrieves a list of u r ls associated with an object in c e d a r
 
-  Retrieve a list of URLs associated with an object in CEDAR. An object could include a System, ATO, etc
+Retrieve a list of URLs associated with an object in CEDAR. An object could include a System, ATO, etc
 */
 func (a *Client) URLFindList(params *URLFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*URLFindListOK, error) {
 	// TODO: Validate the params before sending

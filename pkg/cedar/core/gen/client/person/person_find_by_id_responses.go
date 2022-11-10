@@ -63,7 +63,8 @@ func NewPersonFindByIDOK() *PersonFindByIDOK {
 	return &PersonFindByIDOK{}
 }
 
-/* PersonFindByIDOK describes a response with status code 200, with default header values.
+/*
+	PersonFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewPersonFindByIDBadRequest() *PersonFindByIDBadRequest {
 	return &PersonFindByIDBadRequest{}
 }
 
-/* PersonFindByIDBadRequest describes a response with status code 400, with default header values.
+/*
+	PersonFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewPersonFindByIDUnauthorized() *PersonFindByIDUnauthorized {
 	return &PersonFindByIDUnauthorized{}
 }
 
-/* PersonFindByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+	PersonFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewPersonFindByIDNotFound() *PersonFindByIDNotFound {
 	return &PersonFindByIDNotFound{}
 }
 
-/* PersonFindByIDNotFound describes a response with status code 404, with default header values.
+/*
+	PersonFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewPersonFindByIDInternalServerError() *PersonFindByIDInternalServerError {
 	return &PersonFindByIDInternalServerError{}
 }
 
-/* PersonFindByIDInternalServerError describes a response with status code 500, with default header values.
+/*
+	PersonFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

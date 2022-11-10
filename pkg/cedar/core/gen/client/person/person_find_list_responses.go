@@ -57,7 +57,8 @@ func NewPersonFindListOK() *PersonFindListOK {
 	return &PersonFindListOK{}
 }
 
-/* PersonFindListOK describes a response with status code 200, with default header values.
+/*
+	PersonFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewPersonFindListBadRequest() *PersonFindListBadRequest {
 	return &PersonFindListBadRequest{}
 }
 
-/* PersonFindListBadRequest describes a response with status code 400, with default header values.
+/*
+	PersonFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewPersonFindListUnauthorized() *PersonFindListUnauthorized {
 	return &PersonFindListUnauthorized{}
 }
 
-/* PersonFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+	PersonFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewPersonFindListInternalServerError() *PersonFindListInternalServerError {
 	return &PersonFindListInternalServerError{}
 }
 
-/* PersonFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+	PersonFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

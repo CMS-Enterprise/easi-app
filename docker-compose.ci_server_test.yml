@@ -16,3 +16,21 @@ services:
       - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp # Keep this around for legacy migration V88__Add_app_user.sql
     depends_on:
       - db
+  minio:
+    restart: always
+    image: minio/minio:latest
+    ports:
+      - '9000:9000'
+    entrypoint: minio server /data
+  minio_mc:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    volumes:
+      - ./minio_config.json:/root/.mc/config.json
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc rb --force local/easi-app-file-uploads/;
+      /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
+      /usr/bin/mc policy set public local/easi-app-file-uploads;
+      "

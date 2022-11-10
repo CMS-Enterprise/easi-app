@@ -52,10 +52,12 @@ func NewIntakeFindByClientIDParamsWithHTTPClient(client *http.Client) *IntakeFin
 	}
 }
 
-/* IntakeFindByClientIDParams contains all the parameters to send to the API endpoint
-   for the intake find by client Id operation.
+/*
+IntakeFindByClientIDParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the intake find by client Id operation.
+
+	Typically these are written to a http.Request.
 */
 type IntakeFindByClientIDParams struct {
 

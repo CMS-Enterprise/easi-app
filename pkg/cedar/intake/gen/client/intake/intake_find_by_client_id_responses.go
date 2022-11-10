@@ -57,7 +57,8 @@ func NewIntakeFindByClientIDOK() *IntakeFindByClientIDOK {
 	return &IntakeFindByClientIDOK{}
 }
 
-/* IntakeFindByClientIDOK describes a response with status code 200, with default header values.
+/*
+	IntakeFindByClientIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewIntakeFindByClientIDBadRequest() *IntakeFindByClientIDBadRequest {
 	return &IntakeFindByClientIDBadRequest{}
 }
 
-/* IntakeFindByClientIDBadRequest describes a response with status code 400, with default header values.
+/*
+	IntakeFindByClientIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewIntakeFindByClientIDUnauthorized() *IntakeFindByClientIDUnauthorized {
 	return &IntakeFindByClientIDUnauthorized{}
 }
 
-/* IntakeFindByClientIDUnauthorized describes a response with status code 401, with default header values.
+/*
+	IntakeFindByClientIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewIntakeFindByClientIDInternalServerError() *IntakeFindByClientIDInternalS
 	return &IntakeFindByClientIDInternalServerError{}
 }
 
-/* IntakeFindByClientIDInternalServerError describes a response with status code 500, with default header values.
+/*
+	IntakeFindByClientIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

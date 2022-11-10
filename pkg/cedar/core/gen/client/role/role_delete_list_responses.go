@@ -63,7 +63,8 @@ func NewRoleDeleteListOK() *RoleDeleteListOK {
 	return &RoleDeleteListOK{}
 }
 
-/* RoleDeleteListOK describes a response with status code 200, with default header values.
+/*
+	RoleDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewRoleDeleteListBadRequest() *RoleDeleteListBadRequest {
 	return &RoleDeleteListBadRequest{}
 }
 
-/* RoleDeleteListBadRequest describes a response with status code 400, with default header values.
+/*
+	RoleDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewRoleDeleteListUnauthorized() *RoleDeleteListUnauthorized {
 	return &RoleDeleteListUnauthorized{}
 }
 
-/* RoleDeleteListUnauthorized describes a response with status code 401, with default header values.
+/*
+	RoleDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewRoleDeleteListNotFound() *RoleDeleteListNotFound {
 	return &RoleDeleteListNotFound{}
 }
 
-/* RoleDeleteListNotFound describes a response with status code 404, with default header values.
+/*
+	RoleDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewRoleDeleteListInternalServerError() *RoleDeleteListInternalServerError {
 	return &RoleDeleteListInternalServerError{}
 }
 
-/* RoleDeleteListInternalServerError describes a response with status code 500, with default header values.
+/*
+	RoleDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

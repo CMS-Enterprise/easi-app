@@ -149,9 +149,7 @@ func (s *Server) routes(
 
 	// set up S3 client
 	s3Config := s.NewS3Config()
-	if s.environment.Local() || s.environment.Test() {
-		s3Config.IsLocal = true
-	}
+	s3Config.IsLocal = s.environment.Local() || s.environment.Test()
 
 	s3Client := upload.NewS3Client(s3Config)
 

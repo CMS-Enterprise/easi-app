@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# MinIO mc documentation: https://min.io/docs/minio/linux/reference/minio-mc.html#minio-mc-commands
+# use the "local" alias after each command, i.e. mc ls local
+
+docker run -it --rm --network=easi-app_default -v "$(pwd)/minio_config.json:/root/.mc/config.json" --entrypoint /bin/bash minio/mc

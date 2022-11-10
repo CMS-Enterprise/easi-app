@@ -42,9 +42,9 @@ type ClientService interface {
 }
 
 /*
-  ContractAdd adds a new contract s to the alfabet system this interface takes an arrary of contract documents
+ContractAdd adds a new contract s to the alfabet system this interface takes an arrary of contract documents
 
-  Add a new contract(s) to the Alfabet system. This interface takes an arrary of Contract documents.
+Add a new contract(s) to the Alfabet system. This interface takes an arrary of Contract documents.
 */
 func (a *Client) ContractAdd(params *ContractAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ContractAddOK, error) {
 	// TODO: Validate the params before sending
@@ -83,9 +83,9 @@ func (a *Client) ContractAdd(params *ContractAddParams, authInfo runtime.ClientA
 }
 
 /*
-  ContractDeleteList deletes a list of contracts based on an array of contarct ids
+ContractDeleteList deletes a list of contracts based on an array of contarct ids
 
-  Delete a list of contracts based on an array of contarct ids.
+Delete a list of contracts based on an array of contarct ids.
 */
 func (a *Client) ContractDeleteList(params *ContractDeleteListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ContractDeleteListOK, error) {
 	// TODO: Validate the params before sending
@@ -124,9 +124,9 @@ func (a *Client) ContractDeleteList(params *ContractDeleteListParams, authInfo r
 }
 
 /*
-  ContractFind retrieves a list of contracts based on query criteria if a system Id is passed the contract s for that system are returned if no query data is passed in all contracts for the current year are returned
+ContractFind retrieves a list of contracts based on query criteria if a system Id is passed the contract s for that system are returned if no query data is passed in all contracts for the current year are returned
 
-  Retrieve a list of contracts based on query criteria. If a SystemId is passed, the contract(s) for that system are returned. If no query data is passed in, all contracts for the current year are returned.
+Retrieve a list of contracts based on query criteria. If a SystemId is passed, the contract(s) for that system are returned. If no query data is passed in, all contracts for the current year are returned.
 */
 func (a *Client) ContractFind(params *ContractFindParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ContractFindOK, error) {
 	// TODO: Validate the params before sending
@@ -165,9 +165,9 @@ func (a *Client) ContractFind(params *ContractFindParams, authInfo runtime.Clien
 }
 
 /*
-  ContractUpdate updates an array of contract s in the alfabet system this interface takes an arrary of contract documents if the input budgets only is set to false this interface will also update any associated contract deliverable records
+ContractUpdate updates an array of contract s in the alfabet system this interface takes an arrary of contract documents if the input budgets only is set to false this interface will also update any associated contract deliverable records
 
-  Update an array of contract(s) in the Alfabet system. This interface takes an arrary of Contract documents. If the input budgetsOnly is set to false, this interface will also update any associated Contract Deliverable records.
+Update an array of contract(s) in the Alfabet system. This interface takes an arrary of Contract documents. If the input budgetsOnly is set to false, this interface will also update any associated Contract Deliverable records.
 */
 func (a *Client) ContractUpdate(params *ContractUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ContractUpdateOK, error) {
 	// TODO: Validate the params before sending

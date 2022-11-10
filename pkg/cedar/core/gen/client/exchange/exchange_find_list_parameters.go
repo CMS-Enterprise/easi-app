@@ -52,10 +52,12 @@ func NewExchangeFindListParamsWithHTTPClient(client *http.Client) *ExchangeFindL
 	}
 }
 
-/* ExchangeFindListParams contains all the parameters to send to the API endpoint
-   for the exchange find list operation.
+/*
+ExchangeFindListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the exchange find list operation.
+
+	Typically these are written to a http.Request.
 */
 type ExchangeFindListParams struct {
 

@@ -42,9 +42,9 @@ type ClientService interface {
 }
 
 /*
-  DeploymentAdd adds a list of new deployment records to alfabet this interface takes in an array of deployments
+DeploymentAdd adds a list of new deployment records to alfabet this interface takes in an array of deployments
 
-  Add a list of new deployment records to Alfabet.  This interface takes in an array of deployments.
+Add a list of new deployment records to Alfabet.  This interface takes in an array of deployments.
 */
 func (a *Client) DeploymentAdd(params *DeploymentAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeploymentAddOK, error) {
 	// TODO: Validate the params before sending
@@ -83,9 +83,9 @@ func (a *Client) DeploymentAdd(params *DeploymentAddParams, authInfo runtime.Cli
 }
 
 /*
-  DeploymentDeleteList deletes a list of deployments based on the ids passed in this interface takes an array of deployment ids
+DeploymentDeleteList deletes a list of deployments based on the ids passed in this interface takes an array of deployment ids
 
-  Delete a list of deployments based on the ids passed in. This interface takes an array of deploymentIds.
+Delete a list of deployments based on the ids passed in. This interface takes an array of deploymentIds.
 */
 func (a *Client) DeploymentDeleteList(params *DeploymentDeleteListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeploymentDeleteListOK, error) {
 	// TODO: Validate the params before sending
@@ -124,9 +124,9 @@ func (a *Client) DeploymentDeleteList(params *DeploymentDeleteListParams, authIn
 }
 
 /*
-  DeploymentFindList retrieves a list of deployments based on query criteria system Id state status and deployment type
+DeploymentFindList retrieves a list of deployments based on query criteria system Id state status and deployment type
 
-  Retrieve a list of deployments based on query criteria (systemId, state, status and deploymentType).
+Retrieve a list of deployments based on query criteria (systemId, state, status and deploymentType).
 */
 func (a *Client) DeploymentFindList(params *DeploymentFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeploymentFindListOK, error) {
 	// TODO: Validate the params before sending
@@ -165,9 +165,9 @@ func (a *Client) DeploymentFindList(params *DeploymentFindListParams, authInfo r
 }
 
 /*
-  DeploymentUpdate updates a list of new deployment records to alfabet this interface takes in an array of deployment documents
+DeploymentUpdate updates a list of new deployment records to alfabet this interface takes in an array of deployment documents
 
-  Update a list of new deployment records to Alfabet. This interface takes in an array of deployment documents.
+Update a list of new deployment records to Alfabet. This interface takes in an array of deployment documents.
 */
 func (a *Client) DeploymentUpdate(params *DeploymentUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeploymentUpdateOK, error) {
 	// TODO: Validate the params before sending

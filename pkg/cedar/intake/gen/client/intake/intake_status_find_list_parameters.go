@@ -52,10 +52,12 @@ func NewIntakeStatusFindListParamsWithHTTPClient(client *http.Client) *IntakeSta
 	}
 }
 
-/* IntakeStatusFindListParams contains all the parameters to send to the API endpoint
-   for the intake status find list operation.
+/*
+IntakeStatusFindListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the intake status find list operation.
+
+	Typically these are written to a http.Request.
 */
 type IntakeStatusFindListParams struct {
 

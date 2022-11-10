@@ -7,6 +7,7 @@
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@craco/craco": "^6.0.0",
     "@cypress/code-coverage": "^3.10.0",
+    "@hookform/resolvers": "^2.9.8",
     "@okta/okta-auth-js": "^6.1.0",
     "@okta/okta-react": "^6.4.2",
     "@okta/okta-signin-widget": "^6.0.1",
@@ -52,6 +53,7 @@
     "react-autosuggest": "^9.4.3",
     "react-csv": "^2.0.3",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.37.0",
     "react-i18next": "^11.5.0",
     "react-idle-timer": "^4.5.5",
     "react-media": "^1.10.0",
@@ -72,7 +74,7 @@
     "uswds": "^2.10.3",
     "uuid": "^8.3.2",
     "wait-on": "^5.2.1",
-    "yup": "^0.32.8"
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "craco start",

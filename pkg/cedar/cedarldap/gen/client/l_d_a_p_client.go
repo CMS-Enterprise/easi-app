@@ -6,10 +6,11 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client/operations"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client/operations"
 )
 
 // Default l d a p HTTP client.

@@ -57,7 +57,8 @@ func NewPersonUpdateOK() *PersonUpdateOK {
 	return &PersonUpdateOK{}
 }
 
-/* PersonUpdateOK describes a response with status code 200, with default header values.
+/*
+	PersonUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewPersonUpdateBadRequest() *PersonUpdateBadRequest {
 	return &PersonUpdateBadRequest{}
 }
 
-/* PersonUpdateBadRequest describes a response with status code 400, with default header values.
+/*
+	PersonUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewPersonUpdateUnauthorized() *PersonUpdateUnauthorized {
 	return &PersonUpdateUnauthorized{}
 }
 
-/* PersonUpdateUnauthorized describes a response with status code 401, with default header values.
+/*
+	PersonUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewPersonUpdateInternalServerError() *PersonUpdateInternalServerError {
 	return &PersonUpdateInternalServerError{}
 }
 
-/* PersonUpdateInternalServerError describes a response with status code 500, with default header values.
+/*
+	PersonUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

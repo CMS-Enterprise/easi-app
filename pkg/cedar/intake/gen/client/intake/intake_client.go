@@ -46,9 +46,9 @@ type ClientService interface {
 }
 
 /*
-  IntakeAdd adds an intake
+IntakeAdd adds an intake
 
-  Add an intake
+Add an intake
 */
 func (a *Client) IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*IntakeAddOK, error) {
 	// TODO: Validate the params before sending
@@ -87,9 +87,9 @@ func (a *Client) IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthI
 }
 
 /*
-  IntakeFindByCedarID retrieves an intake based on a c e d a r ID
+IntakeFindByCedarID retrieves an intake based on a c e d a r ID
 
-  Retrieve an intake based on a CEDAR ID
+Retrieve an intake based on a CEDAR ID
 */
 func (a *Client) IntakeFindByCedarID(params *IntakeFindByCedarIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*IntakeFindByCedarIDOK, error) {
 	// TODO: Validate the params before sending
@@ -128,9 +128,9 @@ func (a *Client) IntakeFindByCedarID(params *IntakeFindByCedarIDParams, authInfo
 }
 
 /*
-  IntakeFindByClientID retrieves an intake based on a client ID
+IntakeFindByClientID retrieves an intake based on a client ID
 
-  Retrieve an intake based on a client ID
+Retrieve an intake based on a client ID
 */
 func (a *Client) IntakeFindByClientID(params *IntakeFindByClientIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*IntakeFindByClientIDOK, error) {
 	// TODO: Validate the params before sending
@@ -169,9 +169,9 @@ func (a *Client) IntakeFindByClientID(params *IntakeFindByClientIDParams, authIn
 }
 
 /*
-  IntakeStatusByCedarID retrieves an intake status based on a c e d a r ID
+IntakeStatusByCedarID retrieves an intake status based on a c e d a r ID
 
-  Retrieve an intake status based on a CEDAR ID
+Retrieve an intake status based on a CEDAR ID
 */
 func (a *Client) IntakeStatusByCedarID(params *IntakeStatusByCedarIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*IntakeStatusByCedarIDOK, error) {
 	// TODO: Validate the params before sending
@@ -210,9 +210,9 @@ func (a *Client) IntakeStatusByCedarID(params *IntakeStatusByCedarIDParams, auth
 }
 
 /*
-  IntakeStatusByClientID retrieves an intake status based on a client ID
+IntakeStatusByClientID retrieves an intake status based on a client ID
 
-  Retrieve an intake status based on a client ID
+Retrieve an intake status based on a client ID
 */
 func (a *Client) IntakeStatusByClientID(params *IntakeStatusByClientIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*IntakeStatusByClientIDOK, error) {
 	// TODO: Validate the params before sending
@@ -251,9 +251,9 @@ func (a *Client) IntakeStatusByClientID(params *IntakeStatusByClientIDParams, au
 }
 
 /*
-  IntakeStatusFindList retrieves an array of intake statuses based on search criteria
+IntakeStatusFindList retrieves an array of intake statuses based on search criteria
 
-  Retrieve a list of intake statuses based on search criteria
+Retrieve a list of intake statuses based on search criteria
 */
 func (a *Client) IntakeStatusFindList(params *IntakeStatusFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*IntakeStatusFindListOK, error) {
 	// TODO: Validate the params before sending

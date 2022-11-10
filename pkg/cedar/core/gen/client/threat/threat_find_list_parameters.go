@@ -53,10 +53,12 @@ func NewThreatFindListParamsWithHTTPClient(client *http.Client) *ThreatFindListP
 	}
 }
 
-/* ThreatFindListParams contains all the parameters to send to the API endpoint
-   for the threat find list operation.
+/*
+ThreatFindListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the threat find list operation.
+
+	Typically these are written to a http.Request.
 */
 type ThreatFindListParams struct {
 

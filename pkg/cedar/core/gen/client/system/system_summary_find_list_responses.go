@@ -63,7 +63,8 @@ func NewSystemSummaryFindListOK() *SystemSummaryFindListOK {
 	return &SystemSummaryFindListOK{}
 }
 
-/* SystemSummaryFindListOK describes a response with status code 200, with default header values.
+/*
+	SystemSummaryFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewSystemSummaryFindListBadRequest() *SystemSummaryFindListBadRequest {
 	return &SystemSummaryFindListBadRequest{}
 }
 
-/* SystemSummaryFindListBadRequest describes a response with status code 400, with default header values.
+/*
+	SystemSummaryFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewSystemSummaryFindListUnauthorized() *SystemSummaryFindListUnauthorized {
 	return &SystemSummaryFindListUnauthorized{}
 }
 
-/* SystemSummaryFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+	SystemSummaryFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewSystemSummaryFindListNotFound() *SystemSummaryFindListNotFound {
 	return &SystemSummaryFindListNotFound{}
 }
 
-/* SystemSummaryFindListNotFound describes a response with status code 404, with default header values.
+/*
+	SystemSummaryFindListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewSystemSummaryFindListInternalServerError() *SystemSummaryFindListInterna
 	return &SystemSummaryFindListInternalServerError{}
 }
 
-/* SystemSummaryFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+	SystemSummaryFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

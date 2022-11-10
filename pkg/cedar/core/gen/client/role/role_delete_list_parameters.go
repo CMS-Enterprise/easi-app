@@ -53,10 +53,12 @@ func NewRoleDeleteListParamsWithHTTPClient(client *http.Client) *RoleDeleteListP
 	}
 }
 
-/* RoleDeleteListParams contains all the parameters to send to the API endpoint
-   for the role delete list operation.
+/*
+RoleDeleteListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the role delete list operation.
+
+	Typically these are written to a http.Request.
 */
 type RoleDeleteListParams struct {
 

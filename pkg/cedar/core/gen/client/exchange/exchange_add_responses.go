@@ -57,7 +57,8 @@ func NewExchangeAddOK() *ExchangeAddOK {
 	return &ExchangeAddOK{}
 }
 
-/* ExchangeAddOK describes a response with status code 200, with default header values.
+/*
+	ExchangeAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewExchangeAddBadRequest() *ExchangeAddBadRequest {
 	return &ExchangeAddBadRequest{}
 }
 
-/* ExchangeAddBadRequest describes a response with status code 400, with default header values.
+/*
+	ExchangeAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewExchangeAddUnauthorized() *ExchangeAddUnauthorized {
 	return &ExchangeAddUnauthorized{}
 }
 
-/* ExchangeAddUnauthorized describes a response with status code 401, with default header values.
+/*
+	ExchangeAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewExchangeAddInternalServerError() *ExchangeAddInternalServerError {
 	return &ExchangeAddInternalServerError{}
 }
 
-/* ExchangeAddInternalServerError describes a response with status code 500, with default header values.
+/*
+	ExchangeAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

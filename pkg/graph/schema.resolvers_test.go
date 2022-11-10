@@ -96,7 +96,7 @@ func (m mockS3Client) GetObjectTagging(input *s3.GetObjectTaggingInput) (*s3.Get
 
 	return &s3.GetObjectTaggingOutput{
 		TagSet: []*s3.Tag{{
-			Key:   aws.String("av-status"),
+			Key:   aws.String(upload.AVStatusTagName),
 			Value: aws.String(m.AVStatus),
 		}},
 	}, nil

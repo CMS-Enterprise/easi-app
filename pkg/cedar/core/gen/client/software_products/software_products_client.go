@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-  SoftwareProductsFindList retrieves a list of software products this interface takes in id and version
+SoftwareProductsFindList retrieves a list of software products this interface takes in id and version
 
-  Retrieve a list of softwareProducts. This interface takes in id and version.
+Retrieve a list of softwareProducts. This interface takes in id and version.
 */
 func (a *Client) SoftwareProductsFindList(params *SoftwareProductsFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SoftwareProductsFindListOK, error) {
 	// TODO: Validate the params before sending

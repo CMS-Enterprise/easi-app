@@ -63,7 +63,8 @@ func NewContractDeleteListOK() *ContractDeleteListOK {
 	return &ContractDeleteListOK{}
 }
 
-/* ContractDeleteListOK describes a response with status code 200, with default header values.
+/*
+	ContractDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewContractDeleteListBadRequest() *ContractDeleteListBadRequest {
 	return &ContractDeleteListBadRequest{}
 }
 
-/* ContractDeleteListBadRequest describes a response with status code 400, with default header values.
+/*
+	ContractDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewContractDeleteListUnauthorized() *ContractDeleteListUnauthorized {
 	return &ContractDeleteListUnauthorized{}
 }
 
-/* ContractDeleteListUnauthorized describes a response with status code 401, with default header values.
+/*
+	ContractDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewContractDeleteListNotFound() *ContractDeleteListNotFound {
 	return &ContractDeleteListNotFound{}
 }
 
-/* ContractDeleteListNotFound describes a response with status code 404, with default header values.
+/*
+	ContractDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewContractDeleteListInternalServerError() *ContractDeleteListInternalServe
 	return &ContractDeleteListInternalServerError{}
 }
 
-/* ContractDeleteListInternalServerError describes a response with status code 500, with default header values.
+/*
+	ContractDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

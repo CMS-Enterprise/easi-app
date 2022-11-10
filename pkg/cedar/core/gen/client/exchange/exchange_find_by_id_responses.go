@@ -57,7 +57,8 @@ func NewExchangeFindByIDOK() *ExchangeFindByIDOK {
 	return &ExchangeFindByIDOK{}
 }
 
-/* ExchangeFindByIDOK describes a response with status code 200, with default header values.
+/*
+	ExchangeFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewExchangeFindByIDBadRequest() *ExchangeFindByIDBadRequest {
 	return &ExchangeFindByIDBadRequest{}
 }
 
-/* ExchangeFindByIDBadRequest describes a response with status code 400, with default header values.
+/*
+	ExchangeFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewExchangeFindByIDUnauthorized() *ExchangeFindByIDUnauthorized {
 	return &ExchangeFindByIDUnauthorized{}
 }
 
-/* ExchangeFindByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+	ExchangeFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewExchangeFindByIDInternalServerError() *ExchangeFindByIDInternalServerErr
 	return &ExchangeFindByIDInternalServerError{}
 }
 
-/* ExchangeFindByIDInternalServerError describes a response with status code 500, with default header values.
+/*
+	ExchangeFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

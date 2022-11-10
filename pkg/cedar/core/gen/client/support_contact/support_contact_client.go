@@ -40,9 +40,9 @@ type ClientService interface {
 }
 
 /*
-  SupportContactAdd adds a support contact record to alfabet
+SupportContactAdd adds a support contact record to alfabet
 
-  Add a supportContact record to Alfabet. This interface takes in id, application id, name, title, url, phone and email.
+Add a supportContact record to Alfabet. This interface takes in id, application id, name, title, url, phone and email.
 */
 func (a *Client) SupportContactAdd(params *SupportContactAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SupportContactAddOK, error) {
 	// TODO: Validate the params before sending
@@ -81,9 +81,9 @@ func (a *Client) SupportContactAdd(params *SupportContactAddParams, authInfo run
 }
 
 /*
-  SupportContactDeleteList deletes a list of support contacts by ID
+SupportContactDeleteList deletes a list of support contacts by ID
 
-  Delete a list of supportContacts record to Alfabet. This interface takes an array of supportContact id's.
+Delete a list of supportContacts record to Alfabet. This interface takes an array of supportContact id's.
 */
 func (a *Client) SupportContactDeleteList(params *SupportContactDeleteListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SupportContactDeleteListOK, error) {
 	// TODO: Validate the params before sending
@@ -122,9 +122,9 @@ func (a *Client) SupportContactDeleteList(params *SupportContactDeleteListParams
 }
 
 /*
-  SupportContactFindList retrieves a list of support contacts based on the inputs passed in
+SupportContactFindList retrieves a list of support contacts based on the inputs passed in
 
-  Retrieve a list of supportContact records to Alfabet. This interface takes in id, application id, name, title, url, phone and email.
+Retrieve a list of supportContact records to Alfabet. This interface takes in id, application id, name, title, url, phone and email.
 */
 func (a *Client) SupportContactFindList(params *SupportContactFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SupportContactFindListOK, error) {
 	// TODO: Validate the params before sending

@@ -25,6 +25,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 // Documents is the resolver for the documents field.
@@ -47,7 +48,7 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		// another mechanism for doing that as a background job so that we don't need to do it here.
 		// Furthermore, locally this will always return "", since we are not interfacing with the
 		// real S3.
-		value, valueErr := r.s3Client.TagValueForKey(document.Key, "av-status")
+		value, valueErr := r.s3Client.TagValueForKey(document.Key, upload.AVStatusTagName)
 		if valueErr != nil {
 			return nil, valueErr
 		}
@@ -1908,6 +1909,30 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 	return resolvers.DeleteTRBRequestAttendee(ctx, r.store, id)
 }
 
+// CreateTRBRequestDocument is the resolver for the createTRBRequestDocument field.
+func (r *mutationResolver) CreateTRBRequestDocument(ctx context.Context, input model.CreateTRBRequestDocumentInput) (*model.CreateTRBRequestDocumentPayload, error) {
+	doc, err := resolvers.CreateTRBRequestDocument(ctx, r.store, r.s3Client, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.CreateTRBRequestDocumentPayload{
+		Document: doc,
+	}, nil
+}
+
+// DeleteTRBRequestDocument is the resolver for the deleteTRBRequestDocument field.
+func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error) {
+	doc, err := resolvers.DeleteTRBRequestDocument(ctx, r.store, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteTRBRequestDocumentPayload{
+		Document: doc,
+	}, nil
+}
+
 // UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
 func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
@@ -2667,6 +2692,11 @@ func (r *tRBRequestResolver) Feedback(ctx context.Context, obj *models.TRBReques
 	return resolvers.GetTRBRequestFeedbackByTRBRequestID(ctx, r.store, obj.ID)
 }
 
+// Documents is the resolver for the documents field.
+func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error) {
+	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
+}
+
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
 	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
@@ -2679,6 +2709,29 @@ func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.T
 		return nil, err
 	}
 	return userInfo, nil
+}
+
+// DocumentType is the resolver for the documentType field.
+func (r *tRBRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.TRBRequestDocument) (*model.TRBRequestDocumentType, error) {
+	return &model.TRBRequestDocumentType{
+		CommonType:           obj.CommonDocumentType,
+		OtherTypeDescription: &obj.OtherType,
+	}, nil
+}
+
+// Status is the resolver for the status field.
+func (r *tRBRequestDocumentResolver) Status(ctx context.Context, obj *models.TRBRequestDocument) (models.TRBRequestDocumentStatus, error) {
+	return resolvers.GetStatusForTRBRequestDocument(r.s3Client, obj.S3Key)
+}
+
+// UploadedAt is the resolver for the uploadedAt field.
+func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.TRBRequestDocument) (*time.Time, error) {
+	return &obj.CreatedAt, nil
+}
+
+// URL is the resolver for the url field.
+func (r *tRBRequestDocumentResolver) URL(ctx context.Context, obj *models.TRBRequestDocument) (string, error) {
+	return resolvers.GetURLForTRBRequestDocument(r.s3Client, obj.S3Key)
 }
 
 // NotifyEuaIds is the resolver for the notifyEuaIds field.
@@ -2814,6 +2867,11 @@ func (r *Resolver) TRBRequestAttendee() generated.TRBRequestAttendeeResolver {
 	return &tRBRequestAttendeeResolver{r}
 }
 
+// TRBRequestDocument returns generated.TRBRequestDocumentResolver implementation.
+func (r *Resolver) TRBRequestDocument() generated.TRBRequestDocumentResolver {
+	return &tRBRequestDocumentResolver{r}
+}
+
 // TRBRequestFeedback returns generated.TRBRequestFeedbackResolver implementation.
 func (r *Resolver) TRBRequestFeedback() generated.TRBRequestFeedbackResolver {
 	return &tRBRequestFeedbackResolver{r}
@@ -2845,6 +2903,7 @@ type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
+type tRBRequestDocumentResolver struct{ *Resolver }
 type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

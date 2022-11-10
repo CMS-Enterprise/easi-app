@@ -63,7 +63,8 @@ func NewSystemSummaryFindByIDOK() *SystemSummaryFindByIDOK {
 	return &SystemSummaryFindByIDOK{}
 }
 
-/* SystemSummaryFindByIDOK describes a response with status code 200, with default header values.
+/*
+	SystemSummaryFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewSystemSummaryFindByIDBadRequest() *SystemSummaryFindByIDBadRequest {
 	return &SystemSummaryFindByIDBadRequest{}
 }
 
-/* SystemSummaryFindByIDBadRequest describes a response with status code 400, with default header values.
+/*
+	SystemSummaryFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewSystemSummaryFindByIDUnauthorized() *SystemSummaryFindByIDUnauthorized {
 	return &SystemSummaryFindByIDUnauthorized{}
 }
 
-/* SystemSummaryFindByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+	SystemSummaryFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewSystemSummaryFindByIDNotFound() *SystemSummaryFindByIDNotFound {
 	return &SystemSummaryFindByIDNotFound{}
 }
 
-/* SystemSummaryFindByIDNotFound describes a response with status code 404, with default header values.
+/*
+	SystemSummaryFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewSystemSummaryFindByIDInternalServerError() *SystemSummaryFindByIDInterna
 	return &SystemSummaryFindByIDInternalServerError{}
 }
 
-/* SystemSummaryFindByIDInternalServerError describes a response with status code 500, with default header values.
+/*
+	SystemSummaryFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

@@ -57,7 +57,8 @@ func NewOrganizationFindListOK() *OrganizationFindListOK {
 	return &OrganizationFindListOK{}
 }
 
-/* OrganizationFindListOK describes a response with status code 200, with default header values.
+/*
+	OrganizationFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewOrganizationFindListBadRequest() *OrganizationFindListBadRequest {
 	return &OrganizationFindListBadRequest{}
 }
 
-/* OrganizationFindListBadRequest describes a response with status code 400, with default header values.
+/*
+	OrganizationFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewOrganizationFindListUnauthorized() *OrganizationFindListUnauthorized {
 	return &OrganizationFindListUnauthorized{}
 }
 
-/* OrganizationFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+	OrganizationFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewOrganizationFindListInternalServerError() *OrganizationFindListInternalS
 	return &OrganizationFindListInternalServerError{}
 }
 
-/* OrganizationFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+	OrganizationFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

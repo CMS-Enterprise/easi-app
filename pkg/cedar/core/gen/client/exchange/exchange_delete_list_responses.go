@@ -63,7 +63,8 @@ func NewExchangeDeleteListOK() *ExchangeDeleteListOK {
 	return &ExchangeDeleteListOK{}
 }
 
-/* ExchangeDeleteListOK describes a response with status code 200, with default header values.
+/*
+	ExchangeDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewExchangeDeleteListBadRequest() *ExchangeDeleteListBadRequest {
 	return &ExchangeDeleteListBadRequest{}
 }
 
-/* ExchangeDeleteListBadRequest describes a response with status code 400, with default header values.
+/*
+	ExchangeDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewExchangeDeleteListUnauthorized() *ExchangeDeleteListUnauthorized {
 	return &ExchangeDeleteListUnauthorized{}
 }
 
-/* ExchangeDeleteListUnauthorized describes a response with status code 401, with default header values.
+/*
+	ExchangeDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewExchangeDeleteListNotFound() *ExchangeDeleteListNotFound {
 	return &ExchangeDeleteListNotFound{}
 }
 
-/* ExchangeDeleteListNotFound describes a response with status code 404, with default header values.
+/*
+	ExchangeDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewExchangeDeleteListInternalServerError() *ExchangeDeleteListInternalServe
 	return &ExchangeDeleteListInternalServerError{}
 }
 
-/* ExchangeDeleteListInternalServerError describes a response with status code 500, with default header values.
+/*
+	ExchangeDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

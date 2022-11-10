@@ -55,10 +55,12 @@ func NewContractUpdateParamsWithHTTPClient(client *http.Client) *ContractUpdateP
 	}
 }
 
-/* ContractUpdateParams contains all the parameters to send to the API endpoint
-   for the contract update operation.
+/*
+ContractUpdateParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the contract update operation.
+
+	Typically these are written to a http.Request.
 */
 type ContractUpdateParams struct {
 

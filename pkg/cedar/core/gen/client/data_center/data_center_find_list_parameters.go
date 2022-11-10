@@ -53,10 +53,12 @@ func NewDataCenterFindListParamsWithHTTPClient(client *http.Client) *DataCenterF
 	}
 }
 
-/* DataCenterFindListParams contains all the parameters to send to the API endpoint
-   for the data center find list operation.
+/*
+DataCenterFindListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the data center find list operation.
+
+	Typically these are written to a http.Request.
 */
 type DataCenterFindListParams struct {
 

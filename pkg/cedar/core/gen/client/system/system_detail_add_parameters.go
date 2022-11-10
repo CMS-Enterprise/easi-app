@@ -54,10 +54,12 @@ func NewSystemDetailAddParamsWithHTTPClient(client *http.Client) *SystemDetailAd
 	}
 }
 
-/* SystemDetailAddParams contains all the parameters to send to the API endpoint
-   for the system detail add operation.
+/*
+SystemDetailAddParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the system detail add operation.
+
+	Typically these are written to a http.Request.
 */
 type SystemDetailAddParams struct {
 

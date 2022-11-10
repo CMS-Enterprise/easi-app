@@ -54,10 +54,12 @@ func NewPersonAddParamsWithHTTPClient(client *http.Client) *PersonAddParams {
 	}
 }
 
-/* PersonAddParams contains all the parameters to send to the API endpoint
-   for the person add operation.
+/*
+PersonAddParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the person add operation.
+
+	Typically these are written to a http.Request.
 */
 type PersonAddParams struct {
 

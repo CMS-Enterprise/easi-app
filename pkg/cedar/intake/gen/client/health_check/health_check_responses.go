@@ -45,7 +45,8 @@ func NewHealthCheckOK() *HealthCheckOK {
 	return &HealthCheckOK{}
 }
 
-/* HealthCheckOK describes a response with status code 200, with default header values.
+/*
+	HealthCheckOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -77,7 +78,8 @@ func NewHealthCheckUnauthorized() *HealthCheckUnauthorized {
 	return &HealthCheckUnauthorized{}
 }
 
-/* HealthCheckUnauthorized describes a response with status code 401, with default header values.
+/*
+	HealthCheckUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */

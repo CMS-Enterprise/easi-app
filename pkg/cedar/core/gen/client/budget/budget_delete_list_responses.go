@@ -63,7 +63,8 @@ func NewBudgetDeleteListOK() *BudgetDeleteListOK {
 	return &BudgetDeleteListOK{}
 }
 
-/* BudgetDeleteListOK describes a response with status code 200, with default header values.
+/*
+	BudgetDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewBudgetDeleteListBadRequest() *BudgetDeleteListBadRequest {
 	return &BudgetDeleteListBadRequest{}
 }
 
-/* BudgetDeleteListBadRequest describes a response with status code 400, with default header values.
+/*
+	BudgetDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewBudgetDeleteListUnauthorized() *BudgetDeleteListUnauthorized {
 	return &BudgetDeleteListUnauthorized{}
 }
 
-/* BudgetDeleteListUnauthorized describes a response with status code 401, with default header values.
+/*
+	BudgetDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewBudgetDeleteListNotFound() *BudgetDeleteListNotFound {
 	return &BudgetDeleteListNotFound{}
 }
 
-/* BudgetDeleteListNotFound describes a response with status code 404, with default header values.
+/*
+	BudgetDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewBudgetDeleteListInternalServerError() *BudgetDeleteListInternalServerErr
 	return &BudgetDeleteListInternalServerError{}
 }
 
-/* BudgetDeleteListInternalServerError describes a response with status code 500, with default header values.
+/*
+	BudgetDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

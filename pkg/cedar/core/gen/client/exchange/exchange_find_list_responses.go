@@ -57,7 +57,8 @@ func NewExchangeFindListOK() *ExchangeFindListOK {
 	return &ExchangeFindListOK{}
 }
 
-/* ExchangeFindListOK describes a response with status code 200, with default header values.
+/*
+	ExchangeFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewExchangeFindListBadRequest() *ExchangeFindListBadRequest {
 	return &ExchangeFindListBadRequest{}
 }
 
-/* ExchangeFindListBadRequest describes a response with status code 400, with default header values.
+/*
+	ExchangeFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewExchangeFindListUnauthorized() *ExchangeFindListUnauthorized {
 	return &ExchangeFindListUnauthorized{}
 }
 
-/* ExchangeFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+	ExchangeFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewExchangeFindListInternalServerError() *ExchangeFindListInternalServerErr
 	return &ExchangeFindListInternalServerError{}
 }
 
-/* ExchangeFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+	ExchangeFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

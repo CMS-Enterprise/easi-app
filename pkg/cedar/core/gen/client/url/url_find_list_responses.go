@@ -57,7 +57,8 @@ func NewURLFindListOK() *URLFindListOK {
 	return &URLFindListOK{}
 }
 
-/* URLFindListOK describes a response with status code 200, with default header values.
+/*
+	URLFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -89,7 +90,8 @@ func NewURLFindListBadRequest() *URLFindListBadRequest {
 	return &URLFindListBadRequest{}
 }
 
-/* URLFindListBadRequest describes a response with status code 400, with default header values.
+/*
+	URLFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -121,7 +123,8 @@ func NewURLFindListUnauthorized() *URLFindListUnauthorized {
 	return &URLFindListUnauthorized{}
 }
 
-/* URLFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+	URLFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -153,7 +156,8 @@ func NewURLFindListInternalServerError() *URLFindListInternalServerError {
 	return &URLFindListInternalServerError{}
 }
 
-/* URLFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+	URLFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

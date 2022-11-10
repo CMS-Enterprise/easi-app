@@ -47,7 +47,8 @@ const DevLogin = () => {
       </h1>
       <p>
         <label>
-          Enter a four-character EUA
+          Enter a four-character EUA (this should from the mock user list in
+          pkg/local/cedar_ldap.go)
           <br />
           <input
             type="text"
