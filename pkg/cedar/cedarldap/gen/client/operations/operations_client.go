@@ -42,7 +42,7 @@ type ClientService interface {
 }
 
 /*
-Authenticate Retturn success or failure if the provided credentials are valid.
+  Authenticate Retturn success or failure if the provided credentials are valid.
 */
 func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AuthenticateOK, error) {
 	// TODO: Validate the params before sending
@@ -81,7 +81,7 @@ func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.Clien
 }
 
 /*
-HealthCheck Return success
+  HealthCheck Return success
 */
 func (a *Client) HealthCheck(params *HealthCheckParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*HealthCheckOK, error) {
 	// TODO: Validate the params before sending
@@ -120,7 +120,7 @@ func (a *Client) HealthCheck(params *HealthCheckParams, authInfo runtime.ClientA
 }
 
 /*
-Person Retrieves a list of people based on search criteria.
+  Person Retrieves a list of people based on search criteria.
 */
 func (a *Client) Person(params *PersonParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonOK, error) {
 	// TODO: Validate the params before sending
@@ -159,7 +159,7 @@ func (a *Client) Person(params *PersonParams, authInfo runtime.ClientAuthInfoWri
 }
 
 /*
-PersonIds Retrieves a list of people based on EUA user IDs.
+  PersonIds Retrieves a list of people based on EUA user IDs.
 */
 func (a *Client) PersonIds(params *PersonIdsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonIdsOK, error) {
 	// TODO: Validate the params before sending
