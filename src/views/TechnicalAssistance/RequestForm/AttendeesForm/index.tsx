@@ -79,14 +79,14 @@ function AttendeesForm({
         updateAttendee({
           ...input,
           id: defaultValues.id
-        });
+        }).catch(e => null);
       } else {
         // If creating attendee, add EUA and TRB request id and create attendee
         createAttendee({
           ...input,
           trbRequestId: request.id,
           euaUserId: activeAttendee.userInfo?.euaUserId || ''
-        });
+        }).catch(e => null);
       }
       // TODO: Request error handling
       history.push(backToFormUrl);

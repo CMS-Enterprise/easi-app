@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { FetchResult, useMutation, useQuery } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 
 import {
@@ -23,9 +23,13 @@ type UseTRBAttendees = {
     attendees: TRBAttendeeFields[];
     loading: boolean;
   };
-  createAttendee: (attendee: CreateTRBRequestAttendeeInput) => void;
-  updateAttendee: (attendee: UpdateTRBRequestAttendeeInput) => void;
-  deleteAttendee: (id: string) => void;
+  createAttendee: (
+    attendee: CreateTRBRequestAttendeeInput
+  ) => Promise<FetchResult>;
+  updateAttendee: (
+    attendee: UpdateTRBRequestAttendeeInput
+  ) => Promise<FetchResult>;
+  deleteAttendee: (id: string) => Promise<FetchResult>;
 };
 
 type UseTRBAttendeesProps = {
