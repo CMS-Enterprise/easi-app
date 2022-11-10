@@ -59,7 +59,6 @@ function AttendeesForm({
   const {
     control,
     handleSubmit
-    // setValue,
     // formState: { errors, isSubmitting, isDirty }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
@@ -126,19 +125,34 @@ function AttendeesForm({
             submitAttendee(formData);
           })}
         >
+          {/* <Alert
+            heading={t('basic.errors.checkFix')}
+            type="error"
+            className="margin-bottom-2"
+          >
+            {Object.keys(errors).map(fieldName => {
+              return (
+                <ErrorAlertMessage
+                  key={fieldName}
+                  errorKey={fieldName}
+                  message={t(`attendees.fieldLabels.requester.${fieldName}`)}
+                />
+              );
+            })}
+          </Alert> */}
           {/* Attendee name */}
           <Controller
-            name="userInfo.commonName"
+            name="userInfo"
             control={control}
             render={({ field }) => {
               return (
                 <FormGroup>
-                  <Label htmlFor="userInfo.commonName">
+                  <Label htmlFor="userInfo">
                     {t(`attendees.fieldLabels.${formType}.commonName`)}
                   </Label>
                   <CedarContactSelect
-                    name="userInfo.commonName"
-                    id="userInfo.commonName"
+                    name="userInfo"
+                    id="userInfo"
                     value={activeAttendee.userInfo}
                     onChange={field.onChange}
                   />
