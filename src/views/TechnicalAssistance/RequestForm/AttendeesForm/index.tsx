@@ -130,9 +130,9 @@ function AttendeesForm({
           <Controller
             name="userInfo.commonName"
             control={control}
-            render={({ field, fieldState: { error } }) => {
+            render={({ field }) => {
               return (
-                <FormGroup error={!!error}>
+                <FormGroup>
                   <Label htmlFor="userInfo.commonName">
                     {t(`attendees.fieldLabels.${formType}.commonName`)}
                   </Label>

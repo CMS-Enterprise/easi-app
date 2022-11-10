@@ -129,16 +129,9 @@ export default function useTRBAttendees({
     if (authState?.isAuthenticated) {
       oktaAuth.getUser().then(({ name, email }) => {
         if (isMounted) {
-          // setRequester({
-          //   commonName: name || '',
-          //   email,
-          //   euaUserId: requesterId
-          // });
-
-          // TODO: Remove test data
           setRequester({
-            commonName: 'Ashley Terstriep',
-            email: 'ashley.terstriep@oddball.io',
+            commonName: name || '',
+            email,
             euaUserId: requesterId
           });
         }
