@@ -14,3 +14,9 @@ export type TRBAttendeeFields = {
   component: string;
   role: PersonRole | null;
 };
+
+/** TRB attendees formatted for form */
+export type TRBAttendeesForm = {
+  requester: TRBAttendeeFields;
+  attendees: TRBAttendeeFields[];
+};

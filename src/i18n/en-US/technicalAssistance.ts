@@ -244,17 +244,17 @@ const technicalAssistance = {
     dontEditAndReturn: "Don't edit and return to previous page",
     fieldLabels: {
       requester: {
-        name: 'Requester name',
+        commonName: 'Requester name',
         component: 'Requester component',
         role: 'Requester role'
       },
       create: {
-        name: 'New attendee name',
+        commonName: 'New attendee name',
         component: 'New attendee component',
         role: 'New attendee role'
       },
       edit: {
-        name: 'Attendee name',
+        commonName: 'Attendee name',
         component: 'Attendee component',
         role: 'Attendee role'
       }

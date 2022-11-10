@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { useOktaAuth } from '@okta/okta-react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Alert,
   Dropdown,
+  ErrorMessage,
   Form,
   FormGroup,
   Label,
@@ -14,10 +16,12 @@ import {
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
+import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { PersonRole } from 'types/graphql-global-types';
 import { TRBAttendeeFields } from 'types/technicalAssistance';
+import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
 import { AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
@@ -32,16 +36,10 @@ export const initialAttendee: TRBAttendeeFields = {
   role: null
 };
 
-type TRBAttendeesForm = {
-  requester: TRBAttendeeFields;
-  attendees: TRBAttendeeFields[];
-};
-
 function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
-  const { authState, oktaAuth } = useOktaAuth();
 
   // Active attendee for form fields
   const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeFields>({
@@ -50,47 +48,58 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   });
 
   // Get TRB attendees
-  const { attendees } = useTRBAttendees(request.id);
-
-  const defaultValues: TRBAttendeesForm = {
-    // Requester
-    requester: {
-      ...initialAttendee,
-      trbRequestId: request.id,
-      userInfo: {
-        commonName: '',
-        euaUserId: request.createdBy
-      }
-    },
-    // Filter requester out of attendees array
-    attendees: attendees.filter(
-      attendee => attendee.userInfo?.euaUserId !== request.createdBy
-    )
-  };
-
-  const { control, setValue } = useForm<TRBAttendeesForm>({
-    defaultValues
+  const {
+    data: { attendees, requester, loading },
+    createAttendee,
+    updateAttendee,
+    deleteAttendee
+  } = useTRBAttendees({
+    trbRequestId: request.id,
+    requesterId: request.createdBy
   });
 
-  // Set initial requester data
-  useEffect(() => {
-    let isMounted = true;
-    if (authState?.isAuthenticated) {
-      oktaAuth.getUser().then(({ name, email }) => {
-        if (isMounted) {
-          setValue('requester.userInfo.commonName', name || '');
-          setValue('requester.userInfo.email', email);
-        }
+  const saveRequester = (formData: TRBAttendeeFields) => {
+    const { id, component, userInfo, role } = formData;
+    if (id) {
+      updateAttendee({
+        id,
+        component,
+        role: role as PersonRole
+      });
+    } else if (userInfo) {
+      createAttendee({
+        trbRequestId: request.id,
+        euaUserId: userInfo?.euaUserId,
+        component,
+        role: role as PersonRole
       });
     }
+    // TODO: Mutation error handling
+    history.push(stepUrl.next);
+  };
 
-    return () => {
-      isMounted = false;
-    };
-  }, [authState, oktaAuth, setValue]);
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting, isDirty }
+  } = useForm<TRBAttendeeFields>({
+    resolver: yupResolver(trbAttendeeSchema),
+    defaultValues: requester
+  });
+
+  useEffect(() => {
+    if (!loading) {
+      setValue('userInfo.commonName', requester.userInfo?.commonName || '');
+      setValue('userInfo.euaUserId', requester.userInfo?.euaUserId || '');
+      setValue('userInfo.email', requester.userInfo?.email);
+      setValue('component', requester.component || '');
+      setValue('role', requester.role);
+    }
+  }, [loading, requester, setValue]);
 
   return (
-    <Form className="trb-attendees" onSubmit={() => null}>
+    <div className="trb-attendees">
       <Switch>
         <Route exact path={`${path}/list`}>
           <AttendeesForm
@@ -102,125 +111,161 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
         </Route>
 
         <Route exact path={`${path}`}>
-          {/* Requester name */}
-          <Controller
-            name="requester.userInfo.commonName"
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup>
-                  <Label htmlFor="requester.userInfo.commonName">
-                    {t(`attendees.fieldLabels.requester.role`)}
-                  </Label>
-                  <TextInput
-                    {...field}
-                    ref={null}
-                    id="requester.userInfo.commonName"
-                    type="text"
-                    validationStatus={error && 'error'}
-                    disabled
-                  />
-                </FormGroup>
-              );
-            }}
-          />
-          {/* Requester component */}
-          <Controller
-            name="requester.component"
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup>
-                  <Label htmlFor="requester.component">
-                    {t(`attendees.fieldLabels.requester.component`)}
-                  </Label>
-                  <Dropdown
-                    id="requester.component"
-                    data-testid="requester.component"
-                    {...field}
-                    ref={null}
-                  >
-                    <option label={`- ${t('basic.options.select')} -`} />
-                    {cmsDivisionsAndOfficesOptions('requester.component')}
-                  </Dropdown>
-                </FormGroup>
-              );
-            }}
-          />
-          {/* Requester role */}
-          <Controller
-            name="requester.role"
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup>
-                  <Label htmlFor="requester.role">
-                    {t(`attendees.fieldLabels.requester.role`)}
-                  </Label>
-                  <Dropdown
-                    id="requester.role"
-                    data-testid="requester.role"
-                    {...field}
-                    ref={null}
-                    value={(field.value as PersonRole) || ''}
-                  >
-                    <option label={`- ${t('basic.options.select')} -`} />
-                    {contactRoles.map(({ key, label }) => (
-                      <option key={key} value={key} label={label} />
-                    ))}
-                  </Dropdown>
-                </FormGroup>
-              );
-            }}
-          />
-
-          <Divider className="margin-top-4" />
-
-          <h4>{t('attendees.additionalAttendees')}</h4>
-
-          <div className="margin-y-2">
-            <UswdsReactLink
-              variant="unstyled"
-              className="usa-button"
-              to={`${url}/list`}
-            >
-              {t(
-                attendees.length > 0
-                  ? 'attendees.addAnotherAttendee'
-                  : 'attendees.addAnAttendee'
-              )}
-            </UswdsReactLink>
-          </div>
-
-          <AttendeesList
-            attendees={attendees}
-            setActiveAttendee={setActiveAttendee}
-            id={request.id}
-          />
-
-          <Pager
-            back={{
-              onClick: () => {
-                history.push(stepUrl.back);
-              }
-            }}
-            next={{
-              onClick: e => {
+          <Form
+            onSubmit={handleSubmit(formData => {
+              if (isDirty) {
+                saveRequester(formData);
+              } else {
                 history.push(stepUrl.next);
               }
-              // TODO: Button style / text based on attendees count
-              // // Demo next button based on attendees
-              // ...(numExample === 0
-              //   ? {
-              //       text: t('attendees.continueWithoutAdding'),
-              //       outline: true
-              //     }
-              //   : {})
-            }}
-          />
+            })}
+          >
+            {/* Requester validation errors summary */}
+            {errors && (
+              <Alert
+                heading={t('basic.errors.checkFix')}
+                type="error"
+                className="margin-bottom-2"
+              >
+                {Object.keys(errors).map(fieldName => {
+                  return (
+                    <ErrorAlertMessage
+                      key={fieldName}
+                      errorKey={fieldName}
+                      message={t(
+                        `attendees.fieldLabels.requester.${fieldName}`
+                      )}
+                    />
+                  );
+                })}
+              </Alert>
+            )}
+            {/* Requester name */}
+            <Controller
+              name="userInfo.commonName"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <FormGroup>
+                    <Label htmlFor="userInfo.commonName">
+                      {t(`attendees.fieldLabels.requester.commonName`)}
+                    </Label>
+                    <TextInput
+                      {...field}
+                      ref={null}
+                      id="userInfo.commonName"
+                      type="text"
+                      disabled
+                    />
+                  </FormGroup>
+                );
+              }}
+            />
+            {/* Requester component */}
+            <Controller
+              name="component"
+              control={control}
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <FormGroup error={!!error}>
+                    <Label htmlFor="component">
+                      {t(`attendees.fieldLabels.requester.component`)}
+                    </Label>
+                    {error && (
+                      <ErrorMessage>
+                        {t('basic.errors.makeSelection')}
+                      </ErrorMessage>
+                    )}
+                    <Dropdown
+                      id="component"
+                      data-testid="component"
+                      {...field}
+                      ref={null}
+                    >
+                      <option label={`- ${t('basic.options.select')} -`} />
+                      {cmsDivisionsAndOfficesOptions('component')}
+                    </Dropdown>
+                  </FormGroup>
+                );
+              }}
+            />
+            {/* Requester role */}
+            <Controller
+              name="role"
+              control={control}
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <FormGroup error={!!error}>
+                    <Label htmlFor="role">
+                      {t(`attendees.fieldLabels.requester.role`)}
+                    </Label>
+                    {error && (
+                      <ErrorMessage>
+                        {t('basic.errors.makeSelection')}
+                      </ErrorMessage>
+                    )}
+                    <Dropdown
+                      id="role"
+                      data-testid="role"
+                      {...field}
+                      ref={null}
+                      value={(field.value as PersonRole) || ''}
+                    >
+                      <option label={`- ${t('basic.options.select')} -`} />
+                      {contactRoles.map(({ key, label }) => (
+                        <option key={key} value={key} label={label} />
+                      ))}
+                    </Dropdown>
+                  </FormGroup>
+                );
+              }}
+            />
+
+            <Divider className="margin-top-4" />
+
+            <h4>{t('attendees.additionalAttendees')}</h4>
+
+            <div className="margin-y-2">
+              <UswdsReactLink
+                variant="unstyled"
+                className="usa-button"
+                to={`${url}/list`}
+              >
+                {t(
+                  attendees.length > 0
+                    ? 'attendees.addAnotherAttendee'
+                    : 'attendees.addAnAttendee'
+                )}
+              </UswdsReactLink>
+            </div>
+
+            <AttendeesList
+              attendees={attendees}
+              setActiveAttendee={setActiveAttendee}
+              id={request.id}
+              deleteAttendee={deleteAttendee}
+            />
+
+            <Pager
+              back={{
+                disabled: isSubmitting
+              }}
+              next={{
+                disabled: isSubmitting
+                // TODO: Button style / text based on attendees count
+                // // Demo next button based on attendees
+                // ...(numExample === 0
+                //   ? {
+                //       text: t('attendees.continueWithoutAdding'),
+                //       outline: true
+                //     }
+                //   : {})
+              }}
+            />
+          </Form>
         </Route>
       </Switch>
-    </Form>
+    </div>
   );
 }
 

@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 
 import {
+  PersonRole,
   TRBCollabGroupOption,
   TRBWhereInProcessOption,
   UpdateTRBRequestFormInput
@@ -101,3 +102,20 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
     name: yup.string().required()
   })
 );
+
+export const trbAttendeeSchema = yup.object({
+  id: yup.string(),
+  trbRequestId: yup.string().required(),
+  userInfo: yup.object({
+    commonName: yup.string().required(),
+    euaUserId: yup.string().required(),
+    email: yup.string()
+  }),
+  component: yup.string().required(),
+  role: yup.mixed<PersonRole>().oneOf(Object.values(PersonRole)).required()
+});
+
+export const trbAttendeesFormSchema = yup.object({
+  requester: trbAttendeeSchema,
+  attendees: yup.array().of(trbAttendeeSchema).required()
+});

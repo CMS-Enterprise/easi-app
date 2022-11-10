@@ -138,6 +138,7 @@ function Basic({ request, refreshRequest, stepUrl }: FormStepComponentProps) {
     <Form
       className="trb-form-basic maxw-full"
       onSubmit={handleSubmit(formData => {
+        console.log(formData);
         if (isDirty) {
           const { id } = request;
           const { name } = formData;

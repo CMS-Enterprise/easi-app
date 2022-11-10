@@ -11,8 +11,6 @@ import FieldGroup from 'components/shared/FieldGroup';
 import InitialsIcon from 'components/shared/InitialsIcon';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
-import useTRBAttendees from 'hooks/useTRBAttendees';
-import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import { TRBAttendeeFields } from 'types/technicalAssistance';
 
@@ -106,7 +104,7 @@ const AttendeeFields = ({
 };
 
 type AttendeeProps = {
-  attendee: TRBAttendee;
+  attendee: TRBAttendeeFields;
   setActiveAttendee?: (activeAttendee: TRBAttendeeFields) => void;
   deleteAttendee?: () => void;
 };
@@ -177,19 +175,20 @@ const Attendee = ({
 };
 
 type AttendeesListProps = {
-  attendees: TRBAttendee[];
+  attendees: TRBAttendeeFields[];
   id: string;
   setActiveAttendee: (activeAttendee: TRBAttendeeFields) => void;
+  deleteAttendee: (id: string) => void;
 };
 
 const AttendeesList = ({
   attendees,
   id,
-  setActiveAttendee
+  setActiveAttendee,
+  deleteAttendee
 }: AttendeesListProps) => {
-  // Delete attendee
-  const { deleteAttendee } = useTRBAttendees(id);
-
+  if (attendees.length < 1) return null;
+  // console.log(attendees);
   return (
     <ul className="trbAttendees-list usa-list usa-list--unstyled margin-y-3">
       {[...attendees]
@@ -202,8 +201,10 @@ const AttendeesList = ({
           <Attendee
             attendee={attendee}
             deleteAttendee={() => {
-              deleteAttendee(attendee.id);
-              setActiveAttendee({ ...initialAttendee, trbRequestId: id });
+              if (attendee.id) {
+                deleteAttendee(attendee.id);
+                setActiveAttendee({ ...initialAttendee, trbRequestId: id });
+              }
             }}
             setActiveAttendee={setActiveAttendee}
             key={attendee.id}
