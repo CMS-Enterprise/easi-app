@@ -69,21 +69,20 @@ export function Pager({
         )}
       </div>
       {!saveExitHidden && (
-        <div className="margin-top-2">
-          <Button
-            type="button"
-            unstyled
-            disabled={saveExitDisabled}
-            onClick={() => {
-              submit?.(() => {
-                history.push('/trb');
-              });
-            }}
-          >
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            {t('button.saveAndExit')}
-          </Button>
-        </div>
+        <Button
+          className="margin-top-2"
+          type="button"
+          unstyled
+          disabled={saveExitDisabled}
+          onClick={() => {
+            submit?.(() => {
+              history.push('/trb');
+            });
+          }}
+        >
+          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          {t('button.saveAndExit')}
+        </Button>
       )}
     </div>
   );
