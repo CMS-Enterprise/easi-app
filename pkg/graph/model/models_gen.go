@@ -230,7 +230,7 @@ type CreateTRBRequestFeedbackInput struct {
 	FeedbackMessage string                   `json:"feedbackMessage"`
 	CopyTrbMailbox  bool                     `json:"copyTrbMailbox"`
 	NotifyEuaIds    []string                 `json:"notifyEuaIds"`
-	FeedbackStatus  models.TRBFeedbackStatus `json:"feedbackStatus"`
+	Action          models.TRBFeedbackAction `json:"action"`
 }
 
 // The input required to add a test date/score to a 508/accessibility request

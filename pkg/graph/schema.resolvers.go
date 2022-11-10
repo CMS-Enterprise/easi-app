@@ -1921,7 +1921,7 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		FeedbackMessage: input.FeedbackMessage,
 		CopyTRBMailbox:  input.CopyTrbMailbox,
 		NotifyEUAIDs:    notifyEuas,
-		Status:          input.Status,
+		Action:          input.Action,
 	})
 }
 

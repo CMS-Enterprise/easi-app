@@ -1764,6 +1764,18 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
 }
 
+enum TRBFeedbackAction {
+  READY_FOR_CONSULT
+  REQUEST_EDITS
+}
+
+enum TRBFeedbackStatus {
+  CANNOT_START_YET
+  IN_REVIEW
+  EDITS_REQUESTED
+  COMPLETED
+}
+
 """
 Represents feedback added to a TRB request
 """
@@ -1773,6 +1785,7 @@ type TRBRequestFeedback {
   feedbackMessage: String!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
+  action: TRBFeedbackAction!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -1787,7 +1800,7 @@ input CreateTRBRequestFeedbackInput {
   feedbackMessage: String!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
-  feedbackStatus: TRBFeedbackStatus!
+  action: TRBFeedbackAction!
 }
 
 """
@@ -1946,13 +1959,6 @@ enum TRBRequestType {
 enum TRBRequestStatus {
   OPEN
   CLOSED
-}
-
-enum TRBFeedbackStatus {
-  CANNOT_START_YET
-  IN_REVIEW
-  EDITS_REQUESTED
-  COMPLETED
 }
 
 """

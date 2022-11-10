@@ -5,6 +5,16 @@ import (
 	"github.com/lib/pq"
 )
 
+// TRBFeedbackAction is an enumertion of actions that can be taken by a TRB admin during the
+// feedback step
+type TRBFeedbackAction string
+
+// These are the options for TRBFeedbackAction
+const (
+	TRBFeedbackActionRequestEdits    TRBFeedbackAction = "REQUEST_EDITS"
+	TRBFeedbackActionReadyForConsult TRBFeedbackAction = "READY_FOR_CONSULT"
+)
+
 // TRBRequestFeedback represents an individual feedback item given on a TRB request
 type TRBRequestFeedback struct {
 	baseStruct
@@ -12,5 +22,5 @@ type TRBRequestFeedback struct {
 	FeedbackMessage string            `json:"feedbackMessage" db:"feedback_message"`
 	CopyTRBMailbox  bool              `json:"copyTrbMailbox" db:"copy_trb_mailbox"`
 	NotifyEUAIDs    pq.StringArray    `json:"notifyEuaIds" db:"notify_eua_ids"`
-	Status          TRBFeedbackStatus `json:"status" db:"status"`
+	Action          TRBFeedbackAction `json:"action" db:"action"`
 }

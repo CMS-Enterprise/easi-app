@@ -25,6 +25,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			feedback_message,
 			copy_trb_mailbox,
 			notify_eua_ids,
+			action,
 			created_by,
 			modified_by
 		)
@@ -34,6 +35,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			:feedback_message,
 			:copy_trb_mailbox,
 			:notify_eua_ids,
+			:action,
 			:created_by,
 			:modified_by
 		)

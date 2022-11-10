@@ -783,6 +783,7 @@ type ComplexityRoot struct {
 	}
 
 	TRBRequestFeedback struct {
+		Action          func(childComplexity int) int
 		CopyTRBMailbox  func(childComplexity int) int
 		CreatedAt       func(childComplexity int) int
 		CreatedBy       func(childComplexity int) int
@@ -5033,6 +5034,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestAttendee.UserInfo(childComplexity), true
 
+	case "TRBRequestFeedback.action":
+		if e.complexity.TRBRequestFeedback.Action == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestFeedback.Action(childComplexity), true
+
 	case "TRBRequestFeedback.copyTrbMailbox":
 		if e.complexity.TRBRequestFeedback.CopyTRBMailbox == nil {
 			break
@@ -7335,6 +7343,18 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
 }
 
+enum TRBFeedbackAction {
+  READY_FOR_CONSULT
+  REQUEST_EDITS
+}
+
+enum TRBFeedbackStatus {
+  CANNOT_START_YET
+  IN_REVIEW
+  EDITS_REQUESTED
+  COMPLETED
+}
+
 """
 Represents feedback added to a TRB request
 """
@@ -7344,6 +7364,7 @@ type TRBRequestFeedback {
   feedbackMessage: String!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
+  action: TRBFeedbackAction!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -7358,7 +7379,7 @@ input CreateTRBRequestFeedbackInput {
   feedbackMessage: String!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
-  feedbackStatus: TRBFeedbackStatus!
+  action: TRBFeedbackAction!
 }
 
 """
@@ -7517,13 +7538,6 @@ enum TRBRequestType {
 enum TRBRequestStatus {
   OPEN
   CLOSED
-}
-
-enum TRBFeedbackStatus {
-  CANNOT_START_YET
-  IN_REVIEW
-  EDITS_REQUESTED
-  COMPLETED
 }
 
 """
@@ -25338,6 +25352,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequestFeedback(ctx c
 				return ec.fieldContext_TRBRequestFeedback_copyTrbMailbox(ctx, field)
 			case "notifyEuaIds":
 				return ec.fieldContext_TRBRequestFeedback_notifyEuaIds(ctx, field)
+			case "action":
+				return ec.fieldContext_TRBRequestFeedback_action(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -32958,6 +32974,8 @@ func (ec *executionContext) fieldContext_TRBRequest_feedback(ctx context.Context
 				return ec.fieldContext_TRBRequestFeedback_copyTrbMailbox(ctx, field)
 			case "notifyEuaIds":
 				return ec.fieldContext_TRBRequestFeedback_notifyEuaIds(ctx, field)
+			case "action":
+				return ec.fieldContext_TRBRequestFeedback_action(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -33949,6 +33967,50 @@ func (ec *executionContext) fieldContext_TRBRequestFeedback_notifyEuaIds(ctx con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestFeedback_action(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestFeedback_action(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Action, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.TRBFeedbackAction)
+	fc.Result = res
+	return ec.marshalNTRBFeedbackAction2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackAction(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestFeedback_action(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBFeedbackAction does not have child fields")
 		},
 	}
 	return fc, nil
@@ -38776,7 +38838,7 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestFeedbackInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "feedbackMessage", "copyTrbMailbox", "notifyEuaIds", "feedbackStatus"}
+	fieldsInOrder := [...]string{"trbRequestId", "feedbackMessage", "copyTrbMailbox", "notifyEuaIds", "action"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -38815,11 +38877,11 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestFeedbackInput(ctx cont
 			if err != nil {
 				return it, err
 			}
-		case "feedbackStatus":
+		case "action":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedbackStatus"))
-			it.FeedbackStatus, err = ec.unmarshalNTRBFeedbackStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackStatus(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("action"))
+			it.Action, err = ec.unmarshalNTRBFeedbackAction2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackAction(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -46874,6 +46936,13 @@ func (ec *executionContext) _TRBRequestFeedback(ctx context.Context, sel ast.Sel
 				return innerFunc(ctx)
 
 			})
+		case "action":
+
+			out.Values[i] = ec._TRBRequestFeedback_action(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequestFeedback_createdBy(ctx, field, obj)
@@ -49652,6 +49721,22 @@ func (ec *executionContext) unmarshalNTRBDataAndDataManagementOption2githubᚗco
 }
 
 func (ec *executionContext) marshalNTRBDataAndDataManagementOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBDataAndDataManagementOption(ctx context.Context, sel ast.SelectionSet, v models.TRBDataAndDataManagementOption) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNTRBFeedbackAction2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackAction(ctx context.Context, v interface{}) (models.TRBFeedbackAction, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TRBFeedbackAction(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBFeedbackAction2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackAction(ctx context.Context, sel ast.SelectionSet, v models.TRBFeedbackAction) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
