@@ -719,6 +719,13 @@ type UpdateTRBRequestAttendeeInput struct {
 	Role      models.PersonRole `json:"role"`
 }
 
+// The data required to update a ConsultSession
+type UpdateTRBRequestConsultSessionInput struct {
+	TrbRequestID uuid.UUID `json:"trbRequestId"`
+	SessionTime  time.Time `json:"sessionTime"`
+	Notes        string    `json:"notes"`
+}
+
 // The input required to update a test date/score
 type UpdateTestDateInput struct {
 	Date     time.Time               `json:"date"`
