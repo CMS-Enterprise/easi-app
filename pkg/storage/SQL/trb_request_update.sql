@@ -13,6 +13,7 @@ RETURNING
     name,
     archived,
     type,
+    status,
     feedback_status,
     created_by,
     created_at,
