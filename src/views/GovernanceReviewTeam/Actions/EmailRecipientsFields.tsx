@@ -226,7 +226,7 @@ export default ({
     .flat()
     .reduce(
       (acc: VerifiedContactsObject, contact: SystemIntakeContactProps) => {
-        if (contact.role === 'Requester') return acc;
+        if (contact.role === 'Requester' || !contact.commonName) return acc;
         return {
           verifiedContacts: [
             ...acc.verifiedContacts,
