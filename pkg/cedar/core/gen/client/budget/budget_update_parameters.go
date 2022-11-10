@@ -54,12 +54,10 @@ func NewBudgetUpdateParamsWithHTTPClient(client *http.Client) *BudgetUpdateParam
 	}
 }
 
-/*
-BudgetUpdateParams contains all the parameters to send to the API endpoint
+/* BudgetUpdateParams contains all the parameters to send to the API endpoint
+   for the budget update operation.
 
-	for the budget update operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type BudgetUpdateParams struct {
 

@@ -40,9 +40,9 @@ type ClientService interface {
 }
 
 /*
-DomainModelFindList retrieves reference model information about enterprise architecture assets
+  DomainModelFindList retrieves reference model information about enterprise architecture assets
 
-The Federal Enterprise Architecture Framework (FEAF) v2 describes a suite of tools to help government planners implement the Common Approach. At its core is the Consolidated Reference Model (CRM), which equips OMB and Federal agencies with a common language and framework to describe and analyze investments. It consists of a set of interrelated “reference models” that describe the six subarchitecture domains in the framework: Strategy, Business, Data, Applications, Infrastructure, Security: https://obamawhitehouse.archives.gov/sites/default/files/omb/assets/egov_docs/fea_v2.pdf
+  The Federal Enterprise Architecture Framework (FEAF) v2 describes a suite of tools to help government planners implement the Common Approach. At its core is the Consolidated Reference Model (CRM), which equips OMB and Federal agencies with a common language and framework to describe and analyze investments. It consists of a set of interrelated “reference models” that describe the six subarchitecture domains in the framework: Strategy, Business, Data, Applications, Infrastructure, Security: https://obamawhitehouse.archives.gov/sites/default/files/omb/assets/egov_docs/fea_v2.pdf
 */
 func (a *Client) DomainModelFindList(params *DomainModelFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DomainModelFindListOK, error) {
 	// TODO: Validate the params before sending
@@ -81,9 +81,9 @@ func (a *Client) DomainModelFindList(params *DomainModelFindListParams, authInfo
 }
 
 /*
-DomainModelLevelFindList retrieves the model levels associated with a specific domain reference models
+  DomainModelLevelFindList retrieves the model levels associated with a specific domain reference models
 
-Retrieves the hierarchy levels associated with a specific domain reference models
+  Retrieves the hierarchy levels associated with a specific domain reference models
 */
 func (a *Client) DomainModelLevelFindList(params *DomainModelLevelFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DomainModelLevelFindListOK, error) {
 	// TODO: Validate the params before sending
@@ -122,9 +122,9 @@ func (a *Client) DomainModelLevelFindList(params *DomainModelLevelFindListParams
 }
 
 /*
-DomainModelNameFindList retrieves a list of available domain reference models
+  DomainModelNameFindList retrieves a list of available domain reference models
 
-Retrieves a list of available domain reference models
+  Retrieves a list of available domain reference models
 */
 func (a *Client) DomainModelNameFindList(params *DomainModelNameFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DomainModelNameFindListOK, error) {
 	// TODO: Validate the params before sending

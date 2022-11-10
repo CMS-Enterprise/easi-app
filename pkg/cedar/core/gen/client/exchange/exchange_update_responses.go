@@ -57,8 +57,7 @@ func NewExchangeUpdateOK() *ExchangeUpdateOK {
 	return &ExchangeUpdateOK{}
 }
 
-/*
-	ExchangeUpdateOK describes a response with status code 200, with default header values.
+/* ExchangeUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewExchangeUpdateBadRequest() *ExchangeUpdateBadRequest {
 	return &ExchangeUpdateBadRequest{}
 }
 
-/*
-	ExchangeUpdateBadRequest describes a response with status code 400, with default header values.
+/* ExchangeUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewExchangeUpdateUnauthorized() *ExchangeUpdateUnauthorized {
 	return &ExchangeUpdateUnauthorized{}
 }
 
-/*
-	ExchangeUpdateUnauthorized describes a response with status code 401, with default header values.
+/* ExchangeUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewExchangeUpdateInternalServerError() *ExchangeUpdateInternalServerError {
 	return &ExchangeUpdateInternalServerError{}
 }
 
-/*
-	ExchangeUpdateInternalServerError describes a response with status code 500, with default header values.
+/* ExchangeUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

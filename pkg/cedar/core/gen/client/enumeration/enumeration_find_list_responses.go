@@ -57,8 +57,7 @@ func NewEnumerationFindListOK() *EnumerationFindListOK {
 	return &EnumerationFindListOK{}
 }
 
-/*
-	EnumerationFindListOK describes a response with status code 200, with default header values.
+/* EnumerationFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewEnumerationFindListBadRequest() *EnumerationFindListBadRequest {
 	return &EnumerationFindListBadRequest{}
 }
 
-/*
-	EnumerationFindListBadRequest describes a response with status code 400, with default header values.
+/* EnumerationFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewEnumerationFindListUnauthorized() *EnumerationFindListUnauthorized {
 	return &EnumerationFindListUnauthorized{}
 }
 
-/*
-	EnumerationFindListUnauthorized describes a response with status code 401, with default header values.
+/* EnumerationFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewEnumerationFindListInternalServerError() *EnumerationFindListInternalSer
 	return &EnumerationFindListInternalServerError{}
 }
 
-/*
-	EnumerationFindListInternalServerError describes a response with status code 500, with default header values.
+/* EnumerationFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

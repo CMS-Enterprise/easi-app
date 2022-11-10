@@ -57,8 +57,7 @@ func NewUserAddOK() *UserAddOK {
 	return &UserAddOK{}
 }
 
-/*
-	UserAddOK describes a response with status code 200, with default header values.
+/* UserAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewUserAddBadRequest() *UserAddBadRequest {
 	return &UserAddBadRequest{}
 }
 
-/*
-	UserAddBadRequest describes a response with status code 400, with default header values.
+/* UserAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewUserAddUnauthorized() *UserAddUnauthorized {
 	return &UserAddUnauthorized{}
 }
 
-/*
-	UserAddUnauthorized describes a response with status code 401, with default header values.
+/* UserAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewUserAddInternalServerError() *UserAddInternalServerError {
 	return &UserAddInternalServerError{}
 }
 
-/*
-	UserAddInternalServerError describes a response with status code 500, with default header values.
+/* UserAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

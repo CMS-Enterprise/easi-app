@@ -57,8 +57,7 @@ func NewUserNameUpdateOK() *UserNameUpdateOK {
 	return &UserNameUpdateOK{}
 }
 
-/*
-	UserNameUpdateOK describes a response with status code 200, with default header values.
+/* UserNameUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewUserNameUpdateBadRequest() *UserNameUpdateBadRequest {
 	return &UserNameUpdateBadRequest{}
 }
 
-/*
-	UserNameUpdateBadRequest describes a response with status code 400, with default header values.
+/* UserNameUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewUserNameUpdateUnauthorized() *UserNameUpdateUnauthorized {
 	return &UserNameUpdateUnauthorized{}
 }
 
-/*
-	UserNameUpdateUnauthorized describes a response with status code 401, with default header values.
+/* UserNameUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewUserNameUpdateInternalServerError() *UserNameUpdateInternalServerError {
 	return &UserNameUpdateInternalServerError{}
 }
 
-/*
-	UserNameUpdateInternalServerError describes a response with status code 500, with default header values.
+/* UserNameUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

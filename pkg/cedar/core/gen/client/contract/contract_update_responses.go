@@ -57,8 +57,7 @@ func NewContractUpdateOK() *ContractUpdateOK {
 	return &ContractUpdateOK{}
 }
 
-/*
-	ContractUpdateOK describes a response with status code 200, with default header values.
+/* ContractUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewContractUpdateBadRequest() *ContractUpdateBadRequest {
 	return &ContractUpdateBadRequest{}
 }
 
-/*
-	ContractUpdateBadRequest describes a response with status code 400, with default header values.
+/* ContractUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewContractUpdateUnauthorized() *ContractUpdateUnauthorized {
 	return &ContractUpdateUnauthorized{}
 }
 
-/*
-	ContractUpdateUnauthorized describes a response with status code 401, with default header values.
+/* ContractUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewContractUpdateInternalServerError() *ContractUpdateInternalServerError {
 	return &ContractUpdateInternalServerError{}
 }
 
-/*
-	ContractUpdateInternalServerError describes a response with status code 500, with default header values.
+/* ContractUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

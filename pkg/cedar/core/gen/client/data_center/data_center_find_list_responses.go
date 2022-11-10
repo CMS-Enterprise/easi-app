@@ -63,8 +63,7 @@ func NewDataCenterFindListOK() *DataCenterFindListOK {
 	return &DataCenterFindListOK{}
 }
 
-/*
-	DataCenterFindListOK describes a response with status code 200, with default header values.
+/* DataCenterFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -96,8 +95,7 @@ func NewDataCenterFindListBadRequest() *DataCenterFindListBadRequest {
 	return &DataCenterFindListBadRequest{}
 }
 
-/*
-	DataCenterFindListBadRequest describes a response with status code 400, with default header values.
+/* DataCenterFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -129,8 +127,7 @@ func NewDataCenterFindListUnauthorized() *DataCenterFindListUnauthorized {
 	return &DataCenterFindListUnauthorized{}
 }
 
-/*
-	DataCenterFindListUnauthorized describes a response with status code 401, with default header values.
+/* DataCenterFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -162,8 +159,7 @@ func NewDataCenterFindListNotFound() *DataCenterFindListNotFound {
 	return &DataCenterFindListNotFound{}
 }
 
-/*
-	DataCenterFindListNotFound describes a response with status code 404, with default header values.
+/* DataCenterFindListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -195,8 +191,7 @@ func NewDataCenterFindListInternalServerError() *DataCenterFindListInternalServe
 	return &DataCenterFindListInternalServerError{}
 }
 
-/*
-	DataCenterFindListInternalServerError describes a response with status code 500, with default header values.
+/* DataCenterFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

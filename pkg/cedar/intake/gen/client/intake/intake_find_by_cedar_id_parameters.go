@@ -52,12 +52,10 @@ func NewIntakeFindByCedarIDParamsWithHTTPClient(client *http.Client) *IntakeFind
 	}
 }
 
-/*
-IntakeFindByCedarIDParams contains all the parameters to send to the API endpoint
+/* IntakeFindByCedarIDParams contains all the parameters to send to the API endpoint
+   for the intake find by cedar Id operation.
 
-	for the intake find by cedar Id operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type IntakeFindByCedarIDParams struct {
 

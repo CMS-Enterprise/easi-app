@@ -57,8 +57,7 @@ func NewThreatFindListOK() *ThreatFindListOK {
 	return &ThreatFindListOK{}
 }
 
-/*
-	ThreatFindListOK describes a response with status code 200, with default header values.
+/* ThreatFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewThreatFindListBadRequest() *ThreatFindListBadRequest {
 	return &ThreatFindListBadRequest{}
 }
 
-/*
-	ThreatFindListBadRequest describes a response with status code 400, with default header values.
+/* ThreatFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewThreatFindListUnauthorized() *ThreatFindListUnauthorized {
 	return &ThreatFindListUnauthorized{}
 }
 
-/*
-	ThreatFindListUnauthorized describes a response with status code 401, with default header values.
+/* ThreatFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewThreatFindListInternalServerError() *ThreatFindListInternalServerError {
 	return &ThreatFindListInternalServerError{}
 }
 
-/*
-	ThreatFindListInternalServerError describes a response with status code 500, with default header values.
+/* ThreatFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

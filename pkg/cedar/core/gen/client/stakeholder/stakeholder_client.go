@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-StakeholderFindList retrieves a list of stakeholders this interface takes in id name version state status and ids only
+  StakeholderFindList retrieves a list of stakeholders this interface takes in id name version state status and ids only
 
-Retrieve a list of stakeholders. This interface takes in id, name, version, state, status and idsOnly.
+  Retrieve a list of stakeholders. This interface takes in id, name, version, state, status and idsOnly.
 */
 func (a *Client) StakeholderFindList(params *StakeholderFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*StakeholderFindListOK, error) {
 	// TODO: Validate the params before sending

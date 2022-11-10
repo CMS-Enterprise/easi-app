@@ -57,8 +57,7 @@ func NewComponentFindOK() *ComponentFindOK {
 	return &ComponentFindOK{}
 }
 
-/*
-	ComponentFindOK describes a response with status code 200, with default header values.
+/* ComponentFindOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewComponentFindBadRequest() *ComponentFindBadRequest {
 	return &ComponentFindBadRequest{}
 }
 
-/*
-	ComponentFindBadRequest describes a response with status code 400, with default header values.
+/* ComponentFindBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewComponentFindUnauthorized() *ComponentFindUnauthorized {
 	return &ComponentFindUnauthorized{}
 }
 
-/*
-	ComponentFindUnauthorized describes a response with status code 401, with default header values.
+/* ComponentFindUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewComponentFindInternalServerError() *ComponentFindInternalServerError {
 	return &ComponentFindInternalServerError{}
 }
 
-/*
-	ComponentFindInternalServerError describes a response with status code 500, with default header values.
+/* ComponentFindInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

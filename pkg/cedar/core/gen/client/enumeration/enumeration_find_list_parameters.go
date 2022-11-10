@@ -53,12 +53,10 @@ func NewEnumerationFindListParamsWithHTTPClient(client *http.Client) *Enumeratio
 	}
 }
 
-/*
-EnumerationFindListParams contains all the parameters to send to the API endpoint
+/* EnumerationFindListParams contains all the parameters to send to the API endpoint
+   for the enumeration find list operation.
 
-	for the enumeration find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type EnumerationFindListParams struct {
 

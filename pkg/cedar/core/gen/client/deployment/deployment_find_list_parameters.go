@@ -52,12 +52,10 @@ func NewDeploymentFindListParamsWithHTTPClient(client *http.Client) *DeploymentF
 	}
 }
 
-/*
-DeploymentFindListParams contains all the parameters to send to the API endpoint
+/* DeploymentFindListParams contains all the parameters to send to the API endpoint
+   for the deployment find list operation.
 
-	for the deployment find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type DeploymentFindListParams struct {
 

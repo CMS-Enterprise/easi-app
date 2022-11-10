@@ -63,8 +63,7 @@ func NewRoleFindByIDOK() *RoleFindByIDOK {
 	return &RoleFindByIDOK{}
 }
 
-/*
-	RoleFindByIDOK describes a response with status code 200, with default header values.
+/* RoleFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -96,8 +95,7 @@ func NewRoleFindByIDBadRequest() *RoleFindByIDBadRequest {
 	return &RoleFindByIDBadRequest{}
 }
 
-/*
-	RoleFindByIDBadRequest describes a response with status code 400, with default header values.
+/* RoleFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -129,8 +127,7 @@ func NewRoleFindByIDUnauthorized() *RoleFindByIDUnauthorized {
 	return &RoleFindByIDUnauthorized{}
 }
 
-/*
-	RoleFindByIDUnauthorized describes a response with status code 401, with default header values.
+/* RoleFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -162,8 +159,7 @@ func NewRoleFindByIDNotFound() *RoleFindByIDNotFound {
 	return &RoleFindByIDNotFound{}
 }
 
-/*
-	RoleFindByIDNotFound describes a response with status code 404, with default header values.
+/* RoleFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -195,8 +191,7 @@ func NewRoleFindByIDInternalServerError() *RoleFindByIDInternalServerError {
 	return &RoleFindByIDInternalServerError{}
 }
 
-/*
-	RoleFindByIDInternalServerError describes a response with status code 500, with default header values.
+/* RoleFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

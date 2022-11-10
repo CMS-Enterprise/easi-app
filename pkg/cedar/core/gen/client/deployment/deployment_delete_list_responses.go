@@ -63,8 +63,7 @@ func NewDeploymentDeleteListOK() *DeploymentDeleteListOK {
 	return &DeploymentDeleteListOK{}
 }
 
-/*
-	DeploymentDeleteListOK describes a response with status code 200, with default header values.
+/* DeploymentDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -96,8 +95,7 @@ func NewDeploymentDeleteListBadRequest() *DeploymentDeleteListBadRequest {
 	return &DeploymentDeleteListBadRequest{}
 }
 
-/*
-	DeploymentDeleteListBadRequest describes a response with status code 400, with default header values.
+/* DeploymentDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -129,8 +127,7 @@ func NewDeploymentDeleteListUnauthorized() *DeploymentDeleteListUnauthorized {
 	return &DeploymentDeleteListUnauthorized{}
 }
 
-/*
-	DeploymentDeleteListUnauthorized describes a response with status code 401, with default header values.
+/* DeploymentDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -162,8 +159,7 @@ func NewDeploymentDeleteListNotFound() *DeploymentDeleteListNotFound {
 	return &DeploymentDeleteListNotFound{}
 }
 
-/*
-	DeploymentDeleteListNotFound describes a response with status code 404, with default header values.
+/* DeploymentDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -195,8 +191,7 @@ func NewDeploymentDeleteListInternalServerError() *DeploymentDeleteListInternalS
 	return &DeploymentDeleteListInternalServerError{}
 }
 
-/*
-	DeploymentDeleteListInternalServerError describes a response with status code 500, with default header values.
+/* DeploymentDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

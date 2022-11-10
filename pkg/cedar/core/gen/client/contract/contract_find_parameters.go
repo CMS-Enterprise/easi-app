@@ -52,12 +52,10 @@ func NewContractFindParamsWithHTTPClient(client *http.Client) *ContractFindParam
 	}
 }
 
-/*
-ContractFindParams contains all the parameters to send to the API endpoint
+/* ContractFindParams contains all the parameters to send to the API endpoint
+   for the contract find operation.
 
-	for the contract find operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type ContractFindParams struct {
 

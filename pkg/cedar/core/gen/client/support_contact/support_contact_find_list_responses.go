@@ -57,8 +57,7 @@ func NewSupportContactFindListOK() *SupportContactFindListOK {
 	return &SupportContactFindListOK{}
 }
 
-/*
-	SupportContactFindListOK describes a response with status code 200, with default header values.
+/* SupportContactFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewSupportContactFindListBadRequest() *SupportContactFindListBadRequest {
 	return &SupportContactFindListBadRequest{}
 }
 
-/*
-	SupportContactFindListBadRequest describes a response with status code 400, with default header values.
+/* SupportContactFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewSupportContactFindListUnauthorized() *SupportContactFindListUnauthorized
 	return &SupportContactFindListUnauthorized{}
 }
 
-/*
-	SupportContactFindListUnauthorized describes a response with status code 401, with default header values.
+/* SupportContactFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewSupportContactFindListInternalServerError() *SupportContactFindListInter
 	return &SupportContactFindListInternalServerError{}
 }
 
-/*
-	SupportContactFindListInternalServerError describes a response with status code 500, with default header values.
+/* SupportContactFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

@@ -46,9 +46,9 @@ type ClientService interface {
 }
 
 /*
-UserAdd adds users to a c e d a r application this interface takes an array of user documents
+  UserAdd adds users to a c e d a r application this interface takes an array of user documents
 
-Add users to a CEDAR application. This interface takes an array of User documents.
+  Add users to a CEDAR application. This interface takes an array of User documents.
 */
 func (a *Client) UserAdd(params *UserAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UserAddOK, error) {
 	// TODO: Validate the params before sending
@@ -87,9 +87,9 @@ func (a *Client) UserAdd(params *UserAddParams, authInfo runtime.ClientAuthInfoW
 }
 
 /*
-UserFindByID retrieves an existing user from a c e d a r application this interface takes an id
+  UserFindByID retrieves an existing user from a c e d a r application this interface takes an id
 
-Retrieve an existing user from a CEDAR application. This interface takes an id.
+  Retrieve an existing user from a CEDAR application. This interface takes an id.
 */
 func (a *Client) UserFindByID(params *UserFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UserFindByIDOK, error) {
 	// TODO: Validate the params before sending
@@ -128,9 +128,9 @@ func (a *Client) UserFindByID(params *UserFindByIDParams, authInfo runtime.Clien
 }
 
 /*
-UserFindByUsername retrieves an existing user in a c e d a r system based on the user name this interface takes username
+  UserFindByUsername retrieves an existing user in a c e d a r system based on the user name this interface takes username
 
-Retrieve an existing user in a CEDAR system based on the user name. This interface takes username.
+  Retrieve an existing user in a CEDAR system based on the user name. This interface takes username.
 */
 func (a *Client) UserFindByUsername(params *UserFindByUsernameParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UserFindByUsernameOK, error) {
 	// TODO: Validate the params before sending
@@ -169,9 +169,9 @@ func (a *Client) UserFindByUsername(params *UserFindByUsernameParams, authInfo r
 }
 
 /*
-UserFindList retrieves a list of users from a c e d a r application this interface takes in application id user name first name last name phone and email
+  UserFindList retrieves a list of users from a c e d a r application this interface takes in application id user name first name last name phone and email
 
-Retrieve a list of users from a CEDAR application. This interface takes in application, id, userName, firstName, lastName, phone and email.
+  Retrieve a list of users from a CEDAR application. This interface takes in application, id, userName, firstName, lastName, phone and email.
 */
 func (a *Client) UserFindList(params *UserFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UserFindListOK, error) {
 	// TODO: Validate the params before sending
@@ -210,9 +210,9 @@ func (a *Client) UserFindList(params *UserFindListParams, authInfo runtime.Clien
 }
 
 /*
-UserIDUpdate updates a list existing user in a c e d a r application this interface takes an arrary of user documents
+  UserIDUpdate updates a list existing user in a c e d a r application this interface takes an arrary of user documents
 
-Update a list existing user in a CEDAR application.This interface takes an arrary of User documents.
+  Update a list existing user in a CEDAR application.This interface takes an arrary of User documents.
 */
 func (a *Client) UserIDUpdate(params *UserIDUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UserIDUpdateOK, error) {
 	// TODO: Validate the params before sending
@@ -251,9 +251,9 @@ func (a *Client) UserIDUpdate(params *UserIDUpdateParams, authInfo runtime.Clien
 }
 
 /*
-UserNameUpdate updates a list existing user in a c e d a r system this interface takes an array of user documents
+  UserNameUpdate updates a list existing user in a c e d a r system this interface takes an array of user documents
 
-Update a list existing user in a CEDAR system. This interface takes an array of User documents.
+  Update a list existing user in a CEDAR system. This interface takes an array of User documents.
 */
 func (a *Client) UserNameUpdate(params *UserNameUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UserNameUpdateOK, error) {
 	// TODO: Validate the params before sending

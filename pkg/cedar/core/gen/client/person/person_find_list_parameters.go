@@ -52,12 +52,10 @@ func NewPersonFindListParamsWithHTTPClient(client *http.Client) *PersonFindListP
 	}
 }
 
-/*
-PersonFindListParams contains all the parameters to send to the API endpoint
+/* PersonFindListParams contains all the parameters to send to the API endpoint
+   for the person find list operation.
 
-	for the person find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type PersonFindListParams struct {
 

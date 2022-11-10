@@ -57,8 +57,7 @@ func NewBudgetAddOK() *BudgetAddOK {
 	return &BudgetAddOK{}
 }
 
-/*
-	BudgetAddOK describes a response with status code 200, with default header values.
+/* BudgetAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewBudgetAddBadRequest() *BudgetAddBadRequest {
 	return &BudgetAddBadRequest{}
 }
 
-/*
-	BudgetAddBadRequest describes a response with status code 400, with default header values.
+/* BudgetAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewBudgetAddUnauthorized() *BudgetAddUnauthorized {
 	return &BudgetAddUnauthorized{}
 }
 
-/*
-	BudgetAddUnauthorized describes a response with status code 401, with default header values.
+/* BudgetAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewBudgetAddInternalServerError() *BudgetAddInternalServerError {
 	return &BudgetAddInternalServerError{}
 }
 
-/*
-	BudgetAddInternalServerError describes a response with status code 500, with default header values.
+/* BudgetAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

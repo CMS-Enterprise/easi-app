@@ -57,8 +57,7 @@ func NewIntakeStatusByClientIDOK() *IntakeStatusByClientIDOK {
 	return &IntakeStatusByClientIDOK{}
 }
 
-/*
-	IntakeStatusByClientIDOK describes a response with status code 200, with default header values.
+/* IntakeStatusByClientIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewIntakeStatusByClientIDBadRequest() *IntakeStatusByClientIDBadRequest {
 	return &IntakeStatusByClientIDBadRequest{}
 }
 
-/*
-	IntakeStatusByClientIDBadRequest describes a response with status code 400, with default header values.
+/* IntakeStatusByClientIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewIntakeStatusByClientIDUnauthorized() *IntakeStatusByClientIDUnauthorized
 	return &IntakeStatusByClientIDUnauthorized{}
 }
 
-/*
-	IntakeStatusByClientIDUnauthorized describes a response with status code 401, with default header values.
+/* IntakeStatusByClientIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewIntakeStatusByClientIDInternalServerError() *IntakeStatusByClientIDInter
 	return &IntakeStatusByClientIDInternalServerError{}
 }
 
-/*
-	IntakeStatusByClientIDInternalServerError describes a response with status code 500, with default header values.
+/* IntakeStatusByClientIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

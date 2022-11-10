@@ -57,8 +57,7 @@ func NewBudgetUpdateOK() *BudgetUpdateOK {
 	return &BudgetUpdateOK{}
 }
 
-/*
-	BudgetUpdateOK describes a response with status code 200, with default header values.
+/* BudgetUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewBudgetUpdateBadRequest() *BudgetUpdateBadRequest {
 	return &BudgetUpdateBadRequest{}
 }
 
-/*
-	BudgetUpdateBadRequest describes a response with status code 400, with default header values.
+/* BudgetUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewBudgetUpdateUnauthorized() *BudgetUpdateUnauthorized {
 	return &BudgetUpdateUnauthorized{}
 }
 
-/*
-	BudgetUpdateUnauthorized describes a response with status code 401, with default header values.
+/* BudgetUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewBudgetUpdateInternalServerError() *BudgetUpdateInternalServerError {
 	return &BudgetUpdateInternalServerError{}
 }
 
-/*
-	BudgetUpdateInternalServerError describes a response with status code 500, with default header values.
+/* BudgetUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

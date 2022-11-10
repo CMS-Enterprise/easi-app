@@ -53,12 +53,10 @@ func NewSystemSummaryFindListParamsWithHTTPClient(client *http.Client) *SystemSu
 	}
 }
 
-/*
-SystemSummaryFindListParams contains all the parameters to send to the API endpoint
+/* SystemSummaryFindListParams contains all the parameters to send to the API endpoint
+   for the system summary find list operation.
 
-	for the system summary find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type SystemSummaryFindListParams struct {
 

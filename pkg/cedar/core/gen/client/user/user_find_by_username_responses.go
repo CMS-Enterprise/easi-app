@@ -57,8 +57,7 @@ func NewUserFindByUsernameOK() *UserFindByUsernameOK {
 	return &UserFindByUsernameOK{}
 }
 
-/*
-	UserFindByUsernameOK describes a response with status code 200, with default header values.
+/* UserFindByUsernameOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewUserFindByUsernameBadRequest() *UserFindByUsernameBadRequest {
 	return &UserFindByUsernameBadRequest{}
 }
 
-/*
-	UserFindByUsernameBadRequest describes a response with status code 400, with default header values.
+/* UserFindByUsernameBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewUserFindByUsernameUnauthorized() *UserFindByUsernameUnauthorized {
 	return &UserFindByUsernameUnauthorized{}
 }
 
-/*
-	UserFindByUsernameUnauthorized describes a response with status code 401, with default header values.
+/* UserFindByUsernameUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewUserFindByUsernameInternalServerError() *UserFindByUsernameInternalServe
 	return &UserFindByUsernameInternalServerError{}
 }
 
-/*
-	UserFindByUsernameInternalServerError describes a response with status code 500, with default header values.
+/* UserFindByUsernameInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

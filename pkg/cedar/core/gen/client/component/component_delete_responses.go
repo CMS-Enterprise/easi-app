@@ -63,8 +63,7 @@ func NewComponentDeleteOK() *ComponentDeleteOK {
 	return &ComponentDeleteOK{}
 }
 
-/*
-	ComponentDeleteOK describes a response with status code 200, with default header values.
+/* ComponentDeleteOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -96,8 +95,7 @@ func NewComponentDeleteBadRequest() *ComponentDeleteBadRequest {
 	return &ComponentDeleteBadRequest{}
 }
 
-/*
-	ComponentDeleteBadRequest describes a response with status code 400, with default header values.
+/* ComponentDeleteBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -129,8 +127,7 @@ func NewComponentDeleteUnauthorized() *ComponentDeleteUnauthorized {
 	return &ComponentDeleteUnauthorized{}
 }
 
-/*
-	ComponentDeleteUnauthorized describes a response with status code 401, with default header values.
+/* ComponentDeleteUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -162,8 +159,7 @@ func NewComponentDeleteNotFound() *ComponentDeleteNotFound {
 	return &ComponentDeleteNotFound{}
 }
 
-/*
-	ComponentDeleteNotFound describes a response with status code 404, with default header values.
+/* ComponentDeleteNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -195,8 +191,7 @@ func NewComponentDeleteInternalServerError() *ComponentDeleteInternalServerError
 	return &ComponentDeleteInternalServerError{}
 }
 
-/*
-	ComponentDeleteInternalServerError describes a response with status code 500, with default header values.
+/* ComponentDeleteInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

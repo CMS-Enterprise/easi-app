@@ -63,8 +63,7 @@ func NewStakeholderFindListOK() *StakeholderFindListOK {
 	return &StakeholderFindListOK{}
 }
 
-/*
-	StakeholderFindListOK describes a response with status code 200, with default header values.
+/* StakeholderFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -96,8 +95,7 @@ func NewStakeholderFindListBadRequest() *StakeholderFindListBadRequest {
 	return &StakeholderFindListBadRequest{}
 }
 
-/*
-	StakeholderFindListBadRequest describes a response with status code 400, with default header values.
+/* StakeholderFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -129,8 +127,7 @@ func NewStakeholderFindListUnauthorized() *StakeholderFindListUnauthorized {
 	return &StakeholderFindListUnauthorized{}
 }
 
-/*
-	StakeholderFindListUnauthorized describes a response with status code 401, with default header values.
+/* StakeholderFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -162,8 +159,7 @@ func NewStakeholderFindListNotFound() *StakeholderFindListNotFound {
 	return &StakeholderFindListNotFound{}
 }
 
-/*
-	StakeholderFindListNotFound describes a response with status code 404, with default header values.
+/* StakeholderFindListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -195,8 +191,7 @@ func NewStakeholderFindListInternalServerError() *StakeholderFindListInternalSer
 	return &StakeholderFindListInternalServerError{}
 }
 
-/*
-	StakeholderFindListInternalServerError describes a response with status code 500, with default header values.
+/* StakeholderFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
