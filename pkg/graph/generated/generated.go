@@ -547,7 +547,6 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTRBRequest                                 func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
 		UpdateTRBRequestAttendee                         func(childComplexity int, input model.UpdateTRBRequestAttendeeInput) int
-		UpdateTRBRequestConsultSession                   func(childComplexity int, input model.UpdateTRBRequestConsultSessionInput) int
 		UpdateTRBRequestForm                             func(childComplexity int, input map[string]interface{}) int
 		UpdateTestDate                                   func(childComplexity int, input model.UpdateTestDateInput) int
 	}
@@ -768,7 +767,6 @@ type ComplexityRoot struct {
 	TRBRequest struct {
 		Archived       func(childComplexity int) int
 		Attendees      func(childComplexity int) int
-		ConsultSession func(childComplexity int) int
 		CreatedAt      func(childComplexity int) int
 		CreatedBy      func(childComplexity int) int
 		Documents      func(childComplexity int) int
@@ -794,17 +792,6 @@ type ComplexityRoot struct {
 		Role         func(childComplexity int) int
 		TRBRequestID func(childComplexity int) int
 		UserInfo     func(childComplexity int) int
-	}
-
-	TRBRequestConsultSession struct {
-		CreatedAt    func(childComplexity int) int
-		CreatedBy    func(childComplexity int) int
-		ID           func(childComplexity int) int
-		ModifiedAt   func(childComplexity int) int
-		ModifiedBy   func(childComplexity int) int
-		Notes        func(childComplexity int) int
-		SessionTime  func(childComplexity int) int
-		TRBRequestID func(childComplexity int) int
 	}
 
 	TRBRequestDocument struct {
@@ -1100,7 +1087,6 @@ type MutationResolver interface {
 	DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error)
 	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
 	CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error)
-	UpdateTRBRequestConsultSession(ctx context.Context, input model.UpdateTRBRequestConsultSessionInput) (*models.TRBRequestConsultSession, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -1181,7 +1167,6 @@ type TRBRequestResolver interface {
 
 	Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error)
 	Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error)
-	ConsultSession(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestConsultSession, error)
 }
 type TRBRequestAttendeeResolver interface {
 	UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error)
@@ -3861,18 +3846,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateTRBRequestAttendee(childComplexity, args["input"].(model.UpdateTRBRequestAttendeeInput)), true
 
-	case "Mutation.updateTRBRequestConsultSession":
-		if e.complexity.Mutation.UpdateTRBRequestConsultSession == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateTRBRequestConsultSession_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateTRBRequestConsultSession(childComplexity, args["input"].(model.UpdateTRBRequestConsultSessionInput)), true
-
 	case "Mutation.updateTRBRequestForm":
 		if e.complexity.Mutation.UpdateTRBRequestForm == nil {
 			break
@@ -4988,13 +4961,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.Attendees(childComplexity), true
 
-	case "TRBRequest.consultSession":
-		if e.complexity.TRBRequest.ConsultSession == nil {
-			break
-		}
-
-		return e.complexity.TRBRequest.ConsultSession(childComplexity), true
-
 	case "TRBRequest.createdAt":
 		if e.complexity.TRBRequest.CreatedAt == nil {
 			break
@@ -5148,62 +5114,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequestAttendee.UserInfo(childComplexity), true
-
-	case "TRBRequestConsultSession.createdAt":
-		if e.complexity.TRBRequestConsultSession.CreatedAt == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestConsultSession.CreatedAt(childComplexity), true
-
-	case "TRBRequestConsultSession.createdBy":
-		if e.complexity.TRBRequestConsultSession.CreatedBy == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestConsultSession.CreatedBy(childComplexity), true
-
-	case "TRBRequestConsultSession.id":
-		if e.complexity.TRBRequestConsultSession.ID == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestConsultSession.ID(childComplexity), true
-
-	case "TRBRequestConsultSession.modifiedAt":
-		if e.complexity.TRBRequestConsultSession.ModifiedAt == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestConsultSession.ModifiedAt(childComplexity), true
-
-	case "TRBRequestConsultSession.modifiedBy":
-		if e.complexity.TRBRequestConsultSession.ModifiedBy == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestConsultSession.ModifiedBy(childComplexity), true
-
-	case "TRBRequestConsultSession.notes":
-		if e.complexity.TRBRequestConsultSession.Notes == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestConsultSession.Notes(childComplexity), true
-
-	case "TRBRequestConsultSession.sessionTime":
-		if e.complexity.TRBRequestConsultSession.SessionTime == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestConsultSession.SessionTime(childComplexity), true
-
-	case "TRBRequestConsultSession.trbRequestId":
-		if e.complexity.TRBRequestConsultSession.TRBRequestID == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestConsultSession.TRBRequestID(childComplexity), true
 
 	case "TRBRequestDocument.documentType":
 		if e.complexity.TRBRequestDocument.DocumentType == nil {
@@ -5744,7 +5654,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
 		ec.unmarshalInputUpdateTRBRequestAttendeeInput,
-		ec.unmarshalInputUpdateTRBRequestConsultSessionInput,
 		ec.unmarshalInputUpdateTestDateInput,
 	)
 	first := true
@@ -7311,7 +7220,6 @@ type TRBRequest {
   feedbackStatus: TRBFeedbackStatus!
   documents: [TRBRequestDocument!]!
   form: TRBRequestForm!
-  consultSession: TRBRequestConsultSession!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -7639,30 +7547,6 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
 }
 
-
-"""
-Represents scheduled consult session for a TRB request
-"""
-type TRBRequestConsultSession {
-  id: UUID!
-  trbRequestId: UUID!
-  sessionTime: Time
-  notes: String
-  createdBy: String!
-  createdAt: Time!
-  modifiedBy: String
-  modifiedAt: Time
-}
-
-"""
-The data required to update a ConsultSession
-"""
-input UpdateTRBRequestConsultSessionInput {
-  trbRequestId: UUID!
-  sessionTime: Time!
-  notes: String!
-}
-
 enum TRBFeedbackAction {
   READY_FOR_CONSULT
   REQUEST_EDITS
@@ -7818,7 +7702,6 @@ type Mutation {
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
-  updateTRBRequestConsultSession(input: UpdateTRBRequestConsultSessionInput!): TRBRequestConsultSession!
 }
 
 """
@@ -8686,21 +8569,6 @@ func (ec *executionContext) field_Mutation_updateTRBRequestAttendee_args(ctx con
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateTRBRequestAttendeeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestAttendeeInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateTRBRequestConsultSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.UpdateTRBRequestConsultSessionInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateTRBRequestConsultSessionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestConsultSessionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -25330,8 +25198,6 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "consultSession":
-				return ec.fieldContext_TRBRequest_consultSession(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -25417,8 +25283,6 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "consultSession":
-				return ec.fieldContext_TRBRequest_consultSession(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -25978,79 +25842,6 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequestFeedback(ctx c
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createTRBRequestFeedback_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_updateTRBRequestConsultSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateTRBRequestConsultSession(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTRBRequestConsultSession(rctx, fc.Args["input"].(model.UpdateTRBRequestConsultSessionInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.TRBRequestConsultSession)
-	fc.Result = res
-	return ec.marshalNTRBRequestConsultSession2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestConsultSession(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateTRBRequestConsultSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBRequestConsultSession_id(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBRequestConsultSession_trbRequestId(ctx, field)
-			case "sessionTime":
-				return ec.fieldContext_TRBRequestConsultSession_sessionTime(ctx, field)
-			case "notes":
-				return ec.fieldContext_TRBRequestConsultSession_notes(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBRequestConsultSession_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBRequestConsultSession_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBRequestConsultSession_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBRequestConsultSession_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestConsultSession", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateTRBRequestConsultSession_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -27629,8 +27420,6 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "consultSession":
-				return ec.fieldContext_TRBRequest_consultSession(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -27716,8 +27505,6 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
-			case "consultSession":
-				return ec.fieldContext_TRBRequest_consultSession(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
 			case "createdAt":
@@ -33886,68 +33673,6 @@ func (ec *executionContext) fieldContext_TRBRequest_form(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBRequest_consultSession(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequest_consultSession(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBRequest().ConsultSession(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.TRBRequestConsultSession)
-	fc.Result = res
-	return ec.marshalNTRBRequestConsultSession2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestConsultSession(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequest_consultSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequest",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBRequestConsultSession_id(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBRequestConsultSession_trbRequestId(ctx, field)
-			case "sessionTime":
-				return ec.fieldContext_TRBRequestConsultSession_sessionTime(ctx, field)
-			case "notes":
-				return ec.fieldContext_TRBRequestConsultSession_notes(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBRequestConsultSession_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBRequestConsultSession_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBRequestConsultSession_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBRequestConsultSession_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestConsultSession", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _TRBRequest_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBRequest_createdBy(ctx, field)
 	if err != nil {
@@ -34547,346 +34272,6 @@ func (ec *executionContext) _TRBRequestAttendee_modifiedAt(ctx context.Context, 
 func (ec *executionContext) fieldContext_TRBRequestAttendee_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TRBRequestAttendee",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestConsultSession_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestConsultSession) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestConsultSession_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestConsultSession_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestConsultSession",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestConsultSession_trbRequestId(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestConsultSession) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestConsultSession_trbRequestId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TRBRequestID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestConsultSession_trbRequestId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestConsultSession",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestConsultSession_sessionTime(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestConsultSession) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestConsultSession_sessionTime(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SessionTime, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestConsultSession_sessionTime(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestConsultSession",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestConsultSession_notes(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestConsultSession) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestConsultSession_notes(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Notes, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestConsultSession_notes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestConsultSession",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestConsultSession_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestConsultSession) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestConsultSession_createdBy(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedBy, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestConsultSession_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestConsultSession",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestConsultSession_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestConsultSession) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestConsultSession_createdAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(time.Time)
-	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestConsultSession_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestConsultSession",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestConsultSession_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestConsultSession) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestConsultSession_modifiedBy(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ModifiedBy, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestConsultSession_modifiedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestConsultSession",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestConsultSession_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestConsultSession) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestConsultSession_modifiedAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ModifiedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestConsultSession_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestConsultSession",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -42039,50 +41424,6 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestAttendeeInput(ctx cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTRBRequestConsultSessionInput(ctx context.Context, obj interface{}) (model.UpdateTRBRequestConsultSessionInput, error) {
-	var it model.UpdateTRBRequestConsultSessionInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"trbRequestId", "sessionTime", "notes"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "trbRequestId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-			it.TrbRequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "sessionTime":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sessionTime"))
-			it.SessionTime, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "notes":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notes"))
-			it.Notes, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateTestDateInput(ctx context.Context, obj interface{}) (model.UpdateTestDateInput, error) {
 	var it model.UpdateTestDateInput
 	asMap := map[string]interface{}{}
@@ -46179,15 +45520,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "updateTRBRequestConsultSession":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateTRBRequestConsultSession(ctx, field)
-			})
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -48437,26 +47769,6 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 				return innerFunc(ctx)
 
 			})
-		case "consultSession":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._TRBRequest_consultSession(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequest_createdBy(ctx, field, obj)
@@ -48573,71 +47885,6 @@ func (ec *executionContext) _TRBRequestAttendee(ctx context.Context, sel ast.Sel
 		case "modifiedAt":
 
 			out.Values[i] = ec._TRBRequestAttendee_modifiedAt(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var tRBRequestConsultSessionImplementors = []string{"TRBRequestConsultSession"}
-
-func (ec *executionContext) _TRBRequestConsultSession(ctx context.Context, sel ast.SelectionSet, obj *models.TRBRequestConsultSession) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBRequestConsultSessionImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBRequestConsultSession")
-		case "id":
-
-			out.Values[i] = ec._TRBRequestConsultSession_id(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "trbRequestId":
-
-			out.Values[i] = ec._TRBRequestConsultSession_trbRequestId(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "sessionTime":
-
-			out.Values[i] = ec._TRBRequestConsultSession_sessionTime(ctx, field, obj)
-
-		case "notes":
-
-			out.Values[i] = ec._TRBRequestConsultSession_notes(ctx, field, obj)
-
-		case "createdBy":
-
-			out.Values[i] = ec._TRBRequestConsultSession_createdBy(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "createdAt":
-
-			out.Values[i] = ec._TRBRequestConsultSession_createdAt(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "modifiedBy":
-
-			out.Values[i] = ec._TRBRequestConsultSession_modifiedBy(ctx, field, obj)
-
-		case "modifiedAt":
-
-			out.Values[i] = ec._TRBRequestConsultSession_modifiedAt(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -51882,20 +51129,6 @@ func (ec *executionContext) marshalNTRBRequestAttendee2ᚖgithubᚗcomᚋcmsgov�
 	return ec._TRBRequestAttendee(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTRBRequestConsultSession2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestConsultSession(ctx context.Context, sel ast.SelectionSet, v models.TRBRequestConsultSession) graphql.Marshaler {
-	return ec._TRBRequestConsultSession(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNTRBRequestConsultSession2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestConsultSession(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequestConsultSession) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._TRBRequestConsultSession(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalNTRBRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TRBRequestDocument) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -52257,11 +51490,6 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeReviewDatesInput2github�
 
 func (ec *executionContext) unmarshalNUpdateTRBRequestAttendeeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestAttendeeInput(ctx context.Context, v interface{}) (model.UpdateTRBRequestAttendeeInput, error) {
 	res, err := ec.unmarshalInputUpdateTRBRequestAttendeeInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdateTRBRequestConsultSessionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestConsultSessionInput(ctx context.Context, v interface{}) (model.UpdateTRBRequestConsultSessionInput, error) {
-	res, err := ec.unmarshalInputUpdateTRBRequestConsultSessionInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

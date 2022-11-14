@@ -1503,7 +1503,6 @@ type TRBRequest {
   feedbackStatus: TRBFeedbackStatus!
   documents: [TRBRequestDocument!]!
   form: TRBRequestForm!
-  consultSession: TRBRequestConsultSession!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -1831,30 +1830,6 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
 }
 
-
-"""
-Represents scheduled consult session for a TRB request
-"""
-type TRBRequestConsultSession {
-  id: UUID!
-  trbRequestId: UUID!
-  sessionTime: Time
-  notes: String
-  createdBy: String!
-  createdAt: Time!
-  modifiedBy: String
-  modifiedAt: Time
-}
-
-"""
-The data required to update a ConsultSession
-"""
-input UpdateTRBRequestConsultSessionInput {
-  trbRequestId: UUID!
-  sessionTime: Time!
-  notes: String!
-}
-
 enum TRBFeedbackAction {
   READY_FOR_CONSULT
   REQUEST_EDITS
@@ -2010,7 +1985,6 @@ type Mutation {
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
-  updateTRBRequestConsultSession(input: UpdateTRBRequestConsultSessionInput!): TRBRequestConsultSession!
 }
 
 """
