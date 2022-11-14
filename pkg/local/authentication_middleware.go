@@ -58,7 +58,7 @@ func authenticateMiddleware(logger *zap.Logger, next http.Handler) http.Handler 
 
 		logger.Info("Using local authorization middleware and populating EUA ID and job codes")
 		ctx := appcontext.WithPrincipal(r.Context(), &authentication.EUAPrincipal{
-			EUAID:            config.EUA,
+			EUAID:            strings.ToUpper(config.EUA),
 			JobCodeEASi:      true,
 			JobCodeGRT:       swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
 			JobCode508User:   swag.ContainsStrings(config.JobCodes, "EASI_D_508_USER"),
