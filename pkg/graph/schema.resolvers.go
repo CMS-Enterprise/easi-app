@@ -1943,8 +1943,8 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
 }
 
-// ChangeRolesForUserOnSystem is the resolver for the changeRolesForUserOnSystem field.
-func (r *mutationResolver) ChangeRolesForUserOnSystem(ctx context.Context, input model.ChangeRolesForUserOnSystemInput) (*string, error) {
+// SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
+func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
 	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
 	if err != nil {
 		return nil, err

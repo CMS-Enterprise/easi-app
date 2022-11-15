@@ -227,7 +227,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 
 	// length check is necessary because CEDAR will error if we call addRoles() with no role type IDs
 	if len(newRoles) > 0 {
-		_, err = c.addRoles(ctx, cedarSystemID, newRoles)
+		err = c.addRoles(ctx, cedarSystemID, newRoles)
 		if err != nil {
 			return err
 		}
@@ -245,15 +245,15 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 }
 
 // returns list of role IDs if successful
-func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []newRole) ([]string, error) {
+func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []newRole) error {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []string{}, nil
+		return nil
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 	if err != nil {
-		return []string{}, err
+		return err
 	}
 
 	// Construct the body
@@ -285,22 +285,21 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 	// Make the API call
 	resp, err := c.sdk.Role.RoleAdd(params, c.auth)
 	if err != nil {
-		return []string{}, err
+		return err
 	}
 
 	if resp.Payload == nil {
-		return []string{}, fmt.Errorf("no body received")
+		return fmt.Errorf("no body received")
 	}
 
 	if resp.Payload.Result == "error" {
 		if len(resp.Payload.Message) > 0 {
-			return []string{}, fmt.Errorf(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
+			return fmt.Errorf(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
 		}
-		return []string{}, fmt.Errorf("unknown error")
+		return fmt.Errorf("unknown error")
 	}
 
-	// return list of IDs of created roles
-	return resp.Payload.Message, nil
+	return nil
 }
 
 func (c *Client) deleteRoles(ctx context.Context, roleIDsToDelete []string) error {

@@ -113,12 +113,6 @@ type CedarSystemMaintainerInformation struct {
 	YearToRetireReplace        *string  `json:"yearToRetireReplace"`
 }
 
-type ChangeRolesForUserOnSystemInput struct {
-	CedarSystemID      string   `json:"cedarSystemID"`
-	EuaUserID          string   `json:"euaUserId"`
-	DesiredRoleTypeIDs []string `json:"desiredRoleTypeIDs"`
-}
-
 // Represents a date used for start and end dates on a contract
 type ContractDate struct {
 	Day   *string `json:"day"`
@@ -411,6 +405,12 @@ type SendReportAProblemEmailInput struct {
 	WhatWereYouDoing       string `json:"whatWereYouDoing"`
 	WhatWentWrong          string `json:"whatWentWrong"`
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
+}
+
+type SetRolesForUserOnSystemInput struct {
+	CedarSystemID      string   `json:"cedarSystemID"`
+	EuaUserID          string   `json:"euaUserId"`
+	DesiredRoleTypeIDs []string `json:"desiredRoleTypeIDs"`
 }
 
 // Input to submit an intake for review

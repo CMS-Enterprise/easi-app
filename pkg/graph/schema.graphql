@@ -299,7 +299,7 @@ type CedarRole {
   objectType: String
 }
 
-input ChangeRolesForUserOnSystemInput {
+input SetRolesForUserOnSystemInput {
   cedarSystemID: String!
   euaUserId: String!
   desiredRoleTypeIDs: [String!]!
@@ -1959,7 +1959,7 @@ type Mutation {
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
-  changeRolesForUserOnSystem(input: ChangeRolesForUserOnSystemInput!): String
+  setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
 }
 
 """

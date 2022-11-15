@@ -506,7 +506,6 @@ type ComplexityRoot struct {
 		AddGRTFeedbackAndKeepBusinessCaseInDraft         func(childComplexity int, input model.AddGRTFeedbackInput) int
 		AddGRTFeedbackAndProgressToFinalBusinessCase     func(childComplexity int, input model.AddGRTFeedbackInput) int
 		AddGRTFeedbackAndRequestBusinessCase             func(childComplexity int, input model.AddGRTFeedbackInput) int
-		ChangeRolesForUserOnSystem                       func(childComplexity int, input model.ChangeRolesForUserOnSystemInput) int
 		CreateAccessibilityRequest                       func(childComplexity int, input model.CreateAccessibilityRequestInput) int
 		CreateAccessibilityRequestDocument               func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
 		CreateAccessibilityRequestNote                   func(childComplexity int, input model.CreateAccessibilityRequestNoteInput) int
@@ -541,6 +540,7 @@ type ComplexityRoot struct {
 		SendCantFindSomethingEmail                       func(childComplexity int, input model.SendCantFindSomethingEmailInput) int
 		SendFeedbackEmail                                func(childComplexity int, input model.SendFeedbackEmailInput) int
 		SendReportAProblemEmail                          func(childComplexity int, input model.SendReportAProblemEmailInput) int
+		SetRolesForUserOnSystem                          func(childComplexity int, input model.SetRolesForUserOnSystemInput) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
@@ -1082,7 +1082,7 @@ type MutationResolver interface {
 	CreateTRBRequestDocument(ctx context.Context, input model.CreateTRBRequestDocumentInput) (*model.CreateTRBRequestDocumentPayload, error)
 	DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error)
 	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
-	ChangeRolesForUserOnSystem(ctx context.Context, input model.ChangeRolesForUserOnSystemInput) (*string, error)
+	SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -3290,18 +3290,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddGRTFeedbackAndRequestBusinessCase(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
 
-	case "Mutation.changeRolesForUserOnSystem":
-		if e.complexity.Mutation.ChangeRolesForUserOnSystem == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_changeRolesForUserOnSystem_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.ChangeRolesForUserOnSystem(childComplexity, args["input"].(model.ChangeRolesForUserOnSystemInput)), true
-
 	case "Mutation.createAccessibilityRequest":
 		if e.complexity.Mutation.CreateAccessibilityRequest == nil {
 			break
@@ -3709,6 +3697,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.SendReportAProblemEmail(childComplexity, args["input"].(model.SendReportAProblemEmailInput)), true
+
+	case "Mutation.setRolesForUserOnSystem":
+		if e.complexity.Mutation.SetRolesForUserOnSystem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setRolesForUserOnSystem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetRolesForUserOnSystem(childComplexity, args["input"].(model.SetRolesForUserOnSystemInput)), true
 
 	case "Mutation.submitIntake":
 		if e.complexity.Mutation.SubmitIntake == nil {
@@ -5551,7 +5551,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputAddGRTFeedbackInput,
 		ec.unmarshalInputBasicActionInput,
-		ec.unmarshalInputChangeRolesForUserOnSystemInput,
 		ec.unmarshalInputCreateAccessibilityRequestDocumentInput,
 		ec.unmarshalInputCreateAccessibilityRequestInput,
 		ec.unmarshalInputCreateAccessibilityRequestNoteInput,
@@ -5574,6 +5573,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSendCantFindSomethingEmailInput,
 		ec.unmarshalInputSendFeedbackEmailInput,
 		ec.unmarshalInputSendReportAProblemEmailInput,
+		ec.unmarshalInputSetRolesForUserOnSystemInput,
 		ec.unmarshalInputSubmitIntakeInput,
 		ec.unmarshalInputSystemIntakeBusinessOwnerInput,
 		ec.unmarshalInputSystemIntakeCollaboratorInput,
@@ -5959,7 +5959,7 @@ type CedarRole {
   objectType: String
 }
 
-input ChangeRolesForUserOnSystemInput {
+input SetRolesForUserOnSystemInput {
   cedarSystemID: String!
   euaUserId: String!
   desiredRoleTypeIDs: [String!]!
@@ -7619,7 +7619,7 @@ type Mutation {
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
-  changeRolesForUserOnSystem(input: ChangeRolesForUserOnSystemInput!): String
+  setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
 }
 
 """
@@ -7783,21 +7783,6 @@ func (ec *executionContext) field_Mutation_addGRTFeedbackAndRequestBusinessCase_
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_changeRolesForUserOnSystem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.ChangeRolesForUserOnSystemInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNChangeRolesForUserOnSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐChangeRolesForUserOnSystemInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -8308,6 +8293,21 @@ func (ec *executionContext) field_Mutation_sendReportAProblemEmail_args(ctx cont
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNSendReportAProblemEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendReportAProblemEmailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setRolesForUserOnSystem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.SetRolesForUserOnSystemInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSetRolesForUserOnSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetRolesForUserOnSystemInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -25855,8 +25855,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestForm(ctx conte
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_changeRolesForUserOnSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_changeRolesForUserOnSystem(ctx, field)
+func (ec *executionContext) _Mutation_setRolesForUserOnSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_setRolesForUserOnSystem(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -25869,7 +25869,7 @@ func (ec *executionContext) _Mutation_changeRolesForUserOnSystem(ctx context.Con
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().ChangeRolesForUserOnSystem(rctx, fc.Args["input"].(model.ChangeRolesForUserOnSystemInput))
+		return ec.resolvers.Mutation().SetRolesForUserOnSystem(rctx, fc.Args["input"].(model.SetRolesForUserOnSystemInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -25883,7 +25883,7 @@ func (ec *executionContext) _Mutation_changeRolesForUserOnSystem(ctx context.Con
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_changeRolesForUserOnSystem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_setRolesForUserOnSystem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -25900,7 +25900,7 @@ func (ec *executionContext) fieldContext_Mutation_changeRolesForUserOnSystem(ctx
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_changeRolesForUserOnSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_setRolesForUserOnSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -38821,50 +38821,6 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputChangeRolesForUserOnSystemInput(ctx context.Context, obj interface{}) (model.ChangeRolesForUserOnSystemInput, error) {
-	var it model.ChangeRolesForUserOnSystemInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"cedarSystemID", "euaUserId", "desiredRoleTypeIDs"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "cedarSystemID":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemID"))
-			it.CedarSystemID, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "euaUserId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
-			it.EuaUserID, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "desiredRoleTypeIDs":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("desiredRoleTypeIDs"))
-			it.DesiredRoleTypeIDs, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestDocumentInput, error) {
 	var it model.CreateAccessibilityRequestDocumentInput
 	asMap := map[string]interface{}{}
@@ -39988,6 +39944,50 @@ func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx conte
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howSevereWasTheProblem"))
 			it.HowSevereWasTheProblem, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSetRolesForUserOnSystemInput(ctx context.Context, obj interface{}) (model.SetRolesForUserOnSystemInput, error) {
+	var it model.SetRolesForUserOnSystemInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"cedarSystemID", "euaUserId", "desiredRoleTypeIDs"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "cedarSystemID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemID"))
+			it.CedarSystemID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "euaUserId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
+			it.EuaUserID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "desiredRoleTypeIDs":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("desiredRoleTypeIDs"))
+			it.DesiredRoleTypeIDs, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -45115,10 +45115,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "changeRolesForUserOnSystem":
+		case "setRolesForUserOnSystem":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_changeRolesForUserOnSystem(ctx, field)
+				return ec._Mutation_setRolesForUserOnSystem(ctx, field)
 			})
 
 		default:
@@ -49386,11 +49386,6 @@ func (ec *executionContext) marshalNCedarURL2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑa
 	return ec._CedarURL(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNChangeRolesForUserOnSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐChangeRolesForUserOnSystemInput(ctx context.Context, v interface{}) (model.ChangeRolesForUserOnSystemInput, error) {
-	res, err := ec.unmarshalInputChangeRolesForUserOnSystemInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalNContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx context.Context, sel ast.SelectionSet, v *model.ContractDate) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -49754,6 +49749,11 @@ func (ec *executionContext) unmarshalNSendFeedbackEmailInput2githubᚗcomᚋcmsg
 
 func (ec *executionContext) unmarshalNSendReportAProblemEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendReportAProblemEmailInput(ctx context.Context, v interface{}) (model.SendReportAProblemEmailInput, error) {
 	res, err := ec.unmarshalInputSendReportAProblemEmailInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSetRolesForUserOnSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetRolesForUserOnSystemInput(ctx context.Context, v interface{}) (model.SetRolesForUserOnSystemInput, error) {
+	res, err := ec.unmarshalInputSetRolesForUserOnSystemInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
