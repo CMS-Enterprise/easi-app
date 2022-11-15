@@ -22,9 +22,6 @@ var trbRequestCreateSQL string
 //go:embed SQL/trb_request_form_create.sql
 var trbRequestFormCreateSQL string
 
-//go:embed SQL/trb_request_consult_session_create.sql
-var trbRequestConsultSessionCreateSQL string
-
 //go:embed SQL/trb_request_get_by_id.sql
 var trbRequestGetByIDSQL string
 
@@ -77,35 +74,11 @@ func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 		return nil, err
 	}
 
-	createdForm := models.TRBRequestForm{}
-	err = stmt.Get(&createdForm, form)
+	created := models.TRBRequestForm{}
+	err = stmt.Get(&created, form)
 
 	if err != nil {
 		logger.Error("Failed to create TRB request form with error %s", zap.Error(err))
-		return nil, err
-	}
-
-	consultSession := models.TRBRequestConsultSession{
-		TRBRequestID: retTRB.ID,
-	}
-	consultSession.ID = uuid.New()
-	consultSession.CreatedBy = retTRB.CreatedBy
-
-	stmt, err = tx.PrepareNamed(trbRequestConsultSessionCreateSQL)
-
-	if err != nil {
-		logger.Error(
-			fmt.Sprintf("Failed to update TRB create consult session %s", err),
-			zap.String("id", consultSession.ID.String()),
-		)
-		return nil, err
-	}
-
-	createdSession := models.TRBRequestConsultSession{}
-	err = stmt.Get(&createdSession, consultSession)
-
-	if err != nil {
-		logger.Error("Failed to create TRB request consult session with error %s", zap.Error(err))
 		return nil, err
 	}
 

@@ -76,7 +76,7 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authenticati
 	jc508User := jwtGroupsContainsJobCode(jwt, f.code508User)
 
 	return &authentication.EUAPrincipal{
-			EUAID:            euaID,
+			EUAID:            strings.ToUpper(euaID),
 			JobCodeEASi:      jcEASi,
 			JobCodeGRT:       jcGRT,
 			JobCode508Tester: jc508Tester,

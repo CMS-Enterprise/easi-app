@@ -1950,15 +1950,6 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 	})
 }
 
-// UpdateTRBRequestConsultSession is the resolver for the updateTRBRequestConsultSession field.
-func (r *mutationResolver) UpdateTRBRequestConsultSession(ctx context.Context, input model.UpdateTRBRequestConsultSessionInput) (*models.TRBRequestConsultSession, error) {
-	return resolvers.UpdateTRBRequestConsultSession(ctx, r.store, &models.TRBRequestConsultSession{
-		TRBRequestID: input.TrbRequestID,
-		SessionTime:  &input.SessionTime,
-		Notes:        &input.Notes,
-	})
-}
-
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2709,11 +2700,6 @@ func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBReque
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
 	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
-}
-
-// ConsultSession is the resolver for the consultSession field.
-func (r *tRBRequestResolver) ConsultSession(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestConsultSession, error) {
-	return resolvers.GetTRBRequestConsultSessionByTRBRequestID(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
