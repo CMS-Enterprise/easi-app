@@ -6,6 +6,7 @@ import (
 
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
+	"github.com/samber/lo"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -186,8 +187,61 @@ func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, err
 }
 
 type newRole struct {
-	userEUAID  string
+	euaUserID  string
 	roleTypeID string
+}
+
+// SetRolesForUser sets the desired roles for a user on a given system to *exactly* the requested role types, adding and deleting role assignments in CEDAR as necessary
+func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) error {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return nil
+	}
+
+	allRolesForSystem, err := c.GetRolesBySystem(ctx, cedarSystemID, null.String{})
+	if err != nil {
+		return err
+	}
+
+	currentRolesForUser := lo.Filter(allRolesForSystem, func(role *models.CedarRole, _ int) bool {
+		// the check for !currentRole.RoleID.IsZero() shouldn't be necessary - all roles should have IDs assigned - but check's there just in case CEDAR has bad data
+		return role.AssigneeUsername.ValueOrZero() == euaUserID && !role.RoleID.IsZero()
+	})
+
+	currentRolesForUserByRoleTypes := lo.SliceToMap(currentRolesForUser, func(role *models.CedarRole) (string, *models.CedarRole) {
+		return role.RoleTypeID, role
+	})
+
+	roleTypesToAdd, _ := lo.Difference(desiredRoleTypeIDs, lo.Keys(currentRolesForUserByRoleTypes))
+	newRoles := lo.Map(roleTypesToAdd, func(roleTypeID string, _ int) newRole {
+		return newRole{
+			euaUserID:  euaUserID,
+			roleTypeID: roleTypeID,
+		}
+	})
+
+	rolesToDelete := lo.OmitByKeys(currentRolesForUserByRoleTypes, desiredRoleTypeIDs)
+	roleIDsToDelete := lo.Map(lo.Values(rolesToDelete), func(role *models.CedarRole, _ int) string {
+		return role.RoleID.ValueOrZero()
+	})
+
+	// length check is necessary because CEDAR will error if we call addRoles() with no role type IDs
+	if len(newRoles) > 0 {
+		_, err = c.addRoles(ctx, cedarSystemID, newRoles)
+		if err != nil {
+			return err
+		}
+	}
+
+	// length check is necessary because CEDAR will error if we call deleteRoles() with no role  IDs
+	if len(roleIDsToDelete) > 0 {
+		err = c.deleteRoles(ctx, roleIDsToDelete)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // returns list of role IDs if successful
@@ -206,11 +260,14 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 	rolesToCreate := []*apimodels.Role{}
 
 	for _, newRole := range newRoles {
+		// create by-value copy of roleTypeID so it doesn't change as newRole iterates through newRoles
+		roleTypeID := newRole.roleTypeID
+
 		roleToCreate := &apimodels.Role{
 			Application:      cedarRoleApplicationPtr(),
 			ObjectID:         &cedarSystem.VersionID,
-			AssigneeUserName: newRole.userEUAID,
-			RoleTypeID:       &newRole.roleTypeID,
+			AssigneeUserName: newRole.euaUserID,
+			RoleTypeID:       &roleTypeID,
 		}
 		rolesToCreate = append(rolesToCreate, roleToCreate)
 	}

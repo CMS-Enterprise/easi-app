@@ -1943,6 +1943,17 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
 }
 
+// ChangeRolesForUserOnSystem is the resolver for the changeRolesForUserOnSystem field.
+func (r *mutationResolver) ChangeRolesForUserOnSystem(ctx context.Context, input model.ChangeRolesForUserOnSystemInput) (*string, error) {
+	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := "Success"
+	return &resp, nil
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view

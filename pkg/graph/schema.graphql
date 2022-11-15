@@ -299,6 +299,12 @@ type CedarRole {
   objectType: String
 }
 
+input ChangeRolesForUserOnSystemInput {
+  cedarSystemID: String!
+  euaUserId: String!
+  desiredRoleTypeIDs: [String!]!
+}
+
 """
 CedarURL represents info about a URL associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
 """
@@ -1953,6 +1959,7 @@ type Mutation {
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
+  changeRolesForUserOnSystem(input: ChangeRolesForUserOnSystemInput!): String
 }
 
 """
