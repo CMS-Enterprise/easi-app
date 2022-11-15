@@ -212,7 +212,11 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return role.RoleTypeID, role
 	})
 
+	// first return value from lo.Difference is the role types to add;
+	// second return would be the role types to delete, but we ignore that and calculate it later because we need the *role* IDs
 	roleTypesToAdd, _ := lo.Difference(desiredRoleTypeIDs, lo.Keys(currentRolesForUserByRoleTypes))
+
+	// augment the list of role type IDs to add with the user's EUA ID
 	newRoles := lo.Map(roleTypesToAdd, func(roleTypeID string, _ int) newRole {
 		return newRole{
 			euaUserID:  euaUserID,
@@ -220,6 +224,8 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		}
 	})
 
+	// here is where we find the roles we want to delete; lo.OmitByKeys() removes any currently-assigned role type IDs that aren't in desiredRoleTypeIDs,
+	// then we use lo.Values() to extract the roles, and lo.Map() to pull out those roles' IDs
 	rolesToDelete := lo.OmitByKeys(currentRolesForUserByRoleTypes, desiredRoleTypeIDs)
 	roleIDsToDelete := lo.Map(lo.Values(rolesToDelete), func(role *models.CedarRole, _ int) string {
 		return role.RoleID.ValueOrZero()
@@ -233,7 +239,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		}
 	}
 
-	// length check is necessary because CEDAR will error if we call deleteRoles() with no role  IDs
+	// length check is necessary because CEDAR will error if we call deleteRoles() with no role IDs
 	if len(roleIDsToDelete) > 0 {
 		err = c.deleteRoles(ctx, roleIDsToDelete)
 		if err != nil {
@@ -244,7 +250,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	return nil
 }
 
-// returns list of role IDs if successful
+// private utility method for creating roles for a given system in CEDAR
 func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []newRole) error {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
@@ -294,7 +300,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 
 	if resp.Payload.Result == "error" {
 		if len(resp.Payload.Message) > 0 {
-			return fmt.Errorf(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
+			return fmt.Errorf(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
 		}
 		return fmt.Errorf("unknown error")
 	}
@@ -302,6 +308,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 	return nil
 }
 
+// private utility method for deleting roles from CEDAR
 func (c *Client) deleteRoles(ctx context.Context, roleIDsToDelete []string) error {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
