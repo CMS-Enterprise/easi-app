@@ -70,8 +70,9 @@ function AttendeesForm({
     const submitAttendee = (formData: TRBAttendeeFields) => {
       /** Attendee component and role */
       const input = {
-        component: activeAttendee.component,
-        role: activeAttendee.role as PersonRole
+        trbRequestId: request.id,
+        component: formData.component,
+        role: formData.role as PersonRole
       };
       // If editing attendee, add ID to input and update attendee
       if (defaultValues.id) {
@@ -84,7 +85,7 @@ function AttendeesForm({
         createAttendee({
           ...input,
           trbRequestId: request.id,
-          euaUserId: activeAttendee.userInfo?.euaUserId || ''
+          euaUserId: formData.userInfo?.euaUserId || ''
         }).catch(e => null);
       }
       // TODO: Request error handling
