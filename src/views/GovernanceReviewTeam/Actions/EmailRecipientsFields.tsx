@@ -246,8 +246,6 @@ export default ({
 
   /** Number of unverified contacts */
   const unverifiedCount = contactsList.unverifiedContacts.length;
-  /** Number of verified contacts */
-  const verifiedCount = contactsList.verifiedContacts.length;
 
   /** Number of selected recipients */
   const selectedCount = Object.values(recipients)
@@ -292,7 +290,10 @@ export default ({
 
   // Number of contacts to hide behind view more button
   // Subtract defaultRecipientsCount from total number of possible default recipients to show how many are below view more button
-  const hiddenContactsCount = verifiedCount + (3 - defaultRecipientsCount);
+  const hiddenContactsCount =
+    verifiedContacts.length +
+    additionalContacts.length +
+    (3 - defaultRecipientsCount);
 
   return (
     <div className={classnames(className)}>
