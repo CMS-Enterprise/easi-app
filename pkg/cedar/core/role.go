@@ -10,6 +10,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
+	apimodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -22,6 +23,11 @@ const (
 	cedarPersonAssignee       = "person"
 	cedarOrganizationAssignee = "organization"
 )
+
+func cedarRoleApplicationPtr() *string {
+	str := cedarRoleApplication
+	return &str
+}
 
 func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {
 	if rawAssigneeType == cedarPersonAssignee {
@@ -177,4 +183,97 @@ func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, err
 	}
 
 	return retVal, nil
+}
+
+type newRole struct {
+	userEUAID  string
+	roleTypeID string
+}
+
+// returns list of role IDs if successful
+func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []newRole) ([]string, error) {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return []string{}, nil
+	}
+
+	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return []string{}, err
+	}
+
+	// Construct the body
+	rolesToCreate := []*apimodels.Role{}
+
+	for _, newRole := range newRoles {
+		roleToCreate := &apimodels.Role{
+			Application:      cedarRoleApplicationPtr(),
+			ObjectID:         &cedarSystem.VersionID,
+			AssigneeUserName: newRole.userEUAID,
+			RoleTypeID:       &newRole.roleTypeID,
+		}
+		rolesToCreate = append(rolesToCreate, roleToCreate)
+	}
+
+	body := &apimodels.RoleAddRequest{
+		Application: cedarRoleApplicationPtr(),
+		Roles:       rolesToCreate,
+	}
+
+	// construct the parameters
+	params := apiroles.NewRoleAddParams()
+	params.SetBody(body)
+	params.HTTPClient = c.hc
+
+	// Make the API call
+	resp, err := c.sdk.Role.RoleAdd(params, c.auth)
+	if err != nil {
+		return []string{}, err
+	}
+
+	if resp.Payload == nil {
+		return []string{}, fmt.Errorf("no body received")
+	}
+
+	if resp.Payload.Result == "error" {
+		if len(resp.Payload.Message) > 0 {
+			return []string{}, fmt.Errorf(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
+		}
+		return []string{}, fmt.Errorf("unknown error")
+	}
+
+	// return list of IDs of created roles
+	return resp.Payload.Message, nil
+}
+
+func (c *Client) deleteRoles(ctx context.Context, roleIDsToDelete []string) error {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return nil
+	}
+
+	// construct the parameters
+	params := apiroles.NewRoleDeleteListParams()
+	params.SetApplication(cedarRoleApplication)
+	params.SetID(roleIDsToDelete)
+	params.HTTPClient = c.hc
+
+	// Make the API call
+	resp, err := c.sdk.Role.RoleDeleteList(params, c.auth)
+	if err != nil {
+		return err
+	}
+
+	if resp.Payload == nil {
+		return fmt.Errorf("no body received")
+	}
+
+	if resp.Payload.Result == "error" {
+		if len(resp.Payload.Message) > 0 {
+			return fmt.Errorf(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
+		}
+		return fmt.Errorf("unknown error")
+	}
+
+	return nil
 }
