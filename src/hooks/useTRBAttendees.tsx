@@ -14,13 +14,13 @@ import {
   CreateTRBRequestAttendeeInput,
   UpdateTRBRequestAttendeeInput
 } from 'types/graphql-global-types';
-import { TRBAttendeeFields, TRBAttendeesForm } from 'types/technicalAssistance';
-import { initialAttendee } from 'views/TechnicalAssistance/RequestForm/Attendees';
+import {
+  FormattedTRBAttendees,
+  TRBAttendeeUserInfo
+} from 'types/technicalAssistance';
 
 type UseTRBAttendees = {
-  data: {
-    requester: TRBAttendeeFields;
-    attendees: TRBAttendeeFields[];
+  data: FormattedTRBAttendees & {
     loading: boolean;
   };
   createAttendee: (
@@ -37,12 +37,6 @@ type UseTRBAttendeesProps = {
   requesterId: string;
 };
 
-type UserInfo = {
-  euaUserId: string;
-  commonName: string;
-  email?: string;
-};
-
 /**
  * Custom hook to get, create, update, and delete TRB request attendees
  */
@@ -51,7 +45,7 @@ export default function useTRBAttendees({
   requesterId
 }: UseTRBAttendeesProps): UseTRBAttendees {
   const { authState, oktaAuth } = useOktaAuth();
-  const [requester, setRequester] = useState<UserInfo>({
+  const [requester, setRequester] = useState<TRBAttendeeUserInfo>({
     euaUserId: requesterId,
     commonName: '',
     email: ''
@@ -66,10 +60,14 @@ export default function useTRBAttendees({
   });
   const attendeesArray = data?.trbRequest?.attendees;
 
-  const formattedAttendees: TRBAttendeesForm = useMemo(() => {
-    const initialAttendeesObject: TRBAttendeesForm = {
+  const formattedAttendees: FormattedTRBAttendees = useMemo(() => {
+    /** Empty attendees object before data is loaded from query */
+    const initialAttendeesObject: FormattedTRBAttendees = {
       requester: {
-        ...initialAttendee,
+        trbRequestId,
+        id: '',
+        component: '',
+        role: null,
         userInfo: requester
       },
       attendees: []
@@ -80,7 +78,7 @@ export default function useTRBAttendees({
 
     /** Requester object from attendees query */
     const requesterObject: TRBAttendee | undefined = attendeesArray.find(
-      attendee => attendee?.userInfo?.euaUserId === requester.euaUserId
+      attendee => attendee?.userInfo?.euaUserId === requester?.euaUserId
     );
 
     return {
@@ -92,10 +90,10 @@ export default function useTRBAttendees({
       },
       // Filter requester from attendees array
       attendees: attendeesArray.filter(
-        attendee => attendee?.userInfo?.euaUserId !== requester.euaUserId
+        attendee => attendee?.userInfo?.euaUserId !== requester?.euaUserId
       )
     };
-  }, [attendeesArray, requester]);
+  }, [attendeesArray, requester, trbRequestId]);
 
   /**
    * Create TRB request attendee
@@ -150,9 +148,16 @@ export default function useTRBAttendees({
   return {
     data: { ...formattedAttendees, loading },
     createAttendee: (attendee: CreateTRBRequestAttendeeInput) =>
-      createAttendee({ variables: { input: attendee } }),
+      createAttendee({ variables: { input: attendee } })
+        .catch(e => e)
+        .then((response: FetchResult) => response),
     updateAttendee: (attendee: UpdateTRBRequestAttendeeInput) =>
-      updateAttendee({ variables: { input: attendee } }),
-    deleteAttendee: (id: string) => deleteAttendee({ variables: { id } })
+      updateAttendee({ variables: { input: attendee } })
+        .catch(e => e)
+        .then((response: FetchResult) => response),
+    deleteAttendee: (id: string) =>
+      deleteAttendee({ variables: { id } })
+        .catch(e => e)
+        .then((response: FetchResult) => response)
   };
 }

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Alert,
   Button,
   Dropdown,
   ErrorMessage,
@@ -17,12 +18,13 @@ import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivi
 import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 // eslint-disable-next-line camelcase
 import { CreateTrbRequest_createTRBRequest } from 'queries/types/CreateTrbRequest';
 import { PersonRole } from 'types/graphql-global-types';
-import { TRBAttendeeFields } from 'types/technicalAssistance';
+import { TRBAttendeeData, TRBAttendeeFields } from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../../Breadcrumbs';
@@ -32,8 +34,8 @@ interface AttendeesFormProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
   backToFormUrl?: string;
-  activeAttendee: TRBAttendeeFields;
-  setActiveAttendee: (value: TRBAttendeeFields) => void;
+  activeAttendee: TRBAttendeeData;
+  setActiveAttendee: (value: TRBAttendeeData) => void;
 }
 
 function AttendeesForm({
@@ -46,7 +48,13 @@ function AttendeesForm({
   const history = useHistory();
 
   /** Initial attendee values before form values are updated */
-  const defaultValues: TRBAttendeeFields = useRef(activeAttendee).current;
+  const defaultValues: TRBAttendeeFields = useRef({
+    id: activeAttendee?.id,
+    trbRequestId: request.id,
+    euaUserId: activeAttendee?.userInfo?.euaUserId || '',
+    component: activeAttendee.component,
+    role: activeAttendee.role
+  }).current;
 
   // Attendee mutations
   const { createAttendee, updateAttendee } = useTRBAttendees({
@@ -58,8 +66,9 @@ function AttendeesForm({
 
   const {
     control,
-    handleSubmit
-    // formState: { errors, isSubmitting, isDirty }
+    handleSubmit,
+    setError,
+    formState: { errors, isDirty }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
     defaultValues
@@ -70,7 +79,6 @@ function AttendeesForm({
     const submitAttendee = (formData: TRBAttendeeFields) => {
       /** Attendee component and role */
       const input = {
-        trbRequestId: request.id,
         component: formData.component,
         role: formData.role as PersonRole
       };
@@ -79,18 +87,33 @@ function AttendeesForm({
         updateAttendee({
           ...input,
           id: defaultValues.id
-        }).catch(e => null);
+        })
+          .catch(e => setError('id', { type: 'custom', message: e }))
+          // If no errors, return to previous page
+          .then(response => {
+            if (response && response.data) {
+              history.push(backToFormUrl);
+              // Reset active attendee
+              setActiveAttendee(initialAttendee);
+            }
+          });
       } else {
         // If creating attendee, add EUA and TRB request id and create attendee
         createAttendee({
           ...input,
           trbRequestId: request.id,
-          euaUserId: formData.userInfo?.euaUserId || ''
-        }).catch(e => null);
+          euaUserId: formData.euaUserId
+        })
+          .catch(e => null)
+          // If no errors, return to previous page
+          .then(response => {
+            if (response) {
+              history.push(backToFormUrl);
+              // Reset active attendee
+              setActiveAttendee(initialAttendee);
+            }
+          });
       }
-      // TODO: Request error handling
-      history.push(backToFormUrl);
-      setActiveAttendee(initialAttendee);
     };
 
     return (
@@ -122,28 +145,33 @@ function AttendeesForm({
 
         <Form
           onSubmit={handleSubmit(formData => {
-            // TODO: Fix
-            submitAttendee(formData);
+            if (isDirty) {
+              submitAttendee(formData);
+            } else {
+              history.push(backToFormUrl);
+            }
           })}
         >
-          {/* <Alert
-            heading={t('basic.errors.checkFix')}
-            type="error"
-            className="margin-bottom-2"
-          >
-            {Object.keys(errors).map(fieldName => {
-              return (
-                <ErrorAlertMessage
-                  key={fieldName}
-                  errorKey={fieldName}
-                  message={t(`attendees.fieldLabels.requester.${fieldName}`)}
-                />
-              );
-            })}
-          </Alert> */}
+          {Object.keys(errors).length > 0 && (
+            <Alert
+              heading={t('basic.errors.checkFix')}
+              type="error"
+              className="margin-bottom-2"
+            >
+              {Object.keys(errors).map(fieldName => {
+                return (
+                  <ErrorAlertMessage
+                    key={fieldName}
+                    errorKey={fieldName}
+                    message={t(`attendees.fieldLabels.requester.${fieldName}`)}
+                  />
+                );
+              })}
+            </Alert>
+          )}
           {/* Attendee name */}
           <Controller
-            name="userInfo"
+            name="euaUserId"
             control={control}
             render={({ field }) => {
               return (
@@ -155,7 +183,10 @@ function AttendeesForm({
                     name="userInfo"
                     id="userInfo"
                     value={activeAttendee.userInfo}
-                    onChange={field.onChange}
+                    onChange={cedarContact =>
+                      field.onChange(cedarContact?.euaUserId)
+                    }
+                    disabled={!!activeAttendee.id}
                   />
                 </FormGroup>
               );

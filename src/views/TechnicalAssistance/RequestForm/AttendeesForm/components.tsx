@@ -1,111 +1,22 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
-import { Button, ButtonGroup, Dropdown, Label } from '@trussworks/react-uswds';
-import classNames from 'classnames';
+import { Button, ButtonGroup } from '@trussworks/react-uswds';
 
-import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
-import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
-import FieldGroup from 'components/shared/FieldGroup';
 import InitialsIcon from 'components/shared/InitialsIcon';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
-import { PersonRole } from 'types/graphql-global-types';
-import { TRBAttendeeFields } from 'types/technicalAssistance';
+import { TRBAttendeeData } from 'types/technicalAssistance';
 
 // import { parseAsLocalTime } from 'utils/date';
 import { initialAttendee } from '../Attendees';
 
 import './components.scss';
 
-type AttendeeFieldsProps = {
-  activeAttendee: TRBAttendeeFields;
-  setActiveAttendee: (value: TRBAttendeeFields) => void;
-  type: 'requester' | 'create' | 'edit';
-  className?: string;
-};
-
-const AttendeeFields = ({
-  activeAttendee,
-  setActiveAttendee,
-  type,
-  className
-}: AttendeeFieldsProps) => {
-  const { t } = useTranslation('technicalAssistance');
-  const { userInfo } = activeAttendee;
-
-  return (
-    <div className={classNames('margin-bottom-4', className)}>
-      {/* Attendee name */}
-      <FieldGroup>
-        <Label htmlFor="trbAttendee-name">
-          {t(`attendees.fieldLabels.${type}.name`)}
-        </Label>
-        <CedarContactSelect
-          id="trbAttendee-name"
-          name="trbAttendee-name"
-          value={userInfo || undefined}
-          onChange={cedarContact =>
-            cedarContact &&
-            setActiveAttendee({
-              ...activeAttendee,
-              userInfo: cedarContact
-            })
-          }
-          // If editing attendee or requester, disable field
-          disabled={!(type === 'create')}
-        />
-      </FieldGroup>
-      {/* Attendee component */}
-      <FieldGroup>
-        <Label htmlFor="trbAttendee-component">
-          {t(`attendees.fieldLabels.${type}.component`)}
-        </Label>
-        <Dropdown
-          id="trbAttendee-component"
-          name="trbAttendee-component"
-          value={activeAttendee?.component}
-          onChange={e =>
-            setActiveAttendee({
-              ...activeAttendee,
-              component: e.target.value
-            })
-          }
-        >
-          <option label={`- ${'Select'} -`} />
-          {cmsDivisionsAndOfficesOptions('trbAttendee-component')}
-        </Dropdown>
-      </FieldGroup>
-      {/* Attendee role */}
-      <FieldGroup>
-        <Label htmlFor="trbAttendee-component">
-          {t(`attendees.fieldLabels.${type}.role`)}
-        </Label>
-        <Dropdown
-          id="trbAttendee-role"
-          name="trbAttendee-role"
-          value={activeAttendee?.role || undefined}
-          onChange={e =>
-            setActiveAttendee({
-              ...activeAttendee,
-              role: e.target.value as PersonRole
-            })
-          }
-        >
-          <option label={`- ${'Select'} -`} />
-          {contactRoles.map(({ key, label }) => (
-            <option key={key} value={key} label={label} />
-          ))}
-        </Dropdown>
-      </FieldGroup>
-    </div>
-  );
-};
-
 type AttendeeProps = {
-  attendee: TRBAttendeeFields;
-  setActiveAttendee?: (activeAttendee: TRBAttendeeFields) => void;
+  attendee: TRBAttendeeData;
+  setActiveAttendee?: (activeAttendee: TRBAttendeeData) => void;
   deleteAttendee?: () => void;
 };
 
@@ -132,7 +43,7 @@ const Attendee = ({
   if (!userInfo) return null;
 
   // Attendee name, EUA, and email from CEDAR user info
-  const { commonName, euaUserId, email } = userInfo;
+  const { email, commonName, euaUserId } = userInfo;
 
   return (
     <li id={`trbAttendee-${euaUserId}`}>
@@ -175,9 +86,9 @@ const Attendee = ({
 };
 
 type AttendeesListProps = {
-  attendees: TRBAttendeeFields[];
+  attendees: TRBAttendeeData[];
   id: string;
-  setActiveAttendee: (activeAttendee: TRBAttendeeFields) => void;
+  setActiveAttendee: (activeAttendee: TRBAttendeeData) => void;
   deleteAttendee: (id: string) => void;
 };
 
@@ -214,4 +125,4 @@ const AttendeesList = ({
   );
 };
 
-export { Attendee, AttendeesList, AttendeeFields };
+export { Attendee, AttendeesList };

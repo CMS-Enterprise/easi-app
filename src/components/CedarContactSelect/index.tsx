@@ -106,6 +106,9 @@ const IndicatorsContainer = (
 const formatLabel = (contact: CedarContactProps) =>
   `${contact?.commonName}${contact?.euaUserId && `, ${contact.euaUserId}`}`;
 
+/**
+ * Combobox to look up contact by name from CEDAR
+ */
 export default function CedarContactSelect({
   className,
   id,

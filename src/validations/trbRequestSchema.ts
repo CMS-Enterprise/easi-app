@@ -106,11 +106,7 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
 export const trbAttendeeSchema = yup.object({
   id: yup.string(),
   trbRequestId: yup.string().required(),
-  userInfo: yup.object({
-    commonName: yup.string().required(),
-    euaUserId: yup.string().required(),
-    email: yup.string()
-  }),
+  euaUserId: yup.string().required(),
   component: yup.string().required(),
   role: yup.mixed<PersonRole>().oneOf(Object.values(PersonRole)).required()
 });

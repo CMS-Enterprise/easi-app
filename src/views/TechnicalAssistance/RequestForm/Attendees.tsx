@@ -9,18 +9,18 @@ import {
   ErrorMessage,
   Form,
   FormGroup,
-  Label,
-  TextInput
+  Label
 } from '@trussworks/react-uswds';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
+import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { PersonRole } from 'types/graphql-global-types';
-import { TRBAttendeeFields } from 'types/technicalAssistance';
+import { TRBAttendeeData, TRBAttendeeFields } from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
 import { AttendeesList } from './AttendeesForm/components';
@@ -29,9 +29,12 @@ import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
 /** Initial blank attendee object */
-export const initialAttendee: TRBAttendeeFields = {
+export const initialAttendee: TRBAttendeeData = {
   trbRequestId: '',
-  userInfo: null,
+  userInfo: {
+    commonName: '',
+    euaUserId: ''
+  },
   component: '',
   role: null
 };
@@ -42,7 +45,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const history = useHistory();
 
   // Active attendee for form fields
-  const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeFields>({
+  const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeData>({
     ...initialAttendee,
     trbRequestId: request.id
   });
@@ -59,17 +62,17 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   });
 
   const saveRequester = (formData: TRBAttendeeFields) => {
-    const { id, component, userInfo, role } = formData;
-    if (id) {
+    const { component, role, euaUserId } = formData;
+    if (requester.id) {
       updateAttendee({
-        id,
+        id: requester.id,
         component,
         role: role as PersonRole
       });
-    } else if (userInfo) {
+    } else {
       createAttendee({
         trbRequestId: request.id,
-        euaUserId: userInfo?.euaUserId,
+        euaUserId,
         component,
         role: role as PersonRole
       });
@@ -78,6 +81,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     history.push(stepUrl.next);
   };
 
+  // Initialize form
   const {
     control,
     handleSubmit,
@@ -88,15 +92,16 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     defaultValues: { ...requester, trbRequestId: request.id }
   });
 
+  // Set initial field values after queries have completed
   useEffect(() => {
     if (!loading) {
-      setValue('userInfo.commonName', requester.userInfo?.commonName || '');
-      setValue('userInfo.euaUserId', requester.userInfo?.euaUserId || '');
-      setValue('userInfo.email', requester.userInfo?.email);
+      setValue('euaUserId', requester?.userInfo?.euaUserId || '');
       setValue('component', requester.component || '');
       setValue('role', requester.role);
     }
   }, [loading, requester, setValue]);
+
+  if (loading) return null;
 
   return (
     <div className="trb-attendees">
@@ -142,19 +147,22 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
             )}
             {/* Requester name */}
             <Controller
-              name="userInfo.commonName"
+              name="euaUserId"
               control={control}
               render={({ field }) => {
                 return (
                   <FormGroup>
-                    <Label htmlFor="userInfo.commonName">
+                    <Label htmlFor="euaUserId">
                       {t(`attendees.fieldLabels.requester.commonName`)}
                     </Label>
-                    <TextInput
-                      {...field}
-                      ref={null}
-                      id="userInfo.commonName"
-                      type="text"
+                    <CedarContactSelect
+                      id="euaUserId"
+                      name="euaUserId"
+                      value={requester.userInfo}
+                      onChange={cedarContact =>
+                        cedarContact &&
+                        setValue('euaUserId', cedarContact.euaUserId)
+                      }
                       disabled
                     />
                   </FormGroup>
