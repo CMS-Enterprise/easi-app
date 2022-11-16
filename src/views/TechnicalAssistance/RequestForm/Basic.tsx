@@ -76,7 +76,7 @@ function Basic({
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting, isDirty, dirtyFields }
+    formState: { errors, isSubmitting, isDirty, dirtyFields }
   } = useForm<FormFieldProps<TrbRequestFormBasic>>({
     resolver: yupResolver(basicSchema),
     defaultValues: {
@@ -169,7 +169,7 @@ function Basic({
         // `setIsStepSubmitting` are called before unmount.
         .then(
           () => {
-            if (callback && isValid) callback();
+            callback?.();
           },
           err => {
             if (err instanceof ApolloError) {
@@ -181,7 +181,6 @@ function Basic({
       dirtyFields,
       handleSubmit,
       isDirty,
-      isValid,
       refreshRequest,
       request,
       setFormError,
