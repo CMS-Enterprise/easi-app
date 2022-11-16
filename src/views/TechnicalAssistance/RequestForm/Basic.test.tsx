@@ -124,6 +124,7 @@ describe('Trb Request form: Basic', () => {
             setIsStepSubmitting={() => {}}
             setStepSubmit={() => {}}
             setFormError={() => {}}
+            taskListUrl={null}
           />
         </MockedProvider>
       </MemoryRouter>

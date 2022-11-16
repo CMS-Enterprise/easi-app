@@ -17,11 +17,12 @@ import PageHeading from 'components/PageHeading';
 import Breadcrumbs from './Breadcrumbs';
 
 /**
- * This component is the start of a new Trb Request.
+ * This component sets a `TRBRequestType` for new or existing Requests.
  * The user selects a request type, from `TRBRequestType`,
- * which is set in location state as `requestType`.
+ * which is set in location state as `requestType` for going through the
+ * process of creating a new request, or used to update an existing request.
  */
-function StartRequest() {
+function RequestType() {
   const { t } = useTranslation('technicalAssistance');
   return (
     <GridContainer className="width-full">
@@ -73,7 +74,7 @@ function StartRequest() {
                 <CardFooter>
                   <UswdsReactLink
                     to={{
-                      pathname: '/trb/steps',
+                      pathname: '/trb/process',
                       state: { requestType }
                     }}
                     className="usa-button"
@@ -95,7 +96,7 @@ function StartRequest() {
           <li>
             <UswdsReactLink
               to={{
-                pathname: '/trb/steps',
+                pathname: '/trb/process',
                 // Reuse a request type until there is one defined for "other"
                 state: { requestType: 'NEED_HELP' }
               }}
@@ -110,4 +111,4 @@ function StartRequest() {
   );
 }
 
-export default StartRequest;
+export default RequestType;

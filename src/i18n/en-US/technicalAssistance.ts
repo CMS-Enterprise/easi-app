@@ -3,14 +3,15 @@ const technicalAssistance = {
   nextStep: 'Start a new request',
   // Misc breadcrumb items
   breadcrumbs: {
-    startTrbRequest: 'Start a TRB Request',
-    taskList: 'Task list'
+    startTrbRequest: 'Start a TRB Request'
   },
   // Common button text
   button: {
     back: 'Back',
+    continue: 'Continue',
     next: 'Next',
-    saveAndExit: 'Save and exit'
+    saveAndExit: 'Save and exit',
+    start: 'Start'
   },
   table: {
     header: {
@@ -144,6 +145,9 @@ const technicalAssistance = {
     ],
     back: 'Back',
     continue: 'Continue'
+  },
+  taskList: {
+    heading: 'Task list'
   },
   requestForm: {
     heading: 'TRB Request',

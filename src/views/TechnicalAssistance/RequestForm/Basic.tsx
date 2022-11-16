@@ -58,6 +58,7 @@ export const basicBlankValues = {
 function Basic({
   request,
   stepUrl,
+  taskListUrl,
   refreshRequest,
   setStepSubmit,
   setIsStepSubmitting,
@@ -676,6 +677,7 @@ function Basic({
         }}
         saveExitDisabled={isSubmitting}
         submit={submit}
+        taskListUrl={taskListUrl}
       />
     </Form>
   );

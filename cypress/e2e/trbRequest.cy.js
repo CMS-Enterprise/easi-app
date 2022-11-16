@@ -3,19 +3,21 @@ describe('Technical Assistance', () => {
     cy.localLogin({ name: 'ABCD' });
     // Nav to trb base
     cy.contains('a', 'Technical Assistance').click();
-    // Start request
+    // Start a Request to get to selecting a Request type
     cy.contains('a', 'Start a new request').click();
-    // Selects the first implied request type
+    // Selects the first implied Request Type to get to Process steps
     cy.contains('a', /^Start$/).click();
-    // Continue through process steps
-    cy.contains('a', 'Continue').click();
+    // Continue through Process steps to get to Task list
+    cy.contains('button', 'Continue').click();
+    // Start the Request form from the Task list
+    cy.get('.trb-initial-request-form a').click();
 
+    // Basic details is the first step of the Request Form
     cy.contains('.usa-step-indicator__heading-text', 'Basic request details')
       .should('be.visible')
       .as('basicStepHeader');
 
     // Fill out the Basic form step
-
     cy.get('[name=name]').clear().type('Test Request Name');
     cy.get('[name=component]').select('Center for Medicaid and CHIP Services');
     cy.get('[name=needsAssistanceWith]').type('Assistance');
