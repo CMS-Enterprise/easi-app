@@ -1950,7 +1950,7 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 		return nil, err
 	}
 
-	resp := "Success"
+	resp := "Roles changed successfully"
 	return &resp, nil
 }
 
