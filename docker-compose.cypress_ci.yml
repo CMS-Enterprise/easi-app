@@ -47,7 +47,6 @@ services:
       - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
-      - MINIO_HOST=minio:9000
       - PGHOST=db
       - PGPORT=5432
       - PGDATABASE=postgres
