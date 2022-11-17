@@ -75,6 +75,7 @@ const technicalAssistance = {
       }
     },
     start: 'Start',
+    whenOption: 'When should I choose this option?',
     additionalTrbServices: 'Additional TRB services',
     services: {
       other: 'Other (I don’t see what I’m looking for)'

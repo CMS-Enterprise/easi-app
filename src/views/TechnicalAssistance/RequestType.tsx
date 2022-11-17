@@ -7,12 +7,12 @@ import {
   CardGroup,
   CardHeader,
   GridContainer,
-  IconArrowBack,
-  IconArrowForward
+  IconArrowBack
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import CollapsableLink from 'components/shared/CollapsableLink';
 
 import Breadcrumbs from './Breadcrumbs';
 
@@ -44,50 +44,59 @@ function RequestType() {
           {t('newRequest.goBack')}
         </UswdsReactLink>
       </div>
-      <CardGroup className="margin-top-4 margin-bottom-4">
-        {['NEED_HELP', 'BRAINSTORM', 'FOLLOWUP', 'FORMAL_REVIEW'].map(
-          requestType => {
-            return (
-              <Card
-                key={requestType}
-                gridLayout={{ desktop: { col: 6 } }}
-                containerProps={{ className: 'shadow-2' }}
+      <CardGroup className="flex-align-start margin-top-4 margin-bottom-4">
+        {[
+          'NEED_HELP',
+          'BRAINSTORM'
+          // Post-mvp options
+          // 'FOLLOWUP', 'FORMAL_REVIEW'
+        ].map(requestType => (
+          <Card
+            key={requestType}
+            gridLayout={{ desktop: { col: 6 } }}
+            containerProps={{ className: 'shadow-2' }}
+          >
+            <CardHeader>
+              <h3 className="line-height-heading-2">
+                {t(`newRequest.type.${requestType}.heading`)}
+              </h3>
+            </CardHeader>
+            <CardBody className="padding-bottom-0">
+              <div>{t(`newRequest.type.${requestType}.text`)}</div>
+              <CollapsableLink
+                id={requestType}
+                label={t(`newRequest.whenOption`)}
+                className="margin-top-2"
               >
-                <CardHeader>
-                  <h3 className="line-height-heading-2">
-                    {t(`newRequest.type.${requestType}.heading`)}
-                  </h3>
-                </CardHeader>
-                <CardBody>
-                  <div>{t(`newRequest.type.${requestType}.text`)}</div>
-                  <div>
-                    <ul className="list-style-middot">
-                      {t<string[]>(`newRequest.type.${requestType}.list`, {
-                        returnObjects: true
-                      }).map((text: string, idx: number) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <li key={idx}>{text}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </CardBody>
-                <CardFooter>
-                  <UswdsReactLink
-                    to={{
-                      pathname: '/trb/process',
-                      state: { requestType }
-                    }}
-                    className="usa-button"
-                    variant="unstyled"
-                  >
-                    {t('newRequest.start')}
-                  </UswdsReactLink>
-                </CardFooter>
-              </Card>
-            );
-          }
-        )}
+                <div>
+                  <ul className="list-style-middot">
+                    {t<string[]>(`newRequest.type.${requestType}.list`, {
+                      returnObjects: true
+                    }).map((text: string, idx: number) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <li key={idx}>{text}</li>
+                    ))}
+                  </ul>
+                </div>
+              </CollapsableLink>
+            </CardBody>
+            <CardFooter className="margin-top-3">
+              <UswdsReactLink
+                to={{
+                  pathname: '/trb/process',
+                  state: { requestType }
+                }}
+                className="usa-button"
+                variant="unstyled"
+              >
+                {t('newRequest.start')}
+              </UswdsReactLink>
+            </CardFooter>
+          </Card>
+        ))}
       </CardGroup>
+      {/*
+      Post-mvp
       <div>
         <h3 className="line-height-heading-2">
           {t('newRequest.additionalTrbServices')}
@@ -107,6 +116,7 @@ function RequestType() {
           </li>
         </ul>
       </div>
+      */}
     </GridContainer>
   );
 }
