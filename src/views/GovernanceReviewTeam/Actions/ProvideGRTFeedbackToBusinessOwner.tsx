@@ -38,7 +38,6 @@ const ProvideGRTFeedbackToBusinessOwner = ({
   const history = useHistory();
   const { t } = useTranslation('action');
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(query);
-  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   // Requester object and loading state
   const {
@@ -63,26 +62,37 @@ const ProvideGRTFeedbackToBusinessOwner = ({
       regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: false
-    }
+    },
+    shouldSendEmail: true
   };
 
   const onSubmit = (
     values: ProvideGRTFeedbackForm,
     { setFieldError }: FormikHelpers<ProvideGRTFeedbackForm>
   ) => {
-    const { grtFeedback, emailBody, notificationRecipients } = values;
+    const {
+      grtFeedback,
+      emailBody,
+      notificationRecipients,
+      shouldSendEmail
+    } = values;
+
+    const variables: AddGRTFeedbackVariables = {
+      input: {
+        emailBody,
+        feedback: grtFeedback,
+        intakeID: systemId,
+        shouldSendEmail
+      }
+    };
+
+    if (shouldSendEmail) {
+      variables.input.notificationRecipients = notificationRecipients;
+    }
 
     // GQL mutation to submit action
     mutate({
-      variables: {
-        input: {
-          emailBody,
-          feedback: grtFeedback,
-          intakeID: systemId,
-          shouldSendEmail,
-          notificationRecipients
-        }
-      }
+      variables
     })
       .then(({ errors }) => {
         if (!errors) {
@@ -217,8 +227,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     type="submit"
                     onClick={() => {
                       setErrors({});
-                      setShouldSendEmail(true);
-                      setFieldValue('skipEmail', false);
+                      setFieldValue('shouldSendEmail', true);
                     }}
                     disabled={!!activeContact}
                   >
@@ -227,12 +236,9 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                 </div>
                 <div>
                   <CompleteWithoutEmailButton
-                    onClick={() => {
-                      setErrors({});
-                      setShouldSendEmail(false);
-                      setFieldValue('skipEmail', true);
-                      setTimeout(submitForm);
-                    }}
+                    setErrors={setErrors}
+                    setFieldValue={setFieldValue}
+                    submitForm={submitForm}
                     disabled={!!activeContact}
                   />
                 </div>
