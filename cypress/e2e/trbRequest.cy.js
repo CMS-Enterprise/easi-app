@@ -10,7 +10,7 @@ describe('Technical Assistance', () => {
     // Continue through Process steps to get to Task list
     cy.contains('button', 'Continue').click();
     // Start the Request form from the Task list
-    cy.get('.trb-initial-request-form a').click();
+    cy.contains('.trb-initial-request-form a', 'Start').click();
 
     // Basic details is the first step of the Request Form
     cy.contains('.usa-step-indicator__heading-text', 'Basic request details')
@@ -61,6 +61,27 @@ describe('Technical Assistance', () => {
     // Check the update
     cy.get('@basicStepUrl').then(url => cy.visit(url));
     cy.get('[name=name]').should('have.value', requestName);
+
+    // Change the request type
+    // Jump to task list
+    cy.contains('a', 'Task list').click();
+    // Check current
+    cy.get('.trb-request-type').should(
+      'contain',
+      'I’m having a problem with my system'
+    );
+    // Proceed to change
+    const diffRequestType = 'I have an idea and would like feedback';
+    cy.contains('a', 'Change request type').click();
+    // Select a different type
+    cy.contains('.usa-card', diffRequestType)
+      .contains('button', 'Continue')
+      .click();
+    // Check change
+    cy.get('.trb-request-type').should('contain', diffRequestType);
+
+    // Get back to the request form
+    cy.contains('.trb-initial-request-form a', 'Continue').click();
 
     // Jump to the next available Subject step
     cy.contains(

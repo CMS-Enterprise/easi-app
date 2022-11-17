@@ -251,7 +251,7 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
           class="usa-breadcrumb__list-item usa-current"
         >
           <span>
-            Start a TRB Request
+            Change request type
           </span>
         </li>
       </ol>
@@ -261,7 +261,7 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
       class="easi-h1 margin-bottom-0"
       tabindex="-1"
     >
-      Start a technical assistance request
+      Change request type
     </h1>
     <div
       class="margin-top-1 font-body-lg line-height-body-5 text-light"
@@ -271,9 +271,10 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
     <div
       class="margin-top-2"
     >
-      <a
-        class="usa-link"
-        href="/trb"
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
       >
         <svg
           class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
@@ -292,8 +293,8 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
             d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
           />
         </svg>
-        Go back without starting a request
-      </a>
+        Go back without changing the request type
+      </button>
     </div>
     <ul
       class="usa-card-group flex-align-start margin-top-4 margin-bottom-4"
@@ -358,12 +359,13 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
             class="usa-card__footer margin-top-3"
             data-testid="CardFooter"
           >
-            <a
+            <button
               class="usa-button"
-              href="/trb/process"
+              data-testid="button"
+              type="button"
             >
-              Start
-            </a>
+              Continue
+            </button>
           </div>
         </div>
       </li>
@@ -426,12 +428,13 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
             class="usa-card__footer margin-top-3"
             data-testid="CardFooter"
           >
-            <a
+            <button
               class="usa-button"
-              href="/trb/process"
+              data-testid="button"
+              type="button"
             >
-              Start
-            </a>
+              Continue
+            </button>
           </div>
         </div>
       </li>

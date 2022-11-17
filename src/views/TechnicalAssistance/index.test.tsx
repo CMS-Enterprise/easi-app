@@ -57,7 +57,9 @@ describe('TRB Subview snapshots', () => {
   it('matches Request Type', () => {
     const { asFragment } = render(
       <MemoryRouter>
-        <RequestType />
+        <MockedProvider>
+          <RequestType />
+        </MockedProvider>
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();

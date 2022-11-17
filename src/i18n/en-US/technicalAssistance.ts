@@ -29,10 +29,11 @@ const technicalAssistance = {
     makeSelection: 'Please make a selection',
     somethingWrong: 'Something went wrong.'
   },
-  newRequest: {
+  requestType: {
     heading: 'Start a technical assistance request',
     subhead: 'What is this request for?',
     goBack: 'Go back without starting a request',
+    goBackWithoutChange: 'Go back without changing the request type',
     type: {
       NEED_HELP: {
         heading: 'I’m having a problem with my system',
@@ -74,7 +75,6 @@ const technicalAssistance = {
         ]
       }
     },
-    start: 'Start',
     whenOption: 'When should I choose this option?',
     additionalTrbServices: 'Additional TRB services',
     services: {

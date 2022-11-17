@@ -53,7 +53,7 @@ function ProcessFlow() {
     returnObjects: true
   });
   const requestTypeText = t<Record<string, { heading: string }>>(
-    'newRequest.type',
+    'requestType.type',
     {
       returnObjects: true
     }

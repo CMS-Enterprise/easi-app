@@ -19,7 +19,7 @@ import Breadcrumbs from './Breadcrumbs';
 function TaskList() {
   const { t } = useTranslation('technicalAssistance');
   const requestTypeText = t<Record<string, { heading: string }>>(
-    'newRequest.type',
+    'requestType.type',
     {
       returnObjects: true
     }
@@ -66,7 +66,9 @@ function TaskList() {
         <div>
           {data && (
             <div>
-              {requestTypeText[data.trbRequest.type].heading}
+              <div className="trb-request-type">
+                {requestTypeText[data.trbRequest.type].heading}
+              </div>
 
               <UswdsReactLink to={`/trb/type/${id}`}>
                 {t('steps.changeRequestType')}

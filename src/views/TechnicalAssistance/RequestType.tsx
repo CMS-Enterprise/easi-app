@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -13,6 +16,12 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
+import {
+  UpdateTrbRequestType,
+  UpdateTrbRequestTypeVariables
+} from 'queries/types/UpdateTrbRequestType';
+import UpdateTrbRequestTypeQuery from 'queries/UpdateTrbRequestTypeQuery';
+import { TRBRequestType } from 'types/graphql-global-types';
 
 import Breadcrumbs from './Breadcrumbs';
 
@@ -24,26 +33,55 @@ import Breadcrumbs from './Breadcrumbs';
  */
 function RequestType() {
   const { t } = useTranslation('technicalAssistance');
+
+  const history = useHistory();
+  const { pathname } = useLocation();
+  const isNew = pathname.startsWith('/trb/start');
+
+  const { id } = useParams<{
+    id: string;
+  }>();
+
+  const [mutate, { data, error, loading }] = useMutation<
+    UpdateTrbRequestType,
+    UpdateTrbRequestTypeVariables
+  >(UpdateTrbRequestTypeQuery);
+
+  // Return to the task list after updating the type
+  useEffect(() => {
+    if (data && id) {
+      history.push(`/trb/task-list/${id}`);
+    }
+  }, [data, id, history]);
+
   return (
     <GridContainer className="width-full">
       <Breadcrumbs
         items={[
           { text: t('heading'), url: '/trb' },
-          { text: t('breadcrumbs.startTrbRequest') }
+          {
+            text: t(
+              isNew ? 'breadcrumbs.startTrbRequest' : 'steps.changeRequestType'
+            )
+          }
         ]}
       />
+
       <PageHeading className="margin-bottom-0">
-        {t('newRequest.heading')}
+        {t(isNew ? 'requestType.heading' : 'steps.changeRequestType')}
       </PageHeading>
+
       <div className="margin-top-1 font-body-lg line-height-body-5 text-light">
-        {t('newRequest.subhead')}
+        {t('requestType.subhead')}
       </div>
+
       <div className="margin-top-2">
-        <UswdsReactLink to="/trb">
+        <Button type="button" unstyled onClick={() => history.goBack()}>
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-          {t('newRequest.goBack')}
-        </UswdsReactLink>
+          {t(isNew ? 'requestType.goBack' : 'requestType.goBackWithoutChange')}
+        </Button>
       </div>
+
       <CardGroup className="flex-align-start margin-top-4 margin-bottom-4">
         {[
           'NEED_HELP',
@@ -58,19 +96,19 @@ function RequestType() {
           >
             <CardHeader>
               <h3 className="line-height-heading-2">
-                {t(`newRequest.type.${requestType}.heading`)}
+                {t(`requestType.type.${requestType}.heading`)}
               </h3>
             </CardHeader>
             <CardBody className="padding-bottom-0">
-              <div>{t(`newRequest.type.${requestType}.text`)}</div>
+              <div>{t(`requestType.type.${requestType}.text`)}</div>
               <CollapsableLink
                 id={requestType}
-                label={t(`newRequest.whenOption`)}
+                label={t(`requestType.whenOption`)}
                 className="margin-top-2"
               >
                 <div>
                   <ul className="list-style-middot">
-                    {t<string[]>(`newRequest.type.${requestType}.list`, {
+                    {t<string[]>(`requestType.type.${requestType}.list`, {
                       returnObjects: true
                     }).map((text: string, idx: number) => (
                       // eslint-disable-next-line react/no-array-index-key
@@ -81,16 +119,30 @@ function RequestType() {
               </CollapsableLink>
             </CardBody>
             <CardFooter className="margin-top-3">
-              <UswdsReactLink
-                to={{
-                  pathname: '/trb/process',
-                  state: { requestType }
-                }}
-                className="usa-button"
-                variant="unstyled"
-              >
-                {t('newRequest.start')}
-              </UswdsReactLink>
+              {isNew ? (
+                <UswdsReactLink
+                  to={{
+                    pathname: '/trb/process',
+                    state: { requestType }
+                  }}
+                  className="usa-button"
+                  variant="unstyled"
+                >
+                  {t('button.start')}
+                </UswdsReactLink>
+              ) : (
+                <Button
+                  type="button"
+                  disabled={!!error || !!loading}
+                  onClick={() => {
+                    mutate({
+                      variables: { id, type: requestType as TRBRequestType }
+                    });
+                  }}
+                >
+                  {t('button.continue')}
+                </Button>
+              )}
             </CardFooter>
           </Card>
         ))}
@@ -99,7 +151,7 @@ function RequestType() {
       Post-mvp
       <div>
         <h3 className="line-height-heading-2">
-          {t('newRequest.additionalTrbServices')}
+          {t('requestType.additionalTrbServices')}
         </h3>
         <ul className="list-style-none padding-0">
           <li>
@@ -110,7 +162,7 @@ function RequestType() {
                 state: { requestType: 'NEED_HELP' }
               }}
             >
-              {t('newRequest.services.other')}
+              {t('requestType.services.other')}
               <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
             </UswdsReactLink>
           </li>
