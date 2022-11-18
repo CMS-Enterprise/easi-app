@@ -96,7 +96,7 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	var consultStatus *models.TRBTaskStatus
 	var errConsult error
 	errGroup.Go(func() error {
-		consultStatus, errConsult = GetTRBFeedbackStatus(ctx, store, trbRequestID)
+		consultStatus, errConsult = GetTRBConsultStatus(ctx, store, trbRequestID)
 		return errConsult
 	})
 
