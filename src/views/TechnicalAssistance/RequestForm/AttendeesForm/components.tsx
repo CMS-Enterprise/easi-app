@@ -1,18 +1,165 @@
 import React from 'react';
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFormSetValue
+} from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  Dropdown,
+  ErrorMessage,
+  FormGroup,
+  Label
+} from '@trussworks/react-uswds';
 
+import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
+import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
+import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import InitialsIcon from 'components/shared/InitialsIcon';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
-import { TRBAttendeeData } from 'types/technicalAssistance';
+import { PersonRole } from 'types/graphql-global-types';
+import {
+  AttendeeFieldLabels,
+  TRBAttendeeData,
+  TRBAttendeeFields
+} from 'types/technicalAssistance';
 
 // import { parseAsLocalTime } from 'utils/date';
 import { initialAttendee } from '../Attendees';
 
 import './components.scss';
+
+/** Attendee form props */
+type AttendeeFieldsProps = {
+  /** Default field values */
+  defaultValues: TRBAttendeeData;
+  /** Control from useForm hook */
+  control: Control<TRBAttendeeFields>;
+  /** Field errors object */
+  errors: FieldErrors<TRBAttendeeFields>;
+  /** setValue function from useForm hook */
+  setValue: UseFormSetValue<TRBAttendeeFields>;
+  /** Form field labels */
+  fieldLabels: AttendeeFieldLabels;
+};
+
+const AttendeeFields = ({
+  defaultValues,
+  errors,
+  control,
+  setValue,
+  fieldLabels
+}: AttendeeFieldsProps) => {
+  const { t } = useTranslation('technicalAssistance');
+
+  return (
+    <>
+      {/* Validation errors summary */}
+      {Object.keys(errors).length > 0 && (
+        <Alert
+          heading={t('basic.errors.checkFix')}
+          type="error"
+          className="margin-bottom-2"
+        >
+          {Object.keys(errors).map(fieldName => {
+            // Check if error has custom message
+            const { message } = errors[fieldName as keyof typeof errors] || {};
+            return (
+              <ErrorAlertMessage
+                key={fieldName}
+                errorKey={fieldName}
+                message={t(
+                  message || fieldLabels[fieldName as keyof typeof fieldLabels]
+                )}
+              />
+            );
+          })}
+        </Alert>
+      )}
+      {/* Attendee name */}
+      <Controller
+        name="euaUserId"
+        control={control}
+        render={() => {
+          // TODO: Error state
+          return (
+            <FormGroup>
+              <Label htmlFor="euaUserId">{t(fieldLabels.euaUserId)}</Label>
+              <CedarContactSelect
+                id="euaUserId"
+                name="euaUserId"
+                value={defaultValues.userInfo}
+                onChange={cedarContact =>
+                  cedarContact && setValue('euaUserId', cedarContact.euaUserId)
+                }
+                // TODO: Disabled state - need requester ID
+                disabled
+              />
+            </FormGroup>
+          );
+        }}
+      />
+      {/* Attendee component */}
+      <Controller
+        name="component"
+        control={control}
+        render={({ field, fieldState: { error } }) => {
+          return (
+            <FormGroup error={!!error}>
+              <Label htmlFor="component">{t(fieldLabels.component)}</Label>
+              {error && (
+                <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
+              )}
+              <Dropdown
+                id="component"
+                data-testid="component"
+                {...field}
+                ref={null}
+              >
+                <option label={`- ${t('basic.options.select')} -`} disabled />
+                {cmsDivisionsAndOfficesOptions('component')}
+              </Dropdown>
+            </FormGroup>
+          );
+        }}
+      />
+      {/* Attendee role */}
+      <Controller
+        name="role"
+        control={control}
+        render={({ field, fieldState: { error } }) => {
+          return (
+            <FormGroup error={!!error}>
+              <Label htmlFor="role">{t(fieldLabels.role)}</Label>
+              {error && (
+                <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
+              )}
+              <Dropdown
+                id="role"
+                data-testid="role"
+                {...field}
+                ref={null}
+                value={(field.value as PersonRole) || ''}
+              >
+                <option label={`- ${t('basic.options.select')} -`} disabled />
+                {contactRoles.map(({ key, label }) => (
+                  <option key={key} value={key} label={label} />
+                ))}
+              </Dropdown>
+            </FormGroup>
+          );
+        }}
+      />
+    </>
+  );
+};
 
 type AttendeeProps = {
   attendee: TRBAttendeeData;
@@ -99,7 +246,6 @@ const AttendeesList = ({
   deleteAttendee
 }: AttendeesListProps) => {
   if (attendees.length < 1) return null;
-  // console.log(attendees);
   return (
     <ul className="trbAttendees-list usa-list usa-list--unstyled margin-y-3">
       {[...attendees]
@@ -125,4 +271,4 @@ const AttendeesList = ({
   );
 };
 
-export { Attendee, AttendeesList };
+export { Attendee, AttendeesList, AttendeeFields };

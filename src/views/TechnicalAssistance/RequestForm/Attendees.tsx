@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { FetchResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Alert,
-  Dropdown,
-  ErrorMessage,
-  Form,
-  FormGroup,
-  Label
-} from '@trussworks/react-uswds';
+import { Form } from '@trussworks/react-uswds';
 
-import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
-import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
-import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { PersonRole } from 'types/graphql-global-types';
-import { TRBAttendeeData, TRBAttendeeFields } from 'types/technicalAssistance';
+import {
+  AttendeeFieldLabelsObject,
+  TRBAttendeeData,
+  TRBAttendeeFields
+} from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
-import { AttendeesList } from './AttendeesForm/components';
+import { AttendeeFields, AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
@@ -44,10 +38,27 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { path, url } = useRouteMatch();
   const history = useHistory();
 
+  const fieldLabels: AttendeeFieldLabelsObject = t('attendees.fieldLabels', {
+    returnObjects: true
+  });
+
   // Active attendee for form fields
   const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeData>({
     ...initialAttendee,
     trbRequestId: request.id
+  });
+
+  // Initialize form
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    setError,
+    getValues,
+    reset,
+    formState: { errors, isSubmitting, isDirty }
+  } = useForm<TRBAttendeeFields>({
+    resolver: yupResolver(trbAttendeeSchema)
   });
 
   // Get TRB attendees
@@ -61,45 +72,70 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     requesterId: request.createdBy
   });
 
-  const saveRequester = (formData: TRBAttendeeFields) => {
+  // Reset form with default values after useTRBAttendees query returns requester
+  useEffect(() => {
+    const defaultValues: TRBAttendeeFields = {
+      euaUserId: requester.userInfo?.euaUserId || '',
+      component: requester.component,
+      role: requester.role
+    };
+    reset(defaultValues);
+  }, [requester, reset]);
+
+  /** Create or update requester as attendee */
+  const submitRequesterAttendee = async (
+    formData: TRBAttendeeFields
+  ): Promise<FetchResult> => {
     const { component, role, euaUserId } = formData;
+    // If requester object has ID, update attendee
     if (requester.id) {
-      updateAttendee({
+      return updateAttendee({
         id: requester.id,
         component,
         role: role as PersonRole
       });
-    } else {
-      createAttendee({
-        trbRequestId: request.id,
-        euaUserId,
-        component,
-        role: role as PersonRole
-      });
     }
-    // TODO: Mutation error handling
-    history.push(stepUrl.next);
+    // If no ID is present, create new attendee
+    return createAttendee({
+      trbRequestId: request.id,
+      euaUserId,
+      component,
+      role: role as PersonRole
+    });
   };
 
-  // Initialize form
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors, isSubmitting, isDirty }
-  } = useForm<TRBAttendeeFields>({
-    resolver: yupResolver(trbAttendeeSchema),
-    defaultValues: { ...requester, trbRequestId: request.id }
-  });
-
-  // Set initial field values after queries have completed
-  useEffect(() => {
-    if (!loading) {
-      setValue('euaUserId', requester?.userInfo?.euaUserId || '');
-      setValue('component', requester.component || '');
-      setValue('role', requester.role);
+  /** Function to submit attendee form, used for both requester and additional attendees */
+  // Split into separate function so that error handling can be handled in one place
+  const submitForm = (
+    /** Attendee mutation, either create or update */
+    mutate: (
+      /** Updated attendee field values */
+      attendeeFields: TRBAttendeeFields
+    ) => Promise<FetchResult>,
+    /** Updated attendee field values */
+    formData: TRBAttendeeFields,
+    /** URL to send user if successful */
+    successUrl: string
+  ): void => {
+    // Check if values have changed
+    if (isDirty) {
+      // Execute mutation
+      mutate(formData)
+        // If successful, send user to next step
+        .then(() => history.push(successUrl))
+        .catch(() => {
+          // If mutation returns error, set custom error message
+          setError('euaUserId', {
+            type: 'custom',
+            // TODO: Update error message
+            message: 'Error message here'
+          });
+        });
+    } else {
+      // If data has not changed, send user to next step without executing mutation
+      history.push(successUrl);
     }
-  }, [loading, requester, setValue]);
+  };
 
   if (loading) return null;
 
@@ -117,116 +153,17 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
 
         <Route exact path={`${path}`}>
           <Form
+            className="margin-bottom-4"
             onSubmit={handleSubmit(formData => {
-              if (isDirty) {
-                saveRequester(formData);
-              } else {
-                history.push(stepUrl.next);
-              }
+              submitForm(submitRequesterAttendee, formData, stepUrl.next);
             })}
           >
-            {/* Requester validation errors summary */}
-            {Object.keys(errors).length > 0 && (
-              <Alert
-                heading={t('basic.errors.checkFix')}
-                type="error"
-                className="margin-bottom-2"
-              >
-                {Object.keys(errors).map(fieldName => {
-                  return (
-                    <ErrorAlertMessage
-                      key={fieldName}
-                      errorKey={fieldName}
-                      message={t(
-                        `attendees.fieldLabels.requester.${fieldName}`
-                      )}
-                    />
-                  );
-                })}
-              </Alert>
-            )}
-            {/* Requester name */}
-            <Controller
-              name="euaUserId"
+            <AttendeeFields
+              defaultValues={requester}
+              fieldLabels={fieldLabels.requester}
+              errors={errors}
+              setValue={setValue}
               control={control}
-              render={({ field }) => {
-                return (
-                  <FormGroup>
-                    <Label htmlFor="euaUserId">
-                      {t(`attendees.fieldLabels.requester.commonName`)}
-                    </Label>
-                    <CedarContactSelect
-                      id="euaUserId"
-                      name="euaUserId"
-                      value={requester.userInfo}
-                      onChange={cedarContact =>
-                        cedarContact &&
-                        setValue('euaUserId', cedarContact.euaUserId)
-                      }
-                      disabled
-                    />
-                  </FormGroup>
-                );
-              }}
-            />
-            {/* Requester component */}
-            <Controller
-              name="component"
-              control={control}
-              render={({ field, fieldState: { error } }) => {
-                return (
-                  <FormGroup error={!!error}>
-                    <Label htmlFor="component">
-                      {t(`attendees.fieldLabels.requester.component`)}
-                    </Label>
-                    {error && (
-                      <ErrorMessage>
-                        {t('basic.errors.makeSelection')}
-                      </ErrorMessage>
-                    )}
-                    <Dropdown
-                      id="component"
-                      data-testid="component"
-                      {...field}
-                      ref={null}
-                    >
-                      <option label={`- ${t('basic.options.select')} -`} />
-                      {cmsDivisionsAndOfficesOptions('component')}
-                    </Dropdown>
-                  </FormGroup>
-                );
-              }}
-            />
-            {/* Requester role */}
-            <Controller
-              name="role"
-              control={control}
-              render={({ field, fieldState: { error } }) => {
-                return (
-                  <FormGroup error={!!error}>
-                    <Label htmlFor="role">
-                      {t(`attendees.fieldLabels.requester.role`)}
-                    </Label>
-                    {error && (
-                      <ErrorMessage>
-                        {t('basic.errors.makeSelection')}
-                      </ErrorMessage>
-                    )}
-                    <Dropdown
-                      id="role"
-                      data-testid="role"
-                      {...field}
-                      ref={null}
-                      value={(field.value as PersonRole) || ''}
-                    >
-                      <option label={`- ${t('basic.options.select')} -`} />
-                      {contactRoles.map(({ key, label }) => (
-                        <option key={key} value={key} label={label} />
-                      ))}
-                    </Dropdown>
-                  </FormGroup>
-                );
-              }}
             />
 
             <Divider className="margin-top-4" />
@@ -256,7 +193,14 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
 
             <Pager
               back={{
-                disabled: isSubmitting
+                disabled: isSubmitting,
+                onClick: () => {
+                  submitForm(
+                    submitRequesterAttendee,
+                    getValues(),
+                    stepUrl.back
+                  );
+                }
               }}
               next={{
                 disabled: isSubmitting

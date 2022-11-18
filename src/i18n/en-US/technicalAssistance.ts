@@ -244,19 +244,21 @@ const technicalAssistance = {
     dontEditAndReturn: "Don't edit and return to previous page",
     fieldLabels: {
       requester: {
-        commonName: 'Requester name',
+        euaUserId: 'Requester name',
         component: 'Requester component',
         role: 'Requester role'
       },
-      create: {
-        commonName: 'New attendee name',
-        component: 'New attendee component',
-        role: 'New attendee role'
-      },
-      edit: {
-        commonName: 'Attendee name',
-        component: 'Attendee component',
-        role: 'Attendee role'
+      attendee: {
+        create: {
+          euaUserId: 'New attendee name',
+          component: 'New attendee component',
+          role: 'New attendee role'
+        },
+        edit: {
+          euaUserId: 'Attendee name',
+          component: 'Attendee component',
+          role: 'Attendee role'
+        }
       }
     }
   },

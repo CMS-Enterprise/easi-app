@@ -148,16 +148,9 @@ export default function useTRBAttendees({
   return {
     data: { ...formattedAttendees, loading },
     createAttendee: (attendee: CreateTRBRequestAttendeeInput) =>
-      createAttendee({ variables: { input: attendee } })
-        .catch(e => e)
-        .then((response: FetchResult) => response),
+      createAttendee({ variables: { input: attendee } }),
     updateAttendee: (attendee: UpdateTRBRequestAttendeeInput) =>
-      updateAttendee({ variables: { input: attendee } })
-        .catch(e => e)
-        .then((response: FetchResult) => response),
-    deleteAttendee: (id: string) =>
-      deleteAttendee({ variables: { id } })
-        .catch(e => e)
-        .then((response: FetchResult) => response)
+      updateAttendee({ variables: { input: attendee } }),
+    deleteAttendee: (id: string) => deleteAttendee({ variables: { id } })
   };
 }

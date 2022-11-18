@@ -62,12 +62,13 @@ function AttendeesForm({
     requesterId: request.createdBy
   });
 
-  const formType = defaultValues.id ? 'edit' : 'create';
+  const formType = activeAttendee.id ? 'edit' : 'create';
 
   const {
     control,
     handleSubmit,
     setError,
+    clearErrors,
     formState: { errors, isDirty }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
@@ -83,18 +84,25 @@ function AttendeesForm({
         role: formData.role as PersonRole
       };
       // If editing attendee, add ID to input and update attendee
-      if (defaultValues.id) {
+      if (activeAttendee.id) {
         updateAttendee({
           ...input,
-          id: defaultValues.id
+          id: activeAttendee.id
         })
-          .catch(e => setError('id', { type: 'custom', message: e }))
+          .catch(e => setError('euaUserId', { type: 'custom', message: e }))
           // If no errors, return to previous page
           .then(response => {
             if (response && response.data) {
               history.push(backToFormUrl);
+              // Clear errors
+              clearErrors();
               // Reset active attendee
               setActiveAttendee(initialAttendee);
+            } else {
+              setError('euaUserId', {
+                type: 'custom',
+                message: 'TODO: ERROR MESSAGE HERE'
+              });
             }
           });
       } else {
@@ -128,7 +136,7 @@ function AttendeesForm({
             },
             {
               text: t(
-                defaultValues.id
+                activeAttendee.id
                   ? 'attendees.editAttendee'
                   : 'attendees.addAnAttendee'
               )
@@ -137,7 +145,7 @@ function AttendeesForm({
         />
         <PageHeading>
           {t(
-            defaultValues.id
+            activeAttendee.id
               ? 'attendees.editAttendee'
               : 'attendees.addAnAttendee'
           )}
@@ -152,6 +160,7 @@ function AttendeesForm({
             }
           })}
         >
+          {/* Display form errors */}
           {Object.keys(errors).length > 0 && (
             <Alert
               heading={t('basic.errors.checkFix')}
@@ -159,11 +168,17 @@ function AttendeesForm({
               className="margin-bottom-2"
             >
               {Object.keys(errors).map(fieldName => {
+                // Get custom error message if applicable
+                const { message } =
+                  errors[fieldName as keyof typeof errors] || {};
                 return (
                   <ErrorAlertMessage
                     key={fieldName}
                     errorKey={fieldName}
-                    message={t(`attendees.fieldLabels.requester.${fieldName}`)}
+                    message={
+                      message ||
+                      t(`attendees.fieldLabels.requester.${fieldName}`)
+                    }
                   />
                 );
               })}
@@ -272,14 +287,14 @@ function AttendeesForm({
               {t(defaultValues.id ? 'Save' : 'attendees.addAttendee')}
             </UswdsReactLink> */}
             <Button type="submit">
-              {t(defaultValues.id ? 'Save' : 'attendees.addAttendee')}
+              {t(activeAttendee.id ? 'Save' : 'attendees.addAttendee')}
             </Button>
           </div>
           <div className="margin-top-2">
             <UswdsReactLink to={backToFormUrl}>
               <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
               {t(
-                defaultValues.id
+                activeAttendee.id
                   ? 'attendees.dontEditAndReturn'
                   : 'attendees.dontAddAndReturn'
               )}

@@ -2,8 +2,6 @@ import { PersonRole } from './graphql-global-types';
 
 /** TRB attendee fields allows null role in form */
 export type TRBAttendeeFields = {
-  id?: string;
-  trbRequestId: string;
   euaUserId: string;
   component: string;
   role: PersonRole | null;
@@ -13,6 +11,22 @@ export type TRBAttendeeFields = {
 export type TRBAttendeesForm = {
   requester: TRBAttendeeFields;
   attendees: TRBAttendeeFields[];
+};
+
+/** Field labels */
+export type AttendeeFieldLabels = {
+  euaUserId: string;
+  component: string;
+  role: string;
+};
+
+/** Field labels object for translation */
+export type AttendeeFieldLabelsObject = {
+  attendees: {
+    create: AttendeeFieldLabels;
+    edit: AttendeeFieldLabels;
+  };
+  requester: AttendeeFieldLabels;
 };
 
 /** TRB Attendee user info */
