@@ -6,29 +6,38 @@ import classNames from 'classnames';
 import CedarContactSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import Spinner from 'components/Spinner';
 import contactRoles from 'constants/enums/contactRoles';
 import { initialContactDetails } from 'constants/systemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
+import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 import {
-  CreateContactType,
   DeleteContactType,
-  SystemIntakeContactProps,
-  UpdateContactType
+  SystemIntakeContactProps
 } from 'types/systemIntake';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
+type ContactProps = {
+  /** Contact object for display */
+  contact: SystemIntakeContactProps;
+  /** Delete contact from database */
+  deleteContact: DeleteContactType;
+  /** Set active contact when editing */
+  setActiveContact: (activeContact: SystemIntakeContactProps | null) => void;
+  /** Type of display */
+  type: 'contact' | 'recipient';
+};
+
+/**
+ * Component to display additional contact
+ */
 const Contact = ({
   contact,
   deleteContact,
   setActiveContact,
   type
-}: {
-  contact: SystemIntakeContactProps;
-  deleteContact: DeleteContactType;
-  setActiveContact: (activeContact: SystemIntakeContactProps | null) => void;
-  type: 'contact' | 'recipient';
-}) => {
+}: ContactProps) => {
   const { commonName, component, role, id } = contact;
   const { t } = useTranslation('intake');
 
@@ -60,17 +69,26 @@ const Contact = ({
   );
 };
 
+type ContactFormProps = {
+  /** Contact being created or edited */
+  activeContact: SystemIntakeContactProps;
+  /** Set active contact */
+  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  /** Create or update contact on form submission */
+  onSubmit: (contact: SystemIntakeContactProps) => any;
+  /** Type of form */
+  type: 'contact' | 'recipient';
+};
+
+/**
+ * Form to create or update additional contacts
+ */
 const ContactForm = ({
   activeContact,
   setActiveContact,
   onSubmit,
   type
-}: {
-  activeContact: SystemIntakeContactProps;
-  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
-  onSubmit: CreateContactType | UpdateContactType;
-  type: 'contact' | 'recipient';
-}) => {
+}: ContactFormProps) => {
   const { t } = useTranslation('intake');
 
   const [errors, setErrors] = useState({
@@ -183,7 +201,7 @@ const ContactForm = ({
       {/* Action Buttons */}
       <div className="margin-top-2">
         <Button type="button" outline onClick={() => setActiveContact(null)}>
-          Cancel
+          {t('Cancel')}
         </Button>
         <Button type="button" onClick={() => handleSubmit()}>
           {t(
@@ -199,37 +217,48 @@ const ContactForm = ({
 };
 
 type AdditionalContactsProps = {
+  /** System intake ID */
   systemIntakeId: string;
+  /** Contact being created or edited */
   activeContact: SystemIntakeContactProps | null;
+  /** Set active contact */
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  /** Function called after contact is created */
+  onCreateContact?: (contact: AugmentedSystemIntakeContact) => any;
+  /** Type of form - Recipient type does not display contacts */
   type?: 'recipient' | 'contact';
+  /** Outer div class */
   className?: string;
 };
 
+/**
+ * Additional contacts/recipients component for system intakes
+ */
 export default function AdditionalContacts({
   systemIntakeId,
   activeContact,
   setActiveContact,
+  onCreateContact,
   type = 'contact',
   className
 }: AdditionalContactsProps) {
   const { t } = useTranslation('intake');
   const {
-    contacts: {
-      data: { additionalContacts },
-      loading
-    },
+    contacts,
     createContact,
     updateContact,
     deleteContact
   } = useSystemIntakeContacts(systemIntakeId);
+  const { additionalContacts } = contacts.data;
 
-  // Wait for contacts to load
-  if (loading) return null;
+  const [loading, setIsLoading] = useState(contacts.loading);
+
+  if (contacts.loading) return null;
 
   return (
     <div className={classNames('system-intake-contacts', className)}>
       {type === 'contact' && (
+        // Only display list of additional contacts if type is set to 'contact'
         <>
           <h4>
             {t(
@@ -284,24 +313,46 @@ export default function AdditionalContacts({
         </>
       )}
 
-      {activeContact && !activeContact.id && !activeContact.systemIntakeId && (
-        <ContactForm
-          activeContact={activeContact}
-          setActiveContact={setActiveContact}
-          onSubmit={createContact}
-          type={type}
-        />
-      )}
+      {loading ? (
+        // Display spinner if contact is loading
+        <Spinner />
+      ) : (
+        // Additional contacts form
+        <>
+          {activeContact && !activeContact.id && !activeContact.systemIntakeId && (
+            <ContactForm
+              activeContact={activeContact}
+              setActiveContact={setActiveContact}
+              onSubmit={contact => {
+                // Handle loading state when contact is created
+                setIsLoading(true);
+                createContact(contact).then(response => {
+                  if (response) {
+                    // Set loading as false after mutation is completed
+                    setIsLoading(false);
+                    // Handle response after contact is created
+                    if (onCreateContact) {
+                      onCreateContact(response);
+                    }
+                  }
+                });
+              }}
+              type={type}
+            />
+          )}
 
-      {(!activeContact || activeContact?.systemIntakeId) && (
-        <Button
-          type="button"
-          outline
-          onClick={() => setActiveContact(initialContactDetails)}
-          disabled={!!activeContact?.id}
-        >
-          {t('contactDetails.additionalContacts.add', { type })}
-        </Button>
+          {(!activeContact || activeContact?.systemIntakeId) && (
+            // Button to add additional contact
+            <Button
+              type="button"
+              outline
+              onClick={() => setActiveContact(initialContactDetails)}
+              disabled={!!activeContact?.id}
+            >
+              {t('contactDetails.additionalContacts.add', { type })}
+            </Button>
+          )}
+        </>
       )}
     </div>
   );

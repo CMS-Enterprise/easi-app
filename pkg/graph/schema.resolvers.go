@@ -626,6 +626,11 @@ func (r *cedarRoleResolver) ObjectType(ctx context.Context, obj *models.CedarRol
 	return obj.ObjectType.Ptr(), nil
 }
 
+// Description is the resolver for the description field.
+func (r *cedarRoleTypeResolver) Description(ctx context.Context, obj *models.CedarRoleType) (*string, error) {
+	return obj.Description.Ptr(), nil
+}
+
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
 func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
 	ipEnabledCt := int(obj.SystemMaintainerInformation.IPEnabledAssetCount)
@@ -1938,6 +1943,29 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
 }
 
+// SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
+func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
+	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := "Roles changed successfully"
+	return &resp, nil
+}
+
+// CreateTRBRequestFeedback is the resolver for the createTRBRequestFeedback field.
+func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error) {
+	notifyEuas := models.ConvertEnums[string](input.NotifyEuaIds)
+	return resolvers.CreateTRBRequestFeedback(ctx, r.store, &models.TRBRequestFeedback{
+		TRBRequestID:    input.TrbRequestID,
+		FeedbackMessage: input.FeedbackMessage,
+		CopyTRBMailbox:  input.CopyTrbMailbox,
+		NotifyEUAIDs:    notifyEuas,
+		Action:          input.Action,
+	})
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2136,6 +2164,16 @@ func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, d
 	}
 
 	return cedarDeployments, nil
+}
+
+// RoleTypes is the resolver for the roleTypes field.
+func (r *queryResolver) RoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
+	roleTypes, err := r.cedarCoreClient.GetRoleTypes(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return roleTypes, nil
 }
 
 // Roles is the resolver for the roles field.
@@ -2675,6 +2713,11 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
+// Feedback is the resolver for the feedback field.
+func (r *tRBRequestResolver) Feedback(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestFeedback, error) {
+	return resolvers.GetTRBRequestFeedbackByTRBRequestID(ctx, r.store, obj.ID)
+}
+
 // Documents is the resolver for the documents field.
 func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error) {
 	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
@@ -2683,6 +2726,11 @@ func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBReque
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
 	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+}
+
+// TaskStatuses is the resolver for the taskStatuses field.
+func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
+	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
@@ -2715,6 +2763,12 @@ func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models
 // URL is the resolver for the url field.
 func (r *tRBRequestDocumentResolver) URL(ctx context.Context, obj *models.TRBRequestDocument) (string, error) {
 	return resolvers.GetURLForTRBRequestDocument(r.s3Client, obj.S3Key)
+}
+
+// NotifyEuaIds is the resolver for the notifyEuaIds field.
+func (r *tRBRequestFeedbackResolver) NotifyEuaIds(ctx context.Context, obj *models.TRBRequestFeedback) ([]string, error) {
+	ids := models.ConvertEnums[string](obj.NotifyEUAIDs)
+	return ids, nil
 }
 
 // CollabGroups is the resolver for the collabGroups field.
@@ -2814,6 +2868,9 @@ func (r *Resolver) CedarExchange() generated.CedarExchangeResolver { return &ced
 // CedarRole returns generated.CedarRoleResolver implementation.
 func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleResolver{r} }
 
+// CedarRoleType returns generated.CedarRoleTypeResolver implementation.
+func (r *Resolver) CedarRoleType() generated.CedarRoleTypeResolver { return &cedarRoleTypeResolver{r} }
+
 // CedarSystemDetails returns generated.CedarSystemDetailsResolver implementation.
 func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 	return &cedarSystemDetailsResolver{r}
@@ -2849,6 +2906,11 @@ func (r *Resolver) TRBRequestDocument() generated.TRBRequestDocumentResolver {
 	return &tRBRequestDocumentResolver{r}
 }
 
+// TRBRequestFeedback returns generated.TRBRequestFeedbackResolver implementation.
+func (r *Resolver) TRBRequestFeedback() generated.TRBRequestFeedbackResolver {
+	return &tRBRequestFeedbackResolver{r}
+}
+
 // TRBRequestForm returns generated.TRBRequestFormResolver implementation.
 func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
@@ -2867,6 +2929,7 @@ type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
 type cedarExchangeResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
+type cedarRoleTypeResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
@@ -2876,5 +2939,6 @@ type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
+type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

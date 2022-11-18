@@ -45,7 +45,8 @@ func NewAuthenticateOK() *AuthenticateOK {
 	return &AuthenticateOK{}
 }
 
-/* AuthenticateOK describes a response with status code 200, with default header values.
+/*
+	AuthenticateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -77,7 +78,8 @@ func NewAuthenticateUnauthorized() *AuthenticateUnauthorized {
 	return &AuthenticateUnauthorized{}
 }
 
-/* AuthenticateUnauthorized describes a response with status code 401, with default header values.
+/*
+	AuthenticateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */

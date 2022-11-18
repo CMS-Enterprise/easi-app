@@ -238,6 +238,15 @@ type CreateTRBRequestDocumentPayload struct {
 	Document *models.TRBRequestDocument `json:"document"`
 }
 
+// The data needed add feedback to a TRB request
+type CreateTRBRequestFeedbackInput struct {
+	TrbRequestID    uuid.UUID                `json:"trbRequestId"`
+	FeedbackMessage string                   `json:"feedbackMessage"`
+	CopyTrbMailbox  bool                     `json:"copyTrbMailbox"`
+	NotifyEuaIds    []string                 `json:"notifyEuaIds"`
+	Action          models.TRBFeedbackAction `json:"action"`
+}
+
 // The input required to add a test date/score to a 508/accessibility request
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
@@ -405,6 +414,12 @@ type SendReportAProblemEmailInput struct {
 	WhatWereYouDoing       string `json:"whatWereYouDoing"`
 	WhatWentWrong          string `json:"whatWentWrong"`
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
+}
+
+type SetRolesForUserOnSystemInput struct {
+	CedarSystemID      string   `json:"cedarSystemID"`
+	EuaUserID          string   `json:"euaUserId"`
+	DesiredRoleTypeIDs []string `json:"desiredRoleTypeIDs"`
 }
 
 // Input to submit an intake for review

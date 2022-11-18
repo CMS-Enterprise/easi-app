@@ -18,7 +18,7 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 
 }
 
-// TRBRequestType represents the types of TRBRequestType types.
+// TRBRequestType represents the types of TRBRequestType types
 type TRBRequestType string
 
 // These are the options for TRBRequestType
@@ -29,7 +29,7 @@ const (
 	TRBTFormalReview TRBRequestType = "FORMAL_REVIEW"
 )
 
-// TRBRequestStatus represents the types of TRBRequestStatus types.
+// TRBRequestStatus represents the types of TRBRequestStatus types
 type TRBRequestStatus string
 
 // These are the options for TRBRequestStatus
@@ -37,3 +37,31 @@ const (
 	TRBSOpen   TRBRequestStatus = "OPEN"
 	TRBSClosed TRBRequestStatus = "CLOSED"
 )
+
+// TRBFeedbackStatus represents the types of TRBFeedbackStatus types
+type TRBFeedbackStatus string
+
+// These are the options for TRBFeedbackStatus
+const (
+	TRBFeedbackStatusCannotStartYet TRBFeedbackStatus = "CANNOT_START_YET"
+	TRBFeedbackStatusInReview       TRBFeedbackStatus = "IN_REVIEW"
+	TRBFeedbackStatusEditsRequested TRBFeedbackStatus = "EDITS_REQUESTED"
+	TRBFeedbackStatusCompleted      TRBFeedbackStatus = "COMPLETED"
+)
+
+// TRBConsultStatus represents the types of TRBConsultStatus types
+type TRBConsultStatus string
+
+// These are the options for TRBConsultStatus
+const (
+	TRBConsultStatusCannotStartYet TRBConsultStatus = "CANNOT_START_YET"
+	TRBConsultStatusInProgress     TRBConsultStatus = "IN_PROGRESS"
+	TRBConsultStatusCompleted      TRBConsultStatus = "COMPLETED"
+)
+
+// TRBTaskStatuses contains the individual statuses for the steps of the TRB task list
+type TRBTaskStatuses struct {
+	FormStatus     TRBFormStatus     `json:"formStatus"`
+	FeedbackStatus TRBFeedbackStatus `json:"feedbackStatus"`
+	ConsultStatus  TRBConsultStatus  `json:"consultStatus"`
+}
