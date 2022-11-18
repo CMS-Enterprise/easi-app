@@ -61,7 +61,10 @@ func NewContractAddParamsWithHTTPClient(client *http.Client) *ContractAddParams 
 */
 type ContractAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   An array of Contracts to be added to CEDAR Alfabet.
+	*/
 	Body *models.ContractAddRequest
 
 	timeout    time.Duration

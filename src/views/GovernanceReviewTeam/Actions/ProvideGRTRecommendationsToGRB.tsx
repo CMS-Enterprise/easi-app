@@ -33,7 +33,6 @@ const ProvideGRTRecommendationsToGRB = () => {
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(
     MarkReadyForGRBQuery
   );
-  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   // Requester object and loading state
   const {
@@ -58,26 +57,37 @@ const ProvideGRTRecommendationsToGRB = () => {
       regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: false
-    }
+    },
+    shouldSendEmail: true
   };
 
   const onSubmit = (
     values: ProvideGRTFeedbackForm,
     { setFieldError }: FormikHelpers<ProvideGRTFeedbackForm>
   ) => {
-    const { grtFeedback, emailBody, notificationRecipients } = values;
+    const {
+      grtFeedback,
+      emailBody,
+      notificationRecipients,
+      shouldSendEmail
+    } = values;
+
+    const variables: AddGRTFeedbackVariables = {
+      input: {
+        emailBody,
+        feedback: grtFeedback,
+        intakeID: systemId,
+        shouldSendEmail
+      }
+    };
+
+    if (shouldSendEmail) {
+      variables.input.notificationRecipients = notificationRecipients;
+    }
 
     // GQL mutation to submit action
     mutate({
-      variables: {
-        input: {
-          emailBody,
-          feedback: grtFeedback,
-          intakeID: systemId,
-          shouldSendEmail,
-          notificationRecipients
-        }
-      }
+      variables
     })
       .then(({ errors }) => {
         if (!errors) {
@@ -212,8 +222,7 @@ const ProvideGRTRecommendationsToGRB = () => {
                     type="submit"
                     onClick={() => {
                       setErrors({});
-                      setShouldSendEmail(true);
-                      setFieldValue('skipEmail', false);
+                      setFieldValue('shouldSendEmail', true);
                     }}
                     disabled={!!activeContact}
                   >
@@ -222,13 +231,10 @@ const ProvideGRTRecommendationsToGRB = () => {
                 </div>
                 <div>
                   <CompleteWithoutEmailButton
+                    setErrors={setErrors}
+                    setFieldValue={setFieldValue}
+                    submitForm={submitForm}
                     disabled={!!activeContact}
-                    onClick={() => {
-                      setErrors({});
-                      setShouldSendEmail(false);
-                      setFieldValue('skipEmail', true);
-                      setTimeout(submitForm);
-                    }}
                   />
                 </div>
               </Form>
