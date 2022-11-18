@@ -61,7 +61,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 
 	// If the feedback requests edits, update the form status to "in progress"
 	if formToUpdate != nil {
-		formStmt, err := tx.PrepareNamed(`
+		formStmt, formErr := tx.PrepareNamed(`
 			UPDATE trb_request_forms
 			SET
 				status = :status,
@@ -72,14 +72,14 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 		`)
 
 		updatedForm := models.TRBRequestForm{}
-		err = formStmt.Get(&updatedForm, formToUpdate)
+		formErr = formStmt.Get(&updatedForm, formToUpdate)
 
-		if err != nil {
+		if formErr != nil {
 			appcontext.ZLogger(ctx).Error(
 				fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", err),
 				zap.String("user", formToUpdate.CreatedBy),
 			)
-			return nil, err
+			return nil, formErr
 		}
 	}
 	err = tx.Commit()
@@ -152,5 +152,5 @@ func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, t
 	} else {
 		feedbackPtr = nil
 	}
-	return feedbackPtr, err
+	return feedbackPtr, nil
 }

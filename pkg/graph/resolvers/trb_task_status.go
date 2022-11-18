@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
@@ -22,7 +21,6 @@ func GetTRBFormStatus(ctx context.Context, store *storage.Store, trbRequestID uu
 
 // GetTRBFeedbackStatus retrieves the status of the feedback step of the TRB request task list
 func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBTaskStatus, error) {
-	fmt.Println("**calc feedback status 0")
 	status := models.TRBTaskStatusCannotStartYet
 	errGroup := new(errgroup.Group)
 
@@ -44,10 +42,7 @@ func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 		return nil, err
 	}
 
-	fmt.Println("**calc feedback status 1")
-
 	if feedback != nil {
-		fmt.Println("**calc feedback status 2.0")
 		// If the latest feedback exists, calculate the status based on the action
 		if feedback.Action == models.TRBFeedbackActionRequestEdits {
 			// If latest feedback requests edits, return "edits requested" status
@@ -57,12 +52,10 @@ func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 			status = models.TRBTaskStatusCompleted
 		}
 	} else if form.Status == models.TRBFormStatusCompleted {
-		fmt.Println("**calc feedback status 2.1")
 		// If feedback is nil (there are no feedback yet), calculate the status based on
 		// form status (defaults to "cannot start yet" above)
 		status = models.TRBTaskStatus(models.TRBTaskStatusInProgress)
 	}
-	fmt.Println("**calc feedback status 3")
 
 	return &status, nil
 }

@@ -856,8 +856,9 @@ type ComplexityRoot struct {
 	}
 
 	TRBTaskStatuses struct {
-		ConsultStatus func(childComplexity int) int
-		FormStatus    func(childComplexity int) int
+		ConsultStatus  func(childComplexity int) int
+		FeedbackStatus func(childComplexity int) int
+		FormStatus     func(childComplexity int) int
 	}
 
 	TestDate struct {
@@ -5470,6 +5471,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBTaskStatuses.ConsultStatus(childComplexity), true
 
+	case "TRBTaskStatuses.feedbackStatus":
+		if e.complexity.TRBTaskStatuses.FeedbackStatus == nil {
+			break
+		}
+
+		return e.complexity.TRBTaskStatuses.FeedbackStatus(childComplexity), true
+
 	case "TRBTaskStatuses.formStatus":
 		if e.complexity.TRBTaskStatuses.FormStatus == nil {
 			break
@@ -7250,6 +7258,7 @@ Wraps all of the various status on the TRB task list into one type
 """
 type TRBTaskStatuses {
   formStatus: TRBFormStatus!
+  feedbackStatus: TRBTaskStatus!
   consultStatus: TRBTaskStatus!
 }
 
@@ -33703,6 +33712,8 @@ func (ec *executionContext) fieldContext_TRBRequest_taskStatuses(ctx context.Con
 			switch field.Name {
 			case "formStatus":
 				return ec.fieldContext_TRBTaskStatuses_formStatus(ctx, field)
+			case "feedbackStatus":
+				return ec.fieldContext_TRBTaskStatuses_feedbackStatus(ctx, field)
 			case "consultStatus":
 				return ec.fieldContext_TRBTaskStatuses_consultStatus(ctx, field)
 			}
@@ -36438,6 +36449,50 @@ func (ec *executionContext) fieldContext_TRBTaskStatuses_formStatus(ctx context.
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBFormStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBTaskStatuses_feedbackStatus(ctx context.Context, field graphql.CollectedField, obj *models.TRBTaskStatuses) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBTaskStatuses_feedbackStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FeedbackStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.TRBTaskStatus)
+	fc.Result = res
+	return ec.marshalNTRBTaskStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBTaskStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBTaskStatuses_feedbackStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBTaskStatuses",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBTaskStatus does not have child fields")
 		},
 	}
 	return fc, nil
@@ -48562,6 +48617,13 @@ func (ec *executionContext) _TRBTaskStatuses(ctx context.Context, sel ast.Select
 		case "formStatus":
 
 			out.Values[i] = ec._TRBTaskStatuses_formStatus(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "feedbackStatus":
+
+			out.Values[i] = ec._TRBTaskStatuses_feedbackStatus(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

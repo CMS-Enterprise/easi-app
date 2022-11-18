@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 
@@ -18,11 +17,9 @@ func CreateTRBRequestFeedback(ctx context.Context, store *storage.Store, feedbac
 	// If action is edits requested, change the form status to "in progress"
 	if feedback.Action == models.TRBFeedbackActionRequestEdits {
 		form, err := store.GetTRBRequestFormByTRBRequestID(ctx, feedback.TRBRequestID)
-		fmt.Println("here 1")
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println("here 2")
 
 		// Update the TRB form status to in progress
 		formChanges := map[string]interface{}{
@@ -37,12 +34,10 @@ func CreateTRBRequestFeedback(ctx context.Context, store *storage.Store, feedbac
 		formToUpdate = form
 	}
 
-	fmt.Println("here 3")
 	createdFeedback, err := store.CreateTRBRequestFeedback(ctx, feedback, formToUpdate)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("here 4")
 
 	return createdFeedback, nil
 }
