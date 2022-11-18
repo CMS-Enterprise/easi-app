@@ -16,7 +16,6 @@ func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, st
 	trb := models.NewTRBRequest(princ.ID())
 	trb.Type = requestType
 	trb.Status = models.TRBSOpen
-	trb.FeedbackStatus = models.TRBFeedbackStatusCannotStartYet
 	//TODO make sure this is wired up appropriately
 
 	createdTRB, err := store.CreateTRBRequest(appcontext.ZLogger(ctx), trb)

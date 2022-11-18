@@ -24,12 +24,3 @@ CREATE TABLE trb_request_feedback (
     modified_by TEXT CHECK (modified_by ~ '^[A-Z0-9]{4}$'),
     modified_at TIMESTAMP WITH TIME ZONE
 );
-
-CREATE TYPE trb_feedback_status AS ENUM (
-    'CANNOT_START_YET',
-    'IN_REVIEW',
-    'EDITS_REQUESTED',
-    'COMPLETED'
-);
-
-ALTER TABLE trb_request ADD COLUMN feedback_status trb_feedback_status NOT NULL DEFAULT 'CANNOT_START_YET';

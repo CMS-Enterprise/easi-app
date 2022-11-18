@@ -1499,14 +1499,22 @@ type TRBRequest {
   type: TRBRequestType!
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
-  feedback: [TRBRequestFeedback]!
-  feedbackStatus: TRBFeedbackStatus!
+  feedback: [TRBRequestFeedback!]!
   documents: [TRBRequestDocument!]!
   form: TRBRequestForm!
+  taskStatuses: TRBTaskStatuses!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
   modifiedAt: Time
+}
+
+"""
+Wraps all of the various status on the TRB task list into one type
+"""
+type TRBTaskStatuses {
+  formStatus: TRBFormStatus!
+  consultStatus: TRBTaskStatus!
 }
 
 """
@@ -1518,7 +1526,7 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     name: String
     archived: Boolean
     type: TRBRequestType
-    status: TRBRequestStatus 
+    status: TRBRequestStatus
 }
 
 """
@@ -1651,6 +1659,16 @@ Represents the status of a TRB request form
 enum TRBFormStatus {
   READY_TO_START
   IN_PROGRESS
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB step
+"""
+enum TRBTaskStatus {
+  READY_TO_START
+  IN_PROGRESS
+  EDITS_REQUESTED # Only used for the feedback step
   COMPLETED
 }
 
@@ -1830,16 +1848,12 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
 }
 
+"""
+Represents the action an admin is taking on a TRB request when leaving feedback
+"""
 enum TRBFeedbackAction {
   READY_FOR_CONSULT
   REQUEST_EDITS
-}
-
-enum TRBFeedbackStatus {
-  CANNOT_START_YET
-  IN_REVIEW
-  EDITS_REQUESTED
-  COMPLETED
 }
 
 """
