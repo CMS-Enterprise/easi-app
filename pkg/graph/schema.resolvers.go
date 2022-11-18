@@ -1938,6 +1938,18 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
 }
 
+// CreateTRBRequestFeedback is the resolver for the createTRBRequestFeedback field.
+func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error) {
+	notifyEuas := models.ConvertEnums[string](input.NotifyEuaIds)
+	return resolvers.CreateTRBRequestFeedback(ctx, r.store, &models.TRBRequestFeedback{
+		TRBRequestID:    input.TrbRequestID,
+		FeedbackMessage: input.FeedbackMessage,
+		CopyTRBMailbox:  input.CopyTrbMailbox,
+		NotifyEUAIDs:    notifyEuas,
+		Action:          input.Action,
+	})
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2675,6 +2687,11 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
+// Feedback is the resolver for the feedback field.
+func (r *tRBRequestResolver) Feedback(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestFeedback, error) {
+	return resolvers.GetTRBRequestFeedbackByTRBRequestID(ctx, r.store, obj.ID)
+}
+
 // Documents is the resolver for the documents field.
 func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error) {
 	return resolvers.GetTRBRequestDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
@@ -2683,6 +2700,11 @@ func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBReque
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
 	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+}
+
+// TaskStatuses is the resolver for the taskStatuses field.
+func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
+	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
@@ -2715,6 +2737,12 @@ func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models
 // URL is the resolver for the url field.
 func (r *tRBRequestDocumentResolver) URL(ctx context.Context, obj *models.TRBRequestDocument) (string, error) {
 	return resolvers.GetURLForTRBRequestDocument(r.s3Client, obj.S3Key)
+}
+
+// NotifyEuaIds is the resolver for the notifyEuaIds field.
+func (r *tRBRequestFeedbackResolver) NotifyEuaIds(ctx context.Context, obj *models.TRBRequestFeedback) ([]string, error) {
+	ids := models.ConvertEnums[string](obj.NotifyEUAIDs)
+	return ids, nil
 }
 
 // CollabGroups is the resolver for the collabGroups field.
@@ -2849,6 +2877,11 @@ func (r *Resolver) TRBRequestDocument() generated.TRBRequestDocumentResolver {
 	return &tRBRequestDocumentResolver{r}
 }
 
+// TRBRequestFeedback returns generated.TRBRequestFeedbackResolver implementation.
+func (r *Resolver) TRBRequestFeedback() generated.TRBRequestFeedbackResolver {
+	return &tRBRequestFeedbackResolver{r}
+}
+
 // TRBRequestForm returns generated.TRBRequestFormResolver implementation.
 func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
@@ -2876,5 +2909,6 @@ type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
+type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }

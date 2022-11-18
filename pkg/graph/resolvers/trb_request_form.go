@@ -42,7 +42,7 @@ func UpdateTRBRequestForm(ctx context.Context, store *storage.Store, input map[s
 		return nil, err
 	}
 
-	if isSubmitted {
+	if isSubmitted && previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusCompleted
 	} else if previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusInProgress
