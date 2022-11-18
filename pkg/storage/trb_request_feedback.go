@@ -110,7 +110,7 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequ
 	return results, nil
 }
 
-// GetNewestTRBRequestFeedbackByTRBRequestID queries the DB for all the TRB request feedback records
+// GetNewestTRBRequestFeedbackByTRBRequestID queries the DB the newest TRB request feedback record
 // matching the given TRB request ID
 func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestFeedback, error) {
 	feedback := models.TRBRequestFeedback{}
