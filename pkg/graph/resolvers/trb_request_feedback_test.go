@@ -54,7 +54,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		// Verify that the TRB request feedback status is now "edits requested"
 		updatedFeedbackStatus, err := GetTRBFeedbackStatus(ctx, store, trbRequest.ID)
 		s.NoError(err)
-		s.EqualValues(models.TRBTaskStatusEditsRequested, *updatedFeedbackStatus)
+		s.EqualValues(models.TRBFeedbackStatusEditsRequested, *updatedFeedbackStatus)
 		form, err := GetTRBRequestFormByTRBRequestID(ctx, store, trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(form.Status, models.TRBFormStatusInProgress)
@@ -90,6 +90,6 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		// Verify that the TRB request feedback status is now "completed"
 		finalFeedbackStatus, err := GetTRBFeedbackStatus(ctx, store, trbRequest.ID)
 		s.NoError(err)
-		s.EqualValues(models.TRBTaskStatusCompleted, *finalFeedbackStatus)
+		s.EqualValues(models.TRBFeedbackStatusCompleted, *finalFeedbackStatus)
 	})
 }

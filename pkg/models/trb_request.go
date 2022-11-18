@@ -38,20 +38,30 @@ const (
 	TRBSClosed TRBRequestStatus = "CLOSED"
 )
 
-// TRBTaskStatus represents the types of TRBTaskStatus types
-type TRBTaskStatus string
+// TRBFeedbackStatus represents the types of TRBFeedbackStatus types
+type TRBFeedbackStatus string
 
-// These are the options for TRBTaskStatus
+// These are the options for TRBFeedbackStatus
 const (
-	TRBTaskStatusCannotStartYet TRBTaskStatus = "CANNOT_START_YET"
-	TRBTaskStatusInProgress     TRBTaskStatus = "IN_PROGRESS"
-	TRBTaskStatusEditsRequested TRBTaskStatus = "EDITS_REQUESTED"
-	TRBTaskStatusCompleted      TRBTaskStatus = "COMPLETED"
+	TRBFeedbackStatusCannotStartYet TRBFeedbackStatus = "CANNOT_START_YET"
+	TRBFeedbackStatusInProgress     TRBFeedbackStatus = "IN_PROGRESS"
+	TRBFeedbackStatusEditsRequested TRBFeedbackStatus = "EDITS_REQUESTED"
+	TRBFeedbackStatusCompleted      TRBFeedbackStatus = "COMPLETED"
+)
+
+// TRBConsultStatus represents the types of TRBConsultStatus types
+type TRBConsultStatus string
+
+// These are the options for TRBConsultStatus
+const (
+	TRBConsultStatusCannotStartYet TRBConsultStatus = "CANNOT_START_YET"
+	TRBConsultStatusInProgress     TRBConsultStatus = "IN_PROGRESS"
+	TRBConsultStatusCompleted      TRBConsultStatus = "COMPLETED"
 )
 
 // TRBTaskStatuses contains the individual statuses for the steps of the TRB task list
 type TRBTaskStatuses struct {
-	FormStatus     TRBFormStatus `json:"formStatus"`
-	FeedbackStatus TRBTaskStatus `json:"feedbackStatus"`
-	ConsultStatus  TRBTaskStatus `json:"consultStatus"`
+	FormStatus     TRBFormStatus     `json:"formStatus"`
+	FeedbackStatus TRBFeedbackStatus `json:"feedbackStatus"`
+	ConsultStatus  TRBConsultStatus  `json:"consultStatus"`
 }

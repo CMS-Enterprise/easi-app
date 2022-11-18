@@ -20,8 +20,8 @@ func GetTRBFormStatus(ctx context.Context, store *storage.Store, trbRequestID uu
 }
 
 // GetTRBFeedbackStatus retrieves the status of the feedback step of the TRB request task list
-func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBTaskStatus, error) {
-	status := models.TRBTaskStatusCannotStartYet
+func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBFeedbackStatus, error) {
+	status := models.TRBFeedbackStatusCannotStartYet
 	errGroup := new(errgroup.Group)
 
 	var form *models.TRBRequestForm
@@ -46,31 +46,31 @@ func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 		// If the latest feedback exists, calculate the status based on the action
 		if feedback.Action == models.TRBFeedbackActionRequestEdits {
 			// If latest feedback requests edits, return "edits requested" status
-			status = models.TRBTaskStatus(models.TRBTaskStatusEditsRequested)
+			status = models.TRBFeedbackStatus(models.TRBFeedbackStatusEditsRequested)
 		} else if feedback.Action == models.TRBFeedbackActionReadyForConsult {
 			// If latest feedback action is "ready for consult", return "completed" status
-			status = models.TRBTaskStatusCompleted
+			status = models.TRBFeedbackStatusCompleted
 		}
 	} else if form.Status == models.TRBFormStatusCompleted {
 		// If feedback is nil (there are no feedback yet), calculate the status based on
 		// form status (defaults to "cannot start yet" above)
-		status = models.TRBTaskStatus(models.TRBTaskStatusInProgress)
+		status = models.TRBFeedbackStatus(models.TRBFeedbackStatusInProgress)
 	}
 
 	return &status, nil
 }
 
-// GetTRBConsultStatus retrieves the status of the feedback step of the TRB request task list
-func GetTRBConsultStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBTaskStatus, error) {
-	status := models.TRBTaskStatusCannotStartYet
+// GetTRBConsultStatus retrieves the status of the consult step of the TRB request task list
+func GetTRBConsultStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBConsultStatus, error) {
+	status := models.TRBConsultStatusCannotStartYet
 	feedbackStatus, err := GetTRBFeedbackStatus(ctx, store, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
 
-	if *feedbackStatus == models.TRBTaskStatusCompleted {
+	if *feedbackStatus == models.TRBFeedbackStatusCompleted {
 		// TODO: actually implement the logic for this by checking the dates etc (separate ticket)
-		status = models.TRBTaskStatusInProgress
+		status = models.TRBConsultStatusInProgress
 	}
 	return &status, nil
 }
@@ -86,14 +86,14 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 		return errForm
 	})
 
-	var feedbackStatus *models.TRBTaskStatus
+	var feedbackStatus *models.TRBFeedbackStatus
 	var errFeedback error
 	errGroup.Go(func() error {
 		feedbackStatus, errFeedback = GetTRBFeedbackStatus(ctx, store, trbRequestID)
 		return errFeedback
 	})
 
-	var consultStatus *models.TRBTaskStatus
+	var consultStatus *models.TRBConsultStatus
 	var errConsult error
 	errGroup.Go(func() error {
 		consultStatus, errConsult = GetTRBConsultStatus(ctx, store, trbRequestID)

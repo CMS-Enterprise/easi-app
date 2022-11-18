@@ -1514,8 +1514,8 @@ Wraps all of the various status on the TRB task list into one type
 """
 type TRBTaskStatuses {
   formStatus: TRBFormStatus!
-  feedbackStatus: TRBTaskStatus!
-  consultStatus: TRBTaskStatus!
+  feedbackStatus: TRBFeedbackStatus!
+  consultStatus: TRBConsultStatus!
 }
 
 """
@@ -1664,12 +1664,23 @@ enum TRBFormStatus {
 }
 
 """
-Represents the status of the TRB step
+Represents the status of the TRB feedback step
 """
-enum TRBTaskStatus {
+enum TRBFeedbackStatus {
+  CANNOT_START_YET
+  READY_TO_START
+  IN_REVIEW
+  EDITS_REQUESTED
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB consult step
+"""
+enum TRBConsultStatus {
+  CANNOT_START_YET
   READY_TO_START
   IN_PROGRESS
-  EDITS_REQUESTED # Only used for the feedback step
   COMPLETED
 }
 

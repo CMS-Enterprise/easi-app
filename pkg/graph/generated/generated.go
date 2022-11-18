@@ -7258,8 +7258,8 @@ Wraps all of the various status on the TRB task list into one type
 """
 type TRBTaskStatuses {
   formStatus: TRBFormStatus!
-  feedbackStatus: TRBTaskStatus!
-  consultStatus: TRBTaskStatus!
+  feedbackStatus: TRBFeedbackStatus!
+  consultStatus: TRBConsultStatus!
 }
 
 """
@@ -7408,12 +7408,23 @@ enum TRBFormStatus {
 }
 
 """
-Represents the status of the TRB step
+Represents the status of the TRB feedback step
 """
-enum TRBTaskStatus {
+enum TRBFeedbackStatus {
+  CANNOT_START_YET
+  READY_TO_START
+  IN_REVIEW
+  EDITS_REQUESTED
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB consult step
+"""
+enum TRBConsultStatus {
+  CANNOT_START_YET
   READY_TO_START
   IN_PROGRESS
-  EDITS_REQUESTED # Only used for the feedback step
   COMPLETED
 }
 
@@ -36480,9 +36491,9 @@ func (ec *executionContext) _TRBTaskStatuses_feedbackStatus(ctx context.Context,
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.TRBTaskStatus)
+	res := resTmp.(models.TRBFeedbackStatus)
 	fc.Result = res
-	return ec.marshalNTRBTaskStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBTaskStatus(ctx, field.Selections, res)
+	return ec.marshalNTRBFeedbackStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBTaskStatuses_feedbackStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -36492,7 +36503,7 @@ func (ec *executionContext) fieldContext_TRBTaskStatuses_feedbackStatus(ctx cont
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TRBTaskStatus does not have child fields")
+			return nil, errors.New("field of type TRBFeedbackStatus does not have child fields")
 		},
 	}
 	return fc, nil
@@ -36524,9 +36535,9 @@ func (ec *executionContext) _TRBTaskStatuses_consultStatus(ctx context.Context, 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.TRBTaskStatus)
+	res := resTmp.(models.TRBConsultStatus)
 	fc.Result = res
-	return ec.marshalNTRBTaskStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBTaskStatus(ctx, field.Selections, res)
+	return ec.marshalNTRBConsultStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBConsultStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBTaskStatuses_consultStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -36536,7 +36547,7 @@ func (ec *executionContext) fieldContext_TRBTaskStatuses_consultStatus(ctx conte
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TRBTaskStatus does not have child fields")
+			return nil, errors.New("field of type TRBConsultStatus does not have child fields")
 		},
 	}
 	return fc, nil
@@ -51122,6 +51133,22 @@ func (ec *executionContext) marshalNTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsgo
 	return ret
 }
 
+func (ec *executionContext) unmarshalNTRBConsultStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBConsultStatus(ctx context.Context, v interface{}) (models.TRBConsultStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TRBConsultStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBConsultStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBConsultStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBConsultStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNTRBDataAndDataManagementOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBDataAndDataManagementOption(ctx context.Context, v interface{}) (models.TRBDataAndDataManagementOption, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.TRBDataAndDataManagementOption(tmp)
@@ -51161,6 +51188,22 @@ func (ec *executionContext) unmarshalNTRBFeedbackAction2githubᚗcomᚋcmsgovᚋ
 }
 
 func (ec *executionContext) marshalNTRBFeedbackAction2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackAction(ctx context.Context, sel ast.SelectionSet, v models.TRBFeedbackAction) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNTRBFeedbackStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackStatus(ctx context.Context, v interface{}) (models.TRBFeedbackStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TRBFeedbackStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBFeedbackStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBFeedbackStatus) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -51529,22 +51572,6 @@ func (ec *executionContext) unmarshalNTRBRequestType2githubᚗcomᚋcmsgovᚋeas
 }
 
 func (ec *executionContext) marshalNTRBRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx context.Context, sel ast.SelectionSet, v models.TRBRequestType) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNTRBTaskStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBTaskStatus(ctx context.Context, v interface{}) (models.TRBTaskStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBTaskStatus(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNTRBTaskStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBTaskStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBTaskStatus) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
