@@ -30,7 +30,6 @@ const RejectIntake = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
-  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const [mutate] = useMutation<RejectIntakeType, RejectIntakeVariables>(
     RejectIntakeQuery,
@@ -63,28 +62,40 @@ const RejectIntake = () => {
       regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: false
-    }
+    },
+    shouldSendEmail: true
   };
 
   const onSubmit = (
     values: RejectIntakeForm,
     { setFieldError }: FormikHelpers<RejectIntakeForm>
   ) => {
-    const { feedback, nextSteps, reason, notificationRecipients } = values;
-
-    // Mutation input
-    const input = {
+    const {
       feedback,
-      intakeId: systemId,
       nextSteps,
       reason,
-      shouldSendEmail,
-      notificationRecipients
+      notificationRecipients,
+      shouldSendEmail
+    } = values;
+
+    // Mutation input
+    const variables: RejectIntakeVariables = {
+      input: {
+        feedback,
+        intakeId: systemId,
+        nextSteps,
+        reason,
+        shouldSendEmail
+      }
     };
+
+    if (shouldSendEmail) {
+      variables.input.notificationRecipients = notificationRecipients;
+    }
 
     // GQL mutation to reject intake
     mutate({
-      variables: { input }
+      variables
     })
       .then(({ errors }) => {
         if (!errors) {
@@ -241,8 +252,7 @@ const RejectIntake = () => {
                     type="submit"
                     onClick={() => {
                       setErrors({});
-                      setShouldSendEmail(true);
-                      setFieldValue('skipEmail', false);
+                      setFieldValue('shouldSendEmail', true);
                     }}
                     disabled={!!activeContact}
                   >
@@ -251,12 +261,9 @@ const RejectIntake = () => {
                 </div>
                 <div className="margin-bottom-2">
                   <CompleteWithoutEmailButton
-                    onClick={() => {
-                      setErrors({});
-                      setShouldSendEmail(false);
-                      setFieldValue('skipEmail', true);
-                      setTimeout(submitForm);
-                    }}
+                    setErrors={setErrors}
+                    setFieldValue={setFieldValue}
+                    submitForm={submitForm}
                     disabled={!!activeContact}
                   />
                 </div>

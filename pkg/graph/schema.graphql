@@ -268,6 +268,16 @@ enum CedarAssigneeType {
 }
 
 """
+CedarRoleType represents a type of role that a user or organization can hold for some system, i.e. "Business Owner" or "Project Lead"
+"""
+type CedarRoleType {
+  id: String!
+  application: String!
+  name: String!
+  description: String
+}
+
+"""
 CedarRole represents a role assigned to a person or organization for a system; this information is returned from the CEDAR Core API
 """
 type CedarRole {
@@ -287,6 +297,12 @@ type CedarRole {
   roleTypeDesc: String
   roleID: String
   objectType: String
+}
+
+input SetRolesForUserOnSystemInput {
+  cedarSystemID: String!
+  euaUserId: String!
+  desiredRoleTypeIDs: [String!]!
 }
 
 """
@@ -1499,12 +1515,23 @@ type TRBRequest {
   type: TRBRequestType!
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
+  feedback: [TRBRequestFeedback!]!
   documents: [TRBRequestDocument!]!
   form: TRBRequestForm!
+  taskStatuses: TRBTaskStatuses!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
   modifiedAt: Time
+}
+
+"""
+Wraps all of the various status on the TRB task list into one type
+"""
+type TRBTaskStatuses {
+  formStatus: TRBFormStatus!
+  feedbackStatus: TRBFeedbackStatus!
+  consultStatus: TRBConsultStatus!
 }
 
 """
@@ -1516,7 +1543,7 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     name: String
     archived: Boolean
     type: TRBRequestType
-    status: TRBRequestStatus 
+    status: TRBRequestStatus
 }
 
 """
@@ -1647,6 +1674,27 @@ enum TRBCollabGroupOption {
 Represents the status of a TRB request form
 """
 enum TRBFormStatus {
+  READY_TO_START
+  IN_PROGRESS
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB feedback step
+"""
+enum TRBFeedbackStatus {
+  CANNOT_START_YET
+  READY_TO_START
+  IN_REVIEW
+  EDITS_REQUESTED
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB consult step
+"""
+enum TRBConsultStatus {
+  CANNOT_START_YET
   READY_TO_START
   IN_PROGRESS
   COMPLETED
@@ -1829,6 +1877,41 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
 }
 
 """
+Represents the action an admin is taking on a TRB request when leaving feedback
+"""
+enum TRBFeedbackAction {
+  READY_FOR_CONSULT
+  REQUEST_EDITS
+}
+
+"""
+Represents feedback added to a TRB request
+"""
+type TRBRequestFeedback {
+  id: UUID!
+  trbRequestId: UUID!
+  feedbackMessage: String!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
+  action: TRBFeedbackAction!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+The data needed add feedback to a TRB request
+"""
+input CreateTRBRequestFeedbackInput {
+  trbRequestId: UUID!
+  feedbackMessage: String!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
+  action: TRBFeedbackAction!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -1943,6 +2026,8 @@ type Mutation {
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
+  setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
+  createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
 }
 
 """
@@ -1965,6 +2050,7 @@ type Query {
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  roleTypes: [CedarRoleType!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
