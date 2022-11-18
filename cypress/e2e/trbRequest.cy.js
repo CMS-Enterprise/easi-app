@@ -10,7 +10,10 @@ describe('Technical Assistance', () => {
     // Continue through Process steps to get to Task list
     cy.contains('button', 'Continue').click();
     // Start the Request form from the Task list
-    cy.contains('.trb-initial-request-form a', 'Start').click();
+    cy.contains(
+      '[data-testid="fill-out-the-initial-request-form"] a',
+      'Start'
+    ).click();
 
     // Basic details is the first step of the Request Form
     cy.contains('.usa-step-indicator__heading-text', 'Basic request details')
@@ -81,7 +84,10 @@ describe('Technical Assistance', () => {
     cy.get('.trb-request-type').should('contain', diffRequestType);
 
     // Get back to the request form
-    cy.contains('.trb-initial-request-form a', 'Continue').click();
+    cy.contains(
+      '[data-testid="fill-out-the-initial-request-form"] a',
+      'Continue'
+    ).click();
 
     // Jump to the next available Subject step
     cy.contains(
