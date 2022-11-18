@@ -48,6 +48,10 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 		RETURNING *;
 	`)
 
+	if err != nil {
+		return nil, err
+	}
+
 	createdFeedback := models.TRBRequestFeedback{}
 	err = stmt.Get(&createdFeedback, feedback)
 
@@ -70,6 +74,10 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			WHERE trb_request_id = :trb_request_id
 			RETURNING *;
 		`)
+
+		if formErr != nil {
+			return nil, formErr
+		}
 
 		updatedForm := models.TRBRequestForm{}
 		formErr = formStmt.Get(&updatedForm, formToUpdate)

@@ -38,17 +38,6 @@ const (
 	TRBSClosed TRBRequestStatus = "CLOSED"
 )
 
-// TRBFeedbackStatus represents the types of TRBFeedbackStatus types
-type TRBFeedbackStatus string
-
-// These are the options for TRBFeedbackStatus
-const (
-	TRBFeedbackStatusCannotStartYet TRBFeedbackStatus = "CANNOT_START_YET"
-	TRBFeedbackStatusInReview       TRBFeedbackStatus = "IN_REVIEW"
-	TRBFeedbackStatusEditsRequested TRBFeedbackStatus = "EDITS_REQUESTED"
-	TRBFeedbackStatusCompleted      TRBFeedbackStatus = "COMPLETED"
-)
-
 // TRBTaskStatus represents the types of TRBTaskStatus types
 type TRBTaskStatus string
 
