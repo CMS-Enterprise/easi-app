@@ -7,7 +7,7 @@
   },
   "host" : "webmethods-apigw.cedarimpl.cms.gov",
   "basePath" : "/gateway/LDAP/1.0",
-  "schemes" : [ "http" ],
+  "schemes" : [ "https" ],
   "consumes" : [ "application/json" ],
   "produces" : [ "application/json" ],
   "security" : [ {
