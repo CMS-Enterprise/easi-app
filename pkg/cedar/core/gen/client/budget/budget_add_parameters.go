@@ -54,16 +54,17 @@ func NewBudgetAddParamsWithHTTPClient(client *http.Client) *BudgetAddParams {
 	}
 }
 
-/*
-BudgetAddParams contains all the parameters to send to the API endpoint
+/* BudgetAddParams contains all the parameters to send to the API endpoint
+   for the budget add operation.
 
-	for the budget add operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type BudgetAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Budget(s) to be added to CEDAR.  This required input in a list of Budget documents.
+	*/
 	Body *models.BudgetAddRequest
 
 	timeout    time.Duration

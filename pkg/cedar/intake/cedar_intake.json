@@ -5,7 +5,7 @@
     "version": "1.0",
     "title": "CEDARIntake"
   },
-  "host": "cdrdevapigw1.awscloud.cms.local:5555",
+  "host": "cdrimplapigw02.awscloud.cms.local:5555",
   "basePath": "/gateway/CEDARIntake/1.0",
   "tags": [
     {
@@ -18,7 +18,7 @@
     }
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "consumes": [
     "application/json"
@@ -40,6 +40,7 @@
         "summary": "Retrieve an intake status based on a client ID",
         "description": "Retrieve an intake status based on a client ID",
         "operationId": "intakeStatusByClientId",
+        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -102,6 +103,7 @@
         "summary": "Returns a status and current date/time",
         "description": "Returns a status and current date/time",
         "operationId": "healthCheck",
+        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -127,6 +129,7 @@
         "summary": "Retrieve an array of intake statuses based on search criteria",
         "description": "Retrieve a list of intake statuses based on search criteria",
         "operationId": "intakeStatusFindList",
+        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -197,6 +200,7 @@
         "summary": "Retrieve an intake status based on a CEDAR ID",
         "description": "Retrieve an intake status based on a CEDAR ID",
         "operationId": "intakeStatusByCedarId",
+        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -245,6 +249,7 @@
         "summary": "Retrieve an intake based on a CEDAR ID",
         "description": "Retrieve an intake based on a CEDAR ID",
         "operationId": "intakeFindByCedarId",
+        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -293,6 +298,7 @@
         "summary": "Retrieve an intake based on a client ID",
         "description": "Retrieve an intake based on a client ID",
         "operationId": "intakeFindByClientId",
+        "consumes": [],
         "produces": [
           "application/json"
         ],
@@ -372,7 +378,7 @@
           {
             "in": "body",
             "name": "body",
-            "required": true,
+            "required": false,
             "schema": {
               "$ref": "#/definitions/IntakeInput"
             }
@@ -422,14 +428,14 @@
         "result"
       ],
       "properties": {
-        "result": {
-          "type": "string"
-        },
         "message": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        "result": {
+          "type": "string"
         }
       }
     },
@@ -445,13 +451,13 @@
         "datetime": {
           "type": "string"
         },
-        "version": {
-          "type": "string"
-        },
         "status": {
           "type": "string"
         },
         "timestamp": {
+          "type": "string"
+        },
+        "version": {
           "type": "string"
         }
       }
@@ -464,9 +470,9 @@
         "clientId"
       ],
       "properties": {
-        "clientId": {
+        "cedarId": {
           "type": "string",
-          "description": "Unique ID assigned by CEDAR"
+          "description": "Unqiue ID associated with the object in body"
         },
         "cedarStatus": {
           "type": "string",
@@ -476,13 +482,13 @@
           "type": "string",
           "description": "Message related to errors with the parsing, validation, and mapping of the payload (if applicable)"
         },
+        "clientId": {
+          "type": "string",
+          "description": "Unique ID assigned by CEDAR"
+        },
         "version": {
           "type": "string",
           "description": "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
-        },
-        "cedarId": {
-          "type": "string",
-          "description": "Unqiue ID associated with the object in body"
         }
       }
     },
@@ -499,21 +505,9 @@
         "version"
       ],
       "properties": {
-        "schema": {
+        "body": {
           "type": "string",
-          "description": "The name and version of the schema associated with the object being transmitted, i.e. SystemIntake_v01"
-        },
-        "clientId": {
-          "type": "string",
-          "description": "Unqiue ID associated with the object in body"
-        },
-        "clientStatus": {
-          "type": "string",
-          "description": "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc."
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of object being transmitted, i.e. SystemIntake, BusinessCase, etc"
+          "description": "The encoded, string representation of the object being transmitted"
         },
         "bodyFormat": {
           "type": "string",
@@ -522,24 +516,36 @@
             "XML"
           ]
         },
-        "body": {
-          "type": "string",
-          "description": "The encoded, string representation of the object being transmitted"
-        },
-        "version": {
-          "type": "string",
-          "description": "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
-        },
         "clientCreatedDate": {
           "type": "string",
           "format": "date-time",
           "description": "Creation date associated with the object being transmitted"
+        },
+        "clientId": {
+          "type": "string",
+          "description": "Unqiue ID associated with the object in body"
         },
         "clientLastUpdatedDate": {
           "type": "string",
           "format": "date-time",
           "description": "Last update date associated with the object being transmitted",
           "x-nullable": true
+        },
+        "clientStatus": {
+          "type": "string",
+          "description": "Client's status associated with the object being transmitted, i.e. Initiated, Final, etc."
+        },
+        "schema": {
+          "type": "string",
+          "description": "The name and version of the schema associated with the object being transmitted, i.e. SystemIntake_v01"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of object being transmitted, i.e. SystemIntake, BusinessCase, etc"
+        },
+        "version": {
+          "type": "string",
+          "description": "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
         }
       }
     },
@@ -559,19 +565,7 @@
         "version"
       ],
       "properties": {
-        "schema": {
-          "type": "string"
-        },
-        "clientId": {
-          "type": "string"
-        },
-        "cedarStatusMessage": {
-          "type": "string"
-        },
-        "clientStatus": {
-          "type": "string"
-        },
-        "type": {
+        "body": {
           "type": "string"
         },
         "bodyFormat": {
@@ -581,19 +575,12 @@
             "XML"
           ]
         },
-        "body": {
-          "type": "string"
-        },
-        "version": {
-          "type": "string"
-        },
-        "clientLastUpdatedDate": {
-          "type": "string",
-          "format": "date-time"
-        },
         "cedarCreatedDate": {
           "type": "string",
           "format": "date-time"
+        },
+        "cedarId": {
+          "type": "string"
         },
         "cedarLastUpdatedDate": {
           "type": "string",
@@ -602,12 +589,31 @@
         "cedarStatus": {
           "type": "string"
         },
-        "cedarId": {
+        "cedarStatusMessage": {
           "type": "string"
         },
         "clientCreatedDate": {
           "type": "string",
           "format": "date-time"
+        },
+        "clientId": {
+          "type": "string"
+        },
+        "clientLastUpdatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "clientStatus": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
         }
       }
     },

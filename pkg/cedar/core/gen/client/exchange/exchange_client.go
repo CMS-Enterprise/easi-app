@@ -44,9 +44,9 @@ type ClientService interface {
 }
 
 /*
-ExchangeAdd adds a list of data exchange records to alfabet this interface takes in an array of exchanges
+  ExchangeAdd adds a list of data exchange records to alfabet this interface takes in an array of exchanges
 
-Add a list of data exchange records to Alfabet. This interface takes in an array of exchanges.
+  Add a list of data exchange records to Alfabet. This interface takes in an array of exchanges.
 */
 func (a *Client) ExchangeAdd(params *ExchangeAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExchangeAddOK, error) {
 	// TODO: Validate the params before sending
@@ -85,9 +85,9 @@ func (a *Client) ExchangeAdd(params *ExchangeAddParams, authInfo runtime.ClientA
 }
 
 /*
-ExchangeDeleteList deletes a list of data exchanges by ID this interface takes an array of exchange ids
+  ExchangeDeleteList deletes a list of data exchanges by ID this interface takes an array of exchange ids
 
-Delete a list of data exchanges by ID. This interface takes an array of exchange ids.
+  Delete a list of data exchanges by ID. This interface takes an array of exchange ids.
 */
 func (a *Client) ExchangeDeleteList(params *ExchangeDeleteListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExchangeDeleteListOK, error) {
 	// TODO: Validate the params before sending
@@ -126,9 +126,9 @@ func (a *Client) ExchangeDeleteList(params *ExchangeDeleteListParams, authInfo r
 }
 
 /*
-ExchangeFindByID retrieves a data exchange record from alfabet this interface takes in a system Id direction and version
+  ExchangeFindByID retrieves a data exchange record from alfabet this interface takes in a system Id direction and version
 
-Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
+  Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
 */
 func (a *Client) ExchangeFindByID(params *ExchangeFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExchangeFindByIDOK, error) {
 	// TODO: Validate the params before sending
@@ -167,9 +167,9 @@ func (a *Client) ExchangeFindByID(params *ExchangeFindByIDParams, authInfo runti
 }
 
 /*
-ExchangeFindList retrieves a data exchange record from alfabet this interface takes in a system Id direction and version
+  ExchangeFindList retrieves a data exchange record from alfabet this interface takes in a system Id direction and version
 
-Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
+  Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
 */
 func (a *Client) ExchangeFindList(params *ExchangeFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExchangeFindListOK, error) {
 	// TODO: Validate the params before sending
@@ -208,9 +208,9 @@ func (a *Client) ExchangeFindList(params *ExchangeFindListParams, authInfo runti
 }
 
 /*
-ExchangeUpdate updates a list of data exchange records to alfabet this interface takes in an array of exchanges
+  ExchangeUpdate updates a list of data exchange records to alfabet this interface takes in an array of exchanges
 
-Update a list of data exchange records to Alfabet. This interface takes in an array of exchanges.
+  Update a list of data exchange records to Alfabet. This interface takes in an array of exchanges.
 */
 func (a *Client) ExchangeUpdate(params *ExchangeUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExchangeUpdateOK, error) {
 	// TODO: Validate the params before sending

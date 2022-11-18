@@ -52,12 +52,10 @@ func NewIntakeStatusByClientIDParamsWithHTTPClient(client *http.Client) *IntakeS
 	}
 }
 
-/*
-IntakeStatusByClientIDParams contains all the parameters to send to the API endpoint
+/* IntakeStatusByClientIDParams contains all the parameters to send to the API endpoint
+   for the intake status by client Id operation.
 
-	for the intake status by client Id operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type IntakeStatusByClientIDParams struct {
 

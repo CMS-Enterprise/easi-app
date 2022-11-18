@@ -53,12 +53,10 @@ func NewSystemSummaryFindByIDParamsWithHTTPClient(client *http.Client) *SystemSu
 	}
 }
 
-/*
-SystemSummaryFindByIDParams contains all the parameters to send to the API endpoint
+/* SystemSummaryFindByIDParams contains all the parameters to send to the API endpoint
+   for the system summary find by Id operation.
 
-	for the system summary find by Id operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type SystemSummaryFindByIDParams struct {
 

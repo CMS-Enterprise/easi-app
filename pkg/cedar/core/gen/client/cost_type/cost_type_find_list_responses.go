@@ -57,8 +57,7 @@ func NewCostTypeFindListOK() *CostTypeFindListOK {
 	return &CostTypeFindListOK{}
 }
 
-/*
-	CostTypeFindListOK describes a response with status code 200, with default header values.
+/* CostTypeFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewCostTypeFindListBadRequest() *CostTypeFindListBadRequest {
 	return &CostTypeFindListBadRequest{}
 }
 
-/*
-	CostTypeFindListBadRequest describes a response with status code 400, with default header values.
+/* CostTypeFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewCostTypeFindListUnauthorized() *CostTypeFindListUnauthorized {
 	return &CostTypeFindListUnauthorized{}
 }
 
-/*
-	CostTypeFindListUnauthorized describes a response with status code 401, with default header values.
+/* CostTypeFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewCostTypeFindListInternalServerError() *CostTypeFindListInternalServerErr
 	return &CostTypeFindListInternalServerError{}
 }
 
-/*
-	CostTypeFindListInternalServerError describes a response with status code 500, with default header values.
+/* CostTypeFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

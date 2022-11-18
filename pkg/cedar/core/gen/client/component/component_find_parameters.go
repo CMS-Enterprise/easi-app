@@ -52,12 +52,10 @@ func NewComponentFindParamsWithHTTPClient(client *http.Client) *ComponentFindPar
 	}
 }
 
-/*
-ComponentFindParams contains all the parameters to send to the API endpoint
+/* ComponentFindParams contains all the parameters to send to the API endpoint
+   for the component find operation.
 
-	for the component find operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type ComponentFindParams struct {
 

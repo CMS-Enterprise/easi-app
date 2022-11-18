@@ -57,8 +57,7 @@ func NewRoleAddOK() *RoleAddOK {
 	return &RoleAddOK{}
 }
 
-/*
-	RoleAddOK describes a response with status code 200, with default header values.
+/* RoleAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewRoleAddBadRequest() *RoleAddBadRequest {
 	return &RoleAddBadRequest{}
 }
 
-/*
-	RoleAddBadRequest describes a response with status code 400, with default header values.
+/* RoleAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewRoleAddUnauthorized() *RoleAddUnauthorized {
 	return &RoleAddUnauthorized{}
 }
 
-/*
-	RoleAddUnauthorized describes a response with status code 401, with default header values.
+/* RoleAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewRoleAddInternalServerError() *RoleAddInternalServerError {
 	return &RoleAddInternalServerError{}
 }
 
-/*
-	RoleAddInternalServerError describes a response with status code 500, with default header values.
+/* RoleAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

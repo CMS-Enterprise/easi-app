@@ -63,8 +63,7 @@ func NewSoftwareProductsFindListOK() *SoftwareProductsFindListOK {
 	return &SoftwareProductsFindListOK{}
 }
 
-/*
-	SoftwareProductsFindListOK describes a response with status code 200, with default header values.
+/* SoftwareProductsFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -96,8 +95,7 @@ func NewSoftwareProductsFindListBadRequest() *SoftwareProductsFindListBadRequest
 	return &SoftwareProductsFindListBadRequest{}
 }
 
-/*
-	SoftwareProductsFindListBadRequest describes a response with status code 400, with default header values.
+/* SoftwareProductsFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -129,8 +127,7 @@ func NewSoftwareProductsFindListUnauthorized() *SoftwareProductsFindListUnauthor
 	return &SoftwareProductsFindListUnauthorized{}
 }
 
-/*
-	SoftwareProductsFindListUnauthorized describes a response with status code 401, with default header values.
+/* SoftwareProductsFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -162,8 +159,7 @@ func NewSoftwareProductsFindListNotFound() *SoftwareProductsFindListNotFound {
 	return &SoftwareProductsFindListNotFound{}
 }
 
-/*
-	SoftwareProductsFindListNotFound describes a response with status code 404, with default header values.
+/* SoftwareProductsFindListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -195,8 +191,7 @@ func NewSoftwareProductsFindListInternalServerError() *SoftwareProductsFindListI
 	return &SoftwareProductsFindListInternalServerError{}
 }
 
-/*
-	SoftwareProductsFindListInternalServerError describes a response with status code 500, with default header values.
+/* SoftwareProductsFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

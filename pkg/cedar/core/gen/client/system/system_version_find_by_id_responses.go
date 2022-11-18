@@ -63,8 +63,7 @@ func NewSystemVersionFindByIDOK() *SystemVersionFindByIDOK {
 	return &SystemVersionFindByIDOK{}
 }
 
-/*
-	SystemVersionFindByIDOK describes a response with status code 200, with default header values.
+/* SystemVersionFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -96,8 +95,7 @@ func NewSystemVersionFindByIDBadRequest() *SystemVersionFindByIDBadRequest {
 	return &SystemVersionFindByIDBadRequest{}
 }
 
-/*
-	SystemVersionFindByIDBadRequest describes a response with status code 400, with default header values.
+/* SystemVersionFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -129,8 +127,7 @@ func NewSystemVersionFindByIDUnauthorized() *SystemVersionFindByIDUnauthorized {
 	return &SystemVersionFindByIDUnauthorized{}
 }
 
-/*
-	SystemVersionFindByIDUnauthorized describes a response with status code 401, with default header values.
+/* SystemVersionFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -162,8 +159,7 @@ func NewSystemVersionFindByIDNotFound() *SystemVersionFindByIDNotFound {
 	return &SystemVersionFindByIDNotFound{}
 }
 
-/*
-	SystemVersionFindByIDNotFound describes a response with status code 404, with default header values.
+/* SystemVersionFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -195,8 +191,7 @@ func NewSystemVersionFindByIDInternalServerError() *SystemVersionFindByIDInterna
 	return &SystemVersionFindByIDInternalServerError{}
 }
 
-/*
-	SystemVersionFindByIDInternalServerError describes a response with status code 500, with default header values.
+/* SystemVersionFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

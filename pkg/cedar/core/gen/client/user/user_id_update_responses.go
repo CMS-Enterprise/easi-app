@@ -57,8 +57,7 @@ func NewUserIDUpdateOK() *UserIDUpdateOK {
 	return &UserIDUpdateOK{}
 }
 
-/*
-	UserIDUpdateOK describes a response with status code 200, with default header values.
+/* UserIDUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewUserIDUpdateBadRequest() *UserIDUpdateBadRequest {
 	return &UserIDUpdateBadRequest{}
 }
 
-/*
-	UserIDUpdateBadRequest describes a response with status code 400, with default header values.
+/* UserIDUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewUserIDUpdateUnauthorized() *UserIDUpdateUnauthorized {
 	return &UserIDUpdateUnauthorized{}
 }
 
-/*
-	UserIDUpdateUnauthorized describes a response with status code 401, with default header values.
+/* UserIDUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewUserIDUpdateInternalServerError() *UserIDUpdateInternalServerError {
 	return &UserIDUpdateInternalServerError{}
 }
 
-/*
-	UserIDUpdateInternalServerError describes a response with status code 500, with default header values.
+/* UserIDUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

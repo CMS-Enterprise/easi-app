@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-HealthCheck returns a status and current date time
+  HealthCheck returns a status and current date time
 
-Returns a status and current date/time
+  Returns a status and current date/time
 */
 func (a *Client) HealthCheck(params *HealthCheckParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*HealthCheckOK, error) {
 	// TODO: Validate the params before sending
@@ -51,7 +51,7 @@ func (a *Client) HealthCheck(params *HealthCheckParams, authInfo runtime.ClientA
 		PathPattern:        "/healthCheck",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
+		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &HealthCheckReader{formats: a.formats},
 		AuthInfo:           authInfo,

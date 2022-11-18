@@ -57,8 +57,7 @@ func NewDeploymentUpdateOK() *DeploymentUpdateOK {
 	return &DeploymentUpdateOK{}
 }
 
-/*
-	DeploymentUpdateOK describes a response with status code 200, with default header values.
+/* DeploymentUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewDeploymentUpdateBadRequest() *DeploymentUpdateBadRequest {
 	return &DeploymentUpdateBadRequest{}
 }
 
-/*
-	DeploymentUpdateBadRequest describes a response with status code 400, with default header values.
+/* DeploymentUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewDeploymentUpdateUnauthorized() *DeploymentUpdateUnauthorized {
 	return &DeploymentUpdateUnauthorized{}
 }
 
-/*
-	DeploymentUpdateUnauthorized describes a response with status code 401, with default header values.
+/* DeploymentUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewDeploymentUpdateInternalServerError() *DeploymentUpdateInternalServerErr
 	return &DeploymentUpdateInternalServerError{}
 }
 
-/*
-	DeploymentUpdateInternalServerError describes a response with status code 500, with default header values.
+/* DeploymentUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

@@ -54,16 +54,17 @@ func NewSupportContactAddParamsWithHTTPClient(client *http.Client) *SupportConta
 	}
 }
 
-/*
-SupportContactAddParams contains all the parameters to send to the API endpoint
+/* SupportContactAddParams contains all the parameters to send to the API endpoint
+   for the support contact add operation.
 
-	for the support contact add operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type SupportContactAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   supportContact information to be added to Alfabet.
+	*/
 	Body *models.SupportContactAddRequest
 
 	timeout    time.Duration

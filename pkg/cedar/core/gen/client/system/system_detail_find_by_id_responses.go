@@ -63,8 +63,7 @@ func NewSystemDetailFindByIDOK() *SystemDetailFindByIDOK {
 	return &SystemDetailFindByIDOK{}
 }
 
-/*
-	SystemDetailFindByIDOK describes a response with status code 200, with default header values.
+/* SystemDetailFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -96,8 +95,7 @@ func NewSystemDetailFindByIDBadRequest() *SystemDetailFindByIDBadRequest {
 	return &SystemDetailFindByIDBadRequest{}
 }
 
-/*
-	SystemDetailFindByIDBadRequest describes a response with status code 400, with default header values.
+/* SystemDetailFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -129,8 +127,7 @@ func NewSystemDetailFindByIDUnauthorized() *SystemDetailFindByIDUnauthorized {
 	return &SystemDetailFindByIDUnauthorized{}
 }
 
-/*
-	SystemDetailFindByIDUnauthorized describes a response with status code 401, with default header values.
+/* SystemDetailFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -162,8 +159,7 @@ func NewSystemDetailFindByIDNotFound() *SystemDetailFindByIDNotFound {
 	return &SystemDetailFindByIDNotFound{}
 }
 
-/*
-	SystemDetailFindByIDNotFound describes a response with status code 404, with default header values.
+/* SystemDetailFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -195,8 +191,7 @@ func NewSystemDetailFindByIDInternalServerError() *SystemDetailFindByIDInternalS
 	return &SystemDetailFindByIDInternalServerError{}
 }
 
-/*
-	SystemDetailFindByIDInternalServerError describes a response with status code 500, with default header values.
+/* SystemDetailFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

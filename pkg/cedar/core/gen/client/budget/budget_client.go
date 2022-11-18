@@ -42,9 +42,9 @@ type ClientService interface {
 }
 
 /*
-BudgetAdd adds new budget s to the alfabet system this interface takes an array of one or more budget documents id project Id system Id funding Id and funding
+  BudgetAdd adds new budget s to the alfabet system this interface takes an array of one or more budget documents id project Id system Id funding Id and funding
 
-Add new budget(s) to the Alfabet system. This interface takes an array of one or more budgets (id, projectId, systemId, fundingId and funding).
+  Add new budget(s) to the Alfabet system. This interface takes an array of one or more budgets (id, projectId, systemId, fundingId and funding).
 */
 func (a *Client) BudgetAdd(params *BudgetAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BudgetAddOK, error) {
 	// TODO: Validate the params before sending
@@ -83,9 +83,9 @@ func (a *Client) BudgetAdd(params *BudgetAddParams, authInfo runtime.ClientAuthI
 }
 
 /*
-BudgetDeleteList deletes a list of budgets based on an array of budget ids
+  BudgetDeleteList deletes a list of budgets based on an array of budget ids
 
-Deletes a list of budgets based on an array of budget ids.
+  Deletes a list of budgets based on an array of budget ids.
 */
 func (a *Client) BudgetDeleteList(params *BudgetDeleteListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BudgetDeleteListOK, error) {
 	// TODO: Validate the params before sending
@@ -124,9 +124,9 @@ func (a *Client) BudgetDeleteList(params *BudgetDeleteListParams, authInfo runti
 }
 
 /*
-BudgetFind retrieves a list of budgets based on query criteria listed in the parameters section passing a system Id will cause the interface to return the budget s for just that system setting only ids to true will only return the id s whereas if not set the response will also include project Id system Id funding Id and funding this interface has a limit of 5000 records
+  BudgetFind retrieves a list of budgets based on query criteria listed in the parameters section passing a system Id will cause the interface to return the budget s for just that system setting only ids to true will only return the id s whereas if not set the response will also include project Id system Id funding Id and funding this interface has a limit of 5000 records
 
-Retrieve a list of budgets based on query criteria listed in the parameters section. Passing a SystemId will cause the interface to return the budget(s) for just that system. Setting onlyIds to true will only return the id's, whereas if not set, the response will also include projectId, systemId, fundingId and funding. This interface has a limit of 5000 records.
+  Retrieve a list of budgets based on query criteria listed in the parameters section. Passing a SystemId will cause the interface to return the budget(s) for just that system. Setting onlyIds to true will only return the id's, whereas if not set, the response will also include projectId, systemId, fundingId and funding. This interface has a limit of 5000 records.
 */
 func (a *Client) BudgetFind(params *BudgetFindParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BudgetFindOK, error) {
 	// TODO: Validate the params before sending
@@ -165,9 +165,9 @@ func (a *Client) BudgetFind(params *BudgetFindParams, authInfo runtime.ClientAut
 }
 
 /*
-BudgetUpdate updates a existing budget with alfabet the input requires an array of one or more budget documents id project Id system Id funding Id and funding
+  BudgetUpdate updates a existing budget with alfabet the input requires an array of one or more budget documents id project Id system Id funding Id and funding
 
-Update a existing budget with Alfabet. The input requires an array of one or more budget documents (id, projectId, systemId, fundingId and funding).
+  Update a existing budget with Alfabet. The input requires an array of one or more budget documents (id, projectId, systemId, fundingId and funding).
 */
 func (a *Client) BudgetUpdate(params *BudgetUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BudgetUpdateOK, error) {
 	// TODO: Validate the params before sending

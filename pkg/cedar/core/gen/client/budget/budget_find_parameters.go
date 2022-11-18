@@ -53,12 +53,10 @@ func NewBudgetFindParamsWithHTTPClient(client *http.Client) *BudgetFindParams {
 	}
 }
 
-/*
-BudgetFindParams contains all the parameters to send to the API endpoint
+/* BudgetFindParams contains all the parameters to send to the API endpoint
+   for the budget find operation.
 
-	for the budget find operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type BudgetFindParams struct {
 

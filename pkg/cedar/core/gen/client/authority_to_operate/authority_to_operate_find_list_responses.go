@@ -57,8 +57,7 @@ func NewAuthorityToOperateFindListOK() *AuthorityToOperateFindListOK {
 	return &AuthorityToOperateFindListOK{}
 }
 
-/*
-	AuthorityToOperateFindListOK describes a response with status code 200, with default header values.
+/* AuthorityToOperateFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewAuthorityToOperateFindListBadRequest() *AuthorityToOperateFindListBadReq
 	return &AuthorityToOperateFindListBadRequest{}
 }
 
-/*
-	AuthorityToOperateFindListBadRequest describes a response with status code 400, with default header values.
+/* AuthorityToOperateFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewAuthorityToOperateFindListUnauthorized() *AuthorityToOperateFindListUnau
 	return &AuthorityToOperateFindListUnauthorized{}
 }
 
-/*
-	AuthorityToOperateFindListUnauthorized describes a response with status code 401, with default header values.
+/* AuthorityToOperateFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewAuthorityToOperateFindListInternalServerError() *AuthorityToOperateFindL
 	return &AuthorityToOperateFindListInternalServerError{}
 }
 
-/*
-	AuthorityToOperateFindListInternalServerError describes a response with status code 500, with default header values.
+/* AuthorityToOperateFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

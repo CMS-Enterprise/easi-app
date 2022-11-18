@@ -53,12 +53,10 @@ func NewSystemSummaryFindListParamsWithHTTPClient(client *http.Client) *SystemSu
 	}
 }
 
-/*
-SystemSummaryFindListParams contains all the parameters to send to the API endpoint
+/* SystemSummaryFindListParams contains all the parameters to send to the API endpoint
+   for the system summary find list operation.
 
-	for the system summary find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type SystemSummaryFindListParams struct {
 
@@ -84,17 +82,17 @@ type SystemSummaryFindListParams struct {
 
 	   Limits the number of systems returned. If no value is provided, the default is 1000
 
-	   Format: int64
+	   Format: int32
 	*/
-	Limit *int64
+	Limit *int32
 
 	/* Offset.
 
 	   Defines the starting position of the first record returned. If no value is provided, the default is 0
 
-	   Format: int64
+	   Format: int32
 	*/
-	Offset *int64
+	Offset *int32
 
 	/* State.
 
@@ -201,24 +199,24 @@ func (o *SystemSummaryFindListParams) SetIncludeInSurvey(includeInSurvey *bool) 
 }
 
 // WithLimit adds the limit to the system summary find list params
-func (o *SystemSummaryFindListParams) WithLimit(limit *int64) *SystemSummaryFindListParams {
+func (o *SystemSummaryFindListParams) WithLimit(limit *int32) *SystemSummaryFindListParams {
 	o.SetLimit(limit)
 	return o
 }
 
 // SetLimit adds the limit to the system summary find list params
-func (o *SystemSummaryFindListParams) SetLimit(limit *int64) {
+func (o *SystemSummaryFindListParams) SetLimit(limit *int32) {
 	o.Limit = limit
 }
 
 // WithOffset adds the offset to the system summary find list params
-func (o *SystemSummaryFindListParams) WithOffset(offset *int64) *SystemSummaryFindListParams {
+func (o *SystemSummaryFindListParams) WithOffset(offset *int32) *SystemSummaryFindListParams {
 	o.SetOffset(offset)
 	return o
 }
 
 // SetOffset adds the offset to the system summary find list params
-func (o *SystemSummaryFindListParams) SetOffset(offset *int64) {
+func (o *SystemSummaryFindListParams) SetOffset(offset *int32) {
 	o.Offset = offset
 }
 
@@ -317,12 +315,12 @@ func (o *SystemSummaryFindListParams) WriteToRequest(r runtime.ClientRequest, re
 	if o.Limit != nil {
 
 		// query param limit
-		var qrLimit int64
+		var qrLimit int32
 
 		if o.Limit != nil {
 			qrLimit = *o.Limit
 		}
-		qLimit := swag.FormatInt64(qrLimit)
+		qLimit := swag.FormatInt32(qrLimit)
 		if qLimit != "" {
 
 			if err := r.SetQueryParam("limit", qLimit); err != nil {
@@ -334,12 +332,12 @@ func (o *SystemSummaryFindListParams) WriteToRequest(r runtime.ClientRequest, re
 	if o.Offset != nil {
 
 		// query param offset
-		var qrOffset int64
+		var qrOffset int32
 
 		if o.Offset != nil {
 			qrOffset = *o.Offset
 		}
-		qOffset := swag.FormatInt64(qrOffset)
+		qOffset := swag.FormatInt32(qrOffset)
 		if qOffset != "" {
 
 			if err := r.SetQueryParam("offset", qOffset); err != nil {

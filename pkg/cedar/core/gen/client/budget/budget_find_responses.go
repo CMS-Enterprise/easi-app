@@ -57,8 +57,7 @@ func NewBudgetFindOK() *BudgetFindOK {
 	return &BudgetFindOK{}
 }
 
-/*
-	BudgetFindOK describes a response with status code 200, with default header values.
+/* BudgetFindOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -90,8 +89,7 @@ func NewBudgetFindBadRequest() *BudgetFindBadRequest {
 	return &BudgetFindBadRequest{}
 }
 
-/*
-	BudgetFindBadRequest describes a response with status code 400, with default header values.
+/* BudgetFindBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -123,8 +121,7 @@ func NewBudgetFindUnauthorized() *BudgetFindUnauthorized {
 	return &BudgetFindUnauthorized{}
 }
 
-/*
-	BudgetFindUnauthorized describes a response with status code 401, with default header values.
+/* BudgetFindUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -156,8 +153,7 @@ func NewBudgetFindInternalServerError() *BudgetFindInternalServerError {
 	return &BudgetFindInternalServerError{}
 }
 
-/*
-	BudgetFindInternalServerError describes a response with status code 500, with default header values.
+/* BudgetFindInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

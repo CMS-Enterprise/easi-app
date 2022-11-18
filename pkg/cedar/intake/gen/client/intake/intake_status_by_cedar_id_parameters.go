@@ -52,12 +52,10 @@ func NewIntakeStatusByCedarIDParamsWithHTTPClient(client *http.Client) *IntakeSt
 	}
 }
 
-/*
-IntakeStatusByCedarIDParams contains all the parameters to send to the API endpoint
+/* IntakeStatusByCedarIDParams contains all the parameters to send to the API endpoint
+   for the intake status by cedar Id operation.
 
-	for the intake status by cedar Id operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type IntakeStatusByCedarIDParams struct {
 

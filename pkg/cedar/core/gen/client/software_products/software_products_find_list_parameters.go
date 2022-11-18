@@ -52,12 +52,10 @@ func NewSoftwareProductsFindListParamsWithHTTPClient(client *http.Client) *Softw
 	}
 }
 
-/*
-SoftwareProductsFindListParams contains all the parameters to send to the API endpoint
+/* SoftwareProductsFindListParams contains all the parameters to send to the API endpoint
+   for the software products find list operation.
 
-	for the software products find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type SoftwareProductsFindListParams struct {
 

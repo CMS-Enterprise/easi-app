@@ -54,12 +54,10 @@ func NewIntakeAddParamsWithHTTPClient(client *http.Client) *IntakeAddParams {
 	}
 }
 
-/*
-IntakeAddParams contains all the parameters to send to the API endpoint
+/* IntakeAddParams contains all the parameters to send to the API endpoint
+   for the intake add operation.
 
-	for the intake add operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type IntakeAddParams struct {
 
