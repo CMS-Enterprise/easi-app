@@ -268,6 +268,16 @@ enum CedarAssigneeType {
 }
 
 """
+CedarRoleType represents a type of role that a user or organization can hold for some system, i.e. "Business Owner" or "Project Lead"
+"""
+type CedarRoleType {
+  id: String!
+  application: String!
+  name: String!
+  description: String
+}
+
+"""
 CedarRole represents a role assigned to a person or organization for a system; this information is returned from the CEDAR Core API
 """
 type CedarRole {
@@ -287,6 +297,12 @@ type CedarRole {
   roleTypeDesc: String
   roleID: String
   objectType: String
+}
+
+input SetRolesForUserOnSystemInput {
+  cedarSystemID: String!
+  euaUserId: String!
+  desiredRoleTypeIDs: [String!]!
 }
 
 """
@@ -2010,6 +2026,7 @@ type Mutation {
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
+  setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
 }
 
@@ -2033,6 +2050,7 @@ type Query {
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  roleTypes: [CedarRoleType!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!

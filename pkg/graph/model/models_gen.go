@@ -416,6 +416,12 @@ type SendReportAProblemEmailInput struct {
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
 }
 
+type SetRolesForUserOnSystemInput struct {
+	CedarSystemID      string   `json:"cedarSystemID"`
+	EuaUserID          string   `json:"euaUserId"`
+	DesiredRoleTypeIDs []string `json:"desiredRoleTypeIDs"`
+}
+
 // Input to submit an intake for review
 type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`

@@ -626,6 +626,11 @@ func (r *cedarRoleResolver) ObjectType(ctx context.Context, obj *models.CedarRol
 	return obj.ObjectType.Ptr(), nil
 }
 
+// Description is the resolver for the description field.
+func (r *cedarRoleTypeResolver) Description(ctx context.Context, obj *models.CedarRoleType) (*string, error) {
+	return obj.Description.Ptr(), nil
+}
+
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
 func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
 	ipEnabledCt := int(obj.SystemMaintainerInformation.IPEnabledAssetCount)
@@ -1938,6 +1943,17 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
 }
 
+// SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
+func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
+	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := "Roles changed successfully"
+	return &resp, nil
+}
+
 // CreateTRBRequestFeedback is the resolver for the createTRBRequestFeedback field.
 func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error) {
 	notifyEuas := models.ConvertEnums[string](input.NotifyEuaIds)
@@ -2148,6 +2164,16 @@ func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, d
 	}
 
 	return cedarDeployments, nil
+}
+
+// RoleTypes is the resolver for the roleTypes field.
+func (r *queryResolver) RoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
+	roleTypes, err := r.cedarCoreClient.GetRoleTypes(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return roleTypes, nil
 }
 
 // Roles is the resolver for the roles field.
@@ -2842,6 +2868,9 @@ func (r *Resolver) CedarExchange() generated.CedarExchangeResolver { return &ced
 // CedarRole returns generated.CedarRoleResolver implementation.
 func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleResolver{r} }
 
+// CedarRoleType returns generated.CedarRoleTypeResolver implementation.
+func (r *Resolver) CedarRoleType() generated.CedarRoleTypeResolver { return &cedarRoleTypeResolver{r} }
+
 // CedarSystemDetails returns generated.CedarSystemDetailsResolver implementation.
 func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 	return &cedarSystemDetailsResolver{r}
@@ -2900,6 +2929,7 @@ type cedarDataCenterResolver struct{ *Resolver }
 type cedarDeploymentResolver struct{ *Resolver }
 type cedarExchangeResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
+type cedarRoleTypeResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
