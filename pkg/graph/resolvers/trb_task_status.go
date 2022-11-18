@@ -54,7 +54,7 @@ func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 	} else if form.Status == models.TRBFormStatusCompleted {
 		// If feedback is nil (there are no feedback yet), calculate the status based on
 		// form status (defaults to "cannot start yet" above)
-		status = models.TRBFeedbackStatus(models.TRBFeedbackStatusInProgress)
+		status = models.TRBFeedbackStatus(models.TRBFeedbackStatusInReview)
 	}
 
 	return &status, nil

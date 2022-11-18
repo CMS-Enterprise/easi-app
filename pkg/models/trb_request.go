@@ -44,7 +44,7 @@ type TRBFeedbackStatus string
 // These are the options for TRBFeedbackStatus
 const (
 	TRBFeedbackStatusCannotStartYet TRBFeedbackStatus = "CANNOT_START_YET"
-	TRBFeedbackStatusInProgress     TRBFeedbackStatus = "IN_PROGRESS"
+	TRBFeedbackStatusInReview       TRBFeedbackStatus = "IN_REVIEW"
 	TRBFeedbackStatusEditsRequested TRBFeedbackStatus = "EDITS_REQUESTED"
 	TRBFeedbackStatusCompleted      TRBFeedbackStatus = "COMPLETED"
 )
