@@ -31,3 +31,10 @@ The CEDAR team needs a schema of the data we send them in order to decode it for
 
 - `go run cmd/test_cedar_intake/main.go dump` will create JSON files for test business case, GRT feedback, and system intake data inside the `cmd/test_cedar_intake/` directory. These are examples of the payloads that will be marshaled and sent to CEDAR.
 - `go run cmd/test_cedar_intake/main.go submit` will call our Intake client to send data to CEDAR. It requires the `CEDAR_API_URL` and `CEDAR_API_KEY` environment variables to be set; these should be set in your .envrc.local, pointing to the CEDAR dev environment.
+
+## Checking whether CEDAR Intake received payload
+
+The CEDAR Intake API has two endpoints that can be used together to verify that it received a payload we submitted, and what the payload was.
+
+1. Use Postman to call `GET /intake/status/client/{id}?clientStatus=Initiated&version=1`, where `id` is the `ClientID` of the entity submitted (usually the ID of the top-level entity). If CEDAR received the payload, it will return an HTTP 200, and the body will contain a `cedarId` field. If it did not receive it, it will return an HTTP 400 with the error message "Intake could not be found with those parameters".
+1. Use Postman to call `GET /intake/cedar/{id}`, where `id` is the value of the `cedarId` field from the previous response. The response should contain a `body` field containing the payload that was sent to CEDAR Intake.

@@ -41,7 +41,6 @@ const IssueLifecycleId = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
-  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
 
   const [mutate] = useMutation<IssueLifecycleIdType, IssueLifecycleIdVariables>(
     IssueLifecycleIdQuery,
@@ -78,7 +77,8 @@ const IssueLifecycleId = () => {
       regularRecipientEmails: [requester.email].filter(e => e), // Filter out null emails
       shouldNotifyITGovernance: true,
       shouldNotifyITInvestment: true
-    }
+    },
+    shouldSendEmail: true
   };
 
   // Wait for contacts to load before returning form
@@ -97,7 +97,8 @@ const IssueLifecycleId = () => {
       scope,
       costBaseline,
       lifecycleId,
-      notificationRecipients
+      notificationRecipients,
+      shouldSendEmail
     } = values;
     // Expiration date
     const expiresAt = DateTime.utc(
@@ -107,21 +108,26 @@ const IssueLifecycleId = () => {
     );
 
     // Mutation input
-    const input = {
-      intakeId: systemId,
-      expiresAt: expiresAt.toISO(),
-      nextSteps,
-      scope: scope ?? '',
-      costBaseline,
-      lcid: lifecycleId,
-      feedback,
-      shouldSendEmail,
-      notificationRecipients
+    const variables: IssueLifecycleIdVariables = {
+      input: {
+        intakeId: systemId,
+        expiresAt: expiresAt.toISO(),
+        nextSteps,
+        scope: scope ?? '',
+        costBaseline,
+        lcid: lifecycleId,
+        feedback,
+        shouldSendEmail
+      }
     };
+
+    if (shouldSendEmail) {
+      variables.input.notificationRecipients = notificationRecipients;
+    }
 
     // GQL mutation to issue lifecycle ID
     mutate({
-      variables: { input }
+      variables
     })
       .then(({ errors }) => {
         if (!errors) {
@@ -433,8 +439,7 @@ const IssueLifecycleId = () => {
                     className="margin-top-2"
                     type="submit"
                     onClick={() => {
-                      setShouldSendEmail(true);
-                      setFieldValue('skipEmail', false);
+                      setFieldValue('shouldSendEmail', true);
                     }}
                     disabled={!!activeContact}
                   >
@@ -443,11 +448,8 @@ const IssueLifecycleId = () => {
                 </div>
                 <div className="margin-bottom-2">
                   <CompleteWithoutEmailButton
-                    onClick={() => {
-                      setShouldSendEmail(false);
-                      setFieldValue('skipEmail', true);
-                      setTimeout(submitForm);
-                    }}
+                    setFieldValue={setFieldValue}
+                    submitForm={submitForm}
                     disabled={!!activeContact}
                   />
                 </div>

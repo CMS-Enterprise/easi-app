@@ -18,7 +18,9 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
+import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 import { EmailRecipientsFieldsProps } from 'types/action';
+import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import {
   CreateContactType,
   SystemIntakeContactProps
@@ -26,11 +28,16 @@ import {
 
 type RecipientProps = {
   contact: SystemIntakeContactProps;
-  checked: boolean;
+  recipients: string[];
   updateRecipients: (value: string) => void;
   activeContact: SystemIntakeContactProps | null;
   setActiveContact: (value: SystemIntakeContactProps | null) => void;
   createContact: CreateContactType;
+};
+
+type VerifiedContactsObject = {
+  verifiedContacts: SystemIntakeContactProps[];
+  unverifiedContacts: SystemIntakeContactProps[];
 };
 
 /**
@@ -39,8 +46,8 @@ type RecipientProps = {
 const Recipient = ({
   /** Contact object */
   contact,
-  /** Whether contact is selected */
-  checked,
+  /** Array of recipient emails */
+  recipients,
   /** Update notification recipients */
   updateRecipients,
   /** Current active contact, set when adding or verifying */
@@ -52,8 +59,8 @@ const Recipient = ({
 }: RecipientProps) => {
   const { t } = useTranslation('action');
 
-  // Properties from contact object
-  const { commonName, euaUserId, role, component, email, id } = { ...contact };
+  const [contactDetails, setContactDetails] = useState(contact);
+  const { commonName, euaUserId, role, component, email, id } = contactDetails;
 
   // Whether or not to show verify recipient form
   const [isActive, setActive] = useState(false);
@@ -71,7 +78,7 @@ const Recipient = ({
         value={email || ''}
         onChange={e => updateRecipients(e.target.value)}
         onBlur={() => null}
-        checked={checked}
+        checked={!!email && recipients.includes(email)}
         disabled={!id}
       />
       {/* Unverified recipient alert */}
@@ -134,10 +141,18 @@ const Recipient = ({
               disabled={!(activeContact?.euaUserId && activeContact?.email)}
               onClick={() => {
                 // Create system intake contact
-                createContact(activeContact!);
-                // Close verify recipient form
-                setActiveContact(null);
-                setActive(false);
+                createContact(activeContact!).then(response => {
+                  if (response?.email) {
+                    setContactDetails({
+                      ...response,
+                      commonName: response.commonName || '',
+                      email: response.email
+                    });
+                    updateRecipients(response.email);
+                    setActiveContact(null);
+                    setActive(false);
+                  }
+                });
               }}
             >
               {t('Save')}
@@ -192,47 +207,59 @@ export default ({
   // Contacts query
   const { contacts, createContact } = useSystemIntakeContacts(systemIntakeId);
 
-  // Contact objects from query response
-  const {
-    requester,
-    businessOwner,
-    productManager,
-    isso,
-    additionalContacts
-  } = contacts.data;
+  // Requester object
+  const { requester } = contacts.data;
 
   /** Initial default recipients */
-  const defaultRecipients = useRef(recipients).current;
+  const defaultRecipients: EmailNotificationRecipients = useRef(recipients)
+    .current;
 
-  /** Formatted array of contacts in order of display */
-  const contactsArray = [
-    requester,
-    businessOwner,
-    productManager,
-    ...(isso.commonName ? [isso] : []), // Only include ISSO if present
-    additionalContacts
-  ].flat();
+  /** Number of default recipients to display */
+  const defaultRecipientsCount: number = Object.values(defaultRecipients)
+    .flat()
+    .filter(value => value).length;
 
-  /** Number of unverified recipients */
-  const unverifiedRecipients = contactsArray.filter(
-    ({ id, role }) => !id && role !== 'Requester'
+  /**
+   * Object to display verified and unverified contacts
+   */
+  const contactsList: VerifiedContactsObject = Object.values(contacts.data)
+    .flat()
+    .reduce(
+      (acc: VerifiedContactsObject, contact: SystemIntakeContactProps) => {
+        if (contact.role === 'Requester' || !contact.commonName) return acc;
+        return {
+          verifiedContacts: [
+            ...acc.verifiedContacts,
+            ...(contact.id ? [contact] : [])
+          ],
+          unverifiedContacts: [
+            ...acc.unverifiedContacts,
+            ...(!contact.id ? [contact] : [])
+          ]
+        };
+      },
+      {
+        verifiedContacts: [],
+        unverifiedContacts: []
+      }
+    );
+
+  /** Number of unverified contacts */
+  const unverifiedCount = contactsList.unverifiedContacts.length;
+
+  /** Number of selected recipients */
+  const selectedCount = Object.values(recipients)
+    .flat()
+    .filter(value => value).length;
+
+  const { verifiedContacts, unverifiedContacts } = useRef(contactsList).current;
+
+  /**
+   * Additional contacts not already included in initial list of contacts
+   * */
+  const additionalContacts = contacts.data.additionalContacts.filter(
+    ({ id }) => !verifiedContacts.find(contact => contact.id === id)
   );
-
-  /** Number of default recipients */
-  const defaultRecipientsCount =
-    (defaultRecipients.shouldNotifyITInvestment ? 3 : 2) +
-    unverifiedRecipients.filter(({ role }) => role !== 'Requester').length;
-  /** Number of total possible recipients */
-  const contactsCount = contactsArray.length + 2;
-  /** Number of selected recipients from contacts array */
-  const selectedContacts = contactsArray.filter(({ email }) =>
-    recipients.regularRecipientEmails.includes(email!)
-  ).length;
-  /** Total number of selected recipients */
-  const selectedCount =
-    selectedContacts +
-    Number(recipients.shouldNotifyITGovernance) +
-    Number(recipients.shouldNotifyITInvestment);
 
   /**
    * Update email recipients in system intake
@@ -262,7 +289,11 @@ export default ({
   if (contacts.loading) return null;
 
   // Number of contacts to hide behind view more button
-  const hiddenContactsCount = contactsCount - defaultRecipientsCount;
+  // Subtract defaultRecipientsCount from total number of possible default recipients to show how many are below view more button
+  const hiddenContactsCount =
+    verifiedContacts.length +
+    additionalContacts.length +
+    (3 - defaultRecipientsCount);
 
   return (
     <div className={classnames(className)}>
@@ -278,7 +309,7 @@ export default ({
       )}
 
       {/* Unverified recipients alert */}
-      {unverifiedRecipients.length > 0 && flags.notifyMultipleRecipients && (
+      {unverifiedCount > 0 && flags.notifyMultipleRecipients && (
         <Alert type="warning" slim data-testid="alert_unverified-recipients">
           {t('emailRecipients.unverifiedRecipientsWarning')}
         </Alert>
@@ -297,9 +328,74 @@ export default ({
             )}
           </p>
           <FieldErrorMsg>{error}</FieldErrorMsg>
+
+          {/* Requester */}
+          <CheckboxField
+            id={`${requester.euaUserId}-requester`}
+            name={`${requester.euaUserId}-requester`}
+            label={`${requester.commonName}, ${requester.component} (Requester)`}
+            value={requester.email}
+            onChange={e => updateRecipients(e.target.value)}
+            onBlur={() => null}
+            checked={recipients.regularRecipientEmails.includes(
+              requester.email
+            )}
+            disabled={!requester.email} // Disable if no email provided - only applies to test data
+          />
+
+          {/* IT Governance */}
+          <CheckboxField
+            label="IT Governance Mailbox"
+            checked={recipients.shouldNotifyITGovernance}
+            name="contact-itGovernanceMailbox"
+            id="contact-itGovernanceMailbox"
+            value="shouldNotifyITGovernance"
+            onChange={e =>
+              setRecipients({
+                ...recipients,
+                shouldNotifyITGovernance: e.target.checked
+              })
+            }
+            onBlur={() => null}
+          />
+
+          {/* IT Investment - if default */}
+          {defaultRecipients.shouldNotifyITInvestment && (
+            <CheckboxField
+              label="IT Investment Mailbox"
+              checked={recipients.shouldNotifyITInvestment}
+              name="contact-itInvestmentMailbox"
+              id="contact-itInvestmentMailbox"
+              value="shouldNotifyITInvestment"
+              onChange={e =>
+                setRecipients({
+                  ...recipients,
+                  shouldNotifyITInvestment: e.target.checked
+                })
+              }
+              onBlur={() => null}
+            />
+          )}
+
+          {/* Unverified recipients */}
+          {unverifiedContacts.length > 0 &&
+            unverifiedContacts
+              .filter(({ role }) => role !== 'Requester') // filter out requester
+              .map((contact, index) => (
+                <Recipient
+                  key={`unverified-${index}`} // eslint-disable-line react/no-array-index-key
+                  contact={contact as SystemIntakeContactProps}
+                  recipients={recipients.regularRecipientEmails}
+                  updateRecipients={updateRecipients}
+                  activeContact={activeContact}
+                  setActiveContact={setActiveContact}
+                  createContact={createContact}
+                />
+              ))}
+
           <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
             <TruncatedContent
-              initialCount={defaultRecipientsCount}
+              initialCount={0}
               labelMore={t(
                 `Show ${
                   hiddenContactsCount > 0 ? `${hiddenContactsCount} ` : ''
@@ -312,71 +408,6 @@ export default ({
               )}
               buttonClassName="margin-top-105"
             >
-              {/* Requester */}
-              <CheckboxField
-                id={`${requester.euaUserId}-requester`}
-                name={`${requester.euaUserId}-requester`}
-                label={`${requester.commonName}, ${requester.component} (Requester)`}
-                value={requester.email}
-                onChange={e => updateRecipients(e.target.value)}
-                onBlur={() => null}
-                checked={recipients.regularRecipientEmails.includes(
-                  requester.email
-                )}
-                disabled={!requester.email} // Disable if no email provided - only applies to test data
-              />
-              {/* IT Governance */}
-              <CheckboxField
-                label="IT Governance Mailbox"
-                checked={recipients.shouldNotifyITGovernance}
-                name="contact-itGovernanceMailbox"
-                id="contact-itGovernanceMailbox"
-                value="shouldNotifyITGovernance"
-                onChange={e =>
-                  setRecipients({
-                    ...recipients,
-                    shouldNotifyITGovernance: e.target.checked
-                  })
-                }
-                onBlur={() => null}
-              />
-              {/* IT Investment - if default */}
-              {defaultRecipients.shouldNotifyITInvestment && (
-                <CheckboxField
-                  label="IT Investment Mailbox"
-                  checked={recipients.shouldNotifyITInvestment}
-                  name="contact-itInvestmentMailbox"
-                  id="contact-itInvestmentMailbox"
-                  value="shouldNotifyITInvestment"
-                  onChange={e =>
-                    setRecipients({
-                      ...recipients,
-                      shouldNotifyITInvestment: e.target.checked
-                    })
-                  }
-                  onBlur={() => null}
-                />
-              )}
-              {/* Unverified recipients */}
-              {unverifiedRecipients.length > 0 &&
-                unverifiedRecipients
-                  .filter(({ role }) => role !== 'Requester') // filter out requester
-                  .map((contact, index) => (
-                    <Recipient
-                      key={`unverified-${index}`} // eslint-disable-line react/no-array-index-key
-                      contact={contact as SystemIntakeContactProps}
-                      checked={
-                        !!contact.email &&
-                        recipients.regularRecipientEmails.includes(
-                          contact.email
-                        )
-                      }
-                      updateRecipients={updateRecipients}
-                      activeContact={activeContact}
-                      setActiveContact={setActiveContact}
-                      createContact={createContact}
-                    />
-                  ))}
               {/* IT Investment - if not default */}
               {!defaultRecipients.shouldNotifyITInvestment && (
                 <CheckboxField
@@ -395,27 +426,41 @@ export default ({
                 />
               )}
               {/* Verified contacts */}
-              {contactsArray
-                .filter(({ id, role }) => id && role !== 'Requester') // filter out requester & unverified recipients
-                .map((contact, index) => (
+              {[...verifiedContacts, ...additionalContacts].map(
+                (contact, index) => (
                   <Recipient
                     key={`verified-${index}`} // eslint-disable-line react/no-array-index-key
                     contact={contact as SystemIntakeContactProps}
-                    checked={
-                      !!contact.email &&
-                      recipients.regularRecipientEmails.includes(contact.email)
-                    }
+                    recipients={recipients.regularRecipientEmails}
                     updateRecipients={updateRecipients}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}
                     createContact={createContact}
                   />
-                ))}
+                )
+              )}
               {/* Additional Contacts button/form */}
               <AdditionalContacts
                 systemIntakeId={systemIntakeId}
                 activeContact={activeContact}
                 setActiveContact={setActiveContact}
+                onCreateContact={(contact: AugmentedSystemIntakeContact) => {
+                  if (
+                    // Check if response from CEDAR includes email
+                    contact.email &&
+                    // Check if recipient is already selected
+                    !recipients.regularRecipientEmails.includes(contact.email)
+                  ) {
+                    // If recipient is not already selected, add email to recipients array
+                    setRecipients({
+                      ...recipients,
+                      regularRecipientEmails: [
+                        ...recipients.regularRecipientEmails,
+                        contact.email
+                      ]
+                    });
+                  }
+                }}
                 type="recipient"
                 className="margin-top-3"
               />
