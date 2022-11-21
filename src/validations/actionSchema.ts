@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
-const skippableEmail = Yup.string().when('skipEmail', {
-  is: true,
+const skippableEmail = Yup.string().when('shouldSendEmail', {
+  is: false,
   then: schema => schema.optional(),
   otherwise: schema => schema.required('Please fill out email')
 });
@@ -11,15 +11,17 @@ const notificationRecipients = Yup.object().shape({
   shouldNotifyITGovernance: Yup.boolean(),
   shouldNotifyITInvestment: Yup.boolean(),
   regularRecipientEmails: Yup.array().when(
-    ['shouldNotifyITGovernance', 'shouldNotifyITInvestment', 'skipEmail'],
+    ['shouldNotifyITGovernance', 'shouldNotifyITInvestment', 'shouldSendEmail'],
     {
       is: (
         shouldNotifyITGovernance: boolean,
         shouldNotifyITInvestment: boolean,
-        skipEmail: boolean
+        shouldSendEmail: boolean
       ) => {
         return (
-          !shouldNotifyITGovernance && !shouldNotifyITInvestment && !skipEmail
+          !shouldNotifyITGovernance &&
+          !shouldNotifyITInvestment &&
+          shouldSendEmail
         );
       },
       then: schema => schema.min(1, 'Please select a recipient'),
