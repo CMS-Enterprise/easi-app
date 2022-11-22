@@ -13,6 +13,8 @@
       .governance-task-list__item:before {
         counter-increment: primaryList;
         content: counter(primaryList) '. ';
+        line-height: 1.2;
+        width: 1.5rem;
       }
     }
   }
@@ -68,6 +70,14 @@
   &__task-description {
     max-width: 600px;
     margin-right: auto;
+    margin-bottom: 1rem;
+
+    p:first-of-type {
+      margin-top: 0;
+    }
+    p:last-of-type {
+      margin-bottom: 0;
+    }
   }
 
   &__meeting-date {
