@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Grid, GridContainer } from '@trussworks/react-uswds';
+import { Button, Grid, GridContainer } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -70,16 +70,16 @@ function TaskList() {
       />
 
       {data ? (
-        <Grid row>
-          <Grid tablet={{ col: 9 }}>
-            <PageHeading className="margin-bottom-0">
+        <Grid row gap className="margin-top-6">
+          <Grid tabletLg={{ col: 9 }}>
+            <PageHeading className="margin-y-0">
               {t('taskList.heading')}
             </PageHeading>
 
-            <div>
+            <div className="line-height-body-5">
               {data && (
                 <div>
-                  <div className="trb-request-type">
+                  <div className="trb-request-type text-light font-body-lg line-height-body-4">
                     {requestTypeText[data.trbRequest.type].heading}
                   </div>
 
@@ -89,7 +89,7 @@ function TaskList() {
                 </div>
               )}
 
-              <ol className="governance-task-list__task-list governance-task-list__task-list--primary">
+              <ol className="governance-task-list__task-list governance-task-list__task-list--primary margin-y-4">
                 {/* Fill out the initial request form */}
                 <TaskListItem
                   heading={taskListText[0].heading}
@@ -162,6 +162,36 @@ function TaskList() {
                   </TaskListDescription>
                 </TaskListItem>
               </ol>
+            </div>
+          </Grid>
+
+          {/* Sidebar */}
+          <Grid tabletLg={{ col: 3 }}>
+            <div className="line-height-body-4 padding-top-3 border-top border-top-width-05 border-primary-lighter">
+              <div>
+                <UswdsReactLink to="/trb">
+                  {t('button.saveAndExit')}
+                </UswdsReactLink>
+              </div>
+              <div className="margin-top-1">
+                <Button type="button" unstyled className="text-error">
+                  {t('button.removeYourRequest')}
+                </Button>
+              </div>
+              <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
+                {t('taskList.additionalHelp')}
+              </h4>
+              <div className="">{t('taskList.helpLinksNewTab')}</div>
+              <div className="margin-top-1">
+                <UswdsReactLink to=".">
+                  {t('taskList.stepsInvolved')}
+                </UswdsReactLink>
+              </div>
+              <div className="margin-top-1">
+                <UswdsReactLink to=".">
+                  {t('taskList.sampleRequest')}
+                </UswdsReactLink>
+              </div>
             </div>
           </Grid>
         </Grid>

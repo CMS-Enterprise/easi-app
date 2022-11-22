@@ -11,7 +11,8 @@ const technicalAssistance = {
     continue: 'Continue',
     next: 'Next',
     saveAndExit: 'Save and exit',
-    start: 'Start'
+    start: 'Start',
+    removeYourRequest: 'Remove your request'
   },
   table: {
     header: {
@@ -149,6 +150,11 @@ const technicalAssistance = {
   },
   taskList: {
     heading: 'Task list',
+    additionalHelp: 'Additional Help',
+    helpLinksNewTab: 'All help links open in a new tab',
+    stepsInvolved:
+      'Steps involved in getting technical assistance from the TRB',
+    sampleRequest: 'Sample TRB Request',
     taskList: [
       {
         heading: 'Fill out the initial request form',
