@@ -235,7 +235,6 @@ const technicalAssistance = {
     additionalAttendees: 'Additional attendees',
     addAnAttendee: 'Add an attendee',
     editAttendee: 'Edit attendee',
-    addAttendee: 'Add attendee',
     addAnotherAttendee: 'Add another attendee',
     remove: 'Remove',
     cancel: 'Cancel',
@@ -252,12 +251,14 @@ const technicalAssistance = {
         create: {
           euaUserId: 'New attendee name',
           component: 'New attendee component',
-          role: 'New attendee role'
+          role: 'New attendee role',
+          submit: 'Add attendee'
         },
         edit: {
           euaUserId: 'Attendee name',
           component: 'Attendee component',
-          role: 'Attendee role'
+          role: 'Attendee role',
+          submit: 'Save'
         }
       }
     }

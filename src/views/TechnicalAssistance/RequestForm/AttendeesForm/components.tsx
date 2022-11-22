@@ -38,6 +38,8 @@ import './components.scss';
 
 /** Attendee form props */
 type AttendeeFieldsProps = {
+  /** Fields type */
+  type: 'requester' | 'attendee';
   /** Default field values */
   defaultValues: TRBAttendeeData;
   /** Control from useForm hook */
@@ -51,6 +53,7 @@ type AttendeeFieldsProps = {
 };
 
 const AttendeeFields = ({
+  type,
   defaultValues,
   errors,
   control,
@@ -71,13 +74,20 @@ const AttendeeFields = ({
           {Object.keys(errors).map(fieldName => {
             // Check if error has custom message
             const { message } = errors[fieldName as keyof typeof errors] || {};
+
+            // Error message set by form
+            const errorString =
+              fieldLabels[fieldName as keyof typeof fieldLabels];
+
+            // If no error message, return null
+            if (!errorString || !message) return null;
+
+            // Return error message
             return (
               <ErrorAlertMessage
                 key={fieldName}
                 errorKey={fieldName}
-                message={t(
-                  message || fieldLabels[fieldName as keyof typeof fieldLabels]
-                )}
+                message={t(message || errorString)}
               />
             );
           })}
@@ -99,8 +109,7 @@ const AttendeeFields = ({
                 onChange={cedarContact =>
                   cedarContact && setValue('euaUserId', cedarContact.euaUserId)
                 }
-                // TODO: Disabled state - need requester ID
-                disabled
+                disabled={type === 'requester' || !!defaultValues.id}
               />
             </FormGroup>
           );

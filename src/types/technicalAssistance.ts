@@ -1,3 +1,5 @@
+import { FetchResult } from '@apollo/client';
+
 import { PersonRole } from './graphql-global-types';
 
 /** TRB attendee fields allows null role in form */
@@ -18,15 +20,7 @@ export type AttendeeFieldLabels = {
   euaUserId: string;
   component: string;
   role: string;
-};
-
-/** Field labels object for translation */
-export type AttendeeFieldLabelsObject = {
-  attendees: {
-    create: AttendeeFieldLabels;
-    edit: AttendeeFieldLabels;
-  };
-  requester: AttendeeFieldLabels;
+  submit?: string;
 };
 
 /** TRB Attendee user info */
@@ -50,3 +44,16 @@ export type FormattedTRBAttendees = {
   requester: TRBAttendeeData;
   attendees: TRBAttendeeData[];
 };
+
+/** Function that executes attendee mutation and handles errors */
+export type SubmitFormType = (
+  /** Attendee mutation, either create or update */
+  mutate: (
+    /** Updated attendee field values */
+    attendeeFields: TRBAttendeeFields
+  ) => Promise<FetchResult>,
+  /** Updated attendee field values */
+  formData: TRBAttendeeFields,
+  /** URL to send user if successful */
+  successUrl: string
+) => void;

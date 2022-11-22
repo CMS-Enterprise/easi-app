@@ -1,60 +1,57 @@
 import React, { useRef } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Alert,
-  Button,
-  Dropdown,
-  ErrorMessage,
-  Form,
-  FormGroup,
-  IconArrowBack,
-  Label
-} from '@trussworks/react-uswds';
+import { Form, IconArrowBack } from '@trussworks/react-uswds';
 
-import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
-import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import contactRoles from 'constants/enums/contactRoles';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-// eslint-disable-next-line camelcase
-import { CreateTrbRequest_createTRBRequest } from 'queries/types/CreateTrbRequest';
+import { CreateTrbRequest_createTRBRequest as TRBRequest } from 'queries/types/CreateTrbRequest';
 import { PersonRole } from 'types/graphql-global-types';
-import { TRBAttendeeData, TRBAttendeeFields } from 'types/technicalAssistance';
+import {
+  AttendeeFieldLabels,
+  SubmitFormType,
+  TRBAttendeeData,
+  TRBAttendeeFields
+} from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../../Breadcrumbs';
 import { initialAttendee } from '../Attendees';
+import Pager from '../Pager';
+
+import { AttendeeFields } from './components';
 
 interface AttendeesFormProps {
-  // eslint-disable-next-line camelcase
-  request: CreateTrbRequest_createTRBRequest;
+  request: TRBRequest;
   backToFormUrl?: string;
   activeAttendee: TRBAttendeeData;
   setActiveAttendee: (value: TRBAttendeeData) => void;
+  submitForm: SubmitFormType;
 }
 
 function AttendeesForm({
   request,
   backToFormUrl,
   activeAttendee,
-  setActiveAttendee
+  setActiveAttendee,
+  submitForm
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
+  /** Field labels object from translation file */
+  const fieldLabels: {
+    create: AttendeeFieldLabels;
+    edit: AttendeeFieldLabels;
+  } = t('attendees.fieldLabels.attendee', {
+    returnObjects: true
+  });
+
   /** Initial attendee values before form values are updated */
-  const defaultValues: TRBAttendeeFields = useRef({
-    id: activeAttendee?.id,
-    trbRequestId: request.id,
-    euaUserId: activeAttendee?.userInfo?.euaUserId || '',
-    component: activeAttendee.component,
-    role: activeAttendee.role
-  }).current;
+  const defaultValues: TRBAttendeeData = useRef(activeAttendee).current;
 
   // Attendee mutations
   const { createAttendee, updateAttendee } = useTRBAttendees({
@@ -62,14 +59,17 @@ function AttendeesForm({
     requesterId: request.createdBy
   });
 
+  /** Type of form - edit or create */
   const formType = activeAttendee.id ? 'edit' : 'create';
 
+  // Initialize form
   const {
     control,
     handleSubmit,
+    setValue,
     setError,
     clearErrors,
-    formState: { errors, isDirty }
+    formState: { errors, isSubmitting, isDirty }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
     defaultValues
@@ -160,136 +160,29 @@ function AttendeesForm({
             }
           })}
         >
-          {/* Display form errors */}
-          {Object.keys(errors).length > 0 && (
-            <Alert
-              heading={t('basic.errors.checkFix')}
-              type="error"
-              className="margin-bottom-2"
-            >
-              {Object.keys(errors).map(fieldName => {
-                // Get custom error message if applicable
-                const { message } =
-                  errors[fieldName as keyof typeof errors] || {};
-                return (
-                  <ErrorAlertMessage
-                    key={fieldName}
-                    errorKey={fieldName}
-                    message={
-                      message ||
-                      t(`attendees.fieldLabels.requester.${fieldName}`)
-                    }
-                  />
-                );
-              })}
-            </Alert>
-          )}
-          {/* Attendee name */}
-          <Controller
-            name="euaUserId"
+          <AttendeeFields
+            type="attendee"
+            defaultValues={defaultValues}
+            errors={errors}
             control={control}
-            render={({ field }) => {
-              return (
-                <FormGroup>
-                  <Label htmlFor="userInfo">
-                    {t(`attendees.fieldLabels.${formType}.commonName`)}
-                  </Label>
-                  <CedarContactSelect
-                    name="userInfo"
-                    id="userInfo"
-                    value={activeAttendee.userInfo}
-                    onChange={cedarContact =>
-                      field.onChange(cedarContact?.euaUserId)
-                    }
-                    disabled={!!activeAttendee.id}
-                  />
-                </FormGroup>
-              );
-            }}
+            setValue={setValue}
+            fieldLabels={fieldLabels[formType]}
           />
-
-          {/* Attendee component */}
-          <Controller
-            name="component"
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup error={!!error}>
-                  <Label htmlFor="component">
-                    {t(`attendees.fieldLabels.${formType}.component`)}
-                  </Label>
-                  {error && (
-                    <ErrorMessage>
-                      {t('basic.errors.makeSelection')}
-                    </ErrorMessage>
-                  )}
-                  <Dropdown
-                    {...field}
-                    ref={null}
-                    id="component"
-                    data-testid="component"
-                  >
-                    <option label={`- ${t('basic.options.select')} -`} />
-                    {cmsDivisionsAndOfficesOptions('component')}
-                  </Dropdown>
-                </FormGroup>
-              );
+          <Pager
+            next={{
+              text: t(
+                fieldLabels[formType as keyof typeof fieldLabels].submit || ''
+              ),
+              disabled: isSubmitting
             }}
-          />
-
-          {/* Attendee role */}
-          <Controller
-            name="role"
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup error={!!error}>
-                  <Label htmlFor="role">
-                    {t(`attendees.fieldLabels.${formType}.role`)}
-                  </Label>
-                  {error && (
-                    <ErrorMessage>
-                      {t('basic.errors.makeSelection')}
-                    </ErrorMessage>
-                  )}
-                  <Dropdown
-                    {...field}
-                    ref={null}
-                    id="role"
-                    data-testid="role"
-                    value={(field.value as PersonRole) || ''}
-                  >
-                    <option label={`- ${t('basic.options.select')} -`} />
-                    {contactRoles.map(({ key, label }) => (
-                      <option key={key} value={key} label={label} />
-                    ))}
-                  </Dropdown>
-                </FormGroup>
-              );
+            back={{
+              text: t('Cancel'),
+              onClick: () => history.push(backToFormUrl),
+              disabled: isSubmitting
             }}
+            className="border-top-0"
+            saveExitDisabled
           />
-          <div>
-            {/* Cancel */}
-            <UswdsReactLink
-              variant="unstyled"
-              className="usa-button usa-button--outline"
-              to={backToFormUrl}
-            >
-              {t('attendees.cancel')}
-            </UswdsReactLink>
-            {/* Add Attendee */}
-            {/* <UswdsReactLink
-              variant="unstyled"
-              className="usa-button"
-              to={backToFormUrl}
-              onClick={() => handleSubmit()}
-            >
-              {t(defaultValues.id ? 'Save' : 'attendees.addAttendee')}
-            </UswdsReactLink> */}
-            <Button type="submit">
-              {t(activeAttendee.id ? 'Save' : 'attendees.addAttendee')}
-            </Button>
-          </div>
           <div className="margin-top-2">
             <UswdsReactLink to={backToFormUrl}>
               <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />

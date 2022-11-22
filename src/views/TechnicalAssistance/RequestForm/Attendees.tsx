@@ -11,7 +11,8 @@ import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { PersonRole } from 'types/graphql-global-types';
 import {
-  AttendeeFieldLabelsObject,
+  AttendeeFieldLabels,
+  SubmitFormType,
   TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
@@ -38,9 +39,13 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   const { path, url } = useRouteMatch();
   const history = useHistory();
 
-  const fieldLabels: AttendeeFieldLabelsObject = t('attendees.fieldLabels', {
-    returnObjects: true
-  });
+  /** Field labels object from translation file */
+  const fieldLabels: AttendeeFieldLabels = t(
+    'attendees.fieldLabels.requester',
+    {
+      returnObjects: true
+    }
+  );
 
   // Active attendee for form fields
   const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeData>({
@@ -106,17 +111,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
 
   /** Function to submit attendee form, used for both requester and additional attendees */
   // Split into separate function so that error handling can be handled in one place
-  const submitForm = (
-    /** Attendee mutation, either create or update */
-    mutate: (
-      /** Updated attendee field values */
-      attendeeFields: TRBAttendeeFields
-    ) => Promise<FetchResult>,
-    /** Updated attendee field values */
-    formData: TRBAttendeeFields,
-    /** URL to send user if successful */
-    successUrl: string
-  ): void => {
+  const submitForm: SubmitFormType = (mutate, formData, successUrl) => {
     // Check if values have changed
     if (isDirty) {
       // Execute mutation
@@ -148,6 +143,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
             backToFormUrl={stepUrl.current}
             activeAttendee={activeAttendee}
             setActiveAttendee={setActiveAttendee}
+            submitForm={submitForm}
           />
         </Route>
 
@@ -159,8 +155,9 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
             })}
           >
             <AttendeeFields
+              type="requester"
               defaultValues={requester}
-              fieldLabels={fieldLabels.requester}
+              fieldLabels={fieldLabels}
               errors={errors}
               setValue={setValue}
               control={control}
