@@ -25,7 +25,7 @@ services:
       - LOCAL_AUTH_ENABLED=true
       - FLAG_SOURCE=FILE
       - FLAGDATA_FILE=/cypress/fixtures/flagdata.json
-      - MINIO_ADDRESS=http://minio:9000
+      - MINIO_ADDRESS=http://host.docker.internal:9000
     volumes:
       - ./cypress:/cypress # Mounted so that the backend container can access the file with LaunchDarkly flag values
   easi_client:
