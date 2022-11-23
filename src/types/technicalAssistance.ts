@@ -51,15 +51,12 @@ export type FormattedTRBAttendees = {
 
 /** Function that executes attendee mutation and handles errors */
 export type SubmitFormType = (
-  /** Attendee mutation, either create or update */
-  mutate: (
-    /** Updated attendee field values */
-    attendeeFields: TRBAttendeeFields
-  ) => Promise<FetchResult>,
   /** Updated attendee field values */
   formData: TRBAttendeeFields,
   /** URL to send user if successful */
-  successUrl: string
+  successUrl: string,
+  /** Attendee id if updating */
+  id?: string
 ) => void;
 
 /**

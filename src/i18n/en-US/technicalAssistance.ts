@@ -241,6 +241,10 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding attendees',
     dontAddAndReturn: "Don't add and return to previous page",
     dontEditAndReturn: "Don't edit and return to previous page",
+    attendeeHelpText:
+      'Please provide the name, CMS component, and role for this attendee.',
+    attendeeNameHelpText:
+      'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at cms-rb@cms.hhs.gov',
     fieldLabels: {
       requester: {
         euaUserId: 'Requester name',

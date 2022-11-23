@@ -14,6 +14,7 @@ import {
   Dropdown,
   ErrorMessage,
   FormGroup,
+  Grid,
   Label
 } from '@trussworks/react-uswds';
 
@@ -21,6 +22,7 @@ import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivi
 import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import HelpText from 'components/shared/HelpText';
 import InitialsIcon from 'components/shared/InitialsIcon';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
@@ -41,8 +43,8 @@ import './components.scss';
 type AttendeeFieldsProps = {
   /** Fields type */
   type: 'requester' | 'attendee';
-  /** Default field values */
-  defaultValues: TRBAttendeeData;
+  /** Sets the default values for the form */
+  activeAttendee: TRBAttendeeData;
   /** Control from useForm hook */
   control: Control<TRBAttendeeFields>;
   /** Field errors object */
@@ -60,7 +62,7 @@ type AttendeeFieldsProps = {
  * */
 const AttendeeFields = ({
   type,
-  defaultValues,
+  activeAttendee,
   errors,
   control,
   setValue,
@@ -99,79 +101,100 @@ const AttendeeFields = ({
           })}
         </Alert>
       )}
-      {/* Attendee name */}
-      <Controller
-        name="euaUserId"
-        control={control}
-        render={() => {
-          // TODO: Error state
-          return (
-            <FormGroup>
-              <Label htmlFor="euaUserId">{t(fieldLabels.euaUserId)}</Label>
-              <CedarContactSelect
-                id="euaUserId"
-                name="euaUserId"
-                value={defaultValues.userInfo}
-                onChange={cedarContact =>
-                  cedarContact && setValue('euaUserId', cedarContact.euaUserId)
-                }
-                disabled={type === 'requester' || !!defaultValues.id}
-              />
-            </FormGroup>
-          );
-        }}
-      />
-      {/* Attendee component */}
-      <Controller
-        name="component"
-        control={control}
-        render={({ field, fieldState: { error } }) => {
-          return (
-            <FormGroup className="margin-top-3" error={!!error}>
-              <Label htmlFor="component">{t(fieldLabels.component)}</Label>
-              {error && (
-                <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
-              )}
-              <Dropdown
-                id="component"
-                data-testid="component"
-                {...field}
-                ref={null}
-              >
-                <option label={`- ${t('basic.options.select')} -`} disabled />
-                {cmsDivisionsAndOfficesOptions('component')}
-              </Dropdown>
-            </FormGroup>
-          );
-        }}
-      />
-      {/* Attendee role */}
-      <Controller
-        name="role"
-        control={control}
-        render={({ field, fieldState: { error } }) => {
-          return (
-            <FormGroup className="margin-top-3" error={!!error}>
-              <Label htmlFor="role">{t(fieldLabels.role)}</Label>
-              {error && (
-                <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
-              )}
-              <Dropdown
-                id="role"
-                data-testid="role"
-                {...field}
-                ref={null}
-                value={(field.value as PersonRole) || ''}
-              >
-                <option label={`- ${t('basic.options.select')} -`} disabled />
-                {contactRoles.map(({ key, label }) => (
-                  <option key={key} value={key} label={label} />
-                ))}
-              </Dropdown>
-            </FormGroup>
-          );
-        }}
-      />
+      <Grid row className="margin-bottom-5">
+        <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+          {/* Attendee name */}
+          <Controller
+            name="euaUserId"
+            control={control}
+            render={() => {
+              // TODO: Error state
+              return (
+                <FormGroup>
+                  <Label htmlFor="euaUserId" className="margin-bottom-1">
+                    {t(fieldLabels.euaUserId)}
+                  </Label>
+                  {type === 'attendee' && (
+                    <HelpText>{t('attendees.attendeeNameHelpText')}</HelpText>
+                  )}
+                  <CedarContactSelect
+                    id="euaUserId"
+                    name="euaUserId"
+                    value={activeAttendee.userInfo}
+                    onChange={cedarContact =>
+                      cedarContact &&
+                      setValue('euaUserId', cedarContact.euaUserId)
+                    }
+                    disabled={type === 'requester' || !!activeAttendee.id}
+                    className="maxw-none"
+                  />
+                </FormGroup>
+              );
+            }}
+          />
+          {/* Attendee component */}
+          <Controller
+            name="component"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <FormGroup className="margin-top-3" error={!!error}>
+                  <Label htmlFor="component">{t(fieldLabels.component)}</Label>
+                  {error && (
+                    <ErrorMessage>
+                      {t('basic.errors.makeSelection')}
+                    </ErrorMessage>
+                  )}
+                  <Dropdown
+                    id="component"
+                    data-testid="component"
+                    {...field}
+                    ref={null}
+                  >
+                    <option
+                      label={`- ${t('basic.options.select')} -`}
+                      disabled
+                    />
+                    {cmsDivisionsAndOfficesOptions('component')}
+                  </Dropdown>
+                </FormGroup>
+              );
+            }}
+          />
+          {/* Attendee role */}
+          <Controller
+            name="role"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <FormGroup className="margin-top-3" error={!!error}>
+                  <Label htmlFor="role">{t(fieldLabels.role)}</Label>
+                  {error && (
+                    <ErrorMessage>
+                      {t('basic.errors.makeSelection')}
+                    </ErrorMessage>
+                  )}
+                  <Dropdown
+                    id="role"
+                    data-testid="role"
+                    {...field}
+                    ref={null}
+                    value={(field.value as PersonRole) || ''}
+                  >
+                    <option
+                      label={`- ${t('basic.options.select')} -`}
+                      disabled
+                    />
+                    {contactRoles.map(({ key, label }) => (
+                      <option key={key} value={key} label={label} />
+                    ))}
+                  </Dropdown>
+                </FormGroup>
+              );
+            }}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 };
@@ -243,6 +266,7 @@ const Attendee = ({
                 // Sets active attendee to pass attendee object to edit attendee form
                 onClick={() => setActiveAttendee(attendee)}
                 to={`${url}/list`}
+                className="margin-right-05"
               >
                 {t('Edit')}
               </UswdsReactLink>
@@ -250,7 +274,7 @@ const Attendee = ({
             {/* Delete attendee */}
             {deleteAttendee && (
               <Button
-                className="text-error"
+                className="text-error margin-top-0"
                 type="button"
                 unstyled
                 onClick={() => deleteAttendee()}

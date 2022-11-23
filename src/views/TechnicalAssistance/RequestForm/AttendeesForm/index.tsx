@@ -7,9 +7,6 @@ import { Form, IconArrowBack } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import useTRBAttendees from 'hooks/useTRBAttendees';
-import { CreateTrbRequest_createTRBRequest as TRBRequest } from 'queries/types/CreateTrbRequest';
-import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
   SubmitFormType,
@@ -19,24 +16,19 @@ import {
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../../Breadcrumbs';
-import { initialAttendee } from '../Attendees';
 import Pager from '../Pager';
 
 import { AttendeeFields } from './components';
 
 interface AttendeesFormProps {
-  request: TRBRequest;
   backToFormUrl?: string;
   activeAttendee: TRBAttendeeData;
-  setActiveAttendee: (value: TRBAttendeeData) => void;
   submitForm: SubmitFormType;
 }
 
 function AttendeesForm({
-  request,
   backToFormUrl,
   activeAttendee,
-  setActiveAttendee,
   submitForm
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
@@ -51,10 +43,14 @@ function AttendeesForm({
   });
 
   /** Initial attendee values before form values are updated */
-  const defaultValues: TRBAttendeeData = useRef(activeAttendee).current;
+  const defaultValues: TRBAttendeeFields = useRef({
+    euaUserId: activeAttendee.userInfo?.euaUserId || '',
+    component: activeAttendee.component,
+    role: activeAttendee.role
+  }).current;
 
   // Attendee mutations
-  const { createAttendee, updateAttendee } = useTRBAttendees(request.id);
+  // const { createAttendee, updateAttendee } = useTRBAttendees(request.id);
 
   /** Type of form - edit or create */
   const formType = activeAttendee.id ? 'edit' : 'create';
@@ -64,8 +60,6 @@ function AttendeesForm({
     control,
     handleSubmit,
     setValue,
-    setError,
-    clearErrors,
     formState: { errors, isSubmitting, isDirty }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
@@ -73,54 +67,6 @@ function AttendeesForm({
   });
 
   if (backToFormUrl) {
-    /** Create or update attendee with field values */
-    const submitAttendee = (formData: TRBAttendeeFields) => {
-      /** Attendee component and role */
-      const input = {
-        component: formData.component,
-        role: formData.role as PersonRole
-      };
-      // If editing attendee, add ID to input and update attendee
-      if (activeAttendee.id) {
-        updateAttendee({
-          ...input,
-          id: activeAttendee.id
-        })
-          .catch(e => setError('euaUserId', { type: 'custom', message: e }))
-          // If no errors, return to previous page
-          .then(response => {
-            if (response && response.data) {
-              history.push(backToFormUrl);
-              // Clear errors
-              clearErrors();
-              // Reset active attendee
-              setActiveAttendee(initialAttendee);
-            } else {
-              setError('euaUserId', {
-                type: 'custom',
-                message: 'TODO: ERROR MESSAGE HERE'
-              });
-            }
-          });
-      } else {
-        // If creating attendee, add EUA and TRB request id and create attendee
-        createAttendee({
-          ...input,
-          trbRequestId: request.id,
-          euaUserId: formData.euaUserId
-        })
-          .catch(e => null)
-          // If no errors, return to previous page
-          .then(response => {
-            if (response) {
-              history.push(backToFormUrl);
-              // Reset active attendee
-              setActiveAttendee(initialAttendee);
-            }
-          });
-      }
-    };
-
     return (
       <div className="trb-attendees-list">
         <Breadcrumbs
@@ -140,26 +86,28 @@ function AttendeesForm({
             }
           ]}
         />
-        <PageHeading>
+        <PageHeading className="margin-bottom-1">
           {t(
             activeAttendee.id
               ? 'attendees.editAttendee'
               : 'attendees.addAnAttendee'
           )}
         </PageHeading>
+        <p className="font-body-md">{t('attendees.attendeeHelpText')}</p>
 
         <Form
           onSubmit={handleSubmit(formData => {
             if (isDirty) {
-              submitAttendee(formData);
+              submitForm(formData, backToFormUrl, activeAttendee.id);
             } else {
               history.push(backToFormUrl);
             }
           })}
+          className="maxw-full"
         >
           <AttendeeFields
             type="attendee"
-            defaultValues={defaultValues}
+            activeAttendee={activeAttendee}
             errors={errors}
             control={control}
             setValue={setValue}

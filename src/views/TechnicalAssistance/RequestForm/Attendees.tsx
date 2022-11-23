@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form } from '@trussworks/react-uswds';
+import { Form, Grid } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
@@ -63,6 +64,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     handleSubmit,
     setValue,
     setError,
+    clearErrors,
     getValues,
     reset,
     formState: { errors, isSubmitting, isDirty }
@@ -95,16 +97,17 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   }, [requester, reset]);
 
   /**
-   * Create or update requester as attendee
+   * Create or update  attendee
    */
-  const submitRequesterAttendee = async (
-    formData: TRBAttendeeFields
+  const submitAttendee = async (
+    formData: TRBAttendeeFields,
+    id?: string
   ): Promise<FetchResult> => {
     const { component, role, euaUserId } = formData;
-    // If requester object has ID, update attendee
-    if (requester.id) {
+    // If attendee object has ID, update attendee
+    if (id) {
       return updateAttendee({
-        id: requester.id,
+        id,
         component,
         role: role as PersonRole
       });
@@ -120,28 +123,23 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
 
   /**
    * Function to submit TRB attendee form
-   *
-   * Used for both requester and additional attendees
    */
-  const submitForm: SubmitFormType = (mutate, formData, successUrl) => {
-    // Check if values have changed
-    if (isDirty) {
-      // Execute mutation
-      mutate(formData)
-        // If successful, send user to next step
-        .then(() => history.push(successUrl))
-        .catch(() => {
-          // If mutation returns error, set custom error message
-          setError('euaUserId', {
-            type: 'custom',
-            // TODO: Update error message
-            message: 'Error message here'
-          });
+  const submitForm: SubmitFormType = (formData, successUrl, id) => {
+    // Execute mutation
+    submitAttendee(formData, id)
+      // If successful, send user to next step
+      .then(() => {
+        history.push(successUrl);
+        clearErrors();
+      })
+      .catch(() => {
+        // If mutation returns error, set custom error message
+        setError('euaUserId', {
+          type: 'custom',
+          // TODO: Update error message
+          message: 'Error message here'
         });
-    } else {
-      // If data has not changed, send user to next step without executing mutation
-      history.push(successUrl);
-    }
+      });
   };
 
   if (loading) return null;
@@ -151,79 +149,81 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
       <Switch>
         <Route exact path={`${path}/list`}>
           <AttendeesForm
-            request={request}
             backToFormUrl={stepUrl.current}
             activeAttendee={activeAttendee}
-            setActiveAttendee={setActiveAttendee}
             submitForm={submitForm}
           />
         </Route>
 
         <Route exact path={`${path}`}>
           <Form
-            className="margin-bottom-4"
+            className="margin-bottom-4 maxw-full"
             onSubmit={handleSubmit(formData => {
-              submitForm(submitRequesterAttendee, formData, stepUrl.next);
+              if (isDirty) {
+                submitForm(formData, stepUrl.next);
+              } else {
+                history.push(stepUrl.next);
+              }
             })}
           >
             {/* Requester Fields */}
             <AttendeeFields
               type="requester"
-              defaultValues={requester}
+              activeAttendee={requester}
               fieldLabels={fieldLabels}
               errors={errors}
               setValue={setValue}
               control={control}
             />
 
-            <Divider className="margin-top-4" />
+            <Grid row>
+              <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+                <Divider />
 
-            <h4>{t('attendees.additionalAttendees')}</h4>
+                <div className="margin-bottom-6">
+                  <h4 className="margin-bottom-2">
+                    {t('attendees.additionalAttendees')}
+                  </h4>
 
-            {/* Button to add additional attendee */}
-            <div className="margin-y-2">
-              <UswdsReactLink
-                variant="unstyled"
-                className="usa-button"
-                to={`${url}/list`}
-              >
-                {t(
-                  attendees.length > 0
-                    ? 'attendees.addAnotherAttendee'
-                    : 'attendees.addAnAttendee'
-                )}
-              </UswdsReactLink>
-            </div>
+                  {/* Button to add additional attendee */}
+                  <UswdsReactLink
+                    variant="unstyled"
+                    className={classNames('usa-button', 'margin-top-0', {
+                      'usa-button--outline': attendees.length > 0
+                    })}
+                    to={`${url}/list`}
+                  >
+                    {t(
+                      attendees.length > 0
+                        ? 'attendees.addAnotherAttendee'
+                        : 'attendees.addAnAttendee'
+                    )}
+                  </UswdsReactLink>
 
-            {/* List of additional attendees */}
-            <AttendeesList
-              attendees={attendees}
-              setActiveAttendee={setActiveAttendee}
-              trbRequestId={request.id}
-              deleteAttendee={deleteAttendee}
-            />
+                  {/* List of additional attendees */}
+                  <AttendeesList
+                    attendees={attendees}
+                    setActiveAttendee={setActiveAttendee}
+                    trbRequestId={request.id}
+                    deleteAttendee={deleteAttendee}
+                  />
+                </div>
+              </Grid>
+            </Grid>
 
             <Pager
               back={{
                 disabled: isSubmitting,
                 onClick: () => {
-                  submitForm(
-                    submitRequesterAttendee,
-                    getValues(),
-                    stepUrl.back
-                  );
+                  submitForm(getValues(), stepUrl.back, requester.id);
                 }
               }}
               next={{
-                disabled: isSubmitting
-                // TODO: Button style / text based on attendees count
-                // // Demo next button based on attendees
-                // ...(numExample === 0
-                //   ? {
-                //       text: t('attendees.continueWithoutAdding'),
-                //       outline: true
-                //     }
-                //   : {})
+                disabled: isSubmitting,
+                text:
+                  attendees.length > 0
+                    ? t('Next')
+                    : t('attendees.continueWithoutAdding')
               }}
             />
           </Form>
