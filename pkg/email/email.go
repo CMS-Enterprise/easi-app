@@ -49,6 +49,8 @@ type templates struct {
 	helpSendFeedback                           templateCaller
 	helpCantFindSomething                      templateCaller
 	helpReportAProblem                         templateCaller
+	trbFormSubmittedAdmin                      templateCaller
+	trbFormSubmittedRequester                  templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -208,6 +210,20 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(helpReportAProblemTemplateName)
 	}
 	appTemplates.helpReportAProblem = helpReportAProblemTemplate
+
+	trbFormSubmittedAdminTemplateName := "trb_request_form_submission_admin.gohtml"
+	trbFormSubmittedAdminTemplate := rawTemplates.Lookup(trbFormSubmittedAdminTemplateName)
+	if trbFormSubmittedAdminTemplate == nil {
+		return Client{}, templateError(trbFormSubmittedAdminTemplateName)
+	}
+	appTemplates.trbFormSubmittedAdmin = trbFormSubmittedAdminTemplate
+
+	trbFormSubmittedRequesterTemplateName := "trb_request_form_submission_requester.gohtml"
+	trbFormSubmittedRequesterTemplate := rawTemplates.Lookup(trbFormSubmittedRequesterTemplateName)
+	if trbFormSubmittedRequesterTemplate == nil {
+		return Client{}, templateError(trbFormSubmittedRequesterTemplateName)
+	}
+	appTemplates.trbFormSubmittedRequester = trbFormSubmittedRequesterTemplate
 
 	client := Client{
 		config:    config,
