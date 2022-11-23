@@ -51,21 +51,6 @@
     }
   }
 
-  &__task-tag {
-    padding: 5px 10px;
-    font-size: 1em;
-    line-height: 1.625em;
-    font-weight: bold;
-    &--na {
-      border: 2px solid color('base');
-      color: color('base');
-    }
-
-    &--completed {
-      background-color: color('success-dark');
-      color: color('white');
-    }
-  }
 
   &__task-description {
     max-width: 600px;

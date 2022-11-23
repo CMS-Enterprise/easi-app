@@ -1,43 +1,22 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
+
+import { TRBFormStatus } from 'types/graphql-global-types';
 
 import TaskListItem, { TaskListDescription } from './TaskListItem';
 
 describe('The TaskListItem', () => {
-  it('renders without crashing', () => {
-    shallow(
-      <TaskListItem testId="1" heading="Test Heading" status="CANNOT_START" />
-    );
-  });
-
-  it('displays cannot start tag', () => {
-    const component = shallow(
-      <TaskListItem testId="1" heading="Test Heading" status="CANNOT_START" />
-    );
-
-    expect(
-      component.find('.governance-task-list__task-tag--na').exists()
-    ).toEqual(true);
-  });
-
-  it('displays completed tag', () => {
-    const component = shallow(
-      <TaskListItem testId="1" heading="Test Heading" status="COMPLETED" />
-    );
-
-    expect(
-      component.find('.governance-task-list__task-tag--completed').exists()
-    ).toEqual(true);
-  });
-
-  it('displays children', () => {
-    const component = shallow(
-      <TaskListItem testId="1" heading="Test Heading" status="START">
-        <TaskListDescription>Hello</TaskListDescription>
-        <div id="test-div">Test</div>
+  it('matches snapshot', () => {
+    const { asFragment } = render(
+      <TaskListItem
+        heading="Fill out the Intake Request form"
+        status={TRBFormStatus.READY_TO_START}
+      >
+        <TaskListDescription>
+          <p>Hello</p>
+        </TaskListDescription>
       </TaskListItem>
     );
-
-    expect(component.find('#test-div').text()).toEqual('Test');
+    expect(asFragment()).toMatchSnapshot();
   });
 });

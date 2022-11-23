@@ -1,6 +1,11 @@
 import React from 'react';
 import classnames from 'classnames';
 
+import TaskStatusTag, {
+  TaskStatus,
+  taskStatusClassName
+} from 'components/shared/TaskStatusTag';
+
 type TaskListDescriptionProps = {
   children?: React.ReactNode | React.ReactNodeArray;
 };
@@ -15,9 +20,9 @@ export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
 
 type TaskListItemProps = {
   heading: string;
-  status: string;
+  status: TaskStatus;
   children?: React.ReactNode | React.ReactNodeArray;
-  testId: string;
+  testId?: string;
 };
 
 const TaskListItem = ({
@@ -42,30 +47,7 @@ const TaskListItem = ({
           <h3 className="governance-task-list__task-heading line-height-heading-2 margin-top-0 margin-bottom-1">
             {heading}
           </h3>
-          {status === 'CANNOT_START' && (
-            <span
-              className="governance-task-list__task-tag governance-task-list__task-tag--na"
-              data-testid="task-list-task-tag"
-            >
-              Cannot start yet
-            </span>
-          )}
-          {status === 'COMPLETED' && (
-            <span
-              className="governance-task-list__task-tag governance-task-list__task-tag--completed"
-              data-testid="task-list-task-tag"
-            >
-              Completed
-            </span>
-          )}
-          {status === 'NOT_NEEDED' && (
-            <span
-              className="governance-task-list__task-tag governance-task-list__task-tag--na"
-              data-testid="task-list-task-tag"
-            >
-              Not needed
-            </span>
-          )}
+          {status in taskStatusClassName && <TaskStatusTag status={status} />}
         </div>
         {children}
       </div>
