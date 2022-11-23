@@ -54,10 +54,7 @@ function AttendeesForm({
   const defaultValues: TRBAttendeeData = useRef(activeAttendee).current;
 
   // Attendee mutations
-  const { createAttendee, updateAttendee } = useTRBAttendees({
-    trbRequestId: request.id,
-    requesterId: request.createdBy
-  });
+  const { createAttendee, updateAttendee } = useTRBAttendees(request.id);
 
   /** Type of form - edit or create */
   const formType = activeAttendee.id ? 'edit' : 'create';

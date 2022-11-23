@@ -27,6 +27,7 @@ import contactRoles from 'constants/enums/contactRoles';
 import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
+  DeleteTRBAttendeeType,
   TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
@@ -52,6 +53,11 @@ type AttendeeFieldsProps = {
   fieldLabels: AttendeeFieldLabels;
 };
 
+/**
+ * Reusable component that displays TRB attendee fields
+ *
+ * Used in TRB requester and additional attendee forms
+ * */
 const AttendeeFields = ({
   type,
   defaultValues,
@@ -121,7 +127,7 @@ const AttendeeFields = ({
         control={control}
         render={({ field, fieldState: { error } }) => {
           return (
-            <FormGroup error={!!error}>
+            <FormGroup className="margin-top-3" error={!!error}>
               <Label htmlFor="component">{t(fieldLabels.component)}</Label>
               {error && (
                 <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
@@ -145,7 +151,7 @@ const AttendeeFields = ({
         control={control}
         render={({ field, fieldState: { error } }) => {
           return (
-            <FormGroup error={!!error}>
+            <FormGroup className="margin-top-3" error={!!error}>
               <Label htmlFor="role">{t(fieldLabels.role)}</Label>
               {error && (
                 <ErrorMessage>{t('basic.errors.makeSelection')}</ErrorMessage>
@@ -170,60 +176,78 @@ const AttendeeFields = ({
   );
 };
 
+/** Single TRB attendee props */
 type AttendeeProps = {
+  /** Attendee object */
   attendee: TRBAttendeeData;
+  /** Set active attendee - used to edit attendee */
   setActiveAttendee?: (activeAttendee: TRBAttendeeData) => void;
+  /** Delete attendee */
   deleteAttendee?: () => void;
 };
 
+/** Display single TRB attendee */
 const Attendee = ({
   attendee,
   setActiveAttendee,
   deleteAttendee
 }: AttendeeProps) => {
   const { t } = useTranslation();
-  const { userInfo } = attendee;
   const { url } = useRouteMatch();
 
-  // Get role label from enum value
+  /** Attendee role label */
+  // Gets label from enum value in attendee object
   const role =
     contactRoles.find(contactRole => contactRole.key === attendee.role)
       ?.label || '';
 
-  // Get component acronym
+  /** Attendee component acronym */
   const component = cmsDivisionsAndOffices.find(
     ({ name }) => name === attendee.component
   )?.acronym;
 
   // If attendee is not found in CEDAR, return null
-  if (!userInfo) return null;
+  if (!attendee.userInfo) return null;
 
-  // Attendee name, EUA, and email from CEDAR user info
-  const { email, commonName, euaUserId } = userInfo;
+  // Get attendee user info from object
+  const {
+    /** Attendee email */
+    email,
+    /** Attendee name */
+    commonName,
+    /** Attendee EUA user id */
+    euaUserId
+  } = attendee.userInfo;
 
   return (
     <li id={`trbAttendee-${euaUserId}`}>
+      {/* Attendee icon with initials */}
       <InitialsIcon name={commonName} />
+      {/* Attendee details */}
       <div>
         <p className="margin-y-05 text-bold">
           {commonName}, {component}
         </p>
         <p className="margin-y-05">{email}</p>
         <p className="margin-top-05 margin-bottom-0">{role}</p>
-        {/* Attendee actions */}
+        {/**
+         * Attendee edit and delete buttons
+         * ButtonGroup does not display if setActiveAttendee (edit) and deleteAttendee functions are not provided as props
+         */}
         {(setActiveAttendee || deleteAttendee) && (
           <ButtonGroup className="margin-y-0">
             {/* Edit Attendee */}
             {setActiveAttendee && (
               <UswdsReactLink
                 variant="unstyled"
+                // Sets active attendee to pass attendee object to edit attendee form
                 onClick={() => setActiveAttendee(attendee)}
                 to={`${url}/list`}
               >
                 {t('Edit')}
               </UswdsReactLink>
             )}
-            {/* Remove attendee */}
+            {/* Delete attendee */}
             {deleteAttendee && (
               <Button
                 className="text-error"
@@ -241,20 +265,27 @@ const Attendee = ({
   );
 };
 
+/** TRB attendees list props */
 type AttendeesListProps = {
+  /** Array of attendee objects */
   attendees: TRBAttendeeData[];
-  id: string;
+  /** TRB request id */
+  trbRequestId: string;
+  /** Set active attendee - used to edit attendee */
   setActiveAttendee: (activeAttendee: TRBAttendeeData) => void;
-  deleteAttendee: (id: string) => void;
+  /** Delete attendee */
+  deleteAttendee: DeleteTRBAttendeeType;
 };
 
 const AttendeesList = ({
   attendees,
-  id,
+  trbRequestId,
   setActiveAttendee,
   deleteAttendee
 }: AttendeesListProps) => {
+  // If no attendees, return null
   if (attendees.length < 1) return null;
+
   return (
     <ul className="trbAttendees-list usa-list usa-list--unstyled margin-y-3">
       {[...attendees]
@@ -269,7 +300,7 @@ const AttendeesList = ({
             deleteAttendee={() => {
               if (attendee.id) {
                 deleteAttendee(attendee.id);
-                setActiveAttendee({ ...initialAttendee, trbRequestId: id });
+                setActiveAttendee({ ...initialAttendee, trbRequestId });
               }
             }}
             setActiveAttendee={setActiveAttendee}

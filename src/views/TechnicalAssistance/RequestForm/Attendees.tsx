@@ -47,7 +47,11 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     }
   );
 
-  // Active attendee for form fields
+  /**
+   * Active attendee for form fields
+   *
+   * Used to set field values when creating or editing attendee
+   */
   const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeData>({
     ...initialAttendee,
     trbRequestId: request.id
@@ -66,28 +70,33 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     resolver: yupResolver(trbAttendeeSchema)
   });
 
-  // Get TRB attendees
+  /**
+   * Get TRB attendees data and mutations
+   */
   const {
     data: { attendees, requester, loading },
     createAttendee,
     updateAttendee,
     deleteAttendee
-  } = useTRBAttendees({
-    trbRequestId: request.id,
-    requesterId: request.createdBy
-  });
+  } = useTRBAttendees(request.id);
 
-  // Reset form with default values after useTRBAttendees query returns requester
+  /**
+   * Reset form with default values after useTRBAttendees query returns requester
+   */
   useEffect(() => {
+    /** Default reqiester values */
     const defaultValues: TRBAttendeeFields = {
       euaUserId: requester.userInfo?.euaUserId || '',
       component: requester.component,
       role: requester.role
     };
+    // Reset form
     reset(defaultValues);
   }, [requester, reset]);
 
-  /** Create or update requester as attendee */
+  /**
+   * Create or update requester as attendee
+   */
   const submitRequesterAttendee = async (
     formData: TRBAttendeeFields
   ): Promise<FetchResult> => {
@@ -109,8 +118,11 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     });
   };
 
-  /** Function to submit attendee form, used for both requester and additional attendees */
-  // Split into separate function so that error handling can be handled in one place
+  /**
+   * Function to submit TRB attendee form
+   *
+   * Used for both requester and additional attendees
+   */
   const submitForm: SubmitFormType = (mutate, formData, successUrl) => {
     // Check if values have changed
     if (isDirty) {
@@ -154,6 +166,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
               submitForm(submitRequesterAttendee, formData, stepUrl.next);
             })}
           >
+            {/* Requester Fields */}
             <AttendeeFields
               type="requester"
               defaultValues={requester}
@@ -167,6 +180,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
 
             <h4>{t('attendees.additionalAttendees')}</h4>
 
+            {/* Button to add additional attendee */}
             <div className="margin-y-2">
               <UswdsReactLink
                 variant="unstyled"
@@ -181,10 +195,11 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
               </UswdsReactLink>
             </div>
 
+            {/* List of additional attendees */}
             <AttendeesList
               attendees={attendees}
               setActiveAttendee={setActiveAttendee}
-              id={request.id}
+              trbRequestId={request.id}
               deleteAttendee={deleteAttendee}
             />
 

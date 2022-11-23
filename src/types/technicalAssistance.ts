@@ -1,6 +1,10 @@
 import { FetchResult } from '@apollo/client';
 
-import { PersonRole } from './graphql-global-types';
+import {
+  CreateTRBRequestAttendeeInput,
+  PersonRole,
+  UpdateTRBRequestAttendeeInput
+} from './graphql-global-types';
 
 /** TRB attendee fields allows null role in form */
 export type TRBAttendeeFields = {
@@ -57,3 +61,28 @@ export type SubmitFormType = (
   /** URL to send user if successful */
   successUrl: string
 ) => void;
+
+/**
+ * Create new TRB attendee
+ *
+ * Function returned by useTRBAttendees custom hook
+ */
+export type CreateTRBAttendeeType = (
+  attendee: CreateTRBRequestAttendeeInput
+) => Promise<FetchResult>;
+
+/**
+ * Update TRB attendee
+ *
+ * Function returned by useTRBAttendees custom hook
+ */
+export type UpdateTRBAttendeeType = (
+  attendee: UpdateTRBRequestAttendeeInput
+) => Promise<FetchResult>;
+
+/**
+ * Delete TRB attendee
+ *
+ * Function returned by useTRBAttendees custom hook
+ */
+export type DeleteTRBAttendeeType = (id: string) => Promise<FetchResult>;
