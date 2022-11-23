@@ -10,7 +10,8 @@ import {
   CardGroup,
   CardHeader,
   GridContainer,
-  IconArrowBack
+  IconArrowBack,
+  IconArrowForward
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -147,8 +148,6 @@ function RequestType() {
           </Card>
         ))}
       </CardGroup>
-      {/*
-      Post-mvp
       <div>
         <h3 className="line-height-heading-2">
           {t('requestType.additionalTrbServices')}
@@ -168,7 +167,6 @@ function RequestType() {
           </li>
         </ul>
       </div>
-      */}
     </GridContainer>
   );
 }

@@ -439,6 +439,42 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
         </div>
       </li>
     </ul>
+    <div>
+      <h3
+        class="line-height-heading-2"
+      >
+        Additional TRB services
+      </h3>
+      <ul
+        class="list-style-none padding-0"
+      >
+        <li>
+          <a
+            class="usa-link"
+            href="/trb/process"
+          >
+            Other (I don’t see what I’m looking for)
+            <svg
+              class="usa-icon margin-left-05 margin-bottom-2px text-tbottom"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+              />
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </DocumentFragment>
 `;
