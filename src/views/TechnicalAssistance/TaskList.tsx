@@ -181,7 +181,7 @@ function TaskList() {
               <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                 {t('taskList.additionalHelp')}
               </h4>
-              <div className="">{t('taskList.helpLinksNewTab')}</div>
+              <div className="text-base">{t('taskList.helpLinksNewTab')}</div>
               <div className="margin-top-1">
                 <UswdsReactLink to=".">
                   {t('taskList.stepsInvolved')}
