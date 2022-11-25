@@ -16,7 +16,9 @@ describe('Technical Assistance', () => {
     ).click();
 
     // Basic details is the first step of the Request Form
-    cy.contains('.usa-step-indicator__heading-text', 'Basic request details')
+    cy.contains('.usa-step-indicator__heading-text', 'Basic request details', {
+      timeout: 6000
+    })
       .should('be.visible')
       .as('basicStepHeader');
 

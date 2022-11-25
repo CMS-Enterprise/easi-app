@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
@@ -42,8 +42,10 @@ export type StepSubmit = (onValid?: () => void) => Promise<void>;
 
 export interface FormStepComponentProps {
   request: TrbRequest;
-  /** Refresh the trb request from the form wrapper */
-  refreshRequest: () => void;
+  /** Refetch the trb request from the form wrapper */
+  refetchRequest: (
+    variables?: Partial<GetTrbRequestVariables> | undefined
+  ) => Promise<ApolloQueryResult<GetTrbRequest>>;
   /**
    * Set the current form step component submit handler
    * so that in can be used in other places like the header.
@@ -223,10 +225,6 @@ function RequestForm() {
     variables: { id }
   });
 
-  const getRequest = useCallback(() => {
-    refetch();
-  }, [refetch]);
-
   const request: TrbRequest | undefined = data?.trbRequest;
 
   // Determine the steps that are already completed by attempting to pre-validate them
@@ -276,7 +274,7 @@ function RequestForm() {
         history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
       }
     }
-  }, [getRequest, history, id, request, requestType, step]);
+  }, [history, id, request, requestType, step]);
 
   const taskListUrl = useMemo(
     () => (request ? `/trb/task-list/${request.id}` : null),
@@ -369,7 +367,7 @@ function RequestForm() {
               back: `/trb/requests/${request.id}/${formStepSlugs[stepIdx - 1]}`
             }}
             taskListUrl={taskListUrl}
-            refreshRequest={getRequest}
+            refetchRequest={refetch}
             setStepSubmit={setStepSubmit}
             setIsStepSubmitting={setIsStepSubmitting}
             setFormError={setFormError}

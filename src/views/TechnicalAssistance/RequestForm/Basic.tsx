@@ -59,7 +59,7 @@ function Basic({
   request,
   stepUrl,
   taskListUrl,
-  refreshRequest,
+  refetchRequest,
   setStepSubmit,
   setIsStepSubmitting,
   setFormError
@@ -156,7 +156,7 @@ function Basic({
 
             // Refresh the RequestForm parent request query
             // to update things like `stepsCompleted`
-            refreshRequest();
+            await refetchRequest();
           }
         },
         // Validation did not pass
@@ -182,7 +182,7 @@ function Basic({
       dirtyFields,
       handleSubmit,
       isDirty,
-      refreshRequest,
+      refetchRequest,
       request,
       setFormError,
       t,
