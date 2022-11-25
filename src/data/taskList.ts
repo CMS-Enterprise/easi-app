@@ -1,15 +1,15 @@
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
-type TagEnum = 'COMPLETED' | 'CANNOT_START' | 'NOT_NEEDED' | '';
+export type TagEnum = 'COMPLETED' | 'CANNOT_START' | 'NOT_NEEDED';
 
-export const intakeTag = (status: string): TagEnum => {
+export const intakeTag = (status: string): TagEnum | '' => {
   if (status === 'INTAKE_DRAFT') {
     return '';
   }
   return 'COMPLETED';
 };
 
-export const initialReviewTag = (intakeStatus: string): TagEnum => {
+export const initialReviewTag = (intakeStatus: string): TagEnum | '' => {
   const intakeCompletedStatuses = [
     'NEED_BIZ_CASE',
     'BIZ_CASE_DRAFT',
@@ -32,7 +32,7 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
     : 'CANNOT_START';
 };
 
-export const businessCaseTag = (intake: SystemIntake): TagEnum => {
+export const businessCaseTag = (intake: SystemIntake): TagEnum | '' => {
   if (intake.requestType === 'RECOMPETE') {
     if (intake.status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
@@ -87,7 +87,7 @@ export const finalBusinessCaseTag = (intake: SystemIntake) => {
 };
 
 // Task List Item: Attend GRB Meeting
-export const attendGrbMeetingTag = (intake: SystemIntake): TagEnum => {
+export const attendGrbMeetingTag = (intake: SystemIntake): TagEnum | '' => {
   if (intake.requestType === 'RECOMPETE') {
     if (intake.status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
@@ -110,7 +110,7 @@ export const attendGrbMeetingTag = (intake: SystemIntake): TagEnum => {
 };
 
 // Task List Item: Decision
-export const decisionTag = (intake: SystemIntake): TagEnum => {
+export const decisionTag = (intake: SystemIntake): TagEnum | '' => {
   if (intake.requestType === 'RECOMPETE') {
     if (intake.status === 'LCID_ISSUED') {
       return '';

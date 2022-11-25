@@ -1,12 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { TagEnum } from 'data/taskList';
 import { TRBFormStatus } from 'types/graphql-global-types';
 
 import Tag from '../Tag';
 
-// Add some enums from which don't yet exist in types
-export type TaskStatus = TRBFormStatus | 'CANNOT_START' | 'NOT_NEEDED';
+/**
+ * `TaskStatus` is a combination of enums from backend types
+ * with the previous `TagEnum` that was defined for the GovernanceTaskList.
+ */
+export type TaskStatus = TRBFormStatus | TagEnum;
 
 export const taskStatusClassName: Record<TaskStatus, string> = {
   COMPLETED: 'bg-success-dark text-white',
