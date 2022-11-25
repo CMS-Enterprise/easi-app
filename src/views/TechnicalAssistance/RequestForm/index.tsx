@@ -182,13 +182,9 @@ function Header({
           unstyled
           disabled={isStepSubmitting}
           onClick={() => {
-            stepSubmit?.(
-              taskListUrl
-                ? () => {
-                    history.push(taskListUrl);
-                  }
-                : undefined
-            );
+            stepSubmit?.(() => {
+              history.push(taskListUrl);
+            });
           }}
         >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
