@@ -25,6 +25,3 @@ $theme-font-role-heading: 'sans';
 // Flex responsive classes
 $align-items-settings: map.set($align-items-settings, "responsive", "true");
 $flex-settings: map.set($flex-settings, "responsive", "true");
-
-// Additional breakpoints
-$theme-utility-breakpoints: map.set($theme-utility-breakpoints, "tablet-lg", "true");
