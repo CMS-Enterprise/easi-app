@@ -6,13 +6,26 @@ import TaskStatusTag, {
   taskStatusClassName
 } from 'components/shared/TaskStatusTag';
 
+import './index.scss';
+
+export const TaskListContainer = ({
+  className,
+  ...props
+}: JSX.IntrinsicElements['ol']) => (
+  <ol
+    data-testid="task-list"
+    className={classnames('task-list__task-list', className)}
+    {...props}
+  />
+);
+
 type TaskListDescriptionProps = {
-  children?: React.ReactNode | React.ReactNodeArray;
+  children?: React.ReactNode;
 };
 
 export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
   return (
-    <div className="governance-task-list__task-description line-height-body-4">
+    <div className="task-list__task-description line-height-body-4">
       {children}
     </div>
   );
@@ -21,7 +34,7 @@ export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
 type TaskListItemProps = {
   heading: string;
   status: TaskStatus;
-  children?: React.ReactNode | React.ReactNodeArray;
+  children?: React.ReactNode;
   testId?: string;
 };
 
@@ -32,19 +45,17 @@ const TaskListItem = ({
   testId
 }: TaskListItemProps) => {
   const taskListItemClasses = classnames(
-    'governance-task-list__item',
+    'task-list__item',
     'padding-bottom-4',
     {
-      'governance-task-list__item--na': ['NOT_NEEDED', 'CANNOT_START'].includes(
-        status
-      )
+      'task-list__item--na': ['NOT_NEEDED', 'CANNOT_START'].includes(status)
     }
   );
   return (
     <li className={taskListItemClasses} data-testid={testId}>
-      <div className="governance-task-list__task-content">
-        <div className="governance-task-list__task-heading-row">
-          <h3 className="governance-task-list__task-heading line-height-heading-2 margin-top-0 margin-bottom-1">
+      <div className="task-list__task-content">
+        <div className="task-list__task-heading-row">
+          <h3 className="task-list__task-heading line-height-heading-2 margin-top-0 margin-bottom-1">
             {heading}
           </h3>
           {status in taskStatusClassName && <TaskStatusTag status={status} />}

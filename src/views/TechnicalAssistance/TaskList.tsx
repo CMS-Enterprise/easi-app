@@ -8,14 +8,15 @@ import { kebabCase } from 'lodash';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import TaskListItem, {
+  TaskListContainer,
+  TaskListDescription
+} from 'components/TaskList';
 import GetTrbTasklistQuery from 'queries/GetTrbTasklistQuery';
 import {
   GetTrbTasklist,
   GetTrbTasklistVariables
 } from 'queries/types/GetTrbTasklist';
-import TaskListItem, {
-  TaskListDescription
-} from 'views/GovernanceTaskList/TaskListItem';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 
 import Breadcrumbs from './Breadcrumbs';
@@ -69,17 +70,17 @@ function TaskList() {
         ]}
       />
 
-      {data ? (
+      {data && formStatus ? (
         <Grid row gap className="margin-top-6">
           <Grid tabletLg={{ col: 9 }}>
             <PageHeading className="margin-y-0">
               {t('taskList.heading')}
             </PageHeading>
 
-            <div className="line-height-body-5">
+            <div className="line-height-body-4">
               {data && (
                 <div>
-                  <div className="trb-request-type text-light font-body-lg line-height-body-4">
+                  <div className="trb-request-type text-light font-body-lg">
                     {requestTypeText[data.trbRequest.type].heading}
                   </div>
 
@@ -89,11 +90,11 @@ function TaskList() {
                 </div>
               )}
 
-              <ol className="governance-task-list__task-list governance-task-list__task-list--primary margin-y-4">
+              <TaskListContainer className="margin-top-4">
                 {/* Fill out the initial request form */}
                 <TaskListItem
                   heading={taskListText[0].heading}
-                  status={formStatus || ''}
+                  status={formStatus}
                   testId={kebabCase(taskListText[0].heading)}
                 >
                   <TaskListDescription>
@@ -161,7 +162,7 @@ function TaskList() {
                     <p>{taskListText[4].text}</p>
                   </TaskListDescription>
                 </TaskListItem>
-              </ol>
+              </TaskListContainer>
             </div>
           </Grid>
 

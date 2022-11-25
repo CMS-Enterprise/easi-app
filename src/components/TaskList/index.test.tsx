@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 
 import { TRBFormStatus } from 'types/graphql-global-types';
 
-import TaskListItem, { TaskListDescription } from './TaskListItem';
+import TaskListItem, { TaskListDescription } from '.';
 
 describe('The TaskListItem', () => {
   it('matches snapshot', () => {

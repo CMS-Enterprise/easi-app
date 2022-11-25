@@ -1,13 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import classnames from 'classnames';
 
 import { TRBFormStatus } from 'types/graphql-global-types';
 
 import Tag from '../Tag';
 
-// Add some enums from the previous original Governance Task List
-// which don't yet exist in types
+// Add some enums from which don't yet exist in types
 export type TaskStatus = TRBFormStatus | 'CANNOT_START' | 'NOT_NEEDED';
 
 export const taskStatusClassName: Record<TaskStatus, string> = {
@@ -28,7 +26,7 @@ const TaskStatusTag = ({ status }: TaskStatusTagProps) => {
   const { t } = useTranslation('taskList');
   return (
     <Tag
-      className={classnames(taskStatusClassName[status])}
+      className={taskStatusClassName[status]}
       data-testid="task-list-task-tag"
     >
       {t(`taskStatus.${status}`)}
