@@ -72,7 +72,7 @@ function TaskList() {
 
       {data && formStatus ? (
         <Grid row gap className="margin-top-6">
-          <Grid tabletLg={{ col: 9 }}>
+          <Grid tablet={{ col: 9 }}>
             <PageHeading className="margin-y-0">
               {t('taskList.heading')}
             </PageHeading>
@@ -167,7 +167,7 @@ function TaskList() {
           </Grid>
 
           {/* Sidebar */}
-          <Grid tabletLg={{ col: 3 }}>
+          <Grid tablet={{ col: 3 }}>
             <div className="line-height-body-4 padding-top-3 border-top border-top-width-05 border-primary-lighter">
               <div>
                 <UswdsReactLink to="/trb">

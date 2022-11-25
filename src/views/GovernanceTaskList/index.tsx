@@ -155,7 +155,7 @@ const GovernanceTaskList = () => {
       {loading && <PageLoading />}
       {!loading && !!systemIntake && (
         <div className="grid-row grid-gap">
-          <div className="tablet-lg:grid-col-9">
+          <div className="tablet:grid-col-9">
             <PageHeading>
               {t('pageHeading')}
               {requestName && (
@@ -361,7 +361,7 @@ const GovernanceTaskList = () => {
               </TaskListItem>
             </TaskListContainer>
           </div>
-          <div className="tablet-lg:grid-col-3">
+          <div className="tablet:grid-col-3">
             <SideNavActions
               intake={systemIntake}
               archiveIntake={archiveIntake}
