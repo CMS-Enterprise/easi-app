@@ -38,8 +38,8 @@ func (c Client) trbRequestFormSubmissionAdminEmailBody(requestName string, reque
 	return b.String(), nil
 }
 
-// SendTRBFormSubmissionTemplateToAdmins notifies the TRB admin mailbox that a TRB Request form has been submitted
-func (c Client) SendTRBFormSubmissionTemplateToAdmins(ctx context.Context, requestName string, requesterName string, component string) error {
+// SendTRBFormSubmissionNotificationToAdmins notifies the TRB admin mailbox that a TRB Request form has been submitted
+func (c Client) SendTRBFormSubmissionNotificationToAdmins(ctx context.Context, requestName string, requesterName string, component string) error {
 	subject := fmt.Sprintf("A new TRB Request has been submitted (%v)", requestName)
 	body, err := c.trbRequestFormSubmissionAdminEmailBody(requestName, requesterName, component)
 	if err != nil {
@@ -86,8 +86,8 @@ func (c Client) trbRequestFormSubmissionRequesterEmailBody(requestName string) (
 	return b.String(), nil
 }
 
-// SendTRBFormSubmissionTemplateToRequester notifies a TRB requester that their TRB Request form has been submitted
-func (c Client) SendTRBFormSubmissionTemplateToRequester(ctx context.Context, requesterEmail models.EmailAddress, requestName string, requesterName string) error {
+// SendTRBFormSubmissionNotificationToRequester notifies a TRB requester that their TRB Request form has been submitted
+func (c Client) SendTRBFormSubmissionNotificationToRequester(ctx context.Context, requesterEmail models.EmailAddress, requestName string, requesterName string) error {
 	subject := fmt.Sprintf("Your TRB Request form has been submitted (%v)", requestName)
 	body, err := c.trbRequestFormSubmissionRequesterEmailBody(requestName)
 	if err != nil {

@@ -5,14 +5,22 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
 // UpdateTRBRequestForm updates a TRBRequestForm record in the database
-func UpdateTRBRequestForm(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBRequestForm, error) {
+func UpdateTRBRequestForm(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input map[string]interface{},
+) (*models.TRBRequestForm, error) {
 	idStr, idFound := input["trbRequestId"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
@@ -37,6 +45,32 @@ func UpdateTRBRequestForm(ctx context.Context, store *storage.Store, input map[s
 	}
 	previousStatus := form.Status
 
+	// start fetching info we'll need to send notifications now, but don't wait on results until we're ready to send emails
+	var request models.TRBRequest
+	var requesterInfo models.UserInfo
+
+	emailInfoErrGroup := new(errgroup.Group)
+
+	emailInfoErrGroup.Go(func() error {
+		// declare new error variable so we don't interfere with calls outside of this goroutine
+		requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+		if getRequestErr != nil {
+			return getRequestErr
+		}
+		request = *requestPtr
+		return nil
+	})
+
+	emailInfoErrGroup.Go(func() error {
+		// declare new error variable so we don't interfere with calls outside of this goroutine
+		requesterInfoPtr, fetchUserInfoErr := fetchUserInfo(ctx, form.CreatedBy)
+		if fetchUserInfoErr != nil {
+			return fetchUserInfoErr
+		}
+		requesterInfo = *requesterInfoPtr
+		return nil
+	})
+
 	err = ApplyChangesAndMetaData(input, form, appcontext.Principal(ctx))
 	if err != nil {
 		return nil, err
@@ -50,6 +84,36 @@ func UpdateTRBRequestForm(ctx context.Context, store *storage.Store, input map[s
 
 	updatedForm, err := store.UpdateTRBRequestForm(ctx, form)
 	if err != nil {
+		return nil, err
+	}
+
+	// send notification emails last; make sure database has been updated first
+
+	if err = emailInfoErrGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	emailErrGroup := new(errgroup.Group)
+
+	emailErrGroup.Go(func() error {
+		return emailClient.SendTRBFormSubmissionNotificationToAdmins(
+			ctx,
+			request.Name,
+			requesterInfo.CommonName,
+			*updatedForm.Component,
+		)
+	})
+
+	emailErrGroup.Go(func() error {
+		return emailClient.SendTRBFormSubmissionNotificationToRequester(
+			ctx,
+			requesterInfo.Email,
+			request.Name,
+			requesterInfo.CommonName,
+		)
+	})
+
+	if err := emailErrGroup.Wait(); err != nil {
 		return nil, err
 	}
 

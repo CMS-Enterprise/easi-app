@@ -4,17 +4,50 @@ import (
 	"context"
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 // TestCreateTRBRequestForm makes a new TRB request
 func (s *ResolverSuite) TestCreateTRBRequestForm() {
 	ctx := context.Background()
+
+	config := testhelpers.NewConfig()
+
+	// set up Email Client
+	emailConfig := email.Config{
+		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
+		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:                config.GetString(appconfig.ClientHostKey),
+		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+	localSender := local.NewSender()
+	emailClient, err := email.NewClient(emailConfig, localSender)
+	if err != nil {
+		s.FailNow("Unable to construct email client with local sender")
+	}
+
 	anonEua := "ANON"
+
+	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			EuaUserID:  anonEua,
+			CommonName: "Anonymous",
+			Email:      models.NewEmailAddress("anon@local.fake"),
+		}, nil
+	}
+
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.Status = models.TRBSOpen
-	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 
 	s.Run("create/update/fetch TRB request forms", func() {
@@ -84,7 +117,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"subjectAreaGovernmentProcessesAndPolicies": subjectAreaGovernmentProcessesAndPolicies,
 			"subjectAreaOtherTechnicalTopics":           subjectAreaOtherTechnicalTopics,
 		}
-		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, formChanges)
+		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, formChanges)
 		s.NoError(err)
 		s.EqualValues(&anonEua, updatedForm.ModifiedBy)
 		s.EqualValues(formChanges["needsAssistanceWith"], *updatedForm.NeedsAssistanceWith)
@@ -126,7 +159,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"trbRequestId": trbRequest.ID.String(),
 			"isSubmitted":  true,
 		}
-		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, submitChanges)
+		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, submitChanges)
 		s.NoError(err)
 		s.EqualValues(submittedForm.Status, models.TRBFormStatusCompleted)
 	})

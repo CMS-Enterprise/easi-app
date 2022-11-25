@@ -20,7 +20,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendTRBFormSubmissionTemplateToAdmins(ctx, "testRequest", "testRequester", "testComponent")
+		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -34,7 +34,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		s.NoError(err)
 		client.templates.trbFormSubmittedAdmin = mockFailedTemplateCaller{}
 
-		err = client.SendTRBFormSubmissionTemplateToAdmins(ctx, "testRequest", "testRequester", "testComponent")
+		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -49,7 +49,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendTRBFormSubmissionTemplateToAdmins(ctx, "testRequest", "testRequester", "testComponent")
+		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -72,7 +72,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendTRBFormSubmissionTemplateToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
+		err = client.SendTRBFormSubmissionNotificationToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -86,7 +86,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		s.NoError(err)
 		client.templates.trbFormSubmittedRequester = mockFailedTemplateCaller{}
 
-		err = client.SendTRBFormSubmissionTemplateToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
+		err = client.SendTRBFormSubmissionNotificationToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -101,7 +101,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendTRBFormSubmissionTemplateToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
+		err = client.SendTRBFormSubmissionNotificationToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
