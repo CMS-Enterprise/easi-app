@@ -22,7 +22,7 @@ type Props = {
   saveExitDisabled?: boolean;
   submit?: StepSubmit;
   className?: string;
-  taskListUrl: string | null;
+  taskListUrl: string;
 };
 
 /**
@@ -77,13 +77,9 @@ export function Pager({
           unstyled
           disabled={saveExitDisabled}
           onClick={() => {
-            submit?.(
-              taskListUrl
-                ? () => {
-                    history.push(taskListUrl);
-                  }
-                : undefined
-            );
+            submit?.(() => {
+              history.push(taskListUrl);
+            });
           }}
         >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />

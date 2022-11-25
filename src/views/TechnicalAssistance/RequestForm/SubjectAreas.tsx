@@ -4,7 +4,11 @@ import { useHistory } from 'react-router-dom';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function SubjectAreas({ request, stepUrl }: FormStepComponentProps) {
+function SubjectAreas({
+  request,
+  stepUrl,
+  taskListUrl
+}: FormStepComponentProps) {
   const history = useHistory();
   return (
     <Pager
@@ -18,6 +22,7 @@ function SubjectAreas({ request, stepUrl }: FormStepComponentProps) {
           history.push(stepUrl.next);
         }
       }}
+      taskListUrl={taskListUrl}
     />
   );
 }

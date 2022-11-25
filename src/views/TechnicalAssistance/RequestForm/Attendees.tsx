@@ -9,7 +9,7 @@ import AttendeesList from './AttendeesList';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Attendees({ request, stepUrl }: FormStepComponentProps) {
+function Attendees({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
@@ -68,6 +68,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
                   }
                 : {})
             }}
+            taskListUrl={taskListUrl}
           />
         </Route>
       </Switch>

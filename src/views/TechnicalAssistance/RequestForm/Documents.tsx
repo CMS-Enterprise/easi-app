@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Documents({ request, stepUrl }: FormStepComponentProps) {
+function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   return (
@@ -22,6 +22,7 @@ function Documents({ request, stepUrl }: FormStepComponentProps) {
         text: t('documents.continueWithoutAdding'),
         outline: true
       }}
+      taskListUrl={taskListUrl}
     />
   );
 }

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Check({ request, stepUrl }: FormStepComponentProps) {
+function Check({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   return (
@@ -21,6 +21,7 @@ function Check({ request, stepUrl }: FormStepComponentProps) {
         },
         text: t('check.submit')
       }}
+      taskListUrl={taskListUrl}
     />
   );
 }

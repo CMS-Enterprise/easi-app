@@ -59,7 +59,7 @@ export interface FormStepComponentProps {
     next: string;
     back: string;
   };
-  taskListUrl: string | null;
+  taskListUrl: string;
 }
 
 /**
@@ -125,7 +125,7 @@ function Header({
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
   formError: string | false;
-  taskListUrl: string | null;
+  taskListUrl: string;
 }) {
   const history = useHistory();
 
@@ -324,7 +324,7 @@ function RequestForm() {
     }
   }, [formError]);
 
-  if (!step) {
+  if (!step || taskListUrl === null) {
     return null;
   }
 
