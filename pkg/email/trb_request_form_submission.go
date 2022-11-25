@@ -48,7 +48,7 @@ func (c Client) SendTRBFormSubmissionTemplateToAdmins(ctx context.Context, reque
 
 	err = c.sender.Send(
 		ctx,
-		[]models.EmailAddress{}, // TODO - add configured TRBInboxEmail
+		[]models.EmailAddress{c.config.TRBEmail},
 		[]models.EmailAddress{},
 		subject,
 		body,
@@ -70,7 +70,7 @@ func (c Client) trbRequestFormSubmissionRequesterEmailBody(requestName string) (
 	data := requesterEmailParameters{
 		RequestName:     requestName,
 		RequestLink:     "", // TODO - populate
-		TRBInboxAddress: "", // TODO - load from config
+		TRBInboxAddress: c.config.TRBEmail.String(),
 	}
 
 	var b bytes.Buffer

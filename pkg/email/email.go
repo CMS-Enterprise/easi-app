@@ -16,6 +16,7 @@ type Config struct {
 	GRTEmail               models.EmailAddress
 	ITInvestmentEmail      models.EmailAddress
 	AccessibilityTeamEmail models.EmailAddress
+	TRBEmail               models.EmailAddress
 	EASIHelpEmail          models.EmailAddress
 	URLHost                string
 	URLScheme              string
