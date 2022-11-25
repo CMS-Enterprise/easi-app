@@ -45,31 +45,36 @@ func UpdateTRBRequestForm(
 	}
 	previousStatus := form.Status
 
+	willSendNotifications := isSubmitted && previousStatus != models.TRBFormStatusCompleted
+
 	// start fetching info we'll need to send notifications now, but don't wait on results until we're ready to send emails
 	var request models.TRBRequest
 	var requesterInfo models.UserInfo
 
 	emailInfoErrGroup := new(errgroup.Group)
 
-	emailInfoErrGroup.Go(func() error {
-		// declare new error variable so we don't interfere with calls outside of this goroutine
-		requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
-		if getRequestErr != nil {
-			return getRequestErr
-		}
-		request = *requestPtr
-		return nil
-	})
+	if willSendNotifications {
 
-	emailInfoErrGroup.Go(func() error {
-		// declare new error variable so we don't interfere with calls outside of this goroutine
-		requesterInfoPtr, fetchUserInfoErr := fetchUserInfo(ctx, form.CreatedBy)
-		if fetchUserInfoErr != nil {
-			return fetchUserInfoErr
-		}
-		requesterInfo = *requesterInfoPtr
-		return nil
-	})
+		emailInfoErrGroup.Go(func() error {
+			// declare new error variable so we don't interfere with calls outside of this goroutine
+			requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+			if getRequestErr != nil {
+				return getRequestErr
+			}
+			request = *requestPtr
+			return nil
+		})
+
+		emailInfoErrGroup.Go(func() error {
+			// declare new error variable so we don't interfere with calls outside of this goroutine
+			requesterInfoPtr, fetchUserInfoErr := fetchUserInfo(ctx, form.CreatedBy)
+			if fetchUserInfoErr != nil {
+				return fetchUserInfoErr
+			}
+			requesterInfo = *requesterInfoPtr
+			return nil
+		})
+	}
 
 	err = ApplyChangesAndMetaData(input, form, appcontext.Principal(ctx))
 	if err != nil {
@@ -93,28 +98,30 @@ func UpdateTRBRequestForm(
 		return nil, err
 	}
 
-	emailErrGroup := new(errgroup.Group)
+	if willSendNotifications {
+		emailErrGroup := new(errgroup.Group)
 
-	emailErrGroup.Go(func() error {
-		return emailClient.SendTRBFormSubmissionNotificationToAdmins(
-			ctx,
-			request.Name,
-			requesterInfo.CommonName,
-			*updatedForm.Component,
-		)
-	})
+		emailErrGroup.Go(func() error {
+			return emailClient.SendTRBFormSubmissionNotificationToAdmins(
+				ctx,
+				request.Name,
+				requesterInfo.CommonName,
+				*updatedForm.Component,
+			)
+		})
 
-	emailErrGroup.Go(func() error {
-		return emailClient.SendTRBFormSubmissionNotificationToRequester(
-			ctx,
-			requesterInfo.Email,
-			request.Name,
-			requesterInfo.CommonName,
-		)
-	})
+		emailErrGroup.Go(func() error {
+			return emailClient.SendTRBFormSubmissionNotificationToRequester(
+				ctx,
+				requesterInfo.Email,
+				request.Name,
+				requesterInfo.CommonName,
+			)
+		})
 
-	if err := emailErrGroup.Wait(); err != nil {
-		return nil, err
+		if err := emailErrGroup.Wait(); err != nil {
+			return nil, err
+		}
 	}
 
 	return updatedForm, nil
