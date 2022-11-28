@@ -3,6 +3,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormClearErrors,
   UseFormSetValue
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -52,6 +53,8 @@ type AttendeeFieldsProps = {
   control: Control<TRBAttendeeFields>;
   /** Field errors object */
   errors: FieldErrors<TRBAttendeeFields>;
+  /** Clear form errors */
+  clearErrors: UseFormClearErrors<TRBAttendeeFields>;
   /** setValue function from useForm hook */
   setValue: UseFormSetValue<TRBAttendeeFields>;
   /** Form field labels */
@@ -67,6 +70,7 @@ const AttendeeFields = ({
   type,
   activeAttendee,
   errors,
+  clearErrors,
   control,
   setValue,
   fieldLabels
@@ -110,24 +114,34 @@ const AttendeeFields = ({
           <Controller
             name="euaUserId"
             control={control}
-            render={() => {
-              // TODO: Error state
+            render={({ fieldState: { error } }) => {
               return (
-                <FormGroup>
-                  <Label htmlFor="euaUserId" className="margin-bottom-1">
-                    {t(fieldLabels.euaUserId)}
-                  </Label>
+                <FormGroup error={!!error}>
+                  <Label htmlFor="euaUserId">{t(fieldLabels.euaUserId)}</Label>
+                  {error && (
+                    <ErrorMessage>
+                      {t(
+                        error.message
+                          ? error.message
+                          : 'basic.errors.makeSelection'
+                      )}
+                    </ErrorMessage>
+                  )}
                   {type === 'attendee' && (
-                    <HelpText>{t('attendees.attendeeNameHelpText')}</HelpText>
+                    <HelpText className="margin-top-1">
+                      {t('attendees.attendeeNameHelpText')}
+                    </HelpText>
                   )}
                   <CedarContactSelect
                     id="euaUserId"
                     name="euaUserId"
                     value={activeAttendee.userInfo}
-                    onChange={cedarContact =>
-                      cedarContact &&
-                      setValue('euaUserId', cedarContact.euaUserId)
-                    }
+                    onChange={cedarContact => {
+                      if (cedarContact) {
+                        setValue('euaUserId', cedarContact.euaUserId);
+                        clearErrors('euaUserId');
+                      }
+                    }}
                     disabled={type === 'requester' || !!activeAttendee.id}
                     className="maxw-none"
                   />
@@ -317,8 +331,8 @@ const AttendeesList = ({
   const columns: Column<{ attendee: TRBAttendeeData }>[] = useMemo(
     () => [
       {
-        Header: 'attendee',
-        accessor: 'attendee'
+        accessor: 'attendee',
+        id: 'attendee.id'
       }
     ],
     []
@@ -344,7 +358,6 @@ const AttendeesList = ({
       data,
       columns,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'createdAt', desc: true }], []),
         pageIndex: 0,
         pageSize: 4
       }

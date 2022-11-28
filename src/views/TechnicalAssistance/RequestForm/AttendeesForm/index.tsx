@@ -7,6 +7,7 @@ import { Form, IconArrowBack } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
   AttendeeFieldLabels,
   SubmitFormType,
@@ -24,15 +25,22 @@ interface AttendeesFormProps {
   backToFormUrl?: string;
   activeAttendee: TRBAttendeeData;
   submitForm: SubmitFormType;
+  trbRequestId: string;
 }
 
 function AttendeesForm({
   backToFormUrl,
   activeAttendee,
-  submitForm
+  submitForm,
+  trbRequestId
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+
+  // Attendee data
+  const {
+    data: { attendees, requester }
+  } = useTRBAttendees(trbRequestId);
 
   /** Field labels object from translation file */
   const fieldLabels: {
@@ -49,8 +57,16 @@ function AttendeesForm({
     role: activeAttendee.role
   }).current;
 
-  // Attendee mutations
-  // const { createAttendee, updateAttendee } = useTRBAttendees(request.id);
+  const validateUniqueEuaUserId = (euaUserId: string): boolean => {
+    /** Whether EUA ID is unique compared to attendees and requester */
+    return [
+      // If editing, filter out default euaUserId value
+      ...attendees.filter(
+        attendee => attendee.userInfo?.euaUserId !== defaultValues.euaUserId
+      ),
+      requester
+    ].every(attendee => attendee.userInfo?.euaUserId !== euaUserId);
+  };
 
   /** Type of form - edit or create */
   const formType = activeAttendee.id ? 'edit' : 'create';
@@ -60,6 +76,8 @@ function AttendeesForm({
     control,
     handleSubmit,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors, isSubmitting, isDirty }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
@@ -97,9 +115,20 @@ function AttendeesForm({
 
         <Form
           onSubmit={handleSubmit(formData => {
+            // Check if field values have changed
             if (isDirty) {
-              submitForm(formData, backToFormUrl, activeAttendee.id);
+              // Check whether EUA ID is unique
+              if (validateUniqueEuaUserId(formData.euaUserId)) {
+                // Submit form
+                submitForm(formData, backToFormUrl, activeAttendee.id);
+              } else {
+                // If EUA ID is not unique, set field error
+                setError('euaUserId', {
+                  message: 'Attendee name must be unique'
+                });
+              }
             } else {
+              // If field values have not been changed, return to TRB form without submitting
               history.push(backToFormUrl);
             }
           })}
@@ -109,6 +138,7 @@ function AttendeesForm({
             type="attendee"
             activeAttendee={activeAttendee}
             errors={errors}
+            clearErrors={clearErrors}
             control={control}
             setValue={setValue}
             fieldLabels={fieldLabels[formType]}

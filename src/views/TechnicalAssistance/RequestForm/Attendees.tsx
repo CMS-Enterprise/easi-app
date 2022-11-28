@@ -152,6 +152,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
             backToFormUrl={stepUrl.current}
             activeAttendee={activeAttendee}
             submitForm={submitForm}
+            trbRequestId={request.id}
           />
         </Route>
 
@@ -160,7 +161,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
             className="margin-bottom-4 maxw-full"
             onSubmit={handleSubmit(formData => {
               if (isDirty) {
-                submitForm(formData, stepUrl.next);
+                submitForm(formData, stepUrl.next, requester.id);
               } else {
                 history.push(stepUrl.next);
               }
@@ -172,6 +173,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
               activeAttendee={requester}
               fieldLabels={fieldLabels}
               errors={errors}
+              clearErrors={clearErrors}
               setValue={setValue}
               control={control}
             />
