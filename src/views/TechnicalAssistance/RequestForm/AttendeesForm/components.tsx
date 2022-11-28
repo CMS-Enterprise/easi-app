@@ -34,7 +34,6 @@ import contactRoles from 'constants/enums/contactRoles';
 import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
-  DeleteTRBAttendeeType,
   TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
@@ -314,7 +313,7 @@ type AttendeesListProps = {
   /** Set active attendee - used to edit attendee */
   setActiveAttendee: (activeAttendee: TRBAttendeeData) => void;
   /** Delete attendee */
-  deleteAttendee: DeleteTRBAttendeeType;
+  deleteAttendee: (id: string) => void;
 };
 
 const AttendeesList = ({

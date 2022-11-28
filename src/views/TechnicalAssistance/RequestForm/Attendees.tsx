@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { FetchResult } from '@apollo/client';
+import { ApolloError, FetchResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -13,7 +13,6 @@ import useTRBAttendees from 'hooks/useTRBAttendees';
 import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
-  SubmitFormType,
   TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
@@ -22,7 +21,7 @@ import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 import { AttendeeFields, AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
-import { FormStepComponentProps } from '.';
+import { FormStepComponentProps, StepSubmit } from '.';
 
 /** Initial blank attendee object */
 export const initialAttendee: TRBAttendeeData = {
@@ -35,7 +34,14 @@ export const initialAttendee: TRBAttendeeData = {
   role: null
 };
 
-function Attendees({ request, stepUrl }: FormStepComponentProps) {
+function Attendees({
+  request,
+  stepUrl,
+  setFormError,
+  refreshRequest,
+  setIsStepSubmitting,
+  setStepSubmit
+}: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
@@ -63,7 +69,6 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
     control,
     handleSubmit,
     setValue,
-    setError,
     clearErrors,
     getValues,
     reset,
@@ -99,47 +104,81 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
   /**
    * Create or update  attendee
    */
-  const submitAttendee = async (
-    formData: TRBAttendeeFields,
-    id?: string
-  ): Promise<FetchResult> => {
-    const { component, role, euaUserId } = formData;
-    // If attendee object has ID, update attendee
-    if (id) {
-      return updateAttendee({
-        id,
-        component,
-        role: role as PersonRole
-      });
-    }
-    // If no ID is present, create new attendee
-    return createAttendee({
-      trbRequestId: request.id,
-      euaUserId,
-      component,
-      role: role as PersonRole
-    });
-  };
-
-  /**
-   * Function to submit TRB attendee form
-   */
-  const submitForm: SubmitFormType = (formData, successUrl, id) => {
-    // Execute mutation
-    submitAttendee(formData, id)
-      // If successful, send user to next step
-      .then(() => {
-        history.push(successUrl);
-        clearErrors();
-      })
-      .catch(() => {
-        // If mutation returns error, set custom error message
-        setError('euaUserId', {
-          type: 'custom',
-          message: t('attendees.alerts.error')
+  const submitAttendee = useCallback(
+    (formData: TRBAttendeeFields): Promise<FetchResult> => {
+      const { component, role, euaUserId } = formData;
+      // If attendee object has ID, update attendee
+      if (requester.id) {
+        return updateAttendee({
+          variables: {
+            input: {
+              id: requester.id,
+              component,
+              role: role as PersonRole
+            }
+          }
         });
+      }
+      // If no ID is present, create new attendee
+      return createAttendee({
+        variables: {
+          input: {
+            trbRequestId: request.id,
+            euaUserId,
+            component,
+            role: role as PersonRole
+          }
+        }
       });
-  };
+    },
+    [createAttendee, updateAttendee, request.id, requester.id]
+  );
+
+  /** Submit requester as attendee */
+  const submitForm = useCallback<StepSubmit>(
+    callback =>
+      // Start the submit promise
+      handleSubmit(
+        // Validation passed
+        async formData => {
+          // Submit the input only if there are changes
+          if (isDirty) {
+            // Submit requester fields
+            await submitAttendee(formData);
+            // Refresh the RequestForm parent request query
+            // to update things like `stepsCompleted`
+            refreshRequest();
+          }
+        },
+        // Validation did not pass
+        () => {
+          // Need to throw from this error handler so that the promise is rejected
+          throw new Error('invalid attendees form');
+        }
+      )()
+        // Wait for submit to finish before continuing.
+        // This essentially makes sure any effects like
+        // `setIsStepSubmitting` are called before unmount.
+        .then(
+          () => {
+            callback?.();
+          },
+          err => {
+            if (err instanceof ApolloError) {
+              setFormError(t<string>('attendees.alerts.error'));
+            }
+          }
+        ),
+    [t, handleSubmit, isDirty, refreshRequest, setFormError, submitAttendee]
+  );
+
+  useEffect(() => {
+    setStepSubmit(() => submitForm);
+  }, [setStepSubmit, submitForm]);
+
+  useEffect(() => {
+    setIsStepSubmitting(isSubmitting);
+  }, [setIsStepSubmitting, isSubmitting]);
 
   return (
     <div className="trb-attendees">
@@ -148,21 +187,16 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
           <AttendeesForm
             backToFormUrl={stepUrl.current}
             activeAttendee={activeAttendee}
-            submitForm={submitForm}
+            // submitForm={submitForm}
             trbRequestId={request.id}
+            setFormError={setFormError}
           />
         </Route>
 
         <Route exact path={`${path}`}>
           <Form
             className="margin-bottom-4 maxw-full"
-            onSubmit={handleSubmit(formData => {
-              if (isDirty) {
-                submitForm(formData, stepUrl.next, requester.id);
-              } else {
-                history.push(stepUrl.next);
-              }
-            })}
+            onSubmit={e => e.preventDefault()}
           >
             {/* Requester Fields */}
             <AttendeeFields
@@ -196,10 +230,9 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
                   if (
                     getValues().euaUserId &&
                     getValues().component &&
-                    getValues().role &&
-                    isDirty
+                    getValues().role
                   ) {
-                    submitForm(getValues(), `${url}/list`, requester.id);
+                    submitForm(() => history.push(`${url}/list`));
                   }
                 }}
               >
@@ -215,24 +248,32 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
                 attendees={attendees}
                 setActiveAttendee={setActiveAttendee}
                 trbRequestId={request.id}
-                deleteAttendee={deleteAttendee}
+                deleteAttendee={(id: string) =>
+                  deleteAttendee({ variables: { id } })
+                }
               />
             </div>
 
             <Pager
+              className="margin-top-5"
+              next={{
+                disabled: isSubmitting,
+                onClick: () => {
+                  submitForm(() => {
+                    history.push(stepUrl.next);
+                  });
+                }
+              }}
               back={{
                 disabled: isSubmitting,
                 onClick: () => {
-                  submitForm(getValues(), stepUrl.back, requester.id);
+                  submitForm(() => {
+                    history.push(stepUrl.back);
+                  });
                 }
               }}
-              next={{
-                disabled: isSubmitting,
-                text:
-                  attendees.length > 0
-                    ? t('Next')
-                    : t('attendees.continueWithoutAdding')
-              }}
+              saveExitDisabled={isSubmitting}
+              submit={submitForm}
             />
           </Form>
         </Route>

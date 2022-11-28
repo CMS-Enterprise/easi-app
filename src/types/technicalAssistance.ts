@@ -1,10 +1,4 @@
-import { FetchResult } from '@apollo/client';
-
-import {
-  CreateTRBRequestAttendeeInput,
-  PersonRole,
-  UpdateTRBRequestAttendeeInput
-} from './graphql-global-types';
+import { PersonRole } from './graphql-global-types';
 
 /** TRB attendee fields allows null role in form */
 export type TRBAttendeeFields = {
@@ -48,38 +42,3 @@ export type FormattedTRBAttendees = {
   requester: TRBAttendeeData;
   attendees: TRBAttendeeData[];
 };
-
-/** Function that executes attendee mutation and handles errors */
-export type SubmitFormType = (
-  /** Updated attendee field values */
-  formData: TRBAttendeeFields,
-  /** URL to send user if successful */
-  successUrl: string,
-  /** Attendee id if updating */
-  id?: string
-) => void;
-
-/**
- * Create new TRB attendee
- *
- * Function returned by useTRBAttendees custom hook
- */
-export type CreateTRBAttendeeType = (
-  attendee: CreateTRBRequestAttendeeInput
-) => Promise<FetchResult>;
-
-/**
- * Update TRB attendee
- *
- * Function returned by useTRBAttendees custom hook
- */
-export type UpdateTRBAttendeeType = (
-  attendee: UpdateTRBRequestAttendeeInput
-) => Promise<FetchResult>;
-
-/**
- * Delete TRB attendee
- *
- * Function returned by useTRBAttendees custom hook
- */
-export type DeleteTRBAttendeeType = (id: string) => Promise<FetchResult>;

@@ -1,6 +1,11 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { useMutation, useQuery } from '@apollo/client';
+import {
+  FetchResult,
+  OperationVariables,
+  useMutation,
+  useQuery
+} from '@apollo/client';
 
 import {
   CreateTRBRequestAttendee,
@@ -16,11 +21,8 @@ import {
   UpdateTRBRequestAttendeeInput
 } from 'types/graphql-global-types';
 import {
-  CreateTRBAttendeeType,
-  DeleteTRBAttendeeType,
   FormattedTRBAttendees,
-  TRBAttendeeData,
-  UpdateTRBAttendeeType
+  TRBAttendeeData
 } from 'types/technicalAssistance';
 
 /** useTRBAttendees hook return type */
@@ -35,11 +37,11 @@ type UseTRBAttendees = {
     loading: boolean;
   };
   /** Creates new TRB attendee */
-  createAttendee: CreateTRBAttendeeType;
+  createAttendee: (variables: OperationVariables) => Promise<FetchResult>;
   /** Updates TRB attendee */
-  updateAttendee: UpdateTRBAttendeeType;
+  updateAttendee: (variables: OperationVariables) => Promise<FetchResult>;
   /** Deletes TRB attendee */
-  deleteAttendee: DeleteTRBAttendeeType;
+  deleteAttendee: (variables: OperationVariables) => Promise<FetchResult>;
 };
 
 /**
@@ -117,7 +119,7 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
   );
 
   /** Delete attendee mutation */
-  const [deleteTRBAttendee] = useMutation<{ id: string }>(
+  const [deleteAttendee] = useMutation<{ id: string }>(
     DeleteTRBRequestAttendee,
     {
       refetchQueries: ['GetTRBRequestAttendees']
@@ -126,10 +128,8 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
 
   return {
     data: { ...formattedAttendees, loading },
-    createAttendee: attendee =>
-      createAttendee({ variables: { input: attendee } }),
-    updateAttendee: attendee =>
-      updateAttendee({ variables: { input: attendee } }),
-    deleteAttendee: id => deleteTRBAttendee({ variables: { id } })
+    createAttendee,
+    updateAttendee,
+    deleteAttendee
   };
 }

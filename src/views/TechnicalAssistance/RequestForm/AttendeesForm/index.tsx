@@ -1,16 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { ApolloError, FetchResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, IconArrowBack } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import useTRBAttendees from 'hooks/useTRBAttendees';
+import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
-  SubmitFormType,
   TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
@@ -24,22 +25,24 @@ import { AttendeeFields } from './components';
 interface AttendeesFormProps {
   backToFormUrl?: string;
   activeAttendee: TRBAttendeeData;
-  submitForm: SubmitFormType;
   trbRequestId: string;
+  setFormError: React.Dispatch<React.SetStateAction<string | false>>;
 }
 
 function AttendeesForm({
   backToFormUrl,
   activeAttendee,
-  submitForm,
-  trbRequestId
+  trbRequestId,
+  setFormError
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
   // Attendee data
   const {
-    data: { attendees, requester }
+    data: { attendees, requester },
+    createAttendee,
+    updateAttendee
   } = useTRBAttendees(trbRequestId);
 
   /** Field labels object from translation file */
@@ -57,17 +60,6 @@ function AttendeesForm({
     role: activeAttendee.role
   }).current;
 
-  const validateUniqueEuaUserId = (euaUserId: string): boolean => {
-    /** Whether EUA ID is unique compared to attendees and requester */
-    return [
-      // If editing, filter out default euaUserId value
-      ...attendees.filter(
-        attendee => attendee.userInfo?.euaUserId !== defaultValues.euaUserId
-      ),
-      requester
-    ].every(attendee => attendee.userInfo?.euaUserId !== euaUserId);
-  };
-
   /** Type of form - edit or create */
   const formType = activeAttendee.id ? 'edit' : 'create';
 
@@ -84,7 +76,82 @@ function AttendeesForm({
     defaultValues
   });
 
+  /** Whether or not the submitted attendee EUA ID is unique compared to the requester and additional attendees */
+  const euaUserIdIsUnique = useCallback(
+    euaUserId => {
+      return [
+        // If editing, filter out default euaUserId value
+        ...attendees.filter(
+          attendee => attendee.userInfo?.euaUserId !== defaultValues.euaUserId
+        ),
+        requester
+      ].every(attendee => attendee.userInfo?.euaUserId !== euaUserId);
+    },
+    [defaultValues.euaUserId, requester, attendees]
+  );
+
+  /** Execute attendee mutation */
+  const submitAttendee = (
+    formData: TRBAttendeeFields
+  ): Promise<FetchResult> => {
+    const { component, role, euaUserId } = formData;
+    const { id } = activeAttendee;
+
+    // If attendee object has ID, update attendee
+    if (id) {
+      return updateAttendee({
+        variables: {
+          input: {
+            id,
+            component,
+            role: role as PersonRole
+          }
+        }
+      });
+    }
+    // If no ID is present, create new attendee
+    return createAttendee({
+      variables: {
+        input: {
+          trbRequestId,
+          euaUserId,
+          component,
+          role: role as PersonRole
+        }
+      }
+    });
+  };
+
   if (backToFormUrl) {
+    /** Submit additional attendee fields and return to main attendees form */
+    const submitForm = (formData: TRBAttendeeFields) => {
+      if (isDirty) {
+        // If euaUserId is not unique, set field error
+        if (!euaUserIdIsUnique) {
+          setError('euaUserId', {
+            message: 'Attendee name must be unique'
+          });
+        } else {
+          // Submit attendee fields
+          submitAttendee(formData)
+            .then(() => {
+              // Clear errors
+              clearErrors('euaUserId');
+              // Return to attendees form
+              history.push(backToFormUrl);
+            })
+            .catch(err => {
+              if (err instanceof ApolloError) {
+                // Set form error
+                setFormError(t<string>('attendees.alerts.error'));
+                // Return to attendees form
+                history.push(backToFormUrl);
+              }
+            });
+        }
+      }
+    };
+
     return (
       <div className="trb-attendees-list">
         <Breadcrumbs
@@ -113,27 +180,7 @@ function AttendeesForm({
         </PageHeading>
         <p className="font-body-md">{t('attendees.attendeeHelpText')}</p>
 
-        <Form
-          onSubmit={handleSubmit(formData => {
-            // Check if field values have changed
-            if (isDirty) {
-              // Check whether EUA ID is unique
-              if (validateUniqueEuaUserId(formData.euaUserId)) {
-                // Submit form
-                submitForm(formData, backToFormUrl, activeAttendee.id);
-              } else {
-                // If EUA ID is not unique, set field error
-                setError('euaUserId', {
-                  message: 'Attendee name must be unique'
-                });
-              }
-            } else {
-              // If field values have not been changed, return to TRB form without submitting
-              history.push(backToFormUrl);
-            }
-          })}
-          className="maxw-full"
-        >
+        <Form onSubmit={handleSubmit(submitForm)} className="maxw-full">
           <AttendeeFields
             type="attendee"
             activeAttendee={activeAttendee}
@@ -156,7 +203,7 @@ function AttendeesForm({
               disabled: isSubmitting
             }}
             className="border-top-0"
-            saveExitDisabled
+            saveExitHidden
           />
           <div className="margin-top-2">
             <UswdsReactLink to={backToFormUrl}>
