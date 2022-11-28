@@ -36,3 +36,14 @@ type CedarRole struct {
 	RoleID       zero.String
 	ObjectType   zero.String
 }
+
+// CedarRoleType is the model for a type of role that a user or organization can hold for some system, i.e. "Business Owner" or "Project Lead"
+type CedarRoleType struct {
+	// always-present fields
+	ID          string
+	Application string // should always be "alfabet"
+	Name        string
+
+	// possibly-null fields
+	Description zero.String
+}

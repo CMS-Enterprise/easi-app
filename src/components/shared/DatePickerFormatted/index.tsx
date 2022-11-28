@@ -24,8 +24,12 @@ const DatePickerFormatted = ({
     <DatePicker
       {...props}
       onChange={val => {
-        if (typeof onChange === 'function' && typeof val === 'string') {
-          onChange(dtFormat(DateTime.fromFormat(val, 'MM/dd/yyyy')));
+        if (typeof onChange === 'function') {
+          if (val === '') {
+            onChange('');
+          } else if (typeof val === 'string') {
+            onChange(dtFormat(DateTime.fromFormat(val, 'MM/dd/yyyy')));
+          }
         }
       }}
     />

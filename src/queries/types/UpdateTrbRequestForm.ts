@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateTRBRequestFormInput, TRBWhereInProcessOption, TRBCollabGroupOption } from "./../../types/graphql-global-types";
+import { UpdateTRBRequestFormInput, TRBRequestChanges, TRBWhereInProcessOption, TRBCollabGroupOption } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: UpdateTrbRequestForm
@@ -52,5 +52,5 @@ export interface UpdateTrbRequestForm {
 export interface UpdateTrbRequestFormVariables {
   input: UpdateTRBRequestFormInput;
   id: UUID;
-  name?: string | null;
+  changes?: TRBRequestChanges | null;
 }

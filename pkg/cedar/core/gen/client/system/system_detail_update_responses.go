@@ -63,7 +63,8 @@ func NewSystemDetailUpdateOK() *SystemDetailUpdateOK {
 	return &SystemDetailUpdateOK{}
 }
 
-/* SystemDetailUpdateOK describes a response with status code 200, with default header values.
+/*
+	SystemDetailUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -95,7 +96,8 @@ func NewSystemDetailUpdateBadRequest() *SystemDetailUpdateBadRequest {
 	return &SystemDetailUpdateBadRequest{}
 }
 
-/* SystemDetailUpdateBadRequest describes a response with status code 400, with default header values.
+/*
+	SystemDetailUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -127,7 +129,8 @@ func NewSystemDetailUpdateUnauthorized() *SystemDetailUpdateUnauthorized {
 	return &SystemDetailUpdateUnauthorized{}
 }
 
-/* SystemDetailUpdateUnauthorized describes a response with status code 401, with default header values.
+/*
+	SystemDetailUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -159,7 +162,8 @@ func NewSystemDetailUpdateNotFound() *SystemDetailUpdateNotFound {
 	return &SystemDetailUpdateNotFound{}
 }
 
-/* SystemDetailUpdateNotFound describes a response with status code 404, with default header values.
+/*
+	SystemDetailUpdateNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -191,7 +195,8 @@ func NewSystemDetailUpdateInternalServerError() *SystemDetailUpdateInternalServe
 	return &SystemDetailUpdateInternalServerError{}
 }
 
-/* SystemDetailUpdateInternalServerError describes a response with status code 500, with default header values.
+/*
+	SystemDetailUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */

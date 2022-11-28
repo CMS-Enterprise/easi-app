@@ -2,11 +2,15 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Button,
+  GridContainer,
+  IconArrowBack
+} from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 import * as yup from 'yup';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import CreateTrbRequestQuery from 'queries/CreateTrbRequestQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -35,10 +39,28 @@ import Documents from './Documents';
 import Done from './Done';
 import SubjectAreas from './SubjectAreas';
 
+/**
+ * A promise wrapper for form step submit handlers.
+ * Run the `onValid` callback after successful validation.
+ * Use this to change address urls after submissions are successfully completed.
+ */
+export type StepSubmit = (onValid?: () => void) => Promise<void>;
+
 export interface FormStepComponentProps {
   // eslint-disable-next-line camelcase
   request: CreateTrbRequest_createTRBRequest;
+  /** Refresh the trb request from the form wrapper */
   refreshRequest: () => void;
+  /**
+   * Set the current form step component submit handler
+   * so that in can be used in other places like the header.
+   * Form step components need to reassign the handler.
+   */
+  setStepSubmit: React.Dispatch<React.SetStateAction<StepSubmit | null>>;
+  /** Set to update the submitting state from step components to the parent request form */
+  setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  /** Set a form level error message from step components */
+  setFormError: React.Dispatch<React.SetStateAction<string | false>>;
   stepUrl: {
     current: string;
     next: string;
@@ -95,7 +117,10 @@ function Header({
   step,
   request,
   breadcrumbBar,
-  stepsCompleted
+  stepsCompleted,
+  stepSubmit,
+  isStepSubmitting,
+  formError
 }: {
   step: number;
   /** Unassigned request is used as a loading state toggle. */
@@ -103,6 +128,9 @@ function Header({
   request?: CreateTrbRequest_createTRBRequest;
   breadcrumbBar: React.ReactNode;
   stepsCompleted: string[];
+  stepSubmit: StepSubmit | null;
+  isStepSubmitting: boolean;
+  formError: string | false;
 }) {
   const history = useHistory();
 
@@ -131,7 +159,7 @@ function Header({
         // Indexing of the step text matches `stepsCompleted`
         completed: idx < stepsCompleted.length,
         onClick:
-          request && idx <= stepsCompleted.length
+          request && !isStepSubmitting && idx <= stepsCompleted.length
             ? e => {
                 history.push(
                   `/trb/requests/${request.id}/${formStepSlugs[idx]}`
@@ -141,12 +169,32 @@ function Header({
       }))}
       hideSteps={!request}
       breadcrumbBar={breadcrumbBar}
+      errorAlert={
+        formError && (
+          <Alert
+            heading={t('errors.somethingWrong')}
+            type="error"
+            className="trb-form-error margin-top-3 margin-bottom-2"
+          >
+            {formError}
+          </Alert>
+        )
+      }
     >
       {request && (
-        <UswdsReactLink to="/trb">
+        <Button
+          type="button"
+          unstyled
+          disabled={isStepSubmitting}
+          onClick={() => {
+            stepSubmit?.(() => {
+              history.push('/trb');
+            });
+          }}
+        >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('button.saveAndExit')}
-        </UswdsReactLink>
+        </Button>
       )}
     </StepHeader>
   );
@@ -201,7 +249,6 @@ function RequestForm() {
       return;
     }
     (async () => {
-      // console.log('check completed', stepsCompleted);
       const completed = [...stepsCompleted];
 
       // Validate steps sequentially
@@ -226,12 +273,10 @@ function RequestForm() {
           } catch (err) {
             break;
           }
-          // console.log('idx', stpIdx, stp.step);
           completed.push(stp.step);
         }
       }
 
-      // console.log('completed', completed, stepsCompleted);
       if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
     })();
   }, [request, stepsCompleted]);
@@ -292,6 +337,26 @@ function RequestForm() {
     [t]
   );
 
+  // References to the submit handler and submitting state of the current form step
+  const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
+  const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
+
+  // Form level errors from step components
+  const [formError, setFormError] = useState<string | false>(false);
+
+  // Clear the form level error as implied when steps change
+  useEffect(() => {
+    setFormError(false);
+  }, [setFormError, step]);
+
+  // Scroll to the form error
+  useEffect(() => {
+    if (formError) {
+      const err = document.querySelector('.trb-form-error');
+      err?.scrollIntoView();
+    }
+  }, [formError]);
+
   if (!step) {
     return null;
   }
@@ -327,6 +392,9 @@ function RequestForm() {
           breadcrumbBar={defaultBreadcrumbs}
           request={request}
           stepsCompleted={stepsCompleted}
+          stepSubmit={stepSubmit}
+          isStepSubmitting={isStepSubmitting}
+          formError={formError}
         />
       )}
       {request ? (
@@ -341,6 +409,9 @@ function RequestForm() {
               next: `/trb/requests/${request.id}/${formStepSlugs[stepIdx + 1]}`,
               back: `/trb/requests/${request.id}/${formStepSlugs[stepIdx - 1]}`
             }}
+            setStepSubmit={setStepSubmit}
+            setIsStepSubmitting={setIsStepSubmitting}
+            setFormError={setFormError}
           />
         </GridContainer>
       ) : (

@@ -57,9 +57,10 @@ export type ActionState = {
 export type ActionForm = {
   feedback: string;
   notificationRecipients: EmailNotificationRecipients;
+  shouldSendEmail: boolean;
 };
 
-export type SubmitLifecycleIdForm = {
+export interface SubmitLifecycleIdForm extends ActionForm {
   newLifecycleId?: boolean;
   lifecycleId?: string;
   expirationDateMonth?: string;
@@ -68,9 +69,7 @@ export type SubmitLifecycleIdForm = {
   scope?: string;
   nextSteps?: string;
   costBaseline?: string;
-  feedback: string;
-  notificationRecipients: EmailNotificationRecipients;
-};
+}
 
 // TODO: look into combining the submit and extend LCID?
 export type ExtendLifecycleIdForm = {
@@ -83,17 +82,16 @@ export type ExtendLifecycleIdForm = {
   feedback: string;
 };
 
-export type RejectIntakeForm = {
-  feedback: string;
+export interface RejectIntakeForm extends ActionForm {
   nextSteps: string;
   reason: string;
-  notificationRecipients: EmailNotificationRecipients;
-};
+}
 
 export type ProvideGRTFeedbackForm = {
   grtFeedback: string;
   emailBody: string;
   notificationRecipients: EmailNotificationRecipients;
+  shouldSendEmail: boolean;
 };
 
 export type EmailRecipientsFieldsProps = {

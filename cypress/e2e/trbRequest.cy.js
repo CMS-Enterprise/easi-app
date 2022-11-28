@@ -10,10 +10,9 @@ describe('Technical Assistance', () => {
     // Continue through process steps
     cy.contains('a', 'Continue').click();
 
-    cy.contains(
-      '.usa-step-indicator__heading-text',
-      'Basic request details'
-    ).should('be.visible');
+    cy.contains('.usa-step-indicator__heading-text', 'Basic request details')
+      .should('be.visible')
+      .as('basicStepHeader');
 
     // Fill out the Basic form step
 
@@ -25,36 +24,47 @@ describe('Technical Assistance', () => {
       'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM'
     );
     cy.get('#hasExpectedStartEndDates-no').check({ force: true });
-
-    // Select a collab group but skip the conditional field
     cy.get('#collabGroups-Security').check({ force: true });
+    cy.get('[name=collabDateSecurity]').type('October/November 2022');
 
-    // Submit the form to get a validation error on the conditional field
+    cy.url().as('basicStepUrl');
+
+    // Successful submit
     cy.contains('button', 'Next').as('submit').click();
 
-    cy.contains('.usa-alert__heading', 'Please check and fix the following').as(
-      'formError'
-    );
+    // Proceeded to the next step
+    cy.contains('.usa-step-indicator__heading-text', 'Subject areas')
+      .as('subjectStepHeader')
+      .should('be.visible');
 
-    cy.get('@formError').should('be.visible');
+    // Go over the basic step again to test "save and exit" submits
+    cy.get('@basicStepUrl').then(url => cy.visit(url));
+    cy.get('@basicStepHeader').should('be.visible');
 
-    // Use the error jump link
-    cy.contains('.usa-error-message', 'Security: When did you meet with them?')
-      .should('be.visible')
-      .click();
+    // Error on required field
+    cy.get('[name=name]').clear();
+    cy.contains('button', 'Save and exit').as('saveExit').click();
 
-    // Check that the error field is focused and fix it
-    cy.focused()
-      .should('have.attr', 'name', 'collabDateSecurity')
-      .type('2022-10-24T16:39:56.116105Z');
+    cy.contains(
+      '.usa-alert__heading',
+      'Please check and fix the following'
+    ).should('exist');
+    cy.contains('.usa-error-message', 'Request name').should('be.visible');
 
-    cy.get('@formError').should('not.exist');
+    // Fix the error and return
+    const requestName = '2nd request name';
+    cy.get('[name=name]').type(requestName);
+    cy.get('@saveExit').click();
 
-    // Successful resubmit
-    cy.get('@submit').click();
+    // Check the update
+    cy.get('@basicStepUrl').then(url => cy.visit(url));
+    cy.get('[name=name]').should('have.value', requestName);
 
-    cy.contains('.usa-step-indicator__heading-text', 'Subject areas').should(
-      'be.visible'
-    );
+    // Jump to the next available Subject step
+    cy.contains(
+      '.usa-step-indicator__segment--clickable',
+      'Subject areas'
+    ).click();
+    cy.get('@subjectStepHeader').should('be.visible');
   });
 });

@@ -35,8 +35,6 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
-  const [shouldSendEmail, setShouldSendEmail] = useState<boolean>(true);
-
   // Requester object and loading state
   const {
     contacts: {
@@ -59,18 +57,23 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
     values: ActionForm,
     { setFieldError }: FormikHelpers<ActionForm>
   ) => {
-    const { feedback, notificationRecipients } = values;
+    const { feedback, notificationRecipients, shouldSendEmail } = values;
+
+    const variables: ActionInput = {
+      input: {
+        intakeId: systemId,
+        feedback,
+        shouldSendEmail
+      }
+    };
+
+    if (shouldSendEmail) {
+      variables.input.notificationRecipients = notificationRecipients;
+    }
 
     // GQL mutation to submit action
     mutate({
-      variables: {
-        input: {
-          intakeId: systemId,
-          feedback,
-          shouldSendEmail,
-          notificationRecipients
-        }
-      }
+      variables
     })
       .then(({ errors }) => {
         if (!errors) {
@@ -90,7 +93,8 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       shouldNotifyITInvestment:
         pathname.endsWith('no-governance') ||
         pathname.endsWith('not-it-request')
-    }
+    },
+    shouldSendEmail: true
   };
 
   const backLink = `/governance-review-team/${systemId}/actions`;
@@ -198,8 +202,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                     type="submit"
                     onClick={() => {
                       setErrors({});
-                      setShouldSendEmail(true);
-                      setFieldValue('skipEmail', false);
+                      setFieldValue('shouldSendEmail', true);
                     }}
                     disabled={!!activeContact}
                   >
@@ -208,13 +211,9 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                 </div>
                 <div>
                   <CompleteWithoutEmailButton
-                    onClick={() => {
-                      setErrors({});
-                      setShouldSendEmail(false);
-                      setFieldValue('skipEmail', true);
-                      // todo hack timeout to propagate skipEmail value to the validator before submission
-                      setTimeout(submitForm);
-                    }}
+                    setErrors={setErrors}
+                    setFieldValue={setFieldValue}
+                    submitForm={submitForm}
                     disabled={!!activeContact}
                   />
                 </div>

@@ -6,10 +6,13 @@ import (
 
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
+	"github.com/samber/lo"
 	"go.uber.org/zap"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
+	apimodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -22,6 +25,11 @@ const (
 	cedarPersonAssignee       = "person"
 	cedarOrganizationAssignee = "organization"
 )
+
+func cedarRoleApplicationPtr() *string {
+	str := cedarRoleApplication
+	return &str
+}
 
 func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {
 	if rawAssigneeType == cedarPersonAssignee {
@@ -122,4 +130,229 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 	}
 
 	return retVal, nil
+}
+
+// GetRoleTypes queries CEDAR for the list of supported role types
+func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return []*models.CedarRoleType{}, nil
+	}
+
+	// Construct the parameters
+	params := apiroles.NewRoleTypeFindParams()
+	params.SetApplication(cedarRoleApplication)
+	params.HTTPClient = c.hc
+
+	// Make the API call
+	resp, err := c.sdk.Role.RoleTypeFind(params, c.auth)
+	if err != nil {
+		return []*models.CedarRoleType{}, err
+	}
+
+	if resp.Payload == nil {
+		return []*models.CedarRoleType{}, fmt.Errorf("no body received")
+	}
+
+	// Convert the auto-generated struct to our own pkg/models struct
+	retVal := []*models.CedarRoleType{}
+
+	for _, roleType := range resp.Payload.RoleTypes {
+		if roleType.Application == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role type; role type Application was null")
+			continue
+		}
+
+		if roleType.ID == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role type; role type ID was null")
+			continue
+		}
+
+		if roleType.Name == nil {
+			appcontext.ZLogger(ctx).Error("Error decoding role type; role type Name was null")
+			continue
+		}
+
+		retRoleType := &models.CedarRoleType{
+			ID:          *roleType.ID,
+			Application: *roleType.Application,
+			Name:        *roleType.Name,
+
+			Description: zero.StringFrom(roleType.Description),
+		}
+
+		retVal = append(retVal, retRoleType)
+	}
+
+	return retVal, nil
+}
+
+type newRole struct {
+	euaUserID  string
+	roleTypeID string
+}
+
+// SetRolesForUser sets the desired roles for a user on a given system to *exactly* the requested role types, adding and deleting role assignments in CEDAR as necessary
+func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) error {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return nil
+	}
+
+	allRolesForSystem, err := c.GetRolesBySystem(ctx, cedarSystemID, null.String{})
+	if err != nil {
+		return err
+	}
+
+	currentRolesForUser := lo.Filter(allRolesForSystem, func(role *models.CedarRole, _ int) bool {
+		// the check for !currentRole.RoleID.IsZero() shouldn't be necessary - all roles should have IDs assigned - but check's there just in case CEDAR has bad data
+		return role.AssigneeUsername.ValueOrZero() == euaUserID && !role.RoleID.IsZero()
+	})
+
+	currentRolesForUserByRoleTypes := lo.SliceToMap(currentRolesForUser, func(role *models.CedarRole) (string, *models.CedarRole) {
+		return role.RoleTypeID, role
+	})
+
+	// first return value from lo.Difference is the role types to add;
+	// second return would be the role types to delete, but we ignore that and calculate it later because we need the *role* IDs
+	roleTypesToAdd, _ := lo.Difference(desiredRoleTypeIDs, lo.Keys(currentRolesForUserByRoleTypes))
+
+	// augment the list of role type IDs to add with the user's EUA ID
+	newRoles := lo.Map(roleTypesToAdd, func(roleTypeID string, _ int) newRole {
+		return newRole{
+			euaUserID:  euaUserID,
+			roleTypeID: roleTypeID,
+		}
+	})
+
+	// here is where we find the roles we want to delete; lo.OmitByKeys() removes any currently-assigned role type IDs that aren't in desiredRoleTypeIDs,
+	// then we use lo.Values() to extract the roles, and lo.Map() to pull out those roles' IDs
+	rolesToDelete := lo.OmitByKeys(currentRolesForUserByRoleTypes, desiredRoleTypeIDs)
+	roleIDsToDelete := lo.Map(lo.Values(rolesToDelete), func(role *models.CedarRole, _ int) string {
+		return role.RoleID.ValueOrZero()
+	})
+
+	// addRoles() and deleteRoles() each take several hundred milliseconds for CEDAR to respond; calling them concurrently noticeably helps
+	g := new(errgroup.Group)
+
+	g.Go(func() error {
+		// length check is necessary because CEDAR will error if we call addRoles() with no role type IDs
+		if len(newRoles) > 0 {
+			err = c.addRoles(ctx, cedarSystemID, newRoles)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+
+	g.Go(func() error {
+		// length check is necessary because CEDAR will error if we call deleteRoles() with no role IDs
+		if len(roleIDsToDelete) > 0 {
+			err = c.deleteRoles(ctx, roleIDsToDelete)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+
+	if err := g.Wait(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// private utility method for creating roles for a given system in CEDAR
+func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []newRole) error {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return nil
+	}
+
+	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return err
+	}
+
+	// Construct the body
+	rolesToCreate := []*apimodels.Role{}
+
+	for _, newRole := range newRoles {
+		// create by-value copy of roleTypeID so it doesn't change as newRole iterates through newRoles
+		roleTypeID := newRole.roleTypeID
+
+		roleToCreate := &apimodels.Role{
+			Application:      cedarRoleApplicationPtr(),
+			ObjectID:         &cedarSystem.VersionID,
+			AssigneeUserName: newRole.euaUserID,
+			RoleTypeID:       &roleTypeID,
+		}
+		rolesToCreate = append(rolesToCreate, roleToCreate)
+	}
+
+	body := &apimodels.RoleAddRequest{
+		Application: cedarRoleApplicationPtr(),
+		Roles:       rolesToCreate,
+	}
+
+	// construct the parameters
+	params := apiroles.NewRoleAddParams()
+	params.SetBody(body)
+	params.HTTPClient = c.hc
+
+	// Make the API call
+	resp, err := c.sdk.Role.RoleAdd(params, c.auth)
+	if err != nil {
+		return err
+	}
+
+	if resp.Payload == nil {
+		return fmt.Errorf("no body received")
+	}
+
+	if resp.Payload.Result == "error" {
+		if len(resp.Payload.Message) > 0 {
+			return fmt.Errorf(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
+		}
+		return fmt.Errorf("unknown error")
+	}
+
+	return nil
+}
+
+// private utility method for deleting roles from CEDAR
+func (c *Client) deleteRoles(ctx context.Context, roleIDsToDelete []string) error {
+	if !c.cedarCoreEnabled(ctx) {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		return nil
+	}
+
+	// construct the parameters
+	params := apiroles.NewRoleDeleteListParams()
+	params.SetApplication(cedarRoleApplication)
+	params.SetID(roleIDsToDelete)
+	params.HTTPClient = c.hc
+
+	// Make the API call
+	resp, err := c.sdk.Role.RoleDeleteList(params, c.auth)
+	if err != nil {
+		return err
+	}
+
+	if resp.Payload == nil {
+		return fmt.Errorf("no body received")
+	}
+
+	if resp.Payload.Result == "error" {
+		if len(resp.Payload.Message) > 0 {
+			return fmt.Errorf(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
+		}
+		return fmt.Errorf("unknown error")
+	}
+
+	return nil
 }

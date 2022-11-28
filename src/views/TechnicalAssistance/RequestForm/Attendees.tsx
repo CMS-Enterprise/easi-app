@@ -76,7 +76,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
    * Get TRB attendees data and mutations
    */
   const {
-    data: { attendees, requester, loading },
+    data: { attendees, requester },
     createAttendee,
     updateAttendee,
     deleteAttendee
@@ -141,8 +141,6 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
         });
       });
   };
-
-  if (loading) return null;
 
   return (
     <div className="trb-attendees">
