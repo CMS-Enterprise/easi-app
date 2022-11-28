@@ -136,8 +136,7 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
         // If mutation returns error, set custom error message
         setError('euaUserId', {
           type: 'custom',
-          // TODO: Update error message
-          message: 'Error message here'
+          message: t('attendees.alerts.error')
         });
       });
   };
@@ -190,6 +189,19 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
                   'usa-button--outline': attendees.length > 0
                 })}
                 to={`${url}/list`}
+                // Save requester when navigating to additional attendees form
+                onClick={() => {
+                  // Check that all requester fields are filled out
+                  // This submission should not throw errors if missing fields
+                  if (
+                    getValues().euaUserId &&
+                    getValues().component &&
+                    getValues().role &&
+                    isDirty
+                  ) {
+                    submitForm(getValues(), `${url}/list`, requester.id);
+                  }
+                }}
               >
                 {t(
                   attendees.length > 0

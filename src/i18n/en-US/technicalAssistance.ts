@@ -251,6 +251,11 @@ const technicalAssistance = {
       'Please provide the name, CMS component, and role for this attendee.',
     attendeeNameHelpText:
       'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at cms-rb@cms.hhs.gov',
+    alerts: {
+      success: 'Your attendee has been added',
+      error:
+        'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.'
+    },
     fieldLabels: {
       requester: {
         euaUserId: 'Requester name',

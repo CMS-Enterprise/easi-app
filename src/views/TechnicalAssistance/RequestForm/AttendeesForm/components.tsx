@@ -82,7 +82,7 @@ const AttendeeFields = ({
       {/* Validation errors summary */}
       {Object.keys(errors).length > 0 && (
         <Alert
-          heading={t('basic.errors.checkFix')}
+          heading={t('errors.checkFix')}
           type="error"
           className="margin-bottom-2"
         >
@@ -121,9 +121,7 @@ const AttendeeFields = ({
                   {error && (
                     <ErrorMessage>
                       {t(
-                        error.message
-                          ? error.message
-                          : 'basic.errors.makeSelection'
+                        error.message ? error.message : 'errors.makeSelection'
                       )}
                     </ErrorMessage>
                   )}
@@ -158,9 +156,7 @@ const AttendeeFields = ({
                 <FormGroup className="margin-top-3" error={!!error}>
                   <Label htmlFor="component">{t(fieldLabels.component)}</Label>
                   {error && (
-                    <ErrorMessage>
-                      {t('basic.errors.makeSelection')}
-                    </ErrorMessage>
+                    <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                   )}
                   <Dropdown
                     id="component"
@@ -187,9 +183,7 @@ const AttendeeFields = ({
                 <FormGroup className="margin-top-3" error={!!error}>
                   <Label htmlFor="role">{t(fieldLabels.role)}</Label>
                   {error && (
-                    <ErrorMessage>
-                      {t('basic.errors.makeSelection')}
-                    </ErrorMessage>
+                    <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                   )}
                   <Dropdown
                     id="role"
