@@ -6,7 +6,7 @@ import {
   UseFormClearErrors,
   UseFormSetValue
 } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
 import { Column, usePagination, useTable } from 'react-table';
 import {
@@ -18,6 +18,7 @@ import {
   FormGroup,
   Grid,
   Label,
+  Link,
   Table
 } from '@trussworks/react-uswds';
 
@@ -127,7 +128,13 @@ const AttendeeFields = ({
                   )}
                   {type === 'attendee' && (
                     <HelpText className="margin-top-1">
-                      {t('attendees.attendeeNameHelpText')}
+                      <Trans i18nKey="technicalAssistance:attendees.attendeeNameHelpText">
+                        indexOne
+                        <Link href="mailto:NavigatorInquiries@cms.hhs.gov">
+                          helpTextEmail
+                        </Link>
+                        indexTwo
+                      </Trans>
                     </HelpText>
                   )}
                   <CedarContactSelect
