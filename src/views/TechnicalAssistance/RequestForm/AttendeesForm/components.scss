@@ -1,9 +1,9 @@
-ul.trbAttendees-list {
+.trbAttendees-table tbody {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 1rem;
 
-  > li {
+  .trbAttendee {
     display: flex;
     gap: .5rem;
   }

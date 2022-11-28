@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form, Grid } from '@trussworks/react-uswds';
+import { Form } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -176,40 +176,36 @@ function Attendees({ request, stepUrl }: FormStepComponentProps) {
               control={control}
             />
 
-            <Grid row>
-              <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-                <Divider />
+            <Divider />
 
-                <div className="margin-bottom-6">
-                  <h4 className="margin-bottom-2">
-                    {t('attendees.additionalAttendees')}
-                  </h4>
+            <div className="margin-bottom-6">
+              <h4 className="margin-bottom-2">
+                {t('attendees.additionalAttendees')}
+              </h4>
 
-                  {/* Button to add additional attendee */}
-                  <UswdsReactLink
-                    variant="unstyled"
-                    className={classNames('usa-button', 'margin-top-0', {
-                      'usa-button--outline': attendees.length > 0
-                    })}
-                    to={`${url}/list`}
-                  >
-                    {t(
-                      attendees.length > 0
-                        ? 'attendees.addAnotherAttendee'
-                        : 'attendees.addAnAttendee'
-                    )}
-                  </UswdsReactLink>
+              {/* Button to add additional attendee */}
+              <UswdsReactLink
+                variant="unstyled"
+                className={classNames('usa-button', 'margin-top-0', {
+                  'usa-button--outline': attendees.length > 0
+                })}
+                to={`${url}/list`}
+              >
+                {t(
+                  attendees.length > 0
+                    ? 'attendees.addAnotherAttendee'
+                    : 'attendees.addAnAttendee'
+                )}
+              </UswdsReactLink>
 
-                  {/* List of additional attendees */}
-                  <AttendeesList
-                    attendees={attendees}
-                    setActiveAttendee={setActiveAttendee}
-                    trbRequestId={request.id}
-                    deleteAttendee={deleteAttendee}
-                  />
-                </div>
-              </Grid>
-            </Grid>
+              {/* List of additional attendees */}
+              <AttendeesList
+                attendees={attendees}
+                setActiveAttendee={setActiveAttendee}
+                trbRequestId={request.id}
+                deleteAttendee={deleteAttendee}
+              />
+            </div>
 
             <Pager
               back={{

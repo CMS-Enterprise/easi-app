@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Control,
   Controller,
@@ -7,6 +7,7 @@ import {
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
+import { Column, useTable } from 'react-table';
 import {
   Alert,
   Button,
@@ -15,7 +16,8 @@ import {
   ErrorMessage,
   FormGroup,
   Grid,
-  Label
+  Label,
+  Table
 } from '@trussworks/react-uswds';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -237,13 +239,11 @@ const Attendee = ({
     /** Attendee email */
     email,
     /** Attendee name */
-    commonName,
-    /** Attendee EUA user id */
-    euaUserId
+    commonName
   } = attendee.userInfo;
 
   return (
-    <li id={`trbAttendee-${euaUserId}`}>
+    <>
       {/* Attendee icon with initials */}
       <InitialsIcon name={commonName} />
       {/* Attendee details */}
@@ -285,7 +285,7 @@ const Attendee = ({
           </ButtonGroup>
         )}
       </div>
-    </li>
+    </>
   );
 };
 
@@ -307,31 +307,76 @@ const AttendeesList = ({
   setActiveAttendee,
   deleteAttendee
 }: AttendeesListProps) => {
+  /** Format attendees for display in table */
+  const data = useMemo(() => {
+    return attendees.map(attendee => ({ attendee }));
+  }, [attendees]);
+
+  /** Columns for display in table */
+  const columns: Column<{ attendee: TRBAttendeeData }>[] = useMemo(
+    () => [
+      {
+        Header: 'attendee',
+        accessor: 'attendee'
+      }
+    ],
+    []
+  );
+
+  /** Attendees table object */
+  const table = useTable({
+    data,
+    columns
+  });
+
+  const { getTableProps, getTableBodyProps, rows, prepareRow } = table;
+
   // If no attendees, return null
   if (attendees.length < 1) return null;
 
   return (
-    <ul className="trbAttendees-list usa-list usa-list--unstyled margin-y-3">
-      {[...attendees]
-        // TODO: Fix sort attendees by time created
-        // .sort(
-        //   (a, b) =>
-        //     parseAsLocalTime(b.createdAt) - parseAsLocalTime(a.createdAt)
-        // )
-        .map(attendee => (
-          <Attendee
-            attendee={attendee}
-            deleteAttendee={() => {
-              if (attendee.id) {
-                deleteAttendee(attendee.id);
-                setActiveAttendee({ ...initialAttendee, trbRequestId });
-              }
-            }}
-            setActiveAttendee={setActiveAttendee}
-            key={attendee.id}
-          />
-        ))}
-    </ul>
+    <div className="trbAttendees-table margin-top-4 margin-bottom-2">
+      <Table bordered={false} fullWidth {...getTableProps()}>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, index) => {
+                  const attendee: TRBAttendeeData = cell.value;
+                  return (
+                    <td
+                      {...cell.getCellProps()}
+                      style={{
+                        border: 'none',
+                        padding: 0
+                      }}
+                      id={`trbAttendee-${attendee?.userInfo?.euaUserId}`}
+                      className="trbAttendee"
+                    >
+                      <Attendee
+                        attendee={attendee}
+                        deleteAttendee={() => {
+                          if (attendee.id) {
+                            deleteAttendee(attendee.id);
+                            setActiveAttendee({
+                              ...initialAttendee,
+                              trbRequestId
+                            });
+                          }
+                        }}
+                        setActiveAttendee={setActiveAttendee}
+                        key={attendee.id}
+                      />
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    </div>
   );
 };
 
