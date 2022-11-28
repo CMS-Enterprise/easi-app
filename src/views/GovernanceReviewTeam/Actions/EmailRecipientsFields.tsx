@@ -285,9 +285,6 @@ export default ({
     });
   };
 
-  // Check if contacts have loaded
-  if (contacts.loading) return null;
-
   // Number of contacts to hide behind view more button
   // Subtract defaultRecipientsCount from total number of possible default recipients to show how many are below view more button
   const hiddenContactsCount =
@@ -441,6 +438,7 @@ export default ({
               )}
               {/* Additional Contacts button/form */}
               <AdditionalContacts
+                contacts={contacts}
                 systemIntakeId={systemIntakeId}
                 activeContact={activeContact}
                 setActiveContact={setActiveContact}
@@ -462,7 +460,11 @@ export default ({
                   }
                 }}
                 type="recipient"
-                className="margin-top-3"
+                // Conditional classNames prevent jump in spacing when contacts are loaded
+                className={classnames({
+                  'margin-top-3': !contacts.loading,
+                  'margin-top-105': contacts.loading
+                })}
               />
             </TruncatedContent>
           </div>

@@ -38,11 +38,10 @@ const RejectIntake = () => {
     }
   );
 
-  // Requester object and loading state
+  // Requester object
   const {
     contacts: {
-      data: { requester },
-      loading
+      data: { requester }
     }
   } = useSystemIntakeContacts(systemId);
 
@@ -106,9 +105,6 @@ const RejectIntake = () => {
       // Set Formik error to display alert
       .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
-
-  // Wait for contacts to load before returning form
-  if (loading) return null;
 
   return (
     <Formik

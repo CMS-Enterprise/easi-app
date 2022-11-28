@@ -39,11 +39,10 @@ const ProvideGRTFeedbackToBusinessOwner = ({
   const { t } = useTranslation('action');
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(query);
 
-  // Requester object and loading state
+  // Requester object
   const {
     contacts: {
-      data: { requester },
-      loading
+      data: { requester }
     }
   } = useSystemIntakeContacts(systemId);
 
@@ -103,9 +102,6 @@ const ProvideGRTFeedbackToBusinessOwner = ({
       // Set Formik error to display alert
       .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
-
-  // Wait for contacts to load before returning form
-  if (loading) return null;
 
   return (
     <Formik

@@ -49,11 +49,10 @@ const IssueLifecycleId = () => {
     }
   );
 
-  // Requester object and loading state
+  // Requester object
   const {
     contacts: {
-      data: { requester },
-      loading
+      data: { requester }
     }
   } = useSystemIntakeContacts(systemId);
 
@@ -80,9 +79,6 @@ const IssueLifecycleId = () => {
     },
     shouldSendEmail: true
   };
-
-  // Wait for contacts to load before returning form
-  if (loading) return null;
 
   const onSubmit = async (
     values: SubmitLifecycleIdForm,

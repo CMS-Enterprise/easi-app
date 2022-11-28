@@ -650,6 +650,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {/* Add new contacts */}
                 {flags.notifyMultipleRecipients && (
                   <AdditionalContacts
+                    contacts={contacts}
                     systemIntakeId={id}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}

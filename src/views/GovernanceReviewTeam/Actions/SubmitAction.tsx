@@ -35,11 +35,10 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
-  // Requester object and loading state
+  // Requester object
   const {
     contacts: {
-      data: { requester },
-      loading
+      data: { requester }
     }
   } = useSystemIntakeContacts(systemId);
 
@@ -98,9 +97,6 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   };
 
   const backLink = `/governance-review-team/${systemId}/actions`;
-
-  // Wait for contacts to load before returning form
-  if (loading) return null;
 
   return (
     <Formik
