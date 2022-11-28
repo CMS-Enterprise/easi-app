@@ -7,7 +7,7 @@ import {
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
-import { Column, useTable } from 'react-table';
+import { Column, usePagination, useTable } from 'react-table';
 import {
   Alert,
   Button,
@@ -26,6 +26,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
 import InitialsIcon from 'components/shared/InitialsIcon';
+import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
 import { PersonRole } from 'types/graphql-global-types';
@@ -324,25 +325,45 @@ const AttendeesList = ({
   );
 
   /** Attendees table object */
-  const table = useTable({
-    data,
-    columns
-  });
-
-  const { getTableProps, getTableBodyProps, rows, prepareRow } = table;
+  const {
+    canNextPage,
+    canPreviousPage,
+    getTableProps,
+    getTableBodyProps,
+    gotoPage,
+    nextPage,
+    page,
+    pageCount,
+    pageOptions,
+    prepareRow,
+    previousPage,
+    setPageSize,
+    state
+  } = useTable(
+    {
+      data,
+      columns,
+      initialState: {
+        sortBy: useMemo(() => [{ id: 'createdAt', desc: true }], []),
+        pageIndex: 0,
+        pageSize: 4
+      }
+    },
+    usePagination
+  );
 
   // If no attendees, return null
   if (attendees.length < 1) return null;
 
   return (
-    <div className="trbAttendees-table margin-top-4 margin-bottom-2">
+    <div className="trbAttendees-table margin-top-4">
       <Table bordered={false} fullWidth {...getTableProps()}>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {page.map(row => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
-                {row.cells.map((cell, index) => {
+                {row.cells.map(cell => {
                   const attendee: TRBAttendeeData = cell.value;
                   return (
                     <td
@@ -376,6 +397,25 @@ const AttendeesList = ({
           })}
         </tbody>
       </Table>
+      {
+        /* Table pagination - hide if no second page */
+        attendees.length > state.pageSize && (
+          <TablePagination
+            gotoPage={gotoPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            canNextPage={canNextPage}
+            pageIndex={state.pageIndex}
+            pageOptions={pageOptions}
+            canPreviousPage={canPreviousPage}
+            pageCount={pageCount}
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+            page={[]}
+            className="margin-top-3"
+          />
+        )
+      }
     </div>
   );
 };
