@@ -113,8 +113,9 @@ func UpdateTRBRequestForm(
 		emailErrGroup.Go(func() error {
 			return emailClient.SendTRBFormSubmissionNotificationToRequester(
 				ctx,
-				requesterInfo.Email,
+				request.ID,
 				request.Name,
+				requesterInfo.Email,
 				requesterInfo.CommonName,
 			)
 		})

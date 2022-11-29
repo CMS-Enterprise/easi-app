@@ -5,6 +5,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"path"
+
+	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -18,11 +21,14 @@ type adminEmailParameters struct {
 }
 
 func (c Client) trbRequestFormSubmissionAdminEmailBody(requestName string, requesterName string, component string) (string, error) {
+	// TODO - EASI-2488 - put correct path here
+	requestAdminViewPath := path.Join("TODO", "admin-view")
+
 	data := adminEmailParameters{
 		RequestName:   requestName,
 		RequesterName: requesterName,
 		Component:     component,
-		RequestLink:   "", // TODO - populate
+		RequestLink:   c.urlFromPath(requestAdminViewPath),
 	}
 
 	var b bytes.Buffer
@@ -66,10 +72,12 @@ type requesterEmailParameters struct {
 	TRBInboxAddress string
 }
 
-func (c Client) trbRequestFormSubmissionRequesterEmailBody(requestName string) (string, error) {
+func (c Client) trbRequestFormSubmissionRequesterEmailBody(requestID uuid.UUID, requestName string) (string, error) {
+	requestViewPath := path.Join("trb", "task-list", requestID.String())
+
 	data := requesterEmailParameters{
 		RequestName:     requestName,
-		RequestLink:     "", // TODO - populate
+		RequestLink:     c.urlFromPath(requestViewPath),
 		TRBInboxAddress: c.config.TRBEmail.String(),
 	}
 
@@ -87,9 +95,15 @@ func (c Client) trbRequestFormSubmissionRequesterEmailBody(requestName string) (
 }
 
 // SendTRBFormSubmissionNotificationToRequester notifies a TRB requester that their TRB Request form has been submitted
-func (c Client) SendTRBFormSubmissionNotificationToRequester(ctx context.Context, requesterEmail models.EmailAddress, requestName string, requesterName string) error {
+func (c Client) SendTRBFormSubmissionNotificationToRequester(
+	ctx context.Context,
+	requestID uuid.UUID,
+	requestName string,
+	requesterEmail models.EmailAddress,
+	requesterName string,
+) error {
 	subject := fmt.Sprintf("Your TRB Request form has been submitted (%v)", requestName)
-	body, err := c.trbRequestFormSubmissionRequesterEmailBody(requestName)
+	body, err := c.trbRequestFormSubmissionRequesterEmailBody(requestID, requestName)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

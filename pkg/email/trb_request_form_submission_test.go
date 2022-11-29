@@ -3,6 +3,8 @@ package email
 import (
 	"context"
 
+	"github.com/google/uuid"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -72,7 +74,13 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendTRBFormSubmissionNotificationToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
+		err = client.SendTRBFormSubmissionNotificationToRequester(
+			ctx,
+			uuid.New(),
+			"testRequest",
+			models.NewEmailAddress("test@fake.email"),
+			"testRequester",
+		)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -86,7 +94,13 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		s.NoError(err)
 		client.templates.trbFormSubmittedRequester = mockFailedTemplateCaller{}
 
-		err = client.SendTRBFormSubmissionNotificationToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
+		err = client.SendTRBFormSubmissionNotificationToRequester(
+			ctx,
+			uuid.New(),
+			"testRequest",
+			models.NewEmailAddress("test@fake.email"),
+			"testRequester",
+		)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -101,7 +115,13 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendTRBFormSubmissionNotificationToRequester(ctx, models.NewEmailAddress("test@fake.email"), "testRequest", "testRequester")
+		err = client.SendTRBFormSubmissionNotificationToRequester(
+			ctx,
+			uuid.New(),
+			"testRequest",
+			models.NewEmailAddress("test@fake.email"),
+			"testRequester",
+		)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
