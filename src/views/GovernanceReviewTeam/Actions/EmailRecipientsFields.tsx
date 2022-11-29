@@ -442,7 +442,9 @@ export default ({
                 systemIntakeId={systemIntakeId}
                 activeContact={activeContact}
                 setActiveContact={setActiveContact}
-                onCreateContact={(contact: AugmentedSystemIntakeContact) => {
+                createContactCallback={(
+                  contact: AugmentedSystemIntakeContact
+                ) => {
                   if (
                     // Check if response from CEDAR includes email
                     contact.email &&
