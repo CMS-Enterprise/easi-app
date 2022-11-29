@@ -23,7 +23,9 @@ In general, the necessary tools are:
 
 ## Basic Prerequisites
 
-**MacOS:** Developers will need [Homebrew](https://brew.sh) to install dependencies, which can be installed with `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
+**MacOS:**
+- Developers will need [Homebrew](https://brew.sh) to install dependencies, which can be installed with `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
+- Once [Ruby](#ruby) is installed you'll need to run `scripts/dev hosts:check` to ensure that `host.docker.internal` is added to your `/etc/hosts` file.
 
 **Windows:** Developers will need to install WSL2, set up an Ubuntu distro, then configure VS Code to work with WSL2.
 - In Powershell running as admin, run `wsl --install`.
