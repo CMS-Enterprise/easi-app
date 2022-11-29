@@ -215,9 +215,10 @@ export default ({
     .current;
 
   /** Number of default recipients to display */
-  const defaultRecipientsCount: number = Object.values(defaultRecipients)
-    .flat()
-    .filter(value => value).length;
+  const defaultRecipientsCount: number =
+    1 +
+    Number(defaultRecipients.shouldNotifyITGovernance) +
+    Number(defaultRecipients.shouldNotifyITInvestment);
 
   /**
    * Object to display verified and unverified contacts
