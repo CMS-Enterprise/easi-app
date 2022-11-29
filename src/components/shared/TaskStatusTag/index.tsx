@@ -10,7 +10,7 @@ import Tag from '../Tag';
  * `TaskStatus` is a combination of enums from backend types
  * with the previous `TagEnum` that was defined for the GovernanceTaskList.
  */
-export type TaskStatus = TRBFormStatus | TagEnum;
+export type TaskStatus = keyof typeof TRBFormStatus | TagEnum;
 
 export const taskStatusClassName: Record<TaskStatus, string> = {
   COMPLETED: 'bg-success-dark text-white',
