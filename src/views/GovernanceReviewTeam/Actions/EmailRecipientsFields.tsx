@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -36,8 +36,8 @@ type RecipientProps = {
 };
 
 type VerifiedContactsObject = {
-  verifiedContacts: SystemIntakeContactProps[];
-  unverifiedContacts: SystemIntakeContactProps[];
+  verified: SystemIntakeContactProps[];
+  unverified: SystemIntakeContactProps[];
 };
 
 /**
@@ -207,6 +207,16 @@ export default ({
   // Contacts query
   const { contacts, createContact } = useSystemIntakeContacts(systemIntakeId);
 
+  /**
+   * Initial contacts state
+   *
+   * Used to preserve contact list order based on initial verified/unverified state
+   * */
+  const [
+    initialContacts,
+    setInitialContacts
+  ] = useState<VerifiedContactsObject>({ verified: [], unverified: [] });
+
   // Requester object
   const { requester } = contacts.data;
 
@@ -220,46 +230,19 @@ export default ({
     Number(defaultRecipients.shouldNotifyITGovernance) +
     Number(defaultRecipients.shouldNotifyITInvestment);
 
-  /**
-   * Object to display verified and unverified contacts
-   */
-  const contactsList: VerifiedContactsObject = Object.values(contacts.data)
-    .flat()
-    .reduce(
-      (acc: VerifiedContactsObject, contact: SystemIntakeContactProps) => {
-        if (contact.role === 'Requester' || !contact.commonName) return acc;
-        return {
-          verifiedContacts: [
-            ...acc.verifiedContacts,
-            ...(contact.id ? [contact] : [])
-          ],
-          unverifiedContacts: [
-            ...acc.unverifiedContacts,
-            ...(!contact.id ? [contact] : [])
-          ]
-        };
-      },
-      {
-        verifiedContacts: [],
-        unverifiedContacts: []
-      }
-    );
-
   /** Number of unverified contacts */
-  const unverifiedCount = contactsList.unverifiedContacts.length;
+  const unverifiedCount = initialContacts.unverified.length;
 
   /** Number of selected recipients */
   const selectedCount = Object.values(recipients)
     .flat()
     .filter(value => value).length;
 
-  const { verifiedContacts, unverifiedContacts } = useRef(contactsList).current;
-
   /**
    * Additional contacts not already included in initial list of contacts
    * */
-  const additionalContacts = contacts.data.additionalContacts.filter(
-    ({ id }) => !verifiedContacts.find(contact => contact.id === id)
+  const additionalContacts = contacts.data.additionalContacts.filter(({ id }) =>
+    initialContacts.verified.find(contact => contact.id === id)
   );
 
   /**
@@ -289,9 +272,30 @@ export default ({
   // Number of contacts to hide behind view more button
   // Subtract defaultRecipientsCount from total number of possible default recipients to show how many are below view more button
   const hiddenContactsCount =
-    verifiedContacts.length +
+    initialContacts.verified.length +
     additionalContacts.length +
     (3 - defaultRecipientsCount);
+
+  /** Handles setting initial contacts state */
+  useEffect(() => {
+    let isMounted = false;
+    if (!isMounted) {
+      /** Flattened contacts array */
+      const contactsArray = Object.values(contacts.data).flat();
+      /** Format and set initial contacts object for display */
+      setInitialContacts({
+        verified: contactsArray.filter(
+          contact => contact.id && contact.role !== 'Requester'
+        ),
+        unverified: contactsArray.filter(
+          contact => !contact.id && contact.role !== 'Requester'
+        )
+      });
+    }
+    return () => {
+      isMounted = true;
+    };
+  }, [contacts.data]);
 
   return (
     <div className={classnames(className)}>
@@ -376,8 +380,8 @@ export default ({
           )}
 
           {/* Unverified recipients */}
-          {unverifiedContacts.length > 0 &&
-            unverifiedContacts
+          {initialContacts.unverified.length > 0 &&
+            initialContacts.unverified
               .filter(({ role }) => role !== 'Requester') // filter out requester
               .map((contact, index) => (
                 <Recipient
@@ -424,7 +428,7 @@ export default ({
                 />
               )}
               {/* Verified contacts */}
-              {[...verifiedContacts, ...additionalContacts].map(
+              {[...initialContacts.verified, ...additionalContacts].map(
                 (contact, index) => (
                   <Recipient
                     key={`verified-${index}`} // eslint-disable-line react/no-array-index-key
@@ -445,23 +449,7 @@ export default ({
                 setActiveContact={setActiveContact}
                 createContactCallback={(
                   contact: AugmentedSystemIntakeContact
-                ) => {
-                  if (
-                    // Check if response from CEDAR includes email
-                    contact.email &&
-                    // Check if recipient is already selected
-                    !recipients.regularRecipientEmails.includes(contact.email)
-                  ) {
-                    // If recipient is not already selected, add email to recipients array
-                    setRecipients({
-                      ...recipients,
-                      regularRecipientEmails: [
-                        ...recipients.regularRecipientEmails,
-                        contact.email
-                      ]
-                    });
-                  }
-                }}
+                ) => {}}
                 type="recipient"
                 // Conditional classNames prevent jump in spacing when contacts are loaded
                 className={classnames({
