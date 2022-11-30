@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import UpdateTrbRequestFormQuery from 'queries/UpdateTrbRequestFormQuery';
+import UpdateTrbRequestAndFormQuery from 'queries/UpdateTrbRequestAndFormQuery';
 
 import Basic from './Basic';
 
@@ -22,7 +22,7 @@ describe('Trb Request form: Basic', () => {
           mocks={[
             {
               request: {
-                query: UpdateTrbRequestFormQuery,
+                query: UpdateTrbRequestAndFormQuery,
                 variables: {
                   input: {
                     component: 'Center for Medicaid and CHIP Services',

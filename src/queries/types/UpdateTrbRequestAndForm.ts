@@ -6,15 +6,15 @@
 import { UpdateTRBRequestFormInput, TRBRequestChanges, TRBWhereInProcessOption, TRBCollabGroupOption } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL mutation operation: UpdateTrbRequestForm
+// GraphQL mutation operation: UpdateTrbRequestAndForm
 // ====================================================
 
-export interface UpdateTrbRequestForm_updateTRBRequestForm {
+export interface UpdateTrbRequestAndForm_updateTRBRequestForm {
   __typename: "TRBRequestForm";
   id: UUID;
 }
 
-export interface UpdateTrbRequestForm_updateTRBRequest_form {
+export interface UpdateTrbRequestAndForm_updateTRBRequest_form {
   __typename: "TRBRequestForm";
   id: UUID;
   component: string | null;
@@ -36,19 +36,19 @@ export interface UpdateTrbRequestForm_updateTRBRequest_form {
   collabGroupOther: string | null;
 }
 
-export interface UpdateTrbRequestForm_updateTRBRequest {
+export interface UpdateTrbRequestAndForm_updateTRBRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
-  form: UpdateTrbRequestForm_updateTRBRequest_form;
+  form: UpdateTrbRequestAndForm_updateTRBRequest_form;
 }
 
-export interface UpdateTrbRequestForm {
-  updateTRBRequestForm: UpdateTrbRequestForm_updateTRBRequestForm;
-  updateTRBRequest: UpdateTrbRequestForm_updateTRBRequest;
+export interface UpdateTrbRequestAndForm {
+  updateTRBRequestForm: UpdateTrbRequestAndForm_updateTRBRequestForm;
+  updateTRBRequest: UpdateTrbRequestAndForm_updateTRBRequest;
 }
 
-export interface UpdateTrbRequestFormVariables {
+export interface UpdateTrbRequestAndFormVariables {
   input: UpdateTRBRequestFormInput;
   id: UUID;
   changes?: TRBRequestChanges | null;
