@@ -13,7 +13,6 @@ import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 import {
   DeleteContactType,
-  FormattedContacts,
   SystemIntakeContactProps
 } from 'types/systemIntake';
 
@@ -241,13 +240,8 @@ const ContactForm = ({
 type AdditionalContactsProps = {
   /** System intake ID */
   systemIntakeId: string;
-  /** System intake contacts */
-  contacts: {
-    /** Formatted contacts object */
-    data: FormattedContacts;
-    /** System intake contacts query loading state */
-    loading: boolean;
-  };
+  /** System intake additional contacts - used to render contacts list */
+  contacts?: SystemIntakeContactProps[];
   /** Contact being created or edited */
   activeContact: SystemIntakeContactProps | null;
   /** Set active contact */
@@ -286,8 +280,6 @@ export default function AdditionalContacts({
     /** Show or hide loading spinner */
     setLoading
   ] = useState(false);
-
-  const { additionalContacts } = contacts.data;
 
   /**
    * Creates contact, handles loading state, and executes createContactCallback
@@ -339,7 +331,7 @@ export default function AdditionalContacts({
 
   return (
     <div className={classNames('system-intake-contacts', className)}>
-      {type === 'contact' && (
+      {contacts && (
         // Only display list of additional contacts if type is set to 'contact'
         <>
           <h4>
@@ -350,7 +342,7 @@ export default function AdditionalContacts({
             )}
           </h4>
           <div className="system-intake-contacts__contacts-list">
-            {additionalContacts.map(contact => {
+            {contacts.map(contact => {
               // Show form if editing contact
               if (
                 activeContact &&

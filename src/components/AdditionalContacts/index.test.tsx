@@ -2,8 +2,6 @@ import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 
-import { initialContactsObject } from 'constants/systemIntake';
-
 import AdditionalContacts from './index';
 
 describe('CedarContactSelect', () => {
@@ -21,10 +19,7 @@ describe('CedarContactSelect', () => {
             euaUserId: 'ABCD'
           }}
           setActiveContact={() => null}
-          contacts={{
-            data: initialContactsObject,
-            loading: false
-          }}
+          contacts={[]}
         />
       </MockedProvider>
     );
