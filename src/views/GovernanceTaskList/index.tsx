@@ -192,7 +192,7 @@ const GovernanceTaskList = () => {
                   <br />
                   <UswdsReactLink
                     variant="unstyled"
-                    to={`/task-list/${id}/lcid-info`}
+                    to={`/governance-task-list/${id}/lcid-info`}
                   >
                     {t('lcidAlert.link')}
                   </UswdsReactLink>
@@ -239,7 +239,7 @@ const GovernanceTaskList = () => {
                     <UswdsReactLink
                       className="usa-button margin-top-2"
                       variant="unstyled"
-                      to={`/task-list/${id}/feedback`}
+                      to={`/governance-task-list/${id}/feedback`}
                     >
                       {t('initialReviewFeedback.link')}
                     </UswdsReactLink>
@@ -277,7 +277,7 @@ const GovernanceTaskList = () => {
                       <UswdsReactLink
                         className="usa-button margin-bottom-2"
                         variant="unstyled"
-                        to={`/task-list/${id}/feedback`}
+                        to={`/governance-task-list/${id}/feedback`}
                       >
                         {t('initialReviewFeedback.link')}
                       </UswdsReactLink>
@@ -314,7 +314,7 @@ const GovernanceTaskList = () => {
                       <UswdsReactLink
                         className="usa-button margin-top-2"
                         variant="unstyled"
-                        to={`/task-list/${id}/feedback`}
+                        to={`/governance-task-list/${id}/feedback`}
                       >
                         {t('initialReviewFeedback.link')}
                       </UswdsReactLink>
