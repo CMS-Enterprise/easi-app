@@ -54,7 +54,6 @@ func UpdateTRBRequestForm(
 	emailInfoErrGroup := new(errgroup.Group)
 
 	if willSendNotifications {
-
 		emailInfoErrGroup.Go(func() error {
 			// declare new error variable so we don't interfere with calls outside of this goroutine
 			requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
@@ -94,6 +93,7 @@ func UpdateTRBRequestForm(
 
 	// send notification emails last; make sure database has been updated first
 
+	// don't need to check willSendNotifications here; emailInfoErrGroup only launches goroutines if willSendNotifications is true above
 	if err = emailInfoErrGroup.Wait(); err != nil {
 		return nil, err
 	}
