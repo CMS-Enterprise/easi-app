@@ -39,7 +39,7 @@ const RequestDecision = () => {
   const systemIntake = data?.systemIntake;
 
   return (
-    <MainContent className="governance-task-list grid-container margin-bottom-7">
+    <MainContent className="grid-container margin-bottom-7">
       <div className="grid-row">
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>

@@ -38,6 +38,11 @@ import { archiveSystemIntake, fetchBusinessCase } from 'types/routines';
 import { intakeHasDecision, isIntakeOpen } from 'utils/systemIntake';
 import NotFound from 'views/NotFound';
 
+import TaskListItem, {
+  TaskListContainer,
+  TaskListDescription
+} from '../../components/TaskList';
+
 import SideNavActions from './SideNavActions';
 import {
   AttendGrbMeetingCta,
@@ -45,9 +50,6 @@ import {
   DecisionCta,
   IntakeDraftCta
 } from './TaskListCta';
-import TaskListItem, { TaskListDescription } from './TaskListItem';
-
-import './index.scss';
 
 const GovernanceTaskList = () => {
   const { systemId } = useParams<{ systemId: string }>();
@@ -137,7 +139,7 @@ const GovernanceTaskList = () => {
 
   return (
     <MainContent
-      className="governance-task-list grid-container margin-bottom-7"
+      className="grid-container margin-bottom-7"
       data-testid="governance-task-list"
     >
       <div className="grid-row">
@@ -152,7 +154,7 @@ const GovernanceTaskList = () => {
       </div>
       {loading && <PageLoading />}
       {!loading && !!systemIntake && (
-        <div className="grid-row">
+        <div className="grid-row grid-gap">
           <div className="tablet:grid-col-9">
             <PageHeading>
               {t('pageHeading')}
@@ -197,10 +199,7 @@ const GovernanceTaskList = () => {
                 </>
               </Alert>
             )}
-            <ol
-              data-testid="task-list"
-              className="governance-task-list__task-list governance-task-list__task-list--primary"
-            >
+            <TaskListContainer className="margin-top-4">
               <TaskListItem
                 testId="task-list-intake-form"
                 heading={t('requestForm.heading')}
@@ -266,7 +265,7 @@ const GovernanceTaskList = () => {
                     </p>
                   )}
                   {grtDate && (
-                    <p className="governance-task-list__meeting-date">
+                    <p className="task-list__meeting-date">
                       {getMeetingDate(grtDate)}
                     </p>
                   )}
@@ -341,7 +340,7 @@ const GovernanceTaskList = () => {
                 <TaskListDescription>
                   <p className="margin-top-0">{t('attendGRB.description')}</p>
                   {grbDate && (
-                    <p className="governance-task-list__meeting-date margin-bottom-2">
+                    <p className="task-list__meeting-date margin-bottom-2">
                       {getMeetingDate(grbDate)}
                     </p>
                   )}
@@ -360,10 +359,9 @@ const GovernanceTaskList = () => {
                 </TaskListDescription>
                 <DecisionCta id={id || ''} status={status || ''} />
               </TaskListItem>
-            </ol>
+            </TaskListContainer>
           </div>
-          <div className="tablet:grid-col-1" />
-          <div className="tablet:grid-col-2">
+          <div className="tablet:grid-col-3">
             <SideNavActions
               intake={systemIntake}
               archiveIntake={archiveIntake}
