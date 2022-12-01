@@ -106,6 +106,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
+      enableReinitialize
     >
       {(formikProps: FormikProps<ActionForm>) => {
         const {

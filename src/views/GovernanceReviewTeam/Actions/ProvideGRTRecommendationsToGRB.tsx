@@ -106,6 +106,7 @@ const ProvideGRTRecommendationsToGRB = () => {
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
+      enableReinitialize
     >
       {(formikProps: FormikProps<ProvideGRTFeedbackForm>) => {
         const {

@@ -143,6 +143,7 @@ const IssueLifecycleId = () => {
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
+      enableReinitialize
     >
       {(formikProps: FormikProps<SubmitLifecycleIdForm>) => {
         const {

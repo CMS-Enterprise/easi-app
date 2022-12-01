@@ -169,6 +169,7 @@ const ExtendLifecycleId = ({
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
+      enableReinitialize
     >
       {(formikProps: FormikProps<ExtendLCIDForm>) => {
         const {

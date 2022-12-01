@@ -114,6 +114,7 @@ const RejectIntake = () => {
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
+      enableReinitialize
     >
       {(formikProps: FormikProps<RejectIntakeForm>) => {
         const {
