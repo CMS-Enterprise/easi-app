@@ -106,6 +106,13 @@ const taskList = {
     prepareGRB: 'Prepare for the GRB meeting (opens in new tab)',
     prepareGRT: 'Prepare for the GRT meeting (opens in new tab)',
     readDecision: 'Read decision from board'
+  },
+  taskStatus: {
+    COMPLETED: 'Completed',
+    IN_PROGRESS: 'In Progress',
+    READY_TO_START: 'Ready to start',
+    CANNOT_START: 'Cannot start yet',
+    NOT_NEEDED: 'Not needed'
   }
 };
 

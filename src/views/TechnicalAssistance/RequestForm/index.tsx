@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
@@ -12,16 +12,10 @@ import { isEqual } from 'lodash';
 import * as yup from 'yup';
 
 import PageLoading from 'components/PageLoading';
-import CreateTrbRequestQuery from 'queries/CreateTrbRequestQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
-  CreateTrbRequest,
-  // eslint-disable-next-line camelcase
-  CreateTrbRequest_createTRBRequest,
-  CreateTrbRequestVariables
-} from 'queries/types/CreateTrbRequest';
-import {
   GetTrbRequest,
+  GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
 import { TRBRequestType } from 'types/graphql-global-types';
@@ -47,10 +41,11 @@ import SubjectAreas from './SubjectAreas';
 export type StepSubmit = (onValid?: () => void) => Promise<void>;
 
 export interface FormStepComponentProps {
-  // eslint-disable-next-line camelcase
-  request: CreateTrbRequest_createTRBRequest;
-  /** Refresh the trb request from the form wrapper */
-  refreshRequest: () => void;
+  request: TrbRequest;
+  /** Refetch the trb request from the form wrapper */
+  refetchRequest: (
+    variables?: Partial<GetTrbRequestVariables> | undefined
+  ) => Promise<ApolloQueryResult<GetTrbRequest>>;
   /**
    * Set the current form step component submit handler
    * so that in can be used in other places like the header.
@@ -66,12 +61,13 @@ export interface FormStepComponentProps {
     next: string;
     back: string;
   };
+  taskListUrl: string;
 }
 
 /**
  * Form view components with step url slugs for each form request step.
  * `inputSchema` and `blankValues` are used to determine `stepsCompleted`.
- * */
+ */
 // Temporary optional defs for inputSchema and blankValues used until dev is finished with all steps
 export const formStepComponents: {
   component: (props: FormStepComponentProps) => JSX.Element;
@@ -120,17 +116,18 @@ function Header({
   stepsCompleted,
   stepSubmit,
   isStepSubmitting,
-  formError
+  formError,
+  taskListUrl
 }: {
   step: number;
   /** Unassigned request is used as a loading state toggle. */
-  // eslint-disable-next-line camelcase
-  request?: CreateTrbRequest_createTRBRequest;
+  request?: TrbRequest;
   breadcrumbBar: React.ReactNode;
   stepsCompleted: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
   formError: string | false;
+  taskListUrl: string;
 }) {
   const history = useHistory();
 
@@ -188,7 +185,7 @@ function Header({
           disabled={isStepSubmitting}
           onClick={() => {
             stepSubmit?.(() => {
-              history.push('/trb');
+              history.push(taskListUrl);
             });
           }}
         >
@@ -202,7 +199,6 @@ function Header({
 
 /**
  * This is a component base for the TRB request form.
- * Route param `id` is either `new` or a TrbRequest id.
  */
 function RequestForm() {
   const { t } = useTranslation('technicalAssistance');
@@ -222,24 +218,14 @@ function RequestForm() {
     view?: string;
   }>();
 
-  const [create, createResult] = useMutation<
-    CreateTrbRequest,
-    CreateTrbRequestVariables
-  >(CreateTrbRequestQuery);
+  const { data, error, loading, refetch } = useQuery<
+    GetTrbRequest,
+    GetTrbRequestVariables
+  >(GetTrbRequestQuery, {
+    variables: { id }
+  });
 
-  const [get, getResult] = useLazyQuery<GetTrbRequest, GetTrbRequestVariables>(
-    GetTrbRequestQuery
-  );
-
-  const getRequest = useCallback(() => {
-    get({ variables: { id } });
-  }, [get, id]);
-
-  // Assign request data from the first available query response
-  // Prioritize by latest type: get, create
-  // eslint-disable-next-line camelcase
-  const request: CreateTrbRequest_createTRBRequest | undefined =
-    getResult.data?.trbRequest || createResult.data?.createTRBRequest;
+  const request: TrbRequest | undefined = data?.trbRequest;
 
   // Determine the steps that are already completed by attempting to pre-validate them
   const [stepsCompleted, setStepsCompleted] = useState<string[]>([]);
@@ -282,59 +268,34 @@ function RequestForm() {
   }, [request, stepsCompleted]);
 
   useEffect(() => {
-    // Create a new request if `id` is new and go to it
-    if (id === 'new') {
-      // Request type must be defined for new requests
-      if (requestType) {
-        if (!createResult.called) {
-          // Create the new request
-          create({ variables: { requestType } }).then(res => {
-            // Update the url with the request id
-            if (res.data) {
-              history.replace(`/trb/requests/${res.data.createTRBRequest.id}`);
-            }
-          });
-        }
-      }
-      // Redirect to the start if there's no request type
-      else history.replace('/trb/start');
-    }
-    // Fetch request data if not new
-    else if (!request && !createResult.called && !getResult.called) {
-      getRequest();
-    }
-    // Get or create request was successful
-    // Continue any other effects with request data
-    else if (request) {
+    if (request) {
       // Check step param, redirect to the first step if invalid
       if (!step || !formStepSlugs.includes(step)) {
         history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
       }
     }
-  }, [
-    create,
-    createResult,
-    get,
-    getRequest,
-    getResult,
-    history,
-    id,
-    request,
-    requestType,
-    step
-  ]);
+  }, [history, id, request, requestType, step]);
+
+  const taskListUrl = useMemo(
+    () => (request ? `/trb/task-list/${request.id}` : null),
+    [request]
+  );
 
   const defaultBreadcrumbs = useMemo(
-    () => (
-      <Breadcrumbs
-        items={[
-          { text: t('heading'), url: '/trb' },
-          { text: t('breadcrumbs.taskList'), url: '/trb/task-list' },
-          { text: t('requestForm.heading') }
-        ]}
-      />
-    ),
-    [t]
+    () =>
+      taskListUrl ? (
+        <Breadcrumbs
+          items={[
+            { text: t('heading'), url: '/trb' },
+            {
+              text: t('taskList.heading'),
+              url: taskListUrl
+            },
+            { text: t('requestForm.heading') }
+          ]}
+        />
+      ) : null,
+    [t, taskListUrl]
   );
 
   // References to the submit handler and submitting state of the current form step
@@ -357,7 +318,7 @@ function RequestForm() {
     }
   }, [formError]);
 
-  if (!step) {
+  if (!step || taskListUrl === null) {
     return null;
   }
 
@@ -366,7 +327,7 @@ function RequestForm() {
     return <Done breadcrumbBar={defaultBreadcrumbs} />;
   }
 
-  if (getResult.error || createResult.error) {
+  if (error) {
     return (
       <GridContainer className="width-full">
         <NotFoundPartial />
@@ -378,8 +339,6 @@ function RequestForm() {
   const stepNum = stepIdx + 1;
 
   const FormStepComponent = formStepComponents[stepIdx].component;
-
-  const loading = getResult.loading || createResult.loading;
 
   return (
     <>
@@ -393,6 +352,7 @@ function RequestForm() {
           stepSubmit={stepSubmit}
           isStepSubmitting={isStepSubmitting}
           formError={formError}
+          taskListUrl={taskListUrl}
         />
       )}
       {request ? (
@@ -406,7 +366,8 @@ function RequestForm() {
               next: `/trb/requests/${request.id}/${formStepSlugs[stepIdx + 1]}`,
               back: `/trb/requests/${request.id}/${formStepSlugs[stepIdx - 1]}`
             }}
-            refreshRequest={getRequest}
+            taskListUrl={taskListUrl}
+            refetchRequest={refetch}
             setStepSubmit={setStepSubmit}
             setIsStepSubmitting={setIsStepSubmitting}
             setFormError={setFormError}
