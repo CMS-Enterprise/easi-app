@@ -1,7 +1,14 @@
 import * as yup from 'yup';
 
 import {
+  TRBApplicationDevelopmentOption,
+  TRBCloudAndInfrastructureOption,
   TRBCollabGroupOption,
+  TRBDataAndDataManagementOption,
+  TRBGovernmentProcessesAndPoliciesOption,
+  TRBNetworkAndSecurityOption,
+  TRBOtherTechnicalTopicsOption,
+  TRBTechnicalReferenceArchitectureOption,
   TRBWhereInProcessOption,
   UpdateTRBRequestFormInput
 } from 'types/graphql-global-types';
@@ -99,4 +106,97 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
   yup.object({
     name: yup.string().required()
   })
+);
+
+export type TrbFormInputSubjectAreas = Pick<
+  UpdateTRBRequestFormInput,
+  | 'subjectAreaTechnicalReferenceArchitecture'
+  | 'subjectAreaNetworkAndSecurity'
+  | 'subjectAreaCloudAndInfrastructure'
+  | 'subjectAreaApplicationDevelopment'
+  | 'subjectAreaDataAndDataManagement'
+  | 'subjectAreaGovernmentProcessesAndPolicies'
+  | 'subjectAreaOtherTechnicalTopics'
+>;
+
+export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.object(
+  {
+    subjectAreaTechnicalReferenceArchitecture: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBTechnicalReferenceArchitectureOption>(
+            Object.values(TRBTechnicalReferenceArchitectureOption)
+          )
+          .required()
+      )
+      .min(1)
+      .ensure(),
+    subjectAreaNetworkAndSecurity: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBNetworkAndSecurityOption>(
+            Object.values(TRBNetworkAndSecurityOption)
+          )
+          .required()
+      )
+      .min(1)
+      .ensure(),
+    subjectAreaCloudAndInfrastructure: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBCloudAndInfrastructureOption>(
+            Object.values(TRBCloudAndInfrastructureOption)
+          )
+          .required()
+      )
+      .min(1)
+      .ensure(),
+    subjectAreaApplicationDevelopment: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBApplicationDevelopmentOption>(
+            Object.values(TRBApplicationDevelopmentOption)
+          )
+          .required()
+      )
+      .min(1)
+      .ensure(),
+    subjectAreaDataAndDataManagement: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBDataAndDataManagementOption>(
+            Object.values(TRBDataAndDataManagementOption)
+          )
+          .required()
+      )
+      .min(1)
+      .ensure(),
+    subjectAreaGovernmentProcessesAndPolicies: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBGovernmentProcessesAndPoliciesOption>(
+            Object.values(TRBGovernmentProcessesAndPoliciesOption)
+          )
+          .required()
+      )
+      .min(1)
+      .ensure(),
+    subjectAreaOtherTechnicalTopics: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBOtherTechnicalTopicsOption>(
+            Object.values(TRBOtherTechnicalTopicsOption)
+          )
+          .required()
+      )
+      .min(1)
+      .ensure()
+  }
 );
