@@ -5,8 +5,8 @@ import { render, waitForElementToBeRemoved } from '@testing-library/react';
 
 import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
 
-import StartRequest from './StartRequest';
-import Steps from './Steps';
+import ProcessFlow from './ProcessFlow';
+import RequestType from './RequestType';
 import TechnicalAssistance from '.';
 
 describe('Technical Assistance (TRB) homepage', () => {
@@ -54,18 +54,22 @@ describe('Technical Assistance (TRB) homepage', () => {
 });
 
 describe('TRB Subview snapshots', () => {
-  it('matches NewRequest', () => {
+  it('matches Request Type', () => {
     const { asFragment } = render(
       <MemoryRouter>
-        <StartRequest />
+        <MockedProvider>
+          <RequestType />
+        </MockedProvider>
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();
   });
-  it('matches Steps', () => {
+  it('matches Process Flow', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={[{ state: { requestType: 'NEED_HELP' } }]}>
-        <Steps />
+        <MockedProvider>
+          <ProcessFlow />
+        </MockedProvider>
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();

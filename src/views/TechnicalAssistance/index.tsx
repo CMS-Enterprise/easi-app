@@ -1,13 +1,15 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { GridContainer } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
 import Homepage from './Homepage';
+import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
-import StartRequest from './StartRequest';
-import Steps from './Steps';
+import RequestType from './RequestType';
+import TaskList from './TaskList';
 
 import './index.scss';
 
@@ -21,12 +23,22 @@ function TechnicalAssistance() {
           <Homepage />
         </Route>
 
-        {/* Start a request; sets `requestType` */}
-        <Route exact path={`${path}/start`}>
-          <StartRequest />
+        {/*
+          Starting a New Request begins with selecting a Request Type.
+          Existing Requests can update their request type.
+        */}
+        <Route exact path={[`${path}/start`, `${path}/type/:id?`]}>
+          <RequestType />
         </Route>
-        <Route exact path={`${path}/steps`}>
-          <Steps />
+
+        {/* Process flow shows info before proceeding to create new request */}
+        <Route exact path={`${path}/process`}>
+          <ProcessFlow />
+        </Route>
+
+        {/* Task list after request steps are completed */}
+        <Route exact path={`${path}/task-list/:id`}>
+          <TaskList />
         </Route>
 
         {/* Create new or edit exisiting request */}
@@ -35,7 +47,9 @@ function TechnicalAssistance() {
         </Route>
 
         <Route path="*">
-          <NotFoundPartial />
+          <GridContainer className="width-full">
+            <NotFoundPartial />
+          </GridContainer>
         </Route>
       </Switch>
     </MainContent>

@@ -62,7 +62,7 @@ function Homepage() {
         }: // eslint-disable-next-line camelcase
         CellProps<GetTrbRequests_trbRequests, string>) => {
           return (
-            <UswdsReactLink to={`/trb/requests/${row.original.id}`}>
+            <UswdsReactLink to={`/trb/task-list/${row.original.id}`}>
               {value}
             </UswdsReactLink>
           );
