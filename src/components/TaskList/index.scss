@@ -1,4 +1,4 @@
-.governance-task-list {
+.task-list {
   // Keep heading and order numbers the same
   &__task-heading,
   &__item:before {
@@ -6,14 +6,15 @@
   }
 
   &__task-list {
+    margin: 0;
     padding-left: 0;
     counter-reset: primaryList secondaryList 3;
 
-    &--primary {
-      .governance-task-list__item:before {
-        counter-increment: primaryList;
-        content: counter(primaryList) '. ';
-      }
+    .task-list__item:before {
+      counter-increment: primaryList;
+      content: counter(primaryList) '. ';
+      line-height: 1.2;
+      width: 1.5rem;
     }
   }
 
@@ -44,30 +45,30 @@
     justify-content: space-between;
     align-items: flex-start;
 
-    @media screen and (max-width: $mobile) {
+    @media screen and (max-width: $tablet) {
       flex-direction: column;
     }
   }
 
-  &__task-tag {
-    padding: 5px 10px;
-    font-size: 1em;
-    line-height: 1.625em;
-    font-weight: bold;
-    &--na {
-      border: 2px solid color('base');
-      color: color('base');
-    }
-
-    &--completed {
-      background-color: color('success-dark');
-      color: color('white');
-    }
-  }
 
   &__task-description {
-    max-width: 600px;
+    max-width: 664px;
     margin-right: auto;
+    margin-bottom: 1rem;
+    @media screen and (max-width: $tablet) {
+      margin-top: 1rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    p:first-of-type {
+      margin-top: 0;
+    }
+    p:last-of-type {
+      margin-bottom: 0;
+    }
   }
 
   &__meeting-date {

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import {
+  Button,
   GridContainer,
   ProcessList,
   ProcessListHeading,
@@ -10,14 +12,36 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import CreateTrbRequestQuery from 'queries/CreateTrbRequestQuery';
+import {
+  CreateTrbRequest,
+  CreateTrbRequestVariables
+} from 'queries/types/CreateTrbRequest';
+import { TRBRequestType } from 'types/graphql-global-types';
 
 import Breadcrumbs from './Breadcrumbs';
 
-function Steps() {
+/**
+ * Process flow info where the user proceeds to create a new Trb Request.
+ */
+function ProcessFlow() {
   const { t } = useTranslation('technicalAssistance');
-  const { state } = useLocation<{ requestType: string }>();
+  const { state } = useLocation<{ requestType: TRBRequestType }>();
+  const history = useHistory();
 
   const requestType = state?.requestType;
+
+  const [create, createResult] = useMutation<
+    CreateTrbRequest,
+    CreateTrbRequestVariables
+  >(CreateTrbRequestQuery);
+
+  // Redirect to task list on sucessful trb request creation
+  useEffect(() => {
+    if (createResult.data) {
+      history.push(`/trb/task-list/${createResult.data.createTRBRequest.id}`);
+    }
+  }, [createResult, history]);
 
   // Redirect to start if `requestType` isn't set
   if (!requestType) return <Redirect to="/trb/start" />;
@@ -29,7 +53,7 @@ function Steps() {
     returnObjects: true
   });
   const requestTypeText = t<Record<string, { heading: string }>>(
-    'newRequest.type',
+    'requestType.type',
     {
       returnObjects: true
     }
@@ -126,19 +150,18 @@ function Steps() {
         >
           {t('steps.back')}
         </UswdsReactLink>
-        <UswdsReactLink
-          to={{
-            pathname: '/trb/requests/new',
-            state: { requestType }
+        <Button
+          type="button"
+          disabled={createResult.loading}
+          onClick={() => {
+            create({ variables: { requestType } });
           }}
-          className="usa-button"
-          variant="unstyled"
         >
           {t('steps.continue')}
-        </UswdsReactLink>
+        </Button>
       </div>
     </GridContainer>
   );
 }
 
-export default Steps;
+export default ProcessFlow;
