@@ -43,6 +43,13 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			subject_area_data_and_data_management = :subject_area_data_and_data_management,
 			subject_area_government_processes_and_policies = :subject_area_government_processes_and_policies,
 			subject_area_other_technical_topics = :subject_area_other_technical_topics,
+			subject_area_technical_reference_architecture_other = :subject_area_technical_reference_architecture_other,
+			subject_area_network_and_security_other = :subject_area_network_and_security_other,
+			subject_area_cloud_and_infrastructure_other = :subject_area_cloud_and_infrastructure_other,
+			subject_area_application_development_other = :subject_area_application_development_other,
+			subject_area_data_and_data_management_other = :subject_area_data_and_data_management_other,
+			subject_area_government_processes_and_policies_other = :subject_area_government_processes_and_policies_other,
+			subject_area_other_technical_topics_other = :subject_area_other_technical_topics_other,
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
 		WHERE trb_request_id = :trb_request_id

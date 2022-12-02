@@ -1837,6 +1837,13 @@ type TRBRequestForm {
   subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
   subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
+  subjectAreaTechnicalReferenceArchitectureOther: String
+  subjectAreaNetworkAndSecurityOther: String
+  subjectAreaCloudAndInfrastructureOther: String
+  subjectAreaApplicationDevelopmentOther: String
+  subjectAreaDataAndDataManagementOther: String
+  subjectAreaGovernmentProcessesAndPoliciesOther: String
+  subjectAreaOtherTechnicalTopicsOther: String
 
   createdBy: String!
   createdAt: Time!
