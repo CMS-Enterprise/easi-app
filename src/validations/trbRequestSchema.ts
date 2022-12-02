@@ -108,6 +108,7 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
   })
 );
 
+/*
 export type TrbFormInputSubjectAreas = Pick<
   UpdateTRBRequestFormInput,
   | 'subjectAreaTechnicalReferenceArchitecture'
@@ -118,6 +119,26 @@ export type TrbFormInputSubjectAreas = Pick<
   | 'subjectAreaGovernmentProcessesAndPolicies'
   | 'subjectAreaOtherTechnicalTopics'
 >;
+*/
+export interface TrbFormInputSubjectAreas
+  extends Pick<
+    UpdateTRBRequestFormInput,
+    | 'subjectAreaTechnicalReferenceArchitecture'
+    | 'subjectAreaNetworkAndSecurity'
+    | 'subjectAreaCloudAndInfrastructure'
+    | 'subjectAreaApplicationDevelopment'
+    | 'subjectAreaDataAndDataManagement'
+    | 'subjectAreaGovernmentProcessesAndPolicies'
+    | 'subjectAreaOtherTechnicalTopics'
+  > {
+  subjectAreaTechnicalReferenceArchitectureOther?: string | null;
+  subjectAreaNetworkAndSecurityOther?: string | null;
+  subjectAreaCloudAndInfrastructureOther?: string | null;
+  subjectAreaApplicationDevelopmentOther?: string | null;
+  subjectAreaDataAndDataManagementOther?: string | null;
+  subjectAreaGovernmentProcessesAndPoliciesOther?: string | null;
+  subjectAreaOtherTechnicalTopicsOther?: string | null;
+}
 
 export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.object(
   {
@@ -197,6 +218,13 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
           .required()
       )
       .min(1)
-      .ensure()
+      .ensure(),
+    subjectAreaTechnicalReferenceArchitectureOther: yup.string(),
+    subjectAreaNetworkAndSecurityOther: yup.string(),
+    subjectAreaCloudAndInfrastructureOther: yup.string(),
+    subjectAreaApplicationDevelopmentOther: yup.string(),
+    subjectAreaDataAndDataManagementOther: yup.string(),
+    subjectAreaGovernmentProcessesAndPoliciesOther: yup.string(),
+    subjectAreaOtherTechnicalTopicsOther: yup.string()
   }
 );

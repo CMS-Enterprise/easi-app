@@ -21,7 +21,15 @@ import MultiSelect from 'components/shared/MultiSelect';
 //   UpdateTrbFormVariables
 // } from 'queries/types/UpdateTrbForm';
 // import UpdateTrbFormQuery from 'queries/UpdateTrbFormQuery';
-import { TRBTechnicalReferenceArchitectureOption } from 'types/graphql-global-types';
+import {
+  TRBApplicationDevelopmentOption,
+  TRBCloudAndInfrastructureOption,
+  TRBDataAndDataManagementOption,
+  TRBGovernmentProcessesAndPoliciesOption,
+  TRBNetworkAndSecurityOption,
+  TRBOtherTechnicalTopicsOption,
+  TRBTechnicalReferenceArchitectureOption
+} from 'types/graphql-global-types';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
 import {
@@ -41,6 +49,151 @@ export const subjectAreasBlankValues = {
   subjectAreaGovernmentProcessesAndPolicies: [],
   subjectAreaOtherTechnicalTopics: []
 };
+
+const fields = [
+  // const fields: Array<{
+  //   name:
+  //     | 'subjectAreaTechnicalReferenceArchitecture'
+  //     | 'subjectAreaNetworkAndSecurity'
+  //     | 'subjectAreaCloudAndInfrastructure'
+  //     | 'subjectAreaApplicationDevelopment'
+  //     | 'subjectAreaDataAndDataManagement'
+  //     | 'subjectAreaGovernmentProcessesAndPolicies'
+  //     | 'subjectAreaOtherTechnicalTopics';
+  //   otherText:
+  //     | 'subjectAreaTechnicalReferenceArchitectureOther'
+  //     | 'subjectAreaNetworkAndSecurityOther'
+  //     | 'subjectAreaCloudAndInfrastructureOther'
+  //     | 'subjectAreaApplicationDevelopmentOther'
+  //     | 'subjectAreaDataAndDataManagementOther'
+  //     | 'subjectAreaGovernmentProcessesAndPoliciesOther'
+  //     | 'subjectAreaOtherTechnicalTopicsOther';
+  //   // options: Array<
+  //   //   | TRBTechnicalReferenceArchitectureOption
+  //   //   | TRBNetworkAndSecurityOption
+  //   //   | TRBCloudAndInfrastructureOption
+  //   //   | TRBApplicationDevelopmentOption
+  //   //   | TRBDataAndDataManagementOption
+  //   //   | TRBGovernmentProcessesAndPoliciesOption
+  //   //   | TRBOtherTechnicalTopicsOption
+  //   // >;
+  //   options:
+  //     | TRBTechnicalReferenceArchitectureOption[]
+  //     | TRBNetworkAndSecurityOption[]
+  //     | TRBCloudAndInfrastructureOption[]
+  //     | TRBApplicationDevelopmentOption[]
+  //     | TRBDataAndDataManagementOption[]
+  //     | TRBGovernmentProcessesAndPoliciesOption[]
+  //     | TRBOtherTechnicalTopicsOption[];
+  // }> = [
+  {
+    name: 'subjectAreaTechnicalReferenceArchitecture',
+    otherText: 'subjectAreaTechnicalReferenceArchitectureOther',
+    options: [
+      TRBTechnicalReferenceArchitectureOption.GENERAL_TRA_INFORMATION,
+      TRBTechnicalReferenceArchitectureOption.TRA_GUIDING_PRINCIPLES,
+      TRBTechnicalReferenceArchitectureOption.CMS_PROCESSING_ENVIRONMENTS,
+      TRBTechnicalReferenceArchitectureOption.CMS_TRA_MULTI_ZONE_ARCHITECTURE,
+      TRBTechnicalReferenceArchitectureOption.CMS_TRA_BUSINESS_RULES,
+      TRBTechnicalReferenceArchitectureOption.ABOUT_THE_TRB,
+      TRBTechnicalReferenceArchitectureOption.ARCHITECTURE_CHANGE_REQUEST_PROCESS_FOR_THE_TRA,
+      TRBTechnicalReferenceArchitectureOption.OTHER
+    ]
+  },
+  {
+    name: 'subjectAreaNetworkAndSecurity',
+    otherText: 'subjectAreaNetworkAndSecurityOther',
+    options: [
+      TRBNetworkAndSecurityOption.GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION,
+      TRBNetworkAndSecurityOption.SECURITY_SERVICES,
+      TRBNetworkAndSecurityOption.CMS_CYBERSECURITY_INTEGRATION_CENTER_INTEGRATION,
+      TRBNetworkAndSecurityOption.WIDE_AREA_NETWORK_SERVICES,
+      TRBNetworkAndSecurityOption.ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT,
+      TRBNetworkAndSecurityOption.DOMAIN_NAME_SYSTEM_SERVICES,
+      TRBNetworkAndSecurityOption.OTHER
+    ]
+  },
+  {
+    name: 'subjectAreaCloudAndInfrastructure',
+    otherText: 'subjectAreaCloudAndInfrastructureOther',
+    options: [
+      TRBCloudAndInfrastructureOption.GENERAL_CLOUD_AND_INFRASTRUCTURE_SERVICES_INFORMATION,
+      TRBCloudAndInfrastructureOption.VIRTUALIZATION,
+      TRBCloudAndInfrastructureOption.CLOUD_IAAS_AND_PAAS_INFRASTRUCTURE,
+      TRBCloudAndInfrastructureOption.IT_PERFORMANCE_MANAGEMENT,
+      TRBCloudAndInfrastructureOption.FILE_TRANSFER,
+      TRBCloudAndInfrastructureOption.DATA_STORAGE_SERVICES,
+      TRBCloudAndInfrastructureOption.SOFTWARE_AS_A_SERVICE,
+      TRBCloudAndInfrastructureOption.KEYS_AND_SECRETS_MANAGEMENT,
+      TRBCloudAndInfrastructureOption.MOBILE_DEVICES_AND_APPLICATIONS,
+      TRBCloudAndInfrastructureOption.CLOUD_MIGRATION,
+      TRBCloudAndInfrastructureOption.DISASTER_RECOVERY,
+      TRBCloudAndInfrastructureOption.OTHER
+    ]
+  },
+  {
+    name: 'subjectAreaApplicationDevelopment',
+    otherText: 'subjectAreaApplicationDevelopmentOther',
+    options: [
+      TRBApplicationDevelopmentOption.GENERAL_APPLICATION_DEVELOPMENT_SERVICES_INFORMATION,
+      TRBApplicationDevelopmentOption.APPLICATION_DEVELOPMENT,
+      TRBApplicationDevelopmentOption.WEB_SERVICES_AND_WEB_APIS,
+      TRBApplicationDevelopmentOption.WEB_BASED_UI_SERVICES,
+      TRBApplicationDevelopmentOption.OPEN_SOURCE_SOFTWARE,
+      TRBApplicationDevelopmentOption.PORTAL_INTEGRATION,
+      TRBApplicationDevelopmentOption.ACCESSIBILITY_COMPLIANCE,
+      TRBApplicationDevelopmentOption.BUSINESS_INTELLIGENCE,
+      TRBApplicationDevelopmentOption.CONTAINERS_AND_MICROSERVICES,
+      TRBApplicationDevelopmentOption.ROBOTIC_PROCESS_AUTOMATION,
+      TRBApplicationDevelopmentOption.SYSTEM_ARCHITECTURE_REVIEW,
+      TRBApplicationDevelopmentOption.EMAIL_INTEGRATION,
+      TRBApplicationDevelopmentOption.CONFIGURATION_MANAGEMENT,
+      TRBApplicationDevelopmentOption.OTHER
+    ]
+  },
+  {
+    name: 'subjectAreaDataAndDataManagement',
+    otherText: 'subjectAreaDataAndDataManagementOther',
+    options: [
+      TRBDataAndDataManagementOption.GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION,
+      TRBDataAndDataManagementOption.ENTERPRISE_DATA_ENVIRONMENT_REVIEW,
+      TRBDataAndDataManagementOption.DATA_MART,
+      TRBDataAndDataManagementOption.DATA_WAREHOUSING,
+      TRBDataAndDataManagementOption.ANALYTIC_SANDBOXES,
+      TRBDataAndDataManagementOption.APIS_AND_DATA_EXCHANGES,
+      TRBDataAndDataManagementOption.FHIR,
+      TRBDataAndDataManagementOption.OTHER
+    ]
+  },
+  {
+    name: 'subjectAreaGovernmentProcessesAndPolicies',
+    otherText: 'subjectAreaGovernmentProcessesAndPoliciesOther',
+    options: [
+      TRBGovernmentProcessesAndPoliciesOption.GENERAL_INFORMATION_ABOUT_CMS_PROCESSES_AND_POLICIES,
+      TRBGovernmentProcessesAndPoliciesOption.OTHER_AVAILABLE_TRB_SERVICES,
+      TRBGovernmentProcessesAndPoliciesOption.SECTION_508_AND_ACCESSIBILITY_TESTING,
+      TRBGovernmentProcessesAndPoliciesOption.TARGET_LIFE_CYCLE,
+      TRBGovernmentProcessesAndPoliciesOption.SYSTEM_DISPOSITION_PLANNING,
+      TRBGovernmentProcessesAndPoliciesOption.INVESTMENT_AND_BUDGET_PLANNING,
+      TRBGovernmentProcessesAndPoliciesOption.LIFECYCLE_IDS,
+      TRBGovernmentProcessesAndPoliciesOption.CONTRACTING_AND_PROCUREMENT,
+      TRBGovernmentProcessesAndPoliciesOption.SECURITY_ASSESSMENTS,
+      TRBGovernmentProcessesAndPoliciesOption.INFRASTRUCTURE_AS_A_SERVICE,
+      TRBGovernmentProcessesAndPoliciesOption.OTHER
+    ]
+  },
+  {
+    name: 'subjectAreaOtherTechnicalTopics',
+    otherText: 'subjectAreaOtherTechnicalTopicsOther',
+    options: [
+      TRBOtherTechnicalTopicsOption.ARTIFICIAL_INTELLIGENCE,
+      TRBOtherTechnicalTopicsOption.MACHINE_LEARNING,
+      TRBOtherTechnicalTopicsOption.ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT,
+      TRBOtherTechnicalTopicsOption.OTHER
+    ]
+  }
+] as const;
+// ];
 
 function SubjectAreas({
   request,
@@ -149,6 +302,7 @@ function SubjectAreas({
           </Alert>
 
           {/* Technical Reference Architecture (TRA) */}
+          {/*
           <Controller
             name="subjectAreaTechnicalReferenceArchitecture"
             control={control}
@@ -229,6 +383,75 @@ function SubjectAreas({
               </FormGroup>
             )}
           />
+          */}
+
+          {fields.map(({ name, otherText, options }) => {
+            return (
+              <Controller
+                name={name}
+                control={control}
+                render={({ field, fieldState: { error } }) => {
+                  return (
+                    <FormGroup className="margin-top-5" error={!!error}>
+                      <Label
+                        htmlFor={name}
+                        hint={<div>{t(`subject.hint.${name}`)}</div>}
+                        error={!!error}
+                      >
+                        {t(`subject.labels.${name}`)}
+                      </Label>
+                      {error && (
+                        <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
+                      )}
+                      <MultiSelect
+                        id={name}
+                        name={field.name}
+                        options={options.map(value => ({
+                          label: t(`subject.options.${name}.${value}`),
+                          value
+                        }))}
+                        initialValues={field.value}
+                        onChange={field.onChange}
+                        selectedLabel={t('subject.labels.selectedTopics')}
+                      />
+                      {Array.isArray(field.value) &&
+                        field.value.includes(options[options.length - 1]) && (
+                          <Controller
+                            name={otherText}
+                            control={control}
+                            // eslint-disable-next-line no-shadow
+                            render={({ field, fieldState: { error } }) => (
+                              <FormGroup error={!!error}>
+                                <Label
+                                  htmlFor={otherText}
+                                  hint={<div>{t('subject.hint.other')}</div>}
+                                  error={!!error}
+                                  className="text-normal"
+                                >
+                                  {t('subject.labels.other')}
+                                </Label>
+                                {error && (
+                                  <ErrorMessage>
+                                    {t('errors.fillBlank')}
+                                  </ErrorMessage>
+                                )}
+                                <TextInput
+                                  {...field}
+                                  ref={null}
+                                  id={otherText}
+                                  type="text"
+                                  validationStatus={error && 'error'}
+                                />
+                              </FormGroup>
+                            )}
+                          />
+                        )}
+                    </FormGroup>
+                  );
+                }}
+              />
+            );
+          })}
         </Grid>
       </Grid>
 

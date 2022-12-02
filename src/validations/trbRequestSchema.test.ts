@@ -1,4 +1,8 @@
-import { basicSchema, TrbRequestFormBasic } from './trbRequestSchema';
+import {
+  basicSchema,
+  subjectAreasSchema,
+  TrbRequestFormBasic
+} from './trbRequestSchema';
 
 describe('TRB Basic Form schema validation', () => {
   const minimumRequiredForm = {
@@ -16,10 +20,6 @@ describe('TRB Basic Form schema validation', () => {
     await expect(
       basicSchema.isValid(minimumRequiredForm)
     ).resolves.toBeTruthy();
-  });
-
-  it(`errors on an empty form`, async () => {
-    await expect(basicSchema.isValid({})).resolves.toBeFalsy();
   });
 
   it.each(['whereInProcess', 'collabGroups'])(
@@ -160,5 +160,27 @@ describe('TRB Basic Form schema validation', () => {
         expectedEndDate: ''
       })
     ).resolves.toBeFalsy();
+  });
+});
+
+describe('TRB Subject Areas Form schema validation', () => {
+  const minimumRequiredForm = {
+    subjectAreaTechnicalReferenceArchitecture: ['CMS_TRA_BUSINESS_RULES'],
+    subjectAreaNetworkAndSecurity: [
+      'GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION'
+    ],
+    subjectAreaCloudAndInfrastructure: ['DISASTER_RECOVERY'],
+    subjectAreaApplicationDevelopment: ['OTHER'],
+    subjectAreaDataAndDataManagement: ['DATA_WAREHOUSING'],
+    subjectAreaGovernmentProcessesAndPolicies: ['OTHER_AVAILABLE_TRB_SERVICES'],
+    subjectAreaOtherTechnicalTopics: [
+      'ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT'
+    ]
+  };
+
+  it('passes backend input validation', async () => {
+    await expect(
+      subjectAreasSchema.isValid(minimumRequiredForm)
+    ).resolves.toBeTruthy();
   });
 });
