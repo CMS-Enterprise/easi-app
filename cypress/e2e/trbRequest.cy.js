@@ -3,19 +3,26 @@ describe('Technical Assistance', () => {
     cy.localLogin({ name: 'ABCD' });
     // Nav to trb base
     cy.contains('a', 'Technical Assistance').click();
-    // Start request
+    // Start a Request to get to selecting a Request type
     cy.contains('a', 'Start a new request').click();
-    // Selects the first implied request type
+    // Selects the first implied Request Type to get to Process steps
     cy.contains('a', /^Start$/).click();
-    // Continue through process steps
-    cy.contains('a', 'Continue').click();
+    // Continue through Process steps to get to Task list
+    cy.contains('button', 'Continue').click();
+    // Start the Request form from the Task list
+    cy.contains(
+      '[data-testid="fill-out-the-initial-request-form"] a',
+      'Start'
+    ).click();
 
-    cy.contains('.usa-step-indicator__heading-text', 'Basic request details')
+    // Basic details is the first step of the Request Form
+    cy.contains('.usa-step-indicator__heading-text', 'Basic request details', {
+      timeout: 6000
+    })
       .should('be.visible')
       .as('basicStepHeader');
 
     // Fill out the Basic form step
-
     cy.get('[name=name]').clear().type('Test Request Name');
     cy.get('[name=component]').select('Center for Medicaid and CHIP Services');
     cy.get('[name=needsAssistanceWith]').type('Assistance');
@@ -59,6 +66,30 @@ describe('Technical Assistance', () => {
     // Check the update
     cy.get('@basicStepUrl').then(url => cy.visit(url));
     cy.get('[name=name]').should('have.value', requestName);
+
+    // Change the request type
+    // Jump to task list
+    cy.contains('a', 'Task list').click();
+    // Check current
+    cy.get('.trb-request-type').should(
+      'contain',
+      'I’m having a problem with my system'
+    );
+    // Proceed to change
+    const diffRequestType = 'I have an idea and would like feedback';
+    cy.contains('a', 'Change request type').click();
+    // Select a different type
+    cy.contains('.usa-card', diffRequestType)
+      .contains('button', 'Continue')
+      .click();
+    // Check change
+    cy.get('.trb-request-type').should('contain', diffRequestType);
+
+    // Get back to the request form
+    cy.contains(
+      '[data-testid="fill-out-the-initial-request-form"] a',
+      'Continue'
+    ).click();
 
     // Jump to the next available Subject step
     cy.contains(

@@ -1,335 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TRB Subview snapshots matches NewRequest 1`] = `
-<DocumentFragment>
-  <div
-    class="grid-container width-full"
-    data-testid="gridContainer"
-  >
-    <nav
-      aria-label="Breadcrumbs"
-      class="usa-breadcrumb padding-bottom-0"
-      style="background-color: transparent;"
-    >
-      <ol
-        class="usa-breadcrumb__list"
-      >
-        <li
-          class="usa-breadcrumb__list-item"
-        >
-          <a
-            class="usa-breadcrumb__link"
-            href="/trb"
-          >
-            <span>
-              Technical Assistance
-            </span>
-          </a>
-        </li>
-        <li
-          aria-current="page"
-          class="usa-breadcrumb__list-item usa-current"
-        >
-          <span>
-            Start a TRB Request
-          </span>
-        </li>
-      </ol>
-    </nav>
-    <h1
-      aria-live="polite"
-      class="easi-h1 margin-bottom-0"
-      tabindex="-1"
-    >
-      Start a technical assistance request
-    </h1>
-    <div
-      class="margin-top-1 font-body-lg line-height-body-5 text-light"
-    >
-      What is this request for?
-    </div>
-    <div
-      class="margin-top-2"
-    >
-      <a
-        class="usa-link"
-        href="/trb"
-      >
-        <svg
-          class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
-          focusable="false"
-          height="1em"
-          role="img"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-          />
-        </svg>
-        Go back without starting a request
-      </a>
-    </div>
-    <ul
-      class="usa-card-group margin-top-4 margin-bottom-4"
-      data-testid="CardGroup"
-    >
-      <li
-        class="usa-card desktop:grid-col-6"
-        data-testid="Card"
-      >
-        <div
-          class="usa-card__container shadow-2"
-        >
-          <header
-            class="usa-card__header"
-            data-testid="CardHeader"
-          >
-            <h3
-              class="line-height-heading-2"
-            >
-              I’m having a problem with my system
-            </h3>
-          </header>
-          <div
-            class="usa-card__body"
-            data-testid="CardBody"
-          >
-            <div>
-              The TRB can help you work through technical roadblocks that you are having with your system. Choose this option if:
-            </div>
-            <div>
-              <ul
-                class="list-style-middot"
-              >
-                <li>
-                  you received a security finding, had an incident, or have a POA&M that you need help addressing
-                </li>
-                <li>
-                  you are having implementation difficulties and want guidance on how to proceed
-                </li>
-                <li>
-                  leadership has directed you to engage with the TRB because of an issue with your system
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            class="usa-card__footer"
-            data-testid="CardFooter"
-          >
-            <a
-              class="usa-button"
-              href="/trb/steps"
-            >
-              Start
-            </a>
-          </div>
-        </div>
-      </li>
-      <li
-        class="usa-card desktop:grid-col-6"
-        data-testid="Card"
-      >
-        <div
-          class="usa-card__container shadow-2"
-        >
-          <header
-            class="usa-card__header"
-            data-testid="CardHeader"
-          >
-            <h3
-              class="line-height-heading-2"
-            >
-              I have an idea and would like feedback
-            </h3>
-          </header>
-          <div
-            class="usa-card__body"
-            data-testid="CardBody"
-          >
-            <div>
-              The TRB now offers more casual conversations about specific topics, solutions, or ideas. Choose this option if:
-            </div>
-            <div>
-              <ul
-                class="list-style-middot"
-              >
-                <li>
-                  your team is considering a new technical direction for future work
-                </li>
-                <li>
-                  you have a completely new idea for a system or service and would like to get feedback about it
-                </li>
-                <li>
-                  you want to brainstorm open-ended technical solutions
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            class="usa-card__footer"
-            data-testid="CardFooter"
-          >
-            <a
-              class="usa-button"
-              href="/trb/steps"
-            >
-              Start
-            </a>
-          </div>
-        </div>
-      </li>
-      <li
-        class="usa-card desktop:grid-col-6"
-        data-testid="Card"
-      >
-        <div
-          class="usa-card__container shadow-2"
-        >
-          <header
-            class="usa-card__header"
-            data-testid="CardHeader"
-          >
-            <h3
-              class="line-height-heading-2"
-            >
-              Follow-up or cadence consult
-            </h3>
-          </header>
-          <div
-            class="usa-card__body"
-            data-testid="CardBody"
-          >
-            <div>
-              Select this option if you have previously attended an IT Lounge or consultation with the TRB, and the TRB recommended a follow-up session as part of your next steps. Choose this option if:
-            </div>
-            <div>
-              <ul
-                class="list-style-middot"
-              >
-                <li>
-                  the TRB recommended a follow-up session
-                </li>
-                <li>
-                  you have a regular cadence of engagements with the TRB and need to schedule the next one
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            class="usa-card__footer"
-            data-testid="CardFooter"
-          >
-            <a
-              class="usa-button"
-              href="/trb/steps"
-            >
-              Start
-            </a>
-          </div>
-        </div>
-      </li>
-      <li
-        class="usa-card desktop:grid-col-6"
-        data-testid="Card"
-      >
-        <div
-          class="usa-card__container shadow-2"
-        >
-          <header
-            class="usa-card__header"
-            data-testid="CardHeader"
-          >
-            <h3
-              class="line-height-heading-2"
-            >
-              Formal design review
-            </h3>
-          </header>
-          <div
-            class="usa-card__body"
-            data-testid="CardBody"
-          >
-            <div>
-              Though the TRB has shifted to become more of a consultation and advice service, you can still request a more formal design review or readiness review. Choose this option if:
-            </div>
-            <div>
-              <ul
-                class="list-style-middot"
-              >
-                <li>
-                  you have a architecture solution in mind and would like a review
-                </li>
-                <li>
-                  you are ready to go live and would like one final review with the TRB to make sure your team didn’t miss anything
-                </li>
-                <li>
-                  you would like a formal review of how your solution aligns with CMS’s Technical Reference Architecture (TRA)
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            class="usa-card__footer"
-            data-testid="CardFooter"
-          >
-            <a
-              class="usa-button"
-              href="/trb/steps"
-            >
-              Start
-            </a>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <div>
-      <h3
-        class="line-height-heading-2"
-      >
-        Additional TRB services
-      </h3>
-      <ul
-        class="list-style-none padding-0"
-      >
-        <li>
-          <a
-            class="usa-link"
-            href="/trb/steps"
-          >
-            Other (I don’t see what I’m looking for)
-            <svg
-              class="usa-icon margin-left-05 margin-bottom-2px text-tbottom"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
-              />
-            </svg>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`TRB Subview snapshots matches Steps 1`] = `
+exports[`TRB Subview snapshots matches Process Flow 1`] = `
 <DocumentFragment>
   <div
     class="grid-container width-full"
@@ -537,12 +208,272 @@ exports[`TRB Subview snapshots matches Steps 1`] = `
       >
         Back
       </a>
-      <a
+      <button
         class="usa-button"
-        href="/trb/requests/new"
+        data-testid="button"
+        type="button"
       >
         Continue
-      </a>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`TRB Subview snapshots matches Request Type 1`] = `
+<DocumentFragment>
+  <div
+    class="grid-container width-full"
+    data-testid="gridContainer"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      class="usa-breadcrumb padding-bottom-0"
+      style="background-color: transparent;"
+    >
+      <ol
+        class="usa-breadcrumb__list"
+      >
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/trb"
+          >
+            <span>
+              Technical Assistance
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          class="usa-breadcrumb__list-item usa-current"
+        >
+          <span>
+            Change request type
+          </span>
+        </li>
+      </ol>
+    </nav>
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-bottom-0"
+      tabindex="-1"
+    >
+      Change request type
+    </h1>
+    <div
+      class="margin-top-1 font-body-lg line-height-body-5 text-light"
+    >
+      What is this request for?
+    </div>
+    <div
+      class="margin-top-2"
+    >
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Go back without changing the request type
+      </button>
+    </div>
+    <ul
+      class="usa-card-group flex-align-start margin-top-4 margin-bottom-4"
+      data-testid="CardGroup"
+    >
+      <li
+        class="usa-card desktop:grid-col-6"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container shadow-2"
+        >
+          <header
+            class="usa-card__header"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="line-height-heading-2"
+            >
+              I’m having a problem with my system
+            </h3>
+          </header>
+          <div
+            class="usa-card__body padding-bottom-0"
+            data-testid="CardBody"
+          >
+            <div>
+              The TRB can help you work through technical roadblocks that you are having with your system. Choose this option if:
+            </div>
+            <div
+              class="easi-collapsable-link"
+            >
+              <button
+                aria-controls="NEED_HELP"
+                aria-expanded="false"
+                class="usa-button usa-button--unstyled margin-top-2"
+                data-testid="collapsable-link"
+                type="button"
+              >
+                <svg
+                  class="usa-icon"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
+                When should I choose this option?
+              </button>
+            </div>
+          </div>
+          <div
+            class="usa-card__footer margin-top-3"
+            data-testid="CardFooter"
+          >
+            <button
+              class="usa-button"
+              data-testid="button"
+              type="button"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </li>
+      <li
+        class="usa-card desktop:grid-col-6"
+        data-testid="Card"
+      >
+        <div
+          class="usa-card__container shadow-2"
+        >
+          <header
+            class="usa-card__header"
+            data-testid="CardHeader"
+          >
+            <h3
+              class="line-height-heading-2"
+            >
+              I have an idea and would like feedback
+            </h3>
+          </header>
+          <div
+            class="usa-card__body padding-bottom-0"
+            data-testid="CardBody"
+          >
+            <div>
+              The TRB now offers more casual conversations about specific topics, solutions, or ideas. Choose this option if:
+            </div>
+            <div
+              class="easi-collapsable-link"
+            >
+              <button
+                aria-controls="BRAINSTORM"
+                aria-expanded="false"
+                class="usa-button usa-button--unstyled margin-top-2"
+                data-testid="collapsable-link"
+                type="button"
+              >
+                <svg
+                  class="usa-icon"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
+                When should I choose this option?
+              </button>
+            </div>
+          </div>
+          <div
+            class="usa-card__footer margin-top-3"
+            data-testid="CardFooter"
+          >
+            <button
+              class="usa-button"
+              data-testid="button"
+              type="button"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div>
+      <h3
+        class="line-height-heading-2"
+      >
+        Additional TRB services
+      </h3>
+      <ul
+        class="list-style-none padding-0"
+      >
+        <li>
+          <a
+            class="usa-link"
+            href="/trb/process"
+          >
+            Other (I don’t see what I’m looking for)
+            <svg
+              class="usa-icon margin-left-05 margin-bottom-2px text-tbottom"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+              />
+            </svg>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </DocumentFragment>
@@ -788,7 +719,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                 >
                   <a
                     class="usa-link"
-                    href="/trb/requests/1afc9242-f244-47a3-9f91-4d6fedd8eb91"
+                    href="/trb/task-list/1afc9242-f244-47a3-9f91-4d6fedd8eb91"
                   >
                     My excellent question
                   </a>
@@ -812,7 +743,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                 >
                   <a
                     class="usa-link"
-                    href="/trb/requests/9841c768-bdcd-4856-bae2-62cfdaffacf6"
+                    href="/trb/task-list/9841c768-bdcd-4856-bae2-62cfdaffacf6"
                   >
                     TACO Review
                   </a>

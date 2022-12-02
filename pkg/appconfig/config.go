@@ -132,6 +132,9 @@ const ITInvestmentEmailKey = "IT_INVESTMENT_EMAIL"
 // AccessibilityTeamEmailKey is the key for the receiving email for the 508 team
 const AccessibilityTeamEmailKey = "ACCESSIBILITY_TEAM_EMAIL"
 
+// TRBEmailKey is the key for the receiving email for the TRB
+const TRBEmailKey = "TRB_EMAIL"
+
 // EASIHelpEmailKey is the key for the receiving email for EASI help requests
 const EASIHelpEmailKey = "EASI_HELP_EMAIL"
 
