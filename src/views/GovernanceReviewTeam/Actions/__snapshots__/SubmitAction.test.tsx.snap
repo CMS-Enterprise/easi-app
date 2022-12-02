@@ -398,7 +398,6 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                   class="easi-checkbox usa-checkbox"
                 >
                   <input
-                    checked=""
                     class="usa-checkbox__input"
                     id="SF13-requester"
                     name="SF13-requester"
@@ -459,7 +458,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                       class="usa-checkbox__input"
                       disabled=""
                       id="contact-ProductManager"
-                      name="-ProductManager"
+                      name="contact-ProductManager"
                       type="checkbox"
                       value=""
                     />
@@ -644,49 +643,39 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                      Show 2 fewer recipients
                   </button>
                   <div
-                    class="recipient-container"
-                    data-testid="recipient-BusinessOwner-SF13"
+                    class="easi-checkbox usa-checkbox"
                   >
-                    <div
-                      class="easi-checkbox usa-checkbox"
+                    <input
+                      checked=""
+                      class="usa-checkbox__input"
+                      id="b25bd13b-72a0-4d0e-b5be-7852a1a8259d"
+                      name="SF13-Business Owner"
+                      type="checkbox"
+                      value="sf13@local.fake"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="b25bd13b-72a0-4d0e-b5be-7852a1a8259d"
                     >
-                      <input
-                        checked=""
-                        class="usa-checkbox__input"
-                        id="SF13-BusinessOwner"
-                        name="SF13-BusinessOwner"
-                        type="checkbox"
-                        value="sf13@local.fake"
-                      />
-                      <label
-                        class="usa-checkbox__label"
-                        for="SF13-BusinessOwner"
-                      >
-                        Jerry Seinfeld, Center for Medicaid and CHIP Services (Business Owner)
-                      </label>
-                    </div>
+                      Jerry Seinfeld, Center for Medicaid and CHIP Services (Business Owner)
+                    </label>
                   </div>
                   <div
-                    class="recipient-container"
-                    data-testid="recipient-ISSO-WXYZ"
+                    class="easi-checkbox usa-checkbox"
                   >
-                    <div
-                      class="easi-checkbox usa-checkbox"
+                    <input
+                      class="usa-checkbox__input"
+                      id="346eefa9-c635-4c0b-bc29-26f272c33d0c"
+                      name="WXYZ-ISSO"
+                      type="checkbox"
+                      value="wxyz@local.fake"
+                    />
+                    <label
+                      class="usa-checkbox__label"
+                      for="346eefa9-c635-4c0b-bc29-26f272c33d0c"
                     >
-                      <input
-                        class="usa-checkbox__input"
-                        id="WXYZ-ISSO"
-                        name="WXYZ-ISSO"
-                        type="checkbox"
-                        value="wxyz@local.fake"
-                      />
-                      <label
-                        class="usa-checkbox__label"
-                        for="WXYZ-ISSO"
-                      >
-                        John Smith, CMS Wide (ISSO)
-                      </label>
-                    </div>
+                      John Smith, CMS Wide (ISSO)
+                    </label>
                   </div>
                   <div
                     class="system-intake-contacts margin-top-3"
