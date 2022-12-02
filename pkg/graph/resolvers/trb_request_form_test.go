@@ -53,7 +53,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			models.TRBGovernmentProcessesAndPoliciesOptionSecurityAssessments,
 		}
 		subjectAreaOtherTechnicalTopics := []models.TRBOtherTechnicalTopicsOption{
-			models.TRBOtherTechnicalTopicsOptionArtificialIntelligence,
+			models.TRBOtherTechnicalTopicsOptionOther,
 		}
 
 		formChanges := map[string]interface{}{
@@ -83,6 +83,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"subjectAreaDataAndDataManagement":          subjectAreaDataAndDataManagement,
 			"subjectAreaGovernmentProcessesAndPolicies": subjectAreaGovernmentProcessesAndPolicies,
 			"subjectAreaOtherTechnicalTopics":           subjectAreaOtherTechnicalTopics,
+			"subjectAreaOtherTechnicalTopicsOther":      "Some other technical topic",
 		}
 		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, formChanges)
 		s.NoError(err)
@@ -109,6 +110,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.EqualValues(formChanges["collabDateOther"], *updatedForm.CollabDateOther)
 
 		s.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
+		s.EqualValues(formChanges["subjectAreaOtherTechnicalTopicsOther"], *updatedForm.SubjectAreaOtherTechnicalTopicsOther)
 		s.EqualValues(3, len(updatedForm.CollabGroups))
 
 		s.EqualValues(subjectAreaTechnicalReferenceArchitecture[0], updatedForm.SubjectAreaTechnicalReferenceArchitecture[0])

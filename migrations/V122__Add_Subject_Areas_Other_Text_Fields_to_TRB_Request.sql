@@ -1,0 +1,7 @@
+ALTER TABLE trb_request ADD COLUMN subject_area_technical_reference_architecture_other TEXT;
+ALTER TABLE trb_request ADD COLUMN subject_area_network_and_security_other TEXT;
+ALTER TABLE trb_request ADD COLUMN subject_area_cloud_and_infrastructure_other TEXT;
+ALTER TABLE trb_request ADD COLUMN subject_area_application_development_other TEXT;
+ALTER TABLE trb_request ADD COLUMN subject_area_data_and_data_management_other TEXT;
+ALTER TABLE trb_request ADD COLUMN subject_area_government_processes_and_policies_other TEXT;
+ALTER TABLE trb_request ADD COLUMN subject_area_other_technical_topics_other TEXT;
