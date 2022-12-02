@@ -140,6 +140,8 @@ describe('Governance Review Team', () => {
       .its('response.statusCode')
       .should('eq', 200);
 
+    cy.get('#grtActionEmailRecipientFields').should('be.visible');
+
     cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes').check({ force: true });
     cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes').should('be.checked');
 

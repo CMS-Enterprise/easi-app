@@ -17,6 +17,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
+import Spinner from 'components/Spinner';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 import { EmailRecipientsFieldsProps } from 'types/action';
@@ -229,7 +230,7 @@ export default ({
    *
    * Used to ensure verifiedContacts and unverifiedContacts are only set once in useEffect
    */
-  const contactsLoaded = useRef(false);
+  const [contactsLoaded, setContactsLoaded] = useState(false);
 
   /** Initial default recipients */
   const defaultRecipients: EmailNotificationRecipients = useRef(recipients)
@@ -346,7 +347,7 @@ export default ({
       // Check if contacts have loaded
       contacts.length > 0 &&
       // Returns false if contacts loaded on a previous render
-      !contactsLoaded.current
+      !contactsLoaded
     ) {
       // Set initial unverified contacts
       setUnverifiedContacts(contacts.filter(contact => !contact.id));
@@ -355,12 +356,14 @@ export default ({
       setVerifiedContacts(contacts.filter(contact => contact.id));
 
       // Set contactsLoaded to true
-      contactsLoaded.current = true;
+      setContactsLoaded(true);
     }
-  }, [contacts]);
+  }, [contacts, contactsLoaded, setContactsLoaded]);
+
+  if (!contactsLoaded) return <Spinner />;
 
   return (
-    <div className={classnames(className)}>
+    <div className={classnames(className)} id="grtActionEmailRecipientFields">
       <h3 className={classnames('margin-y-2', headerClassName)}>
         {t('emailRecipients.email')} {optional && t('emailRecipients.optional')}
       </h3>

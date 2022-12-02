@@ -293,7 +293,7 @@ describe('The System Intake Form', () => {
   /**
    * Test contact details section error messages
    */
-  it.only('displays contact details error messages', () => {
+  it('displays contact details error messages', () => {
     // Wait for contacts query to finish loading
     cy.wait('@getSystemIntakeContacts')
       .its('response.statusCode')
