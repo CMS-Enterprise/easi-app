@@ -10,6 +10,9 @@ describe('Governance Review Team', () => {
       if (req.body.operationName === 'GetSystemIntake') {
         req.alias = 'getSystemIntake';
       }
+      if (req.body.operationName === 'GetSystemIntakeContactsQuery') {
+        req.alias = 'getSystemIntakeContacts';
+      }
     });
 
     cy.localLogin({ name: 'GRTB', role: 'EASI_D_GOVTEAM' });
@@ -132,9 +135,14 @@ describe('Governance Review Team', () => {
     cy.get('#issue-lcid').check({ force: true }).should('be.checked');
     cy.get('button[type="submit"]').click();
 
-    cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes')
-      .check({ force: true })
-      .should('be.checked');
+    // Wait for contacts query to finish loading
+    cy.wait('@getSystemIntakeContacts')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes').check({ force: true });
+    cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes').should('be.checked');
+
     cy.get('#IssueLifecycleIdForm-ExpirationDateMonth')
       .clear()
       .type('12')
