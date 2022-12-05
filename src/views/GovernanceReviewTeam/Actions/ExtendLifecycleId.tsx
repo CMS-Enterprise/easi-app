@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { ApolloError, ApolloQueryResult, useMutation } from '@apollo/client';
@@ -71,12 +71,16 @@ const ExtendLifecycleId = ({
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
 
-  // Requester object
+  // System intake contacts
   const {
     contacts: {
+      loading,
       data: { requester }
     }
   } = useSystemIntakeContacts(systemId);
+
+  /** Whether contacts have loaded for the first time */
+  const [contactsLoaded, setContactsLoaded] = useState(false);
 
   // Active contact for adding/verifying recipients
   const [
@@ -160,6 +164,17 @@ const ExtendLifecycleId = ({
       // Set Formik error to display alert
       .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
+
+  // Sets contactsLoaded to true when GetSystemIntakeContactsQuery loading state changes
+  useEffect(() => {
+    if (!loading) {
+      setContactsLoaded(true);
+    }
+  }, [loading]);
+
+  // Returns null until GetSystemIntakeContactsQuery has completed
+  // Allows initial values to fully load before initializing form
+  if (!contactsLoaded) return null;
 
   return (
     <Formik

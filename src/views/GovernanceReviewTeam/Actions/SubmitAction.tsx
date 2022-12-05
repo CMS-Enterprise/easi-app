@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { ApolloError, DocumentNode, useMutation } from '@apollo/client';
@@ -35,12 +35,16 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
-  // Requester object
+  // System intake contacts
   const {
     contacts: {
+      loading,
       data: { requester }
     }
   } = useSystemIntakeContacts(systemId);
+
+  /** Whether contacts have loaded for the first time */
+  const [contactsLoaded, setContactsLoaded] = useState(false);
 
   // Active contact for adding/verifying recipients
   const [
@@ -97,6 +101,17 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   };
 
   const backLink = `/governance-review-team/${systemId}/actions`;
+
+  // Sets contactsLoaded to true when GetSystemIntakeContactsQuery loading state changes
+  useEffect(() => {
+    if (!loading) {
+      setContactsLoaded(true);
+    }
+  }, [loading]);
+
+  // Returns null until GetSystemIntakeContactsQuery has completed
+  // Allows initial values to fully load before initializing form
+  if (!contactsLoaded) return null;
 
   return (
     <Formik
