@@ -108,7 +108,6 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
   })
 );
 
-/*
 export type TrbFormInputSubjectAreas = Pick<
   UpdateTRBRequestFormInput,
   | 'subjectAreaTechnicalReferenceArchitecture'
@@ -118,27 +117,14 @@ export type TrbFormInputSubjectAreas = Pick<
   | 'subjectAreaDataAndDataManagement'
   | 'subjectAreaGovernmentProcessesAndPolicies'
   | 'subjectAreaOtherTechnicalTopics'
+  | 'subjectAreaTechnicalReferenceArchitectureOther'
+  | 'subjectAreaNetworkAndSecurityOther'
+  | 'subjectAreaCloudAndInfrastructureOther'
+  | 'subjectAreaApplicationDevelopmentOther'
+  | 'subjectAreaDataAndDataManagementOther'
+  | 'subjectAreaGovernmentProcessesAndPoliciesOther'
+  | 'subjectAreaOtherTechnicalTopicsOther'
 >;
-*/
-export interface TrbFormInputSubjectAreas
-  extends Pick<
-    UpdateTRBRequestFormInput,
-    | 'subjectAreaTechnicalReferenceArchitecture'
-    | 'subjectAreaNetworkAndSecurity'
-    | 'subjectAreaCloudAndInfrastructure'
-    | 'subjectAreaApplicationDevelopment'
-    | 'subjectAreaDataAndDataManagement'
-    | 'subjectAreaGovernmentProcessesAndPolicies'
-    | 'subjectAreaOtherTechnicalTopics'
-  > {
-  subjectAreaTechnicalReferenceArchitectureOther?: string | null;
-  subjectAreaNetworkAndSecurityOther?: string | null;
-  subjectAreaCloudAndInfrastructureOther?: string | null;
-  subjectAreaApplicationDevelopmentOther?: string | null;
-  subjectAreaDataAndDataManagementOther?: string | null;
-  subjectAreaGovernmentProcessesAndPoliciesOther?: string | null;
-  subjectAreaOtherTechnicalTopicsOther?: string | null;
-}
 
 export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.object(
   {
@@ -151,7 +137,6 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
           )
           .required()
       )
-      .min(1)
       .ensure(),
     subjectAreaNetworkAndSecurity: yup
       .array(
@@ -162,7 +147,6 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
           )
           .required()
       )
-      .min(1)
       .ensure(),
     subjectAreaCloudAndInfrastructure: yup
       .array(
@@ -173,7 +157,6 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
           )
           .required()
       )
-      .min(1)
       .ensure(),
     subjectAreaApplicationDevelopment: yup
       .array(
@@ -184,7 +167,6 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
           )
           .required()
       )
-      .min(1)
       .ensure(),
     subjectAreaDataAndDataManagement: yup
       .array(
@@ -195,7 +177,6 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
           )
           .required()
       )
-      .min(1)
       .ensure(),
     subjectAreaGovernmentProcessesAndPolicies: yup
       .array(
@@ -206,7 +187,6 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
           )
           .required()
       )
-      .min(1)
       .ensure(),
     subjectAreaOtherTechnicalTopics: yup
       .array(
@@ -217,14 +197,48 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
           )
           .required()
       )
-      .min(1)
       .ensure(),
-    subjectAreaTechnicalReferenceArchitectureOther: yup.string(),
-    subjectAreaNetworkAndSecurityOther: yup.string(),
-    subjectAreaCloudAndInfrastructureOther: yup.string(),
-    subjectAreaApplicationDevelopmentOther: yup.string(),
-    subjectAreaDataAndDataManagementOther: yup.string(),
-    subjectAreaGovernmentProcessesAndPoliciesOther: yup.string(),
-    subjectAreaOtherTechnicalTopicsOther: yup.string()
+    subjectAreaTechnicalReferenceArchitectureOther: yup
+      .string()
+      .when('subjectAreaTechnicalReferenceArchitecture', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaNetworkAndSecurityOther: yup
+      .string()
+      .when('subjectAreaNetworkAndSecurity', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaCloudAndInfrastructureOther: yup
+      .string()
+      .when('subjectAreaCloudAndInfrastructure', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaApplicationDevelopmentOther: yup
+      .string()
+      .when('subjectAreaApplicationDevelopment', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaDataAndDataManagementOther: yup
+      .string()
+      .when('subjectAreaDataAndDataManagement', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaGovernmentProcessesAndPoliciesOther: yup
+      .string()
+      .when('subjectAreaGovernmentProcessesAndPolicies', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaOtherTechnicalTopicsOther: yup
+      .string()
+      .when('subjectAreaOtherTechnicalTopics', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      })
   }
 );

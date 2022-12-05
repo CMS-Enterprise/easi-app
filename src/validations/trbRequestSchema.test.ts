@@ -1,6 +1,17 @@
 import {
+  TRBApplicationDevelopmentOption,
+  TRBCloudAndInfrastructureOption,
+  TRBDataAndDataManagementOption,
+  TRBGovernmentProcessesAndPoliciesOption,
+  TRBNetworkAndSecurityOption,
+  TRBOtherTechnicalTopicsOption,
+  TRBTechnicalReferenceArchitectureOption
+} from 'types/graphql-global-types';
+
+import {
   basicSchema,
   subjectAreasSchema,
+  TrbFormInputSubjectAreas,
   TrbRequestFormBasic
 } from './trbRequestSchema';
 
@@ -164,23 +175,81 @@ describe('TRB Basic Form schema validation', () => {
 });
 
 describe('TRB Subject Areas Form schema validation', () => {
-  const minimumRequiredForm = {
-    subjectAreaTechnicalReferenceArchitecture: ['CMS_TRA_BUSINESS_RULES'],
-    subjectAreaNetworkAndSecurity: [
-      'GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION'
-    ],
-    subjectAreaCloudAndInfrastructure: ['DISASTER_RECOVERY'],
-    subjectAreaApplicationDevelopment: ['OTHER'],
-    subjectAreaDataAndDataManagement: ['DATA_WAREHOUSING'],
-    subjectAreaGovernmentProcessesAndPolicies: ['OTHER_AVAILABLE_TRB_SERVICES'],
-    subjectAreaOtherTechnicalTopics: [
-      'ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT'
-    ]
-  };
+  // Subject areas can be an empty form
 
-  it('passes backend input validation', async () => {
+  it.each([
+    {
+      field: 'subjectAreaTechnicalReferenceArchitecture',
+      options: TRBTechnicalReferenceArchitectureOption
+    },
+    {
+      field: 'subjectAreaNetworkAndSecurity',
+      options: TRBNetworkAndSecurityOption
+    },
+    {
+      field: 'subjectAreaCloudAndInfrastructure',
+      options: TRBCloudAndInfrastructureOption
+    },
+    {
+      field: 'subjectAreaApplicationDevelopment',
+      options: TRBApplicationDevelopmentOption
+    },
+    {
+      field: 'subjectAreaDataAndDataManagement',
+      options: TRBDataAndDataManagementOption
+    },
+    {
+      field: 'subjectAreaGovernmentProcessesAndPolicies',
+      options: TRBGovernmentProcessesAndPoliciesOption
+    },
+    {
+      field: 'subjectAreaOtherTechnicalTopics',
+      options: TRBOtherTechnicalTopicsOption
+    }
+  ])('validates field options %j', async ({ field, options }) => {
+    // Correct option value
     await expect(
-      subjectAreasSchema.isValid(minimumRequiredForm)
+      Promise.all(
+        Object.values(options).map(opt => {
+          return subjectAreasSchema.fields[
+            field as keyof TrbFormInputSubjectAreas
+          ].isValid([opt]);
+        })
+      )
+    ).resolves.toEqual(expect.arrayContaining([true]));
+
+    // Missing/invalid option value
+    await expect(
+      Promise.all(
+        Object.values(options).map(opt => {
+          return subjectAreasSchema.fields[
+            field as keyof TrbFormInputSubjectAreas
+          ].isValid(['']);
+        })
+      )
+    ).resolves.toEqual(expect.arrayContaining([false]));
+
+    // All valid option values
+    await expect(
+      subjectAreasSchema.fields[
+        field as keyof TrbFormInputSubjectAreas
+      ].isValid(Object.values(options))
+    ).resolves.toEqual(true);
+
+    // Valid other text
+    await expect(
+      subjectAreasSchema.isValid({
+        [field]: ['OTHER'],
+        [`${field}Other`]: 'test'
+      })
     ).resolves.toBeTruthy();
+
+    // Missing other text
+    await expect(
+      subjectAreasSchema.validate({
+        [field]: ['OTHER'],
+        [`${field}Other`]: ''
+      })
+    ).rejects.toThrow(/other is a required field/i);
   });
 });

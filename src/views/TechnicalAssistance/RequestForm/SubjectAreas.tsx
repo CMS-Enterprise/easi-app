@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError /* , useMutation */ } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
@@ -13,14 +13,15 @@ import {
   Label,
   TextInput
 } from '@trussworks/react-uswds';
+import { pick } from 'lodash';
 
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import MultiSelect from 'components/shared/MultiSelect';
-// import {
-//   UpdateTrbForm,
-//   UpdateTrbFormVariables
-// } from 'queries/types/UpdateTrbForm';
-// import UpdateTrbFormQuery from 'queries/UpdateTrbFormQuery';
+import {
+  UpdateTrbForm,
+  UpdateTrbFormVariables
+} from 'queries/types/UpdateTrbForm';
+import UpdateTrbFormQuery from 'queries/UpdateTrbFormQuery';
 import {
   TRBApplicationDevelopmentOption,
   TRBCloudAndInfrastructureOption,
@@ -47,9 +48,20 @@ export const subjectAreasBlankValues = {
   subjectAreaApplicationDevelopment: [],
   subjectAreaDataAndDataManagement: [],
   subjectAreaGovernmentProcessesAndPolicies: [],
-  subjectAreaOtherTechnicalTopics: []
+  subjectAreaOtherTechnicalTopics: [],
+  subjectAreaTechnicalReferenceArchitectureOther: '',
+  subjectAreaNetworkAndSecurityOther: '',
+  subjectAreaCloudAndInfrastructureOther: '',
+  subjectAreaApplicationDevelopmentOther: '',
+  subjectAreaDataAndDataManagementOther: '',
+  subjectAreaGovernmentProcessesAndPoliciesOther: '',
+  subjectAreaOtherTechnicalTopicsOther: ''
 };
 
+/**
+ * Field `name`s with their associated `otherText` field.
+ * "OTHER" is always the last item of `options`.
+ */
 const fields = [
   // const fields: Array<{
   //   name:
@@ -208,9 +220,9 @@ function SubjectAreas({
 
   const { t } = useTranslation('technicalAssistance');
 
-  // const [updateForm] = useMutation<UpdateTrbForm, UpdateTrbFormVariables>(
-  //   UpdateTrbFormQuery
-  // );
+  const [updateForm] = useMutation<UpdateTrbForm, UpdateTrbFormVariables>(
+    UpdateTrbFormQuery
+  );
 
   // todo undefined instead of []
   const initialValues = nullFillObject(request.form, subjectAreasBlankValues);
@@ -220,7 +232,7 @@ function SubjectAreas({
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty /* dirtyFields */ }
+    formState: { errors, isSubmitting, isDirty, dirtyFields }
     // watch
   } = useForm<FormFieldProps<TrbFormInputSubjectAreas>>({
     resolver: yupResolver(subjectAreasSchema),
@@ -241,7 +253,32 @@ function SubjectAreas({
       handleSubmit(
         async formData => {
           if (isDirty) {
-            // todo
+            const input: any = pick(formData, Object.keys(dirtyFields));
+
+            Object.entries(input).forEach(([key, value]) => {
+              if (value === '') input[key] = null;
+            });
+
+            // Clear out "other" text fields if the option isn't selected from the main field
+            fields.forEach(({ name, otherText, options }) => {
+              if (
+                name in input &&
+                !input[name].includes(options[options.length - 1])
+              ) {
+                input[otherText] = null;
+              }
+            });
+
+            await updateForm({
+              variables: {
+                input: {
+                  trbRequestId: request.id,
+                  ...input
+                }
+              }
+            });
+
+            await refetchRequest();
           }
         },
         () => {
@@ -257,7 +294,16 @@ function SubjectAreas({
           }
         }
       ),
-    [handleSubmit, isDirty, setFormError, t]
+    [
+      dirtyFields,
+      handleSubmit,
+      isDirty,
+      refetchRequest,
+      request.id,
+      setFormError,
+      t,
+      updateForm
+    ]
   );
 
   useEffect(() => {
@@ -269,6 +315,7 @@ function SubjectAreas({
   }, [setIsStepSubmitting, isSubmitting]);
 
   // console.log('values', watch());
+  // console.log('isDirty', isDirty);
 
   return (
     <Form
@@ -297,10 +344,6 @@ function SubjectAreas({
 
       <Grid row>
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-          <Alert type="info" slim>
-            {t('subject.pleaseSelectOne')}
-          </Alert>
-
           {/* Technical Reference Architecture (TRA) */}
           {/*
           <Controller
@@ -468,7 +511,9 @@ function SubjectAreas({
             submit(() => {
               history.push(stepUrl.next);
             });
-          }
+          },
+          text: isDirty ? undefined : t('subject.continueWithoutAdding'),
+          outline: !isDirty
         }}
         saveExitDisabled={isSubmitting}
         submit={submit}

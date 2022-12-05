@@ -407,7 +407,7 @@ const technicalAssistance = {
       submit:
         'Your subject areas were not saved. Please try again. If the error persists, please try again at a later date.'
     },
-    pleaseSelectOne: 'Please select at least 1 topic'
+    continueWithoutAdding: 'Continue without selecting subject areas'
   },
   attendees: {
     addAnAttendee: 'Add an attendee',
