@@ -128,17 +128,10 @@ describe('Governance Review Team', () => {
   it('can issue a Lifecycle ID', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
-
-    cy.get('button[data-testid="collapsable-link"]').click();
-    cy.get('#issue-lcid').check({ force: true }).should('be.checked');
-    cy.get('button[type="submit"]').click();
-
-    // Wait for contacts query to finish loading
-    cy.wait('@getSystemIntakeContacts')
-      .its('response.statusCode')
-      .should('eq', 200);
+    cy.governanceReviewTeam.grtActions.selectAction({
+      intakeName: 'A Completed Intake Form',
+      actionId: 'issue-lcid'
+    });
 
     cy.get('#grtActionEmailRecipientFields').should('be.visible');
 
@@ -198,13 +191,10 @@ describe('Governance Review Team', () => {
   it('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
-    cy.contains('a', 'Closable Request').should('be.visible').click();
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
-
-    cy.get('button[data-testid="collapsable-link"]').click();
-    cy.get('#no-governance').check({ force: true }).should('be.checked');
-
-    cy.get('button[type="submit"]').click();
+    cy.governanceReviewTeam.grtActions.selectAction({
+      intakeName: 'Closable Request',
+      actionId: 'no-governance'
+    });
 
     cy.get('#SubmitActionForm-Feedback')
       .type('Feedback')
@@ -275,12 +265,12 @@ describe('Governance Review Team', () => {
     cy.get('button').contains('Closed Requests').click();
 
     cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
-    cy.contains('a', 'With LCID Issued').should('be.visible').click();
 
-    cy.contains('a', 'Actions').should('be.visible').click();
-
-    cy.get('#extend-lcid').check({ force: true }).should('be.checked');
-    cy.get('button[type="submit"]').click();
+    // Navigate to intake and select action
+    cy.governanceReviewTeam.grtActions.selectAction({
+      intakeName: 'With LCID Issued',
+      actionId: 'extend-lcid'
+    });
 
     cy.get('#ExtendLifecycleId-expirationDateMonth')
       .type('08')
@@ -324,12 +314,12 @@ describe('Governance Review Team', () => {
     cy.get('button').contains('Closed Requests').click();
 
     cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
-    cy.contains('a', 'With LCID Issued').should('be.visible').click();
 
-    cy.contains('a', 'Actions').should('be.visible').click();
-
-    cy.get('#extend-lcid').check({ force: true }).should('be.checked');
-    cy.get('button[type="submit"]').click();
+    // Navigate to intake and select action
+    cy.governanceReviewTeam.grtActions.selectAction({
+      intakeName: 'With LCID Issued',
+      actionId: 'extend-lcid'
+    });
 
     cy.get('#ExtendLifecycleId-expirationDateMonth')
       .type('08')
