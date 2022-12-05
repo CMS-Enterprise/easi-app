@@ -7744,6 +7744,13 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
   subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
+  subjectAreaTechnicalReferenceArchitectureOther: String
+  subjectAreaNetworkAndSecurityOther: String
+  subjectAreaCloudAndInfrastructureOther: String
+  subjectAreaApplicationDevelopmentOther: String
+  subjectAreaDataAndDataManagementOther: String
+  subjectAreaGovernmentProcessesAndPoliciesOther: String
+  subjectAreaOtherTechnicalTopicsOther: String
 }
 
 """
