@@ -31,6 +31,12 @@ describe('The System Intake Form', () => {
     cy.location().should(loc => {
       expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/);
     });
+
+    // Wait for contacts query to complete
+    cy.wait('@getSystemIntakeContacts')
+      .its('response.statusCode')
+      .should('eq', 200);
+
     cy.contains('h1', 'Contact details');
   });
 
@@ -294,11 +300,6 @@ describe('The System Intake Form', () => {
    * Test contact details section error messages
    */
   it('displays contact details error messages', () => {
-    // Wait for contacts query to finish loading
-    cy.wait('@getSystemIntakeContacts')
-      .its('response.statusCode')
-      .should('eq', 200);
-
     // Click next button without filling in any values
     cy.contains('button', 'Next').click();
 
