@@ -59,6 +59,7 @@ func TestEmailTestSuite(t *testing.T) {
 	emailConfig := Config{
 		GRTEmail:          models.NewEmailAddress("grt_email@cms.fake"),     // unique email address that can't get confused with ITInvestmentEmail
 		ITInvestmentEmail: models.NewEmailAddress("it_investment@cms.fake"), // unique email address that can't get confused with GRTEmail
+		TRBEmail:          models.NewEmailAddress("trb_email@cms.fake"),
 		URLHost:           config.GetString(appconfig.ClientHostKey),
 		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
