@@ -358,6 +358,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
           >
             <div
               class="margin-top-3"
+              id="grtActionEmailRecipientFields"
             >
               <h3
                 class="margin-y-2"
