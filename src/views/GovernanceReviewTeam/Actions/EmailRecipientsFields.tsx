@@ -266,9 +266,14 @@ export default ({
     return createContact(contact).then(response => {
       // Check for response
       if (response) {
-        // Check if contact has email
-        if (response?.email) {
-          // Automatically select contact as recipient
+        // Newly verified contacts should automatically be selected as recipients
+        if (
+          // Check if response from CEDAR includes email
+          response?.email &&
+          // Check if contact is already selected as recipient
+          !recipients.regularRecipientEmails.includes(response.email)
+        ) {
+          // Add contact email to recipients array
           setRecipients({
             ...recipients,
             regularRecipientEmails: [
@@ -305,14 +310,14 @@ export default ({
       contact as SystemIntakeContactProps
     ]);
 
-    // Add contact as recipient
+    // New contacts should automatically be selected as recipients
     if (
       // Check if response from CEDAR includes email
       contact.email &&
-      // Check if recipient is already selected
+      // Check if contact is already selected as recipient
       !recipients.regularRecipientEmails.includes(contact.email)
     ) {
-      // If recipient is not already selected, add email to recipients array
+      // Add contact email to recipients array
       setRecipients({
         ...recipients,
         regularRecipientEmails: [
