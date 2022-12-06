@@ -107,10 +107,8 @@ describe('Technical Assistance', () => {
 
     // Select some options including "other" which will toggle on an additional text field
     cy.get('#subjectAreaTechnicalReferenceArchitecture').click();
-    cy.get(
-      '#subjectAreaTechnicalReferenceArchitecture [value="GENERAL_TRA_INFORMATION"]'
-    ).check({ force: true });
-    cy.get('#subjectAreaTechnicalReferenceArchitecture [value="OTHER"]').check({
+    cy.get('[value="GENERAL_TRA_INFORMATION"]').check({ force: true });
+    cy.get('[value="OTHER"]').check({
       force: true
     });
     cy.get('#subjectAreaTechnicalReferenceArchitecture').focused().blur();

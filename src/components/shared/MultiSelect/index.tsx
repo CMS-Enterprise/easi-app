@@ -74,6 +74,7 @@ const MultiSelectTag = ({
 
 const MultiSelect = ({
   id,
+  inputId,
   name,
   selectedLabel,
   options,
@@ -81,7 +82,8 @@ const MultiSelect = ({
   initialValues,
   className
 }: {
-  id: string;
+  id?: string;
+  inputId?: string;
   name: string;
   selectedLabel?: string;
   options: MultiSelectOptionProps[];
@@ -155,6 +157,7 @@ const MultiSelect = ({
     <div>
       <Select
         id={id}
+        inputId={inputId}
         name={name}
         className={classNames('easi-multiselect usa-combo-box', className)}
         options={options}
