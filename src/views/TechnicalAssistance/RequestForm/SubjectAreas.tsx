@@ -528,8 +528,11 @@ function SubjectAreas({
       <Pager
         className="margin-top-5"
         back={{
+          disabled: isSubmitting,
           onClick: () => {
-            history.push(stepUrl.back);
+            submit(() => {
+              history.push(stepUrl.back);
+            });
           }
         }}
         next={{
