@@ -399,6 +399,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                   class="easi-checkbox usa-checkbox"
                 >
                   <input
+                    checked=""
                     class="usa-checkbox__input"
                     id="SF13-requester"
                     name="SF13-requester"
