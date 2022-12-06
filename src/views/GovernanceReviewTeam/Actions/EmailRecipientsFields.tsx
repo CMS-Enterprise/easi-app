@@ -246,17 +246,12 @@ export default ({
    */
   const updateRecipients = (value: string) => {
     const { regularRecipientEmails } = recipients;
-    let updatedRecipients = [];
+    const updatedRecipients = [...regularRecipientEmails];
 
-    // Update recipients
-    if (regularRecipientEmails.includes(value)) {
-      // If recipient already exists, remove email from array
-      updatedRecipients = regularRecipientEmails.filter(
-        email => email !== value
-      );
-    } else {
+    // // Update recipients
+    if (!regularRecipientEmails.includes(value)) {
       // Add email to recipients array
-      updatedRecipients = [...regularRecipientEmails, value];
+      updatedRecipients.push(value);
     }
 
     // Update recipients
