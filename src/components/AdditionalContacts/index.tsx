@@ -351,15 +351,14 @@ export default function AdditionalContacts({
               ) {
                 if (loading) {
                   return (
-                    <div className="margin-bottom-205">
+                    <div key={contact.id} className="margin-bottom-205">
                       <Spinner />
                     </div>
                   );
                 }
                 return (
-                  <div key={contact.euaUserId}>
+                  <div key={contact.id}>
                     <ContactForm
-                      key={contact.euaUserId}
                       activeContact={activeContact}
                       setActiveContact={setActiveContact}
                       onSubmit={handleUpdateContact}

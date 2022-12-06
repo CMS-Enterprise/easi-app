@@ -505,11 +505,6 @@ export default ({
                 createContactCallback={createContactCallback}
                 type="recipient"
                 className="margin-top-3"
-                // Conditional classNames prevent jump in spacing when contacts are loaded
-                // className={classnames({
-                //   'margin-top-3': !loading,
-                //   'margin-top-105': loading
-                // })}
               />
             </TruncatedContent>
           </div>
