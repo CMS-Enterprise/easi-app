@@ -343,7 +343,7 @@ function SubjectAreas({
         <Alert
           heading={t('errors.checkFix')}
           type="error"
-          className="trb-fields-error margin-bottom-2"
+          className="trb-fields-error margin-y-2"
         >
           {Object.keys(errors).map(fieldName => {
             let msg: string;
@@ -365,7 +365,7 @@ function SubjectAreas({
         </Alert>
       )}
 
-      <Grid row>
+      <Grid row className="margin-top-2">
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           {/* Technical Reference Architecture (TRA) */}
           {/*
@@ -459,7 +459,6 @@ function SubjectAreas({
                 render={({ field, fieldState: { error } }) => {
                   return (
                     <FormGroup
-                      className="margin-top-5"
                       // Use the same FormGroup error indicator for the related nested "other" field
                       error={!!error || `${name}Other` in errors}
                     >
