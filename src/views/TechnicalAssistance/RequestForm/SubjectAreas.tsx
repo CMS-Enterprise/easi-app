@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -13,7 +13,7 @@ import {
   Label,
   TextInput
 } from '@trussworks/react-uswds';
-import { pick } from 'lodash';
+import { isEqual, pick, zipObject } from 'lodash';
 
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import MultiSelect from 'components/shared/MultiSelect';
@@ -207,6 +207,8 @@ const fields = [
 ] as const;
 // ];
 
+const primaryFields = fields.map(f => f.name);
+
 function SubjectAreas({
   request,
   stepUrl,
@@ -232,8 +234,8 @@ function SubjectAreas({
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty, dirtyFields }
-    // watch
+    formState: { errors, isSubmitting, isDirty, dirtyFields },
+    watch
   } = useForm<FormFieldProps<TrbFormInputSubjectAreas>>({
     resolver: yupResolver(subjectAreasSchema),
     defaultValues: initialValues
@@ -241,9 +243,20 @@ function SubjectAreas({
 
   const hasErrors = Object.keys(errors).length > 0;
 
+  // Disregard "other" fields when determining form `unfilled`
+  const primaryData = zipObject(primaryFields, watch(primaryFields));
+
+  /**
+   * Switch submit button between next (true) and continue (false)
+   */
+  const unfilled: boolean = useMemo(
+    () => isEqual(primaryData, pick(subjectAreasBlankValues, primaryFields)),
+    [primaryData]
+  );
+
   useEffect(() => {
     if (hasErrors) {
-      const err = document.querySelector('.trb-basic-fields-error');
+      const err = document.querySelector('.trb-fields-error');
       err?.scrollIntoView();
     }
   }, [errors, hasErrors]);
@@ -314,12 +327,15 @@ function SubjectAreas({
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
 
-  // console.log('values', watch());
+  // console.log('watch', watch());
+  // console.log('primaryValues', JSON.stringify(primaryData, null, 2));
+  // console.log('values', JSON.stringify(getValues(), null, 2));
   // console.log('isDirty', isDirty);
+  // console.log('errors', errors);
 
   return (
     <Form
-      className="trb-form-basic maxw-full"
+      className="trb-form-subject maxw-full"
       onSubmit={e => e.preventDefault()}
     >
       {/* Validation errors summary */}
@@ -327,10 +343,17 @@ function SubjectAreas({
         <Alert
           heading={t('errors.checkFix')}
           type="error"
-          className="trb-basic-fields-error margin-bottom-2"
+          className="trb-fields-error margin-bottom-2"
         >
           {Object.keys(errors).map(fieldName => {
-            const msg = t(`subject.labels.${fieldName}`);
+            let msg: string;
+            if (fieldName.endsWith('Other')) {
+              msg = `${t(
+                `subject.labels.${fieldName.replace(/Other$/, '')}`
+              )}: ${t('subject.labels.other')}`;
+            } else {
+              msg = t(`subject.labels.${fieldName}`);
+            }
             return (
               <ErrorAlertMessage
                 key={fieldName}
@@ -435,7 +458,11 @@ function SubjectAreas({
                 control={control}
                 render={({ field, fieldState: { error } }) => {
                   return (
-                    <FormGroup className="margin-top-5" error={!!error}>
+                    <FormGroup
+                      className="margin-top-5"
+                      // Use the same FormGroup error indicator for the related nested "other" field
+                      error={!!error || `${name}Other` in errors}
+                    >
                       <Label
                         htmlFor={name}
                         hint={<div>{t(`subject.hint.${name}`)}</div>}
@@ -464,7 +491,7 @@ function SubjectAreas({
                             control={control}
                             // eslint-disable-next-line no-shadow
                             render={({ field, fieldState: { error } }) => (
-                              <FormGroup error={!!error}>
+                              <FormGroup>
                                 <Label
                                   htmlFor={otherText}
                                   hint={<div>{t('subject.hint.other')}</div>}
@@ -512,8 +539,8 @@ function SubjectAreas({
               history.push(stepUrl.next);
             });
           },
-          text: isDirty ? undefined : t('subject.continueWithoutAdding'),
-          outline: !isDirty
+          text: unfilled ? t('subject.continueWithoutAdding') : undefined,
+          outline: unfilled
         }}
         saveExitDisabled={isSubmitting}
         submit={submit}
