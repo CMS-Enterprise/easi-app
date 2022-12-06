@@ -246,12 +246,17 @@ export default ({
    */
   const updateRecipients = (value: string) => {
     const { regularRecipientEmails } = recipients;
-    const updatedRecipients = [...regularRecipientEmails];
+    let updatedRecipients = [];
 
-    // // Update recipients
-    if (!regularRecipientEmails.includes(value)) {
+    // Update recipients
+    if (regularRecipientEmails.includes(value)) {
+      // If recipient already exists, remove email from array
+      updatedRecipients = regularRecipientEmails.filter(
+        email => email !== value
+      );
+    } else {
       // Add email to recipients array
-      updatedRecipients.push(value);
+      updatedRecipients = [...regularRecipientEmails, value];
     }
 
     // Update recipients
@@ -277,7 +282,13 @@ export default ({
         // Check if contact has email
         if (response?.email) {
           // Automatically select contact as recipient
-          updateRecipients(response.email);
+          setRecipients({
+            ...recipients,
+            regularRecipientEmails: [
+              ...recipients.regularRecipientEmails,
+              response.email
+            ]
+          });
         }
 
         /** Updated unverified contacts array */
