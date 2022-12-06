@@ -35,12 +35,8 @@ const ProvideGRTRecommendationsToGRB = () => {
   );
 
   // System intake contacts
-  const {
-    contacts: {
-      loading,
-      data: { requester }
-    }
-  } = useSystemIntakeContacts(systemId);
+  const { contacts } = useSystemIntakeContacts(systemId);
+  const { requester } = contacts.data;
 
   /** Whether contacts have loaded for the first time */
   const [contactsLoaded, setContactsLoaded] = useState(false);
@@ -104,10 +100,10 @@ const ProvideGRTRecommendationsToGRB = () => {
 
   // Sets contactsLoaded to true when GetSystemIntakeContactsQuery loading state changes
   useEffect(() => {
-    if (!loading) {
+    if (!contacts.loading) {
       setContactsLoaded(true);
     }
-  }, [loading]);
+  }, [contacts.loading]);
 
   // Returns null until GetSystemIntakeContactsQuery has completed
   // Allows initial values to fully load before initializing form
@@ -203,6 +199,7 @@ const ProvideGRTRecommendationsToGRB = () => {
                     systemIntakeId={systemId}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}
+                    contacts={contacts.data}
                     recipients={values.notificationRecipients}
                     setRecipients={recipients =>
                       setFieldValue('notificationRecipients', recipients)

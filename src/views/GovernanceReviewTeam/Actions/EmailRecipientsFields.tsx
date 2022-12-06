@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -17,7 +17,6 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
-import Spinner from 'components/Spinner';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 import { EmailRecipientsFieldsProps } from 'types/action';
@@ -177,6 +176,8 @@ export default ({
   activeContact,
   /** Set active contact */
   setActiveContact,
+  /** Formatted system intake contacts */
+  contacts,
   /** Email notification recipients object */
   recipients,
   /** Set email notification recipients */
@@ -187,34 +188,27 @@ export default ({
   const { t } = useTranslation('action');
   const flags = useFlags();
 
-  // System intake contacts
-  const {
-    contacts: { data, loading },
-    createContact
-  } = useSystemIntakeContacts(systemIntakeId);
+  // Create contact mutation
+  const { createContact } = useSystemIntakeContacts(systemIntakeId);
 
   // Requester object
-  const { requester } = data;
+  const { requester } = contacts;
 
-  /**
-   * Array of system intake contacts
-   */
-  const contacts: SystemIntakeContactProps[] = useMemo(() => {
-    if (loading) return [];
+  const contactsArray = useMemo(() => {
     return [
-      data.businessOwner,
-      data.productManager,
-      ...(data.isso.commonName ? [data.isso] : []),
-      ...data.additionalContacts
+      contacts.businessOwner,
+      contacts.productManager,
+      ...(contacts.isso.commonName ? [contacts.isso] : []),
+      ...contacts.additionalContacts
     ];
-  }, [data, loading]);
+  }, [contacts]);
 
   /**
    * Verified contacts - contains all initial verified contacts and any additional contacts
    */
   const [verifiedContacts, setVerifiedContacts] = useState<
     SystemIntakeContactProps[]
-  >([]);
+  >(contactsArray.filter(contact => contact.id));
 
   /**
    * Unverified contacts - contains all initial unverified contacts
@@ -223,14 +217,7 @@ export default ({
    */
   const [unverifiedContacts, setUnverifiedContacts] = useState<
     SystemIntakeContactProps[]
-  >([]);
-
-  /**
-   * Set to true when GetSystemIntakeContactsQuery has completed
-   *
-   * Used to ensure verifiedContacts and unverifiedContacts are only set once in useEffect
-   */
-  const [contactsLoaded, setContactsLoaded] = useState(false);
+  >(contactsArray.filter(contact => !contact.id));
 
   /** Initial default recipients */
   const defaultRecipients: EmailNotificationRecipients = useRef(recipients)
@@ -342,31 +329,6 @@ export default ({
   const hiddenContactsCount =
     Number(!defaultRecipients.shouldNotifyITInvestment) +
     (verifiedContacts ? verifiedContacts?.length : 0);
-
-  /**
-   * Once contacts are loaded, set verifiedContacts and unverifiedContacts states
-   *
-   * This only runs until contacts are loaded so that unverifiedContacts are not overwritten
-   */
-  useEffect(() => {
-    if (
-      // Check if contacts have loaded
-      contacts.length > 0 &&
-      // Returns false if contacts loaded on a previous render
-      !contactsLoaded
-    ) {
-      // Set initial unverified contacts
-      setUnverifiedContacts(contacts.filter(contact => !contact.id));
-
-      // Set initial verified contacts
-      setVerifiedContacts(contacts.filter(contact => contact.id));
-
-      // Set contactsLoaded to true
-      setContactsLoaded(true);
-    }
-  }, [contacts, contactsLoaded, setContactsLoaded]);
-
-  if (!contactsLoaded) return <Spinner />;
 
   return (
     <div className={classnames(className)} id="grtActionEmailRecipientFields">
@@ -537,11 +499,12 @@ export default ({
                 setActiveContact={setActiveContact}
                 createContactCallback={createContactCallback}
                 type="recipient"
+                className="margin-top-3"
                 // Conditional classNames prevent jump in spacing when contacts are loaded
-                className={classnames({
-                  'margin-top-3': !loading,
-                  'margin-top-105': loading
-                })}
+                // className={classnames({
+                //   'margin-top-3': !loading,
+                //   'margin-top-105': loading
+                // })}
               />
             </TruncatedContent>
           </div>
