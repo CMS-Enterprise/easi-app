@@ -8,6 +8,9 @@ describe('The Task List', () => {
       if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
         req.alias = 'updateContactDetails';
       }
+      if (req.body.operationName === 'GetSystemIntakeContactsQuery') {
+        req.alias = 'getSystemIntakeContacts';
+      }
     });
 
     cy.visit('/system/request-type');
@@ -19,6 +22,10 @@ describe('The Task List', () => {
   it('shows a continue link when a user clicks back until they reach the task list', () => {
     cy.wait(1000);
     cy.get('[data-testid="intake-start-btn"]').should('be.visible').click();
+
+    cy.wait('@getSystemIntakeContacts')
+      .its('response.statusCode')
+      .should('eq', 200);
 
     cy.systemIntake.contactDetails.fillNonBranchingFields();
     cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');

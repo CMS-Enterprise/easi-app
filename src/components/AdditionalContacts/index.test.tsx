@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import AdditionalContacts from './index';
 
 describe('CedarContactSelect', () => {
-  it('matches the snapshot', () => {
+  it('matches the snapshot', async () => {
     const { asFragment } = render(
       <MockedProvider>
         <AdditionalContacts
@@ -20,9 +20,6 @@ describe('CedarContactSelect', () => {
           }}
           setActiveContact={() => null}
           contacts={[]}
-          createContact={() => null}
-          updateContact={() => null}
-          deleteContact={() => null}
         />
       </MockedProvider>
     );
