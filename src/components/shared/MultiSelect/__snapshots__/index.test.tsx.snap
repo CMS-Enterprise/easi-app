@@ -18,19 +18,19 @@ exports[`RelatedArticle matches the snapshot 1`] = `
         class="css-1f43avz-a11yText-A11yText"
       />
       <div
-        class=" css-1vl89cy-control"
+        class=" css-jvusj8-control"
       >
         <div
-          class=" css-1fdsijx-ValueContainer"
+          class=" css-319lph-ValueContainer"
         >
           <div
-            class=" css-1jqq78o-placeholder"
+            class=" css-14el2xx-placeholder"
             id="react-select-2-placeholder"
           >
             0 selected
           </div>
           <div
-            class=" css-qbdosj-Input"
+            class=" css-6j8wv5-Input"
             data-value=""
           >
             <input
@@ -56,11 +56,11 @@ exports[`RelatedArticle matches the snapshot 1`] = `
           class=" css-1hb7zxy-IndicatorsContainer"
         >
           <span
-            class=" css-16b81-indicatorSeparator"
+            class=" css-1vtyy7d-indicatorSeparator"
           />
           <div
             aria-hidden="true"
-            class=" css-gjng1h-indicatorContainer"
+            class=" css-1232v1p-indicatorContainer"
           >
             <svg
               aria-hidden="true"
@@ -81,7 +81,6 @@ exports[`RelatedArticle matches the snapshot 1`] = `
         <input
           name="testMultiSelect"
           type="hidden"
-          value=""
         />
       </div>
     </div>

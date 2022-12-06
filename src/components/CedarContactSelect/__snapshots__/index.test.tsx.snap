@@ -17,13 +17,13 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
       class="css-1f43avz-a11yText-A11yText"
     />
     <div
-      class="cedar-contact-select__control css-79rxjr-control"
+      class="cedar-contact-select__control css-1b5q38d-control"
     >
       <div
-        class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-1fdsijx-ValueContainer"
+        class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-319lph-ValueContainer"
       >
         <div
-          class="cedar-contact-select__input-container css-166bipr-Input"
+          class="cedar-contact-select__input-container css-1pndypt-Input"
           data-value="Jane Doe, ABCD"
         >
           <input
@@ -55,7 +55,7 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
         />
         <div
           aria-hidden="true"
-          class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1h8bgg-indicatorContainer"
+          class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1e245h0-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -71,11 +71,11 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
           </svg>
         </div>
         <span
-          class="cedar-contact-select__indicator-separator css-1u9des2-indicatorSeparator"
+          class="cedar-contact-select__indicator-separator css-1okebmr-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-1h8bgg-indicatorContainer"
+          class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-1e245h0-indicatorContainer"
         >
           <svg
             aria-hidden="true"
