@@ -327,7 +327,7 @@ function SubjectAreas({
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
 
-  // console.log('watch', watch());
+  // console.log('watch', JSON.stringify(watch(), null, 2));
   // console.log('primaryValues', JSON.stringify(primaryData, null, 2));
   // console.log('values', JSON.stringify(getValues(), null, 2));
   // console.log('isDirty', isDirty);
@@ -473,7 +473,7 @@ function SubjectAreas({
                         <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                       )}
                       <MultiSelect
-                        id={name}
+                        inputId={name}
                         name={field.name}
                         options={options.map(value => ({
                           label: t(`subject.options.${name}.${value}`),
