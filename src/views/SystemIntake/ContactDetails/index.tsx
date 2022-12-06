@@ -81,6 +81,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   } = useSystemIntakeContacts(id);
   const { requester, businessOwner, productManager, isso } = contacts.data;
 
+  /** Whether contacts have loaded for the first time */
+  const [contactsLoaded, setContactsLoaded] = useState(false);
+
   const initialValues: ContactDetailsForm = useMemo(
     () => ({
       requester,
@@ -198,8 +201,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
   }, [businessOwner, productManager, requester.euaUserId]);
 
-  // Wait for contacts to load before returning form
-  // if (contacts.loading) return null;
+  // Sets contactsLoaded to true when GetSystemIntakeContactsQuery loading state changes
+  useEffect(() => {
+    if (!contacts.loading) {
+      setContactsLoaded(true);
+    }
+  }, [contacts.loading]);
+
+  // Returns null until GetSystemIntakeContactsQuery has completed
+  // Allows initial values to fully load before initializing form
+  if (!contactsLoaded) return null;
 
   return (
     <Formik
@@ -210,7 +221,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
-      enableReinitialize
     >
       {(formikProps: FormikProps<ContactDetailsForm>) => {
         const { values, setFieldValue, errors } = formikProps;
