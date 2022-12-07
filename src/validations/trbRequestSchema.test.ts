@@ -207,7 +207,7 @@ describe('TRB Subject Areas Form schema validation', () => {
       options: TRBOtherTechnicalTopicsOption
     }
   ])('validates field options %j', async ({ field, options }) => {
-    // Correct option value
+    // All valid single options
     await expect(
       Promise.all(
         Object.values(options).map(opt => {
@@ -235,6 +235,13 @@ describe('TRB Subject Areas Form schema validation', () => {
         field as keyof TrbFormInputSubjectAreas
       ].isValid(Object.values(options))
     ).resolves.toEqual(true);
+
+    // Invalid with valid option values
+    await expect(
+      subjectAreasSchema.fields[
+        field as keyof TrbFormInputSubjectAreas
+      ].isValid(Object.values(options).concat(''))
+    ).resolves.toEqual(false);
 
     // Valid other text
     await expect(
