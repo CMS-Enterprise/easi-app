@@ -72,6 +72,12 @@ const MultiSelectTag = ({
   );
 };
 
+/**
+ * EASi Multiselect.
+ * Uses `react-select/Select` and `@trussworks/react-uswds/Tag`.
+ *
+ * https://www.figma.com/file/5y4EbRmFUB7xRBKUG4qlup/USWDS-Library?node-id=869%3A7346&t=WrUjXtNxIxMgpPss-0
+ */
 const MultiSelect = ({
   id,
   inputId,
