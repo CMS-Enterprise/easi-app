@@ -158,9 +158,11 @@ function Header({
         onClick:
           request && !isStepSubmitting && idx <= stepsCompleted.length
             ? e => {
-                history.push(
-                  `/trb/requests/${request.id}/${formStepSlugs[idx]}`
-                );
+                stepSubmit?.(() => {
+                  history.push(
+                    `/trb/requests/${request.id}/${formStepSlugs[idx]}`
+                  );
+                });
               }
             : undefined
       }))}
