@@ -226,10 +226,7 @@ function SubjectAreas({
     UpdateTrbFormQuery
   );
 
-  // todo undefined instead of []
   const initialValues = nullFillObject(request.form, subjectAreasBlankValues);
-
-  // console.log('initalValues', initialValues);
 
   const {
     control,
@@ -454,6 +451,7 @@ function SubjectAreas({
           {fields.map(({ name, otherText, options }) => {
             return (
               <Controller
+                key={name}
                 name={name}
                 control={control}
                 render={({ field, fieldState: { error } }) => {
@@ -483,38 +481,37 @@ function SubjectAreas({
                         onChange={field.onChange}
                         selectedLabel={t('subject.labels.selectedTopics')}
                       />
-                      {Array.isArray(field.value) &&
-                        field.value.includes(options[options.length - 1]) && (
-                          <Controller
-                            name={otherText}
-                            control={control}
-                            // eslint-disable-next-line no-shadow
-                            render={({ field, fieldState: { error } }) => (
-                              <FormGroup>
-                                <Label
-                                  htmlFor={otherText}
-                                  hint={<div>{t('subject.hint.other')}</div>}
-                                  error={!!error}
-                                  className="text-normal"
-                                >
-                                  {t('subject.labels.other')}
-                                </Label>
-                                {error && (
-                                  <ErrorMessage>
-                                    {t('errors.fillBlank')}
-                                  </ErrorMessage>
-                                )}
-                                <TextInput
-                                  {...field}
-                                  ref={null}
-                                  id={otherText}
-                                  type="text"
-                                  validationStatus={error && 'error'}
-                                />
-                              </FormGroup>
-                            )}
-                          />
-                        )}
+                      {field.value.includes(options[options.length - 1]) && (
+                        <Controller
+                          name={otherText}
+                          control={control}
+                          // eslint-disable-next-line no-shadow
+                          render={({ field, fieldState: { error } }) => (
+                            <FormGroup>
+                              <Label
+                                htmlFor={otherText}
+                                hint={<div>{t('subject.hint.other')}</div>}
+                                error={!!error}
+                                className="text-normal"
+                              >
+                                {t('subject.labels.other')}
+                              </Label>
+                              {error && (
+                                <ErrorMessage>
+                                  {t('errors.fillBlank')}
+                                </ErrorMessage>
+                              )}
+                              <TextInput
+                                {...field}
+                                ref={null}
+                                id={otherText}
+                                type="text"
+                                validationStatus={error && 'error'}
+                              />
+                            </FormGroup>
+                          )}
+                        />
+                      )}
                     </FormGroup>
                   );
                 }}
