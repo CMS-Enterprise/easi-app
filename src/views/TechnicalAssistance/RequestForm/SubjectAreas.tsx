@@ -209,6 +209,10 @@ const fields = [
 
 const primaryFields = fields.map(f => f.name);
 
+/**
+ * All fields in this Subject areas form are optional except for toggled on "other" fields.
+ * Uses `fields` to render form fields.
+ */
 function SubjectAreas({
   request,
   stepUrl,
@@ -232,7 +236,8 @@ function SubjectAreas({
     control,
     handleSubmit,
     formState: { errors, isSubmitting, isDirty, dirtyFields },
-    watch
+    watch,
+    clearErrors
   } = useForm<FormFieldProps<TrbFormInputSubjectAreas>>({
     resolver: yupResolver(subjectAreasSchema),
     defaultValues: initialValues
@@ -449,6 +454,7 @@ function SubjectAreas({
           */}
 
           {fields.map(({ name, otherText, options }) => {
+            const otherOption = options[options.length - 1];
             return (
               <Controller
                 key={name}
@@ -478,10 +484,16 @@ function SubjectAreas({
                           value
                         }))}
                         initialValues={field.value}
-                        onChange={field.onChange}
+                        onChange={values => {
+                          field.onChange(values);
+                          // Clear errors on toggled off empty "other" fields
+                          if (!values.includes(otherOption)) {
+                            clearErrors(otherText);
+                          }
+                        }}
                         selectedLabel={t('subject.labels.selectedTopics')}
                       />
-                      {field.value.includes(options[options.length - 1]) && (
+                      {field.value.includes(otherOption) && (
                         <Controller
                           name={otherText}
                           control={control}
