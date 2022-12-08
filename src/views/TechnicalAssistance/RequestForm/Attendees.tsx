@@ -145,10 +145,13 @@ function Attendees({
           // Submit the input only if there are changes
           if (isDirty) {
             // Submit requester fields
-            await submitAttendee(formData);
-            // Refresh the RequestForm parent request query
-            // to update things like `stepsCompleted`
-            await refetchRequest();
+            await submitAttendee(formData)
+              // Refresh the RequestForm parent request query
+              // to update things like `stepsCompleted`
+              .then(() => refetchRequest())
+              .catch(() => {
+                throw new Error('Error saving attendee');
+              });
           }
         },
         // Validation did not pass
@@ -190,6 +193,7 @@ function Attendees({
             activeAttendee={activeAttendee}
             trbRequestId={request.id}
             setFormError={setFormError}
+            taskListUrl={taskListUrl}
           />
         </Route>
 

@@ -27,13 +27,15 @@ interface AttendeesFormProps {
   activeAttendee: TRBAttendeeData;
   trbRequestId: string;
   setFormError: React.Dispatch<React.SetStateAction<string | false>>;
+  taskListUrl: string;
 }
 
 function AttendeesForm({
   backToFormUrl,
   activeAttendee,
   trbRequestId,
-  setFormError
+  setFormError,
+  taskListUrl
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
@@ -204,6 +206,7 @@ function AttendeesForm({
             }}
             className="border-top-0"
             saveExitHidden
+            taskListUrl={taskListUrl}
           />
           <div className="margin-top-2">
             <UswdsReactLink to={backToFormUrl}>

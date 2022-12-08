@@ -1,15 +1,19 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
-// import { attendees, trbRequest as request } from 'data/mock/trbAttendees';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 import { CreateTrbRequest_createTRBRequest as TRBRequest } from 'queries/types/CreateTrbRequest';
+import {
+  GetTrbRequest,
+  GetTrbRequestVariables
+} from 'queries/types/GetTrbRequest';
 import { PersonRole } from 'types/graphql-global-types';
 
 import Attendees from './Attendees';
@@ -102,6 +106,18 @@ describe('Trb Request form: Attendees', () => {
     }
   ];
 
+  const mockRefetch = async (
+    variables?: Partial<GetTrbRequestVariables> | undefined
+  ): Promise<ApolloQueryResult<GetTrbRequest>> => {
+    return {
+      loading: false,
+      networkStatus: NetworkStatus.ready,
+      data: {
+        trbRequest: trbRequest as TRBRequest
+      }
+    };
+  };
+
   const getAttendeesQuery = {
     request: {
       query: GetTRBRequestAttendees,
@@ -150,10 +166,11 @@ describe('Trb Request form: Attendees', () => {
                 next: `/trb/requests/${trbRequest.id}/documents`,
                 back: `/trb/requests/${trbRequest.id}/subject`
               }}
-              refreshRequest={() => {}}
+              refetchRequest={mockRefetch}
               setIsStepSubmitting={() => {}}
               setStepSubmit={() => {}}
               setFormError={() => {}}
+              taskListUrl=""
             />
           </Provider>
         </MockedProvider>
