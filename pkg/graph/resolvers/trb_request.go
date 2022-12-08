@@ -77,13 +77,31 @@ func UpdateTRBRequestConsultMeetingTime(
 	ctx context.Context,
 	store *storage.Store,
 	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 	id uuid.UUID,
 	meetingTime time.Time,
 	copyTRBMailbox bool,
-	notifyEmails []models.EmailAddress,
+	notifyEUAIDs []string,
 	notes string,
 ) (*models.TRBRequest, error) {
+	notifyInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
+	if err != nil {
+		return nil, err
+	}
+	notifyEmails := []models.EmailAddress{}
+	for _, info := range notifyInfos {
+		if info != nil {
+			notifyEmails = append(notifyEmails, models.NewEmailAddress(info.Email.String()))
+		}
+	}
+
 	trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+
+	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
 	if err != nil {
 		return nil, err
 	}
@@ -107,10 +125,63 @@ func UpdateTRBRequestConsultMeetingTime(
 		CopyTRBMailbox:     copyTRBMailbox,
 		NotifyEmails:       notifyEmails,
 		Notes:              notes,
-		RequesterName:      "Mc Lovin",
+		RequesterName:      requesterInfo.CommonName,
 	}
 
 	err = emailClient.SendTRBRequestConsultMeetingEmail(ctx, emailInput)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedTrb, err
+}
+
+// UpdateTRBRequestTRBLead sets the TRB lead and sends the related emails
+func UpdateTRBRequestTRBLead(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+	id uuid.UUID,
+	trbLead string,
+) (*models.TRBRequest, error) {
+	trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+
+	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
+	if err != nil {
+		return nil, err
+	}
+
+	leadInfo, err := fetchUserInfo(ctx, trbLead)
+	if err != nil {
+		return nil, err
+	}
+
+	changes := map[string]interface{}{
+		"trbLead": &trbLead,
+	}
+
+	err = ApplyChangesAndMetaData(changes, trb, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	updatedTrb, err := store.UpdateTRBRequest(appcontext.ZLogger(ctx), trb)
+	if err != nil {
+		return nil, err
+	}
+
+	emailInput := email.SendTRBRequestTRBLeadEmailInput{
+		TRBRequestName: trb.Name,
+		TRBLeadName:    leadInfo.CommonName,
+		RequesterName:  requesterInfo.CommonName,
+	}
+
+	err = emailClient.SendTRBRequestTRBLeadEmail(ctx, emailInput)
 	if err != nil {
 		return nil, err
 	}

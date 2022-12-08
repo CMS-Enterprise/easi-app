@@ -59,13 +59,25 @@ type TRBConsultPrepStatus string
 // These are the options for TRBConsultPrepStatus
 const (
 	TRBConsultPrepStatusCannotStartYet TRBConsultPrepStatus = "CANNOT_START_YET"
-	TRBConsultPrepStatusInProgress     TRBConsultPrepStatus = "IN_PROGRESS"
+	TRBConsultPrepStatusReadyToStart   TRBConsultPrepStatus = "READY_TO_START"
 	TRBConsultPrepStatusCompleted      TRBConsultPrepStatus = "COMPLETED"
+)
+
+// TRBAttendConsultStatus represents the types of TRBAttendConsultStatus types
+type TRBAttendConsultStatus string
+
+// These are the options for TRBAttendConsultStatus
+const (
+	TRBAttendConsultStatusCannotStartYet  TRBAttendConsultStatus = "CANNOT_START_YET"
+	TRBAttendConsultStatusReadyToSchedule TRBAttendConsultStatus = "READY_TO_SCHEDULE"
+	TRBAttendConsultStatusScheduled       TRBAttendConsultStatus = "SCHEDULED"
+	TRBAttendConsultStatusCompleted       TRBAttendConsultStatus = "COMPLETED"
 )
 
 // TRBTaskStatuses contains the individual statuses for the steps of the TRB task list
 type TRBTaskStatuses struct {
-	FormStatus        TRBFormStatus        `json:"formStatus"`
-	FeedbackStatus    TRBFeedbackStatus    `json:"feedbackStatus"`
-	ConsultPrepStatus TRBConsultPrepStatus `json:"consultPrepStatus"`
+	FormStatus          TRBFormStatus          `json:"formStatus"`
+	FeedbackStatus      TRBFeedbackStatus      `json:"feedbackStatus"`
+	ConsultPrepStatus   TRBConsultPrepStatus   `json:"consultPrepStatus"`
+	AttendConsultStatus TRBAttendConsultStatus `json:"attendConsultStatus"`
 }

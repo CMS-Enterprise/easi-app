@@ -1534,6 +1534,7 @@ type TRBTaskStatuses {
   formStatus: TRBFormStatus!
   feedbackStatus: TRBFeedbackStatus!
   consultPrepStatus: TRBConsultPrepStatus!
+  attendConsultStatus: TRBAttendConsultStatus!
 }
 
 """
@@ -1698,7 +1699,16 @@ Represents the status of the TRB consult step
 enum TRBConsultPrepStatus {
   CANNOT_START_YET
   READY_TO_START
-  IN_PROGRESS
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB consult step
+"""
+enum TRBAttendConsultStatus {
+  CANNOT_START_YET
+  READY_TO_SCHEDULE
+  SCHEDULED
   COMPLETED
 }
 
@@ -1925,6 +1935,14 @@ input UpdateTRBRequestConsultMeetingTimeInput {
 }
 
 """
+The data needed assign a TRB lead to a TRB request
+"""
+input UpdateTRBRequestTRBLeadInput {
+  trbRequestId: UUID!
+  trbLead: String!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -2042,6 +2060,7 @@ type Mutation {
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
+  updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
 }
 
 """

@@ -1968,16 +1968,31 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 
 // UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
 func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
-	notifyInfos, err := r.service.FetchUserInfos(ctx, input.NotifyEuaIds)
-	if err != nil {
-		return nil, err
-	}
-	notifyEmails := make([]models.EmailAddress, len(notifyInfos))
-	for i, info := range notifyInfos {
-		notifyEmails[i] = info.Email
-	}
+	return resolvers.UpdateTRBRequestConsultMeetingTime(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		r.service.FetchUserInfos,
+		input.TrbRequestID,
+		input.ConsultMeetingTime,
+		input.CopyTrbMailbox,
+		input.NotifyEuaIds,
+		input.Notes,
+	)
+}
 
-	return resolvers.UpdateTRBRequestConsultMeetingTime(ctx, r.store, r.emailClient, input.TrbRequestID, input.ConsultMeetingTime, input.CopyTrbMailbox, notifyEmails, input.Notes)
+// UpdateTRBRequestTRBLead is the resolver for the updateTRBRequestTRBLead field.
+func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input model.UpdateTRBRequestTRBLeadInput) (*models.TRBRequest, error) {
+	return resolvers.UpdateTRBRequestTRBLead(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		r.service.FetchUserInfos,
+		input.TrbRequestID,
+		input.TrbLead,
+	)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.

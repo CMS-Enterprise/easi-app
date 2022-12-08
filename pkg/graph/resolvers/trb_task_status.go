@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
@@ -77,8 +78,35 @@ func GetTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbReque
 
 		if trb.ConsultMeetingTime != nil && trb.TRBLead != nil {
 			status = models.TRBConsultPrepStatusCompleted
+		} else if trb.ConsultMeetingTime != nil || trb.TRBLead != nil {
+			status = models.TRBConsultPrepStatusReadyToStart
+		}
+	}
+	return &status, nil
+}
+
+// GetTRBAttendConsultStatus retrieves the status of the consult step of the TRB request task list
+func GetTRBAttendConsultStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBAttendConsultStatus, error) {
+	status := models.TRBAttendConsultStatusCannotStartYet
+	feedbackStatus, err := GetTRBFeedbackStatus(ctx, store, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if *feedbackStatus == models.TRBFeedbackStatusCompleted {
+		trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), trbRequestID)
+		if err != nil {
+			return nil, err
+		}
+
+		if trb.ConsultMeetingTime != nil && trb.TRBLead != nil {
+			if time.Now().Before(*trb.ConsultMeetingTime) {
+				status = models.TRBAttendConsultStatusScheduled
+			} else {
+				status = models.TRBAttendConsultStatusCompleted
+			}
 		} else {
-			status = models.TRBConsultPrepStatusInProgress
+			status = models.TRBAttendConsultStatusReadyToSchedule
 		}
 	}
 	return &status, nil
@@ -103,10 +131,17 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	})
 
 	var consultPrepStatus *models.TRBConsultPrepStatus
-	var errConsult error
+	var errConsultPrep error
 	errGroup.Go(func() error {
-		consultPrepStatus, errConsult = GetTRBConsultPrepStatus(ctx, store, trbRequestID)
-		return errConsult
+		consultPrepStatus, errConsultPrep = GetTRBConsultPrepStatus(ctx, store, trbRequestID)
+		return errConsultPrep
+	})
+
+	var attendConsultStatus *models.TRBAttendConsultStatus
+	var errAttendConsult error
+	errGroup.Go(func() error {
+		attendConsultStatus, errAttendConsult = GetTRBAttendConsultStatus(ctx, store, trbRequestID)
+		return errAttendConsult
 	})
 
 	if err := errGroup.Wait(); err != nil {
@@ -114,9 +149,10 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	}
 
 	statuses := models.TRBTaskStatuses{
-		FormStatus:        *formStatus,
-		FeedbackStatus:    *feedbackStatus,
-		ConsultPrepStatus: *consultPrepStatus,
+		FormStatus:          *formStatus,
+		FeedbackStatus:      *feedbackStatus,
+		ConsultPrepStatus:   *consultPrepStatus,
+		AttendConsultStatus: *attendConsultStatus,
 	}
 
 	return &statuses, nil

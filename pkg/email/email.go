@@ -51,6 +51,7 @@ type templates struct {
 	helpCantFindSomething                      templateCaller
 	helpReportAProblem                         templateCaller
 	trbRequestConsultMeeting                   templateCaller
+	trbRequestTRBLead                          templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -217,6 +218,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(trbRequestConsultMeetingTemplateName)
 	}
 	appTemplates.trbRequestConsultMeeting = trbRequestConsultMeetingTemplate
+
+	trbRequestTRBLeadTemplateName := "trb_request_trb_lead.gohtml"
+	trbRequestTRBLeadTemplate := rawTemplates.Lookup(trbRequestTRBLeadTemplateName)
+	if trbRequestTRBLeadTemplate == nil {
+		return Client{}, templateError(trbRequestTRBLeadTemplateName)
+	}
+	appTemplates.trbRequestTRBLead = trbRequestTRBLeadTemplate
 
 	client := Client{
 		config:    config,

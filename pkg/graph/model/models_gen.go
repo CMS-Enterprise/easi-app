@@ -734,6 +734,12 @@ type UpdateTRBRequestConsultMeetingTimeInput struct {
 	Notes              string    `json:"notes"`
 }
 
+// The data needed assign a TRB lead to a TRB request
+type UpdateTRBRequestTRBLeadInput struct {
+	TrbRequestID uuid.UUID `json:"trbRequestId"`
+	TrbLead      string    `json:"trbLead"`
+}
+
 // The input required to update a test date/score
 type UpdateTestDateInput struct {
 	Date     time.Time               `json:"date"`
