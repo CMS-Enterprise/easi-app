@@ -18,7 +18,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 	input := SendTRBRequestConsultMeetingEmailInput{
 		TRBRequestName:              "Test TRB Request",
 		ConsultMeetingTime:          meetingTime,
-		ConsultMeetingTimeFormatted: meetingTime.Format("January 1st, 2022 at 01:30 PM EST"),
+		ConsultMeetingTimeFormatted: meetingTime.Format("January 2, 2006 at 03:04 PM EST"),
 		CopyTRBMailbox:              true,
 		NotifyEmails:                []models.EmailAddress{"McLovin@example.com", "Jane@example.com"},
 		Notes:                       "Some notes",
@@ -29,7 +29,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-		expectedBody := `<p>The Technical Review Board (TRB) has scheduled a consult session for Test TRB Request on January 1st, 2022 at 01:30 PM EST. You should receive a calendar invite shortly if you have not already.
+		expectedBody := `<p>The Technical Review Board (TRB) has scheduled a consult session for Test TRB Request on January 1, 2022 at 01:30 PM EST. You should receive a calendar invite shortly if you have not already.
 
 <p>Additional notes about this consult session: Some notes</p>
 
@@ -46,7 +46,6 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 <p>If you have questions or need to request a reschedule, please email the TRB at trb@example.com.</p>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
-		
 `
 		fmt.Println(sender.body)
 		err = client.SendTRBRequestConsultMeetingEmail(ctx, input)
