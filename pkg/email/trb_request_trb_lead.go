@@ -13,11 +13,13 @@ type SendTRBRequestTRBLeadEmailInput struct {
 	TRBRequestName string
 	RequesterName  string
 	TRBLeadName    string
+	TRBEmail       models.EmailAddress
 }
 
 // SendTRBRequestTRBLeadEmail sends an email to the EASI team containing a user's request for help
 func (c Client) SendTRBRequestTRBLeadEmail(ctx context.Context, input SendTRBRequestTRBLeadEmailInput) error {
 	subject := input.TRBRequestName + " is assigned to " + input.TRBLeadName
+	input.TRBEmail = c.config.TRBEmail
 
 	var b bytes.Buffer
 	err := c.templates.trbRequestTRBLead.Execute(&b, input)
