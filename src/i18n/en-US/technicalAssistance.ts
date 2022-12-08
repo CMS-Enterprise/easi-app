@@ -3,14 +3,16 @@ const technicalAssistance = {
   nextStep: 'Start a new request',
   // Misc breadcrumb items
   breadcrumbs: {
-    startTrbRequest: 'Start a TRB Request',
-    taskList: 'Task list'
+    startTrbRequest: 'Start a TRB Request'
   },
   // Common button text
   button: {
     back: 'Back',
+    continue: 'Continue',
     next: 'Next',
-    saveAndExit: 'Save and exit'
+    saveAndExit: 'Save and exit',
+    start: 'Start',
+    removeYourRequest: 'Remove your request'
   },
   table: {
     header: {
@@ -28,10 +30,11 @@ const technicalAssistance = {
     makeSelection: 'Please make a selection',
     somethingWrong: 'Something went wrong.'
   },
-  newRequest: {
+  requestType: {
     heading: 'Start a technical assistance request',
     subhead: 'What is this request for?',
     goBack: 'Go back without starting a request',
+    goBackWithoutChange: 'Go back without changing the request type',
     type: {
       NEED_HELP: {
         heading: 'I’m having a problem with my system',
@@ -73,7 +76,7 @@ const technicalAssistance = {
         ]
       }
     },
-    start: 'Start',
+    whenOption: 'When should I choose this option?',
     additionalTrbServices: 'Additional TRB services',
     services: {
       other: 'Other (I don’t see what I’m looking for)'
@@ -144,6 +147,45 @@ const technicalAssistance = {
     ],
     back: 'Back',
     continue: 'Continue'
+  },
+  taskList: {
+    heading: 'Task list',
+    additionalHelp: 'Additional Help',
+    helpLinksNewTab: 'All help links open in a new tab',
+    stepsInvolved:
+      'Steps involved in getting technical assistance from the TRB',
+    sampleRequest: 'Sample TRB Request',
+    taskList: [
+      {
+        heading: 'Fill out the initial request form',
+        text:
+          'Tell the Technical Review Board (TRB) about your question, problem, and/or solution. This helps TRB team members better understand what type of help you’re looking for and how best to assist you. It also lets the TRB prepare ahead of time so that you get more value from your consult session.'
+      },
+      {
+        heading: 'Feedback from initial review',
+        text:
+          'The TRB will review your Intake Request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps.'
+      },
+      {
+        heading: 'Prepare for the TRB consult session',
+        text: 'Prepare by completing some or all of the following:',
+        list: [
+          'download the TRB presentation deck template and fill it out for your project',
+          'upload any additional documentation requested from the TRB',
+          'confirm the list of additional attendees (if any) from your project team'
+        ]
+      },
+      {
+        heading: 'Attend the TRB consult session',
+        text:
+          'A TRB team member will schedule a consult session for your project. Attendees could include Subject Matter Experts (SMEs) to provide additional advice and insight, any additional attendees you’ve specified from your team, and 1 or more TRB team members. Consult sessions are usually 1-hour sessions on Tuesday or Thursday.'
+      },
+      {
+        heading: 'Advice letter and next steps',
+        text:
+          'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.'
+      }
+    ]
   },
   requestForm: {
     heading: 'TRB Request',

@@ -293,25 +293,25 @@ task :reset => :up do
 end
 
 namespace :hosts do
-  desc "Verify that hosts for local development are configured"
+  desc "Verify that hosts for OSX local development are configured"
   task :check do
-    lookup = `dscacheutil -q host -a name minio`.strip
-    if lookup.size == 0 && ask?("Host 'minio' can't be resolved. Do you want to configure it now? (Y/n)")
+    lookup = `dscacheutil -q host -a name host.docker.internal`.strip
+    if lookup.size == 0 && ask?("Host 'host.docker.internal' can't be resolved. Do you want to configure it now? (Y/n)")
       Rake::Task["hosts:install"].invoke
 
       Rake::Task["hosts:install"].reenable
       Rake::Task["hosts:check"].invoke
     elsif lookup.include?("ip_address: 127.0.0.1")
-      puts "Host 'minio' is resolving correctly."
+      puts "Host 'host.docker.internal' is resolving correctly."
     else
-      puts "Host 'minio' resolved, but not to the correct IP:"
+      puts "Host 'host.docker.internal' resolved, but not to the correct IP:"
       puts lookup
       exit(1)
     end
   end
 
   task :install do
-    sh("echo '127.0.0.1 minio' | sudo tee -a /etc/hosts") &&
+    sh("echo '127.0.0.1 host.docker.internal' | sudo tee -a /etc/hosts") &&
       sh("sudo killall -HUP mDNSResponder") &&
       sh("sudo dscacheutil -flushcache")
   end

@@ -9,6 +9,10 @@ describe('The System Intake Form', () => {
         req.alias = 'updateRequestDetails';
       }
 
+      if (req.body.operationName === 'GetSystemIntakeContactsQuery') {
+        req.alias = 'getSystemIntakeContacts';
+      }
+
       if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
         req.alias = 'updateContactDetails';
       }
@@ -27,6 +31,12 @@ describe('The System Intake Form', () => {
     cy.location().should(loc => {
       expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/);
     });
+
+    // Wait for contacts query to complete
+    cy.wait('@getSystemIntakeContacts')
+      .its('response.statusCode')
+      .should('eq', 200);
+
     cy.contains('h1', 'Contact details');
   });
 
@@ -286,9 +296,14 @@ describe('The System Intake Form', () => {
       .get(`li#fundingNumber-${fundingNumber}`);
   });
 
+  /**
+   * Test contact details section error messages
+   */
   it('displays contact details error messages', () => {
+    // Click next button without filling in any values
     cy.contains('button', 'Next').click();
 
+    // Check for error messages
     cy.get('[data-testid="contact-details-errors"]');
   });
 

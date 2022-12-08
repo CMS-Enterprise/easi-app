@@ -22,6 +22,7 @@ type Props = {
   saveExitDisabled?: boolean;
   submit?: StepSubmit;
   className?: string;
+  taskListUrl: string;
 };
 
 /**
@@ -37,7 +38,8 @@ export function Pager({
   saveExitHidden,
   saveExitDisabled,
   submit,
-  className
+  className,
+  taskListUrl
 }: Props) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
@@ -76,7 +78,7 @@ export function Pager({
           disabled={saveExitDisabled}
           onClick={() => {
             submit?.(() => {
-              history.push('/trb');
+              history.push(taskListUrl);
             });
           }}
         >

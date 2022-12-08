@@ -211,6 +211,15 @@ export enum TRBDataAndDataManagementOption {
 }
 
 /**
+ * Represents the status of a TRB request form
+ */
+export enum TRBFormStatus {
+  COMPLETED = "COMPLETED",
+  IN_PROGRESS = "IN_PROGRESS",
+  READY_TO_START = "READY_TO_START",
+}
+
+/**
  * The possible answers to the "government processes and policies" input on the TRB "Subject Areas" page
  */
 export enum TRBGovernmentProcessesAndPoliciesOption {

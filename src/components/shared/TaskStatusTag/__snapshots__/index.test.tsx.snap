@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskStatusTag renders task status tag {"status":"CANNOT_START","className":"border-2px text-base"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag border-2px text-base"
+    data-testid="task-list-task-tag"
+  >
+    Cannot start yet
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag renders task status tag {"status":"COMPLETED","className":"bg-success-dark text-white"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-success-dark text-white"
+    data-testid="task-list-task-tag"
+  >
+    Completed
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag renders task status tag {"status":"IN_PROGRESS","className":"bg-warning"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-warning"
+    data-testid="task-list-task-tag"
+  >
+    In Progress
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag renders task status tag {"status":"NOT_NEEDED","className":"border-2px text-base"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag border-2px text-base"
+    data-testid="task-list-task-tag"
+  >
+    Not needed
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag renders task status tag {"status":"READY_TO_START","className":"bg-info"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-info"
+    data-testid="task-list-task-tag"
+  >
+    Ready to start
+  </span>
+</DocumentFragment>
+`;

@@ -38,9 +38,10 @@ function Attendees({
   request,
   stepUrl,
   setFormError,
-  refreshRequest,
+  refetchRequest,
   setIsStepSubmitting,
-  setStepSubmit
+  setStepSubmit,
+  taskListUrl
 }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
@@ -147,7 +148,7 @@ function Attendees({
             await submitAttendee(formData);
             // Refresh the RequestForm parent request query
             // to update things like `stepsCompleted`
-            refreshRequest();
+            await refetchRequest();
           }
         },
         // Validation did not pass
@@ -169,7 +170,7 @@ function Attendees({
             }
           }
         ),
-    [t, handleSubmit, isDirty, refreshRequest, setFormError, submitAttendee]
+    [t, handleSubmit, isDirty, refetchRequest, setFormError, submitAttendee]
   );
 
   useEffect(() => {
@@ -274,6 +275,7 @@ function Attendees({
               }}
               saveExitDisabled={isSubmitting}
               submit={submitForm}
+              taskListUrl={taskListUrl}
             />
           </Form>
         </Route>
