@@ -523,6 +523,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                               autocomplete="off"
                               autocorrect="off"
                               class="cedar-contact-select__input"
+                              data-testid="cedar-contact-select"
                               id="react-select-IntakeForm-ContactCommonName-input"
                               role="combobox"
                               spellcheck="false"

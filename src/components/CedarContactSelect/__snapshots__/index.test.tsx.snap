@@ -35,6 +35,7 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
             autocomplete="off"
             autocorrect="off"
             class="cedar-contact-select__input"
+            data-testid="cedar-contact-select"
             id="react-select-cedarContactSelect-input"
             role="combobox"
             spellcheck="false"

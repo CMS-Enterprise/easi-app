@@ -36,7 +36,13 @@ type CedarContactSelectOption = {
 
 // Override React Select input to fix hidden input on select bug
 const Input = (props: InputProps<CedarContactSelectOption, false>) => {
-  return <components.Input {...props} isHidden={false} />;
+  return (
+    <components.Input
+      {...props}
+      isHidden={false}
+      data-testid="cedar-contact-select"
+    />
+  );
 };
 
 // Custom option component

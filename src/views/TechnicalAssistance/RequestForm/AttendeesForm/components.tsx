@@ -166,9 +166,10 @@ const AttendeeFields = ({
                   )}
                   <Dropdown
                     id="component"
-                    data-testid="component"
+                    data-testid={`trb-${type}-component`}
                     {...field}
                     ref={null}
+                    value={field.value || ''}
                   >
                     <option
                       label={`- ${t('basic.options.select')} -`}
@@ -193,7 +194,7 @@ const AttendeeFields = ({
                   )}
                   <Dropdown
                     id="role"
-                    data-testid="role"
+                    data-testid={`trb-${type}-role`}
                     {...field}
                     ref={null}
                     value={(field.value as PersonRole) || ''}
@@ -386,6 +387,7 @@ const AttendeesList = ({
                         padding: 0
                       }}
                       id={`trbAttendee-${attendee?.userInfo?.euaUserId}`}
+                      data-testid={`trbAttendee-${attendee?.userInfo?.euaUserId}`}
                       className="trbAttendee"
                     >
                       <Attendee

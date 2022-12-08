@@ -1,0 +1,495 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
+<DocumentFragment>
+  <div
+    class="trb-attendees"
+  >
+    <form
+      class="usa-form margin-bottom-4 maxw-full"
+      data-testid="trb-attendees-form"
+    >
+      <div
+        class="grid-row margin-bottom-5"
+        data-testid="grid"
+      >
+        <div
+          class="tablet:grid-col-12 desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <label
+              class="usa-label"
+              data-testid="label"
+              for="euaUserId"
+            >
+              Requester name
+            </label>
+            <div
+              class="margin-top-1 cedar-contact-select usa-combo-box opacity-70 maxw-none cedar-contact-select--is-disabled css-3iigni-container"
+              id="euaUserId"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-euaUserId-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class="cedar-contact-select__control cedar-contact-select__control--is-disabled css-7n4c1b-control"
+              >
+                <div
+                  class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-319lph-ValueContainer"
+                >
+                  <div
+                    class="cedar-contact-select__input-container css-1pndypt-Input"
+                    data-value="Jerry Seinfeld, SF13"
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-label="Cedar-Users"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class="cedar-contact-select__input"
+                      data-testid="cedar-contact-select"
+                      disabled=""
+                      id="react-select-euaUserId-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value="Jerry Seinfeld, SF13"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="usa-form-group margin-top-3"
+            data-testid="formGroup"
+          >
+            <label
+              class="usa-label"
+              data-testid="label"
+              for="component"
+            >
+              Requester component
+            </label>
+            <select
+              class="usa-select"
+              data-testid="trb-requester-component"
+              id="component"
+              name="component"
+            >
+              <option
+                disabled=""
+                label="- Select -"
+              />
+              <option
+                value="Center for Clinical Standards and Quality"
+              >
+                Center for Clinical Standards and Quality (CCSQ)
+              </option>
+              <option
+                value="Center for Consumer Information and Insurance Oversight"
+              >
+                Center for Consumer Information and Insurance Oversight (CCIIO)
+              </option>
+              <option
+                value="Center for Medicare"
+              >
+                Center for Medicare (CM)
+              </option>
+              <option
+                value="Center for Medicaid and CHIP Services"
+              >
+                Center for Medicaid and CHIP Services (CMCS)
+              </option>
+              <option
+                value="Center for Medicare and Medicaid Innovation"
+              >
+                Center for Medicare and Medicaid Innovation (CMMI)
+              </option>
+              <option
+                value="Center for Program Integrity"
+              >
+                Center for Program Integrity (CPI)
+              </option>
+              <option
+                value="CMS Wide"
+              >
+                CMS Wide (CMS)
+              </option>
+              <option
+                value="Emergency Preparedness and Response Operations"
+              >
+                Emergency Preparedness and Response Operations (EPRO)
+              </option>
+              <option
+                value="Federal Coordinated Health Care Office"
+              >
+                Federal Coordinated Health Care Office (FCHCO)
+              </option>
+              <option
+                value="Office of Acquisition and Grants Management"
+              >
+                Office of Acquisition and Grants Management (OAGM)
+              </option>
+              <option
+                value="Office of Burden Reduction and Health Informatics"
+              >
+                Office of Burden Reduction and Health Informatics (OBRHI)
+              </option>
+              <option
+                value="Office of Communications"
+              >
+                Office of Communications (OC)
+              </option>
+              <option
+                value="Office of Enterprise Data and Analytics"
+              >
+                Office of Enterprise Data and Analytics (OEDA)
+              </option>
+              <option
+                value="Office of Equal Opportunity and Civil Rights"
+              >
+                Office of Equal Opportunity and Civil Rights (OEOCR)
+              </option>
+              <option
+                value="Office of Financial Management"
+              >
+                Office of Financial Management (OFM)
+              </option>
+              <option
+                value="Office of Human Capital"
+              >
+                Office of Human Capital (OHC)
+              </option>
+              <option
+                value="Office of Information Technology"
+              >
+                Office of Information Technology (OIT)
+              </option>
+              <option
+                value="Office of Legislation"
+              >
+                Office of Legislation (OL)
+              </option>
+              <option
+                value="Office of Minority Health"
+              >
+                Office of Minority Health (OMH)
+              </option>
+              <option
+                value="Office of Program Operations and Local Engagement"
+              >
+                Office of Program Operations and Local Engagement (OPOLE)
+              </option>
+              <option
+                value="Office of Security, Facilities, and Logistics Operations"
+              >
+                Office of Security, Facilities, and Logistics Operations (OSFLO)
+              </option>
+              <option
+                value="Office of Strategic Operations and Regulatory Affairs"
+              >
+                Office of Strategic Operations and Regulatory Affairs (OSORA)
+              </option>
+              <option
+                value="Office of Strategy, Performance, and Results"
+              >
+                Office of Strategy, Performance, and Results (OSPR)
+              </option>
+              <option
+                value="Office of the Actuary"
+              >
+                Office of the Actuary (OA)
+              </option>
+              <option
+                value="Offices of Hearings and Inquiries"
+              >
+                Offices of Hearings and Inquiries (OHI)
+              </option>
+              <option
+                value="Other"
+              >
+                Other
+              </option>
+            </select>
+          </div>
+          <div
+            class="usa-form-group margin-top-3"
+            data-testid="formGroup"
+          >
+            <label
+              class="usa-label"
+              data-testid="label"
+              for="role"
+            >
+              Requester role
+            </label>
+            <select
+              class="usa-select"
+              data-testid="trb-requester-role"
+              id="role"
+              name="role"
+            >
+              <option
+                disabled=""
+                label="- Select -"
+              />
+              <option
+                label="Product Owner"
+                value="PRODUCT_OWNER"
+              />
+              <option
+                label="System Owner"
+                value="SYSTEM_OWNER"
+              />
+              <option
+                label="System Maintainer"
+                value="SYSTEM_MAINTAINER"
+              />
+              <option
+                label="Contracting Officer's Representative (COR)"
+                value="CONTRACT_OFFICE_RSREPRESENTATIVE"
+              />
+              <option
+                label="Cloud Navigator"
+                value="CLOUD_NAVIGATOR"
+              />
+              <option
+                label="Privacy Advisor"
+                value="PRIVACY_ADVISOR"
+              />
+              <option
+                label="CRA"
+                value="CRA"
+              />
+              <option
+                label="Other"
+                value="OTHER"
+              />
+              <option
+                label="Unknown"
+                value="UNKNOWN"
+              />
+            </select>
+          </div>
+        </div>
+      </div>
+      <div
+        class="easi-divider"
+      />
+      <div
+        class="margin-bottom-6"
+      >
+        <h4
+          class="margin-bottom-2"
+        >
+          Additional attendees
+        </h4>
+        <a
+          class="usa-button margin-top-0 usa-button--outline"
+          href="//list"
+        >
+          Add another attendee
+        </a>
+        <div
+          class="trbAttendees-table margin-top-4"
+        >
+          <table
+            class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
+            data-testid="table"
+          >
+            <tbody
+              role="rowgroup"
+            >
+              <tr
+                role="row"
+              >
+                <td
+                  class="trbAttendee"
+                  data-testid="trbAttendee-JTTC"
+                  id="trbAttendee-JTTC"
+                  role="cell"
+                  style="padding: 0px;"
+                >
+                  <div
+                    class="easi-initials-icon bg-accent-cool-lighter"
+                  >
+                    <span>
+                      AJ
+                    </span>
+                  </div>
+                  <div>
+                    <p
+                      class="margin-y-05 text-bold"
+                    >
+                      Anabelle Jerde, CPI
+                    </p>
+                    <p
+                      class="margin-y-05"
+                    >
+                      anabelle.jerde@local.fake
+                    </p>
+                    <p
+                      class="margin-top-05 margin-bottom-0"
+                    >
+                      Product Owner
+                    </p>
+                    <ul
+                      class="usa-button-group margin-y-0"
+                    >
+                      <li
+                        class="usa-button-group__item"
+                      >
+                        <a
+                          class="margin-right-05"
+                          href="//list"
+                        >
+                          Edit
+                        </a>
+                      </li>
+                      <li
+                        class="usa-button-group__item"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled text-error margin-top-0"
+                          data-testid="button"
+                          type="button"
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              <tr
+                role="row"
+              >
+                <td
+                  class="trbAttendee"
+                  data-testid="trbAttendee-ADMI"
+                  id="trbAttendee-ADMI"
+                  role="cell"
+                  style="padding: 0px;"
+                >
+                  <div
+                    class="easi-initials-icon bg-accent-cool-lighter"
+                  >
+                    <span>
+                      AA
+                    </span>
+                  </div>
+                  <div>
+                    <p
+                      class="margin-y-05 text-bold"
+                    >
+                      Audrey Abrams, CMS
+                    </p>
+                    <p
+                      class="margin-y-05"
+                    >
+                      audrey.abrams@local.fake
+                    </p>
+                    <p
+                      class="margin-top-05 margin-bottom-0"
+                    >
+                      System Owner
+                    </p>
+                    <ul
+                      class="usa-button-group margin-y-0"
+                    >
+                      <li
+                        class="usa-button-group__item"
+                      >
+                        <a
+                          class="margin-right-05"
+                          href="//list"
+                        >
+                          Edit
+                        </a>
+                      </li>
+                      <li
+                        class="usa-button-group__item"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled text-error margin-top-0"
+                          data-testid="button"
+                          type="button"
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div
+        class="border-base-light border-top-1px margin-top-5"
+      >
+        <div
+          class="margin-top-2"
+        >
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+          <button
+            class="usa-button margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Next
+          </button>
+        </div>
+        <button
+          class="usa-button usa-button--unstyled margin-top-2"
+          data-testid="button"
+          type="button"
+        >
+          <svg
+            class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+          Save and exit
+        </button>
+      </div>
+    </form>
+  </div>
+</DocumentFragment>
+`;

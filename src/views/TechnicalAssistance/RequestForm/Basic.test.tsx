@@ -52,6 +52,7 @@ describe('Trb Request form: Basic', () => {
                   updateTRBRequest: {
                     id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                     name: 'Draft',
+                    createdBy: 'SF13',
                     form: {
                       id: '452cf444-69b2-41a9-b8ab-ed354d209307',
                       component: 'Center for Medicaid and CHIP Services',
@@ -89,6 +90,7 @@ describe('Trb Request form: Basic', () => {
             request={{
               id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
               name: 'Draft',
+              createdBy: 'SF13',
               form: {
                 id: '452cf444-69b2-41a9-b8ab-ed354d209307',
                 component: null,

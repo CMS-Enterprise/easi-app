@@ -187,7 +187,6 @@ function Attendees({
           <AttendeesForm
             backToFormUrl={stepUrl.current}
             activeAttendee={activeAttendee}
-            // submitForm={submitForm}
             trbRequestId={request.id}
             setFormError={setFormError}
           />
@@ -195,6 +194,7 @@ function Attendees({
 
         <Route exact path={`${path}`}>
           <Form
+            data-testid="trb-attendees-form"
             className="margin-bottom-4 maxw-full"
             onSubmit={e => e.preventDefault()}
           >
