@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -71,14 +72,24 @@ func GetTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([
 	return TRBRequests, err
 }
 
-func UpdateTRBRequestConsultMeetingTime(ctx context.Context, store *storage.Store, id uuid.UUID, time time.Time, copyTRBMailbox bool, notifyEUDIDs []string) (*models.TRBRequest, error) {
+// UpdateTRBRequestConsultMeetingTime sets the TRB consult meeting time and sends the related emails
+func UpdateTRBRequestConsultMeetingTime(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	id uuid.UUID,
+	meetingTime time.Time,
+	copyTRBMailbox bool,
+	notifyEmails []models.EmailAddress,
+	notes string,
+) (*models.TRBRequest, error) {
 	trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
 	if err != nil {
 		return nil, err
 	}
 
 	changes := map[string]interface{}{
-		"consultMeetingTime": &time,
+		"consultMeetingTime": &meetingTime,
 	}
 	err = ApplyChangesAndMetaData(changes, trb, appcontext.Principal(ctx))
 	if err != nil {
@@ -86,6 +97,23 @@ func UpdateTRBRequestConsultMeetingTime(ctx context.Context, store *storage.Stor
 	}
 
 	updatedTrb, err := store.UpdateTRBRequest(appcontext.ZLogger(ctx), trb)
+	if err != nil {
+		return nil, err
+	}
+
+	emailInput := email.SendTRBRequestConsultMeetingEmailInput{
+		TRBRequestName:     trb.Name,
+		ConsultMeetingTime: meetingTime,
+		CopyTRBMailbox:     copyTRBMailbox,
+		NotifyEmails:       notifyEmails,
+		Notes:              notes,
+		RequesterName:      "Mc Lovin",
+	}
+
+	err = emailClient.SendTRBRequestConsultMeetingEmail(ctx, emailInput)
+	if err != nil {
+		return nil, err
+	}
 
 	return updatedTrb, err
 }

@@ -731,6 +731,7 @@ type UpdateTRBRequestConsultMeetingTimeInput struct {
 	ConsultMeetingTime time.Time `json:"consultMeetingTime"`
 	CopyTrbMailbox     bool      `json:"copyTrbMailbox"`
 	NotifyEuaIds       []string  `json:"notifyEuaIds"`
+	Notes              string    `json:"notes"`
 }
 
 // The input required to update a test date/score

@@ -12,18 +12,20 @@ import (
 // SendTRBRequestConsultMeetingEmailInput contains the data submitted by the user to the "report a problem" help form
 type SendTRBRequestConsultMeetingEmailInput struct {
 	ConsultMeetingTime          time.Time
-	ConsultMeetingTimeFormatted string
 	CopyTRBMailbox              bool
 	NotifyEmails                []models.EmailAddress
 	TRBRequestName              string
 	Notes                       string
 	RequesterName               string
-	TRBEmail                    string
+	ConsultMeetingTimeFormatted string
+	TRBEmail                    models.EmailAddress
 }
 
 // SendTRBRequestConsultMeetingEmail sends an email to the EASI team containing a user's request for help
 func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input SendTRBRequestConsultMeetingEmailInput) error {
 	subject := "TRB consult session scheduled for " + input.TRBRequestName
+	input.ConsultMeetingTimeFormatted = input.ConsultMeetingTime.Format("January 2, 2006 at 03:04 PM EST")
+	input.TRBEmail = c.config.TRBEmail
 
 	var b bytes.Buffer
 	err := c.templates.trbRequestConsultMeeting.Execute(&b, input)

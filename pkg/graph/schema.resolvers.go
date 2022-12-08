@@ -1968,8 +1968,16 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 
 // UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
 func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
-	notifyEuas := models.ConvertEnums[string](input.NotifyEuaIds)
-	return resolvers.UpdateTRBRequestConsultMeetingTime(ctx, r.store, input.TrbRequestID, input.ConsultMeetingTime, input.CopyTrbMailbox, notifyEuas)
+	notifyInfos, err := r.service.FetchUserInfos(ctx, input.NotifyEuaIds)
+	if err != nil {
+		return nil, err
+	}
+	notifyEmails := make([]models.EmailAddress, len(notifyInfos))
+	for i, info := range notifyInfos {
+		notifyEmails[i] = info.Email
+	}
+
+	return resolvers.UpdateTRBRequestConsultMeetingTime(ctx, r.store, r.emailClient, input.TrbRequestID, input.ConsultMeetingTime, input.CopyTrbMailbox, notifyEmails, input.Notes)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.

@@ -7759,6 +7759,7 @@ input UpdateTRBRequestConsultMeetingTimeInput {
   consultMeetingTime: Time!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
+  notes: String!
 }
 
 """
@@ -42289,7 +42290,7 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestConsultMeetingTimeInpu
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "consultMeetingTime", "copyTrbMailbox", "notifyEuaIds"}
+	fieldsInOrder := [...]string{"trbRequestId", "consultMeetingTime", "copyTrbMailbox", "notifyEuaIds", "notes"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -42325,6 +42326,14 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestConsultMeetingTimeInpu
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notifyEuaIds"))
 			it.NotifyEuaIds, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notes":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notes"))
+			it.Notes, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

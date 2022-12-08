@@ -16,14 +16,12 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 	s.NoError(err)
 
 	input := SendTRBRequestConsultMeetingEmailInput{
-		TRBRequestName:              "Test TRB Request",
-		ConsultMeetingTime:          meetingTime,
-		ConsultMeetingTimeFormatted: meetingTime.Format("January 2, 2006 at 03:04 PM EST"),
-		CopyTRBMailbox:              true,
-		NotifyEmails:                []models.EmailAddress{"McLovin@example.com", "Jane@example.com"},
-		Notes:                       "Some notes",
-		RequesterName:               "Mc Lovin",
-		TRBEmail:                    "trb@example.com",
+		TRBRequestName:     "Test TRB Request",
+		ConsultMeetingTime: meetingTime,
+		CopyTRBMailbox:     true,
+		NotifyEmails:       []models.EmailAddress{"McLovin@example.com", "Jane@example.com"},
+		Notes:              "Some notes",
+		RequesterName:      "Mc Lovin",
 	}
 
 	s.Run("successful call has the right content", func() {
@@ -43,7 +41,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 
 <p><a href="">View the request in EASi</a></p>
 
-<p>If you have questions or need to request a reschedule, please email the TRB at trb@example.com.</p>
+<p>If you have questions or need to request a reschedule, please email the TRB at ` + s.config.TRBEmail.String() + `.</p>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
 `

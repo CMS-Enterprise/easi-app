@@ -1921,6 +1921,7 @@ input UpdateTRBRequestConsultMeetingTimeInput {
   consultMeetingTime: Time!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
+  notes: String!
 }
 
 """
