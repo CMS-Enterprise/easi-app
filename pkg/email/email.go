@@ -17,6 +17,7 @@ type Config struct {
 	ITInvestmentEmail      models.EmailAddress
 	AccessibilityTeamEmail models.EmailAddress
 	EASIHelpEmail          models.EmailAddress
+	TRBEmail               models.EmailAddress
 	URLHost                string
 	URLScheme              string
 	TemplateDirectory      string
@@ -49,6 +50,7 @@ type templates struct {
 	helpSendFeedback                           templateCaller
 	helpCantFindSomething                      templateCaller
 	helpReportAProblem                         templateCaller
+	trbRequestConsultMeeting                   templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -208,6 +210,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(helpReportAProblemTemplateName)
 	}
 	appTemplates.helpReportAProblem = helpReportAProblemTemplate
+
+	trbRequestConsultMeetingTemplateName := "trb_request_consult_meeting.gohtml"
+	trbRequestConsultMeetingTemplate := rawTemplates.Lookup(trbRequestConsultMeetingTemplateName)
+	if trbRequestConsultMeetingTemplate == nil {
+		return Client{}, templateError(trbRequestConsultMeetingTemplateName)
+	}
+	appTemplates.trbRequestConsultMeeting = trbRequestConsultMeetingTemplate
 
 	client := Client{
 		config:    config,

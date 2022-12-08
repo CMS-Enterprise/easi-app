@@ -1966,6 +1966,12 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 	})
 }
 
+// UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
+func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
+	notifyEuas := models.ConvertEnums[string](input.NotifyEuaIds)
+	return resolvers.UpdateTRBRequestConsultMeetingTime(ctx, r.store, input.TrbRequestID, input.ConsultMeetingTime, input.CopyTrbMailbox, notifyEuas)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view

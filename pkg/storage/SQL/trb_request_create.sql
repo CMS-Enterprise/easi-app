@@ -4,6 +4,8 @@ INSERT INTO trb_request(
         archived,
         type,
         status,
+        consult_meeting_time,
+        trb_lead,
         created_by,
         modified_by
     )
@@ -13,6 +15,8 @@ VALUES (
         :archived,
         :type,
         :status,
+        :consult_meeting_time,
+        :trb_lead,
         :created_by,
         :modified_by
     )
@@ -22,6 +26,8 @@ RETURNING
     archived,
     type,
     status,
+    consult_meeting_time,
+    trb_lead,
     created_by,
     created_at,
     modified_by,

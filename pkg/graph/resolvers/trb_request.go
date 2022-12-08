@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 
@@ -26,12 +27,10 @@ func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, st
 	//TODO create place holders for the rest of the related sections with calls to their stores
 
 	return createdTRB, err
-
 }
 
 // UpdateTRBRequest updates a TRB request
 func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}, store *storage.Store) (*models.TRBRequest, error) {
-
 	existing, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
 	if err != nil {
 		return nil, err
@@ -51,12 +50,10 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 	}
 
 	return retTRB, err
-
 }
 
 // GetTRBRequestByID returns a TRB request by it's ID
 func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) (*models.TRBRequest, error) {
-
 	trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
 	if err != nil {
 		return nil, err
@@ -67,11 +64,28 @@ func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) 
 
 // GetTRBRequests returns all TRB Requests
 func GetTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
-
 	TRBRequests, err := store.GetTRBRequests(appcontext.ZLogger(ctx), archived)
 	if err != nil {
 		return nil, err
 	}
 	return TRBRequests, err
+}
 
+func UpdateTRBRequestConsultMeetingTime(ctx context.Context, store *storage.Store, id uuid.UUID, time time.Time, copyTRBMailbox bool, notifyEUDIDs []string) (*models.TRBRequest, error) {
+	trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+
+	changes := map[string]interface{}{
+		"consultMeetingTime": &time,
+	}
+	err = ApplyChangesAndMetaData(changes, trb, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	updatedTrb, err := store.UpdateTRBRequest(appcontext.ZLogger(ctx), trb)
+
+	return updatedTrb, err
 }

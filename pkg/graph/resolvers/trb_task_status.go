@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -60,17 +61,25 @@ func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 	return &status, nil
 }
 
-// GetTRBConsultStatus retrieves the status of the consult step of the TRB request task list
-func GetTRBConsultStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBConsultStatus, error) {
-	status := models.TRBConsultStatusCannotStartYet
+// GetTRBConsultPrepStatus retrieves the status of the consult step of the TRB request task list
+func GetTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBConsultPrepStatus, error) {
+	status := models.TRBConsultPrepStatusCannotStartYet
 	feedbackStatus, err := GetTRBFeedbackStatus(ctx, store, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
 
 	if *feedbackStatus == models.TRBFeedbackStatusCompleted {
-		// TODO: actually implement the logic for this by checking the dates etc (separate ticket)
-		status = models.TRBConsultStatusInProgress
+		trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), trbRequestID)
+		if err != nil {
+			return nil, err
+		}
+
+		if trb.ConsultMeetingTime != nil && trb.TRBLead != nil {
+			status = models.TRBConsultPrepStatusCompleted
+		} else {
+			status = models.TRBConsultPrepStatusInProgress
+		}
 	}
 	return &status, nil
 }
@@ -93,10 +102,10 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 		return errFeedback
 	})
 
-	var consultStatus *models.TRBConsultStatus
+	var consultPrepStatus *models.TRBConsultPrepStatus
 	var errConsult error
 	errGroup.Go(func() error {
-		consultStatus, errConsult = GetTRBConsultStatus(ctx, store, trbRequestID)
+		consultPrepStatus, errConsult = GetTRBConsultPrepStatus(ctx, store, trbRequestID)
 		return errConsult
 	})
 
@@ -105,9 +114,9 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	}
 
 	statuses := models.TRBTaskStatuses{
-		FormStatus:     *formStatus,
-		FeedbackStatus: *feedbackStatus,
-		ConsultStatus:  *consultStatus,
+		FormStatus:        *formStatus,
+		FeedbackStatus:    *feedbackStatus,
+		ConsultPrepStatus: *consultPrepStatus,
 	}
 
 	return &statuses, nil

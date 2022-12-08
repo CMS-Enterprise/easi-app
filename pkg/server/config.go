@@ -54,6 +54,7 @@ func (s Server) NewEmailConfig() email.Config {
 	s.checkRequiredConfig(appconfig.ITInvestmentEmailKey)
 	s.checkRequiredConfig(appconfig.AccessibilityTeamEmailKey)
 	s.checkRequiredConfig(appconfig.EASIHelpEmailKey)
+	s.checkRequiredConfig(appconfig.TRBEmailKey)
 	s.checkRequiredConfig(appconfig.ClientHostKey)
 	s.checkRequiredConfig(appconfig.ClientProtocolKey)
 	s.checkRequiredConfig(appconfig.EmailTemplateDirectoryKey)
@@ -63,6 +64,7 @@ func (s Server) NewEmailConfig() email.Config {
 		ITInvestmentEmail:      models.NewEmailAddress(s.Config.GetString(appconfig.ITInvestmentEmailKey)),
 		AccessibilityTeamEmail: models.NewEmailAddress(s.Config.GetString(appconfig.AccessibilityTeamEmailKey)),
 		EASIHelpEmail:          models.NewEmailAddress(s.Config.GetString(appconfig.EASIHelpEmailKey)),
+		TRBEmail:               models.NewEmailAddress(s.Config.GetString(appconfig.TRBEmailKey)),
 		URLHost:                s.Config.GetString(appconfig.ClientHostKey),
 		URLScheme:              s.Config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory:      s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
