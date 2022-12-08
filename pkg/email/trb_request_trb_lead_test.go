@@ -20,9 +20,13 @@ func (s *EmailTestSuite) TestTRBRequestTRBLeadEmail() {
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-		expectedBody := `Gary Jones is assigned to Test TRB Request as the TRB Lead.
+		expectedBody := `<h1 style="margin-bottom: 0.5rem;">EASi</h1>
 
-<p><a href="">View the request in EASi</a></p>
+<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+
+<p>Gary Jones is assigned to Test TRB Request as the TRB Lead.</p>
+
+<p><a href="mailto:` + s.config.TRBEmail.String() + `" style="font-weight: bold">View the request in EASi</a></p>
 
 <p>Next steps:</p>
 <ul>

@@ -27,7 +27,11 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-		expectedBody := `<p>The Technical Review Board (TRB) has scheduled a consult session for Test TRB Request on January 1, 2022 at 01:30 PM EST. You should receive a calendar invite shortly if you have not already.
+		expectedBody := `<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+
+<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+
+<p>The Technical Review Board (TRB) has scheduled a consult session for Test TRB Request on January 1, 2022 at 01:30 PM EST. You should receive a calendar invite shortly if you have not already.
 
 <p>Additional notes about this consult session: Some notes</p>
 
@@ -39,7 +43,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 <li>If a calendar invite has not already been sent, the TRB lead will send one with a remote video conferencing meeting link.</li>
 </ul>
 
-<p><a href="">View the request in EASi</a></p>
+<p><a href="mailto:` + s.config.TRBEmail.String() + `" style="font-weight: bold">View the request in EASi</a></p>
 
 <p>If you have questions or need to request a reschedule, please email the TRB at ` + s.config.TRBEmail.String() + `.</p>
 

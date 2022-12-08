@@ -1940,7 +1940,13 @@ func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid
 
 // UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
 func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
-	return resolvers.UpdateTRBRequestForm(ctx, r.store, input)
+	return resolvers.UpdateTRBRequestForm(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 }
 
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.

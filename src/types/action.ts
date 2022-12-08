@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 import { EmailNotificationRecipients } from './graphql-global-types';
-import { SystemIntakeContactProps } from './systemIntake';
+import { FormattedContacts, SystemIntakeContactProps } from './systemIntake';
 
 // When adding a new ActionType, please add its description in i18n/governanceReviewTeam/notes
 export type ActionType =
@@ -102,6 +102,7 @@ export type EmailRecipientsFieldsProps = {
   systemIntakeId: string;
   activeContact: SystemIntakeContactProps | null;
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  contacts: FormattedContacts;
   recipients: EmailNotificationRecipients;
   setRecipients: (recipients: EmailNotificationRecipients) => void;
   error: string;

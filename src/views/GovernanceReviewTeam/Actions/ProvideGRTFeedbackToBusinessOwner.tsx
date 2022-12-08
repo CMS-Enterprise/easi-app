@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { ApolloError, DocumentNode, useMutation } from '@apollo/client';
@@ -39,13 +39,12 @@ const ProvideGRTFeedbackToBusinessOwner = ({
   const { t } = useTranslation('action');
   const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(query);
 
-  // Requester object and loading state
-  const {
-    contacts: {
-      data: { requester },
-      loading
-    }
-  } = useSystemIntakeContacts(systemId);
+  // System intake contacts
+  const { contacts } = useSystemIntakeContacts(systemId);
+  const { requester } = contacts.data;
+
+  /** Whether contacts have loaded for the first time */
+  const [contactsLoaded, setContactsLoaded] = useState(false);
 
   // Active contact for adding/verifying recipients
   const [
@@ -104,8 +103,16 @@ const ProvideGRTFeedbackToBusinessOwner = ({
       .catch((e: ApolloError) => setFieldError('systemIntake', e.message));
   };
 
-  // Wait for contacts to load before returning form
-  if (loading) return null;
+  // Sets contactsLoaded to true when GetSystemIntakeContactsQuery loading state changes
+  useEffect(() => {
+    if (!contacts.loading) {
+      setContactsLoaded(true);
+    }
+  }, [contacts.loading]);
+
+  // Returns null until GetSystemIntakeContactsQuery has completed
+  // Allows initial values to fully load before initializing form
+  if (!contactsLoaded) return null;
 
   return (
     <Formik
@@ -115,6 +122,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
+      enableReinitialize
     >
       {(formikProps: FormikProps<ProvideGRTFeedbackForm>) => {
         const {
@@ -196,6 +204,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     systemIntakeId={systemId}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}
+                    contacts={contacts.data}
                     recipients={values.notificationRecipients}
                     setRecipients={recipients =>
                       setFieldValue('notificationRecipients', recipients)

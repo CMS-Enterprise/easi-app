@@ -276,9 +276,18 @@ export type DeleteContactType = (
 
 /** useSystemIntakeContacts custom hook return type */
 export type UseSystemIntakeContactsType = {
-  contacts: { data: FormattedContacts; loading: boolean };
+  /** Object containing contacts data and GetSystemIntakeContactsQuery loading state */
+  contacts: {
+    /** Formatted contacts object */
+    data: FormattedContacts;
+    /** GetSystemIntakeContactsQuery loading state */
+    loading: boolean;
+  };
+  /** Creates system intake contact in database */
   createContact: CreateContactType;
+  /** Updates system intake contact in database */
   updateContact: UpdateContactType;
+  /** Deletes system intake contact from database */
   deleteContact: DeleteContactType;
 };
 
