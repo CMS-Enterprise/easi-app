@@ -7835,6 +7835,7 @@ type Mutation {
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
+    @hasRole(role: EASI_TRB_ADMIN)
 }
 
 """
@@ -7932,6 +7933,11 @@ enum Role {
   A member of the GRT
   """
   EASI_GOVTEAM
+
+  """
+  An admin on the TRB
+  """
+  EASI_TRB_ADMIN
 
   """
   A generic EASi user
@@ -26158,8 +26164,32 @@ func (ec *executionContext) _Mutation_createTRBRequestFeedback(ctx context.Conte
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateTRBRequestFeedback(rctx, fc.Args["input"].(model.CreateTRBRequestFeedbackInput))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateTRBRequestFeedback(rctx, fc.Args["input"].(model.CreateTRBRequestFeedbackInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBRequestFeedback); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBRequestFeedback`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
