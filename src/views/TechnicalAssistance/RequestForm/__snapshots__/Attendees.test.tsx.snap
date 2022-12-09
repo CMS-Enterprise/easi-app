@@ -3,7 +3,7 @@
 exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
 <DocumentFragment>
   <div
-    class="trb-attendees"
+    class="trb-attendees margin-top-2"
   >
     <form
       class="usa-form margin-bottom-4 maxw-full"
@@ -26,7 +26,7 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
               data-testid="label"
               for="euaUserId"
             >
-              Requester name
+              Requester
             </label>
             <div
               class="margin-top-1 cedar-contact-select usa-combo-box opacity-70 maxw-none cedar-contact-select--is-disabled css-3iigni-container"
@@ -308,27 +308,29 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
           Add another attendee
         </a>
         <div
-          class="trbAttendees-table margin-top-4"
+          class="trbAttendees-table margin-top-4 margin-bottom-neg-1"
         >
           <table
             class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
             data-testid="table"
           >
             <tbody
+              class="grid-row grid-gap-sm"
               role="rowgroup"
             >
               <tr
+                class="tablet:grid-col-6 margin-bottom-1"
                 role="row"
               >
                 <td
-                  class="trbAttendee"
+                  class="trbAttendee display-flex"
                   data-testid="trbAttendee-JTTC"
                   id="trbAttendee-JTTC"
                   role="cell"
                   style="padding: 0px;"
                 >
                   <div
-                    class="easi-initials-icon bg-accent-cool-lighter"
+                    class="easi-initials-icon bg-accent-cool-lighter margin-right-1"
                   >
                     <span>
                       AJ
@@ -379,17 +381,18 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                 </td>
               </tr>
               <tr
+                class="tablet:grid-col-6 margin-bottom-1"
                 role="row"
               >
                 <td
-                  class="trbAttendee"
+                  class="trbAttendee display-flex"
                   data-testid="trbAttendee-ADMI"
                   id="trbAttendee-ADMI"
                   role="cell"
                   style="padding: 0px;"
                 >
                   <div
-                    class="easi-initials-icon bg-accent-cool-lighter"
+                    class="easi-initials-icon bg-accent-cool-lighter margin-right-1"
                   >
                     <span>
                       AA
