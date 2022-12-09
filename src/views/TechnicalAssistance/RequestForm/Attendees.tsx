@@ -188,7 +188,7 @@ function Attendees({
   }, [setIsStepSubmitting, isSubmitting]);
 
   return (
-    <div className="trb-attendees">
+    <div className="trb-attendees margin-top-2">
       <Switch>
         <Route exact path={`${path}/list`}>
           <AttendeesForm

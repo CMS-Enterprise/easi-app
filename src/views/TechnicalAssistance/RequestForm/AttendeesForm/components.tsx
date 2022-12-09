@@ -41,8 +41,6 @@ import {
 // import { parseAsLocalTime } from 'utils/date';
 import { initialAttendee } from '../Attendees';
 
-import './components.scss';
-
 /** Attendee form props */
 type AttendeeFieldsProps = {
   /** Fields type */
@@ -76,6 +74,7 @@ const AttendeeFields = ({
   fieldLabels
 }: AttendeeFieldsProps) => {
   const { t } = useTranslation('technicalAssistance');
+  console.log(fieldLabels);
 
   return (
     <>
@@ -261,7 +260,7 @@ const Attendee = ({
   return (
     <>
       {/* Attendee icon with initials */}
-      <InitialsIcon name={commonName} />
+      <InitialsIcon name={commonName} className="margin-right-1" />
       {/* Attendee details */}
       <div>
         <p className="margin-y-05 text-bold">
@@ -360,7 +359,7 @@ const AttendeesList = ({
       columns,
       initialState: {
         pageIndex: 0,
-        pageSize: 4
+        pageSize: 6
       }
     },
     usePagination
@@ -372,11 +371,14 @@ const AttendeesList = ({
   return (
     <div className="trbAttendees-table margin-top-4">
       <Table bordered={false} fullWidth {...getTableProps()}>
-        <tbody {...getTableBodyProps()}>
+        <tbody {...getTableBodyProps()} className="grid-row grid-gap-sm">
           {page.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr
+                {...row.getRowProps()}
+                className="tablet:grid-col-6 margin-bottom-1"
+              >
                 {row.cells.map(cell => {
                   const attendee: TRBAttendeeData = cell.value;
                   return (
@@ -388,7 +390,7 @@ const AttendeesList = ({
                       }}
                       id={`trbAttendee-${attendee?.userInfo?.euaUserId}`}
                       data-testid={`trbAttendee-${attendee?.userInfo?.euaUserId}`}
-                      className="trbAttendee"
+                      className="trbAttendee display-flex"
                     >
                       <Attendee
                         attendee={attendee}
@@ -427,7 +429,6 @@ const AttendeesList = ({
             pageSize={state.pageSize}
             setPageSize={setPageSize}
             page={[]}
-            className="margin-top-3"
           />
         )
       }

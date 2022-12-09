@@ -300,7 +300,7 @@ const technicalAssistance = {
     },
     fieldLabels: {
       requester: {
-        euaUserId: 'Requester name',
+        euaUserId: 'Requester',
         component: 'Requester component',
         role: 'Requester role'
       },
