@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   Control,
   Controller,
@@ -74,7 +74,17 @@ const AttendeeFields = ({
   fieldLabels
 }: AttendeeFieldsProps) => {
   const { t } = useTranslation('technicalAssistance');
-  console.log(fieldLabels);
+
+  // Using this instead of formState.isValid since it's not the same
+  const hasErrors = Object.keys(errors).length > 0;
+
+  // Scroll to the error summary when there are changes after submit
+  useEffect(() => {
+    if (hasErrors) {
+      const err = document.querySelector('.trb-attendees-fields-error');
+      err?.scrollIntoView();
+    }
+  }, [errors, hasErrors]);
 
   return (
     <>
@@ -83,7 +93,7 @@ const AttendeeFields = ({
         <Alert
           heading={t('errors.checkFix')}
           type="error"
-          className="margin-bottom-2"
+          className="trb-attendees-fields-error margin-bottom-2"
         >
           {Object.keys(errors).map(fieldName => {
             // Check if error has custom message
@@ -369,7 +379,7 @@ const AttendeesList = ({
   if (attendees.length < 1) return null;
 
   return (
-    <div className="trbAttendees-table margin-top-4">
+    <div className="trbAttendees-table margin-top-4 margin-bottom-neg-1">
       <Table bordered={false} fullWidth {...getTableProps()}>
         <tbody {...getTableBodyProps()} className="grid-row grid-gap-sm">
           {page.map(row => {
