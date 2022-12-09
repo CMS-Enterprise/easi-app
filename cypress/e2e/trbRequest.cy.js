@@ -107,7 +107,9 @@ describe('Technical Assistance', () => {
       .should('be.visible');
 
     // Name / euaUserId field should be disabled for requester
-    cy.get('#react-select-euaUserId-input').should('be.disabled');
+    cy.get('#react-select-euaUserId-input')
+      .as('euaUserIdInput')
+      .should('be.disabled');
 
     // Submit without filling in fields to test field errors
     cy.contains('button', 'Next').click();
@@ -133,14 +135,37 @@ describe('Technical Assistance', () => {
     cy.contains('h1', 'Add an attendee').should('be.visible');
 
     // Fill attendee fields
+    // Sets name and euaUserId to same as requester to trigger error
     cy.trbRequest.attendees.fillRequiredFields({
       userInfo: {
-        commonName: 'Anabelle Jerde',
-        euaUserId: 'JTTC'
+        commonName: 'Adeline Aarons',
+        euaUserId: 'ABCD'
       },
       component: 'Center for Medicare',
       role: 'PRIVACY_ADVISOR'
     });
+
+    // Submit form
+    cy.contains('button', 'Add attendee').click();
+
+    // Check for unique euaUserId field error
+    cy.contains('button', 'Attendee has already been added').as(
+      'uniqueEuaUserIdError'
+    );
+
+    // Clear field value
+    cy.get('@euaUserIdInput').clear();
+
+    // Enter valid name/eua input
+    cy.trbRequest.attendees.fillRequiredFields({
+      userInfo: {
+        commonName: 'Anabelle Jerde',
+        euaUserId: 'JTTC'
+      }
+    });
+
+    // Check that error message has cleared
+    cy.get('@uniqueEuaUserIdError').should('not.exist');
 
     // Submit form
     cy.contains('button', 'Add attendee').click();
@@ -159,7 +184,7 @@ describe('Technical Assistance', () => {
     cy.contains('h1', 'Edit attendee').should('be.visible');
 
     // Name / euaUserId field should be disabled when editing
-    cy.get('#react-select-euaUserId-input').should('be.disabled');
+    cy.get('@euaUserIdInput').should('be.disabled');
 
     // Update attendee role
     cy.trbRequest.attendees.fillRequiredFields({

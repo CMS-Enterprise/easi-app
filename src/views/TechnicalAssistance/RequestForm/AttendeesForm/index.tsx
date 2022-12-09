@@ -129,7 +129,7 @@ function AttendeesForm({
     const submitForm = (formData: TRBAttendeeFields) => {
       if (isDirty) {
         // If euaUserId is not unique, set field error
-        if (!euaUserIdIsUnique) {
+        if (!euaUserIdIsUnique(formData.euaUserId)) {
           setError('euaUserId', {
             message: 'Attendee has already been added'
           });
