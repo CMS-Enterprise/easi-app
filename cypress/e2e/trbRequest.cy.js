@@ -72,7 +72,7 @@ describe('Technical Assistance', () => {
     });
 
     // Successful submit
-    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Continue without adding attendees').click();
 
     /** Supporting Documents */
 
@@ -84,7 +84,7 @@ describe('Technical Assistance', () => {
     // TODO: Supporting document tests
   });
   /** Adds new attendee */
-  it.only('Adds, edits, and deletes attendee', () => {
+  it('Adds, edits, and deletes attendee', () => {
     // Fill out the Basic Details required fields
     cy.trbRequest.basicDetails.fillRequiredFields();
 
@@ -112,13 +112,13 @@ describe('Technical Assistance', () => {
       .should('be.disabled');
 
     // Submit without filling in fields to test field errors
-    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Continue without adding attendees').click();
 
     // Check for requester error messages
-    cy.contains('button', 'Attendee component is a required field').as(
+    cy.contains('button', 'Requester component is a required field').as(
       'componentError'
     );
-    cy.contains('button', 'Attendee role is a required field').as('roleError');
+    cy.contains('button', 'Requester role is a required field').as('roleError');
 
     // Fill required attendee fields
     cy.trbRequest.attendees.fillRequiredFields({

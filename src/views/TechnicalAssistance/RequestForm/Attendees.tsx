@@ -16,7 +16,7 @@ import {
   TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
-import { trbAttendeeSchema } from 'validations/trbRequestSchema';
+import { trbRequesterSchema } from 'validations/trbRequestSchema';
 
 import { AttendeeFields, AttendeesList } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
@@ -75,7 +75,7 @@ function Attendees({
     reset,
     formState: { errors, isSubmitting, isDirty }
   } = useForm<TRBAttendeeFields>({
-    resolver: yupResolver(trbAttendeeSchema)
+    resolver: yupResolver(trbRequesterSchema)
   });
 
   /**

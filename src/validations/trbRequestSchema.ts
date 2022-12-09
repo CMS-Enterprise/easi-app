@@ -102,6 +102,15 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
   })
 );
 
+export const trbRequesterSchema = yup.object({
+  euaUserId: yup.string().required('Requester name is a required field'),
+  component: yup.string().required('Requester component is a required field'),
+  role: yup
+    .mixed<PersonRole>()
+    .oneOf(Object.values(PersonRole))
+    .required('Requester role is a required field')
+});
+
 export const trbAttendeeSchema = yup.object({
   euaUserId: yup.string().required('Attendee name is a required field'),
   component: yup.string().required('Attendee component is a required field'),
