@@ -63,41 +63,6 @@ export const subjectAreasBlankValues = {
  * "OTHER" is always the last item of `options`.
  */
 const fields = [
-  // const fields: Array<{
-  //   name:
-  //     | 'subjectAreaTechnicalReferenceArchitecture'
-  //     | 'subjectAreaNetworkAndSecurity'
-  //     | 'subjectAreaCloudAndInfrastructure'
-  //     | 'subjectAreaApplicationDevelopment'
-  //     | 'subjectAreaDataAndDataManagement'
-  //     | 'subjectAreaGovernmentProcessesAndPolicies'
-  //     | 'subjectAreaOtherTechnicalTopics';
-  //   otherText:
-  //     | 'subjectAreaTechnicalReferenceArchitectureOther'
-  //     | 'subjectAreaNetworkAndSecurityOther'
-  //     | 'subjectAreaCloudAndInfrastructureOther'
-  //     | 'subjectAreaApplicationDevelopmentOther'
-  //     | 'subjectAreaDataAndDataManagementOther'
-  //     | 'subjectAreaGovernmentProcessesAndPoliciesOther'
-  //     | 'subjectAreaOtherTechnicalTopicsOther';
-  //   // options: Array<
-  //   //   | TRBTechnicalReferenceArchitectureOption
-  //   //   | TRBNetworkAndSecurityOption
-  //   //   | TRBCloudAndInfrastructureOption
-  //   //   | TRBApplicationDevelopmentOption
-  //   //   | TRBDataAndDataManagementOption
-  //   //   | TRBGovernmentProcessesAndPoliciesOption
-  //   //   | TRBOtherTechnicalTopicsOption
-  //   // >;
-  //   options:
-  //     | TRBTechnicalReferenceArchitectureOption[]
-  //     | TRBNetworkAndSecurityOption[]
-  //     | TRBCloudAndInfrastructureOption[]
-  //     | TRBApplicationDevelopmentOption[]
-  //     | TRBDataAndDataManagementOption[]
-  //     | TRBGovernmentProcessesAndPoliciesOption[]
-  //     | TRBOtherTechnicalTopicsOption[];
-  // }> = [
   {
     name: 'subjectAreaTechnicalReferenceArchitecture',
     otherText: 'subjectAreaTechnicalReferenceArchitectureOther',
@@ -205,7 +170,6 @@ const fields = [
     ]
   }
 ] as const;
-// ];
 
 const primaryFields = fields.map(f => f.name);
 
@@ -329,12 +293,6 @@ function SubjectAreas({
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
 
-  // console.log('watch', JSON.stringify(watch(), null, 2));
-  // console.log('primaryValues', JSON.stringify(primaryData, null, 2));
-  // console.log('values', JSON.stringify(getValues(), null, 2));
-  // console.log('isDirty', isDirty);
-  // console.log('errors', errors);
-
   return (
     <Form
       className="trb-form-subject maxw-full"
@@ -369,90 +327,6 @@ function SubjectAreas({
 
       <Grid row className="margin-top-2">
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-          {/* Technical Reference Architecture (TRA) */}
-          {/*
-          <Controller
-            name="subjectAreaTechnicalReferenceArchitecture"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup className="margin-top-5" error={!!error}>
-                <Label
-                  htmlFor="subjectAreaTechnicalReferenceArchitecture"
-                  hint={
-                    <div>
-                      {t(
-                        'subject.hint.subjectAreaTechnicalReferenceArchitecture'
-                      )}
-                    </div>
-                  }
-                  error={!!error}
-                >
-                  {t(
-                    'subject.labels.subjectAreaTechnicalReferenceArchitecture'
-                  )}
-                </Label>
-                {error && (
-                  <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
-                )}
-                <MultiSelect
-                  id="subjectAreaTechnicalReferenceArchitecture"
-                  name={field.name}
-                  options={[
-                    TRBTechnicalReferenceArchitectureOption.GENERAL_TRA_INFORMATION,
-                    TRBTechnicalReferenceArchitectureOption.TRA_GUIDING_PRINCIPLES,
-                    TRBTechnicalReferenceArchitectureOption.CMS_PROCESSING_ENVIRONMENTS,
-                    TRBTechnicalReferenceArchitectureOption.CMS_TRA_MULTI_ZONE_ARCHITECTURE,
-                    TRBTechnicalReferenceArchitectureOption.CMS_TRA_BUSINESS_RULES,
-                    TRBTechnicalReferenceArchitectureOption.ABOUT_THE_TRB,
-                    TRBTechnicalReferenceArchitectureOption.ARCHITECTURE_CHANGE_REQUEST_PROCESS_FOR_THE_TRA,
-                    TRBTechnicalReferenceArchitectureOption.OTHER
-                  ].map(value => ({
-                    label: t(
-                      `subject.options.subjectAreaTechnicalReferenceArchitecture.${value}`
-                    ),
-                    value
-                  }))}
-                  initialValues={field.value}
-                  onChange={field.onChange}
-                  selectedLabel={t('subject.labels.selectedTopics')}
-                />
-                {Array.isArray(field.value) &&
-                  field.value.includes(
-                    'OTHER' as TRBTechnicalReferenceArchitectureOption
-                  ) && (
-                    <Controller
-                      name="subjectAreaTechnicalReferenceArchitectureOther"
-                      control={control}
-                      // eslint-disable-next-line no-shadow
-                      render={({ field, fieldState: { error } }) => (
-                        <FormGroup error={!!error}>
-                          <Label
-                            htmlFor="subjectAreaTechnicalReferenceArchitectureOther"
-                            hint={<div>{t('subject.hint.other')}</div>}
-                            error={!!error}
-                            className="text-normal"
-                          >
-                            {t('subject.labels.other')}
-                          </Label>
-                          {error && (
-                            <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
-                          )}
-                          <TextInput
-                            {...field}
-                            ref={null}
-                            id="subjectAreaTechnicalReferenceArchitectureOther"
-                            type="text"
-                            validationStatus={error && 'error'}
-                          />
-                        </FormGroup>
-                      )}
-                    />
-                  )}
-              </FormGroup>
-            )}
-          />
-          */}
-
           {fields.map(({ name, otherText, options }) => {
             const otherOption = options[options.length - 1];
             return (
@@ -493,37 +367,41 @@ function SubjectAreas({
                         }}
                         selectedLabel={t('subject.labels.selectedTopics')}
                       />
-                      {field.value.includes(otherOption) && (
-                        <Controller
-                          name={otherText}
-                          control={control}
-                          // eslint-disable-next-line no-shadow
-                          render={({ field, fieldState: { error } }) => (
-                            <FormGroup>
-                              <Label
-                                htmlFor={otherText}
-                                hint={<div>{t('subject.hint.other')}</div>}
-                                error={!!error}
-                                className="text-normal"
-                              >
-                                {t('subject.labels.other')}
-                              </Label>
-                              {error && (
-                                <ErrorMessage>
-                                  {t('errors.fillBlank')}
-                                </ErrorMessage>
-                              )}
-                              <TextInput
-                                {...field}
-                                ref={null}
-                                id={otherText}
-                                type="text"
-                                validationStatus={error && 'error'}
-                              />
-                            </FormGroup>
-                          )}
-                        />
-                      )}
+                      {
+                        // Ignoring the type of field since useForm is generating the wrong type
+                        // @ts-ignore
+                        field.value.includes(otherOption) && (
+                          <Controller
+                            name={otherText}
+                            control={control}
+                            // eslint-disable-next-line no-shadow
+                            render={({ field, fieldState: { error } }) => (
+                              <FormGroup>
+                                <Label
+                                  htmlFor={otherText}
+                                  hint={<div>{t('subject.hint.other')}</div>}
+                                  error={!!error}
+                                  className="text-normal"
+                                >
+                                  {t('subject.labels.other')}
+                                </Label>
+                                {error && (
+                                  <ErrorMessage>
+                                    {t('errors.fillBlank')}
+                                  </ErrorMessage>
+                                )}
+                                <TextInput
+                                  {...field}
+                                  ref={null}
+                                  id={otherText}
+                                  type="text"
+                                  validationStatus={error && 'error'}
+                                />
+                              </FormGroup>
+                            )}
+                          />
+                        )
+                      }
                     </FormGroup>
                   );
                 }}
