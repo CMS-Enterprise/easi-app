@@ -18,7 +18,7 @@ import {
 } from 'types/technicalAssistance';
 import { trbRequesterSchema } from 'validations/trbRequestSchema';
 
-import { AttendeeFields, AttendeesList } from './AttendeesForm/components';
+import { AttendeeFields, AttendeesTable } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
@@ -252,7 +252,7 @@ function Attendees({
               </UswdsReactLink>
 
               {/* List of additional attendees */}
-              <AttendeesList
+              <AttendeesTable
                 attendees={attendees}
                 setActiveAttendee={setActiveAttendee}
                 trbRequestId={request.id}

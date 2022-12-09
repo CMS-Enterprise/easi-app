@@ -315,7 +315,7 @@ const Attendee = ({
 };
 
 /** TRB attendees list props */
-type AttendeesListProps = {
+type AttendeesTableProps = {
   /** Array of attendee objects */
   attendees: TRBAttendeeData[];
   /** TRB request id */
@@ -326,12 +326,12 @@ type AttendeesListProps = {
   deleteAttendee: (id: string) => void;
 };
 
-const AttendeesList = ({
+const AttendeesTable = ({
   attendees,
   trbRequestId,
   setActiveAttendee,
   deleteAttendee
-}: AttendeesListProps) => {
+}: AttendeesTableProps) => {
   /** Format attendees for display in table */
   const data = useMemo(() => {
     return attendees.map(attendee => ({ attendee }));
@@ -446,4 +446,4 @@ const AttendeesList = ({
   );
 };
 
-export { Attendee, AttendeesList, AttendeeFields };
+export { Attendee, AttendeesTable, AttendeeFields };

@@ -31,7 +31,7 @@ type UseTRBAttendees = {
   data: {
     /** Requester object */
     requester: TRBAttendeeData;
-    /** Additional attendees */
+    /** Additional attendees array sorted by time created */
     attendees: TRBAttendeeData[];
     /** GetTRBRequestAttendees query loading state */
     loading: boolean;
@@ -57,6 +57,8 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
     fetchPolicy: 'cache-first',
     variables: { id: trbRequestId }
   });
+
+  /** Array of attendees sorted by time created */
   const attendeesArray = useMemo(() => {
     if (!data?.trbRequest?.attendees) return undefined;
     // Sort attendees array by time created
