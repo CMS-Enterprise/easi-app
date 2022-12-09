@@ -57,7 +57,13 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
     fetchPolicy: 'cache-first',
     variables: { id: trbRequestId }
   });
-  const attendeesArray = data?.trbRequest?.attendees;
+  const attendeesArray = useMemo(() => {
+    if (!data?.trbRequest?.attendees) return undefined;
+    // Sort attendees array by time created
+    return [...data.trbRequest.attendees].sort((a, b) =>
+      a.createdAt < b.createdAt ? 1 : -1
+    );
+  }, [data?.trbRequest?.attendees]);
 
   /**
    * Formatted TRB attendees object
