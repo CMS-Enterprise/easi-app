@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -81,24 +81,30 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   } = useSystemIntakeContacts(id);
   const { requester, businessOwner, productManager, isso } = contacts.data;
 
-  const initialValues: ContactDetailsForm = {
-    requester,
-    businessOwner,
-    productManager,
-    isso: {
-      isPresent: !!isso?.euaUserId,
-      ...isso
-    },
-    governanceTeams: {
-      isPresent: governanceTeams.isPresent,
-      teams:
-        governanceTeams.teams?.map(team => ({
-          collaborator: team.collaborator,
-          name: team.name,
-          key: team.key
-        })) || []
-    }
-  };
+  /** Whether contacts have loaded for the first time */
+  const [contactsLoaded, setContactsLoaded] = useState(false);
+
+  const initialValues: ContactDetailsForm = useMemo(
+    () => ({
+      requester,
+      businessOwner,
+      productManager,
+      isso: {
+        isPresent: !!isso?.euaUserId,
+        ...isso
+      },
+      governanceTeams: {
+        isPresent: governanceTeams.isPresent,
+        teams:
+          governanceTeams.teams?.map(team => ({
+            collaborator: team.collaborator,
+            name: team.name,
+            key: team.key
+          })) || []
+      }
+    }),
+    [requester, businessOwner, productManager, isso, governanceTeams]
+  );
 
   const [mutate] = useMutation<
     UpdateSystemIntakeContactDetails,
@@ -195,8 +201,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
   }, [businessOwner, productManager, requester.euaUserId]);
 
-  // Wait for contacts to load before returning form
-  if (contacts.loading) return null;
+  // Sets contactsLoaded to true when GetSystemIntakeContactsQuery loading state changes
+  useEffect(() => {
+    if (!contacts.loading) {
+      setContactsLoaded(true);
+    }
+  }, [contacts.loading]);
+
+  // Returns null until GetSystemIntakeContactsQuery has completed
+  // Allows initial values to fully load before initializing form
+  if (!contactsLoaded) return null;
 
   return (
     <Formik
@@ -650,6 +664,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {/* Add new contacts */}
                 {flags.notifyMultipleRecipients && (
                   <AdditionalContacts
+                    contacts={contacts.data.additionalContacts}
                     systemIntakeId={id}
                     activeContact={activeContact}
                     setActiveContact={setActiveContact}
