@@ -63,6 +63,7 @@ func authenticateMiddleware(logger *zap.Logger, next http.Handler) http.Handler 
 			JobCodeGRT:       swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
 			JobCode508User:   swag.ContainsStrings(config.JobCodes, "EASI_D_508_USER"),
 			JobCode508Tester: swag.ContainsStrings(config.JobCodes, "EASI_D_508_TESTER"),
+			JobCodeTRBAdmin:  swag.ContainsStrings(config.JobCodes, "EASI_TRB_ADMIN_D"),
 		})
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
