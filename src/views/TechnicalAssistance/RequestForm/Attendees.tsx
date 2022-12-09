@@ -37,7 +37,7 @@ export const initialAttendee: TRBAttendeeData = {
 function Attendees({
   request,
   stepUrl,
-  setFormError,
+  setFormAlert,
   refetchRequest,
   setIsStepSubmitting,
   setStepSubmit,
@@ -169,11 +169,14 @@ function Attendees({
           },
           err => {
             if (err instanceof ApolloError) {
-              setFormError(t<string>('attendees.alerts.error'));
+              setFormAlert({
+                type: 'error',
+                message: t<string>('attendees.alerts.error')
+              });
             }
           }
         ),
-    [t, handleSubmit, isDirty, refetchRequest, setFormError, submitAttendee]
+    [t, handleSubmit, isDirty, refetchRequest, setFormAlert, submitAttendee]
   );
 
   useEffect(() => {
@@ -192,7 +195,7 @@ function Attendees({
             backToFormUrl={stepUrl.current}
             activeAttendee={activeAttendee}
             trbRequestId={request.id}
-            setFormError={setFormError}
+            setFormAlert={setFormAlert}
             taskListUrl={taskListUrl}
           />
         </Route>
@@ -267,7 +270,12 @@ function Attendees({
                   submitForm(() => {
                     history.push(stepUrl.next);
                   });
-                }
+                },
+                text: t(
+                  attendees.length > 0
+                    ? 'Next'
+                    : 'attendees.continueWithoutAdding'
+                )
               }}
               back={{
                 disabled: isSubmitting,

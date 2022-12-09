@@ -150,7 +150,7 @@ describe('Trb Request form: Basic', () => {
             refetchRequest={mockRefetch}
             setIsStepSubmitting={() => {}}
             setStepSubmit={() => {}}
-            setFormError={() => {}}
+            setFormAlert={() => {}}
             taskListUrl=""
           />
         </MockedProvider>

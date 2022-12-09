@@ -62,7 +62,7 @@ function Basic({
   refetchRequest,
   setStepSubmit,
   setIsStepSubmitting,
-  setFormError
+  setFormAlert
 }: FormStepComponentProps) {
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
@@ -174,7 +174,10 @@ function Basic({
           },
           err => {
             if (err instanceof ApolloError) {
-              setFormError(t<string>('basic.errors.submit'));
+              setFormAlert({
+                type: 'error',
+                message: t<string>('basic.errors.submit')
+              });
             }
           }
         ),
@@ -184,7 +187,7 @@ function Basic({
       isDirty,
       refetchRequest,
       request,
-      setFormError,
+      setFormAlert,
       t,
       updateForm
     ]

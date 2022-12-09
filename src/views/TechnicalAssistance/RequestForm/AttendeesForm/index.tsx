@@ -26,7 +26,9 @@ interface AttendeesFormProps {
   backToFormUrl?: string;
   activeAttendee: TRBAttendeeData;
   trbRequestId: string;
-  setFormError: React.Dispatch<React.SetStateAction<string | false>>;
+  setFormAlert: React.Dispatch<
+    React.SetStateAction<{ type: 'success' | 'error'; message: string } | false>
+  >;
   taskListUrl: string;
 }
 
@@ -34,7 +36,7 @@ function AttendeesForm({
   backToFormUrl,
   activeAttendee,
   trbRequestId,
-  setFormError,
+  setFormAlert,
   taskListUrl
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
@@ -72,11 +74,15 @@ function AttendeesForm({
     setValue,
     setError,
     clearErrors,
+    watch,
     formState: { errors, isSubmitting, isDirty }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
     defaultValues
   });
+
+  // Field values
+  const values = watch();
 
   /** Whether or not the submitted attendee EUA ID is unique compared to the requester and additional attendees */
   const euaUserIdIsUnique = useCallback(
@@ -139,13 +145,21 @@ function AttendeesForm({
             .then(() => {
               // Clear errors
               clearErrors('euaUserId');
+              //
+              setFormAlert({
+                type: 'success',
+                message: t<string>('attendees.alerts.success')
+              });
               // Return to attendees form
               history.push(backToFormUrl);
             })
             .catch(err => {
               if (err instanceof ApolloError) {
                 // Set form error
-                setFormError(t<string>('attendees.alerts.error'));
+                setFormAlert({
+                  type: 'error',
+                  message: t<string>('attendees.alerts.error')
+                });
                 // Return to attendees form
                 history.push(backToFormUrl);
               }
@@ -159,7 +173,7 @@ function AttendeesForm({
         <Breadcrumbs
           items={[
             { text: t('heading'), url: '/trb' },
-            { text: t('breadcrumbs.taskList'), url: '/trb/task-list' },
+            { text: t('taskList.heading'), url: '/trb/task-list' },
             {
               text: t('requestForm.heading'),
               url: backToFormUrl
@@ -197,7 +211,11 @@ function AttendeesForm({
               text: t(
                 fieldLabels[formType as keyof typeof fieldLabels].submit || ''
               ),
-              disabled: isSubmitting
+              disabled:
+                isSubmitting ||
+                !values.component ||
+                !values.euaUserId ||
+                !values.role
             }}
             back={{
               text: t('Cancel'),
