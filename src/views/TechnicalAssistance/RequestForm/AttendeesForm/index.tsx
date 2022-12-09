@@ -131,7 +131,7 @@ function AttendeesForm({
         // If euaUserId is not unique, set field error
         if (!euaUserIdIsUnique) {
           setError('euaUserId', {
-            message: 'Attendee name must be unique'
+            message: 'Attendee has already been added'
           });
         } else {
           // Submit attendee fields
