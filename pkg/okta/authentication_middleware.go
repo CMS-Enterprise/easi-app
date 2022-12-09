@@ -22,6 +22,8 @@ const (
 	test508UserJobCode   = "EASI_D_508_USER"
 	prod508TesterJobCode = "EASI_P_508_TESTER"
 	test508TesterJobCode = "EASI_D_508_TESTER"
+	prodTRBAdminJobCode  = "EASI_TRB_ADMIN_P"
+	testTRBAdminJobCode  = "EASI_TRB_ADMIN_D"
 )
 
 func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtverifier.Jwt, error) {
@@ -74,6 +76,7 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authenticati
 	jcGRT := jwtGroupsContainsJobCode(jwt, f.codeGRT)
 	jc508Tester := jwtGroupsContainsJobCode(jwt, f.code508Tester)
 	jc508User := jwtGroupsContainsJobCode(jwt, f.code508User)
+	jcTRBAdmin := jwtGroupsContainsJobCode(jwt, f.codeTRBAdmin)
 
 	return &authentication.EUAPrincipal{
 			EUAID:            strings.ToUpper(euaID),
@@ -81,6 +84,7 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authenticati
 			JobCodeGRT:       jcGRT,
 			JobCode508Tester: jc508Tester,
 			JobCode508User:   jc508User,
+			JobCodeTRBAdmin:  jcTRBAdmin,
 		},
 		nil
 }
@@ -147,6 +151,7 @@ type oktaMiddlewareFactory struct {
 	codeGRT       string
 	code508Tester string
 	code508User   string
+	codeTRBAdmin  string
 }
 
 // NewOktaAuthenticationMiddleware returns a wrapper for HandlerFunc to authorize with Okta
@@ -157,10 +162,12 @@ func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, jwtVerifier JwtV
 	jobCodeGRT := prodGRTJobCode
 	jobCode508User := prod508UserJobCode
 	jobCode508Tester := prod508TesterJobCode
+	jobCodeTRBAdmin := prodTRBAdminJobCode
 	if useTestJobCodes {
 		jobCodeGRT = testGRTJobCode
 		jobCode508Tester = test508TesterJobCode
 		jobCode508User = test508UserJobCode
+		jobCodeTRBAdmin = testTRBAdminJobCode
 	}
 
 	middlewareFactory := oktaMiddlewareFactory{
@@ -169,6 +176,7 @@ func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, jwtVerifier JwtV
 		codeGRT:       jobCodeGRT,
 		code508Tester: jobCode508Tester,
 		code508User:   jobCode508User,
+		codeTRBAdmin:  jobCodeTRBAdmin,
 	}
 	return middlewareFactory.newAuthenticationMiddleware
 }

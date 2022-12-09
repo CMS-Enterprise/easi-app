@@ -50,6 +50,13 @@ func HasRole(ctx context.Context, role model.Role) (bool, error) {
 			return false, nil
 		}
 		return true, nil
+	case model.RoleEasiTrbAdmin:
+		if !principal.AllowTRBAdmin() {
+			logger.Info("does not have TRB Admin job code")
+			return false, nil
+		}
+		logger.Info("user authorized as TRB admin", zap.Bool("Authorized", true))
+		return true, nil
 	default:
 		logger.With(zap.String("Role", role.String())).Info("Unrecognized user role")
 		return false, nil
