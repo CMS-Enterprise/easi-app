@@ -119,7 +119,7 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 		return userInfos, nil
 	}
 
-	meetingTime, err := time.Parse(time.RFC3339, "2022-01-01T13:30:00+00:00")
+	meetingTime, err := time.Parse(time.RFC3339, "2022-10-10T12:00:00+00:00")
 	s.NoError(err)
 
 	updated, err := UpdateTRBRequestConsultMeetingTime(
@@ -135,7 +135,7 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 		"See you then!",
 	)
 
-	s.EqualValues(&meetingTime, updated.ConsultMeetingTime)
+	s.True((*updated.ConsultMeetingTime).Equal(meetingTime))
 }
 
 // TestUpdateTRBRequestTRBLead tests the scheduling of consult meeting
