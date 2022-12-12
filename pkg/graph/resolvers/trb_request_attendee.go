@@ -4,19 +4,79 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
 // CreateTRBRequestAttendee creates a TRBRequestAttendee in the database
-func CreateTRBRequestAttendee(ctx context.Context, store *storage.Store, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
+func CreateTRBRequestAttendee(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	attendee *models.TRBRequestAttendee,
+) (*models.TRBRequestAttendee, error) {
+	// start fetching info we'll need to send notifications now, but don't wait on results until we're ready to send emails
+	var request models.TRBRequest
+	var requester models.UserInfo
+	var attendeeInfo models.UserInfo
+
+	emailInfoErrGroup := new(errgroup.Group)
+
+	emailInfoErrGroup.Go(func() error {
+		// declare new error variable so we don't interfere with calls outside of this goroutine
+		requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), attendee.TRBRequestID)
+		if getRequestErr != nil {
+			return getRequestErr
+		}
+		request = *requestPtr
+
+		requesterPtr, getRequesterErr := fetchUserInfo(ctx, request.CreatedBy)
+		if getRequesterErr != nil {
+			return getRequesterErr
+		}
+		requester = *requesterPtr
+
+		return nil
+	})
+
+	emailInfoErrGroup.Go(func() error {
+		// declare new error variable so we don't interfere with calls outside of this goroutine
+		attendeeInfoPtr, fetchUserInfoErr := fetchUserInfo(ctx, attendee.EUAUserID)
+		if fetchUserInfoErr != nil {
+			return fetchUserInfoErr
+		}
+		attendeeInfo = *attendeeInfoPtr
+		return nil
+	})
+
 	attendee.CreatedBy = appcontext.Principal(ctx).ID()
 	createdAttendee, err := store.CreateTRBRequestAttendee(ctx, attendee)
 	if err != nil {
 		return nil, err
 	}
+
+	// send notification email last; make sure database has been updated first
+
+	if err = emailInfoErrGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	// send email notification
+	err = emailClient.SendTRBAttendeeAddedNotification(
+		ctx,
+		attendeeInfo.Email,
+		request.Name,
+		requester.CommonName,
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	return createdAttendee, nil
 }
 

@@ -815,6 +815,8 @@ const (
 	RoleEasi508TesterOrUser Role = "EASI_508_TESTER_OR_USER"
 	// A member of the GRT
 	RoleEasiGovteam Role = "EASI_GOVTEAM"
+	// An admin on the TRB
+	RoleEasiTrbAdmin Role = "EASI_TRB_ADMIN"
 	// A generic EASi user
 	RoleEasiUser Role = "EASI_USER"
 )
@@ -824,12 +826,13 @@ var AllRole = []Role{
 	RoleEasi508User,
 	RoleEasi508TesterOrUser,
 	RoleEasiGovteam,
+	RoleEasiTrbAdmin,
 	RoleEasiUser,
 }
 
 func (e Role) IsValid() bool {
 	switch e {
-	case RoleEasi508Tester, RoleEasi508User, RoleEasi508TesterOrUser, RoleEasiGovteam, RoleEasiUser:
+	case RoleEasi508Tester, RoleEasi508User, RoleEasi508TesterOrUser, RoleEasiGovteam, RoleEasiTrbAdmin, RoleEasiUser:
 		return true
 	}
 	return false

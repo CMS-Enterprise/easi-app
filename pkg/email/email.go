@@ -54,6 +54,7 @@ type templates struct {
 	trbRequestTRBLead                          templateCaller
 	trbFormSubmittedAdmin                      templateCaller
 	trbFormSubmittedRequester                  templateCaller
+	trbAttendeeAdded                           templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -240,6 +241,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(trbFormSubmittedRequesterTemplateName)
 	}
 	appTemplates.trbFormSubmittedRequester = trbFormSubmittedRequesterTemplate
+
+	trbAttendeeAddedTemplateName := "trb_attendee_added.gohtml"
+	trbAttendeeAddedTemplate := rawTemplates.Lookup(trbAttendeeAddedTemplateName)
+	if trbAttendeeAddedTemplate == nil {
+		return Client{}, templateError(trbAttendeeAddedTemplateName)
+	}
+	appTemplates.trbAttendeeAdded = trbAttendeeAddedTemplate
 
 	client := Client{
 		config:    config,
