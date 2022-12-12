@@ -1,12 +1,14 @@
 package resolvers
 
 import (
+	"context"
+	"time"
+
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // TestCreateTRBRequest makes a new TRB request
 func (suite *ResolverSuite) TestCreateTRBRequest() {
-
 	//TODO get the context in the test configs
 	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
@@ -20,12 +22,10 @@ func (suite *ResolverSuite) TestCreateTRBRequest() {
 	suite.NotNil(trb.CreatedAt)
 	suite.Nil(trb.ModifiedBy)
 	suite.Nil(trb.ModifiedAt)
-
 }
 
 // TestUpdateTRBRequest updates a TRB request
 func (suite *ResolverSuite) TestUpdateTRBRequest() {
-
 	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trb)
@@ -45,7 +45,6 @@ func (suite *ResolverSuite) TestUpdateTRBRequest() {
 	suite.EqualValues(updated.Archived, false)
 	suite.EqualValues(updated.ModifiedBy, &princ)
 	suite.NotNil(updated.ModifiedAt)
-
 }
 
 // TestGetTRBRequestByID returns a TRB request by it's ID
@@ -57,12 +56,10 @@ func (suite *ResolverSuite) TestGetTRBRequestByID() {
 	ret, err := GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(ret)
-
 }
 
 // TestGetTRBRequests returns all TRB Requests
 func (suite *ResolverSuite) TestGetTRBRequests() {
-
 	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trb)
@@ -94,5 +91,88 @@ func (suite *ResolverSuite) TestGetTRBRequests() {
 	suite.NoError(err)
 	suite.Len(col, 1)
 	suite.EqualValues(trbUpdate, col[0])
+}
 
+// TestUpdateTRBRequestConsultMeetingTime tests the scheduling of consult meeting
+func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	fetchUserInfo := func(ctx context.Context, eua string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			EuaUserID:  eua,
+			CommonName: "Mc Lovin",
+			Email:      "mclovin@example.com",
+		}, nil
+	}
+
+	fetchUserInfos := func(ctx context.Context, euas []string) ([]*models.UserInfo, error) {
+		userInfos := make([]*models.UserInfo, len(euas))
+		for _, eua := range euas {
+			userInfos = append(userInfos, &models.UserInfo{
+				EuaUserID:  eua,
+				CommonName: "Mc Lovin",
+				Email:      "mclovin@example.com",
+			})
+		}
+		return userInfos, nil
+	}
+
+	meetingTime, err := time.Parse(time.RFC3339, "2022-01-01T13:30:00+00:00")
+	s.NoError(err)
+
+	updated, err := UpdateTRBRequestConsultMeetingTime(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		nil,
+		fetchUserInfo,
+		fetchUserInfos,
+		trb.ID,
+		meetingTime,
+		true,
+		[]string{"mclovin@example.com"},
+		"See you then!",
+	)
+
+	s.EqualValues(&meetingTime, updated.ConsultMeetingTime)
+}
+
+// TestUpdateTRBRequestTRBLead tests the scheduling of consult meeting
+func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	fetchUserInfo := func(ctx context.Context, eua string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			EuaUserID:  eua,
+			CommonName: "Mc Lovin",
+			Email:      "mclovin@example.com",
+		}, nil
+	}
+
+	fetchUserInfos := func(ctx context.Context, euas []string) ([]*models.UserInfo, error) {
+		userInfos := make([]*models.UserInfo, len(euas))
+		for _, eua := range euas {
+			userInfos = append(userInfos, &models.UserInfo{
+				EuaUserID:  eua,
+				CommonName: "Mc Lovin",
+				Email:      "mclovin@example.com",
+			})
+		}
+		return userInfos, nil
+	}
+
+	updated, err := UpdateTRBRequestTRBLead(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		nil,
+		fetchUserInfo,
+		fetchUserInfos,
+		trb.ID,
+		"MCLV",
+	)
+
+	s.EqualValues("MCLV", *updated.TRBLead)
 }

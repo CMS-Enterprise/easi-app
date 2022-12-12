@@ -128,9 +128,13 @@ func UpdateTRBRequestConsultMeetingTime(
 		RequesterName:      requesterInfo.CommonName,
 	}
 
-	err = emailClient.SendTRBRequestConsultMeetingEmail(ctx, emailInput)
-	if err != nil {
-		return nil, err
+	// Email client can be nil when this is called from tests - the email client itself tests this
+	// separately in the email package test
+	if emailClient != nil {
+		err = emailClient.SendTRBRequestConsultMeetingEmail(ctx, emailInput)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return updatedTrb, err
@@ -181,9 +185,13 @@ func UpdateTRBRequestTRBLead(
 		RequesterName:  requesterInfo.CommonName,
 	}
 
-	err = emailClient.SendTRBRequestTRBLeadEmail(ctx, emailInput)
-	if err != nil {
-		return nil, err
+	// Email client can be nil when this is called from tests - the email client itself tests this
+	// separately in the email package test
+	if emailClient != nil {
+		err = emailClient.SendTRBRequestTRBLeadEmail(ctx, emailInput)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return updatedTrb, err
