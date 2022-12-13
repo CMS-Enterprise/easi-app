@@ -263,7 +263,7 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                 value="SYSTEM_MAINTAINER"
               />
               <option
-                label="Contracting Officer's Representative (COR)"
+                label="Contracting Officer’s Representative (COR)"
                 value="CONTRACT_OFFICE_RSREPRESENTATIVE"
               />
               <option

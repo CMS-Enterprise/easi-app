@@ -1,41 +1,49 @@
+import i18next from 'i18next';
+
 import { PersonRole } from 'types/graphql-global-types';
 
 const contactRoles = [
   {
     key: PersonRole.PRODUCT_OWNER,
-    label: 'Product Owner'
+    label: i18next.t('technicalAssistance:attendees.contactRoles.productOwner')
   },
   {
     key: PersonRole.SYSTEM_OWNER,
-    label: 'System Owner'
+    label: i18next.t('technicalAssistance:attendees.contactRoles.systemOwner')
   },
   {
     key: PersonRole.SYSTEM_MAINTAINER,
-    label: 'System Maintainer'
+    label: i18next.t(
+      'technicalAssistance:attendees.contactRoles.systemMaintainer'
+    )
   },
   {
     key: PersonRole.CONTRACT_OFFICE_RSREPRESENTATIVE,
-    label: "Contracting Officer's Representative (COR)"
+    label: i18next.t('technicalAssistance:attendees.contactRoles.contractRep')
   },
   {
     key: PersonRole.CLOUD_NAVIGATOR,
-    label: 'Cloud Navigator'
+    label: i18next.t(
+      'technicalAssistance:attendees.contactRoles.cloudNavigator'
+    )
   },
   {
     key: PersonRole.PRIVACY_ADVISOR,
-    label: 'Privacy Advisor'
+    label: i18next.t(
+      'technicalAssistance:attendees.contactRoles.privacyAdvisor'
+    )
   },
   {
     key: PersonRole.CRA,
-    label: 'CRA'
+    label: i18next.t('technicalAssistance:attendees.contactRoles.cra')
   },
   {
     key: PersonRole.OTHER,
-    label: 'Other'
+    label: i18next.t('technicalAssistance:attendees.contactRoles.other')
   },
   {
     key: PersonRole.UNKNOWN,
-    label: 'Unknown'
+    label: i18next.t('technicalAssistance:attendees.contactRoles.unknown')
   }
 ] as const;
 

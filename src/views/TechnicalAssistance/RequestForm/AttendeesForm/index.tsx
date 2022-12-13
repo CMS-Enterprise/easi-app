@@ -18,6 +18,7 @@ import {
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../../Breadcrumbs';
+import { initialAttendee } from '../Attendees';
 import Pager from '../Pager';
 
 import { AttendeeFields } from './components';
@@ -25,6 +26,8 @@ import { AttendeeFields } from './components';
 interface AttendeesFormProps {
   backToFormUrl?: string;
   activeAttendee: TRBAttendeeData;
+  /** Set active attendee - used to edit attendee */
+  setActiveAttendee: (activeAttendee: TRBAttendeeData) => void;
   trbRequestId: string;
   setFormAlert: React.Dispatch<
     React.SetStateAction<{ type: 'success' | 'error'; message: string } | false>
@@ -35,6 +38,7 @@ interface AttendeesFormProps {
 function AttendeesForm({
   backToFormUrl,
   activeAttendee,
+  setActiveAttendee,
   trbRequestId,
   setFormAlert,
   taskListUrl
@@ -75,7 +79,7 @@ function AttendeesForm({
     setError,
     clearErrors,
     watch,
-    formState: { errors, isSubmitting, isDirty }
+    formState: { errors, isSubmitting }
   } = useForm<TRBAttendeeFields>({
     resolver: yupResolver(trbAttendeeSchema),
     defaultValues
@@ -133,38 +137,45 @@ function AttendeesForm({
   if (backToFormUrl) {
     /** Submit additional attendee fields and return to main attendees form */
     const submitForm = (formData: TRBAttendeeFields) => {
-      if (isDirty) {
-        // If euaUserId is not unique, set field error
-        if (!euaUserIdIsUnique(formData.euaUserId)) {
-          setError('euaUserId', {
-            message: 'Attendee has already been added'
-          });
-        } else {
-          // Submit attendee fields
-          submitAttendee(formData)
-            .then(() => {
-              // Clear errors
-              clearErrors('euaUserId');
-              //
+      // If euaUserId is not unique, set field error
+      if (!euaUserIdIsUnique(formData.euaUserId)) {
+        setError('euaUserId', {
+          message: 'Attendee has already been added'
+        });
+      } else {
+        // Submit attendee fields
+        submitAttendee(formData)
+          .then(() => {
+            // Clear errors
+            clearErrors('euaUserId');
+
+            // Set active attendee to initial
+            setActiveAttendee({ ...initialAttendee, trbRequestId });
+
+            setFormAlert({
+              type: 'success',
+              message: t<string>(
+                `${
+                  activeAttendee.id
+                    ? 'attendees.alerts.successEdit'
+                    : 'attendees.alerts.success'
+                }`
+              )
+            });
+            // Return to attendees form
+            history.push(backToFormUrl);
+          })
+          .catch(err => {
+            if (err instanceof ApolloError) {
+              // Set form error
               setFormAlert({
-                type: 'success',
-                message: t<string>('attendees.alerts.success')
+                type: 'error',
+                message: t<string>('attendees.alerts.error')
               });
               // Return to attendees form
               history.push(backToFormUrl);
-            })
-            .catch(err => {
-              if (err instanceof ApolloError) {
-                // Set form error
-                setFormAlert({
-                  type: 'error',
-                  message: t<string>('attendees.alerts.error')
-                });
-                // Return to attendees form
-                history.push(backToFormUrl);
-              }
-            });
-        }
+            }
+          });
       }
     };
 
@@ -219,7 +230,10 @@ function AttendeesForm({
             }}
             back={{
               text: t('Cancel'),
-              onClick: () => history.push(backToFormUrl),
+              onClick: () => {
+                setActiveAttendee({ ...initialAttendee, trbRequestId });
+                history.push(backToFormUrl);
+              },
               disabled: isSubmitting
             }}
             className="border-top-0"
@@ -227,7 +241,12 @@ function AttendeesForm({
             taskListUrl={taskListUrl}
           />
           <div className="margin-top-2">
-            <UswdsReactLink to={backToFormUrl}>
+            <UswdsReactLink
+              to={backToFormUrl}
+              onClick={() =>
+                setActiveAttendee({ ...initialAttendee, trbRequestId })
+              }
+            >
               <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
               {t(
                 activeAttendee.id

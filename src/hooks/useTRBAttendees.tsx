@@ -54,7 +54,6 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
    * Query to get attendees by TRB request ID
    */
   const { data, loading } = useQuery<RequestResult>(GetTRBRequestAttendees, {
-    fetchPolicy: 'cache-first',
     variables: { id: trbRequestId }
   });
 

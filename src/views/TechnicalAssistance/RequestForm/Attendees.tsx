@@ -150,14 +150,14 @@ function Attendees({
               // to update things like `stepsCompleted`
               .then(() => refetchRequest())
               .catch(() => {
-                throw new Error('Error saving attendee');
+                throw new Error(t<string>('attendees.alerts.error'));
               });
           }
         },
         // Validation did not pass
         () => {
           // Need to throw from this error handler so that the promise is rejected
-          throw new Error('invalid attendees form');
+          throw new Error(t<string>('attendees.alerts.invalidForm'));
         }
       )()
         // Wait for submit to finish before continuing.
@@ -194,6 +194,7 @@ function Attendees({
           <AttendeesForm
             backToFormUrl={stepUrl.current}
             activeAttendee={activeAttendee}
+            setActiveAttendee={setActiveAttendee}
             trbRequestId={request.id}
             setFormAlert={setFormAlert}
             taskListUrl={taskListUrl}

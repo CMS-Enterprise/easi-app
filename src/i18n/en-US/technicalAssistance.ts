@@ -425,8 +425,10 @@ const technicalAssistance = {
       'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at <1>cms-rb@cms.hhs.gov</1>.',
     alerts: {
       success: 'Your attendee has been added',
+      successEdit: 'Your attendee has been edited',
       error:
-        'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.'
+        'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.',
+      invalidForm: 'Invalid attendees form'
     },
     fieldLabels: {
       requester: {
@@ -448,6 +450,17 @@ const technicalAssistance = {
           submit: 'Save'
         }
       }
+    },
+    contactRoles: {
+      productOwner: 'Product Owner',
+      systemOwner: 'System Owner',
+      systemMaintainer: 'System Maintainer',
+      contractRep: 'Contracting Officer’s Representative (COR)',
+      cloudNavigator: 'Cloud Navigator',
+      privacyAdvisor: 'Privacy Advisor',
+      cra: 'CRA',
+      other: 'Other',
+      unknown: 'Unknown'
     }
   },
   documents: {
