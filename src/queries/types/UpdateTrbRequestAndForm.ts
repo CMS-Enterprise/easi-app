@@ -3,13 +3,18 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption } from "./../../types/graphql-global-types";
+import { UpdateTRBRequestFormInput, TRBRequestChanges, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL query operation: GetTrbRequest
+// GraphQL mutation operation: UpdateTrbRequestAndForm
 // ====================================================
 
-export interface GetTrbRequest_trbRequest_form {
+export interface UpdateTrbRequestAndForm_updateTRBRequestForm {
+  __typename: "TRBRequestForm";
+  id: UUID;
+}
+
+export interface UpdateTrbRequestAndForm_updateTRBRequest_form {
   __typename: "TRBRequestForm";
   id: UUID;
   component: string | null;
@@ -45,18 +50,21 @@ export interface GetTrbRequest_trbRequest_form {
   subjectAreaOtherTechnicalTopicsOther: string | null;
 }
 
-export interface GetTrbRequest_trbRequest {
+export interface UpdateTrbRequestAndForm_updateTRBRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
   createdBy: string;
-  form: GetTrbRequest_trbRequest_form;
+  form: UpdateTrbRequestAndForm_updateTRBRequest_form;
 }
 
-export interface GetTrbRequest {
-  trbRequest: GetTrbRequest_trbRequest;
+export interface UpdateTrbRequestAndForm {
+  updateTRBRequestForm: UpdateTrbRequestAndForm_updateTRBRequestForm;
+  updateTRBRequest: UpdateTrbRequestAndForm_updateTRBRequest;
 }
 
-export interface GetTrbRequestVariables {
+export interface UpdateTrbRequestAndFormVariables {
+  input: UpdateTRBRequestFormInput;
   id: UUID;
+  changes?: TRBRequestChanges | null;
 }

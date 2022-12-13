@@ -9,7 +9,6 @@ import {
   IconArrowBack
 } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
-import * as yup from 'yup';
 
 import PageLoading from 'components/PageLoading';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -68,25 +67,13 @@ export interface FormStepComponentProps {
 
 /**
  * Form view components with step url slugs for each form request step.
- * `inputSchema` and `blankValues` are used to determine `stepsCompleted`.
  */
-// Temporary optional defs for inputSchema and blankValues used until dev is finished with all steps
 export const formStepComponents: {
   component: (props: FormStepComponentProps) => JSX.Element;
   step: string;
-  inputSchema?: yup.SchemaOf<any>;
-  blankValues?: any;
 }[] = [
-  {
-    component: Basic,
-    step: 'basic',
-    inputSchema: inputBasicSchema,
-    blankValues: basicBlankValues
-  },
-  {
-    component: SubjectAreas,
-    step: 'subject'
-  },
+  { component: Basic, step: 'basic' },
+  { component: SubjectAreas, step: 'subject' },
   { component: Attendees, step: 'attendees' },
   { component: Documents, step: 'documents' },
   { component: Check, step: 'check' }
@@ -153,16 +140,21 @@ function Header({
           </>
         ),
         description: stp.description,
+        completed: idx < step - 1,
 
-        // Handle links to available steps determined by completed steps
-        // Indexing of the step text matches `stepsCompleted`
-        completed: idx < stepsCompleted.length,
+        // Basic details is the only step with required form fields
+        // Prevent links to other steps until basic is complete
         onClick:
-          request && !isStepSubmitting && idx <= stepsCompleted.length
-            ? e => {
-                history.push(
-                  `/trb/requests/${request.id}/${formStepSlugs[idx]}`
-                );
+          request &&
+          !isStepSubmitting &&
+          idx !== step - 1 && // not the current step
+          stepsCompleted.includes('basic')
+            ? () => {
+                stepSubmit?.(() => {
+                  history.push(
+                    `/trb/requests/${request.id}/${formStepSlugs[idx]}`
+                  );
+                });
               }
             : undefined
       }))}
@@ -239,33 +231,24 @@ function RequestForm() {
     (async () => {
       const completed = [...stepsCompleted];
 
-      // Validate steps sequentially
-      // eslint-disable-next-line no-restricted-syntax
-      for (const stp of formStepComponents) {
-        if (
-          // Skip already validated
-          !completed.includes(stp.step) &&
-          // Temp check for blankValues and inputSchema
-          // Remove when these props are available for all steps
-          stp.blankValues &&
-          stp.inputSchema
-        ) {
-          try {
-            // eslint-disable-next-line no-await-in-loop
-            await stp.inputSchema.validate(
-              nullFillObject(request.form, stp.blankValues),
-              {
-                strict: true
-              }
-            );
-          } catch (err) {
-            break;
-          }
-          completed.push(stp.step);
-        }
-      }
+      // Only the Basic Details step needs a completed form
+      // The rest have all optional fields and can be skipped
+      const stp = 'basic';
 
-      if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+      // Skip if already validated
+      if (!completed.includes(stp)) {
+        inputBasicSchema
+          .isValid(nullFillObject(request.form, basicBlankValues), {
+            strict: true
+          })
+          .then(valid => {
+            if (valid) {
+              completed.push(stp);
+              if (!isEqual(completed, stepsCompleted))
+                setStepsCompleted(completed);
+            }
+          });
+      }
     })();
   }, [request, stepsCompleted]);
 

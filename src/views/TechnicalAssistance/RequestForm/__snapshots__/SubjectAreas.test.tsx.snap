@@ -1,0 +1,774 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Trb Request form: Subject areas submits the form successfully after a failed attempt 1`] = `
+<DocumentFragment>
+  <form
+    class="usa-form trb-form-subject maxw-full"
+    data-testid="form"
+  >
+    <div
+      class="grid-row margin-top-2"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="subjectAreaTechnicalReferenceArchitecture"
+          >
+            Technical Reference Architecture (TRA)
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Select any topics relevant to your request that are related to CMS’s Technical Reference Architecture or its foundational principles.
+              </div>
+            </span>
+          </label>
+          <div>
+            <div
+              class="easi-multiselect usa-combo-box css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-2-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-jvusj8-control"
+              >
+                <div
+                  class=" css-319lph-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-2-placeholder"
+                  >
+                    0 selected
+                  </div>
+                  <div
+                    class=" css-6j8wv5-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-2-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="subjectAreaTechnicalReferenceArchitecture"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <span
+                    class=" css-1vtyy7d-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class=" css-1232v1p-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input
+                  name="subjectAreaTechnicalReferenceArchitecture"
+                  type="hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="subjectAreaNetworkAndSecurity"
+          >
+            Network and security
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Select any network and security topics relevant to your request.
+              </div>
+            </span>
+          </label>
+          <div>
+            <div
+              class="easi-multiselect usa-combo-box css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-3-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-jvusj8-control"
+              >
+                <div
+                  class=" css-319lph-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-3-placeholder"
+                  >
+                    0 selected
+                  </div>
+                  <div
+                    class=" css-6j8wv5-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-3-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="subjectAreaNetworkAndSecurity"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <span
+                    class=" css-1vtyy7d-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class=" css-1232v1p-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input
+                  name="subjectAreaNetworkAndSecurity"
+                  type="hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="subjectAreaCloudAndInfrastructure"
+          >
+            Cloud and infrastructure
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Select any cloud and infrastructure topics relevant to your request.
+              </div>
+            </span>
+          </label>
+          <div>
+            <div
+              class="easi-multiselect usa-combo-box css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-4-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-jvusj8-control"
+              >
+                <div
+                  class=" css-319lph-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-4-placeholder"
+                  >
+                    0 selected
+                  </div>
+                  <div
+                    class=" css-6j8wv5-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-4-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="subjectAreaCloudAndInfrastructure"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <span
+                    class=" css-1vtyy7d-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class=" css-1232v1p-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input
+                  name="subjectAreaCloudAndInfrastructure"
+                  type="hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="subjectAreaApplicationDevelopment"
+          >
+            Application development
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Select application development topics relevant to your request.
+              </div>
+            </span>
+          </label>
+          <div>
+            <div
+              class="easi-multiselect usa-combo-box css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-5-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-jvusj8-control"
+              >
+                <div
+                  class=" css-319lph-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-5-placeholder"
+                  >
+                    0 selected
+                  </div>
+                  <div
+                    class=" css-6j8wv5-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-5-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="subjectAreaApplicationDevelopment"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <span
+                    class=" css-1vtyy7d-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class=" css-1232v1p-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input
+                  name="subjectAreaApplicationDevelopment"
+                  type="hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="subjectAreaDataAndDataManagement"
+          >
+            Data and data management
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Select any specific data topics relevant to your request.
+              </div>
+            </span>
+          </label>
+          <div>
+            <div
+              class="easi-multiselect usa-combo-box css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-6-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-jvusj8-control"
+              >
+                <div
+                  class=" css-319lph-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-6-placeholder"
+                  >
+                    0 selected
+                  </div>
+                  <div
+                    class=" css-6j8wv5-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-6-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="subjectAreaDataAndDataManagement"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <span
+                    class=" css-1vtyy7d-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class=" css-1232v1p-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input
+                  name="subjectAreaDataAndDataManagement"
+                  type="hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="subjectAreaGovernmentProcessesAndPolicies"
+          >
+            CMS Governance processes and policies
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Select any specific CMS processes and policies that you would like to discuss as a part of your request.
+              </div>
+            </span>
+          </label>
+          <div>
+            <div
+              class="easi-multiselect usa-combo-box css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-7-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-jvusj8-control"
+              >
+                <div
+                  class=" css-319lph-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-7-placeholder"
+                  >
+                    0 selected
+                  </div>
+                  <div
+                    class=" css-6j8wv5-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-7-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="subjectAreaGovernmentProcessesAndPolicies"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <span
+                    class=" css-1vtyy7d-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class=" css-1232v1p-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input
+                  name="subjectAreaGovernmentProcessesAndPolicies"
+                  type="hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="usa-form-group"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label"
+            data-testid="label"
+            for="subjectAreaOtherTechnicalTopics"
+          >
+            Other technical topics
+            <span
+              class="usa-hint"
+            >
+              <div>
+                Select any additional topics related to your request.
+              </div>
+            </span>
+          </label>
+          <div>
+            <div
+              class="easi-multiselect usa-combo-box css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-8-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-jvusj8-control"
+              >
+                <div
+                  class=" css-319lph-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-8-placeholder"
+                  >
+                    0 selected
+                  </div>
+                  <div
+                    class=" css-6j8wv5-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-8-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="subjectAreaOtherTechnicalTopics"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <span
+                    class=" css-1vtyy7d-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class=" css-1232v1p-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input
+                  name="subjectAreaOtherTechnicalTopics"
+                  type="hidden"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-base-light border-top-1px margin-top-5"
+    >
+      <div
+        class="margin-top-2"
+      >
+        <button
+          class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+          data-testid="button"
+          type="button"
+        >
+          Back
+        </button>
+        <button
+          class="usa-button usa-button--outline margin-top-0"
+          data-testid="button"
+          type="submit"
+        >
+          Continue without selecting subject areas
+        </button>
+      </div>
+      <button
+        class="usa-button usa-button--unstyled margin-top-2"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Save and exit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;

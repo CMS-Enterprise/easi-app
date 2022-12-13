@@ -53,10 +53,8 @@ describe('Technical Assistance', () => {
       .as('subjectStepHeader')
       .should('be.visible');
 
-    // TODO: Subject area tests
-
     // Successful submit
-    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Continue without selecting subject areas').click();
 
     /** Attendees */
 
@@ -96,10 +94,8 @@ describe('Technical Assistance', () => {
       .as('subjectStepHeader')
       .should('be.visible');
 
-    // TODO: Subject area tests
-
     // Successful submit
-    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Continue without selecting subject areas').click();
 
     // Proceeded to attendees
     cy.contains('.usa-step-indicator__heading-text', 'Attendees')
@@ -112,7 +108,7 @@ describe('Technical Assistance', () => {
       .should('be.disabled');
 
     // Submit without filling in fields to test field errors
-    cy.contains('button', 'Continue without adding attendees').click();
+    cy.contains('button', 'Continue without adding attendees').click().click();
 
     // Check for requester error messages
     cy.contains('button', 'Requester component is a required field').as(
@@ -273,5 +269,43 @@ describe('Technical Assistance', () => {
       'Subject areas'
     ).click();
     cy.get('@subjectStepHeader').should('be.visible');
+
+    cy.url().as('subjectStepUrl');
+
+    // Check the initial submit button state of the empty Subject areas form
+    cy.contains('Continue without selecting subject areas').should(
+      'be.visible'
+    );
+
+    // Select some options including "other" which will toggle on an additional text field
+    cy.get('#subjectAreaTechnicalReferenceArchitecture').click();
+    cy.get('[value="GENERAL_TRA_INFORMATION"]').check({ force: true });
+    cy.get('[value="OTHER"]').check({
+      force: true
+    });
+    cy.get('#subjectAreaTechnicalReferenceArchitecture').focused().blur();
+
+    // Attempt to save with an error from the empty "other" input
+    cy.contains('button', 'Save and exit').as('saveExit').click();
+    cy.contains(
+      '.usa-alert__heading',
+      'Please check and fix the following'
+    ).should('exist');
+    cy.contains(
+      '.usa-error-message',
+      'Technical Reference Architecture (TRA): Please specify'
+    ).should('be.visible');
+
+    // Fix the field error
+    cy.get('[name=subjectAreaTechnicalReferenceArchitectureOther').type(
+      'testing'
+    );
+    // Save and return to task list
+    cy.get('@saveExit').click();
+
+    // Go back to the subject step and check input values
+    cy.get('@subjectStepUrl').then(url => cy.visit(url));
+    cy.contains('.usa-tag', 'General TRA information').should('be.visible');
+    cy.contains('.usa-tag', 'Other').should('be.visible');
   });
 });
