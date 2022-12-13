@@ -4,7 +4,7 @@ import TrbRequestFormFieldsFragment from './TrbRequestFormFieldsFragment';
 
 export default gql`
   ${TrbRequestFormFieldsFragment}
-  mutation UpdateTrbRequestForm(
+  mutation UpdateTrbRequestAndForm(
     $input: UpdateTRBRequestFormInput!
     $id: UUID!
     $changes: TRBRequestChanges

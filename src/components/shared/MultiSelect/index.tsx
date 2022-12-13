@@ -72,8 +72,15 @@ const MultiSelectTag = ({
   );
 };
 
+/**
+ * EASi Multiselect.
+ * Uses `react-select/Select` and `@trussworks/react-uswds/Tag`.
+ *
+ * https://www.figma.com/file/5y4EbRmFUB7xRBKUG4qlup/USWDS-Library?node-id=869%3A7346&t=WrUjXtNxIxMgpPss-0
+ */
 const MultiSelect = ({
   id,
+  inputId,
   name,
   selectedLabel,
   options,
@@ -81,7 +88,8 @@ const MultiSelect = ({
   initialValues,
   className
 }: {
-  id: string;
+  id?: string;
+  inputId?: string;
   name: string;
   selectedLabel?: string;
   options: MultiSelectOptionProps[];
@@ -155,6 +163,7 @@ const MultiSelect = ({
     <div>
       <Select
         id={id}
+        inputId={inputId}
         name={name}
         className={classNames('easi-multiselect usa-combo-box', className)}
         options={options}
