@@ -135,6 +135,7 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 		"See you then!",
 	)
 
+	s.NoError(err)
 	s.True((*updated.ConsultMeetingTime).Equal(meetingTime))
 }
 
@@ -174,5 +175,6 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 		"MCLV",
 	)
 
+	s.NoError(err)
 	s.EqualValues("MCLV", *updated.TRBLead)
 }
