@@ -9,9 +9,9 @@ import configureMockStore from 'redux-mock-store';
 
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
-import { CreateTrbRequest_createTRBRequest as TRBRequest } from 'queries/types/CreateTrbRequest';
 import {
   GetTrbRequest,
+  GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
 import { PersonRole } from 'types/graphql-global-types';
@@ -19,7 +19,7 @@ import { PersonRole } from 'types/graphql-global-types';
 import Attendees from './Attendees';
 
 describe('Trb Request form: Attendees', () => {
-  const trbRequest = {
+  const trbRequest: TrbRequest = {
     id: '441cb9e0-2cb3-43ca-b168-9d6a2a13ec91',
     name: 'Draft',
     createdBy: 'SF13',
@@ -42,6 +42,20 @@ describe('Trb Request form: Attendees', () => {
       collabDateGovernanceReviewBoard: null,
       collabDateOther: null,
       collabGroupOther: null,
+      subjectAreaTechnicalReferenceArchitecture: [],
+      subjectAreaNetworkAndSecurity: [],
+      subjectAreaCloudAndInfrastructure: [],
+      subjectAreaApplicationDevelopment: [],
+      subjectAreaDataAndDataManagement: [],
+      subjectAreaGovernmentProcessesAndPolicies: [],
+      subjectAreaOtherTechnicalTopics: [],
+      subjectAreaTechnicalReferenceArchitectureOther: null,
+      subjectAreaNetworkAndSecurityOther: null,
+      subjectAreaCloudAndInfrastructureOther: null,
+      subjectAreaApplicationDevelopmentOther: null,
+      subjectAreaDataAndDataManagementOther: null,
+      subjectAreaGovernmentProcessesAndPoliciesOther: null,
+      subjectAreaOtherTechnicalTopicsOther: null,
       __typename: 'TRBRequestForm'
     },
     __typename: 'TRBRequest'
@@ -113,7 +127,7 @@ describe('Trb Request form: Attendees', () => {
       loading: false,
       networkStatus: NetworkStatus.ready,
       data: {
-        trbRequest: trbRequest as TRBRequest
+        trbRequest
       }
     };
   };
@@ -160,7 +174,7 @@ describe('Trb Request form: Attendees', () => {
         >
           <Provider store={store}>
             <Attendees
-              request={trbRequest as TRBRequest}
+              request={trbRequest}
               stepUrl={{
                 current: `/trb/requests/${trbRequest.id}/attendees`,
                 next: `/trb/requests/${trbRequest.id}/documents`,
