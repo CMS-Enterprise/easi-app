@@ -3,9 +3,11 @@ package email
 import (
 	"context"
 	"fmt"
+	"path"
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/google/uuid"
 )
 
 func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
@@ -15,6 +17,9 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 	meetingTime, err := time.Parse(time.RFC3339, "2022-01-01T13:30:00+00:00")
 	s.NoError(err)
 
+	trbId := uuid.New()
+	trbLink := path.Join("trb", "task-list", trbId.String())
+
 	input := SendTRBRequestConsultMeetingEmailInput{
 		TRBRequestName:     "Test TRB Request",
 		ConsultMeetingTime: meetingTime,
@@ -22,6 +27,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 		NotifyEmails:       []models.EmailAddress{"McLovin@example.com", "Jane@example.com"},
 		Notes:              "Some notes",
 		RequesterName:      "Mc Lovin",
+		TRBRequestID:       trbId,
 	}
 
 	s.Run("successful call has the right content", func() {
@@ -43,7 +49,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 <li>If a calendar invite has not already been sent, the TRB lead will send one with a remote video conferencing meeting link.</li>
 </ul>
 
-<p><a href="mailto:` + s.config.TRBEmail.String() + `" style="font-weight: bold">View the request in EASi</a></p>
+<p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
 
 <p>If you have questions or need to request a reschedule, please email the TRB at ` + s.config.TRBEmail.String() + `.</p>
 
