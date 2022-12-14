@@ -3,18 +3,24 @@ package email
 import (
 	"context"
 	"fmt"
+	"path"
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/google/uuid"
 )
 
 func (s *EmailTestSuite) TestTRBRequestTRBLeadEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
 
+	trbId := uuid.New()
+	trbLink := path.Join("trb", "task-list", trbId.String())
+
 	input := SendTRBRequestTRBLeadEmailInput{
 		TRBRequestName: "Test TRB Request",
 		RequesterName:  "Mc Lovin",
 		TRBLeadName:    "Gary Jones",
+		TRBRequestID:   trbId,
 	}
 
 	s.Run("successful call has the right content", func() {
@@ -26,7 +32,7 @@ func (s *EmailTestSuite) TestTRBRequestTRBLeadEmail() {
 
 <p>Gary Jones is assigned to Test TRB Request as the TRB Lead.</p>
 
-<p><a href="mailto:` + s.config.TRBEmail.String() + `" style="font-weight: bold">View the request in EASi</a></p>
+<p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
 
 <p>Next steps:</p>
 <ul>

@@ -53,6 +53,8 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 
 <p>If you have questions or need to request a reschedule, please email the TRB at ` + s.config.TRBEmail.String() + `.</p>
 
+<hr>
+
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
 `
 		fmt.Println(sender.body)

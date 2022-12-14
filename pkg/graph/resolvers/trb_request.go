@@ -120,6 +120,7 @@ func UpdateTRBRequestConsultMeetingTime(
 	}
 
 	emailInput := email.SendTRBRequestConsultMeetingEmailInput{
+		TRBRequestID:       trb.ID,
 		TRBRequestName:     trb.Name,
 		ConsultMeetingTime: meetingTime,
 		CopyTRBMailbox:     copyTRBMailbox,
@@ -180,6 +181,7 @@ func UpdateTRBRequestTRBLead(
 	}
 
 	emailInput := email.SendTRBRequestTRBLeadEmailInput{
+		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.Name,
 		TRBLeadName:    leadInfo.CommonName,
 		RequesterName:  requesterInfo.CommonName,
