@@ -24,10 +24,10 @@ import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivi
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import {
-  UpdateTrbRequestForm,
-  UpdateTrbRequestFormVariables
-} from 'queries/types/UpdateTrbRequestForm';
-import UpdateTrbRequestFormQuery from 'queries/UpdateTrbRequestFormQuery';
+  UpdateTrbRequestAndForm,
+  UpdateTrbRequestAndFormVariables
+} from 'queries/types/UpdateTrbRequestAndForm';
+import UpdateTrbRequestAndFormQuery from 'queries/UpdateTrbRequestAndFormQuery';
 import { TRBCollabGroupOption } from 'types/graphql-global-types';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
@@ -68,9 +68,9 @@ function Basic({
   const { t } = useTranslation('technicalAssistance');
 
   const [updateForm] = useMutation<
-    UpdateTrbRequestForm,
-    UpdateTrbRequestFormVariables
-  >(UpdateTrbRequestFormQuery);
+    UpdateTrbRequestAndForm,
+    UpdateTrbRequestAndFormVariables
+  >(UpdateTrbRequestAndFormQuery);
 
   const initialValues = nullFillObject(request.form, basicBlankValues);
 

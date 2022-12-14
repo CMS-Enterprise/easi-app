@@ -25,6 +25,21 @@ export default gql`
       collabDateGovernanceReviewBoard
       collabDateOther
       collabGroupOther
+
+      subjectAreaTechnicalReferenceArchitecture
+      subjectAreaNetworkAndSecurity
+      subjectAreaCloudAndInfrastructure
+      subjectAreaApplicationDevelopment
+      subjectAreaDataAndDataManagement
+      subjectAreaGovernmentProcessesAndPolicies
+      subjectAreaOtherTechnicalTopics
+      subjectAreaTechnicalReferenceArchitectureOther
+      subjectAreaNetworkAndSecurityOther
+      subjectAreaCloudAndInfrastructureOther
+      subjectAreaApplicationDevelopmentOther
+      subjectAreaDataAndDataManagementOther
+      subjectAreaGovernmentProcessesAndPoliciesOther
+      subjectAreaOtherTechnicalTopicsOther
     }
   }
 `;

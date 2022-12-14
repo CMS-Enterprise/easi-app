@@ -719,6 +719,13 @@ export interface UpdateTRBRequestFormInput {
   subjectAreaDataAndDataManagement?: TRBDataAndDataManagementOption[] | null;
   subjectAreaGovernmentProcessesAndPolicies?: TRBGovernmentProcessesAndPoliciesOption[] | null;
   subjectAreaOtherTechnicalTopics?: TRBOtherTechnicalTopicsOption[] | null;
+  subjectAreaTechnicalReferenceArchitectureOther?: string | null;
+  subjectAreaNetworkAndSecurityOther?: string | null;
+  subjectAreaCloudAndInfrastructureOther?: string | null;
+  subjectAreaApplicationDevelopmentOther?: string | null;
+  subjectAreaDataAndDataManagementOther?: string | null;
+  subjectAreaGovernmentProcessesAndPoliciesOther?: string | null;
+  subjectAreaOtherTechnicalTopicsOther?: string | null;
 }
 
 /**

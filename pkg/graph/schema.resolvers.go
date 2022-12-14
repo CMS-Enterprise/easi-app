@@ -1891,12 +1891,18 @@ func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, c
 
 // CreateTRBRequestAttendee is the resolver for the createTRBRequestAttendee field.
 func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input model.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
-	return resolvers.CreateTRBRequestAttendee(ctx, r.store, &models.TRBRequestAttendee{
-		TRBRequestID: input.TrbRequestID,
-		EUAUserID:    input.EuaUserID,
-		Component:    input.Component,
-		Role:         models.PersonRole(input.Role),
-	})
+	return resolvers.CreateTRBRequestAttendee(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		&models.TRBRequestAttendee{
+			TRBRequestID: input.TrbRequestID,
+			EUAUserID:    input.EuaUserID,
+			Component:    input.Component,
+			Role:         models.PersonRole(input.Role),
+		},
+	)
 }
 
 // UpdateTRBRequestAttendee is the resolver for the updateTRBRequestAttendee field.
