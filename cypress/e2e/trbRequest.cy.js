@@ -111,9 +111,9 @@ describe('Technical Assistance', () => {
     cy.contains('button', 'Continue without adding attendees').click().click();
 
     // Check for requester error messages
-    cy.contains('button', 'Requester component is a required field').as(
-      'componentError'
-    );
+    cy.contains('button', 'Requester component is a required field', {
+      timeout: 6000
+    }).as('componentError');
     cy.contains('button', 'Requester role is a required field').as('roleError');
 
     // Fill required attendee fields
