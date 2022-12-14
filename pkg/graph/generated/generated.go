@@ -7564,7 +7564,7 @@ enum TRBConsultPrepStatus {
 }
 
 """
-Represents the status of the TRB consult step
+Represents the status of the TRB consult attendance step
 """
 enum TRBAttendConsultStatus {
   CANNOT_START_YET
