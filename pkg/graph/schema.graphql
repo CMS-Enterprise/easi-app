@@ -1837,6 +1837,13 @@ type TRBRequestForm {
   subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
   subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
+  subjectAreaTechnicalReferenceArchitectureOther: String
+  subjectAreaNetworkAndSecurityOther: String
+  subjectAreaCloudAndInfrastructureOther: String
+  subjectAreaApplicationDevelopmentOther: String
+  subjectAreaDataAndDataManagementOther: String
+  subjectAreaGovernmentProcessesAndPoliciesOther: String
+  subjectAreaOtherTechnicalTopicsOther: String
 
   createdBy: String!
   createdAt: Time!
@@ -1874,6 +1881,13 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
   subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
+  subjectAreaTechnicalReferenceArchitectureOther: String
+  subjectAreaNetworkAndSecurityOther: String
+  subjectAreaCloudAndInfrastructureOther: String
+  subjectAreaApplicationDevelopmentOther: String
+  subjectAreaDataAndDataManagementOther: String
+  subjectAreaGovernmentProcessesAndPoliciesOther: String
+  subjectAreaOtherTechnicalTopicsOther: String
 }
 
 """
@@ -2028,6 +2042,7 @@ type Mutation {
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
+    @hasRole(role: EASI_TRB_ADMIN)
 }
 
 """
@@ -2125,6 +2140,11 @@ enum Role {
   A member of the GRT
   """
   EASI_GOVTEAM
+
+  """
+  An admin on the TRB
+  """
+  EASI_TRB_ADMIN
 
   """
   A generic EASi user

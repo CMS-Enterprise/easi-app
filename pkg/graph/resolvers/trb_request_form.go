@@ -13,6 +13,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
+const missingComponentFallbackText = "an unspecified component"
+
 // UpdateTRBRequestForm updates a TRBRequestForm record in the database
 func UpdateTRBRequestForm(
 	ctx context.Context,
@@ -101,12 +103,17 @@ func UpdateTRBRequestForm(
 	if willSendNotifications {
 		emailErrGroup := new(errgroup.Group)
 
+		componentText := missingComponentFallbackText
+		if updatedForm.Component != nil {
+			componentText = *updatedForm.Component
+		}
+
 		emailErrGroup.Go(func() error {
 			return emailClient.SendTRBFormSubmissionNotificationToAdmins(
 				ctx,
 				request.Name,
 				requesterInfo.CommonName,
-				*updatedForm.Component,
+				componentText,
 			)
 		})
 

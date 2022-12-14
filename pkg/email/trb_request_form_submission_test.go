@@ -125,6 +125,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 			"The TRB will review it and get back to you within two business days with feedback about your request. They will then work with you to schedule a time for your TRB consult session.</p>\n\n" +
 			requesterViewOpeningTag + "View your request in EASi</a>\n\n" +
 			"<p>If you have questions, please contact the Technical Review Board (TRB) at " + mailToTRBInboxElement + ".</p>\n\n" +
+			"<hr>\n\n" +
 			"<p>You will continue to receive email notifications about your request until it is closed.</p>\n"
 
 		err = client.SendTRBFormSubmissionNotificationToRequester(ctx, requestID, requestName, requesterEmail, requesterName)
