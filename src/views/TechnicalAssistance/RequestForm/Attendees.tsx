@@ -234,6 +234,9 @@ function Attendees({
                 to={`${url}/list`}
                 // Save requester when navigating to additional attendees form
                 onClick={() => {
+                  // Clear out alert from previous action
+                  setFormAlert(false);
+
                   // Check that all requester fields are filled out
                   // This submission should not throw errors if missing fields
                   if (
