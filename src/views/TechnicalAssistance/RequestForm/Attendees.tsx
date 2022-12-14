@@ -276,7 +276,8 @@ function Attendees({
                   attendees.length > 0
                     ? 'Next'
                     : 'attendees.continueWithoutAdding'
-                )
+                ),
+                outline: attendees.length === 0
               }}
               back={{
                 disabled: isSubmitting,
