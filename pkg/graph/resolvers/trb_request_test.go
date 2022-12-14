@@ -153,24 +153,11 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 		}, nil
 	}
 
-	fetchUserInfos := func(ctx context.Context, euas []string) ([]*models.UserInfo, error) {
-		userInfos := make([]*models.UserInfo, len(euas))
-		for _, eua := range euas {
-			userInfos = append(userInfos, &models.UserInfo{
-				EuaUserID:  eua,
-				CommonName: "Mc Lovin",
-				Email:      "mclovin@example.com",
-			})
-		}
-		return userInfos, nil
-	}
-
 	updated, err := UpdateTRBRequestTRBLead(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
 		nil,
 		fetchUserInfo,
-		fetchUserInfos,
 		trb.ID,
 		"MCLV",
 	)

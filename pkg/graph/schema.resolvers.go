@@ -2001,7 +2001,6 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 		r.store,
 		r.emailClient,
 		r.service.FetchUserInfo,
-		r.service.FetchUserInfos,
 		input.TrbRequestID,
 		input.TrbLead,
 	)

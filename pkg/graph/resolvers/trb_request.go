@@ -149,7 +149,6 @@ func UpdateTRBRequestTRBLead(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 	id uuid.UUID,
 	trbLead string,
 ) (*models.TRBRequest, error) {
