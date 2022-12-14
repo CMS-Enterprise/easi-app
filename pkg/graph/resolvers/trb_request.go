@@ -85,14 +85,16 @@ func UpdateTRBRequestConsultMeetingTime(
 	notifyEUAIDs []string,
 	notes string,
 ) (*models.TRBRequest, error) {
-	notifyInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
-	if err != nil {
-		return nil, err
-	}
 	notifyEmails := []models.EmailAddress{}
-	for _, info := range notifyInfos {
-		if info != nil {
-			notifyEmails = append(notifyEmails, models.NewEmailAddress(info.Email.String()))
+	if len(notifyEUAIDs) > 0 {
+		notifyInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
+		if err != nil {
+			return nil, err
+		}
+		for _, info := range notifyInfos {
+			if info != nil {
+				notifyEmails = append(notifyEmails, models.NewEmailAddress(info.Email.String()))
+			}
 		}
 	}
 
