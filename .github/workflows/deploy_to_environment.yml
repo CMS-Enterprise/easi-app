@@ -44,18 +44,18 @@ jobs:
       APP_ENV: ${{ inputs.env }}
     steps:
       - name: Check out code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Set up node
-        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - name: Configure yarn cache
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
+        uses: actions/cache@v3
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -65,7 +65,7 @@ jobs:
           restore-keys: |
             v1-yarn-
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@abcf4fe216d7ea3638573156b36c79de8439257a
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

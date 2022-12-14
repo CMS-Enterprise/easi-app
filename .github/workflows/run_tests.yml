@@ -36,11 +36,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure go cache
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
+        uses: actions/cache@v3
         with:
           path: |
             ~/go/pkg/mod
@@ -48,23 +48,23 @@ jobs:
           restore-keys: |
             v1-go-
       - name: Set up go
-        uses: actions/setup-go@d0a58c1c4d2b25278816e339b944508c875f3613
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Login to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@abcf4fe216d7ea3638573156b36c79de8439257a
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@261a7de32bda11ba01f4d75c4ed6caf3739e54be
+        uses: aws-actions/amazon-ecr-login@v1
       - name: Run backend server tests
         env:
           APP_ENV: test
@@ -109,7 +109,7 @@ jobs:
           ./scripts/testsuite
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
       - name: Upload backend test artifacts
-        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+        uses: actions/upload-artifact@v3
         with:
           name: backend-tests
           path: results
@@ -123,18 +123,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Set up node
-        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - name: Configure yarn cache
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
+        uses: actions/cache@v3
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -156,19 +156,19 @@ jobs:
           REACT_APP_LOCAL_AUTH_ENABLED: true
         run: yarn run build
       - name: Login to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@abcf4fe216d7ea3638573156b36c79de8439257a
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@261a7de32bda11ba01f4d75c4ed6caf3739e54be
+        uses: aws-actions/amazon-ecr-login@v1
       - name: Run e2e cypress tests
         env:
           APP_ENV: test
@@ -181,14 +181,14 @@ jobs:
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
         if: ${{ always() }}
-        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-videos
           path: cypress/videos
           retention-days: 14
       - name: Upload cypress screenshots
         if: ${{ always() }}
-        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-screenshots
           path: cypress/screenshots
@@ -203,19 +203,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Set up node
-        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Set up go
-        uses: actions/setup-go@d0a58c1c4d2b25278816e339b944508c875f3613
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
       - name: Configure go cache
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
+        uses: actions/cache@v3
         with:
           path: |
             ~/go/pkg/mod
@@ -226,7 +226,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - name: Configure yarn cache
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
+        uses: actions/cache@v3
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -255,18 +255,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Set up node
-        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - name: Configure yarn cache
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
+        uses: actions/cache@v3
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
@@ -285,18 +285,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v2.3.4
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Set up node
-        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # v2.1.5
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - name: Configure yarn cache
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # v2.1.6
+        uses: actions/cache@v3
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: |
