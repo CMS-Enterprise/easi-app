@@ -6,8 +6,9 @@ import (
 	"path"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {

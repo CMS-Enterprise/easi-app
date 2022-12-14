@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestTRBRequestTRBLeadEmail() {

@@ -6,9 +6,10 @@ import (
 	"path"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/google/uuid"
 )
 
 // SendTRBRequestConsultMeetingEmailInput contains the data submitted by the user to the "report a problem" help form
