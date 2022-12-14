@@ -37,20 +37,9 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
-      - name: Configure go cache
-        id: go-cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/go/pkg/mod
-          key: v1-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            v1-go-
+          cache: true
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
-      - name: Install go modules
-        if: steps.go-cache.outputs.cache-hit != 'true'
-        run: go mod download
       - name: Announce failure
         if: ${{ failure() }}
         run: |
