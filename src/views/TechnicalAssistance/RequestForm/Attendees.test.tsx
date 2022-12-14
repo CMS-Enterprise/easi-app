@@ -169,7 +169,7 @@ describe('Trb Request form: Attendees', () => {
               refetchRequest={mockRefetch}
               setIsStepSubmitting={() => {}}
               setStepSubmit={() => {}}
-              setFormError={() => {}}
+              setFormAlert={() => {}}
               taskListUrl=""
             />
           </Provider>

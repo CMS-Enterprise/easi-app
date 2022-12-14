@@ -94,7 +94,7 @@ function renderSubjectAreas() {
           refetchRequest={mockRefetch}
           setIsStepSubmitting={() => {}}
           setStepSubmit={() => {}}
-          setFormError={() => {}}
+          setFormAlert={() => {}}
           taskListUrl=""
         />
       </MockedProvider>
