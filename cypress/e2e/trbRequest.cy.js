@@ -78,13 +78,13 @@ describe('Technical Assistance', () => {
 
     /** Supporting Documents */
 
-    // Proceeded to supporting documents
-    cy.contains(
-      '.usa-step-indicator__heading-text .long',
-      'Supporting documents'
-    )
-      .as('subjectStepHeader')
-      .should('be.visible');
+    // // Proceeded to supporting documents
+    // cy.contains(
+    //   '.usa-step-indicator__heading-text .long',
+    //   'Supporting documents'
+    // )
+    //   .as('subjectStepHeader')
+    //   .should('be.visible');
 
     // TODO: Supporting document tests
   });
