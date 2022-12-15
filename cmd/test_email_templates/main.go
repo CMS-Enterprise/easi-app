@@ -33,6 +33,7 @@ func createEmailClient() email.Client {
 		GRTEmail:               models.NewEmailAddress("grt_email@cms.gov"),
 		ITInvestmentEmail:      models.NewEmailAddress("it_investment_email@cms.gov"),
 		AccessibilityTeamEmail: models.NewEmailAddress("508_team@cms.gov"),
+		TRBEmail:               models.NewEmailAddress("trb@cms.gov"),
 		EASIHelpEmail:          models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
 		URLHost:                os.Getenv("CLIENT_HOSTNAME"),
 		URLScheme:              os.Getenv("CLIENT_PROTOCOL"),
@@ -43,6 +44,36 @@ func createEmailClient() email.Client {
 	emailClient, err := email.NewClient(emailConfig, sender)
 	noErr(err)
 	return emailClient
+}
+
+func sendTRBEmails(ctx context.Context, client *email.Client) {
+	requestID := uuid.New()
+	requestName := "Example Request"
+	requesterName := "Requesting User"
+	requesterEmail := models.NewEmailAddress("TEST@local.fake")
+	component := "Test Component"
+
+	err := client.SendTRBFormSubmissionNotificationToRequester(ctx, requestID, requestName, requesterEmail, requesterName)
+	noErr(err)
+
+	err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestName, requesterName, component)
+	noErr(err)
+
+	adminEmail := models.NewEmailAddress("admin@local.fake")
+	feedbackRecipients := []models.EmailAddress{requesterEmail, adminEmail}
+
+	readyForConsultFeedback := "You're good to go for the consult meeting!"
+	err = client.SendTRBReadyForConsultNotification(ctx, feedbackRecipients, true, requestID, requestName, requesterName, readyForConsultFeedback)
+	noErr(err)
+
+	editsRequestedFeedback := "Please provide a better form."
+	err = client.SendTRBEditsNeededOnFormNotification(ctx, feedbackRecipients, true, requestID, requestName, requesterName, editsRequestedFeedback)
+	noErr(err)
+
+	attendeeEmail := models.NewEmailAddress("subject_matter_expert@local.fake")
+
+	err = client.SendTRBAttendeeAddedNotification(ctx, attendeeEmail, requestName, requesterName)
+	noErr(err)
 }
 
 func main() {
@@ -57,4 +88,6 @@ func main() {
 
 	err = client.SendIntakeNoEUAIDEmail(ctx, "Some Project With No EUA ID", uuid.New())
 	noErr(err)
+
+	sendTRBEmails(ctx, &client)
 }
