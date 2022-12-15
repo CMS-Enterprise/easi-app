@@ -26,9 +26,13 @@ describe('Technical Assistance', () => {
     ).click();
 
     // Basic details is the first step of the Request Form
-    cy.contains('.usa-step-indicator__heading-text', 'Basic request details', {
-      timeout: 6000
-    })
+    cy.contains(
+      '.usa-step-indicator__heading-text .long',
+      'Basic request details',
+      {
+        timeout: 6000
+      }
+    )
       .should('be.visible')
       .as('basicStepHeader');
 
@@ -49,7 +53,7 @@ describe('Technical Assistance', () => {
     /** Subject Areas */
 
     // Proceeded to subject areas
-    cy.contains('.usa-step-indicator__heading-text', 'Subject areas')
+    cy.contains('.usa-step-indicator__heading-text .long', 'Subject areas')
       .as('subjectStepHeader')
       .should('be.visible');
 
@@ -59,7 +63,7 @@ describe('Technical Assistance', () => {
     /** Attendees */
 
     // Proceeded to attendees
-    cy.contains('.usa-step-indicator__heading-text', 'Attendees')
+    cy.contains('.usa-step-indicator__heading-text .long', 'Attendees')
       .as('subjectStepHeader')
       .should('be.visible');
 
@@ -75,7 +79,10 @@ describe('Technical Assistance', () => {
     /** Supporting Documents */
 
     // Proceeded to supporting documents
-    cy.contains('.usa-step-indicator__heading-text', 'Supporting documents')
+    cy.contains(
+      '.usa-step-indicator__heading-text .long',
+      'Supporting documents'
+    )
       .as('subjectStepHeader')
       .should('be.visible');
 
@@ -90,7 +97,7 @@ describe('Technical Assistance', () => {
     cy.contains('button', 'Next').click();
 
     // Proceeded to subject areas
-    cy.contains('.usa-step-indicator__heading-text', 'Subject areas')
+    cy.contains('.usa-step-indicator__heading-text .long', 'Subject areas')
       .as('subjectStepHeader')
       .should('be.visible');
 
@@ -98,7 +105,7 @@ describe('Technical Assistance', () => {
     cy.contains('button', 'Continue without selecting subject areas').click();
 
     // Proceeded to attendees
-    cy.contains('.usa-step-indicator__heading-text', 'Attendees')
+    cy.contains('.usa-step-indicator__heading-text .long', 'Attendees')
       .as('subjectStepHeader')
       .should('be.visible');
 
@@ -212,7 +219,7 @@ describe('Technical Assistance', () => {
     // Proceeded to the next step
     cy.contains('button', 'Next').click();
 
-    cy.contains('.usa-step-indicator__heading-text', 'Subject areas')
+    cy.contains('.usa-step-indicator__heading-text .long', 'Subject areas')
       .as('subjectStepHeader')
       .should('be.visible');
 
