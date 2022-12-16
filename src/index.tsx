@@ -1,13 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import {
-  ApolloClient,
-  ApolloProvider,
-  createHttpLink,
-  InMemoryCache
-} from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { createUploadLink } from 'apollo-upload-client';
 import axios from 'axios';
 import { detect } from 'detect-browser';
 import { TextEncoder } from 'text-encoding';
@@ -55,7 +51,7 @@ function getAuthHeader(targetUrl: string) {
 /**
  * Setup client for GraphQL
  */
-const httpLink = createHttpLink({
+const uploadLink = createUploadLink({
   uri: process.env.REACT_APP_GRAPHQL_ADDRESS
 });
 
@@ -72,7 +68,7 @@ const authLink = setContext((request, { headers }) => {
 const typePolicies = {};
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(uploadLink),
   cache: new InMemoryCache({
     typePolicies
   }),
