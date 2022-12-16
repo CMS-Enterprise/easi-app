@@ -196,6 +196,17 @@ export enum TRBDataAndDataManagementOption {
 }
 
 /**
+ * Represents the common options for document type that is attached to a
+ * 508/accessibility request
+ */
+export enum TRBDocumentCommonType {
+  ARCHITECTURE_DIAGRAM = "ARCHITECTURE_DIAGRAM",
+  BUSINESS_CASE = "BUSINESS_CASE",
+  OTHER = "OTHER",
+  PRESENTATION_SLIDE_DECK = "PRESENTATION_SLIDE_DECK",
+}
+
+/**
  * Represents the status of a TRB request form
  */
 export enum TRBFormStatus {
@@ -242,6 +253,15 @@ export enum TRBOtherTechnicalTopicsOption {
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT",
   MACHINE_LEARNING = "MACHINE_LEARNING",
   OTHER = "OTHER",
+}
+
+/**
+ * Enumeration of the possible statuses of documents uploaded in the TRB workflow
+ */
+export enum TRBRequestDocumentStatus {
+  AVAILABLE = "AVAILABLE",
+  PENDING = "PENDING",
+  UNAVAILABLE = "UNAVAILABLE",
 }
 
 export enum TRBRequestStatus {

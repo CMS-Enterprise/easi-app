@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useSortBy, useTable } from 'react-table';
+import { Column, useSortBy, useTable } from 'react-table';
+import { useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
@@ -16,6 +17,12 @@ import {
   Table
 } from '@trussworks/react-uswds';
 
+import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import {
+  GetTrbRequestDocuments,
+  GetTrbRequestDocuments_trbRequest_documents as TrbRequestDocuments,
+  GetTrbRequestDocumentsVariables
+} from 'queries/types/GetTrbRequestDocuments';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import Pager from './Pager';
@@ -25,23 +32,31 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const columns = useMemo(() => {
+  const { data /* error, loading */ } = useQuery<
+    GetTrbRequestDocuments,
+    GetTrbRequestDocumentsVariables
+  >(GetTrbRequestDocumentsQuery, {
+    variables: { id: request.id }
+  });
+  const documents = data?.trbRequest.documents || [];
+
+  const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
     return [
       {
         Header: t<string>('documents.table.header.fileName'),
-        accessor: 'a'
+        accessor: 'fileName'
       },
       {
         Header: t<string>('documents.table.header.documentType'),
-        accessor: 'b'
+        accessor: 'documentType.commonType' // todo other & ts error
       },
       {
         Header: t<string>('documents.table.header.uploadDate'),
-        accessor: 'c'
+        accessor: 'uploadedAt'
       },
       {
         Header: t<string>('documents.table.header.actions'),
-        accessor: 'd'
+        accessor: 'url'
       }
     ];
   }, [t]);
@@ -55,7 +70,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   } = useTable(
     {
       columns,
-      data: [],
+      data: documents,
       autoResetSortBy: false,
       autoResetPage: false
     },
