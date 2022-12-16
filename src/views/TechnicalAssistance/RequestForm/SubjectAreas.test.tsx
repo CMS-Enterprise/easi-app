@@ -51,6 +51,7 @@ const mockEmptyFormFields = {
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Draft',
+  createdBy: 'SF13',
   form: {
     ...mockEmptyFormFields,
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
@@ -79,6 +80,7 @@ function renderSubjectAreas() {
           request={{
             id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
             name: 'Draft',
+            createdBy: 'SF13',
             form: {
               ...mockEmptyFormFields,
               id: '452cf444-69b2-41a9-b8ab-ed354d209307',
@@ -94,7 +96,7 @@ function renderSubjectAreas() {
           refetchRequest={mockRefetch}
           setIsStepSubmitting={() => {}}
           setStepSubmit={() => {}}
-          setFormError={() => {}}
+          setFormAlert={() => {}}
           taskListUrl=""
         />
       </MockedProvider>

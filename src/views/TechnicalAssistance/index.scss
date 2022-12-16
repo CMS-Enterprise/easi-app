@@ -64,6 +64,27 @@
         padding-bottom: 0;
       }
     }
+
+    /* Button styling */
+    a.usa-button {
+      color: color('white');
+      text-decoration: none;
+      &:visited {
+        color: color('white');
+      }
+      &:hover {
+        color: color('white')
+      }
+      &--outline {
+        color: color('primary');
+        &:visited {
+          color: color('primary');
+        }
+        &:hover {
+          color: color('primary-dark')
+        }
+      }
+    }
   }
 
   /* Form level error alert */
