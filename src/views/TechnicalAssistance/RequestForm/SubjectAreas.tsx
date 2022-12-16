@@ -184,7 +184,7 @@ function SubjectAreas({
   refetchRequest,
   setStepSubmit,
   setIsStepSubmitting,
-  setFormError
+  setFormAlert
 }: FormStepComponentProps) {
   const history = useHistory();
 
@@ -269,7 +269,10 @@ function SubjectAreas({
         },
         err => {
           if (err instanceof ApolloError) {
-            setFormError(t<string>('subject.errors.submit'));
+            setFormAlert({
+              type: 'error',
+              message: t<string>('subject.errors.submit')
+            });
           }
         }
       ),
@@ -279,7 +282,7 @@ function SubjectAreas({
       isDirty,
       refetchRequest,
       request.id,
-      setFormError,
+      setFormAlert,
       t,
       updateForm
     ]

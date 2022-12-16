@@ -49,5 +49,6 @@ export interface TrbRequestFormFields {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
+  createdBy: string;
   form: TrbRequestFormFields_form;
 }

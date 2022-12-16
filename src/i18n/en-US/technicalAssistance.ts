@@ -203,7 +203,7 @@ const technicalAssistance = {
       {
         name: 'Attendees',
         description:
-          'As the primary requester, please add your CMS component and role on the project. You may also add the names and contact information for any additional individuals who should be present at the IT Tech Lounge or other meetings.'
+          'As the primary requester, please add your CMS component and role on the project. If you wish to, you may also add the names and contact information for any additional individuals who should be present at the TRB consult session. If you’re not sure who should be present, you may add attendees later or share the calendar invite before the meeting.'
       },
       {
         name: 'Supporting documents',
@@ -410,12 +410,58 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without selecting subject areas'
   },
   attendees: {
+    additionalAttendees: 'Additional attendees',
     addAnAttendee: 'Add an attendee',
-    addAttendee: 'Add attendee',
+    editAttendee: 'Edit attendee',
+    addAnotherAttendee: 'Add another attendee',
     remove: 'Remove',
     cancel: 'Cancel',
     continueWithoutAdding: 'Continue without adding attendees',
-    dontAddAndReturn: 'Don’t add and return to previous page'
+    dontAddAndReturn: "Don't add and return to previous page",
+    dontEditAndReturn: "Don't edit and return to previous page",
+    attendeeHelpText:
+      'Please provide the name, CMS component, and role for this attendee.',
+    attendeeNameHelpText:
+      'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at <1>cms-rb@cms.hhs.gov</1>.',
+    alerts: {
+      success: 'Your attendee has been added',
+      successEdit: 'Your attendee has been edited',
+      error:
+        'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.',
+      invalidForm: 'Invalid attendees form'
+    },
+    fieldLabels: {
+      requester: {
+        euaUserId: 'Requester',
+        component: 'Requester component',
+        role: 'Requester role'
+      },
+      attendee: {
+        create: {
+          euaUserId: 'New attendee name',
+          component: 'New attendee component',
+          role: 'New attendee role',
+          submit: 'Add attendee'
+        },
+        edit: {
+          euaUserId: 'Attendee name',
+          component: 'Attendee component',
+          role: 'Attendee role',
+          submit: 'Save'
+        }
+      }
+    },
+    contactRoles: {
+      productOwner: 'Product Owner',
+      systemOwner: 'System Owner',
+      systemMaintainer: 'System Maintainer',
+      contractRep: 'Contracting Officer’s Representative (COR)',
+      cloudNavigator: 'Cloud Navigator',
+      privacyAdvisor: 'Privacy Advisor',
+      cra: 'CRA',
+      other: 'Other',
+      unknown: 'Unknown'
+    }
   },
   documents: {
     continueWithoutAdding: 'Continue without adding documents'
