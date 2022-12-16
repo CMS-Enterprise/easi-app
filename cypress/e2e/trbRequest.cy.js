@@ -149,7 +149,7 @@ describe('Technical Assistance', () => {
     });
 
     // Submit form
-    cy.contains('button', 'Add attendee').click();
+    cy.contains('button', 'Add attendee').should('be.enabled').click();
 
     // Check for unique euaUserId field error
     cy.contains('button', 'Attendee has already been added').as(
