@@ -436,6 +436,16 @@ export interface CreateTRBRequestAttendeeInput {
 }
 
 /**
+ * The data needed to upload a TRB document and attach it to a request with metadata
+ */
+export interface CreateTRBRequestDocumentInput {
+  requestID: UUID;
+  fileData: Upload;
+  documentType: TRBDocumentCommonType;
+  otherTypeDescription?: string | null;
+}
+
+/**
  * The input required to add a test date/score to a 508/accessibility request
  */
 export interface CreateTestDateInput {

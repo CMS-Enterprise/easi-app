@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Column, useSortBy, useTable } from 'react-table';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
@@ -13,11 +13,17 @@ import {
   Form,
   FormGroup,
   IconArrowBack,
+  Label,
   Radio,
   Table
 } from '@trussworks/react-uswds';
 
+import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import {
+  CreateTrbRequestDocument,
+  CreateTrbRequestDocumentVariables
+} from 'queries/types/CreateTrbRequestDocument';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocuments_trbRequest_documents as TrbRequestDocuments,
@@ -77,11 +83,32 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
     useSortBy
   );
 
-  const { control } = useForm({
+  const [createDocument] = useMutation<
+    CreateTrbRequestDocument,
+    CreateTrbRequestDocumentVariables
+  >(CreateTrbRequestDocumentQuery);
+
+  const { control, handleSubmit } = useForm({
     defaultValues: {
-      documentType: ''
+      documentType: '',
+      fileData: undefined
     }
   });
+
+  const submit = async (formData: any) => {
+    // console.log('formdata', formData);
+
+    await createDocument({
+      variables: {
+        input: {
+          requestID: request.id,
+          ...formData
+        }
+      }
+    });
+  };
+
+  // console.log('values', JSON.stringify(watch(), null, 2));
 
   return (
     <>
@@ -136,14 +163,34 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
         <div>{t('documents.table.noDocument')}</div>
       </div>
       <div>
-        <Form className="maxw-full" onSubmit={e => e.preventDefault()}>
+        <Form className="maxw-full" onSubmit={handleSubmit(submit)}>
           {/* tablet col 6 */}
           <h1>{t('documents.upload.title')}</h1>
           <div>{t('documents.upload.subtitle')}</div>
-          <div>
-            <h4>{t('documents.upload.documentUpload')}</h4>
-            <FileInput id="file-input-single" name="file-input-single" />
-          </div>
+          <Controller
+            name="fileData"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <FormGroup error={!!error}>
+                  <Label htmlFor={field.name} error={!!error}>
+                    {t('documents.upload.documentUpload')}
+                  </Label>
+                  {error && <ErrorMessage>todo</ErrorMessage>}
+                  <FileInput
+                    {...field}
+                    ref={null}
+                    id={field.name}
+                    onChange={e => {
+                      field.onChange(e.currentTarget?.files?.[0]);
+                    }}
+                    value=""
+                    accept=".pdf,.doc,.docx,.xls,.xlsx"
+                  />
+                </FormGroup>
+              );
+            }}
+          />
           <Controller
             name="documentType"
             control={control}
@@ -156,9 +203,9 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
                   <Radio
                     {...field}
                     ref={null}
-                    id="documentType"
+                    id={field.name}
                     label={t('documents.upload.type.ARCHITECTURE_DIAGRAM')}
-                    value=""
+                    value="ARCHITECTURE_DIAGRAM"
                   />
                 </Fieldset>
               </FormGroup>
@@ -168,10 +215,12 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
           <Alert type="info" slim>
             {t('documents.upload.toKeepCmsSafe')}
           </Alert>
+          <div>
+            <Button type="submit">
+              {t('documents.upload.uploadDocument')}
+            </Button>
+          </div>
         </Form>
-        <div>
-          <Button type="button">{t('documents.upload.uploadDocument')}</Button>
-        </div>
         <div>
           <Button type="button" unstyled>
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
