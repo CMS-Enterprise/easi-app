@@ -1969,13 +1969,19 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 // CreateTRBRequestFeedback is the resolver for the createTRBRequestFeedback field.
 func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error) {
 	notifyEuas := models.ConvertEnums[string](input.NotifyEuaIds)
-	return resolvers.CreateTRBRequestFeedback(ctx, r.store, &models.TRBRequestFeedback{
-		TRBRequestID:    input.TrbRequestID,
-		FeedbackMessage: input.FeedbackMessage,
-		CopyTRBMailbox:  input.CopyTrbMailbox,
-		NotifyEUAIDs:    notifyEuas,
-		Action:          input.Action,
-	})
+	return resolvers.CreateTRBRequestFeedback(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		r.service.FetchUserInfos,
+		&models.TRBRequestFeedback{
+			TRBRequestID:    input.TrbRequestID,
+			FeedbackMessage: input.FeedbackMessage,
+			CopyTRBMailbox:  input.CopyTrbMailbox,
+			NotifyEUAIDs:    notifyEuas,
+			Action:          input.Action,
+		})
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
