@@ -54,6 +54,7 @@ export interface UpdateTrbRequestAndForm_updateTRBRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
+  createdBy: string;
   form: UpdateTrbRequestAndForm_updateTRBRequest_form;
 }
 

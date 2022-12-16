@@ -54,7 +54,9 @@ export interface FormStepComponentProps {
   /** Set to update the submitting state from step components to the parent request form */
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
   /** Set a form level error message from step components */
-  setFormError: React.Dispatch<React.SetStateAction<string | false>>;
+  setFormAlert: React.Dispatch<
+    React.SetStateAction<{ type: 'success' | 'error'; message: string } | false>
+  >;
   stepUrl: {
     current: string;
     next: string;
@@ -103,7 +105,7 @@ function Header({
   stepsCompleted,
   stepSubmit,
   isStepSubmitting,
-  formError,
+  formAlert,
   taskListUrl
 }: {
   step: number;
@@ -113,7 +115,7 @@ function Header({
   stepsCompleted: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
-  formError: string | false;
+  formAlert: { type: 'success' | 'error'; message: string } | false;
   taskListUrl: string;
 }) {
   const history = useHistory();
@@ -159,13 +161,13 @@ function Header({
       hideSteps={!request}
       breadcrumbBar={breadcrumbBar}
       errorAlert={
-        formError && (
+        formAlert && (
           <Alert
-            heading={t('errors.somethingWrong')}
-            type="error"
+            heading={step !== 3 && t('errors.somethingWrong')}
+            type={formAlert.type}
             className="trb-form-error margin-top-3 margin-bottom-2"
           >
-            {formError}
+            {formAlert.message}
           </Alert>
         )
       }
@@ -286,20 +288,22 @@ function RequestForm() {
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
   // Form level errors from step components
-  const [formError, setFormError] = useState<string | false>(false);
+  const [formAlert, setFormAlert] = useState<
+    { type: 'success' | 'error'; message: string } | false
+  >(false);
 
   // Clear the form level error as implied when steps change
   useEffect(() => {
-    setFormError(false);
-  }, [setFormError, step]);
+    setFormAlert(false);
+  }, [setFormAlert, step]);
 
   // Scroll to the form error
   useEffect(() => {
-    if (formError) {
+    if (formAlert) {
       const err = document.querySelector('.trb-form-error');
       err?.scrollIntoView();
     }
-  }, [formError]);
+  }, [formAlert]);
 
   if (!step || taskListUrl === null) {
     return null;
@@ -334,7 +338,7 @@ function RequestForm() {
           stepsCompleted={stepsCompleted}
           stepSubmit={stepSubmit}
           isStepSubmitting={isStepSubmitting}
-          formError={formError}
+          formAlert={formAlert}
           taskListUrl={taskListUrl}
         />
       )}
@@ -353,7 +357,7 @@ function RequestForm() {
             refetchRequest={refetch}
             setStepSubmit={setStepSubmit}
             setIsStepSubmitting={setIsStepSubmitting}
-            setFormError={setFormError}
+            setFormAlert={setFormAlert}
           />
         </GridContainer>
       ) : (

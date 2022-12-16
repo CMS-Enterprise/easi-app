@@ -36,7 +36,13 @@ type CedarContactSelectOption = {
 
 // Override React Select input to fix hidden input on select bug
 const Input = (props: InputProps<CedarContactSelectOption, false>) => {
-  return <components.Input {...props} isHidden={false} />;
+  return (
+    <components.Input
+      {...props}
+      isHidden={false}
+      data-testid="cedar-contact-select"
+    />
+  );
 };
 
 // Custom option component
@@ -76,7 +82,7 @@ const IndicatorsContainer = (
 ) => {
   const {
     children,
-    selectProps: { className },
+    selectProps: { className, isDisabled },
     hasValue
   } = props;
 
@@ -87,6 +93,9 @@ const IndicatorsContainer = (
   // Whether to show warning icon based in className
   const resultsWarning =
     hasValue && className!.split(' ').includes('cedar-contact-select__warning');
+
+  // Hide indicators if field is disabled
+  if (isDisabled) return null;
 
   return (
     <components.IndicatorsContainer {...props}>
@@ -101,8 +110,11 @@ const IndicatorsContainer = (
 
 /** Returns formatted contact label */
 const formatLabel = (contact: CedarContactProps) =>
-  `${contact?.commonName}${contact?.euaUserId && `, ${contact.euaUserId}`}`;
+  `${contact.commonName}${contact?.euaUserId && `, ${contact.euaUserId}`}`;
 
+/**
+ * Combobox to look up contact by name from CEDAR
+ */
 export default function CedarContactSelect({
   className,
   id,
@@ -235,6 +247,7 @@ export default function CedarContactSelect({
       id={id}
       name={name}
       className={classNames(
+        'margin-top-1',
         'cedar-contact-select',
         'usa-combo-box',
         { 'cedar-contact-select__warning': showWarning },
