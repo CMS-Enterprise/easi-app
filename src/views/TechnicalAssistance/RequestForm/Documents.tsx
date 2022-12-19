@@ -94,7 +94,12 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
     CreateTrbRequestDocumentVariables
   >(CreateTrbRequestDocumentQuery);
 
-  const { control, handleSubmit, watch } = useForm<TrbRequestInputDocument>({
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm<TrbRequestInputDocument>({
     resolver: yupResolver(documentSchema),
     defaultValues: {
       documentType: undefined,
@@ -104,7 +109,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   });
 
   const submit = async (formData: any) => {
-    // console.log('formdata', formData);
+    console.log('formdata', formData);
 
     await createDocument({
       variables: {
@@ -117,6 +122,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   };
 
   console.log('values', JSON.stringify(watch(), null, 2));
+  console.log('errors', JSON.stringify(errors, null, 2));
 
   return (
     <>
@@ -184,7 +190,9 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
                   <Label htmlFor={field.name} error={!!error}>
                     {t('documents.upload.documentUpload')}
                   </Label>
-                  {error && <ErrorMessage>todo</ErrorMessage>}
+                  {error && (
+                    <ErrorMessage>{t('errors.selectFile')}</ErrorMessage>
+                  )}
                   <FileInput
                     id={field.name}
                     name={field.name}
@@ -229,37 +237,33 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
             )}
           />
           {watch('documentType') === 'OTHER' && (
-            <Controller
-              name="otherTypeDescription"
-              control={control}
-              // eslint-disable-next-line no-shadow
-              render={({ field, fieldState: { error } }) => (
-                <FormGroup>
-                  <Label
-                    htmlFor={field.name}
-                    hint="todo"
-                    error={!!error}
-                    className="text-normal"
-                  >
-                    todo
-                  </Label>
-                  {error && (
-                    <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
-                  )}
-                  <TextInput
-                    id={field.name}
-                    name={field.name}
-                    type="text"
-                    onBlur={field.onBlur}
-                    onChange={field.onChange}
-                    value={field.value || ''}
-                    validationStatus={error && 'error'}
-                  />
-                </FormGroup>
-              )}
-            />
+            <div className="margin-left-4">
+              <Controller
+                name="otherTypeDescription"
+                control={control}
+                // eslint-disable-next-line no-shadow
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup>
+                    <Label htmlFor={field.name} error={!!error}>
+                      {t('documents.upload.whatKind')}
+                    </Label>
+                    {error && (
+                      <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                    )}
+                    <TextInput
+                      id={field.name}
+                      name={field.name}
+                      type="text"
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                      value={field.value || ''}
+                      validationStatus={error && 'error'}
+                    />
+                  </FormGroup>
+                )}
+              />
+            </div>
           )}
-          {/* other text */}
           <Alert type="info" slim>
             {t('documents.upload.toKeepCmsSafe')}
           </Alert>

@@ -28,6 +28,7 @@ const technicalAssistance = {
     fillDate: 'Please fill in the date',
     includeExplanation: 'Please include an explanation',
     makeSelection: 'Please make a selection',
+    selectFile: 'Please select a file',
     somethingWrong: 'Something went wrong.'
   },
   requestType: {
