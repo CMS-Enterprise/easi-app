@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Column, useSortBy, useTable } from 'react-table';
 import { useMutation, useQuery } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   Button,
@@ -15,7 +16,8 @@ import {
   IconArrowBack,
   Label,
   Radio,
-  Table
+  Table,
+  TextInput
 } from '@trussworks/react-uswds';
 
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
@@ -30,6 +32,10 @@ import {
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
+import {
+  documentSchema,
+  TrbRequestInputDocument
+} from 'validations/trbRequestSchema';
 
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
@@ -88,10 +94,12 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
     CreateTrbRequestDocumentVariables
   >(CreateTrbRequestDocumentQuery);
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, watch } = useForm<TrbRequestInputDocument>({
+    resolver: yupResolver(documentSchema),
     defaultValues: {
-      documentType: '',
-      fileData: undefined
+      documentType: undefined,
+      fileData: undefined,
+      otherTypeDescription: ''
     }
   });
 
@@ -108,7 +116,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
     });
   };
 
-  // console.log('values', JSON.stringify(watch(), null, 2));
+  console.log('values', JSON.stringify(watch(), null, 2));
 
   return (
     <>
@@ -178,13 +186,12 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
                   </Label>
                   {error && <ErrorMessage>todo</ErrorMessage>}
                   <FileInput
-                    {...field}
-                    ref={null}
                     id={field.name}
+                    name={field.name}
+                    onBlur={field.onBlur}
                     onChange={e => {
                       field.onChange(e.currentTarget?.files?.[0]);
                     }}
-                    value=""
                     accept=".pdf,.doc,.docx,.xls,.xlsx"
                   />
                 </FormGroup>
@@ -200,17 +207,58 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
                   {error && (
                     <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                   )}
-                  <Radio
-                    {...field}
-                    ref={null}
-                    id={field.name}
-                    label={t('documents.upload.type.ARCHITECTURE_DIAGRAM')}
-                    value="ARCHITECTURE_DIAGRAM"
-                  />
+                  {[
+                    'ARCHITECTURE_DIAGRAM',
+                    'PRESENTATION_SLIDE_DECK',
+                    'BUSINESS_CASE',
+                    'OTHER'
+                  ].map(val => (
+                    <Radio
+                      key={val}
+                      id={`${field.name}-${val}`}
+                      data-testid={`${field.name}-${val}`}
+                      name={field.name}
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                      label={t(`documents.upload.type.${val}`)}
+                      value={val}
+                    />
+                  ))}
                 </Fieldset>
               </FormGroup>
             )}
           />
+          {watch('documentType') === 'OTHER' && (
+            <Controller
+              name="otherTypeDescription"
+              control={control}
+              // eslint-disable-next-line no-shadow
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup>
+                  <Label
+                    htmlFor={field.name}
+                    hint="todo"
+                    error={!!error}
+                    className="text-normal"
+                  >
+                    todo
+                  </Label>
+                  {error && (
+                    <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                  )}
+                  <TextInput
+                    id={field.name}
+                    name={field.name}
+                    type="text"
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                    value={field.value || ''}
+                    validationStatus={error && 'error'}
+                  />
+                </FormGroup>
+              )}
+            />
+          )}
           {/* other text */}
           <Alert type="info" slim>
             {t('documents.upload.toKeepCmsSafe')}
