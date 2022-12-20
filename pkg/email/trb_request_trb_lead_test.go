@@ -14,14 +14,14 @@ func (s *EmailTestSuite) TestTRBRequestTRBLeadEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
 
-	trbId := uuid.New()
-	trbLink := path.Join("trb", "task-list", trbId.String())
+	trbID := uuid.New()
+	trbLink := path.Join("trb", "task-list", trbID.String())
 
 	input := SendTRBRequestTRBLeadEmailInput{
 		TRBRequestName: "Test TRB Request",
 		RequesterName:  "Mc Lovin",
 		TRBLeadName:    "Gary Jones",
-		TRBRequestID:   trbId,
+		TRBRequestID:   trbID,
 	}
 
 	s.Run("successful call has the right content", func() {

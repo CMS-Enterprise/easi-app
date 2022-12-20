@@ -18,8 +18,8 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 	meetingTime, err := time.Parse(time.RFC3339, "2022-01-01T13:30:00+00:00")
 	s.NoError(err)
 
-	trbId := uuid.New()
-	trbLink := path.Join("trb", "task-list", trbId.String())
+	trbID := uuid.New()
+	trbLink := path.Join("trb", "task-list", trbID.String())
 
 	input := SendTRBRequestConsultMeetingEmailInput{
 		TRBRequestName:     "Test TRB Request",
@@ -28,7 +28,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 		NotifyEmails:       []models.EmailAddress{"McLovin@example.com", "Jane@example.com"},
 		Notes:              "Some notes",
 		RequesterName:      "Mc Lovin",
-		TRBRequestID:       trbId,
+		TRBRequestID:       trbID,
 	}
 
 	s.Run("successful call has the right content", func() {
