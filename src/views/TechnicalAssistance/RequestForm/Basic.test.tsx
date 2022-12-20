@@ -10,37 +10,50 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import UpdateTrbRequestFormQuery from 'queries/UpdateTrbRequestFormQuery';
-import {
-  TRBCollabGroupOption,
-  TRBWhereInProcessOption
-} from 'types/graphql-global-types';
 
 import Basic from './Basic';
+
+const mockEmptyFormFields = {
+  component: null,
+  needsAssistanceWith: null,
+  hasSolutionInMind: null,
+  proposedSolution: null,
+  whereInProcess: null,
+  whereInProcessOther: null,
+  hasExpectedStartEndDates: null,
+  expectedStartDate: null,
+  expectedEndDate: null,
+  collabGroups: [],
+  collabDateSecurity: null,
+  collabDateEnterpriseArchitecture: null,
+  collabDateCloud: null,
+  collabDatePrivacyAdvisor: null,
+  collabDateGovernanceReviewBoard: null,
+  collabDateOther: null,
+  collabGroupOther: null,
+  subjectAreaTechnicalReferenceArchitecture: [],
+  subjectAreaNetworkAndSecurity: [],
+  subjectAreaCloudAndInfrastructure: [],
+  subjectAreaApplicationDevelopment: [],
+  subjectAreaDataAndDataManagement: [],
+  subjectAreaGovernmentProcessesAndPolicies: [],
+  subjectAreaOtherTechnicalTopics: [],
+  subjectAreaTechnicalReferenceArchitectureOther: null,
+  subjectAreaNetworkAndSecurityOther: null,
+  subjectAreaCloudAndInfrastructureOther: null,
+  subjectAreaApplicationDevelopmentOther: null,
+  subjectAreaDataAndDataManagementOther: null,
+  subjectAreaGovernmentProcessesAndPoliciesOther: null,
+  subjectAreaOtherTechnicalTopicsOther: null
+};
 
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Draft',
+  createdBy: 'SF13',
   form: {
+    ...mockEmptyFormFields,
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
-    component: 'Center for Medicaid and CHIP Services',
-    needsAssistanceWith: 'assistance',
-    hasSolutionInMind: false,
-    proposedSolution: null,
-    whereInProcess:
-      TRBWhereInProcessOption.I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM,
-    whereInProcessOther: null,
-    hasExpectedStartEndDates: false,
-    expectedStartDate: null,
-    expectedEndDate: null,
-    collabGroups: [TRBCollabGroupOption.SECURITY],
-    collabDateSecurity: '10/2022',
-    collabDateEnterpriseArchitecture: null,
-    collabDateCloud: null,
-    collabDatePrivacyAdvisor: null,
-    collabDateGovernanceReviewBoard: null,
-    collabDateOther: null,
-    collabGroupOther: null,
     __typename: 'TRBRequestForm'
   },
   __typename: 'TRBRequest'
@@ -68,71 +81,15 @@ describe('Trb Request form: Basic', () => {
       getByTestId
     } = render(
       <MemoryRouter>
-        <MockedProvider
-          mocks={[
-            {
-              request: {
-                query: UpdateTrbRequestFormQuery,
-                variables: {
-                  input: {
-                    component: 'Center for Medicaid and CHIP Services',
-                    needsAssistanceWith: 'assistance',
-                    hasSolutionInMind: false,
-                    proposedSolution: '',
-                    whereInProcess: 'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
-                    hasExpectedStartEndDates: false,
-                    expectedStartDate: '',
-                    expectedEndDate: '',
-                    collabGroups: ['SECURITY'],
-                    collabDateSecurity: '10/2022',
-                    collabDateEnterpriseArchitecture: '',
-                    collabDateCloud: '',
-                    collabDatePrivacyAdvisor: '',
-                    collabDateGovernanceReviewBoard: '',
-                    collabDateOther: '',
-                    collabGroupOther: '',
-                    trbRequestId: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7'
-                  },
-                  id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
-                  name: 'Draft'
-                }
-              },
-              result: {
-                data: {
-                  updateTRBRequest: mockTrbRequestData,
-                  updateTRBRequestForm: {
-                    id: '452cf444-69b2-41a9-b8ab-ed354d209307',
-                    __typename: 'TRBRequestForm'
-                  }
-                }
-              }
-            }
-          ]}
-          addTypename={false}
-        >
+        <MockedProvider>
           <Basic
             request={{
               id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
               name: 'Draft',
+              createdBy: 'SF13',
               form: {
+                ...mockEmptyFormFields,
                 id: '452cf444-69b2-41a9-b8ab-ed354d209307',
-                component: null,
-                needsAssistanceWith: null,
-                hasSolutionInMind: null,
-                proposedSolution: null,
-                whereInProcess: null,
-                whereInProcessOther: null,
-                hasExpectedStartEndDates: null,
-                expectedStartDate: null,
-                expectedEndDate: null,
-                collabGroups: [],
-                collabDateSecurity: null,
-                collabDateEnterpriseArchitecture: null,
-                collabDateCloud: null,
-                collabDatePrivacyAdvisor: null,
-                collabDateGovernanceReviewBoard: null,
-                collabDateOther: null,
-                collabGroupOther: null,
                 __typename: 'TRBRequestForm'
               },
               __typename: 'TRBRequest'
@@ -148,7 +105,7 @@ describe('Trb Request form: Basic', () => {
             refetchRequest={mockRefetch}
             setIsStepSubmitting={() => {}}
             setStepSubmit={() => {}}
-            setFormError={() => {}}
+            setFormAlert={() => {}}
             taskListUrl=""
           />
         </MockedProvider>

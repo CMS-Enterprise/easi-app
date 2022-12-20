@@ -1,7 +1,15 @@
 import * as yup from 'yup';
 
 import {
+  PersonRole,
+  TRBApplicationDevelopmentOption,
+  TRBCloudAndInfrastructureOption,
   TRBCollabGroupOption,
+  TRBDataAndDataManagementOption,
+  TRBGovernmentProcessesAndPoliciesOption,
+  TRBNetworkAndSecurityOption,
+  TRBOtherTechnicalTopicsOption,
+  TRBTechnicalReferenceArchitectureOption,
   TRBWhereInProcessOption,
   UpdateTRBRequestFormInput
 } from 'types/graphql-global-types';
@@ -99,4 +107,156 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
   yup.object({
     name: yup.string().required()
   })
+);
+
+export const trbRequesterSchema = yup.object({
+  euaUserId: yup.string().required('Requester name is a required field'),
+  component: yup.string().required('Requester component is a required field'),
+  role: yup
+    .mixed<PersonRole>()
+    .oneOf(Object.values(PersonRole))
+    .required('Requester role is a required field')
+});
+
+export const trbAttendeeSchema = yup.object({
+  euaUserId: yup.string().required('Attendee name is a required field'),
+  component: yup.string().required('Attendee component is a required field'),
+  role: yup
+    .mixed<PersonRole>()
+    .oneOf(Object.values(PersonRole))
+    .required('Attendee role is a required field')
+});
+export type TrbFormInputSubjectAreas = Pick<
+  UpdateTRBRequestFormInput,
+  | 'subjectAreaTechnicalReferenceArchitecture'
+  | 'subjectAreaNetworkAndSecurity'
+  | 'subjectAreaCloudAndInfrastructure'
+  | 'subjectAreaApplicationDevelopment'
+  | 'subjectAreaDataAndDataManagement'
+  | 'subjectAreaGovernmentProcessesAndPolicies'
+  | 'subjectAreaOtherTechnicalTopics'
+  | 'subjectAreaTechnicalReferenceArchitectureOther'
+  | 'subjectAreaNetworkAndSecurityOther'
+  | 'subjectAreaCloudAndInfrastructureOther'
+  | 'subjectAreaApplicationDevelopmentOther'
+  | 'subjectAreaDataAndDataManagementOther'
+  | 'subjectAreaGovernmentProcessesAndPoliciesOther'
+  | 'subjectAreaOtherTechnicalTopicsOther'
+>;
+
+export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.object(
+  {
+    subjectAreaTechnicalReferenceArchitecture: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBTechnicalReferenceArchitectureOption>(
+            Object.values(TRBTechnicalReferenceArchitectureOption)
+          )
+          .required()
+      )
+      .ensure(),
+    subjectAreaNetworkAndSecurity: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBNetworkAndSecurityOption>(
+            Object.values(TRBNetworkAndSecurityOption)
+          )
+          .required()
+      )
+      .ensure(),
+    subjectAreaCloudAndInfrastructure: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBCloudAndInfrastructureOption>(
+            Object.values(TRBCloudAndInfrastructureOption)
+          )
+          .required()
+      )
+      .ensure(),
+    subjectAreaApplicationDevelopment: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBApplicationDevelopmentOption>(
+            Object.values(TRBApplicationDevelopmentOption)
+          )
+          .required()
+      )
+      .ensure(),
+    subjectAreaDataAndDataManagement: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBDataAndDataManagementOption>(
+            Object.values(TRBDataAndDataManagementOption)
+          )
+          .required()
+      )
+      .ensure(),
+    subjectAreaGovernmentProcessesAndPolicies: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBGovernmentProcessesAndPoliciesOption>(
+            Object.values(TRBGovernmentProcessesAndPoliciesOption)
+          )
+          .required()
+      )
+      .ensure(),
+    subjectAreaOtherTechnicalTopics: yup
+      .array(
+        yup
+          .mixed()
+          .oneOf<TRBOtherTechnicalTopicsOption>(
+            Object.values(TRBOtherTechnicalTopicsOption)
+          )
+          .required()
+      )
+      .ensure(),
+    subjectAreaTechnicalReferenceArchitectureOther: yup
+      .string()
+      .when('subjectAreaTechnicalReferenceArchitecture', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaNetworkAndSecurityOther: yup
+      .string()
+      .when('subjectAreaNetworkAndSecurity', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaCloudAndInfrastructureOther: yup
+      .string()
+      .when('subjectAreaCloudAndInfrastructure', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaApplicationDevelopmentOther: yup
+      .string()
+      .when('subjectAreaApplicationDevelopment', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaDataAndDataManagementOther: yup
+      .string()
+      .when('subjectAreaDataAndDataManagement', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaGovernmentProcessesAndPoliciesOther: yup
+      .string()
+      .when('subjectAreaGovernmentProcessesAndPolicies', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      }),
+    subjectAreaOtherTechnicalTopicsOther: yup
+      .string()
+      .when('subjectAreaOtherTechnicalTopics', {
+        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
+        then: schema => schema.required()
+      })
+  }
 );

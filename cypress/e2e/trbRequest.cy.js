@@ -1,6 +1,16 @@
 describe('Technical Assistance', () => {
-  it('Creates a new trb request', () => {
+  beforeEach(() => {
     cy.localLogin({ name: 'ABCD' });
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetCedarContacts') {
+        req.alias = 'getCedarContacts';
+      }
+      if (req.body.operationName === 'DeleteTRBRequestAttendee') {
+        req.alias = 'deleteTRBRequestAttendee';
+      }
+    });
+
     // Nav to trb base
     cy.contains('a', 'Technical Assistance').click();
     // Start a Request to get to selecting a Request type
@@ -16,31 +26,200 @@ describe('Technical Assistance', () => {
     ).click();
 
     // Basic details is the first step of the Request Form
-    cy.contains('.usa-step-indicator__heading-text', 'Basic request details', {
-      timeout: 6000
-    })
+    cy.contains(
+      '.usa-step-indicator__heading-text .long',
+      'Basic request details',
+      {
+        timeout: 6000
+      }
+    )
       .should('be.visible')
       .as('basicStepHeader');
 
-    // Fill out the Basic form step
-    cy.get('[name=name]').clear().type('Test Request Name');
-    cy.get('[name=component]').select('Center for Medicaid and CHIP Services');
-    cy.get('[name=needsAssistanceWith]').type('Assistance');
-    cy.get('#hasSolutionInMind-no').check({ force: true });
-    cy.get('[name=whereInProcess]').select(
-      'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM'
-    );
-    cy.get('#hasExpectedStartEndDates-no').check({ force: true });
-    cy.get('#collabGroups-Security').check({ force: true });
-    cy.get('[name=collabDateSecurity]').type('October/November 2022');
-
+    // Get basic details url and assign alias
     cy.url().as('basicStepUrl');
+  });
+
+  /** Fill all required fields */
+  it('Fills out minimum required fields', () => {
+    /** Basic Details */
+
+    // Fill out the Basic form step
+    cy.trbRequest.basicDetails.fillRequiredFields();
 
     // Successful submit
-    cy.contains('button', 'Next').as('submit').click();
+    cy.contains('button', 'Next').click();
+
+    /** Subject Areas */
+
+    // Proceeded to subject areas
+    cy.contains('.usa-step-indicator__heading-text .long', 'Subject areas')
+      .as('subjectStepHeader')
+      .should('be.visible');
+
+    // Successful submit
+    cy.contains('button', 'Continue without selecting subject areas').click();
+
+    /** Attendees */
+
+    // Proceeded to attendees
+    cy.contains('.usa-step-indicator__heading-text .long', 'Attendees')
+      .as('subjectStepHeader')
+      .should('be.visible');
+
+    // Fill required attendee fields
+    cy.trbRequest.attendees.fillRequiredFields({
+      component: 'CMS Wide',
+      role: 'PRODUCT_OWNER'
+    });
+
+    // Successful submit
+    cy.contains('button', 'Continue without adding attendees').click();
+
+    /** Supporting Documents */
+
+    // // Proceeded to supporting documents
+    // cy.contains(
+    //   '.usa-step-indicator__heading-text .long',
+    //   'Supporting documents'
+    // )
+    //   .as('subjectStepHeader')
+    //   .should('be.visible');
+
+    // TODO: Supporting document tests
+  });
+  /** Adds new attendee */
+  it('Adds, edits, and deletes attendee', () => {
+    // Fill out the Basic Details required fields
+    cy.trbRequest.basicDetails.fillRequiredFields();
+
+    // Successful submit
+    cy.contains('button', 'Next').click();
+
+    // Proceeded to subject areas
+    cy.contains('.usa-step-indicator__heading-text .long', 'Subject areas')
+      .as('subjectStepHeader')
+      .should('be.visible');
+
+    // Successful submit
+    cy.contains('button', 'Continue without selecting subject areas').click();
+
+    // Proceeded to attendees
+    cy.contains('.usa-step-indicator__heading-text .long', 'Attendees')
+      .as('subjectStepHeader')
+      .should('be.visible');
+
+    // Name / euaUserId field should be disabled for requester
+    cy.get('#react-select-euaUserId-input')
+      .as('euaUserIdInput')
+      .should('be.disabled');
+
+    // Submit without filling in fields to test field errors
+    cy.contains('button', 'Continue without adding attendees').click().click();
+
+    // Check for requester error messages
+    cy.contains('button', 'Requester component is a required field', {
+      timeout: 6000
+    }).as('componentError');
+    cy.contains('button', 'Requester role is a required field').as('roleError');
+
+    // Fill required attendee fields
+    cy.trbRequest.attendees.fillRequiredFields({
+      component: 'CMS Wide',
+      role: 'PRODUCT_OWNER'
+    });
+
+    // Check that error messages have cleared
+    cy.get('@componentError').should('not.exist');
+    cy.get('@roleError').should('not.exist');
+
+    // Navigate to add attendee form
+    cy.contains('a', 'Add an attendee').click();
+    cy.contains('h1', 'Add an attendee').should('be.visible');
+
+    // Fill attendee fields
+    // Sets name and euaUserId to same as requester to trigger error
+    cy.trbRequest.attendees.fillRequiredFields({
+      userInfo: {
+        commonName: 'Adeline Aarons',
+        euaUserId: 'ABCD'
+      },
+      component: 'Center for Medicare',
+      role: 'PRIVACY_ADVISOR'
+    });
+
+    // Submit form
+    cy.contains('button', 'Add attendee').should('be.enabled').click();
+
+    // Check for unique euaUserId field error
+    cy.contains('button', 'Attendee has already been added').as(
+      'uniqueEuaUserIdError'
+    );
+
+    // Clear field value
+    cy.get('@euaUserIdInput').clear();
+
+    // Enter valid name/eua input
+    cy.trbRequest.attendees.fillRequiredFields({
+      userInfo: {
+        commonName: 'Anabelle Jerde',
+        euaUserId: 'JTTC'
+      }
+    });
+
+    // Check that error message has cleared
+    cy.get('@uniqueEuaUserIdError').should('not.exist');
+
+    // Submit form
+    cy.contains('button', 'Add attendee').click();
+
+    // Confirm that attendee was added to list
+    cy.get('#trbAttendee-JTTC')
+      .as('newAttendee')
+      .contains('p', 'anabelle.jerde@local.fake');
+    cy.get('@newAttendee').contains('p', 'Privacy Advisor');
+
+    // Check for updated add attendee button text
+    cy.contains('a', 'Add another attendee');
+
+    // Edit attendee
+    cy.get('@newAttendee').contains('a', 'Edit').click();
+    cy.contains('h1', 'Edit attendee').should('be.visible');
+
+    // Name / euaUserId field should be disabled when editing
+    cy.get('@euaUserIdInput').should('be.disabled');
+
+    // Update attendee role
+    cy.trbRequest.attendees.fillRequiredFields({
+      role: 'CRA'
+    });
+
+    // Save attendee
+    cy.contains('button', 'Save').click();
+
+    // Check for updated attendee role
+    cy.get('@newAttendee').contains('p', 'CRA');
+
+    // Delete attendee
+    cy.get('@newAttendee').contains('button', 'Remove').click();
+
+    // Wait for delete mutation to complete
+    cy.wait('@deleteTRBRequestAttendee')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    // Check that attendee was deleted
+    cy.get('@newAttendee').should('not.exist');
+  });
+
+  it('Submits values when exiting form', () => {
+    // Fill basic details required fields
+    cy.trbRequest.basicDetails.fillRequiredFields();
 
     // Proceeded to the next step
-    cy.contains('.usa-step-indicator__heading-text', 'Subject areas')
+    cy.contains('button', 'Next').click();
+
+    cy.contains('.usa-step-indicator__heading-text .long', 'Subject areas')
       .as('subjectStepHeader')
       .should('be.visible');
 
@@ -97,5 +276,43 @@ describe('Technical Assistance', () => {
       'Subject areas'
     ).click();
     cy.get('@subjectStepHeader').should('be.visible');
+
+    cy.url().as('subjectStepUrl');
+
+    // Check the initial submit button state of the empty Subject areas form
+    cy.contains('Continue without selecting subject areas').should(
+      'be.visible'
+    );
+
+    // Select some options including "other" which will toggle on an additional text field
+    cy.get('#subjectAreaTechnicalReferenceArchitecture').click();
+    cy.get('[value="GENERAL_TRA_INFORMATION"]').check({ force: true });
+    cy.get('[value="OTHER"]').check({
+      force: true
+    });
+    cy.get('#subjectAreaTechnicalReferenceArchitecture').focused().blur();
+
+    // Attempt to save with an error from the empty "other" input
+    cy.contains('button', 'Save and exit').as('saveExit').click();
+    cy.contains(
+      '.usa-alert__heading',
+      'Please check and fix the following'
+    ).should('exist');
+    cy.contains(
+      '.usa-error-message',
+      'Technical Reference Architecture (TRA): Please specify'
+    ).should('be.visible');
+
+    // Fix the field error
+    cy.get('[name=subjectAreaTechnicalReferenceArchitectureOther').type(
+      'testing'
+    );
+    // Save and return to task list
+    cy.get('@saveExit').click();
+
+    // Go back to the subject step and check input values
+    cy.get('@subjectStepUrl').then(url => cy.visit(url));
+    cy.contains('.usa-tag', 'General TRA information').should('be.visible');
+    cy.contains('.usa-tag', 'Other').should('be.visible');
   });
 });

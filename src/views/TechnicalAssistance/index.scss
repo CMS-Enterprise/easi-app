@@ -20,9 +20,11 @@
       }
       .usa-label {
         max-width: none;
+        margin-bottom: .5rem;
         .usa-hint {
           display: block; /* line break between label and hint */
           font-weight: normal;
+          margin-top: .25rem;
         }
       }
       /* Radio & checkbox label spacing */
@@ -30,11 +32,16 @@
       .usa-checkbox__label {
         margin-top: .75rem;
         letter-spacing: -.01em;
+
+      }
+      .easi-multiselect .usa-checkbox__label {
+        margin-top: 0;
       }
 
-      /* Text & textarea inputs expand to container width */
+      /* These input types and containers expand to their container width */
       .usa-input,
-      .usa-textarea {
+      .usa-textarea,
+      .usa-combo-box {
         max-width: 100%;
       }
 
@@ -55,6 +62,27 @@
       /* Errors messages under group field labels */
       .usa-error-message {
         padding-bottom: 0;
+      }
+    }
+
+    /* Button styling */
+    a.usa-button {
+      color: color('white');
+      text-decoration: none;
+      &:visited {
+        color: color('white');
+      }
+      &:hover {
+        color: color('white')
+      }
+      &--outline {
+        color: color('primary');
+        &:visited {
+          color: color('primary');
+        }
+        &:hover {
+          color: color('primary-dark')
+        }
       }
     }
   }

@@ -836,37 +836,44 @@ type ComplexityRoot struct {
 	}
 
 	TRBRequestForm struct {
-		CollabDateCloud                           func(childComplexity int) int
-		CollabDateEnterpriseArchitecture          func(childComplexity int) int
-		CollabDateGovernanceReviewBoard           func(childComplexity int) int
-		CollabDateOther                           func(childComplexity int) int
-		CollabDatePrivacyAdvisor                  func(childComplexity int) int
-		CollabDateSecurity                        func(childComplexity int) int
-		CollabGroupOther                          func(childComplexity int) int
-		CollabGroups                              func(childComplexity int) int
-		Component                                 func(childComplexity int) int
-		CreatedAt                                 func(childComplexity int) int
-		CreatedBy                                 func(childComplexity int) int
-		ExpectedEndDate                           func(childComplexity int) int
-		ExpectedStartDate                         func(childComplexity int) int
-		HasExpectedStartEndDates                  func(childComplexity int) int
-		HasSolutionInMind                         func(childComplexity int) int
-		ID                                        func(childComplexity int) int
-		ModifiedAt                                func(childComplexity int) int
-		ModifiedBy                                func(childComplexity int) int
-		NeedsAssistanceWith                       func(childComplexity int) int
-		ProposedSolution                          func(childComplexity int) int
-		Status                                    func(childComplexity int) int
-		SubjectAreaApplicationDevelopment         func(childComplexity int) int
-		SubjectAreaCloudAndInfrastructure         func(childComplexity int) int
-		SubjectAreaDataAndDataManagement          func(childComplexity int) int
-		SubjectAreaGovernmentProcessesAndPolicies func(childComplexity int) int
-		SubjectAreaNetworkAndSecurity             func(childComplexity int) int
-		SubjectAreaOtherTechnicalTopics           func(childComplexity int) int
-		SubjectAreaTechnicalReferenceArchitecture func(childComplexity int) int
-		TRBRequestID                              func(childComplexity int) int
-		WhereInProcess                            func(childComplexity int) int
-		WhereInProcessOther                       func(childComplexity int) int
+		CollabDateCloud                                func(childComplexity int) int
+		CollabDateEnterpriseArchitecture               func(childComplexity int) int
+		CollabDateGovernanceReviewBoard                func(childComplexity int) int
+		CollabDateOther                                func(childComplexity int) int
+		CollabDatePrivacyAdvisor                       func(childComplexity int) int
+		CollabDateSecurity                             func(childComplexity int) int
+		CollabGroupOther                               func(childComplexity int) int
+		CollabGroups                                   func(childComplexity int) int
+		Component                                      func(childComplexity int) int
+		CreatedAt                                      func(childComplexity int) int
+		CreatedBy                                      func(childComplexity int) int
+		ExpectedEndDate                                func(childComplexity int) int
+		ExpectedStartDate                              func(childComplexity int) int
+		HasExpectedStartEndDates                       func(childComplexity int) int
+		HasSolutionInMind                              func(childComplexity int) int
+		ID                                             func(childComplexity int) int
+		ModifiedAt                                     func(childComplexity int) int
+		ModifiedBy                                     func(childComplexity int) int
+		NeedsAssistanceWith                            func(childComplexity int) int
+		ProposedSolution                               func(childComplexity int) int
+		Status                                         func(childComplexity int) int
+		SubjectAreaApplicationDevelopment              func(childComplexity int) int
+		SubjectAreaApplicationDevelopmentOther         func(childComplexity int) int
+		SubjectAreaCloudAndInfrastructure              func(childComplexity int) int
+		SubjectAreaCloudAndInfrastructureOther         func(childComplexity int) int
+		SubjectAreaDataAndDataManagement               func(childComplexity int) int
+		SubjectAreaDataAndDataManagementOther          func(childComplexity int) int
+		SubjectAreaGovernmentProcessesAndPolicies      func(childComplexity int) int
+		SubjectAreaGovernmentProcessesAndPoliciesOther func(childComplexity int) int
+		SubjectAreaNetworkAndSecurity                  func(childComplexity int) int
+		SubjectAreaNetworkAndSecurityOther             func(childComplexity int) int
+		SubjectAreaOtherTechnicalTopics                func(childComplexity int) int
+		SubjectAreaOtherTechnicalTopicsOther           func(childComplexity int) int
+		SubjectAreaTechnicalReferenceArchitecture      func(childComplexity int) int
+		SubjectAreaTechnicalReferenceArchitectureOther func(childComplexity int) int
+		TRBRequestID                                   func(childComplexity int) int
+		WhereInProcess                                 func(childComplexity int) int
+		WhereInProcessOther                            func(childComplexity int) int
 	}
 
 	TRBTaskStatuses struct {
@@ -5508,12 +5515,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.SubjectAreaApplicationDevelopment(childComplexity), true
 
+	case "TRBRequestForm.subjectAreaApplicationDevelopmentOther":
+		if e.complexity.TRBRequestForm.SubjectAreaApplicationDevelopmentOther == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.SubjectAreaApplicationDevelopmentOther(childComplexity), true
+
 	case "TRBRequestForm.subjectAreaCloudAndInfrastructure":
 		if e.complexity.TRBRequestForm.SubjectAreaCloudAndInfrastructure == nil {
 			break
 		}
 
 		return e.complexity.TRBRequestForm.SubjectAreaCloudAndInfrastructure(childComplexity), true
+
+	case "TRBRequestForm.subjectAreaCloudAndInfrastructureOther":
+		if e.complexity.TRBRequestForm.SubjectAreaCloudAndInfrastructureOther == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.SubjectAreaCloudAndInfrastructureOther(childComplexity), true
 
 	case "TRBRequestForm.subjectAreaDataAndDataManagement":
 		if e.complexity.TRBRequestForm.SubjectAreaDataAndDataManagement == nil {
@@ -5522,12 +5543,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.SubjectAreaDataAndDataManagement(childComplexity), true
 
+	case "TRBRequestForm.subjectAreaDataAndDataManagementOther":
+		if e.complexity.TRBRequestForm.SubjectAreaDataAndDataManagementOther == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.SubjectAreaDataAndDataManagementOther(childComplexity), true
+
 	case "TRBRequestForm.subjectAreaGovernmentProcessesAndPolicies":
 		if e.complexity.TRBRequestForm.SubjectAreaGovernmentProcessesAndPolicies == nil {
 			break
 		}
 
 		return e.complexity.TRBRequestForm.SubjectAreaGovernmentProcessesAndPolicies(childComplexity), true
+
+	case "TRBRequestForm.subjectAreaGovernmentProcessesAndPoliciesOther":
+		if e.complexity.TRBRequestForm.SubjectAreaGovernmentProcessesAndPoliciesOther == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.SubjectAreaGovernmentProcessesAndPoliciesOther(childComplexity), true
 
 	case "TRBRequestForm.subjectAreaNetworkAndSecurity":
 		if e.complexity.TRBRequestForm.SubjectAreaNetworkAndSecurity == nil {
@@ -5536,6 +5571,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.SubjectAreaNetworkAndSecurity(childComplexity), true
 
+	case "TRBRequestForm.subjectAreaNetworkAndSecurityOther":
+		if e.complexity.TRBRequestForm.SubjectAreaNetworkAndSecurityOther == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.SubjectAreaNetworkAndSecurityOther(childComplexity), true
+
 	case "TRBRequestForm.subjectAreaOtherTechnicalTopics":
 		if e.complexity.TRBRequestForm.SubjectAreaOtherTechnicalTopics == nil {
 			break
@@ -5543,12 +5585,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.SubjectAreaOtherTechnicalTopics(childComplexity), true
 
+	case "TRBRequestForm.subjectAreaOtherTechnicalTopicsOther":
+		if e.complexity.TRBRequestForm.SubjectAreaOtherTechnicalTopicsOther == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.SubjectAreaOtherTechnicalTopicsOther(childComplexity), true
+
 	case "TRBRequestForm.subjectAreaTechnicalReferenceArchitecture":
 		if e.complexity.TRBRequestForm.SubjectAreaTechnicalReferenceArchitecture == nil {
 			break
 		}
 
 		return e.complexity.TRBRequestForm.SubjectAreaTechnicalReferenceArchitecture(childComplexity), true
+
+	case "TRBRequestForm.subjectAreaTechnicalReferenceArchitectureOther":
+		if e.complexity.TRBRequestForm.SubjectAreaTechnicalReferenceArchitectureOther == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.SubjectAreaTechnicalReferenceArchitectureOther(childComplexity), true
 
 	case "TRBRequestForm.trbRequestId":
 		if e.complexity.TRBRequestForm.TRBRequestID == nil {
@@ -7710,6 +7766,13 @@ type TRBRequestForm {
   subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
   subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
+  subjectAreaTechnicalReferenceArchitectureOther: String
+  subjectAreaNetworkAndSecurityOther: String
+  subjectAreaCloudAndInfrastructureOther: String
+  subjectAreaApplicationDevelopmentOther: String
+  subjectAreaDataAndDataManagementOther: String
+  subjectAreaGovernmentProcessesAndPoliciesOther: String
+  subjectAreaOtherTechnicalTopicsOther: String
 
   createdBy: String!
   createdAt: Time!
@@ -7747,6 +7810,13 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
   subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
   subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
+  subjectAreaTechnicalReferenceArchitectureOther: String
+  subjectAreaNetworkAndSecurityOther: String
+  subjectAreaCloudAndInfrastructureOther: String
+  subjectAreaApplicationDevelopmentOther: String
+  subjectAreaDataAndDataManagementOther: String
+  subjectAreaGovernmentProcessesAndPoliciesOther: String
+  subjectAreaOtherTechnicalTopicsOther: String
 }
 
 """
@@ -26200,6 +26270,20 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestForm(ctx conte
 				return ec.fieldContext_TRBRequestForm_subjectAreaGovernmentProcessesAndPolicies(ctx, field)
 			case "subjectAreaOtherTechnicalTopics":
 				return ec.fieldContext_TRBRequestForm_subjectAreaOtherTechnicalTopics(ctx, field)
+			case "subjectAreaTechnicalReferenceArchitectureOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaTechnicalReferenceArchitectureOther(ctx, field)
+			case "subjectAreaNetworkAndSecurityOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaNetworkAndSecurityOther(ctx, field)
+			case "subjectAreaCloudAndInfrastructureOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaCloudAndInfrastructureOther(ctx, field)
+			case "subjectAreaApplicationDevelopmentOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaApplicationDevelopmentOther(ctx, field)
+			case "subjectAreaDataAndDataManagementOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaDataAndDataManagementOther(ctx, field)
+			case "subjectAreaGovernmentProcessesAndPoliciesOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaGovernmentProcessesAndPoliciesOther(ctx, field)
+			case "subjectAreaOtherTechnicalTopicsOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestForm_createdBy(ctx, field)
 			case "createdAt":
@@ -34433,6 +34517,20 @@ func (ec *executionContext) fieldContext_TRBRequest_form(ctx context.Context, fi
 				return ec.fieldContext_TRBRequestForm_subjectAreaGovernmentProcessesAndPolicies(ctx, field)
 			case "subjectAreaOtherTechnicalTopics":
 				return ec.fieldContext_TRBRequestForm_subjectAreaOtherTechnicalTopics(ctx, field)
+			case "subjectAreaTechnicalReferenceArchitectureOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaTechnicalReferenceArchitectureOther(ctx, field)
+			case "subjectAreaNetworkAndSecurityOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaNetworkAndSecurityOther(ctx, field)
+			case "subjectAreaCloudAndInfrastructureOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaCloudAndInfrastructureOther(ctx, field)
+			case "subjectAreaApplicationDevelopmentOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaApplicationDevelopmentOther(ctx, field)
+			case "subjectAreaDataAndDataManagementOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaDataAndDataManagementOther(ctx, field)
+			case "subjectAreaGovernmentProcessesAndPoliciesOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaGovernmentProcessesAndPoliciesOther(ctx, field)
+			case "subjectAreaOtherTechnicalTopicsOther":
+				return ec.fieldContext_TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestForm_createdBy(ctx, field)
 			case "createdAt":
@@ -37096,6 +37194,293 @@ func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaOtherTechnica
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBOtherTechnicalTopicsOption does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_subjectAreaTechnicalReferenceArchitectureOther(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_subjectAreaTechnicalReferenceArchitectureOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubjectAreaTechnicalReferenceArchitectureOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaTechnicalReferenceArchitectureOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_subjectAreaNetworkAndSecurityOther(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_subjectAreaNetworkAndSecurityOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubjectAreaNetworkAndSecurityOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaNetworkAndSecurityOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_subjectAreaCloudAndInfrastructureOther(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_subjectAreaCloudAndInfrastructureOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubjectAreaCloudAndInfrastructureOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaCloudAndInfrastructureOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_subjectAreaApplicationDevelopmentOther(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_subjectAreaApplicationDevelopmentOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubjectAreaApplicationDevelopmentOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaApplicationDevelopmentOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_subjectAreaDataAndDataManagementOther(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_subjectAreaDataAndDataManagementOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubjectAreaDataAndDataManagementOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaDataAndDataManagementOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_subjectAreaGovernmentProcessesAndPoliciesOther(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_subjectAreaGovernmentProcessesAndPoliciesOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubjectAreaGovernmentProcessesAndPoliciesOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaGovernmentProcessesAndPoliciesOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubjectAreaOtherTechnicalTopicsOther, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -49730,6 +50115,34 @@ func (ec *executionContext) _TRBRequestForm(ctx context.Context, sel ast.Selecti
 				return innerFunc(ctx)
 
 			})
+		case "subjectAreaTechnicalReferenceArchitectureOther":
+
+			out.Values[i] = ec._TRBRequestForm_subjectAreaTechnicalReferenceArchitectureOther(ctx, field, obj)
+
+		case "subjectAreaNetworkAndSecurityOther":
+
+			out.Values[i] = ec._TRBRequestForm_subjectAreaNetworkAndSecurityOther(ctx, field, obj)
+
+		case "subjectAreaCloudAndInfrastructureOther":
+
+			out.Values[i] = ec._TRBRequestForm_subjectAreaCloudAndInfrastructureOther(ctx, field, obj)
+
+		case "subjectAreaApplicationDevelopmentOther":
+
+			out.Values[i] = ec._TRBRequestForm_subjectAreaApplicationDevelopmentOther(ctx, field, obj)
+
+		case "subjectAreaDataAndDataManagementOther":
+
+			out.Values[i] = ec._TRBRequestForm_subjectAreaDataAndDataManagementOther(ctx, field, obj)
+
+		case "subjectAreaGovernmentProcessesAndPoliciesOther":
+
+			out.Values[i] = ec._TRBRequestForm_subjectAreaGovernmentProcessesAndPoliciesOther(ctx, field, obj)
+
+		case "subjectAreaOtherTechnicalTopicsOther":
+
+			out.Values[i] = ec._TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx, field, obj)
+
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequestForm_createdBy(ctx, field, obj)

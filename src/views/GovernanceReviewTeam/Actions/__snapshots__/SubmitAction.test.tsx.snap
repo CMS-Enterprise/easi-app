@@ -492,7 +492,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                       Click in the field below to confirm this EUA contact
                     </div>
                     <div
-                      class="cedar-contact-select usa-combo-box cedar-contact-select__warning cedar-contact-select__loading css-b62m3t-container"
+                      class="margin-top-1 cedar-contact-select usa-combo-box cedar-contact-select__warning cedar-contact-select__loading css-b62m3t-container"
                       id="IntakeForm-ContactCommonName"
                     >
                       <span
@@ -524,6 +524,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                               autocomplete="off"
                               autocorrect="off"
                               class="cedar-contact-select__input"
+                              data-testid="cedar-contact-select"
                               id="react-select-IntakeForm-ContactCommonName-input"
                               role="combobox"
                               spellcheck="false"

@@ -9,7 +9,6 @@ import {
   IconArrowBack
 } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
-import * as yup from 'yup';
 
 import PageLoading from 'components/PageLoading';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -55,7 +54,9 @@ export interface FormStepComponentProps {
   /** Set to update the submitting state from step components to the parent request form */
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
   /** Set a form level error message from step components */
-  setFormError: React.Dispatch<React.SetStateAction<string | false>>;
+  setFormAlert: React.Dispatch<
+    React.SetStateAction<{ type: 'success' | 'error'; message: string } | false>
+  >;
   stepUrl: {
     current: string;
     next: string;
@@ -66,25 +67,13 @@ export interface FormStepComponentProps {
 
 /**
  * Form view components with step url slugs for each form request step.
- * `inputSchema` and `blankValues` are used to determine `stepsCompleted`.
  */
-// Temporary optional defs for inputSchema and blankValues used until dev is finished with all steps
 export const formStepComponents: {
   component: (props: FormStepComponentProps) => JSX.Element;
   step: string;
-  inputSchema?: yup.SchemaOf<any>;
-  blankValues?: any;
 }[] = [
-  {
-    component: Basic,
-    step: 'basic',
-    inputSchema: inputBasicSchema,
-    blankValues: basicBlankValues
-  },
-  {
-    component: SubjectAreas,
-    step: 'subject'
-  },
+  { component: Basic, step: 'basic' },
+  { component: SubjectAreas, step: 'subject' },
   { component: Attendees, step: 'attendees' },
   { component: Documents, step: 'documents' },
   { component: Check, step: 'check' }
@@ -116,7 +105,7 @@ function Header({
   stepsCompleted,
   stepSubmit,
   isStepSubmitting,
-  formError,
+  formAlert,
   taskListUrl
 }: {
   step: number;
@@ -126,7 +115,7 @@ function Header({
   stepsCompleted: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
-  formError: string | false;
+  formAlert: { type: 'success' | 'error'; message: string } | false;
   taskListUrl: string;
 }) {
   const history = useHistory();
@@ -151,29 +140,34 @@ function Header({
           </>
         ),
         description: stp.description,
+        completed: idx < step - 1,
 
-        // Handle links to available steps determined by completed steps
-        // Indexing of the step text matches `stepsCompleted`
-        completed: idx < stepsCompleted.length,
+        // Basic details is the only step with required form fields
+        // Prevent links to other steps until basic is complete
         onClick:
-          request && !isStepSubmitting && idx <= stepsCompleted.length
-            ? e => {
-                history.push(
-                  `/trb/requests/${request.id}/${formStepSlugs[idx]}`
-                );
+          request &&
+          !isStepSubmitting &&
+          idx !== step - 1 && // not the current step
+          stepsCompleted.includes('basic')
+            ? () => {
+                stepSubmit?.(() => {
+                  history.push(
+                    `/trb/requests/${request.id}/${formStepSlugs[idx]}`
+                  );
+                });
               }
             : undefined
       }))}
       hideSteps={!request}
       breadcrumbBar={breadcrumbBar}
       errorAlert={
-        formError && (
+        formAlert && (
           <Alert
-            heading={t('errors.somethingWrong')}
-            type="error"
+            heading={step !== 3 && t('errors.somethingWrong')}
+            type={formAlert.type}
             className="trb-form-error margin-top-3 margin-bottom-2"
           >
-            {formError}
+            {formAlert.message}
           </Alert>
         )
       }
@@ -237,33 +231,24 @@ function RequestForm() {
     (async () => {
       const completed = [...stepsCompleted];
 
-      // Validate steps sequentially
-      // eslint-disable-next-line no-restricted-syntax
-      for (const stp of formStepComponents) {
-        if (
-          // Skip already validated
-          !completed.includes(stp.step) &&
-          // Temp check for blankValues and inputSchema
-          // Remove when these props are available for all steps
-          stp.blankValues &&
-          stp.inputSchema
-        ) {
-          try {
-            // eslint-disable-next-line no-await-in-loop
-            await stp.inputSchema.validate(
-              nullFillObject(request.form, stp.blankValues),
-              {
-                strict: true
-              }
-            );
-          } catch (err) {
-            break;
-          }
-          completed.push(stp.step);
-        }
-      }
+      // Only the Basic Details step needs a completed form
+      // The rest have all optional fields and can be skipped
+      const stp = 'basic';
 
-      if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+      // Skip if already validated
+      if (!completed.includes(stp)) {
+        inputBasicSchema
+          .isValid(nullFillObject(request.form, basicBlankValues), {
+            strict: true
+          })
+          .then(valid => {
+            if (valid) {
+              completed.push(stp);
+              if (!isEqual(completed, stepsCompleted))
+                setStepsCompleted(completed);
+            }
+          });
+      }
     })();
   }, [request, stepsCompleted]);
 
@@ -303,20 +288,22 @@ function RequestForm() {
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
   // Form level errors from step components
-  const [formError, setFormError] = useState<string | false>(false);
+  const [formAlert, setFormAlert] = useState<
+    { type: 'success' | 'error'; message: string } | false
+  >(false);
 
   // Clear the form level error as implied when steps change
   useEffect(() => {
-    setFormError(false);
-  }, [setFormError, step]);
+    setFormAlert(false);
+  }, [setFormAlert, step]);
 
   // Scroll to the form error
   useEffect(() => {
-    if (formError) {
+    if (formAlert) {
       const err = document.querySelector('.trb-form-error');
       err?.scrollIntoView();
     }
-  }, [formError]);
+  }, [formAlert]);
 
   if (!step || taskListUrl === null) {
     return null;
@@ -351,7 +338,7 @@ function RequestForm() {
           stepsCompleted={stepsCompleted}
           stepSubmit={stepSubmit}
           isStepSubmitting={isStepSubmitting}
-          formError={formError}
+          formAlert={formAlert}
           taskListUrl={taskListUrl}
         />
       )}
@@ -370,7 +357,7 @@ function RequestForm() {
             refetchRequest={refetch}
             setStepSubmit={setStepSubmit}
             setIsStepSubmitting={setIsStepSubmitting}
-            setFormError={setFormError}
+            setFormAlert={setFormAlert}
           />
         </GridContainer>
       ) : (
