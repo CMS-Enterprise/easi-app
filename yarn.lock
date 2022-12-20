@@ -15231,10 +15231,10 @@ react-i18next@^11.5.0:
     "@babel/runtime" "^7.3.1"
     html-parse-stringify2 "2.0.1"
 
-react-idle-timer@^4.5.5:
-  version "4.5.5"
-  resolved "https://registry.npmjs.org/react-idle-timer/-/react-idle-timer-4.5.5.tgz"
-  integrity sha512-hQpwbEmZq9NZyR3hsq9savk8SwKAyzBqqCpp3sjJQzMrYoQHMIxKrYy0dpCM0JbyHNmSDqD4vLTJAcA+BH47Dw==
+react-idle-timer@^5.4.2:
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/react-idle-timer/-/react-idle-timer-5.4.2.tgz#69e20044cf2ecc421aef99cd82298c526d8acf37"
+  integrity sha512-ofCS/qpFjm6ZguEyePvtf9YMDnLj7zZfeLXRWGRpsC6Ga47H4dm7EvoUW8MsozGEGy8zCvPK0Sk6YuAnwLEzRQ==
 
 react-inspector@^5.1.0:
   version "5.1.1"
