@@ -476,6 +476,7 @@ const technicalAssistance = {
       noDocument: 'No documents uploaded',
       view: 'View',
       remove: 'Remove',
+      unavailable: 'Unavailable',
       virusScan: 'Virus scan in progress...'
     },
     upload: {

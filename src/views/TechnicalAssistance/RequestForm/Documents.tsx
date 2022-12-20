@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Column, useSortBy, useTable } from 'react-table';
+import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -15,22 +15,33 @@ import {
   FormGroup,
   IconArrowBack,
   Label,
+  Link,
   Radio,
   Table,
   TextInput
 } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
+import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import {
   CreateTrbRequestDocument,
   CreateTrbRequestDocumentVariables
 } from 'queries/types/CreateTrbRequestDocument';
 import {
+  DeleteTrbRequestDocument,
+  DeleteTrbRequestDocumentVariables
+} from 'queries/types/DeleteTrbRequestDocument';
+import {
   GetTrbRequestDocuments,
   GetTrbRequestDocuments_trbRequest_documents as TrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
+import {
+  TRBDocumentCommonType,
+  TRBRequestDocumentStatus
+} from 'types/graphql-global-types';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import {
   documentSchema,
@@ -50,7 +61,18 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   >(GetTrbRequestDocumentsQuery, {
     variables: { id: request.id }
   });
+
   const documents = data?.trbRequest.documents || [];
+
+  const [createDocument /* , createResult */] = useMutation<
+    CreateTrbRequestDocument,
+    CreateTrbRequestDocumentVariables
+  >(CreateTrbRequestDocumentQuery);
+
+  const [deleteDocument /* , deleteResult */] = useMutation<
+    DeleteTrbRequestDocument,
+    DeleteTrbRequestDocumentVariables
+  >(DeleteTrbRequestDocumentQuery);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
     return [
@@ -60,18 +82,59 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
       },
       {
         Header: t<string>('documents.table.header.documentType'),
-        accessor: 'documentType.commonType' // todo other & ts error
+        accessor: ({ documentType: { commonType, otherTypeDescription } }) => {
+          if (commonType === TRBDocumentCommonType.OTHER) {
+            return otherTypeDescription || '';
+          }
+          return t(`documents.upload.type.${commonType}`);
+        }
       },
       {
         Header: t<string>('documents.table.header.uploadDate'),
-        accessor: 'uploadedAt'
+        accessor: 'uploadedAt',
+        Cell: ({ value }) => DateTime.fromISO(value).toFormat('MM/dd/yyyy')
       },
       {
         Header: t<string>('documents.table.header.actions'),
-        accessor: 'url'
+        accessor: ({ status }) => {
+          // Repurpose the accessor to use `status` for sorting order
+          if (status === TRBRequestDocumentStatus.PENDING) return 1;
+          if (status === TRBRequestDocumentStatus.AVAILABLE) return 2;
+          if (status === TRBRequestDocumentStatus.UNAVAILABLE) return 3;
+          return 4;
+        },
+        Cell: ({ row }: CellProps<TrbRequestDocuments, string>) => {
+          if (row.original.status === TRBRequestDocumentStatus.PENDING)
+            return <em>{t('documents.table.virusScan')}</em>;
+          if (row.original.status === TRBRequestDocumentStatus.AVAILABLE)
+            return (
+              <>
+                {/* View document */}
+                <Link target="_blank" href={row.original.url}>
+                  {t('documents.table.view')}
+                </Link>
+                {/* Delete document */}
+                <Button
+                  unstyled
+                  type="button"
+                  className="margin-left-2 text-error"
+                  onClick={() => {
+                    deleteDocument({
+                      variables: { id: row.original.id }
+                    }); /* .then(res => console.log('delete', res)); */
+                  }}
+                >
+                  {t('documents.table.remove')}
+                </Button>
+              </>
+            );
+          if (row.original.status === TRBRequestDocumentStatus.UNAVAILABLE)
+            return t('documents.table.unavailable');
+          return '';
+        }
       }
     ];
-  }, [t]);
+  }, [deleteDocument, t]);
 
   const {
     getTableBodyProps,
@@ -84,21 +147,19 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
       columns,
       data: documents,
       autoResetSortBy: false,
-      autoResetPage: false
+      autoResetPage: false,
+      initialState: {
+        sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])
+      }
     },
     useSortBy
   );
 
-  const [createDocument] = useMutation<
-    CreateTrbRequestDocument,
-    CreateTrbRequestDocumentVariables
-  >(CreateTrbRequestDocumentQuery);
-
   const {
     control,
     handleSubmit,
-    watch,
-    formState: { errors }
+    watch
+    // formState: { errors }
   } = useForm<TrbRequestInputDocument>({
     resolver: yupResolver(documentSchema),
     defaultValues: {
@@ -109,7 +170,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   });
 
   const submit = async (formData: any) => {
-    console.log('formdata', formData);
+    // console.log('formdata', formData);
 
     await createDocument({
       variables: {
@@ -121,8 +182,8 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
     });
   };
 
-  console.log('values', JSON.stringify(watch(), null, 2));
-  console.log('errors', JSON.stringify(errors, null, 2));
+  // console.log('values', JSON.stringify(watch(), null, 2));
+  // console.log('errors', JSON.stringify(errors, null, 2));
 
   return (
     <>
@@ -174,7 +235,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
             })}
           </tbody>
         </Table>
-        <div>{t('documents.table.noDocument')}</div>
+        {documents.length === 0 && <div>{t('documents.table.noDocument')}</div>}
       </div>
       <div>
         <Form className="maxw-full" onSubmit={handleSubmit(submit)}>
