@@ -99,7 +99,7 @@ func GetTRBAttendConsultStatus(ctx context.Context, store *storage.Store, trbReq
 			return nil, err
 		}
 
-		if trb.ConsultMeetingTime != nil && trb.TRBLead != nil {
+		if trb.ConsultMeetingTime != nil {
 			if time.Now().Before(*trb.ConsultMeetingTime) {
 				status = models.TRBAttendConsultStatusScheduled
 			} else {
