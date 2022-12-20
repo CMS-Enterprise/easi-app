@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +13,7 @@ import {
   FileInput,
   Form,
   FormGroup,
+  Grid,
   IconArrowBack,
   Label,
   Link,
@@ -22,6 +23,7 @@ import {
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
@@ -54,13 +56,18 @@ import { FormStepComponentProps } from '.';
 function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+  const { url } = useRouteMatch();
+  // console.log('url', url);
 
-  const { data /* error, loading */ } = useQuery<
+  const { data /* , error, loading */ } = useQuery<
     GetTrbRequestDocuments,
     GetTrbRequestDocumentsVariables
   >(GetTrbRequestDocumentsQuery, {
     variables: { id: request.id }
   });
+
+  // console.log('loading', loading, 'error', error);
+  // console.log('data', data);
 
   const documents = data?.trbRequest.documents || [];
 
@@ -104,8 +111,10 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
           return 4;
         },
         Cell: ({ row }: CellProps<TrbRequestDocuments, string>) => {
+          // Virus scanning
           if (row.original.status === TRBRequestDocumentStatus.PENDING)
             return <em>{t('documents.table.virusScan')}</em>;
+          // View or Remove
           if (row.original.status === TRBRequestDocumentStatus.AVAILABLE)
             return (
               <>
@@ -128,6 +137,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
                 </Button>
               </>
             );
+          // Infected unavailable
           if (row.original.status === TRBRequestDocumentStatus.UNAVAILABLE)
             return t('documents.table.unavailable');
           return '';
@@ -186,177 +196,208 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   // console.log('errors', JSON.stringify(errors, null, 2));
 
   return (
-    <>
-      <div>
-        <Button type="button">{t('documents.addDocument')}</Button>
-      </div>
-      <div>
-        <Table bordered={false} fullWidth scrollable {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, index) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    aria-sort={getColumnSortStatus(column)}
-                    scope="col"
-                    className="border-bottom-2px"
-                  >
-                    <Button
-                      type="button"
-                      unstyled
-                      className="width-full display-flex"
-                      {...column.getSortByToggleProps()}
-                    >
-                      <div className="flex-fill text-no-wrap">
-                        {column.render('Header')}
-                      </div>
-                      <div className="position-relative width-205 margin-left-05">
-                        {getHeaderSortIcon(column)}
-                      </div>
-                    </Button>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(row => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-        {documents.length === 0 && <div>{t('documents.table.noDocument')}</div>}
-      </div>
-      <div>
-        <Form className="maxw-full" onSubmit={handleSubmit(submit)}>
-          {/* tablet col 6 */}
-          <h1>{t('documents.upload.title')}</h1>
-          <div>{t('documents.upload.subtitle')}</div>
-          <Controller
-            name="fileData"
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup error={!!error}>
-                  <Label htmlFor={field.name} error={!!error}>
-                    {t('documents.upload.documentUpload')}
-                  </Label>
-                  {error && (
-                    <ErrorMessage>{t('errors.selectFile')}</ErrorMessage>
-                  )}
-                  <FileInput
-                    id={field.name}
-                    name={field.name}
-                    onBlur={field.onBlur}
-                    onChange={e => {
-                      field.onChange(e.currentTarget?.files?.[0]);
-                    }}
-                    accept=".pdf,.doc,.docx,.xls,.xlsx"
-                  />
-                </FormGroup>
-              );
-            }}
-          />
-          <Controller
-            name="documentType"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup error={!!error}>
-                <Fieldset legend={t('documents.upload.whatType')}>
-                  {error && (
-                    <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
-                  )}
-                  {[
-                    'ARCHITECTURE_DIAGRAM',
-                    'PRESENTATION_SLIDE_DECK',
-                    'BUSINESS_CASE',
-                    'OTHER'
-                  ].map(val => (
-                    <Radio
-                      key={val}
-                      id={`${field.name}-${val}`}
-                      data-testid={`${field.name}-${val}`}
-                      name={field.name}
-                      onBlur={field.onBlur}
-                      onChange={field.onChange}
-                      label={t(`documents.upload.type.${val}`)}
-                      value={val}
-                    />
-                  ))}
-                </Fieldset>
-              </FormGroup>
-            )}
-          />
-          {watch('documentType') === 'OTHER' && (
-            <div className="margin-left-4">
-              <Controller
-                name="otherTypeDescription"
-                control={control}
-                // eslint-disable-next-line no-shadow
-                render={({ field, fieldState: { error } }) => (
-                  <FormGroup>
-                    <Label htmlFor={field.name} error={!!error}>
-                      {t('documents.upload.whatKind')}
-                    </Label>
-                    {error && (
-                      <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
-                    )}
-                    <TextInput
-                      id={field.name}
-                      name={field.name}
-                      type="text"
-                      onBlur={field.onBlur}
-                      onChange={field.onChange}
-                      value={field.value || ''}
-                      validationStatus={error && 'error'}
-                    />
-                  </FormGroup>
-                )}
-              />
-            </div>
-          )}
-          <Alert type="info" slim>
-            {t('documents.upload.toKeepCmsSafe')}
-          </Alert>
-          <div>
-            <Button type="submit">
-              {t('documents.upload.uploadDocument')}
-            </Button>
-          </div>
-        </Form>
+    <Switch>
+      {/* Documents table */}
+      <Route exact path="/trb/requests/:id/documents">
         <div>
-          <Button type="button" unstyled>
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            {t('documents.upload.dontUploadAndReturn')}
-          </Button>
+          <UswdsReactLink
+            variant="unstyled"
+            className="usa-button"
+            to={`${url}/upload`}
+          >
+            {t('documents.addDocument')}
+          </UswdsReactLink>
         </div>
-      </div>
-      <Pager
-        back={{
-          onClick: () => {
-            history.push(stepUrl.back);
-          }
-        }}
-        next={{
-          onClick: e => {
-            history.push(stepUrl.next);
-          },
-          text: t('documents.continueWithoutAdding'),
-          outline: true
-        }}
-        taskListUrl={taskListUrl}
-      />
-    </>
+        <div>
+          <Table bordered={false} fullWidth scrollable {...getTableProps()}>
+            <thead>
+              {headerGroups.map(headerGroup => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column, index) => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      aria-sort={getColumnSortStatus(column)}
+                      scope="col"
+                      className="border-bottom-2px"
+                    >
+                      <Button
+                        type="button"
+                        unstyled
+                        className="width-full display-flex"
+                        {...column.getSortByToggleProps()}
+                      >
+                        <div className="flex-fill text-no-wrap">
+                          {column.render('Header')}
+                        </div>
+                        <div className="position-relative width-205 margin-left-05">
+                          {getHeaderSortIcon(column)}
+                        </div>
+                      </Button>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map(row => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell, index) => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          {documents.length === 0 && (
+            <div>{t('documents.table.noDocument')}</div>
+          )}
+        </div>
+
+        <Pager
+          back={{
+            onClick: () => {
+              history.push(stepUrl.back);
+            }
+          }}
+          next={{
+            onClick: e => {
+              history.push(stepUrl.next);
+            },
+            text: t(
+              documents.length
+                ? 'button.next'
+                : 'documents.continueWithoutAdding'
+            ),
+            outline: documents.length === 0
+          }}
+          taskListUrl={taskListUrl}
+        />
+      </Route>
+
+      {/* Upload document form */}
+      <Route exact path="/trb/requests/:id/documents/upload">
+        <div>
+          <Alert type="error" slim>
+            {t('documents.upload.error')}
+          </Alert>
+          <Form className="maxw-full" onSubmit={handleSubmit(submit)}>
+            <h1>{t('documents.upload.title')}</h1>
+            <Grid row gap>
+              <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+                <div>{t('documents.upload.subtitle')}</div>
+                <Controller
+                  name="fileData"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => {
+                    return (
+                      <FormGroup error={!!error}>
+                        <Label htmlFor={field.name} error={!!error}>
+                          {t('documents.upload.documentUpload')}
+                        </Label>
+                        {error && (
+                          <ErrorMessage>{t('errors.selectFile')}</ErrorMessage>
+                        )}
+                        <FileInput
+                          id={field.name}
+                          name={field.name}
+                          onBlur={field.onBlur}
+                          onChange={e => {
+                            field.onChange(e.currentTarget?.files?.[0]);
+                          }}
+                          accept=".pdf,.doc,.docx,.xls,.xlsx"
+                        />
+                      </FormGroup>
+                    );
+                  }}
+                />
+                <Controller
+                  name="documentType"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <FormGroup error={!!error}>
+                      <Fieldset legend={t('documents.upload.whatType')}>
+                        {error && (
+                          <ErrorMessage>
+                            {t('errors.makeSelection')}
+                          </ErrorMessage>
+                        )}
+                        {[
+                          'ARCHITECTURE_DIAGRAM',
+                          'PRESENTATION_SLIDE_DECK',
+                          'BUSINESS_CASE',
+                          'OTHER'
+                        ].map(val => (
+                          <Radio
+                            key={val}
+                            id={`${field.name}-${val}`}
+                            data-testid={`${field.name}-${val}`}
+                            name={field.name}
+                            onBlur={field.onBlur}
+                            onChange={field.onChange}
+                            label={t(`documents.upload.type.${val}`)}
+                            value={val}
+                          />
+                        ))}
+                      </Fieldset>
+                    </FormGroup>
+                  )}
+                />
+                {watch('documentType') === 'OTHER' && (
+                  <div className="margin-left-4">
+                    <Controller
+                      name="otherTypeDescription"
+                      control={control}
+                      // eslint-disable-next-line no-shadow
+                      render={({ field, fieldState: { error } }) => (
+                        <FormGroup>
+                          <Label htmlFor={field.name} error={!!error}>
+                            {t('documents.upload.whatKind')}
+                          </Label>
+                          {error && (
+                            <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                          )}
+                          <TextInput
+                            id={field.name}
+                            name={field.name}
+                            type="text"
+                            onBlur={field.onBlur}
+                            onChange={field.onChange}
+                            value={field.value || ''}
+                            validationStatus={error && 'error'}
+                          />
+                        </FormGroup>
+                      )}
+                    />
+                  </div>
+                )}
+                <Alert type="info" slim>
+                  {t('documents.upload.toKeepCmsSafe')}
+                </Alert>
+              </Grid>
+            </Grid>
+            <div>
+              <Button type="submit">
+                {t('documents.upload.uploadDocument')}
+              </Button>
+            </div>
+          </Form>
+          <div>
+            <UswdsReactLink
+              variant="unstyled"
+              to={`/trb/requests/${request.id}/documents`}
+            >
+              <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+              {t('documents.upload.dontUploadAndReturn')}
+            </UswdsReactLink>
+          </div>
+        </div>
+      </Route>
+    </Switch>
   );
 }
 
