@@ -28,10 +28,16 @@ func (s *EmailTestSuite) TestSendTRBEditsNeededOnFormNotification() {
 		}
 
 		taskListViewOpeningTag := fmt.Sprintf(
-			"<a href=\"%s://%s/trb/task-list/%s\" style=\"font-weight: bold\">",
+			"<a href=\"%s://%s/trb/task-list/%s\">",
 			s.config.URLScheme,
 			s.config.URLHost,
 			requestID,
+		)
+
+		adminViewOpeningTag := fmt.Sprintf(
+			"<a href=\"%s://%s/TODO/admin-view\">",
+			s.config.URLScheme,
+			s.config.URLHost,
 		)
 
 		mailToTRBInboxElement := fmt.Sprintf(
@@ -43,10 +49,16 @@ func (s *EmailTestSuite) TestSendTRBEditsNeededOnFormNotification() {
 		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +
 			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
 			"<p>The Technical Review Board (TRB) has reviewed the initial request form for " + requestName + " and has requested edits.</p>\n\n" +
-			"<p>" + taskListViewOpeningTag + "View the request in EASi</a></p>\n\n" +
 			"<p>Edits requested: " + feedback + "</p>\n\n" +
-			"Next steps:\n<ul>\n" +
+			"Next steps:\n" +
+			"<ul>\n" +
 			"<li>" + requesterName + " and their project team should review the feedback provided by the TRB and make any required changes to the initial request form.</li>\n" +
+			"</ul>\n\n" +
+			"View this request in EASi:\n" +
+			"<ul>\n" +
+			"<li>If you are the initial requester, you may " + taskListViewOpeningTag + "click here</a> to view your request task list.</li>\n" +
+			"<li>TRB team members may " + adminViewOpeningTag + "click here</a> to view the request details.</li>\n" +
+			"<li>Others should contact " + requesterName + " or the TRB for more information about this request.</li>\n" +
 			"</ul>\n\n" +
 			"<p>If you have questions, please email the TRB at " + mailToTRBInboxElement + ".</p>\n\n" +
 			"<hr>\n\n" +
