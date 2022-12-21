@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -34,7 +35,6 @@ func createEmailClient() email.Client {
 		AccessibilityTeamEmail: models.NewEmailAddress("508_team@cms.gov"),
 		TRBEmail:               models.NewEmailAddress("trb@cms.gov"),
 		EASIHelpEmail:          models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
-		TRBEmail:               models.NewEmailAddress(os.Getenv("TRB_EMAIL")),
 		URLHost:                os.Getenv("CLIENT_HOSTNAME"),
 		URLScheme:              os.Getenv("CLIENT_PROTOCOL"),
 		TemplateDirectory:      os.Getenv("EMAIL_TEMPLATE_DIR"),
@@ -60,6 +60,8 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	requesterName := "Requesting User"
 	requesterEmail := models.NewEmailAddress("TEST@local.fake")
 	component := "Test Component"
+	adminEmail := models.NewEmailAddress("admin@local.fake")
+	emailRecipients := []models.EmailAddress{requesterEmail, adminEmail}
 
 	err := client.SendTRBFormSubmissionNotificationToRequester(ctx, requestID, requestName, requesterEmail, requesterName)
 	noErr(err)
@@ -67,20 +69,37 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestName, requesterName, component)
 	noErr(err)
 
-	adminEmail := models.NewEmailAddress("admin@local.fake")
-	feedbackRecipients := []models.EmailAddress{requesterEmail, adminEmail}
-
 	readyForConsultFeedback := "You're good to go for the consult meeting!"
-	err = client.SendTRBReadyForConsultNotification(ctx, feedbackRecipients, true, requestID, requestName, requesterName, readyForConsultFeedback)
+	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, readyForConsultFeedback)
 	noErr(err)
 
 	editsRequestedFeedback := "Please provide a better form."
-	err = client.SendTRBEditsNeededOnFormNotification(ctx, feedbackRecipients, true, requestID, requestName, requesterName, editsRequestedFeedback)
+	err = client.SendTRBEditsNeededOnFormNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, editsRequestedFeedback)
 	noErr(err)
 
 	attendeeEmail := models.NewEmailAddress("subject_matter_expert@local.fake")
-
 	err = client.SendTRBAttendeeAddedNotification(ctx, attendeeEmail, requestName, requesterName)
+	noErr(err)
+
+	leadName := "The Leader"
+	err = client.SendTRBRequestTRBLeadEmail(ctx, email.SendTRBRequestTRBLeadEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		TRBLeadName:    leadName,
+	})
+	noErr(err)
+
+	consultMeetingTime := time.Now().AddDate(0, 0, 10)
+	err = client.SendTRBRequestConsultMeetingEmail(ctx, email.SendTRBRequestConsultMeetingEmailInput{
+		TRBRequestID:       requestID,
+		ConsultMeetingTime: consultMeetingTime,
+		CopyTRBMailbox:     true,
+		NotifyEmails:       emailRecipients,
+		TRBRequestName:     requestName,
+		Notes:              "Have a good time at the consult meeting!",
+		RequesterName:      requesterName,
+	})
 	noErr(err)
 }
 
