@@ -28,10 +28,16 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 		}
 
 		taskListViewOpeningTag := fmt.Sprintf(
-			"<a href=\"%s://%s/trb/task-list/%s\" style=\"font-weight: bold\">",
+			"<a href=\"%s://%s/trb/task-list/%s\">",
 			s.config.URLScheme,
 			s.config.URLHost,
 			requestID,
+		)
+
+		adminViewOpeningTag := fmt.Sprintf(
+			"<a href=\"%s://%s/TODO/admin-view\">",
+			s.config.URLScheme,
+			s.config.URLHost,
 		)
 
 		mailToTRBInboxElement := fmt.Sprintf(
@@ -43,12 +49,18 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +
 			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
 			"<p>The Technical Review Board (TRB) has reviewed the initial request form for " + requestName + " and is now ready to schedule a consult session.</p>\n\n" +
-			"<p>" + taskListViewOpeningTag + "View the request in EASi</a></p>\n\n" +
 			"<p>Feedback: " + feedback + "</p>\n\n" +
-			"Next steps:\n<ul>\n" +
+			"Next steps:\n" +
+			"<ul>\n" +
 			"<li>If they haven't already, the TRB will assign a TRB lead for this request to help process the request and facilitate the consult session.</li>\n" +
 			"<li>The TRB lead will work with " + requesterName + " and their project team to decide on a day and time for the TRB consult session.</li>\n" +
 			"<li>Then they will add the date in EASi and send a separate calendar invite with a remote video conferencing meeting link.</li>\n" +
+			"</ul>\n\n" +
+			"View this request in EASi:\n" +
+			"<ul>\n" +
+			"<li>If you are the initial requester, you may " + taskListViewOpeningTag + "click here</a> to view your request task list.</li>\n" +
+			"<li>TRB team members may " + adminViewOpeningTag + "click here</a> to view the request details.</li>\n" +
+			"<li>Others should contact " + requesterName + " or the TRB for more information about this request.</li>\n" +
 			"</ul>\n\n" +
 			"<p>If you have questions, please email the TRB at " + mailToTRBInboxElement + ".</p>\n\n" +
 			"<hr>\n\n" +
