@@ -16,8 +16,8 @@ type Config struct {
 	GRTEmail               models.EmailAddress
 	ITInvestmentEmail      models.EmailAddress
 	AccessibilityTeamEmail models.EmailAddress
-	TRBEmail               models.EmailAddress
 	EASIHelpEmail          models.EmailAddress
+	TRBEmail               models.EmailAddress
 	URLHost                string
 	URLScheme              string
 	TemplateDirectory      string
@@ -50,6 +50,8 @@ type templates struct {
 	helpSendFeedback                           templateCaller
 	helpCantFindSomething                      templateCaller
 	helpReportAProblem                         templateCaller
+	trbRequestConsultMeeting                   templateCaller
+	trbRequestTRBLead                          templateCaller
 	trbFormSubmittedAdmin                      templateCaller
 	trbFormSubmittedRequester                  templateCaller
 	trbAttendeeAdded                           templateCaller
@@ -213,6 +215,19 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.helpReportAProblem = helpReportAProblemTemplate
 
+	trbRequestConsultMeetingTemplateName := "trb_request_consult_meeting.gohtml"
+	trbRequestConsultMeetingTemplate := rawTemplates.Lookup(trbRequestConsultMeetingTemplateName)
+	if trbRequestConsultMeetingTemplate == nil {
+		return Client{}, templateError(trbRequestConsultMeetingTemplateName)
+	}
+	appTemplates.trbRequestConsultMeeting = trbRequestConsultMeetingTemplate
+
+	trbRequestTRBLeadTemplateName := "trb_request_trb_lead.gohtml"
+	trbRequestTRBLeadTemplate := rawTemplates.Lookup(trbRequestTRBLeadTemplateName)
+	if trbRequestTRBLeadTemplate == nil {
+		return Client{}, templateError(trbRequestTRBLeadTemplateName)
+	}
+	appTemplates.trbRequestTRBLead = trbRequestTRBLeadTemplate
 	trbFormSubmittedAdminTemplateName := "trb_request_form_submission_admin.gohtml"
 	trbFormSubmittedAdminTemplate := rawTemplates.Lookup(trbFormSubmittedAdminTemplateName)
 	if trbFormSubmittedAdminTemplate == nil {
