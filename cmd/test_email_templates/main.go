@@ -2,8 +2,7 @@ package main
 
 // Prerequisites: MailCatcher container running (use scripts/dev up:backend to start)
 
-// This script tests the email notifications for invalid/missing EUA IDs introduced for EASI-1569;
-// other email methods can be tested by calling email.Client's methods.
+// This script tests various email methods.
 // To view emails, visit the MailCatcher web UI at http://127.0.0.1:1080/.
 
 import (
@@ -46,6 +45,14 @@ func createEmailClient() email.Client {
 	return emailClient
 }
 
+func sendInvalidEUAIDEmails(ctx context.Context, client *email.Client) {
+	err := client.SendIntakeInvalidEUAIDEmail(ctx, "Some Project With An Invalid EUA ID", "ABCD", uuid.New())
+	noErr(err)
+
+	err = client.SendIntakeNoEUAIDEmail(ctx, "Some Project With No EUA ID", uuid.New())
+	noErr(err)
+}
+
 func sendTRBEmails(ctx context.Context, client *email.Client) {
 	requestID := uuid.New()
 	requestName := "Example Request"
@@ -83,11 +90,6 @@ func main() {
 
 	client := createEmailClient()
 
-	err = client.SendIntakeInvalidEUAIDEmail(ctx, "Some Project With An Invalid EUA ID", "ABCD", uuid.New())
-	noErr(err)
-
-	err = client.SendIntakeNoEUAIDEmail(ctx, "Some Project With No EUA ID", uuid.New())
-	noErr(err)
-
+	sendInvalidEUAIDEmails(ctx, &client)
 	sendTRBEmails(ctx, &client)
 }
