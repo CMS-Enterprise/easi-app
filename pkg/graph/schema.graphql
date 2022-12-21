@@ -1519,6 +1519,8 @@ type TRBRequest {
   documents: [TRBRequestDocument!]!
   form: TRBRequestForm!
   taskStatuses: TRBTaskStatuses!
+  consultMeetingTime: Time
+  trbLead: String
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -1531,7 +1533,8 @@ Wraps all of the various status on the TRB task list into one type
 type TRBTaskStatuses {
   formStatus: TRBFormStatus!
   feedbackStatus: TRBFeedbackStatus!
-  consultStatus: TRBConsultStatus!
+  consultPrepStatus: TRBConsultPrepStatus!
+  attendConsultStatus: TRBAttendConsultStatus!
 }
 
 """
@@ -1693,10 +1696,19 @@ enum TRBFeedbackStatus {
 """
 Represents the status of the TRB consult step
 """
-enum TRBConsultStatus {
+enum TRBConsultPrepStatus {
   CANNOT_START_YET
   READY_TO_START
-  IN_PROGRESS
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB consult attendance step
+"""
+enum TRBAttendConsultStatus {
+  CANNOT_START_YET
+  READY_TO_SCHEDULE
+  SCHEDULED
   COMPLETED
 }
 
@@ -1926,6 +1938,25 @@ input CreateTRBRequestFeedbackInput {
 }
 
 """
+The data needed schedule a TRB consult meeting time
+"""
+input UpdateTRBRequestConsultMeetingTimeInput {
+  trbRequestId: UUID!
+  consultMeetingTime: Time!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
+  notes: String!
+}
+
+"""
+The data needed assign a TRB lead to a TRB request
+"""
+input UpdateTRBRequestTRBLeadInput {
+  trbRequestId: UUID!
+  trbLead: String!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -2042,6 +2073,10 @@ type Mutation {
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 
