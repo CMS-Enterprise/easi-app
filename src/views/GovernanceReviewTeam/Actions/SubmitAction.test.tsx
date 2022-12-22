@@ -54,14 +54,6 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
-jest.mock('launchdarkly-react-client-sdk', () => ({
-  useFlags: () => {
-    return {
-      notifyMultipleRecipients: true
-    };
-  }
-}));
-
 window.scrollTo = jest.fn();
 
 describe('Submit Action', () => {
