@@ -3,7 +3,9 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
+import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import {
   GetTrbRequest,
@@ -95,7 +97,7 @@ const documents = (
 
 describe('Trb Request form: Supporting documents', () => {
   it('renders states without documents', async () => {
-    const { asFragment, findByRole } = render(
+    const { getByRole, findByText } = render(
       <MemoryRouter
         initialEntries={[
           '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
@@ -125,16 +127,22 @@ describe('Trb Request form: Supporting documents', () => {
       </MemoryRouter>
     );
 
-    // Submit button: Continue without documents
-    expect(
-      await findByRole('button', { name: 'Continue without adding documents' })
-    ).toBeInTheDocument();
+    await findByText('No documents uploaded');
 
-    expect(asFragment()).toMatchSnapshot();
+    // Submit button state without any documents loaded
+    getByRole('button', { name: 'Continue without adding documents' });
+
+    getByRole('link', { name: 'Add a document' });
   });
 
   it('renders states with documents loaded', async () => {
-    const { asFragment, findByRole } = render(
+    const {
+      asFragment,
+      findByRole,
+      getByText,
+      getByRole,
+      getAllByText
+    } = render(
       <MemoryRouter
         initialEntries={[
           '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
@@ -161,8 +169,7 @@ describe('Trb Request form: Supporting documents', () => {
                           },
                           status: 'UNAVAILABLE',
                           uploadedAt: '2022-12-20T16:25:42.414064Z',
-                          url:
-                            'http://host.docker.internal:9000/easi-app-file-uploads/6db39281-4e14-43ed-b973-ced09732c33d.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20221220%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221220T210952Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=5cc44f5a045802fac8a4720b08432d31e70ed86b990063be43b0056c74accea2'
+                          url: '' // Links are not used in test
                         },
                         {
                           id: 'd7efd8a7-4ad9-4ed3-80e4-c4b70f3498ae',
@@ -173,8 +180,7 @@ describe('Trb Request form: Supporting documents', () => {
                           },
                           status: 'AVAILABLE',
                           uploadedAt: '2022-12-20T19:04:12.50116Z',
-                          url:
-                            'http://host.docker.internal:9000/easi-app-file-uploads/483bdc9f-4e23-4288-afc1-da23692df11b.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20221220%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221220T210952Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=835b79034d02ff423c255bf84a167e54b45d0a69ca5693cb80e853ed27ce2f12'
+                          url: ''
                         },
                         {
                           id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
@@ -185,8 +191,7 @@ describe('Trb Request form: Supporting documents', () => {
                           },
                           status: 'PENDING',
                           uploadedAt: '2022-12-20T19:04:36.518916Z',
-                          url:
-                            'http://host.docker.internal:9000/easi-app-file-uploads/561de1eb-8efd-4a08-bdeb-1994249f6fe4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20221220%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221220T210952Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=295b461849f7c5e6357a4b3e4d93b13c617bd43ec5f4236d04d9690bc376b94f'
+                          url: ''
                         }
                       ]
                     }
@@ -201,14 +206,163 @@ describe('Trb Request form: Supporting documents', () => {
       </MemoryRouter>
     );
 
+    // Check some render states
     // Submit button is "Next" when there are documents
-    expect(await findByRole('button', { name: 'Next' })).toBeInTheDocument();
+    await findByRole('button', { name: 'Next' });
 
-    // Snapshot with states demonstrated
-    // - view and remove on available documents
-    // - other description text in document type column
-    // - all document file status types
-    // - date formatting
+    // Available file
+    getByRole('link', { name: 'View' });
+    getByRole('button', { name: 'Remove' });
+
+    getByText('Virus scan in progress...'); // Pending
+    getByText('Unavailable'); // Infected
+    getAllByText('12/20/2022'); // Date formatting
+    getByText('test other'); // Other text description
+
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('opens and closes the document upload form', () => {
+    const { getByRole, getByText } = render(
+      <MemoryRouter
+        initialEntries={[
+          '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
+        ]}
+      >
+        <Route exact path="/trb/requests/:id/:step?/:view?">
+          <MockedProvider>{documents}</MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
+
+    // Add document button can open the upload document form
+    userEvent.click(getByRole('link', { name: 'Add a document' }));
+
+    getByText('Upload a document', { selector: 'h1' });
+
+    // Can close without uploading
+    userEvent.click(
+      getByRole('link', { name: 'Don’t upload and return to previous page' })
+    );
+
+    expect(getByRole('link', { name: 'Add a document' })).toBeInTheDocument();
+  });
+
+  it('successfully uploads a doc', async () => {
+    const testFile = new File(['1'], 'test.pdf', { type: 'application/pdf' });
+
+    const {
+      getByRole,
+      getByTestId,
+      getByLabelText,
+      findByText,
+      getByText
+    } = render(
+      <MemoryRouter
+        initialEntries={[
+          '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
+        ]}
+      >
+        <Route exact path="/trb/requests/:id/:step?/:view?">
+          <MockedProvider
+            mocks={[
+              // Initial get documents
+              {
+                request: {
+                  query: GetTrbRequestDocumentsQuery,
+                  variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
+                },
+                result: {
+                  data: {
+                    trbRequest: {
+                      documents: []
+                    }
+                  }
+                }
+              },
+              // Upload document file
+              {
+                request: {
+                  query: CreateTrbRequestDocumentQuery,
+                  variables: {
+                    input: {
+                      requestID: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
+                      documentType: 'ARCHITECTURE_DIAGRAM',
+                      fileData: testFile
+                    }
+                  }
+                },
+                result: {
+                  data: {
+                    createTRBRequestDocument: {
+                      document: {
+                        id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
+                        documentType: {
+                          commonType: 'ARCHITECTURE_DIAGRAM',
+                          otherTypeDescription: ''
+                        },
+                        fileName: 'test.pdf'
+                      }
+                    }
+                  }
+                }
+              },
+              // Documents list with uploaded file
+              {
+                request: {
+                  query: GetTrbRequestDocumentsQuery,
+                  variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
+                },
+                result: {
+                  data: {
+                    trbRequest: {
+                      documents: [
+                        {
+                          id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
+                          fileName: 'test.pdf',
+                          documentType: {
+                            commonType: 'ARCHITECTURE_DIAGRAM',
+                            otherTypeDescription: ''
+                          },
+                          status: 'PENDING',
+                          uploadedAt: '2022-12-20T19:04:36.518916Z',
+                          url: ''
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]}
+          >
+            {documents}
+          </MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
+
+    expect(await findByText('No documents uploaded')).toBeInTheDocument();
+
+    // Add document button opens upload document form
+    userEvent.click(getByRole('link', { name: 'Add a document' }));
+
+    // Upload doc disabled on empty form
+    const uploadButton = getByRole('button', { name: 'Upload document' });
+    expect(uploadButton).toBeDisabled();
+
+    const documentUploadLabel = getByLabelText('Document upload');
+    userEvent.upload(documentUploadLabel, testFile);
+
+    userEvent.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
+
+    // Attempt submit
+    expect(uploadButton).not.toBeDisabled();
+    userEvent.click(uploadButton);
+
+    // Successful if file info is displayed
+    await findByText('test.pdf');
+    getByText('Architecture diagram');
+    getByText('12/20/2022');
+    getByText('Virus scan in progress...');
   });
 });

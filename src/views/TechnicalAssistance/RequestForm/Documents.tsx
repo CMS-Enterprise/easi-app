@@ -1,7 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useParams,
+  useRouteMatch
+} from 'react-router-dom';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,6 +27,7 @@ import {
   Table,
   TextInput
 } from '@trussworks/react-uswds';
+import { pickBy } from 'lodash';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -50,16 +57,30 @@ import {
   TrbRequestInputDocument
 } from 'validations/trbRequestSchema';
 
+import Breadcrumbs from '../Breadcrumbs';
+
 import Pager from './Pager';
 import { FormStepComponentProps } from '.';
 
-function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
+/**
+ * Documents is a component of both the table list of uploaded documents
+ * and the document upload form.
+ */
+function Documents({
+  request,
+  stepUrl,
+  taskListUrl,
+  setFormAlert
+}: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
   const { url } = useRouteMatch();
-  // console.log('url', url);
 
-  const { data /* , error, loading */ } = useQuery<
+  const { view } = useParams<{
+    view?: string;
+  }>();
+
+  const { data, refetch /* , error, loading */ } = useQuery<
     GetTrbRequestDocuments,
     GetTrbRequestDocumentsVariables
   >(GetTrbRequestDocumentsQuery, {
@@ -70,12 +91,22 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   // console.log('data', data);
 
   const documents = data?.trbRequest.documents || [];
+  // console.log('documents', documents);
 
+  // Documents can be created from the upload form
   const [createDocument /* , createResult */] = useMutation<
     CreateTrbRequestDocument,
     CreateTrbRequestDocumentVariables
   >(CreateTrbRequestDocumentQuery);
 
+  const [isUploadError, setIsUploadError] = useState(false);
+
+  useEffect(() => {
+    if (view === 'upload') setFormAlert(false);
+    if (!view) setIsUploadError(false);
+  }, [view, t, setFormAlert]);
+
+  // Documents can be deleted from the table
   const [deleteDocument /* , deleteResult */] = useMutation<
     DeleteTrbRequestDocument,
     DeleteTrbRequestDocumentVariables
@@ -111,11 +142,13 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
           return 4;
         },
         Cell: ({ row }: CellProps<TrbRequestDocuments, string>) => {
+          // Show the upload status
           // Virus scanning
           if (row.original.status === TRBRequestDocumentStatus.PENDING)
             return <em>{t('documents.table.virusScan')}</em>;
           // View or Remove
           if (row.original.status === TRBRequestDocumentStatus.AVAILABLE)
+            // Show some file actions once it's available
             return (
               <>
                 {/* View document */}
@@ -130,7 +163,13 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
                   onClick={() => {
                     deleteDocument({
                       variables: { id: row.original.id }
-                    }); /* .then(res => console.log('delete', res)); */
+                    })
+                      .then(() => {
+                        refetch(); // Refresh doc list
+                      })
+                      .catch(() => {
+                        // todo no top level error message for the delete yet
+                      });
                   }}
                 >
                   {t('documents.table.remove')}
@@ -144,7 +183,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
         }
       }
     ];
-  }, [deleteDocument, t]);
+  }, [deleteDocument, refetch, t]);
 
   const {
     getTableBodyProps,
@@ -168,8 +207,8 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
   const {
     control,
     handleSubmit,
-    watch
-    // formState: { errors }
+    watch,
+    formState: { /* errors, */ isSubmitting, isDirty }
   } = useForm<TrbRequestInputDocument>({
     resolver: yupResolver(documentSchema),
     defaultValues: {
@@ -179,26 +218,46 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
     }
   });
 
-  const submit = async (formData: any) => {
+  const submit = handleSubmit(async formData => {
     // console.log('formdata', formData);
 
-    await createDocument({
+    // Filter out otherTypeDescription input if it's empty
+    const input: any = pickBy(formData, v => v !== '');
+
+    createDocument({
       variables: {
         input: {
           requestID: request.id,
-          ...formData
+          ...input
         }
       }
-    });
-  };
+    })
+      .then(() => {
+        refetch(); // Reload documents
+        // todo need to update alert params for success state
+        // setFormAlert({
+        //   type: 'success',
+        //   message: t('documents.upload.success')
+        // });
+        // Go back to the documents step
+        history.push(`/trb/requests/${request.id}/documents`);
+      })
+      .catch(err => {
+        // console.log(err);
+        setIsUploadError(true);
+      });
+  });
 
   // console.log('values', JSON.stringify(watch(), null, 2));
   // console.log('errors', JSON.stringify(errors, null, 2));
+  // console.log('isDirty', isDirty);
+  // console.log('dirtyFields', JSON.stringify(dirtyFields, null, 2));
 
   return (
     <Switch>
       {/* Documents table */}
       <Route exact path="/trb/requests/:id/documents">
+        {/* Open the document upload form */}
         <div>
           <UswdsReactLink
             variant="unstyled"
@@ -208,6 +267,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
             {t('documents.addDocument')}
           </UswdsReactLink>
         </div>
+
         <div>
           <Table bordered={false} fullWidth scrollable {...getTableProps()}>
             <thead>
@@ -253,7 +313,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
               })}
             </tbody>
           </Table>
-          {documents.length === 0 && (
+          {data && documents.length === 0 && (
             <div>{t('documents.table.noDocument')}</div>
           )}
         </div>
@@ -282,10 +342,26 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
       {/* Upload document form */}
       <Route exact path="/trb/requests/:id/documents/upload">
         <div>
-          <Alert type="error" slim>
-            {t('documents.upload.error')}
-          </Alert>
-          <Form className="maxw-full" onSubmit={handleSubmit(submit)}>
+          <Breadcrumbs
+            items={[
+              { text: t('heading'), url: '/trb' },
+              {
+                text: t('taskList.heading'),
+                url: taskListUrl
+              },
+              {
+                text: t('requestForm.heading'),
+                url: `/trb/requests/${request.id}/documents`
+              },
+              { text: t('documents.upload.title') }
+            ]}
+          />
+          {isUploadError && (
+            <Alert type="error" slim>
+              {t('documents.upload.error')}
+            </Alert>
+          )}
+          <Form className="maxw-full" onSubmit={submit}>
             <h1>{t('documents.upload.title')}</h1>
             <Grid row gap>
               <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
@@ -293,6 +369,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
                 <Controller
                   name="fileData"
                   control={control}
+                  // eslint-disable-next-line no-shadow
                   render={({ field, fieldState: { error } }) => {
                     return (
                       <FormGroup error={!!error}>
@@ -318,6 +395,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
                 <Controller
                   name="documentType"
                   control={control}
+                  // eslint-disable-next-line no-shadow
                   render={({ field, fieldState: { error } }) => (
                     <FormGroup error={!!error}>
                       <Fieldset legend={t('documents.upload.whatType')}>
@@ -381,7 +459,7 @@ function Documents({ request, stepUrl, taskListUrl }: FormStepComponentProps) {
               </Grid>
             </Grid>
             <div>
-              <Button type="submit">
+              <Button type="submit" disabled={!isDirty || isSubmitting}>
                 {t('documents.upload.uploadDocument')}
               </Button>
             </div>

@@ -53,7 +53,7 @@ export interface FormStepComponentProps {
   setStepSubmit: React.Dispatch<React.SetStateAction<StepSubmit | null>>;
   /** Set to update the submitting state from step components to the parent request form */
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
-  /** Set a form level error message from step components */
+  /** Set a form level alert message from within step components */
   setFormAlert: React.Dispatch<
     React.SetStateAction<{ type: 'success' | 'error'; message: string } | false>
   >;
