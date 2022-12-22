@@ -1,12 +1,16 @@
 package models
 
+import "time"
+
 // TRBRequest represents a TRB request object
 type TRBRequest struct {
 	baseStruct
-	Name     string           `json:"name" db:"name"`
-	Archived bool             `json:"archived" db:"archived"`
-	Type     TRBRequestType   `json:"type" db:"type"`     //TODO should this be a type?
-	Status   TRBRequestStatus `json:"status" db:"status"` //TODO should this be a type?
+	Name               string           `json:"name" db:"name"`
+	Archived           bool             `json:"archived" db:"archived"`
+	Type               TRBRequestType   `json:"type" db:"type"`     //TODO should this be a type?
+	Status             TRBRequestStatus `json:"status" db:"status"` //TODO should this be a type?
+	ConsultMeetingTime *time.Time       `json:"consultMeetingTime" db:"consult_meeting_time"`
+	TRBLead            *string          `json:"trbLead" db:"trb_lead"`
 }
 
 // NewTRBRequest returns a new trb request object
@@ -49,19 +53,31 @@ const (
 	TRBFeedbackStatusCompleted      TRBFeedbackStatus = "COMPLETED"
 )
 
-// TRBConsultStatus represents the types of TRBConsultStatus types
-type TRBConsultStatus string
+// TRBConsultPrepStatus represents the types of TRBConsultPrepStatus types
+type TRBConsultPrepStatus string
 
-// These are the options for TRBConsultStatus
+// These are the options for TRBConsultPrepStatus
 const (
-	TRBConsultStatusCannotStartYet TRBConsultStatus = "CANNOT_START_YET"
-	TRBConsultStatusInProgress     TRBConsultStatus = "IN_PROGRESS"
-	TRBConsultStatusCompleted      TRBConsultStatus = "COMPLETED"
+	TRBConsultPrepStatusCannotStartYet TRBConsultPrepStatus = "CANNOT_START_YET"
+	TRBConsultPrepStatusReadyToStart   TRBConsultPrepStatus = "READY_TO_START"
+	TRBConsultPrepStatusCompleted      TRBConsultPrepStatus = "COMPLETED"
+)
+
+// TRBAttendConsultStatus represents the types of TRBAttendConsultStatus types
+type TRBAttendConsultStatus string
+
+// These are the options for TRBAttendConsultStatus
+const (
+	TRBAttendConsultStatusCannotStartYet  TRBAttendConsultStatus = "CANNOT_START_YET"
+	TRBAttendConsultStatusReadyToSchedule TRBAttendConsultStatus = "READY_TO_SCHEDULE"
+	TRBAttendConsultStatusScheduled       TRBAttendConsultStatus = "SCHEDULED"
+	TRBAttendConsultStatusCompleted       TRBAttendConsultStatus = "COMPLETED"
 )
 
 // TRBTaskStatuses contains the individual statuses for the steps of the TRB task list
 type TRBTaskStatuses struct {
-	FormStatus     TRBFormStatus     `json:"formStatus"`
-	FeedbackStatus TRBFeedbackStatus `json:"feedbackStatus"`
-	ConsultStatus  TRBConsultStatus  `json:"consultStatus"`
+	FormStatus          TRBFormStatus          `json:"formStatus"`
+	FeedbackStatus      TRBFeedbackStatus      `json:"feedbackStatus"`
+	ConsultPrepStatus   TRBConsultPrepStatus   `json:"consultPrepStatus"`
+	AttendConsultStatus TRBAttendConsultStatus `json:"attendConsultStatus"`
 }

@@ -4,6 +4,8 @@ SET id = :id,
     archived = :archived,
     type = :type,
     status = :status,
+    consult_meeting_time = :consult_meeting_time,
+    trb_lead = :trb_lead,
     modified_by = :modified_by,
     modified_at = CURRENT_TIMESTAMP
 WHERE trb_request.id = :id
@@ -13,6 +15,8 @@ RETURNING
     archived,
     type,
     status,
+    consult_meeting_time,
+    trb_lead,
     created_by,
     created_at,
     modified_by,
