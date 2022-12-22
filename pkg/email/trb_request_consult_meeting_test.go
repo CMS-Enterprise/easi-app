@@ -2,7 +2,6 @@ package email
 
 import (
 	"context"
-	"fmt"
 	"path"
 	"time"
 
@@ -58,7 +57,6 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
 `
-		fmt.Println(sender.body)
 		err = client.SendTRBRequestConsultMeetingEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{"McLovin@example.com", "Jane@example.com", s.config.TRBEmail})

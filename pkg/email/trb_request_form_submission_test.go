@@ -106,7 +106,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 		requesterEmail := models.NewEmailAddress("test.requester@test.com")
 		requesterName := "Test Requester"
 
-		requesterViewOpeningTag := fmt.Sprintf(
+		taskListViewOpeningTag := fmt.Sprintf(
 			"<a href=\"%s://%s/trb/task-list/%s\" style=\"font-weight: bold\">",
 			s.config.URLScheme,
 			s.config.URLHost,
@@ -123,7 +123,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToRequester() {
 			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
 			"<p>You have completed the initial request form for your TRB Request (" + requestName + "). " +
 			"The TRB will review it and get back to you within two business days with feedback about your request. They will then work with you to schedule a time for your TRB consult session.</p>\n\n" +
-			requesterViewOpeningTag + "View your request in EASi</a>\n\n" +
+			taskListViewOpeningTag + "View your request in EASi</a>\n\n" +
 			"<p>If you have questions, please contact the Technical Review Board (TRB) at " + mailToTRBInboxElement + ".</p>\n\n" +
 			"<hr>\n\n" +
 			"<p>You will continue to receive email notifications about your request until it is closed.</p>\n"
