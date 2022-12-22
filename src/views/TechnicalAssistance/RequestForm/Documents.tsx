@@ -31,6 +31,7 @@ import { pickBy } from 'lodash';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import PageHeading from 'components/PageHeading';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
@@ -258,7 +259,7 @@ function Documents({
       {/* Documents table */}
       <Route exact path="/trb/requests/:id/documents">
         {/* Open the document upload form */}
-        <div>
+        <div className="margin-top-5 margin-bottom-4">
           <UswdsReactLink
             variant="unstyled"
             className="usa-button"
@@ -314,11 +315,14 @@ function Documents({
             </tbody>
           </Table>
           {data && documents.length === 0 && (
-            <div>{t('documents.table.noDocument')}</div>
+            <div className="font-body-2xs margin-left-2">
+              {t('documents.table.noDocument')}
+            </div>
           )}
         </div>
 
         <Pager
+          className="margin-top-7"
           back={{
             onClick: () => {
               history.push(stepUrl.back);
@@ -362,7 +366,9 @@ function Documents({
             </Alert>
           )}
           <Form className="maxw-full" onSubmit={submit}>
-            <h1>{t('documents.upload.title')}</h1>
+            <PageHeading className="margin-bottom-1">
+              {t('documents.upload.title')}
+            </PageHeading>
             <Grid row gap>
               <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
                 <div>{t('documents.upload.subtitle')}</div>
@@ -372,7 +378,7 @@ function Documents({
                   // eslint-disable-next-line no-shadow
                   render={({ field, fieldState: { error } }) => {
                     return (
-                      <FormGroup error={!!error}>
+                      <FormGroup error={!!error} className="margin-top-5">
                         <Label htmlFor={field.name} error={!!error}>
                           {t('documents.upload.documentUpload')}
                         </Label>
@@ -432,7 +438,7 @@ function Documents({
                       control={control}
                       // eslint-disable-next-line no-shadow
                       render={({ field, fieldState: { error } }) => (
-                        <FormGroup>
+                        <FormGroup className="margin-top-1" error={!!error}>
                           <Label htmlFor={field.name} error={!!error}>
                             {t('documents.upload.whatKind')}
                           </Label>
@@ -453,18 +459,22 @@ function Documents({
                     />
                   </div>
                 )}
-                <Alert type="info" slim>
+                <Alert type="info" slim className="margin-top-5">
                   {t('documents.upload.toKeepCmsSafe')}
                 </Alert>
               </Grid>
             </Grid>
             <div>
-              <Button type="submit" disabled={!isDirty || isSubmitting}>
+              <Button
+                type="submit"
+                disabled={!isDirty || isSubmitting}
+                className="margin-top-4"
+              >
                 {t('documents.upload.uploadDocument')}
               </Button>
             </div>
           </Form>
-          <div>
+          <div className="margin-top-2">
             <UswdsReactLink
               variant="unstyled"
               to={`/trb/requests/${request.id}/documents`}
