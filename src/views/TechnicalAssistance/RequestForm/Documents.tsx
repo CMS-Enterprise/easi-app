@@ -102,11 +102,6 @@ function Documents({
 
   const [isUploadError, setIsUploadError] = useState(false);
 
-  useEffect(() => {
-    if (view === 'upload') setFormAlert(false);
-    if (!view) setIsUploadError(false);
-  }, [view, t, setFormAlert]);
-
   // Documents can be deleted from the table
   const [deleteDocument /* , deleteResult */] = useMutation<
     DeleteTrbRequestDocument,
@@ -209,6 +204,7 @@ function Documents({
     control,
     handleSubmit,
     watch,
+    reset,
     formState: { /* errors, */ isSubmitting, isDirty }
   } = useForm<TrbRequestInputDocument>({
     resolver: yupResolver(documentSchema),
@@ -248,6 +244,12 @@ function Documents({
         setIsUploadError(true);
       });
   });
+
+  useEffect(() => {
+    if (view === 'upload') setFormAlert(false);
+    if (!view) setIsUploadError(false);
+    if (!view && isDirty) reset();
+  }, [view, t, setFormAlert, isDirty, reset]);
 
   // console.log('values', JSON.stringify(watch(), null, 2));
   // console.log('errors', JSON.stringify(errors, null, 2));
