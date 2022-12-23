@@ -27,7 +27,7 @@ import {
   Table,
   TextInput
 } from '@trussworks/react-uswds';
-import { pickBy } from 'lodash';
+import { clone } from 'lodash';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -218,8 +218,12 @@ function Documents({
   const submit = handleSubmit(async formData => {
     // console.log('formdata', formData);
 
-    // Filter out otherTypeDescription input if it's empty
-    const input: any = pickBy(formData, v => v !== '');
+    const input: any = clone(formData);
+
+    // Clear out otherTypeDescription if documentType isn't OTHER
+    if (input.documentType !== 'OTHER') {
+      delete input.otherTypeDescription;
+    }
 
     createDocument({
       variables: {

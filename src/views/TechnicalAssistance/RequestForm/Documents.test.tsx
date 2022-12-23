@@ -2,10 +2,11 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
+import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import {
   GetTrbRequest,
@@ -96,6 +97,8 @@ const documents = (
 );
 
 describe('Trb Request form: Supporting documents', () => {
+  const testFile = new File(['1'], 'test.pdf', { type: 'application/pdf' });
+
   it('renders states without documents', async () => {
     const { getByRole, findByText } = render(
       <MemoryRouter
@@ -248,9 +251,7 @@ describe('Trb Request form: Supporting documents', () => {
     expect(getByRole('link', { name: 'Add a document' })).toBeInTheDocument();
   });
 
-  it('successfully uploads a doc', async () => {
-    const testFile = new File(['1'], 'test.pdf', { type: 'application/pdf' });
-
+  it('successfully uploads a doc, starting from the documents table', async () => {
     const {
       getByRole,
       getByTestId,
@@ -364,5 +365,156 @@ describe('Trb Request form: Supporting documents', () => {
     getByText('Architecture diagram');
     getByText('12/20/2022');
     getByText('Virus scan in progress...');
+  });
+
+  it('deletes a document from the table', async () => {
+    const { findByText, findByRole } = render(
+      <MemoryRouter
+        initialEntries={[
+          '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
+        ]}
+      >
+        <Route exact path="/trb/requests/:id/:step?/:view?">
+          <MockedProvider
+            mocks={[
+              // Table with available file to delete
+              {
+                request: {
+                  query: GetTrbRequestDocumentsQuery,
+                  variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
+                },
+                result: {
+                  data: {
+                    trbRequest: {
+                      documents: [
+                        {
+                          id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
+                          fileName: 'test.pdf',
+                          documentType: {
+                            commonType: 'ARCHITECTURE_DIAGRAM',
+                            otherTypeDescription: ''
+                          },
+                          status: 'AVAILABLE',
+                          uploadedAt: '2022-12-20T19:04:36.518916Z',
+                          url: ''
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              // Delete file
+              {
+                request: {
+                  query: DeleteTrbRequestDocumentQuery,
+                  variables: { id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e' }
+                },
+                result: {
+                  data: {
+                    deleteTRBRequestDocument: {
+                      fileName: 'test.pdf'
+                    }
+                  }
+                }
+              },
+              // Refreshed empty doc list
+              {
+                request: {
+                  query: GetTrbRequestDocumentsQuery,
+                  variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
+                },
+                result: {
+                  data: {
+                    trbRequest: {
+                      documents: []
+                    }
+                  }
+                }
+              }
+            ]}
+          >
+            {documents}
+          </MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
+
+    const fileText = await findByText('test.pdf');
+
+    userEvent.click(await findByRole('button', { name: 'Remove' }));
+
+    await findByText('No documents uploaded');
+    expect(fileText).not.toBeInTheDocument();
+  });
+
+  it('toggles the optional other document type field', async () => {
+    const { getByTestId, findByLabelText } = render(
+      <MemoryRouter
+        initialEntries={[
+          '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents/upload'
+        ]}
+      >
+        <Route exact path="/trb/requests/:id/:step?/:view?">
+          <MockedProvider mocks={[]}>{documents}</MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
+
+    // On
+    userEvent.click(getByTestId('documentType-OTHER'));
+    const otherLabel = await findByLabelText('What kind of document is this?');
+    // Off
+    userEvent.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
+    await waitFor(() => {
+      expect(otherLabel).not.toBeInTheDocument();
+    });
+  });
+
+  it('handles invalid fields and error messages', async () => {
+    const { getByRole, getByTestId, getByLabelText, findByText } = render(
+      <MemoryRouter
+        initialEntries={[
+          '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents/upload'
+        ]}
+      >
+        <Route exact path="/trb/requests/:id/:step?/:view?">
+          <MockedProvider mocks={[]}>{documents}</MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
+
+    const uploadButton = getByRole('button', { name: 'Upload document' });
+
+    expect(uploadButton).toBeDisabled();
+
+    // Select the "Other" document type so that the form submit button is enabled
+    // The file input and the other text field will be left empty to catch errors
+    userEvent.click(getByTestId('documentType-OTHER'));
+
+    // Submit attempt
+    userEvent.click(uploadButton);
+
+    // File input error
+    const fileError = await findByText('Please select a file');
+    // Other document input error
+    const otherDocError = await findByText('Please fill in the blank');
+
+    // Add a document
+    const documentUploadLabel = getByLabelText('Document upload');
+    userEvent.upload(documentUploadLabel, testFile);
+    // Document error gone
+    await waitFor(() => {
+      expect(fileError).not.toBeInTheDocument();
+    });
+
+    // Text field error is still there
+    expect(otherDocError).toBeInTheDocument();
+
+    // Fill in text
+    userEvent.type(getByLabelText('What kind of document is this?'), 'test');
+    // Text error gone
+    await waitFor(() => {
+      expect(fileError).not.toBeInTheDocument();
+    });
   });
 });
