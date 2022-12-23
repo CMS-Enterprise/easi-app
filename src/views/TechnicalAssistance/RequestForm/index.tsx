@@ -39,6 +39,15 @@ import SubjectAreas from './SubjectAreas';
  */
 export type StepSubmit = (onValid?: () => void) => Promise<void>;
 
+export type TrbFormAlert =
+  | {
+      type: 'success' | 'warning' | 'error' | 'info';
+      message: string;
+      heading?: React.ReactNode;
+      slim?: boolean;
+    }
+  | false;
+
 export interface FormStepComponentProps {
   request: TrbRequest;
   /** Refetch the trb request from the form wrapper */
@@ -54,9 +63,7 @@ export interface FormStepComponentProps {
   /** Set to update the submitting state from step components to the parent request form */
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
   /** Set a form level alert message from within step components */
-  setFormAlert: React.Dispatch<
-    React.SetStateAction<{ type: 'success' | 'error'; message: string } | false>
-  >;
+  setFormAlert: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
   stepUrl: {
     current: string;
     next: string;
@@ -115,7 +122,7 @@ function Header({
   stepsCompleted: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
-  formAlert: { type: 'success' | 'error'; message: string } | false;
+  formAlert: TrbFormAlert;
   taskListUrl: string;
 }) {
   const history = useHistory();
@@ -163,8 +170,9 @@ function Header({
       errorAlert={
         formAlert && (
           <Alert
-            heading={step !== 3 && t('errors.somethingWrong')}
+            heading={formAlert.heading}
             type={formAlert.type}
+            slim={formAlert.slim}
             className="trb-form-error margin-top-3 margin-bottom-2"
           >
             {formAlert.message}
@@ -287,10 +295,8 @@ function RequestForm() {
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
-  // Form level errors from step components
-  const [formAlert, setFormAlert] = useState<
-    { type: 'success' | 'error'; message: string } | false
-  >(false);
+  // Form level alerts from step components
+  const [formAlert, setFormAlert] = useState<TrbFormAlert>(false);
 
   // Clear the form level error as implied when steps change
   useEffect(() => {

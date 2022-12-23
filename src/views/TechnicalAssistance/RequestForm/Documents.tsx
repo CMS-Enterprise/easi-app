@@ -231,11 +231,11 @@ function Documents({
     })
       .then(() => {
         refetch(); // Reload documents
-        // todo need to update alert params for success state
-        // setFormAlert({
-        //   type: 'success',
-        //   message: t('documents.upload.success')
-        // });
+        setFormAlert({
+          type: 'success',
+          slim: true,
+          message: t('documents.upload.success')
+        });
         // Go back to the documents step
         history.push(`/trb/requests/${request.id}/documents`);
       })
