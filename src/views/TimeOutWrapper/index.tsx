@@ -14,6 +14,9 @@ type TimeOutWrapperProps = {
   children: React.ReactNode;
 };
 
+// TimeOutWrapper handles all of the logic for tracking user activity and conditionally rendering a timeout modal
+// if idle time reaches a certain threshold.
+// This component effectively doesn't do anything when using local auth.
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const isLocalAuth =
     isLocalAuthEnabled() &&
@@ -23,7 +26,6 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
 
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('milliseconds');
@@ -38,9 +40,8 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       }
     },
     onPrompt: () => {
-      if (authState?.isAuthenticated) {
+      if (!isLocalAuth && authState?.isAuthenticated) {
         setTimeRemainingArr(formatSessionTimeRemaining(fiveMinutes));
-        setIsModalOpen(true);
       }
     },
     promptTimeout: fiveMinutes,
@@ -51,9 +52,13 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   });
 
   const forceRenew = async () => {
-    const tokenManager = await oktaAuth.tokenManager;
-    tokenManager.renew('idToken');
-    tokenManager.renew('accessToken');
+    // If not using local auth, and we've got an authenticated user with an access token, attempt to refresh it
+    // Otherwise, do nothing
+    if (authState?.idToken && authState?.accessToken) {
+      const tokenManager = await oktaAuth.tokenManager;
+      tokenManager.renew('idToken');
+      tokenManager.renew('accessToken');
+    }
   };
 
   /**
@@ -81,7 +86,6 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   };
 
   const handleModalExit = async () => {
-    setIsModalOpen(false);
     idleTimer.reset();
     forceRenew();
   };
@@ -94,7 +98,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         formatSessionTimeRemaining(idleTimer.getRemainingTime())
       );
     },
-    authState?.isAuthenticated && isModalOpen ? 1000 : null
+    authState?.isAuthenticated && idleTimer.isPrompted() ? 1000 : null
   );
 
   // If user is authenticated and has a token, renew it forever one
@@ -127,7 +131,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   return (
     <>
-      <Modal isOpen={isModalOpen} closeModal={handleModalExit}>
+      <Modal isOpen={idleTimer.isPrompted()} closeModal={handleModalExit}>
         <h3
           className="margin-top-0"
           role="timer"
