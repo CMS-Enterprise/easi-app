@@ -523,6 +523,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeContact                        func(childComplexity int, input model.CreateSystemIntakeContactInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
+		CreateTRBAdviceLetter                            func(childComplexity int, trbRequestID uuid.UUID) int
 		CreateTRBRequest                                 func(childComplexity int, requestType models.TRBRequestType) int
 		CreateTRBRequestAttendee                         func(childComplexity int, input model.CreateTRBRequestAttendeeInput) int
 		CreateTRBRequestDocument                         func(childComplexity int, input model.CreateTRBRequestDocumentInput) int
@@ -539,9 +540,11 @@ type ComplexityRoot struct {
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
+		RequestReviewForTRBAdviceLetter                  func(childComplexity int, id uuid.UUID) int
 		SendCantFindSomethingEmail                       func(childComplexity int, input model.SendCantFindSomethingEmailInput) int
 		SendFeedbackEmail                                func(childComplexity int, input model.SendFeedbackEmailInput) int
 		SendReportAProblemEmail                          func(childComplexity int, input model.SendReportAProblemEmailInput) int
+		SendTRBAdviceLetter                              func(childComplexity int, input model.SendTRBAdviceLetterInput) int
 		SetRolesForUserOnSystem                          func(childComplexity int, input model.SetRolesForUserOnSystemInput) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
@@ -554,6 +557,7 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeLinkedContract                 func(childComplexity int, input model.UpdateSystemIntakeLinkedContractInput) int
 		UpdateSystemIntakeRequestDetails                 func(childComplexity int, input model.UpdateSystemIntakeRequestDetailsInput) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
+		UpdateTRBAdviceLetter                            func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBRequest                                 func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
 		UpdateTRBRequestAttendee                         func(childComplexity int, input model.UpdateTRBRequestAttendeeInput) int
 		UpdateTRBRequestConsultMeetingTime               func(childComplexity int, input model.UpdateTRBRequestConsultMeetingTimeInput) int
@@ -776,7 +780,22 @@ type ComplexityRoot struct {
 		Name      func(childComplexity int) int
 	}
 
+	TRBAdviceLetter struct {
+		CreatedAt             func(childComplexity int) int
+		CreatedBy             func(childComplexity int) int
+		DateSent              func(childComplexity int) int
+		FollowupPoint         func(childComplexity int) int
+		ID                    func(childComplexity int) int
+		IsFollowupRecommended func(childComplexity int) int
+		MeetingSummary        func(childComplexity int) int
+		ModifiedAt            func(childComplexity int) int
+		ModifiedBy            func(childComplexity int) int
+		NextSteps             func(childComplexity int) int
+		TRBRequestID          func(childComplexity int) int
+	}
+
 	TRBRequest struct {
+		AdviceLetter       func(childComplexity int) int
 		Archived           func(childComplexity int) int
 		Attendees          func(childComplexity int) int
 		ConsultMeetingTime func(childComplexity int) int
@@ -877,6 +896,7 @@ type ComplexityRoot struct {
 	}
 
 	TRBTaskStatuses struct {
+		AdviceLetterStatus  func(childComplexity int) int
 		AttendConsultStatus func(childComplexity int) int
 		ConsultPrepStatus   func(childComplexity int) int
 		FeedbackStatus      func(childComplexity int) int
@@ -1121,6 +1141,10 @@ type MutationResolver interface {
 	CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error)
 	UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error)
 	UpdateTRBRequestTRBLead(ctx context.Context, input model.UpdateTRBRequestTRBLeadInput) (*models.TRBRequest, error)
+	CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error)
+	UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetter, error)
+	RequestReviewForTRBAdviceLetter(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetter, error)
+	SendTRBAdviceLetter(ctx context.Context, input model.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -1201,6 +1225,7 @@ type TRBRequestResolver interface {
 	Feedback(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestFeedback, error)
 	Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error)
 	Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error)
+	AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBAdviceLetter, error)
 	TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error)
 }
 type TRBRequestAttendeeResolver interface {
@@ -3525,6 +3550,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeNote(childComplexity, args["input"].(model.CreateSystemIntakeNoteInput)), true
 
+	case "Mutation.createTRBAdviceLetter":
+		if e.complexity.Mutation.CreateTRBAdviceLetter == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createTRBAdviceLetter_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateTRBAdviceLetter(childComplexity, args["trbRequestId"].(uuid.UUID)), true
+
 	case "Mutation.createTRBRequest":
 		if e.complexity.Mutation.CreateTRBRequest == nil {
 			break
@@ -3717,6 +3754,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RejectIntake(childComplexity, args["input"].(model.RejectIntakeInput)), true
 
+	case "Mutation.requestReviewForTRBAdviceLetter":
+		if e.complexity.Mutation.RequestReviewForTRBAdviceLetter == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_requestReviewForTRBAdviceLetter_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RequestReviewForTRBAdviceLetter(childComplexity, args["id"].(uuid.UUID)), true
+
 	case "Mutation.sendCantFindSomethingEmail":
 		if e.complexity.Mutation.SendCantFindSomethingEmail == nil {
 			break
@@ -3752,6 +3801,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.SendReportAProblemEmail(childComplexity, args["input"].(model.SendReportAProblemEmailInput)), true
+
+	case "Mutation.sendTRBAdviceLetter":
+		if e.complexity.Mutation.SendTRBAdviceLetter == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_sendTRBAdviceLetter_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SendTRBAdviceLetter(childComplexity, args["input"].(model.SendTRBAdviceLetterInput)), true
 
 	case "Mutation.setRolesForUserOnSystem":
 		if e.complexity.Mutation.SetRolesForUserOnSystem == nil {
@@ -3896,6 +3957,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateSystemIntakeReviewDates(childComplexity, args["input"].(model.UpdateSystemIntakeReviewDatesInput)), true
+
+	case "Mutation.updateTRBAdviceLetter":
+		if e.complexity.Mutation.UpdateTRBAdviceLetter == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateTRBAdviceLetter_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateTRBAdviceLetter(childComplexity, args["input"].(map[string]interface{})), true
 
 	case "Mutation.updateTRBRequest":
 		if e.complexity.Mutation.UpdateTRBRequest == nil {
@@ -5053,6 +5126,90 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
 
+	case "TRBAdviceLetter.createdAt":
+		if e.complexity.TRBAdviceLetter.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.CreatedAt(childComplexity), true
+
+	case "TRBAdviceLetter.createdBy":
+		if e.complexity.TRBAdviceLetter.CreatedBy == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.CreatedBy(childComplexity), true
+
+	case "TRBAdviceLetter.dateSent":
+		if e.complexity.TRBAdviceLetter.DateSent == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.DateSent(childComplexity), true
+
+	case "TRBAdviceLetter.followupPoint":
+		if e.complexity.TRBAdviceLetter.FollowupPoint == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.FollowupPoint(childComplexity), true
+
+	case "TRBAdviceLetter.id":
+		if e.complexity.TRBAdviceLetter.ID == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.ID(childComplexity), true
+
+	case "TRBAdviceLetter.isFollowupRecommended":
+		if e.complexity.TRBAdviceLetter.IsFollowupRecommended == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.IsFollowupRecommended(childComplexity), true
+
+	case "TRBAdviceLetter.meetingSummary":
+		if e.complexity.TRBAdviceLetter.MeetingSummary == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.MeetingSummary(childComplexity), true
+
+	case "TRBAdviceLetter.modifiedAt":
+		if e.complexity.TRBAdviceLetter.ModifiedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.ModifiedAt(childComplexity), true
+
+	case "TRBAdviceLetter.modifiedBy":
+		if e.complexity.TRBAdviceLetter.ModifiedBy == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.ModifiedBy(childComplexity), true
+
+	case "TRBAdviceLetter.nextSteps":
+		if e.complexity.TRBAdviceLetter.NextSteps == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.NextSteps(childComplexity), true
+
+	case "TRBAdviceLetter.trbRequestId":
+		if e.complexity.TRBAdviceLetter.TRBRequestID == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.TRBRequestID(childComplexity), true
+
+	case "TRBRequest.adviceLetter":
+		if e.complexity.TRBRequest.AdviceLetter == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.AdviceLetter(childComplexity), true
+
 	case "TRBRequest.archived":
 		if e.complexity.TRBRequest.Archived == nil {
 			break
@@ -5627,6 +5784,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.WhereInProcessOther(childComplexity), true
 
+	case "TRBTaskStatuses.adviceLetterStatus":
+		if e.complexity.TRBTaskStatuses.AdviceLetterStatus == nil {
+			break
+		}
+
+		return e.complexity.TRBTaskStatuses.AdviceLetterStatus(childComplexity), true
+
 	case "TRBTaskStatuses.attendConsultStatus":
 		if e.complexity.TRBTaskStatuses.AttendConsultStatus == nil {
 			break
@@ -5828,6 +5992,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSendCantFindSomethingEmailInput,
 		ec.unmarshalInputSendFeedbackEmailInput,
 		ec.unmarshalInputSendReportAProblemEmailInput,
+		ec.unmarshalInputSendTRBAdviceLetterInput,
 		ec.unmarshalInputSetRolesForUserOnSystemInput,
 		ec.unmarshalInputSubmitIntakeInput,
 		ec.unmarshalInputSystemIntakeBusinessOwnerInput,
@@ -7435,6 +7600,7 @@ type TRBRequest {
   feedback: [TRBRequestFeedback!]!
   documents: [TRBRequestDocument!]!
   form: TRBRequestForm!
+  adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   trbLead: String
@@ -7452,6 +7618,7 @@ type TRBTaskStatuses {
   feedbackStatus: TRBFeedbackStatus!
   consultPrepStatus: TRBConsultPrepStatus!
   attendConsultStatus: TRBAttendConsultStatus!
+  adviceLetterStatus: TRBAdviceLetterStatus!
 }
 
 """
@@ -7626,6 +7793,17 @@ enum TRBAttendConsultStatus {
   CANNOT_START_YET
   READY_TO_SCHEDULE
   SCHEDULED
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB advice letter step
+"""
+enum TRBAdviceLetterStatus {
+  CANNOT_START_YET
+  READY_TO_START
+  IN_PROGRESS
+  READY_FOR_REVIEW
   COMPLETED
 }
 
@@ -7874,6 +8052,44 @@ input UpdateTRBRequestTRBLeadInput {
 }
 
 """
+Represents an advice letter for a TRB request
+"""
+type TRBAdviceLetter {
+  id: UUID!
+  trbRequestId: UUID!
+  meetingSummary: String
+  nextSteps: String
+  isFollowupRecommended: Boolean
+  dateSent: Time
+  followupPoint: String
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+The data needed to update a TRB advice letter
+"""
+input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
+  trbRequestId: UUID!
+  meetingSummary: String
+  nextSteps: String
+  isFollowupRecommended: Boolean
+  dateSent: Time
+  followupPoint: String
+}
+
+"""
+The data needed to send a TRB advice letter, including who to notify
+"""
+input SendTRBAdviceLetterInput {
+  id: UUID!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -7994,6 +8210,14 @@ type Mutation {
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
+    @hasRole(role: EASI_TRB_ADMIN)
+  requestReviewForTRBAdviceLetter(id: UUID!): TRBAdviceLetter!
+    @hasRole(role: EASI_TRB_ADMIN)
+  sendTRBAdviceLetter(input: SendTRBAdviceLetterInput!): TRBAdviceLetter!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 
@@ -8411,6 +8635,21 @@ func (ec *executionContext) field_Mutation_createSystemIntake_args(ctx context.C
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createTRBAdviceLetter_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["trbRequestId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["trbRequestId"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createTRBRequestAttendee_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -8651,6 +8890,21 @@ func (ec *executionContext) field_Mutation_rejectIntake_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_requestReviewForTRBAdviceLetter_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_sendCantFindSomethingEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -8688,6 +8942,21 @@ func (ec *executionContext) field_Mutation_sendReportAProblemEmail_args(ctx cont
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNSendReportAProblemEmailInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendReportAProblemEmailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_sendTRBAdviceLetter_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.SendTRBAdviceLetterInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSendTRBAdviceLetterInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendTRBAdviceLetterInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -8868,6 +9137,21 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeReviewDates_args(ct
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateSystemIntakeReviewDatesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeReviewDatesInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateTRBAdviceLetter_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 map[string]interface{}
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateTRBAdviceLetterInput2map(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -25713,6 +25997,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
+			case "adviceLetter":
+				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -25802,6 +26088,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
+			case "adviceLetter":
+				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -26544,6 +26832,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestConsultMeeting
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
+			case "adviceLetter":
+				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -26657,6 +26947,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
+			case "adviceLetter":
+				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -26683,6 +26975,418 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateTRBRequestTRBLead_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createTRBAdviceLetter(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createTRBAdviceLetter(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateTRBAdviceLetter(rctx, fc.Args["trbRequestId"].(uuid.UUID))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBAdviceLetter); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBAdviceLetter`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.TRBAdviceLetter)
+	fc.Result = res
+	return ec.marshalNTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createTRBAdviceLetter(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
+			case "trbRequestId":
+				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "meetingSummary":
+				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
+			case "nextSteps":
+				return ec.fieldContext_TRBAdviceLetter_nextSteps(ctx, field)
+			case "isFollowupRecommended":
+				return ec.fieldContext_TRBAdviceLetter_isFollowupRecommended(ctx, field)
+			case "dateSent":
+				return ec.fieldContext_TRBAdviceLetter_dateSent(ctx, field)
+			case "followupPoint":
+				return ec.fieldContext_TRBAdviceLetter_followupPoint(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBAdviceLetter_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBAdviceLetter_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBAdviceLetter_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBAdviceLetter_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetter", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createTRBAdviceLetter_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateTRBAdviceLetter(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTRBAdviceLetter(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateTRBAdviceLetter(rctx, fc.Args["input"].(map[string]interface{}))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBAdviceLetter); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBAdviceLetter`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.TRBAdviceLetter)
+	fc.Result = res
+	return ec.marshalNTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateTRBAdviceLetter(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
+			case "trbRequestId":
+				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "meetingSummary":
+				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
+			case "nextSteps":
+				return ec.fieldContext_TRBAdviceLetter_nextSteps(ctx, field)
+			case "isFollowupRecommended":
+				return ec.fieldContext_TRBAdviceLetter_isFollowupRecommended(ctx, field)
+			case "dateSent":
+				return ec.fieldContext_TRBAdviceLetter_dateSent(ctx, field)
+			case "followupPoint":
+				return ec.fieldContext_TRBAdviceLetter_followupPoint(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBAdviceLetter_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBAdviceLetter_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBAdviceLetter_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBAdviceLetter_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetter", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateTRBAdviceLetter_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_requestReviewForTRBAdviceLetter(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_requestReviewForTRBAdviceLetter(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().RequestReviewForTRBAdviceLetter(rctx, fc.Args["id"].(uuid.UUID))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBAdviceLetter); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBAdviceLetter`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.TRBAdviceLetter)
+	fc.Result = res
+	return ec.marshalNTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_requestReviewForTRBAdviceLetter(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
+			case "trbRequestId":
+				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "meetingSummary":
+				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
+			case "nextSteps":
+				return ec.fieldContext_TRBAdviceLetter_nextSteps(ctx, field)
+			case "isFollowupRecommended":
+				return ec.fieldContext_TRBAdviceLetter_isFollowupRecommended(ctx, field)
+			case "dateSent":
+				return ec.fieldContext_TRBAdviceLetter_dateSent(ctx, field)
+			case "followupPoint":
+				return ec.fieldContext_TRBAdviceLetter_followupPoint(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBAdviceLetter_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBAdviceLetter_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBAdviceLetter_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBAdviceLetter_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetter", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_requestReviewForTRBAdviceLetter_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_sendTRBAdviceLetter(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_sendTRBAdviceLetter(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SendTRBAdviceLetter(rctx, fc.Args["input"].(model.SendTRBAdviceLetterInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBAdviceLetter); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBAdviceLetter`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.TRBAdviceLetter)
+	fc.Result = res
+	return ec.marshalNTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_sendTRBAdviceLetter(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
+			case "trbRequestId":
+				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "meetingSummary":
+				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
+			case "nextSteps":
+				return ec.fieldContext_TRBAdviceLetter_nextSteps(ctx, field)
+			case "isFollowupRecommended":
+				return ec.fieldContext_TRBAdviceLetter_isFollowupRecommended(ctx, field)
+			case "dateSent":
+				return ec.fieldContext_TRBAdviceLetter_dateSent(ctx, field)
+			case "followupPoint":
+				return ec.fieldContext_TRBAdviceLetter_followupPoint(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBAdviceLetter_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBAdviceLetter_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBAdviceLetter_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBAdviceLetter_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetter", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_sendTRBAdviceLetter_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -28313,6 +29017,8 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
+			case "adviceLetter":
+				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -28402,6 +29108,8 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_documents(ctx, field)
 			case "form":
 				return ec.fieldContext_TRBRequest_form(ctx, field)
+			case "adviceLetter":
+				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
 			case "taskStatuses":
 				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 			case "consultMeetingTime":
@@ -34014,6 +34722,469 @@ func (ec *executionContext) fieldContext_SystemIntakeRequester_name(ctx context.
 	return fc, nil
 }
 
+func (ec *executionContext) _TRBAdviceLetter_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_trbRequestId(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TRBRequestID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_trbRequestId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_meetingSummary(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MeetingSummary, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_meetingSummary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_nextSteps(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_nextSteps(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NextSteps, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_nextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_isFollowupRecommended(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_isFollowupRecommended(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsFollowupRecommended, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_isFollowupRecommended(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_dateSent(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_dateSent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DateSent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_dateSent(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_followupPoint(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_followupPoint(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FollowupPoint, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_followupPoint(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_createdBy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedBy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_modifiedBy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedBy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_modifiedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetter_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_modifiedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBRequest_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBRequest_id(ctx, field)
 	if err != nil {
@@ -34546,6 +35717,71 @@ func (ec *executionContext) fieldContext_TRBRequest_form(ctx context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _TRBRequest_adviceLetter(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBRequest().AdviceLetter(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.TRBAdviceLetter)
+	fc.Result = res
+	return ec.marshalOTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_adviceLetter(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
+			case "trbRequestId":
+				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "meetingSummary":
+				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
+			case "nextSteps":
+				return ec.fieldContext_TRBAdviceLetter_nextSteps(ctx, field)
+			case "isFollowupRecommended":
+				return ec.fieldContext_TRBAdviceLetter_isFollowupRecommended(ctx, field)
+			case "dateSent":
+				return ec.fieldContext_TRBAdviceLetter_dateSent(ctx, field)
+			case "followupPoint":
+				return ec.fieldContext_TRBAdviceLetter_followupPoint(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBAdviceLetter_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBAdviceLetter_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBAdviceLetter_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBAdviceLetter_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetter", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBRequest_taskStatuses(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
 	if err != nil {
@@ -34593,6 +35829,8 @@ func (ec *executionContext) fieldContext_TRBRequest_taskStatuses(ctx context.Con
 				return ec.fieldContext_TRBTaskStatuses_consultPrepStatus(ctx, field)
 			case "attendConsultStatus":
 				return ec.fieldContext_TRBTaskStatuses_attendConsultStatus(ctx, field)
+			case "adviceLetterStatus":
+				return ec.fieldContext_TRBTaskStatuses_adviceLetterStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBTaskStatuses", field.Name)
 		},
@@ -37827,6 +39065,50 @@ func (ec *executionContext) fieldContext_TRBTaskStatuses_attendConsultStatus(ctx
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBAttendConsultStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBTaskStatuses_adviceLetterStatus(ctx context.Context, field graphql.CollectedField, obj *models.TRBTaskStatuses) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBTaskStatuses_adviceLetterStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AdviceLetterStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.TRBAdviceLetterStatus)
+	fc.Result = res
+	return ec.marshalNTRBAdviceLetterStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBTaskStatuses_adviceLetterStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBTaskStatuses",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBAdviceLetterStatus does not have child fields")
 		},
 	}
 	return fc, nil
@@ -41915,6 +43197,50 @@ func (ec *executionContext) unmarshalInputSendReportAProblemEmailInput(ctx conte
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howSevereWasTheProblem"))
 			it.HowSevereWasTheProblem, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSendTRBAdviceLetterInput(ctx context.Context, obj interface{}) (model.SendTRBAdviceLetterInput, error) {
+	var it model.SendTRBAdviceLetterInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "copyTrbMailbox", "notifyEuaIds"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "copyTrbMailbox":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("copyTrbMailbox"))
+			it.CopyTrbMailbox, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notifyEuaIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notifyEuaIds"))
+			it.NotifyEuaIds, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -47215,6 +48541,42 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "createTRBAdviceLetter":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createTRBAdviceLetter(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "updateTRBAdviceLetter":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateTRBAdviceLetter(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "requestReviewForTRBAdviceLetter":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_requestReviewForTRBAdviceLetter(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "sendTRBAdviceLetter":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_sendTRBAdviceLetter(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -49355,6 +50717,83 @@ func (ec *executionContext) _SystemIntakeRequester(ctx context.Context, sel ast.
 	return out
 }
 
+var tRBAdviceLetterImplementors = []string{"TRBAdviceLetter"}
+
+func (ec *executionContext) _TRBAdviceLetter(ctx context.Context, sel ast.SelectionSet, obj *models.TRBAdviceLetter) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdviceLetterImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TRBAdviceLetter")
+		case "id":
+
+			out.Values[i] = ec._TRBAdviceLetter_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "trbRequestId":
+
+			out.Values[i] = ec._TRBAdviceLetter_trbRequestId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "meetingSummary":
+
+			out.Values[i] = ec._TRBAdviceLetter_meetingSummary(ctx, field, obj)
+
+		case "nextSteps":
+
+			out.Values[i] = ec._TRBAdviceLetter_nextSteps(ctx, field, obj)
+
+		case "isFollowupRecommended":
+
+			out.Values[i] = ec._TRBAdviceLetter_isFollowupRecommended(ctx, field, obj)
+
+		case "dateSent":
+
+			out.Values[i] = ec._TRBAdviceLetter_dateSent(ctx, field, obj)
+
+		case "followupPoint":
+
+			out.Values[i] = ec._TRBAdviceLetter_followupPoint(ctx, field, obj)
+
+		case "createdBy":
+
+			out.Values[i] = ec._TRBAdviceLetter_createdBy(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdAt":
+
+			out.Values[i] = ec._TRBAdviceLetter_createdAt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "modifiedBy":
+
+			out.Values[i] = ec._TRBAdviceLetter_modifiedBy(ctx, field, obj)
+
+		case "modifiedAt":
+
+			out.Values[i] = ec._TRBAdviceLetter_modifiedAt(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var tRBRequestImplementors = []string{"TRBRequest"}
 
 func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSet, obj *models.TRBRequest) graphql.Marshaler {
@@ -49473,6 +50912,23 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "adviceLetter":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_adviceLetter(ctx, field, obj)
 				return res
 			}
 
@@ -50210,6 +51666,13 @@ func (ec *executionContext) _TRBTaskStatuses(ctx context.Context, sel ast.Select
 		case "attendConsultStatus":
 
 			out.Values[i] = ec._TRBTaskStatuses_attendConsultStatus(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "adviceLetterStatus":
+
+			out.Values[i] = ec._TRBTaskStatuses_adviceLetterStatus(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -52074,6 +53537,11 @@ func (ec *executionContext) unmarshalNSendReportAProblemEmailInput2githubᚗcom�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNSendTRBAdviceLetterInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSendTRBAdviceLetterInput(ctx context.Context, v interface{}) (model.SendTRBAdviceLetterInput, error) {
+	res, err := ec.unmarshalInputSendTRBAdviceLetterInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNSetRolesForUserOnSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetRolesForUserOnSystemInput(ctx context.Context, v interface{}) (model.SetRolesForUserOnSystemInput, error) {
 	res, err := ec.unmarshalInputSetRolesForUserOnSystemInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -52642,6 +54110,36 @@ func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgov�
 }
 
 func (ec *executionContext) marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) marshalNTRBAdviceLetter2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx context.Context, sel ast.SelectionSet, v models.TRBAdviceLetter) graphql.Marshaler {
+	return ec._TRBAdviceLetter(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx context.Context, sel ast.SelectionSet, v *models.TRBAdviceLetter) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TRBAdviceLetter(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTRBAdviceLetterStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatus(ctx context.Context, v interface{}) (models.TRBAdviceLetterStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TRBAdviceLetterStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBAdviceLetterStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBAdviceLetterStatus) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -53413,6 +54911,10 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeRequestDetailsInput2gith
 func (ec *executionContext) unmarshalNUpdateSystemIntakeReviewDatesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeReviewDatesInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeReviewDatesInput, error) {
 	res, err := ec.unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateTRBAdviceLetterInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
+	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) unmarshalNUpdateTRBRequestAttendeeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestAttendeeInput(ctx context.Context, v interface{}) (model.UpdateTRBRequestAttendeeInput, error) {
@@ -54395,6 +55897,13 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx context.Context, sel ast.SelectionSet, v *models.TRBAdviceLetter) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._TRBAdviceLetter(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOTRBApplicationDevelopmentOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBApplicationDevelopmentOptionᚄ(ctx context.Context, v interface{}) ([]models.TRBApplicationDevelopmentOption, error) {
