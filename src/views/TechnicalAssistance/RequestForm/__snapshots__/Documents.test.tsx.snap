@@ -2,7 +2,9 @@
 
 exports[`Trb Request form: Supporting documents renders states with documents loaded 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    class="margin-top-5 margin-bottom-4"
+  >
     <a
       class="usa-button"
       href="/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents/upload"
@@ -300,7 +302,7 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
     </div>
   </div>
   <div
-    class="border-base-light border-top-1px "
+    class="border-base-light border-top-1px margin-top-7"
   >
     <div
       class="margin-top-2"
