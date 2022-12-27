@@ -2,22 +2,72 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 
 	"github.com/lib/pq"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 // TestCreateTRBRequestFeedback makes a new TRB request feedback
 func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 	ctx := context.Background()
-	store := s.testConfigs.Store
+
+	config := testhelpers.NewConfig()
+
+	// set up Email Client
+	emailConfig := email.Config{
+		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
+		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:                config.GetString(appconfig.ClientHostKey),
+		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+	localSender := local.NewSender()
+	emailClient, err := email.NewClient(emailConfig, localSender)
+	if err != nil {
+		s.FailNow("Unable to construct email client with local sender")
+	}
+
 	anonEua := "ANON"
+
+	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			EuaUserID:  anonEua,
+			CommonName: "Anonymous",
+			Email:      models.NewEmailAddress("anon@local.fake"),
+		}, nil
+	}
+
+	stubFetchUserInfos := func(ctx context.Context, euaIDs []string) ([]*models.UserInfo, error) {
+		userInfos := []*models.UserInfo{}
+
+		for i, euaID := range euaIDs {
+			userInfo := &models.UserInfo{
+				EuaUserID:  euaID,
+				CommonName: strconv.Itoa(i),
+				Email:      models.NewEmailAddress(fmt.Sprintf("%v@local.fake", i)),
+			}
+			userInfos = append(userInfos, userInfo)
+		}
+
+		return userInfos, nil
+	}
+
+	store := s.testConfigs.Store
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.Status = models.TRBSOpen
-	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
+	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
 	s.NoError(err)
 
 	form, err := GetTRBRequestFormByTRBRequestID(ctx, store, trbRequest.ID)
@@ -42,7 +92,14 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 			NotifyEUAIDs:    notifyEUAIDs,
 			Action:          models.TRBFeedbackAction(models.TRBFeedbackActionRequestEdits),
 		}
-		created, err := CreateTRBRequestFeedback(ctx, s.testConfigs.Store, toCreate)
+		created, err := CreateTRBRequestFeedback(
+			ctx,
+			s.testConfigs.Store,
+			&emailClient,
+			stubFetchUserInfo,
+			stubFetchUserInfos,
+			toCreate,
+		)
 		s.NoError(err)
 		s.NotNil(created)
 		s.EqualValues(toCreate.FeedbackMessage, created.FeedbackMessage)
@@ -77,7 +134,14 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 			NotifyEUAIDs:    notifyEUAIDs,
 			Action:          models.TRBFeedbackAction(models.TRBFeedbackActionReadyForConsult),
 		}
-		created2, err := CreateTRBRequestFeedback(ctx, s.testConfigs.Store, toCreate2)
+		created2, err := CreateTRBRequestFeedback(
+			ctx,
+			s.testConfigs.Store,
+			&emailClient,
+			stubFetchUserInfo,
+			stubFetchUserInfos,
+			toCreate2,
+		)
 		s.NoError(err)
 		s.NotNil(created2)
 		s.EqualValues(toCreate2.FeedbackMessage, created2.FeedbackMessage)

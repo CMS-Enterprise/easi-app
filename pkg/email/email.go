@@ -55,6 +55,8 @@ type templates struct {
 	trbFormSubmittedAdmin                      templateCaller
 	trbFormSubmittedRequester                  templateCaller
 	trbAttendeeAdded                           templateCaller
+	trbReadyForConsult                         templateCaller
+	trbEditsNeededOnForm                       templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -248,6 +250,20 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(trbAttendeeAddedTemplateName)
 	}
 	appTemplates.trbAttendeeAdded = trbAttendeeAddedTemplate
+
+	trbReadyForConsultTemplateName := "trb_ready_for_consult.gohtml"
+	trbReadyForConsultTemplate := rawTemplates.Lookup(trbReadyForConsultTemplateName)
+	if trbReadyForConsultTemplate == nil {
+		return Client{}, templateError(trbReadyForConsultTemplateName)
+	}
+	appTemplates.trbReadyForConsult = trbReadyForConsultTemplate
+
+	trbEditsNeededOnFormTemplateName := "trb_edits_needed_on_form.gohtml"
+	trbEditsNeededOnFormTemplate := rawTemplates.Lookup(trbEditsNeededOnFormTemplateName)
+	if trbEditsNeededOnFormTemplate == nil {
+		return Client{}, templateError(trbEditsNeededOnFormTemplateName)
+	}
+	appTemplates.trbEditsNeededOnForm = trbEditsNeededOnFormTemplate
 
 	client := Client{
 		config:    config,

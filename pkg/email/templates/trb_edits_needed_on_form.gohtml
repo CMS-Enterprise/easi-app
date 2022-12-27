@@ -1,0 +1,23 @@
+{{template "easi_header.gohtml"}}
+
+<p>The Technical Review Board (TRB) has reviewed the initial request form for {{.RequestName}} and has requested edits.</p>
+
+<p>Edits requested: {{.Feedback}}</p>
+
+Next steps:
+<ul>
+<li>{{.RequesterName}} and their project team should review the feedback provided by the TRB and make any required changes to the initial request form.</li>
+</ul>
+
+View this request in EASi:
+<ul>
+<li>If you are the initial requester, you may <a href="{{.RequestTaskListLink}}">click here</a> to view your request task list.</li>
+<li>TRB team members may <a href="{{.RequestAdminViewLink}}">click here</a> to view the request details.</li>
+<li>Others should contact {{.RequesterName}} or the TRB for more information about this request.</li>
+</ul>
+
+<p>If you have questions, please email the TRB at <a href="mailto:{{.TRBInboxAddress}}">{{.TRBInboxAddress}}</a>.</p>
+
+<hr>
+
+<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
