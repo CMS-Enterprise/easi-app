@@ -48,6 +48,31 @@ describe('The System Intake Form', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
+    // Test "Business owner same as requester" checkbox
+    cy.get('#IntakeForm-IsBusinessOwnerSameAsRequester')
+      .check({ force: true })
+      .should('be.checked');
+
+    // Business Owner name should be disabled when checkbox is checked
+    cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
+      'be.disabled'
+    );
+
+    // Check that business owner fields updated to display requester values
+    cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
+      'have.value',
+      // Requester name shows as User ABCD instead of Adeline Aarons during testing
+      'User ABCD, ABCD'
+    );
+    cy.get('#IntakeForm-BusinessOwnerEmail').should(
+      'have.value',
+      'adeline.aarons@local.fake'
+    );
+    cy.get('#IntakeForm-BusinessOwnerComponent').should(
+      'have.value',
+      'Center for Medicare'
+    );
+
     cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
 
     cy.get('#IntakeForm-NoGovernanceTeam')
@@ -91,6 +116,8 @@ describe('The System Intake Form', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
+    // Test "same as requester" checkbox
+
     // ISSO
     cy.get('#IntakeForm-HasIssoYes')
       .check({ force: true })
@@ -105,7 +132,7 @@ describe('The System Intake Form', () => {
       .select('Center for Program Integrity')
       .should('have.value', 'Center for Program Integrity');
 
-    // Add another contact
+    // Add additional contact
     cy.contains('button', 'Add another contact').click();
 
     cy.get('#react-select-IntakeForm-ContactCommonName-input')
