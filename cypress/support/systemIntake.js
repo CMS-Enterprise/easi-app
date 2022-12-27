@@ -6,24 +6,32 @@ cy.systemIntake = {
         .should('have.value', 'Center for Medicare');
 
       cy.get('#react-select-IntakeForm-BusinessOwnerName-input')
-        .type('Jerry Seinfeld')
-        .wait(1000) // Fix for GH action tests failing
+        .type('Audrey')
         .type('{downarrow}{enter}')
-        .should('have.value', 'Jerry Seinfeld, SF13');
+        .should('have.value', 'Audrey Abrams, ADMI');
+
+      cy.get('#IntakeForm-BusinessOwnerEmail').should(
+        'have.value',
+        'audrey.abrams@local.fake'
+      );
 
       cy.get('#IntakeForm-BusinessOwnerComponent')
-        .select('Center for Medicare')
-        .should('have.value', 'Center for Medicare');
+        .select('CMS Wide')
+        .should('have.value', 'CMS Wide');
 
       cy.get('#react-select-IntakeForm-ProductManagerName-input')
-        .type('Jerry Seinfeld')
-        .wait(1000) // Fix for GH action tests failing
+        .type('Delphia')
         .type('{downArrow}{enter}')
-        .should('have.value', 'Jerry Seinfeld, SF13');
+        .should('have.value', 'Delphia Green, GBRG');
+
+      cy.get('#IntakeForm-ProductManagerEmail').should(
+        'have.value',
+        'delphia.green@local.fake'
+      );
 
       cy.get('#IntakeForm-ProductManagerComponent')
-        .select('Center for Medicare')
-        .should('have.value', 'Center for Medicare');
+        .select('Office of Legislation')
+        .should('have.value', 'Office of Legislation');
     }
   },
   requestDetails: {
