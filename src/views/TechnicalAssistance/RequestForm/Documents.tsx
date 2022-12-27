@@ -141,7 +141,11 @@ function Documents({
           // Show the upload status
           // Virus scanning
           if (row.original.status === TRBRequestDocumentStatus.PENDING)
-            return <em>{t('documents.table.virusScan')}</em>;
+            return (
+              <em data-testurl={row.original.url}>
+                {t('documents.table.virusScan')}
+              </em>
+            );
           // View or Remove
           if (row.original.status === TRBRequestDocumentStatus.AVAILABLE)
             // Show some file actions once it's available
