@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2016,22 +2015,22 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 
 // CreateTRBAdviceLetter is the resolver for the createTRBAdviceLetter field.
 func (r *mutationResolver) CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
-	panic(fmt.Errorf("not implemented: CreateTRBAdviceLetter - createTRBAdviceLetter"))
+	return resolvers.CreateTRBAdviceLetter(ctx, r.store, trbRequestID)
 }
 
 // UpdateTRBAdviceLetter is the resolver for the updateTRBAdviceLetter field.
 func (r *mutationResolver) UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetter, error) {
-	panic(fmt.Errorf("not implemented: UpdateTRBAdviceLetter - updateTRBAdviceLetter"))
+	return resolvers.UpdateTRBAdviceLetter(ctx, r.store, input)
 }
 
 // RequestReviewForTRBAdviceLetter is the resolver for the requestReviewForTRBAdviceLetter field.
 func (r *mutationResolver) RequestReviewForTRBAdviceLetter(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetter, error) {
-	panic(fmt.Errorf("not implemented: RequestReviewForTRBAdviceLetter - requestReviewForTRBAdviceLetter"))
+	return resolvers.RequestReviewForTRBAdviceLetter(ctx, r.store, id)
 }
 
 // SendTRBAdviceLetter is the resolver for the sendTRBAdviceLetter field.
 func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input model.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error) {
-	panic(fmt.Errorf("not implemented: SendTRBAdviceLetter - sendTRBAdviceLetter"))
+	return resolvers.SendTRBAdviceLetter(ctx, r.store, input.ID)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
@@ -2798,7 +2797,7 @@ func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (
 
 // AdviceLetter is the resolver for the adviceLetter field.
 func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBAdviceLetter, error) {
-	panic(fmt.Errorf("not implemented: AdviceLetter - adviceLetter"))
+	return resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, r.store, obj.ID)
 }
 
 // TaskStatuses is the resolver for the taskStatuses field.

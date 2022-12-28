@@ -8076,7 +8076,6 @@ input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
   meetingSummary: String
   nextSteps: String
   isFollowupRecommended: Boolean
-  dateSent: Time
   followupPoint: String
 }
 
