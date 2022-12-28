@@ -215,8 +215,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: true
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },

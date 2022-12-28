@@ -1182,7 +1182,6 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   nextSteps: String
   scope: String!
   costBaseline: String
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -1263,7 +1262,6 @@ input AddGRTFeedbackInput {
   emailBody: String!
   feedback: String!
   intakeID: UUID!
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -1287,7 +1285,6 @@ input IssueLifecycleIdInput {
   nextSteps: String
   scope: String!
   costBaseline: String
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -1299,7 +1296,6 @@ input RejectIntakeInput {
   intakeId: UUID!
   nextSteps: String
   reason: String!
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -1370,7 +1366,6 @@ Input to add feedback to a system request
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
