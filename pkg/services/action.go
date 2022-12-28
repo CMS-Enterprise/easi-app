@@ -329,7 +329,6 @@ func NewCreateActionUpdateStatus(
 	intakeID uuid.UUID,
 	newStatus models.SystemIntakeStatus,
 	shouldCloseBusinessCase bool,
-	shouldSendEmail bool,
 	recipients *models.EmailNotificationRecipients,
 ) (*models.SystemIntake, error) {
 	return func(
@@ -338,7 +337,6 @@ func NewCreateActionUpdateStatus(
 		id uuid.UUID,
 		newStatus models.SystemIntakeStatus,
 		shouldCloseBusinessCase bool,
-		shouldSendEmail bool,
 		recipients *models.EmailNotificationRecipients,
 	) (*models.SystemIntake, error) {
 		err := saveAction(ctx, action)
@@ -387,7 +385,7 @@ func NewCreateActionExtendLifecycleID(
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	sendExtendLCIDEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
-) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
+) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
@@ -396,7 +394,6 @@ func NewCreateActionExtendLifecycleID(
 		nextSteps *string,
 		scope string,
 		costBaseline *string,
-		shouldSendEmail bool,
 		recipients *models.EmailNotificationRecipients,
 	) (*models.SystemIntake, error) {
 		intake, err := fetchSystemIntake(ctx, id)

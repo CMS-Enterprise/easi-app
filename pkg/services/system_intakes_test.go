@@ -377,7 +377,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	s.Run("happy path provided lcid, notifying multiple recipients", func() {
 		multipleReviewEmailsSent = false // clear before running test
 
-		intake, err := happy(context.Background(), input, action, false, &recipients)
+		intake, err := happy(context.Background(), input, action, &recipients)
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -390,7 +390,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	s.Run("happy path provided lcid without sending email (to multiple recipients)", func() {
 		multipleReviewEmailsSent = false // clear before running test
 
-		intake, err := happy(context.Background(), input, action, false, nil)
+		intake, err := happy(context.Background(), input, action, nil)
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -403,7 +403,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		intake, err := happy(context.Background(), input, action, true, &recipients)
+		intake, err := happy(context.Background(), input, action, &recipients)
 		s.NoError(err)
 		s.NotEqual(intake.LifecycleID, "")
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -429,7 +429,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	// build the table-driven test of error cases for unhappy path
 	regularTestCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
 			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnSendLCIDEmailToMultipleRecipients, fnGenerate),
@@ -446,9 +446,6 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 		"error path save action": {
 			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnSendLCIDEmailToMultipleRecipients, fnGenerate),
 		},
-		"error path fetch user info": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnSendLCIDEmailToMultipleRecipients, fnGenerate),
-		},
 		"error path update": {
 			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnSendLCIDEmailToMultipleRecipients, fnGenerate),
 		},
@@ -459,7 +456,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	for expectedErr, tc := range regularTestCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input, action, true, &recipients)
+			_, err := tc.fn(context.Background(), input, action, &recipients)
 			s.Error(err)
 		})
 	}
@@ -526,7 +523,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	s.Run("happy path, notifying multiple recipients", func() {
 		multipleReviewEmailsSent = false // clear before running test
 
-		intake, err := happy(context.Background(), input, action, false, &recipients)
+		intake, err := happy(context.Background(), input, action, &recipients)
 		s.NoError(err)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
@@ -537,7 +534,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	s.Run("happy path without sending email (to multiple recipients)", func() {
 		multipleReviewEmailsSent = false // clear before running test
 
-		intake, err := happy(context.Background(), input, action, false, nil)
+		intake, err := happy(context.Background(), input, action, nil)
 		s.NoError(err)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
@@ -565,7 +562,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 
 	// build the table-driven test of error cases for unhappy path
 	regularTestCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake, *models.Action, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
 			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnSendRejectRequestEmailToMulipleRecipients),
@@ -579,9 +576,6 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 		"error path update": {
 			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnSendRejectRequestEmailToMulipleRecipients),
 		},
-		"error path fetch user info": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnSendRejectRequestEmailToMulipleRecipients),
-		},
 		"error path save action": {
 			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnSendRejectRequestEmailToMulipleRecipients),
 		},
@@ -592,7 +586,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 
 	for expectedErr, tc := range regularTestCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input, action, true, &recipients)
+			_, err := tc.fn(context.Background(), input, action, &recipients)
 			s.Error(err)
 		})
 	}

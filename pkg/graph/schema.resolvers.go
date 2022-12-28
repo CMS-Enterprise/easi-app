@@ -719,11 +719,6 @@ func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models
 
 // AddGRTFeedbackAndKeepBusinessCaseInDraft is the resolver for the addGRTFeedbackAndKeepBusinessCaseInDraft field.
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		&models.GRTFeedback{
@@ -737,7 +732,6 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 			ActionType: models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES,
 		},
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -749,11 +743,6 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 
 // AddGRTFeedbackAndProgressToFinalBusinessCase is the resolver for the addGRTFeedbackAndProgressToFinalBusinessCase field.
 func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		&models.GRTFeedback{
@@ -767,7 +756,6 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
 		models.SystemIntakeStatusBIZCASEFINALNEEDED,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -779,11 +767,6 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 
 // AddGRTFeedbackAndRequestBusinessCase is the resolver for the addGRTFeedbackAndRequestBusinessCase field.
 func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		&models.GRTFeedback{
@@ -797,7 +780,6 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
 		models.SystemIntakeStatusNEEDBIZCASE,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -1122,11 +1104,6 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -1137,7 +1114,6 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNEEDBIZCASE,
 		false,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1147,11 +1123,6 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx contex
 
 // CreateSystemIntakeActionBusinessCaseNeedsChanges is the resolver for the createSystemIntakeActionBusinessCaseNeedsChanges field.
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -1162,7 +1133,6 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx 
 		input.IntakeID,
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 		false,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1172,11 +1142,6 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx 
 
 // CreateSystemIntakeActionGuideReceievedClose is the resolver for the createSystemIntakeActionGuideReceievedClose field.
 func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -1187,7 +1152,6 @@ func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx conte
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
 		false,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1197,11 +1161,6 @@ func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx conte
 
 // CreateSystemIntakeActionNoGovernanceNeeded is the resolver for the createSystemIntakeActionNoGovernanceNeeded field.
 func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -1212,7 +1171,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1222,11 +1180,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx contex
 
 // CreateSystemIntakeActionNotItRequest is the resolver for the createSystemIntakeActionNotItRequest field.
 func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -1237,7 +1190,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 		input.IntakeID,
 		models.SystemIntakeStatusNOTITREQUEST,
 		false,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1247,11 +1199,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 
 // CreateSystemIntakeActionNotRespondingClose is the resolver for the createSystemIntakeActionNotRespondingClose field.
 func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -1262,7 +1209,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1272,11 +1218,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx contex
 
 // CreateSystemIntakeActionReadyForGrt is the resolver for the createSystemIntakeActionReadyForGRT field.
 func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -1287,7 +1228,6 @@ func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Conte
 		input.IntakeID,
 		models.SystemIntakeStatusREADYFORGRT,
 		false,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1297,11 +1237,6 @@ func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Conte
 
 // CreateSystemIntakeActionSendEmail is the resolver for the createSystemIntakeActionSendEmail field.
 func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -1312,7 +1247,6 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 		false,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1334,11 +1268,6 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		}, nil
 	}
 
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.CreateActionExtendLifecycleID(
 		ctx,
 		&models.Action{
@@ -1350,7 +1279,6 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		input.NextSteps,
 		input.Scope,
 		input.CostBaseline,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 
@@ -1446,11 +1374,6 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 
 // IssueLifecycleID is the resolver for the issueLifecycleId field.
 func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.IssueLifecycleID(
 		ctx,
 		&models.SystemIntake{
@@ -1465,7 +1388,6 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
 		},
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1475,11 +1397,6 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 
 // MarkSystemIntakeReadyForGrb is the resolver for the markSystemIntakeReadyForGRB field.
 func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		&models.GRTFeedback{
@@ -1493,7 +1410,6 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 			ActionType: models.ActionTypeREADYFORGRB,
 		},
 		models.SystemIntakeStatusREADYFORGRB,
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -1505,11 +1421,6 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 
 // RejectIntake is the resolver for the rejectIntake field.
 func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
-	var ShouldSendEmail bool = false
-	if input.NotificationRecipients != nil {
-		ShouldSendEmail = true
-	}
-
 	intake, err := r.service.RejectIntake(
 		ctx,
 		&models.SystemIntake{
@@ -1521,7 +1432,6 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
 		},
-		ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
