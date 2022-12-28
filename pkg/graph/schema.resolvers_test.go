@@ -191,13 +191,9 @@ func TestGraphQLTestSuite(t *testing.T) {
 	resolverService.CreateActionExtendLifecycleID = services.NewCreateActionExtendLifecycleID(
 		serviceConfig,
 		saveAction,
-		cedarLdapClient.FetchUserInfo,
 		store.FetchSystemIntakeByID,
 		store.UpdateSystemIntake,
-		emailClient.SendExtendLCIDEmail,
-		emailClient.SendExtendLCIDEmailToMultipleRecipients,
-		emailClient.SendIntakeInvalidEUAIDEmail,
-		emailClient.SendIntakeNoEUAIDEmail,
+		emailClient.SendExtendLCIDEmails,
 	)
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
