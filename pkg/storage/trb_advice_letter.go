@@ -33,19 +33,7 @@ func (s *Store) CreateTRBAdviceLetter(logger *zap.Logger, createdBy string, trbR
 			:trb_request_id,
 			:created_by,
 			:status 
-		) RETURNING
-			id,
-			trb_request_id,
-			created_by,
-			created_at,
-			modified_by,
-			modified_at,
-			status,
-			meeting_summary,
-			next_steps,
-			is_followup_recommended,
-			followup_point,
-			date_sent
+		) RETURNING *;
 	`
 	stmt, err := s.db.PrepareNamed(trbAdviceLetterCreateSQL)
 	if err != nil {
