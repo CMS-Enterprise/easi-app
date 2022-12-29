@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2013,6 +2014,11 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 	)
 }
 
+// CreateTRBAdminNote is the resolver for the createTRBAdminNote field.
+func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: CreateTRBAdminNote - createTRBAdminNote"))
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2778,6 +2784,11 @@ func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
 	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
+}
+
+// AdminNotes is the resolver for the adminNotes field.
+func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: AdminNotes - adminNotes"))
 }
 
 // UserInfo is the resolver for the userInfo field.

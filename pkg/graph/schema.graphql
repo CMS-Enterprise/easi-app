@@ -1521,6 +1521,7 @@ type TRBRequest {
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   trbLead: String
+  adminNotes: [TRBAdminNote!]!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -1957,6 +1958,40 @@ input UpdateTRBRequestTRBLeadInput {
 }
 
 """
+Represents the category of a single TRB admin note
+"""
+enum TRBAdminNoteCategory {
+  GENERAL_REQUEST
+  INITIAL_REQUEST_FORM
+  SUPPORTING_DOCUMENTS
+  CONSULT_SESSION
+  ADVICE_LETTER
+}
+
+"""
+Represents an admin note attached to a TRB request
+"""
+type TRBAdminNote {
+  id: UUID!
+  trbRequestId: UUID!
+  category: TRBAdminNoteCategory!
+  noteText: String!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+The data needed to create a TRB admin note
+"""
+input CreateTRBAdminNoteInput {
+  trbRequestId: UUID!
+  category: TRBAdminNoteCategory!
+  noteText: String!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -2077,6 +2112,8 @@ type Mutation {
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNote(input: CreateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 
