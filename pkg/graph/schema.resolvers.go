@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2016,7 +2015,7 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 
 // CreateTRBAdminNote is the resolver for the createTRBAdminNote field.
 func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error) {
-	panic(fmt.Errorf("not implemented: CreateTRBAdminNote - createTRBAdminNote"))
+	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, input.Category, input.NoteText)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
@@ -2788,7 +2787,7 @@ func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRe
 
 // AdminNotes is the resolver for the adminNotes field.
 func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error) {
-	panic(fmt.Errorf("not implemented: AdminNotes - adminNotes"))
+	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
