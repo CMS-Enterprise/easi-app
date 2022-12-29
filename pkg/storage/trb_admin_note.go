@@ -60,7 +60,19 @@ func (s *Store) CreateTRBAdminNote(logger *zap.Logger, note *models.TRBAdminNote
 func (s *Store) GetTRBAdminNotesByTRBRequestID(logger *zap.Logger, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
 	notes := []*models.TRBAdminNote{}
 
-	err := s.db.Select(&notes, `SELECT * FROM trb_admin_notes WHERE trb_request_id=$1`, trbRequestID)
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE trb_request_id = :trb_request_id`)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB admin notes with error %s", err),
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{"trb_request_id": trbRequestID}
+
+	err = stmt.Select(&notes, arg)
 	if err != nil {
 		logger.Error(
 			"Failed to fetch TRB admin notes",
@@ -69,7 +81,7 @@ func (s *Store) GetTRBAdminNotesByTRBRequestID(logger *zap.Logger, trbRequestID 
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
-			Model:     models.TRBAdminNote{},
+			Model:     []*models.TRBAdminNote{},
 			Operation: apperrors.QueryFetch,
 		}
 	}
