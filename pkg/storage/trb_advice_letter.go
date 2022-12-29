@@ -98,7 +98,7 @@ func (s *Store) UpdateTRBAdviceLetterStatus(logger *zap.Logger, id uuid.UUID, st
 	updated := models.TRBAdviceLetter{}
 	arg := map[string]interface{}{
 		"id":     id,
-		"status": string(status),
+		"status": status,
 	}
 
 	if status == models.TRBAdviceLetterStatusCompleted {
@@ -125,7 +125,7 @@ func (s *Store) UpdateTRBAdviceLetterStatus(logger *zap.Logger, id uuid.UUID, st
 }
 
 // UpdateTRBAdviceLetter updates all of a TRB advice letter's mutable fields.
-// The letter's status can be set, though UpdateTRBAdviceLetterStatus() should be used when setting a letter ready for review or sending a letter.
+// The letter's status _can_ be set, though UpdateTRBAdviceLetterStatus() should be used when setting a letter ready for review or sending a letter.
 func (s *Store) UpdateTRBAdviceLetter(logger *zap.Logger, letter *models.TRBAdviceLetter) (*models.TRBAdviceLetter, error) {
 	const trbAdviceLetterUpdateSQL = `
 		UPDATE trb_advice_letters
