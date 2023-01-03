@@ -19,5 +19,6 @@ CREATE TABLE trb_admin_notes (
 
     -- note-specific fields
     category trb_admin_note_category NOT NULL,
-    note_text TEXT NOT NULL
+    note_text TEXT NOT NULL,
+    is_archived BOOLEAN NOT NULL DEFAULT FALSE
 );

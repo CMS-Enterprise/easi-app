@@ -1221,7 +1221,6 @@ type SystemIntakeFundingSourceResolver interface {
 }
 type TRBAdminNoteResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error)
-	IsArchived(ctx context.Context, obj *models.TRBAdminNote) (bool, error)
 }
 type TRBRequestResolver interface {
 	Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error)
@@ -34917,7 +34916,7 @@ func (ec *executionContext) _TRBAdminNote_isArchived(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBAdminNote().IsArchived(rctx, obj)
+		return obj.IsArchived, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -34938,8 +34937,8 @@ func (ec *executionContext) fieldContext_TRBAdminNote_isArchived(ctx context.Con
 	fc = &graphql.FieldContext{
 		Object:     "TRBAdminNote",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
 		},
@@ -50677,25 +50676,12 @@ func (ec *executionContext) _TRBAdminNote(ctx context.Context, sel ast.Selection
 
 			})
 		case "isArchived":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._TRBAdminNote_isArchived(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._TRBAdminNote_isArchived(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "createdBy":
 
 			out.Values[i] = ec._TRBAdminNote_createdBy(ctx, field, obj)

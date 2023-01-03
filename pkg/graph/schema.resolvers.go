@@ -2781,11 +2781,6 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 	return resolvers.GetTRBAdminNoteAuthorInfo(ctx, obj.CreatedBy, r.service.FetchUserInfo)
 }
 
-// IsArchived is the resolver for the isArchived field.
-func (r *tRBAdminNoteResolver) IsArchived(ctx context.Context, obj *models.TRBAdminNote) (bool, error) {
-	panic(fmt.Errorf("not implemented: IsArchived - isArchived"))
-}
-
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)

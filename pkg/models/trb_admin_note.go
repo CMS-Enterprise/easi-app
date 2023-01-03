@@ -20,4 +20,5 @@ type TRBAdminNote struct {
 	TRBRequestID uuid.UUID            `json:"trbRequestId" db:"trb_request_id"`
 	Category     TRBAdminNoteCategory `json:"category" db:"category"`
 	NoteText     string               `json:"noteText" db:"note_text"`
+	IsArchived   bool                 `json:"isArchived" db:"is_archived"`
 }
