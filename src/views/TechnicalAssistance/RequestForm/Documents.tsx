@@ -32,6 +32,7 @@ import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Spinner from 'components/Spinner';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
@@ -61,7 +62,7 @@ import {
 import Breadcrumbs from '../Breadcrumbs';
 
 import Pager from './Pager';
-import { FormStepComponentProps } from '.';
+import { FormStepComponentProps, StepSubmit } from '.';
 
 /**
  * Documents is a component of both the table list of uploaded documents
@@ -71,9 +72,11 @@ function Documents({
   request,
   stepUrl,
   taskListUrl,
-  setFormAlert
+  setFormAlert,
+  setStepSubmit
 }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
+  const { t: gt } = useTranslation('general');
   const history = useHistory();
   const { url } = useRouteMatch();
 
@@ -81,21 +84,17 @@ function Documents({
     view?: string;
   }>();
 
-  const { data, refetch /* , error, loading */ } = useQuery<
+  const { data, refetch, loading } = useQuery<
     GetTrbRequestDocuments,
     GetTrbRequestDocumentsVariables
   >(GetTrbRequestDocumentsQuery, {
     variables: { id: request.id }
   });
 
-  // console.log('loading', loading, 'error', error);
-  // console.log('data', data);
-
   const documents = data?.trbRequest.documents || [];
-  // console.log('documents', documents);
 
   // Documents can be created from the upload form
-  const [createDocument /* , createResult */] = useMutation<
+  const [createDocument] = useMutation<
     CreateTrbRequestDocument,
     CreateTrbRequestDocumentVariables
   >(CreateTrbRequestDocumentQuery);
@@ -103,7 +102,7 @@ function Documents({
   const [isUploadError, setIsUploadError] = useState(false);
 
   // Documents can be deleted from the table
-  const [deleteDocument /* , deleteResult */] = useMutation<
+  const [deleteDocument] = useMutation<
     DeleteTrbRequestDocument,
     DeleteTrbRequestDocumentVariables
   >(DeleteTrbRequestDocumentQuery);
@@ -250,6 +249,14 @@ function Documents({
       });
   });
 
+  const submitNoop: StepSubmit = async callback => {
+    callback?.();
+  };
+
+  useEffect(() => {
+    setStepSubmit(() => submitNoop);
+  }, [setStepSubmit]);
+
   useEffect(() => {
     if (view === 'upload') setFormAlert(false);
     if (!view) setIsUploadError(false);
@@ -269,89 +276,104 @@ function Documents({
     <Switch>
       {/* Documents table */}
       <Route exact path="/trb/requests/:id/documents">
-        {/* Open the document upload form */}
-        <div className="margin-top-5 margin-bottom-4">
-          <UswdsReactLink
-            variant="unstyled"
-            className="usa-button"
-            to={`${url}/upload`}
-          >
-            {t('documents.addDocument')}
-          </UswdsReactLink>
-        </div>
-
-        <div>
-          <Table bordered={false} fullWidth scrollable {...getTableProps()}>
-            <thead>
-              {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column, index) => (
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      aria-sort={getColumnSortStatus(column)}
-                      scope="col"
-                      className="border-bottom-2px"
-                    >
-                      <Button
-                        type="button"
-                        unstyled
-                        className="width-full display-flex"
-                        {...column.getSortByToggleProps()}
-                      >
-                        <div className="flex-fill text-no-wrap">
-                          {column.render('Header')}
-                        </div>
-                        <div className="position-relative width-205 margin-left-05">
-                          {getHeaderSortIcon(column)}
-                        </div>
-                      </Button>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map(row => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell, index) => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-          {data && documents.length === 0 && (
-            <div className="font-body-2xs margin-left-2">
-              {t('documents.table.noDocument')}
+        {loading ? (
+          <div className="margin-y-10" data-testid="page-loading">
+            <div className="text-center">
+              <Spinner size="xl" aria-valuetext={gt('pageLoading')} aria-busy />
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <>
+            {/* Open the document upload form */}
+            <div className="margin-top-5 margin-bottom-4">
+              <UswdsReactLink
+                variant="unstyled"
+                className="usa-button"
+                to={`${url}/upload`}
+              >
+                {t('documents.addDocument')}
+              </UswdsReactLink>
+            </div>
 
-        <Pager
-          className="margin-top-7"
-          back={{
-            onClick: () => {
-              history.push(stepUrl.back);
-            }
-          }}
-          next={{
-            onClick: e => {
-              history.push(stepUrl.next);
-            },
-            text: t(
-              documents.length
-                ? 'button.next'
-                : 'documents.continueWithoutAdding'
-            ),
-            outline: documents.length === 0
-          }}
-          taskListUrl={taskListUrl}
-        />
+            <div>
+              <Table bordered={false} fullWidth scrollable {...getTableProps()}>
+                <thead>
+                  {headerGroups.map(headerGroup => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                      {headerGroup.headers.map((column, index) => (
+                        <th
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps()
+                          )}
+                          aria-sort={getColumnSortStatus(column)}
+                          scope="col"
+                          className="border-bottom-2px"
+                        >
+                          <Button
+                            type="button"
+                            unstyled
+                            className="width-full display-flex"
+                            {...column.getSortByToggleProps()}
+                          >
+                            <div className="flex-fill text-no-wrap">
+                              {column.render('Header')}
+                            </div>
+                            <div className="position-relative width-205 margin-left-05">
+                              {getHeaderSortIcon(column)}
+                            </div>
+                          </Button>
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                  {rows.map(row => {
+                    prepareRow(row);
+                    return (
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map((cell, index) => {
+                          return (
+                            <td {...cell.getCellProps()}>
+                              {cell.render('Cell')}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+              {data && documents.length === 0 && (
+                <div className="font-body-2xs margin-left-2">
+                  {t('documents.table.noDocument')}
+                </div>
+              )}
+            </div>
+
+            <Pager
+              className="margin-top-7"
+              back={{
+                onClick: () => {
+                  history.push(stepUrl.back);
+                }
+              }}
+              next={{
+                onClick: e => {
+                  history.push(stepUrl.next);
+                },
+                text: t(
+                  documents.length
+                    ? 'button.next'
+                    : 'documents.continueWithoutAdding'
+                ),
+                outline: documents.length === 0
+              }}
+              submit={submitNoop}
+              taskListUrl={taskListUrl}
+            />
+          </>
+        )}
       </Route>
 
       {/* Upload document form */}

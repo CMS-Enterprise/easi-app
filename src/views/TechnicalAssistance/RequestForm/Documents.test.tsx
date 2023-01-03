@@ -225,8 +225,8 @@ describe('Trb Request form: Supporting documents', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('opens and closes the document upload form', () => {
-    const { getByRole, getByText } = render(
+  it('opens and closes the document upload form', async () => {
+    const { findByRole, getByRole, getByText } = render(
       <MemoryRouter
         initialEntries={[
           '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
@@ -239,7 +239,7 @@ describe('Trb Request form: Supporting documents', () => {
     );
 
     // Add document button can open the upload document form
-    userEvent.click(getByRole('link', { name: 'Add a document' }));
+    userEvent.click(await findByRole('link', { name: 'Add a document' }));
 
     getByText('Upload a document', { selector: 'h1' });
 
