@@ -1,6 +1,11 @@
+import { DateTime } from 'luxon';
+
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
 describe('Governance Review Team', () => {
+  const futureDatetime = DateTime.local().plus({ year: 1 });
+  const futureDateYear = futureDatetime.year;
+
   beforeEach(() => {
     cy.intercept('GET', '/api/v1/system_intakes?status=open').as(
       'getOpenIntakes'
@@ -149,8 +154,8 @@ describe('Governance Review Team', () => {
 
     cy.get('#IssueLifecycleIdForm-ExpirationDateYear')
       .clear()
-      .type(new Date().getFullYear())
-      .should('have.value', new Date().getFullYear());
+      .type(futureDateYear)
+      .should('have.value', futureDateYear);
     cy.get('#IssueLifecycleIdForm-Scope')
       .type('Scope')
       .should('have.value', 'Scope');
@@ -183,7 +188,7 @@ describe('Governance Review Team', () => {
     ).click();
     cy.contains('dt', 'Lifecycle ID Expiration')
       .siblings('dd')
-      .contains(`December 25 ${new Date().getFullYear()}`);
+      .contains(`December 25 ${futureDateYear}`);
     cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
     cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
@@ -274,8 +279,8 @@ describe('Governance Review Team', () => {
       .type('31')
       .should('have.value', '31');
     cy.get('#ExtendLifecycleId-expirationDateYear')
-      .type('2028')
-      .should('have.value', '2028');
+      .type(futureDateYear)
+      .should('have.value', futureDateYear);
 
     cy.get('#ExtendLifecycleIdForm-Scope')
       .type('Scope')
@@ -323,8 +328,8 @@ describe('Governance Review Team', () => {
       .type('31')
       .should('have.value', '31');
     cy.get('#ExtendLifecycleId-expirationDateYear')
-      .type('2029')
-      .should('have.value', '2029');
+      .type(futureDateYear)
+      .should('have.value', futureDateYear);
 
     cy.get('#ExtendLifecycleIdForm-Scope')
       .type('Scope')
