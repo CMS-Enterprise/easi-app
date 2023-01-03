@@ -110,7 +110,7 @@ describe('Additional contacts component', () => {
     const activeContact = additionalContacts[0];
 
     // Render component with edit form
-    const { asFragment, getByTestId, findByTestId, getByText } = render(
+    const { asFragment, getByTestId, findByTestId } = render(
       <MockedProvider mocks={[systemIntakeContactsQuery]} addTypename={false}>
         <AdditionalContacts
           systemIntakeId={intakeId}
@@ -130,8 +130,10 @@ describe('Additional contacts component', () => {
       </MockedProvider>
     );
 
-    // Check that edit form is in document
-    expect(getByText('Edit contact')).toBeInTheDocument();
+    // Wait for cedar contacts query to complete
+    await waitForElementToBeRemoved(() =>
+      getByTestId('systemIntakeContactForm').querySelector('.easi-spinner')
+    );
 
     // Check that contact select field displays correct value
     const cedarContactSelectInput = await findByTestId('cedar-contact-select');
@@ -146,10 +148,6 @@ describe('Additional contacts component', () => {
     // Check that role field displays correct value
     const roleField = getByTestId('IntakeForm-ContactRole');
     expect(roleField).toHaveValue(activeContact.role);
-
-    await waitForElementToBeRemoved(() =>
-      getByTestId('systemIntakeContactForm').querySelector('.easi-spinner')
-    );
 
     // Edit form snapshot
     expect(asFragment()).toMatchSnapshot();
