@@ -46,6 +46,7 @@ describe('CedarContactSelect', () => {
 
     // Get mocked CEDAR result
     const userOption = await findByText('Adeline Aarons, ABCD');
+    expect(userOption).toBeInTheDocument();
 
     // Check that component matches snapshot with expanded dropdown
     expect(asFragment()).toMatchSnapshot();
