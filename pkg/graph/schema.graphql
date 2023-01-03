@@ -1976,6 +1976,8 @@ type TRBAdminNote {
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
   noteText: String!
+  author: UserInfo!
+  isArchived: Boolean!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -1989,6 +1991,16 @@ input CreateTRBAdminNoteInput {
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
   noteText: String!
+}
+
+"""
+The data needed for updating a TRB admin note
+"""
+input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
+  id: UUID!
+  category: TRBAdminNoteCategory
+  noteText: String
+  isArchived: Boolean
 }
 
 """
@@ -2115,6 +2127,10 @@ type Mutation {
     @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNote(input: CreateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
+  archiveTRBAdminNote(id: UUID!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
 }
 
 """
@@ -2146,6 +2162,7 @@ type Query {
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
+  trbAdminNote(id: UUID!): TRBAdminNote!
 }
 
 enum TRBRequestType {

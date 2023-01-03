@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2018,6 +2019,16 @@ func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.C
 	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, input.Category, input.NoteText)
 }
 
+// UpdateTRBAdminNote is the resolver for the updateTRBAdminNote field.
+func (r *mutationResolver) UpdateTRBAdminNote(ctx context.Context, input map[string]interface{}) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: UpdateTRBAdminNote - updateTRBAdminNote"))
+}
+
+// ArchiveTRBAdminNote is the resolver for the archiveTRBAdminNote field.
+func (r *mutationResolver) ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: ArchiveTRBAdminNote - archiveTRBAdminNote"))
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2380,6 +2391,11 @@ func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.T
 // TrbRequests is the resolver for the trbRequests field.
 func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	return resolvers.GetTRBRequests(ctx, archived, r.store)
+}
+
+// TrbAdminNote is the resolver for the trbAdminNote field.
+func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: TrbAdminNote - trbAdminNote"))
 }
 
 // Actions is the resolver for the actions field.
@@ -2760,6 +2776,16 @@ func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *mod
 	return obj.Source.Ptr(), nil
 }
 
+// Author is the resolver for the author field.
+func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
+	panic(fmt.Errorf("not implemented: Author - author"))
+}
+
+// IsArchived is the resolver for the isArchived field.
+func (r *tRBAdminNoteResolver) IsArchived(ctx context.Context, obj *models.TRBAdminNote) (bool, error) {
+	panic(fmt.Errorf("not implemented: IsArchived - isArchived"))
+}
+
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
@@ -2950,6 +2976,9 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 	return &systemIntakeFundingSourceResolver{r}
 }
 
+// TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
+func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
+
 // TRBRequest returns generated.TRBRequestResolver implementation.
 func (r *Resolver) TRBRequest() generated.TRBRequestResolver { return &tRBRequestResolver{r} }
 
@@ -2993,6 +3022,7 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
+type tRBAdminNoteResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
