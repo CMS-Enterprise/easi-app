@@ -209,7 +209,7 @@ function Documents({
     handleSubmit,
     watch,
     reset,
-    formState: { /* errors, */ isSubmitting, isDirty }
+    formState: { errors, isSubmitting, isDirty }
   } = useForm<TrbRequestInputDocument>({
     resolver: yupResolver(documentSchema),
     defaultValues: {
@@ -220,8 +220,6 @@ function Documents({
   });
 
   const submit = handleSubmit(async formData => {
-    // console.log('formdata', formData);
-
     const input: any = clone(formData);
 
     // Clear out otherTypeDescription if documentType isn't OTHER
@@ -248,7 +246,6 @@ function Documents({
         history.push(`/trb/requests/${request.id}/documents`);
       })
       .catch(err => {
-        // console.log(err);
         setIsUploadError(true);
       });
   });
@@ -259,10 +256,14 @@ function Documents({
     if (!view && isDirty) reset();
   }, [view, t, setFormAlert, isDirty, reset]);
 
-  // console.log('values', JSON.stringify(watch(), null, 2));
-  // console.log('errors', JSON.stringify(errors, null, 2));
-  // console.log('isDirty', isDirty);
-  // console.log('dirtyFields', JSON.stringify(dirtyFields, null, 2));
+  // Scroll to the first error field if the form is invalid
+  useEffect(() => {
+    const fields = Object.keys(errors);
+    if (fields.length) {
+      const err = document.querySelector(`label[for=${fields[0]}]`);
+      err?.scrollIntoView();
+    }
+  }, [errors]);
 
   return (
     <Switch>

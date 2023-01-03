@@ -471,6 +471,8 @@ describe('Trb Request form: Supporting documents', () => {
   });
 
   it('handles invalid fields and error messages', async () => {
+    Element.prototype.scrollIntoView = jest.fn();
+
     const { getByRole, getByTestId, getByLabelText, findByText } = render(
       <MemoryRouter
         initialEntries={[
