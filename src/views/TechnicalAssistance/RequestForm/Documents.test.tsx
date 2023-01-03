@@ -383,6 +383,53 @@ describe('Trb Request form: Supporting documents', () => {
     getByText('Virus scan in progress...');
   });
 
+  it('handles file upload errors', async () => {
+    Element.prototype.scrollIntoView = jest.fn();
+
+    const { getByRole, getByTestId, getByLabelText, findByText } = render(
+      <MemoryRouter
+        initialEntries={[
+          '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents/upload'
+        ]}
+      >
+        <Route exact path="/trb/requests/:id/:step?/:view?">
+          <MockedProvider
+            mocks={[
+              mockGetTrbRequestDocumentsQueryNoDocuments,
+              // Upload document file with forced network error
+              {
+                request: {
+                  query: CreateTrbRequestDocumentQuery,
+                  variables: {
+                    input: {
+                      requestID: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
+                      documentType: 'ARCHITECTURE_DIAGRAM',
+                      fileData: testFile
+                    }
+                  }
+                },
+                error: new Error()
+              }
+            ]}
+          >
+            {documents}
+          </MockedProvider>
+        </Route>
+      </MemoryRouter>
+    );
+
+    const documentUploadLabel = getByLabelText('Document upload');
+    userEvent.upload(documentUploadLabel, testFile);
+
+    userEvent.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
+
+    // Attempt submit
+    const uploadButton = getByRole('button', { name: 'Upload document' });
+    userEvent.click(uploadButton);
+
+    await findByText(/There was an issue uploading your document/);
+  });
+
   it('deletes a document from the table', async () => {
     const { findByText, findByRole } = render(
       <MemoryRouter

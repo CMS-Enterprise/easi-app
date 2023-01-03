@@ -272,6 +272,14 @@ function Documents({
     }
   }, [errors]);
 
+  // Scroll to the upload error if there's a problem
+  useEffect(() => {
+    if (isUploadError) {
+      const err = document.querySelector('.document-upload-error');
+      err?.scrollIntoView();
+    }
+  }, [isUploadError]);
+
   return (
     <Switch>
       {/* Documents table */}
@@ -394,7 +402,7 @@ function Documents({
             ]}
           />
           {isUploadError && (
-            <Alert type="error" slim>
+            <Alert type="error" slim className="document-upload-error">
               {t('documents.upload.error')}
             </Alert>
           )}
