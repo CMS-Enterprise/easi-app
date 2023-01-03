@@ -2778,7 +2778,7 @@ func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *mod
 
 // Author is the resolver for the author field.
 func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
-	panic(fmt.Errorf("not implemented: Author - author"))
+	return resolvers.GetTRBAdminNoteAuthorInfo(ctx, obj.CreatedBy, r.service.FetchUserInfo)
 }
 
 // IsArchived is the resolver for the isArchived field.

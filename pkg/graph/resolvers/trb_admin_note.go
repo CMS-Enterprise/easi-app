@@ -36,3 +36,12 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 
 	return notes, nil
 }
+
+// GetTRBAdminNoteAuthorInfo gets the full user info for the author of an admin note
+func GetTRBAdminNoteAuthorInfo(ctx context.Context, authorEUAID string, fetchUserInfo func(context.Context, string) (*models.UserInfo, error)) (*models.UserInfo, error) {
+	authorInfo, err := fetchUserInfo(ctx, authorEUAID)
+	if err != nil {
+		return nil, err
+	}
+	return authorInfo, nil
+}
