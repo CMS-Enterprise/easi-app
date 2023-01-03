@@ -74,6 +74,20 @@ const mockRefetch = async (
   };
 };
 
+const mockGetTrbRequestDocumentsQueryNoDocuments = {
+  request: {
+    query: GetTrbRequestDocumentsQuery,
+    variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        documents: []
+      }
+    }
+  }
+};
+
 const documents = (
   <Documents
     request={{
@@ -233,7 +247,9 @@ describe('Trb Request form: Supporting documents', () => {
         ]}
       >
         <Route exact path="/trb/requests/:id/:step?/:view?">
-          <MockedProvider>{documents}</MockedProvider>
+          <MockedProvider mocks={[mockGetTrbRequestDocumentsQueryNoDocuments]}>
+            {documents}
+          </MockedProvider>
         </Route>
       </MemoryRouter>
     );
@@ -412,7 +428,9 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     deleteTRBRequestDocument: {
-                      fileName: 'test.pdf'
+                      document: {
+                        fileName: 'test.pdf'
+                      }
                     }
                   }
                 }
@@ -455,7 +473,9 @@ describe('Trb Request form: Supporting documents', () => {
         ]}
       >
         <Route exact path="/trb/requests/:id/:step?/:view?">
-          <MockedProvider mocks={[]}>{documents}</MockedProvider>
+          <MockedProvider mocks={[mockGetTrbRequestDocumentsQueryNoDocuments]}>
+            {documents}
+          </MockedProvider>
         </Route>
       </MemoryRouter>
     );
@@ -480,7 +500,9 @@ describe('Trb Request form: Supporting documents', () => {
         ]}
       >
         <Route exact path="/trb/requests/:id/:step?/:view?">
-          <MockedProvider mocks={[]}>{documents}</MockedProvider>
+          <MockedProvider mocks={[mockGetTrbRequestDocumentsQueryNoDocuments]}>
+            {documents}
+          </MockedProvider>
         </Route>
       </MemoryRouter>
     );
