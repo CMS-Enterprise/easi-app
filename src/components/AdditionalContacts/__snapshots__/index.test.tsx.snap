@@ -36,7 +36,7 @@ exports[`Additional contacts component displays form when editing contact 1`] = 
               New contact name
             </label>
             <div
-              class="margin-top-1 cedar-contact-select usa-combo-box cedar-contact-select__loading css-b62m3t-container"
+              class="margin-top-1 cedar-contact-select usa-combo-box css-b62m3t-container"
               id="IntakeForm-ContactCommonName"
             >
               <span
@@ -82,11 +82,6 @@ exports[`Additional contacts component displays form when editing contact 1`] = 
                 <div
                   class="cedar-contact-select__indicators css-1hb7zxy-IndicatorsContainer"
                 >
-                  <span
-                    aria-valuetext="Loading"
-                    class="easi-spinner easi-spinner--small"
-                    role="progressbar"
-                  />
                   <div
                     aria-hidden="true"
                     class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1e245h0-indicatorContainer"

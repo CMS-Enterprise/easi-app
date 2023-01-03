@@ -1,6 +1,6 @@
 import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
 import { SystemIntakeContactProps } from 'types/systemIntake';
@@ -146,6 +146,10 @@ describe('Additional contacts component', () => {
     // Check that role field displays correct value
     const roleField = getByTestId('IntakeForm-ContactRole');
     expect(roleField).toHaveValue(activeContact.role);
+
+    await waitForElementToBeRemoved(() =>
+      getByTestId('systemIntakeContactForm').querySelector('.easi-spinner')
+    );
 
     // Edit form snapshot
     expect(asFragment()).toMatchSnapshot();
