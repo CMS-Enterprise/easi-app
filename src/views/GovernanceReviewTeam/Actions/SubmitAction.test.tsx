@@ -275,8 +275,7 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: '',
-              intakeId: systemIntakeId,
-              shouldSendEmail: false
+              intakeId: systemIntakeId
             }
           }
         },
@@ -311,8 +310,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -372,8 +370,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -431,8 +428,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -494,8 +490,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: true
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -559,8 +554,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -616,8 +610,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -677,8 +670,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
