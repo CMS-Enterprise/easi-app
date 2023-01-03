@@ -2395,7 +2395,7 @@ func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*mode
 
 // TrbAdminNote is the resolver for the trbAdminNote field.
 func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
-	panic(fmt.Errorf("not implemented: TrbAdminNote - trbAdminNote"))
+	return resolvers.GetTRBAdminNoteByID(ctx, r.store, id)
 }
 
 // Actions is the resolver for the actions field.

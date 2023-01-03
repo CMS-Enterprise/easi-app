@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -87,4 +89,46 @@ func (s *Store) GetTRBAdminNotesByTRBRequestID(logger *zap.Logger, trbRequestID 
 	}
 
 	return notes, nil
+}
+
+// GetTRBAdminNoteByID retrieves a single admin note by its ID
+func (s *Store) GetTRBAdminNoteByID(logger *zap.Logger, id uuid.UUID) (*models.TRBAdminNote, error) {
+	note := models.TRBAdminNote{}
+
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE id = :id`)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{"id": id}
+
+	err = stmt.Get(&note, arg)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			logger.Info(
+				"No admin note found",
+				zap.Error(err),
+				zap.String("id", id.String()),
+			)
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.TRBAdminNote{}}
+		}
+
+		logger.Error(
+			"Failed to fetch admin note",
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     id,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return &note, nil
 }

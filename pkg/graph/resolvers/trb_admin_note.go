@@ -27,6 +27,16 @@ func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID 
 	return createdNote, nil
 }
 
+// GetTRBAdminNoteByID retrieves a single admin note by its ID
+func GetTRBAdminNoteByID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdminNote, error) {
+	note, err := store.GetTRBAdminNoteByID(appcontext.ZLogger(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+
+	return note, nil
+}
+
 // GetTRBAdminNotesByTRBRequestID retrieves a list of admin notes associated with a TRB request
 func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
 	notes, err := store.GetTRBAdminNotesByTRBRequestID(appcontext.ZLogger(ctx), trbRequestID)
