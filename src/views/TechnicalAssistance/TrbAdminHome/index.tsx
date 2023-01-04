@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -16,35 +16,48 @@ import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import NotFound from 'views/NotFound';
 
+import AdviceLetter from './AdviceLetter';
+import Feedback from './Feedback';
+import InitialRequestForm from './InitialRequestForm';
+import Notes from './Notes';
+import RequestHome from './RequestHome';
+import SupportingDocuments from './SupportingDocuments';
+
 import './index.scss';
 
 /** TRB admin home sub navigation items */
-const subNavItems = (
+const trbAdminSubPages = (
   trbRequestId: string
-): { route: string; translationKey: string }[] => [
+): { route: string; translationKey: string; component: JSX.Element }[] => [
   {
     route: `/trb/${trbRequestId}`,
-    translationKey: 'requestHome'
+    translationKey: 'requestHome',
+    component: <RequestHome trbRequestId={trbRequestId} />
   },
   {
     route: `/trb/${trbRequestId}/initial-request-form`,
-    translationKey: 'initialRequestForm'
+    translationKey: 'initialRequestForm',
+    component: <InitialRequestForm trbRequestId={trbRequestId} />
   },
   {
     route: `/trb/${trbRequestId}/documents`,
-    translationKey: 'supportingDocuments'
+    translationKey: 'supportingDocuments',
+    component: <SupportingDocuments trbRequestId={trbRequestId} />
   },
   {
     route: `/trb/${trbRequestId}/feedback`,
-    translationKey: 'feedback'
+    translationKey: 'feedback',
+    component: <Feedback trbRequestId={trbRequestId} />
   },
   {
     route: `/trb/${trbRequestId}/advice`,
-    translationKey: 'adviceLetter'
+    translationKey: 'adviceLetter',
+    component: <AdviceLetter trbRequestId={trbRequestId} />
   },
   {
     route: `/trb/${trbRequestId}/notes`,
-    translationKey: 'notes'
+    translationKey: 'notes',
+    component: <Notes trbRequestId={trbRequestId} />
   }
 ];
 
@@ -108,42 +121,48 @@ export default function TrbAdminHome() {
                             {t('adminHome.subnav.back')}
                           </Link>
                         </li>
-                        {subNavItems(id).map(({ route, translationKey }) => {
-                          const isActivePage: boolean =
-                            route.split('/')[3] === activePage;
-                          return (
-                            <li
-                              key={`trb-sidenav-${translationKey}`}
-                              className={classNames(
-                                'padding-y-1',
-                                'trb-admin-home__nav-link',
-                                {
-                                  'trb-admin-home__nav-link--active': isActivePage
-                                }
-                              )}
-                            >
-                              <Link
-                                to={route}
-                                data-testid={`grt-nav-${translationKey}-link`}
+                        {trbAdminSubPages(id).map(
+                          ({ route, translationKey }) => {
+                            const isActivePage: boolean =
+                              route.split('/')[3] === activePage;
+                            return (
+                              <li
+                                key={`trb-sidenav-${translationKey}`}
                                 className={classNames(
-                                  'text-no-underline',
-                                  'padding-y-05',
+                                  'padding-y-1',
+                                  'trb-admin-home__nav-link',
                                   {
-                                    'text-base-darkest': !isActivePage,
-                                    'text-primary': isActivePage
+                                    'trb-admin-home__nav-link--active': isActivePage
                                   }
                                 )}
                               >
-                                {t(`adminHome.subnav.${translationKey}`)}
-                              </Link>
-                            </li>
-                          );
-                        })}
+                                <Link
+                                  to={route}
+                                  data-testid={`grt-nav-${translationKey}-link`}
+                                  className={classNames(
+                                    'text-no-underline',
+                                    'padding-y-05',
+                                    {
+                                      'text-base-darkest': !isActivePage,
+                                      'text-primary': isActivePage
+                                    }
+                                  )}
+                                >
+                                  {t(`adminHome.subnav.${translationKey}`)}
+                                </Link>
+                              </li>
+                            );
+                          }
+                        )}
                       </ul>
                     </nav>
                   </Grid>
                   <Grid col desktop={{ col: 9 }}>
-                    Content
+                    {trbAdminSubPages(id).map(({ route, component }) => (
+                      <Route exact path={route}>
+                        {component}
+                      </Route>
+                    ))}
                   </Grid>
                 </Grid>
               </GridContainer>
