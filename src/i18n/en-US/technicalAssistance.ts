@@ -506,7 +506,23 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding documents'
   },
   check: {
-    submit: 'Submit request'
+    submit: 'Submit request',
+    edit: 'Edit this section',
+    notYetSubmitted: 'Not yet submitted',
+    requestType: 'Request type',
+    noTopicsSelected: 'No topics selected',
+    whatNext: {
+      title: 'What happens next?',
+      text: [
+        'The TRB will review and get back to you with one of these outcomes:',
+        'A TRB team member will get back to you within two business days.'
+      ],
+      list: [
+        'schedule a consult session',
+        'direct you to another governance process or team',
+        'request additional information'
+      ]
+    }
   },
   done: {
     success: {
