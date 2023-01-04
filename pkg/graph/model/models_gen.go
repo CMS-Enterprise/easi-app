@@ -416,6 +416,13 @@ type SendReportAProblemEmailInput struct {
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
 }
 
+// The data needed to send a TRB advice letter, including who to notify
+type SendTRBAdviceLetterInput struct {
+	ID             uuid.UUID `json:"id"`
+	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
+	NotifyEuaIds   []string  `json:"notifyEuaIds"`
+}
+
 type SetRolesForUserOnSystemInput struct {
 	CedarSystemID      string   `json:"cedarSystemID"`
 	EuaUserID          string   `json:"euaUserId"`

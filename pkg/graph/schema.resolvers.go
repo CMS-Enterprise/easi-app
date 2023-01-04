@@ -2013,6 +2013,26 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 	)
 }
 
+// CreateTRBAdviceLetter is the resolver for the createTRBAdviceLetter field.
+func (r *mutationResolver) CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
+	return resolvers.CreateTRBAdviceLetter(ctx, r.store, trbRequestID)
+}
+
+// UpdateTRBAdviceLetter is the resolver for the updateTRBAdviceLetter field.
+func (r *mutationResolver) UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetter, error) {
+	return resolvers.UpdateTRBAdviceLetter(ctx, r.store, input)
+}
+
+// RequestReviewForTRBAdviceLetter is the resolver for the requestReviewForTRBAdviceLetter field.
+func (r *mutationResolver) RequestReviewForTRBAdviceLetter(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetter, error) {
+	return resolvers.RequestReviewForTRBAdviceLetter(ctx, r.store, id)
+}
+
+// SendTRBAdviceLetter is the resolver for the sendTRBAdviceLetter field.
+func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input model.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error) {
+	return resolvers.SendTRBAdviceLetter(ctx, r.store, input.ID)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2773,6 +2793,11 @@ func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBReque
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
 	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+}
+
+// AdviceLetter is the resolver for the adviceLetter field.
+func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBAdviceLetter, error) {
+	return resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, r.store, obj.ID)
 }
 
 // TaskStatuses is the resolver for the taskStatuses field.

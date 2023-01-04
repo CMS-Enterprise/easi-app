@@ -1,0 +1,201 @@
+package storage
+
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+	"time"
+
+	"github.com/google/uuid"
+	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
+)
+
+// CreateTRBAdviceLetter creates an advice letter for a TRB request, in the "In Progress" status
+func (s *Store) CreateTRBAdviceLetter(logger *zap.Logger, createdBy string, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
+	adviceLetter := models.TRBAdviceLetter{
+		TRBRequestID: trbRequestID,
+		Status:       models.TRBAdviceLetterStatusInProgress,
+	}
+	adviceLetter.ID = uuid.New()
+	adviceLetter.CreatedBy = createdBy
+
+	const trbAdviceLetterCreateSQL = `
+		INSERT INTO trb_advice_letters (
+			id,
+			trb_request_id,
+			created_by,
+			status
+		) VALUES (
+			:id,
+			:trb_request_id,
+			:created_by,
+			:status 
+		) RETURNING *;
+	`
+	stmt, err := s.db.PrepareNamed(trbAdviceLetterCreateSQL)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to prepare SQL statement for creating TRB advice letter with error %s", err),
+			zap.Error(err),
+			zap.String("user", createdBy),
+		)
+		return nil, err
+	}
+
+	retLetter := models.TRBAdviceLetter{}
+
+	err = stmt.Get(&retLetter, adviceLetter)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to create TRB advice letter with error %s", err),
+			zap.Error(err),
+			zap.String("user", createdBy),
+		)
+		return nil, err
+	}
+
+	return &retLetter, nil
+}
+
+// UpdateTRBAdviceLetterStatus sets the status of a TRB advice letter, for setting the letter as ready to review or sending the letter.
+// When it sends the letter, it also updates the DateSent field.
+func (s *Store) UpdateTRBAdviceLetterStatus(logger *zap.Logger, id uuid.UUID, status models.TRBAdviceLetterStatus) (*models.TRBAdviceLetter, error) {
+	const trbAdviceLetterStatusUpdateSQL = `
+	UPDATE trb_advice_letters
+	SET
+		status = :status,
+		date_sent = :date_sent
+	WHERE id = :id
+	RETURNING *;
+	`
+
+	stmt, err := s.db.PrepareNamed(trbAdviceLetterStatusUpdateSQL)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to prepare SQL statement for updating TRB advice letter status with error %s", err),
+			zap.Error(err),
+			zap.String("id", id.String()),
+			zap.String("status", string(status)),
+		)
+		return nil, err
+	}
+
+	updated := models.TRBAdviceLetter{}
+	arg := map[string]interface{}{
+		"id":     id,
+		"status": status,
+	}
+
+	if status == models.TRBAdviceLetterStatusCompleted {
+		arg["date_sent"] = time.Now()
+	} else {
+		arg["date_sent"] = nil // need this to avoid errors from the ":date_sent" parameter being absent in the SQL statement
+	}
+
+	err = stmt.Get(&updated, arg)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to update TRB advice letter status with error %s", err),
+			zap.String("id", id.String()),
+			zap.String("status", string(status)),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     updated,
+			Operation: apperrors.QueryUpdate,
+		}
+	}
+
+	return &updated, nil
+}
+
+// UpdateTRBAdviceLetter updates all of a TRB advice letter's mutable fields.
+// The letter's status _can_ be set, though UpdateTRBAdviceLetterStatus() should be used when setting a letter ready for review or sending a letter.
+func (s *Store) UpdateTRBAdviceLetter(logger *zap.Logger, letter *models.TRBAdviceLetter) (*models.TRBAdviceLetter, error) {
+	const trbAdviceLetterUpdateSQL = `
+		UPDATE trb_advice_letters
+		SET
+			trb_request_id = :trb_request_id,
+			status = :status,
+			meeting_summary = :meeting_summary,
+			next_steps = :next_steps,
+			is_followup_recommended = :is_followup_recommended,
+			date_sent = :date_sent,
+			followup_point = :followup_point,
+			modified_by = :modified_by,
+			modified_at = :modified_at
+		WHERE id = :id
+		RETURNING *;
+	`
+
+	stmt, err := s.db.PrepareNamed(trbAdviceLetterUpdateSQL)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to prepare SQL statement for updating TRB advice letter with error %s", err),
+			zap.Error(err),
+			zap.String("id", letter.ID.String()),
+		)
+		return nil, err
+	}
+
+	updated := models.TRBAdviceLetter{}
+
+	err = stmt.Get(&updated, letter)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to update TRB advice letter with error %s", err),
+			zap.String("id", letter.ID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     letter,
+			Operation: apperrors.QueryUpdate,
+		}
+	}
+
+	return &updated, nil
+}
+
+// GetTRBAdviceLetterByTRBRequestID fetches a TRB advice letter record by its associated request's ID
+func (s *Store) GetTRBAdviceLetterByTRBRequestID(logger *zap.Logger, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
+	letter := models.TRBAdviceLetter{}
+
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_advice_letters WHERE trb_request_id = :trb_request_id`)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB advice letter with error %s", err),
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{"trb_request_id": trbRequestID}
+
+	err = stmt.Get(&letter, arg)
+	if err != nil {
+		logger.Error(
+			"Failed to fetch TRB advice letter",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{
+				Err:      err,
+				Resource: models.TRBAdviceLetter{},
+			}
+		}
+
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     letter,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return &letter, nil
+}
