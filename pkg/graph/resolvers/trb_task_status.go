@@ -8,7 +8,6 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -119,8 +118,8 @@ func getTRBAdviceLetterStatus(ctx context.Context, store *storage.Store, trbRequ
 	var trb *models.TRBRequest
 	var errGetRequest error
 
-	var letter *models.TRBAdviceLetter
-	var errGetLetter error
+	var letterStatus *models.TRBAdviceLetterStatus
+	var errGetLetterStatus error
 
 	errGroup.Go(func() error {
 		trb, errGetRequest = store.GetTRBRequestByID(logger, trbRequestID)
@@ -131,13 +130,9 @@ func getTRBAdviceLetterStatus(ctx context.Context, store *storage.Store, trbRequ
 	})
 
 	errGroup.Go(func() error {
-		letter, errGetLetter = store.GetTRBAdviceLetterByTRBRequestID(appcontext.ZLogger(ctx), trbRequestID)
-		if errGetLetter != nil {
-			if _, isResourceNotFound := errGetLetter.(*apperrors.ResourceNotFoundError); isResourceNotFound {
-				return nil
-			}
-
-			return errGetLetter
+		letterStatus, errGetLetterStatus = store.GetTRBAdviceLetterStatusByTRBRequestID(appcontext.ZLogger(ctx), trbRequestID)
+		if errGetLetterStatus != nil {
+			return errGetLetterStatus
 		}
 		return nil
 	})
@@ -146,15 +141,15 @@ func getTRBAdviceLetterStatus(ctx context.Context, store *storage.Store, trbRequ
 		return nil, err
 	}
 
-	// if letter hasn't been created yet
-	if letter == nil {
+	// if there weren't any errors but letterStatus is nil, letter hasn't been created yet
+	if letterStatus == nil {
 		if trb.ConsultMeetingTime != nil && time.Now().After(*trb.ConsultMeetingTime) {
 			status = models.TRBAdviceLetterStatusReadyToStart
 		} else {
 			status = models.TRBAdviceLetterStatusCannotStartYet
 		}
 	} else {
-		status = letter.Status
+		status = *letterStatus
 	}
 
 	return &status, nil

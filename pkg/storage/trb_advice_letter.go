@@ -199,3 +199,44 @@ func (s *Store) GetTRBAdviceLetterByTRBRequestID(logger *zap.Logger, trbRequestI
 
 	return &letter, nil
 }
+
+// GetTRBAdviceLetterStatusByTRBRequestID fetches a TRB advice letter's status, if present, by its associated request's ID.
+// It does _not_ return an error if no advice letter is found; this is an expected scenario if an advice letter hasn't been created,
+// in which case resolver logic will compute the advice letter's status.
+func (s *Store) GetTRBAdviceLetterStatusByTRBRequestID(logger *zap.Logger, trbRequestID uuid.UUID) (*models.TRBAdviceLetterStatus, error) {
+	letter := models.TRBAdviceLetter{}
+
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_advice_letters WHERE trb_request_id = :trb_request_id`)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB advice letter with error %s", err),
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{"trb_request_id": trbRequestID}
+
+	err = stmt.Get(&letter, arg)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// advice letter hasn't been created; return (nil, nil) so that resolver logic knows to compute the appropriate status without a spurious error
+			return nil, nil
+		}
+
+		logger.Error(
+			"Failed to fetch TRB advice letter",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     letter,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return &letter.Status, nil
+}
