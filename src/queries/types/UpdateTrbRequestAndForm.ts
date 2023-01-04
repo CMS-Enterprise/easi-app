@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateTRBRequestFormInput, TRBRequestChanges, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption } from "./../../types/graphql-global-types";
+import { UpdateTRBRequestFormInput, TRBRequestChanges, TRBRequestType, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: UpdateTrbRequestAndForm
@@ -55,6 +55,7 @@ export interface UpdateTrbRequestAndForm_updateTRBRequest {
   id: UUID;
   name: string;
   createdBy: string;
+  type: TRBRequestType;
   form: UpdateTrbRequestAndForm_updateTRBRequest_form;
 }
 

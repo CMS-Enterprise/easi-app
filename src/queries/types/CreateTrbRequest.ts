@@ -50,6 +50,7 @@ export interface CreateTrbRequest_createTRBRequest {
   id: UUID;
   name: string;
   createdBy: string;
+  type: TRBRequestType;
   form: CreateTrbRequest_createTRBRequest_form;
 }
 

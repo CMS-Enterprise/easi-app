@@ -5,6 +5,7 @@ export default gql`
     id
     name
     createdBy
+    type
 
     form {
       id
