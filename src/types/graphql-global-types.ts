@@ -167,6 +167,16 @@ export enum TRBApplicationDevelopmentOption {
 }
 
 /**
+ * Represents the status of the TRB consult attendance step
+ */
+export enum TRBAttendConsultStatus {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
+  SCHEDULED = "SCHEDULED",
+}
+
+/**
  * The possible answers to the "cloud and infrastructure" input on the TRB "Subject Areas" page
  */
 export enum TRBCloudAndInfrastructureOption {
@@ -197,6 +207,15 @@ export enum TRBCollabGroupOption {
 }
 
 /**
+ * Represents the status of the TRB consult step
+ */
+export enum TRBConsultPrepStatus {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  READY_TO_START = "READY_TO_START",
+}
+
+/**
  * The possible answers to the "data and data management" input on the TRB "Subject Areas" page
  */
 export enum TRBDataAndDataManagementOption {
@@ -208,6 +227,17 @@ export enum TRBDataAndDataManagementOption {
   FHIR = "FHIR",
   GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION = "GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION",
   OTHER = "OTHER",
+}
+
+/**
+ * Represents the status of the TRB feedback step
+ */
+export enum TRBFeedbackStatus {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_REVIEW = "IN_REVIEW",
+  READY_TO_START = "READY_TO_START",
 }
 
 /**
