@@ -482,6 +482,10 @@ const technicalAssistance = {
     }
   },
   adminHome: {
+    breadcrumb: 'Request {{trbRequestId}}',
+    requestType: 'Request type',
+    requester: 'Requester',
+    submissionDate: 'Submission Date',
     subnav: {
       back: 'Back to All Requests',
       requestHome: 'Request home',

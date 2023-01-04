@@ -16,6 +16,7 @@ import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import NotFound from 'views/NotFound';
 
+import Summary from './Summary/Summary';
 import AdviceLetter from './AdviceLetter';
 import Feedback from './Feedback';
 import InitialRequestForm from './InitialRequestForm';
@@ -103,69 +104,78 @@ export default function TrbAdminHome() {
           {
             // TRB admin home view
             !loading && !!trbRequest && (
-              <GridContainer>
-                <Grid row className="margin-y-5">
-                  <Grid col desktop={{ col: 3 }}>
-                    {/* Navigation */}
-                    <nav>
-                      <ul className="trb-admin-home__nav-list usa-list usa-list--unstyled">
-                        <li className="margin-bottom-4">
-                          <Link
-                            to="/"
-                            className="display-flex flex-align-center"
-                          >
-                            <IconArrowBack
-                              className="margin-right-1"
-                              aria-hidden
-                            />
-                            {t('adminHome.subnav.back')}
-                          </Link>
-                        </li>
-                        {trbAdminSubPages(id).map(
-                          ({ route, translationKey }) => {
-                            const isActivePage: boolean =
-                              route.split('/')[3] === activePage;
-                            return (
-                              <li
-                                key={`trb-sidenav-${translationKey}`}
-                                className={classNames(
-                                  'padding-y-1',
-                                  'trb-admin-home__nav-link',
-                                  {
-                                    'trb-admin-home__nav-link--active': isActivePage
-                                  }
-                                )}
-                              >
-                                <Link
-                                  to={route}
-                                  data-testid={`grt-nav-${translationKey}-link`}
+              <>
+                <Summary
+                  trbRequestId={id}
+                  name={trbRequest.name}
+                  requestType={trbRequest.form.needsAssistanceWith || ''}
+                  requester={trbRequest.createdBy}
+                  submissionDate="September 13, 2022"
+                />
+                <GridContainer>
+                  <Grid row className="margin-y-5">
+                    <Grid col desktop={{ col: 3 }}>
+                      {/* Navigation */}
+                      <nav>
+                        <ul className="trb-admin-home__nav-list usa-list usa-list--unstyled">
+                          <li className="margin-bottom-4">
+                            <Link
+                              to="/"
+                              className="display-flex flex-align-center"
+                            >
+                              <IconArrowBack
+                                className="margin-right-1"
+                                aria-hidden
+                              />
+                              {t('adminHome.subnav.back')}
+                            </Link>
+                          </li>
+                          {trbAdminSubPages(id).map(
+                            ({ route, translationKey }) => {
+                              const isActivePage: boolean =
+                                route.split('/')[3] === activePage;
+                              return (
+                                <li
+                                  key={`trb-sidenav-${translationKey}`}
                                   className={classNames(
-                                    'text-no-underline',
-                                    'padding-y-05',
+                                    'padding-y-1',
+                                    'trb-admin-home__nav-link',
                                     {
-                                      'text-base-darkest': !isActivePage,
-                                      'text-primary': isActivePage
+                                      'trb-admin-home__nav-link--active': isActivePage
                                     }
                                   )}
                                 >
-                                  {t(`adminHome.subnav.${translationKey}`)}
-                                </Link>
-                              </li>
-                            );
-                          }
-                        )}
-                      </ul>
-                    </nav>
+                                  <Link
+                                    to={route}
+                                    data-testid={`grt-nav-${translationKey}-link`}
+                                    className={classNames(
+                                      'text-no-underline',
+                                      'padding-y-05',
+                                      {
+                                        'text-base-darkest': !isActivePage,
+                                        'text-primary': isActivePage
+                                      }
+                                    )}
+                                  >
+                                    {t(`adminHome.subnav.${translationKey}`)}
+                                  </Link>
+                                </li>
+                              );
+                            }
+                          )}
+                        </ul>
+                      </nav>
+                    </Grid>
+                    <Grid col desktop={{ col: 9 }}>
+                      {trbAdminSubPages(id).map(({ route, component }) => (
+                        <Route exact path={route}>
+                          {component}
+                        </Route>
+                      ))}
+                    </Grid>
                   </Grid>
-                  <Grid col desktop={{ col: 9 }}>
-                    {trbAdminSubPages(id).map(({ route, component }) => (
-                      <Route exact path={route}>
-                        {component}
-                      </Route>
-                    ))}
-                  </Grid>
-                </Grid>
-              </GridContainer>
+                </GridContainer>
+              </>
             )
           }
         </div>
