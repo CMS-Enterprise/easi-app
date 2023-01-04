@@ -10,6 +10,7 @@ import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
+import TrbAdminHome from './TrbAdminHome';
 
 import './index.scss';
 
@@ -21,6 +22,10 @@ function TechnicalAssistance() {
       <Switch>
         <Route exact path={path}>
           <Homepage />
+        </Route>
+
+        <Route exact path={`${path}/:id/:activePage?`}>
+          <TrbAdminHome />
         </Route>
 
         {/*

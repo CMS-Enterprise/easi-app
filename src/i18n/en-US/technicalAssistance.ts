@@ -480,6 +480,17 @@ const technicalAssistance = {
       info:
         'Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.'
     }
+  },
+  adminHome: {
+    subnav: {
+      back: 'Back to All Requests',
+      requestHome: 'Request home',
+      initialRequestForm: 'Initial request form',
+      supportingDocuments: 'Supporting documents',
+      feedback: 'Feedback',
+      adviceLetter: 'Advice letter',
+      notes: 'Notes'
+    }
   }
 };
 
