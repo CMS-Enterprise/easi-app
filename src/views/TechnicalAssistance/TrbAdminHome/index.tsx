@@ -5,6 +5,7 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { DateTime } from 'luxon';
 
 import PageLoading from 'components/PageLoading';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -86,6 +87,11 @@ export default function TrbAdminHome() {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
+  /** Request submission date for summary */
+  const submissionDate = trbRequest?.createdAt
+    ? DateTime.fromISO(trbRequest.createdAt).toLocaleString(DateTime.DATE_FULL)
+    : '';
+
   // If loading or no trb request, return page not found
   if (!loading && !trbRequest) {
     return <NotFound />;
@@ -110,7 +116,7 @@ export default function TrbAdminHome() {
                   name={trbRequest.name}
                   requestType={trbRequest.form.needsAssistanceWith || ''}
                   requester={trbRequest.createdBy}
-                  submissionDate="September 13, 2022"
+                  submissionDate={submissionDate}
                 />
                 <GridContainer>
                   <Grid row className="margin-y-5">
