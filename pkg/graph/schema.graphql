@@ -1518,6 +1518,7 @@ type TRBRequest {
   feedback: [TRBRequestFeedback!]!
   documents: [TRBRequestDocument!]!
   form: TRBRequestForm!
+  adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   trbLead: String
@@ -1535,6 +1536,7 @@ type TRBTaskStatuses {
   feedbackStatus: TRBFeedbackStatus!
   consultPrepStatus: TRBConsultPrepStatus!
   attendConsultStatus: TRBAttendConsultStatus!
+  adviceLetterStatus: TRBAdviceLetterStatus!
 }
 
 """
@@ -1709,6 +1711,17 @@ enum TRBAttendConsultStatus {
   CANNOT_START_YET
   READY_TO_SCHEDULE
   SCHEDULED
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB advice letter step
+"""
+enum TRBAdviceLetterStatus {
+  CANNOT_START_YET
+  READY_TO_START
+  IN_PROGRESS
+  READY_FOR_REVIEW
   COMPLETED
 }
 
@@ -1957,6 +1970,43 @@ input UpdateTRBRequestTRBLeadInput {
 }
 
 """
+Represents an advice letter for a TRB request
+"""
+type TRBAdviceLetter {
+  id: UUID!
+  trbRequestId: UUID!
+  meetingSummary: String
+  nextSteps: String
+  isFollowupRecommended: Boolean
+  dateSent: Time
+  followupPoint: String
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+The data needed to update a TRB advice letter
+"""
+input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
+  trbRequestId: UUID!
+  meetingSummary: String
+  nextSteps: String
+  isFollowupRecommended: Boolean
+  followupPoint: String
+}
+
+"""
+The data needed to send a TRB advice letter, including who to notify
+"""
+input SendTRBAdviceLetterInput {
+  id: UUID!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -2077,6 +2127,14 @@ type Mutation {
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
+    @hasRole(role: EASI_TRB_ADMIN)
+  requestReviewForTRBAdviceLetter(id: UUID!): TRBAdviceLetter!
+    @hasRole(role: EASI_TRB_ADMIN)
+  sendTRBAdviceLetter(input: SendTRBAdviceLetterInput!): TRBAdviceLetter!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 
