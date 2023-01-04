@@ -486,6 +486,12 @@ const technicalAssistance = {
     requestType: 'Request type',
     requester: 'Requester',
     submissionDate: 'Submission Date',
+    status: 'Status',
+    open: 'Open',
+    closed: 'Closed',
+    trbLead: 'TRB Lead',
+    notAssigned: 'Not assigned',
+    assign: 'Assign',
     subnav: {
       back: 'Back to All Requests',
       requestHome: 'Request home',
