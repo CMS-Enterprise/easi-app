@@ -1,11 +1,13 @@
 import * as yup from 'yup';
 
 import {
+  CreateTRBRequestDocumentInput,
   PersonRole,
   TRBApplicationDevelopmentOption,
   TRBCloudAndInfrastructureOption,
   TRBCollabGroupOption,
   TRBDataAndDataManagementOption,
+  TRBDocumentCommonType,
   TRBGovernmentProcessesAndPoliciesOption,
   TRBNetworkAndSecurityOption,
   TRBOtherTechnicalTopicsOption,
@@ -13,6 +15,8 @@ import {
   TRBWhereInProcessOption,
   UpdateTRBRequestFormInput
 } from 'types/graphql-global-types';
+
+// import { fileObjectSchema } from './fileSchema';
 
 type TrbFormInputBasic = Pick<
   UpdateTRBRequestFormInput,
@@ -126,6 +130,7 @@ export const trbAttendeeSchema = yup.object({
     .oneOf(Object.values(PersonRole))
     .required('Attendee role is a required field')
 });
+
 export type TrbFormInputSubjectAreas = Pick<
   UpdateTRBRequestFormInput,
   | 'subjectAreaTechnicalReferenceArchitecture'
@@ -260,3 +265,22 @@ export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.ob
       })
   }
 );
+
+export type TrbRequestInputDocument = Omit<
+  CreateTRBRequestDocumentInput,
+  'requestID'
+>;
+
+// export const documentSchema: yup.SchemaOf<TrbRequestInputDocument> = yup.object(
+export const documentSchema = yup.object({
+  // fileData: fileObjectSchema.required(),
+  fileData: yup.mixed().required(),
+  documentType: yup
+    .mixed<TRBDocumentCommonType>()
+    .oneOf(Object.values(TRBDocumentCommonType))
+    .required(),
+  otherTypeDescription: yup.string().when('documentType', {
+    is: 'OTHER',
+    then: schema => schema.required()
+  })
+});

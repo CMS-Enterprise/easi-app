@@ -14,11 +14,12 @@ declare global {
   declare module '*.pdf';
   declare module '*.docx';
 
-  // These types are defined in GQL generated types.  
+  // These types are defined in GQL generated types.
   // Defining globally here for FE to recognize generated types.
    type UUID = string;
    type Time = string;
    type EmailAddress = string;
+   type Upload = File;
 
    interface Window {
     Cypress: any;

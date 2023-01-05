@@ -61,44 +61,8 @@ func (c Client) issueLCIDBody(
 	return b.String(), nil
 }
 
-// SendIssueLCIDEmail sends an email to a single recipient (CC'ing the GRT) for issuing an LCID
-// TODO - EASI-2021 - remove
-func (c Client) SendIssueLCIDEmail(
-	ctx context.Context,
-	recipient models.EmailAddress,
-	systemIntakeID uuid.UUID,
-	projectName string,
-	requester string,
-	lcid string,
-	expirationDate *time.Time,
-	scope string,
-	lifecycleCostBaseline string,
-	nextSteps string,
-	feedback string,
-) error {
-	subject := "Lifecycle ID request approved"
-	body, err := c.issueLCIDBody(systemIntakeID, projectName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	err = c.sender.Send(
-		ctx,
-		[]models.EmailAddress{recipient},
-		[]models.EmailAddress{c.config.GRTEmail},
-		subject,
-		body,
-	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
-}
-
-// SendIssueLCIDEmailToMultipleRecipients sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for issuing an LCID
-// TODO - EASI-2021 - rename to SendIssueLCIDEmails
-func (c Client) SendIssueLCIDEmailToMultipleRecipients(
+// SendIssueLCIDEmails sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for issuing an LCID
+func (c Client) SendIssueLCIDEmails(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,

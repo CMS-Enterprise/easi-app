@@ -271,7 +271,8 @@ function SubjectAreas({
           if (err instanceof ApolloError) {
             setFormAlert({
               type: 'error',
-              message: t<string>('subject.errors.submit')
+              heading: t('errors.somethingWrong'),
+              message: t('subject.errors.submit')
             });
           }
         }

@@ -80,4 +80,5 @@ type TRBTaskStatuses struct {
 	FeedbackStatus      TRBFeedbackStatus      `json:"feedbackStatus"`
 	ConsultPrepStatus   TRBConsultPrepStatus   `json:"consultPrepStatus"`
 	AttendConsultStatus TRBAttendConsultStatus `json:"attendConsultStatus"`
+	AdviceLetterStatus  TRBAdviceLetterStatus  `json:"adviceLetterStatus"`
 }
