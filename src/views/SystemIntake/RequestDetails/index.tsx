@@ -132,13 +132,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             )}
             <PageHeading>Request details</PageHeading>
             <p className="line-height-body-6">
-              Provide a detailed explanation of the business need/issue/problem
-              that the requested project will address, including any legislative
-              mandates, regulations, etc. Include any expected benefits from the
-              investment of organizational resources into this project. Please
-              be sure to indicate clearly any/all relevant deadlines (e.g.,
-              statutory deadlines that CMS must meet). Explain the benefits of
-              developing an IT solution for this need.
+              Provide a brief explanation of the business need/issue/problem
+              that the contract/request will address, including your current
+              plans for how to address the need. This page should speak to what
+              your contract/request accomplishes and how.
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <div className="tablet:grid-col-6">
@@ -167,37 +164,19 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   error={!!flatErrors.businessNeed}
                 >
                   <Label htmlFor="IntakeForm-BusinessNeed">
-                    What is your business need?
+                    What is your business need that this contract/request will
+                    meet?
                   </Label>
                   <HelpText
                     id="IntakeForm-BusinessNeedHelp"
                     className="margin-top-105"
                   >
-                    <>
-                      <span>Include:</span>
-                      <ul className="margin-top-1 padding-left-205">
-                        <li>
-                          a detailed explanation of the business
-                          need/issue/problem that the request will address
-                        </li>
-                        <li>
-                          any legislative mandates or regulations that needs to
-                          be met
-                        </li>
-                        <li>
-                          any expected benefits from the investment of
-                          organizational resources into the request
-                        </li>
-                        <li>
-                          relevant deadlines (e.g., statutory deadlines that CMS
-                          must meet)
-                        </li>
-                        <li>
-                          and the benefits of developing an IT solution for this
-                          need.
-                        </li>
-                      </ul>
-                    </>
+                    Include an explanation of the business need/issue/problem
+                    that the contract/request will address. This information can
+                    be pulled from your draft Acquisition Plan (Statement of
+                    Need section) and/or taken from the Statement of Work,
+                    Statement of Objectives or Performance Work Statement.
+                    Please be brief.
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
                   <Field
@@ -225,7 +204,11 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                     id="IntakeForm-BusinessSolutionHelp"
                     className="margin-y-1"
                   >
-                    Let us know if you have a solution in mind
+                    Let us know if you have a solution in mind. This information
+                    can be pulled from your draft Acquisition Plan (Capability
+                    or Performance section) and/or taken from the Statement of
+                    Work, Statement of Objectives or Performance Work Statement.
+                    Please be brief.
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
                   <Field
