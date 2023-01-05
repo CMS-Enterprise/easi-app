@@ -57,7 +57,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 
 <p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
 
-<p>If you have questions or need to request a reschedule, please email the TRB at ` + s.config.TRBEmail.String() + `.</p>
+<p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:` + s.config.TRBEmail.String() + `">` + s.config.TRBEmail.String() + `</a>.</p>
 
 <hr>
 
