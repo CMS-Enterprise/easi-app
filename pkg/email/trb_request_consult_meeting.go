@@ -31,7 +31,7 @@ func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input Sen
 	subject := "TRB consult session scheduled for " + input.TRBRequestName
 	input.ConsultMeetingTimeFormatted = input.ConsultMeetingTime.Format("January 2, 2006 at 03:04 PM EST")
 	input.TRBEmail = c.config.TRBEmail
-	input.TRBRequestLink = path.Join("trb", "task-list", input.TRBRequestID.String())
+	input.TRBRequestLink = c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String()))
 
 	var b bytes.Buffer
 	err := c.templates.trbRequestConsultMeeting.Execute(&b, input)

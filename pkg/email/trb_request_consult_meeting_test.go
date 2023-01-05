@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	"fmt"
 	"path"
 	"time"
 
@@ -18,7 +19,12 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 	s.NoError(err)
 
 	trbID := uuid.New()
-	trbLink := path.Join("trb", "task-list", trbID.String())
+	trbLink := fmt.Sprintf(
+		"%s://%s/%s",
+		s.config.URLScheme,
+		s.config.URLHost,
+		path.Join("trb", "task-list", trbID.String()),
+	)
 
 	input := SendTRBRequestConsultMeetingEmailInput{
 		TRBRequestName:     "Test TRB Request",
@@ -51,7 +57,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 
 <p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
 
-<p>If you have questions or need to request a reschedule, please email the TRB at ` + s.config.TRBEmail.String() + `.</p>
+<p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:` + s.config.TRBEmail.String() + `">` + s.config.TRBEmail.String() + `</a>.</p>
 
 <hr>
 

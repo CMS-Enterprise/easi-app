@@ -25,7 +25,7 @@ type SendTRBRequestTRBLeadEmailInput struct {
 func (c Client) SendTRBRequestTRBLeadEmail(ctx context.Context, input SendTRBRequestTRBLeadEmailInput) error {
 	subject := input.TRBRequestName + " is assigned to " + input.TRBLeadName
 	input.TRBEmail = c.config.TRBEmail
-	input.TRBRequestLink = path.Join("trb", "task-list", input.TRBRequestID.String())
+	input.TRBRequestLink = c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String()))
 
 	var b bytes.Buffer
 	err := c.templates.trbRequestTRBLead.Execute(&b, input)
