@@ -9,7 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s *EmailTestSuite) TestSendExtendLCIDEmailToMultipleRecipients() {
+func (s *EmailTestSuite) TestSendExtendLCIDEmails() {
 	ctx := context.Background()
 
 	systemIntakeID := uuid.MustParse("313cce9a-88a3-45d9-b36f-a02db5954721")
@@ -23,7 +23,7 @@ func (s *EmailTestSuite) TestSendExtendLCIDEmailToMultipleRecipients() {
 
 	s.Run("successful call sends to the correct recipients", func() {
 		s.runMultipleRecipientsTestAgainstAllTestCases(func(client Client, recipients models.EmailNotificationRecipients) error {
-			return client.SendExtendLCIDEmailToMultipleRecipients(ctx, recipients, systemIntakeID, projectName, requester, &newExpiresAt, newScope, newNextSteps, newCostBaseline)
+			return client.SendExtendLCIDEmails(ctx, recipients, systemIntakeID, projectName, requester, &newExpiresAt, newScope, newNextSteps, newCostBaseline)
 		})
 	})
 }

@@ -2,7 +2,7 @@ import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 
 describe('The System Intake Form', () => {
   beforeEach(() => {
-    cy.localLogin({ name: 'TEST' });
+    cy.localLogin({ name: 'ABCD' });
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
@@ -11,6 +11,10 @@ describe('The System Intake Form', () => {
 
       if (req.body.operationName === 'GetSystemIntakeContactsQuery') {
         req.alias = 'getSystemIntakeContacts';
+      }
+
+      if (req.body.operationName === 'CreateSystemIntakeContact') {
+        req.alias = 'createContact';
       }
 
       if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
@@ -43,6 +47,31 @@ describe('The System Intake Form', () => {
   it('fills out minimum required fields (smoke test)', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
+
+    // Test "Business owner same as requester" checkbox
+    cy.get('#IntakeForm-IsBusinessOwnerSameAsRequester')
+      .check({ force: true })
+      .should('be.checked');
+
+    // Business Owner name should be disabled when checkbox is checked
+    cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
+      'be.disabled'
+    );
+
+    // Check that business owner fields updated to display requester values
+    cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
+      'have.value',
+      // Requester name shows as User ABCD instead of Adeline Aarons during testing
+      'User ABCD, ABCD'
+    );
+    cy.get('#IntakeForm-BusinessOwnerEmail').should(
+      'have.value',
+      'adeline.aarons@local.fake'
+    );
+    cy.get('#IntakeForm-BusinessOwnerComponent').should(
+      'have.value',
+      'Center for Medicare'
+    );
 
     cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
 
@@ -83,11 +112,11 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Your Intake Request has been submitted');
   });
 
-  // depends on the "notifyMultipleRecipients" feature flag being set;
-  // we currently can't guarantee this when running tests in CI
-  it.skip('displays and fills conditional fields', () => {
+  it('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
+
+    // Test "same as requester" checkbox
 
     // ISSO
     cy.get('#IntakeForm-HasIssoYes')
@@ -95,35 +124,35 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     cy.get('#react-select-IntakeForm-IssoName-input')
-      .type('Jerry Seinfeld')
-      .wait(1000) // Fix for GH action tests failing
+      .type('Rudolph')
+      .wait(1000)
       .type('{downArrow}{enter}')
-      .should('have.value', 'Jerry Seinfeld, SF13');
+      .should('have.value', 'Rudolph Pagac, POJG');
 
     cy.get('#IntakeForm-IssoComponent')
-      .select('Center for Medicare')
-      .should('have.value', 'Center for Medicare');
+      .select('Center for Program Integrity')
+      .should('have.value', 'Center for Program Integrity');
 
-    // Add another contact
+    // Add additional contact
     cy.contains('button', 'Add another contact').click();
 
     cy.get('#react-select-IntakeForm-ContactCommonName-input')
-      .type('Jerry Seinfeld')
-      .wait(1000) // Fix for GH action tests failing
+      .type('Annetta Lockman')
+      .wait(1000)
       .type('{downArrow}{enter}')
-      .should('have.value', 'Jerry Seinfeld, SF13');
+      .should('have.value', 'Annetta Lockman, LW40');
 
     cy.get('#IntakeForm-ContactComponent')
-      .select('Center for Medicare')
-      .should('have.value', 'Center for Medicare');
+      .select('Other')
+      .should('have.value', 'Other');
 
     cy.get('#IntakeForm-ContactRole')
       .select('Product Owner')
       .should('have.value', 'Product Owner');
 
-    cy.contains('button', 'Add contact').click();
+    cy.contains('button', 'Add contact').click(1000);
 
-    cy.contains('p', 'SF13');
+    cy.contains('p', 'Annetta Lockman, Other');
 
     // Governance teams
     cy.get('#IntakeForm-YesGovernanceTeams')
@@ -212,7 +241,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', /^Requester$/)
       .siblings('dd')
-      .contains('User TEST');
+      .contains('Adeline Aarons');
 
     cy.contains('.easi-review-row dt', 'Requester Component')
       .siblings('dd')
@@ -220,29 +249,29 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', "CMS Business Owner's Name")
       .siblings('dd')
-      .contains('Jerry Seinfeld');
+      .contains('Audrey Abrams');
 
     cy.contains('.easi-review-row dt', 'CMS Business Owner Component')
       .siblings('dd')
-      .contains('Center for Medicare');
+      .contains('CMS Wide');
 
     cy.contains('.easi-review-row dt', 'CMS Project/Product Manager or lead')
       .siblings('dd')
-      .contains('Jerry Seinfeld');
+      .contains('Delphia Green');
 
     cy.contains(
       '.easi-review-row dt',
       'CMS Project/Product manager or lead Component'
     )
       .siblings('dd')
-      .contains('Center for Medicare');
+      .contains('Office of Legislation');
 
     cy.contains(
       '.easi-review-row dt',
       'Does your project have an Information System Security Officer (ISSO)?'
     )
       .siblings('dd')
-      .contains('Yes, Jerry Seinfeld');
+      .contains('Yes, Rudolph Pagac');
 
     cy.contains('.easi-review-row dt', 'I have started collaborating with')
       .siblings('dd')

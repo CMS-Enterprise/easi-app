@@ -48,41 +48,8 @@ func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, projectName string, req
 	return b.String(), nil
 }
 
-// SendExtendLCIDEmail sends an email to a single recipient for extending an LCID
-// TODO - EASI-2021 - remove
-func (c Client) SendExtendLCIDEmail(
-	ctx context.Context,
-	recipient models.EmailAddress,
-	systemIntakeID uuid.UUID,
-	projectName string,
-	requester string,
-	newExpiresAt *time.Time,
-	newScope string,
-	newNextSteps string,
-	newCostBaseline string,
-) error {
-	subject := "Lifecycle ID extended"
-	body, err := c.extendLCIDBody(systemIntakeID, projectName, requester, newExpiresAt, newScope, newNextSteps, newCostBaseline)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	err = c.sender.Send(
-		ctx,
-		[]models.EmailAddress{recipient},
-		nil,
-		subject,
-		body,
-	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
-}
-
-// SendExtendLCIDEmailToMultipleRecipients sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for extending an LCID
-//
-//	TODO - EASI-2021 - rename to SendExtendLCIDEmails
-func (c Client) SendExtendLCIDEmailToMultipleRecipients(
+// SendExtendLCIDEmails sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for extending an LCID
+func (c Client) SendExtendLCIDEmails(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,

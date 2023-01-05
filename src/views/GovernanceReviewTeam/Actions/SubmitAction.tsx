@@ -61,8 +61,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
     const variables: ActionInput = {
       input: {
         intakeId: systemId,
-        feedback,
-        shouldSendEmail
+        feedback
       }
     };
 

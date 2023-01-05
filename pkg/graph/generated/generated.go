@@ -7264,7 +7264,6 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   nextSteps: String
   scope: String!
   costBaseline: String
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -7345,7 +7344,6 @@ input AddGRTFeedbackInput {
   emailBody: String!
   feedback: String!
   intakeID: UUID!
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -7369,7 +7367,6 @@ input IssueLifecycleIdInput {
   nextSteps: String
   scope: String!
   costBaseline: String
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -7381,7 +7378,6 @@ input RejectIntakeInput {
   intakeId: UUID!
   nextSteps: String
   reason: String!
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -7452,7 +7448,6 @@ Input to add feedback to a system request
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
-  shouldSendEmail: Boolean! = true
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -41900,11 +41895,7 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 		asMap[k] = v
 	}
 
-	if _, present := asMap["shouldSendEmail"]; !present {
-		asMap["shouldSendEmail"] = true
-	}
-
-	fieldsInOrder := [...]string{"emailBody", "feedback", "intakeID", "shouldSendEmail", "notificationRecipients"}
+	fieldsInOrder := [...]string{"emailBody", "feedback", "intakeID", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -41935,14 +41926,6 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
-		case "shouldSendEmail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
-			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "notificationRecipients":
 			var err error
 
@@ -41964,11 +41947,7 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 		asMap[k] = v
 	}
 
-	if _, present := asMap["shouldSendEmail"]; !present {
-		asMap["shouldSendEmail"] = true
-	}
-
-	fieldsInOrder := [...]string{"feedback", "intakeId", "shouldSendEmail", "notificationRecipients"}
+	fieldsInOrder := [...]string{"feedback", "intakeId", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -41988,14 +41967,6 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeId"))
 			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "shouldSendEmail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
-			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -42212,11 +42183,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 		asMap[k] = v
 	}
 
-	if _, present := asMap["shouldSendEmail"]; !present {
-		asMap["shouldSendEmail"] = true
-	}
-
-	fieldsInOrder := [...]string{"id", "expirationDate", "nextSteps", "scope", "costBaseline", "shouldSendEmail", "notificationRecipients"}
+	fieldsInOrder := [...]string{"id", "expirationDate", "nextSteps", "scope", "costBaseline", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -42260,14 +42227,6 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("costBaseline"))
 			it.CostBaseline, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "shouldSendEmail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
-			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -42848,11 +42807,7 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	if _, present := asMap["shouldSendEmail"]; !present {
-		asMap["shouldSendEmail"] = true
-	}
-
-	fieldsInOrder := [...]string{"expiresAt", "feedback", "intakeId", "lcid", "nextSteps", "scope", "costBaseline", "shouldSendEmail", "notificationRecipients"}
+	fieldsInOrder := [...]string{"expiresAt", "feedback", "intakeId", "lcid", "nextSteps", "scope", "costBaseline", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -42915,14 +42870,6 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
-		case "shouldSendEmail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
-			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "notificationRecipients":
 			var err error
 
@@ -42944,11 +42891,7 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 		asMap[k] = v
 	}
 
-	if _, present := asMap["shouldSendEmail"]; !present {
-		asMap["shouldSendEmail"] = true
-	}
-
-	fieldsInOrder := [...]string{"feedback", "intakeId", "nextSteps", "reason", "shouldSendEmail", "notificationRecipients"}
+	fieldsInOrder := [...]string{"feedback", "intakeId", "nextSteps", "reason", "notificationRecipients"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -42984,14 +42927,6 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
 			it.Reason, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "shouldSendEmail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
-			it.ShouldSendEmail, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}

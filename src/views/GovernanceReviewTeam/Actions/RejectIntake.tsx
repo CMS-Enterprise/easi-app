@@ -83,8 +83,7 @@ const RejectIntake = () => {
         feedback,
         intakeId: systemId,
         nextSteps,
-        reason,
-        shouldSendEmail
+        reason
       }
     };
 

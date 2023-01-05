@@ -80,8 +80,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
       input: {
         emailBody,
         feedback: grtFeedback,
-        intakeID: systemId,
-        shouldSendEmail
+        intakeID: systemId
       }
     };
 
