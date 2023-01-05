@@ -5,5 +5,13 @@ export default function SupportingDocuments({
 }: {
   trbRequestId: string;
 }) {
-  return <div>SupportingDocuments</div>;
+  return (
+    <div
+      className="trb-admin-home__supporting-documents"
+      data-testid="trb-admin-home__supporting-documents"
+      id={`trbAdminSupportingDocuments-${trbRequestId}`}
+    >
+      <h1 className="margin-y-0">Supporting documents</h1>
+    </div>
+  );
 }

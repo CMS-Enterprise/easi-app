@@ -1,31 +1,27 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { DateTime } from 'luxon';
 
 import PageLoading from 'components/PageLoading';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
   GetTrbRequest,
-  GetTrbRequest_trbRequest_taskStatuses as TrbRequestTaskStatuses,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import NotFound from 'views/NotFound';
 
-import Summary from './Summary/Summary';
 import AdviceLetter from './AdviceLetter';
 import Feedback from './Feedback';
 import InitialRequestForm from './InitialRequestForm';
 import Notes from './Notes';
 import RequestHome from './RequestHome';
+import Summary from './Summary';
 import SupportingDocuments from './SupportingDocuments';
 
 import './index.scss';
@@ -90,67 +86,6 @@ export default function TrbAdminHome() {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
-  // Get requester object from request attendees
-  const {
-    data: { requester }
-  } = useTRBAttendees(id);
-
-  /** Requester info for display in summary box */
-  const requesterString = useMemo(() => {
-    // If requester component is not set, return name
-    if (!requester.component) return requester?.userInfo?.commonName;
-
-    /** Component acronym */
-    const componentAcronym = cmsDivisionsAndOffices.find(
-      object => object.name === requester.component
-    );
-
-    // Return requester name and component acronym
-    return `${requester?.userInfo?.commonName}, ${componentAcronym}`;
-  }, [requester]);
-
-  /** Request submission date for summary */
-  const submissionDate = trbRequest?.createdAt
-    ? DateTime.fromISO(trbRequest.createdAt).toLocaleString(DateTime.DATE_FULL)
-    : '';
-
-  /** Text describing current task status */
-  const taskStatusText: string | null | undefined = useMemo(() => {
-    /** Task statuses object */
-    const taskStatuses: TrbRequestTaskStatuses | undefined =
-      trbRequest?.taskStatuses;
-
-    // If taskStatuses is undefined, return null;
-    if (!taskStatuses) return null;
-
-    /** Array of status keys in order of appearance in task list */
-    const statusKeysArray = [
-      'formStatus',
-      'feedbackStatus',
-      'consultPrepStatus',
-      'attendConsultStatus'
-    ] as (keyof TrbRequestTaskStatuses)[];
-
-    /**
-     * Current task status
-     *
-     * Finds first task status that is not completed
-     */
-    const currentStatus:
-      | keyof TrbRequestTaskStatuses
-      | undefined = statusKeysArray.find(
-      status => status !== '__typename' && taskStatuses[status] !== 'COMPLETED'
-    );
-
-    // Return corresponding status text from translation file
-    return (
-      currentStatus &&
-      t(
-        `adminHome.taskStatuses.${currentStatus}.${taskStatuses[currentStatus]}`
-      )
-    );
-  }, [t, trbRequest?.taskStatuses]);
-
   // If loading or no trb request, return page not found
   if (!loading && !trbRequest) {
     return <NotFound />;
@@ -174,14 +109,13 @@ export default function TrbAdminHome() {
                   trbRequestId={id}
                   name={trbRequest.name}
                   requestType={trbRequest.type}
-                  requester={requesterString}
-                  submissionDate={submissionDate}
+                  createdAt={trbRequest.createdAt}
                   status={trbRequest.status}
-                  taskStatusText={taskStatusText || ''}
+                  taskStatuses={trbRequest.taskStatuses}
                   trbLead={trbRequest.trbLead}
                 />
                 <GridContainer>
-                  <Grid row className="margin-y-5">
+                  <Grid row className="margin-y-5 grid-gap">
                     <Grid col desktop={{ col: 3 }}>
                       {/* Navigation */}
                       <nav>
