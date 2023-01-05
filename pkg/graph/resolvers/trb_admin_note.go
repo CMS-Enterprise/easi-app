@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 
@@ -54,4 +55,36 @@ func GetTRBAdminNoteAuthorInfo(ctx context.Context, authorEUAID string, fetchUse
 		return nil, err
 	}
 	return authorInfo, nil
+}
+
+// UpdateTRBAdminNote handles general updates to a TRB advice letter
+func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
+	logger := appcontext.ZLogger(ctx)
+
+	idStr, idFound := input["id"]
+	if !idFound {
+		return nil, errors.New("missing required property id")
+	}
+
+	id, err := uuid.Parse(idStr.(string))
+	if err != nil {
+		return nil, err
+	}
+
+	note, err := store.GetTRBAdminNoteByID(logger, id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ApplyChangesAndMetaData(input, note, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	updatedNote, err := store.UpdateTRBAdminNote(logger, note)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedNote, nil
 }

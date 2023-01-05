@@ -2021,7 +2021,7 @@ func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.C
 
 // UpdateTRBAdminNote is the resolver for the updateTRBAdminNote field.
 func (r *mutationResolver) UpdateTRBAdminNote(ctx context.Context, input map[string]interface{}) (*models.TRBAdminNote, error) {
-	panic(fmt.Errorf("not implemented: UpdateTRBAdminNote - updateTRBAdminNote"))
+	return resolvers.UpdateTRBAdminNote(ctx, r.store, input)
 }
 
 // ArchiveTRBAdminNote is the resolver for the archiveTRBAdminNote field.

@@ -132,3 +132,45 @@ func (s *Store) GetTRBAdminNoteByID(logger *zap.Logger, id uuid.UUID) (*models.T
 
 	return &note, nil
 }
+
+// UpdateTRBAdminNote updates all of a TRB admin note's mutable fields.
+func (s *Store) UpdateTRBAdminNote(logger *zap.Logger, note *models.TRBAdminNote) (*models.TRBAdminNote, error) {
+	stmt, err := s.db.PrepareNamed(`
+		UPDATE trb_admin_notes
+		SET
+			category = :category,
+			note_text = :note_text,
+			is_archived = :is_archived
+			modified_by = :modified_by,
+			modified_at = CURRENT_TIMESTAMP
+		WHERE id = :id
+		RETURNING *;
+	`)
+
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to prepare SQL statement for updating TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("id", note.ID.String()),
+		)
+		return nil, err
+	}
+
+	updated := models.TRBAdminNote{}
+
+	err = stmt.Get(&updated, note)
+	if err != nil {
+		logger.Error(
+			fmt.Sprintf("Failed to update TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("id", note.ID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     note,
+			Operation: apperrors.QueryUpdate,
+		}
+	}
+
+	return &updated, nil
+}
