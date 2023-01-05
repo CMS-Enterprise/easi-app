@@ -20,6 +20,7 @@ type SummaryProps = {
   submissionDate: string;
   status: TRBRequestStatus;
   taskStatusText: string;
+  trbLead: string | null;
 };
 
 export default function Summary({
@@ -29,7 +30,8 @@ export default function Summary({
   requester,
   submissionDate,
   status,
-  taskStatusText
+  taskStatusText,
+  trbLead
 }: SummaryProps) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -101,12 +103,23 @@ export default function Summary({
               className="display-flex flex-align-center"
             >
               <h4 className="margin-y-0">{t('adminHome.trbLead')}</h4>
-              <p className="margin-y-0 margin-x-1 display-flex flex-align-center">
-                <IconError className="text-error margin-right-05" />
-                {t('adminHome.notAssigned')}
+              <p className="margin-y-0 margin-left-1 display-flex flex-align-center">
+                {
+                  /**
+                   * If TRB lead is set, display name
+                   * Otherwise, display Not Assigned and link to assign
+                   */
+                  trbLead || (
+                    <>
+                      <IconError className="text-error margin-right-05" />
+                      {t('adminHome.notAssigned')}
+                      <Link to="/" className="margin-left-1">
+                        {t('adminHome.assign')}
+                      </Link>
+                    </>
+                  )
+                }
               </p>
-              {/* Link to assign TRB lead */}
-              <Link to="/">{t('adminHome.assign')}</Link>
             </Grid>
           </Grid>
         </GridContainer>

@@ -157,6 +157,7 @@ export default function TrbAdminHome() {
                   submissionDate={submissionDate}
                   status={trbRequest.status}
                   taskStatusText={taskStatusText || ''}
+                  trbLead={trbRequest.trbLead}
                 />
                 <GridContainer>
                   <Grid row className="margin-y-5">
