@@ -10,12 +10,16 @@ import {
   IconError
 } from '@trussworks/react-uswds';
 
+import { TRBRequestStatus } from 'types/graphql-global-types';
+
 type SummaryProps = {
   trbRequestId: string;
   name: string;
   requestType: string;
   requester: string;
   submissionDate: string;
+  status: TRBRequestStatus;
+  taskStatusText: string;
 };
 
 export default function Summary({
@@ -23,9 +27,12 @@ export default function Summary({
   name,
   requestType,
   requester,
-  submissionDate
+  submissionDate,
+  status,
+  taskStatusText
 }: SummaryProps) {
   const { t } = useTranslation('technicalAssistance');
+
   return (
     <div className="trb-admin-home__summary">
       <section className="bg-primary-darker padding-bottom-3 text-white">
@@ -82,9 +89,9 @@ export default function Summary({
             >
               <h4 className="margin-y-0">{t('adminHome.status')}</h4>
               <span className="bg-info-dark text-white text-bold padding-y-1 padding-x-105 margin-x-1">
-                {t('adminHome.open')}
+                {t(`adminHome.${status.toLowerCase()}`)}
               </span>
-              <p className="margin-y-0 text-base">Request form complete</p>
+              <p className="margin-y-0 text-base">{taskStatusText}</p>
             </Grid>
 
             {/* TRB Lead */}

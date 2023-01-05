@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
@@ -11,6 +11,7 @@ import PageLoading from 'components/PageLoading';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
   GetTrbRequest,
+  GetTrbRequest_trbRequest_taskStatuses as TrbRequestTaskStatuses,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
 import { AppState } from 'reducers/rootReducer';
@@ -92,6 +93,43 @@ export default function TrbAdminHome() {
     ? DateTime.fromISO(trbRequest.createdAt).toLocaleString(DateTime.DATE_FULL)
     : '';
 
+  /** Text describing current task status */
+  const taskStatusText: string | null | undefined = useMemo(() => {
+    /** Task statuses object */
+    const taskStatuses: TrbRequestTaskStatuses | undefined =
+      trbRequest?.taskStatuses;
+
+    // If taskStatuses is undefined, return null;
+    if (!taskStatuses) return null;
+
+    /** Array of status keys in order of appearance in task list */
+    const statusKeysArray = [
+      'formStatus',
+      'feedbackStatus',
+      'consultPrepStatus',
+      'attendConsultStatus'
+    ] as (keyof TrbRequestTaskStatuses)[];
+
+    /**
+     * Current task status
+     *
+     * Finds first task status that is not completed
+     */
+    const currentStatus:
+      | keyof TrbRequestTaskStatuses
+      | undefined = statusKeysArray.find(
+      status => status !== '__typename' && taskStatuses[status] !== 'COMPLETED'
+    );
+
+    // Return corresponding status text from translation file
+    return (
+      currentStatus &&
+      t(
+        `adminHome.taskStatuses.${currentStatus}.${taskStatuses[currentStatus]}`
+      )
+    );
+  }, [t, trbRequest?.taskStatuses]);
+
   // If loading or no trb request, return page not found
   if (!loading && !trbRequest) {
     return <NotFound />;
@@ -117,6 +155,8 @@ export default function TrbAdminHome() {
                   requestType={trbRequest.form.needsAssistanceWith || ''}
                   requester={trbRequest.createdBy}
                   submissionDate={submissionDate}
+                  status={trbRequest.status}
+                  taskStatusText={taskStatusText || ''}
                 />
                 <GridContainer>
                   <Grid row className="margin-y-5">
@@ -174,7 +214,7 @@ export default function TrbAdminHome() {
                     </Grid>
                     <Grid col desktop={{ col: 9 }}>
                       {trbAdminSubPages(id).map(({ route, component }) => (
-                        <Route exact path={route}>
+                        <Route exact path={route} key={route}>
                           {component}
                         </Route>
                       ))}
