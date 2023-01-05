@@ -2,6 +2,7 @@ import {
   TRBApplicationDevelopmentOption,
   TRBCloudAndInfrastructureOption,
   TRBDataAndDataManagementOption,
+  TRBDocumentCommonType,
   TRBGovernmentProcessesAndPoliciesOption,
   TRBNetworkAndSecurityOption,
   TRBOtherTechnicalTopicsOption,
@@ -10,6 +11,7 @@ import {
 
 import {
   basicSchema,
+  documentSchema,
   subjectAreasSchema,
   TrbFormInputSubjectAreas,
   TrbRequestFormBasic
@@ -258,5 +260,64 @@ describe('TRB Subject Areas Form schema validation', () => {
         [`${field}Other`]: ''
       })
     ).rejects.toThrow(/other is a required field/i);
+  });
+});
+
+describe('TRB Supporting Documents Form schema validation', () => {
+  it('passes minimum required inputs', async () => {
+    await expect(
+      documentSchema.isValid({
+        fileData: { name: 'test.pdf', size: 100, type: 'application/pdf' },
+        documentType: 'ARCHITECTURE_DIAGRAM'
+      })
+    ).resolves.toBeTruthy();
+  });
+
+  it('errors on empty', async () => {
+    await expect(documentSchema.isValid({})).resolves.toBeFalsy();
+  });
+
+  it('validates documentType field options', async () => {
+    // Valid single option
+    await expect(
+      Promise.all(
+        Object.values(TRBDocumentCommonType).map(opt =>
+          documentSchema.fields.documentType.isValid(opt)
+        )
+      )
+    ).resolves.toEqual(expect.arrayContaining([true]));
+
+    // Missing/invalid option value
+    await expect(
+      documentSchema.fields.documentType.isValid('')
+    ).resolves.toEqual(false);
+
+    // Invalid multiple options
+    await expect(
+      documentSchema.fields.documentType.isValid([
+        'ARCHITECTURE_DIAGRAM',
+        'BUSINESS_CASE'
+      ])
+    ).resolves.toEqual(false);
+  });
+
+  it('requires other text when toggled on', async () => {
+    // Valid other text
+    await expect(
+      documentSchema.isValid({
+        fileData: { name: 'test.pdf', size: 0, type: 'application/pdf' },
+        documentType: 'OTHER',
+        otherTypeDescription: 'test'
+      })
+    ).resolves.toBeTruthy();
+
+    // Missing other text
+    await expect(
+      documentSchema.validate({
+        fileData: { name: 'test.pdf', size: 0, type: 'application/pdf' },
+        documentType: 'OTHER',
+        otherTypeDescription: ''
+      })
+    ).rejects.toThrow(/otherTypeDescription is a required field/i);
   });
 });

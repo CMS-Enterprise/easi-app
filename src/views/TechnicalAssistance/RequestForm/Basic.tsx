@@ -176,7 +176,8 @@ function Basic({
             if (err instanceof ApolloError) {
               setFormAlert({
                 type: 'error',
-                message: t<string>('basic.errors.submit')
+                heading: t('errors.somethingWrong'),
+                message: t('basic.errors.submit')
               });
             }
           }

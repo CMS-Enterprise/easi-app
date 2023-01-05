@@ -41,7 +41,8 @@
       /* These input types and containers expand to their container width */
       .usa-input,
       .usa-textarea,
-      .usa-combo-box {
+      .usa-combo-box,
+      .usa-file-input {
         max-width: 100%;
       }
 
