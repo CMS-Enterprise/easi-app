@@ -152,7 +152,7 @@ export default function TrbAdminHome() {
                 <Summary
                   trbRequestId={id}
                   name={trbRequest.name}
-                  requestType={trbRequest.form.needsAssistanceWith || ''}
+                  requestType={trbRequest.type}
                   requester={trbRequest.createdBy}
                   submissionDate={submissionDate}
                   status={trbRequest.status}

@@ -10,12 +10,12 @@ import {
   IconError
 } from '@trussworks/react-uswds';
 
-import { TRBRequestStatus } from 'types/graphql-global-types';
+import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
 
 type SummaryProps = {
   trbRequestId: string;
   name: string;
-  requestType: string;
+  requestType: TRBRequestType;
   requester: string;
   submissionDate: string;
   status: TRBRequestStatus;
@@ -61,7 +61,9 @@ export default function Summary({
               <h5 className="text-normal margin-bottom-05 margin-top-2">
                 {t('adminHome.requestType')}
               </h5>
-              <h4 className="margin-y-05">{t(requestType)}</h4>
+              <h4 className="margin-y-05">
+                {t(`requestType.type.${requestType}.heading`)}
+              </h4>
             </Grid>
             <Grid col tablet={{ col: 4 }}>
               {/* Requester */}
