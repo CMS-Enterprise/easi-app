@@ -8,6 +8,8 @@ import classNames from 'classnames';
 import { DateTime } from 'luxon';
 
 import PageLoading from 'components/PageLoading';
+import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
   GetTrbRequest,
@@ -88,6 +90,25 @@ export default function TrbAdminHome() {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
+  // Get requester object from request attendees
+  const {
+    data: { requester }
+  } = useTRBAttendees(id);
+
+  /** Requester info for display in summary box */
+  const requesterString = useMemo(() => {
+    // If requester component is not set, return name
+    if (!requester.component) return requester?.userInfo?.commonName;
+
+    /** Component acronym */
+    const componentAcronym = cmsDivisionsAndOffices.find(
+      object => object.name === requester.component
+    );
+
+    // Return requester name and component acronym
+    return `${requester?.userInfo?.commonName}, ${componentAcronym}`;
+  }, [requester]);
+
   /** Request submission date for summary */
   const submissionDate = trbRequest?.createdAt
     ? DateTime.fromISO(trbRequest.createdAt).toLocaleString(DateTime.DATE_FULL)
@@ -153,7 +174,7 @@ export default function TrbAdminHome() {
                   trbRequestId={id}
                   name={trbRequest.name}
                   requestType={trbRequest.type}
-                  requester={trbRequest.createdBy}
+                  requester={requesterString}
                   submissionDate={submissionDate}
                   status={trbRequest.status}
                   taskStatusText={taskStatusText || ''}
