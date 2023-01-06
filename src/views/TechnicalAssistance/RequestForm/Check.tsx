@@ -10,6 +10,7 @@ import {
 import useTRBAttendees from 'hooks/useTRBAttendees';
 
 import { AttendeesTable } from './AttendeesForm/components';
+import DocumentsTable from './DocumentsTable';
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
 
@@ -155,6 +156,7 @@ function Check({
       {/* Supporting docs */}
       <div>
         <h2>{t('requestForm.steps.3.name')}</h2>
+        <DocumentsTable trbRequestId={request.id} />
       </div>
 
       <Pager
