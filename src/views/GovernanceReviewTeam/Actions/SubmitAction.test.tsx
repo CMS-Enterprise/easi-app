@@ -54,14 +54,6 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
-jest.mock('launchdarkly-react-client-sdk', () => ({
-  useFlags: () => {
-    return {
-      notifyMultipleRecipients: true
-    };
-  }
-}));
-
 window.scrollTo = jest.fn();
 
 describe('Submit Action', () => {
@@ -163,26 +155,52 @@ describe('Submit Action', () => {
 
   describe('actions', () => {
     it('renders additional contacts', async () => {
-      const { asFragment } = renderActionPage('not-it-request', [
+      const {
+        asFragment,
+        getByTestId,
+        findByText,
+        getByRole
+      } = renderActionPage('not-it-request', [
         intakeQuery,
         getCedarContactsQuery,
         getSystemIntakeContactsQuery
       ]);
 
       await waitForPageLoad();
-      screen.getByTestId('truncatedContentButton').click();
+      getByTestId('truncatedContentButton').click();
 
       // Unverified recipients alert
-      expect(
-        screen.getByTestId('alert_unverified-recipients')
-      ).toBeInTheDocument();
+      expect(getByTestId('alert_unverified-recipients')).toBeInTheDocument();
 
-      screen.getByTestId('button_verify-recipient').click();
-      expect(screen.getByRole('combobox', { name: 'Cedar-Users' })).toHaveValue(
-        productManager.commonName
-      );
+      // Click verify recipient button
+      getByTestId('button_verify-recipient').click();
 
+      // Verify recipient form snapshot
       expect(asFragment()).toMatchSnapshot();
+
+      // Select field value should be unverified contact name
+      const contactSelect = getByTestId('cedar-contact-select');
+      expect(contactSelect).toHaveValue(productManager.commonName);
+
+      const contactLabel = `${productManager.commonName}, ${productManager.euaUserId}`;
+
+      // Check that select field loads mock CEDAR contact
+      userEvent.click(contactSelect);
+      const contactOption = await findByText(contactLabel);
+
+      // Select recipient
+      userEvent.click(contactOption);
+      expect(contactSelect).toHaveValue(contactLabel);
+
+      // Verify recipient
+      const saveButton = getByRole('button', { name: 'Save' });
+      userEvent.click(saveButton);
+
+      // Confirm that recipient has been verified
+      const verifiedContact = await findByText(
+        `${productManager.commonName}, ${productManager.component} (${productManager.role})`
+      );
+      expect(verifiedContact).toBeInTheDocument();
     });
 
     it('executes not an IT request mutation', async () => {
@@ -197,8 +215,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: true
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -258,8 +275,7 @@ describe('Submit Action', () => {
           variables: {
             input: {
               feedback: '',
-              intakeId: systemIntakeId,
-              shouldSendEmail: false
+              intakeId: systemIntakeId
             }
           }
         },
@@ -294,8 +310,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -355,8 +370,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -414,8 +428,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -477,8 +490,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: true
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -542,8 +554,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -599,8 +610,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },
@@ -660,8 +670,7 @@ describe('Submit Action', () => {
                 shouldNotifyITInvestment: false
               },
               feedback: 'Test email',
-              intakeId: systemIntakeId,
-              shouldSendEmail: true
+              intakeId: systemIntakeId
             }
           }
         },

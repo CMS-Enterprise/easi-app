@@ -333,7 +333,6 @@ export interface AddGRTFeedbackInput {
   emailBody: string;
   feedback: string;
   intakeID: UUID;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -343,7 +342,6 @@ export interface AddGRTFeedbackInput {
 export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -394,7 +392,6 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   nextSteps?: string | null;
   scope: string;
   costBaseline?: string | null;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -511,7 +508,6 @@ export interface IssueLifecycleIdInput {
   nextSteps?: string | null;
   scope: string;
   costBaseline?: string | null;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -523,7 +519,6 @@ export interface RejectIntakeInput {
   intakeId: UUID;
   nextSteps?: string | null;
   reason: string;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 

@@ -43,8 +43,6 @@ type templates struct {
 	newAccessibilityRequestToRequesterTemplate templateCaller
 	removedAccessibilityRequestTemplate        templateCaller
 	newDocumentTemplate                        templateCaller
-	intakeInvalidEUAIDTemplate                 templateCaller
-	intakeNoEUAIDTemplate                      templateCaller
 	changeAccessibilityRequestStatus           templateCaller
 	newAccessibilityRequestNote                templateCaller
 	helpSendFeedback                           templateCaller
@@ -167,20 +165,6 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(newDocumentTemplateName)
 	}
 	appTemplates.newDocumentTemplate = newDocumentTemplate
-
-	intakeInvalidEUAIDTemplateName := "intake_invalid_euaid.gohtml"
-	intakeInvalidEUAIDTemplate := rawTemplates.Lookup(intakeInvalidEUAIDTemplateName)
-	if intakeInvalidEUAIDTemplate == nil {
-		return Client{}, templateError(intakeInvalidEUAIDTemplateName)
-	}
-	appTemplates.intakeInvalidEUAIDTemplate = intakeInvalidEUAIDTemplate
-
-	intakeNoEUAIDTemplateName := "intake_no_euaid.gohtml"
-	intakeNoEUAIDTemplate := rawTemplates.Lookup(intakeNoEUAIDTemplateName)
-	if intakeNoEUAIDTemplate == nil {
-		return Client{}, templateError(intakeNoEUAIDTemplateName)
-	}
-	appTemplates.intakeNoEUAIDTemplate = intakeNoEUAIDTemplate
 
 	changeAccessibilityRequestStatusTemplateName := "change_508_status.gohtml"
 	changeAccessibilityRequestStatusTemplate := rawTemplates.Lookup(changeAccessibilityRequestStatusTemplateName)

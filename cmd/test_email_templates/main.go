@@ -46,14 +46,6 @@ func createEmailClient() email.Client {
 	return emailClient
 }
 
-func sendInvalidEUAIDEmails(ctx context.Context, client *email.Client) {
-	err := client.SendIntakeInvalidEUAIDEmail(ctx, "Some Project With An Invalid EUA ID", "ABCD", uuid.New())
-	noErr(err)
-
-	err = client.SendIntakeNoEUAIDEmail(ctx, "Some Project With No EUA ID", uuid.New())
-	noErr(err)
-}
-
 func sendTRBEmails(ctx context.Context, client *email.Client) {
 	requestID := uuid.New()
 	requestName := "Example Request"
@@ -110,6 +102,5 @@ func main() {
 
 	client := createEmailClient()
 
-	sendInvalidEUAIDEmails(ctx, &client)
 	sendTRBEmails(ctx, &client)
 }

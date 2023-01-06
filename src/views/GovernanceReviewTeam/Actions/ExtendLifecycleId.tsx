@@ -137,8 +137,7 @@ const ExtendLifecycleId = ({
         expirationDate: expiresAt,
         scope,
         nextSteps,
-        costBaseline: newCostBaseline,
-        shouldSendEmail
+        costBaseline: newCostBaseline
       }
     };
 

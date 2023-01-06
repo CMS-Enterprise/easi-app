@@ -51,39 +51,8 @@ func (c Client) rejectRequestBody(
 	return b.String(), nil
 }
 
-// SendRejectRequestEmail sends an email for rejecting a request
-// TODO - EASI-2021 - remove
-func (c Client) SendRejectRequestEmail(
-	ctx context.Context,
-	recipient models.EmailAddress,
-	systemIntakeID uuid.UUID,
-	projectName string,
-	requester string,
-	reason string,
-	nextSteps string,
-	feedback string,
-) error {
-	subject := "Request in EASi not approved"
-	body, err := c.rejectRequestBody(systemIntakeID, projectName, requester, reason, nextSteps, feedback)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	err = c.sender.Send(
-		ctx,
-		[]models.EmailAddress{recipient},
-		[]models.EmailAddress{c.config.GRTEmail},
-		subject,
-		body,
-	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
-}
-
-// SendRejectRequestEmailToMultipleRecipients sends emails to multiple recipients (possibly including the IT Governance and IT Investment teams) for rejecting a request
-// TODO - EASI-2021 - rename to SendRejectRequestEmails
-func (c Client) SendRejectRequestEmailToMultipleRecipients(
+// SendRejectRequestEmails sends emails to multiple recipients (possibly including the IT Governance and IT Investment teams) for rejecting a request
+func (c Client) SendRejectRequestEmails(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
