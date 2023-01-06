@@ -1,27 +1,5 @@
 {
-  "flags": {
-    "notifyMultipleRecipients": {
-      "key": "notifyMultipleRecipients",
-      "on": true,
-      "targets": [
-        {
-          "variation": 0,
-          "values": [
-            "68942a05a8732638e45824ff0d8869b576b4144704581e8ff6acee9548aa28e6"
-          ]
-        },
-        {
-          "variation": 1,
-          "values": [
-            "4504a9c0c58fdc6d43a4e9ff7331aecc5041c082c32db26621bf0a94133bf54b"
-          ]
-        }
-      ],
-      "fallthrough": { "variation": 1 },
-      "offVariation": 1,
-      "variations": [true, false]
-    }
-  },
+  "flags": {},
   "flagValues": {
     "cedarCoreEnabled": false,
     "emit-to-cedar": false

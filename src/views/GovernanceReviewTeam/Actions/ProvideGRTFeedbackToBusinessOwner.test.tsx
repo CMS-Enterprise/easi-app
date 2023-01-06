@@ -165,8 +165,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: systemIntakeId,
-              shouldSendEmail: true
+              intakeID: systemIntakeId
             }
           }
         },
@@ -216,8 +215,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: systemIntakeId,
-              shouldSendEmail: true
+              intakeID: systemIntakeId
             }
           }
         },
@@ -270,8 +268,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: systemIntakeId,
-              shouldSendEmail: true
+              intakeID: systemIntakeId
             }
           }
         },

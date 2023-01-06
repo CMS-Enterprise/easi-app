@@ -219,9 +219,7 @@ describe('Governance Review Team', () => {
     );
   });
 
-  // depends on the "notifyMultipleRecipients" feature flag being set;
-  // we currently can't guarantee this when running tests in CI
-  it.skip('can select action email recipients', () => {
+  it('can add additional contact as email recipient', () => {
     cy.contains('a', 'Ready for business case').should('be.visible').click();
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
@@ -234,11 +232,11 @@ describe('Governance Review Team', () => {
     cy.contains('button', 'Add another recipient').click();
 
     // Add additional contact
-    cy.get('#IntakeForm-ContactCommonName input')
-      .type('Jerry')
+    cy.get('#react-select-IntakeForm-ContactCommonName-input')
+      .type('Aaron A')
       .wait(1000)
       .type('{downArrow}{enter}')
-      .should('have.value', 'Jerry Seinfeld, SF13');
+      .should('have.value', 'Aaron Adams, ADMN');
 
     cy.get('#IntakeForm-ContactComponent')
       .select('Center for Medicare')
@@ -250,10 +248,8 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'Add recipient').click();
 
-    // Select contact
-    cy.get('input[value="SF13@local.fake"]')
-      .check({ force: true })
-      .should('be.checked');
+    // Check that contact is automatically selected
+    cy.get('input[value="aaron.adams@local.fake"]').should('be.checked');
   });
 
   it('can extend a Lifecycle ID', () => {

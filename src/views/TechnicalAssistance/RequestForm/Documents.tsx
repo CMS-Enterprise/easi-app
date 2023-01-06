@@ -66,7 +66,6 @@ function Documents({
 }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const { t: gt } = useTranslation('general');
-
   const history = useHistory();
   const { url } = useRouteMatch();
 

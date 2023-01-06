@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CedarContactSelect matches the snapshot 1`] = `
+exports[`CedarContactSelect selects contact from dropdown 1`] = `
 <DocumentFragment>
   <div
-    class="margin-top-1 cedar-contact-select usa-combo-box cedar-contact-select__loading css-b62m3t-container"
+    class="margin-top-1 cedar-contact-select usa-combo-box css-b62m3t-container"
     id="cedarContactSelect"
   >
     <span
@@ -15,22 +15,34 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
       aria-live="polite"
       aria-relevant="additions text"
       class="css-1f43avz-a11yText-A11yText"
-    />
+    >
+      <span
+        id="aria-selection"
+      />
+      <span
+        id="aria-context"
+      >
+        option Adeline Aarons, ABCD focused, 1 of 1. 1 result available for search term Adeline. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+      </span>
+    </span>
     <div
-      class="cedar-contact-select__control css-1b5q38d-control"
+      class="cedar-contact-select__control cedar-contact-select__control--is-focused cedar-contact-select__control--menu-is-open css-1cjrczp-control"
     >
       <div
-        class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-319lph-ValueContainer"
+        class="cedar-contact-select__value-container css-319lph-ValueContainer"
       >
         <div
           class="cedar-contact-select__input-container css-1pndypt-Input"
-          data-value="Jane Doe, ABCD"
+          data-value="Adeline"
         >
           <input
             aria-autocomplete="list"
-            aria-expanded="false"
+            aria-controls="react-select-cedarContactSelect-listbox"
+            aria-describedby="react-select-cedarContactSelect-placeholder"
+            aria-expanded="true"
             aria-haspopup="true"
             aria-label="Cedar-Users"
+            aria-owns="react-select-cedarContactSelect-listbox"
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
@@ -42,7 +54,7 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
             style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
             tabindex="0"
             type="text"
-            value="Jane Doe, ABCD"
+            value="Adeline"
           />
         </div>
       </div>
@@ -50,33 +62,11 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
         class="cedar-contact-select__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <span
-          aria-valuetext="Loading"
-          class="easi-spinner easi-spinner--small"
-          role="progressbar"
-        />
-        <div
-          aria-hidden="true"
-          class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1e245h0-indicatorContainer"
-        >
-          <svg
-            aria-hidden="true"
-            class="css-tj5bde-Svg"
-            focusable="false"
-            height="20"
-            viewBox="0 0 20 20"
-            width="20"
-          >
-            <path
-              d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"
-            />
-          </svg>
-        </div>
-        <span
           class="cedar-contact-select__indicator-separator css-1okebmr-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-1e245h0-indicatorContainer"
+          class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-ja6fon-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -93,10 +83,27 @@ exports[`CedarContactSelect matches the snapshot 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="cedar-contact-select__menu css-1met4b5-menu"
+      id="react-select-cedarContactSelect-listbox"
+    >
+      <div
+        class="cedar-contact-select__menu-list css-19oqr5x-MenuList"
+      >
+        <div
+          aria-disabled="false"
+          class="usa-combo-box__list-option usa-combo-box__list-option--focused cedar-contact-select__option cedar-contact-select__option--is-focused css-yt9ioa-option"
+          id="react-select-cedarContactSelect-option-0"
+          tabindex="-1"
+        >
+          Adeline Aarons, ABCD
+        </div>
+      </div>
+    </div>
     <input
       name="cedarContactSelect"
       type="hidden"
-      value="[object Object]"
+      value=""
     />
   </div>
 </DocumentFragment>

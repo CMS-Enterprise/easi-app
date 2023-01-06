@@ -732,7 +732,6 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 			ActionType: models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES,
 		},
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -757,7 +756,6 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
 		models.SystemIntakeStatusBIZCASEFINALNEEDED,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -782,7 +780,6 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
 		models.SystemIntakeStatusNEEDBIZCASE,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -1117,7 +1114,6 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNEEDBIZCASE,
 		false,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1137,7 +1133,6 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx 
 		input.IntakeID,
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 		false,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1157,7 +1152,6 @@ func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx conte
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
 		false,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1177,7 +1171,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1197,7 +1190,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 		input.IntakeID,
 		models.SystemIntakeStatusNOTITREQUEST,
 		false,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1217,7 +1209,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx contex
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1237,7 +1228,6 @@ func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Conte
 		input.IntakeID,
 		models.SystemIntakeStatusREADYFORGRT,
 		false,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1257,7 +1247,6 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 		false,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1290,7 +1279,6 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 		input.NextSteps,
 		input.Scope,
 		input.CostBaseline,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 
@@ -1400,7 +1388,6 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
 		},
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{
@@ -1423,7 +1410,6 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 			ActionType: models.ActionTypeREADYFORGRB,
 		},
 		models.SystemIntakeStatusREADYFORGRB,
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -1446,7 +1432,6 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 			IntakeID: &input.IntakeID,
 			Feedback: null.StringFrom(input.Feedback),
 		},
-		input.ShouldSendEmail,
 		input.NotificationRecipients,
 	)
 	return &model.UpdateSystemIntakePayload{

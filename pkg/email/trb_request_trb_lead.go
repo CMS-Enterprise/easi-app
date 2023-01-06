@@ -17,18 +17,29 @@ type SendTRBRequestTRBLeadEmailInput struct {
 	TRBRequestName string
 	RequesterName  string
 	TRBLeadName    string
-	TRBEmail       models.EmailAddress
+}
+
+// trbLeadEmailTemplateParams contains the data needed for interpolation in the TRB lead email template
+type trbLeadEmailTemplateParams struct {
+	TRBLeadName    string
+	TRBRequestName string
 	TRBRequestLink string
+	RequesterName  string
 }
 
 // SendTRBRequestTRBLeadEmail sends an email to the EASI team containing a user's request for help
 func (c Client) SendTRBRequestTRBLeadEmail(ctx context.Context, input SendTRBRequestTRBLeadEmailInput) error {
 	subject := input.TRBRequestName + " is assigned to " + input.TRBLeadName
-	input.TRBEmail = c.config.TRBEmail
-	input.TRBRequestLink = path.Join("trb", "task-list", input.TRBRequestID.String())
+
+	templateParams := trbLeadEmailTemplateParams{
+		TRBLeadName:    input.TRBLeadName,
+		TRBRequestName: input.TRBRequestName,
+		TRBRequestLink: c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
+		RequesterName:  input.RequesterName,
+	}
 
 	var b bytes.Buffer
-	err := c.templates.trbRequestTRBLead.Execute(&b, input)
+	err := c.templates.trbRequestTRBLead.Execute(&b, templateParams)
 
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
