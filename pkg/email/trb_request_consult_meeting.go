@@ -14,27 +14,41 @@ import (
 
 // SendTRBRequestConsultMeetingEmailInput contains the data submitted by the user to the "report a problem" help form
 type SendTRBRequestConsultMeetingEmailInput struct {
-	TRBRequestID                uuid.UUID
-	ConsultMeetingTime          time.Time
-	CopyTRBMailbox              bool
-	NotifyEmails                []models.EmailAddress
+	TRBRequestID       uuid.UUID
+	ConsultMeetingTime time.Time
+	CopyTRBMailbox     bool
+	NotifyEmails       []models.EmailAddress
+	TRBRequestName     string
+	Notes              string
+	RequesterName      string
+}
+
+// trbConsultMeetingEmailTemplateParams contains the data needed for interpolation in the TRB consult meeting
+// email template
+type trbConsultMeetingEmailTemplateParams struct {
 	TRBRequestName              string
+	ConsultMeetingTimeFormatted string
 	Notes                       string
 	RequesterName               string
-	ConsultMeetingTimeFormatted string
-	TRBEmail                    models.EmailAddress
 	TRBRequestLink              string
+	TRBEmail                    models.EmailAddress
 }
 
 // SendTRBRequestConsultMeetingEmail sends an email to the EASI team containing a user's request for help
 func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input SendTRBRequestConsultMeetingEmailInput) error {
 	subject := "TRB consult session scheduled for " + input.TRBRequestName
-	input.ConsultMeetingTimeFormatted = input.ConsultMeetingTime.Format("January 2, 2006 at 03:04 PM EST")
-	input.TRBEmail = c.config.TRBEmail
-	input.TRBRequestLink = c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String()))
+
+	templateParams := trbConsultMeetingEmailTemplateParams{
+		TRBRequestName:              input.TRBRequestName,
+		ConsultMeetingTimeFormatted: input.ConsultMeetingTime.Format("January 2, 2006 at 03:04 PM EST"),
+		Notes:                       input.Notes,
+		RequesterName:               input.RequesterName,
+		TRBRequestLink:              c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
+		TRBEmail:                    c.config.TRBEmail,
+	}
 
 	var b bytes.Buffer
-	err := c.templates.trbRequestConsultMeeting.Execute(&b, input)
+	err := c.templates.trbRequestConsultMeeting.Execute(&b, templateParams)
 
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
