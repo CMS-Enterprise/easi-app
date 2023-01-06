@@ -17,7 +17,7 @@ const fallbackExtension = ".unknown"
 
 // GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID.
 func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
-	return store.GetTRBRequestDocumentsByRequestID(appcontext.ZLogger(ctx), requestID)
+	return store.GetTRBRequestDocumentsByRequestID(ctx, requestID)
 }
 
 // GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
@@ -78,12 +78,12 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 		documentDatabaseRecord.OtherType = *input.OtherTypeDescription
 	}
 
-	return store.CreateTRBRequestDocument(appcontext.ZLogger(ctx), &documentDatabaseRecord)
+	return store.CreateTRBRequestDocument(ctx, &documentDatabaseRecord)
 }
 
 // DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID.
 //
 // Does *not* delete the uploaded file from S3, following the example of 508/accessibility request documents.
 func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestDocument, error) {
-	return store.DeleteTRBRequestDocument(appcontext.ZLogger(ctx), id)
+	return store.DeleteTRBRequestDocument(ctx, id)
 }

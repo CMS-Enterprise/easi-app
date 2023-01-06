@@ -1,17 +1,19 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // GetTRBRequestDocumentsByRequestID queries the DB for all documents attached to the TRB request with the given ID
-func (s *Store) GetTRBRequestDocumentsByRequestID(logger *zap.Logger, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
+func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	const trbRequestDocumentsGetByRequestIDSQL = `
 		SELECT id,
 			trb_request_id,
@@ -41,7 +43,7 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(logger *zap.Logger, requestID 
 
 	err = stmt.Select(&documents, arg)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request documents for request ID "+requestID.String(),
 			zap.Error(err),
 			zap.String("requestID", requestID.String()),
@@ -57,7 +59,7 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(logger *zap.Logger, requestID 
 }
 
 // CreateTRBRequestDocument creates a record for a TRBRequestDocument in our database, *after* it's been uploaded to S3
-func (s *Store) CreateTRBRequestDocument(logger *zap.Logger, document *models.TRBRequestDocument) (*models.TRBRequestDocument, error) {
+func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.TRBRequestDocument) (*models.TRBRequestDocument, error) {
 	const trbRequestDocumentCreateSQL = `
 		INSERT INTO trb_request_documents (
 			id,
@@ -105,7 +107,7 @@ func (s *Store) CreateTRBRequestDocument(logger *zap.Logger, document *models.TR
 	retDoc := models.TRBRequestDocument{}
 	err = stmt.Get(&retDoc, document)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create trb request document with error %s", err),
 			zap.Error(err),
 			zap.String("user", document.CreatedBy),
@@ -121,7 +123,7 @@ func (s *Store) CreateTRBRequestDocument(logger *zap.Logger, document *models.TR
 }
 
 // DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID
-func (s *Store) DeleteTRBRequestDocument(logger *zap.Logger, id uuid.UUID) (*models.TRBRequestDocument, error) {
+func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*models.TRBRequestDocument, error) {
 	const trbRequestDocumentDeleteSQL = `
 		DELETE
 		FROM trb_request_documents
@@ -152,7 +154,7 @@ func (s *Store) DeleteTRBRequestDocument(logger *zap.Logger, id uuid.UUID) (*mod
 	retDoc := models.TRBRequestDocument{}
 	err = stmt.Get(&retDoc, arg)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to delete trb request document with ID %s due to error %s", id, err),
 			zap.Error(err),
 			zap.String("id", id.String()),

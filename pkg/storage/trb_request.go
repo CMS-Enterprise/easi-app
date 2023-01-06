@@ -1,12 +1,14 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 
@@ -29,7 +31,7 @@ var trbRequestGetByIDSQL string
 var trbRequestUpdateSQL string
 
 // CreateTRBRequest creates a new TRBRequest record
-func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*models.TRBRequest, error) {
+func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequest, error) {
 	tx := s.db.MustBegin()
 	defer tx.Rollback()
 
@@ -39,7 +41,7 @@ func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 
 	stmt, err := tx.PrepareNamed(trbRequestCreateSQL)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to trb request with error %s", err),
 			zap.String("user", trb.CreatedBy),
 		)
@@ -49,7 +51,7 @@ func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 
 	err = stmt.Get(&retTRB, trb)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create trb request with error %s", err),
 			zap.String("user", trb.CreatedBy),
 		)
@@ -67,7 +69,7 @@ func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 	stmt, err = tx.PrepareNamed(trbRequestFormCreateSQL)
 
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB create form %s", err),
 			zap.String("id", form.ID.String()),
 		)
@@ -78,14 +80,14 @@ func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 	err = stmt.Get(&created, form)
 
 	if err != nil {
-		logger.Error("Failed to create TRB request form with error %s", zap.Error(err))
+		appcontext.ZLogger(ctx).Error("Failed to create TRB request form with error %s", zap.Error(err))
 		return nil, err
 	}
 
 	err = tx.Commit()
 
 	if err != nil {
-		logger.Error("Failed to create TRB request with error %s", zap.Error(err))
+		appcontext.ZLogger(ctx).Error("Failed to create TRB request with error %s", zap.Error(err))
 		return nil, err
 	}
 
@@ -93,7 +95,7 @@ func (s *Store) CreateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 }
 
 // GetTRBRequestByID returns an TRBRequest from the db  for a given id
-func (s *Store) GetTRBRequestByID(logger *zap.Logger, id uuid.UUID) (*models.TRBRequest, error) {
+func (s *Store) GetTRBRequestByID(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
 
 	trb := models.TRBRequest{}
 	stmt, err := s.db.PrepareNamed(trbRequestGetByIDSQL)
@@ -104,7 +106,7 @@ func (s *Store) GetTRBRequestByID(logger *zap.Logger, id uuid.UUID) (*models.TRB
 	err = stmt.Get(&trb, arg)
 
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request",
 			zap.Error(err),
 			zap.String("id", id.String()),
@@ -119,10 +121,10 @@ func (s *Store) GetTRBRequestByID(logger *zap.Logger, id uuid.UUID) (*models.TRB
 }
 
 // UpdateTRBRequest returns an TRBRequest from the db for a given id
-func (s *Store) UpdateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*models.TRBRequest, error) {
+func (s *Store) UpdateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequest, error) {
 	stmt, err := s.db.PrepareNamed(trbRequestUpdateSQL)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB request %s", err),
 			zap.String("id", trb.ID.String()),
 		)
@@ -132,7 +134,7 @@ func (s *Store) UpdateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 
 	err = stmt.Get(&retTRB, trb)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB request %s", err),
 			zap.String("id", trb.ID.String()),
 		)
@@ -147,7 +149,7 @@ func (s *Store) UpdateTRBRequest(logger *zap.Logger, trb *models.TRBRequest) (*m
 }
 
 // GetTRBRequests returns the collection of models
-func (s *Store) GetTRBRequests(logger *zap.Logger, archived bool) ([]*models.TRBRequest, error) {
+func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	trbRequests := []*models.TRBRequest{}
 
 	stmt, err := s.db.PrepareNamed(trbRequestCollectionGetSQL)
@@ -159,7 +161,7 @@ func (s *Store) GetTRBRequests(logger *zap.Logger, archived bool) ([]*models.TRB
 	}
 	err = stmt.Select(&trbRequests, arg)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch trb requests",
 			zap.Error(err),
 		)

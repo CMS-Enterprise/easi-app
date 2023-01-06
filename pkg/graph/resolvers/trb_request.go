@@ -20,7 +20,7 @@ func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, st
 	trb.Status = models.TRBSOpen
 	//TODO make sure this is wired up appropriately
 
-	createdTRB, err := store.CreateTRBRequest(appcontext.ZLogger(ctx), trb)
+	createdTRB, err := store.CreateTRBRequest(ctx, trb)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, st
 
 // UpdateTRBRequest updates a TRB request
 func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}, store *storage.Store) (*models.TRBRequest, error) {
-	existing, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+	existing, err := store.GetTRBRequestByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 		return nil, err
 	}
 
-	retTRB, err := store.UpdateTRBRequest(appcontext.ZLogger(ctx), existing)
+	retTRB, err := store.UpdateTRBRequest(ctx, existing)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 
 // GetTRBRequestByID returns a TRB request by it's ID
 func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) (*models.TRBRequest, error) {
-	trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+	trb, err := store.GetTRBRequestByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) 
 
 // GetTRBRequests returns all TRB Requests
 func GetTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
-	TRBRequests, err := store.GetTRBRequests(appcontext.ZLogger(ctx), archived)
+	TRBRequests, err := store.GetTRBRequests(ctx, archived)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func UpdateTRBRequestConsultMeetingTime(
 		}
 	}
 
-	trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+	trb, err := store.GetTRBRequestByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +116,7 @@ func UpdateTRBRequestConsultMeetingTime(
 		return nil, err
 	}
 
-	updatedTrb, err := store.UpdateTRBRequest(appcontext.ZLogger(ctx), trb)
+	updatedTrb, err := store.UpdateTRBRequest(ctx, trb)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func UpdateTRBRequestTRBLead(
 	id uuid.UUID,
 	trbLead string,
 ) (*models.TRBRequest, error) {
-	trb, err := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+	trb, err := store.GetTRBRequestByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -176,7 +176,7 @@ func UpdateTRBRequestTRBLead(
 		return nil, err
 	}
 
-	updatedTrb, err := store.UpdateTRBRequest(appcontext.ZLogger(ctx), trb)
+	updatedTrb, err := store.UpdateTRBRequest(ctx, trb)
 	if err != nil {
 		return nil, err
 	}

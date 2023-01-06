@@ -4,17 +4,16 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func createTRBRequest(s *StoreTestSuite, logger *zap.Logger, createdBy string) uuid.UUID {
+func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) uuid.UUID {
 	trbRequest := models.NewTRBRequest(createdBy)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.Status = models.TRBSOpen
-	createdRequest, err := s.store.CreateTRBRequest(logger, trbRequest)
+	createdRequest, err := s.store.CreateTRBRequest(ctx, trbRequest)
 	s.NoError(err)
 
 	return createdRequest.ID
@@ -27,7 +26,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	anonEua := "ANON"
 
 	s.Run("Creating an advice letter returns a blank advice letter in the In Progress status", func() {
-		trbRequestID := createTRBRequest(s, logger, anonEua)
+		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBAdviceLetter(logger, anonEua, trbRequestID)
 		s.NoError(err)
@@ -42,7 +41,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	})
 
 	s.Run("Creating, then fetching an advice letter returns a blank advice letter in the In Progress status", func() {
-		trbRequestID := createTRBRequest(s, logger, anonEua)
+		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		_, err := s.store.CreateTRBAdviceLetter(logger, anonEua, trbRequestID)
 		s.NoError(err)
@@ -62,7 +61,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	})
 
 	s.Run("Updating an advice letter returns an advice letter with updated data", func() {
-		trbRequestID := createTRBRequest(s, logger, anonEua)
+		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBAdviceLetter(logger, anonEua, trbRequestID)
 		s.NoError(err)
@@ -99,7 +98,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	})
 
 	s.Run("Updating an advice letter to be ready for review changes the status while leaving DateSent nil", func() {
-		trbRequestID := createTRBRequest(s, logger, anonEua)
+		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBAdviceLetter(logger, anonEua, trbRequestID)
 		s.NoError(err)
@@ -112,7 +111,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	})
 
 	s.Run("Updating an advice letter to complete it changes the status and sets DateSent", func() {
-		trbRequestID := createTRBRequest(s, logger, anonEua)
+		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
 		createdLetter, err := s.store.CreateTRBAdviceLetter(logger, anonEua, trbRequestID)
 		s.NoError(err)
