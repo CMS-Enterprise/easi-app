@@ -8,7 +8,6 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -133,10 +132,6 @@ func getTRBAdviceLetterStatus(ctx context.Context, store *storage.Store, trbRequ
 	errGroup.Go(func() error {
 		letter, errGetLetter = store.GetTRBAdviceLetterByTRBRequestID(appcontext.ZLogger(ctx), trbRequestID)
 		if errGetLetter != nil {
-			if _, isResourceNotFound := errGetLetter.(*apperrors.ResourceNotFoundError); isResourceNotFound {
-				return nil
-			}
-
 			return errGetLetter
 		}
 		return nil
