@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -9,12 +10,13 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // CreateTRBAdviceLetter creates an advice letter for a TRB request, in the "In Progress" status
-func (s *Store) CreateTRBAdviceLetter(logger *zap.Logger, createdBy string, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
+func (s *Store) CreateTRBAdviceLetter(ctx context.Context, createdBy string, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
 	adviceLetter := models.TRBAdviceLetter{
 		TRBRequestID: trbRequestID,
 		Status:       models.TRBAdviceLetterStatusInProgress,
@@ -37,7 +39,7 @@ func (s *Store) CreateTRBAdviceLetter(logger *zap.Logger, createdBy string, trbR
 	`
 	stmt, err := s.db.PrepareNamed(trbAdviceLetterCreateSQL)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for creating TRB advice letter with error %s", err),
 			zap.Error(err),
 			zap.String("user", createdBy),
@@ -49,7 +51,7 @@ func (s *Store) CreateTRBAdviceLetter(logger *zap.Logger, createdBy string, trbR
 
 	err = stmt.Get(&retLetter, adviceLetter)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create TRB advice letter with error %s", err),
 			zap.Error(err),
 			zap.String("user", createdBy),
@@ -62,7 +64,7 @@ func (s *Store) CreateTRBAdviceLetter(logger *zap.Logger, createdBy string, trbR
 
 // UpdateTRBAdviceLetterStatus sets the status of a TRB advice letter, for setting the letter as ready to review or sending the letter.
 // When it sends the letter, it also updates the DateSent field.
-func (s *Store) UpdateTRBAdviceLetterStatus(logger *zap.Logger, id uuid.UUID, status models.TRBAdviceLetterStatus) (*models.TRBAdviceLetter, error) {
+func (s *Store) UpdateTRBAdviceLetterStatus(ctx context.Context, id uuid.UUID, status models.TRBAdviceLetterStatus) (*models.TRBAdviceLetter, error) {
 	const trbAdviceLetterStatusUpdateSQL = `
 	UPDATE trb_advice_letters
 	SET
@@ -74,7 +76,7 @@ func (s *Store) UpdateTRBAdviceLetterStatus(logger *zap.Logger, id uuid.UUID, st
 
 	stmt, err := s.db.PrepareNamed(trbAdviceLetterStatusUpdateSQL)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for updating TRB advice letter status with error %s", err),
 			zap.Error(err),
 			zap.String("id", id.String()),
@@ -97,7 +99,7 @@ func (s *Store) UpdateTRBAdviceLetterStatus(logger *zap.Logger, id uuid.UUID, st
 
 	err = stmt.Get(&updated, arg)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB advice letter status with error %s", err),
 			zap.String("id", id.String()),
 			zap.String("status", string(status)),
@@ -114,7 +116,7 @@ func (s *Store) UpdateTRBAdviceLetterStatus(logger *zap.Logger, id uuid.UUID, st
 
 // UpdateTRBAdviceLetter updates all of a TRB advice letter's mutable fields.
 // The letter's status _can_ be set, though UpdateTRBAdviceLetterStatus() should be used when setting a letter ready for review or sending a letter.
-func (s *Store) UpdateTRBAdviceLetter(logger *zap.Logger, letter *models.TRBAdviceLetter) (*models.TRBAdviceLetter, error) {
+func (s *Store) UpdateTRBAdviceLetter(ctx context.Context, letter *models.TRBAdviceLetter) (*models.TRBAdviceLetter, error) {
 	const trbAdviceLetterUpdateSQL = `
 		UPDATE trb_advice_letters
 		SET
@@ -133,7 +135,7 @@ func (s *Store) UpdateTRBAdviceLetter(logger *zap.Logger, letter *models.TRBAdvi
 
 	stmt, err := s.db.PrepareNamed(trbAdviceLetterUpdateSQL)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for updating TRB advice letter with error %s", err),
 			zap.Error(err),
 			zap.String("id", letter.ID.String()),
@@ -145,7 +147,7 @@ func (s *Store) UpdateTRBAdviceLetter(logger *zap.Logger, letter *models.TRBAdvi
 
 	err = stmt.Get(&updated, letter)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB advice letter with error %s", err),
 			zap.String("id", letter.ID.String()),
 		)
@@ -160,12 +162,12 @@ func (s *Store) UpdateTRBAdviceLetter(logger *zap.Logger, letter *models.TRBAdvi
 }
 
 // GetTRBAdviceLetterByTRBRequestID fetches a TRB advice letter record by its associated request's ID
-func (s *Store) GetTRBAdviceLetterByTRBRequestID(logger *zap.Logger, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
+func (s *Store) GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
 	letter := models.TRBAdviceLetter{}
 
 	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_advice_letters WHERE trb_request_id = :trb_request_id`)
 	if err != nil {
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB advice letter with error %s", err),
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
@@ -181,7 +183,7 @@ func (s *Store) GetTRBAdviceLetterByTRBRequestID(logger *zap.Logger, trbRequestI
 			return nil, nil
 		}
 
-		logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB advice letter",
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),

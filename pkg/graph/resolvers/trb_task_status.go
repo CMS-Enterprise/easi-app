@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -128,7 +127,7 @@ func getTRBAdviceLetterStatus(ctx context.Context, store *storage.Store, trbRequ
 	})
 
 	errGroup.Go(func() error {
-		letter, errGetLetter = store.GetTRBAdviceLetterByTRBRequestID(appcontext.ZLogger(ctx), trbRequestID)
+		letter, errGetLetter = store.GetTRBAdviceLetterByTRBRequestID(ctx, trbRequestID)
 		if errGetLetter != nil {
 			return errGetLetter
 		}
