@@ -34,6 +34,11 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, requestID
 
 	stmt, err := s.db.PrepareNamed(trbRequestDocumentsGetByRequestIDSQL)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB request documents for request ID "+requestID.String(),
+			zap.Error(err),
+			zap.String("requestID", requestID.String()),
+		)
 		return nil, err
 	}
 
@@ -101,6 +106,11 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 
 	stmt, err := s.db.PrepareNamed(trbRequestDocumentCreateSQL)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to create trb request document with error %s", err),
+			zap.Error(err),
+			zap.String("user", document.CreatedBy),
+		)
 		return nil, err
 	}
 
@@ -144,6 +154,11 @@ func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*mo
 
 	stmt, err := s.db.PrepareNamed(trbRequestDocumentDeleteSQL)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to delete trb request document with ID %s due to error %s", id, err),
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
 		return nil, err
 	}
 

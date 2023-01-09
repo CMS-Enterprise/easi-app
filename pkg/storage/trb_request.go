@@ -42,7 +42,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 	stmt, err := tx.PrepareNamed(trbRequestCreateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to trb request with error %s", err),
+			fmt.Sprintf("Failed to create trb request with error %s", err),
 			zap.String("user", trb.CreatedBy),
 		)
 		return nil, err
@@ -100,6 +100,11 @@ func (s *Store) GetTRBRequestByID(ctx context.Context, id uuid.UUID) (*models.TR
 	trb := models.TRBRequest{}
 	stmt, err := s.db.PrepareNamed(trbRequestGetByIDSQL)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB request",
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
 		return nil, err
 	}
 	arg := map[string]interface{}{"id": id}
@@ -154,6 +159,10 @@ func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TR
 
 	stmt, err := s.db.PrepareNamed(trbRequestCollectionGetSQL)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch trb requests",
+			zap.Error(err),
+		)
 		return nil, err
 	}
 	arg := map[string]interface{}{
