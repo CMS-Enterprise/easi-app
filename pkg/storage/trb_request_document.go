@@ -13,7 +13,7 @@ import (
 )
 
 // GetTRBRequestDocumentsByRequestID queries the DB for all documents attached to the TRB request with the given ID
-func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
+func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	const trbRequestDocumentsGetByRequestIDSQL = `
 		SELECT id,
 			trb_request_id,
@@ -35,23 +35,23 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, requestID
 	stmt, err := s.db.PrepareNamed(trbRequestDocumentsGetByRequestIDSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch TRB request documents for request ID "+requestID.String(),
+			fmt.Sprintf("Failed to fetch TRB request documents for request ID %s", trbRequestID.String()),
 			zap.Error(err),
-			zap.String("requestID", requestID.String()),
+			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, err
 	}
 
 	arg := map[string]interface{}{
-		"trb_request_id": requestID,
+		"trb_request_id": trbRequestID,
 	}
 
 	err = stmt.Select(&documents, arg)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch TRB request documents for request ID "+requestID.String(),
+			fmt.Sprintf("Failed to fetch TRB request documents for request ID %s", trbRequestID.String()),
 			zap.Error(err),
-			zap.String("requestID", requestID.String()),
+			zap.String("trbRequestID", trbRequestID.String()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,

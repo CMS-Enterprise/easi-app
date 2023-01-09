@@ -16,8 +16,8 @@ import (
 const fallbackExtension = ".unknown"
 
 // GetTRBRequestDocumentsByRequestID fetches all documents attached to the TRB request with the given ID.
-func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, requestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
-	return store.GetTRBRequestDocumentsByRequestID(ctx, requestID)
+func GetTRBRequestDocumentsByRequestID(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, id uuid.UUID) ([]*models.TRBRequestDocument, error) {
+	return store.GetTRBRequestDocumentsByRequestID(ctx, id)
 }
 
 // GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
