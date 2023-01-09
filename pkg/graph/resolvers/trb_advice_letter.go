@@ -5,8 +5,10 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -17,6 +19,19 @@ func GetTRBAdviceLetterByTRBRequestID(ctx context.Context, store *storage.Store,
 
 	if err != nil {
 		return nil, err
+	}
+
+	if letter == nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB advice letter",
+			zap.Error(err),
+			zap.String("trbRequestID", id.String()),
+		)
+
+		return nil, &apperrors.ResourceNotFoundError{
+			Err:      err,
+			Resource: models.TRBAdviceLetter{},
+		}
 	}
 
 	return letter, nil

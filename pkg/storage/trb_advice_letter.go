@@ -177,18 +177,15 @@ func (s *Store) GetTRBAdviceLetterByTRBRequestID(logger *zap.Logger, trbRequestI
 
 	err = stmt.Get(&letter, arg)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
 		logger.Error(
 			"Failed to fetch TRB advice letter",
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
-
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{
-				Err:      err,
-				Resource: models.TRBAdviceLetter{},
-			}
-		}
 
 		return nil, &apperrors.QueryError{
 			Err:       err,
