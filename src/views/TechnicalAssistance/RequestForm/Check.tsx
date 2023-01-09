@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { camelCase, capitalize } from 'lodash';
+import { DateTime } from 'luxon';
 
 import {
   DescriptionDefinition,
@@ -8,11 +10,31 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import useTRBAttendees from 'hooks/useTRBAttendees';
+import { GetTrbRequest_trbRequest_form as TrbRequestForm } from 'queries/types/GetTrbRequest';
+import { TRBWhereInProcessOption } from 'types/graphql-global-types';
 
 import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
+
+function SubjectDefinition(
+  form: any,
+  field: keyof TrbRequestForm
+): React.ReactNode {
+  const { t } = useTranslation('technicalAssistance');
+  return Array.isArray(form[field]) && form[field].length ? (
+    form[field]
+      .map((v: string) =>
+        v === 'OTHER'
+          ? `${t('basic.options.other')}: ${form[`${field}Other`]}`
+          : t(`subject.options.${field}.${v}`)
+      )
+      .join(', ')
+  ) : (
+    <em>{t('check.noTopicsSelected')}</em>
+  );
+}
 
 function Check({
   request,
@@ -62,24 +84,79 @@ function Check({
             <DescriptionDefinition
               definition={request.form.needsAssistanceWith}
             />
+
             <DescriptionTerm term={t('basic.labels.hasSolutionInMind')} />
             <DescriptionDefinition
-              definition={request.form.hasSolutionInMind}
+              definition={t(
+                `basic.options.${request.form.hasSolutionInMind ? 'yes' : 'no'}`
+              )}
             />
-            <DescriptionTerm term={t('basic.labels.proposedSolution')} />
-            <DescriptionDefinition definition={request.form.proposedSolution} />
+            {request.form.hasSolutionInMind && (
+              <>
+                <DescriptionTerm term={t('basic.labels.proposedSolution')} />
+                <DescriptionDefinition
+                  definition={request.form.proposedSolution}
+                />
+              </>
+            )}
+
             <DescriptionTerm term={t('basic.labels.whereInProcess')} />
             <DescriptionDefinition
-              definition={`${request.form.whereInProcess} ${request.form.whereInProcessOther}`}
+              definition={
+                request.form.whereInProcess === TRBWhereInProcessOption.OTHER
+                  ? `${t('basic.options.other')}: ${
+                      request.form.whereInProcessOther
+                    }`
+                  : t(
+                      `basic.options.whereInProcess.${camelCase(
+                        request.form.whereInProcess || ''
+                      )}`
+                    )
+              }
             />
+
             <DescriptionTerm
               term={t('basic.labels.hasExpectedStartEndDates')}
             />
             <DescriptionDefinition
-              definition={`${request.form.hasExpectedStartEndDates} ${request.form.expectedStartDate} ${request.form.expectedEndDate}`}
+              definition={
+                request.form.hasExpectedStartEndDates &&
+                request.form.expectedStartDate &&
+                request.form.expectedEndDate
+                  ? `${t('basic.options.yes')}, ${t(
+                      'check.expectedStartAndGoLive',
+                      {
+                        start: DateTime.fromISO(
+                          request.form.expectedStartDate
+                        ).toFormat('MM/dd/yyyy'),
+                        live: DateTime.fromISO(
+                          request.form.expectedEndDate
+                        ).toFormat('MM/dd/yyyy')
+                      }
+                    )}`
+                  : t('basic.options.no')
+              }
             />
+
             <DescriptionTerm term={t('basic.labels.collabGroups')} />
-            <DescriptionDefinition definition={request.form.collabGroups} />
+            <DescriptionDefinition
+              definition={request.form.collabGroups
+                .map(v => {
+                  if (v === 'OTHER') {
+                    return `${`${t('basic.options.other')}: ${
+                      request.form.collabGroupOther
+                    } (`}${request.form.collabDateOther})`;
+                  }
+                  return `${t(`basic.options.collabGroups.${camelCase(v)}`)} (${
+                    request.form[
+                      `collabDate${capitalize(
+                        camelCase(v)
+                      )}` as keyof TrbRequestForm
+                    ]
+                  })`;
+                })
+                .join(', ')}
+            />
           </DescriptionList>
         </div>
       </div>
@@ -95,53 +172,72 @@ function Check({
               )}
             />
             <DescriptionDefinition
-              definition={
-                request.form.subjectAreaTechnicalReferenceArchitecture
-              }
+              definition={SubjectDefinition(
+                request.form,
+                'subjectAreaTechnicalReferenceArchitecture'
+              )}
             />
-            <DescriptionDefinition
-              className="text-italic"
-              definition={t('check.noTopicsSelected')}
-            />
+
             <DescriptionTerm
               term={t('subject.labels.subjectAreaNetworkAndSecurity')}
             />
             <DescriptionDefinition
-              definition={request.form.subjectAreaNetworkAndSecurity}
+              definition={SubjectDefinition(
+                request.form,
+                'subjectAreaNetworkAndSecurity'
+              )}
             />
+
             <DescriptionTerm
               term={t('subject.labels.subjectAreaCloudAndInfrastructure')}
             />
             <DescriptionDefinition
-              definition={request.form.subjectAreaCloudAndInfrastructure}
+              definition={SubjectDefinition(
+                request.form,
+                'subjectAreaCloudAndInfrastructure'
+              )}
             />
+
             <DescriptionTerm
               term={t('subject.labels.subjectAreaApplicationDevelopment')}
             />
             <DescriptionDefinition
-              definition={request.form.subjectAreaApplicationDevelopment}
+              definition={SubjectDefinition(
+                request.form,
+                'subjectAreaApplicationDevelopment'
+              )}
             />
+
             <DescriptionTerm
               term={t('subject.labels.subjectAreaDataAndDataManagement')}
             />
             <DescriptionDefinition
-              definition={request.form.subjectAreaDataAndDataManagement}
+              definition={SubjectDefinition(
+                request.form,
+                'subjectAreaDataAndDataManagement'
+              )}
             />
+
             <DescriptionTerm
               term={t(
                 'subject.labels.subjectAreaGovernmentProcessesAndPolicies'
               )}
             />
             <DescriptionDefinition
-              definition={
-                request.form.subjectAreaGovernmentProcessesAndPolicies
-              }
+              definition={SubjectDefinition(
+                request.form,
+                'subjectAreaGovernmentProcessesAndPolicies'
+              )}
             />
+
             <DescriptionTerm
               term={t('subject.labels.subjectAreaOtherTechnicalTopics')}
             />
             <DescriptionDefinition
-              definition={request.form.subjectAreaOtherTechnicalTopics}
+              definition={SubjectDefinition(
+                request.form,
+                'subjectAreaOtherTechnicalTopics'
+              )}
             />
           </DescriptionList>
         </div>
