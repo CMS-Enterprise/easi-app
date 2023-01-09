@@ -155,7 +155,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return next(ctx)
 	}}
 
-	issueLifecycleID := func(ctx context.Context, intake *models.SystemIntake, action *models.Action, shouldSendEmail bool, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
+	issueLifecycleID := func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 		if intake.LifecycleID.ValueOrZero() == "" {
 			intake.LifecycleID = null.StringFrom("654321B")
 		}
@@ -191,13 +191,9 @@ func TestGraphQLTestSuite(t *testing.T) {
 	resolverService.CreateActionExtendLifecycleID = services.NewCreateActionExtendLifecycleID(
 		serviceConfig,
 		saveAction,
-		cedarLdapClient.FetchUserInfo,
 		store.FetchSystemIntakeByID,
 		store.UpdateSystemIntake,
-		emailClient.SendExtendLCIDEmail,
-		emailClient.SendExtendLCIDEmailToMultipleRecipients,
-		emailClient.SendIntakeInvalidEUAIDEmail,
-		emailClient.SendIntakeNoEUAIDEmail,
+		emailClient.SendExtendLCIDEmails,
 	)
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)

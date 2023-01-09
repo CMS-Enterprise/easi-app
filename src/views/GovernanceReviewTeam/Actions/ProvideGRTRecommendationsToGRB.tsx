@@ -75,8 +75,7 @@ const ProvideGRTRecommendationsToGRB = () => {
       input: {
         emailBody,
         feedback: grtFeedback,
-        intakeID: systemId,
-        shouldSendEmail
+        intakeID: systemId
       }
     };
 

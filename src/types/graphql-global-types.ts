@@ -240,6 +240,17 @@ export enum TRBFeedbackStatus {
   READY_TO_START = "READY_TO_START",
 }
 
+ /*
+ * Represents the common options for document type that is attached to a
+ * 508/accessibility request
+ */
+export enum TRBDocumentCommonType {
+  ARCHITECTURE_DIAGRAM = "ARCHITECTURE_DIAGRAM",
+  BUSINESS_CASE = "BUSINESS_CASE",
+  OTHER = "OTHER",
+  PRESENTATION_SLIDE_DECK = "PRESENTATION_SLIDE_DECK",
+}
+
 /**
  * Represents the status of a TRB request form
  */
@@ -287,6 +298,15 @@ export enum TRBOtherTechnicalTopicsOption {
   ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT",
   MACHINE_LEARNING = "MACHINE_LEARNING",
   OTHER = "OTHER",
+}
+
+/**
+ * Enumeration of the possible statuses of documents uploaded in the TRB workflow
+ */
+export enum TRBRequestDocumentStatus {
+  AVAILABLE = "AVAILABLE",
+  PENDING = "PENDING",
+  UNAVAILABLE = "UNAVAILABLE",
 }
 
 export enum TRBRequestStatus {
@@ -343,7 +363,6 @@ export interface AddGRTFeedbackInput {
   emailBody: string;
   feedback: string;
   intakeID: UUID;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -353,7 +372,6 @@ export interface AddGRTFeedbackInput {
 export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -404,7 +422,6 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   nextSteps?: string | null;
   scope: string;
   costBaseline?: string | null;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -443,6 +460,16 @@ export interface CreateTRBRequestAttendeeInput {
   trbRequestId: UUID;
   component: string;
   role: PersonRole;
+}
+
+/**
+ * The data needed to upload a TRB document and attach it to a request with metadata
+ */
+export interface CreateTRBRequestDocumentInput {
+  requestID: UUID;
+  fileData: Upload;
+  documentType: TRBDocumentCommonType;
+  otherTypeDescription?: string | null;
 }
 
 /**
@@ -511,7 +538,6 @@ export interface IssueLifecycleIdInput {
   nextSteps?: string | null;
   scope: string;
   costBaseline?: string | null;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -523,7 +549,6 @@ export interface RejectIntakeInput {
   intakeId: UUID;
   nextSteps?: string | null;
   reason: string;
-  shouldSendEmail: boolean;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 

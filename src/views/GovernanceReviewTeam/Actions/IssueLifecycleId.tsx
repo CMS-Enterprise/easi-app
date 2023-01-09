@@ -112,8 +112,7 @@ const IssueLifecycleId = () => {
         scope: scope ?? '',
         costBaseline,
         lcid: lifecycleId,
-        feedback,
-        shouldSendEmail
+        feedback
       }
     };
 
