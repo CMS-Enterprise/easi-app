@@ -38,7 +38,7 @@ func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 	stmt, err := s.db.PrepareNamed(trbAdminNoteCreateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for creating TRB admin note with error %s", err),
+			fmt.Sprintf("Failed to create TRB admin note with error %s", err),
 			zap.Error(err),
 			zap.String("user", note.CreatedBy),
 		)
@@ -67,7 +67,7 @@ func (s *Store) GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID
 	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE trb_request_id = :trb_request_id`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB admin notes with error %s", err),
+			"Failed to fetch TRB admin notes",
 			zap.Error(err),
 			zap.String("trbRequestID", trbRequestID.String()),
 		)
@@ -100,7 +100,7 @@ func (s *Store) GetTRBAdminNoteByID(ctx context.Context, id uuid.UUID) (*models.
 	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE id = :id`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB admin note with error %s", err),
+			"Failed to fetch admin note",
 			zap.Error(err),
 			zap.String("id", id.String()),
 		)
@@ -151,7 +151,7 @@ func (s *Store) UpdateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for updating TRB admin note with error %s", err),
+			fmt.Sprintf("Failed to update TRB admin note with error %s", err),
 			zap.Error(err),
 			zap.String("id", note.ID.String()),
 		)
