@@ -20,7 +20,7 @@ func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID 
 	}
 	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
 
-	createdNote, err := store.CreateTRBAdminNote(appcontext.ZLogger(ctx), &noteToCreate)
+	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID 
 
 // GetTRBAdminNoteByID retrieves a single admin note by its ID
 func GetTRBAdminNoteByID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdminNote, error) {
-	note, err := store.GetTRBAdminNoteByID(appcontext.ZLogger(ctx), id)
+	note, err := store.GetTRBAdminNoteByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func GetTRBAdminNoteByID(ctx context.Context, store *storage.Store, id uuid.UUID
 
 // GetTRBAdminNotesByTRBRequestID retrieves a list of admin notes associated with a TRB request
 func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
-	notes, err := store.GetTRBAdminNotesByTRBRequestID(appcontext.ZLogger(ctx), trbRequestID)
+	notes, err := store.GetTRBAdminNotesByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +59,6 @@ func GetTRBAdminNoteAuthorInfo(ctx context.Context, authorEUAID string, fetchUse
 
 // UpdateTRBAdminNote handles general updates to a TRB advice letter
 func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
-	logger := appcontext.ZLogger(ctx)
-
 	idStr, idFound := input["id"]
 	if !idFound {
 		return nil, errors.New("missing required property id")
@@ -71,7 +69,7 @@ func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[str
 		return nil, err
 	}
 
-	note, err := store.GetTRBAdminNoteByID(logger, id)
+	note, err := store.GetTRBAdminNoteByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +79,7 @@ func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[str
 		return nil, err
 	}
 
-	updatedNote, err := store.UpdateTRBAdminNote(logger, note)
+	updatedNote, err := store.UpdateTRBAdminNote(ctx, note)
 	if err != nil {
 		return nil, err
 	}
