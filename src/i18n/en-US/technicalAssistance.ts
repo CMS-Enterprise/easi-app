@@ -513,6 +513,7 @@ const technicalAssistance = {
     noTopicsSelected: 'No topics selected',
     expectedStartAndGoLive:
       '{{- start}} expected start and {{- live}} expected go live',
+    noAttendees: 'There are no attendees',
     whatNext: {
       title: 'What happens next?',
       text: [

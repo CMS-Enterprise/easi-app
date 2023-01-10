@@ -246,7 +246,11 @@ function Check({
       {/* Attendees */}
       <div>
         <h2>{t('requestForm.steps.2.name')}</h2>
-        <AttendeesTable attendees={attendees} trbRequestId={request.id} />
+        {attendees.length === 0 ? (
+          t('check.noAttendees')
+        ) : (
+          <AttendeesTable attendees={attendees} trbRequestId={request.id} />
+        )}
       </div>
 
       {/* Supporting docs */}
