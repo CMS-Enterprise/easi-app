@@ -112,12 +112,7 @@ func (s *Store) GetTRBAdminNoteByID(ctx context.Context, id uuid.UUID) (*models.
 	err = stmt.Get(&note, arg)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			appcontext.ZLogger(ctx).Info(
-				"No admin note found",
-				zap.Error(err),
-				zap.String("id", id.String()),
-			)
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.TRBAdminNote{}}
+			return nil, nil
 		}
 
 		appcontext.ZLogger(ctx).Error(

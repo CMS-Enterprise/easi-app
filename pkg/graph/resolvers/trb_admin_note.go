@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -33,6 +34,13 @@ func GetTRBAdminNoteByID(ctx context.Context, store *storage.Store, id uuid.UUID
 	note, err := store.GetTRBAdminNoteByID(ctx, id)
 	if err != nil {
 		return nil, err
+	}
+
+	if note == nil {
+		return nil, &apperrors.ResourceNotFoundError{
+			Err:      err,
+			Resource: models.TRBAdminNote{},
+		}
 	}
 
 	return note, nil
