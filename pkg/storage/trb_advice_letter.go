@@ -69,7 +69,9 @@ func (s *Store) UpdateTRBAdviceLetterStatus(ctx context.Context, id uuid.UUID, s
 	UPDATE trb_advice_letters
 	SET
 		status = :status,
-		date_sent = :date_sent
+		date_sent = :date_sent,
+		modified_by = :modified_by,
+		modified_at = CURRENT_TIMESTAMP
 	WHERE id = :id
 	RETURNING *;
 	`
@@ -87,8 +89,9 @@ func (s *Store) UpdateTRBAdviceLetterStatus(ctx context.Context, id uuid.UUID, s
 
 	updated := models.TRBAdviceLetter{}
 	arg := map[string]interface{}{
-		"id":     id,
-		"status": status,
+		"id":          id,
+		"status":      status,
+		"modified_by": appcontext.Principal(ctx).ID(),
 	}
 
 	if status == models.TRBAdviceLetterStatusCompleted {
@@ -128,7 +131,7 @@ func (s *Store) UpdateTRBAdviceLetter(ctx context.Context, letter *models.TRBAdv
 			date_sent = :date_sent,
 			followup_point = :followup_point,
 			modified_by = :modified_by,
-			modified_at = :modified_at
+			modified_at = CURRENT_TIMESTAMP
 		WHERE id = :id
 		RETURNING *;
 	`
