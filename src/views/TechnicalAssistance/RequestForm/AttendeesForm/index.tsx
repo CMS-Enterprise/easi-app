@@ -20,6 +20,7 @@ import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 import Breadcrumbs from '../../Breadcrumbs';
 import { initialAttendee } from '../Attendees';
 import Pager from '../Pager';
+import { TrbFormAlert } from '..';
 
 import { AttendeeFields } from './components';
 
@@ -29,9 +30,7 @@ interface AttendeesFormProps {
   /** Set active attendee - used to edit attendee */
   setActiveAttendee: (activeAttendee: TRBAttendeeData) => void;
   trbRequestId: string;
-  setFormAlert: React.Dispatch<
-    React.SetStateAction<{ type: 'success' | 'error'; message: string } | false>
-  >;
+  setFormAlert: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
   taskListUrl: string;
 }
 

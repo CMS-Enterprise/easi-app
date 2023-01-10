@@ -22,12 +22,12 @@ require (
 	github.com/okta/okta-jwt-verifier-golang v1.3.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pquerna/otp v1.4.0
-	github.com/samber/lo v1.34.0
+	github.com/samber/lo v1.37.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.13.0
 	github.com/stretchr/testify v1.8.1
 	github.com/vektah/gqlparser/v2 v2.5.1
-	go.uber.org/zap v1.23.0
+	go.uber.org/zap v1.24.0
 	golang.org/x/net v0.1.0
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.5.1

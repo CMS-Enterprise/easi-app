@@ -34,7 +34,6 @@ type AddGRTFeedbackInput struct {
 	EmailBody              string                              `json:"emailBody"`
 	Feedback               string                              `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeID"`
-	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
@@ -48,7 +47,6 @@ type AddGRTFeedbackPayload struct {
 type BasicActionInput struct {
 	Feedback               string                              `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
-	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
@@ -181,7 +179,6 @@ type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	NextSteps              *string                             `json:"nextSteps"`
 	Scope                  string                              `json:"scope"`
 	CostBaseline           *string                             `json:"costBaseline"`
-	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
@@ -350,7 +347,6 @@ type IssueLifecycleIDInput struct {
 	NextSteps              *string                             `json:"nextSteps"`
 	Scope                  string                              `json:"scope"`
 	CostBaseline           *string                             `json:"costBaseline"`
-	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
@@ -372,7 +368,6 @@ type RejectIntakeInput struct {
 	IntakeID               uuid.UUID                           `json:"intakeId"`
 	NextSteps              *string                             `json:"nextSteps"`
 	Reason                 string                              `json:"reason"`
-	ShouldSendEmail        bool                                `json:"shouldSendEmail"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
@@ -421,6 +416,13 @@ type SendReportAProblemEmailInput struct {
 	WhatWereYouDoing       string `json:"whatWereYouDoing"`
 	WhatWentWrong          string `json:"whatWentWrong"`
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
+}
+
+// The data needed to send a TRB advice letter, including who to notify
+type SendTRBAdviceLetterInput struct {
+	ID             uuid.UUID `json:"id"`
+	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
+	NotifyEuaIds   []string  `json:"notifyEuaIds"`
 }
 
 type SetRolesForUserOnSystemInput struct {

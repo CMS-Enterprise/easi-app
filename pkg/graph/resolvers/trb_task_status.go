@@ -12,8 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-// GetTRBFormStatus retrieves the status of the form step of the TRB request task list
-func GetTRBFormStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBFormStatus, error) {
+func getTRBFormStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBFormStatus, error) {
 	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
 		return nil, err
@@ -21,8 +20,7 @@ func GetTRBFormStatus(ctx context.Context, store *storage.Store, trbRequestID uu
 	return &form.Status, nil
 }
 
-// GetTRBFeedbackStatus retrieves the status of the feedback step of the TRB request task list
-func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBFeedbackStatus, error) {
+func getTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBFeedbackStatus, error) {
 	status := models.TRBFeedbackStatusCannotStartYet
 	errGroup := new(errgroup.Group)
 
@@ -62,10 +60,9 @@ func GetTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 	return &status, nil
 }
 
-// GetTRBConsultPrepStatus retrieves the status of the consult step of the TRB request task list
-func GetTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBConsultPrepStatus, error) {
+func getTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBConsultPrepStatus, error) {
 	status := models.TRBConsultPrepStatusCannotStartYet
-	feedbackStatus, err := GetTRBFeedbackStatus(ctx, store, trbRequestID)
+	feedbackStatus, err := getTRBFeedbackStatus(ctx, store, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -85,10 +82,9 @@ func GetTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbReque
 	return &status, nil
 }
 
-// GetTRBAttendConsultStatus retrieves the status of the consult step of the TRB request task list
-func GetTRBAttendConsultStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBAttendConsultStatus, error) {
+func getTRBAttendConsultStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBAttendConsultStatus, error) {
 	status := models.TRBAttendConsultStatusCannotStartYet
-	feedbackStatus, err := GetTRBFeedbackStatus(ctx, store, trbRequestID)
+	feedbackStatus, err := getTRBFeedbackStatus(ctx, store, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -112,6 +108,53 @@ func GetTRBAttendConsultStatus(ctx context.Context, store *storage.Store, trbReq
 	return &status, nil
 }
 
+func getTRBAdviceLetterStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBAdviceLetterStatus, error) {
+	logger := appcontext.ZLogger(ctx)
+
+	var status models.TRBAdviceLetterStatus
+
+	errGroup := new(errgroup.Group)
+
+	var trb *models.TRBRequest
+	var errGetRequest error
+
+	var letter *models.TRBAdviceLetter
+	var errGetLetter error
+
+	errGroup.Go(func() error {
+		trb, errGetRequest = store.GetTRBRequestByID(logger, trbRequestID)
+		if errGetRequest != nil {
+			return errGetRequest
+		}
+		return nil
+	})
+
+	errGroup.Go(func() error {
+		letter, errGetLetter = store.GetTRBAdviceLetterByTRBRequestID(appcontext.ZLogger(ctx), trbRequestID)
+		if errGetLetter != nil {
+			return errGetLetter
+		}
+		return nil
+	})
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	// if letter hasn't been created yet
+	if letter == nil {
+		if trb.ConsultMeetingTime != nil && time.Now().After(*trb.ConsultMeetingTime) {
+			status = models.TRBAdviceLetterStatusReadyToStart
+		} else {
+			status = models.TRBAdviceLetterStatusCannotStartYet
+		}
+	} else {
+		status = letter.Status
+	}
+
+	return &status, nil
+}
+
 // GetTRBTaskStatuses retrieves all of the statuses for the steps of a given TRB request's task list
 func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBTaskStatuses, error) {
 	errGroup := new(errgroup.Group)
@@ -119,29 +162,36 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	var formStatus *models.TRBFormStatus
 	var errForm error
 	errGroup.Go(func() error {
-		formStatus, errForm = GetTRBFormStatus(ctx, store, trbRequestID)
+		formStatus, errForm = getTRBFormStatus(ctx, store, trbRequestID)
 		return errForm
 	})
 
 	var feedbackStatus *models.TRBFeedbackStatus
 	var errFeedback error
 	errGroup.Go(func() error {
-		feedbackStatus, errFeedback = GetTRBFeedbackStatus(ctx, store, trbRequestID)
+		feedbackStatus, errFeedback = getTRBFeedbackStatus(ctx, store, trbRequestID)
 		return errFeedback
 	})
 
 	var consultPrepStatus *models.TRBConsultPrepStatus
 	var errConsultPrep error
 	errGroup.Go(func() error {
-		consultPrepStatus, errConsultPrep = GetTRBConsultPrepStatus(ctx, store, trbRequestID)
+		consultPrepStatus, errConsultPrep = getTRBConsultPrepStatus(ctx, store, trbRequestID)
 		return errConsultPrep
 	})
 
 	var attendConsultStatus *models.TRBAttendConsultStatus
 	var errAttendConsult error
 	errGroup.Go(func() error {
-		attendConsultStatus, errAttendConsult = GetTRBAttendConsultStatus(ctx, store, trbRequestID)
+		attendConsultStatus, errAttendConsult = getTRBAttendConsultStatus(ctx, store, trbRequestID)
 		return errAttendConsult
+	})
+
+	var adviceLetterStatus *models.TRBAdviceLetterStatus
+	var errAdviceLetter error
+	errGroup.Go(func() error {
+		adviceLetterStatus, errAdviceLetter = getTRBAdviceLetterStatus(ctx, store, trbRequestID)
+		return errAdviceLetter
 	})
 
 	if err := errGroup.Wait(); err != nil {
@@ -153,6 +203,7 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 		FeedbackStatus:      *feedbackStatus,
 		ConsultPrepStatus:   *consultPrepStatus,
 		AttendConsultStatus: *attendConsultStatus,
+		AdviceLetterStatus:  *adviceLetterStatus,
 	}
 
 	return &statuses, nil

@@ -12,7 +12,6 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -55,7 +54,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const formikRef = useRef<FormikProps<ContactDetailsForm>>(null);
   const { t } = useTranslation('intake');
   const history = useHistory();
-  const flags = useFlags();
 
   // Checkbox values
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState<boolean>(
@@ -662,15 +660,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   </fieldset>
                 </FieldGroup>
                 {/* Add new contacts */}
-                {flags.notifyMultipleRecipients && (
-                  <AdditionalContacts
-                    contacts={contacts.data.additionalContacts}
-                    systemIntakeId={id}
-                    activeContact={activeContact}
-                    setActiveContact={setActiveContact}
-                    className="margin-top-4"
-                  />
-                )}
+                <AdditionalContacts
+                  contacts={contacts.data.additionalContacts}
+                  systemIntakeId={id}
+                  activeContact={activeContact}
+                  setActiveContact={setActiveContact}
+                  className="margin-top-4"
+                />
                 {/* Governance Teams */}
                 <FieldGroup
                   scrollElement="governanceTeams.isPresent"

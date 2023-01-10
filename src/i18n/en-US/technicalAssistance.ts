@@ -28,6 +28,7 @@ const technicalAssistance = {
     fillDate: 'Please fill in the date',
     includeExplanation: 'Please include an explanation',
     makeSelection: 'Please make a selection',
+    selectFile: 'Please select a file',
     somethingWrong: 'Something went wrong.'
   },
   requestType: {
@@ -464,6 +465,44 @@ const technicalAssistance = {
     }
   },
   documents: {
+    addDocument: 'Add a document',
+    table: {
+      header: {
+        fileName: 'File name',
+        documentType: 'Document type',
+        uploadDate: 'Upload date',
+        actions: 'Actions'
+      },
+      noDocument: 'No documents uploaded',
+      view: 'View',
+      remove: 'Remove',
+      unavailable: 'Unavailable',
+      virusScan: 'Virus scan in progress...'
+    },
+    upload: {
+      title: 'Upload a document',
+      subtitle:
+        'Choose a document to upload, such as a presentation slide deck, concept paper, or other system information document.',
+      documentUpload: 'Document upload',
+      dragFile: 'Drag file here or choose from folder',
+      selectedFile: 'Selected file',
+      changeFile: 'Change file',
+      whatType: 'What type of document are you uploading?',
+      type: {
+        ARCHITECTURE_DIAGRAM: 'Architecture diagram',
+        PRESENTATION_SLIDE_DECK: 'Presentation slide deck',
+        BUSINESS_CASE: 'Business Case',
+        OTHER: 'Other'
+      },
+      whatKind: 'What kind of document is this?',
+      toKeepCmsSafe:
+        "To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.",
+      uploadDocument: 'Upload document',
+      dontUploadAndReturn: 'Don’t upload and return to previous page',
+      error:
+        'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
+      success: 'Your document has been uploaded and is being scanned.'
+    },
     continueWithoutAdding: 'Continue without adding documents'
   },
   check: {
