@@ -65,8 +65,7 @@ func GetTRBAdminNoteAuthorInfo(ctx context.Context, authorEUAID string, fetchUse
 	return authorInfo, nil
 }
 
-// UpdateTRBAdminNote updates all of a TRB advice letter's mutable fields.
-// The note's IsArchived field _can_ be set, though ArchiveTRBAdminNote() should be used when archiving a note.
+// UpdateTRBAdminNote handles general updates to a TRB admin note
 func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
 	idStr, idFound := input["id"]
 	if !idFound {
@@ -94,4 +93,14 @@ func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[str
 	}
 
 	return updatedNote, nil
+}
+
+// ArchiveTRBAdminNote archives (soft-deletes) a TRB admin note
+func ArchiveTRBAdminNote(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdminNote, error) {
+	archivedNote, err := store.ArchiveTRBAdminNote(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return archivedNote, nil
 }

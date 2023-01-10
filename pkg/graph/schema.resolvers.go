@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2011,7 +2010,7 @@ func (r *mutationResolver) UpdateTRBAdminNote(ctx context.Context, input map[str
 
 // ArchiveTRBAdminNote is the resolver for the archiveTRBAdminNote field.
 func (r *mutationResolver) ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
-	panic(fmt.Errorf("not implemented: ArchiveTRBAdminNote - archiveTRBAdminNote"))
+	return resolvers.ArchiveTRBAdminNote(ctx, r.store, id)
 }
 
 // CreateTRBAdviceLetter is the resolver for the createTRBAdviceLetter field.
