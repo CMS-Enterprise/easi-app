@@ -137,7 +137,7 @@ func (s *Store) UpdateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 		SET
 			category = :category,
 			note_text = :note_text,
-			is_archived = :is_archived
+			is_archived = :is_archived,
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
 		WHERE id = :id
