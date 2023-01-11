@@ -24,10 +24,6 @@ function TechnicalAssistance() {
           <Homepage />
         </Route>
 
-        <Route exact path={`${path}/:id/:activePage?`}>
-          <TrbAdminHome />
-        </Route>
-
         {/*
           Starting a New Request begins with selecting a Request Type.
           Existing Requests can update their request type.
@@ -49,6 +45,11 @@ function TechnicalAssistance() {
         {/* Create new or edit exisiting request */}
         <Route exact path={`${path}/requests/:id/:step?/:view?`}>
           <RequestForm />
+        </Route>
+
+        {/* TRB admin view */}
+        <Route exact path={`${path}/:id/:activePage?`}>
+          <TrbAdminHome />
         </Route>
 
         <Route path="*">

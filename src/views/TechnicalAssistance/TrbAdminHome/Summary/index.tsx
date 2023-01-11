@@ -5,6 +5,7 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
+  Button,
   Grid,
   GridContainer,
   IconError
@@ -21,6 +22,7 @@ type SummaryProps = {
   name: string;
   requestType: TRBRequestType;
   createdAt: string;
+  createdBy: string;
   status: TRBRequestStatus;
   taskStatuses: TRBRequestTaskStatuses;
   trbLead: string | null;
@@ -31,6 +33,7 @@ export default function Summary({
   name,
   requestType,
   createdAt,
+  createdBy,
   status,
   taskStatuses,
   trbLead
@@ -46,55 +49,55 @@ export default function Summary({
 
   // Get requester object from request attendees
   const {
-    data: { requester }
-  } = useTRBAttendees(trbRequestId);
+    data: { requester, loading }
+  } = useTRBAttendees(trbRequestId, createdBy);
 
   /**
    * Requester info for display in summary box
    */
   const requesterString = useMemo(() => {
-    // If requester component is not set, return name
-    if (!requester.component) return requester?.userInfo?.commonName;
+    // If loading, return null
+    if (loading) return null;
 
-    /** Component acronym */
-    const componentAcronym = cmsDivisionsAndOffices.find(
+    // If requester component is not set, return name or EUA
+    if (!requester.component)
+      return requester?.userInfo?.commonName || requester?.userInfo?.euaUserId;
+
+    /** Requester component */
+    const requesterComponent = cmsDivisionsAndOffices.find(
       object => object.name === requester.component
     );
 
     // Return requester name and component acronym
-    return `${requester?.userInfo?.commonName}, ${componentAcronym}`;
-  }, [requester]);
+    return `${requester?.userInfo?.commonName}, ${requesterComponent?.acronym}`;
+  }, [requester, loading]);
 
-  /**
-   * Text describing current task status
-   */
-  const taskStatusText: string | undefined = useMemo(() => {
-    /** Array of status keys in order of appearance in task list */
-    const statusKeysArray = [
+  /** Get current task status */
+  const currentTaskStatus: keyof TRBRequestTaskStatuses = useMemo(() => {
+    /** Task status object keys */
+    const statusKeys = [
       'formStatus',
       'feedbackStatus',
-      'consultPrepStatus',
-      'attendConsultStatus'
+      'attendConsultPrepStatus',
+      'consultPrepStatus'
     ] as (keyof TRBRequestTaskStatuses)[];
 
     /** Current step in the TRB request task list */
     // Finds first task status that is not completed
     // Returns undefined if all steps completed
-    let currentStatus = statusKeysArray.find(
-      statusKey =>
-        statusKey !== '__typename' && taskStatuses[statusKey] !== 'COMPLETED'
+    const currentStatus = statusKeys.find(
+      statusKey => taskStatuses[statusKey] !== 'COMPLETED'
     );
 
-    // If all task list steps have been completed, set current status to attendConsultStatus
-    if (!currentStatus) {
-      currentStatus = 'attendConsultStatus';
-    }
+    // Return current status
+    // If all task list steps have been completed, return attendConsultStatus
+    return currentStatus || 'attendConsultStatus';
+  }, [taskStatuses]);
 
-    // Return corresponding status text from translation file
-    return t(
-      `adminHome.taskStatuses.${currentStatus}.${taskStatuses[currentStatus]}`
-    );
-  }, [t, taskStatuses]);
+  /** Corresponding task status text from translation file */
+  const taskStatusText: string = t(
+    `adminHome.taskStatuses.${currentTaskStatus}.${taskStatuses[currentTaskStatus]}`
+  );
 
   return (
     <div className="trb-admin-home__summary">
@@ -119,24 +122,43 @@ export default function Summary({
           <Grid row>
             <Grid col tablet={{ col: 8 }}>
               {/* Request type */}
-              <h5 className="text-normal margin-bottom-05 margin-top-2">
-                {t('adminHome.requestType')}
-              </h5>
-              <h4 className="margin-y-05">
-                {t(`requestType.type.${requestType}.heading`)}
-              </h4>
+              <div
+                data-testid="trbSummary-requestType"
+                className="margin-top-2 margin-bottom-05"
+              >
+                <h5 className="text-normal margin-y-0">
+                  {t('adminHome.requestType')}
+                </h5>
+                <h4 className="margin-y-05">
+                  {t(`requestType.type.${requestType}.heading`)}
+                </h4>
+              </div>
             </Grid>
             <Grid col tablet={{ col: 4 }}>
               {/* Requester */}
-              <h5 className="text-normal margin-bottom-05 margin-top-2">
-                {t('adminHome.requester')}
-              </h5>
-              <h4 className="margin-y-05">{requesterString}</h4>
+              <div className="margin-top-2 margin-bottom-05">
+                <h5 className="text-normal margin-y-0">
+                  {t('adminHome.requester')}
+                </h5>
+                {requesterString && (
+                  <h4
+                    className="margin-y-05"
+                    data-testid={`trbSummary-requester_${requester.userInfo?.euaUserId}`}
+                  >
+                    {requesterString}
+                  </h4>
+                )}
+              </div>
               {/* Submission date */}
-              <h5 className="text-normal margin-bottom-05 margin-top-2">
-                {t('adminHome.submissionDate')}
-              </h5>
-              <h4 className="margin-y-05">{t(submissionDate)}</h4>
+              <div
+                data-testid="trbSummary-submissionDate"
+                className="margin-top-2 margin-bottom-05"
+              >
+                <h5 className="text-normal margin-y-0">
+                  {t('adminHome.submissionDate')}
+                </h5>
+                <h4 className="margin-y-05">{t(submissionDate)}</h4>
+              </div>
             </Grid>
           </Grid>
         </GridContainer>
@@ -150,6 +172,7 @@ export default function Summary({
             <Grid
               col
               tablet={{ col: 8 }}
+              data-testid="trbSummary-status"
               className="display-flex flex-align-center"
             >
               <h4 className="margin-y-0">{t('adminHome.status')}</h4>
@@ -163,6 +186,7 @@ export default function Summary({
             <Grid
               col
               tablet={{ col: 4 }}
+              data-testid="trbSummary-trbLead"
               className="display-flex flex-align-center"
             >
               <h4 className="margin-y-0">{t('adminHome.trbLead')}</h4>
@@ -170,15 +194,15 @@ export default function Summary({
                 {
                   /**
                    * If TRB lead is set, display name
-                   * Otherwise, display Not Assigned and link to assign
+                   * Otherwise, display Not Assigned and button to assign
                    */
                   trbLead || (
                     <>
                       <IconError className="text-error margin-right-05" />
                       {t('adminHome.notAssigned')}
-                      <Link to="/" className="margin-left-1">
+                      <Button unstyled type="button" className="margin-left-1">
                         {t('adminHome.assign')}
-                      </Link>
+                      </Button>
                     </>
                   )
                 }

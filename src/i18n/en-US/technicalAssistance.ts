@@ -532,30 +532,23 @@ const technicalAssistance = {
         IN_PROGRESS: 'Draft request form',
         COMPLETED: 'Request form completed'
       },
-      taskStatuses: {
-        formStatus: {
-          READY_TO_START: 'Ready to start request form',
-          IN_PROGRESS: 'Draft request form',
-          COMPLETED: 'Request form completed'
-        },
-        feedbackStatus: {
-          CANNOT_START_YET: 'Request form completed',
-          READY_TO_START: 'Ready to start feedback',
-          EDITS_REQUESTED: 'Feedback edits requested',
-          IN_REVIEW: 'Feedback in review',
-          COMPLETED: 'Feedback completed'
-        },
-        consultPrepStatus: {
-          CANNOT_START_YET: 'Feedback completed',
-          READY_TO_START: 'Ready to start consult prep',
-          COMPLETED: 'Consult prep completed'
-        },
-        attendConsultStatus: {
-          CANNOT_START_YET: 'Consult prep completed',
-          READY_TO_SCHEDULE: 'Ready for consult',
-          SCHEDULED: 'Consult scheduled',
-          COMPLETED: 'Consult completed'
-        }
+      feedbackStatus: {
+        CANNOT_START_YET: 'Request form completed',
+        READY_TO_START: 'Ready to start feedback',
+        EDITS_REQUESTED: 'Feedback edits requested',
+        IN_REVIEW: 'Feedback in review',
+        COMPLETED: 'Feedback completed'
+      },
+      consultPrepStatus: {
+        CANNOT_START_YET: 'Feedback completed',
+        READY_TO_START: 'Ready to start consult prep',
+        COMPLETED: 'Consult prep completed'
+      },
+      attendConsultStatus: {
+        CANNOT_START_YET: 'Consult prep completed',
+        READY_TO_SCHEDULE: 'Ready for consult',
+        SCHEDULED: 'Consult scheduled',
+        COMPLETED: 'Consult completed'
       }
     },
     open: 'Open',

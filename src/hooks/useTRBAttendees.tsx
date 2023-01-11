@@ -47,8 +47,39 @@ type UseTRBAttendees = {
 /**
  * Custom hook to get, create, update, and delete TRB request attendees
  */
-export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
-  const requester = useSelector((state: AppState) => state.auth);
+export default function useTRBAttendees(
+  /** TRB Request ID */
+  trbRequestId: string,
+  /**
+   * createdBy value from TRB request used for retrieving
+   * requester if different from current user.
+   * Not needed in TRB Request Form.
+   */
+  createdBy?: string
+): UseTRBAttendees {
+  /** Current user info from redux */
+  const currentUser = useSelector((state: AppState) => state.auth);
+
+  /**
+   * Initial requester object
+   */
+  const initialRequester: TRBAttendeeData = useMemo(() => {
+    /** Whether or not current user is the requester */
+    const currentUserIsRequester: boolean = createdBy === currentUser.euaId;
+
+    return {
+      trbRequestId,
+      id: '',
+      component: '',
+      role: null,
+      userInfo: {
+        // If requester is same as current user, pre-fill name
+        commonName: currentUserIsRequester ? currentUser.name : '',
+        // If createdBy is not provided, defaults to current user EUA
+        euaUserId: createdBy || currentUser.euaId
+      }
+    };
+  }, [trbRequestId, currentUser, createdBy]);
 
   /**
    * Query to get attendees by TRB request ID
@@ -72,18 +103,9 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
    * Separates requester from additional attendees
    */
   const formattedAttendees: FormattedTRBAttendees = useMemo(() => {
-    /** Empty attendees object before data is loaded from query */
+    /** Initial attendees object before data is loaded from query */
     const initialAttendeesObject: FormattedTRBAttendees = {
-      requester: {
-        trbRequestId,
-        id: '',
-        component: '',
-        role: null,
-        userInfo: {
-          commonName: requester.name,
-          euaUserId: requester.euaId
-        }
-      },
+      requester: initialRequester,
       attendees: []
     };
 
@@ -92,22 +114,25 @@ export default function useTRBAttendees(trbRequestId: string): UseTRBAttendees {
 
     /** Requester object from attendees query */
     const requesterObject: TRBAttendee | undefined = attendeesArray.find(
-      attendee => attendee?.userInfo?.euaUserId === requester.euaId
+      attendee =>
+        attendee?.userInfo?.euaUserId === initialRequester?.userInfo?.euaUserId
     );
 
     return {
       requester: {
-        // Data from current user
-        ...initialAttendeesObject.requester,
+        // Data from initial requester
+        ...initialRequester,
         // If requester exists in attendees, add to object
         ...requesterObject
       },
       // Filter requester from attendees array
       attendees: attendeesArray.filter(
-        attendee => attendee?.userInfo?.euaUserId !== requester.euaId
+        attendee =>
+          attendee?.userInfo?.euaUserId !==
+          initialRequester?.userInfo?.euaUserId
       )
     };
-  }, [attendeesArray, requester, trbRequestId]);
+  }, [attendeesArray, initialRequester]);
 
   /** Create attendee mutation */
   const [createAttendee] = useMutation<CreateTRBRequestAttendeeInput>(
