@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { camelCase, capitalize } from 'lodash';
 import { DateTime } from 'luxon';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -74,6 +75,11 @@ function Check({
       {/* Basic request details */}
       <div>
         <h2>{t('requestForm.steps.0.name')}</h2>
+        <div>
+          <UswdsReactLink to={`/trb/requests/${request.id}/basic`}>
+            {t('check.edit')}
+          </UswdsReactLink>
+        </div>
         <div>
           <DescriptionList>
             <DescriptionTerm term={t('basic.labels.name')} />
@@ -165,6 +171,11 @@ function Check({
       <div>
         <h2>{t('requestForm.steps.1.name')}</h2>
         <div>
+          <UswdsReactLink to={`/trb/requests/${request.id}/subject`}>
+            {t('check.edit')}
+          </UswdsReactLink>
+        </div>
+        <div>
           <DescriptionList>
             <DescriptionTerm
               term={t(
@@ -246,6 +257,11 @@ function Check({
       {/* Attendees */}
       <div>
         <h2>{t('requestForm.steps.2.name')}</h2>
+        <div>
+          <UswdsReactLink to={`/trb/requests/${request.id}/attendees`}>
+            {t('check.edit')}
+          </UswdsReactLink>
+        </div>
         {attendees.length === 0 ? (
           t('check.noAttendees')
         ) : (
@@ -256,6 +272,11 @@ function Check({
       {/* Supporting docs */}
       <div>
         <h2>{t('requestForm.steps.3.name')}</h2>
+        <div>
+          <UswdsReactLink to={`/trb/requests/${request.id}/documents`}>
+            {t('check.edit')}
+          </UswdsReactLink>
+        </div>
         <DocumentsTable trbRequestId={request.id} />
       </div>
 
