@@ -173,8 +173,9 @@ func (s *Store) UpdateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 	return &updated, nil
 }
 
-// ArchiveTRBAdminNote archives (soft-deletes) a TRB admin note
-func (s *Store) ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
+// ArchiveTRBAdminNote archives (soft-deletes) a TRB admin note.
+// It takes a modifiedBy argument because it doesn't take a full TRBAdminNote as an argument, and ModifiedBy fields are usually set by the resolver.
+func (s *Store) ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID, modifiedBy string) (*models.TRBAdminNote, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_admin_notes
 		SET
@@ -197,7 +198,7 @@ func (s *Store) ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID) (*models.
 	updated := models.TRBAdminNote{}
 	arg := map[string]interface{}{
 		"id":          id,
-		"modified_by": appcontext.Principal(ctx).ID(),
+		"modified_by": modifiedBy,
 	}
 
 	err = stmt.Get(&updated, arg)
