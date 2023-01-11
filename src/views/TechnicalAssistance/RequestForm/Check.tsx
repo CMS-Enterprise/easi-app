@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { Grid } from '@trussworks/react-uswds';
 import { camelCase, capitalize } from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -10,6 +11,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { GetTrbRequest_trbRequest_form as TrbRequestForm } from 'queries/types/GetTrbRequest';
 import { TRBWhereInProcessOption } from 'types/graphql-global-types';
@@ -17,6 +19,7 @@ import { TRBWhereInProcessOption } from 'types/graphql-global-types';
 import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';
 import Pager from './Pager';
+import WhatHappensNext from './WhatHappensNext';
 import { FormStepComponentProps, StepSubmit } from '.';
 
 function SubjectDefinition(
@@ -60,37 +63,48 @@ function Check({
 
   return (
     <>
-      <div>
-        <DescriptionList>
-          <DescriptionTerm term={t('table.header.submissionDate')} />
-          <DescriptionDefinition definition={t('check.notYetSubmitted')} />
-
-          <DescriptionTerm term={t('check.requestType')} />
-          <DescriptionDefinition
-            definition={t(`requestType.type.${request.type}.heading`)}
-          />
-        </DescriptionList>
-      </div>
+      <DescriptionList className="margin-top-4 margin-bottom-6">
+        <Grid row gap>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+            <DescriptionTerm term={t('table.header.submissionDate')} />
+            <DescriptionDefinition definition={t('check.notYetSubmitted')} />
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+            <DescriptionTerm term={t('check.requestType')} />
+            <DescriptionDefinition
+              definition={t(`requestType.type.${request.type}.heading`)}
+            />
+          </Grid>
+        </Grid>
+      </DescriptionList>
+      <Divider />
 
       {/* Basic request details */}
+      <h2 className="margin-top-3 margin-bottom-05">
+        {t('requestForm.steps.0.name')}
+      </h2>
       <div>
-        <h2>{t('requestForm.steps.0.name')}</h2>
-        <div>
-          <UswdsReactLink to={`/trb/requests/${request.id}/basic`}>
-            {t('check.edit')}
-          </UswdsReactLink>
-        </div>
-        <div>
-          <DescriptionList>
+        <UswdsReactLink to={`/trb/requests/${request.id}/basic`}>
+          {t('check.edit')}
+        </UswdsReactLink>
+      </div>
+      <DescriptionList className="margin-top-3 margin-bottom-6">
+        <Grid row gap>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm term={t('basic.labels.name')} />
             <DescriptionDefinition definition={request.name} />
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm term={t('basic.labels.component')} />
             <DescriptionDefinition definition={request.form.component} />
+          </Grid>
+          <Grid col={12}>
             <DescriptionTerm term={t('basic.labels.needsAssistanceWith')} />
             <DescriptionDefinition
               definition={request.form.needsAssistanceWith}
             />
-
+          </Grid>
+          <Grid col={12}>
             <DescriptionTerm term={t('basic.labels.hasSolutionInMind')} />
             <DescriptionDefinition
               definition={t(
@@ -105,7 +119,8 @@ function Check({
                 />
               </>
             )}
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm term={t('basic.labels.whereInProcess')} />
             <DescriptionDefinition
               definition={
@@ -120,7 +135,8 @@ function Check({
                     )
               }
             />
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t('basic.labels.hasExpectedStartEndDates')}
             />
@@ -143,7 +159,8 @@ function Check({
                   : t('basic.options.no')
               }
             />
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm term={t('basic.labels.collabGroups')} />
             <DescriptionDefinition
               definition={request.form.collabGroups
@@ -163,20 +180,23 @@ function Check({
                 })
                 .join(', ')}
             />
-          </DescriptionList>
-        </div>
-      </div>
+          </Grid>
+        </Grid>
+      </DescriptionList>
+      <Divider />
 
       {/* Subject areas */}
+      <h2 className="margin-top-3 margin-bottom-05">
+        {t('requestForm.steps.1.name')}
+      </h2>
       <div>
-        <h2>{t('requestForm.steps.1.name')}</h2>
-        <div>
-          <UswdsReactLink to={`/trb/requests/${request.id}/subject`}>
-            {t('check.edit')}
-          </UswdsReactLink>
-        </div>
-        <div>
-          <DescriptionList>
+        <UswdsReactLink to={`/trb/requests/${request.id}/subject`}>
+          {t('check.edit')}
+        </UswdsReactLink>
+      </div>
+      <DescriptionList className="margin-top-3 margin-bottom-6">
+        <Grid row gap>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t(
                 'subject.labels.subjectAreaTechnicalReferenceArchitecture'
@@ -188,7 +208,8 @@ function Check({
                 'subjectAreaTechnicalReferenceArchitecture'
               )}
             />
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t('subject.labels.subjectAreaNetworkAndSecurity')}
             />
@@ -198,7 +219,8 @@ function Check({
                 'subjectAreaNetworkAndSecurity'
               )}
             />
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t('subject.labels.subjectAreaCloudAndInfrastructure')}
             />
@@ -208,7 +230,8 @@ function Check({
                 'subjectAreaCloudAndInfrastructure'
               )}
             />
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t('subject.labels.subjectAreaApplicationDevelopment')}
             />
@@ -218,7 +241,8 @@ function Check({
                 'subjectAreaApplicationDevelopment'
               )}
             />
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t('subject.labels.subjectAreaDataAndDataManagement')}
             />
@@ -228,7 +252,8 @@ function Check({
                 'subjectAreaDataAndDataManagement'
               )}
             />
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t(
                 'subject.labels.subjectAreaGovernmentProcessesAndPolicies'
@@ -240,7 +265,8 @@ function Check({
                 'subjectAreaGovernmentProcessesAndPolicies'
               )}
             />
-
+          </Grid>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t('subject.labels.subjectAreaOtherTechnicalTopics')}
             />
@@ -250,35 +276,48 @@ function Check({
                 'subjectAreaOtherTechnicalTopics'
               )}
             />
-          </DescriptionList>
-        </div>
-      </div>
+          </Grid>
+        </Grid>
+      </DescriptionList>
+      <Divider />
 
       {/* Attendees */}
+      <h2 className="margin-top-3 margin-bottom-05">
+        {t('requestForm.steps.2.name')}
+      </h2>
       <div>
-        <h2>{t('requestForm.steps.2.name')}</h2>
-        <div>
-          <UswdsReactLink to={`/trb/requests/${request.id}/attendees`}>
-            {t('check.edit')}
-          </UswdsReactLink>
-        </div>
+        <UswdsReactLink to={`/trb/requests/${request.id}/attendees`}>
+          {t('check.edit')}
+        </UswdsReactLink>
+      </div>
+      <div className="margin-top-3 margin-bottom-6">
         {attendees.length === 0 ? (
           t('check.noAttendees')
         ) : (
           <AttendeesTable attendees={attendees} trbRequestId={request.id} />
         )}
       </div>
+      <Divider />
 
       {/* Supporting docs */}
+      <h2 className="margin-top-3 margin-bottom-05">
+        {t('requestForm.steps.3.name')}
+      </h2>
       <div>
-        <h2>{t('requestForm.steps.3.name')}</h2>
-        <div>
-          <UswdsReactLink to={`/trb/requests/${request.id}/documents`}>
-            {t('check.edit')}
-          </UswdsReactLink>
-        </div>
+        <UswdsReactLink to={`/trb/requests/${request.id}/documents`}>
+          {t('check.edit')}
+        </UswdsReactLink>
+      </div>
+      <div className="margin-top-3 margin-bottom-6">
         <DocumentsTable trbRequestId={request.id} />
       </div>
+      <Divider />
+
+      <Grid row gap>
+        <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+          <WhatHappensNext />
+        </Grid>
+      </Grid>
 
       <Pager
         back={{
