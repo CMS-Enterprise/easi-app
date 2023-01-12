@@ -154,7 +154,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		s.NotNil(updatedNote.ModifiedAt) // don't care about exact value, just that it was set to *something*
 	})
 
-	s.Run("Archiving a note sets IsArchived to true and sets ModifiedBy, ModifiedAt", func() {
+	s.Run("Setting a note to be archived sets IsArchived to true and sets ModifiedBy, ModifiedAt", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
 		noteToCreate := models.TRBAdminNote{
@@ -166,10 +166,11 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 
 		createdNote, err := s.store.CreateTRBAdminNote(ctx, &noteToCreate)
 		s.NoError(err)
+		s.False(createdNote.IsArchived)
 
 		archivingUser := "SF13"
 
-		archivedNote, err := s.store.ArchiveTRBAdminNote(ctx, createdNote.ID, archivingUser)
+		archivedNote, err := s.store.SetTRBAdminNoteArchived(ctx, createdNote.ID, true, archivingUser)
 		s.NoError(err)
 
 		s.True(archivedNote.IsArchived)

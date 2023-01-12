@@ -86,12 +86,12 @@ func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[str
 	return updatedNote, nil
 }
 
-// ArchiveTRBAdminNote archives (soft-deletes) a TRB admin note
-func ArchiveTRBAdminNote(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdminNote, error) {
-	archivedNote, err := store.ArchiveTRBAdminNote(ctx, id, appcontext.Principal(ctx).ID())
+// SetTRBAdminNoteArchived sets whether a TRB admin note is archived (soft-deleted)
+func SetTRBAdminNoteArchived(ctx context.Context, store *storage.Store, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error) {
+	updatedNote, err := store.SetTRBAdminNoteArchived(ctx, id, isArchived, appcontext.Principal(ctx).ID())
 	if err != nil {
 		return nil, err
 	}
 
-	return archivedNote, nil
+	return updatedNote, nil
 }

@@ -2008,9 +2008,9 @@ func (r *mutationResolver) UpdateTRBAdminNote(ctx context.Context, input map[str
 	return resolvers.UpdateTRBAdminNote(ctx, r.store, input)
 }
 
-// ArchiveTRBAdminNote is the resolver for the archiveTRBAdminNote field.
-func (r *mutationResolver) ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
-	return resolvers.ArchiveTRBAdminNote(ctx, r.store, id)
+// SetTRBAdminNoteArchived is the resolver for the setTRBAdminNoteArchived field.
+func (r *mutationResolver) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error) {
+	return resolvers.SetTRBAdminNoteArchived(ctx, r.store, id, isArchived)
 }
 
 // CreateTRBAdviceLetter is the resolver for the createTRBAdviceLetter field.

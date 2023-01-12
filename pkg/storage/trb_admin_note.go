@@ -173,13 +173,13 @@ func (s *Store) UpdateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 	return &updated, nil
 }
 
-// ArchiveTRBAdminNote archives (soft-deletes) a TRB admin note.
+// SetTRBAdminNoteArchived sets whether a TRB admin note is archived (soft-deleted)
 // It takes a modifiedBy argument because it doesn't take a full TRBAdminNote as an argument, and ModifiedBy fields are usually set by the resolver.
-func (s *Store) ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID, modifiedBy string) (*models.TRBAdminNote, error) {
+func (s *Store) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool, modifiedBy string) (*models.TRBAdminNote, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_admin_notes
 		SET
-			is_archived = true,
+			is_archived = :is_archived,
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
 		WHERE id = :id
@@ -198,6 +198,7 @@ func (s *Store) ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID, modifiedB
 	updated := models.TRBAdminNote{}
 	arg := map[string]interface{}{
 		"id":          id,
+		"is_archived": isArchived,
 		"modified_by": modifiedBy,
 	}
 

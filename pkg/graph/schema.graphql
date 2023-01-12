@@ -2025,7 +2025,6 @@ input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   category: TRBAdminNoteCategory
   noteText: String
-  isArchived: Boolean
 }
 
 """
@@ -2174,7 +2173,7 @@ type Mutation {
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
-  archiveTRBAdminNote(id: UUID!): TRBAdminNote!
+  setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
   createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!

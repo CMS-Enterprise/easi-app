@@ -508,7 +508,6 @@ type ComplexityRoot struct {
 		AddGRTFeedbackAndKeepBusinessCaseInDraft         func(childComplexity int, input model.AddGRTFeedbackInput) int
 		AddGRTFeedbackAndProgressToFinalBusinessCase     func(childComplexity int, input model.AddGRTFeedbackInput) int
 		AddGRTFeedbackAndRequestBusinessCase             func(childComplexity int, input model.AddGRTFeedbackInput) int
-		ArchiveTRBAdminNote                              func(childComplexity int, id uuid.UUID) int
 		CreateAccessibilityRequest                       func(childComplexity int, input model.CreateAccessibilityRequestInput) int
 		CreateAccessibilityRequestDocument               func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
 		CreateAccessibilityRequestNote                   func(childComplexity int, input model.CreateAccessibilityRequestNoteInput) int
@@ -549,6 +548,7 @@ type ComplexityRoot struct {
 		SendReportAProblemEmail                          func(childComplexity int, input model.SendReportAProblemEmailInput) int
 		SendTRBAdviceLetter                              func(childComplexity int, input model.SendTRBAdviceLetterInput) int
 		SetRolesForUserOnSystem                          func(childComplexity int, input model.SetRolesForUserOnSystemInput) int
+		SetTRBAdminNoteArchived                          func(childComplexity int, id uuid.UUID, isArchived bool) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
@@ -1162,7 +1162,7 @@ type MutationResolver interface {
 	UpdateTRBRequestTRBLead(ctx context.Context, input model.UpdateTRBRequestTRBLeadInput) (*models.TRBRequest, error)
 	CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error)
 	UpdateTRBAdminNote(ctx context.Context, input map[string]interface{}) (*models.TRBAdminNote, error)
-	ArchiveTRBAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error)
+	SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error)
 	CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error)
 	UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetter, error)
 	RequestReviewForTRBAdviceLetter(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetter, error)
@@ -3386,18 +3386,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddGRTFeedbackAndRequestBusinessCase(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
 
-	case "Mutation.archiveTRBAdminNote":
-		if e.complexity.Mutation.ArchiveTRBAdminNote == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_archiveTRBAdminNote_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.ArchiveTRBAdminNote(childComplexity, args["id"].(uuid.UUID)), true
-
 	case "Mutation.createAccessibilityRequest":
 		if e.complexity.Mutation.CreateAccessibilityRequest == nil {
 			break
@@ -3877,6 +3865,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.SetRolesForUserOnSystem(childComplexity, args["input"].(model.SetRolesForUserOnSystemInput)), true
+
+	case "Mutation.setTRBAdminNoteArchived":
+		if e.complexity.Mutation.SetTRBAdminNoteArchived == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setTRBAdminNoteArchived_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetTRBAdminNoteArchived(childComplexity, args["id"].(uuid.UUID), args["isArchived"].(bool)), true
 
 	case "Mutation.submitIntake":
 		if e.complexity.Mutation.SubmitIntake == nil {
@@ -8261,7 +8261,6 @@ input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   category: TRBAdminNoteCategory
   noteText: String
-  isArchived: Boolean
 }
 
 """
@@ -8410,7 +8409,7 @@ type Mutation {
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
-  archiveTRBAdminNote(id: UUID!): TRBAdminNote!
+  setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
   createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
@@ -8593,21 +8592,6 @@ func (ec *executionContext) field_Mutation_addGRTFeedbackAndRequestBusinessCase_
 		}
 	}
 	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_archiveTRBAdminNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 uuid.UUID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
 	return args, nil
 }
 
@@ -9208,6 +9192,30 @@ func (ec *executionContext) field_Mutation_setRolesForUserOnSystem_args(ctx cont
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setTRBAdminNoteArchived_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 bool
+	if tmp, ok := rawArgs["isArchived"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isArchived"))
+		arg1, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["isArchived"] = arg1
 	return args, nil
 }
 
@@ -27452,8 +27460,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdminNote(ctx context
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_archiveTRBAdminNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_archiveTRBAdminNote(ctx, field)
+func (ec *executionContext) _Mutation_setTRBAdminNoteArchived(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_setTRBAdminNoteArchived(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -27466,7 +27474,7 @@ func (ec *executionContext) _Mutation_archiveTRBAdminNote(ctx context.Context, f
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().ArchiveTRBAdminNote(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Mutation().SetTRBAdminNoteArchived(rctx, fc.Args["id"].(uuid.UUID), fc.Args["isArchived"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -27483,7 +27491,7 @@ func (ec *executionContext) _Mutation_archiveTRBAdminNote(ctx context.Context, f
 	return ec.marshalNTRBAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_archiveTRBAdminNote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_setTRBAdminNoteArchived(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -27522,7 +27530,7 @@ func (ec *executionContext) fieldContext_Mutation_archiveTRBAdminNote(ctx contex
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_archiveTRBAdminNote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_setTRBAdminNoteArchived_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -49680,10 +49688,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "archiveTRBAdminNote":
+		case "setTRBAdminNoteArchived":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_archiveTRBAdminNote(ctx, field)
+				return ec._Mutation_setTRBAdminNoteArchived(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
