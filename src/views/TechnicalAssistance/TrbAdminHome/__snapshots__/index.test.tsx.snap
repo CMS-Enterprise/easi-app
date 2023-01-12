@@ -262,7 +262,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
               >
                 <a
                   class="text-no-underline padding-y-05 text-primary"
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91"
+                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/request"
                 >
                   Request home
                 </a>

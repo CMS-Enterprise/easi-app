@@ -9,7 +9,7 @@ import SupportingDocuments from './SupportingDocuments';
 
 const subNavItems = (trbRequestId: string): SubNavItem[] => [
   {
-    route: `/trb/${trbRequestId}`,
+    route: `/trb/${trbRequestId}/request`,
     text: 'technicalAssistance:adminHome.subnav.requestHome',
     component: RequestHome,
     groupEnd: true

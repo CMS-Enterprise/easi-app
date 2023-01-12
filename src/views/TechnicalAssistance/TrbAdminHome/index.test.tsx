@@ -40,7 +40,7 @@ const defaultStore = mockStore({
 describe('TRB admin home wrapper', () => {
   it('matches the snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={[`/trb/${trbRequest.id}`]}>
+      <MemoryRouter initialEntries={[`/trb/${trbRequest.id}/request`]}>
         <Provider store={defaultStore}>
           <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
             <Route path="/trb/:id/:activePage?">
@@ -88,13 +88,4 @@ describe('TRB admin home wrapper', () => {
       expect(getByTestId(`trb-admin-home__${subpage}`)).toBeInTheDocument();
     }
   );
-
-  // it('renders admin subpage components', async () => {
-  //   const {asFragment} = renderWrapper();
-
-  //   await waitForPageLoad();
-
-  //   trbAdminSubPages.map()
-
-  // })
 });

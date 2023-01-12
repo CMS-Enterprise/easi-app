@@ -48,7 +48,7 @@ function TechnicalAssistance() {
         </Route>
 
         {/* TRB admin view */}
-        <Route exact path={`${path}/:id/:activePage?`}>
+        <Route exact path={`${path}/:id/:activePage`}>
           <TrbAdminHome />
         </Route>
 
