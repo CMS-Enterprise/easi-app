@@ -12,7 +12,7 @@ func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.Status = models.TRBSOpen
-	_, err := s.store.CreateTRBRequest(s.logger, trbRequest)
+	_, err := s.store.CreateTRBRequest(ctx, trbRequest)
 	s.NoError(err)
 
 	s.Run("create a TRB request attendee", func() {

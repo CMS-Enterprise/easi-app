@@ -392,12 +392,14 @@ func date(year, month, day int) *time.Time {
 }
 
 func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
 	trb := models.NewTRBRequest("EASI")
 	trb.Type = rType
 	trb.Status = models.TRBSOpen
 	for _, cb := range callbacks {
 		cb(trb)
 	}
-	ret, _ := store.CreateTRBRequest(logger, trb)
+	ret, _ := store.CreateTRBRequest(ctx, trb)
 	return ret
 }
