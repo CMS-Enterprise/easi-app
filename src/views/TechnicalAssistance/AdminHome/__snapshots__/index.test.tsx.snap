@@ -3,7 +3,6 @@
 exports[`TRB admin home wrapper matches the snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="trb-admin"
     id="trbAdminHome"
   >
     <div

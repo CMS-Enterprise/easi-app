@@ -12,7 +12,7 @@ import configureMockStore from 'redux-mock-store';
 import { trbRequest } from 'data/mock/trbRequest';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 
-import TrbAdminHome from '.';
+import AdminHome from '.';
 
 const getTrbRequestQuery = {
   request: {
@@ -44,7 +44,7 @@ describe('TRB admin home wrapper', () => {
         <Provider store={defaultStore}>
           <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
             <Route path="/trb/:id/:activePage?">
-              <TrbAdminHome />
+              <AdminHome />
             </Route>
           </MockedProvider>
         </Provider>
@@ -74,7 +74,7 @@ describe('TRB admin home wrapper', () => {
           <Provider store={defaultStore}>
             <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
               <Route path="/trb/:id/:activePage?">
-                <TrbAdminHome />
+                <AdminHome />
               </Route>
             </MockedProvider>
           </Provider>

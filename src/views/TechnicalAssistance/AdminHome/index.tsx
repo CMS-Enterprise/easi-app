@@ -71,7 +71,7 @@ const SideNavigation = ({
   );
 };
 
-export default function TrbAdminHome() {
+export default function AdminHome() {
   /** Current user groups */
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   /** Whether or not current user is set */
@@ -103,7 +103,7 @@ export default function TrbAdminHome() {
     // Check if current user is TRB Admin
     if (user.isTrbAdmin(userGroups)) {
       return (
-        <div className="trb-admin" id="trbAdminHome">
+        <div id="trbAdminHome">
           {
             // TRB request loading
             loading && <PageLoading />

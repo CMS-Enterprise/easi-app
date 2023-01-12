@@ -5,12 +5,12 @@ import { GridContainer } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
+import AdminHome from './AdminHome';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
-import TrbAdminHome from './TrbAdminHome';
 
 import './index.scss';
 
@@ -47,9 +47,9 @@ function TechnicalAssistance() {
           <RequestForm />
         </Route>
 
-        {/* TRB admin view */}
+        {/* Admin view */}
         <Route exact path={`${path}/:id/:activePage`}>
-          <TrbAdminHome />
+          <AdminHome />
         </Route>
 
         <Route path="*">
