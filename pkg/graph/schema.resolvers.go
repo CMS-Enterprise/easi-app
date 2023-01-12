@@ -2782,7 +2782,12 @@ func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *mod
 
 // Author is the resolver for the author field.
 func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
-	return resolvers.GetTRBAdminNoteAuthorInfo(ctx, obj.CreatedBy, r.service.FetchUserInfo)
+	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
 }
 
 // Attendees is the resolver for the attendees field.
