@@ -65,7 +65,9 @@ export default function useTRBAttendees(
    */
   const initialRequester: TRBAttendeeData = useMemo(() => {
     /** Whether or not current user is the requester */
-    const currentUserIsRequester: boolean = createdBy === currentUser.euaId;
+    const currentUserIsRequester: boolean = createdBy
+      ? createdBy === currentUser.euaId
+      : true;
 
     return {
       trbRequestId,
