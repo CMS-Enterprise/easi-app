@@ -46,7 +46,7 @@ func CreateTRBRequestFeedback(
 
 	emailInfoErrGroup.Go(func() error {
 		// declare new error variable so we don't interfere with calls outside of this goroutine
-		requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), feedback.TRBRequestID)
+		requestPtr, getRequestErr := store.GetTRBRequestByID(ctx, feedback.TRBRequestID)
 		if getRequestErr != nil {
 			return getRequestErr
 		}
