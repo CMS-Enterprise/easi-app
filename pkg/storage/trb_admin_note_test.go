@@ -3,28 +3,15 @@ package storage
 import (
 	"context"
 
-	"github.com/google/uuid"
-
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
-
-func createTRBRequestWithContext(ctx context.Context, s *StoreTestSuite, createdBy string) uuid.UUID {
-	trbRequest := models.NewTRBRequest(createdBy)
-	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.Status = models.TRBSOpen
-	createdRequest, err := s.store.CreateTRBRequest(appcontext.ZLogger(ctx), trbRequest)
-	s.NoError(err)
-
-	return createdRequest.ID
-}
 
 func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	ctx := context.Background()
 	anonEUA := "ANON"
 
 	s.Run("Creating an admin note returns a non-archived admin note with the passed-in data", func() {
-		trbRequestID := createTRBRequestWithContext(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
 		category := models.TRBAdminNoteCategoryAdviceLetter
 		noteText := "Creation test"
@@ -45,7 +32,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	})
 
 	s.Run("Creating, then fetching a note by TRB request ID returns the created note", func() {
-		trbRequestID := createTRBRequestWithContext(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 		category := models.TRBAdminNoteCategoryConsultSession
 		noteText := "Creation, then fetch by TRB request ID test"
 		noteToCreate := models.TRBAdminNote{
@@ -71,7 +58,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	})
 
 	s.Run("Creating, then fetching a note by note ID returns the created note", func() {
-		trbRequestID := createTRBRequestWithContext(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 		category := models.TRBAdminNoteCategoryGeneralRequest
 		noteText := "Creation, then fetch by note ID test"
 		noteToCreate := models.TRBAdminNote{
@@ -95,7 +82,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	})
 
 	s.Run("Creating two notes with the same TRB request ID, then fetching notes by TRB request ID, returns both different notes", func() {
-		trbRequestID := createTRBRequestWithContext(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
 		category1 := models.TRBAdminNoteCategoryInitialRequestForm
 		noteText1 := "Creating two notes, then fetch by TRB request ID test (note 1)"
@@ -137,7 +124,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	})
 
 	s.Run("Updating a note returns a note with updated data and sets ModifiedBy, ModifiedAt", func() {
-		trbRequestID := createTRBRequestWithContext(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 		initialCategory := models.TRBAdminNoteCategoryGeneralRequest
 		initialNoteText := "Update note test (initial)"
 		noteToCreate := models.TRBAdminNote{
@@ -168,7 +155,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	})
 
 	s.Run("Archiving a note sets IsArchived to true and sets ModifiedBy, ModifiedAt", func() {
-		trbRequestID := createTRBRequestWithContext(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
 		noteToCreate := models.TRBAdminNote{
 			Category: models.TRBAdminNoteCategoryAdviceLetter,

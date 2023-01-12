@@ -3,20 +3,8 @@ package storage
 import (
 	"context"
 
-	"github.com/google/uuid"
-
 	"github.com/cmsgov/easi-app/pkg/models"
 )
-
-func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) uuid.UUID {
-	trbRequest := models.NewTRBRequest(createdBy)
-	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.Status = models.TRBSOpen
-	createdRequest, err := s.store.CreateTRBRequest(ctx, trbRequest)
-	s.NoError(err)
-
-	return createdRequest.ID
-}
 
 func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	ctx := context.Background()
