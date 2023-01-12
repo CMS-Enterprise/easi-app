@@ -7753,7 +7753,7 @@ type TRBRequest {
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   trbLead: String
-  adminNotes: [TRBAdminNote!]!
+  adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -8410,6 +8410,7 @@ type Mutation {
   updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
@@ -8450,6 +8451,7 @@ type Query {
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
 }
 
 enum TRBRequestType {
@@ -27473,8 +27475,32 @@ func (ec *executionContext) _Mutation_setTRBAdminNoteArchived(ctx context.Contex
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SetTRBAdminNoteArchived(rctx, fc.Args["id"].(uuid.UUID), fc.Args["isArchived"].(bool))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SetTRBAdminNoteArchived(rctx, fc.Args["id"].(uuid.UUID), fc.Args["isArchived"].(bool))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBAdminNote); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBAdminNote`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -29715,8 +29741,32 @@ func (ec *executionContext) _Query_trbAdminNote(ctx context.Context, field graph
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().TrbAdminNote(rctx, fc.Args["id"].(uuid.UUID))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().TrbAdminNote(rctx, fc.Args["id"].(uuid.UUID))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBAdminNote); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBAdminNote`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -37012,8 +37062,32 @@ func (ec *executionContext) _TRBRequest_adminNotes(ctx context.Context, field gr
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBRequest().AdminNotes(rctx, obj)
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.TRBRequest().AdminNotes(rctx, obj)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, obj, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.TRBAdminNote); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cmsgov/easi-app/pkg/models.TRBAdminNote`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

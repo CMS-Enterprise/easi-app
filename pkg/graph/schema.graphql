@@ -1517,7 +1517,7 @@ type TRBRequest {
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   trbLead: String
-  adminNotes: [TRBAdminNote!]!
+  adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -2174,6 +2174,7 @@ type Mutation {
   updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
@@ -2214,6 +2215,7 @@ type Query {
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
 }
 
 enum TRBRequestType {
