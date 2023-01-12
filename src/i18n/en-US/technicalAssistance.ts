@@ -556,6 +556,7 @@ const technicalAssistance = {
     trbLead: 'TRB Lead',
     notAssigned: 'Not assigned',
     assign: 'Assign',
+    change: 'Change',
     subnav: {
       back: 'Back to All Requests',
       requestHome: 'Request home',

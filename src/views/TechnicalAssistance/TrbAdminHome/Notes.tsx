@@ -1,13 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-export default function Notes({ trbRequestId }: { trbRequestId: string }) {
+import { TrbAdminPage } from 'types/technicalAssistance';
+
+const Notes: TrbAdminPage = trbRequestId => {
+  const { t } = useTranslation('technicalAssistance');
   return (
     <div
       className="trb-admin-home__notes"
       data-testid="trb-admin-home__notes"
       id={`trbAdminNotes-${trbRequestId}`}
     >
-      <h1 className="margin-y-0">Notes</h1>
+      <h1 className="margin-y-0">{t('adminHome.subnav.notes')}</h1>
     </div>
   );
-}
+};
+
+export default Notes;

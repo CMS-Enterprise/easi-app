@@ -190,23 +190,20 @@ export default function Summary({
               className="display-flex flex-align-center"
             >
               <h4 className="margin-y-0">{t('adminHome.trbLead')}</h4>
-              <p className="margin-y-0 margin-left-1 display-flex flex-align-center">
+              <p className="margin-y-0 margin-x-1 display-flex flex-align-center">
                 {
-                  /**
-                   * If TRB lead is set, display name
-                   * Otherwise, display Not Assigned and button to assign
-                   */
+                  // Display trb lead name or not assigned
                   trbLead || (
                     <>
                       <IconError className="text-error margin-right-05" />
                       {t('adminHome.notAssigned')}
-                      <Button unstyled type="button" className="margin-left-1">
-                        {t('adminHome.assign')}
-                      </Button>
                     </>
                   )
                 }
               </p>
+              <Button unstyled type="button">
+                {trbLead ? t('adminHome.change') : t('adminHome.assign')}
+              </Button>
             </Grid>
           </Grid>
         </GridContainer>
