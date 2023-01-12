@@ -58,7 +58,7 @@ func UpdateTRBRequestForm(
 	if willSendNotifications {
 		emailInfoErrGroup.Go(func() error {
 			// declare new error variable so we don't interfere with calls outside of this goroutine
-			requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+			requestPtr, getRequestErr := store.GetTRBRequestByID(ctx, id)
 			if getRequestErr != nil {
 				return getRequestErr
 			}
