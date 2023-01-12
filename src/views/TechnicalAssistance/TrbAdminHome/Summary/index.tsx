@@ -120,7 +120,7 @@ export default function Summary({
 
           {/* Request details */}
           <Grid row>
-            <Grid col tablet={{ col: 8 }}>
+            <Grid tablet={{ col: 8 }}>
               {/* Request type */}
               <div
                 data-testid="trbSummary-requestType"
@@ -134,7 +134,7 @@ export default function Summary({
                 </h4>
               </div>
             </Grid>
-            <Grid col tablet={{ col: 4 }}>
+            <Grid tablet={{ col: 4 }}>
               {/* Requester */}
               <div className="margin-top-2 margin-bottom-05">
                 <h5 className="text-normal margin-y-0">
@@ -165,18 +165,17 @@ export default function Summary({
       </section>
 
       {/* Status bar */}
-      <section className="bg-base-lightest padding-y-1">
+      <section className="bg-base-lightest padding-y-05">
         <GridContainer>
           <Grid row>
             {/* Status */}
             <Grid
-              col
               tablet={{ col: 8 }}
               data-testid="trbSummary-status"
-              className="display-flex flex-align-center"
+              className="display-flex flex-align-center margin-y-05"
             >
               <h4 className="margin-y-0">{t('adminHome.status')}</h4>
-              <span className="bg-info-dark text-white text-bold padding-y-1 padding-x-105 margin-x-1">
+              <span className="bg-info-dark text-white text-bold padding-y-05 padding-x-105 margin-x-1">
                 {t(`adminHome.${status.toLowerCase()}`)}
               </span>
               <p className="margin-y-0 text-base">{taskStatusText}</p>
@@ -184,10 +183,9 @@ export default function Summary({
 
             {/* TRB Lead */}
             <Grid
-              col
               tablet={{ col: 4 }}
               data-testid="trbSummary-trbLead"
-              className="display-flex flex-align-center"
+              className="display-flex flex-align-center margin-y-05"
             >
               <h4 className="margin-y-0">{t('adminHome.trbLead')}</h4>
               <p className="margin-y-0 margin-x-1 display-flex flex-align-center">
@@ -201,7 +199,7 @@ export default function Summary({
                   )
                 }
               </p>
-              <Button unstyled type="button">
+              <Button unstyled type="button" className="width-auto">
                 {trbLead ? t('adminHome.change') : t('adminHome.assign')}
               </Button>
             </Grid>

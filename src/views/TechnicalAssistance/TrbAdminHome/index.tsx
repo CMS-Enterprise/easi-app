@@ -31,22 +31,28 @@ const SideNavigation = ({
 }) => {
   const { t } = useTranslation('technicalAssistance');
   return (
-    <nav className="display-none desktop:display-block">
-      <ul className="trb-admin-home__nav-list usa-list usa-list--unstyled">
+    <nav>
+      <ul className="trb-admin__nav-list usa-list usa-list--unstyled">
         <li className="margin-bottom-4">
           <Link to="/" className="display-flex flex-align-center">
             <IconArrowBack className="margin-right-1" aria-hidden />
             {t('adminHome.subnav.back')}
           </Link>
         </li>
-        {subNavItems(trbRequestId).map(({ route, text }) => {
+        {subNavItems(trbRequestId).map(({ route, text, groupEnd }) => {
           const isActivePage: boolean = route.split('/')[3] === activePage;
           return (
             <li
               key={text}
-              className={classNames('padding-y-1', 'trb-admin-home__nav-link', {
-                'trb-admin-home__nav-link--active': isActivePage
-              })}
+              className={classNames(
+                'padding-y-1',
+                'trb-admin__nav-link',
+                'hover:bg-base-lightest',
+                {
+                  'trb-admin__nav-link--active': isActivePage,
+                  'border-bottom-1px border-disabled-light': groupEnd
+                }
+              )}
             >
               <Link
                 to={route}
@@ -97,7 +103,7 @@ export default function TrbAdminHome() {
     // Check if current user is TRB Admin
     if (user.isTrbAdmin(userGroups)) {
       return (
-        <div className="trb-admin-home" id="trbAdminHome">
+        <div className="trb-admin" id="trbAdminHome">
           {
             // TRB request loading
             loading && <PageLoading />
@@ -129,7 +135,11 @@ export default function TrbAdminHome() {
                 />
                 <GridContainer>
                   <Grid row className="margin-y-5 grid-gap">
-                    <Grid col desktop={{ col: 3 }}>
+                    <Grid
+                      col
+                      desktop={{ col: 3 }}
+                      className="display-none tablet:display-block"
+                    >
                       <SideNavigation
                         activePage={activePage}
                         trbRequestId={id}

@@ -11,8 +11,8 @@ const subNavItems = (trbRequestId: string): SubNavItem[] => [
   {
     route: `/trb/${trbRequestId}`,
     text: 'technicalAssistance:adminHome.subnav.requestHome',
-    groupEnd: true,
-    component: RequestHome
+    component: RequestHome,
+    groupEnd: true
   },
   {
     route: `/trb/${trbRequestId}/initial-request-form`,
@@ -32,7 +32,8 @@ const subNavItems = (trbRequestId: string): SubNavItem[] => [
   {
     route: `/trb/${trbRequestId}/advice`,
     text: 'technicalAssistance:adminHome.subnav.adviceLetter',
-    component: AdviceLetter
+    component: AdviceLetter,
+    groupEnd: true
   },
   {
     route: `/trb/${trbRequestId}/notes`,

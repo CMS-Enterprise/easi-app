@@ -1,19 +1,9 @@
-.trb-admin-home__nav-list {
-  li:nth-child(2) {
-    border-bottom: 1px solid color('disabled-light');
-  }
-
-  li:last-child {
-    border-top: 1px solid color('disabled-light');
-  }
-
-  li.trb-admin-home__nav-link {
-    color: color('primary');
-    
-    &--active a {
-      border-left: 3px solid color('primary');
-      padding-left: 1rem;
-      font-weight: bold;
-    }
+li.trb-admin__nav-link {
+  color: color('primary');
+  
+  &--active a {
+    border-left: 3px solid color('primary');
+    padding-left: 1rem;
+    font-weight: bold;
   }
 }
