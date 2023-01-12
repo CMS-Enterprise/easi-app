@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2040,7 +2039,7 @@ func (r *mutationResolver) UpdateTRBAdviceLetterRecommendation(ctx context.Conte
 
 // DeleteTRBAdviceLetterRecommendation is the resolver for the deleteTRBAdviceLetterRecommendation field.
 func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
-	panic(fmt.Errorf("not implemented: DeleteTRBAdviceLetterRecommendation - deleteTRBAdviceLetterRecommendation"))
+	return resolvers.DeleteTRBAdviceLetterRecommendation(ctx, r.store, id)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.

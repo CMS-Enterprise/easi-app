@@ -8247,7 +8247,7 @@ input CreateTRBAdviceLetterRecommendationInput {
 The input required to update a recommendation to a TRB advice letter
 """
 input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
-  trbRequestId: UUID!
+  id: UUID!
   title: String
   recommendation: String
   links: [String!]

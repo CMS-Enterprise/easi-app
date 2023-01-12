@@ -36,7 +36,7 @@ func GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Context, store 
 
 // UpdateTRBAdviceLetterRecommendation updates a TRBAdviceLetterRecommendation record in the database
 func UpdateTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBAdviceLetterRecommendation, error) {
-	idStr, idFound := changes["trbRequestId"]
+	idStr, idFound := changes["id"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
 	}
