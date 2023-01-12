@@ -7,8 +7,8 @@ export default function SupportingDocuments({
 }) {
   return (
     <div
-      className="trb-admin-home__supporting-documents"
-      data-testid="trb-admin-home__supporting-documents"
+      className="trb-admin-home__documents"
+      data-testid="trb-admin-home__documents"
       id={`trbAdminSupportingDocuments-${trbRequestId}`}
     >
       <h1 className="margin-y-0">Supporting documents</h1>
