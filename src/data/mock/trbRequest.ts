@@ -29,7 +29,7 @@ export const requester: TRBAttendee = {
   createdAt: '2023-01-05T07:26:16.036618Z'
 };
 
-const attendees: TRBAttendee[] = [
+export const attendees: TRBAttendee[] = [
   {
     __typename: 'TRBRequestAttendee',
     id: '9a6a3b4e-1a46-4a07-9e0e-e10f8aaf4f82',
@@ -73,14 +73,6 @@ const attendees: TRBAttendee[] = [
     createdAt: '2023-01-05T07:26:16.036618Z'
   }
 ];
-
-export const attendeesObject: {
-  requester: TRBAttendee;
-  attendees: TRBAttendee[];
-} = {
-  requester,
-  attendees
-};
 
 export const trbRequest: TrbRequest = {
   id: trbRequestId,
