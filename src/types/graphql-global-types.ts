@@ -230,17 +230,6 @@ export enum TRBDataAndDataManagementOption {
 }
 
 /**
- * Represents the status of the TRB feedback step
- */
-export enum TRBFeedbackStatus {
-  CANNOT_START_YET = "CANNOT_START_YET",
-  COMPLETED = "COMPLETED",
-  EDITS_REQUESTED = "EDITS_REQUESTED",
-  IN_REVIEW = "IN_REVIEW",
-  READY_TO_START = "READY_TO_START",
-}
-
- /*
  * Represents the common options for document type that is attached to a
  * 508/accessibility request
  */
@@ -249,6 +238,17 @@ export enum TRBDocumentCommonType {
   BUSINESS_CASE = "BUSINESS_CASE",
   OTHER = "OTHER",
   PRESENTATION_SLIDE_DECK = "PRESENTATION_SLIDE_DECK",
+}
+
+/**
+ * Represents the status of the TRB feedback step
+ */
+export enum TRBFeedbackStatus {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_REVIEW = "IN_REVIEW",
+  READY_TO_START = "READY_TO_START",
 }
 
 /**
