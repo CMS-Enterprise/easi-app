@@ -72,10 +72,8 @@ const SideNavigation = ({
 };
 
 export default function AdminHome() {
-  /** Current user groups */
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  /** Whether or not current user is set */
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  // Current user info from redux
+  const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
   // Get url params
   const { id, activePage } = useParams<{
@@ -101,7 +99,7 @@ export default function AdminHome() {
   // Check if current user is set
   if (isUserSet) {
     // Check if current user is TRB Admin
-    if (user.isTrbAdmin(userGroups)) {
+    if (user.isTrbAdmin(groups)) {
       return (
         <div id="trbAdminHome">
           {
