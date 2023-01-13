@@ -93,10 +93,10 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
         Steps in the process
       </h2>
       <ol
-        class="usa-process-list padding-top-0"
+        class="usa-process-list padding-top-0 grid-col-8"
       >
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -112,7 +112,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -125,7 +125,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -156,7 +156,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -187,7 +187,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
