@@ -83,7 +83,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
         </li>
       </ul>
       <div>
-        Requests are usually reviewed and have IT Tech Lounge sessions scheduled within a week.
+        Requests are usually reviewed and have TRB consult sessions scheduled within a week.
       </div>
     </div>
     <div>
@@ -93,10 +93,10 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
         Steps in the process
       </h2>
       <ol
-        class="usa-process-list padding-top-0"
+        class="usa-process-list padding-top-0 grid-col-8"
       >
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -108,11 +108,11 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             Tell the Technical Review Board (TRB) what you need help with, including an overview of your question, problem, and/or solution. You may also upload any documentation that you think the TRB may find helpful (don’t worry, you’ll also be able to add documents later if you aren’t sure what to upload at this stage).
           </p>
           <p>
-            This step helps TRB team members better understand what type of help you’re looking for and how best to assist you. It also lets the TRB prepare more targeted assistance so that you get more value from your IT Lounge session.
+            This step helps TRB team members better understand what type of help you’re looking for and how best to assist you. It also lets the TRB prepare ahead of time so that you get more value from your consult session.
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -121,17 +121,17 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             Feedback from the initial review
           </h3>
           <p>
-            The TRB will review your request form form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps as they schedule an IT Lounge for you and/or your team.
+            The TRB will review your request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps as they schedule a consult session for you and/or your team.
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Prepare for the IT Lounge session
+            Prepare for the TRB consult session
           </h3>
           <p
             class="margin-bottom-0"
@@ -152,22 +152,22 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             </li>
           </ul>
           <p>
-            Prepare for the IT Lounge (opens in new tab)
+            Prepare for your TRB consult meeting (opens in new tab)
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Attend the IT Tech Lounge session
+            Attend the TRB consult session
           </h3>
           <p
             class="margin-bottom-0"
           >
-            A TRB team member will schedule an IT Tech Lounge session for your project. Attendees could include:
+            A TRB team member will schedule a consult session for your project. Attendees could include:
           </p>
           <ul
             class="list-style-middot"
@@ -182,10 +182,12 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
               1 or more TRB team members
             </li>
           </ul>
-          <p />
+          <p>
+            Consult sessions are usually scheduled as 1-hour sessions on Tuesday or Thursday.
+          </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -194,7 +196,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             Advice letter and next steps
           </h3>
           <p>
-            The TRB will work with any SMEs who attended the IT Tech Lounge session to compile a letter that documents any advice for your project team as well as any recommended next steps.
+            The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.
           </p>
         </li>
       </ol>
