@@ -132,7 +132,7 @@ function ProcessFlow() {
               <li>{stepsText[3].list[1]}</li>
               <li>{stepsText[3].list[2]}</li>
             </ul>
-            <p>{stepsText[3].text[2]}</p>
+            <p>{stepsText[3].text[1]}</p>
           </ProcessListItem>
           <ProcessListItem>
             <ProcessListHeading type="h3">
