@@ -91,78 +91,55 @@ export default function AdminHome() {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
-  // If loading or no trb request, return page not found
-  if (!loading && !trbRequest) {
+  // If TRB request is loading or user is not set, return page loading
+  if (loading || !isUserSet) {
+    return <PageLoading />;
+  }
+
+  // If TRB request does not exist or user is not TRB admin, return page not found
+  if (!trbRequest || !user.isTrbAdmin(groups)) {
     return <NotFound />;
   }
 
-  // Check if current user is set
-  if (isUserSet) {
-    // Check if current user is TRB Admin
-    if (user.isTrbAdmin(groups)) {
-      return (
-        <div id="trbAdminHome">
-          {
-            // TRB request loading
-            loading && <PageLoading />
-          }
-          {
-            // TRB admin home view
-            !loading && !!trbRequest && (
-              <>
-                <Summary
-                  trbRequestId={id}
-                  name={trbRequest.name}
-                  requestType={trbRequest.type}
-                  createdAt={trbRequest.createdAt}
-                  createdBy={trbRequest.createdBy}
-                  status={trbRequest.status}
-                  taskStatuses={trbRequest.taskStatuses}
-                  trbLead={trbRequest.trbLead}
-                />
-                <AccordionNavigation
-                  activePage={activePage}
-                  subNavItems={subNavItems(id).map(
-                    ({ route, text, groupEnd }) => ({
-                      route,
-                      text,
-                      groupEnd
-                    })
-                  )}
-                  defaultTitle="TRB Request"
-                />
-                <GridContainer>
-                  <Grid row className="margin-y-5 grid-gap">
-                    <Grid
-                      col
-                      desktop={{ col: 3 }}
-                      className="display-none tablet:display-block"
-                    >
-                      <SideNavigation
-                        activePage={activePage}
-                        trbRequestId={id}
-                      />
-                    </Grid>
-                    <Grid col desktop={{ col: 9 }}>
-                      {subNavItems(id).map(subpage => (
-                        <Route exact path={subpage.route} key={subpage.route}>
-                          <subpage.component trbRequestId={id} />
-                        </Route>
-                      ))}
-                    </Grid>
-                  </Grid>
-                </GridContainer>
-              </>
-            )
-          }
-        </div>
-      );
-    }
-
-    // If current user is not trb admin, return page not found
-    return <NotFound />;
-  }
-
-  // If current user is not set, return page loading
-  return <PageLoading />;
+  return (
+    <div id="trbAdminHome">
+      <Summary
+        trbRequestId={id}
+        name={trbRequest.name}
+        requestType={trbRequest.type}
+        createdAt={trbRequest.createdAt}
+        createdBy={trbRequest.createdBy}
+        status={trbRequest.status}
+        taskStatuses={trbRequest.taskStatuses}
+        trbLead={trbRequest.trbLead}
+      />
+      <AccordionNavigation
+        activePage={activePage}
+        subNavItems={subNavItems(id).map(({ route, text, groupEnd }) => ({
+          route,
+          text,
+          groupEnd
+        }))}
+        defaultTitle="TRB Request"
+      />
+      <GridContainer>
+        <Grid row className="margin-y-5 grid-gap">
+          <Grid
+            col
+            desktop={{ col: 3 }}
+            className="display-none tablet:display-block"
+          >
+            <SideNavigation activePage={activePage} trbRequestId={id} />
+          </Grid>
+          <Grid col desktop={{ col: 9 }}>
+            {subNavItems(id).map(subpage => (
+              <Route exact path={subpage.route} key={subpage.route}>
+                <subpage.component trbRequestId={id} />
+              </Route>
+            ))}
+          </Grid>
+        </Grid>
+      </GridContainer>
+    </div>
+  );
 }
