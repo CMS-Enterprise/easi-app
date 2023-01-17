@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 
 import HelpText from 'components/shared/HelpText';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
+import { formatDate } from 'utils/date';
 
 type GRTFeedbackViewProps = {
   grtFeedbacks: GRTFeedback[];
@@ -20,9 +21,7 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
   );
 
   const formatGRTFeedback = (feedback: GRTFeedback) => {
-    const formattedDate = DateTime.fromISO(feedback.createdAt).toLocaleString(
-      DateTime.DATE_MED
-    );
+    const formattedDate = formatDate(feedback.createdAt);
     return (
       <div className="margin-bottom-3" key={feedback.createdAt}>
         <h4

@@ -1,12 +1,11 @@
 import React from 'react';
-import { DateTime } from 'luxon';
 
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
-import { getFiscalYear } from 'utils/date';
+import { getFiscalYear, parseAsDate } from 'utils/date';
 
 import AlternativeAnalysisReview from './AlternativeAnalysisReview';
 import GeneralRequestInfoReview from './GeneralRequestInfoReview';
@@ -88,7 +87,7 @@ const BusinessCaseReview = ({
             <AlternativeAnalysisReview
               fiscalYear={
                 values.createdAt
-                  ? getFiscalYear(DateTime.fromISO(values.createdAt))
+                  ? getFiscalYear(parseAsDate(values.createdAt))
                   : new Date().getFullYear()
               }
               preferredSolution={values.preferredSolution}

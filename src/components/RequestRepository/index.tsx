@@ -21,7 +21,6 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -88,7 +87,7 @@ const RequestRepository = () => {
     accessor: 'submittedAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+        return formatDate(value);
       }
 
       return t('requestRepository.table.submissionDate.null');
@@ -208,7 +207,7 @@ const RequestRepository = () => {
     accessor: 'lcidExpiresAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+        return formatDate(value);
       }
 
       // If no LCID Expiration exists, display 'No LCID Issued'
@@ -225,9 +224,8 @@ const RequestRepository = () => {
           // Display admin note using truncated text field that
           // will display note with expandable extra text (if applicable)
           <>
-            {DateTime.fromISO(value.createdAt!).toLocaleString(
-              DateTime.DATE_FULL
-            )}
+            {formatDate(value.createdAt!)}
+
             <TruncatedText
               id="last-admin-note"
               label="less"

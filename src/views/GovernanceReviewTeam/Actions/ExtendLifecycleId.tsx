@@ -28,7 +28,7 @@ import {
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 import { ActionForm } from 'types/action';
 import { SystemIntakeContactProps } from 'types/systemIntake';
-import { formatDateAndIgnoreTimezone } from 'utils/date';
+import { formatDate } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { sharedLifecycleIdSchema } from 'validations/actionSchema';
 
@@ -242,7 +242,7 @@ const ExtendLifecycleId = ({
                   {t('extendLcid.currentLcidExpiration')}
                 </dt>
                 <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
-                  {formatDateAndIgnoreTimezone(lcidExpiresAt)}
+                  {formatDate(lcidExpiresAt)}
                 </dd>
                 <dt className="text-bold">{t('extendLcid.currentScope')}</dt>
                 <dd className="margin-left-0 margin-bottom-2 line-height-body-5">

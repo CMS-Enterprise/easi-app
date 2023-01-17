@@ -1,21 +1,20 @@
 import { DateTime } from 'luxon';
 
+// Used to parse out mintute, day, ,month, and years from ISOString
 export const parseAsDate = (date: string) =>
   DateTime.fromISO(date, { zone: 'utc' });
 
-export const parseAsLocalTime = (date: string) => DateTime.fromISO(date);
-
-export const formatDateAndIgnoreTimezone = (date: string) =>
-  parseAsDate(date).toFormat('MMMM d yyyy');
-
-export const formatDate = (date: string | DateTime) => {
+export const formatDate = (date: string | DateTime, local?: boolean) => {
   // ISO String
   if (typeof date === 'string') {
-    return parseAsLocalTime(date).toFormat('MMMM d yyyy');
+    return local
+      ? DateTime.fromISO(date).toFormat('MMMM d yyyy')
+      : parseAsDate(date).toFormat('MMMM d yyyy');
   }
 
   // luxon DateTime
   if (date instanceof DateTime) {
+    console.log(date);
     return date.toFormat('MMMM d yyyy');
   }
 

@@ -244,8 +244,8 @@ export const prepareSystemIntakeForApp = (
     lcidScope: systemIntake.lcidScope || '',
     decisionNextSteps: systemIntake.decisionNextSteps || '',
     rejectionReason: systemIntake.rejectionReason || '',
-    grtDate: systemIntake.grtDate ? parseAsDate(systemIntake.grtDate) : null,
-    grbDate: systemIntake.grbDate ? parseAsDate(systemIntake.grbDate) : null,
+    grtDate: systemIntake.grtDate,
+    grbDate: systemIntake.grbDate,
     adminLead: systemIntake.adminLead || '',
     lastAdminNote: systemIntake.lastAdminNoteContent
       ? {

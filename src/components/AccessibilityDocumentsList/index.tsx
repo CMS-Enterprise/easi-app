@@ -10,7 +10,6 @@ import {
   useTable
 } from 'react-table';
 import { Button, IconError, Link, Table } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -116,7 +115,7 @@ const AccessibilityDocumentsList = ({
   const data = useMemo(() => {
     const tableData = documents.map((singleDoc: Document) => {
       const uploadedAt = singleDoc.uploadedAt
-        ? formatDate(DateTime.fromISO(singleDoc.uploadedAt))
+        ? formatDate(singleDoc.uploadedAt)
         : '';
 
       let translatedStatus;

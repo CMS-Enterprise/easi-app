@@ -9,7 +9,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import { formatDateAndIgnoreTimezone } from 'utils/date';
+import { formatDate } from 'utils/date';
 
 type LcidProps = {
   systemIntake?: SystemIntake | null;
@@ -43,7 +43,7 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
             <DescriptionDefinition
               definition={
                 systemIntake?.lcidExpiresAt
-                  ? formatDateAndIgnoreTimezone(systemIntake?.lcidExpiresAt)
+                  ? formatDate(systemIntake?.lcidExpiresAt)
                   : ''
               }
             />

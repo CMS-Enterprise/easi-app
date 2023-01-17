@@ -32,7 +32,7 @@ import {
   GetAdminNotesAndActionsVariables
 } from 'queries/types/GetAdminNotesAndActions';
 import { AppState } from 'reducers/rootReducer';
-import { formatDate, formatDateAndIgnoreTimezone } from 'utils/date';
+import { formatDate } from 'utils/date';
 
 import './index.scss';
 
@@ -136,15 +136,9 @@ const Notes = () => {
                 <dt>Lifecycle ID</dt>
                 <dd>{data.systemIntake?.lcid}</dd>
                 <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
-                <dd>
-                  {formatDateAndIgnoreTimezone(lcidExpirationChange.newDate)}
-                </dd>
+                <dd>{formatDate(lcidExpirationChange.newDate)}</dd>
                 <dt>{t('notes.extendLcid.oldExpirationDate')}</dt>
-                <dd>
-                  {formatDateAndIgnoreTimezone(
-                    lcidExpirationChange.previousDate
-                  )}
-                </dd>
+                <dd>{formatDate(lcidExpirationChange.previousDate)}</dd>
 
                 {/* Used TruncatedText for old/new scope, next steps, and cost baseline since they can be 3000 characters */}
                 <dt>{t('notes.extendLcid.newScope')}</dt>
