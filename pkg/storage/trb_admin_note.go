@@ -1,0 +1,220 @@
+package storage
+
+import (
+	"context"
+	"database/sql"
+	"errors"
+	"fmt"
+
+	"github.com/google/uuid"
+	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
+)
+
+// CreateTRBAdminNote creates a new TRB admin note record in the database
+func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNote) (*models.TRBAdminNote, error) {
+	if note.ID == uuid.Nil {
+		note.ID = uuid.New()
+	}
+
+	const trbAdminNoteCreateSQL = `
+		INSERT INTO trb_admin_notes (
+			id,
+			trb_request_id,
+			created_by,
+			category,
+			note_text
+		) VALUES (
+			:id,
+			:trb_request_id,
+			:created_by,
+			:category,
+			:note_text
+		) RETURNING *;
+	`
+	stmt, err := s.db.PrepareNamed(trbAdminNoteCreateSQL)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to create TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("user", note.CreatedBy),
+		)
+		return nil, err
+	}
+
+	retNote := models.TRBAdminNote{}
+
+	err = stmt.Get(&retNote, note)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to create TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("user", note.CreatedBy),
+		)
+		return nil, err
+	}
+
+	return &retNote, nil
+}
+
+// GetTRBAdminNotesByTRBRequestID returns all notes for a given TRB request
+func (s *Store) GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBAdminNote, error) {
+	notes := []*models.TRBAdminNote{}
+
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE trb_request_id = :trb_request_id`)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB admin notes",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{"trb_request_id": trbRequestID}
+
+	err = stmt.Select(&notes, arg)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB admin notes",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     []*models.TRBAdminNote{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return notes, nil
+}
+
+// GetTRBAdminNoteByID retrieves a single admin note by its ID
+func (s *Store) GetTRBAdminNoteByID(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
+	note := models.TRBAdminNote{}
+
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_admin_notes WHERE id = :id`)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch admin note",
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{"id": id}
+
+	err = stmt.Get(&note, arg)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch admin note",
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     id,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return &note, nil
+}
+
+// UpdateTRBAdminNote updates all of a TRB admin note's mutable fields.
+// The note's IsArchived field _can_ be set, though ArchiveTRBAdminNote() should be used when archiving a note.
+func (s *Store) UpdateTRBAdminNote(ctx context.Context, note *models.TRBAdminNote) (*models.TRBAdminNote, error) {
+	stmt, err := s.db.PrepareNamed(`
+		UPDATE trb_admin_notes
+		SET
+			category = :category,
+			note_text = :note_text,
+			is_archived = :is_archived,
+			modified_by = :modified_by,
+			modified_at = CURRENT_TIMESTAMP
+		WHERE id = :id
+		RETURNING *;
+	`)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("id", note.ID.String()),
+		)
+		return nil, err
+	}
+
+	updated := models.TRBAdminNote{}
+
+	err = stmt.Get(&updated, note)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("id", note.ID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     note,
+			Operation: apperrors.QueryUpdate,
+		}
+	}
+
+	return &updated, nil
+}
+
+// SetTRBAdminNoteArchived sets whether a TRB admin note is archived (soft-deleted)
+// It takes a modifiedBy argument because it doesn't take a full TRBAdminNote as an argument, and ModifiedBy fields are usually set by the resolver.
+func (s *Store) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool, modifiedBy string) (*models.TRBAdminNote, error) {
+	stmt, err := s.db.PrepareNamed(`
+		UPDATE trb_admin_notes
+		SET
+			is_archived = :is_archived,
+			modified_by = :modified_by,
+			modified_at = CURRENT_TIMESTAMP
+		WHERE id = :id
+		RETURNING *;
+	`)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to archive TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, err
+	}
+
+	updated := models.TRBAdminNote{}
+	arg := map[string]interface{}{
+		"id":          id,
+		"is_archived": isArchived,
+		"modified_by": modifiedBy,
+	}
+
+	err = stmt.Get(&updated, arg)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to archive TRB admin note with error %s", err),
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     updated,
+			Operation: apperrors.QueryUpdate,
+		}
+	}
+
+	return &updated, nil
+}

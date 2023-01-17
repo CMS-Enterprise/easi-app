@@ -96,21 +96,21 @@ function ProcessFlow() {
         <h2 className="margin-top-6 margin-bottom-5">
           {t('steps.stepsInTheProcess')}
         </h2>
-        <ProcessList className="padding-top-0">
-          <ProcessListItem>
+        <ProcessList className="padding-top-0 grid-col-8">
+          <ProcessListItem className="maxw-none">
             <ProcessListHeading type="h3">
               {stepsText[0].heading}
             </ProcessListHeading>
             <p>{stepsText[0].text[0]}</p>
             <p>{stepsText[0].text[1]}</p>
           </ProcessListItem>
-          <ProcessListItem>
+          <ProcessListItem className="maxw-none">
             <ProcessListHeading type="h3">
               {stepsText[1].heading}
             </ProcessListHeading>
             <p>{stepsText[1].text[0]}</p>
           </ProcessListItem>
-          <ProcessListItem>
+          <ProcessListItem className="maxw-none">
             <ProcessListHeading type="h3">
               {stepsText[2].heading}
             </ProcessListHeading>
@@ -122,7 +122,7 @@ function ProcessFlow() {
             </ul>
             <p>{stepsText[2].text[1]}</p>
           </ProcessListItem>
-          <ProcessListItem>
+          <ProcessListItem className="maxw-none">
             <ProcessListHeading type="h3">
               {stepsText[3].heading}
             </ProcessListHeading>
@@ -132,9 +132,9 @@ function ProcessFlow() {
               <li>{stepsText[3].list[1]}</li>
               <li>{stepsText[3].list[2]}</li>
             </ul>
-            <p>{stepsText[3].text[2]}</p>
+            <p>{stepsText[3].text[1]}</p>
           </ProcessListItem>
-          <ProcessListItem>
+          <ProcessListItem className="maxw-none">
             <ProcessListHeading type="h3">
               {stepsText[4].heading}
             </ProcessListHeading>

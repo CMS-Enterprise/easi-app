@@ -25,6 +25,7 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	trb_request_forms,
 	trb_request_attendees,
 	trb_request_feedback,
+	trb_admin_notes,
 	trb_advice_letters,
 	trb_request
 	`
