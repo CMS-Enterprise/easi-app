@@ -22,20 +22,25 @@ import Summary from './Summary';
 
 import './index.scss';
 
-const SideNavigation = ({
-  activePage,
-  trbRequestId
-}: {
+type SideNavProps = {
   activePage: string;
   trbRequestId: string;
-}) => {
+};
+
+/** Side navigation */
+const SideNavigation = ({
+  /** Active page path */
+  activePage,
+  /** Request ID */
+  trbRequestId
+}: SideNavProps) => {
   const { t } = useTranslation('technicalAssistance');
   return (
     <nav>
       <ul className="trb-admin__nav-list usa-list usa-list--unstyled">
-        <li className="margin-bottom-4">
-          <Link to="/" className="display-flex flex-align-center">
-            <IconArrowBack className="margin-right-1" aria-hidden />
+        <li className="trb-admin__view-all-link margin-bottom-4">
+          <Link to="/">
+            <IconArrowBack aria-hidden />
             {t('adminHome.subnav.back')}
           </Link>
         </li>
@@ -44,24 +49,13 @@ const SideNavigation = ({
           return (
             <li
               key={text}
-              className={classNames(
-                'padding-y-1',
-                'trb-admin__nav-link',
-                'hover:bg-base-lightest',
-                {
-                  'trb-admin__nav-link--active': isActivePage,
-                  'border-bottom-1px border-disabled-light': groupEnd
-                }
-              )}
+              className={classNames('trb-admin__nav-link', {
+                'trb-admin__nav-link--active': isActivePage,
+                'trb-admin__nav-link--border': groupEnd
+              })}
             >
-              <Link
-                to={route}
-                className={classNames('text-no-underline', 'padding-y-05', {
-                  'text-base-darkest': !isActivePage,
-                  'text-primary': isActivePage
-                })}
-              >
-                {t(text)}
+              <Link to={route}>
+                <span>{t(text)}</span>
               </Link>
             </li>
           );
@@ -71,6 +65,7 @@ const SideNavigation = ({
   );
 };
 
+/** Wrapper for TRB admin view components */
 export default function AdminHome() {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
@@ -103,6 +98,7 @@ export default function AdminHome() {
 
   return (
     <div id="trbAdminHome">
+      {/* Request summary */}
       <Summary
         trbRequestId={id}
         name={trbRequest.name}
@@ -113,6 +109,8 @@ export default function AdminHome() {
         taskStatuses={trbRequest.taskStatuses}
         trbLead={trbRequest.trbLead}
       />
+
+      {/* Accordion navigation for tablet and mobile */}
       <AccordionNavigation
         activePage={activePage}
         subNavItems={subNavItems(id).map(({ route, text, groupEnd }) => ({
@@ -122,15 +120,19 @@ export default function AdminHome() {
         }))}
         defaultTitle="TRB Request"
       />
+
       <GridContainer>
         <Grid row className="margin-y-5 grid-gap">
+          {/* Side navigation */}
           <Grid
             col
             desktop={{ col: 3 }}
-            className="display-none tablet:display-block"
+            className="display-none desktop:display-block"
           >
             <SideNavigation activePage={activePage} trbRequestId={id} />
           </Grid>
+
+          {/* Page component */}
           <Grid col desktop={{ col: 9 }}>
             {subNavItems(id).map(subpage => (
               <Route exact path={subpage.route} key={subpage.route}>

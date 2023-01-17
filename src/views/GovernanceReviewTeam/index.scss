@@ -46,6 +46,10 @@
     color: color('black');
     text-decoration: none;
 
+    &:hover {
+      color: color('primary');
+    }
+
     &--active {
       font-weight: bold;
       color: $easi-bright-blue;
