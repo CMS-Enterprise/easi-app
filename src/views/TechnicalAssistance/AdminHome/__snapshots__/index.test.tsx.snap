@@ -227,7 +227,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
         data-testid="grid"
       >
         <div
-          class="grid-col desktop:grid-col-3 display-none tablet:display-block"
+          class="grid-col desktop:grid-col-3 display-none desktop:display-block"
           data-testid="grid"
         >
           <nav>
@@ -235,15 +235,14 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
               class="trb-admin__nav-list usa-list usa-list--unstyled"
             >
               <li
-                class="margin-bottom-4"
+                class="trb-admin__view-all-link margin-bottom-4"
               >
                 <a
-                  class="display-flex flex-align-center"
                   href="/"
                 >
                   <svg
                     aria-hidden="true"
-                    class="usa-icon margin-right-1"
+                    class="usa-icon"
                     focusable="false"
                     height="1em"
                     role="img"
@@ -263,63 +262,69 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 </a>
               </li>
               <li
-                class="padding-y-1 trb-admin__nav-link hover:bg-base-lightest trb-admin__nav-link--active border-bottom-1px border-disabled-light"
+                class="trb-admin__nav-link trb-admin__nav-link--active trb-admin__nav-link--border"
               >
                 <a
-                  class="text-no-underline padding-y-05 text-primary"
                   href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/request"
                 >
-                  Request home
+                  <span>
+                    Request home
+                  </span>
                 </a>
               </li>
               <li
-                class="padding-y-1 trb-admin__nav-link hover:bg-base-lightest"
+                class="trb-admin__nav-link"
               >
                 <a
-                  class="text-no-underline padding-y-05 text-base-darkest"
                   href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/initial-request-form"
                 >
-                  Initial request form
+                  <span>
+                    Initial request form
+                  </span>
                 </a>
               </li>
               <li
-                class="padding-y-1 trb-admin__nav-link hover:bg-base-lightest"
+                class="trb-admin__nav-link"
               >
                 <a
-                  class="text-no-underline padding-y-05 text-base-darkest"
                   href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/documents"
                 >
-                  Supporting documents
+                  <span>
+                    Supporting documents
+                  </span>
                 </a>
               </li>
               <li
-                class="padding-y-1 trb-admin__nav-link hover:bg-base-lightest"
+                class="trb-admin__nav-link"
               >
                 <a
-                  class="text-no-underline padding-y-05 text-base-darkest"
                   href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/feedback"
                 >
-                  Feedback
+                  <span>
+                    Feedback
+                  </span>
                 </a>
               </li>
               <li
-                class="padding-y-1 trb-admin__nav-link hover:bg-base-lightest border-bottom-1px border-disabled-light"
+                class="trb-admin__nav-link trb-admin__nav-link--border"
               >
                 <a
-                  class="text-no-underline padding-y-05 text-base-darkest"
                   href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/advice"
                 >
-                  Advice letter
+                  <span>
+                    Advice letter
+                  </span>
                 </a>
               </li>
               <li
-                class="padding-y-1 trb-admin__nav-link hover:bg-base-lightest"
+                class="trb-admin__nav-link"
               >
                 <a
-                  class="text-no-underline padding-y-05 text-base-darkest"
                   href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/notes"
                 >
-                  Notes
+                  <span>
+                    Notes
+                  </span>
                 </a>
               </li>
             </ul>
