@@ -61,12 +61,14 @@ describe('The system intake data modifiers', () => {
         ...initialSystemIntakeForm,
         id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
         euaUserId: 'ABCD',
-        submittedAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 26,
-          zone: 'America/Los_Angeles'
-        }),
+        submittedAt: DateTime.fromObject(
+          {
+            year: 2020,
+            month: 6,
+            day: 26
+          },
+          { zone: 'America/Los_Angeles' }
+        ),
         requestName: 'Easy Access to System Information',
         requester: {
           name: 'Christopher Hui',
@@ -131,39 +133,49 @@ describe('The system intake data modifiers', () => {
         currentStage: 'Test current stage',
         needsEaSupport: true,
         status: 'Submitted',
-        decidedAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 27,
-          zone: 'America/Los_Angeles'
-        }),
-        createdAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 22,
-          zone: 'America/Los_Angeles'
-        }),
-        updatedAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 23,
-          zone: 'America/Los_Angeles'
-        }),
-        archivedAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 28,
-          zone: 'America/Los_Angeles'
-        }),
+        decidedAt: DateTime.fromObject(
+          {
+            year: 2020,
+            month: 6,
+            day: 27
+          },
+          { zone: 'America/Los_Angeles' }
+        ),
+        createdAt: DateTime.fromObject(
+          {
+            year: 2020,
+            month: 6,
+            day: 22
+          },
+          { zone: 'America/Los_Angeles' }
+        ),
+        updatedAt: DateTime.fromObject(
+          {
+            year: 2020,
+            month: 6,
+            day: 23
+          },
+          { zone: 'America/Los_Angeles' }
+        ),
+        archivedAt: DateTime.fromObject(
+          {
+            year: 2020,
+            month: 6,
+            day: 28
+          },
+          { zone: 'America/Los_Angeles' }
+        ),
         adminLead: 'Test Admin Lead',
         lastAdminNote: {
           content: 'last admin note',
-          createdAt: DateTime.fromObject({
-            year: 2020,
-            month: 6,
-            day: 22,
-            zone: 'America/Los_Angeles'
-          })
+          createdAt: DateTime.fromObject(
+            {
+              year: 2020,
+              month: 6,
+              day: 22
+            },
+            { zone: 'America/Los_Angeles' }
+          )
         },
         lcidScope: ''
       };

@@ -6,6 +6,7 @@ import { setContext } from '@apollo/client/link/context';
 import { createUploadLink } from 'apollo-upload-client';
 import axios from 'axios';
 import { detect } from 'detect-browser';
+import { Settings } from 'luxon';
 import { TextEncoder } from 'text-encoding';
 
 import { localAuthStorageKey } from 'constants/localAuth';
@@ -18,6 +19,9 @@ import * as serviceWorker from './serviceWorker';
 import store from './store';
 
 import './index.scss';
+
+// Luxon default timezone settings
+Settings.defaultZone = 'America/New_York';
 
 const apiHost = new URL(process.env.REACT_APP_API_ADDRESS || '').host;
 

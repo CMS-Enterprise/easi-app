@@ -65,19 +65,23 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
       grbDateYear
     } = values;
 
-    const newGrtDate = DateTime.fromObject({
-      day: Number(grtDateDay),
-      month: Number(grtDateMonth),
-      year: Number(grtDateYear),
-      zone: 'UTC'
-    }).toISO();
+    const newGrtDate = DateTime.fromObject(
+      {
+        day: Number(grtDateDay),
+        month: Number(grtDateMonth),
+        year: Number(grtDateYear)
+      },
+      { zone: 'UTC' }
+    ).toISO();
 
-    const newGrbDate = DateTime.fromObject({
-      day: Number(grbDateDay),
-      month: Number(grbDateMonth),
-      year: Number(grbDateYear),
-      zone: 'UTC'
-    }).toISO();
+    const newGrbDate = DateTime.fromObject(
+      {
+        day: Number(grbDateDay),
+        month: Number(grbDateMonth),
+        year: Number(grbDateYear)
+      },
+      { zone: 'UTC' }
+    ).toISO();
 
     mutate({
       variables: {
