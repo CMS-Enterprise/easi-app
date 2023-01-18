@@ -14,7 +14,7 @@ export const formatDate = (date: string | DateTime, local?: boolean) => {
 
   // luxon DateTime
   if (date instanceof DateTime) {
-    console.log(date);
+    // console.log(date);
     return date.toFormat('MMMM d yyyy');
   }
 

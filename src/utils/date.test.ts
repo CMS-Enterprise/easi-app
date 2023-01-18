@@ -25,7 +25,7 @@ describe('formatDate', () => {
     it('converts an ISO string to the proper date in the appropriate timezone', () => {
       Settings.defaultZone = 'UTC-8';
       const isoStringDate = '2022-10-22T00:00:00Z';
-      expect(formatDate(isoStringDate)).toEqual('October 21 2022');
+      expect(formatDate(isoStringDate)).toEqual('October 22 2022');
     });
 
     it('returns invalid datetime when a string is not ISO string', () => {

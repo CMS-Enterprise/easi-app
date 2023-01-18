@@ -10,7 +10,6 @@ import {
   IconError
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -38,7 +37,7 @@ type RequestSummaryProps = {
   requestType: RequestType;
   status: string;
   adminLead: string | null;
-  submittedAt: DateTime;
+  submittedAt: string | null;
   lcid: string | null;
 };
 
