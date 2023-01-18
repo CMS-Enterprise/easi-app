@@ -4,18 +4,19 @@ import { DateTime } from 'luxon';
 export const parseAsDate = (date: string) =>
   DateTime.fromISO(date, { zone: 'utc' });
 
-export const formatDate = (date: string | DateTime, local?: boolean) => {
+// Currently only alternative in use to MMMM d yyyy is MM/dd/yyyy
+// Leaving opening possiblity of paramter to expand beyond short
+export const formatDate = (date: string | DateTime, format?: 'DATE_SHORT') => {
+  const dateFormat = format ? 'MM/dd/yyyy' : 'MMMM d yyyy';
+
   // ISO String
   if (typeof date === 'string') {
-    return local
-      ? DateTime.fromISO(date).toFormat('MMMM d yyyy')
-      : parseAsDate(date).toFormat('MMMM d yyyy');
+    return parseAsDate(date).toFormat(dateFormat);
   }
 
   // luxon DateTime
   if (date instanceof DateTime) {
-    // console.log(date);
-    return date.toFormat('MMMM d yyyy');
+    return date.toFormat(dateFormat);
   }
 
   return '';

@@ -53,6 +53,7 @@ import {
   UrlLocationTag,
   UsernameWithRoles
 } from 'types/systemProfile';
+import { formatDate } from 'utils/date';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
@@ -69,10 +70,6 @@ import SystemSubNav from './components/SystemSubNav/index';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
-
-export function formatDate(v: string) {
-  return DateTime.fromISO(v).toLocaleString(DateTime.DATE_FULL);
-}
 
 function httpsUrl(url: string): string {
   if (/^https?/.test(url)) {

@@ -34,11 +34,8 @@ import {
   SystemProfileSubviewProps,
   ThreatLevel
 } from 'types/systemProfile';
-import {
-  formatDate,
-  showAtoExpirationDate,
-  showVal
-} from 'views/SystemProfile';
+import { formatDate } from 'utils/date';
+import { showAtoExpirationDate, showVal } from 'views/SystemProfile';
 
 import './index.scss';
 

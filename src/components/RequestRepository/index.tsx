@@ -21,6 +21,7 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -84,7 +85,12 @@ const RequestRepository = () => {
 
   const submissionDateColumn = {
     Header: t('intake:fields.submissionDate'),
-    accessor: 'submittedAt',
+    accessor: ({ submittedAt }: { submittedAt: string }) => {
+      if (submittedAt) {
+        return DateTime.fromISO(submittedAt);
+      }
+      return null;
+    },
     Cell: ({ value }: any) => {
       if (value) {
         return formatDate(value);
@@ -139,7 +145,12 @@ const RequestRepository = () => {
 
   const grtDateColumn = {
     Header: t('intake:fields.grtDate'),
-    accessor: 'grtDate',
+    accessor: ({ grtDate }: { grtDate: string | null }) => {
+      if (grtDate) {
+        return DateTime.fromISO(grtDate);
+      }
+      return null;
+    },
     Cell: ({ row, value }: any) => {
       if (!value) {
         return (
@@ -157,7 +168,12 @@ const RequestRepository = () => {
 
   const grbDateColumn = {
     Header: t('intake:fields.grbDate'),
-    accessor: 'grbDate',
+    accessor: ({ grbDate }: { grbDate: string | null }) => {
+      if (grbDate) {
+        return DateTime.fromISO(grbDate);
+      }
+      return null;
+    },
     Cell: ({ row, value }: any) => {
       if (!value) {
         return (
@@ -204,7 +220,12 @@ const RequestRepository = () => {
 
   const lcidExpirationDateColumn = {
     Header: t('intake:fields.lcidExpirationDate'),
-    accessor: 'lcidExpiresAt',
+    accessor: ({ lcidExpiresAt }: { lcidExpiresAt: string | null }) => {
+      if (lcidExpiresAt) {
+        return DateTime.fromISO(lcidExpiresAt);
+      }
+      return null;
+    },
     Cell: ({ value }: any) => {
       if (value) {
         return formatDate(value);

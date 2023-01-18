@@ -17,6 +17,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Button, GridContainer, Table } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -31,6 +32,7 @@ import {
   // eslint-disable-next-line camelcase
   GetTrbRequests_trbRequests
 } from 'queries/types/GetTrbRequests';
+import { formatDate } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -38,7 +40,6 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 import NotFound from 'views/NotFound';
-import { formatDate } from 'views/SystemProfile';
 
 function Homepage() {
   const { t } = useTranslation('technicalAssistance');
@@ -70,9 +71,18 @@ function Homepage() {
       },
       {
         Header: t<string>('table.header.submissionDate'),
-        accessor: 'createdAt',
-        // eslint-disable-next-line react/prop-types
-        Cell: ({ value }) => formatDate(value)
+        accessor: ({ createdAt }: { createdAt: string }) => {
+          if (createdAt) {
+            return DateTime.fromISO(createdAt);
+          }
+          return null;
+        },
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDate(value);
+          }
+          return '';
+        }
       },
       {
         Header: t<string>('table.header.status'),

@@ -61,46 +61,68 @@ export const sortColumnValues = (
   rowOneElem: sortColumnProps,
   rowTwoElem: sortColumnProps
 ) => {
+  // Checking if passed sort value can be formatted as a date
+  const rowOneDateCheck: any =
+    rowOneElem && typeof rowOneElem === 'string'
+      ? DateTime.fromFormat(rowOneElem, 'M/d/yyyy')
+      : { invalidReason: 'unparsable' };
+
+  const rowTwoDateCheck: any =
+    rowTwoElem && typeof rowTwoElem === 'string'
+      ? DateTime.fromFormat(rowTwoElem, 'M/d/yyyy')
+      : { invalidReason: 'unparsable' };
+
+  // Assigned sort values after attemping to parse dates
+  const rowOne =
+    rowOneDateCheck.invalidReason === 'unparsable'
+      ? rowOneElem
+      : rowOneDateCheck;
+
+  const rowTwo =
+    rowTwoDateCheck.invalidReason === 'unparsable'
+      ? rowTwoElem
+      : rowTwoDateCheck;
+
   // Null checks for columns with data potentially empty (LCID Expiration, Admin Notes, etc.)
-  if (rowOneElem === null) {
+  if (rowOne === null) {
     return 1;
   }
 
-  if (rowTwoElem === null) {
+  if (rowTwo === null) {
     return -1;
   }
 
   // If string and number, sort out number first
-  if (typeof rowOneElem === 'number' && typeof rowTwoElem === 'string') {
+  if (typeof rowOne === 'number' && typeof rowTwo === 'string') {
     return 1;
   }
 
   // If string and number, sort out number first
-  if (typeof rowOneElem === 'string' && typeof rowTwoElem === 'number') {
+  if (typeof rowOne === 'string' && typeof rowTwo === 'number') {
     return -1;
   }
 
   // If string/number and datetime, sort out datetimes
   if (
-    rowOneElem instanceof DateTime &&
-    (typeof rowTwoElem === 'string' || typeof rowTwoElem === 'number')
+    rowOne instanceof DateTime &&
+    (typeof rowTwo === 'string' || typeof rowTwo === 'number')
   ) {
     return 1;
   }
 
   // If string/number and datetime, sort out datetimes
   if (
-    rowTwoElem instanceof DateTime &&
-    (typeof rowOneElem === 'string' || typeof rowOneElem === 'number')
+    rowTwo instanceof DateTime &&
+    (typeof rowOne === 'string' || typeof rowOne === 'number')
   ) {
     return -1;
   }
 
   // If both items are strings, enforce capitalization (temporarily) and then compare
-  if (typeof rowOneElem === 'string' && typeof rowTwoElem === 'string') {
-    return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
+  if (typeof rowOne === 'string' && typeof rowTwo === 'string') {
+    return rowOne.toUpperCase() > rowTwo.toUpperCase() ? 1 : -1;
   }
 
   // Default case if both are number/datetime
-  return rowOneElem > rowTwoElem ? 1 : -1;
+  return rowOne > rowTwo ? 1 : -1;
 };
