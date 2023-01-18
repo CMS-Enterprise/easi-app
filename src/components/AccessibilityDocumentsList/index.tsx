@@ -157,6 +157,7 @@ const AccessibilityDocumentsList = ({
     previousPage,
     setPageSize,
     page,
+    rows,
     setGlobalFilter,
     state,
     prepareRow
@@ -184,6 +185,8 @@ const AccessibilityDocumentsList = ({
     useSortBy,
     usePagination
   );
+
+  rows.map(row => prepareRow(row));
 
   if (documents.length === 0) {
     return <div>{t('documentTable.noDocuments')}</div>;
@@ -237,7 +240,6 @@ const AccessibilityDocumentsList = ({
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
-            prepareRow(row);
             return (
               <tr data-testurl={row.original.url} {...row.getRowProps()}>
                 {row.cells.map((cell, i) => {

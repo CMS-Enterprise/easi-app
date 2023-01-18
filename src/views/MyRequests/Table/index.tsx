@@ -9,7 +9,6 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
@@ -21,7 +20,7 @@ import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
-import globalTableFilter from 'utils/globalTableFilter';
+import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -81,15 +80,10 @@ const Table = ({
       },
       {
         Header: t('requestsTable.headers.submittedAt'),
-        accessor: ({ submittedAt }: any) => {
-          if (submittedAt) {
-            return DateTime.fromISO(submittedAt);
-          }
-          return null;
-        },
+        accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate(value);
+            return formatDate(value, 'DATE_SHORT');
           }
           return 'Not submitted';
         }
@@ -109,7 +103,8 @@ const Table = ({
                 <span>
                   {value}
                   <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDate(
-                    row.original.statusCreatedAt
+                    row.original.statusCreatedAt,
+                    'DATE_SHORT'
                   )}`}</span>
                 </span>
               );
@@ -126,15 +121,10 @@ const Table = ({
       },
       {
         Header: t('requestsTable.headers.nextMeetingDate'),
-        accessor: ({ nextMeetingDate }: any) => {
-          if (nextMeetingDate) {
-            return DateTime.fromISO(nextMeetingDate);
-          }
-          return null;
-        },
+        accessor: 'nextMeetingDate',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate(value);
+            return formatDate(value, 'DATE_SHORT');
           }
           return 'None';
         }
@@ -164,6 +154,7 @@ const Table = ({
     previousPage,
     setPageSize,
     page,
+    rows,
     setGlobalFilter,
     state,
     prepareRow
@@ -179,7 +170,7 @@ const Table = ({
           );
         }
       },
-      globalFilter: useMemo(() => globalTableFilter, []),
+      globalFilter: useMemo(() => globalFilterCellText, []),
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
@@ -193,6 +184,8 @@ const Table = ({
     useSortBy,
     usePagination
   );
+
+  rows.map(row => prepareRow(row));
 
   if (loading) {
     return (
@@ -263,7 +256,6 @@ const Table = ({
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
-            prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
                 {row.cells

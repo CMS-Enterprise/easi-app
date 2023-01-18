@@ -17,7 +17,6 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Button, GridContainer, Table } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -71,15 +70,10 @@ function Homepage() {
       },
       {
         Header: t<string>('table.header.submissionDate'),
-        accessor: ({ createdAt }: { createdAt: string }) => {
-          if (createdAt) {
-            return DateTime.fromISO(createdAt);
-          }
-          return null;
-        },
+        accessor: 'createdAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate(value);
+            return formatDate(value, 'DATE_SHORT');
           }
           return '';
         }

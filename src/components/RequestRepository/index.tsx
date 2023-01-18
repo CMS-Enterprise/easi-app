@@ -21,7 +21,6 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -38,7 +37,7 @@ import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { formatDate } from 'utils/date';
-import globalTableFilter from 'utils/globalTableFilter';
+import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
@@ -85,15 +84,10 @@ const RequestRepository = () => {
 
   const submissionDateColumn = {
     Header: t('intake:fields.submissionDate'),
-    accessor: ({ submittedAt }: { submittedAt: string }) => {
-      if (submittedAt) {
-        return DateTime.fromISO(submittedAt);
-      }
-      return null;
-    },
+    accessor: 'submittedAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return formatDate(value);
+        return formatDate(value, 'DATE_SHORT');
       }
 
       return t('requestRepository.table.submissionDate.null');
@@ -145,12 +139,7 @@ const RequestRepository = () => {
 
   const grtDateColumn = {
     Header: t('intake:fields.grtDate'),
-    accessor: ({ grtDate }: { grtDate: string | null }) => {
-      if (grtDate) {
-        return DateTime.fromISO(grtDate);
-      }
-      return null;
-    },
+    accessor: 'grtDate',
     Cell: ({ row, value }: any) => {
       if (!value) {
         return (
@@ -162,18 +151,13 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDate(value);
+      return formatDate(value, 'DATE_SHORT');
     }
   };
 
   const grbDateColumn = {
     Header: t('intake:fields.grbDate'),
-    accessor: ({ grbDate }: { grbDate: string | null }) => {
-      if (grbDate) {
-        return DateTime.fromISO(grbDate);
-      }
-      return null;
-    },
+    accessor: 'grbDate',
     Cell: ({ row, value }: any) => {
       if (!value) {
         return (
@@ -185,7 +169,7 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDate(value);
+      return formatDate(value, 'DATE_SHORT');
     }
   };
 
@@ -220,15 +204,10 @@ const RequestRepository = () => {
 
   const lcidExpirationDateColumn = {
     Header: t('intake:fields.lcidExpirationDate'),
-    accessor: ({ lcidExpiresAt }: { lcidExpiresAt: string | null }) => {
-      if (lcidExpiresAt) {
-        return DateTime.fromISO(lcidExpiresAt);
-      }
-      return null;
-    },
+    accessor: 'lcidExpiresAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return formatDate(value);
+        return formatDate(value, 'DATE_SHORT');
       }
 
       // If no LCID Expiration exists, display 'No LCID Issued'
@@ -245,7 +224,7 @@ const RequestRepository = () => {
           // Display admin note using truncated text field that
           // will display note with expandable extra text (if applicable)
           <>
-            {formatDate(value.createdAt!)}
+            {formatDate(value.createdAt!, 'DATE_SHORT')}
 
             <TruncatedText
               id="last-admin-note"
@@ -322,6 +301,7 @@ const RequestRepository = () => {
     state,
     page,
     prepareRow,
+    rows,
     setSortBy
   } = useTable(
     {
@@ -334,7 +314,7 @@ const RequestRepository = () => {
           );
         }
       },
-      globalFilter: useMemo(() => globalTableFilter, []),
+      globalFilter: useMemo(() => globalFilterCellText, []),
       data,
       autoResetSortBy: false,
       autoResetPage: false,
@@ -348,6 +328,8 @@ const RequestRepository = () => {
     useSortBy,
     usePagination
   );
+
+  rows.map(row => prepareRow(row));
 
   const csvHeaders = csvHeaderMap(t);
 
@@ -480,7 +462,6 @@ const RequestRepository = () => {
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row: Row) => {
-            prepareRow(row);
             return (
               // @ts-ignore
               <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>
