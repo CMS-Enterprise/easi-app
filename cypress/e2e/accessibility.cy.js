@@ -122,7 +122,7 @@ describe('Accessibility Requests', () => {
 
       cy.get('tbody').within(() => {
         cy.contains('th', 'TACO');
-        const dateString = formatDate(new Date().toISOString());
+        const dateString = formatDate(new Date().toISOString(), 'DATE_SHORT');
         cy.contains('td', 'Section 508');
         cy.contains('td', dateString);
         cy.contains('td', 'Open');
@@ -311,7 +311,7 @@ describe('Accessibility Requests', () => {
         .within(() => {
           cy.get('span').contains('In remediation');
           const today = new Date().toISOString();
-          const formattedDate = formatDate(today);
+          const formattedDate = formatDate(today, 'DATE_SHORT');
           cy.get('span').contains(`changed on ${formattedDate}`);
         });
     });
@@ -333,7 +333,7 @@ describe('Accessibility Requests', () => {
         .within(() => {
           cy.get('span').contains('Closed');
           const today = new Date().toISOString();
-          const formattedDate = formatDate(today);
+          const formattedDate = formatDate(today, 'DATE_SHORT');
           cy.get('span').contains(`changed on ${formattedDate}`);
         });
     });

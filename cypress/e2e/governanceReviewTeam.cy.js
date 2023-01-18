@@ -95,11 +95,11 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
       'td',
-      'November 24 2020'
+      '11/24/2020'
     );
     cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
       'td',
-      'December 25 2020'
+      '12/25/2020'
     );
   });
 
