@@ -1,7 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Grid, GridContainer } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 
 import WhatHappensNext from './WhatHappensNext';
@@ -13,20 +16,66 @@ import WhatHappensNext from './WhatHappensNext';
  */
 function Done({ breadcrumbBar }: { breadcrumbBar: React.ReactNode }) {
   const { t } = useTranslation('technicalAssistance');
+  const { id } = useParams<{ id: string }>();
+  const { state } = useLocation<{ success?: boolean }>();
+  const history = useHistory();
+
+  const success = state?.success;
+
+  // Redirect to first step if success state is undefined
+  if (success === undefined) {
+    history.replace(`/trb/requests/${id}`);
+  }
 
   return (
     <>
-      <div className="bg-success-lighter padding-bottom-6">
+      <div
+        className={classNames(
+          {
+            'bg-success-lighter': success,
+            'bg-error-lighter': !success
+          },
+          'padding-bottom-6'
+        )}
+      >
         <GridContainer>
           <Grid row>
             <Grid col>
               {breadcrumbBar}
 
               <PageHeading className="margin-bottom-0">
-                {t('done.success.heading')}
+                {t(`done.${success ? 'success' : 'error'}.heading`)}
               </PageHeading>
               <div className="font-body-lg line-height-body-5 text-light">
-                {t('done.success.info')}
+                {t(`done.${success ? 'success' : 'error'}.info`)}
+              </div>
+              <div>
+                {success ? (
+                  <UswdsReactLink
+                    className="usa-button"
+                    variant="unstyled"
+                    to={`/trb/task-list/${id}`}
+                  >
+                    {t('done.returnToTaskList')}
+                  </UswdsReactLink>
+                ) : (
+                  <>
+                    <UswdsReactLink
+                      className="usa-button"
+                      variant="unstyled"
+                      to={`/trb/requests/${id}`}
+                    >
+                      {t('done.backToTrbRequest')}
+                    </UswdsReactLink>
+                    <UswdsReactLink
+                      className="usa-button usa-button--outline"
+                      variant="unstyled"
+                      to={`/trb/task-list/${id}`}
+                    >
+                      {t('done.returnToTaskList')}
+                    </UswdsReactLink>
+                  </>
+                )}
               </div>
             </Grid>
           </Grid>
@@ -34,6 +83,10 @@ function Done({ breadcrumbBar }: { breadcrumbBar: React.ReactNode }) {
       </div>
 
       <GridContainer>
+        <div>
+          <div>{t('done.referenceNumber')}</div>
+          <div>{id}</div>
+        </div>
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <WhatHappensNext />

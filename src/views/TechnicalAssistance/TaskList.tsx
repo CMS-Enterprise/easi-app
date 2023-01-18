@@ -17,6 +17,7 @@ import {
   GetTrbTasklist,
   GetTrbTasklistVariables
 } from 'queries/types/GetTrbTasklist';
+import { TRBFormStatus } from 'types/graphql-global-types';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 
 import Breadcrumbs from './Breadcrumbs';
@@ -100,18 +101,24 @@ function TaskList() {
                   <TaskListDescription>
                     <p>{taskListText[0].text}</p>
                   </TaskListDescription>
-
-                  <UswdsReactLink
-                    variant="unstyled"
-                    className="usa-button"
-                    to={`/trb/requests/${id}`}
-                  >
-                    {t(
-                      formStatus === 'READY_TO_START'
-                        ? 'button.start'
-                        : 'button.continue'
-                    )}
-                  </UswdsReactLink>
+                  {formStatus === TRBFormStatus.COMPLETED ? (
+                    // todo final url tbd
+                    <UswdsReactLink to={`/trb/requests/${id}`}>
+                      {t('taskList.viewSubmittedTrbRequest')}
+                    </UswdsReactLink>
+                  ) : (
+                    <UswdsReactLink
+                      variant="unstyled"
+                      className="usa-button"
+                      to={`/trb/requests/${id}`}
+                    >
+                      {t(
+                        formStatus === TRBFormStatus.READY_TO_START
+                          ? 'button.start'
+                          : 'button.continue'
+                      )}
+                    </UswdsReactLink>
+                  )}
                 </TaskListItem>
 
                 {/* Feedback from initial review */}

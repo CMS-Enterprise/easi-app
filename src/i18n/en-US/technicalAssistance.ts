@@ -156,6 +156,7 @@ const technicalAssistance = {
     stepsInvolved:
       'Steps involved in getting technical assistance from the TRB',
     sampleRequest: 'Sample TRB Request',
+    viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
     taskList: [
       {
         heading: 'Fill out the initial request form',
@@ -531,13 +532,16 @@ const technicalAssistance = {
     success: {
       heading: 'Success!',
       info:
-        'Your TRB Request has been submitted. you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
+        'Your TRB Request has been submitted. You will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
     },
     error: {
       heading: 'Something went wrong.',
       info:
         'Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.'
-    }
+    },
+    referenceNumber: 'Reference number',
+    returnToTaskList: 'Return to task list',
+    backToTrbRequest: 'Back to TRB Request'
   }
 };
 
