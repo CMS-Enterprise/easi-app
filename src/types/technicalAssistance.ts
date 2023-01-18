@@ -42,3 +42,25 @@ export type FormattedTRBAttendees = {
   requester: TRBAttendeeData;
   attendees: TRBAttendeeData[];
 };
+
+/** TRB Admin page */
+export type TrbAdminPage = ({
+  trbRequestId
+}: {
+  trbRequestId: string;
+}) => JSX.Element;
+
+/** Subnav item return type for admin home wrapper */
+export type SubNavItem = {
+  /** Route to use for navigation link */
+  route: string;
+  /** Translation key to use for navigation link text */
+  text: string;
+  /** Component to display on page */
+  component: TrbAdminPage;
+  /**
+   * Whether or not the navigation item is last in a group.
+   * If true, border is shown beneath link.
+   */
+  groupEnd?: boolean;
+};
