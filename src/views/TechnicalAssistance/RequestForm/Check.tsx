@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Grid } from '@trussworks/react-uswds';
 import { camelCase, capitalize } from 'lodash';
 import { DateTime } from 'luxon';
@@ -14,6 +15,11 @@ import {
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { GetTrbRequest_trbRequest_form as TrbRequestForm } from 'queries/types/GetTrbRequest';
+import {
+  UpdateTrbRequestFormStatus,
+  UpdateTrbRequestFormStatusVariables
+} from 'queries/types/UpdateTrbRequestFormStatus';
+import UpdateTrbRequestFormStatusQuery from 'queries/UpdateTrbRequestFormStatusQuery';
 import { TRBWhereInProcessOption } from 'types/graphql-global-types';
 
 import { AttendeesTable } from './AttendeesForm/components';
@@ -44,10 +50,16 @@ function Check({
   request,
   stepUrl,
   taskListUrl,
-  setStepSubmit
+  setStepSubmit,
+  setIsStepSubmitting
 }: FormStepComponentProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+
+  const [update, { loading }] = useMutation<
+    UpdateTrbRequestFormStatus,
+    UpdateTrbRequestFormStatusVariables
+  >(UpdateTrbRequestFormStatusQuery);
 
   const {
     data: { attendees }
@@ -60,6 +72,10 @@ function Check({
   useEffect(() => {
     setStepSubmit(() => submitNoop);
   }, [setStepSubmit]);
+
+  useEffect(() => {
+    setIsStepSubmitting(loading);
+  }, [setIsStepSubmitting, loading]);
 
   return (
     <>
@@ -321,16 +337,27 @@ function Check({
 
       <Pager
         back={{
+          disabled: loading,
           onClick: () => {
             history.push(stepUrl.back);
           }
         }}
         next={{
+          disabled: loading,
           onClick: () => {
-            history.push(stepUrl.next);
+            update({
+              variables: { trbRequestId: request.id, isSubmitted: true }
+            })
+              .then(() => {
+                history.push(stepUrl.next, { success: true });
+              })
+              .catch(() => {
+                history.push(stepUrl.next, { success: false });
+              });
           },
           text: t('check.submit')
         }}
+        saveExitDisabled={loading}
         taskListUrl={taskListUrl}
         submit={submitNoop}
       />
