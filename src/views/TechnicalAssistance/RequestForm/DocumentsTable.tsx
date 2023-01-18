@@ -40,7 +40,7 @@ function DocumentsTable({
 }: Props) {
   const { t } = useTranslation('technicalAssistance');
 
-  const { data, refetch, loading, error } = useQuery<
+  const { data, refetch, loading } = useQuery<
     GetTrbRequestDocuments,
     GetTrbRequestDocumentsVariables
   >(GetTrbRequestDocumentsQuery, {
@@ -48,11 +48,6 @@ function DocumentsTable({
   });
 
   const documents = data?.trbRequest.documents || [];
-
-  // console.log(trbRequestId);
-  console.log('err', error);
-  // console.log('loading', loading);
-  console.log('documents', documents);
 
   useEffect(() => {
     setRefetchDocuments?.(() => refetch);
