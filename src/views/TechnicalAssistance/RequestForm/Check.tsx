@@ -275,7 +275,7 @@ function Check({
       </div>
       <div className="margin-top-3 margin-bottom-6">
         {attendees.length === 0 ? (
-          t('check.noAttendees')
+          <span className="font-body-2xs">{t('check.noAttendees')}</span>
         ) : (
           <AttendeesTable attendees={attendees} trbRequestId={request.id} />
         )}

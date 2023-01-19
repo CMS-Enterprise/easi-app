@@ -219,9 +219,7 @@ function DocumentsTable({
         </tbody>
       </Table>
       {data && documents.length === 0 && (
-        <div className="font-body-2xs margin-left-2">
-          {t('documents.table.noDocument')}
-        </div>
+        <div className="font-body-2xs">{t('documents.table.noDocument')}</div>
       )}
     </div>
   );
