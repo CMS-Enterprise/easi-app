@@ -3,6 +3,8 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
@@ -83,7 +85,14 @@ func UpdateTRBRequestForm(
 	}
 
 	if isSubmitted && previousStatus != models.TRBFormStatusCompleted {
+		fmt.Println("COMPLETED")
+		fmt.Println("COMPLETED")
+		fmt.Println("COMPLETED")
+		fmt.Println("COMPLETED")
+		fmt.Println("COMPLETED")
 		form.Status = models.TRBFormStatusCompleted
+		now := time.Now()
+		form.SubmittedAt = &now
 	} else if previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusInProgress
 	}
