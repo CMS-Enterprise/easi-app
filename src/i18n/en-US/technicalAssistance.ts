@@ -532,7 +532,7 @@ const technicalAssistance = {
     success: {
       heading: 'Success!',
       info:
-        'Your TRB Request has been submitted. You will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
+        'Your TRB Request has been submitted. You will receive an automatic email, and a TRB team member will reach out shortly after regarding next steps.'
     },
     error: {
       heading: 'Something went wrong.',
