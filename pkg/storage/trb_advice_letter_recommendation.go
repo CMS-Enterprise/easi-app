@@ -113,7 +113,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Cont
 	return results, nil
 }
 
-// DeleteTRBAdviceLetterRecommendation deletes an existing TRB advice letter recommendation record in the database
+// UpdateTRBAdviceLetterRecommendation updates an existing TRB advice letter recommendation record in the database
 func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recommendation *models.TRBAdviceLetterRecommendation) (*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
