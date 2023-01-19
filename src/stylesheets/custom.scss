@@ -10,6 +10,23 @@
   }
 }
 
+// Definition List
+dl.easi {
+  margin-top: 0;
+  margin-bottom: 0;
+  dt  {
+    font-weight: bold;
+    font-size: size('body', 4);
+    line-height: line-height('body', 6);
+  }
+  dd {
+    margin-left: 0;
+    margin-bottom: 1.5rem;
+    font-size: size('body', 5);
+    line-height: line-height('body', 6);
+  }
+}
+
 //  Global changes to usa-label
 .usa-label {
   margin-top: 2rem;
