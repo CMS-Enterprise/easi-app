@@ -60,8 +60,6 @@ function Homepage() {
     GetTrbRequestsQuery
   );
 
-  const trbRequests = data?.trbRequests || [];
-
   const infoBoxText = t<Record<string, string[]>>('infoBox', {
     returnObjects: true
   });
@@ -118,7 +116,7 @@ function Homepage() {
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),
-      data: trbRequests,
+      data: useMemo(() => data?.trbRequests || [], [data?.trbRequests]),
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
@@ -148,19 +146,22 @@ function Homepage() {
 
   return (
     <>
-      {user.isTrbAdmin(groups) && (
-        <SiteAlert
-          variant="info"
-          heading={t('adminInfoBox.heading')}
-          className="trb-admin-alert"
-        >
-          <Trans i18nKey="technicalAssistance:adminInfoBox.text">
-            indexOne
-            <UswdsReactLink to="/">admin</UswdsReactLink>
-            indexTwo
-          </Trans>
-        </SiteAlert>
-      )}
+      {
+        // Admin site alert
+        user.isTrbAdmin(groups) && (
+          <SiteAlert
+            variant="info"
+            heading={t('adminInfoBox.heading')}
+            className="trb-admin-alert"
+          >
+            <Trans i18nKey="technicalAssistance:adminInfoBox.text">
+              indexOne
+              <UswdsReactLink to="/">admin</UswdsReactLink>
+              indexTwo
+            </Trans>
+          </SiteAlert>
+        )
+      }
       <GridContainer className="width-full">
         <SectionWrapper borderBottom>
           <PageHeading className="margin-bottom-0">{t('heading')}</PageHeading>
