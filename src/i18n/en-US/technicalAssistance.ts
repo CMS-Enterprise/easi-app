@@ -1,6 +1,31 @@
 const technicalAssistance = {
-  heading: 'Technical Assistance',
+  heading: 'Technical assistance requests',
+  subheading:
+    'Request help or feedback for your system, or ask the TRB for other technical assistance.',
+  introText:
+    'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.',
+  infoBox: {
+    text: [
+      'You can make a request to:',
+      'Requests are usually reviewed and have TRB consult sessions scheduled within a week.'
+    ],
+    list: [
+      'ask for help with a technical problem',
+      'review potential solutions or ideas with the TRB and other SMEs',
+      'schedule an ongoing cadence of technical consultations',
+      'consult with SMEs from across the agency',
+      'consult with the TRB about compliance with CMS guidelines and standards',
+      'request research or information about a particular technical topic'
+    ]
+  },
+  questions:
+    'If you have any questions, you may reach the TRB team at <0>cms-trb@cms.hhs.gov</0>',
   nextStep: 'Start a new request',
+  adminInfoBox: {
+    heading: 'Looking for the TRB Team page?',
+    text:
+      'Go to <0>Admin Home</0> to review, assign, and manage incoming and existing technical assistance requests.'
+  },
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request'
@@ -15,6 +40,7 @@ const technicalAssistance = {
     removeYourRequest: 'Remove your request'
   },
   table: {
+    heading: 'My TRB Requests',
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission date',
