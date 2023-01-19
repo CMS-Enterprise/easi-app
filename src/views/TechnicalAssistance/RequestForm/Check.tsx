@@ -74,7 +74,7 @@ function Check({
 
   return (
     <>
-      <dl className="easi margin-top-4 margin-bottom-3">
+      <dl className="easi-dl margin-top-4 margin-bottom-3">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>{t('table.header.submissionDate')}</dt>
@@ -97,7 +97,7 @@ function Check({
           {t('check.edit')}
         </UswdsReactLink>
       </div>
-      <dl className="easi margin-y-3">
+      <dl className="easi-dl margin-y-3">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>{t('basic.labels.name')}</dt>
@@ -194,7 +194,7 @@ function Check({
           {t('check.edit')}
         </UswdsReactLink>
       </div>
-      <dl className="easi margin-y-3">
+      <dl className="easi-dl margin-y-3">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>

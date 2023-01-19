@@ -83,7 +83,7 @@ function Done({ breadcrumbBar }: { breadcrumbBar: React.ReactNode }) {
       </div>
 
       <GridContainer>
-        <dl className="easi margin-top-4 margin-bottom-6">
+        <dl className="easi-dl margin-top-4 margin-bottom-6">
           <dt>{t('done.referenceNumber')}</dt>
           <dd>{id}</dd>
         </dl>
