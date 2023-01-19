@@ -38,6 +38,7 @@ type templates struct {
 	unnamedRequestWithdrawTemplate             templateCaller
 	issueLCIDTemplate                          templateCaller
 	extendLCIDTemplate                         templateCaller
+	lcidExpirationAlertTemplate                templateCaller
 	rejectRequestTemplate                      templateCaller
 	newAccessibilityRequestTemplate            templateCaller
 	newAccessibilityRequestToRequesterTemplate templateCaller
@@ -130,6 +131,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(extendLCIDTemplateName)
 	}
 	appTemplates.extendLCIDTemplate = extendLCIDTemplate
+
+	lcidExpirationAlertTemplateName := "lcid_expiration_alert.gohtml"
+	lcidExpirationAlertTemplate := rawTemplates.Lookup(lcidExpirationAlertTemplateName)
+	if lcidExpirationAlertTemplate == nil {
+		return Client{}, templateError(lcidExpirationAlertTemplateName)
+	}
+	appTemplates.lcidExpirationAlertTemplate = lcidExpirationAlertTemplate
 
 	rejectRequestTemplateName := "reject_request.gohtml"
 	rejectRequestTemplate := rawTemplates.Lookup(rejectRequestTemplateName)

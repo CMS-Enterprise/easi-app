@@ -20,6 +20,7 @@ import (
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/alerts"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/appses"
@@ -445,6 +446,17 @@ func (s *Server) routes(
 			return nil
 		})
 	}
+
+	// This is a temporary solution for EASI-2597 until a more robust event scheduling solution is implemented
+
+	// Check for upcoming LCID expirations every 24 hours
+	alerts.StartLcidExpirationCheck(
+		appcontext.WithLogger(context.Background(), s.logger),
+		store.FetchSystemIntakes,
+		store.UpdateSystemIntake,
+		emailClient.SendLCIDExpirationAlertEmail,
+		8.64e+13) // Nanoseconds in a day
+
 	// endpoint for short-lived backfill process
 	// backfillHandler := handlers.NewBackfillHandler(
 	// 	base,
