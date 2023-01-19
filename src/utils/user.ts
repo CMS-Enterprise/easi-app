@@ -5,9 +5,19 @@ import {
   ACCESSIBILITY_TESTER_PROD,
   BASIC_USER_PROD,
   GOVTEAM_DEV,
-  GOVTEAM_PROD
+  GOVTEAM_PROD,
+  TRB_ADMIN_DEV,
+  TRB_ADMIN_PROD
 } from 'constants/jobCodes';
 import { Flags } from 'types/flags';
+
+export const isTrbAdmin = (groups: Array<String> = []) => {
+  if (groups.includes(TRB_ADMIN_DEV) || groups.includes(TRB_ADMIN_PROD)) {
+    return true;
+  }
+
+  return false;
+};
 
 export const isGrtReviewer = (groups: Array<String> = [], flags: Flags) => {
   if (flags.downgradeGovTeam) {
@@ -73,13 +83,18 @@ export const isBasicUser = (groups: Array<String> = [], flags: Flags) => {
   if (groups.length === 0) {
     return true;
   }
-  if (!isAccessibilityTeam(groups, flags) && !isGrtReviewer(groups, flags)) {
+  if (
+    !isAccessibilityTeam(groups, flags) &&
+    !isGrtReviewer(groups, flags) &&
+    !isTrbAdmin(groups)
+  ) {
     return true;
   }
   return false;
 };
 
 const user = {
+  isTrbAdmin,
   isGrtReviewer,
   isAccessibilityTester,
   isAccessibilityAdmin,
