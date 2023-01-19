@@ -173,7 +173,7 @@ function DocumentsTable({
   }
 
   return (
-    <div>
+    <div className="easi-table x-bleed">
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
