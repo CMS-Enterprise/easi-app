@@ -6,7 +6,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-import { formatContractDate, formatDate, parseAsDate } from 'utils/date';
+import { formatContractDate, formatDate, parseAsUTC } from 'utils/date';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
@@ -154,8 +154,8 @@ export const prepareSystemIntakeForApp = (
     return teams;
   };
 
-  const contractStartDate = parseAsDate(systemIntake.contractStartDate);
-  const contractEndDate = parseAsDate(systemIntake.contractEndDate);
+  const contractStartDate = parseAsUTC(systemIntake.contractStartDate);
+  const contractEndDate = parseAsUTC(systemIntake.contractEndDate);
 
   return {
     id: systemIntake.id || '',

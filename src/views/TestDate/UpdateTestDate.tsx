@@ -15,7 +15,7 @@ import {
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 import { TestDateFormType } from 'types/accessibility';
-import { formatDate } from 'utils/date';
+import { formatDate, parseAsUTC } from 'utils/date';
 
 import RequestDeleted from '../Accessibility/RequestDeleted';
 import { NotFoundPartial } from '../NotFound';
@@ -55,7 +55,7 @@ const TestDate = () => {
   );
 
   const testDate = test?.date
-    ? DateTime.fromISO(test.date)
+    ? parseAsUTC(test.date)
     : {
         month: '',
         day: '',

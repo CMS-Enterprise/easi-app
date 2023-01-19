@@ -101,7 +101,7 @@ const Notes = () => {
         element: (
           <NoteListItem key={id} isLinked data-testid="user-note">
             <NoteContent>{content}</NoteContent>
-            <NoteByline>{`by ${author.name} | ${formatDate(
+            <NoteByline>{`by ${author.name} | ${DateTime.fromISO(
               createdAt
             )} at ${DateTime.fromISO(createdAt).toLocaleString(
               DateTime.TIME_SIMPLE
@@ -126,7 +126,7 @@ const Notes = () => {
         element: (
           <NoteListItem key={id} isLinked data-testid="action-note">
             <NoteContent>{t(`notes.actionName.${type}`)}</NoteContent>
-            <NoteByline>{`by: ${actor.name} | ${formatDate(
+            <NoteByline>{`by: ${actor.name} | ${DateTime.fromISO(
               createdAt
             )} at ${DateTime.fromISO(createdAt).toLocaleString(
               DateTime.TIME_SIMPLE

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 // Used to parse out mintute, day, ,month, and years from ISOString
-export const parseAsDate = (date: string) =>
+export const parseAsUTC = (date: string) =>
   DateTime.fromISO(date, { zone: 'utc' });
 
 // Currently only alternative in use to MMMM d yyyy is MM/dd/yyyy
@@ -11,7 +11,7 @@ export const formatDate = (date: string | DateTime, format?: 'DATE_SHORT') => {
 
   // ISO String
   if (typeof date === 'string') {
-    return parseAsDate(date).toFormat(dateFormat);
+    return parseAsUTC(date).toFormat(dateFormat);
   }
 
   // luxon DateTime

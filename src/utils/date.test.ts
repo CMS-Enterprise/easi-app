@@ -4,19 +4,19 @@ import {
   formatContractDate,
   formatDate,
   getFiscalYear,
-  parseAsDate
+  parseAsUTC
 } from './date';
 
-describe('parseAsDate', () => {
+describe('parseAsUTC', () => {
   const date = '2022-10-22T00:00:00Z';
 
   it('converts a date from an ISO string to a luxon datetime', () => {
-    const parsedDate: any = parseAsDate(date);
+    const parsedDate: any = parseAsUTC(date);
     expect(parsedDate instanceof DateTime).toBeTruthy();
   });
 
   it('converts dates from the utc timezone instead of local', () => {
-    expect(parseAsDate(date).day).toEqual(22);
+    expect(parseAsUTC(date).day).toEqual(22);
   });
 });
 

@@ -26,7 +26,7 @@ import {
 } from 'queries/types/UpdateSystemIntakeReviewDates';
 import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 import { SubmitDatesForm } from 'types/systemIntake';
-import { parseAsDate } from 'utils/date';
+import { parseAsUTC } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
@@ -42,8 +42,8 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
   });
 
   const { grtDate, grbDate } = systemIntake;
-  const parsedGrbDate = grbDate ? parseAsDate(grbDate) : null;
-  const parsedGrtDate = grtDate ? parseAsDate(grtDate) : null;
+  const parsedGrbDate = grbDate ? parseAsUTC(grbDate) : null;
+  const parsedGrtDate = grtDate ? parseAsUTC(grtDate) : null;
 
   // TODO: Fix Text Field so we don't have to set initial empty values
   const initialValues: SubmitDatesForm = {

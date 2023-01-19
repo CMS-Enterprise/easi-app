@@ -18,7 +18,6 @@ import {
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { startCase } from 'lodash';
-import { DateTime } from 'luxon';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -53,7 +52,7 @@ import {
   UrlLocationTag,
   UsernameWithRoles
 } from 'types/systemProfile';
-import { formatDate } from 'utils/date';
+import { formatDate, parseAsUTC } from 'utils/date';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
@@ -96,15 +95,13 @@ export function getAtoStatus(
 
   if (!dateAuthorizationMemoExpires) return 'No ATO';
 
-  const expiry = DateTime.fromISO(dateAuthorizationMemoExpires)
-    .toUTC()
-    .toString();
+  const expiry = parseAsUTC(dateAuthorizationMemoExpires).toString();
 
   const date = new Date().toISOString();
 
   if (date >= expiry) return 'Expired';
 
-  const soon = DateTime.fromISO(expiry)
+  const soon = parseAsUTC(expiry)
     .minus({ days: ATO_STATUS_DUE_SOON_DAYS })
     .toString();
   if (date >= soon) return 'Due Soon';

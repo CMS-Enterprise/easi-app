@@ -5,7 +5,7 @@ import PDFExport from 'components/PDFExport';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
-import { getFiscalYear, parseAsDate } from 'utils/date';
+import { getFiscalYear, parseAsUTC } from 'utils/date';
 
 import AlternativeAnalysisReview from './AlternativeAnalysisReview';
 import GeneralRequestInfoReview from './GeneralRequestInfoReview';
@@ -87,7 +87,7 @@ const BusinessCaseReview = ({
             <AlternativeAnalysisReview
               fiscalYear={
                 values.createdAt
-                  ? getFiscalYear(parseAsDate(values.createdAt))
+                  ? getFiscalYear(parseAsUTC(values.createdAt))
                   : new Date().getFullYear()
               }
               preferredSolution={values.preferredSolution}

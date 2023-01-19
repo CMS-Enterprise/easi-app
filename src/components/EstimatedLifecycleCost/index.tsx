@@ -20,7 +20,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
-import { getFiscalYear, parseAsDate } from 'utils/date';
+import { getFiscalYear, parseAsUTC } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
 
 import './index.scss';
@@ -300,7 +300,7 @@ const EstimatedLifecycleCost = ({
 
   const { t } = useTranslation('businessCase');
   const fiscalYear = businessCaseCreatedAt
-    ? getFiscalYear(parseAsDate(businessCaseCreatedAt))
+    ? getFiscalYear(parseAsUTC(businessCaseCreatedAt))
     : new Date().getFullYear();
 
   return (
