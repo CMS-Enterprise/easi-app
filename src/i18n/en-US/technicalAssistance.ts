@@ -19,12 +19,12 @@ const technicalAssistance = {
     ]
   },
   questions:
-    'If you have any questions, you may reach the TRB team at <0>cms-trb@cms.hhs.gov</0>',
+    'If you have any questions, you may reach the TRB team at <1>cms-trb@cms.hhs.gov</1>.',
   nextStep: 'Start a new request',
   adminInfoBox: {
     heading: 'Looking for the TRB Team page?',
     text:
-      'Go to <0>Admin Home</0> to review, assign, and manage incoming and existing technical assistance requests.'
+      'Go to <1>Admin Home</1> to review, assign, and manage incoming and existing technical assistance requests.'
   },
   // Misc breadcrumb items
   breadcrumbs: {
@@ -44,7 +44,7 @@ const technicalAssistance = {
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission date',
-      status: 'Status'
+      status: 'Request status'
     }
   },
   // Higher level errors
