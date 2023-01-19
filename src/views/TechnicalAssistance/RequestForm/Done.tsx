@@ -83,10 +83,10 @@ function Done({ breadcrumbBar }: { breadcrumbBar: React.ReactNode }) {
       </div>
 
       <GridContainer>
-        <div>
-          <div>{t('done.referenceNumber')}</div>
-          <div>{id}</div>
-        </div>
+        <dl className="easi margin-top-4 margin-bottom-6">
+          <dt>{t('done.referenceNumber')}</dt>
+          <dd>{id}</dd>
+        </dl>
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <WhatHappensNext />

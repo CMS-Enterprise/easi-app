@@ -7,11 +7,6 @@ import { camelCase, capitalize } from 'lodash';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import {
-  DescriptionDefinition,
-  DescriptionList,
-  DescriptionTerm
-} from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { GetTrbRequest_trbRequest_form as TrbRequestForm } from 'queries/types/GetTrbRequest';
@@ -79,20 +74,18 @@ function Check({
 
   return (
     <>
-      <DescriptionList className="margin-top-4 margin-bottom-6">
+      <dl className="easi margin-top-4 margin-bottom-3">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm term={t('table.header.submissionDate')} />
-            <DescriptionDefinition definition={t('check.notYetSubmitted')} />
+            <dt>{t('table.header.submissionDate')}</dt>
+            <dd>{t('check.notYetSubmitted')}</dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm term={t('check.requestType')} />
-            <DescriptionDefinition
-              definition={t(`requestType.type.${request.type}.heading`)}
-            />
+            <dt>{t('check.requestType')}</dt>
+            <dd>{t(`requestType.type.${request.type}.heading`)}</dd>
           </Grid>
         </Grid>
-      </DescriptionList>
+      </dl>
       <Divider />
 
       {/* Basic request details */}
@@ -104,87 +97,78 @@ function Check({
           {t('check.edit')}
         </UswdsReactLink>
       </div>
-      <DescriptionList className="margin-top-3 margin-bottom-6">
+      <dl className="easi margin-y-3">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm term={t('basic.labels.name')} />
-            <DescriptionDefinition definition={request.name} />
+            <dt>{t('basic.labels.name')}</dt>
+            <dd>{request.name}</dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm term={t('basic.labels.component')} />
-            <DescriptionDefinition definition={request.form.component} />
+            <dt>{t('basic.labels.component')}</dt>
+            <dd>{request.form.component}</dd>
           </Grid>
           <Grid col={12}>
-            <DescriptionTerm term={t('basic.labels.needsAssistanceWith')} />
-            <DescriptionDefinition
-              definition={request.form.needsAssistanceWith}
-            />
+            <dt>{t('basic.labels.needsAssistanceWith')}</dt>
+            <dd>{request.form.needsAssistanceWith}</dd>
           </Grid>
           <Grid col={12}>
-            <DescriptionTerm term={t('basic.labels.hasSolutionInMind')} />
-            <DescriptionDefinition
-              definition={t(
+            <dt>{t('basic.labels.hasSolutionInMind')}</dt>
+            <dd>
+              {t(
                 `basic.options.${request.form.hasSolutionInMind ? 'yes' : 'no'}`
               )}
-            />
+            </dd>
             {request.form.hasSolutionInMind && (
               <>
-                <DescriptionTerm term={t('basic.labels.proposedSolution')} />
-                <DescriptionDefinition
-                  definition={request.form.proposedSolution}
-                />
+                <dt>{t('basic.labels.proposedSolution')}</dt>
+                <dd>{request.form.proposedSolution}</dd>
               </>
             )}
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm term={t('basic.labels.whereInProcess')} />
-            <DescriptionDefinition
-              definition={
-                request.form.whereInProcess === TRBWhereInProcessOption.OTHER
+            <dt>{t('basic.labels.whereInProcess')}</dt>
+            <dd>
+              {request.form.whereInProcess !== null &&
+                (request.form.whereInProcess === TRBWhereInProcessOption.OTHER
                   ? `${t('basic.options.other')}: ${
                       request.form.whereInProcessOther
                     }`
                   : t(
                       `basic.options.whereInProcess.${camelCase(
-                        request.form.whereInProcess || ''
+                        request.form.whereInProcess
                       )}`
-                    )
-              }
-            />
+                    ))}
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm
-              term={t('basic.labels.hasExpectedStartEndDates')}
-            />
-            <DescriptionDefinition
-              definition={
-                request.form.hasExpectedStartEndDates &&
-                request.form.expectedStartDate &&
-                request.form.expectedEndDate
-                  ? `${t('basic.options.yes')}, ${t(
-                      'check.expectedStartAndGoLive',
-                      {
-                        start: DateTime.fromISO(
-                          request.form.expectedStartDate
-                        ).toFormat('MM/dd/yyyy'),
-                        live: DateTime.fromISO(
-                          request.form.expectedEndDate
-                        ).toFormat('MM/dd/yyyy')
-                      }
-                    )}`
-                  : t('basic.options.no')
-              }
-            />
+            <dt>{t('basic.labels.hasExpectedStartEndDates')}</dt>
+            <dd>
+              {request.form.hasExpectedStartEndDates &&
+              request.form.expectedStartDate &&
+              request.form.expectedEndDate
+                ? `${t('basic.options.yes')}, ${t(
+                    'check.expectedStartAndGoLive',
+                    {
+                      start: DateTime.fromISO(
+                        request.form.expectedStartDate
+                      ).toFormat('MM/dd/yyyy'),
+                      live: DateTime.fromISO(
+                        request.form.expectedEndDate
+                      ).toFormat('MM/dd/yyyy')
+                    }
+                  )}`
+                : t('basic.options.no')}
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm term={t('basic.labels.collabGroups')} />
-            <DescriptionDefinition
-              definition={request.form.collabGroups
+            <dt>{t('basic.labels.collabGroups')}</dt>
+            <dd>
+              {request.form.collabGroups
                 .map(v => {
                   if (v === 'OTHER') {
-                    return `${`${t('basic.options.other')}: ${
+                    return `${t('basic.options.other')}: ${
                       request.form.collabGroupOther
-                    } (`}${request.form.collabDateOther})`;
+                    } (${request.form.collabDateOther})`;
                   }
                   return `${t(`basic.options.collabGroups.${camelCase(v)}`)} (${
                     request.form[
@@ -195,10 +179,10 @@ function Check({
                   })`;
                 })
                 .join(', ')}
-            />
+            </dd>
           </Grid>
         </Grid>
-      </DescriptionList>
+      </dl>
       <Divider />
 
       {/* Subject areas */}
@@ -210,91 +194,74 @@ function Check({
           {t('check.edit')}
         </UswdsReactLink>
       </div>
-      <DescriptionList className="margin-top-3 margin-bottom-6">
+      <dl className="easi margin-y-3">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm
-              term={t(
-                'subject.labels.subjectAreaTechnicalReferenceArchitecture'
-              )}
-            />
-            <DescriptionDefinition
-              definition={SubjectDefinition(
+            <dt>
+              {t('subject.labels.subjectAreaTechnicalReferenceArchitecture')}
+            </dt>
+            <dd>
+              {SubjectDefinition(
                 request.form,
                 'subjectAreaTechnicalReferenceArchitecture'
               )}
-            />
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm
-              term={t('subject.labels.subjectAreaNetworkAndSecurity')}
-            />
-            <DescriptionDefinition
-              definition={SubjectDefinition(
-                request.form,
-                'subjectAreaNetworkAndSecurity'
-              )}
-            />
+            <dt>{t('subject.labels.subjectAreaNetworkAndSecurity')}</dt>
+            <dd>
+              {SubjectDefinition(request.form, 'subjectAreaNetworkAndSecurity')}
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm
-              term={t('subject.labels.subjectAreaCloudAndInfrastructure')}
-            />
-            <DescriptionDefinition
-              definition={SubjectDefinition(
+            <dt>{t('subject.labels.subjectAreaCloudAndInfrastructure')}</dt>
+            <dd>
+              {SubjectDefinition(
                 request.form,
                 'subjectAreaCloudAndInfrastructure'
               )}
-            />
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm
-              term={t('subject.labels.subjectAreaApplicationDevelopment')}
-            />
-            <DescriptionDefinition
-              definition={SubjectDefinition(
+            <dt>{t('subject.labels.subjectAreaApplicationDevelopment')}</dt>
+            <dd>
+              {SubjectDefinition(
                 request.form,
                 'subjectAreaApplicationDevelopment'
               )}
-            />
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm
-              term={t('subject.labels.subjectAreaDataAndDataManagement')}
-            />
-            <DescriptionDefinition
-              definition={SubjectDefinition(
+            <dt>{t('subject.labels.subjectAreaDataAndDataManagement')}</dt>
+            <dd>
+              {SubjectDefinition(
                 request.form,
                 'subjectAreaDataAndDataManagement'
               )}
-            />
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm
-              term={t(
-                'subject.labels.subjectAreaGovernmentProcessesAndPolicies'
-              )}
-            />
-            <DescriptionDefinition
-              definition={SubjectDefinition(
+            <dt>
+              {t('subject.labels.subjectAreaGovernmentProcessesAndPolicies')}
+            </dt>
+            <dd>
+              {SubjectDefinition(
                 request.form,
                 'subjectAreaGovernmentProcessesAndPolicies'
               )}
-            />
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <DescriptionTerm
-              term={t('subject.labels.subjectAreaOtherTechnicalTopics')}
-            />
-            <DescriptionDefinition
-              definition={SubjectDefinition(
+            <dt>{t('subject.labels.subjectAreaOtherTechnicalTopics')}</dt>
+            <dd>
+              {SubjectDefinition(
                 request.form,
                 'subjectAreaOtherTechnicalTopics'
               )}
-            />
+            </dd>
           </Grid>
         </Grid>
-      </DescriptionList>
+      </dl>
       <Divider />
 
       {/* Attendees */}
