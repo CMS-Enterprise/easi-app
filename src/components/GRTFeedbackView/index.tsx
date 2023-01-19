@@ -1,10 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { DateTime } from 'luxon';
 
 import HelpText from 'components/shared/HelpText';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
-import { formatDate } from 'utils/date';
+import { formatDate, parseAsUTC } from 'utils/date';
 
 type GRTFeedbackViewProps = {
   grtFeedbacks: GRTFeedback[];
@@ -49,8 +48,8 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
           {feedbacksForGRB
             .sort(
               (a, b) =>
-                DateTime.fromISO(a.createdAt).toMillis() -
-                DateTime.fromISO(b.createdAt).toMillis()
+                parseAsUTC(a.createdAt).toMillis() -
+                parseAsUTC(b.createdAt).toMillis()
             )
             .map(grtFeedback => formatGRTFeedback(grtFeedback))}
         </div>
@@ -66,8 +65,8 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
           {feedbacksForBusinessOwner
             .sort(
               (a, b) =>
-                DateTime.fromISO(a.createdAt).toMillis() -
-                DateTime.fromISO(b.createdAt).toMillis()
+                parseAsUTC(a.createdAt).toMillis() -
+                parseAsUTC(b.createdAt).toMillis()
             )
             .map(grtFeedback => formatGRTFeedback(grtFeedback))}
         </div>

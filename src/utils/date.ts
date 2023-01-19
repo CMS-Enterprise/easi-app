@@ -5,7 +5,7 @@ export const parseAsUTC = (date: string) =>
   DateTime.fromISO(date, { zone: 'utc' });
 
 // Currently only alternative in use to MMMM d yyyy is MM/dd/yyyy
-// Leaving opening possiblity of paramter to expand beyond short
+// Leaving opening possiblity of 'format' paramter to expand beyond short
 export const formatDate = (date: string | DateTime, format?: 'DATE_SHORT') => {
   const dateFormat = format ? 'MM/dd/yyyy' : 'MMMM d yyyy';
 

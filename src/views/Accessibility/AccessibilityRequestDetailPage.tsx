@@ -18,7 +18,6 @@ import {
   FormikProps
 } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { DateTime } from 'luxon';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -74,7 +73,7 @@ import {
 } from 'types/accessibility';
 import { AccessibilityRequestDeletionReason } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
-import { formatDate } from 'utils/date';
+import { formatDate, parseAsUTC } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import user from 'utils/user';
 import accessibilitySchema from 'validations/accessibilitySchema';
@@ -569,8 +568,8 @@ const AccessibilityRequestDetailPage = () => {
                 {[...testDates]
                   .sort(
                     (a, b) =>
-                      DateTime.fromISO(a.date).toMillis() -
-                      DateTime.fromISO(b.date).toMillis()
+                      parseAsUTC(a.date).toMillis() -
+                      parseAsUTC(b.date).toMillis()
                   )
                   .map((testDate, index) => (
                     <TestDateCard
