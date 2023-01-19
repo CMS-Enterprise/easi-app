@@ -5,6 +5,7 @@
 
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import {
   CellProps,
@@ -37,18 +38,23 @@ import {
   // eslint-disable-next-line camelcase
   GetTrbRequests_trbRequests
 } from 'queries/types/GetTrbRequests';
+import { AppState } from 'reducers/rootReducer';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
   getHeaderSortIcon
 } from 'utils/tableSort';
+import user from 'utils/user';
 import NotFound from 'views/NotFound';
 import { formatDate } from 'views/SystemProfile';
 
 function Homepage() {
   const { t } = useTranslation('technicalAssistance');
   const { url } = useRouteMatch();
+
+  // Current user info from redux
+  const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
   const { loading, error, data } = useQuery<GetTrbRequests>(
     GetTrbRequestsQuery
@@ -132,7 +138,7 @@ function Homepage() {
   // `Column.Cell` is available during filtering
   rows.map(row => prepareRow(row));
 
-  if (loading) {
+  if (loading || !isUserSet) {
     return <PageLoading />;
   }
 
@@ -142,17 +148,19 @@ function Homepage() {
 
   return (
     <>
-      <SiteAlert
-        variant="info"
-        heading={t('adminInfoBox.heading')}
-        className="trb-admin-alert"
-      >
-        <Trans i18nKey="technicalAssistance:adminInfoBox.text">
-          indexOne
-          <UswdsReactLink to="/">admin</UswdsReactLink>
-          indexTwo
-        </Trans>
-      </SiteAlert>
+      {user.isTrbAdmin(groups) && (
+        <SiteAlert
+          variant="info"
+          heading={t('adminInfoBox.heading')}
+          className="trb-admin-alert"
+        >
+          <Trans i18nKey="technicalAssistance:adminInfoBox.text">
+            indexOne
+            <UswdsReactLink to="/">admin</UswdsReactLink>
+            indexTwo
+          </Trans>
+        </SiteAlert>
+      )}
       <GridContainer className="width-full">
         <SectionWrapper borderBottom>
           <PageHeading className="margin-bottom-0">{t('heading')}</PageHeading>
