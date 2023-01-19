@@ -49,7 +49,7 @@ function Done({ breadcrumbBar }: { breadcrumbBar: React.ReactNode }) {
               <div className="font-body-lg line-height-body-5 text-light">
                 {t(`done.${success ? 'success' : 'error'}.info`)}
               </div>
-              <div>
+              <div className="margin-top-4">
                 {success ? (
                   <UswdsReactLink
                     className="usa-button"

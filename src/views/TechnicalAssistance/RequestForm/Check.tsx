@@ -297,7 +297,11 @@ function Check({
       <Divider />
 
       <Grid row gap>
-        <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+        <Grid
+          tablet={{ col: 12 }}
+          desktop={{ col: 6 }}
+          className="margin-top-2 margin-bottom-4"
+        >
           <WhatHappensNext />
         </Grid>
       </Grid>

@@ -7,7 +7,7 @@ const WhatHappensNext = () => {
   return (
     <SummaryBox heading={t('check.whatNext.title')}>
       <div>{t('check.whatNext.text.0')}</div>
-      <ul>
+      <ul className="usa-list margin-y-05">
         <li>{t('check.whatNext.list.0')}</li>
         <li>{t('check.whatNext.list.1')}</li>
         <li>{t('check.whatNext.list.2')}</li>
