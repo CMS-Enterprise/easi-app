@@ -85,6 +85,11 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 	form := models.TRBRequestForm{}
 	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_forms WHERE trb_request_id=:trb_request_id`)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB request form",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
 		return nil, err
 	}
 	arg := map[string]interface{}{"trb_request_id": trbRequestID}

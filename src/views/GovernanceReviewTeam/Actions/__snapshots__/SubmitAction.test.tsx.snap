@@ -212,7 +212,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
         >
           <li>
             <a
-              class="display-flex flex-align-center"
+              class="display-flex flex-align-center hover:text-primary-dark"
               href="/"
             >
               <svg

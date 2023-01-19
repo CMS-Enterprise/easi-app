@@ -5,7 +5,16 @@ export default gql`
     id
     name
     createdBy
+    createdAt
     type
+    status
+    taskStatuses {
+      formStatus
+      feedbackStatus
+      consultPrepStatus
+      attendConsultStatus
+    }
+    trbLead
 
     form {
       id
