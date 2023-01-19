@@ -76,7 +76,10 @@ function Homepage() {
         }: // eslint-disable-next-line camelcase
         CellProps<GetTrbRequests_trbRequests, string>) => {
           return (
-            <UswdsReactLink to={`/trb/task-list/${row.original.id}`}>
+            <UswdsReactLink
+              to={`/trb/task-list/${row.original.id}`}
+              data-testid={`trbRequest-${row.original.id}`}
+            >
               {value}
             </UswdsReactLink>
           );
@@ -153,6 +156,7 @@ function Homepage() {
             variant="info"
             heading={t('adminInfoBox.heading')}
             className="trb-admin-alert"
+            data-testid="trbAdmin-siteAlert"
           >
             <Trans i18nKey="technicalAssistance:adminInfoBox.text">
               indexOne
@@ -206,7 +210,7 @@ function Homepage() {
             setGlobalFilter={setGlobalFilter}
             tableID={t('systemTable.id')}
             tableName={t('systemTable.title')}
-            className="margin-bottom-4 maxw-none grid-col-6"
+            className="margin-bottom-4"
           />
 
           <Table bordered={false} fullWidth scrollable {...getTableProps()}>
@@ -269,7 +273,7 @@ function Homepage() {
               pageSize={state.pageSize}
               setPageSize={setPageSize}
               page={[]}
-              className="desktop:grid-col-fill"
+              className="desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
             />
             <TablePageSize
               className="desktop:grid-col-auto"
