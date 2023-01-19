@@ -12,7 +12,9 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
       Add a document
     </a>
   </div>
-  <div>
+  <div
+    class="easi-table bleed-x"
+  >
     <div
       class="usa-table-container--scrollable"
       data-testid="scrollable-table-container"
