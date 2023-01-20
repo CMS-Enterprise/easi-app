@@ -140,7 +140,7 @@ describe('The system intake data modifiers', () => {
               day: 22
             },
             { zone: 'America/Los_Angeles' }
-          )
+          ).toISO()
         },
         lcidScope: ''
       };
@@ -195,7 +195,7 @@ describe('The system intake data modifiers', () => {
         updatedAt: '2020-06-23T20:22:04Z',
         archivedAt: '2020-06-28T20:22:04Z',
         adminLead: 'Test Admin Lead',
-        lastAdminNote: 'last admin note (June 22 2020)',
+        lastAdminNote: 'last admin note (June 22, 2020)',
         lcidScope: ''
       });
     });

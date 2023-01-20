@@ -25,7 +25,7 @@ describe('formatDate', () => {
     it('converts an ISO string to the proper date in the appropriate timezone', () => {
       Settings.defaultZone = 'UTC-8';
       const isoStringDate = '2022-10-22T00:00:00Z';
-      expect(formatDate(isoStringDate)).toEqual('October 22 2022');
+      expect(formatDate(isoStringDate)).toEqual('October 22, 2022');
     });
 
     it('returns invalid datetime when a string is not ISO string', () => {
@@ -53,20 +53,6 @@ describe('formatDate', () => {
       };
 
       expect(formatContractDate(input)).toEqual('2/2022');
-    });
-  });
-
-  describe('DateTime', () => {
-    it('converts a luxon DateTime to the proper date', () => {
-      const date = DateTime.fromObject({ year: 2020, month: 6, day: 30 });
-
-      expect(formatDate(date)).toEqual('June 30 2020');
-    });
-
-    it('returns invalid datetime when a luxon datetime is invalid', () => {
-      const date = DateTime.fromISO('blah blah blah');
-
-      expect(formatDate(date)).toEqual('Invalid DateTime');
     });
   });
 });

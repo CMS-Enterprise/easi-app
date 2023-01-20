@@ -103,9 +103,9 @@ const Notes = () => {
             <NoteContent>{content}</NoteContent>
             <NoteByline>{`by ${author.name} | ${DateTime.fromISO(
               createdAt
-            )} at ${DateTime.fromISO(createdAt).toLocaleString(
-              DateTime.TIME_SIMPLE
-            )}`}</NoteByline>
+            ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
+              createdAt
+            ).toLocaleString(DateTime.TIME_SIMPLE)}`}</NoteByline>
           </NoteListItem>
         )
       };
@@ -128,9 +128,9 @@ const Notes = () => {
             <NoteContent>{t(`notes.actionName.${type}`)}</NoteContent>
             <NoteByline>{`by: ${actor.name} | ${DateTime.fromISO(
               createdAt
-            )} at ${DateTime.fromISO(createdAt).toLocaleString(
-              DateTime.TIME_SIMPLE
-            )}`}</NoteByline>
+            ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
+              createdAt
+            ).toLocaleString(DateTime.TIME_SIMPLE)}`}</NoteByline>
             {lcidExpirationChange && (
               <dl>
                 <dt>Lifecycle ID</dt>
