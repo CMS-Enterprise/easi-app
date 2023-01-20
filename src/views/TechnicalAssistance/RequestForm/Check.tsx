@@ -144,19 +144,21 @@ function Check({
             <dt>{t('basic.labels.hasExpectedStartEndDates')}</dt>
             <dd>
               {request.form.hasExpectedStartEndDates &&
-              request.form.expectedStartDate &&
-              request.form.expectedEndDate
-                ? `${t('basic.options.yes')}, ${t(
-                    'check.expectedStartAndGoLive',
-                    {
-                      start: DateTime.fromISO(
-                        request.form.expectedStartDate
-                      ).toFormat('MM/dd/yyyy'),
-                      live: DateTime.fromISO(
-                        request.form.expectedEndDate
-                      ).toFormat('MM/dd/yyyy')
-                    }
-                  )}`
+              (request.form.expectedStartDate || request.form.expectedEndDate)
+                ? (() => {
+                    const start = request.form.expectedStartDate
+                      ? `${DateTime.fromISO(
+                          request.form.expectedStartDate
+                        ).toFormat('MM/dd/yyyy')} ${t('check.expectedStart')}`
+                      : '';
+                    const live = request.form.expectedEndDate
+                      ? `${DateTime.fromISO(
+                          request.form.expectedEndDate
+                        ).toFormat('MM/dd/yyyy')} ${t('check.expectedGoLive')}`
+                      : '';
+                    const and = start && live ? t('check.and') : '';
+                    return `${t('basic.options.yes')}, ${start} ${and} ${live}`;
+                  })()
                 : t('basic.options.no')}
             </dd>
           </Grid>

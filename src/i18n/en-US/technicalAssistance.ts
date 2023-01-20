@@ -512,8 +512,9 @@ const technicalAssistance = {
     notYetSubmitted: 'Not yet submitted',
     requestType: 'Request type',
     noTopicsSelected: 'No topics selected',
-    expectedStartAndGoLive:
-      '{{- start}} expected start and {{- live}} expected go live',
+    expectedStart: 'expected start',
+    expectedGoLive: 'expected go live',
+    and: 'and',
     noAttendees: 'There are no attendees',
     whatNext: {
       title: 'What happens next?',
