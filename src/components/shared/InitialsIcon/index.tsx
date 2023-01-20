@@ -20,6 +20,16 @@ type InitialsIconProps = {
   className?: string;
 };
 
+/** Array of classes for background colors */
+export const colorClassNames: string[] = [
+  'bg-accent-cool-lighter',
+  'bg-secondary-lighter',
+  'bg-accent-warm-lighter',
+  'bg-primary-lighter',
+  'bg-warning-lighter',
+  'bg-success-lighter'
+];
+
 /** Circle icon that displays user initials  */
 export default function InitialsIcon({
   name,
@@ -35,16 +45,6 @@ export default function InitialsIcon({
   const [lastName] = nameArray.slice(-1); // Get last name in array
   const initials = (firstName[0] + lastName[0]).toUpperCase();
 
-  /** Array of classes for background colors */
-  const colorClassNames: string[] = [
-    'bg-accent-cool-lighter',
-    'bg-secondary-lighter',
-    'bg-accent-warm-lighter',
-    'bg-primary-lighter',
-    'bg-warning-lighter',
-    'bg-success-lighter'
-  ];
-
   /** Icon background color */
   // Use index prop to get corresponding color from array, or default to backgroundColor prop
   const colorClass = index
@@ -53,6 +53,7 @@ export default function InitialsIcon({
 
   return (
     <div
+      data-testid="initials-icon"
       className={classNames(
         `easi-initials-icon display-flex flex-align-center flex-justify-center font-body-2xs circle-4 ${colorClass}`,
         className
