@@ -188,7 +188,7 @@ describe('Governance Review Team', () => {
     ).click();
     cy.contains('dt', 'Lifecycle ID Expiration')
       .siblings('dd')
-      .contains(`December 25 ${futureDateYear}`);
+      .contains(`December 25, ${futureDateYear}`);
     cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
     cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
