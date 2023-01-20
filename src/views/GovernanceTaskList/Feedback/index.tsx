@@ -41,7 +41,11 @@ const GovernanceFeedback = () => {
   );
 
   const formatGRTFeedback = (item: GRTFeedback) => {
-    const formattedDate = formatDate(item.createdAt);
+    const formattedDate = formatDate({
+      date: item.createdAt,
+      serverGenerated: true,
+      format: 'MMMM d, yyyy'
+    });
     return (
       <div className="margin-bottom-3" key={item.id}>
         <h4

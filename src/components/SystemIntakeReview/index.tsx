@@ -93,7 +93,11 @@ export const SystemIntakeReview = ({
     }
 
     if (submittedAt) {
-      return formatDate(submittedAt);
+      return formatDate({
+        date: submittedAt,
+        serverGenerated: true,
+        format: 'MMMM d, yyyy'
+      });
     }
 
     return 'N/A';

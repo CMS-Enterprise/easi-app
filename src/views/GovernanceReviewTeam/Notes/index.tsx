@@ -136,9 +136,21 @@ const Notes = () => {
                 <dt>Lifecycle ID</dt>
                 <dd>{data.systemIntake?.lcid}</dd>
                 <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
-                <dd>{formatDate(lcidExpirationChange.newDate)}</dd>
+                <dd>
+                  {formatDate({
+                    date: lcidExpirationChange.newDate,
+                    serverGenerated: false,
+                    format: 'MMMM d, yyyy'
+                  })}
+                </dd>
                 <dt>{t('notes.extendLcid.oldExpirationDate')}</dt>
-                <dd>{formatDate(lcidExpirationChange.previousDate)}</dd>
+                <dd>
+                  {formatDate({
+                    date: lcidExpirationChange.previousDate,
+                    serverGenerated: false,
+                    format: 'MMMM d, yyyy'
+                  })}
+                </dd>
 
                 {/* Used TruncatedText for old/new scope, next steps, and cost baseline since they can be 3000 characters */}
                 <dt>{t('notes.extendLcid.newScope')}</dt>

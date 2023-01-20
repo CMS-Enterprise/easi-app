@@ -56,7 +56,11 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate(value, 'DATE_SHORT');
+            return formatDate({
+              date: value,
+              serverGenerated: true,
+              format: 'MM/dd/yyyy'
+            });
           }
           return '';
         },
@@ -71,7 +75,11 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'relevantTestDate',
         Cell: ({ value }: any): any => {
           if (value) {
-            return formatDate(value, 'DATE_SHORT');
+            return formatDate({
+              date: value,
+              serverGenerated: false,
+              format: 'MM/dd/yyyy'
+            });
           }
           return t('requestTable.emptyTestDate');
         },
@@ -95,8 +103,11 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
             <span>
               {value}{' '}
               <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
-                row.original?.statusRecord?.createdAt,
-                'DATE_SHORT'
+                {
+                  date: row.original?.statusRecord?.createdAt,
+                  serverGenerated: true,
+                  format: 'MM/dd/yyyy'
+                }
               )}`}</span>
             </span>
           );

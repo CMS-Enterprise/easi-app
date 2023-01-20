@@ -271,9 +271,11 @@ export const convertIntakeToCSV = (
     ...intake,
     ...collaboratorTeams,
     lastAdminNote: intake.lastAdminNote
-      ? `${intake.lastAdminNote.content} (${formatDate(
-          intake.lastAdminNote.createdAt
-        )})`
+      ? `${intake.lastAdminNote.content} (${formatDate({
+          date: intake.lastAdminNote.createdAt,
+          serverGenerated: true,
+          format: 'MMMM d, yyyy'
+        })})`
       : null,
     lcidScope: intake.lcidScope,
     contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(

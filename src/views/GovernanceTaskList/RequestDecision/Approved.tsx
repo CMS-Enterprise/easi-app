@@ -29,7 +29,11 @@ const Approved = ({ intake }: ApprovedProps) => {
         {lcidExpiresAt && (
           <p className="text-bold">
             {t('decision.lcidExpiration', {
-              date: formatDate(lcidExpiresAt)
+              date: formatDate({
+                date: lcidExpiresAt,
+                serverGenerated: false,
+                format: 'MMMM d, yyyy'
+              })
             })}
           </p>
         )}

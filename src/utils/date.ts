@@ -3,17 +3,25 @@ import { DateTime } from 'luxon';
 // Used to parse out mintute, day, ,month, and years from ISOString
 export const parseAsUTC = (date: string) => DateTime.fromISO(date).toUTC();
 
-// Currently only alternative in use to MMMM d yyyy is MM/dd/yyyy
-// Leaving opening possiblity of 'format' paramter to expand beyond short
-export const formatDate = (date: string, format?: 'DATE_SHORT') => {
-  const dateFormat = format === 'DATE_SHORT' ? 'MM/dd/yyyy' : 'MMMM d, yyyy';
+type DateParserType = {
+  date: string;
+  serverGenerated: boolean;
+  format?: 'MM/dd/yyyy' | 'MMMM d, yyyy';
+};
 
-  // TODO:  remove once frontend sends time with dates
-  const isServerGeneratedDate = date.substring(10) === 'T00:00:00Z';
-
-  return isServerGeneratedDate
-    ? parseAsUTC(date).toFormat(dateFormat)
-    : DateTime.fromISO(date).toFormat(dateFormat);
+/*
+ Currently only alternative in use to MMMM d yyyy is MM/dd/yyyy
+ User input date need to be parsed in UTC to preserve date
+ If iso string contains specific time (server generated dates - ex. dateSubmitted), parse locally
+*/
+export const formatDate = ({
+  date,
+  serverGenerated,
+  format = 'MMMM d, yyyy'
+}: DateParserType) => {
+  return serverGenerated
+    ? DateTime.fromISO(date).toFormat(format)
+    : DateTime.fromISO(date).toUTC().toFormat(format);
 };
 
 type ContractDate = {

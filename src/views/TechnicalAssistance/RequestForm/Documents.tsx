@@ -125,7 +125,12 @@ function Documents({
       {
         Header: t<string>('documents.table.header.uploadDate'),
         accessor: 'uploadedAt',
-        Cell: ({ value }) => formatDate(value, 'DATE_SHORT')
+        Cell: ({ value }) =>
+          formatDate({
+            date: value,
+            serverGenerated: true,
+            format: 'MM/dd/yyyy'
+          })
       },
       {
         Header: t<string>('documents.table.header.actions'),

@@ -87,7 +87,11 @@ const RequestRepository = () => {
     accessor: 'submittedAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return formatDate(value, 'DATE_SHORT');
+        return formatDate({
+          date: value,
+          serverGenerated: true,
+          format: 'MM/dd/yyyy'
+        });
       }
 
       return t('requestRepository.table.submissionDate.null');
@@ -151,7 +155,11 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDate(value, 'DATE_SHORT');
+      return formatDate({
+        date: value,
+        serverGenerated: false,
+        format: 'MM/dd/yyyy'
+      });
     }
   };
 
@@ -169,7 +177,11 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDate(value, 'DATE_SHORT');
+      return formatDate({
+        date: value,
+        serverGenerated: false,
+        format: 'MM/dd/yyyy'
+      });
     }
   };
 
@@ -207,7 +219,11 @@ const RequestRepository = () => {
     accessor: 'lcidExpiresAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return formatDate(value, 'DATE_SHORT');
+        return formatDate({
+          date: value,
+          serverGenerated: false,
+          format: 'MM/dd/yyyy'
+        });
       }
 
       // If no LCID Expiration exists, display 'No LCID Issued'
@@ -224,7 +240,11 @@ const RequestRepository = () => {
           // Display admin note using truncated text field that
           // will display note with expandable extra text (if applicable)
           <>
-            {formatDate(value.createdAt!, 'DATE_SHORT')}
+            {formatDate({
+              date: value.createdAt!,
+              serverGenerated: true,
+              format: 'MM/dd/yyyy'
+            })}
 
             <TruncatedText
               id="last-admin-note"

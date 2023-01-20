@@ -77,7 +77,11 @@ const LcidInfo = () => {
                   {systemIntake.lcidExpiresAt && (
                     <p>
                       {t('decision.lcidExpiration', {
-                        date: formatDate(systemIntake.lcidExpiresAt)
+                        date: formatDate({
+                          date: systemIntake.lcidExpiresAt,
+                          serverGenerated: false,
+                          format: 'MMMM d, yyyy'
+                        })
                       })}
                     </p>
                   )}

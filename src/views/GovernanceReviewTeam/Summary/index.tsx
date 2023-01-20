@@ -136,7 +136,15 @@ const RequestSummary = ({
             </div>
             <div className="easi-grt__description-group">
               <dt>{t('intake:fields.submissionDate')}</dt>
-              <dd>{submittedAt ? formatDate(submittedAt) : 'N/A'}</dd>
+              <dd>
+                {submittedAt
+                  ? formatDate({
+                      date: submittedAt,
+                      serverGenerated: true,
+                      format: 'MMMM d, yyyy'
+                    })
+                  : 'N/A'}
+              </dd>
             </div>
             <div className="easi-grt__description-group">
               <dt>{t('intake:fields.requestFor')}</dt>

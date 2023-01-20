@@ -83,7 +83,11 @@ const Table = ({
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate(value, 'DATE_SHORT');
+            return formatDate({
+              date: value,
+              serverGenerated: false,
+              format: 'MM/dd/yyyy'
+            });
           }
           return 'Not submitted';
         }
@@ -103,8 +107,11 @@ const Table = ({
                 <span>
                   {value}
                   <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDate(
-                    row.original.statusCreatedAt,
-                    'DATE_SHORT'
+                    {
+                      date: row.original.statusCreatedAt,
+                      serverGenerated: true,
+                      format: 'MM/dd/yyyy'
+                    }
                   )}`}</span>
                 </span>
               );
@@ -124,7 +131,11 @@ const Table = ({
         accessor: 'nextMeetingDate',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate(value, 'DATE_SHORT');
+            return formatDate({
+              date: value,
+              serverGenerated: false,
+              format: 'MM/dd/yyyy'
+            });
           }
           return 'None';
         }

@@ -242,7 +242,11 @@ const ExtendLifecycleId = ({
                   {t('extendLcid.currentLcidExpiration')}
                 </dt>
                 <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
-                  {formatDate(lcidExpiresAt)}
+                  {formatDate({
+                    date: lcidExpiresAt,
+                    serverGenerated: true,
+                    format: 'MMMM d, yyyy'
+                  })}
                 </dd>
                 <dt className="text-bold">{t('extendLcid.currentScope')}</dt>
                 <dd className="margin-left-0 margin-bottom-2 line-height-body-5">

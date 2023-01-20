@@ -20,7 +20,11 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
   );
 
   const formatGRTFeedback = (feedback: GRTFeedback) => {
-    const formattedDate = formatDate(feedback.createdAt);
+    const formattedDate = formatDate({
+      date: feedback.createdAt,
+      serverGenerated: true,
+      format: 'MMMM d, yyyy'
+    });
     return (
       <div className="margin-bottom-3" key={feedback.createdAt}>
         <h4

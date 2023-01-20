@@ -435,7 +435,11 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                     className="line-height-body-3 margin-bottom-4"
                     definition={showVal(
                       ato?.lastAssessmentDate &&
-                        formatDate(ato.lastAssessmentDate)
+                        formatDate({
+                          date: ato.lastAssessmentDate,
+                          serverGenerated: false,
+                          format: 'MMMM d, yyyy'
+                        })
                     )}
                   />
                 </Grid>

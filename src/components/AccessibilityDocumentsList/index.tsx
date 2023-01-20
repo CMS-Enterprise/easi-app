@@ -115,7 +115,11 @@ const AccessibilityDocumentsList = ({
   const data = useMemo(() => {
     const tableData = documents.map((singleDoc: Document) => {
       const uploadedAt = singleDoc.uploadedAt
-        ? formatDate(singleDoc.uploadedAt)
+        ? formatDate({
+            date: singleDoc.uploadedAt,
+            serverGenerated: true,
+            format: 'MM/dd/yyyy'
+          })
         : '';
 
       let translatedStatus;

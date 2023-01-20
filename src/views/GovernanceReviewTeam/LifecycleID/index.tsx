@@ -43,7 +43,11 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
             <DescriptionDefinition
               definition={
                 systemIntake?.lcidExpiresAt
-                  ? formatDate(systemIntake?.lcidExpiresAt)
+                  ? formatDate({
+                      date: systemIntake?.lcidExpiresAt,
+                      serverGenerated: false,
+                      format: 'MMMM d, yyyy'
+                    })
                   : ''
               }
             />

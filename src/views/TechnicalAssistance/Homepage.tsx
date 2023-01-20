@@ -73,7 +73,11 @@ function Homepage() {
         accessor: 'createdAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate(value, 'DATE_SHORT');
+            return formatDate({
+              date: value,
+              serverGenerated: true,
+              format: 'MM/dd/yyyy'
+            });
           }
           return '';
         }

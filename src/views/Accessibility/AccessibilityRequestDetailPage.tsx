@@ -204,7 +204,11 @@ const AccessibilityRequestDetailPage = () => {
       refetch();
       showMessage(
         t('removeTestDate.confirmation', {
-          date: formatDate(testDate.date),
+          date: formatDate({
+            date: testDate.date,
+            serverGenerated: false,
+            format: 'MMMM d, yyyy'
+          }),
           requestName
         })
       );
@@ -321,7 +325,11 @@ const AccessibilityRequestDetailPage = () => {
         {notes.length > 0 &&
           t('requestDetails.notes.mostRecentNote', {
             authorName: notes[0]?.authorName,
-            createdAt: formatDate(notes[0]?.createdAt)
+            createdAt: formatDate({
+              date: notes[0]?.createdAt,
+              serverGenerated: true,
+              format: 'MMMM d, yyyy'
+            })
           })}
       </h3>
       <p className="usa-sr-only" aria-live="polite">
@@ -426,7 +434,11 @@ const AccessibilityRequestDetailPage = () => {
               <NoteByline>
                 {`by ${note.authorName}`}
                 <span className="padding-x-1">|</span>
-                {formatDate(note.createdAt)}
+                {formatDate({
+                  date: note.createdAt,
+                  serverGenerated: true,
+                  format: 'MMMM d, yyyy'
+                })}
               </NoteByline>
             </NoteListItem>
           ))}
@@ -605,7 +617,11 @@ const AccessibilityRequestDetailPage = () => {
                     {t('intake:fields.submissionDate')}
                   </dt>
                   <dd className="margin-0 margin-bottom-1">
-                    {formatDate(submittedAt)}
+                    {formatDate({
+                      date: submittedAt,
+                      serverGenerated: true,
+                      format: 'MMMM d, yyyy'
+                    })}
                   </dd>
                   <dt className="font-body-sm text-bold">
                     {t('intake:fields.businessOwner')}

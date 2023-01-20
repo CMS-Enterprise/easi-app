@@ -277,7 +277,11 @@ export function showAtoExpirationDate(
 ): React.ReactNode {
   return showVal(
     systemProfileAto?.dateAuthorizationMemoExpires &&
-      formatDate(systemProfileAto.dateAuthorizationMemoExpires)
+      formatDate({
+        date: systemProfileAto.dateAuthorizationMemoExpires,
+        serverGenerated: false,
+        format: 'MMMM d, yyyy'
+      })
   );
 }
 

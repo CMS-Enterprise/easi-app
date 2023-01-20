@@ -33,7 +33,11 @@ describe('Accessibility Requests', () => {
       cy.contains('h3', 'Test dates and scores');
       cy.get('.accessibility-request__other-details').within(() => {
         cy.contains('dt', 'Submission date');
-        const dateString = formatDate(new Date().toISOString());
+        const dateString = formatDate({
+          date: new Date().toISOString(),
+          serverGenerated: true,
+          format: 'MMMM d, yyyy'
+        });
         cy.contains('dd', dateString);
 
         cy.contains('dt', 'Business Owner');
@@ -122,7 +126,11 @@ describe('Accessibility Requests', () => {
 
       cy.get('tbody').within(() => {
         cy.contains('th', 'TACO');
-        const dateString = formatDate(new Date().toISOString(), 'DATE_SHORT');
+        const dateString = formatDate({
+          date: new Date().toISOString(),
+          serverGenerated: false,
+          format: 'MM/dd/yyyy'
+        });
         cy.contains('td', 'Section 508');
         cy.contains('td', dateString);
         cy.contains('td', 'Open');
@@ -178,7 +186,11 @@ describe('Accessibility Requests', () => {
         .first()
         .within(() => {
           const today = new Date().toISOString();
-          const formattedDate = formatDate(today);
+          const formattedDate = formatDate({
+            date: today,
+            serverGenerated: true,
+            format: 'MMMM d, yyyy'
+          });
           cy.contains('This is a really great note');
           cy.contains(formattedDate);
         });
@@ -202,13 +214,15 @@ describe('Accessibility Requests', () => {
       const currentMonth = String(futureDatetime.month);
       const tomorrow = String(futureDatetime.day);
       const currentYear = String(futureDatetime.year);
-      const tomorrowDate = formatDate(
-        DateTime.fromObject({
+      const tomorrowDate = formatDate({
+        date: DateTime.fromObject({
           month: currentMonth,
           day: tomorrow,
           year: currentYear
-        }).toISO()
-      );
+        }).toISO(),
+        serverGenerated: false,
+        format: 'MMMM d, yyyy'
+      });
 
       cy.get('h1').contains('Seeded 508 Request');
       cy.get('a').contains('Add a date').click();
@@ -311,7 +325,11 @@ describe('Accessibility Requests', () => {
         .within(() => {
           cy.get('span').contains('In remediation');
           const today = new Date().toISOString();
-          const formattedDate = formatDate(today, 'DATE_SHORT');
+          const formattedDate = formatDate({
+            date: today,
+            serverGenerated: true,
+            format: 'MM/dd/yyyy'
+          });
           cy.get('span').contains(`changed on ${formattedDate}`);
         });
     });
@@ -333,7 +351,11 @@ describe('Accessibility Requests', () => {
         .within(() => {
           cy.get('span').contains('Closed');
           const today = new Date().toISOString();
-          const formattedDate = formatDate(today, 'DATE_SHORT');
+          const formattedDate = formatDate({
+            date: today,
+            serverGenerated: true,
+            format: 'MM/dd/yyyy'
+          });
           cy.get('span').contains(`changed on ${formattedDate}`);
         });
     });

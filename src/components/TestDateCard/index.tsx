@@ -44,7 +44,13 @@ const TestDateCard = ({
     <div className="bg-gray-10 padding-2 line-height-body-4 margin-bottom-2">
       <b>{`Test ${testIndex}: ${translateTestType(testType)}`}</b>
       <p className="margin-y-1">
-        <span className="margin-right-2">{formatDate(date)}</span>
+        <span className="margin-right-2">
+          {formatDate({
+            date,
+            serverGenerated: true,
+            format: 'MMMM d, yyyy'
+          })}
+        </span>
         <span
           className=" display-inline-flex text-base-dark"
           data-testid="score"
@@ -82,7 +88,11 @@ const TestDateCard = ({
               {t('removeTestDate.modalHeader', {
                 testNumber: testIndex,
                 testType: translateTestType(testType),
-                testDate: formatDate(date),
+                testDate: formatDate({
+                  date,
+                  serverGenerated: false,
+                  format: 'MMMM d, yyyy'
+                }),
                 requestName
               })}
             </PageHeading>
