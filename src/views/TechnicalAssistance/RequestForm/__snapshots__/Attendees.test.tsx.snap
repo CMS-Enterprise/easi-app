@@ -50,7 +50,7 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                 >
                   <div
                     class="cedar-contact-select__input-container css-1pndypt-Input"
-                    data-value="Jerry Seinfeld, SF13"
+                    data-value="Adeline Aarons, ABCD"
                   >
                     <input
                       aria-autocomplete="list"
@@ -69,7 +69,7 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                       style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
                       tabindex="0"
                       type="text"
-                      value="Jerry Seinfeld, SF13"
+                      value="Adeline Aarons, ABCD"
                     />
                   </div>
                 </div>
@@ -324,8 +324,8 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
               >
                 <td
                   class="trbAttendee display-flex"
-                  data-testid="trbAttendee-JTTC"
-                  id="trbAttendee-JTTC"
+                  data-testid="trbAttendee-ADMI"
+                  id="trbAttendee-ADMI"
                   role="cell"
                   style="padding: 0px;"
                 >
@@ -333,19 +333,81 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                     class="easi-initials-icon bg-accent-cool-lighter margin-right-1"
                   >
                     <span>
-                      AJ
+                      AA
                     </span>
                   </div>
                   <div>
                     <p
                       class="margin-y-05 text-bold"
                     >
-                      Anabelle Jerde, CPI
+                      Audrey Abrams, CMS
                     </p>
                     <p
                       class="margin-y-05"
                     >
-                      anabelle.jerde@local.fake
+                      audrey.abrams@local.fake
+                    </p>
+                    <p
+                      class="margin-top-05 margin-bottom-0"
+                    >
+                      System Owner
+                    </p>
+                    <ul
+                      class="usa-button-group margin-y-0"
+                    >
+                      <li
+                        class="usa-button-group__item"
+                      >
+                        <a
+                          class="margin-right-05"
+                          href="//list"
+                        >
+                          Edit
+                        </a>
+                      </li>
+                      <li
+                        class="usa-button-group__item"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled text-error margin-top-0"
+                          data-testid="button"
+                          type="button"
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              <tr
+                class="tablet:grid-col-6 margin-bottom-1"
+                role="row"
+              >
+                <td
+                  class="trbAttendee display-flex"
+                  data-testid="trbAttendee-SF13"
+                  id="trbAttendee-SF13"
+                  role="cell"
+                  style="padding: 0px;"
+                >
+                  <div
+                    class="easi-initials-icon bg-accent-cool-lighter margin-right-1"
+                  >
+                    <span>
+                      JS
+                    </span>
+                  </div>
+                  <div>
+                    <p
+                      class="margin-y-05 text-bold"
+                    >
+                      Jerry Seinfeld, OEOCR
+                    </p>
+                    <p
+                      class="margin-y-05"
+                    >
+                      jerry.seinfeld@local.fake
                     </p>
                     <p
                       class="margin-top-05 margin-bottom-0"
@@ -386,8 +448,8 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
               >
                 <td
                   class="trbAttendee display-flex"
-                  data-testid="trbAttendee-ADMI"
-                  id="trbAttendee-ADMI"
+                  data-testid="trbAttendee-JTTC"
+                  id="trbAttendee-JTTC"
                   role="cell"
                   style="padding: 0px;"
                 >
@@ -395,24 +457,24 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                     class="easi-initials-icon bg-accent-cool-lighter margin-right-1"
                   >
                     <span>
-                      AA
+                      AJ
                     </span>
                   </div>
                   <div>
                     <p
                       class="margin-y-05 text-bold"
                     >
-                      Audrey Abrams, CMS
+                      Anabelle Jerde, CPI
                     </p>
                     <p
                       class="margin-y-05"
                     >
-                      audrey.abrams@local.fake
+                      anabelle.jerde@local.fake
                     </p>
                     <p
                       class="margin-top-05 margin-bottom-0"
                     >
-                      System Owner
+                      Privacy Advisor
                     </p>
                     <ul
                       class="usa-button-group margin-y-0"

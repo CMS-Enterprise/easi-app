@@ -519,6 +519,53 @@ const technicalAssistance = {
       info:
         'Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.'
     }
+  },
+  adminHome: {
+    breadcrumb: 'Request {{trbRequestId}}',
+    requestType: 'Request type',
+    requester: 'Requester',
+    submissionDate: 'Submission Date',
+    status: 'Status',
+    taskStatuses: {
+      formStatus: {
+        READY_TO_START: 'Ready to start request form',
+        IN_PROGRESS: 'Draft request form',
+        COMPLETED: 'Request form completed'
+      },
+      feedbackStatus: {
+        CANNOT_START_YET: 'Request form completed',
+        READY_TO_START: 'Ready to start feedback',
+        EDITS_REQUESTED: 'Feedback edits requested',
+        IN_REVIEW: 'Feedback in review',
+        COMPLETED: 'Feedback completed'
+      },
+      consultPrepStatus: {
+        CANNOT_START_YET: 'Feedback completed',
+        READY_TO_START: 'Ready to start consult prep',
+        COMPLETED: 'Consult prep completed'
+      },
+      attendConsultStatus: {
+        CANNOT_START_YET: 'Consult prep completed',
+        READY_TO_SCHEDULE: 'Ready for consult',
+        SCHEDULED: 'Consult scheduled',
+        COMPLETED: 'Consult completed'
+      }
+    },
+    open: 'Open',
+    closed: 'Closed',
+    trbLead: 'TRB Lead',
+    notAssigned: 'Not assigned',
+    assign: 'Assign',
+    change: 'Change',
+    subnav: {
+      back: 'Back to All Requests',
+      requestHome: 'Request home',
+      initialRequestForm: 'Initial request form',
+      supportingDocuments: 'Supporting documents',
+      feedback: 'Feedback',
+      adviceLetter: 'Advice letter',
+      notes: 'Notes'
+    }
   }
 };
 
