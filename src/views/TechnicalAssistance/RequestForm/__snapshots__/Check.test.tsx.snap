@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Trb Request form: Check and submit renders values 1`] = `
+exports[`Trb Request form: Check and submit renders request form field values 1`] = `
 <DocumentFragment>
   <dl
     class="easi-dl margin-top-4 margin-bottom-3"
@@ -114,7 +114,7 @@ exports[`Trb Request form: Check and submit renders values 1`] = `
           Where are you in your process?
         </dt>
         <dd>
-          I have an idea and want to brainstorm
+          Other: A different brainstorm
         </dd>
       </div>
       <div

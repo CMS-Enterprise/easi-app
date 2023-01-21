@@ -25,6 +25,7 @@ type TrbFormInputBasic = Pick<
   | 'hasSolutionInMind'
   | 'proposedSolution'
   | 'whereInProcess'
+  | 'whereInProcessOther'
   | 'hasExpectedStartEndDates'
   | 'expectedStartDate'
   | 'expectedEndDate'
@@ -50,6 +51,10 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     .mixed<TRBWhereInProcessOption>()
     .oneOf(Object.values(TRBWhereInProcessOption))
     .required(),
+  whereInProcessOther: yup.string().when('whereInProcess', {
+    is: 'OTHER',
+    then: schema => schema.required()
+  }),
   hasExpectedStartEndDates: yup
     .boolean()
     .nullable()

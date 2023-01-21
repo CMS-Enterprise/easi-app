@@ -33,9 +33,8 @@ const mockTrbRequestData: TrbRequest = {
     hasSolutionInMind: true,
     proposedSolution:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed maecenas gravida tristique maecenas. Id id ipsum, purus ac ornare. A, ut et et, sollicitudin turpis sit porta. Enim, dictumst eu vulputate et lacus et habitant. Sit quisque gravida condimentum augue erat mauris metus, arcu. Malesuada posuere fames integer sed eu tortor vel. Non scelerisque elementum auctor urna consectetur. Ut eget hendrerit massa pharetra pellentesque dolor risus in.',
-    whereInProcess:
-      TRBWhereInProcessOption.I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM,
-    whereInProcessOther: null,
+    whereInProcess: TRBWhereInProcessOption.OTHER,
+    whereInProcessOther: 'A different brainstorm',
     hasExpectedStartEndDates: true,
     expectedStartDate: '2023-01-05T05:00:00Z',
     expectedEndDate: null,
@@ -87,7 +86,7 @@ const mockRefetch = async (
 };
 
 describe('Trb Request form: Check and submit', () => {
-  it('renders values', async () => {
+  it('renders request form field values', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       auth: {
@@ -121,6 +120,8 @@ describe('Trb Request form: Check and submit', () => {
     );
 
     // Check some strings for the correct formatting
+    // Where in process "other" field
+    getByText('Other: A different brainstorm');
     // Expected start date
     getByText('Yes, 01/05/2023 expected start');
     // Oit groups with other
