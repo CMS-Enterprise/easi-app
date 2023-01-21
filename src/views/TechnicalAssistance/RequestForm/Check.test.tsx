@@ -16,6 +16,7 @@ import {
   TRBApplicationDevelopmentOption,
   TRBCollabGroupOption,
   TRBNetworkAndSecurityOption,
+  TRBRequestType,
   TRBWhereInProcessOption
 } from 'types/graphql-global-types';
 
@@ -25,6 +26,7 @@ const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
   createdBy: 'SF13',
+  type: TRBRequestType.NEED_HELP,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     component: 'CCSQ',
@@ -120,6 +122,8 @@ describe('Trb Request form: Check and submit', () => {
     );
 
     // Check some strings for the correct formatting
+    // Request type
+    getByText('I’m having a problem with my system');
     // Where in process "other" field
     getByText('Other: A different brainstorm');
     // Expected start date
