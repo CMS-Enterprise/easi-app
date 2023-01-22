@@ -9,6 +9,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -78,12 +79,47 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 }
 
 // RequestReviewForTRBAdviceLetter sets a TRB advice letter as ready for review and (TODO) notifies the given recipients.
-func RequestReviewForTRBAdviceLetter(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetter, error) {
-	// TODO - EASI-2514 - send notification email(s)
-
+func RequestReviewForTRBAdviceLetter(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	id uuid.UUID,
+) (*models.TRBAdviceLetter, error) {
 	letter, err := store.UpdateTRBAdviceLetterStatus(ctx, id, models.TRBAdviceLetterStatusReadyForReview)
 	if err != nil {
 		return nil, err
+	}
+
+	trb, err := store.GetTRBRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
+	if err != nil {
+		return nil, err
+	}
+
+	leadInfo, err := fetchUserInfo(ctx, *trb.TRBLead)
+	if err != nil {
+		return nil, err
+	}
+
+	emailInput := email.SendTRBRequestTRBLeadEmailInput{
+		TRBRequestID:   trb.ID,
+		TRBRequestName: trb.Name,
+		TRBLeadName:    leadInfo.CommonName,
+		RequesterName:  requesterInfo.CommonName,
+	}
+
+	// Email client can be nil when this is called from tests - the email client itself tests this
+	// separately in the email package test
+	if emailClient != nil {
+		err = emailClient.SendTRBRequestTRBLeadEmail(ctx, emailInput)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return letter, nil
