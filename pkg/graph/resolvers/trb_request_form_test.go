@@ -157,6 +157,9 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		// confirm that the status is correctly marked "in progress"
 		s.EqualValues(updatedForm.Status, models.TRBFormStatusInProgress)
 
+		// confirm we don't yet have a submission date
+		s.Nil(updatedForm.SubmittedAt)
+
 		submitChanges := map[string]interface{}{
 			"trbRequestId": trbRequest.ID.String(),
 			"isSubmitted":  true,
@@ -164,5 +167,6 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, submitChanges)
 		s.NoError(err)
 		s.EqualValues(submittedForm.Status, models.TRBFormStatusCompleted)
+		s.NotNil(submittedForm.SubmittedAt) // we submitted, so this should be populated
 	})
 }

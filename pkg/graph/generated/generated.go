@@ -909,6 +909,7 @@ type ComplexityRoot struct {
 		SubjectAreaOtherTechnicalTopicsOther           func(childComplexity int) int
 		SubjectAreaTechnicalReferenceArchitecture      func(childComplexity int) int
 		SubjectAreaTechnicalReferenceArchitectureOther func(childComplexity int) int
+		SubmittedAt                                    func(childComplexity int) int
 		TRBRequestID                                   func(childComplexity int) int
 		WhereInProcess                                 func(childComplexity int) int
 		WhereInProcessOther                            func(childComplexity int) int
@@ -5916,6 +5917,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.SubjectAreaTechnicalReferenceArchitectureOther(childComplexity), true
 
+	case "TRBRequestForm.submittedAt":
+		if e.complexity.TRBRequestForm.SubmittedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestForm.SubmittedAt(childComplexity), true
+
 	case "TRBRequestForm.trbRequestId":
 		if e.complexity.TRBRequestForm.TRBRequestID == nil {
 			break
@@ -8101,6 +8109,7 @@ type TRBRequestForm {
   subjectAreaDataAndDataManagementOther: String
   subjectAreaGovernmentProcessesAndPoliciesOther: String
   subjectAreaOtherTechnicalTopicsOther: String
+  submittedAt: Time
 
   createdBy: String!
   createdAt: Time!
@@ -26847,6 +26856,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestForm(ctx conte
 				return ec.fieldContext_TRBRequestForm_subjectAreaGovernmentProcessesAndPoliciesOther(ctx, field)
 			case "subjectAreaOtherTechnicalTopicsOther":
 				return ec.fieldContext_TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx, field)
+			case "submittedAt":
+				return ec.fieldContext_TRBRequestForm_submittedAt(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestForm_createdBy(ctx, field)
 			case "createdAt":
@@ -36831,6 +36842,8 @@ func (ec *executionContext) fieldContext_TRBRequest_form(ctx context.Context, fi
 				return ec.fieldContext_TRBRequestForm_subjectAreaGovernmentProcessesAndPoliciesOther(ctx, field)
 			case "subjectAreaOtherTechnicalTopicsOther":
 				return ec.fieldContext_TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx, field)
+			case "submittedAt":
+				return ec.fieldContext_TRBRequestForm_submittedAt(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestForm_createdBy(ctx, field)
 			case "createdAt":
@@ -39938,6 +39951,47 @@ func (ec *executionContext) fieldContext_TRBRequestForm_subjectAreaOtherTechnica
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestForm_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestForm) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestForm_submittedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubmittedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestForm_submittedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestForm",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -52969,6 +53023,10 @@ func (ec *executionContext) _TRBRequestForm(ctx context.Context, sel ast.Selecti
 		case "subjectAreaOtherTechnicalTopicsOther":
 
 			out.Values[i] = ec._TRBRequestForm_subjectAreaOtherTechnicalTopicsOther(ctx, field, obj)
+
+		case "submittedAt":
+
+			out.Values[i] = ec._TRBRequestForm_submittedAt(ctx, field, obj)
 
 		case "createdBy":
 
