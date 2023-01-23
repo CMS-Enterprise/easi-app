@@ -52,7 +52,7 @@ import {
   UrlLocationTag,
   UsernameWithRoles
 } from 'types/systemProfile';
-import { formatDate, parseAsUTC } from 'utils/date';
+import { formatDateUtc, parseAsUTC } from 'utils/date';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
@@ -277,11 +277,10 @@ export function showAtoExpirationDate(
 ): React.ReactNode {
   return showVal(
     systemProfileAto?.dateAuthorizationMemoExpires &&
-      formatDate({
-        date: systemProfileAto.dateAuthorizationMemoExpires,
-        serverGenerated: false,
-        format: 'MMMM d, yyyy'
-      })
+      formatDateUtc(
+        systemProfileAto.dateAuthorizationMemoExpires,
+        'MMMM d, yyyy'
+      )
   );
 }
 

@@ -34,7 +34,7 @@ import {
   SystemProfileSubviewProps,
   ThreatLevel
 } from 'types/systemProfile';
-import { formatDate } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 import { showAtoExpirationDate, showVal } from 'views/SystemProfile';
 
 import './index.scss';
@@ -435,11 +435,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                     className="line-height-body-3 margin-bottom-4"
                     definition={showVal(
                       ato?.lastAssessmentDate &&
-                        formatDate({
-                          date: ato.lastAssessmentDate,
-                          serverGenerated: false,
-                          format: 'MMMM d, yyyy'
-                        })
+                        formatDateUtc(ato.lastAssessmentDate, 'MMMM d, yyyy')
                     )}
                   />
                 </Grid>

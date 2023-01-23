@@ -17,7 +17,7 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
-import { formatDate } from 'utils/date';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -56,11 +56,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate({
-              date: value,
-              serverGenerated: true,
-              format: 'MM/dd/yyyy'
-            });
+            return formatDateLocal(value, 'MM/dd/yyyy');
           }
           return '';
         },
@@ -75,11 +71,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'relevantTestDate',
         Cell: ({ value }: any): any => {
           if (value) {
-            return formatDate({
-              date: value,
-              serverGenerated: false,
-              format: 'MM/dd/yyyy'
-            });
+            return formatDateUtc(value, 'MM/dd/yyyy');
           }
           return t('requestTable.emptyTestDate');
         },
@@ -102,12 +94,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           return (
             <span>
               {value}{' '}
-              <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
-                {
-                  date: row.original?.statusRecord?.createdAt,
-                  serverGenerated: true,
-                  format: 'MM/dd/yyyy'
-                }
+              <span className="text-base-dark font-body-3xs">{`changed on ${formatDateLocal(
+                row.original?.statusRecord?.createdAt,
+                'MM/dd/yyyy'
               )}`}</span>
             </span>
           );

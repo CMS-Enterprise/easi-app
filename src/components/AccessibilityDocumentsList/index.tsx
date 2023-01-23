@@ -21,7 +21,7 @@ import {
   AccessibilityRequestDocumentStatus
 } from 'types/graphql-global-types';
 import { translateDocumentType } from 'utils/accessibilityRequest';
-import { formatDate } from 'utils/date';
+import { formatDateLocal } from 'utils/date';
 import { getHeaderSortIcon, sortColumnValues } from 'utils/tableSort';
 
 type Document = {
@@ -115,11 +115,7 @@ const AccessibilityDocumentsList = ({
   const data = useMemo(() => {
     const tableData = documents.map((singleDoc: Document) => {
       const uploadedAt = singleDoc.uploadedAt
-        ? formatDate({
-            date: singleDoc.uploadedAt,
-            serverGenerated: true,
-            format: 'MM/dd/yyyy'
-          })
+        ? formatDateLocal(singleDoc.uploadedAt, 'MM/dd/yyyy')
         : '';
 
       let translatedStatus;

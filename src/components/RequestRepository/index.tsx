@@ -36,7 +36,7 @@ import { GetSystemIntake_systemIntake_lastAdminNote as LastAdminNote } from 'que
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
-import { formatDate } from 'utils/date';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -87,11 +87,7 @@ const RequestRepository = () => {
     accessor: 'submittedAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return formatDate({
-          date: value,
-          serverGenerated: true,
-          format: 'MM/dd/yyyy'
-        });
+        return formatDateLocal(value, 'MM/dd/yyyy');
       }
 
       return t('requestRepository.table.submissionDate.null');
@@ -155,11 +151,7 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDate({
-        date: value,
-        serverGenerated: false,
-        format: 'MM/dd/yyyy'
-      });
+      return formatDateUtc(value, 'MM/dd/yyyy');
     }
   };
 
@@ -177,11 +169,7 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDate({
-        date: value,
-        serverGenerated: false,
-        format: 'MM/dd/yyyy'
-      });
+      return formatDateUtc(value, 'MM/dd/yyyy');
     }
   };
 
@@ -219,11 +207,7 @@ const RequestRepository = () => {
     accessor: 'lcidExpiresAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return formatDate({
-          date: value,
-          serverGenerated: false,
-          format: 'MM/dd/yyyy'
-        });
+        return formatDateUtc(value, 'MM/dd/yyyy');
       }
 
       // If no LCID Expiration exists, display 'No LCID Issued'
@@ -240,11 +224,7 @@ const RequestRepository = () => {
           // Display admin note using truncated text field that
           // will display note with expandable extra text (if applicable)
           <>
-            {formatDate({
-              date: value.createdAt!,
-              serverGenerated: true,
-              format: 'MM/dd/yyyy'
-            })}
+            {formatDateLocal(value.createdAt!, 'MM/dd/yyyy')}
 
             <TruncatedText
               id="last-admin-note"

@@ -18,7 +18,7 @@ import {
   GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback,
   GetGRTFeedbackVariables
 } from 'queries/types/GetGRTFeedback';
-import { formatDate } from 'utils/date';
+import { formatDateLocal } from 'utils/date';
 
 const GovernanceFeedback = () => {
   const { systemId } = useParams<{ systemId: string }>();
@@ -41,11 +41,7 @@ const GovernanceFeedback = () => {
   );
 
   const formatGRTFeedback = (item: GRTFeedback) => {
-    const formattedDate = formatDate({
-      date: item.createdAt,
-      serverGenerated: true,
-      format: 'MMMM d, yyyy'
-    });
+    const formattedDate = formatDateLocal(item.createdAt, 'MMMM d, yyyy');
     return (
       <div className="margin-bottom-3" key={item.id}>
         <h4

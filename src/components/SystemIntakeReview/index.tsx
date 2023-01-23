@@ -13,7 +13,7 @@ import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { SystemIntakeStatus } from 'types/graphql-global-types';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
-import { formatContractDate, formatDate } from 'utils/date';
+import { formatContractDate, formatDateLocal } from 'utils/date';
 import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
 
 type SystemIntakeReviewProps = {
@@ -93,11 +93,7 @@ export const SystemIntakeReview = ({
     }
 
     if (submittedAt) {
-      return formatDate({
-        date: submittedAt,
-        serverGenerated: true,
-        format: 'MMMM d, yyyy'
-      });
+      return formatDateLocal(submittedAt, 'MMMM d, yyyy');
     }
 
     return 'N/A';

@@ -32,7 +32,7 @@ import {
   GetAdminNotesAndActionsVariables
 } from 'queries/types/GetAdminNotesAndActions';
 import { AppState } from 'reducers/rootReducer';
-import { formatDate } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 
 import './index.scss';
 
@@ -137,19 +137,14 @@ const Notes = () => {
                 <dd>{data.systemIntake?.lcid}</dd>
                 <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
                 <dd>
-                  {formatDate({
-                    date: lcidExpirationChange.newDate,
-                    serverGenerated: false,
-                    format: 'MMMM d, yyyy'
-                  })}
+                  {formatDateUtc(lcidExpirationChange.newDate, 'MMMM d, yyyy')}
                 </dd>
                 <dt>{t('notes.extendLcid.oldExpirationDate')}</dt>
                 <dd>
-                  {formatDate({
-                    date: lcidExpirationChange.previousDate,
-                    serverGenerated: false,
-                    format: 'MMMM d, yyyy'
-                  })}
+                  {formatDateUtc(
+                    lcidExpirationChange.previousDate,
+                    'MMMM d, yyyy'
+                  )}
                 </dd>
 
                 {/* Used TruncatedText for old/new scope, next steps, and cost baseline since they can be 3000 characters */}

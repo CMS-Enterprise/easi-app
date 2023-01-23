@@ -52,7 +52,7 @@ import {
   TRBDocumentCommonType,
   TRBRequestDocumentStatus
 } from 'types/graphql-global-types';
-import { formatDate } from 'utils/date';
+import { formatDateLocal } from 'utils/date';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import {
   documentSchema,
@@ -125,12 +125,7 @@ function Documents({
       {
         Header: t<string>('documents.table.header.uploadDate'),
         accessor: 'uploadedAt',
-        Cell: ({ value }) =>
-          formatDate({
-            date: value,
-            serverGenerated: true,
-            format: 'MM/dd/yyyy'
-          })
+        Cell: ({ value }) => formatDateLocal(value, 'MM/dd/yyyy')
       },
       {
         Header: t<string>('documents.table.header.actions'),

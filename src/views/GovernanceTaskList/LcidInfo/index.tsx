@@ -19,7 +19,7 @@ import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
-import { formatDate } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 
 import './index.scss';
 
@@ -77,11 +77,10 @@ const LcidInfo = () => {
                   {systemIntake.lcidExpiresAt && (
                     <p>
                       {t('decision.lcidExpiration', {
-                        date: formatDate({
-                          date: systemIntake.lcidExpiresAt,
-                          serverGenerated: false,
-                          format: 'MMMM d, yyyy'
-                        })
+                        date: formatDateUtc(
+                          systemIntake.lcidExpiresAt,
+                          'MMMM d, yyyy'
+                        )
                       })}
                     </p>
                   )}

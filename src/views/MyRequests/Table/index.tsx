@@ -19,7 +19,7 @@ import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
-import { formatDate } from 'utils/date';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -83,11 +83,7 @@ const Table = ({
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate({
-              date: value,
-              serverGenerated: false,
-              format: 'MM/dd/yyyy'
-            });
+            return formatDateUtc(value, 'MM/dd/yyyy');
           }
           return 'Not submitted';
         }
@@ -106,12 +102,9 @@ const Table = ({
               return (
                 <span>
                   {value}
-                  <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDate(
-                    {
-                      date: row.original.statusCreatedAt,
-                      serverGenerated: true,
-                      format: 'MM/dd/yyyy'
-                    }
+                  <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDateLocal(
+                    row.original.statusCreatedAt,
+                    'MM/dd/yyyy'
                   )}`}</span>
                 </span>
               );
@@ -131,11 +124,7 @@ const Table = ({
         accessor: 'nextMeetingDate',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate({
-              date: value,
-              serverGenerated: false,
-              format: 'MM/dd/yyyy'
-            });
+            return formatDateUtc(value, 'MM/dd/yyyy');
           }
           return 'None';
         }

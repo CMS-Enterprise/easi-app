@@ -73,7 +73,7 @@ import {
 } from 'types/accessibility';
 import { AccessibilityRequestDeletionReason } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
-import { formatDate, parseAsUTC } from 'utils/date';
+import { formatDateLocal, formatDateUtc, parseAsUTC } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import user from 'utils/user';
 import accessibilitySchema from 'validations/accessibilitySchema';
@@ -204,11 +204,7 @@ const AccessibilityRequestDetailPage = () => {
       refetch();
       showMessage(
         t('removeTestDate.confirmation', {
-          date: formatDate({
-            date: testDate.date,
-            serverGenerated: false,
-            format: 'MMMM d, yyyy'
-          }),
+          date: formatDateUtc(testDate.date, 'MMMM d, yyyy'),
           requestName
         })
       );
@@ -325,11 +321,7 @@ const AccessibilityRequestDetailPage = () => {
         {notes.length > 0 &&
           t('requestDetails.notes.mostRecentNote', {
             authorName: notes[0]?.authorName,
-            createdAt: formatDate({
-              date: notes[0]?.createdAt,
-              serverGenerated: true,
-              format: 'MMMM d, yyyy'
-            })
+            createdAt: formatDateLocal(notes[0]?.createdAt, 'MMMM d, yyyy')
           })}
       </h3>
       <p className="usa-sr-only" aria-live="polite">
@@ -434,11 +426,7 @@ const AccessibilityRequestDetailPage = () => {
               <NoteByline>
                 {`by ${note.authorName}`}
                 <span className="padding-x-1">|</span>
-                {formatDate({
-                  date: note.createdAt,
-                  serverGenerated: true,
-                  format: 'MMMM d, yyyy'
-                })}
+                {formatDateLocal(note.createdAt, 'MMMM d, yyyy')}
               </NoteByline>
             </NoteListItem>
           ))}
@@ -617,11 +605,7 @@ const AccessibilityRequestDetailPage = () => {
                     {t('intake:fields.submissionDate')}
                   </dt>
                   <dd className="margin-0 margin-bottom-1">
-                    {formatDate({
-                      date: submittedAt,
-                      serverGenerated: true,
-                      format: 'MMMM d, yyyy'
-                    })}
+                    {formatDateLocal(submittedAt, 'MMMM d, yyyy')}
                   </dd>
                   <dt className="font-body-sm text-bold">
                     {t('intake:fields.businessOwner')}

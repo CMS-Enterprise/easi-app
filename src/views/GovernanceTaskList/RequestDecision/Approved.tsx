@@ -4,7 +4,7 @@ import { Alert } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import { formatDate } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 
 type ApprovedProps = {
   intake: SystemIntake;
@@ -29,11 +29,7 @@ const Approved = ({ intake }: ApprovedProps) => {
         {lcidExpiresAt && (
           <p className="text-bold">
             {t('decision.lcidExpiration', {
-              date: formatDate({
-                date: lcidExpiresAt,
-                serverGenerated: false,
-                format: 'MMMM d, yyyy'
-              })
+              date: formatDateUtc(lcidExpiresAt, 'MMMM d, yyyy')
             })}
           </p>
         )}

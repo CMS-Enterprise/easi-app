@@ -2,7 +2,8 @@ import { DateTime, Settings } from 'luxon';
 
 import {
   formatContractDate,
-  formatDate,
+  formatDateLocal,
+  formatDateUtc,
   getFiscalYear,
   parseAsUTC
 } from './date';
@@ -20,29 +21,26 @@ describe('parseAsUTC', () => {
   });
 });
 
-describe('formatDate', () => {
+describe('formatDateLocal/UTC', () => {
   describe('string', () => {
     it('converts an ISO string to the proper date in the appropriate timezone', () => {
       Settings.defaultZone = 'UTC-8';
-      const isoStringDate = '2022-10-22T00:00:00Z';
-      expect(
-        formatDate({
-          date: isoStringDate,
-          serverGenerated: false,
-          format: 'MMMM d, yyyy'
-        })
-      ).toEqual('October 22, 2022');
+      const isoStringDate = '2022-10-22T10:00:00Z';
+      expect(formatDateLocal(isoStringDate, 'MMMM d, yyyy')).toEqual(
+        'October 22, 2022'
+      );
     });
 
     it('returns invalid datetime when a string is not ISO string', () => {
       const date = 'not an ISO string';
-      expect(
-        formatDate({
-          date,
-          serverGenerated: false,
-          format: 'MMMM d, yyyy'
-        })
-      ).toEqual('Invalid DateTime');
+      expect(formatDateLocal(date, 'MMMM d, yyyy')).toEqual('Invalid DateTime');
+    });
+
+    it('converts an ISO string UTC timezone', () => {
+      const isoStringDate = '2022-10-22T00:00:00Z';
+      expect(formatDateUtc(isoStringDate, 'MMMM d, yyyy')).toEqual(
+        'October 22, 2022'
+      );
     });
   });
 

@@ -15,7 +15,7 @@ import {
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 import { TestDateFormType } from 'types/accessibility';
-import { formatDate, parseAsUTC } from 'utils/date';
+import { formatDateUtc, parseAsUTC } from 'utils/date';
 
 import RequestDeleted from '../Accessibility/RequestDeleted';
 import { NotFoundPartial } from '../NotFound';
@@ -85,11 +85,7 @@ const TestDate = () => {
 
     const confirmationText = `
       ${t('testDateForm.confirmation.date', {
-        date: formatDate({
-          date,
-          serverGenerated: false,
-          format: 'MMMM d, yyyy'
-        })
+        date: formatDateUtc(date, 'MMMM d, yyyy')
       })}
       ${hasScore ? t('testDateForm.confirmation.score', { score }) : ''}
       ${t('testDateForm.confirmation.update')}
