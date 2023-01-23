@@ -204,4 +204,5 @@ type TRBRequestForm struct {
 	SubjectAreaDataAndDataManagementOther          *string                  `json:"subjectAreaDataAndDataManagementOther" db:"subject_area_data_and_data_management_other"`
 	SubjectAreaGovernmentProcessesAndPoliciesOther *string                  `json:"subjectAreaGovernmentProcessesAndPoliciesOther" db:"subject_area_government_processes_and_policies_other"`
 	SubjectAreaOtherTechnicalTopicsOther           *string                  `json:"subjectAreaOtherTechnicalTopicsOther" db:"subject_area_other_technical_topics_other"`
+	SubmittedAt                                    *time.Time               `json:"submittedAt" db:"submitted_at"`
 }
