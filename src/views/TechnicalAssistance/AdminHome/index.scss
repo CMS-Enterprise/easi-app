@@ -1,0 +1,45 @@
+.trb-admin__view-all-link a {
+  display: flex;
+  align-items: center;
+  color: primary;
+
+  &:hover {
+    color: color("primary-dark");
+  }
+
+  svg {
+    margin-right: .5rem;
+  }
+}
+
+.trb-admin__nav-link {
+  &--border {
+    border-bottom: 1px solid color('disabled-light');
+  }
+
+  a {
+    display: block;
+    text-decoration: none;
+    padding: .5rem 0;
+    color: color('base-darkest');
+
+    &:hover {
+      color: color('primary');
+      background-color: color('base-lightest');
+    }
+
+    span {
+      padding: .25rem 0;
+    }
+  }
+
+  &--active a {
+    color: color('primary');
+
+    span {
+      border-left: 3px solid color('primary');
+      padding-left: 1rem;
+      font-weight: bold;
+    }
+  }
+}

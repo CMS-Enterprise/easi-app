@@ -5,18 +5,33 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
 // GetTRBAdviceLetterByTRBRequestID fetches a TRB advice letter record by its associated request's ID.
 func GetTRBAdviceLetterByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetter, error) {
-	letter, err := store.GetTRBAdviceLetterByTRBRequestID(appcontext.ZLogger(ctx), id)
+	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, id)
 
 	if err != nil {
 		return nil, err
+	}
+
+	if letter == nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB advice letter",
+			zap.Error(err),
+			zap.String("trbRequestID", id.String()),
+		)
+
+		return nil, &apperrors.ResourceNotFoundError{
+			Err:      err,
+			Resource: models.TRBAdviceLetter{},
+		}
 	}
 
 	return letter, nil
@@ -24,7 +39,7 @@ func GetTRBAdviceLetterByTRBRequestID(ctx context.Context, store *storage.Store,
 
 // CreateTRBAdviceLetter creates an advice letter for a TRB request, in the "In Progress" status, when the advice letter is ready to be worked on.
 func CreateTRBAdviceLetter(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
-	letter, err := store.CreateTRBAdviceLetter(appcontext.ZLogger(ctx), appcontext.Principal(ctx).ID(), trbRequestID)
+	letter, err := store.CreateTRBAdviceLetter(ctx, appcontext.Principal(ctx).ID(), trbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -34,8 +49,6 @@ func CreateTRBAdviceLetter(ctx context.Context, store *storage.Store, trbRequest
 
 // UpdateTRBAdviceLetter handles general updates to a TRB advice letter
 func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdviceLetter, error) {
-	logger := appcontext.ZLogger(ctx)
-
 	trbRequestIDStr, idFound := input["trbRequestId"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
@@ -46,7 +59,7 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 		return nil, err
 	}
 
-	letter, err := store.GetTRBAdviceLetterByTRBRequestID(logger, trbRequestID)
+	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +69,7 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 		return nil, err
 	}
 
-	updatedLetter, err := store.UpdateTRBAdviceLetter(logger, letter)
+	updatedLetter, err := store.UpdateTRBAdviceLetter(ctx, letter)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +81,7 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 func RequestReviewForTRBAdviceLetter(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetter, error) {
 	// TODO - EASI-2514 - send notification email(s)
 
-	letter, err := store.UpdateTRBAdviceLetterStatus(appcontext.ZLogger(ctx), id, models.TRBAdviceLetterStatusReadyForReview)
+	letter, err := store.UpdateTRBAdviceLetterStatus(ctx, id, models.TRBAdviceLetterStatusReadyForReview)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +93,7 @@ func RequestReviewForTRBAdviceLetter(ctx context.Context, store *storage.Store, 
 func SendTRBAdviceLetter(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetter, error) {
 	// TODO - EASI-2515 - send notification email(s)
 
-	letter, err := store.UpdateTRBAdviceLetterStatus(appcontext.ZLogger(ctx), id, models.TRBAdviceLetterStatusCompleted)
+	letter, err := store.UpdateTRBAdviceLetterStatus(ctx, id, models.TRBAdviceLetterStatusCompleted)
 	if err != nil {
 		return nil, err
 	}

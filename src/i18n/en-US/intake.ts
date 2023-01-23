@@ -147,7 +147,7 @@ const intake = {
   },
   contactDetails: {
     intakeProcessDescription:
-      'The EASi System Intake process can guide you through all stages of your project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT LifeCycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
+      'The EASi System Intake process can guide you through all stages of your procurement/project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT LifeCycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
     heading: 'Contact details',
     requester: 'Requester',
     requesterComponent: 'Requester Component',
@@ -212,7 +212,7 @@ const intake = {
     fundingSources: {
       label: 'Which existing funding sources will fund this project?',
       helpText:
-        'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
+        'If you are unsure, please get in touch with your Front Office. If this will not use an existing funding source, skip this question.',
       addFundingSource: 'Add a funding source',
       addAnotherFundingSource: 'Add another funding source',
       fundingNumber: 'Funding number',

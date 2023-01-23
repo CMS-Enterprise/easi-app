@@ -1998,6 +1998,21 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 	)
 }
 
+// CreateTRBAdminNote is the resolver for the createTRBAdminNote field.
+func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error) {
+	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, input.Category, input.NoteText)
+}
+
+// UpdateTRBAdminNote is the resolver for the updateTRBAdminNote field.
+func (r *mutationResolver) UpdateTRBAdminNote(ctx context.Context, input map[string]interface{}) (*models.TRBAdminNote, error) {
+	return resolvers.UpdateTRBAdminNote(ctx, r.store, input)
+}
+
+// SetTRBAdminNoteArchived is the resolver for the setTRBAdminNoteArchived field.
+func (r *mutationResolver) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error) {
+	return resolvers.SetTRBAdminNoteArchived(ctx, r.store, id, isArchived)
+}
+
 // CreateTRBAdviceLetter is the resolver for the createTRBAdviceLetter field.
 func (r *mutationResolver) CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
 	return resolvers.CreateTRBAdviceLetter(ctx, r.store, trbRequestID)
@@ -2406,6 +2421,11 @@ func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*mode
 	return resolvers.GetTRBRequests(ctx, archived, r.store)
 }
 
+// TrbAdminNote is the resolver for the trbAdminNote field.
+func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
+	return resolvers.GetTRBAdminNoteByID(ctx, r.store, id)
+}
+
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
 	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
@@ -2784,6 +2804,16 @@ func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *mod
 	return obj.Source.Ptr(), nil
 }
 
+// Author is the resolver for the author field.
+func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
+	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
+}
+
 // Recommendations is the resolver for the recommendations field.
 func (r *tRBAdviceLetterResolver) Recommendations(ctx context.Context, obj *models.TRBAdviceLetter) ([]*models.TRBAdviceLetterRecommendation, error) {
 	return resolvers.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
@@ -2823,6 +2853,11 @@ func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRe
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
 	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
+}
+
+// AdminNotes is the resolver for the adminNotes field.
+func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error) {
+	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
@@ -2985,6 +3020,9 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 	return &systemIntakeFundingSourceResolver{r}
 }
 
+// TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
+func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
+
 // TRBAdviceLetter returns generated.TRBAdviceLetterResolver implementation.
 func (r *Resolver) TRBAdviceLetter() generated.TRBAdviceLetterResolver {
 	return &tRBAdviceLetterResolver{r}
@@ -3038,6 +3076,7 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
+type tRBAdminNoteResolver struct{ *Resolver }
 type tRBAdviceLetterResolver struct{ *Resolver }
 type tRBAdviceLetterRecommendationResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }

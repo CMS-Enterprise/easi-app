@@ -1,11 +1,13 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
 
 	"github.com/facebookgo/clock"
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // required for postgres driver in sqlx
 	"github.com/stretchr/testify/assert"
@@ -14,6 +16,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -84,4 +87,15 @@ func TestStoreTestSuite(t *testing.T) {
 	}
 
 	suite.Run(t, storeTestSuite)
+}
+
+// utility function for testing TRB-related methods
+func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) uuid.UUID {
+	trbRequest := models.NewTRBRequest(createdBy)
+	trbRequest.Type = models.TRBTNeedHelp
+	trbRequest.Status = models.TRBSOpen
+	createdRequest, err := s.store.CreateTRBRequest(ctx, trbRequest)
+	s.NoError(err)
+
+	return createdRequest.ID
 }

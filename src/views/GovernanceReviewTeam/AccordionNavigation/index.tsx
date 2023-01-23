@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import {
@@ -21,23 +21,26 @@ type AccordionNavigationItemProps = {
 type AccordionNavigationProps = {
   activePage: string;
   subNavItems: AccordionNavigationItemProps[];
+  defaultTitle?: string;
 };
 
 const AccordionNavigation = ({
   activePage,
-  subNavItems
+  subNavItems,
+  defaultTitle = 'Intake Request'
 }: AccordionNavigationProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isAccordionOpen, setIsAccordionOpen] = useState<boolean>(false);
-  const [activePageTitle, setActivePageTitle] = useState<string>(
-    'Intake Request'
-  );
 
-  const navLinkClickHandler = (text: string) => {
-    setIsAccordionOpen(!isAccordionOpen);
-    setActivePageTitle(text);
-  };
+  /** Page title text property from current page */
+  const activePageTitle: string | undefined = useMemo(() => {
+    const currentPage = subNavItems.find(
+      item => item.route.split('/')[3] === activePage
+    );
+
+    return currentPage?.text;
+  }, [activePage, subNavItems]);
 
   useEffect(() => {
     // Fixes edge case: subnavigation remains open when user (when in small screen size) expands window to large size really fast (using window manager)
@@ -55,7 +58,7 @@ const AccordionNavigation = ({
         aria-expanded={isAccordionOpen}
         aria-controls="easi-grt__subNav"
       >
-        <h3 className="padding-left-1">{t(activePageTitle)}</h3>
+        <h3 className="padding-left-1">{t(activePageTitle || defaultTitle)}</h3>
         {!isAccordionOpen ? (
           <IconExpandMore size={3} />
         ) : (
@@ -80,7 +83,7 @@ const AccordionNavigation = ({
                   className={classnames({
                     'subNav--current': route.split('/')[3] === activePage
                   })}
-                  onClick={() => navLinkClickHandler(text)}
+                  onClick={() => setIsAccordionOpen(!isAccordionOpen)}
                 >
                   {t(text)}
                 </NavLink>

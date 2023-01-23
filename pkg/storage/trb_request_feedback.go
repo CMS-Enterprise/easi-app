@@ -49,6 +49,10 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 	`)
 
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to create TRB feedback with error %s", err),
+			zap.String("user", feedback.CreatedBy),
+		)
 		return nil, err
 	}
 
@@ -76,6 +80,10 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 		`)
 
 		if formErr != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", err),
+				zap.String("user", formToUpdate.CreatedBy),
+			)
 			return nil, formErr
 		}
 
@@ -130,6 +138,11 @@ func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, t
 	`)
 
 	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch latest TRB request feedback",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
 		return nil, err
 	}
 	arg := map[string]interface{}{"trb_request_id": trbRequestID}

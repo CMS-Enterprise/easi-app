@@ -29,7 +29,7 @@ func CreateTRBRequestAttendee(
 
 	emailInfoErrGroup.Go(func() error {
 		// declare new error variable so we don't interfere with calls outside of this goroutine
-		requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), attendee.TRBRequestID)
+		requestPtr, getRequestErr := store.GetTRBRequestByID(ctx, attendee.TRBRequestID)
 		if getRequestErr != nil {
 			return getRequestErr
 		}

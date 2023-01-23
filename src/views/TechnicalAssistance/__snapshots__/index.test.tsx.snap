@@ -22,7 +22,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             href="/trb"
           >
             <span>
-              Technical Assistance
+              Technical assistance requests
             </span>
           </a>
         </li>
@@ -83,7 +83,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
         </li>
       </ul>
       <div>
-        Requests are usually reviewed and have IT Tech Lounge sessions scheduled within a week.
+        Requests are usually reviewed and have TRB consult sessions scheduled within a week.
       </div>
     </div>
     <div>
@@ -93,10 +93,10 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
         Steps in the process
       </h2>
       <ol
-        class="usa-process-list padding-top-0"
+        class="usa-process-list padding-top-0 grid-col-8"
       >
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -108,11 +108,11 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             Tell the Technical Review Board (TRB) what you need help with, including an overview of your question, problem, and/or solution. You may also upload any documentation that you think the TRB may find helpful (don’t worry, you’ll also be able to add documents later if you aren’t sure what to upload at this stage).
           </p>
           <p>
-            This step helps TRB team members better understand what type of help you’re looking for and how best to assist you. It also lets the TRB prepare more targeted assistance so that you get more value from your IT Lounge session.
+            This step helps TRB team members better understand what type of help you’re looking for and how best to assist you. It also lets the TRB prepare ahead of time so that you get more value from your consult session.
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -121,17 +121,17 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             Feedback from the initial review
           </h3>
           <p>
-            The TRB will review your request form form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps as they schedule an IT Lounge for you and/or your team.
+            The TRB will review your request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps as they schedule a consult session for you and/or your team.
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Prepare for the IT Lounge session
+            Prepare for the TRB consult session
           </h3>
           <p
             class="margin-bottom-0"
@@ -152,22 +152,22 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             </li>
           </ul>
           <p>
-            Prepare for the IT Lounge (opens in new tab)
+            Prepare for your TRB consult meeting (opens in new tab)
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
             data-testid="processListHeading"
           >
-            Attend the IT Tech Lounge session
+            Attend the TRB consult session
           </h3>
           <p
             class="margin-bottom-0"
           >
-            A TRB team member will schedule an IT Tech Lounge session for your project. Attendees could include:
+            A TRB team member will schedule a consult session for your project. Attendees could include:
           </p>
           <ul
             class="list-style-middot"
@@ -182,10 +182,12 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
               1 or more TRB team members
             </li>
           </ul>
-          <p />
+          <p>
+            Consult sessions are usually scheduled as 1-hour sessions on Tuesday or Thursday.
+          </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -194,7 +196,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             Advice letter and next steps
           </h3>
           <p>
-            The TRB will work with any SMEs who attended the IT Tech Lounge session to compile a letter that documents any advice for your project team as well as any recommended next steps.
+            The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.
           </p>
         </li>
       </ol>
@@ -242,7 +244,7 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
             href="/trb"
           >
             <span>
-              Technical Assistance
+              Technical assistance requests
             </span>
           </a>
         </li>
@@ -482,7 +484,7 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
 exports[`Technical Assistance (TRB) homepage renders the homepage with a list of trb requests 1`] = `
 <DocumentFragment>
   <main
-    class="easi-main-content technical-assistance margin-bottom-10"
+    class="easi-main-content technical-assistance margin-bottom-5 desktop:margin-bottom-10"
     id="main-content"
     role="main"
     tabindex="-1"
@@ -491,20 +493,98 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
       class="grid-container width-full"
       data-testid="gridContainer"
     >
-      <h1
-        aria-live="polite"
-        class="easi-h1"
-        tabindex="-1"
+      <div
+        class="easi-section easi-section__border-bottom"
+        data-testid="section-wrapper"
       >
-        Technical Assistance
-      </h1>
-      <a
-        class="usa-button margin-bottom-5"
-        href="/trb/start"
+        <h1
+          aria-live="polite"
+          class="easi-h1 margin-bottom-0"
+          tabindex="-1"
+        >
+          Technical assistance requests
+        </h1>
+        <p
+          class="line-height-body-5 font-body-lg text-light margin-y-1"
+        >
+          Request help or feedback for your system, or ask the TRB for other technical assistance.
+        </p>
+        <p
+          class="line-height-body-5 margin-top-1"
+        >
+          The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.
+        </p>
+        <div
+          class="bg-base-lightest padding-y-205 padding-x-2 margin-y-3"
+        >
+          <p
+            class="margin-top-0"
+          >
+            You can make a request to:
+          </p>
+          <ul>
+            <li
+              class="margin-bottom-1"
+            >
+              ask for help with a technical problem
+            </li>
+            <li
+              class="margin-bottom-1"
+            >
+              review potential solutions or ideas with the TRB and other SMEs
+            </li>
+            <li
+              class="margin-bottom-1"
+            >
+              schedule an ongoing cadence of technical consultations
+            </li>
+            <li
+              class="margin-bottom-1"
+            >
+              consult with SMEs from across the agency
+            </li>
+            <li
+              class="margin-bottom-1"
+            >
+              consult with the TRB about compliance with CMS guidelines and standards
+            </li>
+            <li
+              class="margin-bottom-1"
+            >
+              request research or information about a particular technical topic
+            </li>
+          </ul>
+          <p
+            class="margin-bottom-0"
+          >
+            Requests are usually reviewed and have TRB consult sessions scheduled within a week.
+          </p>
+        </div>
+        <p
+          class="margin-bottom-3"
+        >
+          If you have any questions, you may reach the TRB team at 
+          <a
+            class="usa-link"
+            href="mailto:cms-trb@cms.hhs.gov"
+          >
+            cms-trb@cms.hhs.gov
+          </a>
+          .
+        </p>
+        <a
+          class="usa-button margin-bottom-5"
+          href="/trb/start"
+        >
+          Start a new request
+        </a>
+      </div>
+      <div
+        class="trb-requests-table"
       >
-        Start a new request
-      </a>
-      <div>
+        <h2>
+          My TRB Requests
+        </h2>
         <form
           class="usa-form usa-search margin-bottom-4"
           data-testid="table-client-filter"
@@ -550,16 +630,6 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
           </button>
         </form>
         <div
-          class="margin-bottom-4"
-          data-testid="page-results"
-        >
-          <span>
-            <div>
-              Showing 1-2 of 2 results 
-            </div>
-          </span>
-        </div>
-        <div
           class="usa-table-container--scrollable"
           data-testid="scrollable-table-container"
         >
@@ -573,7 +643,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
               >
                 <th
                   aria-sort="none"
-                  class="border-bottom-2px"
+                  class="border-bottom-2px padding-left-0"
                   colspan="1"
                   role="columnheader"
                   scope="col"
@@ -617,8 +687,53 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   </button>
                 </th>
                 <th
+                  aria-sort="none"
+                  class="border-bottom-2px padding-left-0"
+                  colspan="1"
+                  role="columnheader"
+                  scope="col"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                >
+                  <button
+                    class="usa-button usa-button--unstyled width-full display-flex"
+                    data-testid="button"
+                    style="cursor: pointer;"
+                    title="Toggle SortBy"
+                    type="button"
+                  >
+                    <div
+                      class="flex-fill text-no-wrap"
+                    >
+                      Request status
+                    </div>
+                    <div
+                      class="position-relative width-205 margin-left-05"
+                    >
+                      <svg
+                        class="usa-icon margin-left-05 position-absolute"
+                        data-testid="caret--sort"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                        />
+                      </svg>
+                    </div>
+                  </button>
+                </th>
+                <th
                   aria-sort="descending"
-                  class="border-bottom-2px"
+                  class="border-bottom-2px padding-left-0"
                   colspan="1"
                   role="columnheader"
                   scope="col"
@@ -661,51 +776,6 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                     </div>
                   </button>
                 </th>
-                <th
-                  aria-sort="none"
-                  class="border-bottom-2px"
-                  colspan="1"
-                  role="columnheader"
-                  scope="col"
-                  style="cursor: pointer;"
-                  title="Toggle SortBy"
-                >
-                  <button
-                    class="usa-button usa-button--unstyled width-full display-flex"
-                    data-testid="button"
-                    style="cursor: pointer;"
-                    title="Toggle SortBy"
-                    type="button"
-                  >
-                    <div
-                      class="flex-fill text-no-wrap"
-                    >
-                      Status
-                    </div>
-                    <div
-                      class="position-relative width-205 margin-left-05"
-                    >
-                      <svg
-                        class="usa-icon margin-left-05 position-absolute"
-                        data-testid="caret--sort"
-                        focusable="false"
-                        height="1em"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                        />
-                      </svg>
-                    </div>
-                  </button>
-                </th>
               </tr>
             </thead>
             <tbody
@@ -715,48 +785,56 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                 role="row"
               >
                 <td
+                  class="padding-left-0"
                   role="cell"
                 >
                   <a
                     class="usa-link"
+                    data-testid="trbRequest-1afc9242-f244-47a3-9f91-4d6fedd8eb91"
                     href="/trb/task-list/1afc9242-f244-47a3-9f91-4d6fedd8eb91"
                   >
                     My excellent question
                   </a>
                 </td>
                 <td
-                  role="cell"
-                >
-                  September 12, 2022
-                </td>
-                <td
+                  class="padding-left-0"
                   role="cell"
                 >
                   OPEN
+                </td>
+                <td
+                  class="padding-left-0"
+                  role="cell"
+                >
+                  September 12, 2022
                 </td>
               </tr>
               <tr
                 role="row"
               >
                 <td
+                  class="padding-left-0"
                   role="cell"
                 >
                   <a
                     class="usa-link"
+                    data-testid="trbRequest-9841c768-bdcd-4856-bae2-62cfdaffacf6"
                     href="/trb/task-list/9841c768-bdcd-4856-bae2-62cfdaffacf6"
                   >
                     TACO Review
                   </a>
                 </td>
                 <td
-                  role="cell"
-                >
-                  September 12, 2022
-                </td>
-                <td
+                  class="padding-left-0"
                   role="cell"
                 >
                   OPEN
+                </td>
+                <td
+                  class="padding-left-0"
+                  role="cell"
+                >
+                  September 12, 2022
                 </td>
               </tr>
             </tbody>
@@ -767,7 +845,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
         >
           <nav
             aria-label="Pagination"
-            class="usa-pagination padding-bottom-1 desktop:grid-col-fill"
+            class="usa-pagination padding-bottom-1 desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
             data-testid="table-pagination"
           >
             <ul

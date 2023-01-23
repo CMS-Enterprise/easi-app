@@ -214,6 +214,13 @@ type CreateSystemIntakeNoteInput struct {
 	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
+// The data needed to create a TRB admin note
+type CreateTRBAdminNoteInput struct {
+	TrbRequestID uuid.UUID                   `json:"trbRequestId"`
+	Category     models.TRBAdminNoteCategory `json:"category"`
+	NoteText     string                      `json:"noteText"`
+}
+
 // The input required to add a recommendation & links to a TRB advice letter
 type CreateTRBAdviceLetterRecommendationInput struct {
 	TrbRequestID   uuid.UUID `json:"trbRequestId"`

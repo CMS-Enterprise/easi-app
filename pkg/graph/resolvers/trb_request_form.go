@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
@@ -58,7 +59,7 @@ func UpdateTRBRequestForm(
 	if willSendNotifications {
 		emailInfoErrGroup.Go(func() error {
 			// declare new error variable so we don't interfere with calls outside of this goroutine
-			requestPtr, getRequestErr := store.GetTRBRequestByID(appcontext.ZLogger(ctx), id)
+			requestPtr, getRequestErr := store.GetTRBRequestByID(ctx, id)
 			if getRequestErr != nil {
 				return getRequestErr
 			}
@@ -84,6 +85,8 @@ func UpdateTRBRequestForm(
 
 	if isSubmitted && previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusCompleted
+		now := time.Now()
+		form.SubmittedAt = &now
 	} else if previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusInProgress
 	}
