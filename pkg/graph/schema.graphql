@@ -1865,6 +1865,7 @@ type TRBRequestForm {
   subjectAreaDataAndDataManagementOther: String
   subjectAreaGovernmentProcessesAndPoliciesOther: String
   subjectAreaOtherTechnicalTopicsOther: String
+  submittedAt: Time
 
   createdBy: String!
   createdAt: Time!
