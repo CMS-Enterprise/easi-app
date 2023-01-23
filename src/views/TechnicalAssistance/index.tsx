@@ -18,7 +18,7 @@ function TechnicalAssistance() {
   const { path } = useRouteMatch();
 
   return (
-    <MainContent className="technical-assistance margin-bottom-10">
+    <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
       <Switch>
         <Route exact path={path}>
           <Homepage />
