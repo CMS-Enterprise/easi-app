@@ -78,7 +78,13 @@ function Check({
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>{t('table.header.submissionDate')}</dt>
-            <dd>{t('check.notYetSubmitted')}</dd>
+            <dd>
+              {request.form.submittedAt
+                ? DateTime.fromISO(request.form.submittedAt).toFormat(
+                    'MMMM d, yyyy'
+                  )
+                : t('check.notYetSubmitted')}
+            </dd>
           </Grid>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>{t('check.requestType')}</dt>

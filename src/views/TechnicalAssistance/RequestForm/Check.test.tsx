@@ -70,6 +70,7 @@ const mockTrbRequestData: TrbRequest = {
     subjectAreaDataAndDataManagementOther: null,
     subjectAreaGovernmentProcessesAndPoliciesOther: null,
     subjectAreaOtherTechnicalTopicsOther: null,
+    submittedAt: '2023-01-23T20:06:52.123703Z',
     __typename: 'TRBRequestForm'
   },
   __typename: 'TRBRequest'
@@ -122,6 +123,8 @@ describe('Trb Request form: Check and submit', () => {
     );
 
     // Check some strings for the correct formatting
+    // Submitted date
+    getByText('January 23, 2023');
     // Request type
     getByText('I’m having a problem with my system');
     // Where in process "other" field
