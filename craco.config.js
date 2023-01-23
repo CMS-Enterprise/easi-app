@@ -1,19 +1,15 @@
-const sassResourcesLoader = require('craco-sass-resources-loader');
-
 module.exports = {
-  plugins: [
-    {
-      plugin: sassResourcesLoader,
-      options: {
-        resources: [
-          './src/stylesheets/_uswdsUtilities.scss',
-          './src/stylesheets/_colors.scss',
-          './src/stylesheets/_variables.module.scss'
-        ]
+  style: {
+    sass: {
+      loaderOptions: {
+        sourceMap: true,
+        sassOptions: {
+          includePaths: [
+            './src/stylesheets',
+            './node_modules/@uswds/uswds/packages'
+          ]
+        }
       }
     }
-  ],
-  typescript: {
-    enableTypeChecking: false
   }
 };

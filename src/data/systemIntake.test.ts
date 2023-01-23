@@ -112,6 +112,7 @@ describe('The system intake data modifiers', () => {
           expectedIncreaseAmount: 'One million'
         },
         contract: {
+          number: '',
           hasContract: 'IN_PROGRESS',
           contractor: 'TrussWorks, Inc.',
           vehicle: 'Fixed price contract',
@@ -165,7 +166,8 @@ describe('The system intake data modifiers', () => {
             zone: 'America/Los_Angeles'
           })
         },
-        lcidScope: ''
+        lcidScope: '',
+        requesterNameAndComponent: ''
       };
 
       expect(convertIntakeToCSV(mockIntake)).toMatchObject({

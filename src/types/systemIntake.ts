@@ -96,6 +96,7 @@ export type SystemIntakeForm = {
     content: string;
     createdAt: DateTime;
   } | null;
+  requesterNameAndComponent: string
 } & ContractDetailsForm;
 
 export type ContactDetailsForm = {

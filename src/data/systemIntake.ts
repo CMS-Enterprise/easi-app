@@ -77,7 +77,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   grbDate: null,
   adminLead: '',
   lastAdminNote: null,
-  lcidCostBaseline: ''
+  lcidCostBaseline: '',
+  requesterNameAndComponent: ''
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -253,7 +254,8 @@ export const prepareSystemIntakeForApp = (
           createdAt: systemIntake.lastAdminNoteCreatedAt
         }
       : null,
-    lcidCostBaseline: ''
+    lcidCostBaseline: '',
+    requesterNameAndComponent: ''
   };
 };
 
