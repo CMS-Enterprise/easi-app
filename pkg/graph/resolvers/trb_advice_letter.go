@@ -78,7 +78,7 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 	return updatedLetter, err
 }
 
-// RequestReviewForTRBAdviceLetter sets a TRB advice letter as ready for review and (TODO) notifies the given recipients.
+// RequestReviewForTRBAdviceLetter sets a TRB advice letter as ready for review and notifies the given recipients.
 func RequestReviewForTRBAdviceLetter(
 	ctx context.Context,
 	store *storage.Store,
@@ -91,7 +91,7 @@ func RequestReviewForTRBAdviceLetter(
 		return nil, err
 	}
 
-	trb, err := store.GetTRBRequestByID(ctx, id)
+	trb, err := store.GetTRBRequestByID(ctx, letter.TRBRequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +106,7 @@ func RequestReviewForTRBAdviceLetter(
 		return nil, err
 	}
 
-	emailInput := email.SendTRBRequestTRBLeadEmailInput{
+	emailInput := email.SendTRBAdviceLetterInternalReviewEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.Name,
 		TRBLeadName:    leadInfo.CommonName,
@@ -116,7 +116,7 @@ func RequestReviewForTRBAdviceLetter(
 	// Email client can be nil when this is called from tests - the email client itself tests this
 	// separately in the email package test
 	if emailClient != nil {
-		err = emailClient.SendTRBRequestTRBLeadEmail(ctx, emailInput)
+		err = emailClient.SendTRBAdviceLetterInternalReviewEmail(ctx, emailInput)
 		if err != nil {
 			return nil, err
 		}
