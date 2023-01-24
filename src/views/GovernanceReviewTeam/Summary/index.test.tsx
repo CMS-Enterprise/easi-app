@@ -40,7 +40,7 @@ describe('The GRT Review page', () => {
             requestType="NEW"
             status="INTAKE_SUBMITTED"
             adminLead={null}
-            submittedAt={DateTime.local()}
+            submittedAt={DateTime.local().toISO()}
             lcid={null}
           />
         </MockedProvider>
@@ -66,7 +66,7 @@ describe('The GRT Review page', () => {
             requestType="NEW"
             status="LCID_ISSUED"
             adminLead={null}
-            submittedAt={DateTime.local()}
+            submittedAt={DateTime.local().toISO()}
             lcid={null}
           />
         </MockedProvider>
@@ -92,7 +92,7 @@ describe('The GRT Review page', () => {
             requestType="NEW"
             status="LCID_ISSUED"
             adminLead={null}
-            submittedAt={DateTime.local()}
+            submittedAt={DateTime.local().toISO()}
             lcid="123456"
           />
         </MockedProvider>

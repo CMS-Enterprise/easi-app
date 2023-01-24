@@ -4,7 +4,7 @@ import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
+import { TRBRequestType, TRBRequestStatus } from 'types/graphql-global-types';
 import {
   GetTrbRequest,
   GetTrbRequest_trbRequest as TrbRequest,
@@ -56,6 +56,11 @@ const mockTrbRequestData: TrbRequest = {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     __typename: 'TRBRequestForm'
   },
+  createdAt: '2021-06-10T19:22:40Z',
+  type: TRBRequestType.NEED_HELP,
+  status: TRBRequestStatus.OPEN,
+  taskStatuses: {} as any,
+  trbLead: '',
   __typename: 'TRBRequest'
 };
 
@@ -92,6 +97,11 @@ describe('Trb Request form: Basic', () => {
                 id: '452cf444-69b2-41a9-b8ab-ed354d209307',
                 __typename: 'TRBRequestForm'
               },
+              createdAt: '2021-06-10T19:22:40Z',
+              type: TRBRequestType.NEED_HELP,
+              status: TRBRequestStatus.OPEN,
+              taskStatuses: {} as any,
+              trbLead: '',
               __typename: 'TRBRequest'
             }}
             stepUrl={{

@@ -9,7 +9,9 @@ import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 
-import { ContactDetailsForm } from './index';
+import {
+  ContactDetailsForm,
+} from 'types/systemIntake';
 
 type GovernanceTeamOptionsProps = {
   formikProps: FormikProps<ContactDetailsForm>;

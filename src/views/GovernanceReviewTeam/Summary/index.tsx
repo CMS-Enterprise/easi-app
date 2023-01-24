@@ -38,7 +38,7 @@ type RequestSummaryProps = {
   requestType: RequestType;
   status: string;
   adminLead: string | null;
-  submittedAt: DateTime;
+  submittedAt: string | null;
   lcid: string | null;
 };
 

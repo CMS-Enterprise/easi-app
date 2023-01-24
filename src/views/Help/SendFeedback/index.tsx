@@ -280,7 +280,7 @@ export async function parseFeedbackForm(
           .filter(optionValue => optionValue !== easiServicesUsedOptionValue)
           .concat(
             `${easiServicesUsedOptionValue}: ${values.easiServicesUsedAdditionalText}`
-          );
+          )
       } else {
         parsedValues.easiServicesUsed = easiServicesUsed;
       }
@@ -320,6 +320,7 @@ export async function parseFeedbackForm(
     strict: true
   });
 
+  // Yup cast method is returning easiServicesUsed string[] | undefined instead of string[]
   return parsed;
 }
 
