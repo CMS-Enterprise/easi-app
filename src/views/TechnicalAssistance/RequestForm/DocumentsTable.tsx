@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import Spinner from 'components/Spinner';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
@@ -21,6 +20,7 @@ import {
   TRBDocumentCommonType,
   TRBRequestDocumentStatus
 } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import { RefetchDocuments } from './Documents';
@@ -86,7 +86,7 @@ function DocumentsTable({
       {
         Header: t<string>('documents.table.header.uploadDate'),
         accessor: 'uploadedAt',
-        Cell: ({ value }) => DateTime.fromISO(value).toFormat('MM/dd/yyyy')
+        Cell: ({ value }) => formatDateLocal(value, 'MM/dd/yyyy')
       },
       {
         Header: t<string>('documents.table.header.actions'),

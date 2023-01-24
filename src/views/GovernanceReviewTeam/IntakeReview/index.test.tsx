@@ -2,7 +2,6 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
-import { DateTime } from 'luxon';
 
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
@@ -135,7 +134,7 @@ describe('The GRT intake review view', () => {
     needsEaSupport: false,
     grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
     decidedAt: new Date().toISOString(),
-    submittedAt: DateTime.fromISO(new Date(2020, 8, 30).toISOString()).toISO(),
+    submittedAt: new Date(2020, 8, 30).toISOString(),
     grbDate: null,
     grtDate: null,
     grtFeedbacks: [],

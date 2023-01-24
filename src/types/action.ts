@@ -1,5 +1,3 @@
-import { DateTime } from 'luxon';
-
 import { EmailNotificationRecipients } from './graphql-global-types';
 import { FormattedContacts, SystemIntakeContactProps } from './systemIntake';
 
@@ -37,7 +35,7 @@ export type CreateActionPayload = {
  */
 export type Action = {
   id: string;
-  createdAt: DateTime;
+  createdAt: string | null;
   actorName: string;
   actorEuaUserId: string;
   intakeId: string;

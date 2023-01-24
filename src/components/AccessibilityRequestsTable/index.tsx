@@ -10,7 +10,6 @@ import {
   useTable
 } from 'react-table';
 import { Table } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import GlobalClientFilter from 'components/TableFilter';
@@ -18,8 +17,8 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
-import { formatDate } from 'utils/date';
-import globalTableFilter from 'utils/globalTableFilter';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
+import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -54,15 +53,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.submissionDate'),
-        accessor: ({ submittedAt }: { submittedAt: string }) => {
-          if (submittedAt) {
-            return DateTime.fromISO(submittedAt);
-          }
-          return null;
-        },
+        accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return formatDate(value);
+            return formatDateLocal(value, 'MM/dd/yyyy');
           }
           return '';
         },
@@ -74,15 +68,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: ({ relevantTestDate }: { relevantTestDate: string }) => {
-          if (relevantTestDate) {
-            return DateTime.fromISO(relevantTestDate);
-          }
-          return null;
-        },
+        accessor: 'relevantTestDate',
         Cell: ({ value }: any): any => {
           if (value) {
-            return formatDate(value);
+            return formatDateUtc(value, 'MM/dd/yyyy');
           }
           return t('requestTable.emptyTestDate');
         },
@@ -105,8 +94,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           return (
             <span>
               {value}{' '}
-              <span className="text-base-dark font-body-3xs">{`changed on ${formatDate(
-                row.original?.statusRecord?.createdAt
+              <span className="text-base-dark font-body-3xs">{`changed on ${formatDateLocal(
+                row.original?.statusRecord?.createdAt,
+                'MM/dd/yyyy'
               )}`}</span>
             </span>
           );
@@ -160,6 +150,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     previousPage,
     setPageSize,
     page,
+    rows,
     setGlobalFilter,
     state,
     prepareRow
@@ -175,7 +166,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           );
         }
       },
-      globalFilter: useMemo(() => globalTableFilter, []),
+      globalFilter: useMemo(() => globalFilterCellText, []),
       requests,
       autoResetSortBy: false,
       autoResetPage: false,
@@ -189,6 +180,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     useSortBy,
     usePagination
   );
+
+  rows.map(row => prepareRow(row));
 
   return (
     <div className="accessibility-requests-table">
@@ -241,7 +234,6 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
-            prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell, i) => {

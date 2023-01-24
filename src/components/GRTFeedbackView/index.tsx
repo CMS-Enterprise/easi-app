@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { DateTime } from 'luxon';
 
 import HelpText from 'components/shared/HelpText';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
+import { formatDateLocal, parseAsUTC } from 'utils/date';
 
 type GRTFeedbackViewProps = {
   grtFeedbacks: GRTFeedback[];
@@ -20,9 +20,7 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
   );
 
   const formatGRTFeedback = (feedback: GRTFeedback) => {
-    const formattedDate = DateTime.fromISO(feedback.createdAt).toLocaleString(
-      DateTime.DATE_MED
-    );
+    const formattedDate = formatDateLocal(feedback.createdAt, 'MMMM d, yyyy');
     return (
       <div className="margin-bottom-3" key={feedback.createdAt}>
         <h4
@@ -50,8 +48,8 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
           {feedbacksForGRB
             .sort(
               (a, b) =>
-                DateTime.fromISO(a.createdAt).toMillis() -
-                DateTime.fromISO(b.createdAt).toMillis()
+                parseAsUTC(a.createdAt).toMillis() -
+                parseAsUTC(b.createdAt).toMillis()
             )
             .map(grtFeedback => formatGRTFeedback(grtFeedback))}
         </div>
@@ -67,8 +65,8 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
           {feedbacksForBusinessOwner
             .sort(
               (a, b) =>
-                DateTime.fromISO(a.createdAt).toMillis() -
-                DateTime.fromISO(b.createdAt).toMillis()
+                parseAsUTC(a.createdAt).toMillis() -
+                parseAsUTC(b.createdAt).toMillis()
             )
             .map(grtFeedback => formatGRTFeedback(grtFeedback))}
         </div>

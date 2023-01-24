@@ -39,6 +39,7 @@ import {
   GetTrbRequests_trbRequests
 } from 'queries/types/GetTrbRequests';
 import { AppState } from 'reducers/rootReducer';
+import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -47,7 +48,6 @@ import {
 } from 'utils/tableSort';
 import user from 'utils/user';
 import NotFound from 'views/NotFound';
-import { formatDate } from 'views/SystemProfile';
 
 function Homepage() {
   const { t } = useTranslation('technicalAssistance');
@@ -96,7 +96,9 @@ function Homepage() {
         accessor: 'form.submittedAt', // This is what breaks the Column type arg
         // eslint-disable-next-line react/prop-types
         Cell: ({ value }: { value: string | null }) =>
-          value ? formatDate(value) : t('check.notYetSubmitted')
+          value
+            ? formatDateLocal(value, 'MM/dd/yyyy')
+            : t('check.notYetSubmitted')
       }
     ];
   }, [t]);

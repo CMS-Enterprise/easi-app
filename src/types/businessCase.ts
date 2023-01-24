@@ -1,5 +1,3 @@
-import { DateTime } from 'luxon';
-
 import { LifecycleCosts } from 'types/estimatedLifecycle';
 import { SystemIntakeStatus } from 'types/systemIntake';
 
@@ -78,7 +76,7 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
 export type BusinessCasesState = {
   businessCases: BusinessCaseModel[];
   isLoading: boolean | null;
-  loadedTimestamp: DateTime | null;
+  loadedTimestamp: string | null;
   error: string | null;
 };
 
