@@ -7,13 +7,14 @@ import { TrbAdminPageProps } from 'types/technicalAssistance';
 import AdminAction from './components/AdminAction';
 import RequestNotes from './components/RequestNotes';
 
-const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
+const AdviceLetter = ({ trbRequest }: TrbAdminPageProps) => {
+  const { id } = trbRequest;
   const { t } = useTranslation('technicalAssistance');
   return (
     <div
       className="trb-admin-home__advice"
       data-testid="trb-admin-home__advice"
-      id={`trbAdminAdviceLetter-${trbRequestId}`}
+      id={`trbAdminAdviceLetter-${id}`}
     >
       <Grid row gap="lg">
         <Grid tablet={{ col: 8 }}>
@@ -25,7 +26,7 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
           </p>
         </Grid>
         <Grid tablet={{ col: 4 }}>
-          <RequestNotes trbRequestId={trbRequestId} />
+          <RequestNotes id={id} />
         </Grid>
       </Grid>
       <AdminAction />

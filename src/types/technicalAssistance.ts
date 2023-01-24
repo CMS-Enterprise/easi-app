@@ -1,3 +1,5 @@
+import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
+
 import { PersonRole } from './graphql-global-types';
 
 /** TRB attendee fields allows null role in form */
@@ -39,7 +41,7 @@ export type FormattedTRBAttendees = {
 
 /** TRB Admin page props */
 export type TrbAdminPageProps = {
-  trbRequestId: string;
+  trbRequest: TrbRequest;
 };
 
 /** Subnav item return type for admin home wrapper */
@@ -49,7 +51,7 @@ export type SubNavItem = {
   /** Translation key to use for navigation link text */
   text: string;
   /** Component to display on page */
-  component: ({ trbRequestId }: TrbAdminPageProps) => JSX.Element;
+  component: ({ trbRequest }: TrbAdminPageProps) => JSX.Element;
   /**
    * Whether or not the navigation item is last in a group.
    * If true, border is shown beneath link.
