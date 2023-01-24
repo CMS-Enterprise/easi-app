@@ -11,6 +11,7 @@ import {
 import { isEqual } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
+import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
   GetTrbRequest,
@@ -19,7 +20,10 @@ import {
 } from 'queries/types/GetTrbRequest';
 import { TRBRequestType } from 'types/graphql-global-types';
 import nullFillObject from 'utils/nullFillObject';
-import { inputBasicSchema } from 'validations/trbRequestSchema';
+import {
+  inputBasicSchema,
+  trbRequesterSchema
+} from 'validations/trbRequestSchema';
 import { NotFoundPartial } from 'views/NotFound';
 
 import StepHeader from '../../../components/StepHeader';
@@ -153,13 +157,16 @@ function Header({
         description: stp.description,
         completed: idx < step - 1,
 
-        // Basic details is the only step with required form fields
-        // Prevent links to other steps until basic is complete
+        // Basic Details and Attendees are the only steps with required form fields
+        // Prevent links beyond these steps if they are not completed
         onClick:
           request &&
           !isStepSubmitting &&
           idx !== step - 1 && // not the current step
-          stepsCompleted.includes('basic')
+          // If Attendees is complete then everything's available
+          (stepsCompleted.includes('attendees') ||
+            // Or if Basic is complete, steps up to and including Attendees available
+            (idx < 3 && stepsCompleted.includes('basic')))
             ? () => {
                 stepSubmit?.(() => {
                   history.push(
@@ -233,9 +240,14 @@ function RequestForm() {
 
   const request: TrbRequest | undefined = data?.trbRequest;
 
+  const {
+    data: { requester }
+  } = useTRBAttendees(id);
+
   // Determine the steps that are already completed by attempting to pre-validate them
   const [stepsCompleted, setStepsCompleted] = useState<string[]>([]);
 
+  // Prevalidate certain steps to enable their links in the StepHeader
   useEffect(() => {
     if (!request) {
       return;
@@ -243,26 +255,45 @@ function RequestForm() {
     (async () => {
       const completed = [...stepsCompleted];
 
-      // Only the Basic Details step needs a completed form
-      // The rest have all optional fields and can be skipped
-      const stp = 'basic';
-
-      // Skip if already validated
-      if (!completed.includes(stp)) {
+      // Check the Basic step
+      const basicStep = 'basic';
+      if (!completed.includes(basicStep)) {
         inputBasicSchema
           .isValid(nullFillObject(request.form, basicBlankValues), {
             strict: true
           })
           .then(valid => {
             if (valid) {
-              completed.push(stp);
+              completed.push(basicStep);
+              if (!isEqual(completed, stepsCompleted))
+                setStepsCompleted(completed);
+            }
+          });
+      }
+
+      // Check Requester for the Attendees step
+      const attendeesStep = 'attendees';
+      if (!completed.includes(attendeesStep) && requester) {
+        // See Attendees.tsx for schema validation
+        trbRequesterSchema
+          .isValid(
+            {
+              euaUserId: requester.userInfo?.euaUserId || '',
+              component: requester.component,
+              role: requester.role
+            },
+            { strict: true }
+          )
+          .then(valid => {
+            if (valid) {
+              completed.push(attendeesStep);
               if (!isEqual(completed, stepsCompleted))
                 setStepsCompleted(completed);
             }
           });
       }
     })();
-  }, [request, stepsCompleted]);
+  }, [request, requester, stepsCompleted]);
 
   useEffect(() => {
     if (request) {
