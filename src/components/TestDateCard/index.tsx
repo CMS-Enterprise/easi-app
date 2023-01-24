@@ -7,7 +7,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 import { translateTestType } from 'utils/accessibilityRequest';
-import { formatDate } from 'utils/date';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
 
 type TestDateCardProps = {
   testDate: TestDateType;
@@ -44,7 +44,9 @@ const TestDateCard = ({
     <div className="bg-gray-10 padding-2 line-height-body-4 margin-bottom-2">
       <b>{`Test ${testIndex}: ${translateTestType(testType)}`}</b>
       <p className="margin-y-1">
-        <span className="margin-right-2">{formatDate(date)}</span>
+        <span className="margin-right-2">
+          {formatDateLocal(date, 'MMMM d, yyyy')}
+        </span>
         <span
           className=" display-inline-flex text-base-dark"
           data-testid="score"
@@ -82,8 +84,7 @@ const TestDateCard = ({
               {t('removeTestDate.modalHeader', {
                 testNumber: testIndex,
                 testType: translateTestType(testType),
-                testDate: formatDate(date),
-                requestName
+                testDate: formatDateUtc(date, 'MMMM d, yyyy')
               })}
             </PageHeading>
             <p>{t('removeTestDate.modalText')}</p>

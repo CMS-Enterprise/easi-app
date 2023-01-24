@@ -18,7 +18,6 @@ import {
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { startCase } from 'lodash';
-import { DateTime } from 'luxon';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -53,6 +52,7 @@ import {
   UrlLocationTag,
   UsernameWithRoles
 } from 'types/systemProfile';
+import { formatDateUtc, parseAsUTC } from 'utils/date';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
@@ -69,10 +69,6 @@ import SystemSubNav from './components/SystemSubNav/index';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
-
-export function formatDate(v: string) {
-  return DateTime.fromISO(v).toLocaleString(DateTime.DATE_FULL);
-}
 
 function httpsUrl(url: string): string {
   if (/^https?/.test(url)) {
@@ -99,15 +95,13 @@ export function getAtoStatus(
 
   if (!dateAuthorizationMemoExpires) return 'No ATO';
 
-  const expiry = DateTime.fromISO(dateAuthorizationMemoExpires)
-    .toUTC()
-    .toString();
+  const expiry = parseAsUTC(dateAuthorizationMemoExpires).toString();
 
   const date = new Date().toISOString();
 
   if (date >= expiry) return 'Expired';
 
-  const soon = DateTime.fromISO(expiry)
+  const soon = parseAsUTC(expiry)
     .minus({ days: ATO_STATUS_DUE_SOON_DAYS })
     .toString();
   if (date >= soon) return 'Due Soon';
@@ -283,7 +277,10 @@ export function showAtoExpirationDate(
 ): React.ReactNode {
   return showVal(
     systemProfileAto?.dateAuthorizationMemoExpires &&
-      formatDate(systemProfileAto.dateAuthorizationMemoExpires)
+      formatDateUtc(
+        systemProfileAto.dateAuthorizationMemoExpires,
+        'MMMM d, yyyy'
+      )
   );
 }
 

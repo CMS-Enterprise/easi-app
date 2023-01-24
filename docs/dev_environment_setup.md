@@ -166,7 +166,7 @@ $
 
 This repo uses [`pre-commit`](https://pre-commit.com/) to manage pre-commit Git hooks for maintaining several quality and stylistic standards; see [`.pre-commit-config.yaml`](/.pre-commit-config.yaml) for details.
 
-**MacOS:** Install with `brew install pre-commit`.
+**MacOS:** Install with `brew install pre-commit`. You'll also need to run `brew install diffutils`, as the built-in `diff` command on OSX differs from what some of our pre-commit tooling expects.
 
 **Windows+WSL:**
 - First install Python's `pip` package manager with `sudo apt install python3-pip`.

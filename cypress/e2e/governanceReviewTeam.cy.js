@@ -95,11 +95,11 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
       'td',
-      'November 24 2020'
+      '11/24/2020'
     );
     cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
       'td',
-      'December 25 2020'
+      '12/25/2020'
     );
   });
 
@@ -188,7 +188,7 @@ describe('Governance Review Team', () => {
     ).click();
     cy.contains('dt', 'Lifecycle ID Expiration')
       .siblings('dd')
-      .contains(`December 25 ${futureDateYear}`);
+      .contains(`December 25, ${futureDateYear}`);
     cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
     cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });

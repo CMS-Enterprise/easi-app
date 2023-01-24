@@ -21,7 +21,6 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -37,8 +36,8 @@ import { GetSystemIntake_systemIntake_lastAdminNote as LastAdminNote } from 'que
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
-import { formatDate } from 'utils/date';
-import globalTableFilter from 'utils/globalTableFilter';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
+import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
@@ -88,7 +87,7 @@ const RequestRepository = () => {
     accessor: 'submittedAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+        return formatDateLocal(value, 'MM/dd/yyyy');
       }
 
       return t('requestRepository.table.submissionDate.null');
@@ -152,7 +151,7 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDate(value);
+      return formatDateUtc(value, 'MM/dd/yyyy');
     }
   };
 
@@ -170,7 +169,7 @@ const RequestRepository = () => {
           </UswdsReactLink>
         );
       }
-      return formatDate(value);
+      return formatDateUtc(value, 'MM/dd/yyyy');
     }
   };
 
@@ -208,7 +207,7 @@ const RequestRepository = () => {
     accessor: 'lcidExpiresAt',
     Cell: ({ value }: any) => {
       if (value) {
-        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+        return formatDateUtc(value, 'MM/dd/yyyy');
       }
 
       // If no LCID Expiration exists, display 'No LCID Issued'
@@ -225,9 +224,8 @@ const RequestRepository = () => {
           // Display admin note using truncated text field that
           // will display note with expandable extra text (if applicable)
           <>
-            {DateTime.fromISO(value.createdAt!).toLocaleString(
-              DateTime.DATE_FULL
-            )}
+            {formatDateLocal(value.createdAt!, 'MM/dd/yyyy')}
+
             <TruncatedText
               id="last-admin-note"
               label="less"
@@ -303,6 +301,7 @@ const RequestRepository = () => {
     state,
     page,
     prepareRow,
+    rows,
     setSortBy
   } = useTable(
     {
@@ -315,7 +314,7 @@ const RequestRepository = () => {
           );
         }
       },
-      globalFilter: useMemo(() => globalTableFilter, []),
+      globalFilter: useMemo(() => globalFilterCellText, []),
       data,
       autoResetSortBy: false,
       autoResetPage: false,
@@ -329,6 +328,8 @@ const RequestRepository = () => {
     useSortBy,
     usePagination
   );
+
+  rows.map(row => prepareRow(row));
 
   const csvHeaders = csvHeaderMap(t);
 
@@ -461,7 +462,6 @@ const RequestRepository = () => {
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row: Row) => {
-            prepareRow(row);
             return (
               // @ts-ignore
               <tr {...row.getRowProps()} data-testid={`${row.original.id}-row`}>

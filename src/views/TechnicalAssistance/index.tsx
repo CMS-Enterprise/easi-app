@@ -5,6 +5,7 @@ import { GridContainer } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
+import AdminHome from './AdminHome';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
@@ -17,7 +18,7 @@ function TechnicalAssistance() {
   const { path } = useRouteMatch();
 
   return (
-    <MainContent className="technical-assistance margin-bottom-10">
+    <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
       <Switch>
         <Route exact path={path}>
           <Homepage />
@@ -44,6 +45,11 @@ function TechnicalAssistance() {
         {/* Create new or edit exisiting request */}
         <Route exact path={`${path}/requests/:id/:step?/:view?`}>
           <RequestForm />
+        </Route>
+
+        {/* Admin view */}
+        <Route exact path={`${path}/:id/:activePage`}>
+          <AdminHome />
         </Route>
 
         <Route path="*">

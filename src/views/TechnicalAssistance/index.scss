@@ -1,4 +1,14 @@
 .technical-assistance {
+  .trb-admin-alert {
+    .usa-alert {
+      max-width: 75rem;
+    }
+  }
+  .trb-requests-table {
+    th:last-child, tr:last-child {
+      width: 200px;
+    }
+  }
   .usa-form {
     /* Top margin for 1st level form groups */
     > .usa-form-group {

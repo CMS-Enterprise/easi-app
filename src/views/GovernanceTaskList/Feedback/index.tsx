@@ -7,7 +7,6 @@ import {
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -19,6 +18,7 @@ import {
   GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback,
   GetGRTFeedbackVariables
 } from 'queries/types/GetGRTFeedback';
+import { formatDateLocal } from 'utils/date';
 
 const GovernanceFeedback = () => {
   const { systemId } = useParams<{ systemId: string }>();
@@ -41,9 +41,7 @@ const GovernanceFeedback = () => {
   );
 
   const formatGRTFeedback = (item: GRTFeedback) => {
-    const formattedDate = DateTime.fromISO(item.createdAt).toLocaleString(
-      DateTime.DATE_MED
-    );
+    const formattedDate = formatDateLocal(item.createdAt, 'MMMM d, yyyy');
     return (
       <div className="margin-bottom-3" key={item.id}>
         <h4

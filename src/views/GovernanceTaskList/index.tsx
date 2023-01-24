@@ -35,6 +35,7 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import { archiveSystemIntake, fetchBusinessCase } from 'types/routines';
+import { parseAsUTC } from 'utils/date';
 import { intakeHasDecision, isIntakeOpen } from 'utils/systemIntake';
 import NotFound from 'views/NotFound';
 
@@ -124,9 +125,9 @@ const GovernanceTaskList = () => {
   // The meeting date is "scheduled" until the next day since there is no time
   // associated with meeting dates.
   const getMeetingDate = (date: string): string => {
-    const dateTime = DateTime.fromISO(date);
+    const dateTime = parseAsUTC(date);
     if (dateTime.isValid) {
-      return dateTime.plus({ day: 1 }).toMillis() > DateTime.local().toMillis()
+      return dateTime.plus({ day: 1 }) > DateTime.local()
         ? `Scheduled for ${dateTime.toLocaleString(DateTime.DATE_FULL)}`
         : `Attended on ${dateTime.toLocaleString(DateTime.DATE_FULL)}`;
     }

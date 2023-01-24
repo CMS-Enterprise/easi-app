@@ -110,7 +110,10 @@ const RequestOverview = () => {
         <nav className="desktop:grid-col-2 desktop:display-block display-none margin-right-2">
           <ul className="easi-grt__nav-list">
             <li>
-              <Link to="/" className="display-flex flex-align-center">
+              <Link
+                to="/"
+                className="display-flex flex-align-center hover:text-primary-dark"
+              >
                 <IconArrowBack className="margin-right-1" aria-hidden />
                 {t('back.allRequests')}
               </Link>

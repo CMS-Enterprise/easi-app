@@ -28,7 +28,6 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import { clone } from 'lodash';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -53,6 +52,7 @@ import {
   TRBDocumentCommonType,
   TRBRequestDocumentStatus
 } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import {
   documentSchema,
@@ -125,7 +125,7 @@ function Documents({
       {
         Header: t<string>('documents.table.header.uploadDate'),
         accessor: 'uploadedAt',
-        Cell: ({ value }) => DateTime.fromISO(value).toFormat('MM/dd/yyyy')
+        Cell: ({ value }) => formatDateLocal(value, 'MM/dd/yyyy')
       },
       {
         Header: t<string>('documents.table.header.actions'),

@@ -9,7 +9,6 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { Field, FieldArray } from 'formik';
-import { DateTime } from 'luxon';
 
 import CollapsableList from 'components/CollapsableList';
 import {
@@ -21,7 +20,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
-import { getFiscalYear } from 'utils/date';
+import { getFiscalYear, parseAsUTC } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
 
 import './index.scss';
@@ -301,7 +300,7 @@ const EstimatedLifecycleCost = ({
 
   const { t } = useTranslation('businessCase');
   const fiscalYear = businessCaseCreatedAt
-    ? getFiscalYear(DateTime.fromISO(businessCaseCreatedAt))
+    ? getFiscalYear(parseAsUTC(businessCaseCreatedAt))
     : new Date().getFullYear();
 
   return (
