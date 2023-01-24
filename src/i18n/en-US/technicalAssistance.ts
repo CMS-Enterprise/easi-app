@@ -32,6 +32,15 @@ const technicalAssistance = {
     viewFeedback: 'View feedback'
   },
   adminAction: 'Admin Action',
+  requestNotes: {
+    text: 'notes about this request',
+    viewNotes: 'View notes',
+    addNote: 'Add a note'
+  },
+  adviceLetter: {
+    introText:
+      'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.'
+  },
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request'
