@@ -101,15 +101,19 @@ func RequestReviewForTRBAdviceLetter(
 		return nil, err
 	}
 
-	leadInfo, err := fetchUserInfo(ctx, *trb.TRBLead)
-	if err != nil {
-		return nil, err
+	var leadName string
+	if trb.TRBLead != nil {
+		leadInfo, err2 := fetchUserInfo(ctx, *trb.TRBLead)
+		if err2 != nil {
+			return nil, err2
+		}
+		leadName = leadInfo.CommonName
 	}
 
 	emailInput := email.SendTRBAdviceLetterInternalReviewEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.Name,
-		TRBLeadName:    leadInfo.CommonName,
+		TRBLeadName:    leadName,
 		RequesterName:  requesterInfo.CommonName,
 	}
 

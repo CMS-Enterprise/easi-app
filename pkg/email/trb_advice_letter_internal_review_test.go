@@ -44,14 +44,14 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>` + input.TRBLeadName + ` has completed a draft advice letter for ` + input.TRBRequestName + `. This advice letter is now ready for internal review. Please take a moment to look over the draft and make any suggestions for improvement.</p>
+<p>` + input.TRBRequestName + ` has a draft advice letter that is now ready for internal review. Please take a moment to look over the draft and make any suggestions for improvement.</p>
+
+<p>TRB Lead: ` + input.TRBLeadName + `</p>
 
 <p><a href="` + trbAdviceLetterLink + `" style="font-weight: bold">View the Advice Letter</a></p>
 
 <p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
-
 `
-		fmt.Println(sender.body)
 		err = client.SendTRBAdviceLetterInternalReviewEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.TRBEmail})
