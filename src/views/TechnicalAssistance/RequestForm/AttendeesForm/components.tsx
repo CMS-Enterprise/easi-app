@@ -38,7 +38,6 @@ import {
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 
-// import { parseAsLocalTime } from 'utils/date';
 import { initialAttendee } from '../Attendees';
 
 /** Attendee form props */
@@ -269,8 +268,6 @@ const Attendee = ({
 
   return (
     <>
-      {/* Attendee icon with initials */}
-      <InitialsIcon name={commonName} className="margin-right-1" />
       {/* Attendee details */}
       <div>
         <p className="margin-y-05 text-bold">
@@ -382,7 +379,7 @@ const AttendeesTable = ({
     <div className="trbAttendees-table margin-top-4 margin-bottom-neg-1">
       <Table bordered={false} fullWidth {...getTableProps()}>
         <tbody {...getTableBodyProps()} className="grid-row grid-gap-sm">
-          {page.map(row => {
+          {page.map((row, index) => {
             prepareRow(row);
             return (
               <tr
@@ -402,6 +399,12 @@ const AttendeesTable = ({
                       data-testid={`trbAttendee-${attendee?.userInfo?.euaUserId}`}
                       className="trbAttendee display-flex"
                     >
+                      {/* Attendee icon with initials */}
+                      <InitialsIcon
+                        name={attendee?.userInfo?.commonName || ''}
+                        index={index}
+                        className="margin-right-1"
+                      />
                       <Attendee
                         attendee={attendee}
                         deleteAttendee={() => {

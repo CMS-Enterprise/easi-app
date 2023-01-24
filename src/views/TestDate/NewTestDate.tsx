@@ -12,7 +12,7 @@ import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 import { TestDateFormType } from 'types/accessibility';
-import { formatDate } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 
 import PageLoading from '../../components/PageLoading';
 import RequestDeleted from '../Accessibility/RequestDeleted';
@@ -60,12 +60,16 @@ const NewTestDate = () => {
       day: Number(values.dateDay),
       month: Number(values.dateMonth),
       year: Number(values.dateYear)
-    });
+    })
+      .toUTC()
+      .toISO();
     const hasScore = values.score.isPresent;
     const score = values.score.value;
 
     const submitConfirmation = `
-      ${t('testDateForm.confirmation.date', { date: formatDate(date) })}
+      ${t('testDateForm.confirmation.date', {
+        date: formatDateUtc(date, 'MMMM d, yyyy')
+      })}
       ${hasScore ? t('testDateForm.confirmation.score', { score }) : ''}
       ${t('testDateForm.confirmation.create')}
     `;

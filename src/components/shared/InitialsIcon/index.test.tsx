@@ -1,15 +1,21 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
-import InitialsIcon from './index';
+import InitialsIcon, { colorClassNames } from './index';
 
 describe('The Initials Icon component', () => {
-  it('renders without crashing', () => {
-    shallow(<InitialsIcon name="Jane Doe" />);
-  });
+  it('renders the icon', () => {
+    const { getByTestId } = render(
+      <InitialsIcon name="Jane Marie Doe, Jr" index={3} />
+    );
 
-  it('Renders the correct initials', () => {
-    const component = shallow(<InitialsIcon name="Jane Marie Doe, Jr" />);
-    expect(component.text()).toEqual('JD');
+    /** Rendered icon */
+    const icon = getByTestId('initials-icon');
+
+    // Icon renders correct initials
+    expect(icon).toHaveTextContent('JD');
+
+    // Icon contains correct background color class
+    expect(icon).toHaveClass(colorClassNames[3]);
   });
 });
