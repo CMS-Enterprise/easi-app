@@ -31,6 +31,7 @@ const technicalAssistance = {
       'The TRB has requested edits to your initial request form. Please make any necessary changes and re-submit your form.',
     viewFeedback: 'View feedback'
   },
+  adminAction: 'Admin Action',
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request'

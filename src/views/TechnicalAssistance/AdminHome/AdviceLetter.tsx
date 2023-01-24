@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import { TrbAdminPage } from 'types/technicalAssistance';
 
+import AdminAction from './components/AdminAction';
+
 const AdviceLetter: TrbAdminPage = trbRequestId => {
   const { t } = useTranslation('technicalAssistance');
   return (
@@ -12,6 +14,7 @@ const AdviceLetter: TrbAdminPage = trbRequestId => {
       id={`trbAdminAdviceLetter-${trbRequestId}`}
     >
       <h1 className="margin-y-0">{t('adminHome.subnav.adviceLetter')}</h1>
+      <AdminAction />
     </div>
   );
 };

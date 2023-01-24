@@ -17,8 +17,8 @@ import user from 'utils/user';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
 import NotFound from 'views/NotFound';
 
+import Summary from './components/Summary';
 import subNavItems from './subNavItems';
-import Summary from './Summary';
 
 import './index.scss';
 
