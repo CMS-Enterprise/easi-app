@@ -154,8 +154,8 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                       <dd className="text-right text-base-dark system-profile__icon-container">
                         <IconVerifiedUser
                           width="1rem"
+                          color="#00a91c"
                           height="1rem"
-                          fill="#00a91c"
                           className="margin-right-1"
                           aria-label="verified"
                         />
