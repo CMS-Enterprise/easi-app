@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { TrbAdminPage } from 'types/technicalAssistance';
+import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import AdminAction from './components/AdminAction';
 
-const AdviceLetter: TrbAdminPage = trbRequestId => {
+const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
   return (
     <div
