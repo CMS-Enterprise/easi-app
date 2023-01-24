@@ -31,6 +31,7 @@ import Check from './Check';
 import Documents from './Documents';
 import Done from './Done';
 import SubjectAreas from './SubjectAreas';
+import ViewSubmittedRequest from './ViewSubmittedRequest';
 
 /**
  * A promise wrapper for form step submit handlers.
@@ -88,9 +89,12 @@ export const formStepComponents: {
 
 /**
  * Mapped form step slugs from `formStepComponents`.
- * The last `done` slug is not a form step and is handled separately.
+ * Append `done` & `view` slugs are not form steps, but are used as additional subviews.
+ * Make sure to set this correctly so that invalid slugs are routed appropriately.
  */
-const formStepSlugs = formStepComponents.map(f => f.step).concat('done');
+const formStepSlugs = formStepComponents
+  .map(f => f.step)
+  .concat('done', 'view');
 
 type RequestFormText = {
   heading: string;
@@ -315,9 +319,19 @@ function RequestForm() {
     return null;
   }
 
-  // `Done` has a different layout and is handled seperately
+  // Return early on certain slugs that are not form steps
   if (step === 'done') {
     return <Done breadcrumbBar={defaultBreadcrumbs} />;
+  }
+
+  if (step === 'view' && request) {
+    return (
+      <ViewSubmittedRequest
+        request={request}
+        breadcrumbBar={defaultBreadcrumbs}
+        taskListUrl={taskListUrl}
+      />
+    );
   }
 
   if (error) {

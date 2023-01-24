@@ -570,6 +570,9 @@ const technicalAssistance = {
     returnToTaskList: 'Return to task list',
     backToTrbRequest: 'Back to TRB Request'
   },
+  viewSubmitted: {
+    heading: 'View submitted Technical Assistance Request'
+  },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
     requestType: 'Request type',
