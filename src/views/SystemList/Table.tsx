@@ -33,6 +33,7 @@ import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQue
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
+import globalFilterCellText from 'utils/globalFilterCellText';
 // import { mapCedarStatusToIcon } from 'types/iconStatus';
 import {
   getColumnSortStatus,
@@ -189,6 +190,7 @@ export const Table = ({
       },
       columns,
       data: systems as CedarSystem[],
+      globalFilter: useMemo(() => globalFilterCellText, []),
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
@@ -202,6 +204,8 @@ export const Table = ({
     useSortBy,
     usePagination
   );
+
+  rows.map(row => prepareRow(row));
 
   return (
     <>
@@ -255,7 +259,6 @@ export const Table = ({
 
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
-            prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell, index) => (

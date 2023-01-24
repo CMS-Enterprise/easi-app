@@ -39,6 +39,7 @@ import {
   GetTrbRequests_trbRequests
 } from 'queries/types/GetTrbRequests';
 import { AppState } from 'reducers/rootReducer';
+import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -47,7 +48,6 @@ import {
 } from 'utils/tableSort';
 import user from 'utils/user';
 import NotFound from 'views/NotFound';
-import { formatDate } from 'views/SystemProfile';
 
 function Homepage() {
   const { t } = useTranslation('technicalAssistance');
@@ -93,7 +93,7 @@ function Homepage() {
         Header: t<string>('table.header.submissionDate'),
         accessor: 'createdAt',
         // eslint-disable-next-line react/prop-types
-        Cell: ({ value }) => formatDate(value)
+        Cell: ({ value }) => formatDateLocal(value, 'MM/dd/yyyy')
       }
     ];
   }, [t]);

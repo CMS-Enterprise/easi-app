@@ -10,7 +10,6 @@ import {
   useTable
 } from 'react-table';
 import { Button, IconError, Link, Table } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -22,7 +21,7 @@ import {
   AccessibilityRequestDocumentStatus
 } from 'types/graphql-global-types';
 import { translateDocumentType } from 'utils/accessibilityRequest';
-import { formatDate } from 'utils/date';
+import { formatDateLocal } from 'utils/date';
 import { getHeaderSortIcon, sortColumnValues } from 'utils/tableSort';
 
 type Document = {
@@ -116,7 +115,7 @@ const AccessibilityDocumentsList = ({
   const data = useMemo(() => {
     const tableData = documents.map((singleDoc: Document) => {
       const uploadedAt = singleDoc.uploadedAt
-        ? formatDate(DateTime.fromISO(singleDoc.uploadedAt))
+        ? formatDateLocal(singleDoc.uploadedAt, 'MM/dd/yyyy')
         : '';
 
       let translatedStatus;
@@ -158,6 +157,7 @@ const AccessibilityDocumentsList = ({
     previousPage,
     setPageSize,
     page,
+    rows,
     setGlobalFilter,
     state,
     prepareRow
@@ -185,6 +185,8 @@ const AccessibilityDocumentsList = ({
     useSortBy,
     usePagination
   );
+
+  rows.map(row => prepareRow(row));
 
   if (documents.length === 0) {
     return <div>{t('documentTable.noDocuments')}</div>;
@@ -238,7 +240,6 @@ const AccessibilityDocumentsList = ({
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
-            prepareRow(row);
             return (
               <tr data-testurl={row.original.url} {...row.getRowProps()}>
                 {row.cells.map((cell, i) => {

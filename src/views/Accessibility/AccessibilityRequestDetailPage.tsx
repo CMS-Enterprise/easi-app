@@ -18,7 +18,6 @@ import {
   FormikProps
 } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { DateTime } from 'luxon';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -74,7 +73,7 @@ import {
 } from 'types/accessibility';
 import { AccessibilityRequestDeletionReason } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
-import { formatDate } from 'utils/date';
+import { formatDateLocal, formatDateUtc, parseAsUTC } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import user from 'utils/user';
 import accessibilitySchema from 'validations/accessibilitySchema';
@@ -205,7 +204,7 @@ const AccessibilityRequestDetailPage = () => {
       refetch();
       showMessage(
         t('removeTestDate.confirmation', {
-          date: formatDate(testDate.date),
+          date: formatDateUtc(testDate.date, 'MMMM d, yyyy'),
           requestName
         })
       );
@@ -322,7 +321,7 @@ const AccessibilityRequestDetailPage = () => {
         {notes.length > 0 &&
           t('requestDetails.notes.mostRecentNote', {
             authorName: notes[0]?.authorName,
-            createdAt: formatDate(notes[0]?.createdAt)
+            createdAt: formatDateLocal(notes[0]?.createdAt, 'MMMM d, yyyy')
           })}
       </h3>
       <p className="usa-sr-only" aria-live="polite">
@@ -427,7 +426,7 @@ const AccessibilityRequestDetailPage = () => {
               <NoteByline>
                 {`by ${note.authorName}`}
                 <span className="padding-x-1">|</span>
-                {formatDate(note.createdAt)}
+                {formatDateLocal(note.createdAt, 'MMMM d, yyyy')}
               </NoteByline>
             </NoteListItem>
           ))}
@@ -569,8 +568,8 @@ const AccessibilityRequestDetailPage = () => {
                 {[...testDates]
                   .sort(
                     (a, b) =>
-                      DateTime.fromISO(a.date).toMillis() -
-                      DateTime.fromISO(b.date).toMillis()
+                      parseAsUTC(a.date).toMillis() -
+                      parseAsUTC(b.date).toMillis()
                   )
                   .map((testDate, index) => (
                     <TestDateCard
@@ -606,7 +605,7 @@ const AccessibilityRequestDetailPage = () => {
                     {t('intake:fields.submissionDate')}
                   </dt>
                   <dd className="margin-0 margin-bottom-1">
-                    {formatDate(submittedAt)}
+                    {formatDateLocal(submittedAt, 'MMMM d, yyyy')}
                   </dd>
                   <dt className="font-body-sm text-bold">
                     {t('intake:fields.businessOwner')}

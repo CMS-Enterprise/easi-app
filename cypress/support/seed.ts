@@ -1,13 +1,11 @@
-import { DateTime } from 'luxon';
-
 export interface AccessibilityRequestSchema {
   id: string;
   name: string;
   intakeID: string;
-  createdAt: DateTime;
-  updatedAt: DateTime;
+  createdAt: string;
+  updatedAt: string | null;
   euaUserID: string;
-  deletedAt?: DateTime;
+  deletedAt?: string;
   deletionReason?: string;
   cedarSystemId?: string;
 }

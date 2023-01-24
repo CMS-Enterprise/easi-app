@@ -38,7 +38,6 @@ import {
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 
-// import { parseAsLocalTime } from 'utils/date';
 import { initialAttendee } from '../Attendees';
 
 /** Attendee form props */
