@@ -61,12 +61,7 @@ describe('The system intake data modifiers', () => {
         ...initialSystemIntakeForm,
         id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
         euaUserId: 'ABCD',
-        submittedAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 26,
-          zone: 'America/Los_Angeles'
-        }),
+        submittedAt: '2020-06-26T20:22:04Z',
         requestName: 'Easy Access to System Information',
         requester: {
           name: 'Christopher Hui',
@@ -132,39 +127,21 @@ describe('The system intake data modifiers', () => {
         currentStage: 'Test current stage',
         needsEaSupport: true,
         status: 'Submitted',
-        decidedAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 27,
-          zone: 'America/Los_Angeles'
-        }),
-        createdAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 22,
-          zone: 'America/Los_Angeles'
-        }),
-        updatedAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 23,
-          zone: 'America/Los_Angeles'
-        }),
-        archivedAt: DateTime.fromObject({
-          year: 2020,
-          month: 6,
-          day: 28,
-          zone: 'America/Los_Angeles'
-        }),
+        decidedAt: '2020-06-27T20:22:04Z',
+        createdAt: '2020-06-22T20:22:04Z',
+        updatedAt: '2020-06-23T20:22:04Z',
+        archivedAt: '2020-06-28T20:22:04Z',
         adminLead: 'Test Admin Lead',
         lastAdminNote: {
           content: 'last admin note',
-          createdAt: DateTime.fromObject({
-            year: 2020,
-            month: 6,
-            day: 22,
-            zone: 'America/Los_Angeles'
-          })
+          createdAt: DateTime.fromObject(
+            {
+              year: 2020,
+              month: 6,
+              day: 22
+            },
+            { zone: 'America/Los_Angeles' }
+          ).toISO()
         },
         lcidScope: '',
         requesterNameAndComponent: ''
@@ -214,13 +191,13 @@ describe('The system intake data modifiers', () => {
         currentStage: 'Test current stage',
         needsEaSupport: true,
         status: 'Submitted',
-        submittedAt: '2020-06-26T00:00:00.000-07:00',
-        decidedAt: '2020-06-27T00:00:00.000-07:00',
-        createdAt: '2020-06-22T00:00:00.000-07:00',
-        updatedAt: '2020-06-23T00:00:00.000-07:00',
-        archivedAt: '2020-06-28T00:00:00.000-07:00',
+        submittedAt: '2020-06-26T20:22:04Z',
+        decidedAt: '2020-06-27T20:22:04Z',
+        createdAt: '2020-06-22T20:22:04Z',
+        updatedAt: '2020-06-23T20:22:04Z',
+        archivedAt: '2020-06-28T20:22:04Z',
         adminLead: 'Test Admin Lead',
-        lastAdminNote: 'last admin note (June 22 2020)',
+        lastAdminNote: 'last admin note (June 22, 2020)',
         lcidScope: ''
       });
     });

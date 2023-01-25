@@ -6,7 +6,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-import { formatContractDate, formatDate, parseAsDate } from 'utils/date';
+import { formatContractDate, formatDateLocal, parseAsUTC } from 'utils/date';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
@@ -131,9 +131,9 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
       month: Number(systemIntake.contract.endDate.month),
       year: Number(systemIntake.contract.endDate.year)
     }),
-    grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
-    grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO(),
-    submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO(),
+    grtDate: systemIntake.grtDate,
+    grbDate: systemIntake.grbDate,
+    submittedAt: systemIntake.submittedAt,
     adminLead: systemIntake.adminLead
   };
 };
@@ -155,8 +155,8 @@ export const prepareSystemIntakeForApp = (
     return teams;
   };
 
-  const contractStartDate = parseAsDate(systemIntake.contractStartDate);
-  const contractEndDate = parseAsDate(systemIntake.contractEndDate);
+  const contractStartDate = parseAsUTC(systemIntake.contractStartDate);
+  const contractEndDate = parseAsUTC(systemIntake.contractEndDate);
 
   return {
     id: systemIntake.id || '',
@@ -222,31 +222,19 @@ export const prepareSystemIntakeForApp = (
         ? null
         : systemIntake.eaSupportRequest,
     grtReviewEmailBody: systemIntake.grtReviewEmailBody || '',
-    decidedAt: systemIntake.decidedAt
-      ? DateTime.fromISO(systemIntake.decidedAt)
-      : null,
+    decidedAt: systemIntake.decidedAt,
     businessCaseId: systemIntake.businessCase || null,
-    submittedAt: systemIntake.submittedAt
-      ? DateTime.fromISO(systemIntake.submittedAt)
-      : null,
-    updatedAt: systemIntake.updatedAt
-      ? DateTime.fromISO(systemIntake.updatedAt)
-      : null,
-    createdAt: systemIntake.createdAt
-      ? DateTime.fromISO(systemIntake.createdAt)
-      : null,
-    archivedAt: systemIntake.archivedAt
-      ? DateTime.fromISO(systemIntake.archivedAt)
-      : null,
+    submittedAt: systemIntake.submittedAt,
+    updatedAt: systemIntake.updatedAt,
+    createdAt: systemIntake.createdAt,
+    archivedAt: systemIntake.archivedAt,
     lcid: systemIntake.lcid || '',
-    lcidExpiresAt: systemIntake.lcidExpiresAt
-      ? DateTime.fromISO(systemIntake.lcidExpiresAt)
-      : null,
+    lcidExpiresAt: systemIntake.lcidExpiresAt,
     lcidScope: systemIntake.lcidScope || '',
     decisionNextSteps: systemIntake.decisionNextSteps || '',
     rejectionReason: systemIntake.rejectionReason || '',
-    grtDate: systemIntake.grtDate ? parseAsDate(systemIntake.grtDate) : null,
-    grbDate: systemIntake.grbDate ? parseAsDate(systemIntake.grbDate) : null,
+    grtDate: systemIntake.grtDate,
+    grbDate: systemIntake.grbDate,
     adminLead: systemIntake.adminLead || '',
     lastAdminNote: systemIntake.lastAdminNoteContent
       ? {
@@ -285,8 +273,9 @@ export const convertIntakeToCSV = (
     ...intake,
     ...collaboratorTeams,
     lastAdminNote: intake.lastAdminNote
-      ? `${intake.lastAdminNote.content} (${formatDate(
-          intake.lastAdminNote.createdAt
+      ? `${intake.lastAdminNote.content} (${formatDateLocal(
+          intake.lastAdminNote.createdAt,
+          'MMMM d, yyyy'
         )})`
       : null,
     lcidScope: intake.lcidScope,
@@ -300,11 +289,11 @@ export const convertIntakeToCSV = (
     )
       ? formatContractDate(intake.contract.endDate)
       : '',
-    submittedAt: intake.submittedAt && intake.submittedAt.toISO(),
-    updatedAt: intake.updatedAt && intake.updatedAt.toISO(),
-    createdAt: intake.createdAt && intake.createdAt.toISO(),
-    decidedAt: intake.decidedAt && intake.decidedAt.toISO(),
-    archivedAt: intake.archivedAt && intake.archivedAt.toISO()
+    submittedAt: intake.submittedAt,
+    updatedAt: intake.updatedAt,
+    createdAt: intake.createdAt,
+    decidedAt: intake.decidedAt,
+    archivedAt: intake.archivedAt
   };
 };
 

@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 
 import { prepareSystemIntakeForApp } from 'data/systemIntake';
@@ -33,7 +32,7 @@ function systemIntakesReducer(
         systemIntakes: action.payload.map((intake: any) =>
           prepareSystemIntakeForApp(intake)
         ),
-        loadedTimestamp: DateTime.local()
+        loadedTimestamp: new Date().toISOString()
       };
     case fetchSystemIntakes.FAILURE:
       return {

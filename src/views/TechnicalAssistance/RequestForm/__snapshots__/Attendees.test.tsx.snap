@@ -330,11 +330,10 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                   style="padding: 0px;"
                 >
                   <div
-                    class="easi-initials-icon bg-accent-cool-lighter margin-right-1"
+                    class="easi-initials-icon display-flex flex-align-center flex-justify-center font-body-2xs circle-4 bg-primary-lighter margin-right-1"
+                    data-testid="initials-icon"
                   >
-                    <span>
-                      AA
-                    </span>
+                    AA
                   </div>
                   <div>
                     <p
@@ -392,11 +391,10 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                   style="padding: 0px;"
                 >
                   <div
-                    class="easi-initials-icon bg-accent-cool-lighter margin-right-1"
+                    class="easi-initials-icon display-flex flex-align-center flex-justify-center font-body-2xs circle-4 bg-secondary-lighter margin-right-1"
+                    data-testid="initials-icon"
                   >
-                    <span>
-                      JS
-                    </span>
+                    JS
                   </div>
                   <div>
                     <p
@@ -454,11 +452,10 @@ exports[`Trb Request form: Attendees Renders the attendees form 1`] = `
                   style="padding: 0px;"
                 >
                   <div
-                    class="easi-initials-icon bg-accent-cool-lighter margin-right-1"
+                    class="easi-initials-icon display-flex flex-align-center flex-justify-center font-body-2xs circle-4 bg-accent-warm-lighter margin-right-1"
+                    data-testid="initials-icon"
                   >
-                    <span>
-                      AJ
-                    </span>
+                    AJ
                   </div>
                   <div>
                     <p

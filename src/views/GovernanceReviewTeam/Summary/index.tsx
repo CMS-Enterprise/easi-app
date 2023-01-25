@@ -19,7 +19,7 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 import { RequestType } from 'types/systemIntake';
-import { formatDate } from 'utils/date';
+import { formatDateLocal } from 'utils/date';
 import {
   isIntakeClosed,
   isIntakeOpen,
@@ -136,7 +136,11 @@ const RequestSummary = ({
             </div>
             <div className="easi-grt__description-group">
               <dt>{t('intake:fields.submissionDate')}</dt>
-              <dd>{submittedAt ? formatDate(submittedAt) : 'N/A'}</dd>
+              <dd>
+                {submittedAt
+                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
+                  : 'N/A'}
+              </dd>
             </div>
             <div className="easi-grt__description-group">
               <dt>{t('intake:fields.requestFor')}</dt>

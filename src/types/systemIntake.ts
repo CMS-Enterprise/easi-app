@@ -1,5 +1,3 @@
-import { DateTime } from 'luxon';
-
 import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 
 export type GovernanceCollaborationTeam = {
@@ -77,24 +75,24 @@ export type SystemIntakeForm = {
   currentStage: string;
   needsEaSupport: boolean | null;
   grtReviewEmailBody: string;
-  decidedAt: DateTime | null;
+  decidedAt: string | null;
   businessCaseId?: string | null;
-  submittedAt: DateTime | null;
-  updatedAt: DateTime | null;
-  createdAt: DateTime | null;
-  archivedAt: DateTime | null;
+  submittedAt: string | null;
+  updatedAt: string | null;
+  createdAt: string | null;
+  archivedAt: string | null;
   lcid: string;
-  lcidExpiresAt: DateTime | null;
+  lcidExpiresAt: string | null;
   lcidScope: string;
   lcidCostBaseline: string | null;
   decisionNextSteps: string;
   rejectionReason: string;
-  grtDate: DateTime | null;
-  grbDate: DateTime | null;
+  grtDate: string | null;
+  grbDate: string | null;
   adminLead: string;
   lastAdminNote: {
     content: string;
-    createdAt: DateTime;
+    createdAt: string;
   } | null;
   requesterNameAndComponent: string;
 } & ContractDetailsForm;
@@ -203,7 +201,7 @@ export type IntakeNote = {
     eua: string;
   };
   content: string;
-  createdAt: DateTime;
+  createdAt: string;
 };
 
 // Redux store type for a system intake
@@ -220,7 +218,7 @@ export type SystemIntakeState = {
 export type SystemIntakesState = {
   systemIntakes: SystemIntakeForm[];
   isLoading: boolean | null;
-  loadedTimestamp: DateTime | null;
+  loadedTimestamp: string | null;
   error: string | null;
 };
 
