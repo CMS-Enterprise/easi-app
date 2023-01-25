@@ -8,10 +8,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-
-import {
-  ContactDetailsForm,
-} from 'types/systemIntake';
+import { ContactDetailsForm } from 'types/systemIntake';
 
 type GovernanceTeamOptionsProps = {
   formikProps: FormikProps<ContactDetailsForm>;

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import { IconMenu, GovBanner } from '@trussworks/react-uswds';
+import { GovBanner, IconMenu } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import { NavContext } from 'components/Header/navContext';

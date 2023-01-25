@@ -11,13 +11,13 @@ module.exports = {
         function ignoreSourcemapsloaderWarnings(warning) {
           return (
             warning.module &&
-            warning.module.resource.includes("node_modules") &&
+            warning.module.resource.includes('node_modules') &&
             warning.details &&
-            warning.details.includes("source-map-loader")
+            warning.details.includes('source-map-loader')
           );
-        },
-      ],
-    },
+        }
+      ]
+    }
   },
   style: {
     sass: {

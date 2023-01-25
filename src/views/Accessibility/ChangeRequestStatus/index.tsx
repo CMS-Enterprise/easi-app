@@ -34,9 +34,7 @@ const ChangeRequestStatus = () => {
     }
   });
 
-  const [mutate, mutationResult] = useMutation(
-    UpdateAccessibilityReqStatus
-  );
+  const [mutate, mutationResult] = useMutation(UpdateAccessibilityReqStatus);
   const initialValues = {
     status:
       data?.accessibilityRequest?.statusRecord.status ||

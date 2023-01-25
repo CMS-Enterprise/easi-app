@@ -96,7 +96,7 @@ export type SystemIntakeForm = {
     content: string;
     createdAt: DateTime;
   } | null;
-  requesterNameAndComponent: string
+  requesterNameAndComponent: string;
 } & ContractDetailsForm;
 
 export type ContactDetailsForm = {
@@ -131,7 +131,7 @@ export type MultiFundingSource = {
 /** Funding sources formatted for form */
 export interface ExistingFundingSource extends MultiFundingSource {
   initialFundingNumber: string;
-};
+}
 
 /** Funding sources object formatted for display */
 export type FormattedFundingSourcesObject = {

@@ -72,6 +72,7 @@ repos:
         entry: scripts/pre-commit-eslint
         language: script
         files: \.(js|jsx|ts|tsx)$
+        exclude: (\.(d\.ts)$)|(\.storybook)|(serviceWorker\.ts) # This should match the .eslintrc "ignorePatterns". Change one, change the other!
 
   - repo: local
     hooks:

@@ -5,12 +5,13 @@ import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TRBRequestType, TRBRequestStatus } from 'types/graphql-global-types';
+
 import {
   GetTrbRequest,
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
+import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
 
 import SubjectAreas from './SubjectAreas';
 

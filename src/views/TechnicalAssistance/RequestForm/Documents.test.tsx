@@ -4,7 +4,7 @@ import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TRBRequestType, TRBRequestStatus } from 'types/graphql-global-types';
+
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
@@ -13,6 +13,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
+import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
 
 import Documents from './Documents';
 

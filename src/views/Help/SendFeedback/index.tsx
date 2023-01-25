@@ -280,7 +280,7 @@ export async function parseFeedbackForm(
           .filter(optionValue => optionValue !== easiServicesUsedOptionValue)
           .concat(
             `${easiServicesUsedOptionValue}: ${values.easiServicesUsedAdditionalText}`
-          )
+          );
       } else {
         parsedValues.easiServicesUsed = easiServicesUsed;
       }
