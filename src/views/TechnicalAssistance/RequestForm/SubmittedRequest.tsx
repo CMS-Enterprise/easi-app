@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import { camelCase, capitalize } from 'lodash';
-import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
@@ -12,7 +11,7 @@ import {
   GetTrbRequest_trbRequest_form as TrbRequestForm
 } from 'queries/types/GetTrbRequest';
 import { TRBWhereInProcessOption } from 'types/graphql-global-types';
-import { formatDateUtc } from 'utils/date';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
 
 import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';
@@ -58,9 +57,7 @@ function SubmittedRequest({
             <dt>{t('table.header.submissionDate')}</dt>
             <dd>
               {request.form.submittedAt
-                ? DateTime.fromISO(request.form.submittedAt).toFormat(
-                    'MMMM d, yyyy'
-                  )
+                ? formatDateLocal(request.form.submittedAt, 'MMMM d, yyyy')
                 : t('check.notYetSubmitted')}
             </dd>
           </Grid>
