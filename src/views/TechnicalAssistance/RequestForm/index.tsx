@@ -18,7 +18,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBRequestType } from 'types/graphql-global-types';
+import { TRBFormStatus, TRBRequestType } from 'types/graphql-global-types';
 import nullFillObject from 'utils/nullFillObject';
 import {
   inputBasicSchema,
@@ -127,7 +127,7 @@ function Header({
   /** Unassigned request is used as a loading state toggle. */
   request?: TrbRequest;
   breadcrumbBar: React.ReactNode;
-  stepsCompleted: string[];
+  stepsCompleted?: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
   formAlert: TrbFormAlert;
@@ -163,6 +163,7 @@ function Header({
           request &&
           !isStepSubmitting &&
           idx !== step - 1 && // not the current step
+          Array.isArray(stepsCompleted) &&
           // If Attendees is complete then everything's available
           (stepsCompleted.includes('attendees') ||
             // Or if Basic is complete, steps up to and including Attendees available
@@ -245,64 +246,105 @@ function RequestForm() {
   } = useTRBAttendees(id);
 
   // Determine the steps that are already completed by attempting to pre-validate them
-  const [stepsCompleted, setStepsCompleted] = useState<string[]>([]);
+  const [stepsCompleted, setStepsCompleted] = useState<string[] | undefined>(
+    undefined
+  );
 
-  // Prevalidate certain steps to enable their links in the StepHeader
+  // Prevalidate certain steps that will be checked against
+  // to enable slug paths and links in the StepHeader
   useEffect(() => {
     if (!request) {
       return;
     }
     (async () => {
-      const completed = [...stepsCompleted];
+      const completed = Array.isArray(stepsCompleted)
+        ? [...stepsCompleted]
+        : [];
+      const stepValidators = [];
 
       // Check the Basic step
       const basicStep = 'basic';
       if (!completed.includes(basicStep)) {
-        inputBasicSchema
-          .isValid(nullFillObject(request.form, basicBlankValues), {
-            strict: true
-          })
-          .then(valid => {
-            if (valid) {
-              completed.push(basicStep);
-              if (!isEqual(completed, stepsCompleted))
-                setStepsCompleted(completed);
-            }
-          });
+        stepValidators.push(
+          inputBasicSchema
+            .isValid(nullFillObject(request.form, basicBlankValues), {
+              strict: true
+            })
+            .then(valid => {
+              if (valid) completed.push(basicStep);
+            })
+        );
       }
 
       // Check Requester for the Attendees step
       const attendeesStep = 'attendees';
       if (!completed.includes(attendeesStep) && requester) {
-        // See Attendees.tsx for schema validation
-        trbRequesterSchema
-          .isValid(
-            {
-              euaUserId: requester.userInfo?.euaUserId || '',
-              component: requester.component,
-              role: requester.role
-            },
-            { strict: true }
-          )
-          .then(valid => {
-            if (valid) {
-              completed.push(attendeesStep);
-              if (!isEqual(completed, stepsCompleted))
-                setStepsCompleted(completed);
-            }
-          });
+        stepValidators.push(
+          // See Attendees.tsx for schema validation
+          trbRequesterSchema
+            .isValid(
+              {
+                euaUserId: requester.userInfo?.euaUserId || '',
+                component: requester.component,
+                role: requester.role
+              },
+              { strict: true }
+            )
+            .then(valid => {
+              if (valid) completed.push(attendeesStep);
+            })
+        );
       }
+
+      Promise.allSettled(stepValidators).then(() => {
+        if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+      });
     })();
   }, [request, requester, stepsCompleted]);
 
+  // Handle some redirects based on status, steps completed, step slugs
+
+  // If the form is completed then only allow `view`
   useEffect(() => {
-    if (request) {
-      // Check step param, redirect to the first step if invalid
-      if (!step || !formStepSlugs.includes(step)) {
-        history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
-      }
+    if (
+      step !== 'view' &&
+      request?.taskStatuses.formStatus === TRBFormStatus.COMPLETED
+    ) {
+      history.replace(`/trb/requests/${id}/view`);
+    }
+  }, [history, id, request?.taskStatuses.formStatus, step]);
+
+  // Check step param, redirect to the first step if invalid
+  useEffect(() => {
+    if (
+      request &&
+      (!step || // Step undefined
+        !formStepSlugs.includes(step)) // Invalid step slug
+    ) {
+      history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
     }
   }, [history, id, request, requestType, step]);
+
+  // Prevent step slugs if not completed and redirect to the latest available
+  useEffect(() => {
+    if (stepsCompleted === undefined) {
+      return;
+    }
+    if (
+      !stepsCompleted.includes('basic') &&
+      (step === 'subject' ||
+        step === 'attendees' ||
+        step === 'documents' ||
+        step === 'check')
+    ) {
+      history.replace(`/trb/requests/${id}/basic`);
+    } else if (
+      !stepsCompleted.includes('attendees') &&
+      (step === 'documents' || step === 'check')
+    ) {
+      history.replace(`/trb/requests/${id}/attendees`);
+    }
+  }, [history, id, step, stepsCompleted]);
 
   const taskListUrl = useMemo(
     () => (request ? `/trb/task-list/${request.id}` : null),
@@ -350,6 +392,14 @@ function RequestForm() {
     return null;
   }
 
+  if (error) {
+    return (
+      <GridContainer className="width-full">
+        <NotFoundPartial />
+      </GridContainer>
+    );
+  }
+
   // Return early on certain slugs that are not form steps
   if (step === 'done') {
     return <Done breadcrumbBar={defaultBreadcrumbs} />;
@@ -362,14 +412,6 @@ function RequestForm() {
         breadcrumbBar={defaultBreadcrumbs}
         taskListUrl={taskListUrl}
       />
-    );
-  }
-
-  if (error) {
-    return (
-      <GridContainer className="width-full">
-        <NotFoundPartial />
-      </GridContainer>
     );
   }
 
@@ -393,7 +435,9 @@ function RequestForm() {
           taskListUrl={taskListUrl}
         />
       )}
-      {request ? (
+      {request && Array.isArray(stepsCompleted) ? (
+        // Render the step component when request data is available
+        // and `stepsCompleted` is defined after prevalidating form fields of steps
         <GridContainer className="width-full">
           <FormStepComponent
             request={request}
