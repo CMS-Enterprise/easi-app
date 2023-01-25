@@ -10,7 +10,6 @@ import {
   IconError
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -20,7 +19,7 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 import { RequestType } from 'types/systemIntake';
-import { formatDate } from 'utils/date';
+import { formatDateLocal } from 'utils/date';
 import {
   isIntakeClosed,
   isIntakeOpen,
@@ -38,7 +37,7 @@ type RequestSummaryProps = {
   requestType: RequestType;
   status: string;
   adminLead: string | null;
-  submittedAt: DateTime;
+  submittedAt: string | null;
   lcid: string | null;
 };
 
@@ -137,7 +136,11 @@ const RequestSummary = ({
             </div>
             <div className="easi-grt__description-group">
               <dt>{t('intake:fields.submissionDate')}</dt>
-              <dd>{submittedAt ? formatDate(submittedAt) : 'N/A'}</dd>
+              <dd>
+                {submittedAt
+                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
+                  : 'N/A'}
+              </dd>
             </div>
             <div className="easi-grt__description-group">
               <dt>{t('intake:fields.requestFor')}</dt>

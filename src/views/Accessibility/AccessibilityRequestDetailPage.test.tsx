@@ -315,7 +315,7 @@ describe('AccessibilityRequestDetailPage', () => {
           accessibilityRequest: {
             id: 'a11yRequest123',
             euaUserId: 'AAAA',
-            submittedAt: new Date(),
+            submittedAt: new Date().toISOString(),
             name: 'MY Request',
             system: {
               name: 'TACO',
