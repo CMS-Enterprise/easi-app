@@ -12,6 +12,7 @@ import {
   GetTrbRequest_trbRequest_form as TrbRequestForm
 } from 'queries/types/GetTrbRequest';
 import { TRBWhereInProcessOption } from 'types/graphql-global-types';
+import { formatDateUtc } from 'utils/date';
 
 import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';
@@ -132,14 +133,16 @@ function SubmittedRequest({
               (request.form.expectedStartDate || request.form.expectedEndDate)
                 ? (() => {
                     const start = request.form.expectedStartDate
-                      ? `${DateTime.fromISO(
-                          request.form.expectedStartDate
-                        ).toFormat('MM/dd/yyyy')} ${t('check.expectedStart')}`
+                      ? `${formatDateUtc(
+                          request.form.expectedStartDate,
+                          'MM/dd/yyyy'
+                        )} ${t('check.expectedStart')}`
                       : '';
                     const live = request.form.expectedEndDate
-                      ? `${DateTime.fromISO(
-                          request.form.expectedEndDate
-                        ).toFormat('MM/dd/yyyy')} ${t('check.expectedGoLive')}`
+                      ? `${formatDateUtc(
+                          request.form.expectedEndDate,
+                          'MM/dd/yyyy'
+                        )} ${t('check.expectedGoLive')}`
                       : '';
                     const and = start && live ? t('check.and') : '';
                     return `${t('basic.options.yes')}, ${start} ${and} ${live}`;
