@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { ButtonGroup } from '@trussworks/react-uswds';
 
 type RequestNotesProps = {
-  id: string;
+  trbRequestId: string;
 };
 
-const RequestNotes = ({ id }: RequestNotesProps) => {
+const RequestNotes = ({ trbRequestId }: RequestNotesProps) => {
   const { t } = useTranslation('technicalAssistance');
   const notesCount = 0;
   return (
@@ -19,10 +19,12 @@ const RequestNotes = ({ id }: RequestNotesProps) => {
         <span className="text-bold">{notesCount}</span> {t('requestNotes.text')}
       </p>
       <ButtonGroup>
-        <Link to={`/trb/${id}/notes`} className="margin-right-05">
+        <Link to={`/trb/${trbRequestId}/notes`} className="margin-right-05">
           {t('requestNotes.viewNotes')}
         </Link>
-        <Link to={`/trb/${id}/notes`}>{t('requestNotes.addNote')}</Link>
+        <Link to={`/trb/${trbRequestId}/notes`}>
+          {t('requestNotes.addNote')}
+        </Link>
       </ButtonGroup>
     </div>
   );
