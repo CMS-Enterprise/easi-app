@@ -138,7 +138,7 @@ export default function AdminHome() {
           <Grid col desktop={{ col: 9 }}>
             {subNavItems(id).map(subpage => (
               <Route exact path={subpage.route} key={subpage.route}>
-                <subpage.component trbRequest={trbRequest} />
+                <subpage.component trbRequestId={trbRequest.id} />
               </Route>
             ))}
           </Grid>

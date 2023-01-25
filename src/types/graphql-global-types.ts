@@ -789,6 +789,17 @@ export interface UpdateSystemIntakeReviewDatesInput {
 }
 
 /**
+ * The data needed to update a TRB advice letter
+ */
+export interface UpdateTRBAdviceLetterInput {
+  trbRequestId: UUID;
+  meetingSummary?: string | null;
+  nextSteps?: string | null;
+  isFollowupRecommended?: boolean | null;
+  followupPoint?: string | null;
+}
+
+/**
  * Represents an EUA user who is included as an attendee for a TRB request
  */
 export interface UpdateTRBRequestAttendeeInput {

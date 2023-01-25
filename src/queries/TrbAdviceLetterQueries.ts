@@ -1,26 +1,51 @@
 import { gql } from '@apollo/client';
 
-/**
- * Get TRB advice letter and status
- */
+/** Advice letter fields fragment */
+const TRBAdviceLetter = gql`
+  fragment TRBAdviceLetter on TRBAdviceLetter {
+    id
+    meetingSummary
+    nextSteps
+    isFollowupRecommended
+    followupPoint
+    createdBy
+    createdAt
+    modifiedBy
+    modifiedAt
+  }
+`;
 
-export default gql`
+/** Get TRB advice letter and status */
+export const GetTrbAdviceLetterQuery = gql`
+  ${TRBAdviceLetter}
   query GetTrbAdviceLetter($id: UUID!) {
     trbRequest(id: $id) {
       taskStatuses {
         adviceLetterStatus
       }
       adviceLetter {
-        id
-        meetingSummary
-        nextSteps
-        isFollowupRecommended
-        followupPoint
-        createdBy
-        createdAt
-        modifiedBy
-        modifiedAt
+        ...TRBAdviceLetter
       }
+    }
+  }
+`;
+
+/** Create advice letter */
+export const CreateTrbAdviceLetterQuery = gql`
+  ${TRBAdviceLetter}
+  mutation CreateTrbAdviceLetter($trbRequestId: UUID!) {
+    createTRBAdviceLetter(trbRequestId: $id) {
+      ...TRBAdviceLetter
+    }
+  }
+`;
+
+/** Update advice letter */
+export const UpdateTrbAdviceLetterQuery = gql`
+  ${TRBAdviceLetter}
+  mutation UpdateTrbAdviceLetter($input: UpdateTRBAdviceLetterInput!) {
+    updateTRBAdviceLetter(input: $input) {
+      ...TRBAdviceLetter
     }
   }
 `;
