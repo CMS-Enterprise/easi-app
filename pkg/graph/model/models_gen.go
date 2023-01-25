@@ -221,6 +221,14 @@ type CreateTRBAdminNoteInput struct {
 	NoteText     string                      `json:"noteText"`
 }
 
+// The input required to add a recommendation & links to a TRB advice letter
+type CreateTRBAdviceLetterRecommendationInput struct {
+	TrbRequestID   uuid.UUID `json:"trbRequestId"`
+	Title          string    `json:"title"`
+	Recommendation string    `json:"recommendation"`
+	Links          []string  `json:"links"`
+}
+
 // The data needed add a TRB request attendee to a TRB request
 type CreateTRBRequestAttendeeInput struct {
 	EuaUserID    string            `json:"euaUserId"`
