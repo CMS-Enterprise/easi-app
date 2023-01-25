@@ -94,7 +94,6 @@ function Homepage() {
       {
         Header: t<string>('table.header.submissionDate'),
         accessor: 'form.submittedAt', // This is what breaks the Column type arg
-        // eslint-disable-next-line react/prop-types
         Cell: ({ value }: { value: string | null }) =>
           value
             ? formatDateLocal(value, 'MM/dd/yyyy')
