@@ -86,6 +86,9 @@ export default function AdminHome() {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
+  // console.log(trbRequest);
+  // console.log(id);
+
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
     return <PageLoading />;
@@ -135,7 +138,7 @@ export default function AdminHome() {
           <Grid col desktop={{ col: 9 }}>
             {subNavItems(id).map(subpage => (
               <Route exact path={subpage.route} key={subpage.route}>
-                <subpage.component trbRequestId={id} />
+                <subpage.component trbRequest={trbRequest} />
               </Route>
             ))}
           </Grid>

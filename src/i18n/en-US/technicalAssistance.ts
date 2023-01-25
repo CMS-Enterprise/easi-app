@@ -41,6 +41,13 @@ const technicalAssistance = {
     introText:
       'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.'
   },
+  statusLabels: {
+    CANNOT_START_YET: 'Cannot start yet',
+    COMPLETED: 'Completed',
+    IN_PROGRESS: 'In progress',
+    READY_FOR_REVIEW: 'Ready for review',
+    READY_TO_START: 'Ready to start'
+  },
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request'
@@ -623,7 +630,14 @@ const technicalAssistance = {
         CANNOT_START_YET: 'Consult prep completed',
         READY_TO_SCHEDULE: 'Ready for consult',
         SCHEDULED: 'Consult scheduled',
-        COMPLETED: 'Consult completed'
+        COMPLETED: 'Consult complete'
+      },
+      adviceLetterStatus: {
+        CANNOT_START_YET: 'Consult complete',
+        IN_PROGRESS: 'Draft advice letter',
+        READY_FOR_REVIEW: 'Advice letter in review',
+        READY_TO_START: 'Consult complete',
+        COMPLETED: 'Advice letter sent'
       }
     },
     open: 'Open',

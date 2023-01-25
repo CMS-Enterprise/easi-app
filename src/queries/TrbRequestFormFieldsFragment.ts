@@ -13,6 +13,7 @@ export default gql`
       feedbackStatus
       consultPrepStatus
       attendConsultStatus
+      adviceLetterStatus
     }
     trbLead
 
