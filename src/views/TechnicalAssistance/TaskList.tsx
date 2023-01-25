@@ -103,7 +103,10 @@ function TaskList() {
                   </TaskListDescription>
                   {/* Continue to fill out the request form or view the submitted request if it's completed */}
                   {formStatus === TRBFormStatus.COMPLETED ? (
-                    <UswdsReactLink to={`/trb/requests/${id}/view`}>
+                    <UswdsReactLink
+                      target="_blank"
+                      to={`/trb/requests/${id}/view`}
+                    >
                       {t('taskList.viewSubmittedTrbRequest')}
                     </UswdsReactLink>
                   ) : (
