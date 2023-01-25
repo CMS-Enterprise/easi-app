@@ -60,9 +60,6 @@ const RequestTypeForm = () => {
             case 'RECOMPETE':
               history.push(navigationLink);
               break;
-            case 'SHUTDOWN':
-              history.push(`/system/${id}/contact-details`);
-              break;
             default:
               // console.warn(`Unknown request type: ${systemIntake.requestType}`);
               break;
