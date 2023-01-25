@@ -6,10 +6,12 @@ import {
   Alert,
   Button,
   GridContainer,
-  IconArrowBack
+  IconArrowBack,
+  IconWarning
 } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
@@ -17,7 +19,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBRequestType } from 'types/graphql-global-types';
+import { TRBFeedbackStatus, TRBRequestType } from 'types/graphql-global-types';
 import nullFillObject from 'utils/nullFillObject';
 import { inputBasicSchema } from 'validations/trbRequestSchema';
 import { NotFoundPartial } from 'views/NotFound';
@@ -112,6 +114,7 @@ function Header({
   stepsCompleted,
   stepSubmit,
   isStepSubmitting,
+  warning,
   formAlert,
   taskListUrl
 }: {
@@ -122,6 +125,7 @@ function Header({
   stepsCompleted: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
+  warning?: React.ReactNode;
   formAlert: TrbFormAlert;
   taskListUrl: string;
 }) {
@@ -167,6 +171,7 @@ function Header({
       }))}
       hideSteps={!request}
       breadcrumbBar={breadcrumbBar}
+      warning={warning}
       errorAlert={
         formAlert && (
           <Alert
@@ -196,6 +201,32 @@ function Header({
         </Button>
       )}
     </StepHeader>
+  );
+}
+
+function EditsRequestedWarning() {
+  const { t } = useTranslation('technicalAssistance');
+  return (
+    <div className="bg-error-lighter padding-y-2">
+      <GridContainer className="width-full">
+        <div className="line-height-body-5">
+          <IconWarning
+            className="text-error-dark text-middle margin-right-1"
+            size={3}
+          />
+          <span className="text-middle">{t('editsRequested.alert')}</span>
+        </div>
+        <div className="margin-top-2">
+          <UswdsReactLink
+            variant="unstyled"
+            className="usa-button usa-button--outline"
+            to="/trb"
+          >
+            {t('editsRequested.viewFeedback')}
+          </UswdsReactLink>
+        </div>
+      </GridContainer>
+    </div>
   );
 }
 
@@ -291,6 +322,16 @@ function RequestForm() {
     [t, taskListUrl]
   );
 
+  // Check the request task feedback status for edits requested
+  const editsRequestedWarning = useMemo(
+    () =>
+      request?.taskStatuses.feedbackStatus ===
+      TRBFeedbackStatus.EDITS_REQUESTED ? (
+        <EditsRequestedWarning />
+      ) : null,
+    [request?.taskStatuses.feedbackStatus]
+  );
+
   // References to the submit handler and submitting state of the current form step
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
@@ -344,6 +385,7 @@ function RequestForm() {
           stepsCompleted={stepsCompleted}
           stepSubmit={stepSubmit}
           isStepSubmitting={isStepSubmitting}
+          warning={editsRequestedWarning}
           formAlert={formAlert}
           taskListUrl={taskListUrl}
         />

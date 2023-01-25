@@ -26,6 +26,11 @@ const technicalAssistance = {
     text:
       'Go to <1>Admin Home</1> to review, assign, and manage incoming and existing technical assistance requests.'
   },
+  editsRequested: {
+    alert:
+      'The TRB has requested edits to your initial request form. Please make any necessary changes and re-submit your form.',
+    viewFeedback: 'View feedback'
+  },
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request'
