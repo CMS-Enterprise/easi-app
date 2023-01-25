@@ -160,15 +160,6 @@ const RequestTypeForm = () => {
                       value="RECOMPETE"
                       checked={values.requestType === 'RECOMPETE'}
                     />
-                    <Field
-                      as={RadioField}
-                      id="RequestType-ShutdownSystem"
-                      className="margin-bottom-4"
-                      label={t('requestTypeForm.fields.shutdown')}
-                      name="requestType"
-                      value="SHUTDOWN"
-                      checked={values.requestType === 'SHUTDOWN'}
-                    />
                   </fieldset>
                 </FieldGroup>
                 <CollapsableLink
