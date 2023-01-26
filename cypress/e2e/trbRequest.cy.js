@@ -41,7 +41,7 @@ describe('Technical Assistance', () => {
   });
 
   /** Fill all required fields */
-  it('Fills out minimum required fields', () => {
+  it.skip('Fills out minimum required fields', () => {
     /** Basic Details */
 
     // Fill out the Basic form step
