@@ -277,41 +277,6 @@ describe('The request type form page', () => {
     ).toBeInTheDocument();
   });
 
-  it('creates a shutdown intake', async () => {
-    const intakeMutation = {
-      request: {
-        query: CreateSystemIntake,
-        variables: {
-          input: {
-            requestType: 'SHUTDOWN',
-            requester: {
-              name: 'John Doe'
-            }
-          }
-        }
-      },
-      result: {
-        data: {
-          createSystemIntake: {
-            id: INTAKE_ID,
-            status: 'INTAKE_DRAFT',
-            requestType: 'SHUTDOWN',
-            requester: {
-              name: 'John Doe'
-            }
-          }
-        }
-      }
-    };
-
-    renderPage([intakeMutation, intakeQuery({})]);
-
-    screen.getByRole('radio', { name: /decommission/i }).click();
-    screen.getByRole('button', { name: /continue/i }).click();
-
-    expect(await screen.findByTestId('system-intake')).toBeInTheDocument();
-  });
-
   it('executes request type validations', async () => {
     renderPage([]);
 

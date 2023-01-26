@@ -6,8 +6,7 @@ const makingARequest = {
     options: [
       'add a new system',
       'make major changes or updates',
-      're-compete a contract',
-      'decomission a system'
+      're-compete a contract'
     ]
   },
   forEnterpriseArchitectureHelp: {
