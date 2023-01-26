@@ -14,7 +14,6 @@ describe('Technical Assistance Request Documents', () => {
     cy.trbRequest.basicDetails.fillRequiredFields();
     cy.contains('button', 'Next').click();
 
-    cy.wait(10000);
     cy.contains('.usa-step-indicator__heading-text', 'Subject areas').should(
       'be.visible'
     );
