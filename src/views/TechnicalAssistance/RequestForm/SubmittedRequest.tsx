@@ -46,8 +46,8 @@ function SubmittedRequest({
   const { t } = useTranslation('technicalAssistance');
 
   const {
-    data: { attendees }
-  } = useTRBAttendees(request.id);
+    data: { requester, attendees }
+  } = useTRBAttendees(request.id, request.createdBy);
 
   return (
     <>
@@ -268,7 +268,10 @@ function SubmittedRequest({
         {attendees.length === 0 ? (
           <span className="font-body-2xs">{t('check.noAttendees')}</span>
         ) : (
-          <AttendeesTable attendees={attendees} trbRequestId={request.id} />
+          <AttendeesTable
+            attendees={[requester, ...attendees]}
+            trbRequestId={request.id}
+          />
         )}
       </div>
       <Divider />
