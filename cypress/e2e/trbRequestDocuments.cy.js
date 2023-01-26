@@ -1,5 +1,5 @@
 describe('Technical Assistance Request Documents', () => {
-  it('can upload and then delete a document', () => {
+  it.only('can upload and then delete a document', () => {
     cy.localLogin({ name: 'ABCD' });
 
     cy.contains('a', 'Technical Assistance').click();
@@ -11,12 +11,21 @@ describe('Technical Assistance Request Documents', () => {
       'Start'
     ).click();
 
+    cy.screenshot('before_basic_fill');
+
     cy.trbRequest.basicDetails.fillRequiredFields();
+
+    cy.screenshot('before_basic_click');
+
     cy.contains('button', 'Next').click();
+
+    cy.screenshot('after_basic_click');
 
     cy.contains('.usa-step-indicator__heading-text', 'Subject areas').should(
       'be.visible'
     );
+
+    cy.screenshot('after_subject_header_visible');
 
     cy.contains('.usa-step-indicator__segment-label', 'Attendees').click();
     cy.trbRequest.attendees.fillRequiredFields({
