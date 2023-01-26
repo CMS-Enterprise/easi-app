@@ -15,7 +15,7 @@ COPY pkg ./pkg
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/seed ./cmd/seed
 
-FROM cypress/base:12.19.0
+FROM cypress/base:16.18.1
 
 # mc - minio client, used for tagging uploaded files
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
