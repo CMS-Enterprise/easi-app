@@ -318,9 +318,9 @@ type AttendeesTableProps = {
   /** TRB request id */
   trbRequestId: string;
   /** Set active attendee - used to edit attendee */
-  setActiveAttendee: (activeAttendee: TRBAttendeeData) => void;
+  setActiveAttendee?: (activeAttendee: TRBAttendeeData) => void;
   /** Delete attendee */
-  deleteAttendee: (id: string) => void;
+  deleteAttendee?: (id: string) => void;
 };
 
 const AttendeesTable = ({
@@ -407,15 +407,19 @@ const AttendeesTable = ({
                       />
                       <Attendee
                         attendee={attendee}
-                        deleteAttendee={() => {
-                          if (attendee.id) {
-                            deleteAttendee(attendee.id);
-                            setActiveAttendee({
-                              ...initialAttendee,
-                              trbRequestId
-                            });
-                          }
-                        }}
+                        deleteAttendee={
+                          deleteAttendee
+                            ? () => {
+                                if (attendee.id) {
+                                  deleteAttendee(attendee.id);
+                                  setActiveAttendee?.({
+                                    ...initialAttendee,
+                                    trbRequestId
+                                  });
+                                }
+                              }
+                            : undefined
+                        }
                         setActiveAttendee={setActiveAttendee}
                         key={attendee.id}
                       />

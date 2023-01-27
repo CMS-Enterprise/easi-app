@@ -63,6 +63,15 @@ describe('TRB Basic Form schema validation', () => {
       }
     },
     {
+      parent: { whereInProcess: 'OTHER' },
+      empty: {
+        whereInProcessOther: ''
+      },
+      filled: {
+        whereInProcessOther: 'process'
+      }
+    },
+    {
       parent: {
         collabGroups: ['SECURITY']
       },

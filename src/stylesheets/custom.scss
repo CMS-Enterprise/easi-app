@@ -10,6 +10,45 @@
   }
 }
 
+// Definition List
+.easi-dl {
+  margin-top: 0;
+  margin-bottom: 0;
+  dt  {
+    font-weight: bold;
+    font-size: size('body', 4);
+    line-height: line-height('body', 6);
+  }
+  dd {
+    margin-left: 0;
+    margin-bottom: 1.5rem;
+    font-size: size('body', 5);
+    line-height: line-height('body', 6);
+  }
+}
+
+// Table Horizontal Bleed
+.easi-table--bleed-x {
+  .usa-table {
+    thead tr {
+      th:first-of-type {
+        padding-left: 0;
+      }
+      th:last-of-type {
+        padding-right: 0;
+      }
+    }
+    tbody tr {
+      td:first-of-type {
+        padding-left: 0;
+      }
+      td:last-of-type {
+        padding-right: 0;
+      }
+    }
+  }
+}
+
 //  Global changes to usa-label
 .usa-label {
   margin-top: 2rem;
