@@ -21,8 +21,9 @@ FROM cypress/base:16.18.1
 RUN apt-get update && apt-get install --no-install-recommends -y wget && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
 
-COPY package.json /
-RUN npm install --dev --silent
+COPY package.json yarn.lock /
+RUN npm install -g yarn
+RUN yarn install --immutable
 
 COPY cypress /cypress
 COPY cypress.config.ts /
