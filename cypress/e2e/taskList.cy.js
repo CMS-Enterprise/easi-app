@@ -1,6 +1,5 @@
 describe('The Task List', () => {
   beforeEach(() => {
-    cy.server();
     cy.localLogin({ name: 'TEST' });
     cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
 
