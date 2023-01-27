@@ -1,6 +1,6 @@
 Cypress.Commands.add('login', () => {
-  cy.route('POST', '/oauth2/*').as('oauthPost');
-  cy.route('GET', '/oauth2/*').as('oauthGet');
+  cy.intercept('POST', '/oauth2/*').as('oauthPost');
+  cy.intercept('GET', '/oauth2/*').as('oauthGet');
 
   cy.visit('/signin');
 
