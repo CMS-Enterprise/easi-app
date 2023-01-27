@@ -1,4 +1,4 @@
-describe.skip('Technical Assistance', () => {
+describe('Technical Assistance', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'ABCD' });
 
@@ -41,7 +41,7 @@ describe.skip('Technical Assistance', () => {
   });
 
   /** Fill all required fields */
-  it.skip('Fills out minimum required fields', () => {
+  it('Fills out minimum required fields', () => {
     /** Basic Details */
 
     // Fill out the Basic form step
