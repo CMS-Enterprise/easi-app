@@ -51,6 +51,7 @@ export interface GetTrbRequest_trbRequest_form {
   subjectAreaDataAndDataManagementOther: string | null;
   subjectAreaGovernmentProcessesAndPoliciesOther: string | null;
   subjectAreaOtherTechnicalTopicsOther: string | null;
+  submittedAt: Time | null;
 }
 
 export interface GetTrbRequest_trbRequest {

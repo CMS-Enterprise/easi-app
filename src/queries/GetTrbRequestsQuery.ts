@@ -7,6 +7,10 @@ export default gql`
       name
       status
       createdAt
+
+      form {
+        submittedAt
+      }
     }
   }
 `;
