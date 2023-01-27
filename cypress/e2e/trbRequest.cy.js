@@ -34,9 +34,11 @@ describe('Technical Assistance', () => {
       }
     )
       .should('be.visible')
-      .as('basicStepHeader');
+      .as('basicStepHeaderIsVisible'); // Alias _after_ .should means that calls to @basicStepHeaderIsVisible will include the .should('be.visible') as well, hence the name!
 
     // Get basic details url and assign alias
+    // "type: static" makes the alias always return the URL as it was here, rather than re-running `cy.url()` when you call it
+    // https://docs.cypress.io/api/commands/as#Arguments
     cy.url().as('basicStepUrl', { type: 'static' });
   });
 
@@ -215,7 +217,7 @@ describe('Technical Assistance', () => {
     cy.get('@newAttendee').should('not.exist');
   });
 
-  it.only('Submits values when exiting form', () => {
+  it('Submits values when exiting form', () => {
     // Fill basic details required fields
     cy.trbRequest.basicDetails.fillRequiredFields();
 
@@ -228,8 +230,7 @@ describe('Technical Assistance', () => {
 
     // Go over the basic step again to test "save and exit" submits
     cy.get('@basicStepUrl').then(url => cy.visit(url));
-    cy.get('@basicStepHeader');
-    // .should('be.visible');
+    cy.get('@basicStepHeaderIsVisible');
 
     // Error on required field
     cy.get('[name=name]').clear();
