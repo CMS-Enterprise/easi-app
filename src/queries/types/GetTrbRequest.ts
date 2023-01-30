@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbRequest
@@ -54,6 +54,18 @@ export interface GetTrbRequest_trbRequest_form {
   submittedAt: Time | null;
 }
 
+export interface GetTrbRequest_trbRequest_feedback {
+  __typename: "TRBRequestFeedback";
+  id: UUID;
+  feedbackMessage: string;
+  notifyEuaIds: string[];
+  action: TRBFeedbackAction;
+  createdBy: string;
+  createdAt: Time;
+  modifiedBy: string | null;
+  modifiedAt: Time | null;
+}
+
 export interface GetTrbRequest_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
@@ -65,6 +77,7 @@ export interface GetTrbRequest_trbRequest {
   taskStatuses: GetTrbRequest_trbRequest_taskStatuses;
   trbLead: string | null;
   form: GetTrbRequest_trbRequest_form;
+  feedback: GetTrbRequest_trbRequest_feedback[];
 }
 
 export interface GetTrbRequest {

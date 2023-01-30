@@ -54,5 +54,16 @@ export default gql`
 
       submittedAt
     }
+
+    feedback {
+      id
+      feedbackMessage
+      notifyEuaIds
+      action
+      createdBy
+      createdAt
+      modifiedBy
+      modifiedAt
+    }
   }
 `;
