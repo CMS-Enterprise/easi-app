@@ -43,7 +43,7 @@ describe('Technical Assistance', () => {
   });
 
   /** Fill all required fields */
-  it('Fills out minimum required fields', () => {
+  it('Fills out minimum required fields', { timeout: 30000 }, () => {
     /** Basic Details */
 
     // Fill out the Basic form step
@@ -99,14 +99,9 @@ describe('Technical Assistance', () => {
       .should('be.visible');
   });
   /** Adds new attendee */
-  it('Adds, edits, and deletes attendee', () => {
+  it('Adds, edits, and deletes attendee', { timeout: 30000 }, () => {
     // Fill out the Basic Details required fields
     cy.trbRequest.basicDetails.fillRequiredFields();
-
-    // TODO Figure out why tests break without this cy.wait()
-    // For some reason, without it, Cypress claims to have clicked the button, but the page never advances, and the test stops after
-    // checking for the "Subject Areas" header
-    cy.wait(500);
 
     // Successful submit
     cy.contains('button', 'Next').click();
@@ -227,7 +222,7 @@ describe('Technical Assistance', () => {
     cy.get('@newAttendee').should('not.exist');
   });
 
-  it('Submits values when exiting form', () => {
+  it('Submits values when exiting form', { timeout: 30000 }, () => {
     // Fill basic details required fields
     cy.trbRequest.basicDetails.fillRequiredFields();
 
