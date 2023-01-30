@@ -34,10 +34,12 @@ describe('Technical Assistance', () => {
       }
     )
       .should('be.visible')
-      .as('basicStepHeader');
+      .as('basicStepHeaderIsVisible'); // Alias _after_ .should means that calls to @basicStepHeaderIsVisible will include the .should('be.visible') as well, hence the name!
 
     // Get basic details url and assign alias
-    cy.url().as('basicStepUrl');
+    // "type: static" makes the alias always return the URL as it was here, rather than re-running `cy.url()` when you call it
+    // https://docs.cypress.io/api/commands/as#Arguments
+    cy.url().as('basicStepUrl', { type: 'static' });
   });
 
   /** Fill all required fields */
@@ -76,17 +78,20 @@ describe('Technical Assistance', () => {
     // Successful submit
     cy.contains('button', 'Continue without adding attendees').click();
 
-    /** Supporting Documents */
+    // Pass through Supporting documents
+    cy.contains('button', 'Continue without adding documents').click();
 
-    // // Proceeded to supporting documents
-    // cy.contains(
-    //   '.usa-step-indicator__heading-text .long',
-    //   'Supporting documents'
-    // )
-    //   .as('subjectStepHeader')
-    //   .should('be.visible');
-
-    // TODO: Supporting document tests
+    // Submit request in Check and submit
+    cy.contains('button', 'Submit request').click();
+    // Successful request submit
+    cy.contains('h1', 'Success!').should('be.visible');
+    // Follow link to go back to task list
+    cy.contains('a', 'Return to task list').click();
+    // Check that the request form status is completed
+    cy.contains('h3', 'Fill out the initial request form')
+      .siblings('span')
+      .contains('Completed')
+      .should('be.visible');
   });
   /** Adds new attendee */
   it('Adds, edits, and deletes attendee', () => {
@@ -225,7 +230,7 @@ describe('Technical Assistance', () => {
 
     // Go over the basic step again to test "save and exit" submits
     cy.get('@basicStepUrl').then(url => cy.visit(url));
-    cy.get('@basicStepHeader').should('be.visible');
+    cy.get('@basicStepHeaderIsVisible');
 
     // Error on required field
     cy.get('[name=name]').clear();

@@ -2033,6 +2033,30 @@ func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input model.
 	return resolvers.SendTRBAdviceLetter(ctx, r.store, input.ID)
 }
 
+// CreateTRBAdviceLetterRecommendation is the resolver for the createTRBAdviceLetterRecommendation field.
+func (r *mutationResolver) CreateTRBAdviceLetterRecommendation(ctx context.Context, input model.CreateTRBAdviceLetterRecommendationInput) (*models.TRBAdviceLetterRecommendation, error) {
+	links := models.ConvertEnums[string](input.Links)
+	return resolvers.CreateTRBAdviceLetterRecommendation(
+		ctx,
+		r.store,
+		&models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   input.TrbRequestID,
+			Title:          input.Title,
+			Recommendation: input.Recommendation,
+			Links:          links,
+		})
+}
+
+// UpdateTRBAdviceLetterRecommendation is the resolver for the updateTRBAdviceLetterRecommendation field.
+func (r *mutationResolver) UpdateTRBAdviceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetterRecommendation, error) {
+	return resolvers.UpdateTRBAdviceLetterRecommendation(ctx, r.store, input)
+}
+
+// DeleteTRBAdviceLetterRecommendation is the resolver for the deleteTRBAdviceLetterRecommendation field.
+func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
+	return resolvers.DeleteTRBAdviceLetterRecommendation(ctx, r.store, id)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2790,6 +2814,17 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 	return authorInfo, nil
 }
 
+// Recommendations is the resolver for the recommendations field.
+func (r *tRBAdviceLetterResolver) Recommendations(ctx context.Context, obj *models.TRBAdviceLetter) ([]*models.TRBAdviceLetterRecommendation, error) {
+	return resolvers.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
+}
+
+// Links is the resolver for the links field.
+func (r *tRBAdviceLetterRecommendationResolver) Links(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) ([]string, error) {
+	links := models.ConvertEnums[string](obj.Links)
+	return links, nil
+}
+
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
@@ -2988,6 +3023,16 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
+// TRBAdviceLetter returns generated.TRBAdviceLetterResolver implementation.
+func (r *Resolver) TRBAdviceLetter() generated.TRBAdviceLetterResolver {
+	return &tRBAdviceLetterResolver{r}
+}
+
+// TRBAdviceLetterRecommendation returns generated.TRBAdviceLetterRecommendationResolver implementation.
+func (r *Resolver) TRBAdviceLetterRecommendation() generated.TRBAdviceLetterRecommendationResolver {
+	return &tRBAdviceLetterRecommendationResolver{r}
+}
+
 // TRBRequest returns generated.TRBRequestResolver implementation.
 func (r *Resolver) TRBRequest() generated.TRBRequestResolver { return &tRBRequestResolver{r} }
 
@@ -3032,6 +3077,8 @@ type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
+type tRBAdviceLetterResolver struct{ *Resolver }
+type tRBAdviceLetterRecommendationResolver struct{ *Resolver }
 type tRBRequestResolver struct{ *Resolver }
 type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }

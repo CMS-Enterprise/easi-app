@@ -1,8 +1,6 @@
 Cypress.Commands.add('login', () => {
-  cy.server();
-
-  cy.route('POST', '/oauth2/*').as('oauthPost');
-  cy.route('GET', '/oauth2/*').as('oauthGet');
+  cy.intercept('POST', '/oauth2/*').as('oauthPost');
+  cy.intercept('GET', '/oauth2/*').as('oauthGet');
 
   cy.visit('/signin');
 
@@ -31,8 +29,6 @@ Cypress.Commands.add('login', () => {
 });
 
 Cypress.Commands.add('localLogin', ({ name, role }) => {
-  cy.server();
-
   cy.visit('/login');
 
   cy.get('[data-testid="LocalAuth-Visit"]').click();

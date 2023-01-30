@@ -64,6 +64,8 @@ function Homepage() {
     returnObjects: true
   });
 
+  // @ts-ignore
+  // Ignoring due to accessor props with dot property string values which break react-table typescripting
   // eslint-disable-next-line camelcase
   const columns = useMemo<Column<GetTrbRequests_trbRequests>[]>(() => {
     return [
@@ -91,9 +93,11 @@ function Homepage() {
       },
       {
         Header: t<string>('table.header.submissionDate'),
-        accessor: 'createdAt',
-        // eslint-disable-next-line react/prop-types
-        Cell: ({ value }) => formatDateLocal(value, 'MM/dd/yyyy')
+        accessor: 'form.submittedAt', // This is what breaks the Column type arg
+        Cell: ({ value }: { value: string | null }) =>
+          value
+            ? formatDateLocal(value, 'MM/dd/yyyy')
+            : t('check.notYetSubmitted')
       }
     ];
   }, [t]);
@@ -123,7 +127,7 @@ function Homepage() {
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'createdAt', desc: true }], []),
+        sortBy: useMemo(() => [{ id: 'form.submittedAt', desc: true }], []),
         pageIndex: 0,
         pageSize: 10
       }
