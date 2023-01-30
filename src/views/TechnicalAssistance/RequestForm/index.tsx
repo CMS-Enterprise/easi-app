@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
   Alert,
@@ -20,11 +20,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import {
-  TRBFeedbackStatus,
-  TRBFormStatus,
-  TRBRequestType
-} from 'types/graphql-global-types';
+import { TRBFeedbackStatus, TRBFormStatus } from 'types/graphql-global-types';
 import nullFillObject from 'utils/nullFillObject';
 import {
   inputBasicSchema,
@@ -42,6 +38,22 @@ import Documents from './Documents';
 import Done from './Done';
 import SubjectAreas from './SubjectAreas';
 import ViewSubmittedRequest from './ViewSubmittedRequest';
+
+/** Ordered list of request form steps as url slugs  */
+const formStepSlugs = [
+  'basic',
+  'subject',
+  'attendees',
+  'documents',
+  'check'
+] as const;
+
+type FormStepSlug = typeof formStepSlugs[number];
+
+/** All slugs under the Trb request form */
+const viewSlugs = [...formStepSlugs, 'done', 'view', 'feedback'] as const;
+
+type ViewSlug = typeof viewSlugs[number];
 
 /**
  * A promise wrapper for form step submit handlers.
@@ -88,7 +100,7 @@ export interface FormStepComponentProps {
  */
 export const formStepComponents: {
   component: (props: FormStepComponentProps) => JSX.Element;
-  step: string;
+  step: FormStepSlug;
 }[] = [
   { component: Basic, step: 'basic' },
   { component: SubjectAreas, step: 'subject' },
@@ -96,15 +108,6 @@ export const formStepComponents: {
   { component: Documents, step: 'documents' },
   { component: Check, step: 'check' }
 ];
-
-/**
- * Mapped form step slugs from `formStepComponents`.
- * Append `done` & `view` slugs are not form steps, but are used as additional subviews.
- * Make sure to set this correctly so that invalid slugs are routed appropriately.
- */
-const formStepSlugs = formStepComponents
-  .map(f => f.step)
-  .concat('done', 'view');
 
 type RequestFormText = {
   heading: string;
@@ -254,15 +257,11 @@ function RequestForm() {
 
   const history = useHistory();
 
-  // New requests require `requestType`
-  const location = useLocation<{ requestType: string }>();
-  const requestType = location.state?.requestType as TRBRequestType;
-
   const { id, step, view } = useParams<{
     /** Request id */
     id: string;
     /** Form step slug from `formStepSlugs` */
-    step?: string;
+    step?: ViewSlug;
     /** Form step subview */
     view?: string;
   }>();
@@ -281,7 +280,9 @@ function RequestForm() {
   } = useTRBAttendees(id);
 
   // Determine the steps that are already completed by attempting to pre-validate them
-  const [stepsCompleted, setStepsCompleted] = useState<string[] | undefined>(
+  const [stepsCompleted, setStepsCompleted] = useState<
+    FormStepSlug[] | undefined
+  >(
     // undefined // TODO set this back
     ['basic', 'attendees']
   );
@@ -353,13 +354,12 @@ function RequestForm() {
   // Check step param, redirect to the first step if invalid
   useEffect(() => {
     if (
-      request &&
-      (!step || // Step undefined
-        !formStepSlugs.includes(step)) // Invalid step slug
+      !step || // Step undefined
+      !viewSlugs.includes(step) // Invalid step slug
     ) {
       history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
     }
-  }, [history, id, request, requestType, step]);
+  }, [history, id, step]);
 
   // Prevent step slugs if not completed and redirect to the latest available
   // TODO Figure out what might be happening with CI runs hitting this block when submitting basic form step
@@ -462,7 +462,7 @@ function RequestForm() {
     );
   }
 
-  const stepIdx = formStepSlugs.indexOf(step);
+  const stepIdx = formStepSlugs.indexOf(step as FormStepSlug);
   const stepNum = stepIdx + 1;
 
   const FormStepComponent = formStepComponents[stepIdx].component;
