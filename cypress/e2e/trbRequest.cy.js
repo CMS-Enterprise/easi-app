@@ -49,6 +49,11 @@ describe('Technical Assistance', () => {
     // Fill out the Basic form step
     cy.trbRequest.basicDetails.fillRequiredFields();
 
+    // TODO Figure out why tests break without this cy.wait()
+    // For some reason, without it, Cypress claims to have clicked the button, but the page never advances, and the test stops after
+    // checking for the "Subject Areas" header
+    cy.wait(500);
+
     // Successful submit
     cy.contains('button', 'Next').click();
 
@@ -97,6 +102,11 @@ describe('Technical Assistance', () => {
   it('Adds, edits, and deletes attendee', () => {
     // Fill out the Basic Details required fields
     cy.trbRequest.basicDetails.fillRequiredFields();
+
+    // TODO Figure out why tests break without this cy.wait()
+    // For some reason, without it, Cypress claims to have clicked the button, but the page never advances, and the test stops after
+    // checking for the "Subject Areas" header
+    cy.wait(500);
 
     // Successful submit
     cy.contains('button', 'Next').click();
