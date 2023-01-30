@@ -113,9 +113,9 @@ describe('The home page', () => {
           expect(
             component.find('a[children="IT Governance"]').exists()
           ).toEqual(true);
-          expect(
-            component.find('a[children="Section 508 compliance"]').exists()
-          ).toEqual(true);
+          expect(component.find('a[children="Section 508"]').exists()).toEqual(
+            true
+          );
           expect(component.find('hr').exists()).toBeTruthy();
           expect(component.find(Table).exists()).toBeTruthy();
         });

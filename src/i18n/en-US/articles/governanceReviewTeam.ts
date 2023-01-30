@@ -39,7 +39,7 @@ const governanceReviewTeam = {
         'Do you have a clearly identified business owner?',
         'What other CMS business processes/systems/programs will you interact with?',
         'How many users would you have and who are they?',
-        'Are you compliant with the Technical Reference Architecture?',
+        'Do you align with Technical Reference Architecture guidelines?',
         'Does your Project/System need access to any CMS Enterprise Data in order to meet program objectives? PHI, PII, etc.'
       ]
     },
