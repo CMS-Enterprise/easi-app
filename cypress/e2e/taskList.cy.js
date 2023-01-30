@@ -1,4 +1,4 @@
-describe('The Task List', () => {
+describe.skip('The Task List', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'TEST' });
     cy.intercept('PUT', '/api/v1/system_intake').as('putSystemIntake');

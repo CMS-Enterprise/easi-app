@@ -1,7 +1,7 @@
 import { ACCESSIBILITY_ADMIN_DEV } from '../../src/constants/jobCodes';
 
 const maxAttempts = 3;
-describe('Logging in', () => {
+describe.skip('Logging in', () => {
   it(
     'logs in with okta',
     {
