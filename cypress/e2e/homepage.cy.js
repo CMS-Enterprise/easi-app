@@ -5,7 +5,7 @@ import {
   GOVTEAM_DEV
 } from '../../src/constants/jobCodes';
 
-describe.skip('Homepage', () => {
+describe('Homepage', () => {
   it('shows the basic homepage for no user roles', () => {
     cy.localLogin({ name: 'USR1' });
     cy.contains('h3', 'My governance requests');

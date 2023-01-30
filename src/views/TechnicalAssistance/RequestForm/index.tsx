@@ -327,6 +327,7 @@ function RequestForm() {
   }, [history, id, request, requestType, step]);
 
   // Prevent step slugs if not completed and redirect to the latest available
+  // TODO Figure out what might be happening with CI runs hitting this block when submitting basic form step
   // useEffect(() => {
   //   if (stepsCompleted === undefined) {
   //     return;

@@ -5,7 +5,7 @@ import { formatDateLocal, formatDateUtc } from '../../src/utils/date';
 // scripts/dev db:seed
 // 508 Request UUID - 6e224030-09d5-46f7-ad04-4bb851b36eab
 
-describe.skip('Accessibility Requests', () => {
+describe('Accessibility Requests', () => {
   it('can create a request and see its details', () => {
     cy.localLogin({ name: 'A11Y' });
 
@@ -169,7 +169,7 @@ describe.skip('Accessibility Requests', () => {
     cy.get('table').should('not.exist');
   });
 
-  describe.skip('notes', () => {
+  describe('notes', () => {
     it('can add a note', () => {
       cy.localLogin({ name: 'A11Y', role: 'EASI_D_508_USER' });
       cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
@@ -192,7 +192,7 @@ describe.skip('Accessibility Requests', () => {
     });
   });
 
-  describe.skip('test dates', () => {
+  describe('test dates', () => {
     beforeEach(() => {
       cy.localLogin({ name: 'ADMI', role: 'EASI_D_508_USER' });
       cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');
@@ -293,7 +293,7 @@ describe.skip('Accessibility Requests', () => {
     });
   });
 
-  describe.skip('request status', () => {
+  describe('request status', () => {
     beforeEach(() => {
       cy.localLogin({ name: 'ADMI', role: 'EASI_D_508_USER' });
       cy.visit('/508/requests/6e224030-09d5-46f7-ad04-4bb851b36eab');

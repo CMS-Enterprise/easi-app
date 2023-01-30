@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
-describe.skip('Governance Review Team', () => {
+describe('Governance Review Team', () => {
   const futureDatetime = DateTime.local().plus({ year: 1 });
   const futureDateYear = futureDatetime.year;
 
