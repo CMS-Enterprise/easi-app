@@ -51,6 +51,8 @@ export default gql`
       subjectAreaDataAndDataManagementOther
       subjectAreaGovernmentProcessesAndPoliciesOther
       subjectAreaOtherTechnicalTopicsOther
+
+      submittedAt
     }
   }
 `;

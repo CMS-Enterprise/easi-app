@@ -129,8 +129,7 @@ const intake = {
       addNewSystem: 'Add a new system',
       majorChanges: 'Major changes or upgrades to an existing system',
       recompete:
-        'Re-compete a contract without any changes to systems or services',
-      shutdown: 'Decommission a system'
+        'Re-compete a contract without any changes to systems or services'
     },
     helpAndGuidance: {
       majorChanges: {
