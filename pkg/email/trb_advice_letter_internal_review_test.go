@@ -53,6 +53,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 <p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
 `
 		err = client.SendTRBAdviceLetterInternalReviewEmail(ctx, input)
+		fmt.Println(sender.body)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.TRBEmail})
 		s.Equal(expectedBody, sender.body)
