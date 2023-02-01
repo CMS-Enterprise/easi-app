@@ -36,6 +36,7 @@ import Basic, { basicBlankValues } from './Basic';
 import Check from './Check';
 import Documents from './Documents';
 import Done from './Done';
+import Feedback from './Feedback';
 import SubjectAreas from './SubjectAreas';
 import ViewSubmittedRequest from './ViewSubmittedRequest';
 
@@ -223,23 +224,25 @@ function Header({
   );
 }
 
-function EditsRequestedWarning() {
+function EditsRequestedWarning({ requestId }: { requestId: string }) {
   const { t } = useTranslation('technicalAssistance');
   return (
     <div className="bg-error-lighter padding-y-2">
       <GridContainer className="width-full">
-        <div className="line-height-body-5">
+        <div>
           <IconWarning
             className="text-error-dark text-middle margin-right-1"
             size={3}
           />
-          <span className="text-middle">{t('editsRequested.alert')}</span>
+          <span className="text-middle line-height-body-5">
+            {t('editsRequested.alert')}
+          </span>
         </div>
         <div className="margin-top-2">
           <UswdsReactLink
             variant="unstyled"
             className="usa-button usa-button--outline"
-            to="/trb"
+            to={`/trb/requests/${requestId}/feedback`}
           >
             {t('editsRequested.viewFeedback')}
           </UswdsReactLink>
@@ -410,9 +413,9 @@ function RequestForm() {
     () =>
       request?.taskStatuses.feedbackStatus ===
       TRBFeedbackStatus.EDITS_REQUESTED ? (
-        <EditsRequestedWarning />
+        <EditsRequestedWarning requestId={request.id} />
       ) : null,
-    [request?.taskStatuses.feedbackStatus]
+    [request?.id, request?.taskStatuses.feedbackStatus]
   );
 
   // References to the submit handler and submitting state of the current form step
@@ -460,6 +463,10 @@ function RequestForm() {
         taskListUrl={taskListUrl}
       />
     );
+  }
+
+  if (step === 'feedback' && request) {
+    return <Feedback request={request} taskListUrl={taskListUrl} />;
   }
 
   const stepIdx = formStepSlugs.indexOf(step as FormStepSlug);

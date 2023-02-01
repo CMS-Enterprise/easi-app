@@ -59,11 +59,8 @@ export default gql`
       id
       feedbackMessage
       notifyEuaIds
-      action
       createdBy
       createdAt
-      modifiedBy
-      modifiedAt
     }
   }
 `;

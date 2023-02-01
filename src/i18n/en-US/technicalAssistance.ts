@@ -578,6 +578,13 @@ const technicalAssistance = {
   viewSubmitted: {
     heading: 'View submitted Technical Assistance Request'
   },
+  requestFeedback: {
+    heading: 'Feedback about your request',
+    viewFeedback: 'View feedback',
+    date: 'Date',
+    from: 'Feedback from',
+    returnToForm: 'Return to request form'
+  },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
     requestType: 'Request type',

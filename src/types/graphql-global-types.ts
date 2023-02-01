@@ -241,14 +241,6 @@ export enum TRBDocumentCommonType {
 }
 
 /**
- * Represents the action an admin is taking on a TRB request when leaving feedback
- */
-export enum TRBFeedbackAction {
-  READY_FOR_CONSULT = "READY_FOR_CONSULT",
-  REQUEST_EDITS = "REQUEST_EDITS",
-}
-
-/**
  * Represents the status of the TRB feedback step
  */
 export enum TRBFeedbackStatus {
