@@ -939,6 +939,9 @@ type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
   content: String!
   createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+  archived: Boolean!
   id: UUID!
 }
 
@@ -1350,6 +1353,15 @@ input CreateSystemIntakeNoteInput {
   content: String!
   authorName: String!
   intakeId: UUID!
+}
+
+"""
+TODO: NJD - remove archived here?
+"""
+input UpdateSystemIntakeNoteInput {
+  content: String!
+  archived: Boolean!
+  id: UUID!
 }
 
 """
@@ -2148,6 +2160,10 @@ type Mutation {
     input: CreateSystemIntakeActionExtendLifecycleIdInput!
   ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
+    @hasRole(role: EASI_GOVTEAM)
+  setSystemIntakeNoteArchived(id: UUID!, isArchived: Boolean!): SystemIntakeNote!
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
     @hasRole(role: EASI_USER)

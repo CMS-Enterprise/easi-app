@@ -1310,6 +1310,44 @@ func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input mod
 	}, err
 }
 
+// UpdateSystemIntakeNote is the resolver for the updateSystemIntakeNote field.
+func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input model.UpdateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
+	// panic(fmt.Errorf("not implemented: UpdateSystemIntakeNote - updateSystemIntakeNote"))
+	// TODO: NJD - fill this out
+	note, err := r.store.UpdateNote(ctx, &models.Note{
+		AuthorEUAID: appcontext.Principal(ctx).ID(),
+		Content:     null.StringFrom(input.Content),
+		ID:          input.ID,
+		IsArchived:  input.Archived,
+	})
+
+	return &model.SystemIntakeNote{
+		ID: note.ID,
+		Author: &model.SystemIntakeNoteAuthor{
+			Name: note.AuthorName.String,
+			Eua:  note.AuthorEUAID,
+		},
+		Content: note.Content.String,
+		// CreatedAt: *note.Createdt,A
+	}, err
+}
+
+// SetSystemIntakeNoteArchived is the resolver for the setSystemIntakeNoteArchived field.
+func (r *mutationResolver) SetSystemIntakeNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*model.SystemIntakeNote, error) {
+	// NJD - panic(fmt.Errorf("not implemented: SetSystemIntakeNoteArchived - setSystemIntakeNoteArchived"))
+	updatedNote, err := r.store.SetNoteArchived(ctx, id, isArchived, appcontext.Principal(ctx).ID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.SystemIntakeNote{
+		ID:       updatedNote.ID,
+		Content:  updatedNote.Content.String,
+		Archived: updatedNote.IsArchived,
+	}, err
+}
+
 // CreateSystemIntake is the resolver for the createSystemIntake field.
 func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error) {
 	systemIntake := models.SystemIntake{

@@ -552,6 +552,7 @@ type ComplexityRoot struct {
 		SendReportAProblemEmail                          func(childComplexity int, input model.SendReportAProblemEmailInput) int
 		SendTRBAdviceLetter                              func(childComplexity int, input model.SendTRBAdviceLetterInput) int
 		SetRolesForUserOnSystem                          func(childComplexity int, input model.SetRolesForUserOnSystemInput) int
+		SetSystemIntakeNoteArchived                      func(childComplexity int, id uuid.UUID, isArchived bool) int
 		SetTRBAdminNoteArchived                          func(childComplexity int, id uuid.UUID, isArchived bool) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
@@ -562,6 +563,7 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeContractDetails                func(childComplexity int, input model.UpdateSystemIntakeContractDetailsInput) int
 		UpdateSystemIntakeLinkedCedarSystem              func(childComplexity int, input model.UpdateSystemIntakeLinkedCedarSystemInput) int
 		UpdateSystemIntakeLinkedContract                 func(childComplexity int, input model.UpdateSystemIntakeLinkedContractInput) int
+		UpdateSystemIntakeNote                           func(childComplexity int, input model.UpdateSystemIntakeNoteInput) int
 		UpdateSystemIntakeRequestDetails                 func(childComplexity int, input model.UpdateSystemIntakeRequestDetailsInput) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTRBAdminNote                               func(childComplexity int, input map[string]interface{}) int
@@ -768,10 +770,13 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeNote struct {
-		Author    func(childComplexity int) int
-		Content   func(childComplexity int) int
-		CreatedAt func(childComplexity int) int
-		ID        func(childComplexity int) int
+		Archived   func(childComplexity int) int
+		Author     func(childComplexity int) int
+		Content    func(childComplexity int) int
+		CreatedAt  func(childComplexity int) int
+		ID         func(childComplexity int) int
+		ModifiedAt func(childComplexity int) int
+		ModifiedBy func(childComplexity int) int
 	}
 
 	SystemIntakeNoteAuthor struct {
@@ -1143,6 +1148,8 @@ type MutationResolver interface {
 	CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionExtendLifecycleID(ctx context.Context, input model.CreateSystemIntakeActionExtendLifecycleIDInput) (*model.CreateSystemIntakeActionExtendLifecycleIDPayload, error)
 	CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error)
+	UpdateSystemIntakeNote(ctx context.Context, input model.UpdateSystemIntakeNoteInput) (*model.SystemIntakeNote, error)
+	SetSystemIntakeNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*model.SystemIntakeNote, error)
 	CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
@@ -3918,6 +3925,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SetRolesForUserOnSystem(childComplexity, args["input"].(model.SetRolesForUserOnSystemInput)), true
 
+	case "Mutation.setSystemIntakeNoteArchived":
+		if e.complexity.Mutation.SetSystemIntakeNoteArchived == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setSystemIntakeNoteArchived_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetSystemIntakeNoteArchived(childComplexity, args["id"].(uuid.UUID), args["isArchived"].(bool)), true
+
 	case "Mutation.setTRBAdminNoteArchived":
 		if e.complexity.Mutation.SetTRBAdminNoteArchived == nil {
 			break
@@ -4037,6 +4056,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateSystemIntakeLinkedContract(childComplexity, args["input"].(model.UpdateSystemIntakeLinkedContractInput)), true
+
+	case "Mutation.updateSystemIntakeNote":
+		if e.complexity.Mutation.UpdateSystemIntakeNote == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeNote_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeNote(childComplexity, args["input"].(model.UpdateSystemIntakeNoteInput)), true
 
 	case "Mutation.updateSystemIntakeRequestDetails":
 		if e.complexity.Mutation.UpdateSystemIntakeRequestDetails == nil {
@@ -5189,6 +5220,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeLCIDExpirationChange.PreviousScope(childComplexity), true
 
+	case "SystemIntakeNote.archived":
+		if e.complexity.SystemIntakeNote.Archived == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNote.Archived(childComplexity), true
+
 	case "SystemIntakeNote.author":
 		if e.complexity.SystemIntakeNote.Author == nil {
 			break
@@ -5216,6 +5254,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeNote.ID(childComplexity), true
+
+	case "SystemIntakeNote.modifiedAt":
+		if e.complexity.SystemIntakeNote.ModifiedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNote.ModifiedAt(childComplexity), true
+
+	case "SystemIntakeNote.modifiedBy":
+		if e.complexity.SystemIntakeNote.ModifiedBy == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNote.ModifiedBy(childComplexity), true
 
 	case "SystemIntakeNoteAuthor.eua":
 		if e.complexity.SystemIntakeNoteAuthor.Eua == nil {
@@ -6310,6 +6362,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeContractDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeLinkedCedarSystemInput,
 		ec.unmarshalInputUpdateSystemIntakeLinkedContractInput,
+		ec.unmarshalInputUpdateSystemIntakeNoteInput,
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
 		ec.unmarshalInputUpdateTRBRequestAttendeeInput,
@@ -7317,6 +7370,9 @@ type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
   content: String!
   createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+  archived: Boolean!
   id: UUID!
 }
 
@@ -7728,6 +7784,15 @@ input CreateSystemIntakeNoteInput {
   content: String!
   authorName: String!
   intakeId: UUID!
+}
+
+"""
+TODO: NJD - remove archived here?
+"""
+input UpdateSystemIntakeNoteInput {
+  content: String!
+  archived: Boolean!
+  id: UUID!
 }
 
 """
@@ -8526,6 +8591,10 @@ type Mutation {
     input: CreateSystemIntakeActionExtendLifecycleIdInput!
   ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
+    @hasRole(role: EASI_GOVTEAM)
+  setSystemIntakeNoteArchived(id: UUID!, isArchived: Boolean!): SystemIntakeNote!
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
     @hasRole(role: EASI_USER)
@@ -9412,6 +9481,30 @@ func (ec *executionContext) field_Mutation_setRolesForUserOnSystem_args(ctx cont
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_setSystemIntakeNoteArchived_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 bool
+	if tmp, ok := rawArgs["isArchived"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isArchived"))
+		arg1, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["isArchived"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_setTRBAdminNoteArchived_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -9563,6 +9656,21 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeLinkedContract_args
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateSystemIntakeLinkedContractInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeLinkedContractInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateSystemIntakeNoteInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSystemIntakeNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeNoteInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -24753,6 +24861,12 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeNote(ctx con
 				return ec.fieldContext_SystemIntakeNote_content(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntakeNote_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeNote_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeNote_modifiedAt(ctx, field)
+			case "archived":
+				return ec.fieldContext_SystemIntakeNote_archived(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntakeNote_id(ctx, field)
 			}
@@ -24767,6 +24881,196 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeNote(ctx con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createSystemIntakeNote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateSystemIntakeNote(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateSystemIntakeNote(rctx, fc.Args["input"].(model.UpdateSystemIntakeNoteInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.SystemIntakeNote); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.SystemIntakeNote`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.SystemIntakeNote)
+	fc.Result = res
+	return ec.marshalNSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNote(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeNote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "author":
+				return ec.fieldContext_SystemIntakeNote_author(ctx, field)
+			case "content":
+				return ec.fieldContext_SystemIntakeNote_content(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeNote_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeNote_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeNote_modifiedAt(ctx, field)
+			case "archived":
+				return ec.fieldContext_SystemIntakeNote_archived(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntakeNote_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeNote", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateSystemIntakeNote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_setSystemIntakeNoteArchived(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_setSystemIntakeNoteArchived(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SetSystemIntakeNoteArchived(rctx, fc.Args["id"].(uuid.UUID), fc.Args["isArchived"].(bool))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.SystemIntakeNote); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.SystemIntakeNote`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.SystemIntakeNote)
+	fc.Result = res
+	return ec.marshalNSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNote(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_setSystemIntakeNoteArchived(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "author":
+				return ec.fieldContext_SystemIntakeNote_author(ctx, field)
+			case "content":
+				return ec.fieldContext_SystemIntakeNote_content(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeNote_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeNote_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeNote_modifiedAt(ctx, field)
+			case "archived":
+				return ec.fieldContext_SystemIntakeNote_archived(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntakeNote_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeNote", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_setSystemIntakeNoteArchived_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -32564,6 +32868,12 @@ func (ec *executionContext) fieldContext_SystemIntake_notes(ctx context.Context,
 				return ec.fieldContext_SystemIntakeNote_content(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntakeNote_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeNote_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeNote_modifiedAt(ctx, field)
+			case "archived":
+				return ec.fieldContext_SystemIntakeNote_archived(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntakeNote_id(ctx, field)
 			}
@@ -35601,6 +35911,132 @@ func (ec *executionContext) fieldContext_SystemIntakeNote_createdAt(ctx context.
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeNote_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeNote_modifiedBy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedBy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeNote_modifiedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeNote",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeNote_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeNote_modifiedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeNote_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeNote",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeNote_archived(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeNote_archived(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Archived, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeNote_archived(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeNote",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -46393,6 +46829,50 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeLinkedContractInput(
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateSystemIntakeNoteInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeNoteInput, error) {
+	var it model.UpdateSystemIntakeNoteInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"content", "archived", "id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "content":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
+			it.Content, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "archived":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("archived"))
+			it.Archived, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeRequestDetailsInput, error) {
 	var it model.UpdateSystemIntakeRequestDetailsInput
 	asMap := map[string]interface{}{}
@@ -50589,6 +51069,24 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_createSystemIntakeNote(ctx, field)
 			})
 
+		case "updateSystemIntakeNote":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSystemIntakeNote(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "setSystemIntakeNoteArchived":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_setSystemIntakeNoteArchived(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "createSystemIntake":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -52963,6 +53461,21 @@ func (ec *executionContext) _SystemIntakeNote(ctx context.Context, sel ast.Selec
 		case "createdAt":
 
 			out.Values[i] = ec._SystemIntakeNote_createdAt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "modifiedBy":
+
+			out.Values[i] = ec._SystemIntakeNote_modifiedBy(ctx, field, obj)
+
+		case "modifiedAt":
+
+			out.Values[i] = ec._SystemIntakeNote_modifiedAt(ctx, field, obj)
+
+		case "archived":
+
+			out.Values[i] = ec._SystemIntakeNote_archived(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -56591,6 +57104,10 @@ func (ec *executionContext) unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcm
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNSystemIntakeNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNote(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeNote) graphql.Marshaler {
+	return ec._SystemIntakeNote(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNSystemIntakeNote2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNoteᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SystemIntakeNote) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -57643,6 +58160,11 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeLinkedCedarSystemInput2g
 
 func (ec *executionContext) unmarshalNUpdateSystemIntakeLinkedContractInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeLinkedContractInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeLinkedContractInput, error) {
 	res, err := ec.unmarshalInputUpdateSystemIntakeLinkedContractInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSystemIntakeNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeNoteInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeNoteInput, error) {
+	res, err := ec.unmarshalInputUpdateSystemIntakeNoteInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

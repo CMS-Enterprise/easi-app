@@ -587,10 +587,13 @@ type SystemIntakeLCIDExpirationChange struct {
 
 // A note added to a system request
 type SystemIntakeNote struct {
-	Author    *SystemIntakeNoteAuthor `json:"author"`
-	Content   string                  `json:"content"`
-	CreatedAt time.Time               `json:"createdAt"`
-	ID        uuid.UUID               `json:"id"`
+	Author     *SystemIntakeNoteAuthor `json:"author"`
+	Content    string                  `json:"content"`
+	CreatedAt  time.Time               `json:"createdAt"`
+	ModifiedBy *string                 `json:"modifiedBy"`
+	ModifiedAt *time.Time              `json:"modifiedAt"`
+	Archived   bool                    `json:"archived"`
+	ID         uuid.UUID               `json:"id"`
 }
 
 // The author of a note added to a system request
@@ -709,6 +712,13 @@ type UpdateSystemIntakeLinkedCedarSystemInput struct {
 type UpdateSystemIntakeLinkedContractInput struct {
 	ID             uuid.UUID `json:"id"`
 	ContractNumber *string   `json:"contractNumber"`
+}
+
+// TODO: NJD - remove archived here?
+type UpdateSystemIntakeNoteInput struct {
+	Content  string    `json:"content"`
+	Archived bool      `json:"archived"`
+	ID       uuid.UUID `json:"id"`
 }
 
 // The payload for updating a system's IT governance request
