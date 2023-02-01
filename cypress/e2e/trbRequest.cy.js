@@ -91,7 +91,7 @@ describe('Technical Assistance', () => {
       .should('be.visible');
   });
   /** Adds new attendee */
-  it.only('Adds, edits, and deletes attendee', () => {
+  it('Adds, edits, and deletes attendee', () => {
     // Fill out the Basic Details required fields
     cy.trbRequest.basicDetails.fillRequiredFields();
 
