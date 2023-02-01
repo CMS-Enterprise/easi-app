@@ -1555,8 +1555,8 @@ type TRBRequestAttendee {
   euaUserId: String! # Sort of duplicative, as this is also in UserInfo
   userInfo: UserInfo
   trbRequestId: UUID!
-  component: String!
-  role: PersonRole!
+  component: String
+  role: PersonRole
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
