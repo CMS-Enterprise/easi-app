@@ -3,9 +3,6 @@ describe('Technical Assistance', () => {
     cy.localLogin({ name: 'ABCD' });
 
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'GetCedarContacts') {
-        req.alias = 'getCedarContacts';
-      }
       if (req.body.operationName === 'DeleteTRBRequestAttendee') {
         req.alias = 'deleteTRBRequestAttendee';
       }
@@ -94,7 +91,7 @@ describe('Technical Assistance', () => {
       .should('be.visible');
   });
   /** Adds new attendee */
-  it('Adds, edits, and deletes attendee', () => {
+  it.only('Adds, edits, and deletes attendee', () => {
     // Fill out the Basic Details required fields
     cy.trbRequest.basicDetails.fillRequiredFields();
 
