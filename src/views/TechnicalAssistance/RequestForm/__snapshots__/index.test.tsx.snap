@@ -124,7 +124,7 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
             Feedback from
           </dt>
           <dd>
-            ABCD
+            George Louis Costanza
           </dd>
         </dl>
       </div>
@@ -172,7 +172,7 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
             Feedback from
           </dt>
           <dd>
-            ABCD
+            George Louis Costanza
           </dd>
         </dl>
       </div>

@@ -92,7 +92,10 @@ function renderFeedbackTest() {
                       feedbackMessage:
                         'Purus morbi pellentesque eget erat. Egestas venenatis vitae pretium pretium, orci, elit praesent tortor. Turpis semper sollicitudin sagittis pellentesque est dictum. Rhoncus, nulla turpis netus praesent consequat leo orci, vel.',
                       notifyEuaIds: ['ABCD'],
-                      createdBy: 'ABCD',
+                      author: {
+                        commonName: 'George Louis Costanza',
+                        __typename: 'UserInfo'
+                      },
                       createdAt: '2023-01-30T16:23:34.576076Z',
                       __typename: 'TRBRequestFeedback'
                     },
@@ -101,7 +104,10 @@ function renderFeedbackTest() {
                       feedbackMessage:
                         'Id mauris pharetra volutpat, praesent faucibus aliquam, penatibus. Convallis maecenas cras dignissim in diam duis odio maecenas. Mi amet ullamcorper dolor tempus vulputate elit a volutpat purus. Nunc, vel arcu imperdiet duis enim leo quis. Aliquam nibh tincidunt aliquam morbi non. A in porttitor suspendisse nunc turpis turpis eros, at ultrices. Scelerisque netus quisque semper ullamcorper porta interdum scelerisque elementum. Egestas enim egestas imperdiet sociis porta.',
                       notifyEuaIds: ['ABCD'],
-                      createdBy: 'ABCD',
+                      author: {
+                        commonName: 'George Louis Costanza',
+                        __typename: 'UserInfo'
+                      },
                       createdAt: '2023-01-31T18:22:13.029728Z',
                       __typename: 'TRBRequestFeedback'
                     }

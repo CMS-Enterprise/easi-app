@@ -54,12 +54,17 @@ export interface GetTrbRequest_trbRequest_form {
   submittedAt: Time | null;
 }
 
+export interface GetTrbRequest_trbRequest_feedback_author {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
 export interface GetTrbRequest_trbRequest_feedback {
   __typename: "TRBRequestFeedback";
   id: UUID;
   feedbackMessage: string;
   notifyEuaIds: string[];
-  createdBy: string;
+  author: GetTrbRequest_trbRequest_feedback_author;
   createdAt: Time;
 }
 

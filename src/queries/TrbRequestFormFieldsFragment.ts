@@ -59,7 +59,9 @@ export default gql`
       id
       feedbackMessage
       notifyEuaIds
-      createdBy
+      author {
+        commonName
+      }
       createdAt
     }
   }

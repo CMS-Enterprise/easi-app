@@ -54,12 +54,17 @@ export interface TrbRequestFormFields_form {
   submittedAt: Time | null;
 }
 
+export interface TrbRequestFormFields_feedback_author {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
 export interface TrbRequestFormFields_feedback {
   __typename: "TRBRequestFeedback";
   id: UUID;
   feedbackMessage: string;
   notifyEuaIds: string[];
-  createdBy: string;
+  author: TrbRequestFormFields_feedback_author;
   createdAt: Time;
 }
 
