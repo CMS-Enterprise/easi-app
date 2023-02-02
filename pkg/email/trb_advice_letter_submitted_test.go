@@ -1,0 +1,93 @@
+package email
+
+import (
+	"context"
+	"fmt"
+	"path"
+	"time"
+
+	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/models"
+)
+
+func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
+	sender := mockSender{}
+	ctx := context.Background()
+
+	trbID := uuid.New()
+	trbLink := fmt.Sprintf(
+		"%s://%s/%s",
+		s.config.URLScheme,
+		s.config.URLHost,
+		path.Join("trb", "task-list", trbID.String()),
+	)
+
+	// TODO - figure out what this URL will be once it's in the frontend
+	adviceLetterLink := fmt.Sprintf(
+		"%s://%s/%s",
+		s.config.URLScheme,
+		s.config.URLHost,
+		path.Join("trb", "advice-letter", trbID.String()),
+	)
+
+	submissionDate, err := time.Parse(time.RFC3339, "2022-02-01T13:30:00+00:00")
+	s.NoError(err)
+	consultDate, err := time.Parse(time.RFC3339, "2022-01-01T13:30:00+00:00")
+	s.NoError(err)
+
+	recipients := []models.EmailAddress{
+		models.NewEmailAddress("abcd@local.fake"),
+		models.NewEmailAddress("efgh@local.fake"),
+	}
+
+	input := SendTRBAdviceLetterSubmittedEmailInput{
+		TRBRequestID:   trbID,
+		RequestName:    "Test TRB Request",
+		RequestType:    "Tech Support",
+		RequesterName:  "Mc Lovin",
+		Component:      "Pickles",
+		SubmissionDate: &submissionDate,
+		ConsultDate:    &consultDate,
+		Recipients:     recipients,
+	}
+	allRecipients := append(recipients, s.config.TRBEmail)
+
+	s.Run("successful call has the right content", func() {
+		client, err := NewClient(s.config, &sender)
+		s.NoError(err)
+		expectedBody := `<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+
+<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+
+<p>The Technical Review Board (TRB) has compiled an advice letter for Test TRB Request. Use the link below to view recommendations from the TRB as well as a summary of the initial support request.</p>
+
+<p><a href="` + adviceLetterLink + `" style="font-weight: bold">View the Advice Letter</a></p>
+
+<p>Any further communication or follow-up sessions may be organized via email with the TRB or via a new request in EASi.</p>
+
+<p><strong>Request summary</strong></p>
+<ul style="padding-left: 0;">
+<li style="list-style-type: none;">Submission date: ` + submissionDate.Format("January 2, 2006") + `</li>
+<li style="list-style-type: none;">Requester: ` + input.RequesterName + `</li>
+<li style="list-style-type: none;">Component: ` + input.Component + `</li>
+<li style="list-style-type: none;">Request type: ` + input.RequestType + `</li>
+<li style="list-style-type: none;">Date of TRB Consult: ` + consultDate.Format("January 2, 2006") + `</li>
+</ul>
+
+<p>View this request in EASi:</p>
+<ul>
+<li>If you are the initial requester, you may <a href="` + adviceLetterLink + `">click here</a> to view the advice letter and your request task list.</li>
+<li>TRB team members may <a href="` + trbLink + `">click here</a> to view the request details.</li>
+<li>Others should contact Mc Lovin or the TRB for more information about this request.</li>
+</ul>
+
+<p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:` + s.config.TRBEmail.String() + `">` + s.config.TRBEmail.String() + `</a>.</p>
+`
+		err = client.SendTRBAdviceLetterSubmittedEmail(ctx, input)
+		fmt.Println(sender.body)
+		s.NoError(err)
+		s.ElementsMatch(sender.toAddresses, allRecipients)
+		s.Equal(expectedBody, sender.body)
+	})
+}

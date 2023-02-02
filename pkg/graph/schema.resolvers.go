@@ -2030,7 +2030,13 @@ func (r *mutationResolver) RequestReviewForTRBAdviceLetter(ctx context.Context, 
 
 // SendTRBAdviceLetter is the resolver for the sendTRBAdviceLetter field.
 func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input model.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error) {
-	return resolvers.SendTRBAdviceLetter(ctx, r.store, input.ID)
+	return resolvers.SendTRBAdviceLetter(
+		ctx,
+		r.store,
+		input.ID,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		r.service.FetchUserInfos)
 }
 
 // CreateTRBAdviceLetterRecommendation is the resolver for the createTRBAdviceLetterRecommendation field.
