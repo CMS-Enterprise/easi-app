@@ -10,10 +10,10 @@ import classNames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
-  TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 import { trbRequesterSchema } from 'validations/trbRequestSchema';
@@ -24,14 +24,14 @@ import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
 
 /** Initial blank attendee object */
-export const initialAttendee: TRBAttendeeData = {
+export const initialAttendee: TRBAttendee = {
+  __typename: 'TRBRequestAttendee',
   trbRequestId: '',
-  userInfo: {
-    commonName: '',
-    euaUserId: ''
-  },
-  component: '',
-  role: null
+  id: '',
+  userInfo: null,
+  component: null,
+  role: null,
+  createdAt: ''
 };
 
 function Attendees({
@@ -60,7 +60,7 @@ function Attendees({
    *
    * Used to set field values when creating or editing attendee
    */
-  const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeData>({
+  const [activeAttendee, setActiveAttendee] = useState<TRBAttendee>({
     ...initialAttendee,
     trbRequestId: request.id
   });

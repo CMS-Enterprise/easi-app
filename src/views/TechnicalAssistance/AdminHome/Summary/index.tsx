@@ -50,7 +50,7 @@ export default function Summary({
   // Get requester object from request attendees
   const {
     data: { requester, loading }
-  } = useTRBAttendees(trbRequestId, createdBy);
+  } = useTRBAttendees(trbRequestId);
 
   /**
    * Requester info for display in summary box
