@@ -91,7 +91,7 @@ function renderFeedbackTest() {
                       id: 'edf39ac2-ced6-4cfd-a328-a1707c2e04c7',
                       feedbackMessage:
                         'Purus morbi pellentesque eget erat. Egestas venenatis vitae pretium pretium, orci, elit praesent tortor. Turpis semper sollicitudin sagittis pellentesque est dictum. Rhoncus, nulla turpis netus praesent consequat leo orci, vel.',
-                      notifyEuaIds: ['ABCD'],
+                      action: 'REQUEST_EDITS',
                       author: {
                         commonName: 'George Louis Costanza',
                         __typename: 'UserInfo'
@@ -103,7 +103,7 @@ function renderFeedbackTest() {
                       id: 'eeb2dab6-d436-433a-90a9-673c8e9256f5',
                       feedbackMessage:
                         'Id mauris pharetra volutpat, praesent faucibus aliquam, penatibus. Convallis maecenas cras dignissim in diam duis odio maecenas. Mi amet ullamcorper dolor tempus vulputate elit a volutpat purus. Nunc, vel arcu imperdiet duis enim leo quis. Aliquam nibh tincidunt aliquam morbi non. A in porttitor suspendisse nunc turpis turpis eros, at ultrices. Scelerisque netus quisque semper ullamcorper porta interdum scelerisque elementum. Egestas enim egestas imperdiet sociis porta.',
-                      notifyEuaIds: ['ABCD'],
+                      action: 'REQUEST_EDITS',
                       author: {
                         commonName: 'George Louis Costanza',
                         __typename: 'UserInfo'

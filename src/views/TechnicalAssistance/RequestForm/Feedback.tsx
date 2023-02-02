@@ -7,6 +7,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Divider from 'components/shared/Divider';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
+import { TRBFeedbackAction } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 import Breadcrumbs from '../Breadcrumbs';
@@ -55,7 +56,12 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
       </PageHeading>
       {returnToFormLink}
 
-      {sortBy(request.feedback, 'createdAt')
+      {sortBy(
+        request.feedback.filter(
+          e => e.action === TRBFeedbackAction.REQUEST_EDITS
+        ),
+        'createdAt'
+      )
         .reverse()
         .map(item => {
           return (

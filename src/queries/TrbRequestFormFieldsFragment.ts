@@ -57,8 +57,8 @@ export default gql`
 
     feedback {
       id
+      action
       feedbackMessage
-      notifyEuaIds
       author {
         commonName
       }
