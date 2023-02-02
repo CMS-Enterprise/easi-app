@@ -53,7 +53,22 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 <p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
 `
 		err = client.SendTRBAdviceLetterInternalReviewEmail(ctx, input)
-		fmt.Println(sender.body)
+		s.NoError(err)
+		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.TRBEmail})
+		s.Equal(expectedBody, sender.body)
+
+		input.TRBLeadName = ""
+		expectedBody = `<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+
+<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+
+<p>` + input.TRBRequestName + ` has a draft advice letter that is now ready for internal review. Please take a moment to look over the draft and make any suggestions for improvement.</p>
+
+<p><a href="` + trbAdviceLetterLink + `" style="font-weight: bold">View the Advice Letter</a></p>
+
+<p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
+`
+		err = client.SendTRBAdviceLetterInternalReviewEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.TRBEmail})
 		s.Equal(expectedBody, sender.body)
