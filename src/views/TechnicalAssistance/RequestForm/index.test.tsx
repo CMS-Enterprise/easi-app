@@ -144,7 +144,13 @@ describe('TRB Request Form Feedback', () => {
   });
 
   it('goes to and renders the feedback view', async () => {
-    const { asFragment, findByText, findByRole } = renderFeedbackTest();
+    const {
+      asFragment,
+      findByText,
+      findByRole,
+      getAllByText,
+      getAllByTestId
+    } = renderFeedbackTest();
 
     const feedbackLink = await findByRole('link', {
       name: i18next.t<string>('technicalAssistance:editsRequested.viewFeedback')
@@ -155,6 +161,15 @@ describe('TRB Request Form Feedback', () => {
     await findByText(
       i18next.t<string>('technicalAssistance:requestFeedback.heading')
     );
+
+    // Check feedback author name
+    getAllByText('George Louis Costanza');
+
+    // Check feedback ordered by dates desc
+    const sortedDates = getAllByTestId('feedback-date');
+    expect(sortedDates.length).toBe(2);
+    expect(sortedDates[0]).toHaveTextContent('January 31, 2023');
+    expect(sortedDates[1]).toHaveTextContent('January 30, 2023');
 
     expect(asFragment()).toMatchSnapshot();
   });

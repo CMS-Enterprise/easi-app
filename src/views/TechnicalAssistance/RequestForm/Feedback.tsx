@@ -70,7 +70,9 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
                 <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
                   <dl className="easi-dl">
                     <dt>{t('requestFeedback.date')}</dt>
-                    <dd>{formatDateLocal(item.createdAt, 'MMMM d, yyyy')}</dd>
+                    <dd data-testid="feedback-date">
+                      {formatDateLocal(item.createdAt, 'MMMM d, yyyy')}
+                    </dd>
                   </dl>
                 </Grid>
                 <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>

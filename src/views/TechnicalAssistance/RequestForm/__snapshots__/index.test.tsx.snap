@@ -108,7 +108,9 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
           <dt>
             Date
           </dt>
-          <dd>
+          <dd
+            data-testid="feedback-date"
+          >
             January 31, 2023
           </dd>
         </dl>
@@ -156,7 +158,9 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
           <dt>
             Date
           </dt>
-          <dd>
+          <dd
+            data-testid="feedback-date"
+          >
             January 30, 2023
           </dd>
         </dl>
