@@ -78,7 +78,7 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
                 <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
                   <dl className="easi-dl">
                     <dt>{t('requestFeedback.from')}</dt>
-                    <dd>{item.author.commonName}</dd>
+                    <dd>{item.author.commonName}, TRB</dd>
                   </dl>
                 </Grid>
                 <Grid col={12}>

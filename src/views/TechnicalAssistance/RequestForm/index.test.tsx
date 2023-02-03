@@ -163,7 +163,7 @@ describe('TRB Request Form Feedback', () => {
     );
 
     // Check feedback author name
-    getAllByText('George Louis Costanza');
+    getAllByText(/George Louis Costanza/);
 
     // Check feedback ordered by dates desc
     const sortedDates = getAllByTestId('feedback-date');
