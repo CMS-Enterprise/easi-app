@@ -79,7 +79,9 @@ const SystemIntakeValidationSchema: any = {
     })
   }),
   requestDetails: Yup.object().shape({
-    requestName: Yup.string().trim().required('Enter the Project Name'),
+    requestName: Yup.string()
+      .trim()
+      .required('Enter the Contract/Request Title'),
     businessNeed: Yup.string().trim().required('Tell us about your request'),
     businessSolution: Yup.string()
       .trim()
