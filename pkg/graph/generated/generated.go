@@ -880,6 +880,7 @@ type ComplexityRoot struct {
 
 	TRBRequestFeedback struct {
 		Action          func(childComplexity int) int
+		Author          func(childComplexity int) int
 		CopyTRBMailbox  func(childComplexity int) int
 		CreatedAt       func(childComplexity int) int
 		CreatedBy       func(childComplexity int) int
@@ -1296,6 +1297,8 @@ type TRBRequestDocumentResolver interface {
 }
 type TRBRequestFeedbackResolver interface {
 	NotifyEuaIds(ctx context.Context, obj *models.TRBRequestFeedback) ([]string, error)
+
+	Author(ctx context.Context, obj *models.TRBRequestFeedback) (*models.UserInfo, error)
 }
 type TRBRequestFormResolver interface {
 	CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error)
@@ -5742,6 +5745,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestFeedback.Action(childComplexity), true
 
+	case "TRBRequestFeedback.author":
+		if e.complexity.TRBRequestFeedback.Author == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestFeedback.Author(childComplexity), true
+
 	case "TRBRequestFeedback.copyTrbMailbox":
 		if e.complexity.TRBRequestFeedback.CopyTRBMailbox == nil {
 			break
@@ -8308,6 +8318,7 @@ type TRBRequestFeedback {
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -27232,6 +27243,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequestFeedback(ctx c
 				return ec.fieldContext_TRBRequestFeedback_notifyEuaIds(ctx, field)
 			case "action":
 				return ec.fieldContext_TRBRequestFeedback_action(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBRequestFeedback_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -37642,6 +37655,8 @@ func (ec *executionContext) fieldContext_TRBRequest_feedback(ctx context.Context
 				return ec.fieldContext_TRBRequestFeedback_notifyEuaIds(ctx, field)
 			case "action":
 				return ec.fieldContext_TRBRequestFeedback_action(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBRequestFeedback_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -39351,6 +39366,58 @@ func (ec *executionContext) fieldContext_TRBRequestFeedback_action(ctx context.C
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBFeedbackAction does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestFeedback_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestFeedback_author(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBRequestFeedback().Author(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestFeedback_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestFeedback",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
 		},
 	}
 	return fc, nil
@@ -53889,6 +53956,26 @@ func (ec *executionContext) _TRBRequestFeedback(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "author":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequestFeedback_author(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequestFeedback_createdBy(ctx, field, obj)

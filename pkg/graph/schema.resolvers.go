@@ -2900,6 +2900,15 @@ func (r *tRBRequestFeedbackResolver) NotifyEuaIds(ctx context.Context, obj *mode
 	return ids, nil
 }
 
+// Author is the resolver for the author field.
+func (r *tRBRequestFeedbackResolver) Author(ctx context.Context, obj *models.TRBRequestFeedback) (*models.UserInfo, error) {
+	user, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	if err != nil {
+		return &models.UserInfo{}, err
+	}
+	return user, nil
+}
+
 // CollabGroups is the resolver for the collabGroups field.
 func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error) {
 	collabGroups := models.ConvertEnums[models.TRBCollabGroupOption](obj.CollabGroups)

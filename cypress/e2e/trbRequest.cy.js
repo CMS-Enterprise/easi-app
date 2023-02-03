@@ -3,9 +3,6 @@ describe('Technical Assistance', () => {
     cy.localLogin({ name: 'ABCD' });
 
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'GetCedarContacts') {
-        req.alias = 'getCedarContacts';
-      }
       if (req.body.operationName === 'DeleteTRBRequestAttendee') {
         req.alias = 'deleteTRBRequestAttendee';
       }
