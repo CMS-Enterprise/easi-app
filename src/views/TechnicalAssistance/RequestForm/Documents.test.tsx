@@ -284,6 +284,7 @@ describe('Trb Request form: Supporting documents', () => {
       getByTestId,
       getByLabelText,
       findByText,
+      findByTestId,
       getByText
     } = render(
       <MemoryRouter
@@ -388,6 +389,7 @@ describe('Trb Request form: Supporting documents', () => {
     userEvent.click(uploadButton);
 
     // Successful if file info is displayed
+    await findByTestId('table');
     await findByText('test.pdf');
     getByText('Architecture diagram');
     getByText('12/20/2022');

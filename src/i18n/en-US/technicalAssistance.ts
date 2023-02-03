@@ -14,7 +14,7 @@ const technicalAssistance = {
       'review potential solutions or ideas with the TRB and other SMEs',
       'schedule an ongoing cadence of technical consultations',
       'consult with SMEs from across the agency',
-      'consult with the TRB about compliance with CMS guidelines and standards',
+      'consult with the TRB about CMS guidelines and standards',
       'request research or information about a particular technical topic'
     ]
   },
@@ -123,7 +123,7 @@ const technicalAssistance = {
       list: [
         'ask for help with a technical problem',
         'consult with SMEs from across the agency',
-        'consult with the TRB about compliance with CMS guidelines and standards'
+        'consult with the TRB about CMS guidelines and standards'
       ]
     },
     stepsInTheProcess: 'Steps in the process',
@@ -182,6 +182,7 @@ const technicalAssistance = {
     stepsInvolved:
       'Steps involved in getting technical assistance from the TRB',
     sampleRequest: 'Sample TRB Request',
+    viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
     taskList: [
       {
         heading: 'Fill out the initial request form',
@@ -386,7 +387,7 @@ const technicalAssistance = {
         WEB_BASED_UI_SERVICES: 'Web-based UI services',
         OPEN_SOURCE_SOFTWARE: 'Open source software',
         PORTAL_INTEGRATION: 'Portal integration',
-        ACCESSIBILITY_COMPLIANCE: 'Accessibility compliance',
+        ACCESSIBILITY_COMPLIANCE: 'Accessibility and 508',
         BUSINESS_INTELLIGENCE: 'Business intelligence',
         CONTAINERS_AND_MICROSERVICES: 'Containers and microservices',
         ROBOTIC_PROCESS_AUTOMATION: 'Robotic Process Automation (RPA)',
@@ -532,19 +533,45 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding documents'
   },
   check: {
-    submit: 'Submit request'
+    submit: 'Submit request',
+    edit: 'Edit this section',
+    notYetSubmitted: 'Not yet submitted',
+    requestType: 'Request type',
+    noTopicsSelected: 'No topics selected',
+    expectedStart: 'expected start',
+    expectedGoLive: 'expected go live',
+    and: 'and',
+    noAttendees: 'There are no attendees',
+    whatNext: {
+      title: 'What happens next?',
+      text: [
+        'The TRB will review and get back to you with one of these outcomes:',
+        'A TRB team member will get back to you within two business days.'
+      ],
+      list: [
+        'schedule a consult session',
+        'direct you to another governance process or team',
+        'request additional information'
+      ]
+    }
   },
   done: {
     success: {
       heading: 'Success!',
       info:
-        'Your TRB Request has been submitted. you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
+        'Your TRB Request has been submitted. You will receive an automatic email, and a TRB team member will reach out shortly after regarding next steps.'
     },
     error: {
       heading: 'Something went wrong.',
       info:
         'Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.'
-    }
+    },
+    referenceNumber: 'Reference number',
+    returnToTaskList: 'Return to task list',
+    backToTrbRequest: 'Back to TRB Request'
+  },
+  viewSubmitted: {
+    heading: 'View submitted Technical Assistance Request'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',

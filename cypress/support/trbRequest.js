@@ -19,14 +19,12 @@ cy.trbRequest = {
     fillRequiredFields: attendee => {
       if (attendee.userInfo && !attendee.id) {
         const { commonName, euaUserId } = attendee.userInfo;
-        cy.get('#react-select-euaUserId-input').type(
-          `${commonName}, ${euaUserId}`
-        );
 
-        // Wait for cedar contacts query to complete
-        cy.wait('@getCedarContacts')
-          .its('response.statusCode')
-          .should('eq', 200);
+        const nameAndId = `${commonName}, ${euaUserId}`;
+        cy.get('#react-select-euaUserId-input').type(nameAndId);
+
+        // Wait to see if the first option is what we expect it to be
+        cy.contains('#react-select-euaUserId-option-0', nameAndId);
 
         cy.get('#react-select-euaUserId-input')
           .type('{downarrow}{enter}')

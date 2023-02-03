@@ -12,11 +12,10 @@ const home = {
     title: 'Governance Services',
     itg: {
       heading: 'IT Governance',
-      body:
-        'Includes applying for a lifecycle ID, recompetes and decommissioning a system'
+      body: 'Includes applying for a lifecycle ID, and recompetes'
     },
     '508': {
-      heading: 'Section 508 compliance',
+      heading: 'Section 508',
       body:
         'Learn about the process and make a request for 508 testing of your application'
     }
