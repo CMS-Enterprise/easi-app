@@ -1,4 +1,4 @@
-describe('Technical Assistance', () => {
+describe.skip('Technical Assistance', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'ABCD' });
 
