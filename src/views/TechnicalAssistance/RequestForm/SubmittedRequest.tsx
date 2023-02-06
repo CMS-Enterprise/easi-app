@@ -21,7 +21,6 @@ function SubjectDefinition(
   field: keyof TrbRequestForm
 ): React.ReactNode {
   const { t } = useTranslation('technicalAssistance');
-  // disabled react/destructuring-assignment
   return Array.isArray(form[field]) && form[field].length ? (
     form[field]
       .map((v: string) =>
@@ -33,7 +32,6 @@ function SubjectDefinition(
   ) : (
     <em>{t('check.noTopicsSelected')}</em>
   );
-  // enable react/destructuring-assignment
 }
 
 type SubmittedRequestProps = {
