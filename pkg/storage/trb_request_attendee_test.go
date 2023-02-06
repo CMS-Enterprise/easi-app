@@ -16,21 +16,24 @@ func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
 	s.NoError(err)
 
 	s.Run("create a TRB request attendee", func() {
+		poRole := models.PersonRoleProductOwner
+		cnRole := models.PersonRoleCloudNavigator
 		attendee := models.TRBRequestAttendee{
 			EUAUserID:    anonEua,
 			TRBRequestID: trbRequest.ID,
-			Role:         models.PersonRoleProductOwner,
+			Role:         &poRole,
 		}
 		attendee.CreatedBy = anonEua
 		createdAttendee, err := s.store.CreateTRBRequestAttendee(ctx, &attendee)
 		s.NoError(err)
 
-		createdAttendee.Role = models.PersonRoleCloudNavigator
+		createdAttendee.Role = &cnRole
 		createdAttendee.ModifiedBy = &anonEua
 		_, err = s.store.UpdateTRBRequestAttendee(ctx, createdAttendee)
 		s.NoError(err)
 
-		createdAttendee.Component = "The Citadel of Ricks"
+		component := "The Citadel of Ricks"
+		createdAttendee.Component = &component
 		createdAttendee.ModifiedBy = &anonEua
 		_, err = s.store.UpdateTRBRequestAttendee(ctx, createdAttendee)
 		s.NoError(err)
