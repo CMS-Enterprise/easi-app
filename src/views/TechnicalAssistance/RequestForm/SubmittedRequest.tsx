@@ -37,11 +37,13 @@ function SubjectDefinition(
 type SubmittedRequestProps = {
   request: TrbRequest;
   showEditSectionLinks?: boolean;
+  showSectionHeadingDescription?: boolean;
 };
 
 function SubmittedRequest({
   request,
-  showEditSectionLinks
+  showEditSectionLinks,
+  showSectionHeadingDescription
 }: SubmittedRequestProps) {
   const { t } = useTranslation('technicalAssistance');
 
