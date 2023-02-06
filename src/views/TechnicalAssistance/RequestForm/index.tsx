@@ -1,15 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
   GridContainer,
-  IconArrowBack
+  IconArrowBack,
+  IconWarning
 } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -18,7 +20,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBFormStatus, TRBRequestType } from 'types/graphql-global-types';
+import { TRBFeedbackStatus, TRBFormStatus } from 'types/graphql-global-types';
 import nullFillObject from 'utils/nullFillObject';
 import {
   inputBasicSchema,
@@ -34,8 +36,25 @@ import Basic, { basicBlankValues } from './Basic';
 import Check from './Check';
 import Documents from './Documents';
 import Done from './Done';
+import Feedback from './Feedback';
 import SubjectAreas from './SubjectAreas';
 import ViewSubmittedRequest from './ViewSubmittedRequest';
+
+/** Ordered list of request form steps as url slugs  */
+const formStepSlugs = [
+  'basic',
+  'subject',
+  'attendees',
+  'documents',
+  'check'
+] as const;
+
+type FormStepSlug = typeof formStepSlugs[number];
+
+/** All slugs under the Trb request form */
+const viewSlugs = [...formStepSlugs, 'done', 'view', 'feedback'] as const;
+
+type ViewSlug = typeof viewSlugs[number];
 
 /**
  * A promise wrapper for form step submit handlers.
@@ -82,7 +101,7 @@ export interface FormStepComponentProps {
  */
 export const formStepComponents: {
   component: (props: FormStepComponentProps) => JSX.Element;
-  step: string;
+  step: FormStepSlug;
 }[] = [
   { component: Basic, step: 'basic' },
   { component: SubjectAreas, step: 'subject' },
@@ -90,15 +109,6 @@ export const formStepComponents: {
   { component: Documents, step: 'documents' },
   { component: Check, step: 'check' }
 ];
-
-/**
- * Mapped form step slugs from `formStepComponents`.
- * Append `done` & `view` slugs are not form steps, but are used as additional subviews.
- * Make sure to set this correctly so that invalid slugs are routed appropriately.
- */
-const formStepSlugs = formStepComponents
-  .map(f => f.step)
-  .concat('done', 'view');
 
 type RequestFormText = {
   heading: string;
@@ -120,6 +130,7 @@ function Header({
   stepsCompleted,
   stepSubmit,
   isStepSubmitting,
+  warning,
   formAlert,
   taskListUrl
 }: {
@@ -130,6 +141,7 @@ function Header({
   stepsCompleted?: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
+  warning?: React.ReactNode;
   formAlert: TrbFormAlert;
   taskListUrl: string;
 }) {
@@ -179,6 +191,7 @@ function Header({
       }))}
       hideSteps={!request}
       breadcrumbBar={breadcrumbBar}
+      warning={warning}
       errorAlert={
         formAlert && (
           <Alert
@@ -211,6 +224,34 @@ function Header({
   );
 }
 
+function EditsRequestedWarning({ requestId }: { requestId: string }) {
+  const { t } = useTranslation('technicalAssistance');
+  return (
+    <div className="bg-error-lighter padding-y-2">
+      <GridContainer className="width-full">
+        <div>
+          <IconWarning
+            className="text-error-dark text-middle margin-right-1"
+            size={3}
+          />
+          <span className="text-middle line-height-body-5">
+            {t('editsRequested.alert')}
+          </span>
+        </div>
+        <div className="margin-top-2">
+          <UswdsReactLink
+            variant="unstyled"
+            className="usa-button usa-button--outline"
+            to={`/trb/requests/${requestId}/feedback`}
+          >
+            {t('editsRequested.viewFeedback')}
+          </UswdsReactLink>
+        </div>
+      </GridContainer>
+    </div>
+  );
+}
+
 /**
  * This is a component base for the TRB request form.
  */
@@ -219,15 +260,11 @@ function RequestForm() {
 
   const history = useHistory();
 
-  // New requests require `requestType`
-  const location = useLocation<{ requestType: string }>();
-  const requestType = location.state?.requestType as TRBRequestType;
-
   const { id, step, view } = useParams<{
     /** Request id */
     id: string;
     /** Form step slug from `formStepSlugs` */
-    step?: string;
+    step?: ViewSlug;
     /** Form step subview */
     view?: string;
   }>();
@@ -246,7 +283,9 @@ function RequestForm() {
   } = useTRBAttendees(id);
 
   // Determine the steps that are already completed by attempting to pre-validate them
-  const [stepsCompleted, setStepsCompleted] = useState<string[] | undefined>(
+  const [stepsCompleted, setStepsCompleted] = useState<
+    FormStepSlug[] | undefined
+  >(
     // undefined // TODO set this back
     ['basic', 'attendees']
   );
@@ -318,13 +357,12 @@ function RequestForm() {
   // Check step param, redirect to the first step if invalid
   useEffect(() => {
     if (
-      request &&
-      (!step || // Step undefined
-        !formStepSlugs.includes(step)) // Invalid step slug
+      !step || // Step undefined
+      !viewSlugs.includes(step) // Invalid step slug
     ) {
       history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
     }
-  }, [history, id, request, requestType, step]);
+  }, [history, id, step]);
 
   // Prevent step slugs if not completed and redirect to the latest available
   // TODO Figure out what might be happening with CI runs hitting this block when submitting basic form step
@@ -368,6 +406,16 @@ function RequestForm() {
         />
       ) : null,
     [t, taskListUrl]
+  );
+
+  // Check the request task feedback status for edits requested
+  const editsRequestedWarning = useMemo(
+    () =>
+      request?.taskStatuses.feedbackStatus ===
+      TRBFeedbackStatus.EDITS_REQUESTED ? (
+        <EditsRequestedWarning requestId={request.id} />
+      ) : null,
+    [request?.id, request?.taskStatuses.feedbackStatus]
   );
 
   // References to the submit handler and submitting state of the current form step
@@ -417,7 +465,11 @@ function RequestForm() {
     );
   }
 
-  const stepIdx = formStepSlugs.indexOf(step);
+  if (step === 'feedback' && request) {
+    return <Feedback request={request} taskListUrl={taskListUrl} />;
+  }
+
+  const stepIdx = formStepSlugs.indexOf(step as FormStepSlug);
   const stepNum = stepIdx + 1;
 
   const FormStepComponent = formStepComponents[stepIdx].component;
@@ -433,6 +485,7 @@ function RequestForm() {
           stepsCompleted={stepsCompleted}
           stepSubmit={stepSubmit}
           isStepSubmitting={isStepSubmitting}
+          warning={editsRequestedWarning}
           formAlert={formAlert}
           taskListUrl={taskListUrl}
         />

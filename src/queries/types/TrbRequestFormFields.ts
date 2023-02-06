@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: TrbRequestFormFields
@@ -54,6 +54,20 @@ export interface TrbRequestFormFields_form {
   submittedAt: Time | null;
 }
 
+export interface TrbRequestFormFields_feedback_author {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
+export interface TrbRequestFormFields_feedback {
+  __typename: "TRBRequestFeedback";
+  id: UUID;
+  action: TRBFeedbackAction;
+  feedbackMessage: string;
+  author: TrbRequestFormFields_feedback_author;
+  createdAt: Time;
+}
+
 export interface TrbRequestFormFields {
   __typename: "TRBRequest";
   id: UUID;
@@ -65,4 +79,5 @@ export interface TrbRequestFormFields {
   taskStatuses: TrbRequestFormFields_taskStatuses;
   trbLead: string | null;
   form: TrbRequestFormFields_form;
+  feedback: TrbRequestFormFields_feedback[];
 }
