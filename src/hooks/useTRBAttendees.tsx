@@ -18,6 +18,7 @@ import {
   CreateTRBRequestAttendeeInput,
   UpdateTRBRequestAttendeeInput
 } from 'types/graphql-global-types';
+import { initialAttendee } from 'views/TechnicalAssistance/RequestForm/Attendees';
 
 /** useTRBAttendees hook return type */
 type UseTRBAttendees = {
@@ -53,15 +54,19 @@ export default function useTRBAttendees(
   });
 
   /**
-   * Array of attendees sorted by time created, with requester attendee object first
+   * Array of attendees sorted by time created, with requester attendee object last
    */
   const attendees = useMemo(() => {
     if (!data?.trbRequest?.attendees) return [];
+
     // Sort attendees array by time created
     return [...data.trbRequest.attendees].sort((a, b) =>
       a.createdAt < b.createdAt ? 1 : -1
     );
   }, [data?.trbRequest?.attendees]);
+
+  /** Requester object - last in attendees array when sorted by createdAt time */
+  const requester: TRBAttendee | undefined = attendees.at(-1);
 
   /** Create attendee mutation */
   const [createAttendee] = useMutation<CreateTRBRequestAttendeeInput>(
@@ -89,8 +94,8 @@ export default function useTRBAttendees(
 
   return {
     data: {
-      requester: attendees[0],
-      attendees: attendees.slice(1),
+      requester: requester || initialAttendee,
+      attendees: loading ? [] : attendees.slice(0, attendees.length - 1),
       loading
     },
     createAttendee,
