@@ -85,12 +85,6 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 >
                   Requester
                 </h5>
-                <h4
-                  class="margin-y-05"
-                  data-testid="trbSummary-requester_ABCD"
-                >
-                  ABCD
-                </h4>
               </div>
               <div
                 class="margin-top-2 margin-bottom-05"
