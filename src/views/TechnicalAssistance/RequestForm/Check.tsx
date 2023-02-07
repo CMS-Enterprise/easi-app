@@ -66,14 +66,15 @@ function Check({
         next={{
           disabled: loading,
           onClick: () => {
+            const doneUrl = `/trb/requests/${request.id}/done`;
             update({
               variables: { trbRequestId: request.id, isSubmitted: true }
             })
               .then(() => {
-                history.push(stepUrl.next, { success: true });
+                history.push(doneUrl, { success: true });
               })
               .catch(() => {
-                history.push(stepUrl.next, { success: false });
+                history.push(doneUrl, { success: false });
               });
           },
           text: t('check.submit')
