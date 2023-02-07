@@ -15,6 +15,7 @@ import { NotFoundPartial } from 'views/NotFound';
 
 import SubmittedRequest from '../RequestForm/SubmittedRequest';
 
+// eslint-disable-next-line react/prop-types
 const InitialRequestForm: TrbAdminPage = ({ trbRequestId }) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -52,7 +53,7 @@ const InitialRequestForm: TrbAdminPage = ({ trbRequestId }) => {
     );
   }
 
-  return undefined;
+  return <></>;
 };
 
 export default InitialRequestForm;

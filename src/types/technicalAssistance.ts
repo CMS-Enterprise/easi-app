@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PersonRole } from './graphql-global-types';
 
 /** TRB attendee fields allows null role in form */
@@ -50,7 +48,7 @@ export type TrbAdminPage = ({
   trbRequestId
 }: {
   trbRequestId: string;
-}) => React.ReactNode;
+}) => JSX.Element;
 
 /** Subnav item return type for admin home wrapper */
 export type SubNavItem = {
