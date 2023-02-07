@@ -22,7 +22,8 @@ import (
 // ResolverSuite is the testify suite for the resolver package
 type ResolverSuite struct {
 	suite.Suite
-	testConfigs *TestConfigs
+	testConfigs       *TestConfigs
+	fetchUserInfoStub func(context.Context, string) (*models.UserInfo, error)
 }
 
 // SetupTest clears the database between each test
@@ -35,6 +36,13 @@ func (suite *ResolverSuite) SetupTest() {
 func TestResolverSuite(t *testing.T) {
 	rs := new(ResolverSuite)
 	rs.testConfigs = GetDefaultTestConfigs()
+	rs.fetchUserInfoStub = func(context.Context, string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			EuaUserID:  "ANON",
+			CommonName: "Anonymous",
+			Email:      models.NewEmailAddress("anon@local.fake"),
+		}, nil
+	}
 	suite.Run(t, rs)
 }
 

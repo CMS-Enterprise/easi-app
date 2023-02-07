@@ -1,0 +1,4 @@
+ALTER TABLE trb_request_attendees
+    ALTER COLUMN component DROP NOT NULL,
+    ALTER COLUMN role DROP NOT NULL,
+    ALTER COLUMN role DROP DEFAULT;

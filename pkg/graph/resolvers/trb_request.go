@@ -13,14 +13,34 @@ import (
 )
 
 // CreateTRBRequest makes a new TRB request
-func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, store *storage.Store) (*models.TRBRequest, error) {
+func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, fetchUserInfo func(context.Context, string) (*models.UserInfo, error), store *storage.Store) (*models.TRBRequest, error) {
 	princ := appcontext.Principal(ctx)
+
+	// Fetch user info for the "requester" attendee
+	requester, err := fetchUserInfo(ctx, princ.ID())
+	if err != nil {
+		return nil, err
+	}
+
 	trb := models.NewTRBRequest(princ.ID())
 	trb.Type = requestType
 	trb.Status = models.TRBSOpen
 	//TODO make sure this is wired up appropriately
 
 	createdTRB, err := store.CreateTRBRequest(ctx, trb)
+	if err != nil {
+		return nil, err
+	}
+
+	// This should probably be a part of a transaction...
+	initialAttendee := &models.TRBRequestAttendee{
+		TRBRequestID: createdTRB.ID,
+		EUAUserID:    requester.EuaUserID,
+		Component:    nil,
+		Role:         nil,
+	}
+	initialAttendee.CreatedBy = appcontext.Principal(ctx).ID()
+	_, err = store.CreateTRBRequestAttendee(ctx, initialAttendee)
 	if err != nil {
 		return nil, err
 	}
