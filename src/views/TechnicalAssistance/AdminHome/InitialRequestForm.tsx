@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 
 import PageLoading from 'components/PageLoading';
+import TaskStatusTag from 'components/shared/TaskStatusTag';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
   GetTrbRequest,
@@ -44,6 +45,8 @@ const InitialRequestForm: TrbAdminPage = ({ trbRequestId }) => {
         <h1 className="margin-y-0">
           {t('adminHome.subnav.initialRequestForm')}
         </h1>
+
+        <TaskStatusTag status={request.taskStatuses.formStatus} />
         <SubmittedRequest request={request} showSectionHeadingDescription />
       </div>
     );
