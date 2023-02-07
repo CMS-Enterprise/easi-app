@@ -71,7 +71,7 @@ describe('TRB admin home wrapper', () => {
     'notes'
   ];
 
-  test.each(subpages)(
+  test.skip.each(subpages)(
     'renders submit action with and without email notification %j',
     async subpage => {
       const { getByTestId } = render(

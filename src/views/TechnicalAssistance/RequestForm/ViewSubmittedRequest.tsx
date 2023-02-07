@@ -34,7 +34,7 @@ function ViewSubmittedRequest({
         {t('done.returnToTaskList')}
       </UswdsReactLink>
 
-      <SubmittedRequest request={request} />
+      <SubmittedRequest request={request} showRequestHeaderInfo />
     </GridContainer>
   );
 }
