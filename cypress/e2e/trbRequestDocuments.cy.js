@@ -1,4 +1,4 @@
-describe.skip('Technical Assistance Request Documents', () => {
+describe('Technical Assistance Request Documents', () => {
   it('can upload and then delete a document', () => {
     cy.localLogin({ name: 'ABCD' });
 

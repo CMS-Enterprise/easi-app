@@ -14,7 +14,7 @@ const technicalAssistance = {
       'review potential solutions or ideas with the TRB and other SMEs',
       'schedule an ongoing cadence of technical consultations',
       'consult with SMEs from across the agency',
-      'consult with the TRB about compliance with CMS guidelines and standards',
+      'consult with the TRB about CMS guidelines and standards',
       'request research or information about a particular technical topic'
     ]
   },
@@ -25,6 +25,11 @@ const technicalAssistance = {
     heading: 'Looking for the TRB Team page?',
     text:
       'Go to <1>Admin Home</1> to review, assign, and manage incoming and existing technical assistance requests.'
+  },
+  editsRequested: {
+    alert:
+      'The TRB has requested edits to your initial request form. Please make any necessary changes and re-submit your form.',
+    viewFeedback: 'View feedback'
   },
   // Misc breadcrumb items
   breadcrumbs: {
@@ -123,7 +128,7 @@ const technicalAssistance = {
       list: [
         'ask for help with a technical problem',
         'consult with SMEs from across the agency',
-        'consult with the TRB about compliance with CMS guidelines and standards'
+        'consult with the TRB about CMS guidelines and standards'
       ]
     },
     stepsInTheProcess: 'Steps in the process',
@@ -387,7 +392,7 @@ const technicalAssistance = {
         WEB_BASED_UI_SERVICES: 'Web-based UI services',
         OPEN_SOURCE_SOFTWARE: 'Open source software',
         PORTAL_INTEGRATION: 'Portal integration',
-        ACCESSIBILITY_COMPLIANCE: 'Accessibility compliance',
+        ACCESSIBILITY_COMPLIANCE: 'Accessibility and 508',
         BUSINESS_INTELLIGENCE: 'Business intelligence',
         CONTAINERS_AND_MICROSERVICES: 'Containers and microservices',
         ROBOTIC_PROCESS_AUTOMATION: 'Robotic Process Automation (RPA)',
@@ -572,6 +577,13 @@ const technicalAssistance = {
   },
   viewSubmitted: {
     heading: 'View submitted Technical Assistance Request'
+  },
+  requestFeedback: {
+    heading: 'Feedback about your request',
+    viewFeedback: 'View feedback',
+    date: 'Date',
+    from: 'Feedback from',
+    returnToForm: 'Return to request form'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',

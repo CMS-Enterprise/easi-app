@@ -3,9 +3,6 @@ describe.skip('Technical Assistance', () => {
     cy.localLogin({ name: 'ABCD' });
 
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'GetCedarContacts') {
-        req.alias = 'getCedarContacts';
-      }
       if (req.body.operationName === 'DeleteTRBRequestAttendee') {
         req.alias = 'deleteTRBRequestAttendee';
       }
@@ -34,14 +31,16 @@ describe.skip('Technical Assistance', () => {
       }
     )
       .should('be.visible')
-      .as('basicStepHeader');
+      .as('basicStepHeaderIsVisible'); // Alias _after_ .should means that calls to @basicStepHeaderIsVisible will include the .should('be.visible') as well, hence the name!
 
     // Get basic details url and assign alias
-    cy.url().as('basicStepUrl');
+    // "type: static" makes the alias always return the URL as it was here, rather than re-running `cy.url()` when you call it
+    // https://docs.cypress.io/api/commands/as#Arguments
+    cy.url().as('basicStepUrl', { type: 'static' });
   });
 
   /** Fill all required fields */
-  it.skip('Fills out minimum required fields', () => {
+  it('Fills out minimum required fields', () => {
     /** Basic Details */
 
     // Fill out the Basic form step
@@ -228,7 +227,7 @@ describe.skip('Technical Assistance', () => {
 
     // Go over the basic step again to test "save and exit" submits
     cy.get('@basicStepUrl').then(url => cy.visit(url));
-    cy.get('@basicStepHeader').should('be.visible');
+    cy.get('@basicStepHeaderIsVisible');
 
     // Error on required field
     cy.get('[name=name]').clear();

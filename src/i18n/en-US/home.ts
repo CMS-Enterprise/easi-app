@@ -15,7 +15,7 @@ const home = {
       body: 'Includes applying for a lifecycle ID, and recompetes'
     },
     '508': {
-      heading: 'Section 508 compliance',
+      heading: 'Section 508',
       body:
         'Learn about the process and make a request for 508 testing of your application'
     }

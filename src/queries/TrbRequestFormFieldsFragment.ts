@@ -54,5 +54,15 @@ export default gql`
 
       submittedAt
     }
+
+    feedback {
+      id
+      action
+      feedbackMessage
+      author {
+        commonName
+      }
+      createdAt
+    }
   }
 `;
