@@ -21,8 +21,8 @@ export interface UpdateTRBRequestAttendee_updateTRBRequestAttendee {
   id: UUID;
   trbRequestId: UUID;
   userInfo: UpdateTRBRequestAttendee_updateTRBRequestAttendee_userInfo | null;
-  component: string;
-  role: PersonRole;
+  component: string | null;
+  role: PersonRole | null;
   createdAt: Time;
 }
 

@@ -1862,7 +1862,7 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 
 // CreateTRBRequest is the resolver for the createTRBRequest field.
 func (r *mutationResolver) CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType) (*models.TRBRequest, error) {
-	return resolvers.CreateTRBRequest(ctx, requestType, r.store)
+	return resolvers.CreateTRBRequest(ctx, requestType, r.service.FetchUserInfo, r.store)
 }
 
 // UpdateTRBRequest is the resolver for the updateTRBRequest field.
@@ -1872,6 +1872,7 @@ func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, c
 
 // CreateTRBRequestAttendee is the resolver for the createTRBRequestAttendee field.
 func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input model.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
+	role := models.PersonRole(input.Role)
 	return resolvers.CreateTRBRequestAttendee(
 		ctx,
 		r.store,
@@ -1880,17 +1881,18 @@ func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input m
 		&models.TRBRequestAttendee{
 			TRBRequestID: input.TrbRequestID,
 			EUAUserID:    input.EuaUserID,
-			Component:    input.Component,
-			Role:         models.PersonRole(input.Role),
+			Component:    &input.Component,
+			Role:         &role,
 		},
 	)
 }
 
 // UpdateTRBRequestAttendee is the resolver for the updateTRBRequestAttendee field.
 func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input model.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
+	role := models.PersonRole(input.Role)
 	attendee := &models.TRBRequestAttendee{
-		Component: input.Component,
-		Role:      models.PersonRole(input.Role),
+		Component: &input.Component,
+		Role:      &role,
 	}
 	attendee.ID = input.ID
 	return resolvers.UpdateTRBRequestAttendee(ctx, r.store, attendee)

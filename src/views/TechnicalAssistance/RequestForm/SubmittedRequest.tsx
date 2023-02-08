@@ -47,7 +47,7 @@ function SubmittedRequest({
 
   const {
     data: { requester, attendees }
-  } = useTRBAttendees(request.id, request.createdBy);
+  } = useTRBAttendees(request.id);
 
   return (
     <>
