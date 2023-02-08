@@ -44,11 +44,11 @@ export type FormattedTRBAttendees = {
 };
 
 /** TRB Admin page */
-export type TrbAdminPage = ({
-  trbRequestId
-}: {
+export type TrbAdminPageProps = {
   trbRequestId: string;
-}) => JSX.Element;
+};
+
+export type TrbAdminPage = (props: TrbAdminPageProps) => JSX.Element;
 
 /** Subnav item return type for admin home wrapper */
 export type SubNavItem = {

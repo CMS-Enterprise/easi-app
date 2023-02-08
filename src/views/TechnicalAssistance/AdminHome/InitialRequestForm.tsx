@@ -10,13 +10,12 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TrbAdminPage } from 'types/technicalAssistance';
+import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { NotFoundPartial } from 'views/NotFound';
 
 import SubmittedRequest from '../RequestForm/SubmittedRequest';
 
-// eslint-disable-next-line react/prop-types
-const InitialRequestForm: TrbAdminPage = ({ trbRequestId }) => {
+const InitialRequestForm = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { data, error, loading } = useQuery<
@@ -28,32 +27,26 @@ const InitialRequestForm: TrbAdminPage = ({ trbRequestId }) => {
 
   const request: TrbRequest | undefined = data?.trbRequest;
 
-  if (loading) {
-    return <PageLoading />;
-  }
+  return (
+    <>
+      {loading && <PageLoading />}
+      {error && <NotFoundPartial />}
+      {request && (
+        <div
+          className="trb-admin-home__initial-request-form"
+          data-testid="trb-admin-home__initial-request-form"
+          id={`trbAdminInitialRequestForm-${trbRequestId}`}
+        >
+          <h1 className="margin-y-0">
+            {t('adminHome.subnav.initialRequestForm')}
+          </h1>
 
-  if (error) {
-    return <NotFoundPartial />;
-  }
-
-  if (request) {
-    return (
-      <div
-        className="trb-admin-home__initial-request-form"
-        data-testid="trb-admin-home__initial-request-form"
-        id={`trbAdminInitialRequestForm-${trbRequestId}`}
-      >
-        <h1 className="margin-y-0">
-          {t('adminHome.subnav.initialRequestForm')}
-        </h1>
-
-        <TaskStatusTag status={request.taskStatuses.formStatus} />
-        <SubmittedRequest request={request} showSectionHeadingDescription />
-      </div>
-    );
-  }
-
-  return <></>;
+          <TaskStatusTag status={request.taskStatuses.formStatus} />
+          <SubmittedRequest request={request} showSectionHeadingDescription />
+        </div>
+      )}
+    </>
+  );
 };
 
 export default InitialRequestForm;
