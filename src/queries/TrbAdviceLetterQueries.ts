@@ -7,7 +7,13 @@ const TRBAdviceLetter = gql`
     meetingSummary
     nextSteps
     isFollowupRecommended
+    dateSent
     followupPoint
+    recommendations {
+      title
+      recommendation
+      links
+    }
     createdBy
     createdAt
     modifiedBy
@@ -34,7 +40,7 @@ export const GetTrbAdviceLetterQuery = gql`
 export const CreateTrbAdviceLetterQuery = gql`
   ${TRBAdviceLetter}
   mutation CreateTrbAdviceLetter($trbRequestId: UUID!) {
-    createTRBAdviceLetter(trbRequestId: $id) {
+    createTRBAdviceLetter(trbRequestId: $trbRequestId) {
       ...TRBAdviceLetter
     }
   }

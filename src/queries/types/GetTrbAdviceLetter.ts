@@ -14,13 +14,22 @@ export interface GetTrbAdviceLetter_trbRequest_taskStatuses {
   adviceLetterStatus: TRBAdviceLetterStatus;
 }
 
+export interface GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations {
+  __typename: "TRBAdviceLetterRecommendation";
+  title: string;
+  recommendation: string;
+  links: string[];
+}
+
 export interface GetTrbAdviceLetter_trbRequest_adviceLetter {
   __typename: "TRBAdviceLetter";
   id: UUID;
   meetingSummary: string | null;
   nextSteps: string | null;
   isFollowupRecommended: boolean | null;
+  dateSent: Time | null;
   followupPoint: string | null;
+  recommendations: GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations[];
   createdBy: string;
   createdAt: Time;
   modifiedBy: string | null;

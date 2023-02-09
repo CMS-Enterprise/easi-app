@@ -7,13 +7,22 @@
 // GraphQL mutation operation: CreateTrbAdviceLetter
 // ====================================================
 
+export interface CreateTrbAdviceLetter_createTRBAdviceLetter_recommendations {
+  __typename: "TRBAdviceLetterRecommendation";
+  title: string;
+  recommendation: string;
+  links: string[];
+}
+
 export interface CreateTrbAdviceLetter_createTRBAdviceLetter {
   __typename: "TRBAdviceLetter";
   id: UUID;
   meetingSummary: string | null;
   nextSteps: string | null;
   isFollowupRecommended: boolean | null;
+  dateSent: Time | null;
   followupPoint: string | null;
+  recommendations: CreateTrbAdviceLetter_createTRBAdviceLetter_recommendations[];
   createdBy: string;
   createdAt: Time;
   modifiedBy: string | null;
