@@ -85,7 +85,6 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 <p>If you have questions or need to request a reschedule, please email the TRB at <a href="mailto:` + s.config.TRBEmail.String() + `">` + s.config.TRBEmail.String() + `</a>.</p>
 `
 		err = client.SendTRBAdviceLetterSubmittedEmail(ctx, input)
-		fmt.Println(sender.body)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 		s.Equal(expectedBody, sender.body)
