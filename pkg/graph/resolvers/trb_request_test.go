@@ -10,7 +10,7 @@ import (
 // TestCreateTRBRequest makes a new TRB request
 func (s *ResolverSuite) TestCreateTRBRequest() {
 	//TODO get the context in the test configs
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -26,7 +26,7 @@ func (s *ResolverSuite) TestCreateTRBRequest() {
 
 // TestUpdateTRBRequest updates a TRB request
 func (s *ResolverSuite) TestUpdateTRBRequest() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -49,7 +49,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 
 // TestGetTRBRequestByID returns a TRB request by it's ID
 func (s *ResolverSuite) TestGetTRBRequestByID() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -60,7 +60,7 @@ func (s *ResolverSuite) TestGetTRBRequestByID() {
 
 // TestGetTRBRequests returns all TRB Requests
 func (s *ResolverSuite) TestGetTRBRequests() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 	//Check we return 1 value
@@ -69,7 +69,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.Len(col, 1)
 	s.EqualValues(trb, col[0])
 
-	trb2, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb2, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb2)
 	//Check for 2 request
@@ -95,7 +95,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 
 // TestUpdateTRBRequestConsultMeetingTime tests the scheduling of consult meeting
 func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -141,7 +141,7 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 
 // TestUpdateTRBRequestTRBLead tests the scheduling of consult meeting
 func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 

@@ -1,8 +1,7 @@
 describe('The Task List', () => {
   beforeEach(() => {
-    cy.server();
     cy.localLogin({ name: 'TEST' });
-    cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
+    cy.intercept('PUT', '/api/v1/system_intake').as('putSystemIntake');
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {

@@ -31,14 +31,13 @@ import InitialsIcon from 'components/shared/InitialsIcon';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
-  TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 
-// import { parseAsLocalTime } from 'utils/date';
 import { initialAttendee } from '../Attendees';
 
 /** Attendee form props */
@@ -46,7 +45,7 @@ type AttendeeFieldsProps = {
   /** Fields type */
   type: 'requester' | 'attendee';
   /** Sets the default values for the form */
-  activeAttendee: TRBAttendeeData;
+  activeAttendee: TRBAttendee;
   /** Control from useForm hook */
   control: Control<TRBAttendeeFields>;
   /** Field errors object */
@@ -229,9 +228,9 @@ const AttendeeFields = ({
 /** Single TRB attendee props */
 type AttendeeProps = {
   /** Attendee object */
-  attendee: TRBAttendeeData;
+  attendee: TRBAttendee;
   /** Set active attendee - used to edit attendee */
-  setActiveAttendee?: (activeAttendee: TRBAttendeeData) => void;
+  setActiveAttendee?: (activeAttendee: TRBAttendee) => void;
   /** Delete attendee */
   deleteAttendee?: () => void;
 };
@@ -269,8 +268,6 @@ const Attendee = ({
 
   return (
     <>
-      {/* Attendee icon with initials */}
-      <InitialsIcon name={commonName} className="margin-right-1" />
       {/* Attendee details */}
       <div>
         <p className="margin-y-05 text-bold">
@@ -317,13 +314,13 @@ const Attendee = ({
 /** TRB attendees list props */
 type AttendeesTableProps = {
   /** Array of attendee objects */
-  attendees: TRBAttendeeData[];
+  attendees: TRBAttendee[];
   /** TRB request id */
   trbRequestId: string;
   /** Set active attendee - used to edit attendee */
-  setActiveAttendee: (activeAttendee: TRBAttendeeData) => void;
+  setActiveAttendee?: (activeAttendee: TRBAttendee) => void;
   /** Delete attendee */
-  deleteAttendee: (id: string) => void;
+  deleteAttendee?: (id: string) => void;
 };
 
 const AttendeesTable = ({
@@ -338,7 +335,7 @@ const AttendeesTable = ({
   }, [attendees]);
 
   /** Columns for display in table */
-  const columns: Column<{ attendee: TRBAttendeeData }>[] = useMemo(
+  const columns: Column<{ attendee: TRBAttendee }>[] = useMemo(
     () => [
       {
         accessor: 'attendee',
@@ -382,7 +379,7 @@ const AttendeesTable = ({
     <div className="trbAttendees-table margin-top-4 margin-bottom-neg-1">
       <Table bordered={false} fullWidth {...getTableProps()}>
         <tbody {...getTableBodyProps()} className="grid-row grid-gap-sm">
-          {page.map(row => {
+          {page.map((row, index) => {
             prepareRow(row);
             return (
               <tr
@@ -390,7 +387,7 @@ const AttendeesTable = ({
                 className="tablet:grid-col-6 margin-bottom-1"
               >
                 {row.cells.map(cell => {
-                  const attendee: TRBAttendeeData = cell.value;
+                  const attendee: TRBAttendee = cell.value;
                   return (
                     <td
                       {...cell.getCellProps()}
@@ -402,17 +399,27 @@ const AttendeesTable = ({
                       data-testid={`trbAttendee-${attendee?.userInfo?.euaUserId}`}
                       className="trbAttendee display-flex"
                     >
+                      {/* Attendee icon with initials */}
+                      <InitialsIcon
+                        name={attendee?.userInfo?.commonName || ''}
+                        index={index}
+                        className="margin-right-1"
+                      />
                       <Attendee
                         attendee={attendee}
-                        deleteAttendee={() => {
-                          if (attendee.id) {
-                            deleteAttendee(attendee.id);
-                            setActiveAttendee({
-                              ...initialAttendee,
-                              trbRequestId
-                            });
-                          }
-                        }}
+                        deleteAttendee={
+                          deleteAttendee
+                            ? () => {
+                                if (attendee.id) {
+                                  deleteAttendee(attendee.id);
+                                  setActiveAttendee?.({
+                                    ...initialAttendee,
+                                    trbRequestId
+                                  });
+                                }
+                              }
+                            : undefined
+                        }
                         setActiveAttendee={setActiveAttendee}
                         key={attendee.id}
                       />

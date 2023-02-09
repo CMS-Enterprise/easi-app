@@ -79,7 +79,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
           consult with SMEs from across the agency
         </li>
         <li>
-          consult with the TRB about compliance with CMS guidelines and standards
+          consult with the TRB about CMS guidelines and standards
         </li>
       </ul>
       <div>
@@ -546,7 +546,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
             <li
               class="margin-bottom-1"
             >
-              consult with the TRB about compliance with CMS guidelines and standards
+              consult with the TRB about CMS guidelines and standards
             </li>
             <li
               class="margin-bottom-1"
@@ -806,7 +806,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   class="padding-left-0"
                   role="cell"
                 >
-                  September 12, 2022
+                  01/23/2023
                 </td>
               </tr>
               <tr
@@ -834,7 +834,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   class="padding-left-0"
                   role="cell"
                 >
-                  September 12, 2022
+                  Not yet submitted
                 </td>
               </tr>
             </tbody>

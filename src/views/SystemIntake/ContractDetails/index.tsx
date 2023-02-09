@@ -103,19 +103,23 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   });
 
   const formatContractDetailsPayload = (values: ContractDetailsForm) => {
-    const startDate = DateTime.fromObject({
-      day: Number(values.contract.startDate.day) || 0,
-      month: Number(values.contract.startDate.month) || 0,
-      year: Number(values.contract.startDate.year) || 0,
-      zone: 'UTC'
-    }).toISO();
+    const startDate = DateTime.fromObject(
+      {
+        day: Number(values.contract.startDate.day) || 0,
+        month: Number(values.contract.startDate.month) || 0,
+        year: Number(values.contract.startDate.year) || 0
+      },
+      { zone: 'UTC' }
+    ).toISO();
 
-    const endDate = DateTime.fromObject({
-      day: Number(values.contract.endDate.day) || 0,
-      month: Number(values.contract.endDate.month) || 0,
-      year: Number(values.contract.endDate.year) || 0,
-      zone: 'UTC'
-    }).toISO();
+    const endDate = DateTime.fromObject(
+      {
+        day: Number(values.contract.endDate.day) || 0,
+        month: Number(values.contract.endDate.month) || 0,
+        year: Number(values.contract.endDate.year) || 0
+      },
+      { zone: 'UTC' }
+    ).toISO();
 
     return {
       id,

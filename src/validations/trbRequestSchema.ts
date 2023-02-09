@@ -25,6 +25,7 @@ type TrbFormInputBasic = Pick<
   | 'hasSolutionInMind'
   | 'proposedSolution'
   | 'whereInProcess'
+  | 'whereInProcessOther'
   | 'hasExpectedStartEndDates'
   | 'expectedStartDate'
   | 'expectedEndDate'
@@ -50,6 +51,10 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     .mixed<TRBWhereInProcessOption>()
     .oneOf(Object.values(TRBWhereInProcessOption))
     .required(),
+  whereInProcessOther: yup.string().when('whereInProcess', {
+    is: 'OTHER',
+    then: schema => schema.required()
+  }),
   hasExpectedStartEndDates: yup
     .boolean()
     .nullable()
@@ -115,9 +120,13 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
 
 export const trbRequesterSchema = yup.object({
   euaUserId: yup.string().required('Requester name is a required field'),
-  component: yup.string().required('Requester component is a required field'),
+  component: yup
+    .string()
+    .nullable()
+    .required('Requester component is a required field'),
   role: yup
     .mixed<PersonRole>()
+    .nullable()
     .oneOf(Object.values(PersonRole))
     .required('Requester role is a required field')
 });

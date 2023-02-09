@@ -5,7 +5,7 @@ import './index.scss';
 
 type DescriptionListProps = {
   className?: string;
-  title: string;
+  title?: string;
   children: ReactNode | ReactNodeArray;
 };
 export const DescriptionList = ({

@@ -32,7 +32,7 @@ import {
   GetAdminNotesAndActionsVariables
 } from 'queries/types/GetAdminNotesAndActions';
 import { AppState } from 'reducers/rootReducer';
-import { formatDate, formatDateAndIgnoreTimezone } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 
 import './index.scss';
 
@@ -101,11 +101,11 @@ const Notes = () => {
         element: (
           <NoteListItem key={id} isLinked data-testid="user-note">
             <NoteContent>{content}</NoteContent>
-            <NoteByline>{`by ${author.name} | ${formatDate(
+            <NoteByline>{`by ${author.name} | ${DateTime.fromISO(
               createdAt
-            )} at ${DateTime.fromISO(createdAt).toLocaleString(
-              DateTime.TIME_SIMPLE
-            )}`}</NoteByline>
+            ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
+              createdAt
+            ).toLocaleString(DateTime.TIME_SIMPLE)}`}</NoteByline>
           </NoteListItem>
         )
       };
@@ -126,23 +126,24 @@ const Notes = () => {
         element: (
           <NoteListItem key={id} isLinked data-testid="action-note">
             <NoteContent>{t(`notes.actionName.${type}`)}</NoteContent>
-            <NoteByline>{`by: ${actor.name} | ${formatDate(
+            <NoteByline>{`by: ${actor.name} | ${DateTime.fromISO(
               createdAt
-            )} at ${DateTime.fromISO(createdAt).toLocaleString(
-              DateTime.TIME_SIMPLE
-            )}`}</NoteByline>
+            ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
+              createdAt
+            ).toLocaleString(DateTime.TIME_SIMPLE)}`}</NoteByline>
             {lcidExpirationChange && (
               <dl>
                 <dt>Lifecycle ID</dt>
                 <dd>{data.systemIntake?.lcid}</dd>
                 <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
                 <dd>
-                  {formatDateAndIgnoreTimezone(lcidExpirationChange.newDate)}
+                  {formatDateUtc(lcidExpirationChange.newDate, 'MMMM d, yyyy')}
                 </dd>
                 <dt>{t('notes.extendLcid.oldExpirationDate')}</dt>
                 <dd>
-                  {formatDateAndIgnoreTimezone(
-                    lcidExpirationChange.previousDate
+                  {formatDateUtc(
+                    lcidExpirationChange.previousDate,
+                    'MMMM d, yyyy'
                   )}
                 </dd>
 

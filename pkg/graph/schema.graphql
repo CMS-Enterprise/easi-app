@@ -1555,8 +1555,8 @@ type TRBRequestAttendee {
   euaUserId: String! # Sort of duplicative, as this is also in UserInfo
   userInfo: UserInfo
   trbRequestId: UUID!
-  component: String!
-  role: PersonRole!
+  component: String
+  role: PersonRole
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -1930,6 +1930,7 @@ type TRBRequestFeedback {
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2004,6 +2005,7 @@ type TRBAdviceLetter {
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
+  recommendations: [TRBAdviceLetterRecommendation!]!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2046,6 +2048,41 @@ input SendTRBAdviceLetterInput {
   id: UUID!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
+}
+
+"""
+Represents a recommendation and links that have been added to a TRB advice letter
+"""
+type TRBAdviceLetterRecommendation {
+  id: UUID!
+  trbRequestId: UUID!
+  title: String!
+  recommendation: String!
+  links: [String!]!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
+The input required to add a recommendation & links to a TRB advice letter
+"""
+input CreateTRBAdviceLetterRecommendationInput {
+  trbRequestId: UUID!
+  title: String!
+  recommendation: String!
+  links: [String!]!
+}
+
+"""
+The input required to update a recommendation to a TRB advice letter
+"""
+input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
+  id: UUID!
+  title: String
+  recommendation: String
+  links: [String!]
 }
 
 """
@@ -2183,6 +2220,12 @@ type Mutation {
   requestReviewForTRBAdviceLetter(id: UUID!): TRBAdviceLetter!
     @hasRole(role: EASI_TRB_ADMIN)
   sendTRBAdviceLetter(input: SendTRBAdviceLetterInput!): TRBAdviceLetter!
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdviceLetterRecommendation(input: CreateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
+    @hasRole(role: EASI_TRB_ADMIN)
+  deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 

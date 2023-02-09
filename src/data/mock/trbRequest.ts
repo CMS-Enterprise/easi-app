@@ -122,6 +122,7 @@ export const trbRequest: TrbRequest = {
     subjectAreaDataAndDataManagementOther: null,
     subjectAreaGovernmentProcessesAndPoliciesOther: null,
     subjectAreaOtherTechnicalTopicsOther: null,
+    submittedAt: null,
     __typename: 'TRBRequestForm'
   },
   __typename: 'TRBRequest'

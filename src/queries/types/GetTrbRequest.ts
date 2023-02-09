@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbRequest
@@ -51,6 +51,21 @@ export interface GetTrbRequest_trbRequest_form {
   subjectAreaDataAndDataManagementOther: string | null;
   subjectAreaGovernmentProcessesAndPoliciesOther: string | null;
   subjectAreaOtherTechnicalTopicsOther: string | null;
+  submittedAt: Time | null;
+}
+
+export interface GetTrbRequest_trbRequest_feedback_author {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
+export interface GetTrbRequest_trbRequest_feedback {
+  __typename: "TRBRequestFeedback";
+  id: UUID;
+  action: TRBFeedbackAction;
+  feedbackMessage: string;
+  author: GetTrbRequest_trbRequest_feedback_author;
+  createdAt: Time;
 }
 
 export interface GetTrbRequest_trbRequest {
@@ -64,6 +79,7 @@ export interface GetTrbRequest_trbRequest {
   taskStatuses: GetTrbRequest_trbRequest_taskStatuses;
   trbLead: string | null;
   form: GetTrbRequest_trbRequest_form;
+  feedback: GetTrbRequest_trbRequest_feedback[];
 }
 
 export interface GetTrbRequest {

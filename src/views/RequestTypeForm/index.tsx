@@ -60,9 +60,6 @@ const RequestTypeForm = () => {
             case 'RECOMPETE':
               history.push(navigationLink);
               break;
-            case 'SHUTDOWN':
-              history.push(`/system/${id}/contact-details`);
-              break;
             default:
               // console.warn(`Unknown request type: ${systemIntake.requestType}`);
               break;
@@ -159,15 +156,6 @@ const RequestTypeForm = () => {
                       name="requestType"
                       value="RECOMPETE"
                       checked={values.requestType === 'RECOMPETE'}
-                    />
-                    <Field
-                      as={RadioField}
-                      id="RequestType-ShutdownSystem"
-                      className="margin-bottom-4"
-                      label={t('requestTypeForm.fields.shutdown')}
-                      name="requestType"
-                      value="SHUTDOWN"
-                      checked={values.requestType === 'SHUTDOWN'}
                     />
                   </fieldset>
                 </FieldGroup>

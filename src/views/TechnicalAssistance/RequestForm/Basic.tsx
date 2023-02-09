@@ -42,6 +42,7 @@ export const basicBlankValues = {
   hasSolutionInMind: null,
   proposedSolution: '',
   whereInProcess: '',
+  whereInProcessOther: '',
   hasExpectedStartEndDates: null,
   expectedStartDate: '',
   expectedEndDate: '',
@@ -122,6 +123,9 @@ function Basic({
             // as dirty, so they need to be set to null to be cleared.
             if (input.hasSolutionInMind === false) {
               input.proposedSolution = null;
+            }
+            if (input.whereInProcess !== 'OTHER') {
+              input.whereInProcessOther = null;
             }
             if (input.hasExpectedStartEndDates === false) {
               input.expectedStartDate = null;
@@ -431,6 +435,34 @@ function Basic({
                     );
                   })}
                 </Dropdown>
+                {field.value === 'OTHER' && (
+                  <Controller
+                    name="whereInProcessOther"
+                    control={control}
+                    // eslint-disable-next-line no-shadow
+                    render={({ field, fieldState: { error } }) => (
+                      <FormGroup error={!!error}>
+                        <Label
+                          htmlFor={field.name}
+                          error={!!error}
+                          className="text-normal"
+                        >
+                          {t('subject.labels.other')}
+                        </Label>
+                        {error && (
+                          <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                        )}
+                        <TextInput
+                          {...field}
+                          ref={null}
+                          id={field.name}
+                          type="text"
+                          validationStatus={error && 'error'}
+                        />
+                      </FormGroup>
+                    )}
+                  />
+                )}
               </FormGroup>
             )}
           />

@@ -2,18 +2,18 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { ApolloError, FetchResult } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import PageLoading from 'components/PageLoading';
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import { PersonRole } from 'types/graphql-global-types';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
   AttendeeFieldLabels,
-  TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 import { trbRequesterSchema } from 'validations/trbRequestSchema';
@@ -24,14 +24,19 @@ import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
 
 /** Initial blank attendee object */
-export const initialAttendee: TRBAttendeeData = {
+export const initialAttendee: TRBAttendee = {
+  __typename: 'TRBRequestAttendee',
   trbRequestId: '',
+  id: '',
   userInfo: {
+    __typename: 'UserInfo',
     commonName: '',
-    euaUserId: ''
+    euaUserId: '',
+    email: ''
   },
-  component: '',
-  role: null
+  component: null,
+  role: null,
+  createdAt: ''
 };
 
 function Attendees({
@@ -60,7 +65,7 @@ function Attendees({
    *
    * Used to set field values when creating or editing attendee
    */
-  const [activeAttendee, setActiveAttendee] = useState<TRBAttendeeData>({
+  const [activeAttendee, setActiveAttendee] = useState<TRBAttendee>({
     ...initialAttendee,
     trbRequestId: request.id
   });
@@ -82,8 +87,7 @@ function Attendees({
    * Get TRB attendees data and mutations
    */
   const {
-    data: { attendees, requester },
-    createAttendee,
+    data: { attendees, requester, loading },
     updateAttendee,
     deleteAttendee
   } = useTRBAttendees(request.id);
@@ -94,46 +98,13 @@ function Attendees({
   useEffect(() => {
     /** Default reqiester values */
     const defaultValues: TRBAttendeeFields = {
-      euaUserId: requester.userInfo?.euaUserId || '',
-      component: requester.component,
-      role: requester.role
+      euaUserId: requester?.userInfo?.euaUserId || '',
+      component: requester?.component,
+      role: requester?.role
     };
     // Reset form
     reset(defaultValues);
   }, [requester, reset]);
-
-  /**
-   * Create or update  attendee
-   */
-  const submitAttendee = useCallback(
-    (formData: TRBAttendeeFields): Promise<FetchResult> => {
-      const { component, role, euaUserId } = formData;
-      // If attendee object has ID, update attendee
-      if (requester.id) {
-        return updateAttendee({
-          variables: {
-            input: {
-              id: requester.id,
-              component,
-              role: role as PersonRole
-            }
-          }
-        });
-      }
-      // If no ID is present, create new attendee
-      return createAttendee({
-        variables: {
-          input: {
-            trbRequestId: request.id,
-            euaUserId,
-            component,
-            role: role as PersonRole
-          }
-        }
-      });
-    },
-    [createAttendee, updateAttendee, request.id, requester.id]
-  );
 
   /** Submit requester as attendee */
   const submitForm = useCallback<StepSubmit>(
@@ -143,9 +114,17 @@ function Attendees({
         // Validation passed
         async formData => {
           // Submit the input only if there are changes
-          if (isDirty) {
-            // Submit requester fields
-            await submitAttendee(formData)
+          if (isDirty && requester.id) {
+            // Update requester
+            await updateAttendee({
+              variables: {
+                input: {
+                  id: requester.id,
+                  component: formData.component,
+                  role: formData.role
+                }
+              }
+            })
               // Refresh the RequestForm parent request query
               // to update things like `stepsCompleted`
               .then(() => refetchRequest())
@@ -176,7 +155,15 @@ function Attendees({
             }
           }
         ),
-    [t, handleSubmit, isDirty, refetchRequest, setFormAlert, submitAttendee]
+    [
+      t,
+      handleSubmit,
+      isDirty,
+      refetchRequest,
+      setFormAlert,
+      requester,
+      updateAttendee
+    ]
   );
 
   useEffect(() => {
@@ -186,6 +173,9 @@ function Attendees({
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
+
+  // Wait until attendees query has completed to load form
+  if (loading) return <PageLoading />;
 
   return (
     <div className="trb-attendees margin-top-2">
