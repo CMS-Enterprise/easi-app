@@ -21,8 +21,8 @@ export interface DeleteTRBRequestAttendee_deleteTRBRequestAttendee {
   id: UUID;
   trbRequestId: UUID;
   userInfo: DeleteTRBRequestAttendee_deleteTRBRequestAttendee_userInfo | null;
-  component: string;
-  role: PersonRole;
+  component: string | null;
+  role: PersonRole | null;
   createdAt: Time;
 }
 

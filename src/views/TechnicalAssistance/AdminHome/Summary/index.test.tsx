@@ -60,7 +60,6 @@ describe('TRB Admin Home summary', () => {
               name={trbRequest.name}
               requestType={trbRequest.type}
               createdAt={trbRequest.createdAt}
-              createdBy={trbRequest.createdBy}
               status={trbRequest.status}
               taskStatuses={trbRequest.taskStatuses}
               trbLead={trbRequest.trbLead}

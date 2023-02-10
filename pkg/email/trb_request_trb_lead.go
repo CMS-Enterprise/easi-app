@@ -11,7 +11,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// SendTRBRequestTRBLeadEmailInput contains the data submitted by the user to the "report a problem" help form
+// SendTRBRequestTRBLeadEmailInput contains the data needed to send an email to the TRB team
+// indicating that a TRB lead has been assigned
 type SendTRBRequestTRBLeadEmailInput struct {
 	TRBRequestID   uuid.UUID
 	TRBRequestName string
@@ -27,7 +28,7 @@ type trbLeadEmailTemplateParams struct {
 	RequesterName  string
 }
 
-// SendTRBRequestTRBLeadEmail sends an email to the EASI team containing a user's request for help
+// SendTRBRequestTRBLeadEmail sends an email to the TRB team indicating that a TRB lead has been assigned
 func (c Client) SendTRBRequestTRBLeadEmail(ctx context.Context, input SendTRBRequestTRBLeadEmailInput) error {
 	subject := input.TRBRequestName + " is assigned to " + input.TRBLeadName
 
