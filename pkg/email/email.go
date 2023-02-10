@@ -50,6 +50,7 @@ type templates struct {
 	helpReportAProblem                         templateCaller
 	trbRequestConsultMeeting                   templateCaller
 	trbRequestTRBLead                          templateCaller
+	trbAdviceLetterInternalReview              templateCaller
 	trbFormSubmittedAdmin                      templateCaller
 	trbFormSubmittedRequester                  templateCaller
 	trbAttendeeAdded                           templateCaller
@@ -214,6 +215,14 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(trbRequestTRBLeadTemplateName)
 	}
 	appTemplates.trbRequestTRBLead = trbRequestTRBLeadTemplate
+
+	trbAdviceLetterInternalReviewTemplateName := "trb_advice_letter_internal_review.gohtml"
+	trbAdviceLetterInternalReviewTemplate := rawTemplates.Lookup(trbAdviceLetterInternalReviewTemplateName)
+	if trbAdviceLetterInternalReviewTemplate == nil {
+		return Client{}, templateError(trbAdviceLetterInternalReviewTemplateName)
+	}
+	appTemplates.trbAdviceLetterInternalReview = trbAdviceLetterInternalReviewTemplate
+
 	trbFormSubmittedAdminTemplateName := "trb_request_form_submission_admin.gohtml"
 	trbFormSubmittedAdminTemplate := rawTemplates.Lookup(trbFormSubmittedAdminTemplateName)
 	if trbFormSubmittedAdminTemplate == nil {

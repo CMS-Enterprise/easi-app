@@ -31,10 +31,10 @@ import InitialsIcon from 'components/shared/InitialsIcon';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
-  TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 
@@ -45,7 +45,7 @@ type AttendeeFieldsProps = {
   /** Fields type */
   type: 'requester' | 'attendee';
   /** Sets the default values for the form */
-  activeAttendee: TRBAttendeeData;
+  activeAttendee: TRBAttendee;
   /** Control from useForm hook */
   control: Control<TRBAttendeeFields>;
   /** Field errors object */
@@ -228,9 +228,9 @@ const AttendeeFields = ({
 /** Single TRB attendee props */
 type AttendeeProps = {
   /** Attendee object */
-  attendee: TRBAttendeeData;
+  attendee: TRBAttendee;
   /** Set active attendee - used to edit attendee */
-  setActiveAttendee?: (activeAttendee: TRBAttendeeData) => void;
+  setActiveAttendee?: (activeAttendee: TRBAttendee) => void;
   /** Delete attendee */
   deleteAttendee?: () => void;
 };
@@ -314,11 +314,11 @@ const Attendee = ({
 /** TRB attendees list props */
 type AttendeesTableProps = {
   /** Array of attendee objects */
-  attendees: TRBAttendeeData[];
+  attendees: TRBAttendee[];
   /** TRB request id */
   trbRequestId: string;
   /** Set active attendee - used to edit attendee */
-  setActiveAttendee?: (activeAttendee: TRBAttendeeData) => void;
+  setActiveAttendee?: (activeAttendee: TRBAttendee) => void;
   /** Delete attendee */
   deleteAttendee?: (id: string) => void;
 };
@@ -335,7 +335,7 @@ const AttendeesTable = ({
   }, [attendees]);
 
   /** Columns for display in table */
-  const columns: Column<{ attendee: TRBAttendeeData }>[] = useMemo(
+  const columns: Column<{ attendee: TRBAttendee }>[] = useMemo(
     () => [
       {
         accessor: 'attendee',
@@ -387,7 +387,7 @@ const AttendeesTable = ({
                 className="tablet:grid-col-6 margin-bottom-1"
               >
                 {row.cells.map(cell => {
-                  const attendee: TRBAttendeeData = cell.value;
+                  const attendee: TRBAttendee = cell.value;
                   return (
                     <td
                       {...cell.getCellProps()}
