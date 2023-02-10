@@ -21,11 +21,12 @@ function SubjectDefinition(
   field: keyof TrbRequestForm
 ): React.ReactNode {
   const { t } = useTranslation('technicalAssistance');
-  return Array.isArray(form[field]) && form[field].length ? (
-    form[field]
+  const { [field]: formField, [`${field}Other`]: formFieldOther } = form;
+  return Array.isArray(formField) && formField.length ? (
+    formField
       .map((v: string) =>
         v === 'OTHER'
-          ? `${t('basic.options.other')}: ${form[`${field}Other`]}`
+          ? `${t('basic.options.other')}: ${formFieldOther}`
           : t(`subject.options.${field}.${v}`)
       )
       .join(', ')
