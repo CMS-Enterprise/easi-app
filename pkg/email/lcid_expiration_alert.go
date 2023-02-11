@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"path"
 	"time"
 
@@ -14,19 +15,36 @@ import (
 )
 
 type lcidExperationAlert struct {
-	RequestName    string
-	ExpirationDate string
-	GRTEmail       string
-	DecisionLink   string
+	ProjectName  string
+	LifecycleID  string
+	ExpiresAt    string
+	Scope        string
+	CostBaseline string
+	NextSteps    string
+	GRTEmail     string
+	RequestLink  string
 }
 
-func (c Client) lcidExpirationBody(ctx context.Context, systemIntakeID uuid.UUID, requestName string, lcidExpirationDate *time.Time) (string, error) {
-	decisionPath := path.Join("governance-review-team", systemIntakeID.String(), "decision")
+func (c Client) lcidExpirationBody(
+	ctx context.Context,
+	systemIntakeID uuid.UUID,
+	projectName string,
+	lcid string,
+	lcidExpirationDate *time.Time,
+	scope string,
+	lifecycleCostBaseline string,
+	nextSteps string,
+) (string, error) {
+	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := lcidExperationAlert{
-		RequestName:    requestName,
-		ExpirationDate: lcidExpirationDate.Format("January 2, 2006"),
-		GRTEmail:       string(c.config.GRTEmail),
-		DecisionLink:   decisionPath,
+		ProjectName:  projectName,
+		LifecycleID:  lcid,
+		ExpiresAt:    lcidExpirationDate.Format("January 2, 2006"),
+		Scope:        scope,
+		CostBaseline: lifecycleCostBaseline,
+		NextSteps:    nextSteps,
+		GRTEmail:     string(c.config.GRTEmail),
+		RequestLink:  decisionPath,
 	}
 
 	var b bytes.Buffer
@@ -43,9 +61,19 @@ func (c Client) lcidExpirationBody(ctx context.Context, systemIntakeID uuid.UUID
 }
 
 // SendLCIDExpirationAlertEmail sends an email to the governance mailbox notifying them about LCID that is expiring soon
-func (c Client) SendLCIDExpirationAlertEmail(ctx context.Context, requestName string, lcidExpirationDate *time.Time, systemIntakeID uuid.UUID) error {
-	subject := "Lifecycle ID about to expire"
-	body, err := c.lcidExpirationBody(ctx, systemIntakeID, requestName, lcidExpirationDate)
+func (c Client) SendLCIDExpirationAlertEmail(
+	ctx context.Context,
+	recipients models.EmailNotificationRecipients,
+	systemIntakeID uuid.UUID,
+	projectName string,
+	lcid string,
+	lcidExpirationDate *time.Time,
+	scope string,
+	lifecycleCostBaseline string,
+	nextSteps string,
+) error {
+	subject := fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName)
+	body, err := c.lcidExpirationBody(ctx, systemIntakeID, projectName, lcid, lcidExpirationDate, scope, lifecycleCostBaseline, nextSteps)
 
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
@@ -53,8 +81,9 @@ func (c Client) SendLCIDExpirationAlertEmail(ctx context.Context, requestName st
 
 	err = c.sender.Send(
 		ctx,
-		[]models.EmailAddress{c.config.GRTEmail},
-		nil,
+		c.listAllRecipients(recipients),
+		nil, // TODO: This is nil b/c we set the ShouldNotifyITGovernance bool as true in recipients.
+		//       This however doesn't cc the governance mailbox but sends directly to it, we should maybe allow for specification between cc'ing and sending directly?
 		subject,
 		body,
 	)

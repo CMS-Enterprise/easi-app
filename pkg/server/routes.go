@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -452,10 +453,11 @@ func (s *Server) routes(
 	// Check for upcoming LCID expirations every 24 hours
 	alerts.StartLcidExpirationCheck(
 		appcontext.WithLogger(context.Background(), s.logger),
+		cedarLDAPClient.FetchUserInfo,
 		store.FetchSystemIntakes,
 		store.UpdateSystemIntake,
 		emailClient.SendLCIDExpirationAlertEmail,
-		8.64e+13) // Nanoseconds in a day
+		time.Hour*24)
 
 	// endpoint for short-lived backfill process
 	// backfillHandler := handlers.NewBackfillHandler(
