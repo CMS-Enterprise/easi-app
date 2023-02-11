@@ -51,6 +51,18 @@ export default gql`
       subjectAreaDataAndDataManagementOther
       subjectAreaGovernmentProcessesAndPoliciesOther
       subjectAreaOtherTechnicalTopicsOther
+
+      submittedAt
+    }
+
+    feedback {
+      id
+      action
+      feedbackMessage
+      author {
+        commonName
+      }
+      createdAt
     }
   }
 `;

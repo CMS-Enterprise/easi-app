@@ -20,7 +20,10 @@ describe('Technical Assistance (TRB) homepage', () => {
       id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
       name: 'My excellent question',
       status: 'OPEN',
-      createdAt: '2022-09-12T17:46:08.067675Z'
+      createdAt: '2022-09-12T17:46:08.067675Z',
+      form: {
+        submittedAt: '2023-01-23T20:06:52.123703Z'
+      }
     },
     {
       id: '9841c768-bdcd-4856-bae2-62cfdaffacf6',

@@ -22,7 +22,6 @@ type SummaryProps = {
   name: string;
   requestType: TRBRequestType;
   createdAt: string;
-  createdBy: string;
   status: TRBRequestStatus;
   taskStatuses: TRBRequestTaskStatuses;
   trbLead: string | null;
@@ -33,7 +32,6 @@ export default function Summary({
   name,
   requestType,
   createdAt,
-  createdBy,
   status,
   taskStatuses,
   trbLead
@@ -50,7 +48,7 @@ export default function Summary({
   // Get requester object from request attendees
   const {
     data: { requester, loading }
-  } = useTRBAttendees(trbRequestId, createdBy);
+  } = useTRBAttendees(trbRequestId);
 
   /**
    * Requester info for display in summary box

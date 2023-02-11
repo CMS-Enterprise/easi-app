@@ -1,25 +1,31 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
   GridContainer,
-  IconArrowBack
+  IconArrowBack,
+  IconWarning
 } from '@trussworks/react-uswds';
 import { isEqual } from 'lodash';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
   GetTrbRequest,
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBRequestType } from 'types/graphql-global-types';
+import { TRBFeedbackStatus, TRBFormStatus } from 'types/graphql-global-types';
 import nullFillObject from 'utils/nullFillObject';
-import { inputBasicSchema } from 'validations/trbRequestSchema';
+import {
+  inputBasicSchema,
+  trbRequesterSchema
+} from 'validations/trbRequestSchema';
 import { NotFoundPartial } from 'views/NotFound';
 
 import StepHeader from '../../../components/StepHeader';
@@ -30,7 +36,25 @@ import Basic, { basicBlankValues } from './Basic';
 import Check from './Check';
 import Documents from './Documents';
 import Done from './Done';
+import Feedback from './Feedback';
 import SubjectAreas from './SubjectAreas';
+import ViewSubmittedRequest from './ViewSubmittedRequest';
+
+/** Ordered list of request form steps as url slugs  */
+const formStepSlugs = [
+  'basic',
+  'subject',
+  'attendees',
+  'documents',
+  'check'
+] as const;
+
+type FormStepSlug = typeof formStepSlugs[number];
+
+/** All slugs under the Trb request form */
+const viewSlugs = [...formStepSlugs, 'done', 'view', 'feedback'] as const;
+
+type ViewSlug = typeof viewSlugs[number];
 
 /**
  * A promise wrapper for form step submit handlers.
@@ -77,7 +101,7 @@ export interface FormStepComponentProps {
  */
 export const formStepComponents: {
   component: (props: FormStepComponentProps) => JSX.Element;
-  step: string;
+  step: FormStepSlug;
 }[] = [
   { component: Basic, step: 'basic' },
   { component: SubjectAreas, step: 'subject' },
@@ -85,12 +109,6 @@ export const formStepComponents: {
   { component: Documents, step: 'documents' },
   { component: Check, step: 'check' }
 ];
-
-/**
- * Mapped form step slugs from `formStepComponents`.
- * The last `done` slug is not a form step and is handled separately.
- */
-const formStepSlugs = formStepComponents.map(f => f.step).concat('done');
 
 type RequestFormText = {
   heading: string;
@@ -112,6 +130,7 @@ function Header({
   stepsCompleted,
   stepSubmit,
   isStepSubmitting,
+  warning,
   formAlert,
   taskListUrl
 }: {
@@ -119,9 +138,10 @@ function Header({
   /** Unassigned request is used as a loading state toggle. */
   request?: TrbRequest;
   breadcrumbBar: React.ReactNode;
-  stepsCompleted: string[];
+  stepsCompleted?: string[];
   stepSubmit: StepSubmit | null;
   isStepSubmitting: boolean;
+  warning?: React.ReactNode;
   formAlert: TrbFormAlert;
   taskListUrl: string;
 }) {
@@ -149,13 +169,17 @@ function Header({
         description: stp.description,
         completed: idx < step - 1,
 
-        // Basic details is the only step with required form fields
-        // Prevent links to other steps until basic is complete
+        // Basic Details and Attendees are the only steps with required form fields
+        // Prevent links beyond these steps if they are not completed
         onClick:
           request &&
           !isStepSubmitting &&
           idx !== step - 1 && // not the current step
-          stepsCompleted.includes('basic')
+          Array.isArray(stepsCompleted) &&
+          // If Attendees is complete then everything's available
+          (stepsCompleted.includes('attendees') ||
+            // Or if Basic is complete, steps up to and including Attendees available
+            (idx < 3 && stepsCompleted.includes('basic')))
             ? () => {
                 stepSubmit?.(() => {
                   history.push(
@@ -167,6 +191,7 @@ function Header({
       }))}
       hideSteps={!request}
       breadcrumbBar={breadcrumbBar}
+      warning={warning}
       errorAlert={
         formAlert && (
           <Alert
@@ -199,6 +224,34 @@ function Header({
   );
 }
 
+function EditsRequestedWarning({ requestId }: { requestId: string }) {
+  const { t } = useTranslation('technicalAssistance');
+  return (
+    <div className="bg-error-lighter padding-y-2">
+      <GridContainer className="width-full">
+        <div>
+          <IconWarning
+            className="text-error-dark text-middle margin-right-1"
+            size={3}
+          />
+          <span className="text-middle line-height-body-5">
+            {t('editsRequested.alert')}
+          </span>
+        </div>
+        <div className="margin-top-2">
+          <UswdsReactLink
+            variant="unstyled"
+            className="usa-button usa-button--outline"
+            to={`/trb/requests/${requestId}/feedback`}
+          >
+            {t('editsRequested.viewFeedback')}
+          </UswdsReactLink>
+        </div>
+      </GridContainer>
+    </div>
+  );
+}
+
 /**
  * This is a component base for the TRB request form.
  */
@@ -207,15 +260,11 @@ function RequestForm() {
 
   const history = useHistory();
 
-  // New requests require `requestType`
-  const location = useLocation<{ requestType: string }>();
-  const requestType = location.state?.requestType as TRBRequestType;
-
   const { id, step, view } = useParams<{
     /** Request id */
     id: string;
     /** Form step slug from `formStepSlugs` */
-    step?: string;
+    step?: ViewSlug;
     /** Form step subview */
     view?: string;
   }>();
@@ -229,45 +278,113 @@ function RequestForm() {
 
   const request: TrbRequest | undefined = data?.trbRequest;
 
-  // Determine the steps that are already completed by attempting to pre-validate them
-  const [stepsCompleted, setStepsCompleted] = useState<string[]>([]);
+  const {
+    data: { requester }
+  } = useTRBAttendees(id);
 
+  // Determine the steps that are already completed by attempting to pre-validate them
+  const [stepsCompleted, setStepsCompleted] = useState<
+    FormStepSlug[] | undefined
+  >(
+    // undefined // TODO set this back
+    ['basic', 'attendees']
+  );
+
+  // Prevalidate certain steps that will be checked against
+  // to enable slug paths and links in the StepHeader
   useEffect(() => {
     if (!request) {
       return;
     }
     (async () => {
-      const completed = [...stepsCompleted];
+      const completed = Array.isArray(stepsCompleted)
+        ? [...stepsCompleted]
+        : [];
+      const stepValidators = [];
 
-      // Only the Basic Details step needs a completed form
-      // The rest have all optional fields and can be skipped
-      const stp = 'basic';
-
-      // Skip if already validated
-      if (!completed.includes(stp)) {
-        inputBasicSchema
-          .isValid(nullFillObject(request.form, basicBlankValues), {
-            strict: true
-          })
-          .then(valid => {
-            if (valid) {
-              completed.push(stp);
-              if (!isEqual(completed, stepsCompleted))
-                setStepsCompleted(completed);
-            }
-          });
+      // Check the Basic step
+      const basicStep = 'basic';
+      if (!completed.includes(basicStep)) {
+        stepValidators.push(
+          inputBasicSchema
+            .isValid(nullFillObject(request.form, basicBlankValues), {
+              strict: true
+            })
+            .then(valid => {
+              if (valid) completed.push(basicStep);
+            })
+        );
       }
+
+      // Check Requester for the Attendees step
+      const attendeesStep = 'attendees';
+      if (!completed.includes(attendeesStep) && requester) {
+        stepValidators.push(
+          // See Attendees.tsx for schema validation
+          trbRequesterSchema
+            .isValid(
+              {
+                euaUserId: requester.userInfo?.euaUserId || '',
+                component: requester.component,
+                role: requester.role
+              },
+              { strict: true }
+            )
+            .then(valid => {
+              if (valid) completed.push(attendeesStep);
+            })
+        );
+      }
+
+      Promise.allSettled(stepValidators).then(() => {
+        if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+      });
     })();
-  }, [request, stepsCompleted]);
+  }, [request, requester, stepsCompleted]);
 
+  // Handle some redirects based on status, steps completed, step slugs
+
+  // If the form is completed then only allow `view`
   useEffect(() => {
-    if (request) {
-      // Check step param, redirect to the first step if invalid
-      if (!step || !formStepSlugs.includes(step)) {
-        history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
-      }
+    if (
+      step !== 'view' &&
+      request?.taskStatuses.formStatus === TRBFormStatus.COMPLETED
+    ) {
+      history.replace(`/trb/requests/${id}/view`);
     }
-  }, [history, id, request, requestType, step]);
+  }, [history, id, request?.taskStatuses.formStatus, step]);
+
+  // Check step param, redirect to the first step if invalid
+  useEffect(() => {
+    if (
+      !step || // Step undefined
+      !viewSlugs.includes(step) // Invalid step slug
+    ) {
+      history.replace(`/trb/requests/${id}/${formStepSlugs[0]}`);
+    }
+  }, [history, id, step]);
+
+  // Prevent step slugs if not completed and redirect to the latest available
+  // TODO Figure out what might be happening with CI runs hitting this block when submitting basic form step
+  // useEffect(() => {
+  //   if (stepsCompleted === undefined) {
+  //     return;
+  //   }
+  //   if (
+  //     !stepsCompleted.includes('basic') &&
+  //     (step === 'subject' ||
+  //       step === 'attendees' ||
+  //       step === 'documents' ||
+  //       step === 'check')
+  //   ) {
+  //     history.replace(`/trb/requests/${id}/basic`);
+  //   } else if (
+  //     !stepsCompleted.includes('attendees') &&
+  //     (step === 'documents' || step === 'check')
+  //   ) {
+  //     history.replace(`/trb/requests/${id}/attendees`);
+  //   }
+  // }, [history, id, step, stepsCompleted]);
 
   const taskListUrl = useMemo(
     () => (request ? `/trb/task-list/${request.id}` : null),
@@ -289,6 +406,16 @@ function RequestForm() {
         />
       ) : null,
     [t, taskListUrl]
+  );
+
+  // Check the request task feedback status for edits requested
+  const editsRequestedWarning = useMemo(
+    () =>
+      request?.taskStatuses.feedbackStatus ===
+      TRBFeedbackStatus.EDITS_REQUESTED ? (
+        <EditsRequestedWarning requestId={request.id} />
+      ) : null,
+    [request?.id, request?.taskStatuses.feedbackStatus]
   );
 
   // References to the submit handler and submitting state of the current form step
@@ -315,11 +442,6 @@ function RequestForm() {
     return null;
   }
 
-  // `Done` has a different layout and is handled seperately
-  if (step === 'done') {
-    return <Done breadcrumbBar={defaultBreadcrumbs} />;
-  }
-
   if (error) {
     return (
       <GridContainer className="width-full">
@@ -328,7 +450,26 @@ function RequestForm() {
     );
   }
 
-  const stepIdx = formStepSlugs.indexOf(step);
+  // Return early on certain slugs that are not form steps
+  if (step === 'done') {
+    return <Done breadcrumbBar={defaultBreadcrumbs} />;
+  }
+
+  if (step === 'view' && request) {
+    return (
+      <ViewSubmittedRequest
+        request={request}
+        breadcrumbBar={defaultBreadcrumbs}
+        taskListUrl={taskListUrl}
+      />
+    );
+  }
+
+  if (step === 'feedback' && request) {
+    return <Feedback request={request} taskListUrl={taskListUrl} />;
+  }
+
+  const stepIdx = formStepSlugs.indexOf(step as FormStepSlug);
   const stepNum = stepIdx + 1;
 
   const FormStepComponent = formStepComponents[stepIdx].component;
@@ -344,11 +485,14 @@ function RequestForm() {
           stepsCompleted={stepsCompleted}
           stepSubmit={stepSubmit}
           isStepSubmitting={isStepSubmitting}
+          warning={editsRequestedWarning}
           formAlert={formAlert}
           taskListUrl={taskListUrl}
         />
       )}
-      {request ? (
+      {request && Array.isArray(stepsCompleted) ? (
+        // Render the step component when request data is available
+        // and `stepsCompleted` is defined after prevalidating form fields of steps
         <GridContainer className="width-full">
           <FormStepComponent
             request={request}

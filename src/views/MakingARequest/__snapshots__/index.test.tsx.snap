@@ -48,9 +48,6 @@ exports[`The making a request page matches the snapshot 1`] = `
           <li>
             re-compete a contract
           </li>
-          <li>
-            decomission a system
-          </li>
         </ul>
       </div>
     </div>

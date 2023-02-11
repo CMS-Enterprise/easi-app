@@ -1,18 +1,24 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureMockStore from 'redux-mock-store';
 
 import { attendees, requester, trbRequest } from 'data/mock/trbRequest';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 import { GetTrbRequest } from 'queries/types/GetTrbRequest';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 
 import Attendees from './Attendees';
+
+/** Requester object with initial null values for component and role */
+const initialRequester: TRBAttendee = {
+  ...requester,
+  component: null,
+  role: null
+};
 
 describe('Trb Request form: Attendees', () => {
   const mockRefetch = async (): Promise<ApolloQueryResult<GetTrbRequest>> => {
@@ -34,7 +40,9 @@ describe('Trb Request form: Attendees', () => {
     },
     result: {
       data: {
-        trbRequest: { requester, attendees }
+        trbRequest: {
+          attendees: [initialRequester, ...attendees]
+        }
       }
     }
   };
@@ -52,62 +60,50 @@ describe('Trb Request form: Attendees', () => {
   };
 
   it('Renders the attendees form', async () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      auth: {
-        euaId: requester?.userInfo?.euaUserId,
-        name: requester?.userInfo?.commonName
-      }
-    });
-    const { asFragment, getByTestId } = render(
+    const { asFragment, getByTestId, findByTestId } = render(
       <MemoryRouter>
         <MockedProvider
           mocks={[getAttendeesQuery, getTrbRequestQuery]}
           addTypename={false}
         >
-          <Provider store={store}>
-            <Attendees
-              request={trbRequest}
-              stepUrl={{
-                current: `/trb/requests/${trbRequest.id}/attendees`,
-                next: `/trb/requests/${trbRequest.id}/documents`,
-                back: `/trb/requests/${trbRequest.id}/subject`
-              }}
-              refetchRequest={mockRefetch}
-              setIsStepSubmitting={() => {}}
-              setStepSubmit={() => {}}
-              setFormAlert={() => {}}
-              taskListUrl=""
-            />
-          </Provider>
+          <Attendees
+            request={trbRequest}
+            stepUrl={{
+              current: `/trb/requests/${trbRequest.id}/attendees`,
+              next: `/trb/requests/${trbRequest.id}/documents`,
+              back: `/trb/requests/${trbRequest.id}/subject`
+            }}
+            refetchRequest={mockRefetch}
+            setIsStepSubmitting={() => {}}
+            setStepSubmit={() => {}}
+            setFormAlert={() => {}}
+            taskListUrl=""
+          />
         </MockedProvider>
       </MemoryRouter>
     );
 
-    // Check for requester name
-    expect(getByTestId('cedar-contact-select')).toHaveValue(
+    const requesterContactSelect = await findByTestId('cedar-contact-select');
+
+    // Check that requester name and EUA matches mocked query results
+    expect(requesterContactSelect).toHaveValue(
       `${requester.userInfo?.commonName}, ${requester.userInfo?.euaUserId}`
     );
 
+    const requesterComponentField = getByTestId('trb-requester-component');
+    const requesterRoleField = getByTestId('trb-requester-role');
+
+    // Check that form loads initial null values for requester component and role
+    expect(requesterComponentField).not.toHaveValue();
+    expect(requesterRoleField).not.toHaveValue();
+
     // Select requester component
-    userEvent.selectOptions(getByTestId('trb-requester-component'), [
-      requester.component
-    ]);
-    expect(getByTestId('trb-requester-component')).toHaveValue(
-      requester.component
-    );
+    userEvent.selectOptions(requesterComponentField, [requester.component!]);
+    expect(requesterComponentField).toHaveValue(requester.component);
 
     // Select requester role
-    userEvent.selectOptions(getByTestId('trb-requester-role'), [
-      requester.role
-    ]);
-    expect(getByTestId('trb-requester-role')).toHaveValue(requester.role);
-
-    // Wait for contacts to load
-    await waitFor(() => {
-      // Check for first additional contact
-      getByTestId(`trbAttendee-${attendees[0]?.userInfo?.euaUserId}`);
-    });
+    userEvent.selectOptions(requesterRoleField, [requester.role!]);
+    expect(requesterRoleField).toHaveValue(requester.role);
 
     // Snapshot
     expect(asFragment()).toMatchSnapshot();
