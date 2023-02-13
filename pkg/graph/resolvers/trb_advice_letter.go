@@ -79,13 +79,52 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 	return updatedLetter, err
 }
 
-// RequestReviewForTRBAdviceLetter sets a TRB advice letter as ready for review and (TODO) notifies the given recipients.
-func RequestReviewForTRBAdviceLetter(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetter, error) {
-	// TODO - EASI-2514 - send notification email(s)
-
+// RequestReviewForTRBAdviceLetter sets a TRB advice letter as ready for review and notifies the given recipients.
+func RequestReviewForTRBAdviceLetter(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	id uuid.UUID,
+) (*models.TRBAdviceLetter, error) {
 	letter, err := store.UpdateTRBAdviceLetterStatus(ctx, id, models.TRBAdviceLetterStatusReadyForReview)
 	if err != nil {
 		return nil, err
+	}
+
+	trb, err := store.GetTRBRequestByID(ctx, letter.TRBRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
+	if err != nil {
+		return nil, err
+	}
+
+	var leadName string
+	if trb.TRBLead != nil {
+		leadInfo, err2 := fetchUserInfo(ctx, *trb.TRBLead)
+		if err2 != nil {
+			return nil, err2
+		}
+		leadName = leadInfo.CommonName
+	}
+
+	emailInput := email.SendTRBAdviceLetterInternalReviewEmailInput{
+		TRBRequestID:   trb.ID,
+		TRBRequestName: trb.Name,
+		TRBLeadName:    leadName,
+		RequesterName:  requesterInfo.CommonName,
+	}
+
+	// Email client can be nil when this is called from tests - the email client itself tests this
+	// separately in the email package test
+	if emailClient != nil {
+		err = emailClient.SendTRBAdviceLetterInternalReviewEmail(ctx, emailInput)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return letter, nil

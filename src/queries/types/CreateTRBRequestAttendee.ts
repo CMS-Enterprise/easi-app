@@ -21,8 +21,8 @@ export interface CreateTRBRequestAttendee_createTRBRequestAttendee {
   id: UUID;
   trbRequestId: UUID;
   userInfo: CreateTRBRequestAttendee_createTRBRequestAttendee_userInfo | null;
-  component: string;
-  role: PersonRole;
+  component: string | null;
+  role: PersonRole | null;
   createdAt: Time;
 }
 

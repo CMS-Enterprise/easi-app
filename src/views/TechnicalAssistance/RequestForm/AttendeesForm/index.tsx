@@ -9,10 +9,10 @@ import { Form, IconArrowBack } from '@trussworks/react-uswds';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import useTRBAttendees from 'hooks/useTRBAttendees';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
-  TRBAttendeeData,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
@@ -26,9 +26,9 @@ import { AttendeeFields } from './components';
 
 interface AttendeesFormProps {
   backToFormUrl?: string;
-  activeAttendee: TRBAttendeeData;
+  activeAttendee: TRBAttendee;
   /** Set active attendee - used to edit attendee */
-  setActiveAttendee: (activeAttendee: TRBAttendeeData) => void;
+  setActiveAttendee: (activeAttendee: TRBAttendee) => void;
   trbRequestId: string;
   setFormAlert: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
   taskListUrl: string;

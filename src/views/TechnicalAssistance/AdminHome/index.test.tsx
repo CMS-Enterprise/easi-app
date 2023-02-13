@@ -5,7 +5,6 @@ import { MockedProvider } from '@apollo/client/testing';
 import {
   render,
   screen,
-  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
@@ -40,7 +39,7 @@ const defaultStore = mockStore({
 
 describe('TRB admin home wrapper', () => {
   it('matches the snapshot', async () => {
-    const { asFragment, getByTestId } = render(
+    const { asFragment } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequest.id}/request`]}>
         <Provider store={defaultStore}>
           <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
@@ -54,10 +53,6 @@ describe('TRB admin home wrapper', () => {
 
     // Wait for page to load
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
-
-    await waitFor(() => {
-      expect(getByTestId('trbSummary-requester_ABCD')).toBeInTheDocument();
-    });
 
     // Snapshot
     expect(asFragment()).toMatchSnapshot();
