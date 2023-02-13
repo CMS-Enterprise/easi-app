@@ -2827,6 +2827,16 @@ func (r *tRBAdviceLetterRecommendationResolver) Links(ctx context.Context, obj *
 	return links, nil
 }
 
+// Author is the resolver for the author field.
+func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) (*models.UserInfo, error) {
+	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
+}
+
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
