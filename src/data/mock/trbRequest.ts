@@ -86,6 +86,7 @@ export const trbRequest: TrbRequest = {
     feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
     formStatus: TRBFormStatus.READY_TO_START
   },
+  feedback: [],
   status: TRBRequestStatus.OPEN,
   type: TRBRequestType.NEED_HELP,
   trbLead: null,
