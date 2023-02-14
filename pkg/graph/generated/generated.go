@@ -817,6 +817,7 @@ type ComplexityRoot struct {
 	}
 
 	TRBAdviceLetterRecommendation struct {
+		Author         func(childComplexity int) int
 		CreatedAt      func(childComplexity int) int
 		CreatedBy      func(childComplexity int) int
 		ID             func(childComplexity int) int
@@ -1269,6 +1270,7 @@ type TRBAdviceLetterResolver interface {
 }
 type TRBAdviceLetterRecommendationResolver interface {
 	Links(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) ([]string, error)
+	Author(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) (*models.UserInfo, error)
 }
 type TRBRequestResolver interface {
 	Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error)
@@ -5415,6 +5417,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBAdviceLetter.TRBRequestID(childComplexity), true
 
+	case "TRBAdviceLetterRecommendation.author":
+		if e.complexity.TRBAdviceLetterRecommendation.Author == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetterRecommendation.Author(childComplexity), true
+
 	case "TRBAdviceLetterRecommendation.createdAt":
 		if e.complexity.TRBAdviceLetterRecommendation.CreatedAt == nil {
 			break
@@ -8439,6 +8448,7 @@ type TRBAdviceLetterRecommendation {
   title: String!
   recommendation: String!
   links: [String!]!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -28229,6 +28239,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
 			case "createdAt":
@@ -28327,6 +28339,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
 			case "createdAt":
@@ -28425,6 +28439,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
 			case "createdAt":
@@ -36644,6 +36660,8 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_recommendations(ctx con
 				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
 			case "createdAt":
@@ -37044,6 +37062,58 @@ func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_links(ctx
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetterRecommendation_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetterRecommendation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBAdviceLetterRecommendation().Author(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetterRecommendation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
 		},
 	}
 	return fc, nil
@@ -53170,6 +53240,26 @@ func (ec *executionContext) _TRBAdviceLetterRecommendation(ctx context.Context, 
 					}
 				}()
 				res = ec._TRBAdviceLetterRecommendation_links(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "author":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBAdviceLetterRecommendation_author(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
