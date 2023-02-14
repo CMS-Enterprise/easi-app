@@ -23,13 +23,22 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 	// allRecipients := append(recipients, s.config.TRBEmail)
 	intakeID := uuid.MustParse("19b916b7-0d18-493d-b08d-c726cff6c3df")
 	projectName := "Test Request"
+	requesterName := "Test Requester"
 	lcid := "123456"
 	scope := "scope"
 	lifecycleCostBaseline := "lifecycleCostBaseline"
 	nextSteps := "nextSteps"
 	lcidExpiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
-	decisionPath := fmt.Sprintf(
-		"<a href=\"governance-task-list/%s/request-decision\" style=\"font-weight: bold\">View the request in EASi</a>",
+	requesterTaskListLink := fmt.Sprintf(
+		"<a href=\"governance-task-list/%s\" style=\"font-weight: bold\">click here</a>",
+		intakeID.String(),
+	)
+	requesterDecisionLink := fmt.Sprintf(
+		"<a href=\"governance-task-list/%s/request-decision\" style=\"font-weight: bold\">here</a>",
+		intakeID.String(),
+	)
+	grtDecisionLink := fmt.Sprintf(
+		"<a href=\"governance-review-team/%s/lcid\" style=\"font-weight: bold\">click here</a>",
 		intakeID.String(),
 	)
 
@@ -63,7 +72,13 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>\n" +
 			"<li>if contract support is no longer needed</li>\n" +
 			"</ul>\n\n" +
-			"<p>" + decisionPath + "</p>\n\n" +
+			"View this request in EASi:\n" +
+			"<ul>\n" +
+			"<li>The person who initially submitted this request, " + requesterName + ", may " + requesterTaskListLink +
+			" to view the request task list and " + requesterDecisionLink + " to view the decision and LCID information</li>\n" +
+			"<li>Governance Team members may " + grtDecisionLink + " to view the decision and LCID information</li>\n" +
+			"<li>Others should contact " + requesterName + " or the Governance Team for more information on the request</li>\n" +
+			"</ul>\n\n" +
 			"<p>If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "</p>\n\n" +
 			"<p><u>Current Lifecycle ID Summary</u><p>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
@@ -77,6 +92,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			recipients,
 			intakeID,
 			projectName,
+			requesterName,
 			lcid,
 			&lcidExpiresAt,
 			scope,
@@ -120,7 +136,13 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>\n" +
 			"<li>if contract support is no longer needed</li>\n" +
 			"</ul>\n\n" +
-			"<p>" + decisionPath + "</p>\n\n" +
+			"View this request in EASi:\n" +
+			"<ul>\n" +
+			"<li>The person who initially submitted this request, " + requesterName + ", may " + requesterTaskListLink +
+			" to view the request task list and " + requesterDecisionLink + " to view the decision and LCID information</li>\n" +
+			"<li>Governance Team members may " + grtDecisionLink + " to view the decision and LCID information</li>\n" +
+			"<li>Others should contact " + requesterName + " or the Governance Team for more information on the request</li>\n" +
+			"</ul>\n\n" +
 			"<p>If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "</p>\n\n" +
 			"<p><u>Current Lifecycle ID Summary</u><p>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
@@ -132,6 +154,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			recipients,
 			intakeID,
 			projectName,
+			requesterName,
 			lcid,
 			&lcidExpiresAt,
 			scope,
@@ -155,6 +178,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			recipients,
 			intakeID,
 			projectName,
+			requesterName,
 			lcid,
 			&lcidExpiresAt,
 			scope,
@@ -179,6 +203,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			recipients,
 			intakeID,
 			projectName,
+			requesterName,
 			lcid,
 			&lcidExpiresAt,
 			scope,
@@ -204,6 +229,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			recipients,
 			intakeID,
 			projectName,
+			requesterName,
 			lcid,
 			&lcidExpiresAt,
 			scope,

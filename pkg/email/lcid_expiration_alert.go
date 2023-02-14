@@ -15,36 +15,42 @@ import (
 )
 
 type lcidExperationAlert struct {
-	ProjectName  string
-	LifecycleID  string
-	ExpiresAt    string
-	Scope        string
-	CostBaseline string
-	NextSteps    string
-	GRTEmail     string
-	RequestLink  string
+	ProjectName   string
+	RequesterName string
+	LifecycleID   string
+	ExpiresAt     string
+	Scope         string
+	CostBaseline  string
+	NextSteps     string
+	GRTEmail      string
+	RequesterLink string
+	GRTLink       string
 }
 
 func (c Client) lcidExpirationBody(
 	ctx context.Context,
 	systemIntakeID uuid.UUID,
 	projectName string,
+	requesterName string,
 	lcid string,
 	lcidExpirationDate *time.Time,
 	scope string,
 	lifecycleCostBaseline string,
 	nextSteps string,
 ) (string, error) {
-	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
+	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
+	grtPath := path.Join("governance-review-team", systemIntakeID.String(), "lcid")
 	data := lcidExperationAlert{
-		ProjectName:  projectName,
-		LifecycleID:  lcid,
-		ExpiresAt:    lcidExpirationDate.Format("January 2, 2006"),
-		Scope:        scope,
-		CostBaseline: lifecycleCostBaseline,
-		NextSteps:    nextSteps,
-		GRTEmail:     string(c.config.GRTEmail),
-		RequestLink:  decisionPath,
+		ProjectName:   projectName,
+		RequesterName: requesterName,
+		LifecycleID:   lcid,
+		ExpiresAt:     lcidExpirationDate.Format("January 2, 2006"),
+		Scope:         scope,
+		CostBaseline:  lifecycleCostBaseline,
+		NextSteps:     nextSteps,
+		GRTEmail:      string(c.config.GRTEmail),
+		RequesterLink: requesterPath,
+		GRTLink:       grtPath,
 	}
 
 	var b bytes.Buffer
@@ -66,6 +72,7 @@ func (c Client) SendLCIDExpirationAlertEmail(
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
 	projectName string,
+	requesterName string,
 	lcid string,
 	lcidExpirationDate *time.Time,
 	scope string,
@@ -73,7 +80,7 @@ func (c Client) SendLCIDExpirationAlertEmail(
 	nextSteps string,
 ) error {
 	subject := fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName)
-	body, err := c.lcidExpirationBody(ctx, systemIntakeID, projectName, lcid, lcidExpirationDate, scope, lifecycleCostBaseline, nextSteps)
+	body, err := c.lcidExpirationBody(ctx, systemIntakeID, projectName, requesterName, lcid, lcidExpirationDate, scope, lifecycleCostBaseline, nextSteps)
 
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
