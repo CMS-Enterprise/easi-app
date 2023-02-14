@@ -21,6 +21,12 @@ export interface GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations {
   links: string[];
 }
 
+export interface GetTrbAdviceLetter_trbRequest_adviceLetter_author {
+  __typename: "UserInfo";
+  euaUserId: string;
+  commonName: string;
+}
+
 export interface GetTrbAdviceLetter_trbRequest_adviceLetter {
   __typename: "TRBAdviceLetter";
   id: UUID;
@@ -30,14 +36,14 @@ export interface GetTrbAdviceLetter_trbRequest_adviceLetter {
   dateSent: Time | null;
   followupPoint: string | null;
   recommendations: GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations[];
-  createdBy: string;
+  author: GetTrbAdviceLetter_trbRequest_adviceLetter_author;
   createdAt: Time;
-  modifiedBy: string | null;
   modifiedAt: Time | null;
 }
 
 export interface GetTrbAdviceLetter_trbRequest {
   __typename: "TRBRequest";
+  name: string;
   taskStatuses: GetTrbAdviceLetter_trbRequest_taskStatuses;
   adviceLetter: GetTrbAdviceLetter_trbRequest_adviceLetter | null;
 }

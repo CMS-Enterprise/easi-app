@@ -16,6 +16,12 @@ export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter_recommendations {
   links: string[];
 }
 
+export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter_author {
+  __typename: "UserInfo";
+  euaUserId: string;
+  commonName: string;
+}
+
 export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter {
   __typename: "TRBAdviceLetter";
   id: UUID;
@@ -25,9 +31,8 @@ export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter {
   dateSent: Time | null;
   followupPoint: string | null;
   recommendations: UpdateTrbAdviceLetter_updateTRBAdviceLetter_recommendations[];
-  createdBy: string;
+  author: UpdateTrbAdviceLetter_updateTRBAdviceLetter_author;
   createdAt: Time;
-  modifiedBy: string | null;
   modifiedAt: Time | null;
 }
 

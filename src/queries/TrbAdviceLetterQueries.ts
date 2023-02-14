@@ -14,9 +14,11 @@ const TRBAdviceLetter = gql`
       recommendation
       links
     }
-    createdBy
+    author {
+      euaUserId
+      commonName
+    }
     createdAt
-    modifiedBy
     modifiedAt
   }
 `;
@@ -26,6 +28,7 @@ export const GetTrbAdviceLetterQuery = gql`
   ${TRBAdviceLetter}
   query GetTrbAdviceLetter($id: UUID!) {
     trbRequest(id: $id) {
+      name
       taskStatuses {
         adviceLetterStatus
       }
