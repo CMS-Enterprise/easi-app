@@ -802,6 +802,7 @@ type ComplexityRoot struct {
 	}
 
 	TRBAdviceLetter struct {
+		Author                func(childComplexity int) int
 		CreatedAt             func(childComplexity int) int
 		CreatedBy             func(childComplexity int) int
 		DateSent              func(childComplexity int) int
@@ -1266,6 +1267,8 @@ type TRBAdminNoteResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error)
 }
 type TRBAdviceLetterResolver interface {
+	Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error)
+
 	Recommendations(ctx context.Context, obj *models.TRBAdviceLetter) ([]*models.TRBAdviceLetterRecommendation, error)
 }
 type TRBAdviceLetterRecommendationResolver interface {
@@ -5333,6 +5336,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBAdminNote.TRBRequestID(childComplexity), true
 
+	case "TRBAdviceLetter.author":
+		if e.complexity.TRBAdviceLetter.Author == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetter.Author(childComplexity), true
+
 	case "TRBAdviceLetter.createdAt":
 		if e.complexity.TRBAdviceLetter.CreatedAt == nil {
 			break
@@ -8389,6 +8399,7 @@ Represents an advice letter for a TRB request
 type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
+  author: UserInfo!
   meetingSummary: String
   nextSteps: String
   isFollowupRecommended: Boolean
@@ -27817,6 +27828,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdviceLetter(ctx cont
 				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetter_author(ctx, field)
 			case "meetingSummary":
 				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
 			case "nextSteps":
@@ -27921,6 +27934,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdviceLetter(ctx cont
 				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetter_author(ctx, field)
 			case "meetingSummary":
 				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
 			case "nextSteps":
@@ -28025,6 +28040,8 @@ func (ec *executionContext) fieldContext_Mutation_requestReviewForTRBAdviceLette
 				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetter_author(ctx, field)
 			case "meetingSummary":
 				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
 			case "nextSteps":
@@ -28129,6 +28146,8 @@ func (ec *executionContext) fieldContext_Mutation_sendTRBAdviceLetter(ctx contex
 				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetter_author(ctx, field)
 			case "meetingSummary":
 				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
 			case "nextSteps":
@@ -36406,6 +36425,58 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_trbRequestId(ctx contex
 	return fc, nil
 }
 
+func (ec *executionContext) _TRBAdviceLetter_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetter_author(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBAdviceLetter().Author(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetter_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetter",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBAdviceLetter_meetingSummary(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetter) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
 	if err != nil {
@@ -37865,6 +37936,8 @@ func (ec *executionContext) fieldContext_TRBRequest_adviceLetter(ctx context.Con
 				return ec.fieldContext_TRBAdviceLetter_id(ctx, field)
 			case "trbRequestId":
 				return ec.fieldContext_TRBAdviceLetter_trbRequestId(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetter_author(ctx, field)
 			case "meetingSummary":
 				return ec.fieldContext_TRBAdviceLetter_meetingSummary(ctx, field)
 			case "nextSteps":
@@ -53119,6 +53192,26 @@ func (ec *executionContext) _TRBAdviceLetter(ctx context.Context, sel ast.Select
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "author":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBAdviceLetter_author(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "meetingSummary":
 
 			out.Values[i] = ec._TRBAdviceLetter_meetingSummary(ctx, field, obj)
