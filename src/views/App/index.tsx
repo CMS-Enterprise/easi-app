@@ -72,8 +72,12 @@ const AppRoutes = () => {
       <SecureRoute path="/my-requests" component={MyRequests} />
 
       {/* 508 / Accessibility Team Routes */}
-      <Redirect exact from="/508" to="/508/making-a-request" />
-      <SecureRoute path="/508" component={Accessibility} />
+      {flags.hide508Workflow && (
+        <Redirect exact from="/508" to="/508/making-a-request" />
+      )}
+      {flags.hide508Workflow && (
+        <SecureRoute path="/508" component={Accessibility} />
+      )}
 
       {/* GRT/GRB Routes */}
       <SecureRoute
