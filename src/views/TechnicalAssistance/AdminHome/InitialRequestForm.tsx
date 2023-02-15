@@ -10,12 +10,17 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
+import { TRBFormStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { NotFoundPartial } from 'views/NotFound';
 
 import SubmittedRequest from '../RequestForm/SubmittedRequest';
 
-const InitialRequestForm = ({ trbRequestId }: TrbAdminPageProps) => {
+const InitialRequestForm = ({
+  trbRequestId,
+  requesterString,
+  submissionDate
+}: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { data, error, loading } = useQuery<
@@ -37,11 +42,22 @@ const InitialRequestForm = ({ trbRequestId }: TrbAdminPageProps) => {
           data-testid="trb-admin-home__initial-request-form"
           id={`trbAdminInitialRequestForm-${trbRequestId}`}
         >
-          <h1 className="margin-y-0">
+          <h1 className="margin-top-0 margin-bottom-1 line-height-heading-2">
             {t('adminHome.subnav.initialRequestForm')}
           </h1>
 
-          <TaskStatusTag status={request.taskStatuses.formStatus} />
+          <div className="display-flex flex-align-center line-height-body-5">
+            <TaskStatusTag status={request.taskStatuses.formStatus} />
+            {request.taskStatuses.formStatus === TRBFormStatus.COMPLETED && (
+              <div className="text-base margin-left-05">
+                {t('adminHome.byNameOnDate', {
+                  name: requesterString,
+                  date: submissionDate
+                })}
+              </div>
+            )}
+          </div>
+
           <SubmittedRequest request={request} showSectionHeadingDescription />
         </div>
       )}

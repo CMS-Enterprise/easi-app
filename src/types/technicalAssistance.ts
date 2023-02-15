@@ -18,6 +18,8 @@ export type AttendeeFieldLabels = {
 /** TRB Admin page */
 export type TrbAdminPageProps = {
   trbRequestId: string;
+  requesterString?: string | null;
+  submissionDate?: string;
 };
 
 export type TrbAdminPage = (props: TrbAdminPageProps) => JSX.Element;

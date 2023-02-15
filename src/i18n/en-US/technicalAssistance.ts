@@ -640,7 +640,8 @@ const technicalAssistance = {
       feedback: 'Feedback',
       adviceLetter: 'Advice letter',
       notes: 'Notes'
-    }
+    },
+    byNameOnDate: 'by {{name}} on {{date}}'
   }
 };
 
