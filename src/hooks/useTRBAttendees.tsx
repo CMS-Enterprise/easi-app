@@ -66,7 +66,7 @@ export default function useTRBAttendees(
   }, [data?.trbRequest?.attendees]);
 
   /** Requester object - last in attendees array when sorted by createdAt time */
-  const requester: TRBAttendee | undefined = attendees.at(-1);
+  const requester: TRBAttendee | undefined = attendees[attendees.length - 1];
 
   /** Create attendee mutation */
   const [createAttendee] = useMutation<CreateTRBRequestAttendeeInput>(
