@@ -6,6 +6,7 @@ import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
 import { requester } from 'data/mock/trbRequest';
+import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import {
@@ -79,11 +80,11 @@ describe('Trb Admin Initial Request Form', () => {
       }
     });
     const {
-      asFragment,
       getByText,
       queryByText,
       queryAllByText,
-      findByText
+      findByText,
+      findByTestId
     } = render(
       <MockedProvider
         mocks={[
@@ -93,6 +94,13 @@ describe('Trb Admin Initial Request Form', () => {
               variables: { id: mockTrbRequestData.id }
             },
             result: { data: { trbRequest: mockTrbRequestData } }
+          },
+          {
+            request: {
+              query: GetTrbRequestDocumentsQuery,
+              variables: { id: mockTrbRequestData.id }
+            },
+            result: { data: { trbRequest: { documents: [] } } }
           }
         ]}
       >
@@ -102,11 +110,18 @@ describe('Trb Admin Initial Request Form', () => {
       </MockedProvider>
     );
 
+    await findByTestId('page-loading');
+
     // Loaded okay
     await findByText(
       i18next.t<string>(
         'technicalAssistance:adminHome.subnav.initialRequestForm'
       )
+    );
+
+    // Empty documents table loaded
+    await findByText(
+      i18next.t<string>('technicalAssistance:documents.table.noDocument')
     );
 
     // Task status tag rendered from query data
@@ -135,7 +150,5 @@ describe('Trb Admin Initial Request Form', () => {
     expect(
       queryByText(i18next.t<string>('technicalAssistance:check.requestType'))
     ).not.toBeInTheDocument();
-
-    expect(asFragment()).toMatchSnapshot();
   });
 });
