@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
@@ -14,6 +14,7 @@ import {
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
+  TRBRequestStatus,
   TRBRequestType
 } from 'types/graphql-global-types';
 
@@ -23,7 +24,9 @@ const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
   createdBy: 'SF13',
+  createdAt: '',
   type: TRBRequestType.NEED_HELP,
+  status: TRBRequestStatus.OPEN,
   taskStatuses: {
     formStatus: TRBFormStatus.IN_PROGRESS,
     feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
@@ -67,7 +70,9 @@ const mockTrbRequestData: TrbRequest = {
     submittedAt: null,
     __typename: 'TRBRequestForm'
   },
-  __typename: 'TRBRequest'
+  __typename: 'TRBRequest',
+  trbLead: null,
+  feedback: []
 };
 
 describe('Trb Admin Initial Request Form', () => {
@@ -110,18 +115,15 @@ describe('Trb Admin Initial Request Form', () => {
       </MockedProvider>
     );
 
-    await findByTestId('page-loading');
+    const loading = await findByTestId('page-loading');
 
     // Loaded okay
-    await findByText(
+    await waitForElementToBeRemoved(loading);
+
+    getByText(
       i18next.t<string>(
         'technicalAssistance:adminHome.subnav.initialRequestForm'
       )
-    );
-
-    // Empty documents table loaded
-    await findByText(
-      i18next.t<string>('technicalAssistance:documents.table.noDocument')
     );
 
     // Task status tag rendered from query data
@@ -150,5 +152,10 @@ describe('Trb Admin Initial Request Form', () => {
     expect(
       queryByText(i18next.t<string>('technicalAssistance:check.requestType'))
     ).not.toBeInTheDocument();
+
+    // Empty documents table loaded
+    await findByText(
+      i18next.t<string>('technicalAssistance:documents.table.noDocument')
+    );
   });
 });
