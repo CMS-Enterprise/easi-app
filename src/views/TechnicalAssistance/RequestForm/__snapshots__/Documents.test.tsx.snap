@@ -13,7 +13,7 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
     </a>
   </div>
   <div
-    class="easi-table--bleed-x"
+    class="easi-table--bleed-x easi-table--bottomless"
   >
     <div
       class="usa-table-container--scrollable"

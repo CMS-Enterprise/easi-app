@@ -8,16 +8,20 @@ exports[`Trb Admin Initial Request Form renders 1`] = `
     id="trbAdminInitialRequestForm-f3b4cff8-321d-4d2a-a9a2-4b05810756d7"
   >
     <h1
-      class="margin-y-0"
+      class="margin-top-0 margin-bottom-1 line-height-heading-2"
     >
       Initial request form
     </h1>
-    <span
-      class="easi-tag bg-warning"
-      data-testid="task-list-task-tag"
+    <div
+      class="display-flex flex-align-center line-height-body-5"
     >
-      In Progress
-    </span>
+      <span
+        class="easi-tag bg-warning"
+        data-testid="task-list-task-tag"
+      >
+        In Progress
+      </span>
+    </div>
     <h2
       class="margin-top-3 margin-bottom-05"
     >
@@ -258,7 +262,7 @@ exports[`Trb Admin Initial Request Form renders 1`] = `
       class="margin-top-3 margin-bottom-6"
     >
       <div
-        class="easi-table--bleed-x"
+        class="easi-table--bleed-x easi-table--bottomless"
       >
         <div
           class="usa-table-container--scrollable"
@@ -461,9 +465,6 @@ exports[`Trb Admin Initial Request Form renders 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="easi-divider"
-    />
   </div>
 </DocumentFragment>
 `;
