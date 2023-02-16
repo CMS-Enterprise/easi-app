@@ -11,6 +11,7 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
+import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 
@@ -32,14 +33,20 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
   });
 
   const { adviceLetter, taskStatuses } = data?.trbRequest || {};
-  const adviceLetterStatus = taskStatuses?.adviceLetterStatus;
+
+  /**
+   * Advice letter status
+   *
+   * Defaults to `CANNOT_START_YET` to fix issue where query returns undefined if no advice letter is present
+   */
+  const adviceLetterStatus =
+    taskStatuses?.adviceLetterStatus || TRBAdviceLetterStatus.CANNOT_START_YET;
+
   const author = adviceLetter?.author;
   const recommendations = adviceLetter?.recommendations || [];
 
   // Page loading
-  if (loading || !adviceLetterStatus) {
-    return <PageLoading />;
-  }
+  if (loading) return <PageLoading />;
 
   return (
     <div
