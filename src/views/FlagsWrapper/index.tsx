@@ -38,7 +38,8 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             systemProfile: true,
             systemProfileHiddenFields: false,
             cedar508Requests: false,
-            technicalAssistance: true
+            technicalAssistance: true,
+            hide508Workflow: true
           }
         });
 
