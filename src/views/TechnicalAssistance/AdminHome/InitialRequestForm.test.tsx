@@ -1,14 +1,16 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { MockedProvider } from '@apollo/client/testing';
-import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { render } from '@testing-library/react';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
-import { requester } from 'data/mock/trbRequest';
+import { attendees, requester } from 'data/mock/trbRequest';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
@@ -17,6 +19,7 @@ import {
   TRBRequestStatus,
   TRBRequestType
 } from 'types/graphql-global-types';
+import VerboseMockedProvider from 'utils/testing/MockedVerboseProvider';
 
 import InitialRequestForm from './InitialRequestForm';
 
@@ -75,6 +78,12 @@ const mockTrbRequestData: TrbRequest = {
   feedback: []
 };
 
+const initialRequester: TRBAttendee = {
+  ...requester,
+  component: null,
+  role: null
+};
+
 describe('Trb Admin Initial Request Form', () => {
   it('renders', async () => {
     const mockStore = configureMockStore();
@@ -84,14 +93,12 @@ describe('Trb Admin Initial Request Form', () => {
         name: requester?.userInfo?.commonName
       }
     });
-    const {
-      getByText,
-      queryByText,
-      queryAllByText,
-      findByText,
-      findByTestId
-    } = render(
-      <MockedProvider
+    const { getByText, queryByText, queryAllByText, findByText } = render(
+      <VerboseMockedProvider
+        defaultOptions={{
+          watchQuery: { fetchPolicy: 'no-cache' },
+          query: { fetchPolicy: 'no-cache' }
+        }}
         mocks={[
           {
             request: {
@@ -102,25 +109,49 @@ describe('Trb Admin Initial Request Form', () => {
           },
           {
             request: {
+              query: GetTRBRequestAttendees,
+              variables: {
+                id: mockTrbRequestData.id
+              }
+            },
+            result: {
+              data: {
+                trbRequest: {
+                  id: mockTrbRequestData.id,
+                  attendees: [initialRequester, ...attendees]
+                }
+              }
+            }
+          },
+          {
+            request: {
               query: GetTrbRequestDocumentsQuery,
               variables: { id: mockTrbRequestData.id }
             },
-            result: { data: { trbRequest: { documents: [] } } }
+            result: {
+              data: {
+                trbRequest: { id: mockTrbRequestData.id, documents: [] }
+              }
+            }
           }
         ]}
       >
         <Provider store={store}>
-          <InitialRequestForm trbRequestId={mockTrbRequestData.id} />
+          <MemoryRouter
+            initialEntries={[
+              `/trb/${mockTrbRequestData.id}/initial-request-form`
+            ]}
+          >
+            <Route exact path="/trb/:id/:activePage">
+              <InitialRequestForm trbRequestId={mockTrbRequestData.id} />
+            </Route>
+          </MemoryRouter>
         </Provider>
-      </MockedProvider>
+      </VerboseMockedProvider>
     );
 
-    const loading = await findByTestId('page-loading');
-
     // Loaded okay
-    await waitForElementToBeRemoved(loading);
-
-    getByText(
+    await findByText(
       i18next.t<string>(
         'technicalAssistance:adminHome.subnav.initialRequestForm'
       )
