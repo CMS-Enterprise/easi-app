@@ -39,7 +39,17 @@ const technicalAssistance = {
   },
   adviceLetter: {
     introText:
-      'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.'
+      'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.',
+    downloadAsPdf: 'Download advice letter as PDF',
+    sendDate: 'Send date',
+    notYetSent: 'Not yet sent',
+    whatWeHeard: 'What we heard',
+    meetingSummary: 'Meeting summary',
+    whatWeRecommend: 'What we recommend',
+    resources: 'Resources',
+    nextSteps: 'Next steps',
+    notSpecified: 'Not specified yet',
+    followup: 'Should the team return for a follow-up session?'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',

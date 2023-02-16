@@ -86,9 +86,6 @@ export default function AdminHome() {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
-  // console.log(trbRequest);
-  // console.log(id);
-
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
     return <PageLoading />;
@@ -124,7 +121,7 @@ export default function AdminHome() {
       />
 
       <GridContainer>
-        <Grid row className="margin-y-5 grid-gap">
+        <Grid row className="margin-top-5 grid-gap">
           {/* Side navigation */}
           <Grid
             col

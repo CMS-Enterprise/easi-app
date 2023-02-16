@@ -12,7 +12,7 @@ const RequestNotes = ({ trbRequestId }: RequestNotesProps) => {
   const notesCount = 0;
   return (
     <div
-      className="trb-admin-home__request-notes bg-base-lightest padding-x-2 padding-y-1"
+      className="trb-admin-home__request-notes bg-base-lightest padding-x-2 padding-y-1 margin-bottom-3"
       data-testid="trb-admin-home__request-notes"
     >
       <p className="margin-y-0 line-height-body-5">
