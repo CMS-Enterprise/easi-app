@@ -19,7 +19,7 @@ import {
   TRBRequestStatus,
   TRBRequestType
 } from 'types/graphql-global-types';
-import VerboseMockedProvider from 'utils/testing/MockedVerboseProvider';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import InitialRequestForm from './InitialRequestForm';
 
