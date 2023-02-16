@@ -364,7 +364,7 @@ exports[`TRB admin home Renders advice letters 1`] = `
                   <span
                     data-testid="status-author-text"
                   >
-                     by Jerry Seinfeld on Invalid DateTime
+                     by Jerry Seinfeld on January 5, 2023
                   </span>
                 </p>
               </div>
