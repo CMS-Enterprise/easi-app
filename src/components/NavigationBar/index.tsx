@@ -34,7 +34,7 @@ export const navLinks = (flags: Flags) => [
   {
     link: '/508',
     label: 'add508Request',
-    isDisabled: flags.hide508Workflow
+    isEnabled: !flags.hide508Workflow
   },
   {
     link: '/trb',
