@@ -12,8 +12,8 @@ type AdminTaskStatusTagProps = {
   status: TaskStatus;
   /** User name to display next to status tag */
   name: string;
-  /** Time to display next to user name */
-  time: string;
+  /** Date to display next to user name */
+  date: string;
   className?: string;
 };
 
@@ -25,7 +25,7 @@ type AdminTaskStatusTagProps = {
 const AdminTaskStatusTag = ({
   status,
   name,
-  time,
+  date,
   className
 }: AdminTaskStatusTagProps) => {
   return (
@@ -34,8 +34,8 @@ const AdminTaskStatusTag = ({
       {
         // Only show name and date if ready for review or completed
         (status === 'READY_FOR_REVIEW' || status === 'COMPLETED') && (
-          <span>
-            {` by ${name} at ${formatDateLocal(time, 'MMMM d, yyyy')}`}
+          <span data-testid="status-author-text">
+            {` by ${name} on ${formatDateLocal(date, 'MMMM d, yyyy')}`}
           </span>
         )
       }
