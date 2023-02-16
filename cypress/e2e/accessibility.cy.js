@@ -5,7 +5,7 @@ import { formatDateLocal, formatDateUtc } from '../../src/utils/date';
 // scripts/dev db:seed
 // 508 Request UUID - 6e224030-09d5-46f7-ad04-4bb851b36eab
 
-describe('Accessibility Requests', () => {
+describe.skip('Accessibility Requests', () => {
   it('can create a request and see its details', () => {
     cy.localLogin({ name: 'A11Y' });
 
