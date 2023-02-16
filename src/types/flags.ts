@@ -7,6 +7,7 @@ export type Flags = {
   systemProfileHiddenFields: boolean;
   cedar508Requests: boolean;
   technicalAssistance: boolean;
+  hide508Workflow: boolean;
 };
 
 export type FlagsState = {
