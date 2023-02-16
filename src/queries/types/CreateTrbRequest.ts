@@ -73,12 +73,9 @@ export interface CreateTrbRequest_createTRBRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
-  createdBy: string;
-  createdAt: Time;
   type: TRBRequestType;
   status: TRBRequestStatus;
   taskStatuses: CreateTrbRequest_createTRBRequest_taskStatuses;
-  trbLead: string | null;
   form: CreateTrbRequest_createTRBRequest_form;
   feedback: CreateTrbRequest_createTRBRequest_feedback[];
 }

@@ -73,12 +73,9 @@ export interface TrbRequestFormFields {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
-  createdBy: string;
-  createdAt: Time;
   type: TRBRequestType;
   status: TRBRequestStatus;
   taskStatuses: TrbRequestFormFields_taskStatuses;
-  trbLead: string | null;
   form: TrbRequestFormFields_form;
   feedback: TrbRequestFormFields_feedback[];
 }

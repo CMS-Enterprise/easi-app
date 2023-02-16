@@ -122,8 +122,6 @@ export const trbRequestAdviceLetter: AdviceLetter = {
 export const trbRequest: TrbRequest = {
   id: trbRequestId,
   name: 'Draft',
-  createdBy: euaUserId,
-  createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses: {
     __typename: 'TRBTaskStatuses',
     attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
@@ -135,7 +133,6 @@ export const trbRequest: TrbRequest = {
   feedback: [],
   status: TRBRequestStatus.OPEN,
   type: TRBRequestType.NEED_HELP,
-  trbLead: null,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     component: null,

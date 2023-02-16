@@ -4,8 +4,6 @@ export default gql`
   fragment TrbRequestFormFields on TRBRequest {
     id
     name
-    createdBy
-    createdAt
     type
     status
     taskStatuses {
@@ -15,7 +13,6 @@ export default gql`
       attendConsultStatus
       adviceLetterStatus
     }
-    trbLead
 
     form {
       id
