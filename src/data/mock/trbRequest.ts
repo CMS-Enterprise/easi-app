@@ -1,7 +1,9 @@
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { GetTRBRequestAttendees_trbRequest_attendees as TRBAttendee } from 'queries/types/GetTRBRequestAttendees';
+import { GetTrbRequestSummary_trbRequest as Summary } from 'queries/types/GetTrbRequestSummary';
 import {
   PersonRole,
+  TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
@@ -74,6 +76,23 @@ export const attendees: TRBAttendee[] = [
   }
 ];
 
+export const trbRequestSummary: Summary = {
+  __typename: 'TRBRequest',
+  name: 'TRB Request Mock',
+  type: TRBRequestType.NEED_HELP,
+  status: TRBRequestStatus.OPEN,
+  trbLead: null,
+  createdAt: '2023-01-05T07:26:16.036618Z',
+  taskStatuses: {
+    __typename: 'TRBTaskStatuses',
+    attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+    consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+    feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+    formStatus: TRBFormStatus.READY_TO_START,
+    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
+  }
+};
+
 export const trbRequest: TrbRequest = {
   id: trbRequestId,
   name: 'Draft',
@@ -84,8 +103,10 @@ export const trbRequest: TrbRequest = {
     attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
     consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
     feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-    formStatus: TRBFormStatus.READY_TO_START
+    formStatus: TRBFormStatus.READY_TO_START,
+    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
   },
+  feedback: [],
   status: TRBRequestStatus.OPEN,
   type: TRBRequestType.NEED_HELP,
   trbLead: null,
