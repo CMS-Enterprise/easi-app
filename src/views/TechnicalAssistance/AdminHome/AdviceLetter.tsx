@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
-import { Grid, Link } from '@trussworks/react-uswds';
+import { Alert, Grid, Link } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
 import PDFExport from 'components/PDFExport';
@@ -60,7 +60,7 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
           <AdminTaskStatusTag
             status={adviceLetterStatus}
             name={author?.commonName!}
-            time={adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''}
+            date={adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''}
             className="margin-bottom-205"
           />
         </Grid>
@@ -70,8 +70,13 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
       </Grid>
 
       {
-        /* Advice letter content */
-        adviceLetter && (
+        // If no advice letter, show alert message
+        !adviceLetter ? (
+          <Alert type="info" slim>
+            {t('adviceLetter.noAdviceLetter')}
+          </Alert>
+        ) : (
+          /* Advice letter content */
           <PDFExport
             title={t('adminHome.subnav.adviceLetter')}
             filename={`Advice letter for ${data?.trbRequest?.name}`}
