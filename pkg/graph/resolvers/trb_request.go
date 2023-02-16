@@ -2,9 +2,11 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -218,4 +220,85 @@ func UpdateTRBRequestTRBLead(
 	}
 
 	return updatedTrb, err
+}
+
+// CloseTRBRequest closes a TRB request and sends an email if recipients are specified
+func CloseTRBRequest(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+	id uuid.UUID,
+	reasonClosed string,
+	notifyEUAIDs []string,
+) (*models.TRBRequest, error) {
+	// Query the TRB request, attendees in parallel
+	errGroup := new(errgroup.Group)
+
+	// Query the TRB request
+	var trb *models.TRBRequest
+	var errTRB error
+	errGroup.Go(func() error {
+		trb, errTRB = store.GetTRBRequestByID(ctx, id)
+		return errTRB
+	})
+
+	if errG := errGroup.Wait(); errG != nil {
+		return nil, errG
+	}
+
+	// Check if request is already closed so an unnecesary email won't be sent
+	if trb.Status != models.TRBSOpen {
+		return nil, errors.New("Cannot close a TRB request that is not open")
+	}
+
+	trbChanges := map[string]interface{}{
+		"status": models.TRBSClosed,
+	}
+
+	err := ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	updatedTrb, err := store.UpdateTRBRequest(ctx, trb)
+	if err != nil {
+		return nil, err
+	}
+
+	requester, err := fetchUserInfo(ctx, trb.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	notifyUserInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos)+1)
+	for _, recipientInfo := range notifyUserInfos {
+		recipientEmails = append(recipientEmails, recipientInfo.Email)
+	}
+	recipientEmails = append(recipientEmails, requester.Email)
+
+	emailInput := email.SendTRBRequestClosedEmailInput{
+		TRBRequestID:   trb.ID,
+		TRBRequestName: trb.Name,
+		RequesterName:  requester.CommonName,
+		Recipients:     recipientEmails,
+		ReasonClosed:   reasonClosed,
+	}
+
+	// Email client can be nil when this is called from tests - the email client itself tests this
+	// separately in the email package test
+	if emailClient != nil {
+		err = emailClient.SendTRBRequestClosedEmail(ctx, emailInput)
+		if err != nil {
+			return updatedTrb, err
+		}
+	}
+
+	return updatedTrb, nil
 }

@@ -57,6 +57,7 @@ type templates struct {
 	trbReadyForConsult                         templateCaller
 	trbEditsNeededOnForm                       templateCaller
 	trbAdviceLetterSubmitted                   templateCaller
+	trbRequestClosed                           templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -265,6 +266,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(trbEditsNeededOnFormTemplateName)
 	}
 	appTemplates.trbEditsNeededOnForm = trbEditsNeededOnFormTemplate
+
+	trbRequestClosedTemplateName := "trb_request_closed.gohtml"
+	trbRequestClosedTemplate := rawTemplates.Lookup(trbRequestClosedTemplateName)
+	if trbRequestClosedTemplate == nil {
+		return Client{}, templateError(trbRequestClosedTemplateName)
+	}
+	appTemplates.trbRequestClosed = trbRequestClosedTemplate
 
 	client := Client{
 		config:    config,

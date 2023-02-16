@@ -111,6 +111,13 @@ type CedarSystemMaintainerInformation struct {
 	YearToRetireReplace        *string  `json:"yearToRetireReplace"`
 }
 
+// The input needed to close a TRB request
+type CloseTRBRequestInput struct {
+	ID           uuid.UUID `json:"id"`
+	ReasonClosed string    `json:"reasonClosed"`
+	NotifyEuaIds []string  `json:"notifyEuaIds"`
+}
+
 // Represents a date used for start and end dates on a contract
 type ContractDate struct {
 	Day   *string `json:"day"`
