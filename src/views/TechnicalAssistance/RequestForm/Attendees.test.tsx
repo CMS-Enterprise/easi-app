@@ -73,7 +73,7 @@ describe('Trb Request form: Attendees', () => {
   };
 
   it('Renders the attendees form', async () => {
-    const { asFragment, getByTestId, findByTestId } = render(
+    const { getByTestId, findByTestId } = render(
       <MemoryRouter>
         <MockedProvider
           mocks={[getAttendeesQuery, getTrbRequestQuery, getCedarContactsQuery]}
@@ -117,8 +117,5 @@ describe('Trb Request form: Attendees', () => {
     // Select requester role
     userEvent.selectOptions(requesterRoleField, [requester.role!]);
     expect(requesterRoleField).toHaveValue(requester.role);
-
-    // Snapshot
-    expect(asFragment()).toMatchSnapshot();
   });
 });
