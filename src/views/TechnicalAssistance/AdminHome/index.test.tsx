@@ -9,8 +9,12 @@ import {
 } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
-import { trbRequestSummary } from 'data/mock/trbRequest';
+import {
+  trbRequestAdviceLetter,
+  trbRequestSummary
+} from 'data/mock/trbRequest';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
+import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 
 import AdminHome from '.';
 
@@ -25,6 +29,18 @@ const getTrbRequestQuery = {
   },
   result: {
     data: { trbRequest: trbRequestSummary }
+  }
+};
+
+const getAdviceLetterQuery = {
+  request: {
+    query: GetTrbAdviceLetterQuery,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: { trbRequest: trbRequestAdviceLetter }
   }
 };
 
@@ -83,5 +99,35 @@ describe('TRB admin home', () => {
 
     const subPageContent = await findByTestId(`trb-admin-home__${subpage}`);
     expect(subPageContent).toBeInTheDocument();
+  });
+
+  it.only('Renders advice letters', async () => {
+    const { findByTestId, getByText, asFragment } = render(
+      <MemoryRouter initialEntries={[`/trb/${trbRequestId}/advice`]}>
+        <Provider store={defaultStore}>
+          <MockedProvider
+            mocks={[getTrbRequestQuery, getAdviceLetterQuery]}
+            addTypename={false}
+          >
+            <Route path="/trb/:id/:activePage?">
+              <AdminHome />
+            </Route>
+          </MockedProvider>
+        </Provider>
+      </MemoryRouter>
+    );
+
+    // Wait for page to load
+    const subPageContent = await findByTestId(`trb-admin-home__advice`);
+    expect(subPageContent).toBeInTheDocument();
+
+    // Advice letter renders
+    expect(getByText('Meeting summary text')).toBeInTheDocument();
+
+    // Recommendation letter renders
+    expect(getByText('Recommendation 1')).toBeInTheDocument();
+
+    // Snapshot
+    expect(asFragment()).toMatchSnapshot();
   });
 });

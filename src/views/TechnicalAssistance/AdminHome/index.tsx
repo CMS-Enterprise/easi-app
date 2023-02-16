@@ -7,11 +7,11 @@ import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import PageLoading from 'components/PageLoading';
-import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import {
-  GetTrbRequest,
-  GetTrbRequestVariables
-} from 'queries/types/GetTrbRequest';
+  GetTrbRequestSummary,
+  GetTrbRequestSummaryVariables
+} from 'queries/types/GetTrbRequestSummary';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
@@ -77,12 +77,12 @@ export default function AdminHome() {
   }>();
 
   // TRB request query
-  const { data, loading } = useQuery<GetTrbRequest, GetTrbRequestVariables>(
-    GetTrbRequestQuery,
-    {
-      variables: { id }
-    }
-  );
+  const { data, loading } = useQuery<
+    GetTrbRequestSummary,
+    GetTrbRequestSummaryVariables
+  >(GetTrbRequestSummaryQuery, {
+    variables: { id }
+  });
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
@@ -135,7 +135,7 @@ export default function AdminHome() {
           <Grid col desktop={{ col: 9 }}>
             {subNavItems(id).map(subpage => (
               <Route exact path={subpage.route} key={subpage.route}>
-                <subpage.component trbRequestId={trbRequest.id} />
+                <subpage.component trbRequestId={id} />
               </Route>
             ))}
           </Grid>
