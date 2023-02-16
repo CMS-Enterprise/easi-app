@@ -1938,7 +1938,7 @@ type TRBRequestFeedback {
 }
 
 """
-The data needed add feedback to a TRB request
+The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
@@ -2096,6 +2096,14 @@ input CloseTRBRequestInput {
 }
 
 """
+The data needed to reopen a TRB request
+"""
+input ReopenTRBRequestInput {
+  trbRequestId: UUID!
+  reasonReopened: String!
+}
+
+"""
 Defines the mutations for the schema
 """
 type Mutation {
@@ -2238,6 +2246,8 @@ type Mutation {
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
+    @hasRole(role: EASI_TRB_ADMIN)
+  reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 

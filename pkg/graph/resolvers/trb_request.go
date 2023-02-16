@@ -302,3 +302,96 @@ func CloseTRBRequest(
 
 	return updatedTrb, nil
 }
+
+// ReopenTRBRequest re-opens a TRB request and sends an email to the requester and attendees
+func ReopenTRBRequest(
+	ctx context.Context,
+	store *storage.Store,
+	id uuid.UUID,
+	reasonReopened string,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+) (*models.TRBRequest, error) {
+	// Query the TRB request, attendees in parallel
+	errGroup := new(errgroup.Group)
+
+	// Query the TRB request
+	var trb *models.TRBRequest
+	var errTRB error
+	errGroup.Go(func() error {
+		trb, errTRB = store.GetTRBRequestByID(ctx, id)
+		return errTRB
+	})
+
+	// Query the TRB request attendees
+	var attendees []*models.TRBRequestAttendee
+	var errAttendees error
+	errGroup.Go(func() error {
+		attendees, errAttendees = store.GetTRBRequestAttendeesByTRBRequestID(ctx, id)
+		return errAttendees
+	})
+
+	if errG := errGroup.Wait(); errG != nil {
+		return nil, errG
+	}
+
+	// Check if request is already open so an unnecesary email won't be sent
+	if trb.Status != models.TRBSClosed {
+		return nil, errors.New("Cannot re-open a TRB request that is not closed")
+	}
+
+	trbChanges := map[string]interface{}{
+		"status": models.TRBSOpen,
+	}
+
+	err := ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	updatedTrb, err := store.UpdateTRBRequest(ctx, trb)
+	if err != nil {
+		return nil, err
+	}
+
+	requester, err := fetchUserInfo(ctx, trb.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	recipientEuas := make([]string, 0, len(attendees))
+	for _, attendee := range attendees {
+		recipientEuas = append(recipientEuas, attendee.EUAUserID)
+	}
+
+	attendeeInfos, err := fetchUserInfos(ctx, recipientEuas)
+	if err != nil {
+		return nil, err
+	}
+
+	recipientEmails := make([]models.EmailAddress, 0, len(attendees)+1)
+	for _, attendeeInfo := range attendeeInfos {
+		recipientEmails = append(recipientEmails, attendeeInfo.Email)
+	}
+	recipientEmails = append(recipientEmails, requester.Email)
+
+	emailInput := email.SendTRBRequestReopenedEmailInput{
+		TRBRequestID:   trb.ID,
+		TRBRequestName: trb.Name,
+		RequesterName:  requester.CommonName,
+		Recipients:     recipientEmails,
+		ReasonReopened: reasonReopened,
+	}
+
+	// Email client can be nil when this is called from tests - the email client itself tests this
+	// separately in the email package test
+	if emailClient != nil {
+		err = emailClient.SendTRBRequestReopenedEmail(ctx, emailInput)
+		if err != nil {
+			return updatedTrb, err
+		}
+	}
+
+	return updatedTrb, nil
+}
