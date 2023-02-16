@@ -2065,6 +2065,19 @@ func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Conte
 	return resolvers.DeleteTRBAdviceLetterRecommendation(ctx, r.store, id)
 }
 
+// ReopenTrbRequest is the resolver for the reopenTrbRequest field.
+func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.ReopenTRBRequestInput) (*models.TRBRequest, error) {
+	return resolvers.ReopenTRBRequest(
+		ctx,
+		r.store,
+		input.TrbRequestID,
+		input.ReasonReopened,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		r.service.FetchUserInfos,
+	)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
