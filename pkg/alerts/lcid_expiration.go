@@ -52,6 +52,7 @@ func getAlertRecipients(
 // If LCID is expiring with 60 days, an alert should be sent once and then again if LCID gets with 46 days (two weeks later) of expiration
 func checkForLCIDExpiration(
 	ctx context.Context,
+	currentDate time.Time,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchSystemIntakes func(context.Context) (models.SystemIntakes, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
@@ -77,8 +78,6 @@ func checkForLCIDExpiration(
 		appcontext.ZLogger(ctx).Warn(fmt.Sprintf("Failed to fetch system intakes for LCID Expiration check. %s", err))
 		return err
 	}
-
-	currentDate := time.Now()
 
 	for _, currIntake := range result {
 
@@ -231,7 +230,7 @@ func StartLcidExpirationCheck(
 	ticker := time.NewTicker(lcidExpirationCheckTime)
 	go func(ctx context.Context) {
 		for {
-			err := checkForLCIDExpiration(ctx, fetchUserInfo, fetchSystemIntakes, updateSystemIntake, sendLCIDExpirationEmail)
+			err := checkForLCIDExpiration(ctx, time.Now(), fetchUserInfo, fetchSystemIntakes, updateSystemIntake, sendLCIDExpirationEmail)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Failed to check for LCID Expiration", zap.Error(err))
 			}
