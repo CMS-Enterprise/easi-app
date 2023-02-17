@@ -56,6 +56,7 @@ type templates struct {
 	trbAttendeeAdded                           templateCaller
 	trbReadyForConsult                         templateCaller
 	trbEditsNeededOnForm                       templateCaller
+	trbRequestReopened                         templateCaller
 	trbAdviceLetterSubmitted                   templateCaller
 }
 
@@ -265,6 +266,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(trbEditsNeededOnFormTemplateName)
 	}
 	appTemplates.trbEditsNeededOnForm = trbEditsNeededOnFormTemplate
+
+	trbRequestReopenedTemplateName := "trb_request_reopened.gohtml"
+	trbRequestReopenedTemplate := rawTemplates.Lookup(trbRequestReopenedTemplateName)
+	if trbRequestReopenedTemplate == nil {
+		return Client{}, templateError(trbRequestReopenedTemplateName)
+	}
+	appTemplates.trbRequestReopened = trbRequestReopenedTemplate
 
 	client := Client{
 		config:    config,
