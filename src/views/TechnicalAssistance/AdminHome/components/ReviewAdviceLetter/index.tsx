@@ -52,7 +52,7 @@ const ReviewAdviceLetter = ({
               return (
                 <div
                   key={title}
-                  className="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4"
+                  className="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
                 >
                   <h3 className="margin-bottom-1">{title}</h3>
                   <p className="margin-top-0 line-height-body-5">
