@@ -10,7 +10,6 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import AdminAction from './components/AdminAction';
@@ -33,13 +32,7 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
 
   const { adviceLetter, taskStatuses } = data?.trbRequest || {};
 
-  /**
-   * Advice letter status
-   *
-   * Defaults to `CANNOT_START_YET` to fix issue where query returns undefined if no advice letter is present
-   */
-  const adviceLetterStatus =
-    taskStatuses?.adviceLetterStatus || TRBAdviceLetterStatus.CANNOT_START_YET;
+  const adviceLetterStatus = taskStatuses?.adviceLetterStatus;
 
   const author = adviceLetter?.author;
 
@@ -63,7 +56,7 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
 
           {/* Status tag */}
           <AdminTaskStatusTag
-            status={adviceLetterStatus}
+            status={adviceLetterStatus || 'CANNOT_START_YET'}
             name={author?.commonName!}
             date={adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''}
             className="margin-bottom-205"
@@ -75,8 +68,8 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
       </Grid>
 
       {
-        // If no advice letter, show alert message
-        !adviceLetter ? (
+        // If advice letter status is CANNOT_START_YET, show alert message
+        adviceLetterStatus === 'CANNOT_START_YET' ? (
           <Alert type="info" slim>
             {t('adviceLetter.noAdviceLetter')}
           </Alert>
@@ -87,9 +80,10 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
             filename={`Advice letter for ${data?.trbRequest?.name}`}
             label={t('adviceLetter.downloadAsPdf')}
             linkPosition="top"
+            disabled={!adviceLetter}
           >
             <AdminAction className="margin-top-3 margin-bottom-5" />
-            <ReviewAdviceLetter adviceLetter={adviceLetter} />
+            {adviceLetter && <ReviewAdviceLetter adviceLetter={adviceLetter} />}
           </PDFExport>
         )
       }
