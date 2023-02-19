@@ -147,8 +147,15 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   error={!!flatErrors.requestName}
                 >
                   <Label htmlFor="IntakeForm-ContractName">
-                    Contract/Request Name
+                    Contract/Request Title
                   </Label>
+                  <HelpText
+                    id="IntakeForm-ContractNameHelp"
+                    className="margin-top-105"
+                  >
+                    Your request title should match the title of your
+                    Acquisition Plan or Interagency Agreement.
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
                     as={TextInput}

@@ -1567,8 +1567,8 @@ type TRBRequestAttendee {
   euaUserId: String! # Sort of duplicative, as this is also in UserInfo
   userInfo: UserInfo
   trbRequestId: UUID!
-  component: String!
-  role: PersonRole!
+  component: String
+  role: PersonRole
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -1942,6 +1942,7 @@ type TRBRequestFeedback {
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -1949,7 +1950,7 @@ type TRBRequestFeedback {
 }
 
 """
-The data needed add feedback to a TRB request
+The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
@@ -2070,6 +2071,7 @@ type TRBAdviceLetterRecommendation {
   title: String!
   recommendation: String!
   links: [String!]!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2094,6 +2096,14 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
   title: String
   recommendation: String
   links: [String!]
+}
+
+"""
+The data needed to reopen a TRB request
+"""
+input ReopenTRBRequestInput {
+  trbRequestId: UUID!
+  reasonReopened: String!
 }
 
 """
@@ -2241,6 +2251,8 @@ type Mutation {
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
+    @hasRole(role: EASI_TRB_ADMIN)
+  reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 

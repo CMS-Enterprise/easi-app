@@ -42,7 +42,6 @@ type ResolverRoot interface {
 	AccessibilityRequest() AccessibilityRequestResolver
 	AccessibilityRequestDocument() AccessibilityRequestDocumentResolver
 	AccessibilityRequestNote() AccessibilityRequestNoteResolver
-	AugmentedSystemIntakeContact() AugmentedSystemIntakeContactResolver
 	BusinessCase() BusinessCaseResolver
 	CedarAuthorityToOperate() CedarAuthorityToOperateResolver
 	CedarDataCenter() CedarDataCenterResolver
@@ -64,7 +63,6 @@ type ResolverRoot interface {
 	TRBRequestDocument() TRBRequestDocumentResolver
 	TRBRequestFeedback() TRBRequestFeedbackResolver
 	TRBRequestForm() TRBRequestFormResolver
-	UserInfo() UserInfoResolver
 }
 
 type DirectiveRoot struct {
@@ -546,6 +544,7 @@ type ComplexityRoot struct {
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
+		ReopenTrbRequest                                 func(childComplexity int, input model.ReopenTRBRequestInput) int
 		RequestReviewForTRBAdviceLetter                  func(childComplexity int, id uuid.UUID) int
 		SendCantFindSomethingEmail                       func(childComplexity int, input model.SendCantFindSomethingEmailInput) int
 		SendFeedbackEmail                                func(childComplexity int, input model.SendFeedbackEmailInput) int
@@ -824,6 +823,7 @@ type ComplexityRoot struct {
 	}
 
 	TRBAdviceLetterRecommendation struct {
+		Author         func(childComplexity int) int
 		CreatedAt      func(childComplexity int) int
 		CreatedBy      func(childComplexity int) int
 		ID             func(childComplexity int) int
@@ -885,6 +885,7 @@ type ComplexityRoot struct {
 
 	TRBRequestFeedback struct {
 		Action          func(childComplexity int) int
+		Author          func(childComplexity int) int
 		CopyTRBMailbox  func(childComplexity int) int
 		CreatedAt       func(childComplexity int) int
 		CreatedBy       func(childComplexity int) int
@@ -1009,9 +1010,6 @@ type AccessibilityRequestDocumentResolver interface {
 }
 type AccessibilityRequestNoteResolver interface {
 	AuthorName(ctx context.Context, obj *models.AccessibilityRequestNote) (string, error)
-}
-type AugmentedSystemIntakeContactResolver interface {
-	Email(ctx context.Context, obj *models.AugmentedSystemIntakeContact) (*string, error)
 }
 type BusinessCaseResolver interface {
 	AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
@@ -1196,6 +1194,7 @@ type MutationResolver interface {
 	CreateTRBAdviceLetterRecommendation(ctx context.Context, input model.CreateTRBAdviceLetterRecommendationInput) (*models.TRBAdviceLetterRecommendation, error)
 	UpdateTRBAdviceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetterRecommendation, error)
 	DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error)
+	ReopenTrbRequest(ctx context.Context, input model.ReopenTRBRequestInput) (*models.TRBRequest, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -1280,6 +1279,7 @@ type TRBAdviceLetterResolver interface {
 }
 type TRBAdviceLetterRecommendationResolver interface {
 	Links(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) ([]string, error)
+	Author(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) (*models.UserInfo, error)
 }
 type TRBRequestResolver interface {
 	Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error)
@@ -1303,6 +1303,8 @@ type TRBRequestDocumentResolver interface {
 }
 type TRBRequestFeedbackResolver interface {
 	NotifyEuaIds(ctx context.Context, obj *models.TRBRequestFeedback) ([]string, error)
+
+	Author(ctx context.Context, obj *models.TRBRequestFeedback) (*models.UserInfo, error)
 }
 type TRBRequestFormResolver interface {
 	CollabGroups(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCollabGroupOption, error)
@@ -1314,9 +1316,6 @@ type TRBRequestFormResolver interface {
 	SubjectAreaDataAndDataManagement(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBDataAndDataManagementOption, error)
 	SubjectAreaGovernmentProcessesAndPolicies(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBGovernmentProcessesAndPoliciesOption, error)
 	SubjectAreaOtherTechnicalTopics(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBOtherTechnicalTopicsOption, error)
-}
-type UserInfoResolver interface {
-	Email(ctx context.Context, obj *models.UserInfo) (string, error)
 }
 
 type executableSchema struct {
@@ -3853,6 +3852,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RejectIntake(childComplexity, args["input"].(model.RejectIntakeInput)), true
 
+	case "Mutation.reopenTrbRequest":
+		if e.complexity.Mutation.ReopenTrbRequest == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_reopenTrbRequest_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ReopenTrbRequest(childComplexity, args["input"].(model.ReopenTRBRequestInput)), true
+
 	case "Mutation.requestReviewForTRBAdviceLetter":
 		if e.complexity.Mutation.RequestReviewForTRBAdviceLetter == nil {
 			break
@@ -5472,6 +5483,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBAdviceLetter.TRBRequestID(childComplexity), true
 
+	case "TRBAdviceLetterRecommendation.author":
+		if e.complexity.TRBAdviceLetterRecommendation.Author == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetterRecommendation.Author(childComplexity), true
+
 	case "TRBAdviceLetterRecommendation.createdAt":
 		if e.complexity.TRBAdviceLetterRecommendation.CreatedAt == nil {
 			break
@@ -5793,6 +5811,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequestFeedback.Action(childComplexity), true
+
+	case "TRBRequestFeedback.author":
+		if e.complexity.TRBRequestFeedback.Author == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestFeedback.Author(childComplexity), true
 
 	case "TRBRequestFeedback.copyTrbMailbox":
 		if e.complexity.TRBRequestFeedback.CopyTRBMailbox == nil {
@@ -6337,6 +6362,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputGeneratePresignedUploadURLInput,
 		ec.unmarshalInputIssueLifecycleIdInput,
 		ec.unmarshalInputRejectIntakeInput,
+		ec.unmarshalInputReopenTRBRequestInput,
 		ec.unmarshalInputSendCantFindSomethingEmailInput,
 		ec.unmarshalInputSendFeedbackEmailInput,
 		ec.unmarshalInputSendReportAProblemEmailInput,
@@ -7998,8 +8024,8 @@ type TRBRequestAttendee {
   euaUserId: String! # Sort of duplicative, as this is also in UserInfo
   userInfo: UserInfo
   trbRequestId: UUID!
-  component: String!
-  role: PersonRole!
+  component: String
+  role: PersonRole
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -8373,6 +8399,7 @@ type TRBRequestFeedback {
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -8380,7 +8407,7 @@ type TRBRequestFeedback {
 }
 
 """
-The data needed add feedback to a TRB request
+The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
@@ -8501,6 +8528,7 @@ type TRBAdviceLetterRecommendation {
   title: String!
   recommendation: String!
   links: [String!]!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -8525,6 +8553,14 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
   title: String
   recommendation: String
   links: [String!]
+}
+
+"""
+The data needed to reopen a TRB request
+"""
+input ReopenTRBRequestInput {
+  trbRequestId: UUID!
+  reasonReopened: String!
 }
 
 """
@@ -8672,6 +8708,8 @@ type Mutation {
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
+    @hasRole(role: EASI_TRB_ADMIN)
+  reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 
@@ -9383,6 +9421,21 @@ func (ec *executionContext) field_Mutation_rejectIntake_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRejectIntakeInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_reopenTrbRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.ReopenTRBRequestInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNReopenTRBRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐReopenTRBRequestInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -12186,7 +12239,7 @@ func (ec *executionContext) _AugmentedSystemIntakeContact_email(ctx context.Cont
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AugmentedSystemIntakeContact().Email(rctx, obj)
+		return obj.Email, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12195,17 +12248,17 @@ func (ec *executionContext) _AugmentedSystemIntakeContact_email(ctx context.Cont
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(models.EmailAddress)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_AugmentedSystemIntakeContact_email(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "AugmentedSystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -23401,7 +23454,6 @@ func (ec *executionContext) _Mutation_addGRTFeedbackAndKeepBusinessCaseInDraft(c
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -23481,7 +23533,6 @@ func (ec *executionContext) _Mutation_addGRTFeedbackAndProgressToFinalBusinessCa
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -23561,7 +23612,6 @@ func (ec *executionContext) _Mutation_addGRTFeedbackAndRequestBusinessCase(ctx c
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -23617,7 +23667,6 @@ func (ec *executionContext) _Mutation_createAccessibilityRequest(ctx context.Con
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -23675,7 +23724,6 @@ func (ec *executionContext) _Mutation_deleteAccessibilityRequest(ctx context.Con
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -23733,7 +23781,6 @@ func (ec *executionContext) _Mutation_createAccessibilityRequestDocument(ctx con
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -23815,7 +23862,6 @@ func (ec *executionContext) _Mutation_createAccessibilityRequestNote(ctx context
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -23873,7 +23919,6 @@ func (ec *executionContext) _Mutation_deleteAccessibilityRequestDocument(ctx con
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -23953,7 +23998,6 @@ func (ec *executionContext) _Mutation_updateAccessibilityRequestStatus(ctx conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24017,7 +24061,6 @@ func (ec *executionContext) _Mutation_updateAccessibilityRequestCedarSystem(ctx 
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24099,7 +24142,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionBusinessCaseNeeded
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24181,7 +24223,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionBusinessCaseNeedsC
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24263,7 +24304,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionGuideReceievedClos
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24345,7 +24385,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionNoGovernanceNeeded
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24427,7 +24466,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionNotItRequest(ctx c
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24509,7 +24547,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionNotRespondingClose
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24591,7 +24628,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionReadyForGRT(ctx co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24673,7 +24709,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionSendEmail(ctx cont
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24755,7 +24790,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionExtendLifecycleId(
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24837,7 +24871,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeNote(ctx context.Context
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25119,7 +25152,6 @@ func (ec *executionContext) _Mutation_createSystemIntake(ctx context.Context, fi
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25291,7 +25323,6 @@ func (ec *executionContext) _Mutation_createTestDate(ctx context.Context, field 
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25373,7 +25404,6 @@ func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field 
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25455,7 +25485,6 @@ func (ec *executionContext) _Mutation_deleteTestDate(ctx context.Context, field 
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25513,7 +25542,6 @@ func (ec *executionContext) _Mutation_generatePresignedUploadURL(ctx context.Con
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25595,7 +25623,6 @@ func (ec *executionContext) _Mutation_issueLifecycleId(ctx context.Context, fiel
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25677,7 +25704,6 @@ func (ec *executionContext) _Mutation_markSystemIntakeReadyForGRB(ctx context.Co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25757,7 +25783,6 @@ func (ec *executionContext) _Mutation_rejectIntake(ctx context.Context, field gr
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25815,7 +25840,6 @@ func (ec *executionContext) _Mutation_submitIntake(ctx context.Context, field gr
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25897,7 +25921,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeAdminLead(ctx context.Co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -25979,7 +26002,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeReviewDates(ctx context.
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26037,7 +26059,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeContactDetails(ctx conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26095,7 +26116,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeRequestDetails(ctx conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26153,7 +26173,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeContractDetails(ctx cont
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26211,7 +26230,6 @@ func (ec *executionContext) _Mutation_createCedarSystemBookmark(ctx context.Cont
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26267,7 +26285,6 @@ func (ec *executionContext) _Mutation_deleteCedarSystemBookmark(ctx context.Cont
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26323,7 +26340,6 @@ func (ec *executionContext) _Mutation_createSystemIntakeContact(ctx context.Cont
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26379,7 +26395,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeContact(ctx context.Cont
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26435,7 +26450,6 @@ func (ec *executionContext) _Mutation_deleteSystemIntakeContact(ctx context.Cont
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26491,7 +26505,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeLinkedCedarSystem(ctx co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26549,7 +26562,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeLinkedContract(ctx conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26607,7 +26619,6 @@ func (ec *executionContext) _Mutation_sendFeedbackEmail(ctx context.Context, fie
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26659,7 +26670,6 @@ func (ec *executionContext) _Mutation_sendCantFindSomethingEmail(ctx context.Con
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26711,7 +26721,6 @@ func (ec *executionContext) _Mutation_sendReportAProblemEmail(ctx context.Contex
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -26763,7 +26772,6 @@ func (ec *executionContext) _Mutation_createTRBRequest(ctx context.Context, fiel
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -26856,7 +26864,6 @@ func (ec *executionContext) _Mutation_updateTRBRequest(ctx context.Context, fiel
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -26949,7 +26956,6 @@ func (ec *executionContext) _Mutation_createTRBRequestAttendee(ctx context.Conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -27026,7 +27032,6 @@ func (ec *executionContext) _Mutation_updateTRBRequestAttendee(ctx context.Conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -27103,7 +27108,6 @@ func (ec *executionContext) _Mutation_deleteTRBRequestAttendee(ctx context.Conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -27180,7 +27184,6 @@ func (ec *executionContext) _Mutation_createTRBRequestDocument(ctx context.Conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -27236,7 +27239,6 @@ func (ec *executionContext) _Mutation_deleteTRBRequestDocument(ctx context.Conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -27292,7 +27294,6 @@ func (ec *executionContext) _Mutation_updateTRBRequestForm(ctx context.Context, 
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -27427,7 +27428,6 @@ func (ec *executionContext) _Mutation_setRolesForUserOnSystem(ctx context.Contex
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -27503,7 +27503,6 @@ func (ec *executionContext) _Mutation_createTRBRequestFeedback(ctx context.Conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -27536,6 +27535,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequestFeedback(ctx c
 				return ec.fieldContext_TRBRequestFeedback_notifyEuaIds(ctx, field)
 			case "action":
 				return ec.fieldContext_TRBRequestFeedback_action(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBRequestFeedback_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -27604,7 +27605,6 @@ func (ec *executionContext) _Mutation_updateTRBRequestConsultMeetingTime(ctx con
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -27721,7 +27721,6 @@ func (ec *executionContext) _Mutation_updateTRBRequestTRBLead(ctx context.Contex
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -27838,7 +27837,6 @@ func (ec *executionContext) _Mutation_createTRBAdminNote(ctx context.Context, fi
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -27939,7 +27937,6 @@ func (ec *executionContext) _Mutation_updateTRBAdminNote(ctx context.Context, fi
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28040,7 +28037,6 @@ func (ec *executionContext) _Mutation_setTRBAdminNoteArchived(ctx context.Contex
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28141,7 +28137,6 @@ func (ec *executionContext) _Mutation_createTRBAdviceLetter(ctx context.Context,
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28246,7 +28241,6 @@ func (ec *executionContext) _Mutation_updateTRBAdviceLetter(ctx context.Context,
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28351,7 +28345,6 @@ func (ec *executionContext) _Mutation_requestReviewForTRBAdviceLetter(ctx contex
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28456,7 +28449,6 @@ func (ec *executionContext) _Mutation_sendTRBAdviceLetter(ctx context.Context, f
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28561,7 +28553,6 @@ func (ec *executionContext) _Mutation_createTRBAdviceLetterRecommendation(ctx co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28592,6 +28583,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
 			case "createdAt":
@@ -28660,7 +28653,6 @@ func (ec *executionContext) _Mutation_updateTRBAdviceLetterRecommendation(ctx co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28691,6 +28683,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
 			case "createdAt":
@@ -28759,7 +28753,6 @@ func (ec *executionContext) _Mutation_deleteTRBAdviceLetterRecommendation(ctx co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -28790,6 +28783,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
 			case "createdAt":
@@ -28816,6 +28811,122 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBAdviceLetterRecommend
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_reopenTrbRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_reopenTrbRequest(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().ReopenTrbRequest(rctx, fc.Args["input"].(model.ReopenTRBRequestInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBRequest); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBRequest`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.TRBRequest)
+	fc.Result = res
+	return ec.marshalNTRBRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequest(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_reopenTrbRequest(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBRequest_id(ctx, field)
+			case "name":
+				return ec.fieldContext_TRBRequest_name(ctx, field)
+			case "archived":
+				return ec.fieldContext_TRBRequest_archived(ctx, field)
+			case "type":
+				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "status":
+				return ec.fieldContext_TRBRequest_status(ctx, field)
+			case "attendees":
+				return ec.fieldContext_TRBRequest_attendees(ctx, field)
+			case "feedback":
+				return ec.fieldContext_TRBRequest_feedback(ctx, field)
+			case "documents":
+				return ec.fieldContext_TRBRequest_documents(ctx, field)
+			case "form":
+				return ec.fieldContext_TRBRequest_form(ctx, field)
+			case "adviceLetter":
+				return ec.fieldContext_TRBRequest_adviceLetter(ctx, field)
+			case "taskStatuses":
+				return ec.fieldContext_TRBRequest_taskStatuses(ctx, field)
+			case "consultMeetingTime":
+				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
+			case "trbLead":
+				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "adminNotes":
+				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBRequest", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_reopenTrbRequest_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_accessibilityRequest(ctx, field)
 	if err != nil {
@@ -28834,7 +28945,6 @@ func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, fie
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -28910,7 +29020,6 @@ func (ec *executionContext) _Query_accessibilityRequests(ctx context.Context, fi
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -28966,7 +29075,6 @@ func (ec *executionContext) _Query_requests(ctx context.Context, field graphql.C
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -29022,7 +29130,6 @@ func (ec *executionContext) _Query_systemIntake(ctx context.Context, field graph
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -29170,7 +29277,6 @@ func (ec *executionContext) _Query_systems(ctx context.Context, field graphql.Co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -29226,7 +29332,6 @@ func (ec *executionContext) _Query_currentUser(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -29271,7 +29376,6 @@ func (ec *executionContext) _Query_cedarAuthorityToOperate(ctx context.Context, 
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -29384,7 +29488,6 @@ func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context,
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -29447,7 +29550,6 @@ func (ec *executionContext) _Query_cedarSystem(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -29521,7 +29623,6 @@ func (ec *executionContext) _Query_cedarSystems(ctx context.Context, field graph
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -29584,7 +29685,6 @@ func (ec *executionContext) _Query_cedarSystemBookmarks(ctx context.Context, fie
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -29634,7 +29734,6 @@ func (ec *executionContext) _Query_cedarThreat(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -29705,7 +29804,6 @@ func (ec *executionContext) _Query_deployments(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -29798,7 +29896,6 @@ func (ec *executionContext) _Query_roleTypes(ctx context.Context, field graphql.
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -29852,7 +29949,6 @@ func (ec *executionContext) _Query_roles(ctx context.Context, field graphql.Coll
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -29941,7 +30037,6 @@ func (ec *executionContext) _Query_exchanges(ctx context.Context, field graphql.
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -30052,7 +30147,6 @@ func (ec *executionContext) _Query_urls(ctx context.Context, field graphql.Colle
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -30121,7 +30215,6 @@ func (ec *executionContext) _Query_cedarSystemDetails(ctx context.Context, field
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -30189,7 +30282,6 @@ func (ec *executionContext) _Query_systemIntakeContacts(ctx context.Context, fie
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -30250,7 +30342,6 @@ func (ec *executionContext) _Query_relatedSystemIntakes(ctx context.Context, fie
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -30401,7 +30492,6 @@ func (ec *executionContext) _Query_trbRequest(ctx context.Context, field graphql
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -30494,7 +30584,6 @@ func (ec *executionContext) _Query_trbRequests(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -30611,7 +30700,6 @@ func (ec *executionContext) _Query_trbAdminNote(ctx context.Context, field graph
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -30688,7 +30776,6 @@ func (ec *executionContext) _Query___type(ctx context.Context, field graphql.Col
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -30762,7 +30849,6 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -37166,6 +37252,8 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_recommendations(ctx con
 				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
 			case "links":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
 			case "createdAt":
@@ -37566,6 +37654,58 @@ func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_links(ctx
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetterRecommendation_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetterRecommendation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBAdviceLetterRecommendation().Author(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetterRecommendation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
 		},
 	}
 	return fc, nil
@@ -38078,6 +38218,8 @@ func (ec *executionContext) fieldContext_TRBRequest_feedback(ctx context.Context
 				return ec.fieldContext_TRBRequestFeedback_notifyEuaIds(ctx, field)
 			case "action":
 				return ec.fieldContext_TRBRequestFeedback_action(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBRequestFeedback_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -38942,14 +39084,11 @@ func (ec *executionContext) _TRBRequestAttendee_component(ctx context.Context, f
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestAttendee_component(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -38986,14 +39125,11 @@ func (ec *executionContext) _TRBRequestAttendee_role(ctx context.Context, field 
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(models.PersonRole)
+	res := resTmp.(*models.PersonRole)
 	fc.Result = res
-	return ec.marshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx, field.Selections, res)
+	return ec.marshalOPersonRole2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestAttendee_role(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -39793,6 +39929,58 @@ func (ec *executionContext) fieldContext_TRBRequestFeedback_action(ctx context.C
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBFeedbackAction does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestFeedback_author(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestFeedback_author(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBRequestFeedback().Author(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestFeedback_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestFeedback",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
 		},
 	}
 	return fc, nil
@@ -42738,7 +42926,7 @@ func (ec *executionContext) _UserInfo_email(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.UserInfo().Email(rctx, obj)
+		return obj.Email, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -42750,17 +42938,17 @@ func (ec *executionContext) _UserInfo_email(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.EmailAddress)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNString2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserInfo_email(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserInfo",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -45737,6 +45925,42 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Context, obj interface{}) (model.ReopenTRBRequestInput, error) {
+	var it model.ReopenTRBRequestInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"trbRequestId", "reasonReopened"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "trbRequestId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+			it.TrbRequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "reasonReopened":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reasonReopened"))
+			it.ReasonReopened, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSendCantFindSomethingEmailInput(ctx context.Context, obj interface{}) (model.SendCantFindSomethingEmailInput, error) {
 	var it model.SendCantFindSomethingEmailInput
 	asMap := map[string]interface{}{}
@@ -47749,57 +47973,44 @@ func (ec *executionContext) _AugmentedSystemIntakeContact(ctx context.Context, s
 			out.Values[i] = ec._AugmentedSystemIntakeContact_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "euaUserId":
 
 			out.Values[i] = ec._AugmentedSystemIntakeContact_euaUserId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "systemIntakeId":
 
 			out.Values[i] = ec._AugmentedSystemIntakeContact_systemIntakeId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "component":
 
 			out.Values[i] = ec._AugmentedSystemIntakeContact_component(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "role":
 
 			out.Values[i] = ec._AugmentedSystemIntakeContact_role(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "commonName":
 
 			out.Values[i] = ec._AugmentedSystemIntakeContact_commonName(ctx, field, obj)
 
 		case "email":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AugmentedSystemIntakeContact_email(ctx, field, obj)
-				return res
-			}
+			out.Values[i] = ec._AugmentedSystemIntakeContact_email(ctx, field, obj)
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -50939,7 +51150,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	})
 
 	out := graphql.NewFieldSet(fields)
-	var invalids uint32
 	for i, field := range fields {
 		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
 			Object: field.Name,
@@ -51237,45 +51447,30 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_createTRBRequest(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateTRBRequest":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTRBRequest(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createTRBRequestAttendee":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTRBRequestAttendee(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateTRBRequestAttendee":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTRBRequestAttendee(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "deleteTRBRequestAttendee":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteTRBRequestAttendee(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createTRBRequestDocument":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -51294,9 +51489,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateTRBRequestForm(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "setRolesForUserOnSystem":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -51309,125 +51501,89 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_createTRBRequestFeedback(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateTRBRequestConsultMeetingTime":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTRBRequestConsultMeetingTime(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateTRBRequestTRBLead":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTRBRequestTRBLead(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createTRBAdminNote":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTRBAdminNote(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateTRBAdminNote":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTRBAdminNote(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "setTRBAdminNoteArchived":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_setTRBAdminNoteArchived(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createTRBAdviceLetter":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTRBAdviceLetter(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateTRBAdviceLetter":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTRBAdviceLetter(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "requestReviewForTRBAdviceLetter":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_requestReviewForTRBAdviceLetter(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "sendTRBAdviceLetter":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_sendTRBAdviceLetter(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createTRBAdviceLetterRecommendation":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTRBAdviceLetterRecommendation(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateTRBAdviceLetterRecommendation":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTRBAdviceLetterRecommendation(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "deleteTRBAdviceLetterRecommendation":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteTRBAdviceLetterRecommendation(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+		case "reopenTrbRequest":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_reopenTrbRequest(ctx, field)
+			})
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
 	}
 	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
 	return out
 }
 
@@ -51440,7 +51596,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	})
 
 	out := graphql.NewFieldSet(fields)
-	var invalids uint32
 	for i, field := range fields {
 		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
 			Object: field.Name,
@@ -51580,9 +51735,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cedarAuthorityToOperate(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51603,9 +51755,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cedarPersonsByCommonName(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51666,9 +51815,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cedarSystemBookmarks(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51689,9 +51835,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cedarThreat(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51712,9 +51855,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_deployments(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51735,9 +51875,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_roleTypes(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51758,9 +51895,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_roles(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51781,9 +51915,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_exchanges(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51804,9 +51935,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_urls(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51847,9 +51975,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_systemIntakeContacts(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51870,9 +51995,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_relatedSystemIntakes(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51893,9 +52015,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_trbRequest(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51916,9 +52035,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_trbRequests(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51939,9 +52055,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_trbAdminNote(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -51969,9 +52082,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		}
 	}
 	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
 	return out
 }
 
@@ -53851,6 +53961,26 @@ func (ec *executionContext) _TRBAdviceLetterRecommendation(ctx context.Context, 
 				return innerFunc(ctx)
 
 			})
+		case "author":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBAdviceLetterRecommendation_author(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "createdBy":
 
 			out.Values[i] = ec._TRBAdviceLetterRecommendation_createdBy(ctx, field, obj)
@@ -54159,16 +54289,10 @@ func (ec *executionContext) _TRBRequestAttendee(ctx context.Context, sel ast.Sel
 
 			out.Values[i] = ec._TRBRequestAttendee_component(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "role":
 
 			out.Values[i] = ec._TRBRequestAttendee_role(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequestAttendee_createdBy(ctx, field, obj)
@@ -54414,6 +54538,26 @@ func (ec *executionContext) _TRBRequestFeedback(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "author":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequestFeedback_author(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "createdBy":
 
 			out.Values[i] = ec._TRBRequestFeedback_createdBy(ctx, field, obj)
@@ -55041,34 +55185,21 @@ func (ec *executionContext) _UserInfo(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._UserInfo_commonName(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "email":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._UserInfo_email(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._UserInfo_email(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "euaUserId":
 
 			out.Values[i] = ec._UserInfo_euaUserId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -56562,6 +56693,11 @@ func (ec *executionContext) unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNReopenTRBRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐReopenTRBRequestInput(ctx context.Context, v interface{}) (model.ReopenTRBRequestInput, error) {
+	res, err := ec.unmarshalInputReopenTRBRequestInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequest(ctx context.Context, sel ast.SelectionSet, v *model.Request) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -56669,6 +56805,21 @@ func (ec *executionContext) unmarshalNSendTRBAdviceLetterInput2githubᚗcomᚋcm
 func (ec *executionContext) unmarshalNSetRolesForUserOnSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetRolesForUserOnSystemInput(ctx context.Context, v interface{}) (model.SetRolesForUserOnSystemInput, error) {
 	res, err := ec.unmarshalInputSetRolesForUserOnSystemInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNString2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, v interface{}) (models.EmailAddress, error) {
+	res, err := graphql.UnmarshalString(v)
+	return models.EmailAddress(res), graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNString2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, sel ast.SelectionSet, v models.EmailAddress) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -58964,11 +59115,38 @@ func (ec *executionContext) marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋea
 	return res
 }
 
+func (ec *executionContext) unmarshalOPersonRole2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, v interface{}) (*models.PersonRole, error) {
+	if v == nil {
+		return nil, nil
+	}
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.PersonRole(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOPersonRole2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, sel ast.SelectionSet, v *models.PersonRole) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalString(string(*v))
+	return res
+}
+
 func (ec *executionContext) marshalORequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRequestsConnection(ctx context.Context, sel ast.SelectionSet, v *model.RequestsConnection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._RequestsConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOString2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, v interface{}) (models.EmailAddress, error) {
+	res, err := graphql.UnmarshalString(v)
+	return models.EmailAddress(res), graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOString2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, sel ast.SelectionSet, v models.EmailAddress) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	return res
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

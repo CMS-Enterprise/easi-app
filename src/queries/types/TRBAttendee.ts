@@ -21,7 +21,7 @@ export interface TRBAttendee {
   id: UUID;
   trbRequestId: UUID;
   userInfo: TRBAttendee_userInfo | null;
-  component: string;
-  role: PersonRole;
+  component: string | null;
+  role: PersonRole | null;
   createdAt: Time;
 }

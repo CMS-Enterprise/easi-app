@@ -50,11 +50,14 @@ type templates struct {
 	helpReportAProblem                         templateCaller
 	trbRequestConsultMeeting                   templateCaller
 	trbRequestTRBLead                          templateCaller
+	trbAdviceLetterInternalReview              templateCaller
 	trbFormSubmittedAdmin                      templateCaller
 	trbFormSubmittedRequester                  templateCaller
 	trbAttendeeAdded                           templateCaller
 	trbReadyForConsult                         templateCaller
 	trbEditsNeededOnForm                       templateCaller
+	trbRequestReopened                         templateCaller
+	trbAdviceLetterSubmitted                   templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -214,6 +217,14 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(trbRequestTRBLeadTemplateName)
 	}
 	appTemplates.trbRequestTRBLead = trbRequestTRBLeadTemplate
+
+	trbAdviceLetterInternalReviewTemplateName := "trb_advice_letter_internal_review.gohtml"
+	trbAdviceLetterInternalReviewTemplate := rawTemplates.Lookup(trbAdviceLetterInternalReviewTemplateName)
+	if trbAdviceLetterInternalReviewTemplate == nil {
+		return Client{}, templateError(trbAdviceLetterInternalReviewTemplateName)
+	}
+	appTemplates.trbAdviceLetterInternalReview = trbAdviceLetterInternalReviewTemplate
+
 	trbFormSubmittedAdminTemplateName := "trb_request_form_submission_admin.gohtml"
 	trbFormSubmittedAdminTemplate := rawTemplates.Lookup(trbFormSubmittedAdminTemplateName)
 	if trbFormSubmittedAdminTemplate == nil {
@@ -242,12 +253,26 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.trbReadyForConsult = trbReadyForConsultTemplate
 
+	trbAdviceLetterSubmittedTemplateName := "trb_advice_letter_submitted.gohtml"
+	trbAdviceLetterSubmittedTemplate := rawTemplates.Lookup(trbAdviceLetterSubmittedTemplateName)
+	if trbAdviceLetterSubmittedTemplate == nil {
+		return Client{}, templateError(trbAdviceLetterSubmittedTemplateName)
+	}
+	appTemplates.trbAdviceLetterSubmitted = trbAdviceLetterSubmittedTemplate
+
 	trbEditsNeededOnFormTemplateName := "trb_edits_needed_on_form.gohtml"
 	trbEditsNeededOnFormTemplate := rawTemplates.Lookup(trbEditsNeededOnFormTemplateName)
 	if trbEditsNeededOnFormTemplate == nil {
 		return Client{}, templateError(trbEditsNeededOnFormTemplateName)
 	}
 	appTemplates.trbEditsNeededOnForm = trbEditsNeededOnFormTemplate
+
+	trbRequestReopenedTemplateName := "trb_request_reopened.gohtml"
+	trbRequestReopenedTemplate := rawTemplates.Lookup(trbRequestReopenedTemplateName)
+	if trbRequestReopenedTemplate == nil {
+		return Client{}, templateError(trbRequestReopenedTemplateName)
+	}
+	appTemplates.trbRequestReopened = trbRequestReopenedTemplate
 
 	client := Client{
 		config:    config,
