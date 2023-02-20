@@ -31,6 +31,35 @@ const technicalAssistance = {
       'The TRB has requested edits to your initial request form. Please make any necessary changes and re-submit your form.',
     viewFeedback: 'View feedback'
   },
+  adminAction: 'Admin Action',
+  requestNotes: {
+    text: 'notes about this request',
+    viewNotes: 'View notes',
+    addNote: 'Add a note'
+  },
+  adviceLetter: {
+    introText:
+      'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.',
+    noAdviceLetter:
+      'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.',
+    downloadAsPdf: 'Download advice letter as PDF',
+    sendDate: 'Send date',
+    notYetSent: 'Not yet sent',
+    whatWeHeard: 'What we heard',
+    meetingSummary: 'Meeting summary',
+    whatWeRecommend: 'What we recommend',
+    resources: 'Resources',
+    nextSteps: 'Next steps',
+    notSpecified: 'Not specified yet',
+    followup: 'Should the team return for a follow-up session?'
+  },
+  statusLabels: {
+    CANNOT_START_YET: 'Cannot start yet',
+    COMPLETED: 'Completed',
+    IN_PROGRESS: 'In progress',
+    READY_FOR_REVIEW: 'Ready for review',
+    READY_TO_START: 'Ready to start'
+  },
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request'
@@ -623,7 +652,14 @@ const technicalAssistance = {
         CANNOT_START_YET: 'Consult prep completed',
         READY_TO_SCHEDULE: 'Ready for consult',
         SCHEDULED: 'Consult scheduled',
-        COMPLETED: 'Consult completed'
+        COMPLETED: 'Consult complete'
+      },
+      adviceLetterStatus: {
+        CANNOT_START_YET: 'Consult complete',
+        IN_PROGRESS: 'Draft advice letter',
+        READY_FOR_REVIEW: 'Advice letter in review',
+        READY_TO_START: 'Consult complete',
+        COMPLETED: 'Advice letter sent'
       }
     },
     open: 'Open',

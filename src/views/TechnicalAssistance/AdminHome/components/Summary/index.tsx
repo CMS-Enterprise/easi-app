@@ -49,7 +49,8 @@ export default function Summary({
       'formStatus',
       'feedbackStatus',
       'attendConsultPrepStatus',
-      'consultPrepStatus'
+      'consultPrepStatus',
+      'adviceLetterStatus'
     ] as (keyof TRBRequestTaskStatuses)[];
 
     /** Current step in the TRB request task list */
@@ -60,8 +61,8 @@ export default function Summary({
     );
 
     // Return current status
-    // If all task list steps have been completed, return attendConsultStatus
-    return currentStatus || 'attendConsultStatus';
+    // If all task list steps have been completed, return last step
+    return currentStatus || statusKeys.at(-1)!;
   }, [taskStatuses]);
 
   /** Corresponding task status text from translation file */

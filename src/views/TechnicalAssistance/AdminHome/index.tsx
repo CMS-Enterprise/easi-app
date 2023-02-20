@@ -9,19 +9,20 @@ import classNames from 'classnames';
 import PageLoading from 'components/PageLoading';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+// import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import {
-  GetTrbRequest,
-  GetTrbRequestVariables
-} from 'queries/types/GetTrbRequest';
+  GetTrbRequestSummary,
+  GetTrbRequestSummaryVariables
+} from 'queries/types/GetTrbRequestSummary';
 import { AppState } from 'reducers/rootReducer';
 import { formatDateLocal } from 'utils/date';
 import user from 'utils/user';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
 import NotFound from 'views/NotFound';
 
+import Summary from './components/Summary';
 import subNavItems from './subNavItems';
-import Summary from './Summary';
 
 import './index.scss';
 
@@ -80,12 +81,12 @@ export default function AdminHome() {
   }>();
 
   // TRB request query
-  const { data, loading } = useQuery<GetTrbRequest, GetTrbRequestVariables>(
-    GetTrbRequestQuery,
-    {
-      variables: { id }
-    }
-  );
+  const { data, loading } = useQuery<
+    GetTrbRequestSummary,
+    GetTrbRequestSummaryVariables
+  >(GetTrbRequestSummaryQuery, {
+    variables: { id }
+  });
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
@@ -159,7 +160,7 @@ export default function AdminHome() {
       />
 
       <GridContainer>
-        <Grid row className="margin-y-5 grid-gap">
+        <Grid row className="margin-top-5 grid-gap">
           {/* Side navigation */}
           <Grid
             col

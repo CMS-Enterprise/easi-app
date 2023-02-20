@@ -2835,6 +2835,16 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 	return authorInfo, nil
 }
 
+// Author is the resolver for the author field.
+func (r *tRBAdviceLetterResolver) Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error) {
+	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
+}
+
 // Recommendations is the resolver for the recommendations field.
 func (r *tRBAdviceLetterResolver) Recommendations(ctx context.Context, obj *models.TRBAdviceLetter) ([]*models.TRBAdviceLetterRecommendation, error) {
 	return resolvers.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)

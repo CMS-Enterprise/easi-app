@@ -29,7 +29,10 @@ describe('Technical Assistance (TRB) homepage', () => {
       id: '9841c768-bdcd-4856-bae2-62cfdaffacf6',
       name: 'TACO Review',
       status: 'OPEN',
-      createdAt: '2022-09-12T17:46:08.07031Z'
+      createdAt: '2022-09-12T17:46:08.07031Z',
+      form: {
+        submittedAt: ''
+      }
     }
   ];
 

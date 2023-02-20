@@ -15,14 +15,34 @@ export type AttendeeFieldLabels = {
   submit?: string;
 };
 
-/** TRB Admin page */
+/** TRB Attendee user info */
+export type TRBAttendeeUserInfo = {
+  commonName: string;
+  euaUserId: string;
+  email?: string;
+} | null;
+
+/** TRB Attendee object with user info */
+export type TRBAttendeeData = {
+  id?: string;
+  trbRequestId: string;
+  userInfo: TRBAttendeeUserInfo;
+  component: string;
+  role: PersonRole | null;
+};
+
+/** Formatted attendees for display */
+export type FormattedTRBAttendees = {
+  requester: TRBAttendeeData;
+  attendees: TRBAttendeeData[];
+};
+
+/** TRB Admin page props */
 export type TrbAdminPageProps = {
   trbRequestId: string;
   requesterString?: string | null;
   submissionDate?: string;
 };
-
-export type TrbAdminPage = (props: TrbAdminPageProps) => JSX.Element;
 
 /** Subnav item return type for admin home wrapper */
 export type SubNavItem = {
@@ -31,7 +51,7 @@ export type SubNavItem = {
   /** Translation key to use for navigation link text */
   text: string;
   /** Component to display on page */
-  component: TrbAdminPage;
+  component: ({ trbRequestId }: TrbAdminPageProps) => JSX.Element;
   /**
    * Whether or not the navigation item is last in a group.
    * If true, border is shown beneath link.

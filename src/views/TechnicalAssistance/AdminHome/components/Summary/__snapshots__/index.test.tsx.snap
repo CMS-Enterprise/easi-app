@@ -37,14 +37,14 @@ exports[`TRB Admin Home summary renders TRB request details 1`] = `
               aria-current="page"
               class="usa-breadcrumb__list-item usa-current"
             >
-              Request 441cb9e0-2cb3-43ca-b168-9d6a2a13ec91
+              Request a4093ec7-caec-4e73-be3d-a8d6262bc61b
             </li>
           </ol>
         </nav>
         <h2
           class="margin-top-05 margin-bottom-0"
         >
-          Draft
+          TRB Request Mock
         </h2>
         <div
           class="grid-row"

@@ -33,15 +33,15 @@ const InitialRequestForm = ({
   const request: TrbRequest | undefined = data?.trbRequest;
 
   return (
-    <>
+    <div
+      className="trb-admin-home__initial-request-form"
+      data-testid="trb-admin-home__initial-request-form"
+      id={`trbAdminInitialRequestForm-${trbRequestId}`}
+    >
       {loading && <PageLoading />}
       {error && <NotFoundPartial />}
       {request && (
-        <div
-          className="trb-admin-home__initial-request-form"
-          data-testid="trb-admin-home__initial-request-form"
-          id={`trbAdminInitialRequestForm-${trbRequestId}`}
-        >
+        <>
           <h1 className="margin-top-0 margin-bottom-1 line-height-heading-2">
             {t('adminHome.subnav.initialRequestForm')}
           </h1>
@@ -59,9 +59,9 @@ const InitialRequestForm = ({
           </div>
 
           <SubmittedRequest request={request} showSectionHeadingDescription />
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 };
 

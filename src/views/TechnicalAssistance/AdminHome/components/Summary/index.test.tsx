@@ -5,21 +5,23 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, within } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
-import { requester, trbRequest } from 'data/mock/trbRequest';
-import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+import { requester, trbRequestSummary } from 'data/mock/trbRequest';
+import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 
 import Summary from '.';
 
+const trbRequestId = 'a4093ec7-caec-4e73-be3d-a8d6262bc61b';
+
 const getTrbRequestQuery = {
   request: {
-    query: GetTrbRequestQuery,
+    query: GetTrbRequestSummaryQuery,
     variables: {
-      id: trbRequest.id
+      id: trbRequestId
     }
   },
   result: {
-    data: trbRequest
+    data: { trbRequest: trbRequestSummary }
   }
 };
 
@@ -27,13 +29,18 @@ const getTrbAttendeesQuery = {
   request: {
     query: GetTRBRequestAttendees,
     variables: {
-      id: trbRequest.id
+      id: trbRequestId
     }
   },
   result: {
     data: {
       trbRequest: {
-        attendees: [requester]
+        attendees: [
+          {
+            ...requester,
+            trbRequestId
+          }
+        ]
       }
     }
   }
@@ -56,13 +63,13 @@ describe('TRB Admin Home summary', () => {
         <MockedProvider mocks={[getTrbRequestQuery, getTrbAttendeesQuery]}>
           <Provider store={defaultStore}>
             <Summary
-              trbRequestId={trbRequest.id}
-              name={trbRequest.name}
-              requestType={trbRequest.type}
-              createdAt={trbRequest.createdAt}
-              status={trbRequest.status}
-              taskStatuses={trbRequest.taskStatuses}
-              trbLead={trbRequest.trbLead}
+              trbRequestId={trbRequestId}
+              name={trbRequestSummary.name}
+              requestType={trbRequestSummary.type}
+              createdAt={trbRequestSummary.createdAt}
+              status={trbRequestSummary.status}
+              taskStatuses={trbRequestSummary.taskStatuses}
+              trbLead={trbRequestSummary.trbLead}
               requester={requester}
               requesterString="Adeline Aarons, CMS"
               submissionDate="January 5, 2023"
