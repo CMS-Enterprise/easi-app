@@ -47,6 +47,7 @@ function renderFeedbackTest() {
                     feedbackStatus: 'EDITS_REQUESTED',
                     consultPrepStatus: 'CANNOT_START_YET',
                     attendConsultStatus: 'CANNOT_START_YET',
+                    adviceLetterStatus: 'CANNOT_START_YET',
                     __typename: 'TRBTaskStatuses'
                   },
                   trbLead: null,
