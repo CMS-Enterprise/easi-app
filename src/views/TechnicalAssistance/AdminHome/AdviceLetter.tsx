@@ -10,6 +10,7 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
+import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import AdminAction from './components/AdminAction';
@@ -56,7 +57,9 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
 
           {/* Status tag */}
           <AdminTaskStatusTag
-            status={adviceLetterStatus || 'CANNOT_START_YET'}
+            status={
+              adviceLetterStatus || TRBAdviceLetterStatus.CANNOT_START_YET
+            }
             name={author?.commonName!}
             date={adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''}
             className="margin-bottom-205"
