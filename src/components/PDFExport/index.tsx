@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { IconFileDownload } from '@trussworks/react-uswds';
 import axios from 'axios';
 import classNames from 'classnames';
 import { Base64 } from 'js-base64';
@@ -6,14 +7,13 @@ import escape from 'lodash';
 
 import { downloadBlob } from 'utils/downloadFile';
 
-import downloadSVG from './download.svg';
-
 type PDFExportProps = {
   filename: string;
   title: string;
   children: React.ReactNode;
   label?: string;
   linkPosition?: 'top' | 'bottom';
+  disabled?: boolean;
 };
 
 function generatePDF(filename: string, content: string) {
@@ -93,7 +93,8 @@ const PDFExport = ({
   filename,
   children,
   label,
-  linkPosition = 'bottom'
+  linkPosition = 'bottom',
+  disabled
 }: PDFExportProps) => {
   const divEl = useRef<HTMLDivElement>(null);
 
@@ -107,16 +108,12 @@ const PDFExport = ({
         })}
       >
         <button
-          className="usa-button usa-button--unstyled easi-no-print"
+          className="usa-button usa-button--unstyled easi-no-print display-flex flex-align-center"
           type="button"
           onClick={() => downloadRefAsPDF(title, filename, divEl)}
+          disabled={disabled}
         >
-          <img
-            src={downloadSVG}
-            alt=""
-            aria-hidden="true"
-            className="margin-right-1"
-          />
+          <IconFileDownload className="margin-right-05" />
           {label || 'Download PDF'}
         </button>
       </div>

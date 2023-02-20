@@ -1938,7 +1938,7 @@ type TRBRequestFeedback {
 }
 
 """
-The data needed add feedback to a TRB request
+The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
@@ -2000,6 +2000,7 @@ Represents an advice letter for a TRB request
 type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
+  author: UserInfo!
   meetingSummary: String
   nextSteps: String
   isFollowupRecommended: Boolean
@@ -2084,6 +2085,14 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
   title: String
   recommendation: String
   links: [String!]
+}
+
+"""
+The data needed to reopen a TRB request
+"""
+input ReopenTRBRequestInput {
+  trbRequestId: UUID!
+  reasonReopened: String!
 }
 
 """
@@ -2227,6 +2236,8 @@ type Mutation {
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
+    @hasRole(role: EASI_TRB_ADMIN)
+  reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 }
 

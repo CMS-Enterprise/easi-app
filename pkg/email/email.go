@@ -57,6 +57,8 @@ type templates struct {
 	trbAttendeeAdded                           templateCaller
 	trbReadyForConsult                         templateCaller
 	trbEditsNeededOnForm                       templateCaller
+	trbRequestReopened                         templateCaller
+	trbAdviceLetterSubmitted                   templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -259,12 +261,26 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.trbReadyForConsult = trbReadyForConsultTemplate
 
+	trbAdviceLetterSubmittedTemplateName := "trb_advice_letter_submitted.gohtml"
+	trbAdviceLetterSubmittedTemplate := rawTemplates.Lookup(trbAdviceLetterSubmittedTemplateName)
+	if trbAdviceLetterSubmittedTemplate == nil {
+		return Client{}, templateError(trbAdviceLetterSubmittedTemplateName)
+	}
+	appTemplates.trbAdviceLetterSubmitted = trbAdviceLetterSubmittedTemplate
+
 	trbEditsNeededOnFormTemplateName := "trb_edits_needed_on_form.gohtml"
 	trbEditsNeededOnFormTemplate := rawTemplates.Lookup(trbEditsNeededOnFormTemplateName)
 	if trbEditsNeededOnFormTemplate == nil {
 		return Client{}, templateError(trbEditsNeededOnFormTemplateName)
 	}
 	appTemplates.trbEditsNeededOnForm = trbEditsNeededOnFormTemplate
+
+	trbRequestReopenedTemplateName := "trb_request_reopened.gohtml"
+	trbRequestReopenedTemplate := rawTemplates.Lookup(trbRequestReopenedTemplateName)
+	if trbRequestReopenedTemplate == nil {
+		return Client{}, templateError(trbRequestReopenedTemplateName)
+	}
+	appTemplates.trbRequestReopened = trbRequestReopenedTemplate
 
 	client := Client{
 		config:    config,
