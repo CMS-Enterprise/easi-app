@@ -39,7 +39,7 @@ exports[`TRB Advice Letter review component Matches the snapshot 1`] = `
         What we recommend
       </h2>
       <div
-        class="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4"
+        class="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
       >
         <h3
           class="margin-bottom-1"
