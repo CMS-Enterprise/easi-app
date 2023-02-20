@@ -6,6 +6,7 @@ import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
 import AdminHome from './AdminHome';
+import AdviceLetterForm from './AdviceLetterForm';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
@@ -45,6 +46,10 @@ function TechnicalAssistance() {
         {/* Create new or edit exisiting request */}
         <Route exact path={`${path}/requests/:id/:step?/:view?`}>
           <RequestForm />
+        </Route>
+
+        <Route exact path={`${path}/:id/advice/:formStep`}>
+          <AdviceLetterForm />
         </Route>
 
         {/* Admin view */}
