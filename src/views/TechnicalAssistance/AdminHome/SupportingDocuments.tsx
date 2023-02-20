@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { TrbAdminPage } from 'types/technicalAssistance';
+import { TrbAdminPageProps } from 'types/technicalAssistance';
 
-const Documents: TrbAdminPage = trbRequestId => {
+const Documents = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
   return (
     <div

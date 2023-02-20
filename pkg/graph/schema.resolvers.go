@@ -2032,7 +2032,13 @@ func (r *mutationResolver) RequestReviewForTRBAdviceLetter(ctx context.Context, 
 
 // SendTRBAdviceLetter is the resolver for the sendTRBAdviceLetter field.
 func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input model.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error) {
-	return resolvers.SendTRBAdviceLetter(ctx, r.store, input.ID)
+	return resolvers.SendTRBAdviceLetter(
+		ctx,
+		r.store,
+		input.ID,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		r.service.FetchUserInfos)
 }
 
 // CreateTRBAdviceLetterRecommendation is the resolver for the createTRBAdviceLetterRecommendation field.
@@ -2057,6 +2063,19 @@ func (r *mutationResolver) UpdateTRBAdviceLetterRecommendation(ctx context.Conte
 // DeleteTRBAdviceLetterRecommendation is the resolver for the deleteTRBAdviceLetterRecommendation field.
 func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
 	return resolvers.DeleteTRBAdviceLetterRecommendation(ctx, r.store, id)
+}
+
+// ReopenTrbRequest is the resolver for the reopenTrbRequest field.
+func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.ReopenTRBRequestInput) (*models.TRBRequest, error) {
+	return resolvers.ReopenTRBRequest(
+		ctx,
+		r.store,
+		input.TrbRequestID,
+		input.ReasonReopened,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		r.service.FetchUserInfos,
+	)
 }
 
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
@@ -2808,6 +2827,16 @@ func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *mod
 
 // Author is the resolver for the author field.
 func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
+	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
+}
+
+// Author is the resolver for the author field.
+func (r *tRBAdviceLetterResolver) Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error) {
 	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
 	if err != nil {
 		return nil, err
