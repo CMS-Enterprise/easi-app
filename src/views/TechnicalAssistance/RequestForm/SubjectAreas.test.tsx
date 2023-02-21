@@ -46,7 +46,8 @@ const mockEmptyFormFields = {
   subjectAreaApplicationDevelopmentOther: null,
   subjectAreaDataAndDataManagementOther: null,
   subjectAreaGovernmentProcessesAndPoliciesOther: null,
-  subjectAreaOtherTechnicalTopicsOther: null
+  subjectAreaOtherTechnicalTopicsOther: null,
+  submittedAt: '2023-01-31T16:23:06.111436Z'
 };
 
 const mockTrbRequestData: TrbRequest = {
@@ -58,6 +59,7 @@ const mockTrbRequestData: TrbRequest = {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     __typename: 'TRBRequestForm'
   },
+  feedback: [],
   createdAt: '2021-06-10T19:22:40Z',
   type: TRBRequestType.NEED_HELP,
   status: TRBRequestStatus.OPEN,
@@ -92,6 +94,7 @@ function renderSubjectAreas() {
               id: '452cf444-69b2-41a9-b8ab-ed354d209307',
               __typename: 'TRBRequestForm'
             },
+            feedback: [],
             createdAt: '2021-06-10T19:22:40Z',
             type: TRBRequestType.NEED_HELP,
             status: TRBRequestStatus.OPEN,

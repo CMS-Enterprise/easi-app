@@ -48,7 +48,8 @@ const mockEmptyFormFields = {
   subjectAreaApplicationDevelopmentOther: null,
   subjectAreaDataAndDataManagementOther: null,
   subjectAreaGovernmentProcessesAndPoliciesOther: null,
-  subjectAreaOtherTechnicalTopicsOther: null
+  subjectAreaOtherTechnicalTopicsOther: null,
+  submittedAt: '2023-01-31T16:23:06.111436Z'
 };
 
 const mockTrbRequestData: TrbRequest = {
@@ -65,6 +66,7 @@ const mockTrbRequestData: TrbRequest = {
   status: TRBRequestStatus.OPEN,
   taskStatuses: {} as any,
   trbLead: '',
+  feedback: [],
   __typename: 'TRBRequest'
 };
 
@@ -110,6 +112,7 @@ const documents = (
       status: TRBRequestStatus.OPEN,
       taskStatuses: {} as any,
       trbLead: '',
+      feedback: [],
       __typename: 'TRBRequest'
     }}
     stepUrl={{ current: '', next: '', back: '' }}
