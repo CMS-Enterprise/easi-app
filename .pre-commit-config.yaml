@@ -76,6 +76,15 @@ repos:
 
   - repo: local
     hooks:
+      - id: tsc-check
+        name: Run typescript check
+        entry: scripts/pre-commit-tsc
+        language: script
+        files: \.(js|jsx|ts|tsx)$
+        pass_filenames: false
+
+  - repo: local
+    hooks:
       - id: graphql-schema
         name: Lint GraphQL schema
         entry: scripts/pre-commit-graphql-schema-lint
