@@ -53,7 +53,8 @@ function TechnicalAssistance() {
           <AdminHome />
         </Route>
 
-        <Route exact path={`${path}/:id/:activePage/request-edits`}>
+        {/* Admin request form actions */}
+        <Route exact path={`${path}/:id/:activePage/:action`}>
           <RequestEdits />
         </Route>
 

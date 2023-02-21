@@ -29,12 +29,27 @@ import Breadcrumbs from '../Breadcrumbs';
 function RequestEdits() {
   const { t } = useTranslation('technicalAssistance');
 
-  const { id, activePage } = useParams<{ id: string; activePage: string }>();
+  const { id, activePage, action } = useParams<{
+    id: string;
+    activePage: string;
+    action: 'request-edits' | 'ready-for-consult';
+  }>();
   const history = useHistory();
 
   const { message, showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl = `/trb/${id}/${activePage}`;
+
+  let actionText: 'actionRequestEdits' | 'actionReadyForConsult';
+  let feedbackAction: TRBFeedbackAction;
+
+  if (action === 'request-edits') {
+    actionText = 'actionRequestEdits';
+    feedbackAction = TRBFeedbackAction.REQUEST_EDITS;
+  } else {
+    actionText = 'actionReadyForConsult';
+    feedbackAction = TRBFeedbackAction.READY_FOR_CONSULT;
+  }
 
   const {
     control,
@@ -72,10 +87,10 @@ function RequestEdits() {
 
       <Grid row>
         <PageHeading className="margin-bottom-0">
-          {t('actionRequestEdits.heading')}
+          {t(`${actionText}.heading`)}
         </PageHeading>
         <div className="line-height-body-5 font-body-lg text-light">
-          {t('actionRequestEdits.description')}
+          {t(`${actionText}.description`)}
         </div>
       </Grid>
       <Grid row gap>
@@ -89,14 +104,14 @@ function RequestEdits() {
                     feedbackMessage: formData.feedbackMessage,
                     copyTrbMailbox: false, // todo
                     notifyEuaIds: ['ABCD'], // todo
-                    action: TRBFeedbackAction.REQUEST_EDITS
+                    action: feedbackAction
                   }
                 }
               })
                 .then(result => {
                   showMessageOnNextPage(
                     <Alert type="success" slim className="margin-top-3">
-                      {t('actionRequestEdits.success')}
+                      {t(`${actionText}.success`)}
                     </Alert>
                   );
                   history.push(requestUrl);
@@ -104,7 +119,7 @@ function RequestEdits() {
                 .catch(err => {
                   showMessage(
                     <Alert type="error" slim className="margin-top-3">
-                      {t('actionRequestEdits.error')}
+                      {t(`${actionText}.error`)}
                     </Alert>
                   );
                 });
@@ -123,7 +138,7 @@ function RequestEdits() {
                     htmlFor="feedbackMessage"
                     hint={<div>{t('actionRequestEdits.hint')}</div>}
                   >
-                    {t('actionRequestEdits.label')}
+                    {t(`${actionText}.label`)}
                   </Label>
                   <CharacterCount
                     {...field}

@@ -120,7 +120,7 @@ describe('Trb Admin: Action: Request Edits', () => {
               <Route exact path="/trb/:id/:activePage">
                 <AdminHome />
               </Route>
-              <Route exact path="/trb/:id/:activePage/request-edits">
+              <Route exact path="/trb/:id/:activePage/:action">
                 <RequestEdits />
               </Route>
             </MessageProvider>
@@ -184,7 +184,7 @@ describe('Trb Admin: Action: Request Edits', () => {
           ]}
         >
           <MessageProvider>
-            <Route exact path="/trb/:id/:activePage/request-edits">
+            <Route exact path="/trb/:id/:activePage/:action">
               <RequestEdits />
             </Route>
           </MessageProvider>

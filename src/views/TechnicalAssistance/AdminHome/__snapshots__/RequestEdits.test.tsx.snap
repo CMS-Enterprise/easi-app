@@ -62,7 +62,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
       <div
         class="line-height-body-5 font-body-lg text-light"
       >
-        Use this action if the TRB needs additional information about the request in order to proceed with scheduling aconsult session. Specify the edits or additional information needed from the requester.
+        Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.
       </div>
     </div>
     <div
