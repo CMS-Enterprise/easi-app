@@ -681,6 +681,10 @@ const technicalAssistance = {
     notificationDescription:
       'A notification email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.',
     submit: 'Complete action',
+    error:
+      'There was an issue completing the request edits action. Please try again, and if the problem persists, try again later.',
+    success:
+      'Action completed. You have successfully requested edits to this request.',
     cancelAndReturn: 'Cancel action and return to request'
   }
 };

@@ -7,6 +7,7 @@ import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import PageLoading from 'components/PageLoading';
+import useMessage from 'hooks/useMessage';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import {
   GetTrbRequestSummary,
@@ -86,6 +87,9 @@ export default function AdminHome() {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
+  // Alert feedback from children
+  const { message } = useMessage();
+
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
     return <PageLoading />;
@@ -121,6 +125,7 @@ export default function AdminHome() {
       />
 
       <GridContainer>
+        {message}
         <Grid row className="margin-top-5 grid-gap">
           {/* Side navigation */}
           <Grid

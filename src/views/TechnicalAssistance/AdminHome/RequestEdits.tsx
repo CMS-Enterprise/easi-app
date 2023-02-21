@@ -1,9 +1,10 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
+  Alert,
   Button,
   CharacterCount,
   ErrorMessage,
@@ -16,6 +17,7 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import useMessage from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {
   CreateTrbRequestFeedback,
@@ -27,6 +29,9 @@ function RequestEdits() {
   const { t } = useTranslation('technicalAssistance');
 
   const { id, activePage } = useParams<{ id: string; activePage: string }>();
+  const history = useHistory();
+
+  const { message, showMessage, showMessageOnNextPage } = useMessage();
 
   const {
     control,
@@ -38,14 +43,14 @@ function RequestEdits() {
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [mutate, { loading, error, data }] = useMutation<
+  const [mutate] = useMutation<
     CreateTrbRequestFeedback,
     CreateTrbRequestFeedbackVariables
   >(CreateTrbRequestFeedbackQuery);
 
   return (
     <GridContainer className="width-full">
+      {message}
       <Grid row>
         <PageHeading className="margin-bottom-0">
           {t('actionRequestEdits.heading')}
@@ -58,7 +63,6 @@ function RequestEdits() {
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           <Form
             onSubmit={handleSubmit(formData => {
-              // console.log('submit', formData);
               mutate({
                 variables: {
                   input: {
@@ -71,13 +75,19 @@ function RequestEdits() {
                 }
               })
                 .then(result => {
-                  // eslint-disable-next-line no-console
-                  console.log('success', result);
+                  showMessageOnNextPage(
+                    <Alert type="success" slim className="margin-top-3">
+                      {t('actionRequestEdits.success')}
+                    </Alert>
+                  );
+                  history.push(`/trb/${id}/${activePage}`);
                 })
-                // eslint-disable-next-line no-shadow
-                .catch(error => {
-                  // eslint-disable-next-line no-console
-                  console.log('error', error);
+                .catch(err => {
+                  showMessage(
+                    <Alert type="error" slim className="margin-top-3">
+                      {t('actionRequestEdits.error')}
+                    </Alert>
+                  );
                 });
             })}
             className="maxw-full"
