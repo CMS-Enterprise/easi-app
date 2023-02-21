@@ -29,15 +29,15 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	intake := testhelpers.NewSystemIntake()
 	intakePtr = &intake
 
-	var intakeWithLCIDExpiringIn61DaysPtr *models.SystemIntake
-	intakeWithLCIDExpiringIn61Days := testhelpers.NewSystemIntake()
-	intakeWithLCIDExpiringIn61Days.LifecycleExpiresAt = &sixtyDaysFromDate
-	intakeWithLCIDExpiringIn61DaysPtr = &intakeWithLCIDExpiringIn61Days
-
 	var intakeWithLCIDExpiringIn60DaysPtr *models.SystemIntake
 	intakeWithLCIDExpiringIn60Days := testhelpers.NewSystemIntake()
-	intakeWithLCIDExpiringIn60Days.LifecycleExpiresAt = &fiftyNineDaysFromDate
+	intakeWithLCIDExpiringIn60Days.LifecycleExpiresAt = &sixtyDaysFromDate
 	intakeWithLCIDExpiringIn60DaysPtr = &intakeWithLCIDExpiringIn60Days
+
+	var intakeWithLCIDExpiringIn59DaysPtr *models.SystemIntake
+	intakeWithLCIDExpiringIn59Days := testhelpers.NewSystemIntake()
+	intakeWithLCIDExpiringIn59Days.LifecycleExpiresAt = &fiftyNineDaysFromDate
+	intakeWithLCIDExpiringIn59DaysPtr = &intakeWithLCIDExpiringIn59Days
 
 	var intakeWithLCIDExpiringIn46DaysPtr *models.SystemIntake
 	intakeWithLCIDExpiringIn46Days := testhelpers.NewSystemIntake()
@@ -45,7 +45,7 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	intakeWithLCIDExpiringIn46DaysPtr = &intakeWithLCIDExpiringIn46Days
 
 	var systemIntakes []*models.SystemIntake
-	systemIntakes = append(systemIntakes, intakePtr, intakeWithLCIDExpiringIn46DaysPtr, intakeWithLCIDExpiringIn60DaysPtr, intakeWithLCIDExpiringIn61DaysPtr)
+	systemIntakes = append(systemIntakes, intakePtr, intakeWithLCIDExpiringIn46DaysPtr, intakeWithLCIDExpiringIn59DaysPtr, intakeWithLCIDExpiringIn60DaysPtr)
 
 	// Mock Functions
 	mockFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
@@ -89,7 +89,7 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	}
 
 	// Test Cases
-	t.Run("Sends correct number of alerts", func(t *testing.T) {
+	t.Run("sends correct number of alerts", func(t *testing.T) {
 		clearAlerts(systemIntakes)
 
 		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days
@@ -105,7 +105,7 @@ func TestLCIDExpirationAlert(t *testing.T) {
 		assert.Equal(t, 0, lcidExpirationAlertCount)
 	})
 
-	t.Run("Doesn't resend alerts", func(t *testing.T) {
+	t.Run("does not resend alerts", func(t *testing.T) {
 		clearAlerts(systemIntakes)
 
 		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days
@@ -116,13 +116,13 @@ func TestLCIDExpirationAlert(t *testing.T) {
 
 		// Test that it sends an alert for the intake that is now expiring withing 60 days but doesn't resend alerts
 		lcidExpirationAlertCount = 0
-		twoDaysLater := time.Now().AddDate(0, 0, 2)
+		twoDaysLater := testDate.AddDate(0, 0, 2)
 		err = checkForLCIDExpiration(ctx, twoDaysLater, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
 		assert.NoError(t, err)
 		assert.Equal(t, 1, lcidExpirationAlertCount)
 	})
 
-	t.Run("Sends alerts 14 days after first alert", func(t *testing.T) {
+	t.Run("sends alerts 14 days after first alert", func(t *testing.T) {
 		clearAlerts(systemIntakes)
 
 		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days
@@ -133,22 +133,72 @@ func TestLCIDExpirationAlert(t *testing.T) {
 
 		// Test that it sends an alert for the intake that is now expiring withing 60 days but doesn't resend alerts
 		lcidExpirationAlertCount = 0
-		twoDaysLater := time.Now().AddDate(0, 0, 2)
+		twoDaysLater := testDate.AddDate(0, 0, 2)
 		err = checkForLCIDExpiration(ctx, twoDaysLater, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
 		assert.NoError(t, err)
 		assert.Equal(t, 1, lcidExpirationAlertCount)
 
 		// Test that it resends alerts for the two intakes that were alerted more then 14 days ago but doesn't resend the alert to the other
 		lcidExpirationAlertCount = 0
-		fifteenDaysLater := time.Now().AddDate(0, 0, 15)
+		fifteenDaysLater := testDate.AddDate(0, 0, 15)
 		err = checkForLCIDExpiration(ctx, fifteenDaysLater, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
 		assert.NoError(t, err)
 		assert.Equal(t, 2, lcidExpirationAlertCount)
 
 		// Test that it resends alerts for the one intake that was alerted more then 14 days ago but doesn't resend alerts to the others
 		lcidExpirationAlertCount = 0
-		seventeenDaysLater := time.Now().AddDate(0, 0, 17)
+		seventeenDaysLater := testDate.AddDate(0, 0, 17)
 		err = checkForLCIDExpiration(ctx, seventeenDaysLater, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 1, lcidExpirationAlertCount)
+	})
+
+	t.Run("resets alerts properly on LCID extension", func(t *testing.T) {
+		clearAlerts(systemIntakes)
+
+		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days
+		lcidExpirationAlertCount = 0
+		err := checkForLCIDExpiration(ctx, testDate, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 2, lcidExpirationAlertCount)
+
+		// Test that all alert timestamps are set properly
+		assert.NotNil(t, intakeWithLCIDExpiringIn46Days.LifecycleExpirationAlertTS)
+		assert.NotNil(t, intakeWithLCIDExpiringIn59Days.LifecycleExpirationAlertTS)
+		assert.Nil(t, intakeWithLCIDExpiringIn60Days.LifecycleExpirationAlertTS)
+
+		// Test that it sends an alert for the intake that is now expiring withing 60 days but doesn't resend alerts
+		lcidExpirationAlertCount = 0
+		twoDaysLater := testDate.AddDate(0, 0, 2)
+		err = checkForLCIDExpiration(ctx, twoDaysLater, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 1, lcidExpirationAlertCount)
+
+		// Test that all alert timestamps are set properly
+		assert.NotNil(t, intakeWithLCIDExpiringIn46Days.LifecycleExpirationAlertTS)
+		assert.NotNil(t, intakeWithLCIDExpiringIn59Days.LifecycleExpirationAlertTS)
+		assert.NotNil(t, intakeWithLCIDExpiringIn60Days.LifecycleExpirationAlertTS)
+
+		// "Extend" intakeWithLCIDExpiringIn59Days' LCID by two days
+		lcidExtendedThreeDays := intakeWithLCIDExpiringIn59Days.LifecycleExpiresAt.AddDate(0, 0, 3)
+		intakeWithLCIDExpiringIn59Days.LifecycleExpiresAt = &lcidExtendedThreeDays
+
+		// Fire off another check/alert (still two days later)
+		// This shouldn't send any alerts but should nil out the newly extended LCID alert timestamp since it has fallen out of the 60 day window
+		lcidExpirationAlertCount = 0
+		err = checkForLCIDExpiration(ctx, twoDaysLater, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 0, lcidExpirationAlertCount)
+
+		// Test that "extended" LCID alert timestamp is now nil
+		assert.NotNil(t, intakeWithLCIDExpiringIn46Days.LifecycleExpirationAlertTS)
+		assert.Nil(t, intakeWithLCIDExpiringIn59Days.LifecycleExpirationAlertTS) // This intake now actually expires in 62 days since it was "extended"
+		assert.NotNil(t, intakeWithLCIDExpiringIn60Days.LifecycleExpirationAlertTS)
+
+		// Test that "extended" LCID alert is sent once it re-enters the 60 day window
+		lcidExpirationAlertCount = 0
+		threeDaysLater := testDate.AddDate(0, 0, 3)
+		err = checkForLCIDExpiration(ctx, threeDaysLater, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
 		assert.NoError(t, err)
 		assert.Equal(t, 1, lcidExpirationAlertCount)
 	})
