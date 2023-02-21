@@ -24,6 +24,8 @@ import {
 } from 'queries/types/CreateTrbRequestFeedback';
 import { TRBFeedbackAction } from 'types/graphql-global-types';
 
+import Breadcrumbs from '../Breadcrumbs';
+
 function RequestEdits() {
   const { t } = useTranslation('technicalAssistance');
 
@@ -31,6 +33,8 @@ function RequestEdits() {
   const history = useHistory();
 
   const { message, showMessage, showMessageOnNextPage } = useMessage();
+
+  const requestUrl = `/trb/${id}/${activePage}`;
 
   const {
     control,
@@ -49,7 +53,23 @@ function RequestEdits() {
 
   return (
     <GridContainer className="width-full">
+      <Breadcrumbs
+        items={[
+          { text: t('Home'), url: `/trb` },
+          {
+            text: t('adminHome.breadcrumb', { trbRequestId: id }),
+            url: requestUrl
+          },
+          {
+            text: t(
+              'adminHome.taskStatuses.attendConsultStatus.READY_TO_SCHEDULE'
+            )
+          }
+        ]}
+      />
+
       {message}
+
       <Grid row>
         <PageHeading className="margin-bottom-0">
           {t('actionRequestEdits.heading')}
@@ -79,7 +99,7 @@ function RequestEdits() {
                       {t('actionRequestEdits.success')}
                     </Alert>
                   );
-                  history.push(`/trb/${id}/${activePage}`);
+                  history.push(requestUrl);
                 })
                 .catch(err => {
                   showMessage(
@@ -133,7 +153,7 @@ function RequestEdits() {
         </Grid>
       </Grid>
       <div>
-        <UswdsReactLink to={`/trb/${id}/${activePage}`}>
+        <UswdsReactLink to={requestUrl}>
           {t('actionRequestEdits.cancelAndReturn')}
         </UswdsReactLink>
       </div>
