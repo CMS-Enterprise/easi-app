@@ -44,15 +44,15 @@ describe('TRB admin home', () => {
   it('matches the snapshot', async () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
-        <Provider store={defaultStore}>
-          <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
-            <Route path="/trb/:id/:activePage?">
-              <MessageProvider>
+        <MessageProvider>
+          <Provider store={defaultStore}>
+            <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
+              <Route path="/trb/:id/:activePage?">
                 <AdminHome />
-              </MessageProvider>
-            </Route>
-          </MockedProvider>
-        </Provider>
+              </Route>
+            </MockedProvider>
+          </Provider>
+        </MessageProvider>
       </MemoryRouter>
     );
 
@@ -74,15 +74,15 @@ describe('TRB admin home', () => {
   test.each(subpages)('Renders each subpage', async subpage => {
     const { findByTestId } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/${subpage}`]}>
-        <Provider store={defaultStore}>
-          <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
-            <Route path="/trb/:id/:activePage?">
-              <MessageProvider>
+        <MessageProvider>
+          <Provider store={defaultStore}>
+            <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
+              <Route path="/trb/:id/:activePage?">
                 <AdminHome />
-              </MessageProvider>
-            </Route>
-          </MockedProvider>
-        </Provider>
+              </Route>
+            </MockedProvider>
+          </Provider>
+        </MessageProvider>
       </MemoryRouter>
     );
 

@@ -159,39 +159,37 @@ describe('Trb Admin: Action: Request Edits', () => {
 
   it('shows error notice when submission fails', async () => {
     const { getByLabelText, getByRole, findByText } = render(
-      <Provider store={store}>
-        <MockedProvider
-          mocks={[
-            {
-              request: {
-                query: CreateTrbRequestFeedbackQuery,
-                variables: {
-                  input: {
-                    trbRequestId,
-                    feedbackMessage,
-                    copyTrbMailbox: false,
-                    notifyEuaIds: ['ABCD'],
-                    action: 'REQUEST_EDITS'
-                  }
+      <MockedProvider
+        mocks={[
+          {
+            request: {
+              query: CreateTrbRequestFeedbackQuery,
+              variables: {
+                input: {
+                  trbRequestId,
+                  feedbackMessage,
+                  copyTrbMailbox: false,
+                  notifyEuaIds: ['ABCD'],
+                  action: 'REQUEST_EDITS'
                 }
-              },
-              error: new Error()
-            }
+              }
+            },
+            error: new Error()
+          }
+        ]}
+      >
+        <MemoryRouter
+          initialEntries={[
+            `/trb/${trbRequestId}/initial-request-form/request-edits`
           ]}
         >
-          <MemoryRouter
-            initialEntries={[
-              `/trb/${trbRequestId}/initial-request-form/request-edits`
-            ]}
-          >
-            <MessageProvider>
-              <Route exact path="/trb/:id/:activePage/request-edits">
-                <RequestEdits />
-              </Route>
-            </MessageProvider>
-          </MemoryRouter>
-        </MockedProvider>
-      </Provider>
+          <MessageProvider>
+            <Route exact path="/trb/:id/:activePage/request-edits">
+              <RequestEdits />
+            </Route>
+          </MessageProvider>
+        </MemoryRouter>
+      </MockedProvider>
     );
 
     userEvent.type(
