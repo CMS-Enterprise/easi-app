@@ -4,7 +4,7 @@ describe('extend lifecycle ID schema', () => {
   const defaultValues = {
     expirationDateDay: '15',
     expirationDateMonth: '2',
-    expirationDateYear: '2023',
+    expirationDateYear: '3023',
     nextSteps: 'Some new next steps',
     scope: 'A new scope'
   };
