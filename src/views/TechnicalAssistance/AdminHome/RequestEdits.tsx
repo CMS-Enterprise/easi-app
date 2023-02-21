@@ -159,7 +159,11 @@ function RequestEdits() {
               <Button
                 type="submit"
                 className=""
-                disabled={!isDirty || isSubmitting}
+                // `feedbackMessage` is required for `request-edits` action
+                // Disable submit if request-edits feedbackMessage undefined
+                disabled={
+                  (action === 'request-edits' && !isDirty) || isSubmitting
+                }
               >
                 {t('actionRequestEdits.submit')}
               </Button>
