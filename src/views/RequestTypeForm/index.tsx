@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
@@ -7,8 +7,7 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Button,
-  Link as UswdsLink
+  Button
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -17,7 +16,6 @@ import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
-import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import flattenErrors from 'utils/flattenErrors';
@@ -174,15 +172,6 @@ const RequestTypeForm = () => {
                     ))}
                   </ul>
                 </CollapsableLink>
-                <HelpText id="RequestType-HelpText" className="margin-top-4">
-                  <Trans i18nKey="intake:requestTypeForm.info">
-                    indexZero
-                    <UswdsLink href="mailto:NavigatorInquiries@cms.hhs.gov">
-                      navigatorEmailLink
-                    </UswdsLink>
-                    indexTwo
-                  </Trans>
-                </HelpText>
                 <Button
                   className="margin-top-5 display-block"
                   type="submit"

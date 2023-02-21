@@ -1,7 +1,10 @@
+import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { GetTRBRequestAttendees_trbRequest_attendees as TRBAttendee } from 'queries/types/GetTRBRequestAttendees';
+import { GetTrbRequestSummary_trbRequest as Summary } from 'queries/types/GetTrbRequestSummary';
 import {
   PersonRole,
+  TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
@@ -74,22 +77,62 @@ export const attendees: TRBAttendee[] = [
   }
 ];
 
-export const trbRequest: TrbRequest = {
-  id: trbRequestId,
-  name: 'Draft',
-  createdBy: euaUserId,
+export const trbRequestSummary: Summary = {
+  __typename: 'TRBRequest',
+  name: 'TRB Request Mock',
+  type: TRBRequestType.NEED_HELP,
+  status: TRBRequestStatus.OPEN,
+  trbLead: null,
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses: {
     __typename: 'TRBTaskStatuses',
     attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
     consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
     feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-    formStatus: TRBFormStatus.READY_TO_START
+    formStatus: TRBFormStatus.READY_TO_START,
+    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
+  }
+};
+
+export const trbRequestAdviceLetter: AdviceLetter = {
+  __typename: 'TRBAdviceLetter',
+  id: '1b68aeca-f0d4-42e8-90ef-70ed2de1a34b',
+  meetingSummary: 'Meeting summary text',
+  nextSteps: 'These are the next steps',
+  isFollowupRecommended: true,
+  dateSent: null,
+  followupPoint: 'Six months from now',
+  recommendations: [
+    {
+      __typename: 'TRBAdviceLetterRecommendation',
+      title: 'Recommendation 1',
+      recommendation: 'This is the recommendation text',
+      links: ['easi.cms.gov', 'https://google.com']
+    }
+  ],
+  author: {
+    __typename: 'UserInfo',
+    euaUserId: 'SF13',
+    commonName: 'Jerry Seinfeld'
+  },
+  createdAt: '2023-01-05T07:26:16.036618Z',
+  modifiedAt: null
+};
+
+export const trbRequest: TrbRequest = {
+  id: trbRequestId,
+  name: 'Draft',
+  taskStatuses: {
+    __typename: 'TRBTaskStatuses',
+    attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+    consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+    feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+    formStatus: TRBFormStatus.READY_TO_START,
+    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
   },
   feedback: [],
   status: TRBRequestStatus.OPEN,
   type: TRBRequestType.NEED_HELP,
-  trbLead: null,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     component: null,

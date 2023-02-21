@@ -13,6 +13,7 @@ import {
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
 import {
+  TRBAdviceLetterStatus,
   TRBApplicationDevelopmentOption,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
@@ -30,17 +31,15 @@ import Check from './Check';
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
-  createdBy: 'SF13',
-  createdAt: '',
   status: TRBRequestStatus.OPEN,
   taskStatuses: {
     __typename: 'TRBTaskStatuses',
     formStatus: TRBFormStatus.IN_PROGRESS,
     feedbackStatus: TRBFeedbackStatus.READY_TO_START,
     consultPrepStatus: TRBConsultPrepStatus.READY_TO_START,
-    attendConsultStatus: TRBAttendConsultStatus.READY_TO_SCHEDULE
+    attendConsultStatus: TRBAttendConsultStatus.READY_TO_SCHEDULE,
+    adviceLetterStatus: TRBAdviceLetterStatus.READY_TO_START
   },
-  trbLead: '',
   feedback: [],
   type: TRBRequestType.NEED_HELP,
   form: {

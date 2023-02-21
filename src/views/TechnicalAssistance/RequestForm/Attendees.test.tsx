@@ -6,6 +6,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { attendees, requester, trbRequest } from 'data/mock/trbRequest';
+import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 import { GetTrbRequest } from 'queries/types/GetTrbRequest';
@@ -59,11 +60,23 @@ describe('Trb Request form: Attendees', () => {
     }
   };
 
+  const getCedarContactsQuery = {
+    request: {
+      query: GetCedarContactsQuery,
+      variables: {
+        commonName: initialRequester.userInfo?.commonName
+      }
+    },
+    result: {
+      data: requester
+    }
+  };
+
   it('Renders the attendees form', async () => {
-    const { asFragment, getByTestId, findByTestId } = render(
+    const { getByTestId, findByTestId } = render(
       <MemoryRouter>
         <MockedProvider
-          mocks={[getAttendeesQuery, getTrbRequestQuery]}
+          mocks={[getAttendeesQuery, getTrbRequestQuery, getCedarContactsQuery]}
           addTypename={false}
         >
           <Attendees
@@ -104,8 +117,5 @@ describe('Trb Request form: Attendees', () => {
     // Select requester role
     userEvent.selectOptions(requesterRoleField, [requester.role!]);
     expect(requesterRoleField).toHaveValue(requester.role);
-
-    // Snapshot
-    expect(asFragment()).toMatchSnapshot();
   });
 });

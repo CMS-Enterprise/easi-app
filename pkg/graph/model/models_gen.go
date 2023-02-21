@@ -250,7 +250,7 @@ type CreateTRBRequestDocumentPayload struct {
 	Document *models.TRBRequestDocument `json:"document"`
 }
 
-// The data needed add feedback to a TRB request
+// The data needed to add feedback to a TRB request
 type CreateTRBRequestFeedbackInput struct {
 	TrbRequestID    uuid.UUID                `json:"trbRequestId"`
 	FeedbackMessage string                   `json:"feedbackMessage"`
@@ -377,6 +377,12 @@ type RejectIntakeInput struct {
 	NextSteps              *string                             `json:"nextSteps"`
 	Reason                 string                              `json:"reason"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+}
+
+// The data needed to reopen a TRB request
+type ReopenTRBRequestInput struct {
+	TrbRequestID   uuid.UUID `json:"trbRequestId"`
+	ReasonReopened string    `json:"reasonReopened"`
 }
 
 // Represents a request being made with the EASi system
