@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
+<DocumentFragment>
+  <div
+    class="grid-container width-full"
+    data-testid="gridContainer"
+  >
+    <div
+      class="grid-row"
+      data-testid="grid"
+    >
+      <h1
+        aria-live="polite"
+        class="easi-h1 margin-bottom-0"
+        tabindex="-1"
+      >
+        Action: request edits
+      </h1>
+      <div
+        class="line-height-body-5 font-body-lg text-light"
+      >
+        Use this action if the TRB needs additional information about the request in order to proceed with scheduling aconsult session. Specify the edits or additional information needed from the requester.
+      </div>
+    </div>
+    <div
+      class="grid-row grid-gap"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <form
+          class="usa-form maxw-full"
+          data-testid="form"
+        >
+          <div
+            class="margin-top-1"
+          >
+            Fields marked with an asterisk ( * ) are required.
+          </div>
+          <div
+            class="usa-form-group"
+            data-testid="formGroup"
+          >
+            <label
+              class="usa-label"
+              data-testid="label"
+              for="feedbackMessage"
+            >
+              What type of edits are needed prior to scheduling the consult session? *
+              <span
+                class="usa-hint"
+              >
+                <div>
+                  Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.
+                </div>
+              </span>
+            </label>
+            <textarea
+              aria-describedby="feedbackMessage-info feedbackMessage-hint"
+              class="usa-textarea usa-character-count__field"
+              data-testid="textarea"
+              id="feedbackMessage"
+              name="feedbackMessage"
+              rows="2"
+            />
+            <span
+              aria-live="polite"
+              class="usa-hint usa-character-count__message"
+              data-testid="characterCountMessage"
+              id="feedbackMessage-info"
+            >
+              2000 characters allowed
+            </span>
+          </div>
+          <h3>
+            Notification email
+          </h3>
+          <div>
+            A notification email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.
+          </div>
+          <div>
+            <button
+              class="usa-button"
+              data-testid="button"
+              disabled=""
+              type="submit"
+            >
+              Complete action
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div>
+      <a
+        class="usa-link"
+        href="/trb/449ea115-8bfa-48c3-b1dd-5a613d79fbae/initial-request-form"
+      >
+        Cancel action and return to request
+      </a>
+    </div>
+  </div>
+</DocumentFragment>
+`;

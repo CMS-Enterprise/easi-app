@@ -7,7 +7,6 @@ import {
   Alert,
   Button,
   CharacterCount,
-  ErrorMessage,
   Form,
   FormGroup,
   Grid,
@@ -98,26 +97,22 @@ function RequestEdits() {
             <Controller
               name="feedbackMessage"
               control={control}
-              // eslint-disable-next-line no-shadow
-              render={({ field, fieldState: { error } }) => (
-                <FormGroup error={!!error}>
+              render={({ field }) => (
+                <FormGroup>
                   <Label
                     htmlFor="feedbackMessage"
                     hint={<div>{t('actionRequestEdits.hint')}</div>}
-                    error={!!error}
                   >
                     {t('actionRequestEdits.label')}
                   </Label>
-                  {error && <ErrorMessage>error</ErrorMessage>}
                   <CharacterCount
                     {...field}
                     ref={null}
-                    id="proposedSolution"
+                    id="feedbackMessage"
                     maxLength={2000}
                     isTextArea
                     rows={2}
                     aria-describedby="feedbackMessage-info feedbackMessage-hint"
-                    error={!!error}
                   />
                 </FormGroup>
               )}
