@@ -1999,6 +1999,7 @@ Represents an advice letter for a TRB request
 type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
+  author: UserInfo!
   meetingSummary: String
   nextSteps: String
   isFollowupRecommended: Boolean
