@@ -136,9 +136,21 @@ function RequestEdits() {
                 <FormGroup>
                   <Label
                     htmlFor="feedbackMessage"
-                    hint={<div>{t('actionRequestEdits.hint')}</div>}
+                    hint={
+                      <div className="margin-top-1">
+                        {t('actionRequestEdits.hint')}
+                      </div>
+                    }
+                    className="text-normal margin-top-6"
                   >
                     {t(`${actionText}.label`)}
+                    {/* Show the required marker for Feedback message when the action is "request edits" */}
+                    {action === 'request-edits' && (
+                      <>
+                        {' '}
+                        <span className="text-red">*</span>
+                      </>
+                    )}
                   </Label>
                   <CharacterCount
                     {...field}

@@ -676,7 +676,7 @@ const technicalAssistance = {
     hint:
       'Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.',
     label:
-      'What type of edits are needed prior to scheduling the consult session? *',
+      'What type of edits are needed prior to scheduling the consult session?',
     notificationTitle: 'Notification email',
     notificationDescription:
       'A notification email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.',
