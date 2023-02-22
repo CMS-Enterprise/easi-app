@@ -51,6 +51,10 @@
   }
 }
 
+.easi-table--bottomless .usa-table tbody tr:last-of-type td {
+  border-bottom: 0 !important;
+}
+
 //  Global changes to usa-label
 .usa-label {
   margin-top: 2rem;
