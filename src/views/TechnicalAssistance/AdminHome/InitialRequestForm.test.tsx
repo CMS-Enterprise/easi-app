@@ -12,6 +12,7 @@ import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
+  TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
@@ -26,8 +27,6 @@ import InitialRequestForm from './InitialRequestForm';
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
-  createdBy: 'SF13',
-  createdAt: '',
   type: TRBRequestType.NEED_HELP,
   status: TRBRequestStatus.OPEN,
   taskStatuses: {
@@ -35,6 +34,7 @@ const mockTrbRequestData: TrbRequest = {
     feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
     consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
     attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
     __typename: 'TRBTaskStatuses'
   },
   form: {
@@ -74,7 +74,6 @@ const mockTrbRequestData: TrbRequest = {
     __typename: 'TRBRequestForm'
   },
   __typename: 'TRBRequest',
-  trbLead: null,
   feedback: []
 };
 
