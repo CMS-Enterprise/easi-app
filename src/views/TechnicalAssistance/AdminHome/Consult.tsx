@@ -2,9 +2,9 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-// import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
-  // Alert,
+  Alert,
   Button,
   Form,
   FormGroup,
@@ -17,25 +17,32 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
+import {
+  UpdateTrbRequestConsultMeeting,
+  UpdateTrbRequestConsultMeetingVariables
+} from 'queries/types/UpdateTrbRequestConsultMeeting';
+import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 
 import Breadcrumbs from '../Breadcrumbs';
 
 function Consult() {
   const { t } = useTranslation('technicalAssistance');
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id, activePage, action } = useParams<{
+  const { id, activePage } = useParams<{
     id: string;
     activePage: string;
     action: 'consult';
   }>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const history = useHistory();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { message, showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl = `/trb/${id}/${activePage}`;
+
+  const [mutate] = useMutation<
+    UpdateTrbRequestConsultMeeting,
+    UpdateTrbRequestConsultMeetingVariables
+  >(UpdateTrbRequestConsultMeetingQuery);
 
   const {
     control,
@@ -44,7 +51,8 @@ function Consult() {
   } = useForm({
     defaultValues: {
       meetingDate: '',
-      meetingTime: ''
+      meetingTime: '',
+      notes: ''
     }
   });
 
@@ -79,11 +87,16 @@ function Consult() {
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           <Form
             onSubmit={handleSubmit(formData => {
-              /*
+              const consultMeetingTime =
+                formData.meetingDate + formData.meetingTime; // todo
               mutate({
                 variables: {
                   input: {
                     trbRequestId: id,
+                    consultMeetingTime,
+                    notes: formData.notes,
+                    copyTrbMailbox: false,
+                    notifyEuaIds: ['ABCD']
                   }
                 }
               })
@@ -102,7 +115,6 @@ function Consult() {
                     </Alert>
                   );
                 });
-              */
             })}
             className="maxw-full"
           >

@@ -809,6 +809,17 @@ export interface UpdateTRBRequestAttendeeInput {
 }
 
 /**
+ * The data needed schedule a TRB consult meeting time
+ */
+export interface UpdateTRBRequestConsultMeetingTimeInput {
+  trbRequestId: UUID;
+  consultMeetingTime: Time;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  notes: string;
+}
+
+/**
  * Represents an EUA user who is included as an form for a TRB request
  */
 export interface UpdateTRBRequestFormInput {
