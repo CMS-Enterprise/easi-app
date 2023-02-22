@@ -678,6 +678,25 @@ const technicalAssistance = {
       notes: 'Notes'
     },
     byNameOnDate: 'by {{name}} on {{date}}'
+  },
+  actionConsult: {
+    heading: 'Action: schedule a TRB consult session',
+    description:
+      'Once you have confirmed availability with the requester and project team, set a date and time for the consult session for this request.',
+    labels: {
+      meetingDate: 'Meeting date',
+      meetingTime: 'Meeting time'
+    },
+    hints: {
+      meetingDate: 'mm/dd/yyyy',
+      meetingTime: 'hh:mm pm'
+    },
+    error:
+      'There was an issue scheduling the consult session. Please try again, and if the problem persists, try again later.',
+    success:
+      'The date for this request’s TRB consult session is set for 11/02/2022 at 11:00 am.',
+    alert:
+      'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.'
   }
 };
 
