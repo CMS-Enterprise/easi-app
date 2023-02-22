@@ -1,3 +1,6 @@
+@use 'uswds-core' as *;
+@use 'viewports' as *;
+
 .task-list {
   // Keep heading and order numbers the same
   &__task-heading,

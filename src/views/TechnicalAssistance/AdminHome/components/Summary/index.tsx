@@ -62,7 +62,7 @@ export default function Summary({
 
     // Return current status
     // If all task list steps have been completed, return last step
-    return currentStatus || statusKeys.at(-1)!;
+    return currentStatus || statusKeys[-1]!;
   }, [taskStatuses]);
 
   /** Corresponding task status text from translation file */
