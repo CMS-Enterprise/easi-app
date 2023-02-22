@@ -1,6 +1,6 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
@@ -11,6 +11,7 @@ import {
   FormGroup,
   Grid,
   GridContainer,
+  IconArrowBack,
   Label
 } from '@trussworks/react-uswds';
 
@@ -126,8 +127,11 @@ function RequestEdits() {
             })}
             className="maxw-full"
           >
-            <div className="margin-top-1">
-              {t('actionRequestEdits.fieldsMarkedRequired')}
+            <div className="margin-top-1 text-base">
+              <Trans
+                i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
+                components={{ red: <span className="text-red" /> }}
+              />
             </div>
             <Controller
               name="feedbackMessage"
@@ -144,7 +148,7 @@ function RequestEdits() {
                     className="text-normal margin-top-6"
                   >
                     {t(`${actionText}.label`)}
-                    {/* Show the required marker for Feedback message when the action is "request edits" */}
+                    {/* Show the required marker when the action is `request-edits` */}
                     {action === 'request-edits' && (
                       <>
                         {' '}
@@ -164,7 +168,9 @@ function RequestEdits() {
                 </FormGroup>
               )}
             />
-            <h3>{t('actionRequestEdits.notificationTitle')}</h3>
+            <h3 className="margin-top-6">
+              {t('actionRequestEdits.notificationTitle')}
+            </h3>
             <div>{t('actionRequestEdits.notificationDescription')}</div>
             {/* todo cedar contacts */}
             <div>
@@ -183,8 +189,9 @@ function RequestEdits() {
           </Form>
         </Grid>
       </Grid>
-      <div>
+      <div className="margin-top-2">
         <UswdsReactLink to={requestUrl}>
+          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('actionRequestEdits.cancelAndReturn')}
         </UswdsReactLink>
       </div>
