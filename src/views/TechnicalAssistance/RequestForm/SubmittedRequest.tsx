@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
-import { camelCase, capitalize } from 'lodash';
+import { camelCase, upperFirst } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
@@ -172,7 +172,7 @@ function SubmittedRequest({
                   }
                   return `${t(`basic.options.collabGroups.${camelCase(v)}`)} (${
                     request.form[
-                      `collabDate${capitalize(
+                      `collabDate${upperFirst(
                         camelCase(v)
                       )}` as keyof TrbRequestForm
                     ]
