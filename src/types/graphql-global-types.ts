@@ -492,7 +492,7 @@ export interface CreateTRBRequestDocumentInput {
 }
 
 /**
- * The data needed add feedback to a TRB request
+ * The data needed to add feedback to a TRB request
  */
 export interface CreateTRBRequestFeedbackInput {
   trbRequestId: UUID;
