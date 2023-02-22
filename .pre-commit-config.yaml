@@ -72,6 +72,16 @@ repos:
         entry: scripts/pre-commit-eslint
         language: script
         files: \.(js|jsx|ts|tsx)$
+        exclude: (\.(d\.ts)$)|(\.storybook)|(serviceWorker\.ts) # This should match the .eslintrc "ignorePatterns". Change one, change the other!
+
+  - repo: local
+    hooks:
+      - id: tsc-check
+        name: Run typescript check
+        entry: scripts/pre-commit-tsc
+        language: script
+        files: \.(js|jsx|ts|tsx)$
+        pass_filenames: false
 
   - repo: local
     hooks:

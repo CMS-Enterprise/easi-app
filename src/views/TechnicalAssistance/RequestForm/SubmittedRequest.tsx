@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
-import { camelCase, capitalize } from 'lodash';
+import { camelCase, upperFirst } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
@@ -21,11 +21,12 @@ function SubjectDefinition(
   field: keyof TrbRequestForm
 ): React.ReactNode {
   const { t } = useTranslation('technicalAssistance');
-  return Array.isArray(form[field]) && form[field].length ? (
-    form[field]
+  const { [field]: formField, [`${field}Other`]: formFieldOther } = form;
+  return Array.isArray(formField) && formField.length ? (
+    formField
       .map((v: string) =>
         v === 'OTHER'
-          ? `${t('basic.options.other')}: ${form[`${field}Other`]}`
+          ? `${t('basic.options.other')}: ${formFieldOther}`
           : t(`subject.options.${field}.${v}`)
       )
       .join(', ')
@@ -37,11 +38,15 @@ function SubjectDefinition(
 type SubmittedRequestProps = {
   request: TrbRequest;
   showEditSectionLinks?: boolean;
+  showSectionHeadingDescription?: boolean;
+  showRequestHeaderInfo?: boolean;
 };
 
 function SubmittedRequest({
   request,
-  showEditSectionLinks
+  showEditSectionLinks,
+  showSectionHeadingDescription,
+  showRequestHeaderInfo
 }: SubmittedRequestProps) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -51,28 +56,37 @@ function SubmittedRequest({
 
   return (
     <>
-      <dl className="easi-dl margin-top-4 margin-bottom-3">
-        <Grid row gap>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>{t('table.header.submissionDate')}</dt>
-            <dd>
-              {request.form.submittedAt
-                ? formatDateLocal(request.form.submittedAt, 'MMMM d, yyyy')
-                : t('check.notYetSubmitted')}
-            </dd>
-          </Grid>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>{t('check.requestType')}</dt>
-            <dd>{t(`requestType.type.${request.type}.heading`)}</dd>
-          </Grid>
-        </Grid>
-      </dl>
-      <Divider />
+      {showRequestHeaderInfo && (
+        <>
+          <dl className="easi-dl margin-top-4 margin-bottom-3">
+            <Grid row gap>
+              <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+                <dt>{t('table.header.submissionDate')}</dt>
+                <dd>
+                  {request.form.submittedAt
+                    ? formatDateLocal(request.form.submittedAt, 'MMMM d, yyyy')
+                    : t('check.notYetSubmitted')}
+                </dd>
+              </Grid>
+              <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+                <dt>{t('check.requestType')}</dt>
+                <dd>{t(`requestType.type.${request.type}.heading`)}</dd>
+              </Grid>
+            </Grid>
+          </dl>
+          <Divider />
+        </>
+      )}
 
       {/* Basic request details */}
       <h2 className="margin-top-3 margin-bottom-05">
         {t('requestForm.steps.0.name')}
       </h2>
+      {showSectionHeadingDescription && (
+        <div className="text-base line-height-body-5">
+          {t('requestForm.steps.0.adminDescription')}
+        </div>
+      )}
       {showEditSectionLinks && (
         <div>
           <UswdsReactLink to={`/trb/requests/${request.id}/basic`}>
@@ -159,7 +173,7 @@ function SubmittedRequest({
                   }
                   return `${t(`basic.options.collabGroups.${camelCase(v)}`)} (${
                     request.form[
-                      `collabDate${capitalize(
+                      `collabDate${upperFirst(
                         camelCase(v)
                       )}` as keyof TrbRequestForm
                     ]
@@ -176,6 +190,11 @@ function SubmittedRequest({
       <h2 className="margin-top-3 margin-bottom-05">
         {t('requestForm.steps.1.name')}
       </h2>
+      {showSectionHeadingDescription && (
+        <div className="text-base line-height-body-5">
+          {t('requestForm.steps.1.adminDescription')}
+        </div>
+      )}
       {showEditSectionLinks && (
         <div>
           <UswdsReactLink to={`/trb/requests/${request.id}/subject`}>
@@ -257,6 +276,11 @@ function SubmittedRequest({
       <h2 className="margin-top-3 margin-bottom-05">
         {t('requestForm.steps.2.name')}
       </h2>
+      {showSectionHeadingDescription && (
+        <div className="text-base line-height-body-5">
+          {t('requestForm.steps.2.adminDescription')}
+        </div>
+      )}
       {showEditSectionLinks && (
         <div>
           <UswdsReactLink to={`/trb/requests/${request.id}/attendees`}>
@@ -280,6 +304,11 @@ function SubmittedRequest({
       <h2 className="margin-top-3 margin-bottom-05">
         {t('requestForm.steps.3.name')}
       </h2>
+      {showSectionHeadingDescription && (
+        <div className="text-base line-height-body-5">
+          {t('requestForm.steps.3.adminDescription')}
+        </div>
+      )}
       {showEditSectionLinks && (
         <div>
           <UswdsReactLink to={`/trb/requests/${request.id}/documents`}>
@@ -290,7 +319,6 @@ function SubmittedRequest({
       <div className="margin-top-3 margin-bottom-6">
         <DocumentsTable trbRequestId={request.id} />
       </div>
-      <Divider />
     </>
   );
 }

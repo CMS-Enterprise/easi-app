@@ -13,9 +13,15 @@ import {
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
 import {
+  TRBAdviceLetterStatus,
   TRBApplicationDevelopmentOption,
+  TRBAttendConsultStatus,
   TRBCollabGroupOption,
+  TRBConsultPrepStatus,
+  TRBFeedbackStatus,
+  TRBFormStatus,
   TRBNetworkAndSecurityOption,
+  TRBRequestStatus,
   TRBRequestType,
   TRBWhereInProcessOption
 } from 'types/graphql-global-types';
@@ -25,7 +31,16 @@ import Check from './Check';
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
-  createdBy: 'SF13',
+  status: TRBRequestStatus.OPEN,
+  taskStatuses: {
+    __typename: 'TRBTaskStatuses',
+    formStatus: TRBFormStatus.IN_PROGRESS,
+    feedbackStatus: TRBFeedbackStatus.READY_TO_START,
+    consultPrepStatus: TRBConsultPrepStatus.READY_TO_START,
+    attendConsultStatus: TRBAttendConsultStatus.READY_TO_SCHEDULE,
+    adviceLetterStatus: TRBAdviceLetterStatus.READY_TO_START
+  },
+  feedback: [],
   type: TRBRequestType.NEED_HELP,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',

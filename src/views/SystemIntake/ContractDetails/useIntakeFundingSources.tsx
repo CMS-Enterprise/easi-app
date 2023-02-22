@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import {
+  ExistingFundingSource,
   FormattedFundingSourcesObject,
   FundingSource,
   MultiFundingSource,
@@ -90,7 +91,9 @@ export default function useIntakeFundingSources(
     } else {
       // If editing funding source, delete initial source
       if (action === 'Edit') {
-        delete updatedFundingSources[data.initialFundingNumber];
+        delete updatedFundingSources[
+          (data as ExistingFundingSource).initialFundingNumber
+        ];
       }
       // If creating or editing funding source, add source
       updatedFundingSources = {

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  mutation UpdateAccessibilityRequestStatus(
+  mutation UpdateAccessibilityReqStatus(
     $input: UpdateAccessibilityRequestStatus!
   ) {
     updateAccessibilityRequestStatus(input: $input) {

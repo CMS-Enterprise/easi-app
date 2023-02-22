@@ -27,6 +27,7 @@ export interface GetTrbRequestDocuments_trbRequest_documents {
 
 export interface GetTrbRequestDocuments_trbRequest {
   __typename: "TRBRequest";
+  id: UUID;
   documents: GetTrbRequestDocuments_trbRequest_documents[];
 }
 

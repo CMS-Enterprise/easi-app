@@ -24,6 +24,7 @@ export const GetTRBRequestAttendees = gql`
   ${TRBAttendee}
   query GetTRBRequestAttendees($id: UUID!) {
     trbRequest(id: $id) {
+      id
       attendees {
         ...TRBAttendee
       }
