@@ -114,7 +114,7 @@ describe('Trb Request form: Supporting documents', () => {
   const testFile = new File(['1'], 'test.pdf', { type: 'application/pdf' });
 
   it('renders states without documents', async () => {
-    const { getByRole, findByText } = render(
+    const { getByRole, findByText, asFragment } = render(
       <MemoryRouter
         initialEntries={[
           '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
@@ -145,6 +145,8 @@ describe('Trb Request form: Supporting documents', () => {
     );
 
     await findByText('No documents uploaded');
+
+    expect(asFragment()).toMatchSnapshot();
 
     // Submit button state without any documents loaded
     getByRole('button', { name: 'Continue without adding documents' });
