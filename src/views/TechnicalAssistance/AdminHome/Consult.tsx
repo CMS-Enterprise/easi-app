@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -21,6 +21,7 @@ import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import useMessage from 'hooks/useMessage';
 import {
   UpdateTrbRequestConsultMeeting,
@@ -64,19 +65,17 @@ function Consult() {
     }
   });
 
+  const hasErrors = Object.keys(errors).length > 0;
+
+  useEffect(() => {
+    if (hasErrors) {
+      const err = document.querySelector('.trb-basic-fields-error');
+      err?.scrollIntoView();
+    }
+  }, [errors, hasErrors]);
+
   // console.log('errors', errors);
   // const vals = watch();
-  // console.log(
-  //   'time',
-  //   vals.meetingDate,
-  //   vals.meetingTime,
-  //   DateTime.fromFormat(
-  //     `${vals.meetingDate} ${vals.meetingTime}`,
-  //     'MM/dd/yyyy HH:mm'
-  //   )
-  //     .toUTC()
-  //     .toISO()
-  // );
   // console.log('values', JSON.stringify(vals, null, 2));
 
   return (
@@ -106,59 +105,78 @@ function Consult() {
           {t('actionConsult.description')}
         </div>
       </Grid>
-      <Grid row gap>
-        <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-          <Form
-            onSubmit={handleSubmit(formData => {
-              // Format the time as utc iso from the components' default local format
-              const consultMeetingTime = DateTime.fromFormat(
-                `${formData.meetingDate} ${formData.meetingTime}`,
-                'MM/dd/yyyy HH:mm'
-              )
-                .toUTC()
-                .toISO();
+      <Form
+        onSubmit={handleSubmit(formData => {
+          // Format the time as utc iso from the components' default local format
+          const consultMeetingTime = DateTime.fromFormat(
+            `${formData.meetingDate} ${formData.meetingTime}`,
+            'MM/dd/yyyy HH:mm'
+          )
+            .toUTC()
+            .toISO();
 
-              mutate({
-                variables: {
-                  input: {
-                    trbRequestId: id,
-                    consultMeetingTime,
-                    notes: formData.notes,
-                    copyTrbMailbox: false,
-                    notifyEuaIds: ['ABCD']
-                  }
-                }
-              })
-                .then(result => {
-                  showMessageOnNextPage(
-                    <Alert type="success" slim className="margin-top-3">
-                      {t('actionConsult.success', {
-                        date: formData.meetingDate,
-                        time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
-                          .toFormat('t')
-                          .toLowerCase()
-                      })}
-                    </Alert>
-                  );
-                  history.push(requestUrl);
-                })
-                .catch(err => {
-                  showMessage(
-                    <Alert type="error" slim className="margin-top-3">
-                      {t('actionConsult.error')}
-                    </Alert>
-                  );
-                });
-            })}
-            className="maxw-full"
+          mutate({
+            variables: {
+              input: {
+                trbRequestId: id,
+                consultMeetingTime,
+                notes: formData.notes,
+                copyTrbMailbox: false,
+                notifyEuaIds: ['ABCD']
+              }
+            }
+          })
+            .then(result => {
+              showMessageOnNextPage(
+                <Alert type="success" slim className="margin-top-3">
+                  {t('actionConsult.success', {
+                    date: formData.meetingDate,
+                    time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
+                      .toFormat('t')
+                      .toLowerCase()
+                  })}
+                </Alert>
+              );
+              history.push(requestUrl);
+            })
+            .catch(err => {
+              showMessage(
+                <Alert type="error" slim className="margin-top-3">
+                  {t('actionConsult.error')}
+                </Alert>
+              );
+            });
+        })}
+        className="maxw-full"
+      >
+        <div className="margin-top-1 margin-bottom-6 text-base">
+          <Trans
+            i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
+            components={{ red: <span className="text-red" /> }}
+          />
+        </div>
+
+        {hasErrors && (
+          <Alert
+            heading={t('errors.checkFix')}
+            type="error"
+            className="trb-basic-fields-error"
           >
-            <div className="margin-top-1 text-base">
-              <Trans
-                i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
-                components={{ red: <span className="text-red" /> }}
-              />
-            </div>
+            {Object.keys(errors).map(fieldName => {
+              const msg: string = t(`actionConsult.labels.${fieldName}`);
+              return (
+                <ErrorAlertMessage
+                  key={fieldName}
+                  errorKey={fieldName}
+                  message={msg}
+                />
+              );
+            })}
+          </Alert>
+        )}
 
+        <Grid row gap>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             {/* Meeting date */}
             <Controller
               name="meetingDate"
@@ -173,7 +191,7 @@ function Consult() {
                         {t('actionConsult.hints.meetingDate')}
                       </div>
                     }
-                    className="text-normal margin-top-6"
+                    className="text-normal"
                     error={!!error}
                   >
                     {t('actionConsult.labels.meetingDate')}
@@ -254,14 +272,14 @@ function Consult() {
             </h3>
             <div>{t('actionRequestEdits.notificationDescription')}</div>
             {/* todo cedar contacts */}
-            <div>
-              <Button type="submit" disabled={!isDirty || isSubmitting}>
-                {t('actionRequestEdits.submit')}
-              </Button>
-            </div>
-          </Form>
+          </Grid>
         </Grid>
-      </Grid>
+        <div>
+          <Button type="submit" disabled={!isDirty || isSubmitting}>
+            {t('actionRequestEdits.submit')}
+          </Button>
+        </div>
+      </Form>
       <div className="margin-top-2">
         <UswdsReactLink to={requestUrl}>
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
