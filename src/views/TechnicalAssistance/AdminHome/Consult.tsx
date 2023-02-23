@@ -6,13 +6,18 @@ import { useMutation } from '@apollo/client';
 import {
   Alert,
   Button,
+  CharacterCount,
+  DatePicker,
+  ErrorMessage,
   Form,
   FormGroup,
   Grid,
   GridContainer,
   IconArrowBack,
-  Label
+  Label,
+  TimePicker
 } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -47,7 +52,10 @@ function Consult() {
   const {
     control,
     handleSubmit,
-    formState: { isDirty, isSubmitting }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    watch,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    formState: { errors, isDirty, isSubmitting }
   } = useForm({
     defaultValues: {
       meetingDate: '',
@@ -55,6 +63,21 @@ function Consult() {
       notes: ''
     }
   });
+
+  // console.log('errors', errors);
+  // const vals = watch();
+  // console.log(
+  //   'time',
+  //   vals.meetingDate,
+  //   vals.meetingTime,
+  //   DateTime.fromFormat(
+  //     `${vals.meetingDate} ${vals.meetingTime}`,
+  //     'MM/dd/yyyy HH:mm'
+  //   )
+  //     .toUTC()
+  //     .toISO()
+  // );
+  // console.log('values', JSON.stringify(vals, null, 2));
 
   return (
     <GridContainer className="width-full">
@@ -87,8 +110,14 @@ function Consult() {
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           <Form
             onSubmit={handleSubmit(formData => {
-              const consultMeetingTime =
-                formData.meetingDate + formData.meetingTime; // todo
+              // Format the time as utc iso from the components' default local format
+              const consultMeetingTime = DateTime.fromFormat(
+                `${formData.meetingDate} ${formData.meetingTime}`,
+                'MM/dd/yyyy HH:mm'
+              )
+                .toUTC()
+                .toISO();
+
               mutate({
                 variables: {
                   input: {
@@ -103,7 +132,12 @@ function Consult() {
                 .then(result => {
                   showMessageOnNextPage(
                     <Alert type="success" slim className="margin-top-3">
-                      {t('actionConsult.success')}
+                      {t('actionConsult.success', {
+                        date: formData.meetingDate,
+                        time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
+                          .toFormat('t')
+                          .toLowerCase()
+                      })}
                     </Alert>
                   );
                   history.push(requestUrl);
@@ -124,11 +158,14 @@ function Consult() {
                 components={{ red: <span className="text-red" /> }}
               />
             </div>
+
+            {/* Meeting date */}
             <Controller
               name="meetingDate"
               control={control}
-              render={({ field }) => (
-                <FormGroup>
+              rules={{ required: true }}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup error={!!error}>
                   <Label
                     htmlFor="meetingDate"
                     hint={
@@ -137,17 +174,31 @@ function Consult() {
                       </div>
                     }
                     className="text-normal margin-top-6"
+                    error={!!error}
                   >
                     {t('actionConsult.labels.meetingDate')}
                   </Label>
+                  {error && (
+                    <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                  )}
+                  <DatePicker
+                    id="meetingDate"
+                    name="meetingDate"
+                    onChange={val => {
+                      field.onChange(val);
+                    }}
+                  />
                 </FormGroup>
               )}
             />
+
+            {/* Meeting time */}
             <Controller
               name="meetingTime"
               control={control}
-              render={({ field }) => (
-                <FormGroup>
+              rules={{ required: true }}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup error={!!error}>
                   <Label
                     htmlFor="meetingTime"
                     hint={
@@ -155,13 +206,49 @@ function Consult() {
                         {t('actionConsult.hints.meetingTime')}
                       </div>
                     }
-                    className="text-normal margin-top-6"
+                    className="text-normal"
+                    error={!!error}
                   >
                     {t('actionConsult.labels.meetingTime')}
                   </Label>
+                  {error && (
+                    <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                  )}
+                  <TimePicker
+                    id="meetingTime"
+                    name="meetingTime"
+                    onChange={val => {
+                      field.onChange(val);
+                    }}
+                    step={5}
+                  />
                 </FormGroup>
               )}
             />
+
+            {/* Notes */}
+            <Controller
+              name="notes"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup>
+                  <Label htmlFor="notes" className="text-normal">
+                    {t('actionConsult.labels.notes')}
+                  </Label>
+                  <CharacterCount
+                    {...field}
+                    ref={null}
+                    id="notes"
+                    maxLength={2000}
+                    isTextArea
+                    rows={2}
+                    aria-describedby="notes-info notes-hint"
+                    error={!!error}
+                  />
+                </FormGroup>
+              )}
+            />
+
             <h3 className="margin-top-6">
               {t('actionRequestEdits.notificationTitle')}
             </h3>
