@@ -30,15 +30,21 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 	nextSteps := "nextSteps"
 	lcidExpiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
 	requesterTaskListLink := fmt.Sprintf(
-		"<a href=\"governance-task-list/%s\" style=\"font-weight: bold\">click here</a>",
+		"<a href=\"%s://%s/governance-task-list/%s\" style=\"font-weight: bold\">click here</a>",
+		s.config.URLScheme,
+		s.config.URLHost,
 		intakeID.String(),
 	)
 	requesterDecisionLink := fmt.Sprintf(
-		"<a href=\"governance-task-list/%s/request-decision\" style=\"font-weight: bold\">here</a>",
+		"<a href=\"%s://%s/governance-task-list/%s/request-decision\" style=\"font-weight: bold\">here</a>",
+		s.config.URLScheme,
+		s.config.URLHost,
 		intakeID.String(),
 	)
 	grtDecisionLink := fmt.Sprintf(
-		"<a href=\"governance-review-team/%s/lcid\" style=\"font-weight: bold\">click here</a>",
+		"<a href=\"%s://%s/governance-review-team/%s/lcid\" style=\"font-weight: bold\">click here</a>",
+		s.config.URLScheme,
+		s.config.URLHost,
 		intakeID.String(),
 	)
 
@@ -49,11 +55,11 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Lifecycle ID issued for " +
 			projectName +
 			" is set to expire on " +
-			lcidExpiresAt.Format("January 02, 2006") + ".\n" +
-			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the CIO risk register</p>\n\n" +
+			lcidExpiresAt.Format("January 02, 2006") + ". " +
+			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the CIO risk register.</p>\n" +
 			"<p>To avoid this please email the Governance Team at " +
 			string(s.config.GRTEmail) +
-			" within one week to update them with the current status of your project</p>\n\n" +
+			" within one week to update them with the current status of your project.</p>\n\n" +
 			"For IT system projects, please include (if applicable):\n" +
 			"<ul>\n" +
 			"<li>if the project is in production and if so, the date it was released into production</li>\n" +
@@ -63,7 +69,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<li>if the project has been cancelled</li>\n" +
 			"<li>if the project is on hold</li>\n" +
 			"</ul>\n\n" +
-			"Fir O&M projects or services contracts, please include (if applicable):\n" +
+			"For O&M projects or services contracts, please include (if applicable):\n" +
 			"<ul>\n" +
 			"<li>if the current contract is not being extended, include the end date of the period of performance</li>\n" +
 			"<li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>\n" +
@@ -78,8 +84,8 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			" to view the request task list and " + requesterDecisionLink + " to view the decision and LCID information</li>\n" +
 			"<li>Governance Team members may " + grtDecisionLink + " to view the decision and LCID information</li>\n" +
 			"<li>Others should contact " + requesterName + " or the Governance Team for more information on the request</li>\n" +
-			"</ul>\n\n" +
-			"<p>If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "</p>\n\n" +
+			"</ul>\n" +
+			"<p>If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "</p>\n" +
 			"<p><u>Current Lifecycle ID Summary</u><p>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
@@ -113,11 +119,11 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Lifecycle ID issued for " +
 			projectName +
 			" is set to expire on " +
-			lcidExpiresAt.Format("January 02, 2006") + ".\n" +
-			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the CIO risk register</p>\n\n" +
+			lcidExpiresAt.Format("January 02, 2006") + ". " +
+			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the CIO risk register.</p>\n" +
 			"<p>To avoid this please email the Governance Team at " +
 			string(s.config.GRTEmail) +
-			" within one week to update them with the current status of your project</p>\n\n" +
+			" within one week to update them with the current status of your project.</p>\n\n" +
 			"For IT system projects, please include (if applicable):\n" +
 			"<ul>\n" +
 			"<li>if the project is in production and if so, the date it was released into production</li>\n" +
@@ -127,7 +133,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<li>if the project has been cancelled</li>\n" +
 			"<li>if the project is on hold</li>\n" +
 			"</ul>\n\n" +
-			"Fir O&M projects or services contracts, please include (if applicable):\n" +
+			"For O&M projects or services contracts, please include (if applicable):\n" +
 			"<ul>\n" +
 			"<li>if the current contract is not being extended, include the end date of the period of performance</li>\n" +
 			"<li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>\n" +
@@ -142,8 +148,8 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			" to view the request task list and " + requesterDecisionLink + " to view the decision and LCID information</li>\n" +
 			"<li>Governance Team members may " + grtDecisionLink + " to view the decision and LCID information</li>\n" +
 			"<li>Others should contact " + requesterName + " or the Governance Team for more information on the request</li>\n" +
-			"</ul>\n\n" +
-			"<p>If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "</p>\n\n" +
+			"</ul>\n" +
+			"<p>If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "</p>\n" +
 			"<p><u>Current Lifecycle ID Summary</u><p>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +

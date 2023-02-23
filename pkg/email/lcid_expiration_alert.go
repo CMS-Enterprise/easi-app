@@ -49,8 +49,8 @@ func (c Client) lcidExpirationBody(
 		CostBaseline:  lifecycleCostBaseline,
 		NextSteps:     nextSteps,
 		GRTEmail:      string(c.config.GRTEmail),
-		RequesterLink: requesterPath,
-		GRTLink:       grtPath,
+		RequesterLink: c.urlFromPath(requesterPath),
+		GRTLink:       c.urlFromPath(grtPath),
 	}
 
 	var b bytes.Buffer
