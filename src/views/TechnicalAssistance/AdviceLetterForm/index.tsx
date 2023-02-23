@@ -21,6 +21,8 @@ import {
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
 
+import Breadcrumbs from '../Breadcrumbs';
+
 import InternalReview from './InternalReview';
 import NextSteps from './NextSteps';
 import Recommendations from './Recommendations';
@@ -118,12 +120,29 @@ const AdviceLetterForm = () => {
         step={currentStepIndex + 1}
         steps={steps.map((step, index) => ({
           key: step.name,
-          label: step.name,
+          label: (
+            <>
+              <span className="name">{step.name}</span>
+              <span className="long">{step.longName ?? step.name}</span>
+            </>
+          ),
           description: step.description,
           completed: index < currentStepIndex,
           // TODO: onClick prop
           onClick: () => null
         }))}
+        breadcrumbBar={
+          <Breadcrumbs
+            items={[
+              { text: t('Home'), url: '/trb' },
+              {
+                text: t(`Request ${id}`),
+                url: `/trb/${id}/advice`
+              },
+              { text: t('adviceLetterForm.heading') }
+            ]}
+          />
+        }
       >
         <Button
           type="button"
