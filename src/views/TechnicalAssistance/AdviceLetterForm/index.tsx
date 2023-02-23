@@ -91,16 +91,19 @@ const AdviceLetterForm = () => {
   /** Submit advice letter form */
   const onSubmit = formData => console.log(formData);
 
-  /** Current form step slug - will return undefined if URL is invalid */
-  const currentFormStep: AdviceFormStep | undefined = adviceFormSteps.find(
+  /** Index of current form step - will return -1 if invalid URL */
+  const currentStepIndex: number = adviceFormSteps.findIndex(
     ({ slug }) => slug === formStep
   );
+
+  /** Current form step object */
+  const currentFormStep: AdviceFormStep = adviceFormSteps[currentStepIndex];
 
   // Page loading
   if (loading) return <PageLoading />;
 
   // If invalid URL or request doesn't exist, return page not found
-  if (!currentFormStep || !trbRequest) return <NotFound />;
+  if (currentStepIndex === -1 || !trbRequest) return <NotFound />;
 
   const {
     taskStatuses: { adviceLetterStatus }
@@ -112,13 +115,14 @@ const AdviceLetterForm = () => {
         heading={t('adviceLetterForm.heading')}
         text={t('adviceLetterForm.description')}
         subText={t('adviceLetterForm.text')}
-        step={1}
+        step={currentStepIndex + 1}
         steps={steps.map((step, index) => ({
           key: step.name,
           label: step.name,
           description: step.description,
-          completed: false
-          // onClick: null
+          completed: index < currentStepIndex,
+          // TODO: onClick prop
+          onClick: () => null
         }))}
       >
         <Button
