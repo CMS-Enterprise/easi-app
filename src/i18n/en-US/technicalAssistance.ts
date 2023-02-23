@@ -53,6 +53,43 @@ const technicalAssistance = {
     notSpecified: 'Not specified yet',
     followup: 'Should the team return for a follow-up session?'
   },
+  adviceLetterForm: {
+    heading: 'Advice letter',
+    description:
+      'Document any outcomes, advice, findings, recommendations, or next steps that the TRB has for this request.',
+    text:
+      'After submitting this form, the requester will recieve an automatic notification letting them know their advice letter is available.',
+    returnToRequest: 'Save and return to request',
+    steps: [
+      {
+        name: 'What we heard',
+        description:
+          'Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.'
+      },
+      {
+        name: 'What we recommend',
+        description:
+          'Add recommendations for the project team. Provide a title, description, and any useful resources for each recommendation.'
+      },
+      {
+        name: 'Next steps',
+        description:
+          'Add any additional next steps the team should take, and mark whether they should return to the TRB for a follow-up session.'
+      },
+      {
+        name: 'Internal review',
+        longName: 'Check your work and request an internal review'
+      },
+      {
+        name: 'Check and send',
+        longName:
+          'Check the content of your advice letter and send it to the requester',
+        description:
+          'Review the notes from your TRB team members and incorporate any feedback into the advice letter. When you are ready, send it to the requester, project team, and any other recipients you would like to include.'
+      }
+    ],
+    meetingSummary: 'Meeting summary'
+  },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
     COMPLETED: 'Completed',

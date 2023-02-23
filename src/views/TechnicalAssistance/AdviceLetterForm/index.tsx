@@ -1,10 +1,18 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Form, Grid, GridContainer } from '@trussworks/react-uswds';
+import {
+  Button,
+  Form,
+  Grid,
+  GridContainer,
+  IconArrowBack
+} from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+import StepHeader from 'components/StepHeader';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   GetTrbAdviceLetter,
@@ -24,6 +32,8 @@ type AdviceFormStep = {
   slug: string;
   component: () => JSX.Element;
 };
+
+type StepsText = { name: string; longName?: string; description?: string }[];
 
 const adviceFormSteps: AdviceFormStep[] = [
   {
@@ -60,6 +70,9 @@ const AdviceLetterForm = () => {
     formStep: string;
   }>();
 
+  const { t } = useTranslation('technicalAssistance');
+  const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
+
   /** Advice letter form context */
   const formContext = useForm();
 
@@ -94,23 +107,50 @@ const AdviceLetterForm = () => {
   } = trbRequest;
 
   return (
-    <GridContainer>
-      <Grid>
-        {
-          // TODO: View if advice letter cannot be started yet
-          adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET ? (
-            <p>Cannot start yet</p>
-          ) : (
-            /** Advice letter form */
-            <FormProvider {...formContext}>
-              <Form onSubmit={handleSubmit(onSubmit)}>
-                <currentFormStep.component />
-              </Form>
-            </FormProvider>
-          )
-        }
-      </Grid>
-    </GridContainer>
+    <>
+      <StepHeader
+        heading={t('adviceLetterForm.heading')}
+        text={t('adviceLetterForm.description')}
+        subText={t('adviceLetterForm.text')}
+        step={1}
+        steps={steps.map((step, index) => ({
+          key: step.name,
+          label: step.name,
+          description: step.description,
+          completed: false
+          // onClick: null
+        }))}
+      >
+        <Button
+          type="button"
+          unstyled
+          // TODO: disabled prop
+          disabled={false}
+          // TODO: onClick prop
+          onClick={() => null}
+        >
+          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          {t('adviceLetterForm.returnToRequest')}
+        </Button>
+      </StepHeader>
+      <GridContainer>
+        <Grid>
+          {
+            // TODO: View if advice letter cannot be started yet
+            adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET ? (
+              <p>Cannot start yet</p>
+            ) : (
+              /** Advice letter form */
+              <FormProvider {...formContext}>
+                <Form onSubmit={handleSubmit(onSubmit)}>
+                  <currentFormStep.component />
+                </Form>
+              </FormProvider>
+            )
+          }
+        </Grid>
+      </GridContainer>
+    </>
   );
 };
 
