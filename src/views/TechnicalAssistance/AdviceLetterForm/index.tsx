@@ -1,8 +1,16 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { Form } from '@trussworks/react-uswds';
+import { useQuery } from '@apollo/client';
+import { Form, Grid, GridContainer } from '@trussworks/react-uswds';
 
+import PageLoading from 'components/PageLoading';
+import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  GetTrbAdviceLetter,
+  GetTrbAdviceLetterVariables
+} from 'queries/types/GetTrbAdviceLetter';
+import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
 
 import InternalReview from './InternalReview';
@@ -47,29 +55,62 @@ const adviceFormSteps: AdviceFormStep[] = [
 
 const AdviceLetterForm = () => {
   // Get url params
-  const { formStep } = useParams<{
+  const { id, formStep } = useParams<{
     id: string;
     formStep: string;
   }>();
 
+  /** Advice letter form context */
   const formContext = useForm();
 
   const { handleSubmit } = formContext;
-  const onSubmit = data => console.log(data);
 
-  /** Current form step slug - will return undefined if page not found */
+  // TRB request query
+  const { data, loading } = useQuery<
+    GetTrbAdviceLetter,
+    GetTrbAdviceLetterVariables
+  >(GetTrbAdviceLetterQuery, {
+    variables: { id }
+  });
+  /** Current trb request */
+  const trbRequest = data?.trbRequest;
+
+  /** Submit advice letter form */
+  const onSubmit = formData => console.log(formData);
+
+  /** Current form step slug - will return undefined if URL is invalid */
   const currentFormStep: AdviceFormStep | undefined = adviceFormSteps.find(
     ({ slug }) => slug === formStep
   );
 
-  if (!currentFormStep) return <NotFound />;
+  // Page loading
+  if (loading) return <PageLoading />;
+
+  // If invalid URL or request doesn't exist, return page not found
+  if (!currentFormStep || !trbRequest) return <NotFound />;
+
+  const {
+    taskStatuses: { adviceLetterStatus }
+  } = trbRequest;
 
   return (
-    <FormProvider {...formContext}>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <currentFormStep.component />
-      </Form>
-    </FormProvider>
+    <GridContainer>
+      <Grid>
+        {
+          // TODO: View if advice letter cannot be started yet
+          adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET ? (
+            <p>Cannot start yet</p>
+          ) : (
+            /** Advice letter form */
+            <FormProvider {...formContext}>
+              <Form onSubmit={handleSubmit(onSubmit)}>
+                <currentFormStep.component />
+              </Form>
+            </FormProvider>
+          )
+        }
+      </Grid>
+    </GridContainer>
   );
 };
 
