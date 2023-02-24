@@ -143,6 +143,9 @@ const AdviceLetterForm = () => {
             ]}
           />
         }
+        hideSteps={
+          adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
+        }
       >
         <Button
           type="button"
