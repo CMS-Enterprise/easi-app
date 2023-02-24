@@ -54,7 +54,10 @@ function TechnicalAssistance() {
         </Route>
 
         {/* Admin request form actions */}
-        <Route exact path={`${path}/:id/:activePage/:action`}>
+        <Route
+          exact
+          path={`${path}/:id/:activePage/:action(request-edits|ready-for-consult)`}
+        >
           <RequestEdits />
         </Route>
 
