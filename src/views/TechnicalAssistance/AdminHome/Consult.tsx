@@ -274,6 +274,10 @@ function Consult() {
             </h3>
             <div>{t('actionRequestEdits.notificationDescription')}</div>
             {/* todo cedar contacts */}
+
+            <Alert type="warning" slim>
+              {t('actionConsult.alert')}
+            </Alert>
           </Grid>
         </Grid>
 
