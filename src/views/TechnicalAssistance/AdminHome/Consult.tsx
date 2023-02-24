@@ -53,8 +53,6 @@ function Consult() {
   const {
     control,
     handleSubmit,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    watch,
     formState: { errors, isDirty, isSubmitting }
   } = useForm({
     defaultValues: {
@@ -72,10 +70,6 @@ function Consult() {
       err?.scrollIntoView();
     }
   }, [errors, hasErrors]);
-
-  // console.log('errors', errors);
-  // const vals = watch();
-  // console.log('values', JSON.stringify(vals, null, 2));
 
   return (
     <GridContainer className="width-full">
@@ -131,7 +125,6 @@ function Consult() {
               history.push(requestUrl);
             })
             .catch(err => {
-              // console.log('mutate error', err);
               showMessage(
                 <Alert type="error" slim className="margin-top-3">
                   {t('actionConsult.error')}

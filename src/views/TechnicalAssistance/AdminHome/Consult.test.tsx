@@ -156,8 +156,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
 
     userEvent.click(submitButton);
 
-    // The meetingDate and meetingTime field inputs are properly parsed to utc iso
-    // for the query, if the submission is successful
+    // This test will check that the meetingDate and meetingTime field inputs
+    // are properly parsed to utc iso for the query
     // Note: the jest timezone is set to utc in `jest-global-setup.js`
 
     await findByRole('heading', { name: /Initial request form/ });
