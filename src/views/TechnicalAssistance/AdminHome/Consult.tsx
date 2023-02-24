@@ -55,7 +55,6 @@ function Consult() {
     handleSubmit,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     watch,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors, isDirty, isSubmitting }
   } = useForm({
     defaultValues: {
@@ -97,14 +96,6 @@ function Consult() {
 
       {message}
 
-      <Grid row>
-        <PageHeading className="margin-bottom-0">
-          {t('actionConsult.heading')}
-        </PageHeading>
-        <div className="line-height-body-5 font-body-lg text-light">
-          {t('actionConsult.description')}
-        </div>
-      </Grid>
       <Form
         onSubmit={handleSubmit(formData => {
           // Format the time as utc iso from the components' default local format
@@ -140,6 +131,7 @@ function Consult() {
               history.push(requestUrl);
             })
             .catch(err => {
+              // console.log('mutate error', err);
               showMessage(
                 <Alert type="error" slim className="margin-top-3">
                   {t('actionConsult.error')}
@@ -149,31 +141,41 @@ function Consult() {
         })}
         className="maxw-full"
       >
-        <div className="margin-top-1 margin-bottom-6 text-base">
-          <Trans
-            i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
-            components={{ red: <span className="text-red" /> }}
-          />
-        </div>
+        <Grid row>
+          <Grid col>
+            <PageHeading className="margin-bottom-0">
+              {t('actionConsult.heading')}
+            </PageHeading>
+            <div className="line-height-body-5 font-body-lg text-light">
+              {t('actionConsult.description')}
+            </div>
+            <div className="margin-top-1 margin-bottom-6 text-base">
+              <Trans
+                i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
+                components={{ red: <span className="text-red" /> }}
+              />
+            </div>
 
-        {hasErrors && (
-          <Alert
-            heading={t('errors.checkFix')}
-            type="error"
-            className="trb-basic-fields-error"
-          >
-            {Object.keys(errors).map(fieldName => {
-              const msg: string = t(`actionConsult.labels.${fieldName}`);
-              return (
-                <ErrorAlertMessage
-                  key={fieldName}
-                  errorKey={fieldName}
-                  message={msg}
-                />
-              );
-            })}
-          </Alert>
-        )}
+            {hasErrors && (
+              <Alert
+                heading={t('errors.checkFix')}
+                type="error"
+                className="trb-basic-fields-error"
+              >
+                {Object.keys(errors).map(fieldName => {
+                  const msg: string = t(`actionConsult.labels.${fieldName}`);
+                  return (
+                    <ErrorAlertMessage
+                      key={fieldName}
+                      errorKey={fieldName}
+                      message={msg}
+                    />
+                  );
+                })}
+              </Alert>
+            )}
+          </Grid>
+        </Grid>
 
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
@@ -274,12 +276,14 @@ function Consult() {
             {/* todo cedar contacts */}
           </Grid>
         </Grid>
+
         <div>
           <Button type="submit" disabled={!isDirty || isSubmitting}>
             {t('actionRequestEdits.submit')}
           </Button>
         </div>
       </Form>
+
       <div className="margin-top-2">
         <UswdsReactLink to={requestUrl}>
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
