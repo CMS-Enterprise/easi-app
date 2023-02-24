@@ -153,24 +153,24 @@ function Homepage() {
 
   return (
     <>
-      {
-        // Admin site alert
-        user.isTrbAdmin(groups) && (
-          <SiteAlert
-            variant="info"
-            heading={t('adminInfoBox.heading')}
-            className="trb-admin-alert"
-            data-testid="trbAdmin-siteAlert"
-          >
-            <Trans i18nKey="technicalAssistance:adminInfoBox.text">
-              indexOne
-              <UswdsReactLink to="/">admin</UswdsReactLink>
-              indexTwo
-            </Trans>
-          </SiteAlert>
-        )
-      }
       <GridContainer className="width-full">
+        {
+          // Admin site alert
+          user.isTrbAdmin(groups) && (
+            <SiteAlert
+              variant="info"
+              heading={t('adminInfoBox.heading')}
+              className="trb-admin-alert"
+              data-testid="trbAdmin-siteAlert"
+            >
+              <Trans i18nKey="technicalAssistance:adminInfoBox.text">
+                indexOne
+                <UswdsReactLink to="/">admin</UswdsReactLink>
+                indexTwo
+              </Trans>
+            </SiteAlert>
+          )
+        }
         <SectionWrapper borderBottom>
           <PageHeading className="margin-bottom-0">{t('heading')}</PageHeading>
           <p className="line-height-body-5 font-body-lg text-light margin-y-1">
