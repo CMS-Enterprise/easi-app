@@ -6,6 +6,7 @@ import { ErrorMessage, FormGroup, Label } from '@trussworks/react-uswds';
 
 import HelpText from 'components/shared/HelpText';
 import TextAreaField from 'components/shared/TextAreaField';
+import { AdviceLetterFormFields } from 'types/technicalAssistance';
 
 import Pager from '../RequestForm/Pager';
 
@@ -16,22 +17,24 @@ const Summary = ({ trbRequestId }: { trbRequestId: string }) => {
   const {
     getValues,
     formState: { isSubmitting }
-  } = useFormContext();
+  } = useFormContext<AdviceLetterFormFields>();
 
   return (
     <>
+      {/** Required fields text */}
       <HelpText className="margin-top-1">
         <Trans
           i18nKey="technicalAssistance:requiredFields"
           components={{ red: <span className="text-red" /> }}
         />
       </HelpText>
+
+      {/** Meeting summary field */}
       <Controller
         name="meetingSummary"
-        // control={control}
         render={({ field, fieldState: { error } }) => {
           return (
-            <FormGroup className="margin-top-4" error={!!error}>
+            <FormGroup className="maxw-tablet margin-top-4" error={!!error}>
               <Label className="text-normal" htmlFor="meetingSummary">
                 {t('adviceLetterForm.meetingSummary')}{' '}
                 <span className="text-red">*</span>
@@ -50,6 +53,7 @@ const Summary = ({ trbRequestId }: { trbRequestId: string }) => {
         }}
       />
 
+      {/** Form pager buttons */}
       <Pager
         className="margin-top-4"
         back={{ outline: true, text: t('button.cancel') }}

@@ -182,7 +182,7 @@ const AdviceLetterForm = () => {
             ) : (
               /** Advice letter form */
               <FormProvider {...formContext}>
-                <Form className="maxw-tablet" onSubmit={handleSubmit(onSubmit)}>
+                <Form className="maxw-none" onSubmit={handleSubmit(onSubmit)}>
                   <currentFormStep.component trbRequestId={id} />
                 </Form>
               </FormProvider>
