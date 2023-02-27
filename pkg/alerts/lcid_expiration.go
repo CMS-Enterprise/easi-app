@@ -2,7 +2,6 @@ package alerts
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -28,7 +27,7 @@ func getAlertRecipients(
 
 	if requesterInfo == nil || requesterInfo.Email == "" {
 		return nil, &apperrors.ExternalAPIError{
-			Err:       errors.New("requester info fetch was not successful when checking for LCID expiration"),
+			Err:       fmt.Errorf("Requester info fetch was not successful when checking for LCID expiration for intake with ID: %s", intake.ID),
 			Model:     intake,
 			ModelID:   intake.ID.String(),
 			Operation: apperrors.Fetch,
@@ -105,7 +104,8 @@ func checkForLCIDExpiration(
 				var recipients *models.EmailNotificationRecipients
 				recipients, err = getAlertRecipients(ctx, currIntake, fetchUserInfo)
 				if err != nil {
-					return err
+					appcontext.ZLogger(ctx).Warn(fmt.Sprintf("Failed to get requester information from intake with ID: %s", currIntake.ID), zap.Error(err))
+					continue
 				}
 
 				err = sendLCIDExpirationEmail(
@@ -122,8 +122,8 @@ func checkForLCIDExpiration(
 				)
 
 				if err != nil {
-					appcontext.ZLogger(ctx).Error("LCID Expiration Alert email failed to send: ", zap.Error(err))
-					return err
+					appcontext.ZLogger(ctx).Warn(fmt.Sprintf("Failed to send LCID Expiration Alert email for intake with ID: %s", currIntake.ID), zap.Error(err))
+					continue
 				}
 
 				// Set LifecycleExpirationAlertTS to current date
@@ -148,7 +148,8 @@ func checkForLCIDExpiration(
 				var recipients *models.EmailNotificationRecipients
 				recipients, err = getAlertRecipients(ctx, currIntake, fetchUserInfo)
 				if err != nil {
-					return err
+					appcontext.ZLogger(ctx).Warn(fmt.Sprintf("Failed to get requester information from intake with ID: %s", currIntake.ID), zap.Error(err))
+					continue
 				}
 
 				err = sendLCIDExpirationEmail(
@@ -165,8 +166,8 @@ func checkForLCIDExpiration(
 				)
 
 				if err != nil {
-					appcontext.ZLogger(ctx).Error("LCID Expiration Alert email failed to send: ", zap.Error(err))
-					return err
+					appcontext.ZLogger(ctx).Warn(fmt.Sprintf("Failed to send LCID Expiration Alert email for intake with ID: %s", currIntake.ID), zap.Error(err))
+					continue
 				}
 
 				// Set LifecycleExpirationAlertTS to LCID expiration date
