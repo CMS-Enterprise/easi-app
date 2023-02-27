@@ -94,7 +94,10 @@ const technicalAssistance = {
     addRecommendation: 'Add a recommendation',
     noRecommendations:
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
-    continueWithoutAdding: 'Continue without adding recommendations'
+    continueWithoutAdding: 'Continue without adding recommendations',
+    addResourceLink: 'Add a resource link',
+    returnToAdviceLetter:
+      'Don’t add a recommendation and return to advice letter'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
@@ -113,6 +116,7 @@ const technicalAssistance = {
     back: 'Back',
     continue: 'Continue',
     next: 'Next',
+    save: 'Save',
     saveAndExit: 'Save and exit',
     start: 'Start',
     removeYourRequest: 'Remove your request'

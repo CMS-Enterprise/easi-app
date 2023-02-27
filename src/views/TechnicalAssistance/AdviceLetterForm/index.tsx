@@ -70,9 +70,10 @@ const adviceFormSteps: AdviceFormStep[] = [
 
 const AdviceLetterForm = () => {
   // Get url params
-  const { id, formStep } = useParams<{
+  const { id, formStep, subpage } = useParams<{
     id: string;
     formStep: string;
+    subpage: string;
   }>();
 
   const { t } = useTranslation('technicalAssistance');
@@ -127,52 +128,54 @@ const AdviceLetterForm = () => {
 
   return (
     <>
-      <StepHeader
-        heading={t('adviceLetterForm.heading')}
-        text={t('adviceLetterForm.description')}
-        subText={t('adviceLetterForm.text')}
-        step={currentStepIndex + 1}
-        steps={steps.map((step, index) => ({
-          key: step.name,
-          label: (
-            <>
-              <span className="name">{step.name}</span>
-              <span className="long">{step.longName ?? step.name}</span>
-            </>
-          ),
-          description: step.description,
-          completed: index < currentStepIndex,
-          // TODO: onClick prop
-          onClick: () => null
-        }))}
-        breadcrumbBar={
-          <Breadcrumbs
-            items={[
-              { text: t('Home'), url: '/trb' },
-              {
-                text: t(`Request ${id}`),
-                url: `/trb/${id}/advice`
-              },
-              { text: t('adviceLetterForm.heading') }
-            ]}
-          />
-        }
-        hideSteps={
-          adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
-        }
-      >
-        <Button
-          type="button"
-          unstyled
-          // TODO: disabled prop
-          disabled={false}
-          // TODO: onClick prop
-          onClick={() => null}
+      {!subpage && (
+        <StepHeader
+          heading={t('adviceLetterForm.heading')}
+          text={t('adviceLetterForm.description')}
+          subText={t('adviceLetterForm.text')}
+          step={currentStepIndex + 1}
+          steps={steps.map((step, index) => ({
+            key: step.name,
+            label: (
+              <>
+                <span className="name">{step.name}</span>
+                <span className="long">{step.longName ?? step.name}</span>
+              </>
+            ),
+            description: step.description,
+            completed: index < currentStepIndex,
+            // TODO: onClick prop
+            onClick: () => null
+          }))}
+          breadcrumbBar={
+            <Breadcrumbs
+              items={[
+                { text: t('Home'), url: '/trb' },
+                {
+                  text: t(`Request ${id}`),
+                  url: `/trb/${id}/advice`
+                },
+                { text: t('adviceLetterForm.heading') }
+              ]}
+            />
+          }
+          hideSteps={
+            adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
+          }
         >
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-          {t('adviceLetterForm.returnToRequest')}
-        </Button>
-      </StepHeader>
+          <Button
+            type="button"
+            unstyled
+            // TODO: disabled prop
+            disabled={false}
+            // TODO: onClick prop
+            onClick={() => null}
+          >
+            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+            {t('adviceLetterForm.returnToRequest')}
+          </Button>
+        </StepHeader>
+      )}
       <GridContainer>
         <Grid>
           {

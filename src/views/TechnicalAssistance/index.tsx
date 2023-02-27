@@ -48,7 +48,7 @@ function TechnicalAssistance() {
           <RequestForm />
         </Route>
 
-        <Route exact path={`${path}/:id/advice/:formStep`}>
+        <Route path={`${path}/:id/advice/:formStep/:subpage?`}>
           <AdviceLetterForm />
         </Route>
 
