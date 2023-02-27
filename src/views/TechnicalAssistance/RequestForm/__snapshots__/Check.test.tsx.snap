@@ -359,33 +359,41 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
     </div>
   </div>
   <div
-    class="border-base-light border-top-1px "
+    class="border-base-light border-top-1px"
   >
-    <div
-      class="margin-top-2"
+    <ul
+      class="usa-button-group margin-top-2"
     >
-      <button
-        class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-        data-testid="button"
-        type="button"
+      <li
+        class="usa-button-group__item"
       >
-        Back
-      </button>
-      <button
-        class="usa-button margin-top-0"
-        data-testid="button"
-        type="submit"
+        <button
+          class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+          data-testid="button"
+          type="button"
+        >
+          Back
+        </button>
+      </li>
+      <li
+        class="usa-button-group__item"
       >
-        Submit request
-      </button>
-    </div>
+        <button
+          class="usa-button margin-top-0"
+          data-testid="button"
+          type="submit"
+        >
+          Submit request
+        </button>
+      </li>
+    </ul>
     <button
-      class="usa-button usa-button--unstyled margin-top-2"
+      class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
       data-testid="button"
       type="button"
     >
       <svg
-        class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
+        class="usa-icon margin-right-05"
         focusable="false"
         height="1em"
         role="img"
