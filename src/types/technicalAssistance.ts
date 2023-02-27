@@ -56,3 +56,25 @@ export type SubNavItem = {
    */
   groupEnd?: boolean;
 };
+
+export type AdviceLetterRecommendationFields = {
+  title: string;
+  description: string;
+  links?: string[];
+};
+
+export type AdviceLetterNextSteps = {
+  nextSteps: string;
+  followUp: boolean;
+};
+
+/** Advice letter form fields */
+export type AdviceLetterFormFields = {
+  meetingSummary: string | null;
+  nextSteps: string | null;
+  isFollowupRecommended: boolean | null;
+  followUpPoint: string | null;
+  recommendations: AdviceLetterRecommendationFields[];
+  // internalReview: string;
+  // review: string;
+};
