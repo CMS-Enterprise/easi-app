@@ -90,7 +90,11 @@ const technicalAssistance = {
           'Review the notes from your TRB team members and incorporate any feedback into the advice letter. When you are ready, send it to the requester, project team, and any other recipients you would like to include.'
       }
     ],
-    meetingSummary: 'Meeting summary'
+    meetingSummary: 'Meeting summary',
+    addRecommendation: 'Add a recommendation',
+    noRecommendations:
+      'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
+    continueWithoutAdding: 'Continue without adding recommendations'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
