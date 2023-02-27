@@ -179,6 +179,11 @@ func UpdateTRBRequestTRBLead(
 		return nil, err
 	}
 
+	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
 	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
 	if err != nil {
 		return nil, err
@@ -203,17 +208,24 @@ func UpdateTRBRequestTRBLead(
 		return nil, err
 	}
 
+	component := ""
+	if form.Component != nil {
+		component = *form.Component
+	}
+
 	emailInput := email.SendTRBRequestTRBLeadEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.Name,
 		TRBLeadName:    leadInfo.CommonName,
 		RequesterName:  requesterInfo.CommonName,
+		Component:      component,
+		TRBLeadEmail:   leadInfo.Email,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this
 	// separately in the email package test
 	if emailClient != nil {
-		err = emailClient.SendTRBRequestTRBLeadEmail(ctx, emailInput)
+		err = emailClient.SendTRBRequestTRBLeadAssignedEmails(ctx, emailInput)
 		if err != nil {
 			return nil, err
 		}
