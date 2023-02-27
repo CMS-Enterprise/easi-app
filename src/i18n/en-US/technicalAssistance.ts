@@ -53,6 +53,8 @@ const technicalAssistance = {
     notSpecified: 'Not specified yet',
     followup: 'Should the team return for a follow-up session?'
   },
+  requiredFields:
+    'Fields marked with an asterisk ( <red>*</red> ) are required.',
   adviceLetterForm: {
     heading: 'Advice letter',
     description:
@@ -103,6 +105,7 @@ const technicalAssistance = {
   },
   // Common button text
   button: {
+    cancel: 'Cancel',
     back: 'Back',
     continue: 'Continue',
     next: 'Next',

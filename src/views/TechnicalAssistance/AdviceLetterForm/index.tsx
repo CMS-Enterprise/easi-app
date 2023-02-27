@@ -3,6 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   Form,
@@ -19,6 +20,8 @@ import {
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
+import { AdviceLetterFormFields } from 'types/technicalAssistance';
+import { adviceLetterSchema } from 'validations/trbRequestSchema';
 import NotFound from 'views/NotFound';
 
 import Breadcrumbs from '../Breadcrumbs';
@@ -32,7 +35,7 @@ import Summary from './Summary';
 type AdviceFormStep = {
   key: string;
   slug: string;
-  component: () => JSX.Element;
+  component: ({ trbRequestId }: { trbRequestId: string }) => JSX.Element;
 };
 
 type StepsText = { name: string; longName?: string; description?: string }[];
@@ -75,11 +78,6 @@ const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
 
-  /** Advice letter form context */
-  const formContext = useForm();
-
-  const { handleSubmit } = formContext;
-
   // TRB request query
   const { data, loading } = useQuery<
     GetTrbAdviceLetter,
@@ -90,8 +88,24 @@ const AdviceLetterForm = () => {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
+  const { adviceLetter } = trbRequest || {};
+
+  /** Advice letter form context */
+  const formContext = useForm<AdviceLetterFormFields>({
+    resolver: yupResolver(adviceLetterSchema),
+    defaultValues: {
+      meetingSummary: adviceLetter?.meetingSummary,
+      recommendations: adviceLetter?.recommendations,
+      nextSteps: adviceLetter?.nextSteps,
+      isFollowupRecommended: adviceLetter?.isFollowupRecommended,
+      followUpPoint: adviceLetter?.followupPoint
+    }
+  });
+
+  const { handleSubmit } = formContext;
+
   /** Submit advice letter form */
-  const onSubmit = formData => console.log(formData);
+  const onSubmit = formData => null;
 
   /** Index of current form step - will return -1 if invalid URL */
   const currentStepIndex: number = adviceFormSteps.findIndex(
@@ -168,8 +182,8 @@ const AdviceLetterForm = () => {
             ) : (
               /** Advice letter form */
               <FormProvider {...formContext}>
-                <Form onSubmit={handleSubmit(onSubmit)}>
-                  <currentFormStep.component />
+                <Form className="maxw-tablet" onSubmit={handleSubmit(onSubmit)}>
+                  <currentFormStep.component trbRequestId={id} />
                 </Form>
               </FormProvider>
             )
