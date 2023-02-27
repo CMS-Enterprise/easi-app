@@ -10,6 +10,7 @@ const TRBAdviceLetter = gql`
     dateSent
     followupPoint
     recommendations {
+      id
       title
       recommendation
       links

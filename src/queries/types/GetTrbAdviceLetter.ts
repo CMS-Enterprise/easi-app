@@ -16,6 +16,7 @@ export interface GetTrbAdviceLetter_trbRequest_taskStatuses {
 
 export interface GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations {
   __typename: "TRBAdviceLetterRecommendation";
+  id: UUID;
   title: string;
   recommendation: string;
   links: string[];
