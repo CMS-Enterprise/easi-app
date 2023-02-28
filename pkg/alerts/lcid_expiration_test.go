@@ -2,6 +2,7 @@ package alerts
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -54,6 +56,28 @@ func TestLCIDExpirationAlert(t *testing.T) {
 			Email:      "email",
 			EuaUserID:  "ABCD",
 		}, nil
+	}
+
+	mockFetchUserInfoInvalidParams := func(context.Context, string) (*models.UserInfo, error) {
+		return nil, &apperrors.InvalidParametersError{
+			FunctionName: "cedarldap.FetchUserInfo",
+		}
+	}
+
+	mockFetchUserInfoInvalidEUAID := func(context.Context, string) (*models.UserInfo, error) {
+		return nil, &apperrors.InvalidEUAIDError{
+			EUAID: "ABCD",
+		}
+	}
+
+	mockFetchUserInfoExternalAPIError := func(context.Context, string) (*models.UserInfo, error) {
+		return nil, &apperrors.ExternalAPIError{
+			Err:       errors.New("failed to return person from CEDAR LDAP"),
+			ModelID:   "ABCD",
+			Model:     nil,
+			Operation: apperrors.Fetch,
+			Source:    "CEDAR LDAP",
+		}
 	}
 
 	mockUpdateIntake := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
@@ -153,7 +177,56 @@ func TestLCIDExpirationAlert(t *testing.T) {
 		assert.Equal(t, 1, lcidExpirationAlertCount)
 	})
 
-	t.Run("resets alerts properly on LCID extension", func(t *testing.T) {
+	t.Run("properly handles fetch user info invalid params", func(t *testing.T) {
+		clearAlerts(systemIntakes)
+
+		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days even in case of invalid params error
+		lcidExpirationAlertCount = 0
+		err := checkForLCIDExpiration(ctx, testDate, mockFetchUserInfoInvalidParams, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 2, lcidExpirationAlertCount)
+
+		// Test that it does not send alerts on retry after invalid EUA
+		lcidExpirationAlertCount = 0
+		err = checkForLCIDExpiration(ctx, testDate, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 0, lcidExpirationAlertCount)
+	})
+
+	t.Run("properly handles fetch user info invalid EUA", func(t *testing.T) {
+		clearAlerts(systemIntakes)
+
+		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days even in case of invalid EUA error
+		lcidExpirationAlertCount = 0
+		err := checkForLCIDExpiration(ctx, testDate, mockFetchUserInfoInvalidEUAID, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 2, lcidExpirationAlertCount)
+
+		// Test that it does not send alerts on retry after invalid EUA
+		lcidExpirationAlertCount = 0
+		err = checkForLCIDExpiration(ctx, testDate, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 0, lcidExpirationAlertCount)
+	})
+
+	t.Run("properly handles fetch user info external api error", func(t *testing.T) {
+		clearAlerts(systemIntakes)
+
+		// Test that it doesnt send alerts in case of external API error
+		lcidExpirationAlertCount = 0
+		err := checkForLCIDExpiration(ctx, testDate, mockFetchUserInfoExternalAPIError, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 0, lcidExpirationAlertCount)
+
+		// Test that it sends alerts on retry after external API error
+		lcidExpirationAlertCount = 0
+		err = checkForLCIDExpiration(ctx, testDate, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.Equal(t, 2, lcidExpirationAlertCount)
+	})
+
+	// NOTE: this test should be run last since it modifies the LCID expiration date of the test intakes
+	t.Run("resets alerts properly on lcid extension", func(t *testing.T) {
 		clearAlerts(systemIntakes)
 
 		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days

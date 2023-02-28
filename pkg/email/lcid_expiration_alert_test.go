@@ -52,15 +52,17 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Lifecycle ID issued for " +
+		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +
+			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
+			"<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Lifecycle ID issued for " +
 			projectName +
 			" is set to expire on " +
 			lcidExpiresAt.Format("January 02, 2006") + ". " +
-			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the CIO risk register.</p>\n" +
-			"<p>To avoid this please email the Governance Team at " +
+			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>\n" +
+			"To avoid this please email the Governance Team at " +
 			string(s.config.GRTEmail) +
-			" within one week to update them with the current status of your project.</p>\n\n" +
-			"For IT system projects, please include (if applicable):\n" +
+			" within one week to update them with the current status of your project.\n\n" +
+			"For New IT development projects, please include (if applicable):\n" +
 			"<ul>\n" +
 			"<li>if the project is in production and if so, the date it was released into production</li>\n" +
 			"<li>if development of the project is still underway and if so, the target production release date</li>\n" +
@@ -68,16 +70,16 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<li>if the development effort has encountered difficulties and would like technical assistance (please also include the target production date)</li>\n" +
 			"<li>if the project has been cancelled</li>\n" +
 			"<li>if the project is on hold</li>\n" +
-			"</ul>\n\n" +
+			"</ul>\n" +
 			"For O&M projects or services contracts, please include (if applicable):\n" +
 			"<ul>\n" +
 			"<li>if the current contract is not being extended, include the end date of the period of performance</li>\n" +
 			"<li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>\n" +
 			"<li>if an extension of the current contract is planned, include the new contract expiration date</li>\n" +
-			"<li>describe any planned changes to service requirements, if any</li>\n" +
+			"<li>describe any new development or planned changes to service requirements, if any</li>\n" +
 			"<li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>\n" +
 			"<li>if contract support is no longer needed</li>\n" +
-			"</ul>\n\n" +
+			"</ul>\n" +
 			"View this request in EASi:\n" +
 			"<ul>\n" +
 			"<li>The person who initially submitted this request, " + requesterName + ", may " + requesterTaskListLink +
@@ -85,8 +87,8 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<li>Governance Team members may " + grtDecisionLink + " to view the decision and LCID information</li>\n" +
 			"<li>Others should contact " + requesterName + " or the Governance Team for more information on the request</li>\n" +
 			"</ul>\n" +
-			"<p>If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "</p>\n" +
-			"<p><u>Current Lifecycle ID Summary</u><p>\n" +
+			"If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "\n\n\n" +
+			"<u>Current Lifecycle ID Summary</u>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
@@ -116,15 +118,17 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Lifecycle ID issued for " +
+		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +
+			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
+			"<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Lifecycle ID issued for " +
 			projectName +
 			" is set to expire on " +
 			lcidExpiresAt.Format("January 02, 2006") + ". " +
-			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the CIO risk register.</p>\n" +
-			"<p>To avoid this please email the Governance Team at " +
+			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>\n" +
+			"To avoid this please email the Governance Team at " +
 			string(s.config.GRTEmail) +
-			" within one week to update them with the current status of your project.</p>\n\n" +
-			"For IT system projects, please include (if applicable):\n" +
+			" within one week to update them with the current status of your project.\n\n" +
+			"For New IT development projects, please include (if applicable):\n" +
 			"<ul>\n" +
 			"<li>if the project is in production and if so, the date it was released into production</li>\n" +
 			"<li>if development of the project is still underway and if so, the target production release date</li>\n" +
@@ -132,16 +136,16 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<li>if the development effort has encountered difficulties and would like technical assistance (please also include the target production date)</li>\n" +
 			"<li>if the project has been cancelled</li>\n" +
 			"<li>if the project is on hold</li>\n" +
-			"</ul>\n\n" +
+			"</ul>\n" +
 			"For O&M projects or services contracts, please include (if applicable):\n" +
 			"<ul>\n" +
 			"<li>if the current contract is not being extended, include the end date of the period of performance</li>\n" +
 			"<li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>\n" +
 			"<li>if an extension of the current contract is planned, include the new contract expiration date</li>\n" +
-			"<li>describe any planned changes to service requirements, if any</li>\n" +
+			"<li>describe any new development or planned changes to service requirements, if any</li>\n" +
 			"<li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>\n" +
 			"<li>if contract support is no longer needed</li>\n" +
-			"</ul>\n\n" +
+			"</ul>\n" +
 			"View this request in EASi:\n" +
 			"<ul>\n" +
 			"<li>The person who initially submitted this request, " + requesterName + ", may " + requesterTaskListLink +
@@ -149,8 +153,8 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<li>Governance Team members may " + grtDecisionLink + " to view the decision and LCID information</li>\n" +
 			"<li>Others should contact " + requesterName + " or the Governance Team for more information on the request</li>\n" +
 			"</ul>\n" +
-			"<p>If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "</p>\n" +
-			"<p><u>Current Lifecycle ID Summary</u><p>\n" +
+			"If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "\n\n\n" +
+			"<u>Current Lifecycle ID Summary</u>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n\n\n"
