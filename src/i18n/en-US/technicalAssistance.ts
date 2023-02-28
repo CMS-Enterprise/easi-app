@@ -678,6 +678,36 @@ const technicalAssistance = {
       notes: 'Notes'
     },
     byNameOnDate: 'by {{name}} on {{date}}'
+  },
+  actionRequestEdits: {
+    heading: 'Action: request edits',
+    description:
+      'Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.',
+    fieldsMarkedRequired:
+      'Fields marked with an asterisk ( <red>*</red> ) are required.',
+    hint:
+      'Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.',
+    label:
+      'What type of edits are needed prior to scheduling the consult session?',
+    notificationTitle: 'Notification email',
+    notificationDescription:
+      'A notification email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.',
+    submit: 'Complete action',
+    error:
+      'There was an issue completing the request edits action. Please try again, and if the problem persists, try again later.',
+    success:
+      'Action completed. You have successfully requested edits to this request.',
+    cancelAndReturn: 'Cancel action and return to request'
+  },
+  actionReadyForConsult: {
+    heading: 'Action: ready for consult',
+    description:
+      'Add any feedback you have for the requester based on your review of their initial intake form. If the consult session has already been scheduled, you may also add that information here.',
+    label: 'Feedback for requester',
+    error:
+      'There was an issue completing the ready for consult action. Please try again, and if the problem persists, try again later.',
+    success:
+      'Action completed. This request is now ready to schedule a consult session.'
   }
 };
 
