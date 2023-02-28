@@ -37,7 +37,7 @@ function Consult() {
   const { id, activePage } = useParams<{
     id: string;
     activePage: string;
-    action: 'consult';
+    action: 'schedule-consult';
   }>();
   const history = useHistory();
 
@@ -81,9 +81,7 @@ function Consult() {
             url: requestUrl
           },
           {
-            text: t(
-              'adminHome.taskStatuses.attendConsultStatus.READY_TO_SCHEDULE'
-            )
+            text: t('actionScheduleConsult.breadcrumb')
           }
         ]}
       />
@@ -114,7 +112,7 @@ function Consult() {
             .then(result => {
               showMessageOnNextPage(
                 <Alert type="success" slim className="margin-top-3">
-                  {t('actionConsult.success', {
+                  {t('actionScheduleConsult.success', {
                     date: formData.meetingDate,
                     time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
                       .toFormat('t')
@@ -130,7 +128,7 @@ function Consult() {
             .catch(err => {
               showMessage(
                 <Alert type="error" slim className="margin-top-3">
-                  {t('actionConsult.error')}
+                  {t('actionScheduleConsult.error')}
                 </Alert>
               );
             });
@@ -140,10 +138,10 @@ function Consult() {
         <Grid row>
           <Grid col>
             <PageHeading className="margin-bottom-0">
-              {t('actionConsult.heading')}
+              {t('actionScheduleConsult.heading')}
             </PageHeading>
             <div className="line-height-body-5 font-body-lg text-light">
-              {t('actionConsult.description')}
+              {t('actionScheduleConsult.description')}
             </div>
             <div className="margin-top-1 margin-bottom-6 text-base">
               <Trans
@@ -159,7 +157,9 @@ function Consult() {
                 className="trb-basic-fields-error"
               >
                 {Object.keys(errors).map(fieldName => {
-                  const msg: string = t(`actionConsult.labels.${fieldName}`);
+                  const msg: string = t(
+                    `actionScheduleConsult.labels.${fieldName}`
+                  );
                   return (
                     <ErrorAlertMessage
                       key={fieldName}
@@ -186,13 +186,13 @@ function Consult() {
                     htmlFor="meetingDate"
                     hint={
                       <div className="margin-top-1">
-                        {t('actionConsult.hints.meetingDate')}
+                        {t('actionScheduleConsult.hints.meetingDate')}
                       </div>
                     }
                     className="text-normal"
                     error={!!error}
                   >
-                    {t('actionConsult.labels.meetingDate')}{' '}
+                    {t('actionScheduleConsult.labels.meetingDate')}{' '}
                     <span className="text-red">*</span>
                   </Label>
                   {error && (
@@ -220,13 +220,13 @@ function Consult() {
                     htmlFor="meetingTime"
                     hint={
                       <div className="margin-top-1">
-                        {t('actionConsult.hints.meetingTime')}
+                        {t('actionScheduleConsult.hints.meetingTime')}
                       </div>
                     }
                     className="text-normal"
                     error={!!error}
                   >
-                    {t('actionConsult.labels.meetingTime')}{' '}
+                    {t('actionScheduleConsult.labels.meetingTime')}{' '}
                     <span className="text-red">*</span>
                   </Label>
                   {error && (
@@ -251,7 +251,7 @@ function Consult() {
               render={({ field, fieldState: { error } }) => (
                 <FormGroup>
                   <Label htmlFor="notes" className="text-normal">
-                    {t('actionConsult.labels.notes')}
+                    {t('actionScheduleConsult.labels.notes')}
                   </Label>
                   <CharacterCount
                     {...field}
@@ -274,7 +274,7 @@ function Consult() {
             {/* todo cedar contacts */}
 
             <Alert type="warning" slim>
-              {t('actionConsult.alert')}
+              {t('actionScheduleConsult.alert')}
             </Alert>
           </Grid>
         </Grid>

@@ -61,7 +61,7 @@ function TechnicalAssistance() {
         >
           <RequestEdits />
         </Route>
-        <Route exact path={`${path}/:id/:activePage/:action(consult)`}>
+        <Route exact path={`${path}/:id/:activePage/:action(schedule-consult)`}>
           <Consult />
         </Route>
 

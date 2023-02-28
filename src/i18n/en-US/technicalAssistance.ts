@@ -709,7 +709,7 @@ const technicalAssistance = {
     success:
       'Action completed. This request is now ready to schedule a consult session.'
   },
-  actionConsult: {
+  actionScheduleConsult: {
     heading: 'Action: schedule a TRB consult session',
     description:
       'Once you have confirmed availability with the requester and project team, set a date and time for the consult session for this request.',
@@ -727,7 +727,8 @@ const technicalAssistance = {
     success:
       'The date for this request’s TRB consult session is set for {{date}} at {{time}}.',
     alert:
-      'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.'
+      'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
+    breadcrumb: 'Schedule a consult'
   }
 };
 

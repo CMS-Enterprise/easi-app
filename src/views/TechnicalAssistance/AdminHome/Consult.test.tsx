@@ -114,7 +114,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
         >
           <MemoryRouter
             initialEntries={[
-              `/trb/${trbRequestId}/initial-request-form/consult`
+              `/trb/${trbRequestId}/initial-request-form/schedule-consult`
             ]}
           >
             <MessageProvider>
@@ -130,7 +130,9 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       </Provider>
     );
 
-    getByText(i18next.t<string>('technicalAssistance:actionConsult.heading'));
+    getByText(
+      i18next.t<string>('technicalAssistance:actionScheduleConsult.heading')
+    );
 
     const submitButton = getByRole('button', {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
@@ -142,7 +144,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       getByLabelText(
         RegExp(
           i18next.t<string>(
-            'technicalAssistance:actionConsult.labels.meetingDate'
+            'technicalAssistance:actionScheduleConsult.labels.meetingDate'
           )
         )
       ),
@@ -153,7 +155,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       getByLabelText(
         RegExp(
           i18next.t<string>(
-            'technicalAssistance:actionConsult.labels.meetingTime'
+            'technicalAssistance:actionScheduleConsult.labels.meetingTime'
           )
         )
       ),
@@ -169,7 +171,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     await findByRole('heading', { name: /Initial request form/ });
 
     await findByText(
-      i18next.t<string>('technicalAssistance:actionConsult.success', {
+      i18next.t<string>('technicalAssistance:actionScheduleConsult.success', {
         date: '02/23/2023',
         time: '1:00 pm',
         interpolation: {
@@ -183,7 +185,9 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     const { getByLabelText, getByRole, findByText } = render(
       <MockedProvider>
         <MemoryRouter
-          initialEntries={[`/trb/${trbRequestId}/initial-request-form/consult`]}
+          initialEntries={[
+            `/trb/${trbRequestId}/initial-request-form/schedule-consult`
+          ]}
         >
           <MessageProvider>
             <Route exact path="/trb/:id/:activePage/:action">
@@ -197,7 +201,9 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     userEvent.type(
       getByLabelText(
         RegExp(
-          i18next.t<string>('technicalAssistance:actionConsult.labels.notes')
+          i18next.t<string>(
+            'technicalAssistance:actionScheduleConsult.labels.notes'
+          )
         )
       ),
       'note'
@@ -218,7 +224,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     getByRole('button', {
       name: RegExp(
         i18next.t<string>(
-          'technicalAssistance:actionConsult.labels.meetingDate'
+          'technicalAssistance:actionScheduleConsult.labels.meetingDate'
         )
       )
     });
@@ -226,7 +232,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     getByRole('button', {
       name: RegExp(
         i18next.t<string>(
-          'technicalAssistance:actionConsult.labels.meetingTime'
+          'technicalAssistance:actionScheduleConsult.labels.meetingTime'
         )
       )
     });
@@ -254,7 +260,9 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
         ]}
       >
         <MemoryRouter
-          initialEntries={[`/trb/${trbRequestId}/initial-request-form/consult`]}
+          initialEntries={[
+            `/trb/${trbRequestId}/initial-request-form/schedule-consult`
+          ]}
         >
           <MessageProvider>
             <Route exact path="/trb/:id/:activePage/:action">
@@ -269,7 +277,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       getByLabelText(
         RegExp(
           i18next.t<string>(
-            'technicalAssistance:actionConsult.labels.meetingDate'
+            'technicalAssistance:actionScheduleConsult.labels.meetingDate'
           )
         )
       ),
@@ -280,7 +288,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       getByLabelText(
         RegExp(
           i18next.t<string>(
-            'technicalAssistance:actionConsult.labels.meetingTime'
+            'technicalAssistance:actionScheduleConsult.labels.meetingTime'
           )
         )
       ),
@@ -294,7 +302,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     );
 
     await findByText(
-      i18next.t<string>('technicalAssistance:actionConsult.error')
+      i18next.t<string>('technicalAssistance:actionScheduleConsult.error')
     );
   });
 });
