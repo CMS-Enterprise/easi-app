@@ -30,7 +30,13 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
 
   it('submits successfully ', async () => {
-    const { getByText, getByLabelText, getByRole, findByRole } = render(
+    const {
+      getByText,
+      getByLabelText,
+      getByRole,
+      findByRole,
+      findByText
+    } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -162,9 +168,15 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
 
     await findByRole('heading', { name: /Initial request form/ });
 
-    // await findByText(
-    //   i18next.t<string>('technicalAssistance:actionRequestEdits.success')
-    // );
+    await findByText(
+      i18next.t<string>('technicalAssistance:actionConsult.success', {
+        date: '02/23/2023',
+        time: '1:00 pm',
+        interpolation: {
+          escapeValue: false
+        }
+      })
+    );
   });
 
   it('shows the error summary on missing required fields', async () => {

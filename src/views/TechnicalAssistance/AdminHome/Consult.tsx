@@ -118,7 +118,10 @@ function Consult() {
                     date: formData.meetingDate,
                     time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
                       .toFormat('t')
-                      .toLowerCase()
+                      .toLowerCase(),
+                    interpolation: {
+                      escapeValue: false
+                    }
                   })}
                 </Alert>
               );
