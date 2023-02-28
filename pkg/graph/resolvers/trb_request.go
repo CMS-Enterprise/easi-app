@@ -233,19 +233,9 @@ func CloseTRBRequest(
 	reasonClosed string,
 	notifyEUAIDs []string,
 ) (*models.TRBRequest, error) {
-	// Query the TRB request, attendees in parallel
-	errGroup := new(errgroup.Group)
-
-	// Query the TRB request
-	var trb *models.TRBRequest
-	var errTRB error
-	errGroup.Go(func() error {
-		trb, errTRB = store.GetTRBRequestByID(ctx, id)
-		return errTRB
-	})
-
-	if errG := errGroup.Wait(); errG != nil {
-		return nil, errG
+	trb, err := store.GetTRBRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
 	}
 
 	// Check if request is already closed so an unnecesary email won't be sent
@@ -257,7 +247,7 @@ func CloseTRBRequest(
 		"status": models.TRBSClosed,
 	}
 
-	err := ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
 	if err != nil {
 		return nil, err
 	}
