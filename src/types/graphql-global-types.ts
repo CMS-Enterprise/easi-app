@@ -492,6 +492,17 @@ export interface CreateTRBRequestDocumentInput {
 }
 
 /**
+ * The data needed to add feedback to a TRB request
+ */
+export interface CreateTRBRequestFeedbackInput {
+  trbRequestId: UUID;
+  feedbackMessage: string;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  action: TRBFeedbackAction;
+}
+
+/**
  * The input required to add a test date/score to a 508/accessibility request
  */
 export interface CreateTestDateInput {

@@ -3,6 +3,9 @@
 .technical-assistance {
   .trb-admin-alert {
     .usa-alert {
+      border-left: none;
+    }
+    .usa-alert__body {
       max-width: 75rem;
     }
   }
