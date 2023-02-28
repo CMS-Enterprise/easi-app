@@ -74,4 +74,15 @@ func (s *SESTestSuite) TestSend() {
 
 		s.NoError(err)
 	})
+	s.Run("Does nothing when passing empty toAddresses", func() {
+		err := s.sender.Send(
+			context.Background(),
+			[]models.EmailAddress{},
+			nil,
+			"Test Subject",
+			"Test Body",
+		)
+
+		s.NoError(err)
+	})
 }
