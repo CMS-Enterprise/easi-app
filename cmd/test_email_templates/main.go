@@ -54,6 +54,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	component := "Test Component"
 	adminEmail := models.NewEmailAddress("admin@local.fake")
 	emailRecipients := []models.EmailAddress{requesterEmail, adminEmail}
+	leadEmail := models.NewEmailAddress("TEST_LEAD@local.fake")
 
 	err := client.SendTRBFormSubmissionNotificationToRequester(ctx, requestID, requestName, requesterEmail, requesterName)
 	noErr(err)
@@ -74,11 +75,13 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	noErr(err)
 
 	leadName := "The Leader"
-	err = client.SendTRBRequestTRBLeadEmail(ctx, email.SendTRBRequestTRBLeadEmailInput{
+	err = client.SendTRBRequestTRBLeadAssignedEmails(ctx, email.SendTRBRequestTRBLeadEmailInput{
 		TRBRequestID:   requestID,
 		TRBRequestName: requestName,
 		RequesterName:  requesterName,
 		TRBLeadName:    leadName,
+		Component:      component,
+		TRBLeadEmail:   leadEmail,
 	})
 	noErr(err)
 
