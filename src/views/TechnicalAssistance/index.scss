@@ -66,6 +66,14 @@
         max-height: 155px;
       }
 
+      /* Datepicker has extra margin space to remove */
+      .usa-date-picker {
+        .usa-date-picker__external-input,
+        .usa-date-picker__button {
+          margin-top: 0;
+        }
+      }
+
       /* Date picker undo width wrapping */
       /*
       .usa-date-picker__calendar {
@@ -74,6 +82,15 @@
         }
       }
       */
+
+      /* Timepicker has an extra form-group wrapper with space to remove */
+      > .usa-form-group:has(> .usa-time-picker) {
+        margin-top: 0;
+      }
+      /* The Timepicker component generates its own label; remove it */
+      > .usa-form-group > .usa-label:has(+ .usa-time-picker) {
+        display: none;
+      }
 
       /* Errors messages under group field labels */
       .usa-error-message {

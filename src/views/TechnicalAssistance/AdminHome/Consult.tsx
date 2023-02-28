@@ -192,7 +192,8 @@ function Consult() {
                     className="text-normal"
                     error={!!error}
                   >
-                    {t('actionConsult.labels.meetingDate')}
+                    {t('actionConsult.labels.meetingDate')}{' '}
+                    <span className="text-red">*</span>
                   </Label>
                   {error && (
                     <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
@@ -225,7 +226,8 @@ function Consult() {
                     className="text-normal"
                     error={!!error}
                   >
-                    {t('actionConsult.labels.meetingTime')}
+                    {t('actionConsult.labels.meetingTime')}{' '}
+                    <span className="text-red">*</span>
                   </Label>
                   {error && (
                     <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
