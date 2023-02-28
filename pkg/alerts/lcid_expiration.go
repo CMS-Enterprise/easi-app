@@ -90,7 +90,7 @@ func checkForLCIDExpiration(
 	result, err := fetchSystemIntakes(ctx)
 
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to fetch system intakes for LCID Expiration check")
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intakes for LCID Expiration check", zap.Error(err))
 		return err
 	}
 
