@@ -125,66 +125,73 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
         />
       </HelpText>
 
-      {/** Title */}
-      <Controller
-        name="title"
-        control={control}
-        render={({ field, fieldState: { error } }) => {
-          return (
-            <FormGroup className="margin-top-3" error={!!error}>
-              <Label className="text-normal" htmlFor="title" required>
-                {t('Title')}
-              </Label>
-              {error && <ErrorMessage>{t('fillBlank')}</ErrorMessage>}
-              <TextInput
-                type="text"
-                id="title"
-                {...field}
-                ref={null}
-                required
-              />
-            </FormGroup>
-          );
-        }}
-      />
+      <div className="maxw-tablet">
+        {/** Title */}
+        <Controller
+          name="title"
+          control={control}
+          render={({ field, fieldState: { error } }) => {
+            return (
+              <FormGroup className="margin-top-3" error={!!error}>
+                <Label className="text-normal" htmlFor="title" required>
+                  {t('Title')}
+                </Label>
+                {error && <ErrorMessage>{t('fillBlank')}</ErrorMessage>}
+                <TextInput
+                  type="text"
+                  id="title"
+                  {...field}
+                  ref={null}
+                  required
+                />
+              </FormGroup>
+            );
+          }}
+        />
 
-      {/** Description */}
-      <Controller
-        name="description"
-        control={control}
-        render={({ field, fieldState: { error } }) => {
-          return (
-            <FormGroup className="margin-top-3" error={!!error}>
-              <Label className="text-normal" htmlFor="description" required>
-                {t('Description')}
-              </Label>
-              {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-              <TextAreaField id="description" {...field} ref={null} required />
-            </FormGroup>
-          );
-        }}
-      />
+        {/** Description */}
+        <Controller
+          name="description"
+          control={control}
+          render={({ field, fieldState: { error } }) => {
+            return (
+              <FormGroup className="margin-top-3" error={!!error}>
+                <Label className="text-normal" htmlFor="description" required>
+                  {t('Description')}
+                </Label>
+                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+                <TextAreaField
+                  id="description"
+                  {...field}
+                  ref={null}
+                  required
+                />
+              </FormGroup>
+            );
+          }}
+        />
 
-      {/** Links */}
-      <LinksArrayField control={control} watch={watch} />
+        {/** Links */}
+        <LinksArrayField control={control} watch={watch} />
 
-      {/** Save */}
-      <Button
-        type="submit"
-        className="margin-top-6"
-        disabled={
-          watch('title').length === 0 ||
-          watch('description').length === 0 ||
-          isSubmitting
-        }
-        onClick={() =>
-          createRecommendation().then(() =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations`)
-          )
-        }
-      >
-        {t('button.save')}
-      </Button>
+        {/** Save */}
+        <Button
+          type="submit"
+          className="margin-top-6"
+          disabled={
+            watch('title').length === 0 ||
+            watch('description').length === 0 ||
+            isSubmitting
+          }
+          onClick={() =>
+            createRecommendation().then(() =>
+              history.push(`/trb/${trbRequestId}/advice/recommendations`)
+            )
+          }
+        >
+          {t('button.save')}
+        </Button>
+      </div>
 
       {/** Return without adding recommendation */}
       <Button
