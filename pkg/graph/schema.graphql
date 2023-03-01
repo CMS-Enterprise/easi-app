@@ -1519,6 +1519,7 @@ type TRBRequest {
   consultMeetingTime: Time
   trbLead: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
+  isRecent: Boolean!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String

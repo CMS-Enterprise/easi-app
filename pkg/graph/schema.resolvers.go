@@ -2906,6 +2906,11 @@ func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequ
 	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
+// IsRecent is the resolver for the isRecent field.
+func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBRequest) (bool, error) {
+	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
+}
+
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
 	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
