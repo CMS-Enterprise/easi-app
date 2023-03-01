@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -28,14 +28,25 @@ import Breadcrumbs from '../Breadcrumbs';
 
 import InternalReview from './InternalReview';
 import NextSteps from './NextSteps';
-import Recommendations from './Recommendations';
+import Recommendations, { RecommendationsProps } from './Recommendations';
 import Review from './Review';
 import Summary from './Summary';
+
+type ComponentType = ({
+  trbRequestId
+}: {
+  trbRequestId: string;
+}) => JSX.Element;
+
+type RecommendationsComponentType = ({
+  trbRequestId,
+  recommendations
+}: RecommendationsProps) => JSX.Element;
 
 type AdviceFormStep = {
   key: string;
   slug: string;
-  component: ({ trbRequestId }: { trbRequestId: string }) => JSX.Element;
+  component: ComponentType | RecommendationsComponentType;
 };
 
 type StepsText = { name: string; longName?: string; description?: string }[];
@@ -76,6 +87,8 @@ const AdviceLetterForm = () => {
     subpage: string;
   }>();
 
+  const history = useHistory();
+
   const { t } = useTranslation('technicalAssistance');
   const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
 
@@ -102,7 +115,10 @@ const AdviceLetterForm = () => {
     }
   });
 
-  const { handleSubmit } = formContext;
+  const {
+    handleSubmit,
+    formState: { isSubmitting }
+  } = formContext;
 
   /** Submit advice letter form */
   const onSubmit = formData => null;
@@ -114,6 +130,24 @@ const AdviceLetterForm = () => {
 
   /** Current form step object */
   const currentFormStep: AdviceFormStep = adviceFormSteps[currentStepIndex];
+
+  /**
+   * Renders form wrapper for all step components except recommendations
+   */
+  const FormWrapper = ({ children }: { children: React.ReactNode }) => {
+    if (formStep === 'recommendations') {
+      // If form step is recommendations, render component without form wrapper
+      return <>{children}</>;
+    }
+    // Advice letter form with step component
+    return (
+      <FormProvider {...formContext}>
+        <Form className="maxw-none" onSubmit={handleSubmit(onSubmit)}>
+          {children}
+        </Form>
+      </FormProvider>
+    );
+  };
 
   // Page loading
   if (loading) return <PageLoading />;
@@ -127,6 +161,7 @@ const AdviceLetterForm = () => {
 
   return (
     <>
+      {/** Form page header */}
       {!subpage && (
         <StepHeader
           heading={t('adviceLetterForm.heading')}
@@ -165,16 +200,16 @@ const AdviceLetterForm = () => {
           <Button
             type="button"
             unstyled
-            // TODO: disabled prop
-            disabled={false}
+            disabled={isSubmitting}
             // TODO: onClick prop
-            onClick={() => null}
+            onClick={() => history.push(`/trb/${id}/advice`)}
           >
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t('adviceLetterForm.returnToRequest')}
           </Button>
         </StepHeader>
       )}
+      {/** Form page body */}
       <GridContainer>
         <Grid>
           {
@@ -182,12 +217,12 @@ const AdviceLetterForm = () => {
             adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET ? (
               <p>Cannot start yet</p>
             ) : (
-              /** Advice letter form */
-              <FormProvider {...formContext}>
-                <Form className="maxw-none" onSubmit={handleSubmit(onSubmit)}>
-                  <currentFormStep.component trbRequestId={id} />
-                </Form>
-              </FormProvider>
+              <FormWrapper>
+                <currentFormStep.component
+                  trbRequestId={id}
+                  recommendations={adviceLetter?.recommendations || []}
+                />
+              </FormWrapper>
             )
           }
         </Grid>

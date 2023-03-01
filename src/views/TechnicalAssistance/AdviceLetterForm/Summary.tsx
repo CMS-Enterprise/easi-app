@@ -15,7 +15,6 @@ const Summary = ({ trbRequestId }: { trbRequestId: string }) => {
   const history = useHistory();
 
   const {
-    getValues,
     formState: { isSubmitting }
   } = useFormContext<AdviceLetterFormFields>();
 
@@ -58,7 +57,8 @@ const Summary = ({ trbRequestId }: { trbRequestId: string }) => {
         className="margin-top-4"
         back={{ outline: true, text: t('button.cancel') }}
         next={{
-          disabled: isSubmitting || !getValues().meetingSummary,
+          // TODO: disabled prop
+          disabled: isSubmitting,
           onClick: () =>
             history.push(`/trb/${trbRequestId}/advice/recommendations`)
         }}

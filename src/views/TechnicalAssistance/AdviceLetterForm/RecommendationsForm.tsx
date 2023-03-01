@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ErrorMessage,
+  Form,
   FormGroup,
   IconArrowBack,
   TextInput
@@ -125,7 +126,14 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
         />
       </HelpText>
 
-      <div className="maxw-tablet">
+      <Form
+        onSubmit={() =>
+          createRecommendation().then(() =>
+            history.push(`/trb/${trbRequestId}/advice/recommendations`)
+          )
+        }
+        className="maxw-tablet"
+      >
         {/** Title */}
         <Controller
           name="title"
@@ -183,15 +191,10 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
             watch('description').length === 0 ||
             isSubmitting
           }
-          onClick={() =>
-            createRecommendation().then(() =>
-              history.push(`/trb/${trbRequestId}/advice/recommendations`)
-            )
-          }
         >
           {t('button.save')}
         </Button>
-      </div>
+      </Form>
 
       {/** Return without adding recommendation */}
       <Button
