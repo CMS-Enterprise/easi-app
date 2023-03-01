@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-// TestCreateTRBRequestForm makes a new TRB request
+// TestCreateTRBRequestForm tests the creation a new TRB request form
 func (s *ResolverSuite) TestCreateTRBRequestForm() {
 	ctx := context.Background()
 

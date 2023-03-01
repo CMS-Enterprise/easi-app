@@ -211,11 +211,6 @@ func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID
 	var status models.TRBRequestStatus
 	status = models.TRBRequestStatusNew
 
-	// trb, err := store.GetTRBRequestByID(ctx, trbRequestID)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
 	taskStatuses, err := GetTRBTaskStatuses(ctx, store, trbRequestID)
 	if err != nil {
 		return status, err
@@ -237,17 +232,17 @@ func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID
 	}
 
 	// Request form complete
-	if formStatus == models.TRBFormStatusCompleted && feedbackStatus == models.TRBFeedbackStatusInReview {
-		status = models.TRBRequestStatusDraftRequestForm
+	if formStatus == models.TRBFormStatusCompleted {
+		status = models.TRBRequestStatusRequestFormComplete
 	}
 
 	// Ready for consult
-	if consultPrepStatus == models.TRBConsultPrepStatusReadyToStart {
+	if feedbackStatus == models.TRBFeedbackStatusCompleted {
 		status = models.TRBRequestStatusReadyForConsult
 	}
 
 	// Consult scheduled
-	if consultPrepStatus == models.TRBConsultPrepStatusCompleted && attendConsultStatus == models.TRBAttendConsultStatusScheduled {
+	if consultPrepStatus == models.TRBConsultPrepStatusCompleted {
 		status = models.TRBRequestStatusConsultScheduled
 	}
 
@@ -268,10 +263,17 @@ func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID
 
 	// Advice letter sent
 	if adviceLetterStatus == models.TRBAdviceLetterStatusCompleted {
-		status = models.TRBRequestStatusAdviceLetterSent
+		// Get the advice letter and check if follow-up was recommended
+		adviceLetter, err := GetTRBAdviceLetterByTRBRequestID(ctx, store, trbRequestID)
+		if err != nil {
+			return status, err
+		}
+		followupRecommended := adviceLetter.IsFollowupRecommended
+		if followupRecommended != nil && *followupRecommended {
+			status = models.TRBRequestStatusFollowUpRequested
+		} else {
+			status = models.TRBRequestStatusAdviceLetterSent
+		}
 	}
-
-	// Follow up requested - TODO
-
 	return status, nil
 }
