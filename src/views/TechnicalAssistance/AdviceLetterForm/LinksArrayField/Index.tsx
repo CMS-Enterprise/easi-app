@@ -63,14 +63,14 @@ export default function LinkArrayField({
                     );
                   }}
                 />
-                {/** Delete button */}
+                {/** Remove button */}
                 <Button
                   type="button"
-                  className="text-secondary margin-top-0 margin-left-1"
+                  className="text-secondary margin-top-0 margin-left-2"
                   onClick={() => remove(index)}
                   unstyled
                 >
-                  {t('Delete')}
+                  {t('Remove')}
                 </Button>
               </FormGroup>
             </li>
