@@ -1,7 +1,17 @@
 import { gql } from '@apollo/client';
 
+const TRBRecommendation = gql`
+  fragment TRBRecommendation on TRBAdviceLetterRecommendation {
+    id
+    title
+    recommendation
+    links
+  }
+`;
+
 /** Advice letter fields fragment */
 const TRBAdviceLetter = gql`
+  ${TRBRecommendation}
   fragment TRBAdviceLetter on TRBAdviceLetter {
     id
     meetingSummary
@@ -10,10 +20,7 @@ const TRBAdviceLetter = gql`
     dateSent
     followupPoint
     recommendations {
-      id
-      title
-      recommendation
-      links
+      ...TRBRecommendation
     }
     author {
       euaUserId
@@ -56,6 +63,42 @@ export const UpdateTrbAdviceLetterQuery = gql`
   mutation UpdateTrbAdviceLetter($input: UpdateTRBAdviceLetterInput!) {
     updateTRBAdviceLetter(input: $input) {
       ...TRBAdviceLetter
+    }
+  }
+`;
+
+/** Get advice letter recommendations */
+export const GetTrbRecommendationsQuery = gql`
+  ${TRBAdviceLetter}
+  query GetTrbRecommendations($id: UUID!) {
+    trbRequest(id: $id) {
+      adviceLetter {
+        recommendations {
+          ...TRBRecommendation
+        }
+      }
+    }
+  }
+`;
+
+/** Create advice letter recommendation */
+export const CreateTrbRecommendationQuery = gql`
+  mutation CreateTRBRecommendation(
+    $input: CreateTRBAdviceLetterRecommendationInput!
+  ) {
+    createTRBAdviceLetterRecommendation(input: $input) {
+      ...TRBRecommendation
+    }
+  }
+`;
+
+/** Update advice letter recommendation */
+export const UpdateTrbRecommendationQuery = gql`
+  mutation UpdateTRBRecommendation(
+    $input: UpdateTRBAdviceLetterRecommendationInput!
+  ) {
+    updateTRBAdviceLetterRecommendation(input: $input) {
+      ...TRBRecommendation
     }
   }
 `;
