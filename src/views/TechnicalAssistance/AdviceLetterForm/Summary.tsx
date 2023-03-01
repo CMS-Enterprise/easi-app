@@ -1,7 +1,6 @@
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { ErrorMessage, FormGroup, Label } from '@trussworks/react-uswds';
 
 import HelpText from 'components/shared/HelpText';
@@ -10,9 +9,10 @@ import { AdviceLetterFormFields } from 'types/technicalAssistance';
 
 import Pager from '../RequestForm/Pager';
 
-const Summary = ({ trbRequestId }: { trbRequestId: string }) => {
+import { StepComponentProps } from '.';
+
+const Summary = ({ trbRequestId, updateAdviceLetter }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
-  const history = useHistory();
 
   const {
     formState: { isSubmitting }
@@ -38,9 +38,7 @@ const Summary = ({ trbRequestId }: { trbRequestId: string }) => {
                 {t('adviceLetterForm.meetingSummary')}{' '}
                 <span className="text-red">*</span>
               </Label>
-              {error && (
-                <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
-              )}
+              {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <TextAreaField
                 id="meetingSummary"
                 {...field}
@@ -60,7 +58,10 @@ const Summary = ({ trbRequestId }: { trbRequestId: string }) => {
           // TODO: disabled prop
           disabled: isSubmitting,
           onClick: () =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations`)
+            updateAdviceLetter(
+              ['meetingSummary'],
+              `/trb/${trbRequestId}/advice/recommendations`
+            )
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}

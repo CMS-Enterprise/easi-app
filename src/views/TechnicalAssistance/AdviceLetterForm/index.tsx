@@ -2,7 +2,7 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -14,11 +14,18 @@ import {
 
 import PageLoading from 'components/PageLoading';
 import StepHeader from 'components/StepHeader';
-import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  GetTrbAdviceLetterQuery,
+  UpdateTrbAdviceLetterQuery
+} from 'queries/TrbAdviceLetterQueries';
 import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
+import {
+  UpdateTrbAdviceLetter,
+  UpdateTrbAdviceLetterVariables
+} from 'queries/types/UpdateTrbAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { AdviceLetterFormFields } from 'types/technicalAssistance';
 import { adviceLetterSchema } from 'validations/trbRequestSchema';
@@ -32,11 +39,20 @@ import Recommendations, { RecommendationsProps } from './Recommendations';
 import Review from './Review';
 import Summary from './Summary';
 
-type ComponentType = ({
-  trbRequestId
-}: {
+type UpdateAdviceLetterType = (
+  fields?: (keyof AdviceLetterFormFields)[],
+  redirectUrl?: string
+) => Promise<void>;
+
+export type StepComponentProps = {
   trbRequestId: string;
-}) => JSX.Element;
+  updateAdviceLetter: UpdateAdviceLetterType;
+};
+
+type ComponentType = ({
+  trbRequestId,
+  updateAdviceLetter
+}: StepComponentProps) => JSX.Element;
 
 type RecommendationsComponentType = ({
   trbRequestId,
@@ -79,6 +95,9 @@ const adviceFormSteps: AdviceFormStep[] = [
   }
 ];
 
+/**
+ * TRB request admin advice letter form
+ */
 const AdviceLetterForm = () => {
   // Get url params
   const { id, formStep, subpage } = useParams<{
@@ -102,6 +121,11 @@ const AdviceLetterForm = () => {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
+  const [update] = useMutation<
+    UpdateTrbAdviceLetter,
+    UpdateTrbAdviceLetterVariables
+  >(UpdateTrbAdviceLetterQuery);
+
   const { adviceLetter } = trbRequest || {};
 
   /** Advice letter form context */
@@ -117,11 +141,15 @@ const AdviceLetterForm = () => {
 
   const {
     handleSubmit,
-    formState: { isSubmitting }
+    getValues,
+    trigger,
+    formState: { isSubmitting, dirtyFields, errors }
   } = formContext;
 
   /** Submit advice letter form */
-  const onSubmit = formData => null;
+  const onSubmit = formData => {
+    console.log({ dirtyFields, formData });
+  };
 
   /** Index of current form step - will return -1 if invalid URL */
   const currentStepIndex: number = adviceFormSteps.findIndex(
@@ -146,6 +174,66 @@ const AdviceLetterForm = () => {
           {children}
         </Form>
       </FormProvider>
+    );
+  };
+
+  /** Validates form fields, updates advice letter, and redirects user */
+  const updateAdviceLetter: UpdateAdviceLetterType = async (
+    /** Array of field keys to update - defaults to all changed fields */
+    fields,
+    /** URL to redirect to after successful mutation - defaults to `/trb/${id}/advice` */
+    redirectUrl = `/trb/${id}/advice`
+  ) => {
+    /** Array of field names to update */
+    const fieldsArray =
+      fields || (Object.keys(dirtyFields) as (keyof AdviceLetterFormFields)[]);
+
+    /** Object containing updated field values */
+    const updatedValues: Partial<AdviceLetterFormFields> = fieldsArray.reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: getValues()[key as keyof AdviceLetterFormFields]
+      }),
+      {}
+    );
+
+    return (
+      // Validate fields
+      trigger(fieldsArray)
+        .then(valid => {
+          // If field validation passes, update advice letter
+          if (valid) {
+            update({
+              variables: {
+                input: {
+                  trbRequestId: id,
+                  ...updatedValues
+                }
+              }
+            })
+              .then(result => {
+                // If no errors, redirect
+                if (!result.errors) {
+                  history.push(redirectUrl);
+                }
+              })
+              // If mutation fails, throw error
+              .catch(e => {
+                throw new Error(e);
+              });
+          } else {
+            // If validation fails, throw error
+            throw new Error('Invalid field submission');
+          }
+        })
+        // Log error message and form errors
+        .catch(e =>
+          // eslint-disable-next-line no-console
+          console.error({
+            message: e,
+            errors
+          })
+        )
     );
   };
 
@@ -201,8 +289,9 @@ const AdviceLetterForm = () => {
             type="button"
             unstyled
             disabled={isSubmitting}
-            // TODO: onClick prop
-            onClick={() => history.push(`/trb/${id}/advice`)}
+            onClick={() =>
+              updateAdviceLetter().then(() => history.push(`/trb/${id}/advice`))
+            }
           >
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t('adviceLetterForm.returnToRequest')}
@@ -220,6 +309,7 @@ const AdviceLetterForm = () => {
               <FormWrapper>
                 <currentFormStep.component
                   trbRequestId={id}
+                  updateAdviceLetter={updateAdviceLetter}
                   recommendations={adviceLetter?.recommendations || []}
                 />
               </FormWrapper>

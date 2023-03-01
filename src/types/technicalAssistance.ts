@@ -76,7 +76,7 @@ export type AdviceLetterFormFields = {
   nextSteps: string | null;
   isFollowupRecommended: boolean | null;
   followUpPoint: string | null;
-  recommendations: AdviceLetterRecommendationFields[];
+  // recommendations: AdviceLetterRecommendationFields[];
   // internalReview: string;
   // review: string;
 };
