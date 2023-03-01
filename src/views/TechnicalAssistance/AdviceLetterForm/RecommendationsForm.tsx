@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -14,6 +15,14 @@ import {
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import {
+  CreateTrbRecommendationQuery,
+  UpdateTrbRecommendationQuery
+} from 'queries/TrbAdviceLetterQueries';
+import {
+  CreateTRBAdviceLetterRecommendationInput,
+  UpdateTRBAdviceLetterRecommendationInput
+} from 'types/graphql-global-types';
 import { AdviceLetterRecommendationFields } from 'types/technicalAssistance';
 import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
@@ -30,6 +39,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
   const history = useHistory();
 
   const {
+    handleSubmit,
     control,
     watch,
     formState: { isSubmitting }
@@ -41,6 +51,50 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
       links: []
     }
   });
+
+  const [create] = useMutation<CreateTRBAdviceLetterRecommendationInput>(
+    CreateTrbRecommendationQuery
+  );
+
+  const [update] = useMutation<UpdateTRBAdviceLetterRecommendationInput>(
+    UpdateTrbRecommendationQuery
+  );
+
+  const createRecommendation = async () => {
+    handleSubmit(
+      formData => {
+        /** Format links to array of strings */
+        const links = (formData.links || []).map(({ link }) => link);
+
+        if (formData?.id) {
+          /** Update recommendation if ID is present */
+          update({
+            variables: {
+              input: {
+                id: formData?.id,
+                title: formData.title,
+                recommendation: formData.description,
+                links
+              }
+            }
+          });
+        } else {
+          /** Create recommendation */
+          create({
+            variables: {
+              input: {
+                trbRequestId,
+                title: formData.title,
+                recommendation: formData.description,
+                links
+              }
+            }
+          });
+        }
+      }
+      // error => console.log(error)
+    )();
+  };
 
   return (
     <div>
@@ -77,7 +131,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
         control={control}
         render={({ field, fieldState: { error } }) => {
           return (
-            <FormGroup className="maxw-tablet margin-top-3" error={!!error}>
+            <FormGroup className="margin-top-3" error={!!error}>
               <Label className="text-normal" htmlFor="title" required>
                 {t('Title')}
               </Label>
@@ -100,7 +154,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
         control={control}
         render={({ field, fieldState: { error } }) => {
           return (
-            <FormGroup className="maxw-tablet margin-top-3" error={!!error}>
+            <FormGroup className="margin-top-3" error={!!error}>
               <Label className="text-normal" htmlFor="description" required>
                 {t('Description')}
               </Label>
@@ -111,6 +165,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
         }}
       />
 
+      {/** Links */}
       <LinksArrayField control={control} watch={watch} />
 
       {/** Save */}
@@ -122,15 +177,18 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
           watch('description').length === 0 ||
           isSubmitting
         }
-        // TODO: submit recommendation
-        onClick={() => null}
+        onClick={() =>
+          createRecommendation().then(() =>
+            history.push(`/trb/${trbRequestId}/advice/recommendations`)
+          )
+        }
       >
         {t('button.save')}
       </Button>
 
       {/** Return without adding recommendation */}
       <Button
-        className="margin-top-2 display-flex flex-align-center"
+        className="margin-top-205 display-flex flex-align-center"
         type="button"
         unstyled
         onClick={() =>

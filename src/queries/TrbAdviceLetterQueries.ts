@@ -69,7 +69,7 @@ export const UpdateTrbAdviceLetterQuery = gql`
 
 /** Get advice letter recommendations */
 export const GetTrbRecommendationsQuery = gql`
-  ${TRBAdviceLetter}
+  ${TRBRecommendation}
   query GetTrbRecommendations($id: UUID!) {
     trbRequest(id: $id) {
       adviceLetter {
@@ -83,6 +83,7 @@ export const GetTrbRecommendationsQuery = gql`
 
 /** Create advice letter recommendation */
 export const CreateTrbRecommendationQuery = gql`
+  ${TRBRecommendation}
   mutation CreateTRBRecommendation(
     $input: CreateTRBAdviceLetterRecommendationInput!
   ) {
@@ -94,6 +95,7 @@ export const CreateTrbRecommendationQuery = gql`
 
 /** Update advice letter recommendation */
 export const UpdateTrbRecommendationQuery = gql`
+  ${TRBRecommendation}
   mutation UpdateTRBRecommendation(
     $input: UpdateTRBAdviceLetterRecommendationInput!
   ) {

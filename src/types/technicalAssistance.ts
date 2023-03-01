@@ -58,6 +58,7 @@ export type SubNavItem = {
 };
 
 export type AdviceLetterRecommendationFields = {
+  id?: string;
   title: string;
   description: string;
   /** Links array - object type to get useFieldArray hook to work */

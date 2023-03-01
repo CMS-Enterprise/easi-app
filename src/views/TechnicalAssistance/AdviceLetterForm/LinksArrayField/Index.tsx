@@ -39,7 +39,7 @@ export default function LinkArrayField({
       <ul className="usa-list usa-list--unstyled">
         {fields.map((item, index) => {
           return (
-            <li key={item.id} className="maxw-tablet">
+            <li key={item.id}>
               <Label
                 htmlFor={`links.${index}.link`}
                 className="text-normal margin-top-3"

@@ -1,7 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import { Alert, Button } from '@trussworks/react-uswds';
+
+import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTrbRecommendations } from 'queries/types/GetTrbRecommendations';
 
 import Pager from '../RequestForm/Pager';
 
@@ -9,12 +13,19 @@ import RecommendationsForm from './RecommendationsForm';
 
 const Recommendations = ({ trbRequestId }: { trbRequestId: string }) => {
   const { t } = useTranslation('technicalAssistance');
-  const { path } = useRouteMatch();
+  const { path, url } = useRouteMatch();
   const history = useHistory();
+
+  const { data } = useQuery<GetTrbRecommendations>(GetTrbRecommendationsQuery, {
+    variables: { id: trbRequestId }
+  });
+
+  const recommendations = data?.trbRequest?.adviceLetter?.recommendations;
 
   /** Whether recommendations have been added to the request */
   // TODO: Get recommendations query
-  const hasRecommendations: boolean = true;
+  const hasRecommendations: boolean =
+    !!recommendations && recommendations.length > 0;
 
   return (
     <Switch>
@@ -29,7 +40,7 @@ const Recommendations = ({ trbRequestId }: { trbRequestId: string }) => {
         <Button
           className="margin-top-5 margin-bottom-1"
           type="button"
-          onClick={() => null}
+          onClick={() => history.push(`${url}/form`)}
         >
           {t('adviceLetterForm.addRecommendation')}
         </Button>
