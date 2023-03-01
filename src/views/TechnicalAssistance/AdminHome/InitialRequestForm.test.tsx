@@ -17,7 +17,7 @@ import {
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
-  TRBRequestStatus,
+  TRBRequestState,
   TRBRequestType
 } from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -28,7 +28,7 @@ const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
   type: TRBRequestType.NEED_HELP,
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   taskStatuses: {
     formStatus: TRBFormStatus.IN_PROGRESS,
     feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,

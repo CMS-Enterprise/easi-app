@@ -2866,6 +2866,11 @@ func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj 
 	return authorInfo, nil
 }
 
+// Status is the resolver for the status field.
+func (r *tRBRequestResolver) Status(ctx context.Context, obj *models.TRBRequest) (models.TRBRequestStatus, error) {
+	return resolvers.GetTRBRequestStatus(ctx, r.store, obj.ID)
+}
+
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)

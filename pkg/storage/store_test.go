@@ -93,7 +93,7 @@ func TestStoreTestSuite(t *testing.T) {
 func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) uuid.UUID {
 	trbRequest := models.NewTRBRequest(createdBy)
 	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.Status = models.TRBSOpen
+	trbRequest.State = models.TRBRequestStateOpen
 	createdRequest, err := s.store.CreateTRBRequest(ctx, trbRequest)
 	s.NoError(err)
 

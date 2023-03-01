@@ -846,6 +846,7 @@ type ComplexityRoot struct {
 		ModifiedAt         func(childComplexity int) int
 		ModifiedBy         func(childComplexity int) int
 		Name               func(childComplexity int) int
+		State              func(childComplexity int) int
 		Status             func(childComplexity int) int
 		TRBLead            func(childComplexity int) int
 		TaskStatuses       func(childComplexity int) int
@@ -1278,6 +1279,7 @@ type TRBAdviceLetterRecommendationResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdviceLetterRecommendation) (*models.UserInfo, error)
 }
 type TRBRequestResolver interface {
+	Status(ctx context.Context, obj *models.TRBRequest) (models.TRBRequestStatus, error)
 	Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error)
 	Feedback(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestFeedback, error)
 	Documents(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestDocument, error)
@@ -5609,6 +5611,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.Name(childComplexity), true
 
+	case "TRBRequest.state":
+		if e.complexity.TRBRequest.State == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.State(childComplexity), true
+
 	case "TRBRequest.status":
 		if e.complexity.TRBRequest.Status == nil {
 			break
@@ -7922,6 +7931,7 @@ type TRBRequest {
   name: String!
   archived: Boolean!
   type: TRBRequestType!
+  state: TRBRequestState!
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
   feedback: [TRBRequestFeedback!]!
@@ -7958,7 +7968,7 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     name: String
     archived: Boolean
     type: TRBRequestType
-    status: TRBRequestStatus
+    status: TRBRequestState
 }
 
 """
@@ -8695,9 +8705,22 @@ enum TRBRequestType {
   FORMAL_REVIEW
 }
 
-enum TRBRequestStatus {
+enum TRBRequestState {
   OPEN
   CLOSED
+}
+
+enum TRBRequestStatus {
+  NEW
+  DRAFT_REQUEST_FORM
+  REQUEST_FORM_COMPLETE
+  READY_FOR_CONSULT
+  CONSULT_SCHEDULED
+  CONSULT_COMPLETE
+  DRAFT_ADVICE_LETTER
+  ADVICE_LETTER_IN_REVIEW
+  ADVICE_LETTER_SENT
+  FOLLOW_UP_REQUESTED
 }
 
 """
@@ -26507,6 +26530,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_archived(ctx, field)
 			case "type":
 				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "state":
+				return ec.fieldContext_TRBRequest_state(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
@@ -26599,6 +26624,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_archived(ctx, field)
 			case "type":
 				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "state":
+				return ec.fieldContext_TRBRequest_state(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
@@ -27340,6 +27367,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestConsultMeeting
 				return ec.fieldContext_TRBRequest_archived(ctx, field)
 			case "type":
 				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "state":
+				return ec.fieldContext_TRBRequest_state(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
@@ -27456,6 +27485,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 				return ec.fieldContext_TRBRequest_archived(ctx, field)
 			case "type":
 				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "state":
+				return ec.fieldContext_TRBRequest_state(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
@@ -28596,6 +28627,8 @@ func (ec *executionContext) fieldContext_Mutation_reopenTrbRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_archived(ctx, field)
 			case "type":
 				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "state":
+				return ec.fieldContext_TRBRequest_state(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
@@ -30235,6 +30268,8 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_archived(ctx, field)
 			case "type":
 				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "state":
+				return ec.fieldContext_TRBRequest_state(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
@@ -30327,6 +30362,8 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_archived(ctx, field)
 			case "type":
 				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "state":
+				return ec.fieldContext_TRBRequest_state(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
@@ -37692,6 +37729,50 @@ func (ec *executionContext) fieldContext_TRBRequest_type(ctx context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _TRBRequest_state(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_state(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.State, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.TRBRequestState)
+	fc.Result = res
+	return ec.marshalNTRBRequestState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestState(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_state(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBRequestState does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBRequest_status(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBRequest_status(ctx, field)
 	if err != nil {
@@ -37706,7 +37787,7 @@ func (ec *executionContext) _TRBRequest_status(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
+		return ec.resolvers.TRBRequest().Status(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -37727,8 +37808,8 @@ func (ec *executionContext) fieldContext_TRBRequest_status(ctx context.Context, 
 	fc = &graphql.FieldContext{
 		Object:     "TRBRequest",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBRequestStatus does not have child fields")
 		},
@@ -53632,13 +53713,33 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "status":
+		case "state":
 
-			out.Values[i] = ec._TRBRequest_status(ctx, field, obj)
+			out.Values[i] = ec._TRBRequest_state(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "status":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_status(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "attendees":
 			field := field
 
@@ -57677,6 +57778,22 @@ func (ec *executionContext) marshalNTRBRequestForm2ᚖgithubᚗcomᚋcmsgovᚋea
 	return ec._TRBRequestForm(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNTRBRequestState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestState(ctx context.Context, v interface{}) (models.TRBRequestState, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TRBRequestState(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBRequestState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestState(ctx context.Context, sel ast.SelectionSet, v models.TRBRequestState) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNTRBRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestStatus(ctx context.Context, v interface{}) (models.TRBRequestStatus, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.TRBRequestStatus(tmp)
@@ -59432,16 +59549,16 @@ func (ec *executionContext) marshalOTRBRequestDocument2ᚖgithubᚗcomᚋcmsgov�
 	return ec._TRBRequestDocument(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOTRBRequestStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestStatus(ctx context.Context, v interface{}) (*models.TRBRequestStatus, error) {
+func (ec *executionContext) unmarshalOTRBRequestState2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestState(ctx context.Context, v interface{}) (*models.TRBRequestState, error) {
 	if v == nil {
 		return nil, nil
 	}
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBRequestStatus(tmp)
+	res := models.TRBRequestState(tmp)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTRBRequestStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestStatus(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequestStatus) graphql.Marshaler {
+func (ec *executionContext) marshalOTRBRequestState2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestState(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequestState) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

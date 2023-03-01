@@ -26,7 +26,7 @@ func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, fe
 
 	trb := models.NewTRBRequest(princ.ID())
 	trb.Type = requestType
-	trb.Status = models.TRBSOpen
+	trb.State = models.TRBRequestStateOpen
 	//TODO make sure this is wired up appropriately
 
 	createdTRB, err := store.CreateTRBRequest(ctx, trb)
@@ -268,12 +268,12 @@ func ReopenTRBRequest(
 	}
 
 	// Check if request is already open so an unnecesary email won't be sent
-	if trb.Status != models.TRBSClosed {
+	if trb.State != models.TRBRequestStateClosed {
 		return nil, errors.New("Cannot re-open a TRB request that is not closed")
 	}
 
 	trbChanges := map[string]interface{}{
-		"status": models.TRBSOpen,
+		"status": models.TRBRequestStateOpen,
 	}
 
 	err := ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))

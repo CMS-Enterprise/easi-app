@@ -16,7 +16,7 @@ func (s *ResolverSuite) TestCreateTRBRequest() {
 
 	s.EqualValues(false, trb.Archived)
 	s.EqualValues("Draft", trb.Name)
-	s.EqualValues(models.TRBSOpen, trb.Status)
+	s.EqualValues(models.TRBRequestStateOpen, trb.State)
 	s.EqualValues(s.testConfigs.Principal.EUAID, trb.CreatedBy)
 	s.NotNil(trb.ID)
 	s.NotNil(trb.CreatedAt)
@@ -32,7 +32,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 
 	changes := map[string]interface{}{
 		"Name":     "Testing",
-		"status":   models.TRBSClosed,
+		"state":    models.TRBRequestStateClosed,
 		"archived": false,
 	}
 	princ := s.testConfigs.Principal.ID()
@@ -41,7 +41,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 	s.NotNil(updated)
 	s.NoError(err)
 	s.EqualValues(updated.Name, "Testing")
-	s.EqualValues(updated.Status, models.TRBSClosed)
+	s.EqualValues(updated.State, models.TRBRequestStateClosed)
 	s.EqualValues(updated.Archived, false)
 	s.EqualValues(updated.ModifiedBy, &princ)
 	s.NotNil(updated.ModifiedAt)
@@ -78,7 +78,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.Len(col, 2)
 
 	changes := map[string]interface{}{
-		"status":   models.TRBSClosed,
+		"state":    models.TRBRequestStateClosed,
 		"archived": true,
 	}
 

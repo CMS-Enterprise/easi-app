@@ -205,3 +205,73 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 
 	return &statuses, nil
 }
+
+// GetTRBRequestStatus calculates the overall status of the TRB request
+func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (models.TRBRequestStatus, error) {
+	var status models.TRBRequestStatus
+	status = models.TRBRequestStatusNew
+
+	// trb, err := store.GetTRBRequestByID(ctx, trbRequestID)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	taskStatuses, err := GetTRBTaskStatuses(ctx, store, trbRequestID)
+	if err != nil {
+		return status, err
+	}
+	formStatus := taskStatuses.FormStatus
+	feedbackStatus := taskStatuses.FeedbackStatus
+	consultPrepStatus := taskStatuses.ConsultPrepStatus
+	attendConsultStatus := taskStatuses.AttendConsultStatus
+	adviceLetterStatus := taskStatuses.AdviceLetterStatus
+
+	// New - form status will be "ready to start"
+	if formStatus == models.TRBFormStatusReadyToStart {
+		status = models.TRBRequestStatusNew
+	}
+
+	// Draft request form - form status will be "in progress"
+	if formStatus == models.TRBFormStatusInProgress {
+		status = models.TRBRequestStatusDraftRequestForm
+	}
+
+	// Request form complete
+	if formStatus == models.TRBFormStatusCompleted && feedbackStatus == models.TRBFeedbackStatusInReview {
+		status = models.TRBRequestStatusDraftRequestForm
+	}
+
+	// Ready for consult
+	if consultPrepStatus == models.TRBConsultPrepStatusReadyToStart {
+		status = models.TRBRequestStatusReadyForConsult
+	}
+
+	// Consult scheduled
+	if consultPrepStatus == models.TRBConsultPrepStatusCompleted && attendConsultStatus == models.TRBAttendConsultStatusScheduled {
+		status = models.TRBRequestStatusConsultScheduled
+	}
+
+	// Consult complete
+	if attendConsultStatus == models.TRBAttendConsultStatusCompleted && adviceLetterStatus == models.TRBAdviceLetterStatusReadyToStart {
+		status = models.TRBRequestStatusConsultComplete
+	}
+
+	// Draft advice letter
+	if adviceLetterStatus == models.TRBAdviceLetterStatusInProgress {
+		status = models.TRBRequestStatusDraftAdviceLetter
+	}
+
+	// Advice letter in review
+	if adviceLetterStatus == models.TRBAdviceLetterStatusReadyForReview {
+		status = models.TRBRequestStatusAdviceLetterInReview
+	}
+
+	// Advice letter sent
+	if adviceLetterStatus == models.TRBAdviceLetterStatusCompleted {
+		status = models.TRBRequestStatusAdviceLetterSent
+	}
+
+	// Follow up requested - TODO
+
+	return status, nil
+}

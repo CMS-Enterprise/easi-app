@@ -9,7 +9,7 @@ import {
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
-  TRBRequestStatus,
+  TRBRequestState,
   TRBRequestType
 } from 'types/graphql-global-types';
 
@@ -81,7 +81,7 @@ export const trbRequestSummary: Summary = {
   __typename: 'TRBRequest',
   name: 'TRB Request Mock',
   type: TRBRequestType.NEED_HELP,
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   trbLead: null,
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses: {
@@ -131,7 +131,7 @@ export const trbRequest: TrbRequest = {
     adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
   },
   feedback: [],
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   type: TRBRequestType.NEED_HELP,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',

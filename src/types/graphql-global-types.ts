@@ -328,7 +328,7 @@ export enum TRBRequestDocumentStatus {
   UNAVAILABLE = "UNAVAILABLE",
 }
 
-export enum TRBRequestStatus {
+export enum TRBRequestState {
   CLOSED = "CLOSED",
   OPEN = "OPEN",
 }
@@ -715,7 +715,7 @@ export interface TRBRequestChanges {
   name?: string | null;
   archived?: boolean | null;
   type?: TRBRequestType | null;
-  status?: TRBRequestStatus | null;
+  status?: TRBRequestState | null;
 }
 
 /**

@@ -13,14 +13,14 @@ import {
 
 import { GetTrbRequest_trbRequest_taskStatuses as TRBRequestTaskStatuses } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
-import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
+import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
 
 type SummaryProps = {
   trbRequestId: string;
   name: string;
   requestType: TRBRequestType;
   createdAt: string;
-  status: TRBRequestStatus;
+  status: TRBRequestState;
   taskStatuses: TRBRequestTaskStatuses;
   trbLead: string | null;
   requester: TRBAttendee;
