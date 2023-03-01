@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
+  ErrorMessage,
   FormGroup,
-  IconAdd,
   IconArrowBack,
   TextInput
 } from '@trussworks/react-uswds';
@@ -13,20 +15,28 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AdviceLetterRecommendationFields } from 'types/technicalAssistance';
+import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
 
-const RecommendationsForm = ({ trbRequestId }: { trbRequestId: string }) => {
+type RecommendationsFormProps = {
+  trbRequestId: string;
+};
+
+const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const [
-    recommendation,
-    setRecommendation
-  ] = useState<AdviceLetterRecommendationFields>({
-    title: '',
-    description: '',
-    links: []
+  const {
+    watch,
+    formState: { isSubmitting }
+  } = useForm<AdviceLetterRecommendationFields>({
+    resolver: yupResolver(adviceRecommendationSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      links: []
+    }
   });
 
   return (
@@ -58,56 +68,52 @@ const RecommendationsForm = ({ trbRequestId }: { trbRequestId: string }) => {
         />
       </HelpText>
 
-      <div className="maxw-tablet">
-        {/** Title */}
-        <FormGroup>
-          <Label htmlFor="title" required>
-            {t('Title')}
-          </Label>
-          <TextInput
-            type="text"
-            name="title"
-            id="recommendationTitle"
-            value={recommendation.title}
-            onChange={e =>
-              setRecommendation({ ...recommendation, title: e.target.value })
-            }
-          />
-        </FormGroup>
+      {/** Title */}
+      <Controller
+        name="title"
+        render={({ field, fieldState: { error } }) => {
+          return (
+            <FormGroup className="maxw-tablet margin-top-3" error={!!error}>
+              <Label className="text-normal" htmlFor="title" required>
+                {t('Title')}
+              </Label>
+              {error && <ErrorMessage>{t('fillBlank')}</ErrorMessage>}
+              <TextInput
+                type="text"
+                id="title"
+                {...field}
+                ref={null}
+                required
+              />
+            </FormGroup>
+          );
+        }}
+      />
 
-        {/** Description */}
-        <FormGroup>
-          <Label htmlFor="description" required>
-            {t('Description')}
-          </Label>
-          <TextAreaField
-            name="description"
-            id="recommendationDescription"
-            value={recommendation.description}
-            onChange={e =>
-              setRecommendation({
-                ...recommendation,
-                description: e.target.value
-              })
-            }
-            onBlur={() => null}
-          />
-        </FormGroup>
-
-        <Button
-          unstyled
-          type="button"
-          className="display-flex flex-align-center margin-bottom-2"
-        >
-          <IconAdd className="margin-right-05" />
-          {t('adviceLetterForm.addResourceLink')}
-        </Button>
-      </div>
+      {/** Description */}
+      <Controller
+        name="description"
+        render={({ field, fieldState: { error } }) => {
+          return (
+            <FormGroup className="maxw-tablet margin-top-3" error={!!error}>
+              <Label className="text-normal" htmlFor="description" required>
+                {t('Description')}
+              </Label>
+              {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+              <TextAreaField id="description" {...field} ref={null} required />
+            </FormGroup>
+          );
+        }}
+      />
 
       {/** Save */}
       <Button
         type="submit"
-        disabled={!recommendation.title && !recommendation.description}
+        disabled={
+          watch('title').length === 0 ||
+          watch('description').length === 0 ||
+          isSubmitting
+        }
         // TODO: submit recommendation
         onClick={() => null}
       >

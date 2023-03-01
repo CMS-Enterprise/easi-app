@@ -1,10 +1,7 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { Alert, Button } from '@trussworks/react-uswds';
-
-import { AdviceLetterFormFields } from 'types/technicalAssistance';
 
 import Pager from '../RequestForm/Pager';
 
@@ -15,15 +12,9 @@ const Recommendations = ({ trbRequestId }: { trbRequestId: string }) => {
   const { path } = useRouteMatch();
   const history = useHistory();
 
-  const {
-    getValues,
-    formState: { isSubmitting }
-  } = useFormContext<AdviceLetterFormFields>();
-
-  const { recommendations } = getValues();
-
   /** Whether recommendations have been added to the request */
-  const hasRecommendations = recommendations && recommendations.length > 0;
+  // TODO: Get recommendations query
+  const hasRecommendations: boolean = true;
 
   return (
     <Switch>
@@ -43,6 +34,7 @@ const Recommendations = ({ trbRequestId }: { trbRequestId: string }) => {
           {t('adviceLetterForm.addRecommendation')}
         </Button>
 
+        {/** No recommendations message */}
         <Alert type="info" slim>
           {t('adviceLetterForm.noRecommendations')}
         </Alert>
@@ -57,7 +49,8 @@ const Recommendations = ({ trbRequestId }: { trbRequestId: string }) => {
             }
           }}
           next={{
-            disabled: isSubmitting,
+            // TODO: disabled logic
+            // disabled: isSubmitting,
             text: hasRecommendations
               ? t('button.next')
               : t('adviceLetterForm.continueWithoutAdding'),
