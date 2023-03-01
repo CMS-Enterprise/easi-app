@@ -74,6 +74,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
       {/** Title */}
       <Controller
         name="title"
+        control={control}
         render={({ field, fieldState: { error } }) => {
           return (
             <FormGroup className="maxw-tablet margin-top-3" error={!!error}>
@@ -96,6 +97,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
       {/** Description */}
       <Controller
         name="description"
+        control={control}
         render={({ field, fieldState: { error } }) => {
           return (
             <FormGroup className="maxw-tablet margin-top-3" error={!!error}>
