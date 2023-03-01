@@ -58,10 +58,10 @@ export type SubNavItem = {
 };
 
 export type AdviceLetterRecommendationFields = {
-  id?: string;
   title: string;
   description: string;
-  links?: string[];
+  /** Links array - object type to get useFieldArray hook to work */
+  links?: { link: string }[];
 };
 
 export type AdviceLetterNextSteps = {

@@ -96,7 +96,6 @@ const AdviceLetterForm = () => {
     resolver: yupResolver(adviceLetterSchema),
     defaultValues: {
       meetingSummary: adviceLetter?.meetingSummary,
-      recommendations: adviceLetter?.recommendations,
       nextSteps: adviceLetter?.nextSteps,
       isFollowupRecommended: adviceLetter?.isFollowupRecommended,
       followUpPoint: adviceLetter?.followupPoint

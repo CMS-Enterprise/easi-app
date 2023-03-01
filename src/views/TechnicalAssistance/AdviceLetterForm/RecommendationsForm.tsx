@@ -19,6 +19,8 @@ import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
 
+import LinksArrayField from './LinksArrayField/Index';
+
 type RecommendationsFormProps = {
   trbRequestId: string;
 };
@@ -28,6 +30,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
   const history = useHistory();
 
   const {
+    control,
     watch,
     formState: { isSubmitting }
   } = useForm<AdviceLetterRecommendationFields>({
@@ -106,9 +109,12 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
         }}
       />
 
+      <LinksArrayField control={control} watch={watch} />
+
       {/** Save */}
       <Button
         type="submit"
+        className="margin-top-6"
         disabled={
           watch('title').length === 0 ||
           watch('description').length === 0 ||

@@ -96,6 +96,7 @@ const technicalAssistance = {
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
     continueWithoutAdding: 'Continue without adding recommendations',
     addResourceLink: 'Add a resource link',
+    addAnotherResourceLink: 'Add another resource link',
     returnToAdviceLetter:
       'Don’t add a recommendation and return to advice letter'
   },
