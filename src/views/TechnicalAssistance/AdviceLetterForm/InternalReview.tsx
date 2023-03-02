@@ -1,9 +1,6 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-
-import { AdviceLetterFormFields } from 'types/technicalAssistance';
 
 import Pager from '../RequestForm/Pager';
 
@@ -11,12 +8,9 @@ const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const {
-    formState: { isSubmitting }
-  } = useFormContext<AdviceLetterFormFields>();
-
   return (
     <div id="trbAdviceInternalReview">
+      {/* Internal Review */}
       {/** Form pager buttons */}
       <Pager
         className="margin-top-4"
@@ -25,10 +19,11 @@ const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
           onClick: () => history.push(`/trb/${trbRequestId}/advice/next-steps`)
         }}
         next={{
-          disabled: isSubmitting,
+          text: 'Request internal review',
+          // disabled: isSubmitting,
           onClick: () => {
             // TODO: Submit for internal review
-            history.push(`/trb/${trbRequestId}/request`);
+            history.push(`/trb/${trbRequestId}/advice/review`);
           }
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
