@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -45,6 +45,46 @@ const Summary = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
     }
   });
 
+  /** Update advice letter meeting summary */
+  const updateForm = useCallback(
+    (url: string) => {
+      if (!isDirty) {
+        history.push(url);
+      } else {
+        handleSubmit(
+          formData => {
+            update({
+              variables: {
+                input: {
+                  trbRequestId,
+                  ...formData
+                }
+              }
+            });
+          },
+          () => {
+            // Need to throw from this error handler so that the promise is rejected
+            throw new Error('Invalid meeting summary');
+          }
+        )().then(
+          () => history.push(url),
+          e => {
+            // setFormAlert({
+            //   type: 'error',
+            //   heading: t('errors.somethingWrong'),
+            //   message: t('basic.errors.submit')
+            // });
+
+            // TODO: Error handling
+            // eslint-disable-next-line no-console
+            console.error(e);
+          }
+        );
+      }
+    },
+    [handleSubmit, isDirty, trbRequestId, history, update]
+  );
+
   return (
     <Form
       onSubmit={e => e.preventDefault()}
@@ -76,30 +116,15 @@ const Summary = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
       {/** Form pager buttons */}
       <Pager
         className="margin-top-4"
-        back={{ outline: true, text: t('button.cancel') }}
+        back={{
+          outline: true,
+          text: t('button.cancel'),
+          onClick: () => history.push(`trb/${trbRequestId}/advice`)
+        }}
         next={{
           disabled: isSubmitting || watch('meetingSummary')?.length === 0,
-          onClick: handleSubmit(formData => {
-            if (isDirty) {
-              update({
-                variables: {
-                  input: {
-                    trbRequestId,
-                    meetingSummary: formData.meetingSummary
-                  }
-                }
-              })
-                .then(response => {
-                  if (!response.errors) {
-                    history.push(`/trb/${trbRequestId}/advice/recommendations`);
-                  }
-                })
-                // eslint-disable-next-line no-console
-                .catch(e => console.error(e));
-            } else {
-              history.push(`/trb/${trbRequestId}/advice/recommendations`);
-            }
-          })
+          onClick: () =>
+            updateForm(`/trb/${trbRequestId}/advice/recommendations`)
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
