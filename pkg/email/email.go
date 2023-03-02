@@ -50,7 +50,8 @@ type templates struct {
 	helpCantFindSomething                      templateCaller
 	helpReportAProblem                         templateCaller
 	trbRequestConsultMeeting                   templateCaller
-	trbRequestTRBLead                          templateCaller
+	trbRequestTRBLeadAdmin                     templateCaller
+	trbRequestTRBLeadAssignee                  templateCaller
 	trbAdviceLetterInternalReview              templateCaller
 	trbFormSubmittedAdmin                      templateCaller
 	trbFormSubmittedRequester                  templateCaller
@@ -219,12 +220,19 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.trbRequestConsultMeeting = trbRequestConsultMeetingTemplate
 
-	trbRequestTRBLeadTemplateName := "trb_request_trb_lead.gohtml"
-	trbRequestTRBLeadTemplate := rawTemplates.Lookup(trbRequestTRBLeadTemplateName)
-	if trbRequestTRBLeadTemplate == nil {
-		return Client{}, templateError(trbRequestTRBLeadTemplateName)
+	trbRequestTRBLeadAdminTemplateName := "trb_request_trb_lead_admin.gohtml"
+	trbRequestTRBLeadAdminTemplate := rawTemplates.Lookup(trbRequestTRBLeadAdminTemplateName)
+	if trbRequestTRBLeadAdminTemplate == nil {
+		return Client{}, templateError(trbRequestTRBLeadAdminTemplateName)
 	}
-	appTemplates.trbRequestTRBLead = trbRequestTRBLeadTemplate
+	appTemplates.trbRequestTRBLeadAdmin = trbRequestTRBLeadAdminTemplate
+
+	trbRequestTRBLeadAssigneeTemplateName := "trb_request_trb_lead_assignee.gohtml"
+	trbRequestTRBLeadAssigneeTemplate := rawTemplates.Lookup(trbRequestTRBLeadAssigneeTemplateName)
+	if trbRequestTRBLeadAssigneeTemplate == nil {
+		return Client{}, templateError(trbRequestTRBLeadAssigneeTemplateName)
+	}
+	appTemplates.trbRequestTRBLeadAssignee = trbRequestTRBLeadAssigneeTemplate
 
 	trbAdviceLetterInternalReviewTemplateName := "trb_advice_letter_internal_review.gohtml"
 	trbAdviceLetterInternalReviewTemplate := rawTemplates.Lookup(trbAdviceLetterInternalReviewTemplateName)

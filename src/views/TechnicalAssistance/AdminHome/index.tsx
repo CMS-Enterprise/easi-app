@@ -8,8 +8,8 @@ import classNames from 'classnames';
 
 import PageLoading from 'components/PageLoading';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-// import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import {
   GetTrbRequestSummary,
@@ -90,6 +90,9 @@ export default function AdminHome() {
   /** Current trb request */
   const trbRequest = data?.trbRequest;
 
+  // Alert feedback from children
+  const { message } = useMessage();
+
   // Get requester object from request attendees
   const {
     data: { requester, loading: requesterLoading }
@@ -160,6 +163,7 @@ export default function AdminHome() {
       />
 
       <GridContainer>
+        {message}
         <Grid row className="margin-top-5 grid-gap">
           {/* Side navigation */}
           <Grid
