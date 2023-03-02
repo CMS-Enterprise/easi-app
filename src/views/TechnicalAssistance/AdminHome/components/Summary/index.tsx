@@ -33,7 +33,7 @@ export default function Summary({
   name,
   requestType,
   createdAt,
-  state: status,
+  state,
   taskStatuses,
   trbLead,
   requester,
@@ -147,7 +147,7 @@ export default function Summary({
             >
               <h4 className="margin-y-0">{t('adminHome.status')}</h4>
               <span className="bg-info-dark text-white text-bold padding-y-05 padding-x-105 margin-x-1">
-                {t(`adminHome.${status.toLowerCase()}`)}
+                {t(`adminHome.${state.toLowerCase()}`)}
               </span>
               <p className="margin-y-0 text-base">{taskStatusText}</p>
             </Grid>
