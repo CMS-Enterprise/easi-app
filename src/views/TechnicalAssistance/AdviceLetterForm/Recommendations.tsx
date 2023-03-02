@@ -1,9 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Alert, Button, ButtonGroup } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import { DeleteTrbRecommendationQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  DeleteTRBRecommendation,
+  DeleteTRBRecommendationVariables
+} from 'queries/types/DeleteTRBRecommendation';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations as TRBRecommendation } from 'queries/types/GetTrbAdviceLetter';
 
 import Pager from '../RequestForm/Pager';
@@ -26,7 +32,12 @@ const Recommendations = ({
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
 
-  // console.log('recommendations', recommendations);
+  const [deleteRecommendation] = useMutation<
+    DeleteTRBRecommendation,
+    DeleteTRBRecommendationVariables
+  >(DeleteTrbRecommendationQuery);
+
+  console.log('recommendations', recommendations);
 
   return (
     <Switch>
@@ -54,12 +65,14 @@ const Recommendations = ({
             </Alert>
           ) : (
             /* Recommendations list */
-            <ul className="usa-list usa-list--unstyled">
+            <ul className="usa-list usa-list--unstyled margin-bottom-2">
               {recommendations.map(({ title, recommendation, links, id }) => {
                 return (
                   <li key={id}>
                     <h4 className="margin-bottom-0">{title}</h4>
-                    <p className="margin-top-05">{recommendation}</p>
+                    <p className="margin-top-05 margin-bottom-0">
+                      {recommendation}
+                    </p>
                     {
                       /* Links list */
                       links && (
@@ -76,12 +89,17 @@ const Recommendations = ({
                       )
                     }
                     <ButtonGroup>
+                      {/* Edit */}
                       <Button type="button" unstyled>
                         {t('adviceLetterForm.editRecommendation')}
                       </Button>
+                      {/* Remove */}
                       <Button
                         type="button"
                         className="text-secondary margin-left-1"
+                        onClick={() =>
+                          deleteRecommendation({ variables: { id } })
+                        }
                         unstyled
                       >
                         {t('adviceLetterForm.removeRecommendation')}
