@@ -104,3 +104,13 @@ export const UpdateTrbRecommendationQuery = gql`
     }
   }
 `;
+
+/** Delete advice letter recommendation */
+export const DeleteTrbRecommendationQuery = gql`
+  ${TRBRecommendation}
+  mutation DeleteTRBRecommendation($id: UUID!) {
+    deleteTRBAdviceLetterRecommendation(id: $id) {
+      ...TRBRecommendation
+    }
+  }
+`;
