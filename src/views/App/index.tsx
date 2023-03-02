@@ -53,14 +53,6 @@ import shouldScroll from './scrollConfig';
 
 import './index.scss';
 
-ReactGA.initialize([
-  {
-    trackingId: 'G-B01YHRZXNY',
-    gaOptions: {}, // optional
-    gtagOptions: {} // optional
-  }
-]);
-
 const AppRoutes = () => {
   const location = useLocation();
   const flags = useFlags();
