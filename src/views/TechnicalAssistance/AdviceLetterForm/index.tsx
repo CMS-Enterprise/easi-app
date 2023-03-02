@@ -40,6 +40,8 @@ import Recommendations, { RecommendationsProps } from './Recommendations';
 import Review from './Review';
 import Summary from './Summary';
 
+import './index.scss';
+
 type UpdateAdviceLetterType = (
   fields?: (keyof AdviceLetterFormFields)[],
   redirectUrl?: string

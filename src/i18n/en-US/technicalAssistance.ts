@@ -100,7 +100,12 @@ const technicalAssistance = {
     returnToAdviceLetter:
       'Don’t add a recommendation and return to advice letter',
     editRecommendation: 'Edit recommendation',
-    removeRecommendation: 'Remove recommendation'
+    removeRecommendation: 'Remove recommendation',
+    nextSteps: 'Next steps',
+    isFollowupRecommended: 'Should the team return for a follow-up session?',
+    followupYes: 'Yes, a follow-up is recommended',
+    notNecessary: 'Not necessary',
+    followupHelpText: 'Examples: in 6 months, when development is complete'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
