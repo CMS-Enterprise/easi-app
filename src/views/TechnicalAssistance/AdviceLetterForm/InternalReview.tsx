@@ -16,7 +16,7 @@ const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
   } = useFormContext<AdviceLetterFormFields>();
 
   return (
-    <div>
+    <div id="trbAdviceInternalReview">
       {/** Form pager buttons */}
       <Pager
         className="margin-top-4"

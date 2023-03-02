@@ -23,7 +23,7 @@ const Recommendations = ({
   const hasRecommendations: boolean = recommendations.length > 0;
 
   return (
-    <div>
+    <div id="trbAdviceRecommendations">
       {/* Add recommendation button */}
       <Button
         className="margin-top-5 margin-bottom-1"
