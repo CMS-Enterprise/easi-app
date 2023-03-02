@@ -60,55 +60,47 @@ func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*models.Note
 // UpdateNote updates all of a IT governance admin note's mutable fields.
 // The note's IsArchived field _can_ be set, though SetNoteArchived() should be used when archiving a note.
 func (s *Store) UpdateNote(ctx context.Context, note *models.Note) (*models.Note, error) {
-
-	const updateNoteSQL = `
-		UPDATE notes
-		SET
-			content = :content,
-			modified_by = :modified_by,
-			modified_at = CURRENT_TIMESTAMP
-		WHERE id = :id
-		`
-
-	tx := s.db.MustBegin()
-	defer tx.Rollback()
-
-	result, err := tx.NamedExec(updateNoteSQL, &note)
+	stmt, err := s.db.PrepareNamed(`
+	UPDATE notes
+	SET
+		content = :content,
+		modified_by = :modified_by,
+		modified_at = CURRENT_TIMESTAMP
+	WHERE id = :id
+	RETURNING *;
+`)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update IT governance admin note with error %s", err),
+			fmt.Sprintf("Failed to update IT Governance admin note with error %s", err),
+			zap.Error(err),
 			zap.String("id", note.ID.String()),
 		)
-		return note, err
-	}
-	affectedRows, rowsAffectedErr := result.RowsAffected()
-	if affectedRows == 0 || rowsAffectedErr != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update IT governance admin note with error %s", err),
-			zap.String("id", note.ID.String()),
-		)
-		return note, errors.New("IT governance admin note not found")
+		return nil, err
 	}
 
-	err = tx.Commit()
+	updated := models.Note{}
+
+	err = stmt.Get(&updated, note)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update IT governance admin note with error %s", err),
+			fmt.Sprintf("Failed to update IT Governance admin note with error %s", err),
+			zap.Error(err),
 			zap.String("id", note.ID.String()),
 		)
-		return note, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     note,
+			Operation: apperrors.QueryUpdate,
+		}
 	}
 
-	return note, nil
+	return &updated, nil
 }
 
 // SetNoteArchived sets whether an admin note is archived (soft-deleted)
 // It takes a modifiedBy argument because it doesn't take a full Note as an argument
 func (s *Store) SetNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool, modifiedBy string) (*models.Note, error) {
-
-	appcontext.ZLogger(ctx).Info(fmt.Sprintf("NJD: isArchived -> %t", isArchived))
-
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE notes
 		SET
@@ -148,8 +140,6 @@ func (s *Store) SetNoteArchived(ctx context.Context, id uuid.UUID, isArchived bo
 			Operation: apperrors.QueryUpdate,
 		}
 	}
-
-	appcontext.ZLogger(ctx).Info(fmt.Sprintf("NJD: updated.IsArchived -> %t", updated.IsArchived))
 
 	return &updated, nil
 }

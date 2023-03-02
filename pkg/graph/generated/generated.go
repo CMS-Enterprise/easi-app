@@ -7832,11 +7832,10 @@ input CreateSystemIntakeNoteInput {
 }
 
 """
-TODO: NJD - remove archived here?
+Input data for updating an IT governance admin note
 """
 input UpdateSystemIntakeNoteInput {
   content: String!
-  archived: Boolean!
   id: UUID!
 }
 
@@ -24983,7 +24982,6 @@ func (ec *executionContext) _Mutation_updateSystemIntakeNote(ctx context.Context
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -25078,7 +25076,6 @@ func (ec *executionContext) _Mutation_setSystemIntakeNoteArchived(ctx context.Co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -47201,7 +47198,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeNoteInput(ctx contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"content", "archived", "id"}
+	fieldsInOrder := [...]string{"content", "id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -47213,14 +47210,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeNoteInput(ctx contex
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			it.Content, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "archived":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("archived"))
-			it.Archived, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -51426,18 +51415,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateSystemIntakeNote(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "setSystemIntakeNoteArchived":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_setSystemIntakeNoteArchived(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createSystemIntake":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {

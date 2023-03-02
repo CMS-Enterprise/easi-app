@@ -720,11 +720,10 @@ type UpdateSystemIntakeLinkedContractInput struct {
 	ContractNumber *string   `json:"contractNumber"`
 }
 
-// TODO: NJD - remove archived here?
+// Input data for updating an IT governance admin note
 type UpdateSystemIntakeNoteInput struct {
-	Content  string    `json:"content"`
-	Archived bool      `json:"archived"`
-	ID       uuid.UUID `json:"id"`
+	Content string    `json:"content"`
+	ID      uuid.UUID `json:"id"`
 }
 
 // The payload for updating a system's IT governance request
