@@ -2,13 +2,12 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import { IconMenu } from '@trussworks/react-uswds';
+import { GovBanner, IconMenu } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import { NavContext } from 'components/Header/navContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import NavigationBar from 'components/NavigationBar';
-import UsGovBanner from 'components/UsGovBanner';
 import { localAuthStorageKey } from 'constants/localAuth';
 
 import './index.scss';
@@ -94,7 +93,7 @@ export const Header = ({ children }: HeaderProps) => {
 
   return (
     <header className="usa-header easi-header" role="banner" ref={navbarRef}>
-      <UsGovBanner />
+      <GovBanner />
       <div className="grid-container easi-header__basic">
         <div className="usa-logo site-logo" id="logo">
           <Link to="/">

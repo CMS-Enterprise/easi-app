@@ -320,6 +320,8 @@ export async function parseFeedbackForm(
     strict: true
   });
 
+  // Yup cast method is returning easiServicesUsed string[] | undefined instead of string[]
+  // @ts-ignore
   return parsed;
 }
 

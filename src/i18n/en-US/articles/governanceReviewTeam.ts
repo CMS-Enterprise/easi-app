@@ -216,13 +216,13 @@ const governanceReviewTeam = {
     changeLead: 'Change',
     notAssigned: 'Not Assigned',
     members: [
-      'Matthew Schmid',
       'Valerie Hartz',
       'Jaime Cadwell',
       'Alex Smith',
       'Leilani Fields',
       'Ashley Marks',
-      'Leah Nguyen'
+      'Leah Nguyen',
+      'Emily Hill'
     ]
   }
 };

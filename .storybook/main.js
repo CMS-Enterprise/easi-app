@@ -28,6 +28,7 @@ module.exports = {
             resources: [
               path.resolve(__dirname, '../src/stylesheets/_colors.scss'),
               path.resolve(__dirname, '../src/stylesheets/_variables.module.scss'),
+              path.resolve(__dirname, '../src/stylesheets/_viewports.scss'),
               path.resolve(__dirname, '../src/stylesheets/_uswdsUtilities.scss')
             ]
           }

@@ -94,6 +94,7 @@ export type SystemIntakeForm = {
     content: string;
     createdAt: string;
   } | null;
+  requesterNameAndComponent: string;
 } & ContractDetailsForm;
 
 export type ContactDetailsForm = {
@@ -125,6 +126,11 @@ export type MultiFundingSource = {
   sources: string[];
 };
 
+/** Funding sources formatted for form */
+export interface ExistingFundingSource extends MultiFundingSource {
+  initialFundingNumber: string;
+}
+
 /** Funding sources object formatted for display */
 export type FormattedFundingSourcesObject = {
   [number: string]: {
@@ -141,11 +147,7 @@ export type UpdateFundingSources =
     }
   | {
       action: 'Edit';
-      data: {
-        initialFundingNumber: string;
-        fundingNumber: string;
-        sources: string[];
-      };
+      data: ExistingFundingSource;
     };
 
 /** Update active funding source in form */

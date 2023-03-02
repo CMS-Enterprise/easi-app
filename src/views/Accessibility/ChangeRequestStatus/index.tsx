@@ -12,7 +12,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import useMessage from 'hooks/useMessage';
 import GetAccessibilityRequestForStatusChange from 'queries/GetAccessibilityRequestForStatusChange';
-import UpdateAccessibilityRequestStatus from 'queries/UpdateAccessibilityRequestStatusQuery';
+import UpdateAccessibilityReqStatus from 'queries/UpdateAccessibilityRequestStatusQuery';
 import { AccessibilityRequestStatus } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 import { NotFoundPartial } from 'views/NotFound';
@@ -34,9 +34,7 @@ const ChangeRequestStatus = () => {
     }
   });
 
-  const [mutate, mutationResult] = useMutation(
-    UpdateAccessibilityRequestStatus
-  );
+  const [mutate, mutationResult] = useMutation(UpdateAccessibilityReqStatus);
   const initialValues = {
     status:
       data?.accessibilityRequest?.statusRecord.status ||
