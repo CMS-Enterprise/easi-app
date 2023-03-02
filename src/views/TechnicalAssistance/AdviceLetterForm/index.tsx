@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+import HelpText from 'components/shared/HelpText';
 import StepHeader from 'components/StepHeader';
 import {
   GetTrbAdviceLetterQuery,
@@ -160,18 +161,36 @@ const AdviceLetterForm = () => {
   const currentFormStep: AdviceFormStep = adviceFormSteps[currentStepIndex];
 
   /**
-   * Renders form wrapper for all step components except recommendations
+   * Form wrapper for step components
    */
   const FormWrapper = ({ children }: { children: React.ReactNode }) => {
     if (formStep === 'recommendations') {
       // If form step is recommendations, render component without form wrapper
       return <>{children}</>;
     }
+
+    /** Whether to show required fields help text */
+    const showHelpText = formStep === 'summary' || formStep === 'next-steps';
+
     // Advice letter form with step component
     return (
       <FormProvider {...formContext}>
         <Form className="maxw-none" onSubmit={handleSubmit(onSubmit)}>
-          {children}
+          {
+            /* Required fields text */
+            showHelpText && (
+              <HelpText className="margin-top-1 margin-bottom-3">
+                <Trans
+                  i18nKey="technicalAssistance:requiredFields"
+                  components={{ red: <span className="text-red" /> }}
+                />
+              </HelpText>
+            )
+          }
+          {
+            /* Form fields */
+            children
+          }
         </Form>
       </FormProvider>
     );

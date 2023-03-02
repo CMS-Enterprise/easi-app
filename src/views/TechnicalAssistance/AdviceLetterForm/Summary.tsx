@@ -1,9 +1,9 @@
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
-import { ErrorMessage, FormGroup, Label } from '@trussworks/react-uswds';
+import { useTranslation } from 'react-i18next';
+import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
-import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AdviceLetterFormFields } from 'types/technicalAssistance';
 
@@ -15,35 +15,28 @@ const Summary = ({ trbRequestId, updateAdviceLetter }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const {
+    control,
     formState: { isSubmitting }
   } = useFormContext<AdviceLetterFormFields>();
 
   return (
-    <>
-      {/** Required fields text */}
-      <HelpText className="margin-top-1">
-        <Trans
-          i18nKey="technicalAssistance:requiredFields"
-          components={{ red: <span className="text-red" /> }}
-        />
-      </HelpText>
-
+    <div id="trbAdviceSummary" className="maxw-tablet">
       {/** Meeting summary field */}
       <Controller
         name="meetingSummary"
+        control={control}
         render={({ field, fieldState: { error } }) => {
           return (
-            <FormGroup className="maxw-tablet margin-top-4" error={!!error}>
-              <Label className="text-normal" htmlFor="meetingSummary">
+            <FormGroup error={!!error}>
+              <Label className="text-normal" htmlFor="meetingSummary" required>
                 {t('adviceLetterForm.meetingSummary')}{' '}
-                <span className="text-red">*</span>
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <TextAreaField
                 id="meetingSummary"
                 {...field}
                 ref={null}
-                required
+                value={field.value || ''}
               />
             </FormGroup>
           );
@@ -67,7 +60,7 @@ const Summary = ({ trbRequestId, updateAdviceLetter }: StepComponentProps) => {
         saveExitText={t('adviceLetterForm.returnToRequest')}
         border={false}
       />
-    </>
+    </div>
   );
 };
 
