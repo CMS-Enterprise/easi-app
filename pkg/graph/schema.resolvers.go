@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -2894,6 +2895,44 @@ func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRe
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
 	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
+}
+
+// TrbLeadInfo is the resolver for the trbLeadInfo field.
+func (r *tRBRequestResolver) TrbLeadInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
+	var trbLeadInfo *models.UserInfo
+	leadEUA := obj.TRBLead
+	if obj.TRBLead != nil {
+		info, err := dataloaders.GetUserInfo(ctx, *leadEUA)
+		if err != nil {
+			return nil, err
+		}
+		trbLeadInfo = info
+	}
+
+	if trbLeadInfo == nil {
+		trbLeadInfo = &models.UserInfo{}
+	}
+
+	return trbLeadInfo, nil
+}
+
+// RequesterInfo is the resolver for the requesterInfo field.
+func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
+	var requesterInfo *models.UserInfo
+	leadEUA := obj.TRBLead
+	if obj.TRBLead != nil {
+		info, err := dataloaders.GetUserInfo(ctx, *leadEUA)
+		if err != nil {
+			return nil, err
+		}
+		requesterInfo = info
+	}
+
+	if requesterInfo == nil {
+		requesterInfo = &models.UserInfo{}
+	}
+
+	return requesterInfo, nil
 }
 
 // AdminNotes is the resolver for the adminNotes field.
