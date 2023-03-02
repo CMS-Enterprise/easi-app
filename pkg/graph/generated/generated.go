@@ -847,10 +847,12 @@ type ComplexityRoot struct {
 		ModifiedAt         func(childComplexity int) int
 		ModifiedBy         func(childComplexity int) int
 		Name               func(childComplexity int) int
+		RequesterInfo      func(childComplexity int) int
 		State              func(childComplexity int) int
 		Status             func(childComplexity int) int
 		TRBLead            func(childComplexity int) int
 		TaskStatuses       func(childComplexity int) int
+		TrbLeadInfo        func(childComplexity int) int
 		Type               func(childComplexity int) int
 	}
 
@@ -1288,6 +1290,8 @@ type TRBRequestResolver interface {
 	AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBAdviceLetter, error)
 	TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error)
 
+	TrbLeadInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error)
+	RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error)
 	AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error)
 	IsRecent(ctx context.Context, obj *models.TRBRequest) (bool, error)
 }
@@ -5620,6 +5624,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.Name(childComplexity), true
 
+	case "TRBRequest.requesterInfo":
+		if e.complexity.TRBRequest.RequesterInfo == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.RequesterInfo(childComplexity), true
+
 	case "TRBRequest.state":
 		if e.complexity.TRBRequest.State == nil {
 			break
@@ -5647,6 +5658,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequest.TaskStatuses(childComplexity), true
+
+	case "TRBRequest.trbLeadInfo":
+		if e.complexity.TRBRequest.TrbLeadInfo == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.TrbLeadInfo(childComplexity), true
 
 	case "TRBRequest.type":
 		if e.complexity.TRBRequest.Type == nil {
@@ -7950,6 +7968,8 @@ type TRBRequest {
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   trbLead: String
+  trbLeadInfo: UserInfo
+  requesterInfo: UserInfo
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
   createdBy: String!
@@ -7978,7 +7998,7 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     name: String
     archived: Boolean
     type: TRBRequestType
-    status: TRBRequestState
+    state: TRBRequestState
 }
 
 """
@@ -26560,6 +26580,10 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "trbLeadInfo":
+				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+			case "requesterInfo":
+				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "adminNotes":
 				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
 			case "isRecent":
@@ -26656,6 +26680,10 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "trbLeadInfo":
+				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+			case "requesterInfo":
+				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "adminNotes":
 				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
 			case "isRecent":
@@ -27401,6 +27429,10 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestConsultMeeting
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "trbLeadInfo":
+				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+			case "requesterInfo":
+				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "adminNotes":
 				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
 			case "isRecent":
@@ -27521,6 +27553,10 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "trbLeadInfo":
+				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+			case "requesterInfo":
+				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "adminNotes":
 				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
 			case "isRecent":
@@ -28665,6 +28701,10 @@ func (ec *executionContext) fieldContext_Mutation_reopenTrbRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "trbLeadInfo":
+				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+			case "requesterInfo":
+				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "adminNotes":
 				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
 			case "isRecent":
@@ -30308,6 +30348,10 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "trbLeadInfo":
+				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+			case "requesterInfo":
+				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "adminNotes":
 				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
 			case "isRecent":
@@ -30404,6 +30448,10 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "trbLeadInfo":
+				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+			case "requesterInfo":
+				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "adminNotes":
 				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
 			case "isRecent":
@@ -38359,6 +38407,104 @@ func (ec *executionContext) fieldContext_TRBRequest_trbLead(ctx context.Context,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequest_trbLeadInfo(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBRequest().TrbLeadInfo(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalOUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_trbLeadInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequest_requesterInfo(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBRequest().RequesterInfo(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalOUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_requesterInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
 		},
 	}
 	return fc, nil
@@ -53933,6 +54079,40 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 
 			out.Values[i] = ec._TRBRequest_trbLead(ctx, field, obj)
 
+		case "trbLeadInfo":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_trbLeadInfo(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "requesterInfo":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_requesterInfo(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "adminNotes":
 			field := field
 

@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2899,6 +2900,16 @@ func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRe
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
 	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
+}
+
+// TrbLeadInfo is the resolver for the trbLeadInfo field.
+func (r *tRBRequestResolver) TrbLeadInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
+	panic(fmt.Errorf("not implemented: TrbLeadInfo - trbLeadInfo"))
+}
+
+// RequesterInfo is the resolver for the requesterInfo field.
+func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
+	panic(fmt.Errorf("not implemented: RequesterInfo - requesterInfo"))
 }
 
 // AdminNotes is the resolver for the adminNotes field.
