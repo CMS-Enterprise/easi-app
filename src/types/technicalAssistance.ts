@@ -60,7 +60,7 @@ export type SubNavItem = {
 export type AdviceLetterRecommendationFields = {
   id?: string;
   title: string;
-  description: string;
+  recommendation: string;
   /** Links array - object type to get useFieldArray hook to work */
   links?: { link: string }[];
 };
@@ -75,7 +75,7 @@ export type AdviceLetterFormFields = {
   meetingSummary: string | null;
   nextSteps: string | null;
   isFollowupRecommended: boolean | null;
-  followUpPoint: string | null;
+  followupPoint: string | null;
   // recommendations: AdviceLetterRecommendationFields[];
   // internalReview: string;
   // review: string;

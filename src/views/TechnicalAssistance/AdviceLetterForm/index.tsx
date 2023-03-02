@@ -136,7 +136,7 @@ const AdviceLetterForm = () => {
       meetingSummary: adviceLetter?.meetingSummary,
       nextSteps: adviceLetter?.nextSteps,
       isFollowupRecommended: adviceLetter?.isFollowupRecommended,
-      followUpPoint: adviceLetter?.followupPoint
+      followupPoint: adviceLetter?.followupPoint
     }
   });
 
@@ -148,9 +148,7 @@ const AdviceLetterForm = () => {
   } = formContext;
 
   /** Submit advice letter form */
-  const onSubmit = formData => {
-    console.log({ dirtyFields, formData });
-  };
+  const onSubmit = formData => null;
 
   /** Index of current form step - will return -1 if invalid URL */
   const currentStepIndex: number = adviceFormSteps.findIndex(
