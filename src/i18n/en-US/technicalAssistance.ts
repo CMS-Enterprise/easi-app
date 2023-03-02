@@ -98,7 +98,9 @@ const technicalAssistance = {
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
     returnToAdviceLetter:
-      'Don’t add a recommendation and return to advice letter'
+      'Don’t add a recommendation and return to advice letter',
+    editRecommendation: 'Edit recommendation',
+    removeRecommendation: 'Remove recommendation'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
