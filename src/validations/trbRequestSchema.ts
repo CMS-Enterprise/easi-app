@@ -300,6 +300,10 @@ export const adviceRecommendationSchema = yup.object({
   links: yup.array(yup.string())
 });
 
+export const meetingSummarySchema = yup.object({
+  meetingSummary: yup.string().required('Meeting summary is a required field')
+});
+
 export const adviceLetterSchema = yup.object({
   meetingSummary: yup.string().required('Meeting summary is a required field'),
   nextSteps: yup.string().required('Next steps is a required field'),

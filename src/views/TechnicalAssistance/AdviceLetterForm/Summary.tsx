@@ -1,26 +1,56 @@
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
+import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { ErrorMessage, Form, FormGroup } from '@trussworks/react-uswds';
 
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { AdviceLetterFormFields } from 'types/technicalAssistance';
+import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  UpdateTrbAdviceLetter,
+  UpdateTrbAdviceLetterVariables
+} from 'queries/types/UpdateTrbAdviceLetter';
+import {
+  AdviceLetterSummary,
+  StepComponentProps
+} from 'types/technicalAssistance';
+import { meetingSummarySchema } from 'validations/trbRequestSchema';
 
 import Pager from '../RequestForm/Pager';
 
-import { StepComponentProps } from '.';
-
-const Summary = ({ trbRequestId, updateAdviceLetter }: StepComponentProps) => {
+const Summary = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
 
+  const { meetingSummary } = adviceLetter;
+
+  const history = useHistory();
+
+  const [update] = useMutation<
+    UpdateTrbAdviceLetter,
+    UpdateTrbAdviceLetterVariables
+  >(UpdateTrbAdviceLetterQuery);
+
   const {
+    handleSubmit,
     control,
-    formState: { isSubmitting }
-  } = useFormContext<AdviceLetterFormFields>();
+    watch,
+    formState: { isSubmitting, isDirty }
+  } = useForm<AdviceLetterSummary>({
+    resolver: yupResolver(meetingSummarySchema),
+    defaultValues: {
+      meetingSummary
+    }
+  });
 
   return (
-    <div id="trbAdviceSummary" className="maxw-tablet">
+    <Form
+      onSubmit={e => e.preventDefault()}
+      id="trbAdviceSummary"
+      className="maxw-tablet"
+    >
       {/** Meeting summary field */}
       <Controller
         name="meetingSummary"
@@ -48,19 +78,34 @@ const Summary = ({ trbRequestId, updateAdviceLetter }: StepComponentProps) => {
         className="margin-top-4"
         back={{ outline: true, text: t('button.cancel') }}
         next={{
-          // TODO: disabled prop
-          disabled: isSubmitting,
-          onClick: () =>
-            updateAdviceLetter(
-              ['meetingSummary'],
-              `/trb/${trbRequestId}/advice/recommendations`
-            )
+          disabled: isSubmitting || watch('meetingSummary')?.length === 0,
+          onClick: handleSubmit(formData => {
+            if (isDirty) {
+              update({
+                variables: {
+                  input: {
+                    trbRequestId,
+                    meetingSummary: formData.meetingSummary
+                  }
+                }
+              })
+                .then(response => {
+                  if (!response.errors) {
+                    history.push(`/trb/${trbRequestId}/advice/recommendations`);
+                  }
+                })
+                // eslint-disable-next-line no-console
+                .catch(e => console.error(e));
+            } else {
+              history.push(`/trb/${trbRequestId}/advice/recommendations`);
+            }
+          })
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
         border={false}
       />
-    </div>
+    </Form>
   );
 };
 

@@ -1,3 +1,5 @@
+import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
+
 import { PersonRole } from './graphql-global-types';
 
 /** TRB attendee fields allows null role in form */
@@ -65,9 +67,14 @@ export type AdviceLetterRecommendationFields = {
   links?: { link: string }[];
 };
 
+export type AdviceLetterSummary = {
+  meetingSummary: string | null;
+};
+
 export type AdviceLetterNextSteps = {
-  nextSteps: string;
-  followUp: boolean;
+  nextSteps: string | null;
+  isFollowupRecommended: boolean | null;
+  followupPoint: string | null;
 };
 
 /** Advice letter form fields */
@@ -79,4 +86,14 @@ export type AdviceLetterFormFields = {
   // recommendations: AdviceLetterRecommendationFields[];
   // internalReview: string;
   // review: string;
+};
+
+export type UpdateAdviceLetterType = (
+  fields?: (keyof AdviceLetterFormFields)[],
+  redirectUrl?: string
+) => Promise<void>;
+
+export type StepComponentProps = {
+  trbRequestId: string;
+  adviceLetter: AdviceLetter;
 };
