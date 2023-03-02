@@ -295,21 +295,23 @@ export const documentSchema = yup.object({
 });
 
 export const adviceRecommendationSchema = yup.object({
-  title: yup.string().required('Title is a required field'),
-  description: yup.string().required('Description is a required field'),
+  title: yup.string().required(),
+  recommendation: yup.string().required(),
   links: yup.array(yup.string())
 });
 
 export const meetingSummarySchema = yup.object({
-  meetingSummary: yup.string().required('Meeting summary is a required field')
+  meetingSummary: yup.string().required()
 });
 
-export const adviceLetterSchema = yup.object({
-  meetingSummary: yup.string().required('Meeting summary is a required field'),
-  nextSteps: yup.string().required('Next steps is a required field'),
-  isFollowupRecommended: yup.boolean().required(),
-  followUpPoint: yup.string().when('followUp', {
-    is: true,
-    then: schema => schema.required()
-  })
+export const nextStepsSchema = yup.object({
+  nextSteps: yup.string().nullable(),
+  isFollowupRecommended: yup.boolean(),
+  followupPoint: yup
+    .string()
+    .nullable()
+    .when('isFollowupRecommended', {
+      is: true,
+      then: schema => schema.required()
+    })
 });

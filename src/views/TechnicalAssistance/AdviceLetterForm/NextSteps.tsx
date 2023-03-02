@@ -1,10 +1,13 @@
-import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import React, { useCallback } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   ErrorMessage,
   Fieldset,
+  Form,
   FormGroup,
   Radio,
   TextInput
@@ -13,26 +16,94 @@ import {
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { AdviceLetterFormFields } from 'types/technicalAssistance';
+import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  UpdateTrbAdviceLetter,
+  UpdateTrbAdviceLetterVariables
+} from 'queries/types/UpdateTrbAdviceLetter';
+import {
+  AdviceLetterNextSteps,
+  StepComponentProps
+} from 'types/technicalAssistance';
+import { nextStepsSchema } from 'validations/trbRequestSchema';
 
 import Pager from '../RequestForm/Pager';
 
-import { StepComponentProps } from '.';
-
-const NextSteps = ({
-  trbRequestId,
-  updateAdviceLetter
-}: StepComponentProps) => {
+const NextSteps = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
+
+  const { nextSteps, isFollowupRecommended, followupPoint } = adviceLetter;
+
   const history = useHistory();
 
+  const [update] = useMutation<
+    UpdateTrbAdviceLetter,
+    UpdateTrbAdviceLetterVariables
+  >(UpdateTrbAdviceLetterQuery);
+
   const {
+    handleSubmit,
     control,
-    formState: { isSubmitting }
-  } = useFormContext<AdviceLetterFormFields>();
+    formState: { isSubmitting, isDirty }
+  } = useForm<AdviceLetterNextSteps>({
+    resolver: yupResolver(nextStepsSchema),
+    defaultValues: {
+      nextSteps,
+      isFollowupRecommended,
+      followupPoint
+    }
+  });
+
+  const updateForm = useCallback(
+    (url: string) => {
+      if (!isDirty) {
+        history.push(url);
+      } else {
+        handleSubmit(
+          formData => {
+            /** Updated form values */
+            const input = { trbRequestId, ...formData };
+
+            // If isFollowUpRecommended is changed to false, clear followupPoint value
+            if (!formData.isFollowupRecommended) {
+              input.followupPoint = '';
+            }
+
+            update({
+              variables: {
+                input
+              }
+            });
+          },
+          () => {
+            // Need to throw from this error handler so that the promise is rejected
+            throw new Error('Invalid next steps');
+          }
+        )().then(
+          () => history.push(url),
+          e => {
+            // setFormAlert({
+            //   type: 'error',
+            //   heading: t('errors.somethingWrong'),
+            //   message: t('basic.errors.submit')
+            // });
+
+            // TODO: Error handling
+            // eslint-disable-next-line no-console
+            console.error(e);
+          }
+        );
+      }
+    },
+    [handleSubmit, isDirty, trbRequestId, history, update]
+  );
 
   return (
-    <div id="trbAdviceNextSteps" className="maxw-tablet">
+    <Form
+      onSubmit={e => e.preventDefault()}
+      id="trbAdviceNextSteps"
+      className="maxw-tablet"
+    >
       {/* Next steps */}
       <Controller
         name="nextSteps"
@@ -69,6 +140,7 @@ const NextSteps = ({
                 {error && (
                   <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                 )}
+                {/* Yes, a follow-up is recommended */}
                 <Radio
                   {...field}
                   ref={null}
@@ -79,6 +151,7 @@ const NextSteps = ({
                   onChange={() => field.onChange(true)}
                 />
                 {field.value === true && (
+                  /* Follow-up point */
                   <Controller
                     name="followupPoint"
                     control={control}
@@ -97,6 +170,9 @@ const NextSteps = ({
                           <HelpText>
                             {t('adviceLetterForm.followupHelpText')}
                           </HelpText>
+                          {input.fieldState.error && (
+                            <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                          )}
                           <TextInput
                             type="text"
                             {...input.field}
@@ -109,6 +185,7 @@ const NextSteps = ({
                     }}
                   />
                 )}
+                {/* Follow-up not necessary */}
                 <Radio
                   {...field}
                   ref={null}
@@ -130,21 +207,18 @@ const NextSteps = ({
         back={{
           outline: true,
           onClick: () =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations`)
+            updateForm(`/trb/${trbRequestId}/advice/recommendations`)
         }}
         next={{
           disabled: isSubmitting,
           onClick: () =>
-            updateAdviceLetter(
-              ['nextSteps', 'isFollowupRecommended', 'followupPoint'],
-              `/trb/${trbRequestId}/advice/internal-review`
-            )
+            updateForm(`/trb/${trbRequestId}/advice/internal-review`)
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
         border={false}
       />
-    </div>
+    </Form>
   );
 };
 
