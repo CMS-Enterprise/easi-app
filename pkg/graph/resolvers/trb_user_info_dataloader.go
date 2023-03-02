@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/graph-gophers/dataloader"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // Loaders wrap your data loaders to inject via middleware

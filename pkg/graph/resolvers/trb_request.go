@@ -9,6 +9,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -333,4 +334,36 @@ func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Ti
 	numDaysToConsiderRecent := -7
 	recentIfAfterDate := now.AddDate(0, 0, numDaysToConsiderRecent)
 	return obj.CreatedAt.After(recentIfAfterDate)
+}
+
+// GetTRBLeadInfo retrieves the user info of a TRB request's lead
+func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, error) {
+	var trbLeadInfo *models.UserInfo
+	if trbLead != nil {
+		info, err := dataloaders.GetUserInfo(ctx, *trbLead)
+		if err != nil {
+			return nil, err
+		}
+		trbLeadInfo = info
+	}
+
+	if trbLeadInfo == nil {
+		trbLeadInfo = &models.UserInfo{}
+	}
+
+	return trbLeadInfo, nil
+}
+
+// GetTRBRequesterInfo retrieves the user info of a TRB request's requester
+func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.UserInfo, error) {
+	requesterInfo, err := dataloaders.GetUserInfo(ctx, requesterEUA)
+	if err != nil {
+		return nil, err
+	}
+
+	if requesterInfo == nil {
+		requesterInfo = &models.UserInfo{}
+	}
+
+	return requesterInfo, nil
 }
