@@ -4,17 +4,18 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/graph-gophers/dataloader"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// UserInfoFetcher reads Users from a database
-type UserInfoFetcher struct {
+// UserInfoLoader reads Users from a database
+type UserInfoLoader struct {
 	FetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)
 }
 
 // BatchUserInfos implements a batch function to populate UserInfo for EUA IDs
-func (u *UserInfoFetcher) BatchUserInfos(
+func (u *UserInfoLoader) BatchUserInfos(
 	ctx context.Context,
 	keys dataloader.Keys,
 ) []*dataloader.Result {

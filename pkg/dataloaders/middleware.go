@@ -4,8 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/graph-gophers/dataloader"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // Loaders wrap your data loaders to inject via middleware
@@ -21,11 +22,11 @@ const (
 
 // NewLoaders instantiates data loaders for the middleware
 func NewLoaders(fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)) *Loaders {
-	userInfoFetcher := UserInfoFetcher{
+	userInfoLoader := UserInfoLoader{
 		FetchUserInfos: fetchUserInfos,
 	}
 	loaders := &Loaders{
-		UserInfoLoader: dataloader.NewBatchedLoader(userInfoFetcher.BatchUserInfos),
+		UserInfoLoader: dataloader.NewBatchedLoader(userInfoLoader.BatchUserInfos),
 	}
 	return loaders
 }
@@ -36,10 +37,14 @@ func For(ctx context.Context) *Loaders {
 }
 
 // Middleware stores Loaders as a request-scoped context value.
-func Middleware(loaders *Loaders, next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		nextCtx := context.WithValue(r.Context(), loadersKey, loaders)
-		r = r.WithContext(nextCtx)
-		next.ServeHTTP(w, r)
-	})
+func Middleware(fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+			loaders := NewLoaders(fetchUserInfos)
+			augmentedCtx := context.WithValue(ctx, loadersKey, loaders)
+			r = r.WithContext(augmentedCtx)
+			next.ServeHTTP(w, r)
+		})
+	}
 }

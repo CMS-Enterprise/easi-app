@@ -31,6 +31,7 @@ import (
 
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph"
@@ -277,6 +278,8 @@ func (s *Server) routes(
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
+	loaderMiddleware := dataloaders.Middleware(cedarLDAPClient.FetchUserInfos)
+	s.router.Use(loaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)
 
