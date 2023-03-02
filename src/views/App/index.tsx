@@ -1,4 +1,6 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
+import ReactGA from 'react-ga4';
+import { RootStateOrAny, useSelector } from 'react-redux';
 import {
   BrowserRouter,
   Redirect,
@@ -51,9 +53,27 @@ import shouldScroll from './scrollConfig';
 
 import './index.scss';
 
+ReactGA.initialize([
+  {
+    trackingId: 'G-B01YHRZXNY',
+    gaOptions: {}, // optional
+    gtagOptions: {} // optional
+  }
+]);
+
 const AppRoutes = () => {
   const location = useLocation();
   const flags = useFlags();
+
+  const { euaId, name } = useSelector((state: RootStateOrAny) => state.auth);
+
+  // Track GA Pages
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: location.pathname });
+    if (euaId) {
+      ReactGA.set({ user_properties: { userId: euaId, userName: name } });
+    }
+  }, [location.pathname, euaId, name]);
 
   // Scroll to top
   useLayoutEffect(() => {
