@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TRB admin home wrapper matches the snapshot 1`] = `
+exports[`TRB admin home matches the snapshot 1`] = `
 <DocumentFragment>
   <div
     id="trbAdminHome"
@@ -40,14 +40,14 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Request 441cb9e0-2cb3-43ca-b168-9d6a2a13ec91
+                Request a4093ec7-caec-4e73-be3d-a8d6262bc61b
               </li>
             </ol>
           </nav>
           <h2
             class="margin-top-05 margin-bottom-0"
           >
-            Draft
+            TRB Request Mock
           </h2>
           <div
             class="grid-row"
@@ -217,7 +217,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
       data-testid="gridContainer"
     >
       <div
-        class="grid-row margin-y-5 grid-gap"
+        class="grid-row margin-top-5 grid-gap"
         data-testid="grid"
       >
         <div
@@ -259,7 +259,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 class="trb-admin__nav-link trb-admin__nav-link--active trb-admin__nav-link--border"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/request"
+                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/request"
                 >
                   <span>
                     Request home
@@ -270,7 +270,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/initial-request-form"
+                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/initial-request-form"
                 >
                   <span>
                     Initial request form
@@ -281,7 +281,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/documents"
+                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/documents"
                 >
                   <span>
                     Supporting documents
@@ -292,7 +292,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/feedback"
+                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/feedback"
                 >
                   <span>
                     Feedback
@@ -303,7 +303,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 class="trb-admin__nav-link trb-admin__nav-link--border"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/advice"
+                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/advice"
                 >
                   <span>
                     Advice letter
@@ -314,7 +314,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/notes"
+                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/notes"
                 >
                   <span>
                     Notes
@@ -331,7 +331,7 @@ exports[`TRB admin home wrapper matches the snapshot 1`] = `
           <div
             class="trb-admin-home__request-home"
             data-testid="trb-admin-home__request-home"
-            id="trbAdminRequestHome-[object Object]"
+            id="trbAdminRequestHome-a4093ec7-caec-4e73-be3d-a8d6262bc61b"
           >
             <h1
               class="margin-y-0"

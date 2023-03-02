@@ -5,11 +5,9 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -17,26 +15,7 @@ import (
 
 // GetTRBAdviceLetterByTRBRequestID fetches a TRB advice letter record by its associated request's ID.
 func GetTRBAdviceLetterByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetter, error) {
-	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if letter == nil {
-		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch TRB advice letter",
-			zap.Error(err),
-			zap.String("trbRequestID", id.String()),
-		)
-
-		return nil, &apperrors.ResourceNotFoundError{
-			Err:      err,
-			Resource: models.TRBAdviceLetter{},
-		}
-	}
-
-	return letter, nil
+	return store.GetTRBAdviceLetterByTRBRequestID(ctx, id)
 }
 
 // CreateTRBAdviceLetter creates an advice letter for a TRB request, in the "In Progress" status, when the advice letter is ready to be worked on.

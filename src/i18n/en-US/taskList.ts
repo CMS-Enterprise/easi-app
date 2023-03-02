@@ -112,7 +112,10 @@ const taskList = {
     IN_PROGRESS: 'In Progress',
     READY_TO_START: 'Ready to start',
     CANNOT_START: 'Cannot start yet',
-    NOT_NEEDED: 'Not needed'
+    NOT_NEEDED: 'Not needed',
+    // Additional statuses for trb admin tasks
+    CANNOT_START_YET: 'Cannot start yet',
+    READY_FOR_REVIEW: 'Ready for review'
   }
 };
 

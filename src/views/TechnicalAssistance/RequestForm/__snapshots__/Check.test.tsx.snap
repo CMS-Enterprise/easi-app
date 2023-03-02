@@ -309,9 +309,6 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
     </div>
   </div>
   <div
-    class="easi-divider"
-  />
-  <div
     class="grid-row grid-gap"
     data-testid="grid"
   >

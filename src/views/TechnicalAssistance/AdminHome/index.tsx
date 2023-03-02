@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
@@ -7,18 +7,22 @@ import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import PageLoading from 'components/PageLoading';
-import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import useMessage from 'hooks/useMessage';
+import useTRBAttendees from 'hooks/useTRBAttendees';
+import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import {
-  GetTrbRequest,
-  GetTrbRequestVariables
-} from 'queries/types/GetTrbRequest';
+  GetTrbRequestSummary,
+  GetTrbRequestSummaryVariables
+} from 'queries/types/GetTrbRequestSummary';
 import { AppState } from 'reducers/rootReducer';
+import { formatDateLocal } from 'utils/date';
 import user from 'utils/user';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
 import NotFound from 'views/NotFound';
 
+import Summary from './components/Summary';
 import subNavItems from './subNavItems';
-import Summary from './Summary';
 
 import './index.scss';
 
@@ -77,14 +81,49 @@ export default function AdminHome() {
   }>();
 
   // TRB request query
-  const { data, loading } = useQuery<GetTrbRequest, GetTrbRequestVariables>(
-    GetTrbRequestQuery,
-    {
-      variables: { id }
-    }
-  );
+  const { data, loading } = useQuery<
+    GetTrbRequestSummary,
+    GetTrbRequestSummaryVariables
+  >(GetTrbRequestSummaryQuery, {
+    variables: { id }
+  });
   /** Current trb request */
   const trbRequest = data?.trbRequest;
+
+  // Alert feedback from children
+  const { message } = useMessage();
+
+  // Get requester object from request attendees
+  const {
+    data: { requester, loading: requesterLoading }
+  } = useTRBAttendees(id);
+
+  /**
+   * Requester name and cms office acronym
+   */
+  const requesterString = useMemo(() => {
+    // If loading, return null
+    if (requesterLoading) return null;
+
+    // If requester component is not set, return name or EUA
+    if (!requester.component)
+      return requester?.userInfo?.commonName || requester?.userInfo?.euaUserId;
+
+    /** Requester component */
+    const requesterComponent = cmsDivisionsAndOffices.find(
+      object => object.name === requester.component
+    );
+
+    // Return requester name and component acronym
+    return `${requester?.userInfo?.commonName}, ${requesterComponent?.acronym}`;
+  }, [requester, requesterLoading]);
+
+  /**
+   * Request submission date for summary
+   */
+  const submissionDate = trbRequest?.createdAt
+    ? formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy')
+    : '';
 
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
@@ -107,6 +146,9 @@ export default function AdminHome() {
         status={trbRequest.status}
         taskStatuses={trbRequest.taskStatuses}
         trbLead={trbRequest.trbLead}
+        requester={requester}
+        requesterString={requesterString}
+        submissionDate={submissionDate}
       />
 
       {/* Accordion navigation for tablet and mobile */}
@@ -121,7 +163,8 @@ export default function AdminHome() {
       />
 
       <GridContainer>
-        <Grid row className="margin-y-5 grid-gap">
+        {message}
+        <Grid row className="margin-top-5 grid-gap">
           {/* Side navigation */}
           <Grid
             col
@@ -135,7 +178,11 @@ export default function AdminHome() {
           <Grid col desktop={{ col: 9 }}>
             {subNavItems(id).map(subpage => (
               <Route exact path={subpage.route} key={subpage.route}>
-                <subpage.component trbRequestId={id} />
+                <subpage.component
+                  trbRequestId={id}
+                  requesterString={requesterString}
+                  submissionDate={submissionDate}
+                />
               </Route>
             ))}
           </Grid>

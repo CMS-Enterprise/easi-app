@@ -31,6 +31,35 @@ const technicalAssistance = {
       'The TRB has requested edits to your initial request form. Please make any necessary changes and re-submit your form.',
     viewFeedback: 'View feedback'
   },
+  adminAction: 'Admin Action',
+  requestNotes: {
+    text: 'notes about this request',
+    viewNotes: 'View notes',
+    addNote: 'Add a note'
+  },
+  adviceLetter: {
+    introText:
+      'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.',
+    noAdviceLetter:
+      'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.',
+    downloadAsPdf: 'Download advice letter as PDF',
+    sendDate: 'Send date',
+    notYetSent: 'Not yet sent',
+    whatWeHeard: 'What we heard',
+    meetingSummary: 'Meeting summary',
+    whatWeRecommend: 'What we recommend',
+    resources: 'Resources',
+    nextSteps: 'Next steps',
+    notSpecified: 'Not specified yet',
+    followup: 'Should the team return for a follow-up session?'
+  },
+  statusLabels: {
+    CANNOT_START_YET: 'Cannot start yet',
+    COMPLETED: 'Completed',
+    IN_PROGRESS: 'In progress',
+    READY_FOR_REVIEW: 'Ready for review',
+    READY_TO_START: 'Ready to start'
+  },
   // Misc breadcrumb items
   breadcrumbs: {
     startTrbRequest: 'Start a TRB Request'
@@ -227,21 +256,31 @@ const technicalAssistance = {
       'After submitting this form, you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
     ],
     steps: [
-      { name: 'Basic request details' },
+      {
+        name: 'Basic request details',
+        adminDescription:
+          'These basic request details were input by the requester to explain this technical assistance request.'
+      },
       {
         name: 'Subject areas',
         description:
-          'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.'
+          'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.',
+        adminDescription:
+          'These subject areas were by the requester to be discussed during the consult session.'
       },
       {
         name: 'Attendees',
         description:
-          'As the primary requester, please add your CMS component and role on the project. If you wish to, you may also add the names and contact information for any additional individuals who should be present at the TRB consult session. If you’re not sure who should be present, you may add attendees later or share the calendar invite before the meeting.'
+          'As the primary requester, please add your CMS component and role on the project. If you wish to, you may also add the names and contact information for any additional individuals who should be present at the TRB consult session. If you’re not sure who should be present, you may add attendees later or share the calendar invite before the meeting.',
+        adminDescription:
+          'These attendees were added by the requester and should be included as a part of the consult session.'
       },
       {
         name: 'Supporting documents',
         description:
-          'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.'
+          'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.',
+        adminDescription:
+          'These supporting documents were added by the requester and should be reviewed as needed for this request.'
       },
       {
         name: 'Check and submit',
@@ -613,7 +652,14 @@ const technicalAssistance = {
         CANNOT_START_YET: 'Consult prep completed',
         READY_TO_SCHEDULE: 'Ready for consult',
         SCHEDULED: 'Consult scheduled',
-        COMPLETED: 'Consult completed'
+        COMPLETED: 'Consult complete'
+      },
+      adviceLetterStatus: {
+        CANNOT_START_YET: 'Consult complete',
+        IN_PROGRESS: 'Draft advice letter',
+        READY_FOR_REVIEW: 'Advice letter in review',
+        READY_TO_START: 'Consult complete',
+        COMPLETED: 'Advice letter sent'
       }
     },
     open: 'Open',
@@ -630,7 +676,38 @@ const technicalAssistance = {
       feedback: 'Feedback',
       adviceLetter: 'Advice letter',
       notes: 'Notes'
-    }
+    },
+    byNameOnDate: 'by {{name}} on {{date}}'
+  },
+  actionRequestEdits: {
+    heading: 'Action: request edits',
+    description:
+      'Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.',
+    fieldsMarkedRequired:
+      'Fields marked with an asterisk ( <red>*</red> ) are required.',
+    hint:
+      'Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.',
+    label:
+      'What type of edits are needed prior to scheduling the consult session?',
+    notificationTitle: 'Notification email',
+    notificationDescription:
+      'A notification email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.',
+    submit: 'Complete action',
+    error:
+      'There was an issue completing the request edits action. Please try again, and if the problem persists, try again later.',
+    success:
+      'Action completed. You have successfully requested edits to this request.',
+    cancelAndReturn: 'Cancel action and return to request'
+  },
+  actionReadyForConsult: {
+    heading: 'Action: ready for consult',
+    description:
+      'Add any feedback you have for the requester based on your review of their initial intake form. If the consult session has already been scheduled, you may also add that information here.',
+    label: 'Feedback for requester',
+    error:
+      'There was an issue completing the ready for consult action. Please try again, and if the problem persists, try again later.',
+    success:
+      'Action completed. This request is now ready to schedule a consult session.'
   }
 };
 
