@@ -1,6 +1,5 @@
 import React, { useEffect, useLayoutEffect } from 'react';
 import ReactGA from 'react-ga4';
-import { RootStateOrAny, useSelector } from 'react-redux';
 import {
   BrowserRouter,
   Redirect,
@@ -57,15 +56,12 @@ const AppRoutes = () => {
   const location = useLocation();
   const flags = useFlags();
 
-  const { euaId, name } = useSelector((state: RootStateOrAny) => state.auth);
-
   // Track GA Pages
   useEffect(() => {
-    ReactGA.send({ hitType: 'pageview', page: location.pathname });
-    if (euaId) {
-      ReactGA.set({ user_properties: { userId: euaId } });
+    if (location.pathname) {
+      ReactGA.send({ hitType: 'pageview', page: location.pathname });
     }
-  }, [location.pathname, euaId, name]);
+  }, [location.pathname]);
 
   // Scroll to top
   useLayoutEffect(() => {
