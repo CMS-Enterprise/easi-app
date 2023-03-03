@@ -165,3 +165,25 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 	s.NoError(err)
 	s.EqualValues("MCLV", *updated.TRBLead)
 }
+
+func (s *ResolverSuite) TestIsRecentTRBRequest() {
+	// Set up a date to mock the current time
+	dateOnlyLayout := "2006-01-02"
+	now, err := time.Parse(dateOnlyLayout, "2020-01-10")
+	s.NoError(err)
+
+	// 10 Days old
+	tenDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
+	tenDaysOld.CreatedAt = now.AddDate(0, 0, -10)
+	s.False(IsRecentTRBRequest(s.testConfigs.Context, tenDaysOld, now))
+
+	// 6 days old
+	sixDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
+	sixDaysOld.CreatedAt = now.AddDate(0, 0, -6)
+	s.True(IsRecentTRBRequest(s.testConfigs.Context, sixDaysOld, now))
+
+	// 0 days old
+	zeroDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
+	zeroDaysOld.CreatedAt = now
+	s.True(IsRecentTRBRequest(s.testConfigs.Context, zeroDaysOld, now))
+}
