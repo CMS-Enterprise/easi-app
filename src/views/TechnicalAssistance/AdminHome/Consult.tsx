@@ -143,7 +143,7 @@ function Consult() {
             <div className="line-height-body-5 font-body-lg text-light">
               {t('actionScheduleConsult.description')}
             </div>
-            <div className="margin-top-1 margin-bottom-6 text-base">
+            <div className="margin-top-1 margin-bottom-4 text-base">
               <Trans
                 i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
                 components={{ red: <span className="text-red" /> }}
@@ -176,73 +176,75 @@ function Consult() {
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             {/* Meeting date */}
-            <Controller
-              name="meetingDate"
-              control={control}
-              rules={{ required: true }}
-              render={({ field, fieldState: { error } }) => (
-                <FormGroup error={!!error}>
-                  <Label
-                    htmlFor="meetingDate"
-                    hint={
-                      <div className="margin-top-1">
-                        {t('actionScheduleConsult.hints.meetingDate')}
-                      </div>
-                    }
-                    className="text-normal"
-                    error={!!error}
-                  >
-                    {t('actionScheduleConsult.labels.meetingDate')}{' '}
-                    <span className="text-red">*</span>
-                  </Label>
-                  {error && (
-                    <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
-                  )}
-                  <DatePicker
-                    id="meetingDate"
-                    name="meetingDate"
-                    onChange={val => {
-                      field.onChange(val);
-                    }}
-                  />
-                </FormGroup>
-              )}
-            />
+            <div className="date-time-wrapper">
+              <Controller
+                name="meetingDate"
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup error={!!error}>
+                    <Label
+                      htmlFor="meetingDate"
+                      hint={
+                        <div className="margin-top-1">
+                          {t('actionScheduleConsult.hints.meetingDate')}
+                        </div>
+                      }
+                      className="text-normal"
+                      error={!!error}
+                    >
+                      {t('actionScheduleConsult.labels.meetingDate')}{' '}
+                      <span className="text-red">*</span>
+                    </Label>
+                    {error && (
+                      <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                    )}
+                    <DatePicker
+                      id="meetingDate"
+                      name="meetingDate"
+                      onChange={val => {
+                        field.onChange(val);
+                      }}
+                    />
+                  </FormGroup>
+                )}
+              />
 
-            {/* Meeting time */}
-            <Controller
-              name="meetingTime"
-              control={control}
-              rules={{ required: true }}
-              render={({ field, fieldState: { error } }) => (
-                <FormGroup error={!!error}>
-                  <Label
-                    htmlFor="meetingTime"
-                    hint={
-                      <div className="margin-top-1">
-                        {t('actionScheduleConsult.hints.meetingTime')}
-                      </div>
-                    }
-                    className="text-normal"
-                    error={!!error}
-                  >
-                    {t('actionScheduleConsult.labels.meetingTime')}{' '}
-                    <span className="text-red">*</span>
-                  </Label>
-                  {error && (
-                    <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
-                  )}
-                  <TimePicker
-                    id="meetingTime"
-                    name="meetingTime"
-                    onChange={val => {
-                      field.onChange(val);
-                    }}
-                    step={5}
-                  />
-                </FormGroup>
-              )}
-            />
+              {/* Meeting time */}
+              <Controller
+                name="meetingTime"
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup error={!!error}>
+                    <Label
+                      htmlFor="meetingTime"
+                      hint={
+                        <div className="margin-top-1">
+                          {t('actionScheduleConsult.hints.meetingTime')}
+                        </div>
+                      }
+                      className="text-normal"
+                      error={!!error}
+                    >
+                      {t('actionScheduleConsult.labels.meetingTime')}{' '}
+                      <span className="text-red">*</span>
+                    </Label>
+                    {error && (
+                      <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                    )}
+                    <TimePicker
+                      id="meetingTime"
+                      name="meetingTime"
+                      onChange={val => {
+                        field.onChange(val);
+                      }}
+                      step={5}
+                    />
+                  </FormGroup>
+                )}
+              />
+            </div>
 
             {/* Notes */}
             <Controller
