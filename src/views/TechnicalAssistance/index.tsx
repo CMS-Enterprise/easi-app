@@ -12,6 +12,7 @@ import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
+import TeamHome from './TeamHome';
 
 import './index.scss';
 
@@ -59,6 +60,10 @@ function TechnicalAssistance() {
           path={`${path}/:id/:activePage/:action(request-edits|ready-for-consult)`}
         >
           <RequestEdits />
+        </Route>
+
+        <Route exact path={`${path}/team`}>
+          <TeamHome />
         </Route>
 
         <Route path="*">

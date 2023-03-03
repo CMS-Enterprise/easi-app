@@ -78,7 +78,8 @@ const technicalAssistance = {
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission date',
-      status: 'Request status'
+      status: 'Request status',
+      trbConsultDate: 'TRB consult date'
     }
   },
   // Higher level errors
@@ -678,6 +679,26 @@ const technicalAssistance = {
       notes: 'Notes'
     },
     byNameOnDate: 'by {{name}} on {{date}}'
+  },
+  adminTeamHome: {
+    description:
+      'From EASi’s TRB home, you can review, assign, and manage incoming and existing TRB support requests.',
+    jumpToExitingRequests: 'Jump to existing requests',
+    downloadAllTrbRequests: 'Download all TRB requests (csv)',
+    switchToDifferentAdminView: 'Swich to a different admin view',
+    submitYourOwnRequest: 'Submit your own technical assistance request',
+    newRequests: {
+      heading: 'New requests',
+      description:
+        'Review these recently submitted technical assistance requests and assign a TRB lead.',
+      downloadCsv: 'Download all new requests (csv)'
+    },
+    existingRequests: {
+      heading: 'Existing requests',
+      description:
+        'Use the tabs below to navigate between closed requests and those that are open and have been reviewed and assigned.',
+      downloadCsv: 'Download all existing requests (csv)'
+    }
   },
   actionRequestEdits: {
     heading: 'Action: request edits',
