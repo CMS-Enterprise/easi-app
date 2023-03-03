@@ -63,7 +63,7 @@ const AppRoutes = () => {
   useEffect(() => {
     ReactGA.send({ hitType: 'pageview', page: location.pathname });
     if (euaId) {
-      ReactGA.set({ user_properties: { userId: euaId, userName: name } });
+      ReactGA.set({ user_properties: { userId: euaId } });
     }
   }, [location.pathname, euaId, name]);
 
