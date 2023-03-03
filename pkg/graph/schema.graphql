@@ -1518,7 +1518,9 @@ type TRBRequest {
   consultMeetingTime: Time
   trbLead: String
   trbLeadInfo: UserInfo!
+  trbLeadComponent: String
   requesterInfo: UserInfo!
+  requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
   createdBy: String!

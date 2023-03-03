@@ -2901,9 +2901,20 @@ func (r *tRBRequestResolver) TrbLeadInfo(ctx context.Context, obj *models.TRBReq
 	return resolvers.GetTRBLeadInfo(ctx, obj.TRBLead)
 }
 
+// TrbLeadComponent is the resolver for the trbLeadComponent field.
+func (r *tRBRequestResolver) TrbLeadComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
+	return resolvers.GetTRBUserComponent(ctx, r.store, obj.TRBLead)
+}
+
 // RequesterInfo is the resolver for the requesterInfo field.
 func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
 	return resolvers.GetTRBRequesterInfo(ctx, obj.CreatedBy)
+}
+
+// RequesterComponent is the resolver for the requesterComponent field.
+func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
+	requester := obj.CreatedBy
+	return resolvers.GetTRBUserComponent(ctx, r.store, &requester)
 }
 
 // AdminNotes is the resolver for the adminNotes field.
