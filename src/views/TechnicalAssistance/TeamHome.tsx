@@ -153,29 +153,34 @@ function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
         </tbody>
       </Table>
 
-      <div className="grid-row grid-gap grid-gap-lg">
-        <TablePagination
-          gotoPage={gotoPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
-          canNextPage={canNextPage}
-          pageIndex={state.pageIndex}
-          pageOptions={pageOptions}
-          canPreviousPage={canPreviousPage}
-          pageCount={pageCount}
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-          page={[]}
-          className="desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
-        />
-      </div>
+      {rows.length > 0 && (
+        <>
+          <div className="grid-row grid-gap grid-gap-lg">
+            <TablePagination
+              gotoPage={gotoPage}
+              previousPage={previousPage}
+              nextPage={nextPage}
+              canNextPage={canNextPage}
+              pageIndex={state.pageIndex}
+              pageOptions={pageOptions}
+              canPreviousPage={canPreviousPage}
+              pageCount={pageCount}
+              pageSize={state.pageSize}
+              setPageSize={setPageSize}
+              page={[]}
+              className="desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
+            />
+          </div>
 
-      <div
-        className="usa-sr-only usa-table__announcement-region"
-        aria-live="polite"
-      >
-        {currentTableSortDescription(headerGroups[0])}
-      </div>
+          <div
+            className="usa-sr-only usa-table__announcement-region"
+            aria-live="polite"
+          >
+            {currentTableSortDescription(headerGroups[0])}
+          </div>
+        </>
+      )}
+      {rows.length === 0 && t('adminTeamHome.newRequests.noRequests')}
     </div>
   );
 }
@@ -321,34 +326,40 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
         </tbody>
       </Table>
 
-      <div className="grid-row grid-gap grid-gap-lg">
-        <TablePagination
-          gotoPage={gotoPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
-          canNextPage={canNextPage}
-          pageIndex={state.pageIndex}
-          pageOptions={pageOptions}
-          canPreviousPage={canPreviousPage}
-          pageCount={pageCount}
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-          page={[]}
-          className="desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
-        />
-        <TablePageSize
-          className="desktop:grid-col-auto"
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-        />
-      </div>
+      {rows.length > 0 && (
+        <>
+          <div className="grid-row grid-gap grid-gap-lg">
+            <TablePagination
+              gotoPage={gotoPage}
+              previousPage={previousPage}
+              nextPage={nextPage}
+              canNextPage={canNextPage}
+              pageIndex={state.pageIndex}
+              pageOptions={pageOptions}
+              canPreviousPage={canPreviousPage}
+              pageCount={pageCount}
+              pageSize={state.pageSize}
+              setPageSize={setPageSize}
+              page={[]}
+              className="desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
+            />
+            <TablePageSize
+              className="desktop:grid-col-auto"
+              pageSize={state.pageSize}
+              setPageSize={setPageSize}
+            />
+          </div>
 
-      <div
-        className="usa-sr-only usa-table__announcement-region"
-        aria-live="polite"
-      >
-        {currentTableSortDescription(headerGroups[0])}
-      </div>
+          <div
+            className="usa-sr-only usa-table__announcement-region"
+            aria-live="polite"
+          >
+            {currentTableSortDescription(headerGroups[0])}
+          </div>
+        </>
+      )}
+      {rows.length === 0 &&
+        t(`adminTeamHome.existingRequests.noRequests.${activeTable}`)}
     </div>
   );
 }

@@ -691,13 +691,21 @@ const technicalAssistance = {
       heading: 'New requests',
       description:
         'Review these recently submitted technical assistance requests and assign a TRB lead.',
-      downloadCsv: 'Download all new requests (csv)'
+      downloadCsv: 'Download all new requests (csv)',
+      noRequests:
+        'There are currently no new requests. The TRB Mailbox will receive an email notification when a new request is submitted, or you can check back here later.'
     },
     existingRequests: {
       heading: 'Existing requests',
       description:
         'Use the tabs below to navigate between closed requests and those that are open and have been reviewed and assigned.',
-      downloadCsv: 'Download all existing requests (csv)'
+      downloadCsv: 'Download all existing requests (csv)',
+      noRequests: {
+        open:
+          'There are currently no open requests that are in progress. Review any new requests above and assign a TRB lead.',
+        closed:
+          'There are currently no closed requests. Continue to work on open requests. When they are closed, they will appear here.'
+      }
     }
   },
   actionRequestEdits: {
