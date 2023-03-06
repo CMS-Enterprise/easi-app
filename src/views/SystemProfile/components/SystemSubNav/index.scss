@@ -1,3 +1,6 @@
+@use 'uswds-core' as *;
+@use 'colors' as *;
+
 .system-detail {
   &__subNav-accordion {
     button.usa-menu-btn {

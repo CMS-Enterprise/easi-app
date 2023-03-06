@@ -147,6 +147,17 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * Represents the status of the TRB advice letter step
+ */
+export enum TRBAdviceLetterStatus {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  IN_PROGRESS = "IN_PROGRESS",
+  READY_FOR_REVIEW = "READY_FOR_REVIEW",
+  READY_TO_START = "READY_TO_START",
+}
+
+/**
  * The possible answers to the "application development" input on the TRB "Subject Areas" page
  */
 export enum TRBApplicationDevelopmentOption {
@@ -481,6 +492,17 @@ export interface CreateTRBRequestDocumentInput {
 }
 
 /**
+ * The data needed to add feedback to a TRB request
+ */
+export interface CreateTRBRequestFeedbackInput {
+  trbRequestId: UUID;
+  feedbackMessage: string;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  action: TRBFeedbackAction;
+}
+
+/**
  * The input required to add a test date/score to a 508/accessibility request
  */
 export interface CreateTestDateInput {
@@ -778,12 +800,34 @@ export interface UpdateSystemIntakeReviewDatesInput {
 }
 
 /**
+ * The data needed to update a TRB advice letter
+ */
+export interface UpdateTRBAdviceLetterInput {
+  trbRequestId: UUID;
+  meetingSummary?: string | null;
+  nextSteps?: string | null;
+  isFollowupRecommended?: boolean | null;
+  followupPoint?: string | null;
+}
+
+/**
  * Represents an EUA user who is included as an attendee for a TRB request
  */
 export interface UpdateTRBRequestAttendeeInput {
   id: UUID;
   component: string;
   role: PersonRole;
+}
+
+/**
+ * The data needed schedule a TRB consult meeting time
+ */
+export interface UpdateTRBRequestConsultMeetingTimeInput {
+  trbRequestId: UUID;
+  consultMeetingTime: Time;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  notes: string;
 }
 
 /**

@@ -28,6 +28,7 @@ export interface GetTRBRequestAttendees_trbRequest_attendees {
 
 export interface GetTRBRequestAttendees_trbRequest {
   __typename: "TRBRequest";
+  id: UUID;
   attendees: GetTRBRequestAttendees_trbRequest_attendees[];
 }
 

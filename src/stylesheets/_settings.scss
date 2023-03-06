@@ -1,27 +1,46 @@
-@use "sass:map";
-
 // USWDS Settings
-$theme-font-path: '~uswds/src/fonts';
-$theme-image-path: '~uswds/src/img';
-$theme-hero-image: '~uswds/src/img/hero.png';
 
-// Override defaultUSWDS maximum width settings
-$theme-header-max-width: 'desktop-lg';
-$theme-grid-container-max-width: 'desktop-lg';
-$theme-footer-max-width: 'desktop-lg';
+@use "uswds-core" with (
+    $theme-font-path: '~@uswds/uswds/fonts',
+    $theme-image-path: '~@uswds/uswds/img',
+    // $theme-hero-image: '~@uswds/uswds/img/hero.png',
 
-// Override default USWDS body font
-$theme-font-type-sans: 'public-sans';
+    // Override defaultUSWDS maximum width settings
+    $theme-header-max-width: 'desktop-lg',
+    $theme-grid-container-max-width: 'desktop-lg',
+    $theme-footer-max-width: 'desktop-lg',
 
-// Override default sorted header background color
-$theme-table-sorted-header-background-color: 'white';
+    // Override default USWDS body font
+    $theme-font-type-sans: 'public-sans',
 
-// All utility classes use !important
-$utilities-use-important: 'true';
+    // Override default sorted header background color
+    $theme-table-sorted-header-background-color: 'white',
 
-// All heading roles use sans
-$theme-font-role-heading: 'sans';
+    // All utility classes use !important
+    $utilities-use-important: 'true',
 
-// Flex responsive classes
-$align-items-settings: map.set($align-items-settings, "responsive", "true");
-$flex-settings: map.set($flex-settings, "responsive", "true");
+    // All heading roles use sans
+    $theme-font-role-heading: 'sans',
+
+    // // Disable showing updates and notifications logs
+    $theme-show-notifications: 'false',
+
+    // // Flex responsive classes
+    $align-items-settings: (
+        output: 'true',
+        responsive: 'true',
+        active: 'false',
+        focus: 'false',
+        hover: 'false',
+        visited: 'false',
+      ),
+
+    $flex-settings: (
+        output: 'true',
+        responsive: 'false',
+        active: 'false',
+        focus: 'false',
+        hover: 'false',
+        visited: 'false',
+      )
+);

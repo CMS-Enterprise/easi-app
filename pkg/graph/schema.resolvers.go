@@ -2835,6 +2835,16 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 	return authorInfo, nil
 }
 
+// Author is the resolver for the author field.
+func (r *tRBAdviceLetterResolver) Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error) {
+	authorInfo, err := r.service.FetchUserInfo(ctx, obj.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return authorInfo, nil
+}
+
 // Recommendations is the resolver for the recommendations field.
 func (r *tRBAdviceLetterResolver) Recommendations(ctx context.Context, obj *models.TRBAdviceLetter) ([]*models.TRBAdviceLetterRecommendation, error) {
 	return resolvers.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, r.store, obj.TRBRequestID)
@@ -2889,6 +2899,11 @@ func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRe
 // AdminNotes is the resolver for the adminNotes field.
 func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error) {
 	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, r.store, obj.ID)
+}
+
+// IsRecent is the resolver for the isRecent field.
+func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBRequest) (bool, error) {
+	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
 }
 
 // UserInfo is the resolver for the userInfo field.

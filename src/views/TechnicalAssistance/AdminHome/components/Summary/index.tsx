@@ -10,11 +10,9 @@ import {
   GridContainer,
   IconError
 } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import useTRBAttendees from 'hooks/useTRBAttendees';
 import { GetTrbRequest_trbRequest_taskStatuses as TRBRequestTaskStatuses } from 'queries/types/GetTrbRequest';
+import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
 
 type SummaryProps = {
@@ -25,6 +23,9 @@ type SummaryProps = {
   status: TRBRequestStatus;
   taskStatuses: TRBRequestTaskStatuses;
   trbLead: string | null;
+  requester: TRBAttendee;
+  requesterString?: string | null;
+  submissionDate: string;
 };
 
 export default function Summary({
@@ -34,41 +35,12 @@ export default function Summary({
   createdAt,
   status,
   taskStatuses,
-  trbLead
+  trbLead,
+  requester,
+  requesterString,
+  submissionDate
 }: SummaryProps) {
   const { t } = useTranslation('technicalAssistance');
-
-  /**
-   * Request submission date for summary
-   */
-  const submissionDate = createdAt
-    ? DateTime.fromISO(createdAt).toLocaleString(DateTime.DATE_FULL)
-    : '';
-
-  // Get requester object from request attendees
-  const {
-    data: { requester, loading }
-  } = useTRBAttendees(trbRequestId);
-
-  /**
-   * Requester info for display in summary box
-   */
-  const requesterString = useMemo(() => {
-    // If loading, return null
-    if (loading) return null;
-
-    // If requester component is not set, return name or EUA
-    if (!requester.component)
-      return requester?.userInfo?.commonName || requester?.userInfo?.euaUserId;
-
-    /** Requester component */
-    const requesterComponent = cmsDivisionsAndOffices.find(
-      object => object.name === requester.component
-    );
-
-    // Return requester name and component acronym
-    return `${requester?.userInfo?.commonName}, ${requesterComponent?.acronym}`;
-  }, [requester, loading]);
 
   /** Get current task status */
   const currentTaskStatus: keyof TRBRequestTaskStatuses = useMemo(() => {
@@ -77,7 +49,8 @@ export default function Summary({
       'formStatus',
       'feedbackStatus',
       'attendConsultPrepStatus',
-      'consultPrepStatus'
+      'consultPrepStatus',
+      'adviceLetterStatus'
     ] as (keyof TRBRequestTaskStatuses)[];
 
     /** Current step in the TRB request task list */
@@ -88,8 +61,8 @@ export default function Summary({
     );
 
     // Return current status
-    // If all task list steps have been completed, return attendConsultStatus
-    return currentStatus || 'attendConsultStatus';
+    // If all task list steps have been completed, return last step
+    return currentStatus || statusKeys[-1]!;
   }, [taskStatuses]);
 
   /** Corresponding task status text from translation file */

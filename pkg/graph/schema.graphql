@@ -1518,6 +1518,7 @@ type TRBRequest {
   consultMeetingTime: Time
   trbLead: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
+  isRecent: Boolean!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -2000,6 +2001,7 @@ Represents an advice letter for a TRB request
 type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
+  author: UserInfo!
   meetingSummary: String
   nextSteps: String
   isFollowupRecommended: Boolean

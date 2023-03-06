@@ -9,20 +9,23 @@ import {
 } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
-import { trbRequest } from 'data/mock/trbRequest';
-import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+import { trbRequestSummary } from 'data/mock/trbRequest';
+import { MessageProvider } from 'hooks/useMessage';
+import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 
 import AdminHome from '.';
 
+const trbRequestId = 'a4093ec7-caec-4e73-be3d-a8d6262bc61b';
+
 const getTrbRequestQuery = {
   request: {
-    query: GetTrbRequestQuery,
+    query: GetTrbRequestSummaryQuery,
     variables: {
-      id: trbRequest.id
+      id: trbRequestId
     }
   },
   result: {
-    data: { trbRequest }
+    data: { trbRequest: trbRequestSummary }
   }
 };
 
@@ -37,17 +40,19 @@ const defaultStore = mockStore({
   }
 });
 
-describe('TRB admin home wrapper', () => {
+describe('TRB admin home', () => {
   it('matches the snapshot', async () => {
     const { asFragment } = render(
-      <MemoryRouter initialEntries={[`/trb/${trbRequest.id}/request`]}>
-        <Provider store={defaultStore}>
-          <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
-            <Route path="/trb/:id/:activePage?">
-              <AdminHome />
-            </Route>
-          </MockedProvider>
-        </Provider>
+      <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
+        <MessageProvider>
+          <Provider store={defaultStore}>
+            <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
+              <Route path="/trb/:id/:activePage?">
+                <AdminHome />
+              </Route>
+            </MockedProvider>
+          </Provider>
+        </MessageProvider>
       </MemoryRouter>
     );
 
@@ -66,11 +71,10 @@ describe('TRB admin home wrapper', () => {
     'notes'
   ];
 
-  test.each(subpages)(
-    'renders submit action with and without email notification %j',
-    async subpage => {
-      const { getByTestId } = render(
-        <MemoryRouter initialEntries={[`/trb/${trbRequest.id}/${subpage}`]}>
+  test.each(subpages)('Renders each subpage', async subpage => {
+    const { findByTestId } = render(
+      <MemoryRouter initialEntries={[`/trb/${trbRequestId}/${subpage}`]}>
+        <MessageProvider>
           <Provider store={defaultStore}>
             <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
               <Route path="/trb/:id/:activePage?">
@@ -78,14 +82,11 @@ describe('TRB admin home wrapper', () => {
               </Route>
             </MockedProvider>
           </Provider>
-        </MemoryRouter>
-      );
+        </MessageProvider>
+      </MemoryRouter>
+    );
 
-      // Wait for page to load
-      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
-
-      // Check that correct subpage component is rendered
-      expect(getByTestId(`trb-admin-home__${subpage}`)).toBeInTheDocument();
-    }
-  );
+    const subPageContent = await findByTestId(`trb-admin-home__${subpage}`);
+    expect(subPageContent).toBeInTheDocument();
+  });
 });

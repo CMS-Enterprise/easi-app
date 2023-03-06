@@ -1,3 +1,5 @@
+@use 'uswds-core' as *;
+
 // Custom USWDS Button
 .easi-button {
   &__save {
@@ -47,6 +49,10 @@
       }
     }
   }
+}
+
+.easi-table--bottomless .usa-table tbody tr:last-of-type td {
+  border-bottom: 0 !important;
 }
 
 //  Global changes to usa-label
