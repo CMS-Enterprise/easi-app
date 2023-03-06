@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Column,
@@ -186,7 +186,9 @@ type TrbExistingRequestsTableProps = {
 
 function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
   const { t } = useTranslation('technicalAssistance');
-  /* tabs open & closed */
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
 
   // @ts-ignore
   const columns = useMemo<Column<TrbRequests>[]>(() => {
