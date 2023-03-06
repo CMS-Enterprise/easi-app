@@ -97,11 +97,15 @@ function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
   rows.map(row => prepareRow(row));
 
   return (
-    <div className="bg-accent-cool-lighter">
-      <h3>{t('adminTeamHome.newRequests.heading')}</h3>
-      <div>{t('adminTeamHome.newRequests.description')}</div>
+    <div className="bg-accent-cool-lighter padding-4">
+      <h3 className="margin-top-0 margin-bottom-1">
+        {t('adminTeamHome.newRequests.heading')}
+      </h3>
+      <div className="margin-bottom-1 line-height-body-5">
+        {t('adminTeamHome.newRequests.description')}
+      </div>
 
-      <div>
+      <div className="margin-bottom-4 line-height-body-5">
         <Button type="button" unstyled>
           {t('adminTeamHome.newRequests.downloadCsv')}
         </Button>
@@ -116,7 +120,7 @@ function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
-                  className="border-bottom-2px padding-left-0"
+                  className="border-bottom-2px bg-transparent"
                 >
                   <Button
                     type="button"
@@ -142,7 +146,7 @@ function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
                   return (
-                    <td {...cell.getCellProps()} className="padding-left-0">
+                    <td {...cell.getCellProps()} className="bg-transparent">
                       {cell.render('Cell')}
                     </td>
                   );
@@ -169,6 +173,7 @@ function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
               setPageSize={setPageSize}
               page={[]}
               className="desktop:grid-col-fill desktop:padding-bottom-0 desktop:margin-bottom-0"
+              transparentBg
             />
           </div>
 
@@ -180,7 +185,11 @@ function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
           </div>
         </>
       )}
-      {rows.length === 0 && t('adminTeamHome.newRequests.noRequests')}
+      {rows.length === 0 && (
+        <div className="padding-x-2 padding-bottom-1 border-bottom-1px">
+          {t('adminTeamHome.newRequests.noRequests')}
+        </div>
+      )}
     </div>
   );
 }
@@ -264,20 +273,26 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
 
   return (
     <div>
-      <h3>{t('adminTeamHome.existingRequests.heading')}</h3>
-      <div>{t('adminTeamHome.existingRequests.description')}</div>
+      <h3 className="margin-top-0 margin-bottom-1">
+        {t('adminTeamHome.existingRequests.heading')}
+      </h3>
+      <div className="margin-bottom-1 line-height-body-5">
+        {t('adminTeamHome.existingRequests.description')}
+      </div>
 
-      <div>
+      <div className="margin-bottom-4 line-height-body-5">
         <Button type="button" unstyled>
           {t('adminTeamHome.existingRequests.downloadCsv')}
         </Button>
       </div>
 
+      <div className="border-bottom-1px margin-bottom-4" />
+
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
         tableID={t('systemTable.id')}
         tableName={t('systemTable.title')}
-        className="margin-bottom-4"
+        className="margin-bottom-5"
       />
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
@@ -289,7 +304,7 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
-                  className="border-bottom-2px padding-left-0"
+                  className="border-bottom-2px"
                 >
                   <Button
                     type="button"
@@ -315,9 +330,7 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
                   return (
-                    <td {...cell.getCellProps()} className="padding-left-0">
-                      {cell.render('Cell')}
-                    </td>
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                   );
                 })}
               </tr>
@@ -358,8 +371,11 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
           </div>
         </>
       )}
-      {rows.length === 0 &&
-        t(`adminTeamHome.existingRequests.noRequests.${activeTable}`)}
+      {rows.length === 0 && (
+        <div className="padding-x-2 padding-bottom-1 border-bottom-1px">
+          {t(`adminTeamHome.existingRequests.noRequests.${activeTable}`)}
+        </div>
+      )}
     </div>
   );
 }
@@ -379,25 +395,31 @@ function TeamHome({}: TeamHomeProps) {
 
   return (
     <GridContainer className="width-full">
-      <PageHeading>{t('heading')}</PageHeading>
-      <div>{t('adminTeamHome.description')}</div>
+      <PageHeading className="margin-bottom-1">{t('heading')}</PageHeading>
+      <div className="font-body-lg">{t('adminTeamHome.description')}</div>
       {loading && <PageLoading />}
-      <ul>
-        <li>{t('adminTeamHome.jumpToExitingRequests')}</li>
-        <li>{t('adminTeamHome.downloadAllTrbRequests')}</li>
-        <li>
-          <Button type="button" unstyled>
-            {t('adminTeamHome.switchToDifferentAdminView')}
-          </Button>
-        </li>
-        <li>{t('adminTeamHome.submitYourOwnRequest')}</li>
-      </ul>
       {Array.isArray(trbRequests) && (
         <>
-          <TrbNewRequestsTable requests={trbRequests.filter(d => d.isRecent)} />
-          <TrbExistingRequestsTable
-            requests={trbRequests.filter(d => !d.isRecent)}
-          />
+          <ul className="usa-list--unstyled trb-action-options margin-top-1 line-height-body-5">
+            <li>{t('adminTeamHome.jumpToExitingRequests')}</li>
+            <li>{t('adminTeamHome.downloadAllTrbRequests')}</li>
+            <li>
+              <Button type="button" unstyled>
+                {t('adminTeamHome.switchToDifferentAdminView')}
+              </Button>
+            </li>
+            <li>{t('adminTeamHome.submitYourOwnRequest')}</li>
+          </ul>
+          <div className="margin-top-6">
+            <TrbNewRequestsTable
+              requests={trbRequests.filter(d => d.isRecent)}
+            />
+          </div>
+          <div className="margin-top-6">
+            <TrbExistingRequestsTable
+              requests={trbRequests.filter(d => !d.isRecent)}
+            />
+          </div>
         </>
       )}
     </GridContainer>
