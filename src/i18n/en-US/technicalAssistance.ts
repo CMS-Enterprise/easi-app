@@ -700,6 +700,16 @@ const technicalAssistance = {
       description:
         'Use the tabs below to navigate between closed requests and those that are open and have been reviewed and assigned.',
       downloadCsv: 'Download all existing requests (csv)',
+      tabs: {
+        label: 'Request Repository Table Navigation',
+        selected: '{{name}} selected',
+        open: {
+          name: 'Open Requests'
+        },
+        closed: {
+          name: 'Closed Requests'
+        }
+      },
       noRequests: {
         open:
           'There are currently no open requests that are in progress. Review any new requests above and assign a TRB lead.',

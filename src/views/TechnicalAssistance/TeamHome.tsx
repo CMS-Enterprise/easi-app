@@ -10,6 +10,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Button, GridContainer, Table } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -201,7 +202,6 @@ type TrbExistingRequestsTableProps = {
 function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
   const { t } = useTranslation('technicalAssistance');
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
 
   // @ts-ignore
@@ -254,7 +254,11 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),
-      data: requests,
+      data: useMemo(
+        () =>
+          requests.filter((d: any) => d.status.toLowerCase() === activeTable),
+        [activeTable, requests]
+      ),
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {
@@ -286,7 +290,50 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
         </Button>
       </div>
 
-      <div className="border-bottom-1px margin-bottom-4" />
+      <nav aria-label={t('adminTeamHome.existingRequests.tabs.label')}>
+        <ul className="easi-request-repo__tab-list margin-bottom-4">
+          <li
+            className={classnames('easi-request-repo__tab', {
+              'easi-request-repo__tab--active': activeTable === 'open'
+            })}
+          >
+            <button
+              type="button"
+              className="easi-request-repo__tab-btn"
+              onClick={() => setActiveTable('open')}
+              aria-label={
+                activeTable === 'open'
+                  ? t('adminTeamHome.existingRequests.tabs.selected', {
+                      name: t('adminTeamHome.existingRequests.tabs.open.name')
+                    })
+                  : ''
+              }
+            >
+              {t('adminTeamHome.existingRequests.tabs.open.name')}
+            </button>
+          </li>
+          <li
+            className={classnames('easi-request-repo__tab', {
+              'easi-request-repo__tab--active': activeTable === 'closed'
+            })}
+          >
+            <button
+              type="button"
+              className="easi-request-repo__tab-btn"
+              onClick={() => setActiveTable('closed')}
+              aria-label={
+                activeTable === 'closed'
+                  ? t('adminTeamHome.existingRequests.tabs.selected', {
+                      name: t('adminTeamHome.existingRequests.tabs.closed.name')
+                    })
+                  : ''
+              }
+            >
+              {t('adminTeamHome.existingRequests.tabs.closed.name')}
+            </button>
+          </li>
+        </ul>
+      </nav>
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
