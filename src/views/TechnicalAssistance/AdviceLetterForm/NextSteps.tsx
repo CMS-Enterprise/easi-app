@@ -251,6 +251,7 @@ const NextSteps = ({
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
+        submit={submit}
         border={false}
       />
     </Form>
