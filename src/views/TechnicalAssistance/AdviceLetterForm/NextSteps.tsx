@@ -50,6 +50,7 @@ const NextSteps = ({
   const {
     handleSubmit,
     control,
+    watch,
     formState: { isSubmitting, isDirty }
   } = useForm<AdviceLetterNextSteps>({
     resolver: yupResolver(nextStepsSchema),
@@ -239,7 +240,10 @@ const NextSteps = ({
             )
         }}
         next={{
-          disabled: isSubmitting,
+          disabled:
+            isSubmitting ||
+            // Disable button if followupPoint field is visible but not filled out
+            (!!watch().isFollowupRecommended && !watch().followupPoint),
           onClick: () =>
             submit(() =>
               history.push(`/trb/${trbRequestId}/advice/internal-review`)

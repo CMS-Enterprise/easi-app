@@ -150,10 +150,7 @@ const Summary = ({
           onClick: () => history.push(`/trb/${trbRequestId}/advice`)
         }}
         next={{
-          disabled:
-            isSubmitting ||
-            !watch('meetingSummary') ||
-            watch('meetingSummary')?.length === 0,
+          disabled: isSubmitting || !watch('meetingSummary'),
           onClick: () =>
             submit(() =>
               history.push(`/trb/${trbRequestId}/advice/recommendations`)
