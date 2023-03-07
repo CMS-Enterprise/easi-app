@@ -8,16 +8,34 @@ const home = {
     heading: '508 Requests',
     newRequest: 'Add a new request'
   },
+  actionTitle: 'Available Services',
   actions: {
-    title: 'Governance Services',
-    itg: {
+    ITGov: {
       heading: 'IT Governance',
-      body: 'Includes applying for a lifecycle ID, and recompetes'
+      body:
+        'Includes processes for applying for a Lifecycle ID and decomissioning a system.',
+      learnMore: 'Learn more about IT Governance',
+      link: '/system/making-a-request',
+      button: 'Start an IT Governance request',
+      buttonLink: '/system/request-type'
     },
     '508': {
       heading: 'Section 508',
       body:
-        'Learn about the process and make a request for 508 testing of your application'
+        'Request 508 testing for your application or system and learn about the process.',
+      learnMore: 'Learn more about 508 testing',
+      link: '/508/making-a-request',
+      button: 'Start a 508 testing request',
+      buttonLink: '/508/testing-overview?continue=true'
+    },
+    TRB: {
+      heading: 'Technical Assistance',
+      body:
+        'Get help, feedback, and guidance from the Technical Review Board (TRB).',
+      learnMore: 'Learn more about the TRB',
+      link: '/trb',
+      button: 'Start a TRB request',
+      buttonLink: '/trb/start'
     }
   },
   requestsTable: {
@@ -26,9 +44,9 @@ const home = {
     title: 'Request Table',
     breadcrumb: {
       home: 'Home',
-      table: 'My governance requests'
+      table: 'My requests'
     },
-    heading: 'My governance requests',
+    heading: 'My requests',
     headers: {
       name: 'Request name',
       type: 'Governance',

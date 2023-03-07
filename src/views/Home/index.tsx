@@ -2,10 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Alert } from '@trussworks/react-uswds';
+import { Alert, Grid } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import LinkCard from 'components/LinkCard';
+import LinkCard, { LinkRequestType } from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import RequestRepository from 'components/RequestRepository';
@@ -24,6 +24,10 @@ const Home = () => {
   const flags = useFlags();
 
   const { message } = useMessage();
+
+  const requestTypes: Record<LinkRequestType, any> = t('home:actions', {
+    returnObjects: true
+  });
 
   const renderView = () => {
     if (isUserSet) {
@@ -66,28 +70,27 @@ const Home = () => {
                 {t('home:subtitle')}
               </p>
               <hr className="margin-bottom-4" aria-hidden />
-              <h2 className="margin-bottom-2">{t('home:actions.title')}</h2>
-              <div className="display-flex flex-row">
-                <LinkCard
-                  link="/system/making-a-request"
-                  heading={t('home:actions.itg.heading')}
-                  className="margin-right-2"
-                >
-                  {t('home:actions.itg.body')}
-                </LinkCard>
-                <LinkCard
-                  link="/508/making-a-request"
-                  heading={t('home:actions.508.heading')}
-                >
-                  {t('home:actions.508.body')}
-                </LinkCard>
-              </div>
+              <h2 className="margin-bottom-2">{t('home:actionTitle')}</h2>
+              <Grid row gap={2}>
+                {[
+                  { ITGov: requestTypes.ITGov },
+                  { TRB: requestTypes.TRB },
+                  { 508: requestTypes[508] }
+                ].map(requestType => (
+                  <Grid tablet={{ col: 4 }} key={Object.keys(requestType)[0]}>
+                    <LinkCard
+                      type={Object.keys(requestType)[0] as LinkRequestType}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+
               <h3 className="margin-top-4">
                 {t('home:requestsTable.heading')}
               </h3>
             </div>
             <div className="tablet:grid-col-12">
-              <Table defaultPageSize={50} />
+              <Table defaultPageSize={10} />
             </div>
           </div>
         );

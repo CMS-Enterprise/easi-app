@@ -304,25 +304,30 @@ const Table = ({
       </UswdsTable>
 
       <div className="grid-row grid-gap grid-gap-lg">
-        <TablePagination
-          gotoPage={gotoPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
-          canNextPage={canNextPage}
-          pageIndex={state.pageIndex}
-          pageOptions={pageOptions}
-          canPreviousPage={canPreviousPage}
-          pageCount={pageCount}
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-          page={[]}
-          className="desktop:grid-col-fill"
-        />
-        <TablePageSize
-          className="desktop:grid-col-auto"
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-        />
+        {data.length > 10 && (
+          <TablePagination
+            gotoPage={gotoPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            canNextPage={canNextPage}
+            pageIndex={state.pageIndex}
+            pageOptions={pageOptions}
+            canPreviousPage={canPreviousPage}
+            pageCount={pageCount}
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+            page={[]}
+            className="desktop:grid-col-fill"
+          />
+        )}
+
+        {data.length > 10 && (
+          <TablePageSize
+            className="desktop:grid-col-auto"
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+          />
+        )}
       </div>
 
       <div
