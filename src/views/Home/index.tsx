@@ -43,14 +43,19 @@ const Home = () => {
   });
 
   const { loading: loadingSystems, data: systems } = useQuery<GetCedarSystems>(
-    GetCedarSystemsQuery
+    GetCedarSystemsQuery,
+    {
+      skip: !user.isBasicUser(userGroups, flags)
+    }
   );
 
   const {
     loading: loadingBookmarks,
     data: systemsBookmarks,
     refetch: refetchBookmarks
-  } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
+  } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery, {
+    skip: !user.isBasicUser(userGroups, flags)
+  });
 
   const systemsTableData = (systems?.cedarSystems ?? []) as CedarSystem[];
   const bookmarks: CedarSystemBookmark[] =
