@@ -306,7 +306,7 @@ export const meetingSummarySchema = yup.object({
 
 export const nextStepsSchema = yup.object({
   nextSteps: yup.string().nullable(),
-  isFollowupRecommended: yup.boolean(),
+  isFollowupRecommended: yup.boolean().nullable(),
   followupPoint: yup
     .string()
     .nullable()
