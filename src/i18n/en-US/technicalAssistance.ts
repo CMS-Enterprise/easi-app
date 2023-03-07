@@ -105,7 +105,9 @@ const technicalAssistance = {
     isFollowupRecommended: 'Should the team return for a follow-up session?',
     followupYes: 'Yes, a follow-up is recommended',
     notNecessary: 'Not necessary',
-    followupHelpText: 'Examples: in 6 months, when development is complete'
+    followupHelpText: 'Examples: in 6 months, when development is complete',
+    error:
+      'There was an issue saving your advice letter. Please try again, and if the problem persists, try again later.'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',

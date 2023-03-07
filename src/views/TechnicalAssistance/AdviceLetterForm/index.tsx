@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
+  Alert,
   Button,
   Grid,
   GridContainer,
@@ -17,7 +18,7 @@ import {
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
-import { StepComponentProps } from 'types/technicalAssistance';
+import { FormAlertObject, StepComponentProps } from 'types/technicalAssistance';
 import NotFound from 'views/NotFound';
 
 import Breadcrumbs from '../Breadcrumbs';
@@ -92,6 +93,8 @@ const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
 
+  const [formAlert, setFormAlert] = useState<FormAlertObject | undefined>();
+
   // TRB request query
   const { data, loading } = useQuery<
     GetTrbAdviceLetter,
@@ -142,7 +145,9 @@ const AdviceLetterForm = () => {
             description: step.description,
             completed: index < currentStepIndex,
             // TODO: onClick prop
-            onClick: () => null
+            onClick: () => {
+              history.push(`/trb/${id}/advice/${adviceFormSteps[index].slug}`);
+            }
           }))}
           breadcrumbBar={
             <Breadcrumbs
@@ -158,6 +163,13 @@ const AdviceLetterForm = () => {
           }
           hideSteps={
             adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
+          }
+          errorAlert={
+            formAlert && (
+              <Alert type={formAlert.type} className="margin-top-3" slim>
+                {formAlert.message}
+              </Alert>
+            )
           }
         >
           <Button
@@ -184,6 +196,7 @@ const AdviceLetterForm = () => {
               <currentFormStep.component
                 trbRequestId={id}
                 adviceLetter={adviceLetter}
+                setFormAlert={setFormAlert}
                 recommendations={adviceLetter?.recommendations || []}
               />
             )

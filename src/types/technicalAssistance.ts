@@ -93,7 +93,13 @@ export type UpdateAdviceLetterType = (
   redirectUrl?: string
 ) => Promise<void>;
 
+export type FormAlertObject = {
+  type: 'success' | 'warning' | 'error' | 'info';
+  message: string;
+};
+
 export type StepComponentProps = {
   trbRequestId: string;
   adviceLetter: AdviceLetter;
+  setFormAlert: (alert: FormAlertObject | undefined) => void;
 };

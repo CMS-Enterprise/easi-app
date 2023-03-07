@@ -21,7 +21,11 @@ import { meetingSummarySchema } from 'validations/trbRequestSchema';
 
 import Pager from '../RequestForm/Pager';
 
-const Summary = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
+const Summary = ({
+  trbRequestId,
+  adviceLetter,
+  setFormAlert
+}: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { meetingSummary } = adviceLetter;
@@ -49,40 +53,37 @@ const Summary = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
   const updateForm = useCallback(
     (url: string) => {
       if (!isDirty) {
-        history.push(url);
-      } else {
-        handleSubmit(
-          formData => {
-            update({
-              variables: {
-                input: {
-                  trbRequestId,
-                  ...formData
-                }
-              }
-            });
-          },
-          () => {
-            // Need to throw from this error handler so that the promise is rejected
-            throw new Error('Invalid meeting summary');
-          }
-        )().then(
-          () => history.push(url),
-          e => {
-            // setFormAlert({
-            //   type: 'error',
-            //   heading: t('errors.somethingWrong'),
-            //   message: t('basic.errors.submit')
-            // });
-
-            // TODO: Error handling
-            // eslint-disable-next-line no-console
-            console.error(e);
-          }
-        );
+        return history.push(url);
       }
+
+      /** Submit form and execute mutation */
+      const submitForm = handleSubmit(
+        async formData => {
+          await update({
+            variables: {
+              input: {
+                trbRequestId,
+                ...formData
+              }
+            }
+          });
+        },
+        () => {
+          throw new Error('Invalid field submission');
+        }
+      );
+
+      return submitForm().then(
+        () => history.push(url),
+        e =>
+          /** Set form alert if form update or mutation fails */
+          setFormAlert({
+            type: 'error',
+            message: t('adviceLetterForm.error')
+          })
+      );
     },
-    [handleSubmit, isDirty, trbRequestId, history, update]
+    [handleSubmit, isDirty, trbRequestId, history, update, setFormAlert, t]
   );
 
   return (
