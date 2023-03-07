@@ -100,7 +100,9 @@ const Home = () => {
 
               <hr className="margin-bottom-3" aria-hidden />
 
-              <h2 className="margin-y-2">{t('home:actionTitle')}</h2>
+              <h2 className="margin-top-2 margin-bottom-1">
+                {t('home:actionTitle')}
+              </h2>
 
               <Grid row gap={2}>
                 {[
@@ -110,6 +112,7 @@ const Home = () => {
                 ].map(requestType => (
                   <Grid tablet={{ col: 4 }} key={Object.keys(requestType)[0]}>
                     <LinkCard
+                      className="margin-top-1"
                       type={Object.keys(requestType)[0] as LinkRequestType}
                     />
                   </Grid>
