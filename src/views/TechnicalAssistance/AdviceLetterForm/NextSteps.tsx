@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -60,7 +60,7 @@ const NextSteps = ({
     }
   });
 
-  /** Update advice letter meeting summary */
+  /** Submit next steps fields and update advice letter */
   const submit: StepSubmit = useCallback(
     callback => {
       /** Submits form and updates advice letter */
@@ -123,6 +123,14 @@ const NextSteps = ({
       id="trbAdviceNextSteps"
       className="maxw-tablet"
     >
+      {/* Required fields help text */}
+      <HelpText className="margin-top-1 margin-bottom-1">
+        <Trans
+          i18nKey="technicalAssistance:requiredFields"
+          components={{ red: <span className="text-red" /> }}
+        />
+      </HelpText>
+
       {/* Next steps */}
       <Controller
         name="nextSteps"

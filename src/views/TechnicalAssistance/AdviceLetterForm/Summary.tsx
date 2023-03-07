@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, Form, FormGroup } from '@trussworks/react-uswds';
 
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
@@ -110,7 +111,15 @@ const Summary = ({
       id="trbAdviceSummary"
       className="maxw-tablet"
     >
-      {/** Meeting summary field */}
+      {/* Required fields help text */}
+      <HelpText className="margin-top-1 margin-bottom-1">
+        <Trans
+          i18nKey="technicalAssistance:requiredFields"
+          components={{ red: <span className="text-red" /> }}
+        />
+      </HelpText>
+
+      {/* Meeting summary field */}
       <Controller
         name="meetingSummary"
         control={control}
@@ -132,7 +141,7 @@ const Summary = ({
         }}
       />
 
-      {/** Form pager buttons */}
+      {/* Form pager buttons */}
       <Pager
         className="margin-top-4"
         back={{
