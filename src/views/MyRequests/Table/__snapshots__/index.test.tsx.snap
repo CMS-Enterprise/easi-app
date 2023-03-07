@@ -55,7 +55,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
     >
       <span>
         <div>
-          Showing 1-4 of 4 results 
+          Showing 1-5 of 5 results 
         </div>
       </span>
     </div>
@@ -256,6 +256,44 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
         <tbody
           role="rowgroup"
         >
+          <tr
+            role="row"
+          >
+            <th
+              role="cell"
+              scope="row"
+              style="padding-left: 0px;"
+            >
+              <a
+                class="usa-link"
+                href="/"
+              >
+                My excellent question
+              </a>
+            </th>
+            <td
+              role="cell"
+              style="width: 150px; padding-left: 0px;"
+            >
+              TRB
+            </td>
+            <td
+              role="cell"
+              style="width: 150px; padding-left: 0px;"
+            >
+              03/07/2023
+            </td>
+            <td
+              role="cell"
+              style="width: 200px; padding-left: 0px;"
+            />
+            <td
+              role="cell"
+              style="width: 150px; padding-left: 0px;"
+            >
+              None
+            </td>
+          </tr>
           <tr
             role="row"
           >
