@@ -1,7 +1,7 @@
 const home = {
   title: 'Welcome to EASi',
   subtitle:
-    'The place to find CMS IT governance and Section 508 services as well as comprehensive information about CMS systems.',
+    'The place to find CMS IT Governance, assistance with technical issues, Section 508 services, as well as comprehensive information about CMS systems.',
   startNow: 'Start now',
   signIn: 'Sign in to start',
   accessibility: {
