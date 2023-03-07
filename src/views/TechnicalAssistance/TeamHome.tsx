@@ -555,7 +555,18 @@ function TeamHome({}: TeamHomeProps) {
         <>
           <ul className="usa-list--unstyled trb-action-options margin-top-1 line-height-body-5">
             <li>
-              <span>{t('adminTeamHome.jumpToExitingRequests')}</span>
+              <Button
+                type="button"
+                unstyled
+                className="usa-link"
+                onClick={() => {
+                  document
+                    .querySelector('.trb-existing-requests-table')
+                    ?.scrollIntoView();
+                }}
+              >
+                {t('adminTeamHome.jumpToExitingRequests')}
+              </Button>
             </li>
             <li>
               <CsvDownloadLink
@@ -565,19 +576,19 @@ function TeamHome({}: TeamHomeProps) {
                 {t('adminTeamHome.downloadAllTrbRequests')}
               </CsvDownloadLink>
             </li>
+            {/* <li>{t('adminTeamHome.switchToDifferentAdminView')}</li> post-mvp */}
             <li>
-              <Button type="button" unstyled>
-                {t('adminTeamHome.switchToDifferentAdminView')}
-              </Button>
+              <UswdsReactLink to="/trb/start">
+                {t('adminTeamHome.submitYourOwnRequest')}
+              </UswdsReactLink>
             </li>
-            <li>{t('adminTeamHome.submitYourOwnRequest')}</li>
           </ul>
           <div className="margin-top-6">
             <TrbNewRequestsTable
               requests={trbRequests.filter(d => d.isRecent)}
             />
           </div>
-          <div className="margin-top-6">
+          <div className="margin-top-6 trb-existing-requests-table">
             <TrbExistingRequestsTable
               requests={trbRequests.filter(d => !d.isRecent)}
             />
