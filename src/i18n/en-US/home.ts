@@ -38,7 +38,8 @@ const home = {
     },
     types: {
       ACCESSIBILITY_REQUEST: 'Section 508',
-      GOVERNANCE_REQUEST: 'IT Governance'
+      GOVERNANCE_REQUEST: 'IT Governance',
+      TRB: 'TRB'
     },
     defaultName: 'Draft',
     defaultSubmittedAt: 'Not submitted',

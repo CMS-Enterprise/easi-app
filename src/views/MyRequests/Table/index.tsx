@@ -43,7 +43,12 @@ const Table = ({
   hiddenColumns,
   defaultPageSize = 10
 }: myRequestsTableProps) => {
-  const { t } = useTranslation(['home', 'intake', 'accessibility']);
+  const { t } = useTranslation([
+    'home',
+    'intake',
+    'accessibility',
+    'technicalAssistance'
+  ]);
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
     GetRequestsVariables
@@ -51,6 +56,8 @@ const Table = ({
     variables: { first: 20 },
     fetchPolicy: 'cache-and-network'
   });
+
+  console.log(tableData);
 
   const columns: any = useMemo(() => {
     return [
@@ -112,6 +119,8 @@ const Table = ({
               if (row.original.lcid) {
                 return `${value}: ${row.original.lcid}`;
               }
+              return value;
+            case t(`requestsTable.types.TRB`):
               return value;
             default:
               return '';
