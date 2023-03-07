@@ -1,4 +1,7 @@
+import React from 'react';
+
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
+import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
 import { PersonRole } from './graphql-global-types';
 
@@ -101,5 +104,14 @@ export type FormAlertObject = {
 export type StepComponentProps = {
   trbRequestId: string;
   adviceLetter: AdviceLetter;
-  setFormAlert: (alert: FormAlertObject | undefined) => void;
+  /**
+   * Set the current form step component submit handler
+   * so that in can be used in other places like the header.
+   * Form step components need to reassign the handler.
+   */
+  setStepSubmit: React.Dispatch<React.SetStateAction<StepSubmit | null>>;
+  /** Set to update the submitting state from step components to the parent request form */
+  setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  /** Set a form level alert message from within step components */
+  setFormAlert: React.Dispatch<React.SetStateAction<FormAlertObject | null>>;
 };

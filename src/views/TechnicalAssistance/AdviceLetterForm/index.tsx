@@ -22,6 +22,7 @@ import { FormAlertObject, StepComponentProps } from 'types/technicalAssistance';
 import NotFound from 'views/NotFound';
 
 import Breadcrumbs from '../Breadcrumbs';
+import { StepSubmit } from '../RequestForm';
 
 import InternalReview from './InternalReview';
 import NextSteps from './NextSteps';
@@ -81,19 +82,15 @@ const adviceFormSteps: AdviceFormStep[] = [
  * TRB request admin advice letter form
  */
 const AdviceLetterForm = () => {
+  const { t } = useTranslation('technicalAssistance');
+  const history = useHistory();
+
   // Get url params
   const { id, formStep, subpage } = useParams<{
     id: string;
     formStep: string;
     subpage: string;
   }>();
-
-  const history = useHistory();
-
-  const { t } = useTranslation('technicalAssistance');
-  const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
-
-  const [formAlert, setFormAlert] = useState<FormAlertObject | undefined>();
 
   // TRB request query
   const { data, loading } = useQuery<
@@ -104,6 +101,16 @@ const AdviceLetterForm = () => {
   });
   /** Current trb request */
   const trbRequest = data?.trbRequest;
+
+  // References to the submit handler and submitting state of the current form step
+  const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
+  const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
+
+  // Form level alerts from step components
+  const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
+
+  /** Form steps translated text object */
+  const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
 
   /** Index of current form step - will return -1 if invalid URL */
   const currentStepIndex: number = adviceFormSteps.findIndex(
@@ -144,9 +151,15 @@ const AdviceLetterForm = () => {
             ),
             description: step.description,
             completed: index < currentStepIndex,
-            // TODO: onClick prop
             onClick: () => {
-              history.push(`/trb/${id}/advice/${adviceFormSteps[index].slug}`);
+              if (!isStepSubmitting && currentStepIndex !== index) {
+                // Save and go to step url
+                stepSubmit?.(() =>
+                  history.push(
+                    `/trb/${id}/advice/${adviceFormSteps[index].slug}`
+                  )
+                );
+              }
             }
           }))}
           breadcrumbBar={
@@ -172,20 +185,22 @@ const AdviceLetterForm = () => {
             )
           }
         >
+          {/* Save and return to request button */}
           <Button
             type="button"
             unstyled
-            // TODO: Disabled prop
-            // disabled={isSubmitting}
-            // TODO: Save on click
-            onClick={() => history.push(`/trb/${id}/advice`)}
+            disabled={isStepSubmitting}
+            onClick={() =>
+              stepSubmit?.(() => history.push(`/trb/${id}/advice`))
+            }
           >
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t('adviceLetterForm.returnToRequest')}
           </Button>
         </StepHeader>
       )}
-      {/** Step component */}
+
+      {/* Form page content */}
       <GridContainer>
         <Grid>
           {
@@ -193,10 +208,13 @@ const AdviceLetterForm = () => {
             adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET ? (
               <p>Cannot start yet</p>
             ) : (
+              /* Current form step component */
               <currentFormStep.component
                 trbRequestId={id}
                 adviceLetter={adviceLetter}
                 setFormAlert={setFormAlert}
+                setStepSubmit={setStepSubmit}
+                setIsStepSubmitting={setIsStepSubmitting}
                 recommendations={adviceLetter?.recommendations || []}
               />
             )

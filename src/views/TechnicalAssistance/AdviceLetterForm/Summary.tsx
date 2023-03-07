@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, Form, FormGroup } from '@trussworks/react-uswds';
 
@@ -19,12 +19,15 @@ import {
 } from 'types/technicalAssistance';
 import { meetingSummarySchema } from 'validations/trbRequestSchema';
 
+import { StepSubmit } from '../RequestForm';
 import Pager from '../RequestForm/Pager';
 
 const Summary = ({
   trbRequestId,
   adviceLetter,
-  setFormAlert
+  setFormAlert,
+  setStepSubmit,
+  setIsStepSubmitting
 }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -50,41 +53,56 @@ const Summary = ({
   });
 
   /** Update advice letter meeting summary */
-  const updateForm = useCallback(
-    (url: string) => {
-      if (!isDirty) {
-        return history.push(url);
-      }
-
-      /** Submit form and execute mutation */
+  const submit: StepSubmit = useCallback(
+    callback => {
+      /** Form submission and UpdateTrbAdviceLetter mutation */
       const submitForm = handleSubmit(
         async formData => {
-          await update({
-            variables: {
-              input: {
-                trbRequestId,
-                ...formData
+          if (isDirty) {
+            await update({
+              variables: {
+                input: {
+                  trbRequestId,
+                  ...formData
+                }
               }
-            }
-          });
+            });
+          }
         },
+        // Throw error to cause promise to fail
         () => {
           throw new Error('Invalid field submission');
         }
       );
 
+      // Submit form
       return submitForm().then(
-        () => history.push(url),
-        e =>
-          /** Set form alert if form update or mutation fails */
-          setFormAlert({
-            type: 'error',
-            message: t('adviceLetterForm.error')
-          })
+        // If successful, set error to null and execute callback
+        () => {
+          setFormAlert(null);
+          callback?.();
+        },
+        // If apollo error, set form alert error message
+        e => {
+          if (e instanceof ApolloError) {
+            setFormAlert({
+              type: 'error',
+              message: t('adviceLetterForm.error')
+            });
+          }
+        }
       );
     },
-    [handleSubmit, isDirty, trbRequestId, history, update, setFormAlert, t]
+    [handleSubmit, isDirty, trbRequestId, update, setFormAlert, t]
   );
+
+  useEffect(() => {
+    setStepSubmit(() => submit);
+  }, [setStepSubmit, submit]);
+
+  useEffect(() => {
+    setIsStepSubmitting(isSubmitting);
+  }, [setIsStepSubmitting, isSubmitting]);
 
   return (
     <Form
@@ -120,12 +138,17 @@ const Summary = ({
         back={{
           outline: true,
           text: t('button.cancel'),
-          onClick: () => history.push(`trb/${trbRequestId}/advice`)
+          onClick: () => history.push(`/trb/${trbRequestId}/advice`)
         }}
         next={{
-          disabled: isSubmitting || watch('meetingSummary')?.length === 0,
+          disabled:
+            isSubmitting ||
+            !watch('meetingSummary') ||
+            watch('meetingSummary')?.length === 0,
           onClick: () =>
-            updateForm(`/trb/${trbRequestId}/advice/recommendations`)
+            submit(() =>
+              history.push(`/trb/${trbRequestId}/advice/recommendations`)
+            )
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
