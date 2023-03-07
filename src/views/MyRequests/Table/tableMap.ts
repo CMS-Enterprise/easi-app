@@ -17,7 +17,7 @@ type MergedRequests = GetRequestsType | GetTRBRequestsType;
 
 // Type guard for checking request is of type GetTRBRequestsType/TRB
 // https://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types
-const isTRBRequestType = (
+export const isTRBRequestType = (
   request: MergedRequests
 ): request is GetTRBRequestsType => {
   /* eslint no-underscore-dangle: 0 */

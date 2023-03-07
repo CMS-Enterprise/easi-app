@@ -28,7 +28,7 @@ import {
   sortColumnValues
 } from 'utils/tableSort';
 
-import tableMap from './tableMap';
+import tableMap, { isTRBRequestType } from './tableMap';
 
 import '../index.scss';
 
@@ -57,8 +57,6 @@ const Table = ({
     fetchPolicy: 'cache-and-network'
   });
 
-  console.log(tableData);
-
   const columns: any = useMemo(() => {
     return [
       {
@@ -66,16 +64,22 @@ const Table = ({
         accessor: 'name',
         Cell: ({ row, value }: any) => {
           let link: string;
-          switch (row.original.type) {
-            case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
-              link = `/508/requests/${row.original.id}`;
-              break;
-            case t('requestsTable.types.GOVERNANCE_REQUEST'):
-              link = `/governance-task-list/${row.original.id}`;
-              break;
-            default:
-              link = '/';
+
+          if (isTRBRequestType(row.original)) {
+            link = `/trb/task-list/${row.original.id}`;
+          } else {
+            switch (row.original.type) {
+              case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
+                link = `/508/requests/${row.original.id}`;
+                break;
+              case t('requestsTable.types.GOVERNANCE_REQUEST'):
+                link = `/governance-task-list/${row.original.id}`;
+                break;
+              default:
+                link = '/';
+            }
           }
+
           return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
         },
         width: '220px',
