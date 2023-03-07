@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import {
   CellProps,
@@ -10,8 +11,14 @@ import {
   useTable
 } from 'react-table';
 import { useQuery } from '@apollo/client';
-import { Button, GridContainer, Table } from '@trussworks/react-uswds';
+import {
+  Button,
+  GridContainer,
+  IconFileDownload,
+  Table
+} from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import i18next from 'i18next';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -44,6 +51,55 @@ function SubmissionDateCell({
 function NameCell({ value, row }: CellProps<TrbRequests, TrbRequests['name']>) {
   return (
     <UswdsReactLink to={`/trb/${row.original.id}`}>{value}</UswdsReactLink>
+  );
+}
+export const trbRequestsCsvHeader = [
+  i18next.t<string>('technicalAssistance:table.header.submissionDate'),
+  i18next.t<string>('technicalAssistance:table.header.requestName'),
+  i18next.t<string>('technicalAssistance:adminHome.requester'),
+  i18next.t<string>('technicalAssistance:adminHome.requestType'),
+  i18next.t<string>('technicalAssistance:adminHome.trbLead'),
+  i18next.t<string>('technicalAssistance:adminHome.status'),
+  i18next.t<string>('technicalAssistance:table.header.trbConsultDate')
+] as const;
+
+export function getTrbRequestDataAsCsv(requests: TrbRequests[]) {
+  const rows = requests.map(r => {
+    const submissionDate = r.form.submittedAt
+      ? formatDateLocal(r.form.submittedAt, 'MM/dd/yyyy')
+      : '';
+    const trbConsultDate = r.consultMeetingTime
+      ? formatDateLocal(r.consultMeetingTime, 'MM/dd/yyyy')
+      : '';
+
+    return [
+      submissionDate,
+      r.name,
+      'requester wip',
+      i18next.t<string>(`technicalAssistance:table.requestTypes.${r.type}`),
+      'trb lead wip',
+      r.status,
+      trbConsultDate
+    ];
+  });
+
+  return [trbRequestsCsvHeader, ...rows];
+}
+
+function CsvDownloadLink({
+  children,
+  data,
+  filename
+}: {
+  children?: React.ReactNode;
+  data: any;
+  filename?: string;
+}) {
+  return (
+    <CSVLink className="usa-link" data={data} filename={filename}>
+      <IconFileDownload className="text-middle margin-right-1" />
+      {children}
+    </CSVLink>
   );
 }
 
@@ -142,9 +198,12 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
       </div>
 
       <div className="margin-bottom-4 line-height-body-5">
-        <Button type="button" unstyled>
+        <CsvDownloadLink
+          data={getTrbRequestDataAsCsv(requests)}
+          filename="new-trb-requests.csv"
+        >
           {t('adminTeamHome.newRequests.downloadCsv')}
-        </Button>
+        </CsvDownloadLink>
       </div>
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
@@ -329,9 +388,12 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       </div>
 
       <div className="margin-bottom-4 line-height-body-5">
-        <Button type="button" unstyled>
+        <CsvDownloadLink
+          data={getTrbRequestDataAsCsv(requests)}
+          filename="existing-trb-requests.csv"
+        >
           {t('adminTeamHome.existingRequests.downloadCsv')}
-        </Button>
+        </CsvDownloadLink>
       </div>
 
       <nav aria-label={t('adminTeamHome.existingRequests.tabs.label')}>
@@ -492,8 +554,17 @@ function TeamHome({}: TeamHomeProps) {
       {Array.isArray(trbRequests) && (
         <>
           <ul className="usa-list--unstyled trb-action-options margin-top-1 line-height-body-5">
-            <li>{t('adminTeamHome.jumpToExitingRequests')}</li>
-            <li>{t('adminTeamHome.downloadAllTrbRequests')}</li>
+            <li>
+              <span>{t('adminTeamHome.jumpToExitingRequests')}</span>
+            </li>
+            <li>
+              <CsvDownloadLink
+                data={getTrbRequestDataAsCsv(trbRequests)}
+                filename="all-trb-requests.csv"
+              >
+                {t('adminTeamHome.downloadAllTrbRequests')}
+              </CsvDownloadLink>
+            </li>
             <li>
               <Button type="button" unstyled>
                 {t('adminTeamHome.switchToDifferentAdminView')}
