@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   ErrorMessage,
@@ -27,14 +27,20 @@ import {
 } from 'types/technicalAssistance';
 import { nextStepsSchema } from 'validations/trbRequestSchema';
 
+import { StepSubmit } from '../RequestForm';
 import Pager from '../RequestForm/Pager';
 
-const NextSteps = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
+const NextSteps = ({
+  trbRequestId,
+  adviceLetter,
+  setFormAlert,
+  setStepSubmit,
+  setIsStepSubmitting
+}: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
+  const history = useHistory();
 
   const { nextSteps, isFollowupRecommended, followupPoint } = adviceLetter;
-
-  const history = useHistory();
 
   const [update] = useMutation<
     UpdateTrbAdviceLetter,
@@ -54,49 +60,62 @@ const NextSteps = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
     }
   });
 
-  const updateForm = useCallback(
-    (url: string) => {
-      if (!isDirty) {
-        history.push(url);
-      } else {
-        handleSubmit(
-          formData => {
-            /** Updated form values */
-            const input = { trbRequestId, ...formData };
-
-            // If isFollowUpRecommended is changed to false, clear followupPoint value
-            if (!formData.isFollowupRecommended) {
-              input.followupPoint = '';
-            }
-
-            update({
+  /** Update advice letter meeting summary */
+  const submit: StepSubmit = useCallback(
+    callback => {
+      /** Submits form and updates advice letter */
+      const submitForm = handleSubmit(
+        async formData => {
+          if (isDirty) {
+            // UpdateTrbAdviceLetter mutation
+            await update({
               variables: {
-                input
+                input: {
+                  trbRequestId,
+                  ...formData,
+                  // If isFollowUpRecommended is set to false, clear followupPoint value
+                  followupPoint: formData.isFollowupRecommended
+                    ? formData.followupPoint
+                    : null
+                }
               }
             });
-          },
-          () => {
-            // Need to throw from this error handler so that the promise is rejected
-            throw new Error('Invalid next steps');
           }
-        )().then(
-          () => history.push(url),
-          e => {
-            // setFormAlert({
-            //   type: 'error',
-            //   heading: t('errors.somethingWrong'),
-            //   message: t('basic.errors.submit')
-            // });
+        },
+        // Throw error to cause promise to fail
+        () => {
+          throw new Error('Invalid field submission');
+        }
+      );
 
-            // TODO: Error handling
-            // eslint-disable-next-line no-console
-            console.error(e);
+      // Submit form
+      return submitForm().then(
+        // If successful, set error to null and execute callback
+        () => {
+          setFormAlert(null);
+          callback?.();
+        },
+        // If apollo error, set form alert error message
+        e => {
+          if (e instanceof ApolloError) {
+            setFormAlert({
+              type: 'error',
+              message: t('adviceLetterForm.error')
+            });
           }
-        );
-      }
+        }
+      );
     },
-    [handleSubmit, isDirty, trbRequestId, history, update]
+    [handleSubmit, isDirty, trbRequestId, update, setFormAlert, t]
   );
+
+  useEffect(() => {
+    setStepSubmit(() => submit);
+  }, [setStepSubmit, submit]);
+
+  useEffect(() => {
+    setIsStepSubmitting(isSubmitting);
+  }, [setIsStepSubmitting, isSubmitting]);
 
   return (
     <Form
@@ -207,12 +226,16 @@ const NextSteps = ({ trbRequestId, adviceLetter }: StepComponentProps) => {
         back={{
           outline: true,
           onClick: () =>
-            updateForm(`/trb/${trbRequestId}/advice/recommendations`)
+            submit(() =>
+              history.push(`/trb/${trbRequestId}/advice/recommendations`)
+            )
         }}
         next={{
           disabled: isSubmitting,
           onClick: () =>
-            updateForm(`/trb/${trbRequestId}/advice/internal-review`)
+            submit(() =>
+              history.push(`/trb/${trbRequestId}/advice/internal-review`)
+            )
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}

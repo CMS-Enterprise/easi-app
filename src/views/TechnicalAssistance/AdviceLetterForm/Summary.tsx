@@ -30,10 +30,9 @@ const Summary = ({
   setIsStepSubmitting
 }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
+  const history = useHistory();
 
   const { meetingSummary } = adviceLetter;
-
-  const history = useHistory();
 
   const [update] = useMutation<
     UpdateTrbAdviceLetter,
@@ -52,13 +51,14 @@ const Summary = ({
     }
   });
 
-  /** Update advice letter meeting summary */
+  /** Submit meeting summary fields and update advice letter */
   const submit: StepSubmit = useCallback(
     callback => {
-      /** Form submission and UpdateTrbAdviceLetter mutation */
+      /** Submits form and updates advice letter */
       const submitForm = handleSubmit(
         async formData => {
           if (isDirty) {
+            // UpdateTrbAdviceLetter mutation
             await update({
               variables: {
                 input: {
