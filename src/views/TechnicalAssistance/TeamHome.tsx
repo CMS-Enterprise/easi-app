@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  CellProps,
   Column,
   useFilters,
   useGlobalFilter,
@@ -12,6 +13,7 @@ import { useQuery } from '@apollo/client';
 import { Button, GridContainer, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import GlobalClientFilter from 'components/TableFilter';
@@ -22,6 +24,7 @@ import {
   GetTrbAdminTeamHome,
   GetTrbAdminTeamHome_trbRequests as TrbRequests
 } from 'queries/types/GetTrbAdminTeamHome';
+import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -29,11 +32,26 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 
-type TrbNewRequestsTableProps = {
-  requests: any;
+function SubmissionDateCell({
+  value
+}: CellProps<TrbRequests, TrbRequests['form']['submittedAt']>) {
+  const { t } = useTranslation('technicalAssistance');
+  return value
+    ? formatDateLocal(value, 'MM/dd/yyyy')
+    : t('check.notYetSubmitted');
+}
+
+function NameCell({ value, row }: CellProps<TrbRequests, TrbRequests['name']>) {
+  return (
+    <UswdsReactLink to={`/trb/${row.original.id}`}>{value}</UswdsReactLink>
+  );
+}
+
+type TrbRequestsTableProps = {
+  requests: TrbRequests[];
 };
 
-function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
+function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
   const { t } = useTranslation('technicalAssistance');
 
   // @ts-ignore
@@ -41,21 +59,38 @@ function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
     return [
       {
         Header: t<string>('table.header.submissionDate'),
-        accessor: 'form.submittedAt'
+        accessor: 'form.submittedAt',
+        Cell: SubmissionDateCell
       },
       {
         Header: t<string>('table.header.requestName'),
-        accessor: 'name'
+        accessor: 'name',
+        Cell: NameCell
       },
       {
         Header: t<string>('adminHome.requester')
       },
       {
         Header: t<string>('adminHome.requestType'),
-        accessor: 'type'
+        accessor: ({ type }) => t(`table.requestTypes.${type}`)
       },
       {
-        Header: t<string>('documents.table.header.actions')
+        Header: t<string>('documents.table.header.actions'),
+        Cell: ({ value, row }: CellProps<TrbRequests>) => {
+          return (
+            <>
+              <UswdsReactLink
+                to={`/trb/${row.original.id}`}
+                className="margin-right-2"
+              >
+                {t('adminTeamHome.actions.reviewRequest')}
+              </UswdsReactLink>
+              <UswdsReactLink to={`/trb/${row.original.id}`}>
+                {t('adminTeamHome.actions.assignLead')}
+              </UswdsReactLink>
+            </>
+          );
+        }
       }
     ];
   }, [t]);
@@ -195,11 +230,7 @@ function TrbNewRequestsTable({ requests }: TrbNewRequestsTableProps) {
   );
 }
 
-type TrbExistingRequestsTableProps = {
-  requests: any;
-};
-
-function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
+function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
   const { t } = useTranslation('technicalAssistance');
 
   const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
@@ -209,11 +240,13 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
     return [
       {
         Header: t<string>('table.header.submissionDate'),
-        accessor: 'form.submittedAt'
+        accessor: 'form.submittedAt',
+        Cell: SubmissionDateCell
       },
       {
         Header: t<string>('table.header.requestName'),
-        accessor: 'name'
+        accessor: 'name',
+        Cell: NameCell
       },
       {
         Header: t<string>('adminHome.requester')
@@ -228,7 +261,18 @@ function TrbExistingRequestsTable({ requests }: TrbExistingRequestsTableProps) {
       },
       {
         Header: t<string>('table.header.trbConsultDate'),
-        accessor: 'consultMeetingTime'
+        accessor: 'consultMeetingTime',
+        Cell: ({
+          value,
+          row
+        }: CellProps<TrbRequests, TrbRequests['consultMeetingTime']>) =>
+          value ? (
+            formatDateLocal(value, 'MM/dd/yyyy')
+          ) : (
+            <UswdsReactLink to={`/trb/${row.original.id}`}>
+              {t('adminTeamHome.actions.addDate')}
+            </UswdsReactLink>
+          )
       }
     ];
   }, [t]);

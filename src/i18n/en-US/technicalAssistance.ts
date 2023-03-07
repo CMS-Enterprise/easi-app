@@ -80,6 +80,10 @@ const technicalAssistance = {
       submissionDate: 'Submission date',
       status: 'Request status',
       trbConsultDate: 'TRB consult date'
+    },
+    requestTypes: {
+      NEED_HELP: 'System problem',
+      BRAINSTORM: 'Idea feedback'
     }
   },
   // Higher level errors
@@ -716,6 +720,11 @@ const technicalAssistance = {
         closed:
           'There are currently no closed requests. Continue to work on open requests. When they are closed, they will appear here.'
       }
+    },
+    actions: {
+      reviewRequest: 'Review request',
+      assignLead: 'Assign lead',
+      addDate: 'Add date'
     }
   },
   actionRequestEdits: {
