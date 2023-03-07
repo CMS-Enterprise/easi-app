@@ -101,6 +101,8 @@ const AdviceLetterForm = () => {
   });
   /** Current trb request */
   const trbRequest = data?.trbRequest;
+  const { adviceLetter, taskStatuses } = trbRequest || {};
+  const { adviceLetterStatus } = taskStatuses || {};
 
   // References to the submit handler and submitting state of the current form step
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
@@ -123,14 +125,15 @@ const AdviceLetterForm = () => {
   // Page loading
   if (loading) return <PageLoading />;
 
-  // If invalid URL or request doesn't exist, return page not found
-  if (currentStepIndex === -1 || !trbRequest || !trbRequest.adviceLetter)
+  // If invalid URL or advice letter can't be started, return page not found
+  if (
+    currentStepIndex === -1 ||
+    !trbRequest ||
+    !adviceLetter ||
+    adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
+  ) {
     return <NotFound />;
-
-  const {
-    adviceLetter,
-    taskStatuses: { adviceLetterStatus }
-  } = trbRequest;
+  }
 
   return (
     <>
@@ -174,9 +177,6 @@ const AdviceLetterForm = () => {
               ]}
             />
           }
-          hideSteps={
-            adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
-          }
           errorAlert={
             formAlert && (
               <Alert type={formAlert.type} className="margin-top-3" slim>
@@ -200,25 +200,17 @@ const AdviceLetterForm = () => {
         </StepHeader>
       )}
 
-      {/* Form page content */}
+      {/* Current form step component */}
       <GridContainer>
         <Grid>
-          {
-            // TODO: View if advice letter cannot be started yet
-            adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET ? (
-              <p>Cannot start yet</p>
-            ) : (
-              /* Current form step component */
-              <currentFormStep.component
-                trbRequestId={id}
-                adviceLetter={adviceLetter}
-                setFormAlert={setFormAlert}
-                setStepSubmit={setStepSubmit}
-                setIsStepSubmitting={setIsStepSubmitting}
-                recommendations={adviceLetter?.recommendations || []}
-              />
-            )
-          }
+          <currentFormStep.component
+            trbRequestId={id}
+            adviceLetter={adviceLetter}
+            setFormAlert={setFormAlert}
+            setStepSubmit={setStepSubmit}
+            setIsStepSubmitting={setIsStepSubmitting}
+            recommendations={adviceLetter?.recommendations || []}
+          />
         </Grid>
       </GridContainer>
     </>
