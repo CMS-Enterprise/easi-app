@@ -111,7 +111,9 @@ function RequestNameCell({
   row
 }: CellProps<TrbRequests, TrbRequests['name']>) {
   return (
-    <UswdsReactLink to={`/trb/${row.original.id}`}>{value}</UswdsReactLink>
+    <UswdsReactLink to={`/trb/requests/${row.original.id}`}>
+      {value}
+    </UswdsReactLink>
   );
 }
 
@@ -164,12 +166,15 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
           return (
             <>
               <UswdsReactLink
-                to={`/trb/${row.original.id}`}
+                to={`/trb/${row.original.id}/initial-request-form`}
                 className="margin-right-2"
               >
                 {t('adminTeamHome.actions.reviewRequest')}
               </UswdsReactLink>
-              <UswdsReactLink to={`/trb/${row.original.id}`}>
+              {/* todo assign lead action url */}
+              <UswdsReactLink
+                to={`/trb/${row.original.id}/initial-request-form`}
+              >
                 {t('adminTeamHome.actions.assignLead')}
               </UswdsReactLink>
             </>
@@ -361,7 +366,9 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
           value ? (
             formatDateLocal(value, 'MM/dd/yyyy')
           ) : (
-            <UswdsReactLink to={`/trb/${row.original.id}`}>
+            <UswdsReactLink
+              to={`/trb/${row.original.id}/initial-request-form/schedule-consult`}
+            >
               {t('adminTeamHome.actions.addDate')}
             </UswdsReactLink>
           )
