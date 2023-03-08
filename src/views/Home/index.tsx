@@ -14,6 +14,7 @@ import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
+import TeamHome from 'views/TechnicalAssistance/TeamHome';
 
 import WelcomeText from './WelcomeText';
 
@@ -46,6 +47,14 @@ const Home = () => {
 
       if (user.isAccessibilityTeam(userGroups, flags)) {
         return <List />;
+      }
+
+      if (user.isTrbAdmin(userGroups)) {
+        return (
+          <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
+            <TeamHome />
+          </MainContent>
+        );
       }
 
       if (user.isBasicUser(userGroups, flags)) {

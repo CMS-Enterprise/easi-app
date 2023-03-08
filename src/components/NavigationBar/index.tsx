@@ -1,10 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { PrimaryNav } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import { AppState } from 'reducers/rootReducer';
 import { Flags } from 'types/flags';
+import user from 'utils/user';
 
 import './index.scss';
 
@@ -15,10 +18,14 @@ export type NavigationProps = {
   userName?: string;
 };
 
-export const navLinks = (flags: Flags) => [
+export const navLinks = (
+  flags: Flags,
+  userGroups: string[],
+  isUserSet: boolean
+) => [
   {
     link: '/',
-    label: 'home',
+    label: isUserSet && user.isTrbAdmin(userGroups) ? 'Admin home' : 'home',
     isEnabled: true
   },
   {
@@ -61,8 +68,10 @@ const NavigationBar = ({
 }: NavigationProps) => {
   const { t } = useTranslation();
   const flags = useFlags();
+  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
-  const primaryLinks = navLinks(flags).map(
+  const primaryLinks = navLinks(flags, userGroups, isUserSet).map(
     route =>
       route.isEnabled && (
         <div className="easi-nav" key={route.label}>
