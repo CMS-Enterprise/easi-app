@@ -251,12 +251,12 @@ func CloseTRBRequest(
 	}
 
 	// Check if request is already closed so an unnecesary email won't be sent
-	if trb.Status != models.TRBSOpen {
+	if trb.State != models.TRBRequestStateOpen {
 		return nil, errors.New("Cannot close a TRB request that is not open")
 	}
 
 	trbChanges := map[string]interface{}{
-		"status": models.TRBSClosed,
+		"state": models.TRBRequestStateClosed,
 	}
 
 	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
