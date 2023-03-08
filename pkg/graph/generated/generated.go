@@ -28744,6 +28744,14 @@ func (ec *executionContext) fieldContext_Mutation_closeTRBRequest(ctx context.Co
 				return ec.fieldContext_TRBRequest_consultMeetingTime(ctx, field)
 			case "trbLead":
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
+			case "trbLeadInfo":
+				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
+			case "trbLeadComponent":
+				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
+			case "requesterInfo":
+				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
+			case "requesterComponent":
+				return ec.fieldContext_TRBRequest_requesterComponent(ctx, field)
 			case "adminNotes":
 				return ec.fieldContext_TRBRequest_adminNotes(ctx, field)
 			case "isRecent":
