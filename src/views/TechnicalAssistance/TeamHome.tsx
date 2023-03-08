@@ -449,13 +449,6 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
               type="button"
               className="easi-request-repo__tab-btn"
               onClick={() => setActiveTable('open')}
-              aria-label={
-                activeTable === 'open'
-                  ? t('adminTeamHome.existingRequests.tabs.selected', {
-                      name: t('adminTeamHome.existingRequests.tabs.open.name')
-                    })
-                  : ''
-              }
             >
               {t('adminTeamHome.existingRequests.tabs.open.name')}
             </button>
@@ -469,13 +462,6 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
               type="button"
               className="easi-request-repo__tab-btn"
               onClick={() => setActiveTable('closed')}
-              aria-label={
-                activeTable === 'closed'
-                  ? t('adminTeamHome.existingRequests.tabs.selected', {
-                      name: t('adminTeamHome.existingRequests.tabs.closed.name')
-                    })
-                  : ''
-              }
             >
               {t('adminTeamHome.existingRequests.tabs.closed.name')}
             </button>

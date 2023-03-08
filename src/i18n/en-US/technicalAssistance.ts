@@ -706,7 +706,6 @@ const technicalAssistance = {
       downloadCsv: 'Download all existing requests (csv)',
       tabs: {
         label: 'Request Repository Table Navigation',
-        selected: '{{name}} selected',
         open: {
           name: 'Open Requests'
         },
