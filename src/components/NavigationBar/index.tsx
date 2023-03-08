@@ -6,6 +6,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { Flags } from 'types/flags';
 
+import '../Header/index.scss';
 import './index.scss';
 
 export type NavigationProps = {
@@ -111,7 +112,7 @@ const NavigationBar = ({
     <nav
       aria-label={t('header:navigation')}
       data-testid="navigation-bar"
-      className="grid-container display-flex width-full"
+      className="easi-header grid-container display-flex width-full"
     >
       <PrimaryNav
         onClick={() => toggle(false)}
