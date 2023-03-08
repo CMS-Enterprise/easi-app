@@ -101,3 +101,10 @@
 .bg-transparent {
   background-color: transparent;
 }
+
+.sticky {
+  align-self: start;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+}

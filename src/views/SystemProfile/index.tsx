@@ -605,7 +605,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
               {!isMobile && (
                 <Grid
                   desktop={{ col: 3 }}
-                  className="padding-right-4 sticky-nav"
+                  className="padding-right-4 sticky side-nav"
                 >
                   {/* Side navigation for single system */}
                   <SideNav items={subNavigationLinks} />
@@ -640,7 +640,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                         <Grid
                           desktop={{ col: 4 }}
                           className={classnames({
-                            'sticky-nav padding-top-7': !isMobile
+                            'sticky side-nav padding-top-7': !isMobile
                           })}
                         >
                           {/* Setting a ref here to reference the grid width for the fixed side nav */}

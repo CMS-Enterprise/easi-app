@@ -86,7 +86,7 @@ export const Navigation = ({ children }: NavigationProps) => {
   return (
     <div className="navigation" role="banner" ref={navbarRef}>
       {authState?.isAuthenticated && (
-        <Grid className="sticky-nav-header navigation__content">
+        <Grid className="sticky sticky-nav-header navigation__content">
           <NavigationBar
             toggle={setIsMobileSideNavExpanded}
             signout={signout}
