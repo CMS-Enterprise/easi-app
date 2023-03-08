@@ -39,20 +39,10 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 
-function SubmissionDateCell({
-  value
-}: CellProps<TrbRequests, TrbRequests['form']['submittedAt']>) {
-  const { t } = useTranslation('technicalAssistance');
-  return value
-    ? formatDateLocal(value, 'MM/dd/yyyy')
-    : t('check.notYetSubmitted');
+function getPersonVal(name: string, component?: any) {
+  return `${name}${typeof component === 'string' ? `, ${component}` : ''}`;
 }
 
-function NameCell({ value, row }: CellProps<TrbRequests, TrbRequests['name']>) {
-  return (
-    <UswdsReactLink to={`/trb/${row.original.id}`}>{value}</UswdsReactLink>
-  );
-}
 export const trbRequestsCsvHeader = [
   i18next.t<string>('technicalAssistance:table.header.submissionDate'),
   i18next.t<string>('technicalAssistance:table.header.requestName'),
@@ -71,13 +61,18 @@ export function getTrbRequestDataAsCsv(requests: TrbRequests[]) {
     const trbConsultDate = r.consultMeetingTime
       ? formatDateLocal(r.consultMeetingTime, 'MM/dd/yyyy')
       : '';
+    const requester = getPersonVal(
+      r.requesterInfo.commonName,
+      r.requesterComponent
+    );
+    const trbLead = getPersonVal(r.trbLeadInfo.commonName, r.trbLeadComponent);
 
     return [
       submissionDate,
       r.name,
-      'requester wip',
+      requester,
       i18next.t<string>(`technicalAssistance:table.requestTypes.${r.type}`),
-      'trb lead wip',
+      trbLead,
       r.status,
       trbConsultDate
     ];
@@ -103,6 +98,37 @@ function CsvDownloadLink({
   );
 }
 
+function SubmissionDateCell({
+  value
+}: CellProps<TrbRequests, TrbRequests['form']['submittedAt']>) {
+  return value
+    ? formatDateLocal(value, 'MM/dd/yyyy')
+    : i18next.t<string>('technicalAssistance:check.notYetSubmitted');
+}
+
+function RequestNameCell({
+  value,
+  row
+}: CellProps<TrbRequests, TrbRequests['name']>) {
+  return (
+    <UswdsReactLink to={`/trb/${row.original.id}`}>{value}</UswdsReactLink>
+  );
+}
+
+function RequesterCell({ row }: CellProps<TrbRequests>) {
+  return getPersonVal(
+    row.original.requesterInfo.commonName,
+    row.original.requesterComponent
+  );
+}
+
+function TrbLeadCell({ row }: CellProps<TrbRequests>) {
+  return getPersonVal(
+    row.original.trbLeadInfo.commonName,
+    row.original.trbLeadComponent
+  );
+}
+
 type TrbRequestsTableProps = {
   requests: TrbRequests[];
 };
@@ -121,10 +147,12 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
       {
         Header: t<string>('table.header.requestName'),
         accessor: 'name',
-        Cell: NameCell
+        Cell: RequestNameCell
       },
       {
-        Header: t<string>('adminHome.requester')
+        Header: t<string>('adminHome.requester'),
+        accessor: 'requesterInfo.commonName',
+        Cell: RequesterCell
       },
       {
         Header: t<string>('adminHome.requestType'),
@@ -146,7 +174,8 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
               </UswdsReactLink>
             </>
           );
-        }
+        },
+        disableSortBy: true
       }
     ];
   }, [t]);
@@ -197,6 +226,7 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
         {t('adminTeamHome.newRequests.description')}
       </div>
 
+      {/* Download new requests csv */}
       <div className="margin-bottom-4 line-height-body-5">
         <CsvDownloadLink
           data={getTrbRequestDataAsCsv(requests)}
@@ -305,14 +335,17 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       {
         Header: t<string>('table.header.requestName'),
         accessor: 'name',
-        Cell: NameCell
+        Cell: RequestNameCell
       },
       {
-        Header: t<string>('adminHome.requester')
+        Header: t<string>('adminHome.requester'),
+        accessor: 'requesterInfo.commonName',
+        Cell: RequesterCell
       },
       {
         Header: t<string>('adminHome.trbLead'),
-        accessor: 'trbLead'
+        accessor: 'trbLeadInfo.commonName',
+        Cell: TrbLeadCell
       },
       {
         Header: t<string>('adminHome.status'),
@@ -387,6 +420,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
         {t('adminTeamHome.existingRequests.description')}
       </div>
 
+      {/* Download existing requests csv */}
       <div className="margin-bottom-4 line-height-body-5">
         <CsvDownloadLink
           data={getTrbRequestDataAsCsv(requests)}
@@ -396,6 +430,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
         </CsvDownloadLink>
       </div>
 
+      {/* Open | Closed requests tabs */}
       <nav aria-label={t('adminTeamHome.existingRequests.tabs.label')}>
         <ul className="easi-request-repo__tab-list margin-bottom-4">
           <li

@@ -9,6 +9,16 @@ import { TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRB
 // GraphQL query operation: GetTrbAdminTeamHome
 // ====================================================
 
+export interface GetTrbAdminTeamHome_trbRequests_trbLeadInfo {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
+export interface GetTrbAdminTeamHome_trbRequests_requesterInfo {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
 export interface GetTrbAdminTeamHome_trbRequests_taskStatuses {
   __typename: "TRBTaskStatuses";
   formStatus: TRBFormStatus;
@@ -30,8 +40,11 @@ export interface GetTrbAdminTeamHome_trbRequests {
   type: TRBRequestType;
   isRecent: boolean;
   status: TRBRequestStatus;
-  trbLead: string | null;
   consultMeetingTime: Time | null;
+  trbLeadComponent: string | null;
+  trbLeadInfo: GetTrbAdminTeamHome_trbRequests_trbLeadInfo;
+  requesterComponent: string | null;
+  requesterInfo: GetTrbAdminTeamHome_trbRequests_requesterInfo;
   taskStatuses: GetTrbAdminTeamHome_trbRequests_taskStatuses;
   form: GetTrbAdminTeamHome_trbRequests_form;
 }
