@@ -602,7 +602,7 @@ function TeamHome() {
                     ?.scrollIntoView();
                 }}
               >
-                {t('adminTeamHome.jumpToExitingRequests')}
+                {t('adminTeamHome.jumpToExistingRequests')}
               </Button>
             </li>
             <li>

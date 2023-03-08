@@ -80,7 +80,7 @@ describe('Trb Admin Team Home', () => {
     // Page actions available
     await findByRole('button', {
       name: i18next.t<string>(
-        'technicalAssistance:adminTeamHome.jumpToExitingRequests'
+        'technicalAssistance:adminTeamHome.jumpToExistingRequests'
       )
     });
     await findByRole('link', {

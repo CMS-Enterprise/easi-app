@@ -687,7 +687,7 @@ const technicalAssistance = {
   adminTeamHome: {
     description:
       'From EASi’s TRB home, you can review, assign, and manage incoming and existing TRB support requests.',
-    jumpToExitingRequests: 'Jump to existing requests',
+    jumpToExistingRequests: 'Jump to existing requests',
     downloadAllTrbRequests: 'Download all TRB requests (csv)',
     switchToDifferentAdminView: 'Swich to a different admin view',
     submitYourOwnRequest: 'Submit your own technical assistance request',
