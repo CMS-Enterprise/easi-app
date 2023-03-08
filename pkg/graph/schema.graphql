@@ -1546,7 +1546,6 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     name: String
     archived: Boolean
     type: TRBRequestType
-    state: TRBRequestState
 }
 
 """

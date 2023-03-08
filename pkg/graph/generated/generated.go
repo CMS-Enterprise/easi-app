@@ -7978,7 +7978,6 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     name: String
     archived: Boolean
     type: TRBRequestType
-    state: TRBRequestState
 }
 
 """
@@ -59635,23 +59634,6 @@ func (ec *executionContext) marshalOTRBRequestDocument2ᚖgithubᚗcomᚋcmsgov�
 		return graphql.Null
 	}
 	return ec._TRBRequestDocument(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOTRBRequestState2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestState(ctx context.Context, v interface{}) (*models.TRBRequestState, error) {
-	if v == nil {
-		return nil, nil
-	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBRequestState(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOTRBRequestState2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestState(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequestState) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalString(string(*v))
-	return res
 }
 
 func (ec *executionContext) unmarshalOTRBRequestType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx context.Context, v interface{}) (*models.TRBRequestType, error) {

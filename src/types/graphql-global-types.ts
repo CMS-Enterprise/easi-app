@@ -715,7 +715,6 @@ export interface TRBRequestChanges {
   name?: string | null;
   archived?: boolean | null;
   type?: TRBRequestType | null;
-  state?: TRBRequestState | null;
 }
 
 /**
