@@ -271,12 +271,16 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(row => {
+          {page.map((row, rowIdx) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
                   return (
-                    <td {...cell.getCellProps()} className="bg-transparent">
+                    <td
+                      {...cell.getCellProps()}
+                      className="bg-transparent"
+                      data-testid={`trb-new-cell-${rowIdx}-${index}`}
+                    >
                       {cell.render('Cell')}
                     </td>
                   );
@@ -506,12 +510,17 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(row => {
+          {page.map((row, rowIdx) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td
+                      data-testid={`trb-existing-cell-${rowIdx}-${index}`}
+                      {...cell.getCellProps()}
+                    >
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>
