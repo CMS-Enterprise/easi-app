@@ -108,15 +108,17 @@ const NavigationBar = ({
   const navItems = mobile ? primaryLinks.concat(userLinks) : primaryLinks;
 
   return (
-    <nav aria-label={t('header:navigation')} data-testid="navigation-bar">
-      <div className="grid-container">
-        <PrimaryNav
-          onClick={() => toggle(false)}
-          mobileExpanded={mobile}
-          aria-label="Primary navigation"
-          items={navItems}
-        />
-      </div>
+    <nav
+      aria-label={t('header:navigation')}
+      data-testid="navigation-bar"
+      className="grid-container display-flex width-full"
+    >
+      <PrimaryNav
+        onClick={() => toggle(false)}
+        mobileExpanded={mobile}
+        aria-label="Primary navigation"
+        items={navItems}
+      />
     </nav>
   );
 };
