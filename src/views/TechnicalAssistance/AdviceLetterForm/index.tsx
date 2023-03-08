@@ -18,7 +18,7 @@ import {
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
-import { FormAlertObject, StepComponentProps } from 'types/technicalAssistance';
+import { FormAlertObject } from 'types/technicalAssistance';
 import NotFound from 'views/NotFound';
 
 import Breadcrumbs from '../Breadcrumbs';
@@ -26,57 +26,38 @@ import { StepSubmit } from '../RequestForm';
 
 import InternalReview from './InternalReview';
 import NextSteps from './NextSteps';
-import Recommendations, { RecommendationsProps } from './Recommendations';
+import Recommendations from './Recommendations';
 import Review from './Review';
 import Summary from './Summary';
 
 import './index.scss';
 
-type ComponentType = ({
-  trbRequestId,
-  adviceLetter
-}: StepComponentProps) => JSX.Element;
-
-type RecommendationsComponentType = ({
-  trbRequestId,
-  recommendations
-}: RecommendationsProps) => JSX.Element;
-
-type AdviceFormStep = {
-  key: string;
-  slug: string;
-  component: ComponentType | RecommendationsComponentType;
-};
-
 type StepsText = { name: string; longName?: string; description?: string }[];
 
-const adviceFormSteps: AdviceFormStep[] = [
+const adviceFormSteps = [
   {
-    key: 'summary',
     slug: 'summary',
     component: Summary
   },
   {
-    key: 'recommendations',
     slug: 'recommendations',
     component: Recommendations
   },
   {
-    key: 'nextSteps',
     slug: 'next-steps',
     component: NextSteps
   },
   {
-    key: 'internalReview',
     slug: 'internal-review',
     component: InternalReview
   },
   {
-    key: 'review',
     slug: 'review',
     component: Review
   }
-];
+] as const;
+
+type AdviceFormStep = typeof adviceFormSteps[number];
 
 /**
  * TRB request admin advice letter form
@@ -99,6 +80,7 @@ const AdviceLetterForm = () => {
   >(GetTrbAdviceLetterQuery, {
     variables: { id }
   });
+
   /** Current trb request */
   const trbRequest = data?.trbRequest;
   const { adviceLetter, taskStatuses } = trbRequest || {};
@@ -209,7 +191,6 @@ const AdviceLetterForm = () => {
             setFormAlert={setFormAlert}
             setStepSubmit={setStepSubmit}
             setIsStepSubmitting={setIsStepSubmitting}
-            recommendations={adviceLetter?.recommendations || []}
           />
         </Grid>
       </GridContainer>

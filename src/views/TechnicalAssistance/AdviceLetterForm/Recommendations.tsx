@@ -3,21 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Alert, Button } from '@trussworks/react-uswds';
 
-import { GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations as TRBRecommendation } from 'queries/types/GetTrbAdviceLetter';
+import { StepComponentProps } from 'types/technicalAssistance';
 
 import Pager from '../RequestForm/Pager';
 
-export type RecommendationsProps = {
-  trbRequestId: string;
-  recommendations: TRBRecommendation[];
-};
-
 const Recommendations = ({
   trbRequestId,
-  recommendations
-}: RecommendationsProps) => {
+  adviceLetter,
+  setStepSubmit,
+  setIsStepSubmitting,
+  setFormAlert
+}: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+
+  const { recommendations } = adviceLetter;
 
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
