@@ -11,7 +11,7 @@ import NavigationBar from 'components/NavigationBar';
 import { localAuthStorageKey } from 'constants/localAuth';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 
-import '../NavigationBar/index.scss';
+// import '../NavigationBar/index.scss';
 import './index.scss';
 
 type HeaderProps = {
@@ -98,7 +98,7 @@ export const Header = ({ children }: HeaderProps) => {
   return (
     <header
       className={classnames('usa-header easi-header', {
-        'sticky-nav display-block navigation__content': isMobile
+        'sticky-nav-header display-block navigation__content': isMobile
       })}
       role="banner"
       ref={navbarRef}

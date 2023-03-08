@@ -222,7 +222,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
         </button>
       </div>
       <div
-        class="easi-section margin-top-5 margin-bottom-5"
+        class="easi-section margin-bottom-5"
         data-testid="section-wrapper"
       >
         <div
@@ -300,7 +300,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                     data-testid="grid"
                   >
                     <div
-                      class="desktop:grid-col-8"
+                      class="desktop:grid-col-8 padding-top-3"
                       data-testid="grid"
                     >
                       <div
@@ -617,7 +617,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                       </div>
                     </div>
                     <div
-                      class="desktop:grid-col-4 sticky-nav"
+                      class="desktop:grid-col-4 sticky-nav padding-top-7"
                       data-testid="grid"
                     >
                       <div
