@@ -273,7 +273,7 @@ func ReopenTRBRequest(
 	}
 
 	trbChanges := map[string]interface{}{
-		"status": models.TRBRequestStateOpen,
+		"state": models.TRBRequestStateOpen,
 	}
 
 	err := ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
