@@ -568,10 +568,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
   );
 }
 
-type TeamHomeProps = {};
-
-// eslint-disable-next-line no-empty-pattern
-function TeamHome({}: TeamHomeProps) {
+function TeamHome() {
   const { t } = useTranslation('technicalAssistance');
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -579,7 +576,9 @@ function TeamHome({}: TeamHomeProps) {
     GetTrbAdminTeamHomeQuery
   );
 
-  const trbRequests = data?.trbRequests;
+  const trbRequests = data?.trbRequests.filter(
+    r => r.form.submittedAt !== null
+  );
 
   return (
     <GridContainer className="width-full">
