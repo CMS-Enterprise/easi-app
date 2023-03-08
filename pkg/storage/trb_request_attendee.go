@@ -143,3 +143,43 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 
 	return &deleted, err
 }
+
+// GetAttendeeComponentByEUA attempts to retrieve the component of a given EUA user ID
+func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string) (*string, error) {
+	attendee := models.TRBRequestAttendee{}
+	stmt, err := s.db.PrepareNamed(`
+		SELECT *
+		FROM trb_request_attendees
+		WHERE eua_user_id = :eua_user_id
+		LIMIT 1
+	`)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB attendee",
+			zap.Error(err),
+			zap.String("euaID", euaID),
+		)
+		return nil, err
+	}
+	arg := map[string]interface{}{"eua_user_id": euaID}
+	err = stmt.Get(&attendee, arg)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB attendee",
+			zap.Error(err),
+			zap.String("euaID", euaID),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     attendee,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return attendee.Component, nil
+}
