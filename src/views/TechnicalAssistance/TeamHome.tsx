@@ -101,9 +101,7 @@ function CsvDownloadLink({
 function SubmissionDateCell({
   value
 }: CellProps<TrbRequests, TrbRequests['form']['submittedAt']>) {
-  return value
-    ? formatDateLocal(value, 'MM/dd/yyyy')
-    : i18next.t<string>('technicalAssistance:check.notYetSubmitted');
+  return value ? formatDateLocal(value, 'MM/dd/yyyy') : '';
 }
 
 function RequestNameCell({
