@@ -578,6 +578,7 @@ function TeamHome() {
     GetTrbAdminTeamHomeQuery
   );
 
+  // todo Refer to EASI-2725 on when backend will handle this filtering
   const trbRequests = data?.trbRequests.filter(
     r => r.form.submittedAt !== null
   );
