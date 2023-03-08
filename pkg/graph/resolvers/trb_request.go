@@ -179,6 +179,11 @@ func UpdateTRBRequestTRBLead(
 		return nil, err
 	}
 
+	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
 	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
 	if err != nil {
 		return nil, err
@@ -203,23 +208,101 @@ func UpdateTRBRequestTRBLead(
 		return nil, err
 	}
 
+	component := ""
+	if form.Component != nil {
+		component = *form.Component
+	}
+
 	emailInput := email.SendTRBRequestTRBLeadEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.Name,
 		TRBLeadName:    leadInfo.CommonName,
 		RequesterName:  requesterInfo.CommonName,
+		Component:      component,
+		TRBLeadEmail:   leadInfo.Email,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this
 	// separately in the email package test
 	if emailClient != nil {
-		err = emailClient.SendTRBRequestTRBLeadEmail(ctx, emailInput)
+		err = emailClient.SendTRBRequestTRBLeadAssignedEmails(ctx, emailInput)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	return updatedTrb, err
+}
+
+// CloseTRBRequest closes a TRB request and sends an email if recipients are specified
+func CloseTRBRequest(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+	id uuid.UUID,
+	reasonClosed string,
+	notifyEUAIDs []string,
+) (*models.TRBRequest, error) {
+	trb, err := store.GetTRBRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if request is already closed so an unnecesary email won't be sent
+	if trb.Status != models.TRBSOpen {
+		return nil, errors.New("Cannot close a TRB request that is not open")
+	}
+
+	trbChanges := map[string]interface{}{
+		"status": models.TRBSClosed,
+	}
+
+	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	updatedTrb, err := store.UpdateTRBRequest(ctx, trb)
+	if err != nil {
+		return nil, err
+	}
+
+	requester, err := fetchUserInfo(ctx, trb.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	notifyUserInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos)+1)
+	for _, recipientInfo := range notifyUserInfos {
+		recipientEmails = append(recipientEmails, recipientInfo.Email)
+	}
+	recipientEmails = append(recipientEmails, requester.Email)
+
+	emailInput := email.SendTRBRequestClosedEmailInput{
+		TRBRequestID:   trb.ID,
+		TRBRequestName: trb.Name,
+		RequesterName:  requester.CommonName,
+		Recipients:     recipientEmails,
+		ReasonClosed:   reasonClosed,
+	}
+
+	// Email client can be nil when this is called from tests - the email client itself tests this
+	// separately in the email package test
+	if emailClient != nil {
+		err = emailClient.SendTRBRequestClosedEmail(ctx, emailInput)
+		if err != nil {
+			return updatedTrb, err
+		}
+	}
+
+	return updatedTrb, nil
 }
 
 // ReopenTRBRequest re-opens a TRB request and sends an email to the requester and attendees
@@ -313,4 +396,12 @@ func ReopenTRBRequest(
 	}
 
 	return updatedTrb, nil
+}
+
+// IsRecentTRBRequest determines if a TRB Request should be determined to be flagged as "recent" or not.
+// TODO: Add more logic in https://jiraent.cms.gov/browse/EASI-2711
+func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Time) bool {
+	numDaysToConsiderRecent := -7
+	recentIfAfterDate := now.AddDate(0, 0, numDaysToConsiderRecent)
+	return obj.CreatedAt.After(recentIfAfterDate)
 }

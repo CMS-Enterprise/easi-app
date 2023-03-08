@@ -1,6 +1,4 @@
-$mobile: 480px;
-$tablet: 640px;
-$desktop: 1024px;
+@import 'viewports';
 
 // division by 1px removes the unit
 :export {

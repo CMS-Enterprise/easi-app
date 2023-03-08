@@ -502,6 +502,17 @@ export interface CreateTRBRequestDocumentInput {
 }
 
 /**
+ * The data needed to add feedback to a TRB request
+ */
+export interface CreateTRBRequestFeedbackInput {
+  trbRequestId: UUID;
+  feedbackMessage: string;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  action: TRBFeedbackAction;
+}
+
+/**
  * The input required to add a test date/score to a 508/accessibility request
  */
 export interface CreateTestDateInput {
@@ -714,7 +725,6 @@ export interface TRBRequestChanges {
   name?: string | null;
   archived?: boolean | null;
   type?: TRBRequestType | null;
-  status?: TRBRequestStatus | null;
 }
 
 /**
@@ -826,6 +836,17 @@ export interface UpdateTRBRequestAttendeeInput {
   id: UUID;
   component: string;
   role: PersonRole;
+}
+
+/**
+ * The data needed schedule a TRB consult meeting time
+ */
+export interface UpdateTRBRequestConsultMeetingTimeInput {
+  trbRequestId: UUID;
+  consultMeetingTime: Time;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  notes: string;
 }
 
 /**

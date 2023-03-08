@@ -44,7 +44,11 @@ function Check({
 
   return (
     <>
-      <SubmittedRequest request={request} showEditSectionLinks />
+      <SubmittedRequest
+        request={request}
+        showEditSectionLinks
+        showRequestHeaderInfo
+      />
 
       <Grid row gap>
         <Grid

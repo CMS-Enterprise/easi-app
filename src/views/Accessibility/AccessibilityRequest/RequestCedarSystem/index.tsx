@@ -106,6 +106,7 @@ type UpdateRequestWrapperProps = {
 const UpdateRequestWrapper = (
   props: RequestWrapperProps & UpdateRequestWrapperProps
 ) => {
+  const { accessibilityRequestId } = props;
   const [updateRequest, updateRequestResult] = useMutation(
     UpdateAccessibilityRequestQuery
   );
@@ -116,7 +117,7 @@ const UpdateRequestWrapper = (
     updateRequest({
       variables: {
         input: {
-          id: props.accessibilityRequestId,
+          id: accessibilityRequestId,
           cedarSystemId: values.cedarId
         }
       }

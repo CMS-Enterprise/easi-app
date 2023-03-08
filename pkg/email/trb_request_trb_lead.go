@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/google/uuid"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -18,21 +19,49 @@ type SendTRBRequestTRBLeadEmailInput struct {
 	TRBRequestName string
 	RequesterName  string
 	TRBLeadName    string
+	Component      string
+	TRBLeadEmail   models.EmailAddress
 }
 
-// trbLeadEmailTemplateParams contains the data needed for interpolation in the TRB lead email template
-type trbLeadEmailTemplateParams struct {
+// trbLeadAdminEmailTemplateParams contains the data needed for interpolation in the TRB lead admin email template
+type trbLeadAdminEmailTemplateParams struct {
 	TRBLeadName    string
 	TRBRequestName string
 	TRBRequestLink string
 	RequesterName  string
 }
 
-// SendTRBRequestTRBLeadEmail sends an email to the TRB team indicating that a TRB lead has been assigned
-func (c Client) SendTRBRequestTRBLeadEmail(ctx context.Context, input SendTRBRequestTRBLeadEmailInput) error {
+// trbLeadAssigneeEmailTemplateParams contains the data needed for interpolation in the TRB lead
+// assignee email template
+type trbLeadAssigneeEmailTemplateParams struct {
+	TRBLeadName    string
+	TRBRequestName string
+	TRBRequestLink string
+	RequesterName  string
+	Component      string
+}
+
+// SendTRBRequestTRBLeadAssignedEmails sends emails to the TRB team and the TRB lead when the lead
+// is assigned to a TRB request
+func (c Client) SendTRBRequestTRBLeadAssignedEmails(ctx context.Context, input SendTRBRequestTRBLeadEmailInput) error {
+	g := new(errgroup.Group)
+
+	g.Go(func() error {
+		return c.sendTRBRequestTRBLeadAdminEmail(ctx, input)
+	})
+
+	g.Go(func() error {
+		return c.sendTRBRequestTRBLeadAssigneeEmail(ctx, input)
+	})
+
+	return g.Wait()
+}
+
+// sendTRBRequestTRBLeadAdminEmail sends an email to the TRB team indicating that a TRB lead has been assigned
+func (c Client) sendTRBRequestTRBLeadAdminEmail(ctx context.Context, input SendTRBRequestTRBLeadEmailInput) error {
 	subject := input.TRBRequestName + " is assigned to " + input.TRBLeadName
 
-	templateParams := trbLeadEmailTemplateParams{
+	templateParams := trbLeadAdminEmailTemplateParams{
 		TRBLeadName:    input.TRBLeadName,
 		TRBRequestName: input.TRBRequestName,
 		TRBRequestLink: c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
@@ -40,13 +69,41 @@ func (c Client) SendTRBRequestTRBLeadEmail(ctx context.Context, input SendTRBReq
 	}
 
 	var b bytes.Buffer
-	err := c.templates.trbRequestTRBLead.Execute(&b, templateParams)
+	err := c.templates.trbRequestTRBLeadAdmin.Execute(&b, templateParams)
 
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 
 	err = c.sender.Send(ctx, []models.EmailAddress{c.config.TRBEmail}, nil, subject, b.String())
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	return nil
+}
+
+// sendTRBRequestTRBLeadAssigneeEmail sends an email to a user indicating that they have been assigned
+// as the TRB lead for a TRB request
+func (c Client) sendTRBRequestTRBLeadAssigneeEmail(ctx context.Context, input SendTRBRequestTRBLeadEmailInput) error {
+	subject := "You have been assigned as the TRB lead for " + input.TRBRequestName
+
+	templateParams := trbLeadAssigneeEmailTemplateParams{
+		TRBLeadName:    input.TRBLeadName,
+		TRBRequestName: input.TRBRequestName,
+		TRBRequestLink: c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
+		RequesterName:  input.RequesterName,
+		Component:      input.Component,
+	}
+
+	var b bytes.Buffer
+	err := c.templates.trbRequestTRBLeadAssignee.Execute(&b, templateParams)
+
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	err = c.sender.Send(ctx, []models.EmailAddress{input.TRBLeadEmail}, nil, subject, b.String())
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

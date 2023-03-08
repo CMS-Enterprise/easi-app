@@ -1,3 +1,6 @@
+@use 'uswds-core' as *;
+@use 'colors' as *;
+
 .easi-section {
     &__border {
         border: 1px solid color($theme-color-base-light);

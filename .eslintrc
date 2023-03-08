@@ -1,8 +1,9 @@
 {
-  "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts"],
+  "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts",".storybook/**/*"],
   "globals" : {
     "JSX" : "readonly"
   },
+  "root": true,
   "extends": [
     "react-app",
     "airbnb",

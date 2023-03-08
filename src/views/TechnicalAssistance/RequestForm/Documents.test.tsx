@@ -13,6 +13,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
+import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
 
 import Documents from './Documents';
 
@@ -47,18 +48,22 @@ const mockEmptyFormFields = {
   subjectAreaApplicationDevelopmentOther: null,
   subjectAreaDataAndDataManagementOther: null,
   subjectAreaGovernmentProcessesAndPoliciesOther: null,
-  subjectAreaOtherTechnicalTopicsOther: null
+  subjectAreaOtherTechnicalTopicsOther: null,
+  submittedAt: '2023-01-31T16:23:06.111436Z'
 };
 
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Draft',
-  createdBy: 'SF13',
   form: {
     ...mockEmptyFormFields,
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     __typename: 'TRBRequestForm'
   },
+  type: TRBRequestType.NEED_HELP,
+  status: TRBRequestStatus.OPEN,
+  taskStatuses: {} as any,
+  feedback: [],
   __typename: 'TRBRequest'
 };
 
@@ -93,12 +98,15 @@ const documents = (
     request={{
       id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
       name: 'Draft',
-      createdBy: 'SF13',
       form: {
         ...mockEmptyFormFields,
         id: '452cf444-69b2-41a9-b8ab-ed354d209307',
         __typename: 'TRBRequestForm'
       },
+      type: TRBRequestType.NEED_HELP,
+      status: TRBRequestStatus.OPEN,
+      taskStatuses: {} as any,
+      feedback: [],
       __typename: 'TRBRequest'
     }}
     stepUrl={{ current: '', next: '', back: '' }}
@@ -114,7 +122,7 @@ describe('Trb Request form: Supporting documents', () => {
   const testFile = new File(['1'], 'test.pdf', { type: 'application/pdf' });
 
   it('renders states without documents', async () => {
-    const { getByRole, findByText } = render(
+    const { getByRole, findByText, asFragment } = render(
       <MemoryRouter
         initialEntries={[
           '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
@@ -145,6 +153,8 @@ describe('Trb Request form: Supporting documents', () => {
     );
 
     await findByText('No documents uploaded');
+
+    expect(asFragment()).toMatchSnapshot();
 
     // Submit button state without any documents loaded
     getByRole('button', { name: 'Continue without adding documents' });

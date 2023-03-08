@@ -70,6 +70,9 @@ describe('TRB Admin Home summary', () => {
               status={trbRequestSummary.status}
               taskStatuses={trbRequestSummary.taskStatuses}
               trbLead={trbRequestSummary.trbLead}
+              requester={requester}
+              requesterString="Adeline Aarons, CMS"
+              submissionDate="January 5, 2023"
             />
           </Provider>
         </MockedProvider>

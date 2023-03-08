@@ -1,3 +1,6 @@
+@use 'uswds-core' as *;
+@use 'viewports' as *;
+
 .easi-modal {
   &__overlay {
     position: fixed;

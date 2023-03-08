@@ -38,14 +38,16 @@ const ActionRadioOption = ({ label, route }: ActionRadioOptionProps) => {
     );
   }
 
+  const { name, onChange, value } = actionContext;
+
   return (
     <RadioField
       id={route}
       label={label}
-      name={actionContext.name}
+      name={name}
       value={route}
-      onChange={actionContext.onChange}
-      checked={actionContext.value === route}
+      onChange={onChange}
+      checked={value === route}
       className={radioFieldClassName}
     />
   );

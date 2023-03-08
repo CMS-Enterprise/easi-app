@@ -45,6 +45,8 @@ export type FormattedTRBAttendees = {
 /** TRB Admin page props */
 export type TrbAdminPageProps = {
   trbRequestId: string;
+  requesterString?: string | null;
+  submissionDate?: string;
 };
 
 /** Subnav item return type for admin home wrapper */
