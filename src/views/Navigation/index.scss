@@ -1,0 +1,12 @@
+@use 'uswds-core' as *;
+
+.navigation {
+    margin-bottom: -1px;
+    border-top: 1px solid color('base-lighter');
+
+    &__content {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: 'white';
+        z-index: 100;
+    }
+}

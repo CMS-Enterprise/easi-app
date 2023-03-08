@@ -1,5 +1,16 @@
 @use 'uswds-core' as *;
 @use 'colors' as *;
+@use 'viewports' as *;
+
+.sticky-nav {
+    align-self: start;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    display: flex;
+    background-color: white;
+    width: 100%;
+}
 
 .usa-nav {
     margin-left: -1em
@@ -47,8 +58,4 @@
         }
 
     }
-}
-
-.border-top-light {
-    border-top: 1px solid color('base-lighter');
 }

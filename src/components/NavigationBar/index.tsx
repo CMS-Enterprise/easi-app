@@ -108,11 +108,7 @@ const NavigationBar = ({
   const navItems = mobile ? primaryLinks.concat(userLinks) : primaryLinks;
 
   return (
-    <nav
-      aria-label={t('header:navigation')}
-      data-testid="navigation-bar"
-      className="border-top-light"
-    >
+    <nav aria-label={t('header:navigation')} data-testid="navigation-bar">
       <div className="grid-container">
         <PrimaryNav
           onClick={() => toggle(false)}
