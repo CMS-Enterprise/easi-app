@@ -170,12 +170,10 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
               >
                 {t('adminTeamHome.actions.reviewRequest')}
               </UswdsReactLink>
-              {/* todo assign lead action url */}
-              <UswdsReactLink
-                to={`/trb/${row.original.id}/initial-request-form`}
-              >
+              {/* wip assign lead could be a modal popup */}
+              <Button type="button" unstyled>
                 {t('adminTeamHome.actions.assignLead')}
-              </UswdsReactLink>
+              </Button>
             </>
           );
         },
