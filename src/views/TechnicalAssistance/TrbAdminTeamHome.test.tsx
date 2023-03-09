@@ -21,14 +21,68 @@ describe('Trb Admin Team Home', () => {
     const csv = getTrbRequestDataAsCsv(trbRequests);
     expect(csv).toEqual([
       trbRequestsCsvHeader,
-      /* eslint-disable prettier/prettier */
-      [ '03/01/2023', 'First help', 'Wava Upton', 'System problem', '', i18next.t<string>('technicalAssistance:table.requestStatus.NEW'), '' ],
-      [ '03/02/2023', 'Second brainstorm', 'Derick Koss', 'Idea feedback', '', i18next.t<string>('technicalAssistance:table.requestStatus.NEW'), '' ],
-      [ '03/03/2023', 'Third open', 'Loraine Kirlin', 'System problem', 'Astrid Howell', i18next.t<string>('technicalAssistance:table.requestStatus.DRAFT_REQUEST_FORM'), '' ],
-      [ '03/04/2023', 'Fourth open with date', 'Clotilde Goodwin', 'System problem', 'Polly Sauer', i18next.t<string>('technicalAssistance:table.requestStatus.REQUEST_FORM_COMPLETE'), '04/01/2023' ],
-      [ '03/05/2023', 'Fifth closed', 'Sylvester Mante', 'System problem', 'Sydni Reynolds', i18next.t<string>('technicalAssistance:table.requestStatus.READY_FOR_CONSULT'), '04/02/2023' ],
-      [ '03/06/2023', 'Sixth open with component', 'Damaris Langosh, BBQ', 'System problem', 'Hosea Lemke, TRB', i18next.t<string>('technicalAssistance:table.requestStatus.CONSULT_SCHEDULED'), '04/02/2023' ]
-      /* eslint-enable */
+      [
+        '03/01/2023',
+        'First help',
+        'Wava Upton',
+        'System problem',
+        '',
+        i18next.t<string>('technicalAssistance:table.requestStatus.NEW'),
+        ''
+      ],
+      [
+        '03/02/2023',
+        'Second brainstorm',
+        'Derick Koss',
+        'Idea feedback',
+        '',
+        i18next.t<string>('technicalAssistance:table.requestStatus.NEW'),
+        ''
+      ],
+      [
+        '03/03/2023',
+        'Third open',
+        'Loraine Kirlin',
+        'System problem',
+        'Astrid Howell',
+        i18next.t<string>(
+          'technicalAssistance:table.requestStatus.DRAFT_REQUEST_FORM'
+        ),
+        ''
+      ],
+      [
+        '03/04/2023',
+        'Fourth open with date',
+        'Clotilde Goodwin',
+        'System problem',
+        'Polly Sauer',
+        i18next.t<string>(
+          'technicalAssistance:table.requestStatus.REQUEST_FORM_COMPLETE'
+        ),
+        '04/01/2023'
+      ],
+      [
+        '03/05/2023',
+        'Fifth closed',
+        'Sylvester Mante',
+        'System problem',
+        'Sydni Reynolds',
+        i18next.t<string>(
+          'technicalAssistance:table.requestStatus.READY_FOR_CONSULT'
+        ),
+        '04/02/2023'
+      ],
+      [
+        '03/06/2023',
+        'Sixth open with component',
+        'Damaris Langosh, BBQ',
+        'System problem',
+        'Hosea Lemke, TRB',
+        i18next.t<string>(
+          'technicalAssistance:table.requestStatus.CONSULT_SCHEDULED'
+        ),
+        '04/02/2023'
+      ]
     ]);
   });
 
