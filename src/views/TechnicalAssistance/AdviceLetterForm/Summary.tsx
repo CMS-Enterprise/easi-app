@@ -76,7 +76,6 @@ const Summary = ({
         }
       );
 
-      // Submit form
       return submitForm().then(
         // If successful, set error to null and execute callback
         () => {

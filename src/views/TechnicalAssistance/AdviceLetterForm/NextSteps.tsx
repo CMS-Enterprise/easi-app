@@ -89,7 +89,6 @@ const NextSteps = ({
         }
       );
 
-      // Submit form
       return submitForm().then(
         // If successful, set error to null and execute callback
         () => {
@@ -139,7 +138,7 @@ const NextSteps = ({
         render={({ field, fieldState: { error } }) => {
           return (
             <FormGroup error={!!error}>
-              <Label className="text-normal" htmlFor="nextSteps">
+              <Label className="text-normal" htmlFor="nextSteps" required>
                 {t('adviceLetterForm.nextSteps')}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
@@ -162,7 +161,12 @@ const NextSteps = ({
           return (
             <FormGroup error={!!error}>
               <Fieldset
-                legend={t('adviceLetterForm.isFollowupRecommended')}
+                legend={
+                  <>
+                    {t('adviceLetterForm.isFollowupRecommended')}
+                    <span className="text-red"> *</span>
+                  </>
+                }
                 className="text-normal"
               >
                 {error && (
