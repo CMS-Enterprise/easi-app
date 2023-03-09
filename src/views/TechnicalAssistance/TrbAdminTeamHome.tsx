@@ -477,7 +477,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
         setGlobalFilter={setGlobalFilter}
         tableID={t('systemTable.id')}
         tableName={t('systemTable.title')}
-        className="margin-bottom-5"
+        className="margin-bottom-5 maxw-mobile-lg"
       />
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>

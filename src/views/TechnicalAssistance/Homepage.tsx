@@ -214,7 +214,7 @@ function Homepage() {
             setGlobalFilter={setGlobalFilter}
             tableID={t('systemTable.id')}
             tableName={t('systemTable.title')}
-            className="margin-bottom-4"
+            className="margin-bottom-4 maxw-mobile-lg"
           />
 
           <Table bordered={false} fullWidth scrollable {...getTableProps()}>

@@ -586,7 +586,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
           My TRB Requests
         </h2>
         <form
-          class="usa-form usa-search margin-bottom-4"
+          class="usa-form usa-search margin-bottom-4 maxw-mobile-lg"
           data-testid="table-client-filter"
           role="search"
         >
