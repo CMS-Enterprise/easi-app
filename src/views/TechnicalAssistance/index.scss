@@ -31,9 +31,13 @@
       width: 200px;
     }
   }
-  .trb-action-options {
+  .trb-admin-team-home-actions {
     @media screen and (min-width: $desktop) {
       display: flex;
+      li {
+        height: units('205');
+        line-height: units('205');
+      }
       li:not(:last-of-type) {
         margin-right: 1rem;
         padding-right: 1rem;

@@ -589,7 +589,7 @@ function TrbAdminTeamHome() {
       {loading && <PageLoading />}
       {Array.isArray(trbRequests) && (
         <>
-          <ul className="usa-list--unstyled trb-action-options margin-top-1 line-height-body-5">
+          <ul className="usa-list--unstyled trb-admin-team-home-actions margin-top-1 line-height-body-5">
             <li>
               <Button
                 type="button"
