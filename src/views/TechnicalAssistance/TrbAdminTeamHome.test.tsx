@@ -5,9 +5,8 @@ import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
-import { trbTeamHomeRequests } from 'data/mock/trbRequest';
+import { trbAdminTeamHomeRequests } from 'data/mock/trbRequest';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
-import { GetTrbAdminTeamHome_trbRequests as TrbRequests } from 'queries/types/GetTrbAdminTeamHome';
 
 import TrbAdminTeamHome, {
   getTrbRequestDataAsCsv,
@@ -15,10 +14,8 @@ import TrbAdminTeamHome, {
 } from './TrbAdminTeamHome';
 
 describe('Trb Admin Team Home', () => {
-  const trbRequests = trbTeamHomeRequests as TrbRequests[];
-
   it('parses csv data from trb request data', () => {
-    const csv = getTrbRequestDataAsCsv(trbRequests);
+    const csv = getTrbRequestDataAsCsv(trbAdminTeamHomeRequests);
     expect(csv).toEqual([
       trbRequestsCsvHeader,
       [
@@ -122,7 +119,7 @@ describe('Trb Admin Team Home', () => {
           mocks={[
             {
               request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-              result: { data: { trbRequests: trbTeamHomeRequests } }
+              result: { data: { trbRequests: trbAdminTeamHomeRequests } }
             }
           ]}
         >
@@ -168,7 +165,7 @@ describe('Trb Admin Team Home', () => {
           mocks={[
             {
               request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-              result: { data: { trbRequests: trbTeamHomeRequests } }
+              result: { data: { trbRequests: trbAdminTeamHomeRequests } }
             }
           ]}
         >
@@ -253,7 +250,7 @@ describe('Trb Admin Team Home', () => {
           mocks={[
             {
               request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-              result: { data: { trbRequests: trbTeamHomeRequests } }
+              result: { data: { trbRequests: trbAdminTeamHomeRequests } }
             }
           ]}
         >

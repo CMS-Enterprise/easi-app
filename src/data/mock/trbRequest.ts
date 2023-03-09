@@ -1,4 +1,3 @@
-import { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'queries/types/GetTrbAdminTeamHome';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { GetTRBRequestAttendees_trbRequest_attendees as TRBAttendee } from 'queries/types/GetTRBRequestAttendees';
@@ -14,6 +13,7 @@ import {
   TRBRequestStatus,
   TRBRequestType
 } from 'types/graphql-global-types';
+import { TrbAdminTeamHomeRequest } from 'types/technicalAssistance';
 
 const trbRequestId: string = '441cb9e0-2cb3-43ca-b168-9d6a2a13ec91';
 
@@ -174,7 +174,7 @@ export const trbRequest: TrbRequest = {
   __typename: 'TRBRequest'
 };
 
-export const trbTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
+export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
   {
     id: '0ba435ac-50ee-44d1-94cc-4dd480b70a75',
     name: 'First help',

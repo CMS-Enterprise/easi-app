@@ -27,10 +27,8 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
-import {
-  GetTrbAdminTeamHome,
-  GetTrbAdminTeamHome_trbRequests as TrbRequests
-} from 'queries/types/GetTrbAdminTeamHome';
+import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
+import { TrbAdminTeamHomeRequest } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -53,7 +51,7 @@ export const trbRequestsCsvHeader = [
   i18next.t<string>('technicalAssistance:table.header.trbConsultDate')
 ] as const;
 
-export function getTrbRequestDataAsCsv(requests: TrbRequests[]) {
+export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
   const rows = requests.map(r => {
     const submissionDate = r.form.submittedAt
       ? formatDateLocal(r.form.submittedAt, 'MM/dd/yyyy')
@@ -100,14 +98,17 @@ function CsvDownloadLink({
 
 function SubmissionDateCell({
   value
-}: CellProps<TrbRequests, TrbRequests['form']['submittedAt']>) {
+}: CellProps<
+  TrbAdminTeamHomeRequest,
+  TrbAdminTeamHomeRequest['form']['submittedAt']
+>) {
   return value ? formatDateLocal(value, 'MM/dd/yyyy') : '';
 }
 
 function RequestNameCell({
   value,
   row
-}: CellProps<TrbRequests, TrbRequests['name']>) {
+}: CellProps<TrbAdminTeamHomeRequest, TrbAdminTeamHomeRequest['name']>) {
   return (
     <UswdsReactLink to={`/trb/requests/${row.original.id}`}>
       {value}
@@ -115,14 +116,14 @@ function RequestNameCell({
   );
 }
 
-function RequesterCell({ row }: CellProps<TrbRequests>) {
+function RequesterCell({ row }: CellProps<TrbAdminTeamHomeRequest>) {
   return getPersonVal(
     row.original.requesterInfo.commonName,
     row.original.requesterComponent
   );
 }
 
-function TrbLeadCell({ row }: CellProps<TrbRequests>) {
+function TrbLeadCell({ row }: CellProps<TrbAdminTeamHomeRequest>) {
   return getPersonVal(
     row.original.trbLeadInfo.commonName,
     row.original.trbLeadComponent
@@ -130,14 +131,14 @@ function TrbLeadCell({ row }: CellProps<TrbRequests>) {
 }
 
 type TrbRequestsTableProps = {
-  requests: TrbRequests[];
+  requests: TrbAdminTeamHomeRequest[];
 };
 
 function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
   const { t } = useTranslation('technicalAssistance');
 
   // @ts-ignore
-  const columns = useMemo<Column<TrbRequests>[]>(() => {
+  const columns = useMemo<Column<TrbAdminTeamHomeRequest>[]>(() => {
     return [
       {
         Header: t<string>('table.header.submissionDate'),
@@ -160,7 +161,7 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
       },
       {
         Header: t<string>('documents.table.header.actions'),
-        Cell: ({ value, row }: CellProps<TrbRequests>) => {
+        Cell: ({ value, row }: CellProps<TrbAdminTeamHomeRequest>) => {
           return (
             <>
               <UswdsReactLink
@@ -339,7 +340,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
   const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
 
   // @ts-ignore
-  const columns = useMemo<Column<TrbRequests>[]>(() => {
+  const columns = useMemo<Column<TrbAdminTeamHomeRequest>[]>(() => {
     return [
       {
         Header: t<string>('table.header.submissionDate'),
@@ -371,7 +372,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
         Cell: ({
           value,
           row
-        }: CellProps<TrbRequests, TrbRequests['consultMeetingTime']>) =>
+        }: CellProps<
+          TrbAdminTeamHomeRequest,
+          TrbAdminTeamHomeRequest['consultMeetingTime']
+        >) =>
           value ? (
             formatDateLocal(value, 'MM/dd/yyyy')
           ) : (

@@ -1,5 +1,8 @@
 import { PersonRole } from './graphql-global-types';
 
+// eslint-disable-next-line camelcase
+export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'queries/types/GetTrbAdminTeamHome';
+
 /** TRB attendee fields allows null role in form */
 export type TRBAttendeeFields = {
   euaUserId: string;
