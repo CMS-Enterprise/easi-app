@@ -2915,6 +2915,27 @@ func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRe
 	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
 }
 
+// TrbLeadInfo is the resolver for the trbLeadInfo field.
+func (r *tRBRequestResolver) TrbLeadInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
+	return resolvers.GetTRBLeadInfo(ctx, obj.TRBLead)
+}
+
+// TrbLeadComponent is the resolver for the trbLeadComponent field.
+func (r *tRBRequestResolver) TrbLeadComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
+	return resolvers.GetTRBUserComponent(ctx, r.store, obj.TRBLead)
+}
+
+// RequesterInfo is the resolver for the requesterInfo field.
+func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
+	return resolvers.GetTRBRequesterInfo(ctx, obj.CreatedBy)
+}
+
+// RequesterComponent is the resolver for the requesterComponent field.
+func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
+	requester := obj.CreatedBy
+	return resolvers.GetTRBUserComponent(ctx, r.store, &requester)
+}
+
 // AdminNotes is the resolver for the adminNotes field.
 func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error) {
 	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, r.store, obj.ID)
