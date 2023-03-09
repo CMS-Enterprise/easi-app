@@ -28685,6 +28685,8 @@ func (ec *executionContext) fieldContext_Mutation_closeTRBRequest(ctx context.Co
 				return ec.fieldContext_TRBRequest_archived(ctx, field)
 			case "type":
 				return ec.fieldContext_TRBRequest_type(ctx, field)
+			case "state":
+				return ec.fieldContext_TRBRequest_state(ctx, field)
 			case "status":
 				return ec.fieldContext_TRBRequest_status(ctx, field)
 			case "attendees":
