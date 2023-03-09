@@ -289,6 +289,12 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
         </tbody>
       </Table>
 
+      {rows.length === 0 && (
+        <div className="padding-x-2 padding-bottom-1 border-bottom-1px margin-top-neg-105 line-height-body-5">
+          {t('adminTeamHome.newRequests.noRequests')}
+        </div>
+      )}
+
       {rows.length > 0 && (
         <>
           <div className="grid-row grid-gap grid-gap-lg">
@@ -316,11 +322,6 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
             {currentTableSortDescription(headerGroups[0])}
           </div>
         </>
-      )}
-      {rows.length === 0 && (
-        <div className="padding-x-2 padding-bottom-1 border-bottom-1px">
-          {t('adminTeamHome.newRequests.noRequests')}
-        </div>
       )}
     </div>
   );
@@ -528,6 +529,12 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
         </tbody>
       </Table>
 
+      {rows.length === 0 && (
+        <div className="padding-x-2 padding-bottom-1 border-bottom-1px margin-top-neg-105 line-height-body-5">
+          {t(`adminTeamHome.existingRequests.noRequests.${activeTable}`)}
+        </div>
+      )}
+
       {rows.length > 0 && (
         <>
           <div className="grid-row grid-gap grid-gap-lg">
@@ -559,11 +566,6 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
             {currentTableSortDescription(headerGroups[0])}
           </div>
         </>
-      )}
-      {rows.length === 0 && (
-        <div className="padding-x-2 padding-bottom-1 border-bottom-1px">
-          {t(`adminTeamHome.existingRequests.noRequests.${activeTable}`)}
-        </div>
       )}
     </div>
   );
