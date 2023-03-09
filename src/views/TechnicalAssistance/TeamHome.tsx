@@ -73,7 +73,7 @@ export function getTrbRequestDataAsCsv(requests: TrbRequests[]) {
       requester,
       i18next.t<string>(`technicalAssistance:table.requestTypes.${r.type}`),
       trbLead,
-      r.status,
+      i18next.t<string>(`technicalAssistance:table.requestStatus.${r.status}`),
       trbConsultDate
     ];
   });
@@ -356,7 +356,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       },
       {
         Header: t<string>('adminHome.status'),
-        accessor: 'status'
+        accessor: ({ status }) => t(`table.requestStatus.${status}`)
       },
       {
         Header: t<string>('table.header.trbConsultDate'),

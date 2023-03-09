@@ -84,6 +84,18 @@ const technicalAssistance = {
     requestTypes: {
       NEED_HELP: 'System problem',
       BRAINSTORM: 'Idea feedback'
+    },
+    requestStatus: {
+      NEW: 'New',
+      DRAFT_REQUEST_FORM: 'Draft request form',
+      REQUEST_FORM_COMPLETE: 'Request form complete',
+      READY_FOR_CONSULT: 'Ready for consult',
+      CONSULT_SCHEDULED: 'Consult scheduled',
+      CONSULT_COMPLETE: 'Consult complete',
+      DRAFT_ADVICE_LETTER: 'Draft advice letter',
+      ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
+      ADVICE_LETTER_SENT: 'Advice letter sent',
+      FOLLOW_UP_REQUESTED: 'Follow-up requested'
     }
   },
   // Higher level errors
