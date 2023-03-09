@@ -1,0 +1,213 @@
+package resolvers
+
+import (
+	"context"
+	"fmt"
+	"strconv"
+	"time"
+
+	"github.com/lib/pq"
+
+	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
+)
+
+// TestTRBRequestStatus tests the overall status of a TRB request
+func (s *ResolverSuite) TestTRBRequestStatus() {
+	ctx := context.Background()
+	store := s.testConfigs.Store
+
+	config := testhelpers.NewConfig()
+
+	// set up Email Client
+	emailConfig := email.Config{
+		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
+		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:                config.GetString(appconfig.ClientHostKey),
+		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+	localSender := local.NewSender()
+	emailClient, err := email.NewClient(emailConfig, localSender)
+	if err != nil {
+		s.FailNow("Unable to construct email client with local sender")
+	}
+
+	anonEua := "ANON"
+
+	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			EuaUserID:  anonEua,
+			CommonName: "Anonymous",
+			Email:      models.NewEmailAddress("anon@local.fake"),
+		}, nil
+	}
+
+	stubFetchUserInfos := func(ctx context.Context, euaIDs []string) ([]*models.UserInfo, error) {
+		userInfos := []*models.UserInfo{}
+
+		for i, euaID := range euaIDs {
+			userInfo := &models.UserInfo{
+				EuaUserID:  euaID,
+				CommonName: strconv.Itoa(i),
+				Email:      models.NewEmailAddress(fmt.Sprintf("%v@local.fake", i)),
+			}
+			userInfos = append(userInfos, userInfo)
+		}
+
+		return userInfos, nil
+	}
+
+	trb := models.NewTRBRequest(anonEua)
+	trb.Type = models.TRBTNeedHelp
+	trb.State = models.TRBRequestStateOpen
+	trb, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
+	s.NoError(err)
+
+	s.Run("status is correctly calculated as TRB tasks are performed", func() {
+		// Test the "NEW" TRB status
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
+		trbStatus, err := GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusNew, trbStatus)
+
+		// Test the "DRAFT_REQUEST_FORM" status by making a random update to the form but not
+		// submitting it
+		form, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trb.ID)
+		s.NoError(err)
+		s.NotNil(form)
+		formChanges := map[string]interface{}{
+			"isSubmitted":  false,
+			"trbRequestId": trb.ID.String(),
+			"component":    "Taco Cart",
+		}
+		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusDraftRequestForm, trbStatus)
+
+		// Test the "REQUEST_FORM_COMPLETE" status by submitting it
+		form, err = GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trb.ID)
+		s.NoError(err)
+		s.NotNil(form)
+		formChanges = map[string]interface{}{
+			"isSubmitted":  true,
+			"trbRequestId": trb.ID.String(),
+			"component":    "Taco Cart",
+		}
+		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusRequestFormComplete, trbStatus)
+
+		// Test the "READY_FOR_CONSULT" status by creating an approving feedback
+		notifyEUAIDs := pq.StringArray{"WUTT", "NOPE", "YEET"}
+		feedback := &models.TRBRequestFeedback{
+			TRBRequestID:    trb.ID,
+			FeedbackMessage: "I like the TRB request",
+			CopyTRBMailbox:  true,
+			NotifyEUAIDs:    notifyEUAIDs,
+			Action:          models.TRBFeedbackAction(models.TRBFeedbackActionReadyForConsult),
+		}
+		_, err = CreateTRBRequestFeedback(
+			ctx,
+			s.testConfigs.Store,
+			&emailClient,
+			stubFetchUserInfo,
+			stubFetchUserInfos,
+			feedback,
+		)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusReadyForConsult, trbStatus)
+
+		// Test the "CONSULT_SCHEDULED" status by scheduling a consult session in the future
+		meetingTime := time.Now().Local().Add(time.Hour * 24)
+		s.NoError(err)
+		_, err = UpdateTRBRequestConsultMeetingTime(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			nil,
+			stubFetchUserInfo,
+			stubFetchUserInfos,
+			trb.ID,
+			meetingTime,
+			true,
+			[]string{"mclovin@example.com"},
+			"See you then!",
+		)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusConsultScheduled, trbStatus)
+
+		// Test the "CONSULT_COMPLETE" status by updating the meeting time to be a time in the past
+		meetingTime = time.Now().Local().Add(time.Hour * -24)
+		s.NoError(err)
+		_, err = UpdateTRBRequestConsultMeetingTime(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			nil,
+			stubFetchUserInfo,
+			stubFetchUserInfos,
+			trb.ID,
+			meetingTime,
+			true,
+			[]string{"mclovin@example.com"},
+			"See you then!",
+		)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusConsultComplete, trbStatus)
+
+		// Test the "DRAFT_ADVICE_LETTER" status by making a change to the advice letter
+		adviceLetter, err := CreateTRBAdviceLetter(ctx, store, trb.ID)
+		s.NoError(err)
+		s.NotNil(adviceLetter)
+		adviceLetterChanges := map[string]interface{}{
+			"trbRequestId":   trb.ID.String(),
+			"meetingSummary": "Talked about stuff",
+		}
+		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusDraftAdviceLetter, trbStatus)
+
+		// Test the "ADVICE_LETTER_IN_REVIEW" status by requesting review for the advice letter
+		_, err = RequestReviewForTRBAdviceLetter(ctx, store, &emailClient, stubFetchUserInfo, adviceLetter.ID)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusAdviceLetterInReview, trbStatus)
+
+		// Test the "ADVICE_LETTER_SENT" status by sending the advice letter
+		_, err = SendTRBAdviceLetter(ctx, store, adviceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusAdviceLetterSent, trbStatus)
+
+		// Test the "FOLLOW_UP_REQUESTED" status by updating the advice letter to recommend follow up
+		adviceLetterChanges = map[string]interface{}{
+			"trbRequestId":          trb.ID.String(),
+			"isFollowupRecommended": true,
+		}
+		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
+		s.NoError(err)
+		trbStatus, err = GetTRBRequestStatus(ctx, store, trb.ID)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusFollowUpRequested, trbStatus)
+	})
+}

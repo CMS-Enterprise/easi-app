@@ -5,7 +5,7 @@ export default gql`
     trbRequest(id: $id) {
       name
       type
-      status
+      state
       trbLead
       createdAt
       taskStatuses {

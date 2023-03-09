@@ -8,6 +8,7 @@ export default gql`
       type
       isRecent
       status
+      state
       consultMeetingTime
 
       trbLeadComponent

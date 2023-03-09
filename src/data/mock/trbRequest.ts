@@ -10,6 +10,7 @@ import {
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
+  TRBRequestState,
   TRBRequestStatus,
   TRBRequestType
 } from 'types/graphql-global-types';
@@ -82,7 +83,7 @@ export const trbRequestSummary: Summary = {
   __typename: 'TRBRequest',
   name: 'TRB Request Mock',
   type: TRBRequestType.NEED_HELP,
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   trbLead: null,
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses: {
@@ -132,7 +133,7 @@ export const trbRequest: TrbRequest = {
     adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
   },
   feedback: [],
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   type: TRBRequestType.NEED_HELP,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
@@ -179,7 +180,8 @@ export const trbTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     name: 'First help',
     type: TRBRequestType.NEED_HELP,
     isRecent: true,
-    status: TRBRequestStatus.OPEN,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.NEW,
     consultMeetingTime: null,
     trbLeadComponent: null,
     trbLeadInfo: {
@@ -210,7 +212,8 @@ export const trbTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     name: 'Second brainstorm',
     type: TRBRequestType.BRAINSTORM,
     isRecent: true,
-    status: TRBRequestStatus.OPEN,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.NEW,
     consultMeetingTime: null,
     trbLeadComponent: null,
     trbLeadInfo: {
@@ -241,7 +244,8 @@ export const trbTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     name: 'Third open',
     type: TRBRequestType.NEED_HELP,
     isRecent: false,
-    status: TRBRequestStatus.OPEN,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.NEW,
     consultMeetingTime: null,
     trbLeadComponent: null,
     trbLeadInfo: {
@@ -272,7 +276,8 @@ export const trbTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     name: 'Fourth open with date',
     type: TRBRequestType.NEED_HELP,
     isRecent: false,
-    status: TRBRequestStatus.OPEN,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.NEW,
     consultMeetingTime: '2023-04-01T09:23:45Z',
     trbLeadComponent: null,
     trbLeadInfo: {
@@ -303,7 +308,8 @@ export const trbTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     name: 'Fifth closed',
     type: TRBRequestType.NEED_HELP,
     isRecent: false,
-    status: TRBRequestStatus.CLOSED,
+    state: TRBRequestState.CLOSED,
+    status: TRBRequestStatus.NEW,
     consultMeetingTime: '2023-04-02T09:23:45Z',
     trbLeadComponent: null,
     trbLeadInfo: {
@@ -334,7 +340,8 @@ export const trbTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     name: 'Sixth open with component',
     type: TRBRequestType.NEED_HELP,
     isRecent: false,
-    status: TRBRequestStatus.OPEN,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.NEW,
     consultMeetingTime: '2023-04-02T09:23:45Z',
     trbLeadComponent: 'TRB',
     trbLeadInfo: {

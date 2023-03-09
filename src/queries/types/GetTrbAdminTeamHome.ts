@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestStatus, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetTrbAdminTeamHome
@@ -40,6 +40,7 @@ export interface GetTrbAdminTeamHome_trbRequests {
   type: TRBRequestType;
   isRecent: boolean;
   status: TRBRequestStatus;
+  state: TRBRequestState;
   consultMeetingTime: Time | null;
   trbLeadComponent: string | null;
   trbLeadInfo: GetTrbAdminTeamHome_trbRequests_trbLeadInfo;

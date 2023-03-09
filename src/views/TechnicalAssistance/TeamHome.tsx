@@ -401,7 +401,8 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       globalFilter: useMemo(() => globalFilterCellText, []),
       data: useMemo(
         () =>
-          requests.filter((d: any) => d.status.toLowerCase() === activeTable),
+          // Switch on open vs closed existing requests
+          requests.filter((d: any) => d.state.toLowerCase() === activeTable),
         [activeTable, requests]
       ),
       autoResetSortBy: false,

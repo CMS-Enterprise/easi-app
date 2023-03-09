@@ -21,7 +21,7 @@ import {
   TRBFeedbackStatus,
   TRBFormStatus,
   TRBNetworkAndSecurityOption,
-  TRBRequestStatus,
+  TRBRequestState,
   TRBRequestType,
   TRBWhereInProcessOption
 } from 'types/graphql-global-types';
@@ -31,7 +31,7 @@ import Check from './Check';
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   taskStatuses: {
     __typename: 'TRBTaskStatuses',
     formStatus: TRBFormStatus.IN_PROGRESS,

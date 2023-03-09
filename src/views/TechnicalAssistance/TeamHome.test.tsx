@@ -22,12 +22,12 @@ describe('Trb Admin Team Home', () => {
     expect(csv).toEqual([
       trbRequestsCsvHeader,
       /* eslint-disable prettier/prettier */
-      [ '03/01/2023', 'First help', 'Wava Upton', 'System problem', '', 'OPEN', '' ],
-      [ '03/02/2023', 'Second brainstorm', 'Derick Koss', 'Idea feedback', '', 'OPEN', '' ],
-      [ '03/03/2023', 'Third open', 'Loraine Kirlin', 'System problem', 'Astrid Howell', 'OPEN', '' ],
-      [ '03/04/2023', 'Fourth open with date', 'Clotilde Goodwin', 'System problem', 'Polly Sauer', 'OPEN', '04/01/2023' ],
-      [ '03/05/2023', 'Fifth closed', 'Sylvester Mante', 'System problem', 'Sydni Reynolds', 'CLOSED', '04/02/2023' ],
-      [ '03/06/2023', 'Sixth open with component', 'Damaris Langosh, BBQ', 'System problem', 'Hosea Lemke, TRB', 'OPEN', '04/02/2023' ]
+      [ '03/01/2023', 'First help', 'Wava Upton', 'System problem', '', 'NEW', '' ],
+      [ '03/02/2023', 'Second brainstorm', 'Derick Koss', 'Idea feedback', '', 'NEW', '' ],
+      [ '03/03/2023', 'Third open', 'Loraine Kirlin', 'System problem', 'Astrid Howell', 'NEW', '' ],
+      [ '03/04/2023', 'Fourth open with date', 'Clotilde Goodwin', 'System problem', 'Polly Sauer', 'NEW', '04/01/2023' ],
+      [ '03/05/2023', 'Fifth closed', 'Sylvester Mante', 'System problem', 'Sydni Reynolds', 'NEW', '04/02/2023' ],
+      [ '03/06/2023', 'Sixth open with component', 'Damaris Langosh, BBQ', 'System problem', 'Hosea Lemke, TRB', 'NEW', '04/02/2023' ]
       /* eslint-enable */
     ]);
   });
