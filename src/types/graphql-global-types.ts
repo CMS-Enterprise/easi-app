@@ -715,7 +715,6 @@ export interface TRBRequestChanges {
   name?: string | null;
   archived?: boolean | null;
   type?: TRBRequestType | null;
-  status?: TRBRequestStatus | null;
 }
 
 /**
@@ -817,6 +816,17 @@ export interface UpdateTRBRequestAttendeeInput {
   id: UUID;
   component: string;
   role: PersonRole;
+}
+
+/**
+ * The data needed schedule a TRB consult meeting time
+ */
+export interface UpdateTRBRequestConsultMeetingTimeInput {
+  trbRequestId: UUID;
+  consultMeetingTime: Time;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  notes: string;
 }
 
 /**
