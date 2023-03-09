@@ -214,7 +214,7 @@ describe('Trb Admin Team Home', () => {
         'technicalAssistance:adminTeamHome.actions.reviewRequest'
       )
     });
-    within(await findByTestId('trb-new-cell-1-4')).getByRole('link', {
+    within(await findByTestId('trb-new-cell-1-4')).getByRole('button', {
       name: i18next.t<string>(
         'technicalAssistance:adminTeamHome.actions.assignLead'
       )
