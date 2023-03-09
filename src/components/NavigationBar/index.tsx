@@ -68,10 +68,9 @@ const NavigationBar = ({
 }: NavigationProps) => {
   const { t } = useTranslation();
   const flags = useFlags();
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
-  const primaryLinks = navLinks(flags, userGroups, isUserSet).map(
+  const primaryLinks = navLinks(flags, groups, isUserSet).map(
     route =>
       route.isEnabled && (
         <div className="easi-nav" key={route.label}>

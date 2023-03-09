@@ -20,15 +20,14 @@ import WelcomeText from './WelcomeText';
 
 const Home = () => {
   const { t } = useTranslation();
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
   const flags = useFlags();
 
   const { message } = useMessage();
 
   const renderView = () => {
     if (isUserSet) {
-      if (user.isGrtReviewer(userGroups, flags)) {
+      if (user.isGrtReviewer(groups, flags)) {
         return (
           // Changed GRT table from grid-container to just slight margins. This is take up
           // entire screen to better fit the more expansive data in the table.
@@ -45,11 +44,11 @@ const Home = () => {
         );
       }
 
-      if (user.isAccessibilityTeam(userGroups, flags)) {
+      if (user.isAccessibilityTeam(groups, flags)) {
         return <List />;
       }
 
-      if (user.isTrbAdmin(userGroups)) {
+      if (user.isTrbAdmin(groups)) {
         return (
           <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
             <TrbAdminTeamHome />
@@ -57,7 +56,7 @@ const Home = () => {
         );
       }
 
-      if (user.isBasicUser(userGroups, flags)) {
+      if (user.isBasicUser(groups, flags)) {
         return (
           <div className="grid-container">
             {message && (
