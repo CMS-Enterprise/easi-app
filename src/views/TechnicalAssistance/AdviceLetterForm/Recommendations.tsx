@@ -2,9 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Alert, Button, ButtonGroup } from '@trussworks/react-uswds';
+import { Button, ButtonGroup } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import { Alert } from 'components/shared/Alert';
 import { DeleteTrbRecommendationQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   DeleteTRBRecommendation,
@@ -38,7 +39,7 @@ const Recommendations = ({
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
 
-  const [deleteRecommendation] = useMutation<
+  const [deleteRecommendation, loading] = useMutation<
     DeleteTRBRecommendation,
     DeleteTRBRecommendationVariables
   >(DeleteTrbRecommendationQuery);
@@ -127,8 +128,7 @@ const Recommendations = ({
               }
             }}
             next={{
-              // TODO: disabled logic
-              // disabled: isSubmitting,
+              disabled: !!loading,
               text: hasRecommendations
                 ? t('button.next')
                 : t('adviceLetterForm.continueWithoutAdding'),
