@@ -569,7 +569,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
   );
 }
 
-function TeamHome() {
+function TrbAdminTeamHome() {
   const { t } = useTranslation('technicalAssistance');
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -635,4 +635,4 @@ function TeamHome() {
   );
 }
 
-export default TeamHome;
+export default TrbAdminTeamHome;

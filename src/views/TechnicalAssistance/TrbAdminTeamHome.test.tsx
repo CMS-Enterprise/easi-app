@@ -9,10 +9,10 @@ import { trbTeamHomeRequests } from 'data/mock/trbRequest';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome_trbRequests as TrbRequests } from 'queries/types/GetTrbAdminTeamHome';
 
-import TeamHome, {
+import TrbAdminTeamHome, {
   getTrbRequestDataAsCsv,
   trbRequestsCsvHeader
-} from './TeamHome';
+} from './TrbAdminTeamHome';
 
 describe('Trb Admin Team Home', () => {
   const trbRequests = trbTeamHomeRequests as TrbRequests[];
@@ -43,7 +43,7 @@ describe('Trb Admin Team Home', () => {
             }
           ]}
         >
-          <TeamHome />
+          <TrbAdminTeamHome />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -72,7 +72,7 @@ describe('Trb Admin Team Home', () => {
             }
           ]}
         >
-          <TeamHome />
+          <TrbAdminTeamHome />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -118,7 +118,7 @@ describe('Trb Admin Team Home', () => {
             }
           ]}
         >
-          <TeamHome />
+          <TrbAdminTeamHome />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -203,7 +203,7 @@ describe('Trb Admin Team Home', () => {
             }
           ]}
         >
-          <TeamHome />
+          <TrbAdminTeamHome />
         </MockedProvider>
       </MemoryRouter>
     );
