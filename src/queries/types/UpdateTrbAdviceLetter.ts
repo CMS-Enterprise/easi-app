@@ -11,6 +11,7 @@ import { UpdateTRBAdviceLetterInput } from "./../../types/graphql-global-types";
 
 export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter_recommendations {
   __typename: "TRBAdviceLetterRecommendation";
+  id: UUID;
   title: string;
   recommendation: string;
   links: string[];

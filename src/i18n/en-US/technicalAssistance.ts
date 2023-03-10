@@ -53,6 +53,62 @@ const technicalAssistance = {
     notSpecified: 'Not specified yet',
     followup: 'Should the team return for a follow-up session?'
   },
+  requiredFields:
+    'Fields marked with an asterisk ( <red>*</red> ) are required.',
+  adviceLetterForm: {
+    heading: 'Advice letter',
+    description:
+      'Document any outcomes, advice, findings, recommendations, or next steps that the TRB has for this request.',
+    text:
+      'After submitting this form, the requester will recieve an automatic notification letting them know their advice letter is available.',
+    returnToRequest: 'Save and return to request',
+    steps: [
+      {
+        name: 'What we heard',
+        description:
+          'Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.'
+      },
+      {
+        name: 'What we recommend',
+        description:
+          'Add recommendations for the project team. Provide a title, description, and any useful resources for each recommendation.'
+      },
+      {
+        name: 'Next steps',
+        description:
+          'Add any additional next steps the team should take, and mark whether they should return to the TRB for a follow-up session.'
+      },
+      {
+        name: 'Internal review',
+        longName: 'Check your work and request an internal review'
+      },
+      {
+        name: 'Check and send',
+        longName:
+          'Check the content of your advice letter and send it to the requester',
+        description:
+          'Review the notes from your TRB team members and incorporate any feedback into the advice letter. When you are ready, send it to the requester, project team, and any other recipients you would like to include.'
+      }
+    ],
+    meetingSummary: 'Meeting summary',
+    addRecommendation: 'Add a recommendation',
+    noRecommendations:
+      'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
+    continueWithoutAdding: 'Continue without adding recommendations',
+    addResourceLink: 'Add a resource link',
+    addAnotherResourceLink: 'Add another resource link',
+    returnToAdviceLetter:
+      'Don’t add a recommendation and return to advice letter',
+    editRecommendation: 'Edit recommendation',
+    removeRecommendation: 'Remove recommendation',
+    nextSteps: 'Next steps',
+    isFollowupRecommended: 'Should the team return for a follow-up session?',
+    followupYes: 'Yes, a follow-up is recommended',
+    notNecessary: 'Not necessary',
+    followupHelpText: 'Examples: in 6 months, when development is complete',
+    error:
+      'There was an issue saving your advice letter. Please try again, and if the problem persists, try again later.'
+  },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
     COMPLETED: 'Completed',
@@ -66,9 +122,11 @@ const technicalAssistance = {
   },
   // Common button text
   button: {
+    cancel: 'Cancel',
     back: 'Back',
     continue: 'Continue',
     next: 'Next',
+    save: 'Save',
     saveAndExit: 'Save and exit',
     start: 'Start',
     removeYourRequest: 'Remove your request'

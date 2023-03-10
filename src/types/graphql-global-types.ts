@@ -472,6 +472,16 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
+ * The input required to add a recommendation & links to a TRB advice letter
+ */
+export interface CreateTRBAdviceLetterRecommendationInput {
+  trbRequestId: UUID;
+  title: string;
+  recommendation: string;
+  links: string[];
+}
+
+/**
  * The data needed add a TRB request attendee to a TRB request
  */
 export interface CreateTRBRequestAttendeeInput {
@@ -807,6 +817,16 @@ export interface UpdateTRBAdviceLetterInput {
   nextSteps?: string | null;
   isFollowupRecommended?: boolean | null;
   followupPoint?: string | null;
+}
+
+/**
+ * The input required to update a recommendation to a TRB advice letter
+ */
+export interface UpdateTRBAdviceLetterRecommendationInput {
+  id: UUID;
+  title?: string | null;
+  recommendation?: string | null;
+  links?: string[] | null;
 }
 
 /**
