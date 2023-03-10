@@ -16,5 +16,12 @@ export default gql`
         }
       }
     }
+    trbRequests(archived: false) {
+      id
+      name
+      submittedAt: createdAt
+      status
+      nextMeetingDate: consultMeetingTime
+    }
   }
 `;

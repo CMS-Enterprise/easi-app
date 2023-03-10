@@ -87,6 +87,7 @@ const mockGetTrbRequestDocumentsQueryNoDocuments = {
   result: {
     data: {
       trbRequest: {
+        id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
         documents: []
       }
     }
@@ -139,6 +140,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: []
                     }
                   }
@@ -186,6 +188,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: [
                         {
                           id: '21517ecf-a671-46f3-afec-35eebde49630',
@@ -303,6 +306,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: []
                     }
                   }
@@ -344,6 +348,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: [
                         {
                           id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
@@ -461,6 +466,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: [
                         {
                           id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
@@ -503,6 +509,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: []
                     }
                   }

@@ -688,6 +688,10 @@ const technicalAssistance = {
     requester: 'Requester',
     submissionDate: 'Submission Date',
     status: 'Status',
+    requestStatuses: {
+      OPEN: 'Open',
+      CLOSED: 'Closed'
+    },
     taskStatuses: {
       formStatus: {
         READY_TO_START: 'Ready to start request form',

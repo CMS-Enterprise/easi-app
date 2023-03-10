@@ -1,6 +1,10 @@
 import { TFunction } from 'i18next';
 
-import { GetRequests } from 'queries/types/GetRequests';
+import {
+  GetRequests,
+  GetRequests_requests_edges_node as GetRequestsType,
+  GetRequests_trbRequests as GetTRBRequestsType
+} from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 
@@ -9,43 +13,71 @@ import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
 
+type MergedRequests = GetRequestsType | GetTRBRequestsType;
+
+// Type guard for checking request is of type GetTRBRequestsType/TRB
+// https://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types
+export const isTRBRequestType = (
+  request: MergedRequests
+): request is GetTRBRequestsType => {
+  /* eslint no-underscore-dangle: 0 */
+  return request.__typename === 'TRBRequest';
+};
+
 const tableMap = (
   tableData: GetRequests,
   t: TFunction,
   requestType?: RequestType
 ) => {
-  const requests = tableData?.requests?.edges.map(edge => {
-    return edge.node;
-  });
+  const requests: GetRequestsType[] =
+    tableData?.requests?.edges.map(edge => {
+      return edge.node;
+    }) || ([] as GetRequestsType[]);
 
-  const mappedData = requests
-    ?.filter(request => (!requestType ? true : request.type === requestType)) // if filter prop exists, filter by the request type
+  const trbRequests: GetTRBRequestsType[] = tableData?.trbRequests || [];
+
+  const mergedRequests: MergedRequests[] = [...requests, ...trbRequests];
+
+  const mappedData = mergedRequests
+    ?.filter(request =>
+      !requestType
+        ? true
+        : !isTRBRequestType(request) && request.type === requestType
+    ) // if filter prop exists, filter by the request type
     .map(request => {
       const name = request.name ? request.name : 'Draft';
 
-      const type: string = request.type
-        ? t(`requestsTable.types.${request.type}`)
-        : '';
+      const type: string =
+        !isTRBRequestType(request) && request.type
+          ? t(`requestsTable.types.${request.type}`)
+          : t(`requestsTable.types.TRB`);
 
-      let status;
-      switch (request.type) {
-        case RequestType.ACCESSIBILITY_REQUEST:
-          // Status hasn't changed if the status record created at is the same
-          // as the 508 request's submitted at
-          if (request.submittedAt === request.statusCreatedAt) {
+      let status = '';
+      if (!isTRBRequestType(request)) {
+        switch (request.type) {
+          case RequestType.ACCESSIBILITY_REQUEST:
+            // Status hasn't changed if the status record created at is the same
+            // as the 508 request's submitted at
+            if (request.submittedAt === request.statusCreatedAt) {
+              status = accessibilityRequestStatusMap[request.status];
+            }
             status = accessibilityRequestStatusMap[request.status];
-          }
-          status = accessibilityRequestStatusMap[request.status];
-          break;
-        case RequestType.GOVERNANCE_REQUEST:
-          status = t(`intake:statusMap.${request.status}`);
-          if (request.lcid) {
-            status = `${status}: ${request.lcid}`;
-          }
-          break;
-        default:
-          status = '';
-          break;
+            break;
+          case RequestType.GOVERNANCE_REQUEST:
+            status = t(`intake:statusMap.${request.status}`);
+            if (request.lcid) {
+              status = `${status}: ${request.lcid}`;
+            }
+            break;
+          default:
+            status = '';
+            break;
+        }
+      } else {
+        // TRB status
+        status = t(`adminHome.requestStatuses.${request.status}`, {
+          ns: 'technicalAssistance'
+        });
       }
 
       return {
