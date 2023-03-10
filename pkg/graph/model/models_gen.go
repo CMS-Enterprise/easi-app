@@ -757,6 +757,12 @@ type UpdateTRBRequestConsultMeetingTimeInput struct {
 	Notes              string    `json:"notes"`
 }
 
+type UpdateTRBRequestFundingSourcesInput struct {
+	TrbRequestID  uuid.UUID `json:"trbRequestId"`
+	FundingNumber string    `json:"fundingNumber"`
+	Sources       []string  `json:"sources"`
+}
+
 // The data needed assign a TRB lead to a TRB request
 type UpdateTRBRequestTRBLeadInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`

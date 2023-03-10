@@ -36,20 +36,9 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 			collab_date_governance_review_board = :collab_date_governance_review_board,
 			collab_date_other = :collab_date_other,
 			collab_group_other = :collab_group_other,
-			subject_area_technical_reference_architecture = :subject_area_technical_reference_architecture,
-			subject_area_network_and_security = :subject_area_network_and_security,
-			subject_area_cloud_and_infrastructure = :subject_area_cloud_and_infrastructure,
-			subject_area_application_development = :subject_area_application_development,
-			subject_area_data_and_data_management = :subject_area_data_and_data_management,
-			subject_area_government_processes_and_policies = :subject_area_government_processes_and_policies,
-			subject_area_other_technical_topics = :subject_area_other_technical_topics,
-			subject_area_technical_reference_architecture_other = :subject_area_technical_reference_architecture_other,
-			subject_area_network_and_security_other = :subject_area_network_and_security_other,
-			subject_area_cloud_and_infrastructure_other = :subject_area_cloud_and_infrastructure_other,
-			subject_area_application_development_other = :subject_area_application_development_other,
-			subject_area_data_and_data_management_other = :subject_area_data_and_data_management_other,
-			subject_area_government_processes_and_policies_other = :subject_area_government_processes_and_policies_other,
-			subject_area_other_technical_topics_other = :subject_area_other_technical_topics_other,
+			collab_grb_consult_requested = :collab_grb_consult_requested,
+			subject_area_options = :subject_area_options,
+			subject_area_option_other = :subject_area_option_other,
 			submitted_at = :submitted_at,
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
@@ -109,6 +98,38 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 		}
 	}
 	return &form, err
+}
+
+// GetTRBRequestFormByTRBRequestID queries the DB for all the TRB request form records
+// matching the given TRB request ID
+func (s *Store) GetFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
+	fmt.Println("I am running!")
+	fundingSources := []*models.TRBFundingSource{}
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_funding_sources WHERE trb_request_id=:trb_request_id`)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB request funding sources",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, err
+	}
+	arg := map[string]interface{}{"trb_request_id": trbRequestID}
+	err = stmt.Select(&fundingSources, arg)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch TRB request funding sources",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     fundingSources,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return fundingSources, err
 }
 
 // DeleteTRBRequestForm deletes an existing TRB request form record in the database
