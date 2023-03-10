@@ -42,6 +42,7 @@ describe('Trb Request form: Attendees', () => {
     result: {
       data: {
         trbRequest: {
+          id: trbRequest.id,
           attendees: [initialRequester, ...attendees]
         }
       }
