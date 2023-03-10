@@ -235,6 +235,7 @@ const systemProfile = {
   systemTable: {
     title: 'All Systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
+    noResults: 'No systems found.',
     id: 'system-list',
     search: 'Search Table',
     header: {

@@ -207,6 +207,10 @@ export const Table = ({
 
   rows.map(row => prepareRow(row));
 
+  if (rows.length === 0) {
+    return <p>{t('systemTable.noResults')}</p>;
+  }
+
   return (
     <>
       <GlobalClientFilter
