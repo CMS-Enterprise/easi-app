@@ -124,7 +124,7 @@ const NextSteps = ({
       className="maxw-tablet"
     >
       {/* Required fields help text */}
-      <HelpText className="margin-top-1 margin-bottom-1">
+      <HelpText className="margin-top-1 margin-bottom-1 text-base">
         <Trans
           i18nKey="technicalAssistance:requiredFields"
           components={{ red: <span className="text-red" /> }}

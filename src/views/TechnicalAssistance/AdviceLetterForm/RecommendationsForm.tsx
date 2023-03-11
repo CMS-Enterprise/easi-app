@@ -160,7 +160,7 @@ const RecommendationsForm = ({
         {t('adviceLetterForm.addRecommendation')}
       </h1>
       {/* Required fields text */}
-      <HelpText className="margin-top-1 margin-bottom-2">
+      <HelpText className="margin-top-1 margin-bottom-2 text-base">
         <Trans
           i18nKey="technicalAssistance:requiredFields"
           components={{ red: <span className="text-red" /> }}
