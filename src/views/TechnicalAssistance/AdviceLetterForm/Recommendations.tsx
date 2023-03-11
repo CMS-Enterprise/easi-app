@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -42,6 +42,10 @@ const Recommendations = ({
     DeleteTRBRecommendation,
     DeleteTRBRecommendationVariables
   >(DeleteTrbRecommendationQuery);
+
+  useEffect(() => {
+    setIsStepSubmitting(loading);
+  }, [setIsStepSubmitting, loading]);
 
   return (
     <Switch>
