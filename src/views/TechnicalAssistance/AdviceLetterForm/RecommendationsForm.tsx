@@ -1,11 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import {
-  // ApolloError,
-  useMutation
-} from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -16,6 +13,7 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 
+import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -50,6 +48,8 @@ const RecommendationsForm = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
+  const [showFormError, setShowFormError] = useState<boolean>(false);
+
   const {
     handleSubmit,
     control,
@@ -72,8 +72,8 @@ const RecommendationsForm = ({
     UpdateTrbRecommendationQuery
   );
 
+  /** Submits form and executes recommendation mutation */
   const submit = useCallback(() => {
-    /** Submits form and executes recommendation mutation */
     const submitForm = handleSubmit(
       async formData => {
         if (isDirty) {
@@ -104,15 +104,29 @@ const RecommendationsForm = ({
 
     return submitForm().then(
       () => {
-        // TODO: Reset errors on success
+        setShowFormError(false);
+        setFormAlert({
+          type: 'success',
+          message: t('adviceLetterForm.recommendationSuccess')
+        });
         history.push(`/trb/${trbRequestId}/advice/recommendations`);
       },
       e => {
-        // eslint-disable-next-line no-console
-        console.error(e);
+        if (e instanceof ApolloError) {
+          setShowFormError(true);
+        }
       }
     );
-  }, [handleSubmit, isDirty, trbRequestId, update, create, history]);
+  }, [
+    t,
+    handleSubmit,
+    isDirty,
+    trbRequestId,
+    update,
+    create,
+    history,
+    setFormAlert
+  ]);
 
   return (
     <div>
@@ -132,10 +146,20 @@ const RecommendationsForm = ({
           }
         ]}
       />
+
+      {
+        /* Error alert for gql errors */
+        showFormError && (
+          <Alert type="error" className="margin-bottom-5" slim>
+            {t('adviceLetterForm.error', { type: 'recommendation' })}
+          </Alert>
+        )
+      }
+
       <h1 className="margin-bottom-0">
         {t('adviceLetterForm.addRecommendation')}
       </h1>
-      {/** Required fields text */}
+      {/* Required fields text */}
       <HelpText className="margin-top-1 margin-bottom-2">
         <Trans
           i18nKey="technicalAssistance:requiredFields"
@@ -151,7 +175,7 @@ const RecommendationsForm = ({
         }
         className="maxw-tablet"
       >
-        {/** Title */}
+        {/* Title */}
         <Controller
           name="title"
           control={control}
@@ -174,7 +198,7 @@ const RecommendationsForm = ({
           }}
         />
 
-        {/** Description */}
+        {/* Description */}
         <Controller
           name="recommendation"
           control={control}
@@ -200,10 +224,10 @@ const RecommendationsForm = ({
           }}
         />
 
-        {/** Links */}
+        {/* Links */}
         <LinksArrayField control={control} watch={watch} />
 
-        {/** Save */}
+        {/* Save */}
         <Button
           type="submit"
           className="margin-top-6"
@@ -218,7 +242,7 @@ const RecommendationsForm = ({
         </Button>
       </Form>
 
-      {/** Return without adding recommendation */}
+      {/* Return without adding recommendation */}
       <Button
         className="margin-top-205 display-flex flex-align-center"
         type="button"
