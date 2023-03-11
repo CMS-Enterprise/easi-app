@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
@@ -50,12 +50,7 @@ const RecommendationsForm = ({
 
   const [showFormError, setShowFormError] = useState<boolean>(false);
 
-  const {
-    handleSubmit,
-    control,
-    watch,
-    formState: { isSubmitting, isDirty }
-  } = useForm<AdviceLetterRecommendationFields>({
+  const formObject = useForm<AdviceLetterRecommendationFields>({
     resolver: yupResolver(adviceRecommendationSchema),
     defaultValues: {
       title: '',
@@ -63,6 +58,13 @@ const RecommendationsForm = ({
       links: []
     }
   });
+
+  const {
+    handleSubmit,
+    control,
+    watch,
+    formState: { isSubmitting, isDirty }
+  } = formObject;
 
   const [create] = useMutation<CreateTRBAdviceLetterRecommendationInput>(
     CreateTrbRecommendationQuery
@@ -97,7 +99,7 @@ const RecommendationsForm = ({
         }
       },
       // Throw error to cause promise to fail
-      () => {
+      e => {
         throw new Error('Invalid form submission');
       }
     );
@@ -167,14 +169,7 @@ const RecommendationsForm = ({
         />
       </HelpText>
 
-      <Form
-        onSubmit={() =>
-          submit().then(() =>
-            history.push(`/trb/${trbRequestId}/advice/recommendations`)
-          )
-        }
-        className="maxw-tablet"
-      >
+      <Form onSubmit={e => e.preventDefault()} className="maxw-tablet">
         {/* Title */}
         <Controller
           name="title"
@@ -225,7 +220,9 @@ const RecommendationsForm = ({
         />
 
         {/* Links */}
-        <LinksArrayField control={control} watch={watch} />
+        <FormProvider {...formObject}>
+          <LinksArrayField />
+        </FormProvider>
 
         {/* Save */}
         <Button

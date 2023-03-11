@@ -299,7 +299,11 @@ export const documentSchema = yup.object({
 export const adviceRecommendationSchema = yup.object({
   title: yup.string().required(),
   recommendation: yup.string().required(),
-  links: yup.array(yup.string())
+  links: yup.array(
+    yup.object({
+      link: yup.string().required()
+    })
+  )
 });
 
 export const meetingSummarySchema = yup.object({

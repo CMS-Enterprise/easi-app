@@ -1,92 +1,102 @@
 import React from 'react';
-import {
-  Control,
-  Controller,
-  useFieldArray,
-  UseFormWatch
-} from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Button, FormGroup, IconAdd, TextInput } from '@trussworks/react-uswds';
+import {
+  Button,
+  ErrorMessage,
+  FormGroup,
+  IconAdd,
+  TextInput
+} from '@trussworks/react-uswds';
 
 import Label from 'components/shared/Label';
 import { AdviceLetterRecommendationFields } from 'types/technicalAssistance';
 
-type LinksArrayFieldProps = {
-  control: Control<AdviceLetterRecommendationFields>;
-  watch: UseFormWatch<AdviceLetterRecommendationFields>;
-};
-
 /**
  * TRB Recommendation links field using React Hook Forms useFieldArray hook
  */
-export default function LinkArrayField({
-  control
-}: // watch
-LinksArrayFieldProps) {
+export default function LinkArrayField() {
   const { t } = useTranslation('technicalAssistance');
 
-  const { fields, append, remove } = useFieldArray({
+  const {
     control,
+    watch,
+    formState: { errors }
+  } = useFormContext<AdviceLetterRecommendationFields>();
+
+  const { fields, append, remove } = useFieldArray({
     name: 'links'
   });
 
   /** Field value - updates on input change */
-  // const links = watch('links');
+  const links = watch('links') || [];
+
+  /** Value of the last link input */
+  const lastLinkInput: string | undefined = links.slice(-1)[0]?.link;
 
   return (
     <div id="trbLinksField">
-      {/** Field inputs */}
-      <ul className="usa-list usa-list--unstyled">
-        {fields.map((item, index) => {
-          return (
-            <li key={item.id}>
-              <Label
-                htmlFor={`links.${index}.link`}
-                className="text-normal margin-top-3"
-              >
-                {t('Link')}
-              </Label>
-              <FormGroup className="margin-top-1 display-flex flex-align-center">
-                {/** Link input */}
-                <Controller
-                  name={`links.${index}.link`}
-                  control={control}
-                  render={({ field, fieldState: { error } }) => {
-                    return (
-                      <TextInput
-                        className="margin-top-0"
-                        type="text"
-                        id={`link.${item.id}`}
-                        {...field}
-                        ref={null}
-                      />
-                    );
-                  }}
-                />
-                {/** Remove button */}
-                <Button
-                  type="button"
-                  className="text-secondary margin-top-0 margin-left-2"
-                  onClick={() => remove(index)}
-                  unstyled
-                >
-                  {t('Remove')}
-                </Button>
-              </FormGroup>
-            </li>
-          );
-        })}
-      </ul>
+      {
+        /** Field inputs */
+        links.length > 0 && (
+          <ul className="usa-list usa-list--unstyled">
+            {fields.map((item, index) => {
+              return (
+                <li key={item.id}>
+                  {/** Link input */}
+                  <Controller
+                    name={`links.${index}.link`}
+                    control={control}
+                    render={({ field }) => {
+                      const error: boolean = !!errors.links?.[index]?.link;
+                      return (
+                        <FormGroup error={error}>
+                          <Label
+                            htmlFor={`links.${index}.link`}
+                            className="text-normal margin-top-3"
+                          >
+                            {t('Link')}
+                          </Label>
+                          {error && (
+                            <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                          )}
+                          <div className="margin-top-1 display-flex flex-align-center">
+                            <TextInput
+                              className="margin-top-0"
+                              type="url"
+                              id={`link.${item.id}`}
+                              {...field}
+                              ref={null}
+                            />
+                            <Button
+                              type="button"
+                              className="text-secondary margin-top-0 margin-left-2"
+                              onClick={() => remove(index)}
+                              unstyled
+                            >
+                              {t('Remove')}
+                            </Button>
+                          </div>
+                        </FormGroup>
+                      );
+                    }}
+                  />
+                  {/** Remove button */}
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
 
       {/** Add link button */}
       <Button
         type="button"
-        className="display-flex flex-align-center"
+        className="display-flex flex-align-center margin-top-4"
         onClick={() => {
           append({ link: '' });
         }}
-        // TODO: Disabled state
-        // disabled={links?.length === 0}
+        disabled={links.length > 0 && !lastLinkInput}
         unstyled
       >
         <IconAdd className="margin-right-05" />
