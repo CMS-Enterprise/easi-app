@@ -20,9 +20,9 @@ type LinksArrayFieldProps = {
  * TRB Recommendation links field using React Hook Forms useFieldArray hook
  */
 export default function LinkArrayField({
-  control,
-  watch
-}: LinksArrayFieldProps) {
+  control
+}: // watch
+LinksArrayFieldProps) {
   const { t } = useTranslation('technicalAssistance');
 
   const { fields, append, remove } = useFieldArray({
@@ -31,7 +31,7 @@ export default function LinkArrayField({
   });
 
   /** Field value - updates on input change */
-  const links = watch('links');
+  // const links = watch('links');
 
   return (
     <div id="trbLinksField">
@@ -85,7 +85,8 @@ export default function LinkArrayField({
         onClick={() => {
           append({ link: '' });
         }}
-        disabled={links?.length === 0}
+        // TODO: Disabled state
+        // disabled={links?.length === 0}
         unstyled
       >
         <IconAdd className="margin-right-05" />

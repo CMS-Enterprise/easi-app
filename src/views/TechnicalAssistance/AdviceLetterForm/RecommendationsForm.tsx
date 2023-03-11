@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import {
+  // ApolloError,
+  useMutation
+} from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -24,7 +27,10 @@ import {
   CreateTRBAdviceLetterRecommendationInput,
   UpdateTRBAdviceLetterRecommendationInput
 } from 'types/graphql-global-types';
-import { AdviceLetterRecommendationFields } from 'types/technicalAssistance';
+import {
+  AdviceLetterRecommendationFields,
+  FormAlertObject
+} from 'types/technicalAssistance';
 import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
@@ -33,9 +39,14 @@ import LinksArrayField from './LinksArrayField/Index';
 
 type RecommendationsFormProps = {
   trbRequestId: string;
+  /** Set a form level alert message from within step components */
+  setFormAlert: React.Dispatch<React.SetStateAction<FormAlertObject | null>>;
 };
 
-const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
+const RecommendationsForm = ({
+  trbRequestId,
+  setFormAlert
+}: RecommendationsFormProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
@@ -43,7 +54,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
     handleSubmit,
     control,
     watch,
-    formState: { isSubmitting }
+    formState: { isSubmitting, isDirty }
   } = useForm<AdviceLetterRecommendationFields>({
     resolver: yupResolver(adviceRecommendationSchema),
     defaultValues: {
@@ -61,17 +72,21 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
     UpdateTrbRecommendationQuery
   );
 
-  const createRecommendation = async () => {
-    handleSubmit(
-      formData => {
-        /** Format links to array of strings */
-        const links = (formData.links || []).map(({ link }) => link);
+  const submit = useCallback(() => {
+    /** Submits form and executes recommendation mutation */
+    const submitForm = handleSubmit(
+      async formData => {
+        if (isDirty) {
+          /** Format links to array of strings */
+          const links = (formData.links || []).map(({ link }) => link);
 
-        if (formData?.id) {
-          /** Update recommendation if ID is present */
-          update({
+          /** Creates new or updates existing recommendation */
+          const mutate = formData?.id ? update : create;
+
+          await mutate({
             variables: {
               input: {
+                trbRequestId,
                 id: formData?.id,
                 title: formData.title,
                 recommendation: formData.recommendation,
@@ -79,23 +94,25 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
               }
             }
           });
-        } else {
-          /** Create recommendation */
-          create({
-            variables: {
-              input: {
-                trbRequestId,
-                title: formData.title,
-                recommendation: formData.recommendation,
-                links
-              }
-            }
-          });
         }
+      },
+      // Throw error to cause promise to fail
+      () => {
+        throw new Error('Invalid form submission');
       }
-      // error => console.log(error)
-    )();
-  };
+    );
+
+    return submitForm().then(
+      () => {
+        // TODO: Reset errors on success
+        history.push(`/trb/${trbRequestId}/advice/recommendations`);
+      },
+      e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    );
+  }, [handleSubmit, isDirty, trbRequestId, update, create, history]);
 
   return (
     <div>
@@ -128,7 +145,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
 
       <Form
         onSubmit={() =>
-          createRecommendation().then(() =>
+          submit().then(() =>
             history.push(`/trb/${trbRequestId}/advice/recommendations`)
           )
         }
@@ -195,6 +212,7 @@ const RecommendationsForm = ({ trbRequestId }: RecommendationsFormProps) => {
             watch('recommendation').length === 0 ||
             isSubmitting
           }
+          onClick={() => submit()}
         >
           {t('button.save')}
         </Button>

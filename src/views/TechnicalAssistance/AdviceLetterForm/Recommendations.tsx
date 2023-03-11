@@ -26,7 +26,6 @@ export type RecommendationsProps = {
 const Recommendations = ({
   trbRequestId,
   adviceLetter,
-  setStepSubmit,
   setIsStepSubmitting,
   setFormAlert
 }: StepComponentProps) => {
@@ -39,7 +38,7 @@ const Recommendations = ({
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
 
-  const [deleteRecommendation, loading] = useMutation<
+  const [deleteRecommendation, { loading }] = useMutation<
     DeleteTRBRecommendation,
     DeleteTRBRecommendationVariables
   >(DeleteTrbRecommendationQuery);
@@ -48,7 +47,10 @@ const Recommendations = ({
     <Switch>
       {/* Recommendations Form */}
       <Route exact path={`${path}/form`}>
-        <RecommendationsForm trbRequestId={trbRequestId} />
+        <RecommendationsForm
+          trbRequestId={trbRequestId}
+          setFormAlert={setFormAlert}
+        />
       </Route>
 
       {/* Recommendations form step */}
