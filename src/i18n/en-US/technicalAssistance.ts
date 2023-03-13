@@ -92,6 +92,7 @@ const technicalAssistance = {
     ],
     meetingSummary: 'Meeting summary',
     addRecommendation: 'Add a recommendation',
+    addAnotherRecommendation: 'Add another recommendation',
     noRecommendations:
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
     continueWithoutAdding: 'Continue without adding recommendations',

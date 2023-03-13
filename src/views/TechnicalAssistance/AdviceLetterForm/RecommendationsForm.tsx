@@ -19,6 +19,7 @@ import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import {
   CreateTrbRecommendationQuery,
+  GetTrbAdviceLetterQuery,
   UpdateTrbRecommendationQuery
 } from 'queries/TrbAdviceLetterQueries';
 import {
@@ -94,7 +95,15 @@ const RecommendationsForm = ({
                 recommendation: formData.recommendation,
                 links
               }
-            }
+            },
+            refetchQueries: [
+              {
+                query: GetTrbAdviceLetterQuery,
+                variables: {
+                  id: trbRequestId
+                }
+              }
+            ]
           });
         }
       },

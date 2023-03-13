@@ -6,7 +6,10 @@ import { Button, ButtonGroup } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { Alert } from 'components/shared/Alert';
-import { DeleteTrbRecommendationQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  DeleteTrbRecommendationQuery,
+  GetTrbAdviceLetterQuery
+} from 'queries/TrbAdviceLetterQueries';
 import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables
@@ -41,7 +44,16 @@ const Recommendations = ({
   const [deleteRecommendation, { loading }] = useMutation<
     DeleteTRBRecommendation,
     DeleteTRBRecommendationVariables
-  >(DeleteTrbRecommendationQuery);
+  >(DeleteTrbRecommendationQuery, {
+    refetchQueries: [
+      {
+        query: GetTrbAdviceLetterQuery,
+        variables: {
+          id: trbRequestId
+        }
+      }
+    ]
+  });
 
   useEffect(() => {
     setIsStepSubmitting(loading);
@@ -65,8 +77,13 @@ const Recommendations = ({
             className="margin-top-5 margin-bottom-1"
             type="button"
             onClick={() => history.push(`${url}/form`)}
+            outline={hasRecommendations}
           >
-            {t('adviceLetterForm.addRecommendation')}
+            {t(
+              hasRecommendations
+                ? 'adviceLetterForm.addAnotherRecommendation'
+                : 'adviceLetterForm.addRecommendation'
+            )}
           </Button>
 
           {
@@ -90,6 +107,7 @@ const Recommendations = ({
                         links && (
                           <ul className="usa-list usa-list--unstyled">
                             {links.map((link, index) => (
+                              // TODO: Link formatting - remove http and fix href prop
                               // eslint-disable-next-line react/no-array-index-key
                               <li key={`${id}.${index}`}>
                                 <UswdsReactLink to={link} variant="external">
