@@ -16,24 +16,24 @@ import { formatDateLocal, formatDateUtc } from 'utils/date';
 import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';
 
-function SubjectDefinition(
-  form: any,
-  field: keyof TrbRequestForm
-): React.ReactNode {
-  const { t } = useTranslation('technicalAssistance');
-  const { [field]: formField, [`${field}Other`]: formFieldOther } = form;
-  return Array.isArray(formField) && formField.length ? (
-    formField
-      .map((v: string) =>
-        v === 'OTHER'
-          ? `${t('basic.options.other')}: ${formFieldOther}`
-          : t(`subject.options.${field}.${v}`)
-      )
-      .join(', ')
-  ) : (
-    <em>{t('check.noTopicsSelected')}</em>
-  );
-}
+// function SubjectDefinition(
+//   form: any,
+//   field: keyof TrbRequestForm
+// ): React.ReactNode {
+//   const { t } = useTranslation('technicalAssistance');
+//   const { [field]: formField, [`${field}Other`]: formFieldOther } = form;
+//   return Array.isArray(formField) && formField.length ? (
+//     formField
+//       .map((v: string) =>
+//         v === 'OTHER'
+//           ? `${t('basic.options.other')}: ${formFieldOther}`
+//           : t(`subject.options.${field}.${v}`)
+//       )
+//       .join(', ')
+//   ) : (
+//     <em>{t('check.noTopicsSelected')}</em>
+//   );
+// }
 
 type SubmittedRequestProps = {
   request: TrbRequest;
@@ -202,7 +202,7 @@ function SubmittedRequest({
           </UswdsReactLink>
         </div>
       )}
-      <dl className="easi-dl margin-y-3">
+      {/* <dl className="easi-dl margin-y-3">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>
@@ -269,7 +269,7 @@ function SubmittedRequest({
             </dd>
           </Grid>
         </Grid>
-      </dl>
+      </dl> */}
       <Divider />
 
       {/* Attendees */}

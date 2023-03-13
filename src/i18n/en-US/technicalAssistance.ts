@@ -351,130 +351,31 @@ const technicalAssistance = {
     allFieldsMandatory: 'All fields are mandatory'
   },
   subject: {
+    info:
+      'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.',
     labels: {
-      subjectAreaTechnicalReferenceArchitecture:
-        'Technical Reference Architecture (TRA)',
-      subjectAreaNetworkAndSecurity: 'Network and security',
-      subjectAreaCloudAndInfrastructure: 'Cloud and infrastructure',
-      subjectAreaApplicationDevelopment: 'Application development',
-      subjectAreaDataAndDataManagement: 'Data and data management',
-      subjectAreaGovernmentProcessesAndPolicies:
-        'CMS Governance processes and policies',
-      subjectAreaOtherTechnicalTopics: 'Other technical topics',
-
-      other: 'Please specify',
-      selectedTopics: 'Selected topics'
+      ACCESSIBILITY_COMPLIANCE: 'Access Control and Identity Management',
+      ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT: 'Accessibility Compliance',
+      ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT:
+        'Assistance with System Concept Development',
+      BUSINESS_INTELLIGENCE: 'Business Intelligence',
+      CLOUD_MIGRATION: 'Cloud Migration',
+      CONTAINERS_AND_MICROSERVICES: 'Containers and Microservices',
+      DISASTER_RECOVERY: 'Disaster Recovery',
+      EMAIL_INTEGRATION: 'Email Integration',
+      ENTERPRISE_DATA_LAKE_INTEGRATION: 'Enterprise Data Lake Integration',
+      FRAMEWORK_OR_TOOL_ALTERNATIVES: 'Framework or Tool Alternatives',
+      OPEN_SOURCE_SOFTWARE: 'Open Source Software',
+      PORTAL_INTEGRATION: 'Portal Integration',
+      SYSTEM_ARCHITECTURE_REVIEW: 'TRA Clarifications and/or Applicability',
+      SYSTEM_DISPOSITION_PLANNING: 'System Architecture Review',
+      TECHNICAL_REFERENCE_ARCHITECTURE: 'System Disposition Planning',
+      WEB_BASED_UI_SERVICES: 'Web Services and Web APIs',
+      WEB_SERVICES_AND_APIS: 'Web-based UI Services'
     },
-    hint: {
-      subjectAreaTechnicalReferenceArchitecture:
-        'Select any topics relevant to your request that are related to CMS’s Technical Reference Architecture or its foundational principles.',
-      subjectAreaNetworkAndSecurity:
-        'Select any network and security topics relevant to your request.',
-      subjectAreaCloudAndInfrastructure:
-        'Select any cloud and infrastructure topics relevant to your request.',
-      subjectAreaApplicationDevelopment:
-        'Select application development topics relevant to your request.',
-      subjectAreaDataAndDataManagement:
-        'Select any specific data topics relevant to your request.',
-      subjectAreaGovernmentProcessesAndPolicies:
-        'Select any specific CMS processes and policies that you would like to discuss as a part of your request.',
-      subjectAreaOtherTechnicalTopics:
-        'Select any additional topics related to your request.',
-
-      other: 'Explain which Other topic you would like to discuss with the TRB.'
-    },
-    options: {
-      subjectAreaTechnicalReferenceArchitecture: {
-        GENERAL_TRA_INFORMATION: 'General TRA information',
-        TRA_GUIDING_PRINCIPLES: 'TRA guiding principles',
-        CMS_PROCESSING_ENVIRONMENTS: 'CMS processing environments',
-        CMS_TRA_MULTI_ZONE_ARCHITECTURE: 'CMS TRA multi-zone architecture',
-        CMS_TRA_BUSINESS_RULES: 'CMS TRA business rules',
-        ABOUT_THE_TRB: 'About the TRB',
-        ARCHITECTURE_CHANGE_REQUEST_PROCESS_FOR_THE_TRA:
-          'Architecture change request process for the TRA',
-        OTHER: 'Other'
-      },
-      subjectAreaNetworkAndSecurity: {
-        GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION:
-          'General network and security services information',
-        SECURITY_SERVICES: 'Security services',
-        CMS_CYBERSECURITY_INTEGRATION_CENTER_INTEGRATION:
-          'CMS Cybersecurity Integration Center (CCIC) integration',
-        WIDE_AREA_NETWORK_SERVICES: 'Wide area network services',
-        ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT:
-          'Access control and identity management',
-        DOMAIN_NAME_SYSTEM_SERVICES: 'Domain name system services',
-        OTHER: 'Other'
-      },
-      subjectAreaCloudAndInfrastructure: {
-        GENERAL_CLOUD_AND_INFRASTRUCTURE_SERVICES_INFORMATION:
-          'General cloud and infrastructure services information',
-        VIRTUALIZATION: 'Virtualization',
-        CLOUD_IAAS_AND_PAAS_INFRASTRUCTURE:
-          'Cloud IaaS and PaaS infrastructure',
-        IT_PERFORMANCE_MANAGEMENT: 'IT performance management',
-        FILE_TRANSFER: 'File transfer',
-        DATA_STORAGE_SERVICES: 'Data storage services',
-        SOFTWARE_AS_A_SERVICE: 'Software as a Service',
-        KEYS_AND_SECRETS_MANAGEMENT: 'Keys and secrets management',
-        MOBILE_DEVICES_AND_APPLICATIONS: 'Mobile devices and applications',
-        CLOUD_MIGRATION: 'Cloud migration',
-        DISASTER_RECOVERY: 'Disaster recovery',
-        OTHER: 'Other'
-      },
-      subjectAreaApplicationDevelopment: {
-        GENERAL_APPLICATION_DEVELOPMENT_SERVICES_INFORMATION:
-          'General application development services information',
-        APPLICATION_DEVELOPMENT: 'Application development',
-        WEB_SERVICES_AND_WEB_APIS: 'Web services and web APIs',
-        WEB_BASED_UI_SERVICES: 'Web-based UI services',
-        OPEN_SOURCE_SOFTWARE: 'Open source software',
-        PORTAL_INTEGRATION: 'Portal integration',
-        ACCESSIBILITY_COMPLIANCE: 'Accessibility and 508',
-        BUSINESS_INTELLIGENCE: 'Business intelligence',
-        CONTAINERS_AND_MICROSERVICES: 'Containers and microservices',
-        ROBOTIC_PROCESS_AUTOMATION: 'Robotic Process Automation (RPA)',
-        SYSTEM_ARCHITECTURE_REVIEW: 'System architecture review',
-        EMAIL_INTEGRATION: 'Email integration',
-        CONFIGURATION_MANAGEMENT: 'Configuration management',
-        OTHER: 'Other'
-      },
-      subjectAreaDataAndDataManagement: {
-        GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION:
-          'General data and data management information',
-        ENTERPRISE_DATA_ENVIRONMENT_REVIEW:
-          'Enterprise data environment review',
-        DATA_MART: 'Data mart',
-        DATA_WAREHOUSING: 'Data warehousing',
-        ANALYTIC_SANDBOXES: 'Analytic sandboxes',
-        APIS_AND_DATA_EXCHANGES: 'APIs and data exchanges',
-        FHIR: 'FHIR',
-        OTHER: 'Other'
-      },
-      subjectAreaGovernmentProcessesAndPolicies: {
-        GENERAL_INFORMATION_ABOUT_CMS_PROCESSES_AND_POLICIES:
-          'General information about CMS processes and policies',
-        OTHER_AVAILABLE_TRB_SERVICES: 'Other available TRB services',
-        SECTION_508_AND_ACCESSIBILITY_TESTING:
-          'Section 508 and accessibility testing',
-        TARGET_LIFE_CYCLE: 'Target Life Cycle (TLC)',
-        SYSTEM_DISPOSITION_PLANNING: 'System disposition planning',
-        INVESTMENT_AND_BUDGET_PLANNING: 'Investment and budget planning',
-        LIFECYCLE_IDS: 'Lifecycle IDs',
-        CONTRACTING_AND_PROCUREMENT: 'Contracting and procurement',
-        SECURITY_ASSESSMENTS: 'Security assessments (ATO, ACT, SIA, etc.)',
-        INFRASTRUCTURE_AS_A_SERVICE: 'Infrastructure as a service (BatCave)',
-        OTHER: 'Other'
-      },
-      subjectAreaOtherTechnicalTopics: {
-        ARTIFICIAL_INTELLIGENCE: 'Artificial Intelligence (AI)',
-        MACHINE_LEARNING: 'Machine Learning (ML)',
-        ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT:
-          'Assistance with system concept development',
-        OTHER: 'Other'
-      }
-    },
+    other: 'Other',
+    otherHint:
+      'Add a list of additional topics you’d like to discuss with the TRB. Please comma-separate your list if you are including multiple.',
     errors: {
       submit:
         'Your subject areas were not saved. Please try again. If the error persists, please try again at a later date.'

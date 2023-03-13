@@ -1,4 +1,5 @@
 @use 'uswds-core' as *;
+@use 'viewports' as *;
 
 .technical-assistance {
   .trb-admin-alert {
@@ -11,6 +12,26 @@
       width: 200px;
     }
   }
+
+  .trb-checkbox-container {
+    border: 1px solid color('base');
+    border-radius: .25rem;
+    padding: .5rem;
+    margin-bottom: 1rem !important;
+
+    .usa-checkbox__label {
+      margin: 0 !important;
+    }
+  }
+
+  .subject-container-height {
+    height:  25rem;
+
+    @media screen and (max-width: $desktop) {
+      height:  auto;
+    }
+  }
+
   .usa-form {
     /* Top margin for 1st level form groups */
     > .usa-form-group {

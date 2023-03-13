@@ -14,13 +14,11 @@ import {
 } from 'queries/types/GetTrbRequest';
 import {
   TRBAdviceLetterStatus,
-  TRBApplicationDevelopmentOption,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
-  TRBNetworkAndSecurityOption,
   TRBRequestStatus,
   TRBRequestType,
   TRBWhereInProcessOption
@@ -63,28 +61,10 @@ const mockTrbRequestData: TrbRequest = {
     collabDateGovernanceReviewBoard: null,
     collabDateOther: 'Lorem ipsum dolor',
     collabGroupOther: 'Consectetur',
-    subjectAreaTechnicalReferenceArchitecture: [],
-    subjectAreaNetworkAndSecurity: [
-      TRBNetworkAndSecurityOption.GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION,
-      TRBNetworkAndSecurityOption.ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
-    ],
-    subjectAreaCloudAndInfrastructure: [],
-    subjectAreaApplicationDevelopment: [
-      TRBApplicationDevelopmentOption.OPEN_SOURCE_SOFTWARE,
-      TRBApplicationDevelopmentOption.BUSINESS_INTELLIGENCE,
-      TRBApplicationDevelopmentOption.EMAIL_INTEGRATION,
-      TRBApplicationDevelopmentOption.OTHER
-    ],
-    subjectAreaDataAndDataManagement: [],
-    subjectAreaGovernmentProcessesAndPolicies: [],
-    subjectAreaOtherTechnicalTopics: [],
-    subjectAreaTechnicalReferenceArchitectureOther: null,
-    subjectAreaNetworkAndSecurityOther: null,
-    subjectAreaCloudAndInfrastructureOther: null,
-    subjectAreaApplicationDevelopmentOther: 'Lorem ipsum dolor',
-    subjectAreaDataAndDataManagementOther: null,
-    subjectAreaGovernmentProcessesAndPoliciesOther: null,
-    subjectAreaOtherTechnicalTopicsOther: null,
+    collabGRBConsultRequested: null,
+    subjectAreaOptions: null,
+    subjectAreaOptionOther: null,
+    fundingSources: null,
     submittedAt: '2023-01-23T20:06:52.123703Z',
     __typename: 'TRBRequestForm'
   },
