@@ -77,7 +77,7 @@ const intake = {
     }
   },
   requestType: {
-    new: 'Add a new system',
+    new: 'Add a new system or service',
     recompete: 'Re-compete',
     majorChanges: 'Major change or upgrade',
     shutdown: 'Decommission a system'
@@ -125,7 +125,8 @@ const intake = {
     subheading: 'What is this request for?',
     fields: {
       addNewSystem: 'Add a new system',
-      majorChanges: 'Major changes or upgrades to an existing system',
+      majorChanges:
+        'Major changes or upgrades to an existing system or service',
       recompete:
         'Re-compete a contract without any changes to systems or services'
     },
