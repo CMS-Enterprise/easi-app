@@ -64,6 +64,7 @@ func (s *Store) UpdateNote(ctx context.Context, note *models.Note) (*models.Note
 	UPDATE notes
 	SET
 		content = :content,
+		is_archived = :is_archived,
 		modified_by = :modified_by,
 		modified_at = CURRENT_TIMESTAMP
 	WHERE id = :id
@@ -161,10 +162,10 @@ func (s *Store) FetchNoteByID(ctx context.Context, id uuid.UUID) (*models.Note, 
 	return &note, nil
 }
 
-// FetchNotesBySystemIntakeID retrieves all Notes associated with a specific SystemIntake
+// FetchNotesBySystemIntakeID retrieves all (non archived/deleted) Notes associated with a specific SystemIntake
 func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, id uuid.UUID) ([]*models.Note, error) {
 	notes := []*models.Note{}
-	err := s.db.Select(&notes, "SELECT * FROM notes WHERE system_intake=$1 ORDER BY created_at DESC", id)
+	err := s.db.Select(&notes, "SELECT * FROM notes WHERE system_intake=$1 AND is_archived=false ORDER BY created_at DESC", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch notes %s", err),

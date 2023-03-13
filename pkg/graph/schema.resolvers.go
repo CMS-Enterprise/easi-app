@@ -1316,6 +1316,7 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 
 	note, err := r.store.UpdateNote(ctx, &models.Note{
 		Content:    null.StringFrom(input.Content),
+		IsArchived: input.IsArchived,
 		ID:         input.ID,
 		ModifiedBy: &userInfo.EuaUserID,
 	})
@@ -1327,23 +1328,9 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 			Eua:  note.AuthorEUAID,
 		},
 		Content:    note.Content.String,
+		Archived:   note.IsArchived,
 		ModifiedAt: note.ModifiedAt,
 		ModifiedBy: note.ModifiedBy,
-	}, err
-}
-
-// SetSystemIntakeNoteArchived is the resolver for the setSystemIntakeNoteArchived field.
-func (r *mutationResolver) SetSystemIntakeNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*model.SystemIntakeNote, error) {
-	updatedNote, err := r.store.SetNoteArchived(ctx, id, isArchived, appcontext.Principal(ctx).ID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.SystemIntakeNote{
-		ID:       updatedNote.ID,
-		Content:  updatedNote.Content.String,
-		Archived: updatedNote.IsArchived,
 	}, err
 }
 
@@ -2757,8 +2744,11 @@ func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemInta
 				Name: n.AuthorName.String,
 				Eua:  n.AuthorEUAID,
 			},
-			Content:   n.Content.String,
-			CreatedAt: *n.CreatedAt,
+			Archived:   n.IsArchived,
+			ModifiedBy: n.ModifiedBy,
+			ModifiedAt: n.ModifiedAt,
+			Content:    n.Content.String,
+			CreatedAt:  *n.CreatedAt,
 		})
 	}
 	return graphNotes, nil

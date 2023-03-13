@@ -722,8 +722,9 @@ type UpdateSystemIntakeLinkedContractInput struct {
 
 // Input data for updating an IT governance admin note
 type UpdateSystemIntakeNoteInput struct {
-	Content string    `json:"content"`
-	ID      uuid.UUID `json:"id"`
+	Content    string    `json:"content"`
+	IsArchived bool      `json:"isArchived"`
+	ID         uuid.UUID `json:"id"`
 }
 
 // The payload for updating a system's IT governance request

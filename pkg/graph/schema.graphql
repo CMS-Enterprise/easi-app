@@ -1360,6 +1360,7 @@ Input data for updating an IT governance admin note
 """
 input UpdateSystemIntakeNoteInput {
   content: String!
+  isArchived: Boolean!
   id: UUID!
 }
 
@@ -2173,8 +2174,6 @@ type Mutation {
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
-    @hasRole(role: EASI_GOVTEAM)
-  setSystemIntakeNoteArchived(id: UUID!, isArchived: Boolean!): SystemIntakeNote!
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
     @hasRole(role: EASI_USER)
