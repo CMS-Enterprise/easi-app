@@ -599,13 +599,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           setModalSubpage={setModalSubpage}
         />
 
-        <SectionWrapper className="margin-top-5 margin-bottom-5">
+        <SectionWrapper className="margin-bottom-5">
           <GridContainer className={classnames({ 'maxw-none': modal })}>
             <Grid row gap>
               {!isMobile && (
                 <Grid
                   desktop={{ col: 3 }}
-                  className="padding-right-4 sticky-nav"
+                  className="padding-right-4 sticky side-nav"
                 >
                   {/* Side navigation for single system */}
                   <SideNav items={subNavigationLinks} />
@@ -628,7 +628,10 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                   <GridContainer className="padding-left-0 padding-right-0">
                     <Grid row gap>
                       {/* Central component */}
-                      <Grid desktop={{ col: modal ? 12 : 8 }}>
+                      <Grid
+                        desktop={{ col: modal ? 12 : 8 }}
+                        className="padding-top-3"
+                      >
                         {subComponent.component}
                       </Grid>
 
@@ -637,7 +640,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                         <Grid
                           desktop={{ col: 4 }}
                           className={classnames({
-                            'sticky-nav': !isMobile
+                            'sticky side-nav padding-top-7': !isMobile
                           })}
                         >
                           {/* Setting a ref here to reference the grid width for the fixed side nav */}

@@ -9,6 +9,7 @@
 
 export interface CreateTrbAdviceLetter_createTRBAdviceLetter_recommendations {
   __typename: "TRBAdviceLetterRecommendation";
+  id: UUID;
   title: string;
   recommendation: string;
   links: string[];

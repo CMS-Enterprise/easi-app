@@ -98,9 +98,15 @@ const PDFExport = ({
 }: PDFExportProps) => {
   const divEl = useRef<HTMLDivElement>(null);
 
-  return (
+  const IntakeContent: JSX.Element = (
     <div className="easi-pdf-export" ref={divEl}>
-      {linkPosition === 'bottom' && children}
+      {children}
+    </div>
+  );
+
+  return (
+    <>
+      {linkPosition === 'bottom' && IntakeContent}
 
       <div
         className={classNames('easi-pdf-export__controls', {
@@ -118,8 +124,8 @@ const PDFExport = ({
         </button>
       </div>
 
-      {linkPosition === 'top' && children}
-    </div>
+      {linkPosition === 'top' && IntakeContent}
+    </>
   );
 };
 

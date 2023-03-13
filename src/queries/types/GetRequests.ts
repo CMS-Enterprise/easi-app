@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { RequestType } from "./../../types/graphql-global-types";
+import { RequestType, TRBRequestStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetRequests
@@ -31,8 +31,18 @@ export interface GetRequests_requests {
   edges: GetRequests_requests_edges[];
 }
 
+export interface GetRequests_trbRequests {
+  __typename: "TRBRequest";
+  id: UUID;
+  name: string;
+  submittedAt: Time;
+  status: TRBRequestStatus;
+  nextMeetingDate: Time | null;
+}
+
 export interface GetRequests {
   requests: GetRequests_requests | null;
+  trbRequests: GetRequests_trbRequests[];
 }
 
 export interface GetRequestsVariables {

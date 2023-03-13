@@ -1529,6 +1529,10 @@ type TRBRequest {
   taskStatuses: TRBTaskStatuses!
   consultMeetingTime: Time
   trbLead: String
+  trbLeadInfo: UserInfo!
+  trbLeadComponent: String
+  requesterInfo: UserInfo!
+  requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
   createdBy: String!
@@ -1557,7 +1561,6 @@ input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     name: String
     archived: Boolean
     type: TRBRequestType
-    status: TRBRequestStatus
 }
 
 """
@@ -2101,6 +2104,15 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
 }
 
 """
+The input needed to close a TRB request
+"""
+input CloseTRBRequestInput {
+  id: UUID!
+  reasonClosed: String!
+  notifyEuaIds: [String!]!
+}
+
+"""
 The data needed to reopen a TRB request
 """
 input ReopenTRBRequestInput {
@@ -2251,6 +2263,8 @@ type Mutation {
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
+    @hasRole(role: EASI_TRB_ADMIN)
+  closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)

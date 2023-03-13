@@ -52,7 +52,7 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 // this function only supports querying for a _single_ user's info
 func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*models2.UserInfo, error) {
 	if euaID == "" {
-		appcontext.ZLogger(ctx).Error("No EUA ID specified; unable to request user info from CEDAR LDAP")
+		appcontext.ZLogger(ctx).Warn("No EUA ID specified; unable to request user info from CEDAR LDAP")
 		return nil, &apperrors.InvalidParametersError{
 			FunctionName: "cedarldap.FetchUserInfo",
 		}
@@ -101,9 +101,9 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 // FetchUserInfos fetches multiple users' personal details
 func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) ([]*models2.UserInfo, error) {
 	if len(euaIDs) == 0 {
-		appcontext.ZLogger(ctx).Error("No EUA ID specified; unable to request user info from CEDAR LDAP")
+		appcontext.ZLogger(ctx).Warn("No EUA IDs specified; unable to request user info from CEDAR LDAP")
 		return nil, &apperrors.InvalidParametersError{
-			FunctionName: "cedarldap.FetchUserInfo",
+			FunctionName: "cedarldap.FetchUserInfos",
 		}
 	}
 
@@ -149,7 +149,7 @@ func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) (
 // `commonName` parameter in * to make the search match any person whose name contains the commonName param
 func (c TranslatedClient) SearchCommonNameContains(ctx context.Context, commonName string) ([]*models2.UserInfo, error) {
 	if commonName == "" {
-		appcontext.ZLogger(ctx).Error("No commonName specified; skipping request to CEDAR LDAP")
+		appcontext.ZLogger(ctx).Warn("No commonName specified; skipping request to CEDAR LDAP")
 		return nil, nil
 	}
 
