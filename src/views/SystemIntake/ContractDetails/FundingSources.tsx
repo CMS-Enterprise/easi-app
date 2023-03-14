@@ -45,18 +45,18 @@ export const FundingSourcesListItem = ({
       className={classNames('funding-source', className)}
       id={`fundingNumber-${fundingNumber}`}
     >
-      <p className="text-bold font-body-sm">
+      <p className="text-bold font-body-sm margin-bottom-0">
         {t('contractDetails.fundingSources.fundingSource')}
       </p>
-      <p>{fundingNumberText}</p>
-      <p>{fundingSourceText}</p>
+      <p className="margin-y-05">{fundingNumberText}</p>
+      <p className="margin-y-05">{fundingSourceText}</p>
       {handleEdit && (
         <Button
           unstyled
           small
           onClick={() => handleEdit()}
           type="button"
-          className="margin-right-1"
+          className="margin-right-1 margin-top-1"
           data-testid="fundingSourcesAction-delete"
         >
           {t('Edit')}
@@ -68,7 +68,7 @@ export const FundingSourcesListItem = ({
           small
           onClick={() => handleDelete()}
           type="button"
-          className="text-error"
+          className="text-error margin-top-1"
           data-testid="fundingSourcesAction-delete"
         >
           {t('Delete')}

@@ -10,13 +10,6 @@ import {
 } from 'types/graphql-global-types';
 // import { fileObjectSchema } from './fileSchema';
 
-// type TRBFormFundingSources = {
-//   fundingSources: {
-//     sources: string[];
-//     fundingNumber: string;
-//   };
-// };
-
 type TrbFormInputBasic = Pick<
   UpdateTRBRequestFormInput,
   | 'component'
@@ -110,23 +103,7 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
     then: schema => schema.required()
   })
-  // fundingSources: yup.object().shape({
-  //   fundingNumber: yup.string().required('Requester name is a required field'),
-  //   source: yup.string().required('Requester name is a required field')
-  // })
 });
-
-// export const fundingSourcesBasicSchema: yup.SchemaOf<TRBFormFundingSources> = yup.object(
-//   {
-//     fundingSources: yup.object().shape({
-//       fundingNumber: yup
-//         .string()
-//         .required('Requester name is a required field'),
-//       sources: yup.array().of(yup.string().required()).required()
-//     })
-//   }
-// );
-
 export interface TrbRequestFormBasic extends TrbFormInputBasic {
   name: string;
 }

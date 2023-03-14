@@ -1,726 +1,496 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Trb Request form: Subject areas submits the form successfully after a failed attempt 1`] = `
+exports[`Trb Request form: Subject areas checks subject area form elements 1`] = `
 <DocumentFragment>
   <form
     class="usa-form trb-form-subject maxw-full"
     data-testid="form"
   >
     <div
-      class="grid-row margin-top-2"
-      data-testid="grid"
+      class="usa-form-group"
+      data-testid="formGroup"
     >
       <div
-        class="tablet:grid-col-12 desktop:grid-col-6"
+        class="grid-row grid-gap-2 desktop:grid-col-12 flex-column subject-container-height"
         data-testid="grid"
       >
         <div
-          class="usa-form-group"
-          data-testid="formGroup"
+          class="desktop:grid-col-4"
+          data-testid="grid"
         >
-          <label
-            class="usa-label"
-            data-testid="label"
-            for="subjectAreaTechnicalReferenceArchitecture"
+          <div
+            class="trb-checkbox-container"
           >
-            Technical Reference Architecture (TRA)
-            <span
-              class="usa-hint"
-            >
-              <div>
-                Select any topics relevant to your request that are related to CMS’s Technical Reference Architecture or its foundational principles.
-              </div>
-            </span>
-          </label>
-          <div>
             <div
-              class="easi-multiselect usa-combo-box css-b62m3t-container"
+              class="easi-checkbox usa-checkbox"
             >
-              <span
-                class="css-1f43avz-a11yText-A11yText"
-                id="react-select-2-live-region"
+              <input
+                class="usa-checkbox__input"
+                id="ACCESSIBILITY_COMPLIANCE"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="ACCESSIBILITY_COMPLIANCE"
               />
-              <span
-                aria-atomic="false"
-                aria-live="polite"
-                aria-relevant="additions text"
-                class="css-1f43avz-a11yText-A11yText"
-              />
-              <div
-                class=" css-jvusj8-control"
+              <label
+                class="usa-checkbox__label"
+                for="ACCESSIBILITY_COMPLIANCE"
               >
-                <div
-                  class=" css-319lph-ValueContainer"
-                >
-                  <div
-                    class=" css-14el2xx-placeholder"
-                    id="react-select-2-placeholder"
-                  >
-                    0 selected
-                  </div>
-                  <div
-                    class=" css-6j8wv5-Input"
-                    data-value=""
-                  >
-                    <input
-                      aria-autocomplete="list"
-                      aria-describedby="react-select-2-placeholder"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      autocorrect="off"
-                      class=""
-                      id="subjectAreaTechnicalReferenceArchitecture"
-                      role="combobox"
-                      spellcheck="false"
-                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                      tabindex="0"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
-                >
-                  <span
-                    class=" css-1vtyy7d-indicatorSeparator"
-                  />
-                  <div
-                    aria-hidden="true"
-                    class=" css-1232v1p-indicatorContainer"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="css-tj5bde-Svg"
-                      focusable="false"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      width="20"
-                    >
-                      <path
-                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <input
-                  name="subjectAreaTechnicalReferenceArchitecture"
-                  type="hidden"
-                />
-              </div>
+                Access Control and Identity Management
+              </label>
             </div>
           </div>
         </div>
         <div
-          class="usa-form-group"
-          data-testid="formGroup"
+          class="desktop:grid-col-4"
+          data-testid="grid"
         >
-          <label
-            class="usa-label"
-            data-testid="label"
-            for="subjectAreaNetworkAndSecurity"
+          <div
+            class="trb-checkbox-container"
           >
-            Network and security
-            <span
-              class="usa-hint"
-            >
-              <div>
-                Select any network and security topics relevant to your request.
-              </div>
-            </span>
-          </label>
-          <div>
             <div
-              class="easi-multiselect usa-combo-box css-b62m3t-container"
+              class="easi-checkbox usa-checkbox"
             >
-              <span
-                class="css-1f43avz-a11yText-A11yText"
-                id="react-select-3-live-region"
+              <input
+                class="usa-checkbox__input"
+                id="ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
               />
-              <span
-                aria-atomic="false"
-                aria-live="polite"
-                aria-relevant="additions text"
-                class="css-1f43avz-a11yText-A11yText"
-              />
-              <div
-                class=" css-jvusj8-control"
+              <label
+                class="usa-checkbox__label"
+                for="ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
               >
-                <div
-                  class=" css-319lph-ValueContainer"
-                >
-                  <div
-                    class=" css-14el2xx-placeholder"
-                    id="react-select-3-placeholder"
-                  >
-                    0 selected
-                  </div>
-                  <div
-                    class=" css-6j8wv5-Input"
-                    data-value=""
-                  >
-                    <input
-                      aria-autocomplete="list"
-                      aria-describedby="react-select-3-placeholder"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      autocorrect="off"
-                      class=""
-                      id="subjectAreaNetworkAndSecurity"
-                      role="combobox"
-                      spellcheck="false"
-                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                      tabindex="0"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
-                >
-                  <span
-                    class=" css-1vtyy7d-indicatorSeparator"
-                  />
-                  <div
-                    aria-hidden="true"
-                    class=" css-1232v1p-indicatorContainer"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="css-tj5bde-Svg"
-                      focusable="false"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      width="20"
-                    >
-                      <path
-                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <input
-                  name="subjectAreaNetworkAndSecurity"
-                  type="hidden"
-                />
-              </div>
+                Accessibility Compliance
+              </label>
             </div>
           </div>
         </div>
         <div
-          class="usa-form-group"
-          data-testid="formGroup"
+          class="desktop:grid-col-4"
+          data-testid="grid"
         >
-          <label
-            class="usa-label"
-            data-testid="label"
-            for="subjectAreaCloudAndInfrastructure"
+          <div
+            class="trb-checkbox-container"
           >
-            Cloud and infrastructure
-            <span
-              class="usa-hint"
-            >
-              <div>
-                Select any cloud and infrastructure topics relevant to your request.
-              </div>
-            </span>
-          </label>
-          <div>
             <div
-              class="easi-multiselect usa-combo-box css-b62m3t-container"
+              class="easi-checkbox usa-checkbox"
             >
-              <span
-                class="css-1f43avz-a11yText-A11yText"
-                id="react-select-4-live-region"
+              <input
+                class="usa-checkbox__input"
+                id="ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
               />
-              <span
-                aria-atomic="false"
-                aria-live="polite"
-                aria-relevant="additions text"
-                class="css-1f43avz-a11yText-A11yText"
-              />
-              <div
-                class=" css-jvusj8-control"
+              <label
+                class="usa-checkbox__label"
+                for="ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
               >
-                <div
-                  class=" css-319lph-ValueContainer"
-                >
-                  <div
-                    class=" css-14el2xx-placeholder"
-                    id="react-select-4-placeholder"
-                  >
-                    0 selected
-                  </div>
-                  <div
-                    class=" css-6j8wv5-Input"
-                    data-value=""
-                  >
-                    <input
-                      aria-autocomplete="list"
-                      aria-describedby="react-select-4-placeholder"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      autocorrect="off"
-                      class=""
-                      id="subjectAreaCloudAndInfrastructure"
-                      role="combobox"
-                      spellcheck="false"
-                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                      tabindex="0"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
-                >
-                  <span
-                    class=" css-1vtyy7d-indicatorSeparator"
-                  />
-                  <div
-                    aria-hidden="true"
-                    class=" css-1232v1p-indicatorContainer"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="css-tj5bde-Svg"
-                      focusable="false"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      width="20"
-                    >
-                      <path
-                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <input
-                  name="subjectAreaCloudAndInfrastructure"
-                  type="hidden"
-                />
-              </div>
+                Assistance with System Concept Development
+              </label>
             </div>
           </div>
         </div>
         <div
-          class="usa-form-group"
-          data-testid="formGroup"
+          class="desktop:grid-col-4"
+          data-testid="grid"
         >
-          <label
-            class="usa-label"
-            data-testid="label"
-            for="subjectAreaApplicationDevelopment"
+          <div
+            class="trb-checkbox-container"
           >
-            Application development
-            <span
-              class="usa-hint"
-            >
-              <div>
-                Select application development topics relevant to your request.
-              </div>
-            </span>
-          </label>
-          <div>
             <div
-              class="easi-multiselect usa-combo-box css-b62m3t-container"
+              class="easi-checkbox usa-checkbox"
             >
-              <span
-                class="css-1f43avz-a11yText-A11yText"
-                id="react-select-5-live-region"
+              <input
+                class="usa-checkbox__input"
+                id="BUSINESS_INTELLIGENCE"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="BUSINESS_INTELLIGENCE"
               />
-              <span
-                aria-atomic="false"
-                aria-live="polite"
-                aria-relevant="additions text"
-                class="css-1f43avz-a11yText-A11yText"
-              />
-              <div
-                class=" css-jvusj8-control"
+              <label
+                class="usa-checkbox__label"
+                for="BUSINESS_INTELLIGENCE"
               >
-                <div
-                  class=" css-319lph-ValueContainer"
-                >
-                  <div
-                    class=" css-14el2xx-placeholder"
-                    id="react-select-5-placeholder"
-                  >
-                    0 selected
-                  </div>
-                  <div
-                    class=" css-6j8wv5-Input"
-                    data-value=""
-                  >
-                    <input
-                      aria-autocomplete="list"
-                      aria-describedby="react-select-5-placeholder"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      autocorrect="off"
-                      class=""
-                      id="subjectAreaApplicationDevelopment"
-                      role="combobox"
-                      spellcheck="false"
-                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                      tabindex="0"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
-                >
-                  <span
-                    class=" css-1vtyy7d-indicatorSeparator"
-                  />
-                  <div
-                    aria-hidden="true"
-                    class=" css-1232v1p-indicatorContainer"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="css-tj5bde-Svg"
-                      focusable="false"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      width="20"
-                    >
-                      <path
-                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <input
-                  name="subjectAreaApplicationDevelopment"
-                  type="hidden"
-                />
-              </div>
+                Business Intelligence
+              </label>
             </div>
           </div>
         </div>
         <div
-          class="usa-form-group"
-          data-testid="formGroup"
+          class="desktop:grid-col-4"
+          data-testid="grid"
         >
-          <label
-            class="usa-label"
-            data-testid="label"
-            for="subjectAreaDataAndDataManagement"
+          <div
+            class="trb-checkbox-container"
           >
-            Data and data management
-            <span
-              class="usa-hint"
-            >
-              <div>
-                Select any specific data topics relevant to your request.
-              </div>
-            </span>
-          </label>
-          <div>
             <div
-              class="easi-multiselect usa-combo-box css-b62m3t-container"
+              class="easi-checkbox usa-checkbox"
             >
-              <span
-                class="css-1f43avz-a11yText-A11yText"
-                id="react-select-6-live-region"
+              <input
+                checked=""
+                class="usa-checkbox__input"
+                id="CLOUD_MIGRATION"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="CLOUD_MIGRATION"
               />
-              <span
-                aria-atomic="false"
-                aria-live="polite"
-                aria-relevant="additions text"
-                class="css-1f43avz-a11yText-A11yText"
-              />
-              <div
-                class=" css-jvusj8-control"
+              <label
+                class="usa-checkbox__label"
+                for="CLOUD_MIGRATION"
               >
-                <div
-                  class=" css-319lph-ValueContainer"
-                >
-                  <div
-                    class=" css-14el2xx-placeholder"
-                    id="react-select-6-placeholder"
-                  >
-                    0 selected
-                  </div>
-                  <div
-                    class=" css-6j8wv5-Input"
-                    data-value=""
-                  >
-                    <input
-                      aria-autocomplete="list"
-                      aria-describedby="react-select-6-placeholder"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      autocorrect="off"
-                      class=""
-                      id="subjectAreaDataAndDataManagement"
-                      role="combobox"
-                      spellcheck="false"
-                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                      tabindex="0"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
-                >
-                  <span
-                    class=" css-1vtyy7d-indicatorSeparator"
-                  />
-                  <div
-                    aria-hidden="true"
-                    class=" css-1232v1p-indicatorContainer"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="css-tj5bde-Svg"
-                      focusable="false"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      width="20"
-                    >
-                      <path
-                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <input
-                  name="subjectAreaDataAndDataManagement"
-                  type="hidden"
-                />
-              </div>
+                Cloud Migration
+              </label>
             </div>
           </div>
         </div>
         <div
-          class="usa-form-group"
-          data-testid="formGroup"
+          class="desktop:grid-col-4"
+          data-testid="grid"
         >
-          <label
-            class="usa-label"
-            data-testid="label"
-            for="subjectAreaGovernmentProcessesAndPolicies"
+          <div
+            class="trb-checkbox-container"
           >
-            CMS Governance processes and policies
-            <span
-              class="usa-hint"
-            >
-              <div>
-                Select any specific CMS processes and policies that you would like to discuss as a part of your request.
-              </div>
-            </span>
-          </label>
-          <div>
             <div
-              class="easi-multiselect usa-combo-box css-b62m3t-container"
+              class="easi-checkbox usa-checkbox"
             >
-              <span
-                class="css-1f43avz-a11yText-A11yText"
-                id="react-select-7-live-region"
+              <input
+                class="usa-checkbox__input"
+                id="CONTAINERS_AND_MICROSERVICES"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="CONTAINERS_AND_MICROSERVICES"
               />
-              <span
-                aria-atomic="false"
-                aria-live="polite"
-                aria-relevant="additions text"
-                class="css-1f43avz-a11yText-A11yText"
-              />
-              <div
-                class=" css-jvusj8-control"
+              <label
+                class="usa-checkbox__label"
+                for="CONTAINERS_AND_MICROSERVICES"
               >
-                <div
-                  class=" css-319lph-ValueContainer"
-                >
-                  <div
-                    class=" css-14el2xx-placeholder"
-                    id="react-select-7-placeholder"
-                  >
-                    0 selected
-                  </div>
-                  <div
-                    class=" css-6j8wv5-Input"
-                    data-value=""
-                  >
-                    <input
-                      aria-autocomplete="list"
-                      aria-describedby="react-select-7-placeholder"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      autocorrect="off"
-                      class=""
-                      id="subjectAreaGovernmentProcessesAndPolicies"
-                      role="combobox"
-                      spellcheck="false"
-                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                      tabindex="0"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
-                >
-                  <span
-                    class=" css-1vtyy7d-indicatorSeparator"
-                  />
-                  <div
-                    aria-hidden="true"
-                    class=" css-1232v1p-indicatorContainer"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="css-tj5bde-Svg"
-                      focusable="false"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      width="20"
-                    >
-                      <path
-                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <input
-                  name="subjectAreaGovernmentProcessesAndPolicies"
-                  type="hidden"
-                />
-              </div>
+                Containers and Microservices
+              </label>
             </div>
           </div>
         </div>
         <div
-          class="usa-form-group"
-          data-testid="formGroup"
+          class="desktop:grid-col-4"
+          data-testid="grid"
         >
-          <label
-            class="usa-label"
-            data-testid="label"
-            for="subjectAreaOtherTechnicalTopics"
+          <div
+            class="trb-checkbox-container"
           >
-            Other technical topics
-            <span
-              class="usa-hint"
-            >
-              <div>
-                Select any additional topics related to your request.
-              </div>
-            </span>
-          </label>
-          <div>
             <div
-              class="easi-multiselect usa-combo-box css-b62m3t-container"
+              class="easi-checkbox usa-checkbox"
             >
-              <span
-                class="css-1f43avz-a11yText-A11yText"
-                id="react-select-8-live-region"
+              <input
+                class="usa-checkbox__input"
+                id="DISASTER_RECOVERY"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="DISASTER_RECOVERY"
               />
-              <span
-                aria-atomic="false"
-                aria-live="polite"
-                aria-relevant="additions text"
-                class="css-1f43avz-a11yText-A11yText"
-              />
-              <div
-                class=" css-jvusj8-control"
+              <label
+                class="usa-checkbox__label"
+                for="DISASTER_RECOVERY"
               >
-                <div
-                  class=" css-319lph-ValueContainer"
-                >
-                  <div
-                    class=" css-14el2xx-placeholder"
-                    id="react-select-8-placeholder"
-                  >
-                    0 selected
-                  </div>
-                  <div
-                    class=" css-6j8wv5-Input"
-                    data-value=""
-                  >
-                    <input
-                      aria-autocomplete="list"
-                      aria-describedby="react-select-8-placeholder"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      autocorrect="off"
-                      class=""
-                      id="subjectAreaOtherTechnicalTopics"
-                      role="combobox"
-                      spellcheck="false"
-                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                      tabindex="0"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
-                >
-                  <span
-                    class=" css-1vtyy7d-indicatorSeparator"
-                  />
-                  <div
-                    aria-hidden="true"
-                    class=" css-1232v1p-indicatorContainer"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="css-tj5bde-Svg"
-                      focusable="false"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      width="20"
-                    >
-                      <path
-                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <input
-                  name="subjectAreaOtherTechnicalTopics"
-                  type="hidden"
-                />
-              </div>
+                Disaster Recovery
+              </label>
             </div>
           </div>
         </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="EMAIL_INTEGRATION"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="EMAIL_INTEGRATION"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="EMAIL_INTEGRATION"
+              >
+                Email Integration
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="ENTERPRISE_DATA_LAKE_INTEGRATION"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="ENTERPRISE_DATA_LAKE_INTEGRATION"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="ENTERPRISE_DATA_LAKE_INTEGRATION"
+              >
+                Enterprise Data Lake Integration
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="FRAMEWORK_OR_TOOL_ALTERNATIVES"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="FRAMEWORK_OR_TOOL_ALTERNATIVES"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="FRAMEWORK_OR_TOOL_ALTERNATIVES"
+              >
+                Framework or Tool Alternatives
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="OPEN_SOURCE_SOFTWARE"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="OPEN_SOURCE_SOFTWARE"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="OPEN_SOURCE_SOFTWARE"
+              >
+                Open Source Software
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="PORTAL_INTEGRATION"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="PORTAL_INTEGRATION"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="PORTAL_INTEGRATION"
+              >
+                Portal Integration
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="SYSTEM_ARCHITECTURE_REVIEW"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="SYSTEM_ARCHITECTURE_REVIEW"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="SYSTEM_ARCHITECTURE_REVIEW"
+              >
+                TRA Clarifications and/or Applicability
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="SYSTEM_DISPOSITION_PLANNING"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="SYSTEM_DISPOSITION_PLANNING"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="SYSTEM_DISPOSITION_PLANNING"
+              >
+                System Architecture Review
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="TECHNICAL_REFERENCE_ARCHITECTURE"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="TECHNICAL_REFERENCE_ARCHITECTURE"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="TECHNICAL_REFERENCE_ARCHITECTURE"
+              >
+                System Disposition Planning
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="WEB_BASED_UI_SERVICES"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="WEB_BASED_UI_SERVICES"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="WEB_BASED_UI_SERVICES"
+              >
+                Web Services and Web APIs
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="desktop:grid-col-4"
+          data-testid="grid"
+        >
+          <div
+            class="trb-checkbox-container"
+          >
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="WEB_SERVICES_AND_APIS"
+                name="subjectAreaOptions"
+                type="checkbox"
+                value="WEB_SERVICES_AND_APIS"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="WEB_SERVICES_AND_APIS"
+              >
+                Web-based UI Services
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="desktop:grid-col-12 padding-top-1"
+      data-testid="grid"
+    >
+      <div
+        class="usa-form-group margin-top-1"
+        data-testid="formGroup"
+      >
+        <label
+          class="usa-label text-normal"
+          data-testid="label"
+          for="subjectAreaOptionOther"
+        >
+          <div
+            class="text-bold"
+          >
+            Other
+          </div>
+          <span
+            class="usa-hint"
+          >
+            <div>
+              Add a list of additional topics you’d like to discuss with the TRB. Please comma-separate your list if you are including multiple.
+            </div>
+          </span>
+        </label>
+        <textarea
+          class="usa-textarea"
+          data-testid="subjectAreaOptionOther"
+          id="subjectAreaOptionOther"
+          name="subjectAreaOptionOther"
+        />
       </div>
     </div>
     <div
@@ -737,11 +507,11 @@ exports[`Trb Request form: Subject areas submits the form successfully after a f
           Back
         </button>
         <button
-          class="usa-button usa-button--outline margin-top-0"
+          class="usa-button margin-top-0"
           data-testid="button"
           type="submit"
         >
-          Continue without selecting subject areas
+          Next
         </button>
       </div>
       <button

@@ -244,6 +244,7 @@ function SubjectAreas({
                 {...field}
                 ref={null}
                 id="subjectAreaOptionOther"
+                data-testid="subjectAreaOptionOther"
               />
             </FormGroup>
           )}
