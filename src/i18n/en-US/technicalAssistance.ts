@@ -295,6 +295,7 @@ const technicalAssistance = {
     labels: {
       name: 'Request name',
       component: 'Request component',
+      projectInformation: 'Project Information',
       needsAssistanceWith: 'What do you need technical assistance with?',
       hasSolutionInMind: 'Do you have a solution in mind already?',
       proposedSolution: 'Describe your proposed solution.',
@@ -303,12 +304,14 @@ const technicalAssistance = {
         'Does your solution have an expected start and/or end date?',
       expectedStartDate: 'Expected start date',
       expectedEndDate: 'Expected end date',
+      collabAndGovernance: 'Collaboration and Governance',
       collabGroups:
         'Select any other OIT groups that you have met with or collaborated with.',
       collabGroupOther: 'Which other group(s)?',
       whenMeet: 'When did you meet with them?',
       collabGRBConsultRequested:
-        'Did the GRT or GRB request that you consult with the TRB as a part of your IT Governance or LCID issuance process?'
+        'Did the GRT or GRB request that you consult with the TRB as a part of your IT Governance or LCID issuance process?',
+      pleaseSpecify: 'Please specify'
     },
     hint: {
       component:

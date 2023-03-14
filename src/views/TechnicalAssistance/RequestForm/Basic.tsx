@@ -22,7 +22,9 @@ import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
+import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import {
   UpdateTrbRequestAndForm,
   UpdateTrbRequestAndFormVariables
@@ -256,7 +258,9 @@ function Basic({
               <FormGroup className="margin-top-5" error={!!error}>
                 <Label htmlFor="name" error={!!error}>
                   {t('basic.labels.name')}
+                  <RequiredAsterisk />
                 </Label>
+
                 {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
                 <TextInput
                   {...field}
@@ -281,6 +285,7 @@ function Basic({
                   error={!!error}
                 >
                   {t('basic.labels.component')}
+                  <RequiredAsterisk />
                 </Label>
                 {error && (
                   <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
@@ -298,6 +303,12 @@ function Basic({
             )}
           />
 
+          <Divider className="margin-top-6" />
+
+          <h4 className="margin-top-1">
+            {t('basic.labels.projectInformation')}
+          </h4>
+
           {/* What do you need technical assistance with? */}
           <Controller
             name="needsAssistanceWith"
@@ -310,6 +321,7 @@ function Basic({
                   error={!!error}
                 >
                   {t('basic.labels.needsAssistanceWith')}
+                  <RequiredAsterisk />
                 </Label>
                 {error && (
                   <ErrorMessage>{t('errors.includeExplanation')}</ErrorMessage>
@@ -336,6 +348,7 @@ function Basic({
               return (
                 <FormGroup error={!!error}>
                   <Fieldset legend={t('basic.labels.hasSolutionInMind')}>
+                    <RequiredAsterisk className="text-bold" />
                     {error && (
                       <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                     )}
@@ -361,6 +374,7 @@ function Basic({
                           <FormGroup error={!!error} className="margin-left-4">
                             <Label htmlFor="proposedSolution" error={!!error}>
                               {t('basic.labels.proposedSolution')}
+                              <RequiredAsterisk />
                             </Label>
                             {error && (
                               <ErrorMessage>
@@ -410,6 +424,7 @@ function Basic({
                   error={!!error}
                 >
                   {t('basic.labels.whereInProcess')}
+                  <RequiredAsterisk />
                 </Label>
                 {error && (
                   <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
@@ -448,7 +463,8 @@ function Basic({
                           error={!!error}
                           className="text-normal"
                         >
-                          {t('subject.labels.other')}
+                          {t('basic.labels.pleaseSpecify')}
+                          <RequiredAsterisk className="text-bold" />
                         </Label>
                         {error && (
                           <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
@@ -476,6 +492,7 @@ function Basic({
               return (
                 <FormGroup error={!!startOrEndError}>
                   <Fieldset legend={t('basic.labels.hasExpectedStartEndDates')}>
+                    <RequiredAsterisk className="text-bold" />
                     {startOrEndError && (
                       <ErrorMessage>
                         {startOrEndError.type === 'expected-start-or-end-date'
@@ -562,6 +579,12 @@ function Basic({
               );
             }}
           />
+
+          <Divider className="margin-top-6" />
+
+          <h4 className="margin-top-1">
+            {t('basic.labels.collabAndGovernance')}
+          </h4>
 
           {/* Select any other OIT groups that you have met with or collaborated with. */}
           <Controller
