@@ -306,7 +306,9 @@ const technicalAssistance = {
       collabGroups:
         'Select any other OIT groups that you have met with or collaborated with.',
       collabGroupOther: 'Which other group(s)?',
-      whenMeet: 'When did you meet with them?'
+      whenMeet: 'When did you meet with them?',
+      collabGRBConsultRequested:
+        'Did the GRT or GRB request that you consult with the TRB as a part of your IT Governance or LCID issuance process?'
     },
     hint: {
       component:

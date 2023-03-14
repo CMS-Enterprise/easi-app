@@ -30,6 +30,7 @@ type TrbFormInputBasic = Pick<
   | 'collabDateGovernanceReviewBoard'
   | 'collabDateOther'
   | 'collabGroupOther'
+  | 'collabGRBConsultRequested'
 >;
 
 export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
@@ -88,6 +89,10 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     then: schema => schema.required()
   }),
   collabDateGovernanceReviewBoard: yup.string().when('collabGroups', {
+    is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
+    then: schema => schema.required()
+  }),
+  collabGRBConsultRequested: yup.boolean().when('collabGroups', {
     is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
     then: schema => schema.required()
   }),

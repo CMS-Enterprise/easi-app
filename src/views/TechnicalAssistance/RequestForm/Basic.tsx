@@ -53,7 +53,8 @@ export const basicBlankValues = {
   collabDatePrivacyAdvisor: '',
   collabDateGovernanceReviewBoard: '',
   collabDateOther: '',
-  collabGroupOther: ''
+  collabGroupOther: '',
+  collabGRBConsultRequested: null
 };
 
 function Basic({
@@ -685,6 +686,62 @@ function Basic({
                                         type="text"
                                         validationStatus={error && 'error'}
                                       />
+                                      {val === 'GOVERNANCE_REVIEW_BOARD' && (
+                                        <Controller
+                                          name="collabGRBConsultRequested"
+                                          control={control}
+                                          render={({
+                                            // eslint-disable-next-line no-shadow
+                                            field,
+                                            // eslint-disable-next-line no-shadow
+                                            fieldState: { error }
+                                          }) => (
+                                            <FormGroup
+                                              error={!!error}
+                                              className="margin-bottom-1"
+                                            >
+                                              <Label
+                                                htmlFor={collabDateKey}
+                                                error={!!error}
+                                              >
+                                                {t(
+                                                  'basic.labels.collabGRBConsultRequested'
+                                                )}
+                                              </Label>
+                                              {error && (
+                                                <ErrorMessage>
+                                                  {t('errors.fillBlank')}
+                                                </ErrorMessage>
+                                              )}
+                                              <Radio
+                                                {...field}
+                                                ref={null}
+                                                id="grt-brb-consult-yes"
+                                                data-testid="grt-brb-consult-yes"
+                                                label={t('basic.options.yes')}
+                                                onChange={() =>
+                                                  field.onChange(true)
+                                                }
+                                                value="true"
+                                                checked={field.value === true}
+                                              />
+
+                                              <Radio
+                                                {...field}
+                                                ref={null}
+                                                id="grt-brb-consult-no"
+                                                data-testid="grt-brb-consult-no"
+                                                label={t('basic.options.no')}
+                                                onChange={() =>
+                                                  field.onChange(false)
+                                                }
+                                                value="false"
+                                                checked={field.value === false}
+                                              />
+                                            </FormGroup>
+                                          )}
+                                        />
+                                      )}
                                     </FormGroup>
                                   )}
                                 />
