@@ -3,7 +3,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
-// import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   ErrorMessage,
@@ -12,7 +11,7 @@ import {
   Grid,
   Label
 } from '@trussworks/react-uswds';
-import { isEqual, pick, zipObject } from 'lodash';
+import { isEqual, pick } from 'lodash';
 
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -23,14 +22,8 @@ import {
 } from 'queries/types/UpdateTrbForm';
 import UpdateTrbFormQuery from 'queries/UpdateTrbFormQuery';
 import { TRBSubjectAreaOption } from 'types/graphql-global-types';
-// } from 'types/graphql-global-types';
-// import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
 
-// import {
-//   subjectAreasSchema,
-//   TrbFormInputSubjectAreas
-// } from 'validations/trbRequestSchema';
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
 
@@ -39,10 +32,6 @@ export const subjectAreasBlankValues = {
   subjectAreaOptionOther: ''
 };
 
-const subjectFields: string[] = [
-  'subjectAreaOptions',
-  'subjectAreaOptionOther'
-];
 /**
  * Uses enum `TRBSubjectAreaOption` to render form fields.
  */
@@ -70,10 +59,7 @@ function SubjectAreas({
     handleSubmit,
     formState: { errors, isSubmitting, isDirty, dirtyFields },
     watch
-    // clearErrors
   } = useForm({
-    // } = useForm<FormFieldProps<TrbFormInputSubjectAreas>>({
-    // resolver: yupResolver(subjectAreasSchema),
     defaultValues: initialValues
   });
 
@@ -81,15 +67,12 @@ function SubjectAreas({
 
   const subjectData = watch();
 
-  // Disregard "other" fields when determining form `unfilled`
-  const primaryData = zipObject(subjectFields, watch(subjectFields));
-
   /**
    * Switch submit button between next (true) and continue (false)
    */
   const unfilled: boolean = useMemo(
-    () => isEqual(primaryData, pick(subjectAreasBlankValues, subjectFields)),
-    [primaryData]
+    () => isEqual(subjectData, subjectAreasBlankValues),
+    [subjectData]
   );
 
   useEffect(() => {
@@ -103,17 +86,8 @@ function SubjectAreas({
     callback =>
       handleSubmit(
         async formData => {
-          // Remove unneeded checkbox field for mutation
-          const {
-            subjectAreaOptionOtherCheckbox,
-            ...formSubmissionData
-          } = formData;
-
           if (isDirty) {
-            const input: any = pick(
-              formSubmissionData,
-              Object.keys(dirtyFields)
-            );
+            const input: any = pick(formData, Object.keys(dirtyFields));
 
             Object.entries(input).forEach(([key, value]) => {
               if (value === '') input[key] = null;
@@ -200,8 +174,6 @@ function SubjectAreas({
         </Alert>
       )}
 
-      {/* <Grid row className="margin-top-2"> */}
-      {/* <Grid row desktop={{ col: 12 }}> */}
       <Controller
         name="subjectAreaOptions"
         control={control}
@@ -252,26 +224,7 @@ function SubjectAreas({
         }}
       />
 
-      <Grid desktop={{ col: 12 }} className="padding-top-2">
-        <Controller
-          name="subjectAreaOptionOtherCheckbox"
-          control={control}
-          // eslint-disable-next-line no-shadow
-          render={({ field, fieldState: { error } }) => (
-            <FormGroup>
-              <CheckboxField
-                id="subjectAreaOptionOtherCheckbox"
-                name="subjectAreaOptionOtherCheckbox"
-                label={t(`subject.other`)}
-                value="subjectAreaOptionOtherCheckbox"
-                onChange={() => null}
-                onBlur={() => null}
-                checked={!!subjectData.subjectAreaOptionOther}
-              />
-            </FormGroup>
-          )}
-        />
-
+      <Grid desktop={{ col: 12 }} className="padding-top-1">
         <Controller
           name="subjectAreaOptionOther"
           control={control}
@@ -284,7 +237,7 @@ function SubjectAreas({
                 error={!!error}
                 className="text-normal"
               >
-                {' '}
+                <div className="text-bold">{t(`subject.other`)}</div>
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <TextAreaField
@@ -296,7 +249,6 @@ function SubjectAreas({
           )}
         />
       </Grid>
-      {/* </Grid> */}
 
       <Pager
         className="margin-top-5"
