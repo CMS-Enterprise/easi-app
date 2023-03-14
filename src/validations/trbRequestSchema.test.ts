@@ -109,10 +109,12 @@ describe('TRB Basic Form schema validation', () => {
         collabGroups: ['GOVERNANCE_REVIEW_BOARD']
       },
       empty: {
-        collabDateGovernanceReviewBoard: ''
+        collabDateGovernanceReviewBoard: '',
+        collabGRBConsultRequested: null
       },
       filled: {
-        collabDateGovernanceReviewBoard: freeTextDate
+        collabDateGovernanceReviewBoard: freeTextDate,
+        collabGRBConsultRequested: true
       }
     },
     {

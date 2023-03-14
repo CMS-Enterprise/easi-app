@@ -21,6 +21,7 @@ import {
   TRBFormStatus,
   TRBRequestStatus,
   TRBRequestType,
+  TRBSubjectAreaOption,
   TRBWhereInProcessOption
 } from 'types/graphql-global-types';
 
@@ -62,8 +63,11 @@ const mockTrbRequestData: TrbRequest = {
     collabDateOther: 'Lorem ipsum dolor',
     collabGroupOther: 'Consectetur',
     collabGRBConsultRequested: null,
-    subjectAreaOptions: null,
-    subjectAreaOptionOther: null,
+    subjectAreaOptions: [
+      TRBSubjectAreaOption.ACCESSIBILITY_COMPLIANCE,
+      TRBSubjectAreaOption.CLOUD_MIGRATION
+    ],
+    subjectAreaOptionOther: 'A few other subjects',
     fundingSources: null,
     submittedAt: '2023-01-23T20:06:52.123703Z',
     __typename: 'TRBRequestForm'
@@ -129,15 +133,11 @@ describe('Trb Request form: Check and submit', () => {
     // Oit groups with other
     getByText('Security (06/01/2023), Other: Consectetur (Lorem ipsum dolor)');
     // Net sec options
-    getByText(
-      'General network and security services information, Access control and identity management'
-    );
+    getByText('Access Control and Identity Management');
     // App dev with other
-    getByText(
-      'Open source software, Business intelligence, Email integration, Other: Lorem ipsum dolor'
-    );
+    getByText('Cloud Migration');
     // Others with no topics
-    expect(getAllByText('No topics selected')).toHaveLength(5);
+    getByText('A few other subjects');
 
     // Snapshot of stuff in place
     expect(asFragment()).toMatchSnapshot();

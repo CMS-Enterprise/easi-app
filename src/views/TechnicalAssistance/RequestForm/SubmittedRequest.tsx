@@ -262,7 +262,10 @@ function SubmittedRequest({
       )}
       <div className="margin-top-3">
         {request.form.subjectAreaOptions?.map(subject => (
-          <Tag className="text-base-darker bg-base-lighter margin-bottom-1">
+          <Tag
+            className="text-base-darker bg-base-lighter margin-bottom-1"
+            key={subject}
+          >
             {t(`subject.labels.${subject}`)}
           </Tag>
         ))}
