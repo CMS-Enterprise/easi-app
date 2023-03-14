@@ -11,8 +11,12 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequest_trbRequest_form as TrbRequestForm
 } from 'queries/types/GetTrbRequest';
-import { TRBWhereInProcessOption } from 'types/graphql-global-types';
+import {
+  TRBCollabGroupOption,
+  TRBWhereInProcessOption
+} from 'types/graphql-global-types';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
+import { formatFundingSourcesForRender } from 'views/SystemIntake/ContractDetails/useIntakeFundingSources';
 
 import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';
@@ -50,6 +54,10 @@ function SubmittedRequest({
   showRequestHeaderInfo
 }: SubmittedRequestProps) {
   const { t } = useTranslation('technicalAssistance');
+
+  const fundingSources = formatFundingSourcesForRender(
+    request.form.fundingSources || []
+  );
 
   const {
     data: { requester, attendees }
@@ -162,6 +170,37 @@ function SubmittedRequest({
                 : t('basic.options.no')}
             </dd>
           </Grid>
+
+          <Grid tablet={{ col: 12 }}>
+            <dt>{t('basic.labels.fundingSources')}</dt>
+          </Grid>
+
+          {fundingSources.length && (
+            <>
+              {fundingSources.map(fundingSource => (
+                <Grid
+                  tablet={{ col: 12 }}
+                  desktop={{ col: 6 }}
+                  key={fundingSource.fundingNumber}
+                >
+                  <dt>{t('basic.labels.fundingSource')}</dt>
+                  <dd className="margin-bottom-0">
+                    {t('basic.labels.fundingNumber')}:{' '}
+                    {fundingSource.fundingNumber}
+                  </dd>
+                  <dd>
+                    {t('basic.labels.fundingSourcesList')}:{' '}
+                    {fundingSource.sources.join(', ')}
+                  </dd>
+                </Grid>
+              ))}
+            </>
+          )}
+
+          {/* Used to break up a potential uneven row */}
+          <Grid desktop={{ col: 12 }} />
+
+          {/* <Grid row desktop={{ col: 12 }}> */}
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>{t('basic.labels.collabGroups')}</dt>
             <dd>
@@ -183,6 +222,24 @@ function SubmittedRequest({
                 .join(', ')}
             </dd>
           </Grid>
+
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+            {request.form.collabGroups.includes(
+              TRBCollabGroupOption.GOVERNANCE_REVIEW_BOARD
+            ) && (
+              <>
+                <dt>{t('basic.labels.collabGRBConsultRequested')}</dt>
+                <dd>
+                  {t(
+                    `basic.options.${
+                      request.form.collabGRBConsultRequested ? 'yes' : 'no'
+                    }`
+                  )}
+                </dd>
+              </>
+            )}
+          </Grid>
+          {/* </Grid> */}
         </Grid>
       </dl>
       <Divider />

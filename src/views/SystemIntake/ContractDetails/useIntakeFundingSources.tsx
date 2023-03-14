@@ -11,10 +11,35 @@ import {
   UseIntakeFundingSources
 } from 'types/systemIntake';
 
+type GenericFundingSourceQueryType = {
+  fundingNumber: string;
+  source: string;
+};
+
 // Empty funding source
 const emptyFundingSource: MultiFundingSource = {
   fundingNumber: '',
   sources: []
+};
+
+export const formatFundingSourcesForRender = (
+  initialFundingSources: GenericFundingSourceQueryType[]
+): MultiFundingSource[] => {
+  const condenseadSources = initialFundingSources.reduce(
+    (acc: any, { fundingNumber, source }) => {
+      acc[fundingNumber] ??= {
+        fundingNumber,
+        sources: []
+      };
+      acc[fundingNumber].sources.push(source);
+
+      return acc;
+    },
+    {}
+  );
+  return Object.entries(condenseadSources).map(
+    entry => entry[1]
+  ) as MultiFundingSource[];
 };
 
 // Custom hook for system intake funding source actions

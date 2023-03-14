@@ -304,6 +304,9 @@ const technicalAssistance = {
         'Does your solution have an expected start and/or end date?',
       expectedStartDate: 'Expected start date',
       expectedEndDate: 'Expected end date',
+      fundingSource: 'Funding source',
+      fundingNumber: 'Funding number',
+      fundingSourcesList: 'Funding sources',
       fundingSources: 'Which existing funding sources will fund this project?',
       collabAndGovernance: 'Collaboration and Governance',
       collabGroups:
