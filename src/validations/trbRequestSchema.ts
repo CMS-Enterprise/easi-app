@@ -91,10 +91,13 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
     then: schema => schema.required()
   }),
-  collabGRBConsultRequested: yup.boolean().when('collabGroups', {
-    is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
-    then: schema => schema.required()
-  }),
+  collabGRBConsultRequested: yup
+    .boolean()
+    .nullable()
+    .when('collabGroups', {
+      is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
+      then: schema => schema.required()
+    }),
   collabGroupOther: yup.string().when('collabGroups', {
     is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
     then: schema => schema.required()
