@@ -25,18 +25,34 @@ import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import intakeFundingSources from 'constants/enums/intakeFundingSources';
+import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'queries/types/GetTrbRequest';
 import {
   UpdateTrbRequestAndForm,
   UpdateTrbRequestAndFormVariables
 } from 'queries/types/UpdateTrbRequestAndForm';
+import {
+  UpdateTRBRequestFundingSourcesVariables,
+  UpdateTRBRequestFundingSourcesVariables as UpdateTRBRequestFundingSourcesVariablesType
+} from 'queries/types/UpdateTRBRequestFundingSources';
 import UpdateTrbRequestAndFormQuery from 'queries/UpdateTrbRequestAndFormQuery';
+import UpdateTRBRequestFundingSources from 'queries/UpdateTRBRequestFundingSources';
 import { TRBCollabGroupOption } from 'types/graphql-global-types';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
-import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
+import {
+  basicSchema,
+  // fundingSourcesBasicSchema,
+  TrbRequestFormBasic
+} from 'validations/trbRequestSchema';
+import FundingSources from 'views/SystemIntake/ContractDetails/FundingSources';
 
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
+
+type FundingSourcesFormType = {
+  fundingSources: GetTrbRequestFundingSourcesType[];
+};
 
 export const basicBlankValues = {
   component: '',
@@ -76,6 +92,11 @@ function Basic({
     UpdateTrbRequestAndFormVariables
   >(UpdateTrbRequestAndFormQuery);
 
+  const [updatefundingSources] = useMutation<
+    UpdateTRBRequestFundingSourcesVariablesType,
+    UpdateTRBRequestFundingSourcesVariables
+  >(UpdateTRBRequestFundingSources);
+
   const initialValues = nullFillObject(request.form, basicBlankValues);
 
   const {
@@ -87,6 +108,14 @@ function Basic({
     defaultValues: {
       name: request.name,
       ...initialValues
+    }
+  });
+
+  const { control: controlFundingSources, reset } = useForm<
+    FormFieldProps<FundingSourcesFormType>
+  >({
+    defaultValues: {
+      fundingSources: request.form.fundingSources ?? []
     }
   });
 
@@ -201,6 +230,36 @@ function Basic({
     ]
   );
 
+  // Handling the funding sources sumbission outside the scope of RHF handler
+  // Funding sources component has it's own validation
+  const submitFundingSources = ({
+    fundingNumber,
+    sources
+  }: {
+    fundingNumber: string;
+    sources: string[];
+  }) => {
+    updatefundingSources({
+      variables: {
+        trbRequestId: request.id,
+        fundingNumber,
+        sources
+      }
+    })
+      .then(() => {
+        refetchRequest();
+      })
+      .catch(err => {
+        if (err instanceof ApolloError) {
+          setFormAlert({
+            type: 'error',
+            heading: t('errors.somethingWrong'),
+            message: t('basic.errors.submit')
+          });
+        }
+      });
+  };
+
   useEffect(() => {
     setStepSubmit(() => submit);
   }, [setStepSubmit, submit]);
@@ -208,6 +267,12 @@ function Basic({
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
+
+  // effect runs when funding sources are updated
+  useEffect(() => {
+    // reset form with updated fundingsources
+    reset({ fundingSources: request.form.fundingSources || [] });
+  }, [request.form.fundingSources, reset]);
 
   return (
     <Form
@@ -585,6 +650,39 @@ function Basic({
           <h4 className="margin-top-1">
             {t('basic.labels.collabAndGovernance')}
           </h4>
+
+          <Controller
+            name="fundingSources"
+            control={controlFundingSources}
+            // eslint-disable-next-line no-shadow
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error} className="margin-bottom-4">
+                <Label
+                  htmlFor={field.name}
+                  error={!!error}
+                  hint={t('basic.hint.fundingSources')}
+                  className="text-normal"
+                >
+                  {t('basic.labels.fundingSources')}
+                </Label>
+                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+                <FundingSources
+                  id="trb-funding-sources"
+                  initialValues={field.value}
+                  setFieldValue={(fieldName, value) => {
+                    if (value.delete) {
+                      // TODO: Delete funding source submit handler
+                    } else {
+                      // Add or edit funding source submit handler
+                      submitFundingSources(value);
+                    }
+                  }}
+                  fundingSourceOptions={intakeFundingSources}
+                  combinedFields
+                />
+              </FormGroup>
+            )}
+          />
 
           {/* Select any other OIT groups that you have met with or collaborated with. */}
           <Controller

@@ -138,8 +138,10 @@ const FundingSourceForm = ({
       );
     }
 
-    // Set errors
-    setErrors(updatedErrors);
+    if (updatedErrors.fundingNumber || updatedErrors.sources) {
+      // Set errors
+      setErrors(updatedErrors);
+    }
 
     // If no errors, update funding sources
     if (!updatedErrors.fundingNumber && !updatedErrors.sources) {
@@ -161,6 +163,10 @@ const FundingSourceForm = ({
         });
       }
     }
+
+    return {
+      err: updatedErrors
+    };
   };
   return (
     <>
@@ -247,7 +253,14 @@ const FundingSourceForm = ({
       </Button>
       <Button
         type="button"
-        onClick={() => onSubmit()}
+        onClick={() => {
+          const { err } = onSubmit();
+          if (!err) {
+            setActiveFundingSource({
+              action: 'Reset'
+            });
+          }
+        }}
         className="display-inline-block margin-top-2"
         data-testid="fundingSourcesAction-save"
       >
@@ -258,20 +271,25 @@ const FundingSourceForm = ({
 };
 
 type FundingSourcesProps = {
+  id?: string;
   initialValues: FundingSource[];
   fundingSourceOptions: string[];
   setFieldValue: (field: string, value: any) => void;
+  combinedFields?: boolean;
 };
 
 const FundingSources = ({
+  id,
   initialValues,
   fundingSourceOptions,
-  setFieldValue
+  setFieldValue,
+  combinedFields = false
 }: FundingSourcesProps) => {
   // Get funding sources actions from useIntakeFundingSources custom hook
   const fundingSourcesData = useIntakeFundingSources(
     initialValues,
-    setFieldValue
+    setFieldValue,
+    combinedFields
   );
   const [fundingSources, setFundingSources] = fundingSourcesData.fundingSources;
   const [
@@ -286,7 +304,7 @@ const FundingSources = ({
     <>
       {Object.keys(fundingSources).length > 0 && (
         <ul
-          id="Intake-Form-ExistingFundingSources"
+          id={id || 'Intake-Form-ExistingFundingSources'}
           className="usa-list--unstyled margin-bottom-4 margin-top-3"
         >
           {Object.values(fundingSources).map(fundingSource => {

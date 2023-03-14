@@ -304,6 +304,7 @@ const technicalAssistance = {
         'Does your solution have an expected start and/or end date?',
       expectedStartDate: 'Expected start date',
       expectedEndDate: 'Expected end date',
+      fundingSources: 'Which existing funding sources will fund this project?',
       collabAndGovernance: 'Collaboration and Governance',
       collabGroups:
         'Select any other OIT groups that you have met with or collaborated with.',
@@ -321,7 +322,9 @@ const technicalAssistance = {
       whereInProcess:
         'This helps the TRB provide the right type of support for your request.',
       whenMeet:
-        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.'
+        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.',
+      fundingSources:
+        'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.'
     },
     options: {
       select: 'Select',
