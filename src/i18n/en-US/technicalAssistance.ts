@@ -373,6 +373,7 @@ const technicalAssistance = {
       WEB_BASED_UI_SERVICES: 'Web Services and Web APIs',
       WEB_SERVICES_AND_APIS: 'Web-based UI Services'
     },
+    otherSubjectAreas: 'Other subject areas',
     other: 'Other',
     otherHint:
       'Add a list of additional topics you’d like to discuss with the TRB. Please comma-separate your list if you are including multiple.',

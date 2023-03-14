@@ -5,6 +5,7 @@ import { camelCase, upperFirst } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
+import Tag from 'components/shared/Tag';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
   GetTrbRequest_trbRequest as TrbRequest,
@@ -202,74 +203,19 @@ function SubmittedRequest({
           </UswdsReactLink>
         </div>
       )}
-      {/* <dl className="easi-dl margin-y-3">
-        <Grid row gap>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>
-              {t('subject.labels.subjectAreaTechnicalReferenceArchitecture')}
-            </dt>
-            <dd>
-              {SubjectDefinition(
-                request.form,
-                'subjectAreaTechnicalReferenceArchitecture'
-              )}
-            </dd>
-          </Grid>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>{t('subject.labels.subjectAreaNetworkAndSecurity')}</dt>
-            <dd>
-              {SubjectDefinition(request.form, 'subjectAreaNetworkAndSecurity')}
-            </dd>
-          </Grid>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>{t('subject.labels.subjectAreaCloudAndInfrastructure')}</dt>
-            <dd>
-              {SubjectDefinition(
-                request.form,
-                'subjectAreaCloudAndInfrastructure'
-              )}
-            </dd>
-          </Grid>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>{t('subject.labels.subjectAreaApplicationDevelopment')}</dt>
-            <dd>
-              {SubjectDefinition(
-                request.form,
-                'subjectAreaApplicationDevelopment'
-              )}
-            </dd>
-          </Grid>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>{t('subject.labels.subjectAreaDataAndDataManagement')}</dt>
-            <dd>
-              {SubjectDefinition(
-                request.form,
-                'subjectAreaDataAndDataManagement'
-              )}
-            </dd>
-          </Grid>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>
-              {t('subject.labels.subjectAreaGovernmentProcessesAndPolicies')}
-            </dt>
-            <dd>
-              {SubjectDefinition(
-                request.form,
-                'subjectAreaGovernmentProcessesAndPolicies'
-              )}
-            </dd>
-          </Grid>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <dt>{t('subject.labels.subjectAreaOtherTechnicalTopics')}</dt>
-            <dd>
-              {SubjectDefinition(
-                request.form,
-                'subjectAreaOtherTechnicalTopics'
-              )}
-            </dd>
-          </Grid>
-        </Grid>
-      </dl> */}
+      <div className="margin-top-3">
+        {request.form.subjectAreaOptions?.map(subject => (
+          <Tag className="text-base-darker bg-base-lighter margin-bottom-1">
+            {t(`subject.labels.${subject}`)}
+          </Tag>
+        ))}
+      </div>
+
+      <dl className="easi-dl margin-y-3">
+        <dt>{t('subject.otherSubjectAreas')}</dt>
+        <dd>{request.form.subjectAreaOptionOther}</dd>
+      </dl>
+
       <Divider />
 
       {/* Attendees */}
