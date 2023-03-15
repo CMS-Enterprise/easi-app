@@ -280,7 +280,18 @@ const technicalAssistance = {
       'The TRB has requested edits to your initial request form. View their feedback and make any changes requested.',
     noFeedback:
       'The TRB had no feedback about your request form. If you have any questions, you may contact them at ',
+    downloadTemplates: 'Download presentation templates',
     sendAnEmail: 'Send an email',
+    uploadDocuments: 'Upload additional documents',
+    reviewAttendeeList: 'Review attendee list',
+    viewAttendeeList: 'View attendee list',
+    prepareForTRB: 'Prepare for your TRB consult meeting (opens in a new tab)',
+    trbConsultInfoHeading:
+      'Your TRB consult session is scheduled for {{-datetime}}',
+    trbConsultInfo:
+      'If this day or time does not work for you, or if you need to reschedule, please contact the TRB at ',
+    trbConsultAttended:
+      'You attended your project’s TRB consult session on {{-datetime}}',
     taskList: [
       {
         heading: 'Fill out the initial request form',

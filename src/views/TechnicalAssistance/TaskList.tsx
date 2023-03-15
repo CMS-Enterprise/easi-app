@@ -18,7 +18,12 @@ import {
   GetTrbTasklist,
   GetTrbTasklistVariables
 } from 'queries/types/GetTrbTasklist';
-import { TRBFeedbackStatus, TRBFormStatus } from 'types/graphql-global-types';
+import {
+  TRBAttendConsultStatus,
+  TRBConsultPrepStatus,
+  TRBFeedbackStatus,
+  TRBFormStatus
+} from 'types/graphql-global-types';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 
 import Breadcrumbs from './Breadcrumbs';
@@ -117,7 +122,7 @@ function TaskList() {
                   <TaskListDescription>
                     <p>{taskListText[0].text}</p>
 
-                    {editsRequested && (
+                    {editsRequested && formStatus !== TRBFormStatus.COMPLETED && (
                       <Alert type="warning" slim className="margin-bottom-205">
                         {t('taskList.editsRequestedWarning')}
                       </Alert>
@@ -186,34 +191,114 @@ function TaskList() {
                 {/* Prepare for the TRB consult session */}
                 <TaskListItem
                   heading={taskListText[2].heading}
-                  status="CANNOT_START"
+                  status={taskStatuses?.consultPrepStatus}
                   testId={kebabCase(taskListText[2].heading)}
                 >
                   <TaskListDescription>
                     <p>{taskListText[2].text}</p>
-                    <ul>
+                    <ul className="margin-bottom-2 list-disc">
                       <li>{taskListText[2].list![0]}</li>
                       <li>{taskListText[2].list![1]}</li>
                       <li>{taskListText[2].list![2]}</li>
                     </ul>
+
+                    {taskStatuses?.consultPrepStatus !==
+                    TRBConsultPrepStatus.CANNOT_START_YET ? (
+                      <div>
+                        <UswdsReactLink
+                          variant="unstyled"
+                          className="usa-button"
+                          to="/help/it-governance/prepare-for-trb-consult"
+                        >
+                          {t('taskList.downloadTemplates')}
+                        </UswdsReactLink>
+
+                        <UswdsReactLink
+                          className="display-block margin-top-2"
+                          to={`/trb/request/${id}/upload-document`}
+                        >
+                          {t('taskList.uploadDocuments')}
+                        </UswdsReactLink>
+
+                        <UswdsReactLink
+                          className="display-block margin-top-2"
+                          target="_blank"
+                          to={`/trb/request/${id}/attendee-list`}
+                        >
+                          {t('taskList.reviewAttendeeList')}
+                        </UswdsReactLink>
+                      </div>
+                    ) : (
+                      <UswdsReactLink
+                        className="display-block margin-top-2"
+                        to="/help/it-governance/prepare-for-trb-consult"
+                      >
+                        {t('taskList.prepareForTRB')}
+                      </UswdsReactLink>
+                    )}
                   </TaskListDescription>
                 </TaskListItem>
 
                 {/* Attend the TRB consult session */}
                 <TaskListItem
                   heading={taskListText[3].heading}
-                  status="CANNOT_START"
+                  status={taskStatuses?.attendConsultStatus}
                   testId={kebabCase(taskListText[3].heading)}
                 >
                   <TaskListDescription>
                     <p>{taskListText[3].text}</p>
+
+                    {taskStatuses?.attendConsultStatus ===
+                      TRBAttendConsultStatus.SCHEDULED && (
+                      <Alert
+                        type="info"
+                        slim
+                        className="margin-bottom-0 margin-top-205"
+                      >
+                        <h4 className="margin-0">
+                          {t('taskList.trbConsultInfoHeading', {
+                            datetime: '09/01/2023 at 2:00 pm' // TODO: replace with TRB consult scehduled date
+                          })}
+                        </h4>
+                        {t('taskList.trbConsultInfo')}{' '}
+                        <Link
+                          href="mailto:cms-trb@cms.hhs.gov"
+                          aria-label={t('taskList.sendAnEmail')}
+                          target="_blank"
+                        >
+                          cms-trb@cms.hhs.gov
+                        </Link>
+                      </Alert>
+                    )}
+
+                    {taskStatuses?.attendConsultStatus ===
+                      TRBAttendConsultStatus.COMPLETED && (
+                      <>
+                        <Alert
+                          type="info"
+                          slim
+                          className="margin-bottom-0 margin-top-205"
+                        >
+                          {t('taskList.trbConsultAttended', {
+                            datetime: '09/01/2023 at 2:00 pm' // TODO: replace with TRB consult scehduled date
+                          })}
+                        </Alert>
+                        <UswdsReactLink
+                          className="display-block margin-top-2"
+                          target="_blank"
+                          to={`/trb/request/${id}/attendee-list`}
+                        >
+                          {t('taskList.viewAttendeeList')}
+                        </UswdsReactLink>
+                      </>
+                    )}
                   </TaskListDescription>
                 </TaskListItem>
 
                 {/* Advice letter and next steps */}
                 <TaskListItem
                   heading={taskListText[4].heading}
-                  status="CANNOT_START"
+                  status={taskStatuses?.adviceLetterStatus}
                   testId={kebabCase(taskListText[4].heading)}
                 >
                   <TaskListDescription>
