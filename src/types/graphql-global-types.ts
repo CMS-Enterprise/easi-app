@@ -328,7 +328,7 @@ export enum TRBRequestDocumentStatus {
   UNAVAILABLE = "UNAVAILABLE",
 }
 
-export enum TRBRequestStatus {
+export enum TRBRequestState {
   CLOSED = "CLOSED",
   OPEN = "OPEN",
 }
