@@ -125,6 +125,7 @@ const technicalAssistance = {
     cancel: 'Cancel',
     back: 'Back',
     continue: 'Continue',
+    update: 'Update',
     next: 'Next',
     save: 'Save',
     saveAndExit: 'Save and exit',
@@ -275,6 +276,11 @@ const technicalAssistance = {
       'Steps involved in getting technical assistance from the TRB',
     sampleRequest: 'Sample TRB Request',
     viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
+    editsRequestedWarning:
+      'The TRB has requested edits to your initial request form. View their feedback and make any changes requested.',
+    noFeedback:
+      'The TRB had no feedback about your request form. If you have any questions, you may contact them at ',
+    sendAnEmail: 'Send an email',
     taskList: [
       {
         heading: 'Fill out the initial request form',
@@ -680,7 +686,8 @@ const technicalAssistance = {
     viewFeedback: 'View feedback',
     date: 'Date',
     from: 'Feedback from',
-    returnToForm: 'Return to request form'
+    returnToForm: 'Return to request form',
+    returnToTaskList: 'Return to task list'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',

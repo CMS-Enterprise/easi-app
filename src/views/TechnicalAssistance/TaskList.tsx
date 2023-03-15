@@ -2,12 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Button, Grid, GridContainer } from '@trussworks/react-uswds';
+import { Button, Grid, GridContainer, Link } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import TaskListItem, {
   TaskListContainer,
   TaskListDescription
@@ -17,7 +18,7 @@ import {
   GetTrbTasklist,
   GetTrbTasklistVariables
 } from 'queries/types/GetTrbTasklist';
-import { TRBFormStatus } from 'types/graphql-global-types';
+import { TRBFeedbackStatus, TRBFormStatus } from 'types/graphql-global-types';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 
 import Breadcrumbs from './Breadcrumbs';
@@ -58,7 +59,22 @@ function TaskList() {
     );
   }
 
+  const taskStatuses = data?.trbRequest.taskStatuses;
+
   const formStatus = data?.trbRequest.form.status;
+
+  const editsRequested: boolean =
+    taskStatuses?.feedbackStatus === TRBFeedbackStatus.EDITS_REQUESTED;
+
+  const initialRequestButtonText = (): string => {
+    if (editsRequested) {
+      return t('button.update');
+    }
+    if (formStatus === TRBFormStatus.READY_TO_START) {
+      return t('button.start');
+    }
+    return t('button.continue');
+  };
 
   return (
     <GridContainer className="width-full">
@@ -100,6 +116,12 @@ function TaskList() {
                 >
                   <TaskListDescription>
                     <p>{taskListText[0].text}</p>
+
+                    {editsRequested && (
+                      <Alert type="warning" slim className="margin-bottom-205">
+                        {t('taskList.editsRequestedWarning')}
+                      </Alert>
+                    )}
                   </TaskListDescription>
                   {/* Continue to fill out the request form or view the submitted request if it's completed */}
                   {formStatus === TRBFormStatus.COMPLETED ? (
@@ -115,11 +137,7 @@ function TaskList() {
                       className="usa-button"
                       to={`/trb/requests/${id}`}
                     >
-                      {t(
-                        formStatus === TRBFormStatus.READY_TO_START
-                          ? 'button.start'
-                          : 'button.continue'
-                      )}
+                      {initialRequestButtonText()}
                     </UswdsReactLink>
                   )}
                 </TaskListItem>
@@ -127,12 +145,42 @@ function TaskList() {
                 {/* Feedback from initial review */}
                 <TaskListItem
                   heading={taskListText[1].heading}
-                  status="CANNOT_START"
+                  status={taskStatuses?.feedbackStatus}
                   testId={kebabCase(taskListText[1].heading)}
                 >
                   <TaskListDescription>
                     <p>{taskListText[1].text}</p>
                   </TaskListDescription>
+
+                  {data?.trbRequest.feedback.length === 0 &&
+                    taskStatuses?.feedbackStatus ===
+                      TRBFeedbackStatus.COMPLETED && (
+                      <Grid desktop={{ col: 10 }}>
+                        <Alert type="info" slim className="margin-bottom-0">
+                          {t('taskList.noFeedback')}{' '}
+                          <Link
+                            href="mailto:cms-trb@cms.hhs.gov"
+                            aria-label={t('taskList.sendAnEmail')}
+                            target="_blank"
+                          >
+                            cms-trb@cms.hhs.gov
+                          </Link>
+                        </Alert>
+                      </Grid>
+                    )}
+
+                  {data?.trbRequest.feedback.length !== 0 && (
+                    <UswdsReactLink
+                      variant="unstyled"
+                      className="usa-button usa-button--outline"
+                      to={{
+                        pathname: `/trb/requests/${id}/feedback`,
+                        state: { fromTaskList: true }
+                      }}
+                    >
+                      {t('editsRequested.viewFeedback')}
+                    </UswdsReactLink>
+                  )}
                 </TaskListItem>
 
                 {/* Prepare for the TRB consult session */}
