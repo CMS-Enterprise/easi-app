@@ -15,7 +15,6 @@ import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables
 } from 'queries/types/DeleteTRBRecommendation';
-import { GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations as TRBRecommendation } from 'queries/types/GetTrbAdviceLetter';
 import {
   AdviceLetterRecommendationFields,
   StepComponentProps
@@ -26,11 +25,6 @@ import RecommendationsList from '../AdminHome/components/ReviewAdviceLetter/Reco
 import Pager from '../RequestForm/Pager';
 
 import RecommendationsForm from './RecommendationsForm';
-
-export type RecommendationsProps = {
-  trbRequestId: string;
-  recommendations: TRBRecommendation[];
-};
 
 const defaultValues: AdviceLetterRecommendationFields = {
   id: undefined,
@@ -161,6 +155,7 @@ const Recommendations = ({
               outline: !hasRecommendations
             }}
             taskListUrl={`/trb/${trbRequestId}/request`}
+            submit={async callback => callback?.()}
             saveExitText={t('adviceLetterForm.returnToRequest')}
             border={false}
           />

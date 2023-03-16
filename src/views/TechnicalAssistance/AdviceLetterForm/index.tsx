@@ -136,14 +136,15 @@ const AdviceLetterForm = () => {
             ),
             description: step.description,
             completed: index < currentStepIndex,
-            onClick: () => {
+            onClick: async () => {
+              const url = `/trb/${id}/advice/${adviceFormSteps[index].slug}`;
               if (!isStepSubmitting && currentStepIndex !== index) {
                 // Save and go to step url
-                stepSubmit?.(() =>
-                  history.push(
-                    `/trb/${id}/advice/${adviceFormSteps[index].slug}`
-                  )
-                );
+                if (stepSubmit) {
+                  stepSubmit(() => history.push(url));
+                } else {
+                  history.push(url);
+                }
               }
             }
           }))}
@@ -172,9 +173,14 @@ const AdviceLetterForm = () => {
             type="button"
             unstyled
             disabled={isStepSubmitting}
-            onClick={() =>
-              stepSubmit?.(() => history.push(`/trb/${id}/advice`))
-            }
+            onClick={() => {
+              const url = `/trb/${id}/advice`;
+              if (stepSubmit) {
+                stepSubmit?.(() => history.push(url));
+              } else {
+                history.push(url);
+              }
+            }}
           >
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t('adviceLetterForm.returnToRequest')}
