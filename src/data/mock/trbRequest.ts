@@ -109,6 +109,13 @@ export const trbRequestAdviceLetter: AdviceLetter = {
       title: 'Recommendation 1',
       recommendation: 'This is the recommendation text',
       links: ['easi.cms.gov', 'https://google.com']
+    },
+    {
+      __typename: 'TRBAdviceLetterRecommendation',
+      id: 'a118705f-c87b-48ef-a812-b3264ad00abe',
+      title: 'Recommendation 2',
+      recommendation: 'This is the recommendation text',
+      links: ['easi.cms.gov', 'cms.gov']
     }
   ],
   author: {
