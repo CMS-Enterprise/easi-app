@@ -144,12 +144,15 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
       },
       {
         Header: t<string>('documents.table.header.actions'),
-        Cell: ({ value, row }: CellProps<TrbAdminTeamHomeRequest>) => (
-          // wip assign lead could be a modal popup
-          <Button type="button" unstyled>
-            {t('adminTeamHome.actions.assignLead')}
-          </Button>
-        ),
+        Cell: ({ row }: CellProps<TrbAdminTeamHomeRequest>) =>
+          row.original.trbLeadInfo.commonName === '' ? (
+            // wip assign lead could be a modal popup
+            <Button type="button" unstyled>
+              {t('adminTeamHome.actions.assignLead')}
+            </Button>
+          ) : (
+            ''
+          ),
         disableSortBy: true
       }
     ];
