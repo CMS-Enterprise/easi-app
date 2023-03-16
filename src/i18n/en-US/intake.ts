@@ -124,7 +124,7 @@ const intake = {
     heading: 'Make a Request',
     subheading: 'What is this request for?',
     fields: {
-      addNewSystem: 'Add a new system',
+      addNewSystem: 'Add a new system or service',
       majorChanges:
         'Major changes or upgrades to an existing system or service',
       recompete:
