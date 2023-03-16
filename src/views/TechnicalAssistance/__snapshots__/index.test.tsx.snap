@@ -45,7 +45,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
     </h1>
     <div>
       <span
-        class="line-height-body-5 text-base margin-right-2"
+        class="font-body-md line-height-body-4 text-base margin-right-2"
       >
         I’m having a problem with my system
       </span>
