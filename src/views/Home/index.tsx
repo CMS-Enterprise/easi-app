@@ -115,7 +115,6 @@ const Home = () => {
                   ...(flags.technicalAssistance
                     ? [{ TRB: requestTypes.TRB }]
                     : []),
-                  { TRB: requestTypes.TRB },
                   { 508: requestTypes[508] }
                 ].map(requestType => (
                   <Grid tablet={{ col: 4 }} key={Object.keys(requestType)[0]}>
