@@ -162,6 +162,7 @@ describe('Governance Review Team', () => {
     result: {
       data: {
         systemIntake: {
+          lcid: null,
           notes: [
             {
               id: '074632f8-44fd-4c57-851c-4577ec1af230',
@@ -179,6 +180,7 @@ describe('Governance Review Team', () => {
               createdAt: '2021-07-07T20:32:04Z',
               feedback: 'This business case needs feedback',
               type: 'PROVIDE_FEEDBACK_NEED_BIZ_CASE',
+              lcidExpirationChange: null,
               actor: {
                 name: 'Actor Name',
                 email: 'actor@example.com'
@@ -189,6 +191,7 @@ describe('Governance Review Team', () => {
               createdAt: '2021-07-07T20:22:04Z',
               feedback: null,
               type: 'SUBMIT_INTAKE',
+              lcidExpirationChange: null,
               actor: {
                 name: 'Actor Name',
                 email: 'actor@example.com'

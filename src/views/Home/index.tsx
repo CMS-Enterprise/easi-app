@@ -2,18 +2,31 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Alert } from '@trussworks/react-uswds';
+import { useQuery } from '@apollo/client';
+import { Alert, Grid } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import LinkCard from 'components/LinkCard';
+import LinkCard, { LinkRequestType } from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import RequestRepository from 'components/RequestRepository';
 import useMessage from 'hooks/useMessage';
+import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
+import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
+import {
+  GetCedarSystemBookmarks,
+  GetCedarSystemBookmarks_cedarSystemBookmarks as CedarSystemBookmark
+} from 'queries/types/GetCedarSystemBookmarks';
+import {
+  GetCedarSystems,
+  GetCedarSystems_cedarSystems as CedarSystem
+} from 'queries/types/GetCedarSystems';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
+import SystemsListTable from 'views/SystemList/Table';
 
 import WelcomeText from './WelcomeText';
 
@@ -24,6 +37,29 @@ const Home = () => {
   const flags = useFlags();
 
   const { message } = useMessage();
+
+  const requestTypes: Record<LinkRequestType, any> = t('home:actions', {
+    returnObjects: true
+  });
+
+  const { loading: loadingSystems, data: systems } = useQuery<GetCedarSystems>(
+    GetCedarSystemsQuery,
+    {
+      skip: !user.isBasicUser(userGroups, flags)
+    }
+  );
+
+  const {
+    loading: loadingBookmarks,
+    data: systemsBookmarks,
+    refetch: refetchBookmarks
+  } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery, {
+    skip: !user.isBasicUser(userGroups, flags)
+  });
+
+  const systemsTableData = (systems?.cedarSystems ?? []) as CedarSystem[];
+  const bookmarks: CedarSystemBookmark[] =
+    systemsBookmarks?.cedarSystemBookmarks ?? [];
 
   const renderView = () => {
     if (isUserSet) {
@@ -58,37 +94,66 @@ const Home = () => {
                 </Alert>
               </div>
             )}
-            <div className="tablet:grid-col-12">
+            <Grid tablet={{ col: 12 }}>
               <PageHeading className="margin-bottom-0">
                 {t('home:title')}
               </PageHeading>
+
               <p className="line-height-body-5 font-body-lg text-light margin-bottom-5 margin-top-1">
                 {t('home:subtitle')}
               </p>
-              <hr className="margin-bottom-4" aria-hidden />
-              <h2 className="margin-bottom-2">{t('home:actions.title')}</h2>
-              <div className="display-flex flex-row">
-                <LinkCard
-                  link="/system/making-a-request"
-                  heading={t('home:actions.itg.heading')}
-                  className="margin-right-2"
-                >
-                  {t('home:actions.itg.body')}
-                </LinkCard>
-                <LinkCard
-                  link="/508/making-a-request"
-                  heading={t('home:actions.508.heading')}
-                >
-                  {t('home:actions.508.body')}
-                </LinkCard>
-              </div>
+
+              <hr className="margin-bottom-3" aria-hidden />
+
+              <h2 className="margin-top-2 margin-bottom-1">
+                {t('home:actionTitle')}
+              </h2>
+
+              <Grid row gap={2}>
+                {[
+                  { ITGov: requestTypes.ITGov },
+                  { TRB: requestTypes.TRB },
+                  { 508: requestTypes[508] }
+                ].map(requestType => (
+                  <Grid tablet={{ col: 4 }} key={Object.keys(requestType)[0]}>
+                    <LinkCard
+                      className="margin-top-1"
+                      type={Object.keys(requestType)[0] as LinkRequestType}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+
               <h3 className="margin-top-4">
                 {t('home:requestsTable.heading')}
               </h3>
-            </div>
-            <div className="tablet:grid-col-12">
-              <Table defaultPageSize={50} />
-            </div>
+            </Grid>
+
+            <Grid tablet={{ col: 12 }}>
+              <Table defaultPageSize={10} />
+            </Grid>
+
+            <hr className="margin-bottom-3 margin-top-4" aria-hidden />
+
+            <Grid tablet={{ col: 12 }} className="margin-bottom-6">
+              <h2 className="margin-bottom-0 margin-top-4">
+                {t('systemProfile:systemTable.title')}
+              </h2>
+
+              <p className="margin-bottom-5">
+                {t('systemProfile:systemTable.subtitle')}
+              </p>
+
+              {loadingSystems || loadingBookmarks ? (
+                <PageLoading />
+              ) : (
+                <SystemsListTable
+                  systems={systemsTableData}
+                  savedBookmarks={bookmarks}
+                  refetchBookmarks={refetchBookmarks}
+                />
+              )}
+            </Grid>
           </div>
         );
       }

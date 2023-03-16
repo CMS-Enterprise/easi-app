@@ -85,7 +85,10 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
             linkPosition="top"
             disabled={!adviceLetter}
           >
-            <AdminAction className="margin-top-3 margin-bottom-5" />
+            <AdminAction
+              trbRequestId={trbRequestId}
+              className="margin-top-3 margin-bottom-5"
+            />
             {adviceLetter && <ReviewAdviceLetter adviceLetter={adviceLetter} />}
           </PDFExport>
         )

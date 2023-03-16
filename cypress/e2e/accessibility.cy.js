@@ -114,7 +114,7 @@ describe.skip('Accessibility Requests', () => {
     cy.visit('/');
     cy.contains('h1', 'Welcome to EASi');
     cy.contains('h2', 'Governance Services');
-    cy.contains('h3', 'My governance requests');
+    cy.contains('h3', 'My requests');
     cy.get('table').within(() => {
       cy.get('thead').within(() => {
         cy.contains('th', 'Request name');

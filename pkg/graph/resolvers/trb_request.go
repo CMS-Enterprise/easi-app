@@ -9,6 +9,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -26,7 +27,7 @@ func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, fe
 
 	trb := models.NewTRBRequest(princ.ID())
 	trb.Type = requestType
-	trb.Status = models.TRBSOpen
+	trb.State = models.TRBRequestStateOpen
 	//TODO make sure this is wired up appropriately
 
 	createdTRB, err := store.CreateTRBRequest(ctx, trb)
@@ -234,6 +235,77 @@ func UpdateTRBRequestTRBLead(
 	return updatedTrb, err
 }
 
+// CloseTRBRequest closes a TRB request and sends an email if recipients are specified
+func CloseTRBRequest(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+	id uuid.UUID,
+	reasonClosed string,
+	notifyEUAIDs []string,
+) (*models.TRBRequest, error) {
+	trb, err := store.GetTRBRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if request is already closed so an unnecesary email won't be sent
+	if trb.State != models.TRBRequestStateOpen {
+		return nil, errors.New("Cannot close a TRB request that is not open")
+	}
+
+	trbChanges := map[string]interface{}{
+		"state": models.TRBRequestStateClosed,
+	}
+
+	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	updatedTrb, err := store.UpdateTRBRequest(ctx, trb)
+	if err != nil {
+		return nil, err
+	}
+
+	requester, err := fetchUserInfo(ctx, trb.CreatedBy)
+	if err != nil {
+		return nil, err
+	}
+
+	notifyUserInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos)+1)
+	for _, recipientInfo := range notifyUserInfos {
+		recipientEmails = append(recipientEmails, recipientInfo.Email)
+	}
+	recipientEmails = append(recipientEmails, requester.Email)
+
+	emailInput := email.SendTRBRequestClosedEmailInput{
+		TRBRequestID:   trb.ID,
+		TRBRequestName: trb.Name,
+		RequesterName:  requester.CommonName,
+		Recipients:     recipientEmails,
+		ReasonClosed:   reasonClosed,
+	}
+
+	// Email client can be nil when this is called from tests - the email client itself tests this
+	// separately in the email package test
+	if emailClient != nil {
+		err = emailClient.SendTRBRequestClosedEmail(ctx, emailInput)
+		if err != nil {
+			return updatedTrb, err
+		}
+	}
+
+	return updatedTrb, nil
+}
+
 // ReopenTRBRequest re-opens a TRB request and sends an email to the requester and attendees
 func ReopenTRBRequest(
 	ctx context.Context,
@@ -268,12 +340,12 @@ func ReopenTRBRequest(
 	}
 
 	// Check if request is already open so an unnecesary email won't be sent
-	if trb.Status != models.TRBSClosed {
+	if trb.State != models.TRBRequestStateClosed {
 		return nil, errors.New("Cannot re-open a TRB request that is not closed")
 	}
 
 	trbChanges := map[string]interface{}{
-		"status": models.TRBSOpen,
+		"state": models.TRBRequestStateOpen,
 	}
 
 	err := ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
@@ -325,4 +397,59 @@ func ReopenTRBRequest(
 	}
 
 	return updatedTrb, nil
+}
+
+// IsRecentTRBRequest determines if a TRB Request should be determined to be flagged as "recent" or not.
+// TODO: Add more logic in https://jiraent.cms.gov/browse/EASI-2711
+func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Time) bool {
+	numDaysToConsiderRecent := -7
+	recentIfAfterDate := now.AddDate(0, 0, numDaysToConsiderRecent)
+	return obj.CreatedAt.After(recentIfAfterDate)
+}
+
+// GetTRBLeadInfo retrieves the user info of a TRB request's lead
+func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, error) {
+	var trbLeadInfo *models.UserInfo
+	if trbLead != nil {
+		info, err := dataloaders.GetUserInfo(ctx, *trbLead)
+		if err != nil {
+			return nil, err
+		}
+		trbLeadInfo = info
+	}
+
+	if trbLeadInfo == nil {
+		trbLeadInfo = &models.UserInfo{}
+	}
+
+	return trbLeadInfo, nil
+}
+
+// GetTRBRequesterInfo retrieves the user info of a TRB request's requester
+func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.UserInfo, error) {
+	requesterInfo, err := dataloaders.GetUserInfo(ctx, requesterEUA)
+	if err != nil {
+		return nil, err
+	}
+
+	if requesterInfo == nil {
+		requesterInfo = &models.UserInfo{}
+	}
+
+	return requesterInfo, nil
+}
+
+// GetTRBUserComponent retrieves the component of a TRB user from the TRB attendees table
+func GetTRBUserComponent(ctx context.Context, store *storage.Store, euaID *string) (*string, error) {
+	// TODO/tech debt: This results in an N+1 problem and could be moved to a dataloader if
+	// performance ever becomes an issue
+	var component *string
+	if euaID != nil {
+		attendeeComponent, err := store.GetAttendeeComponentByEUA(ctx, *euaID)
+		if err != nil {
+			return nil, err
+		}
+		component = attendeeComponent
+	}
+	return component, nil
 }

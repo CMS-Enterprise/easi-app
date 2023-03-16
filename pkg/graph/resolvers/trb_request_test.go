@@ -16,7 +16,7 @@ func (s *ResolverSuite) TestCreateTRBRequest() {
 
 	s.EqualValues(false, trb.Archived)
 	s.EqualValues("Draft", trb.Name)
-	s.EqualValues(models.TRBSOpen, trb.Status)
+	s.EqualValues(models.TRBRequestStateOpen, trb.State)
 	s.EqualValues(s.testConfigs.Principal.EUAID, trb.CreatedBy)
 	s.NotNil(trb.ID)
 	s.NotNil(trb.CreatedAt)
@@ -32,7 +32,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 
 	changes := map[string]interface{}{
 		"Name":     "Testing",
-		"status":   models.TRBSClosed,
+		"state":    models.TRBRequestStateClosed,
 		"archived": false,
 	}
 	princ := s.testConfigs.Principal.ID()
@@ -41,7 +41,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 	s.NotNil(updated)
 	s.NoError(err)
 	s.EqualValues(updated.Name, "Testing")
-	s.EqualValues(updated.Status, models.TRBSClosed)
+	s.EqualValues(updated.State, models.TRBRequestStateClosed)
 	s.EqualValues(updated.Archived, false)
 	s.EqualValues(updated.ModifiedBy, &princ)
 	s.NotNil(updated.ModifiedAt)
@@ -78,7 +78,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.Len(col, 2)
 
 	changes := map[string]interface{}{
-		"status":   models.TRBSClosed,
+		"state":    models.TRBRequestStateClosed,
 		"archived": true,
 	}
 
@@ -164,4 +164,26 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 
 	s.NoError(err)
 	s.EqualValues("MCLV", *updated.TRBLead)
+}
+
+func (s *ResolverSuite) TestIsRecentTRBRequest() {
+	// Set up a date to mock the current time
+	dateOnlyLayout := "2006-01-02"
+	now, err := time.Parse(dateOnlyLayout, "2020-01-10")
+	s.NoError(err)
+
+	// 10 Days old
+	tenDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
+	tenDaysOld.CreatedAt = now.AddDate(0, 0, -10)
+	s.False(IsRecentTRBRequest(s.testConfigs.Context, tenDaysOld, now))
+
+	// 6 days old
+	sixDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
+	sixDaysOld.CreatedAt = now.AddDate(0, 0, -6)
+	s.True(IsRecentTRBRequest(s.testConfigs.Context, sixDaysOld, now))
+
+	// 0 days old
+	zeroDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
+	zeroDaysOld.CreatedAt = now
+	s.True(IsRecentTRBRequest(s.testConfigs.Context, zeroDaysOld, now))
 }

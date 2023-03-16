@@ -9,7 +9,7 @@ import {
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
-  TRBRequestStatus,
+  TRBRequestState,
   TRBRequestType
 } from 'types/graphql-global-types';
 
@@ -81,7 +81,7 @@ export const trbRequestSummary: Summary = {
   __typename: 'TRBRequest',
   name: 'TRB Request Mock',
   type: TRBRequestType.NEED_HELP,
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   trbLead: null,
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses: {
@@ -105,6 +105,7 @@ export const trbRequestAdviceLetter: AdviceLetter = {
   recommendations: [
     {
       __typename: 'TRBAdviceLetterRecommendation',
+      id: '682c9839-ac4c-48f5-8ac3-8693573e4dd8',
       title: 'Recommendation 1',
       recommendation: 'This is the recommendation text',
       links: ['easi.cms.gov', 'https://google.com']
@@ -131,7 +132,7 @@ export const trbRequest: TrbRequest = {
     adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
   },
   feedback: [],
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   type: TRBRequestType.NEED_HELP,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',

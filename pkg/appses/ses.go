@@ -44,6 +44,12 @@ func (s Sender) Send(
 	subject string,
 	body string,
 ) error {
+	// Don't send an email if there's no recipients (even if there are ccAddresses)
+	if len(toAddresses) == 0 {
+		appcontext.ZLogger(ctx).Warn("attempted to send an email with empty toAddresses")
+		return nil
+	}
+
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
 			ToAddresses: models.EmailAddressesToStringPtrs(toAddresses),

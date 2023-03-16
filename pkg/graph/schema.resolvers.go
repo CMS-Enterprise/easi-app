@@ -2075,6 +2075,20 @@ func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Conte
 	return resolvers.DeleteTRBAdviceLetterRecommendation(ctx, r.store, id)
 }
 
+// CloseTRBRequest is the resolver for the closeTRBRequest field.
+func (r *mutationResolver) CloseTRBRequest(ctx context.Context, input model.CloseTRBRequestInput) (*models.TRBRequest, error) {
+	return resolvers.CloseTRBRequest(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		r.service.FetchUserInfos,
+		input.ID,
+		input.ReasonClosed,
+		input.NotifyEuaIds,
+	)
+}
+
 // ReopenTrbRequest is the resolver for the reopenTrbRequest field.
 func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.ReopenTRBRequestInput) (*models.TRBRequest, error) {
 	return resolvers.ReopenTRBRequest(
@@ -2876,6 +2890,11 @@ func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj 
 	return authorInfo, nil
 }
 
+// Status is the resolver for the status field.
+func (r *tRBRequestResolver) Status(ctx context.Context, obj *models.TRBRequest) (models.TRBRequestStatus, error) {
+	return resolvers.GetTRBRequestStatus(ctx, r.store, obj.ID)
+}
+
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
 	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
@@ -2906,9 +2925,35 @@ func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRe
 	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
 }
 
+// TrbLeadInfo is the resolver for the trbLeadInfo field.
+func (r *tRBRequestResolver) TrbLeadInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
+	return resolvers.GetTRBLeadInfo(ctx, obj.TRBLead)
+}
+
+// TrbLeadComponent is the resolver for the trbLeadComponent field.
+func (r *tRBRequestResolver) TrbLeadComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
+	return resolvers.GetTRBUserComponent(ctx, r.store, obj.TRBLead)
+}
+
+// RequesterInfo is the resolver for the requesterInfo field.
+func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
+	return resolvers.GetTRBRequesterInfo(ctx, obj.CreatedBy)
+}
+
+// RequesterComponent is the resolver for the requesterComponent field.
+func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
+	requester := obj.CreatedBy
+	return resolvers.GetTRBUserComponent(ctx, r.store, &requester)
+}
+
 // AdminNotes is the resolver for the adminNotes field.
 func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error) {
 	return resolvers.GetTRBAdminNotesByTRBRequestID(ctx, r.store, obj.ID)
+}
+
+// IsRecent is the resolver for the isRecent field.
+func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBRequest) (bool, error) {
+	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
 }
 
 // UserInfo is the resolver for the userInfo field.

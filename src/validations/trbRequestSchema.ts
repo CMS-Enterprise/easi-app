@@ -162,3 +162,27 @@ export const documentSchema = yup.object({
     then: schema => schema.required()
   })
 });
+
+// Advice letter form schemas
+
+export const adviceRecommendationSchema = yup.object({
+  title: yup.string().required(),
+  recommendation: yup.string().required(),
+  links: yup.array(yup.string())
+});
+
+export const meetingSummarySchema = yup.object({
+  meetingSummary: yup.string().required()
+});
+
+export const nextStepsSchema = yup.object({
+  nextSteps: yup.string().nullable().required(),
+  isFollowupRecommended: yup.boolean().nullable().required(),
+  followupPoint: yup
+    .string()
+    .nullable()
+    .when('isFollowupRecommended', {
+      is: true,
+      then: schema => schema.required()
+    })
+});

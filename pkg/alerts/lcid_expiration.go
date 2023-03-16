@@ -2,8 +2,6 @@ package alerts
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -15,6 +13,10 @@ import (
 )
 
 // Uses CEDAR LDAP functions to get and build out recipient list for alert
+// This should behave as follows:
+// -- Send to requester and Governance Mailbox in case of no errors
+// -- Send only to the Governance Mailbox in cases of "expected" errors (InvalidParameters and InvalidEUAID)
+// -- Do not send in case of any other (or "unexpected") errors
 func getAlertRecipients(
 	ctx context.Context,
 	intake models.SystemIntake,
@@ -22,23 +24,36 @@ func getAlertRecipients(
 ) (*models.EmailNotificationRecipients, error) {
 
 	requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-	if err != nil {
-		return nil, err
-	}
+	var emailsToNotify []models.EmailAddress
 
-	if requesterInfo == nil || requesterInfo.Email == "" {
-		return nil, &apperrors.ExternalAPIError{
-			Err:       errors.New("requester info fetch was not successful when checking for LCID expiration"),
-			Model:     intake,
-			ModelID:   intake.ID.String(),
-			Operation: apperrors.Fetch,
-			Source:    "CEDAR LDAP",
+	// Only return an error if we hit an "unexpected" error
+	if err != nil {
+		switch err.(type) {
+		case *apperrors.InvalidParametersError: // Invalid Parameters error - log warning but do not return error
+			appcontext.ZLogger(ctx).Warn(
+				"Failed to fetch requester info while checking for LCID Expiration",
+				zap.String("SystemIntakeID", intake.ID.String()),
+				zap.Error(err),
+			)
+		case *apperrors.InvalidEUAIDError: // Invalid EUA ID error - log warning but do not return error
+			appcontext.ZLogger(ctx).Warn(
+				"Failed to fetch requester info while checking for LCID Expiration",
+				zap.String("SystemIntakeID", intake.ID.String()),
+				zap.Error(err),
+			)
+		default: // All other errors - log error and return error
+			appcontext.ZLogger(ctx).Error(
+				"Failed to fetch requester info while checking for LCID Expiration",
+				zap.String("SystemIntakeID", intake.ID.String()),
+				zap.Error(err),
+			)
+			return nil, err
 		}
+	} else {
+		emailsToNotify = append(emailsToNotify, requesterInfo.Email)
 	}
 
 	// TODO: Add other members of project team that need to be notified
-	emailsToNotify := []models.EmailAddress{requesterInfo.Email}
-
 	recipients := models.EmailNotificationRecipients{
 		RegularRecipientEmails:   emailsToNotify,
 		ShouldNotifyITGovernance: true,
@@ -75,7 +90,7 @@ func checkForLCIDExpiration(
 	result, err := fetchSystemIntakes(ctx)
 
 	if err != nil {
-		appcontext.ZLogger(ctx).Warn(fmt.Sprintf("Failed to fetch system intakes for LCID Expiration check. %s", err))
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intakes for LCID Expiration check", zap.Error(err))
 		return err
 	}
 
@@ -104,8 +119,11 @@ func checkForLCIDExpiration(
 				// Get email alert recipients
 				var recipients *models.EmailNotificationRecipients
 				recipients, err = getAlertRecipients(ctx, currIntake, fetchUserInfo)
+
+				// getAlertRecipients handles "expected" errors (InvalidParametersError and InvalidEUAIDError) w/o returning the error by logging the error and only adding the
+				// Governance Mailbox to the recipient list. This is to handle intakes that have bad requester information. It will return an error in all other error cases
 				if err != nil {
-					return err
+					continue
 				}
 
 				err = sendLCIDExpirationEmail(
@@ -122,8 +140,12 @@ func checkForLCIDExpiration(
 				)
 
 				if err != nil {
-					appcontext.ZLogger(ctx).Error("LCID Expiration Alert email failed to send: ", zap.Error(err))
-					return err
+					appcontext.ZLogger(ctx).Error(
+						"Failed to send LCID Expiration Alert email",
+						zap.String("SystemIntakeID", currIntake.ID.String()),
+						zap.Error(err),
+					)
+					continue
 				}
 
 				// Set LifecycleExpirationAlertTS to current date
@@ -132,6 +154,11 @@ func checkForLCIDExpiration(
 
 				_, err = updateSystemIntake(ctx, &updatedIntake)
 				if err != nil {
+					appcontext.ZLogger(ctx).Error(
+						"Failed to update systemIntake while checking for LCID Expiration",
+						zap.String("SystemIntakeID", currIntake.ID.String()),
+						zap.Error(err),
+					)
 					return &apperrors.QueryError{
 						Err:       err,
 						Model:     updatedIntake,
@@ -147,8 +174,11 @@ func checkForLCIDExpiration(
 				// Get email alert recipients
 				var recipients *models.EmailNotificationRecipients
 				recipients, err = getAlertRecipients(ctx, currIntake, fetchUserInfo)
+
+				// getAlertRecipients handles "expected" errors (InvalidParametersError and InvalidEUAIDError) w/o returning the error by logging the error and only adding the
+				// Governance Mailbox to the recipient list. This is to handle intakes that have bad requester information. It will return an error in all other error cases
 				if err != nil {
-					return err
+					continue
 				}
 
 				err = sendLCIDExpirationEmail(
@@ -165,8 +195,12 @@ func checkForLCIDExpiration(
 				)
 
 				if err != nil {
-					appcontext.ZLogger(ctx).Error("LCID Expiration Alert email failed to send: ", zap.Error(err))
-					return err
+					appcontext.ZLogger(ctx).Error(
+						"Failed to send LCID Expiration Alert email",
+						zap.String("SystemIntakeID", currIntake.ID.String()),
+						zap.Error(err),
+					)
+					continue
 				}
 
 				// Set LifecycleExpirationAlertTS to LCID expiration date
@@ -176,6 +210,11 @@ func checkForLCIDExpiration(
 
 				_, err = updateSystemIntake(ctx, &updatedIntake)
 				if err != nil {
+					appcontext.ZLogger(ctx).Error(
+						"Failed to update systemIntake while checking for LCID Expiration",
+						zap.String("SystemIntakeID", currIntake.ID.String()),
+						zap.Error(err),
+					)
 					return &apperrors.QueryError{
 						Err:       err,
 						Model:     updatedIntake,
