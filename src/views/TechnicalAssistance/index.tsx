@@ -8,6 +8,7 @@ import { NotFoundPartial } from 'views/NotFound';
 import Consult from './AdminHome/Consult';
 import RequestEdits from './AdminHome/RequestEdits';
 import AdminHome from './AdminHome';
+import AdviceLetterForm from './AdviceLetterForm';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
@@ -47,6 +48,10 @@ function TechnicalAssistance() {
         {/* Create new or edit exisiting request */}
         <Route exact path={`${path}/requests/:id/:step?/:view?`}>
           <RequestForm />
+        </Route>
+
+        <Route path={`${path}/:id/advice/:formStep/:subpage?`}>
+          <AdviceLetterForm />
         </Route>
 
         {/* Admin view */}

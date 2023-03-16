@@ -5,6 +5,7 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
@@ -74,6 +75,8 @@ export default function AdminHome() {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
+  const flags = useFlags();
+
   // Get url params
   const { id, activePage } = useParams<{
     id: string;
@@ -131,7 +134,7 @@ export default function AdminHome() {
   }
 
   // If TRB request does not exist or user is not TRB admin, return page not found
-  if (!trbRequest || !user.isTrbAdmin(groups)) {
+  if (!trbRequest || !user.isTrbAdmin(groups, flags)) {
     return <NotFound />;
   }
 

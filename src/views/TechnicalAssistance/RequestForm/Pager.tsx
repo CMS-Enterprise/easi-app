@@ -1,7 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, IconArrowBack } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, IconArrowBack } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import { StepSubmit } from '.';
 
@@ -18,11 +19,13 @@ type PageButtonProps =
 type Props = {
   back?: PageButtonProps;
   next?: PageButtonProps;
+  saveExitText?: string;
   saveExitHidden?: boolean;
   saveExitDisabled?: boolean;
   submit?: StepSubmit;
   className?: string;
   taskListUrl: string;
+  border?: boolean;
 };
 
 /**
@@ -35,18 +38,24 @@ type Props = {
 export function Pager({
   back,
   next,
+  saveExitText,
   saveExitHidden,
   saveExitDisabled,
   submit,
   className,
-  taskListUrl
+  taskListUrl,
+  border = true
 }: Props) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
   return (
-    <div className={`border-base-light border-top-1px ${className || ''}`}>
-      <div className="margin-top-2">
+    <div
+      className={classNames(className, {
+        'border-base-light border-top-1px': border
+      })}
+    >
+      <ButtonGroup className={classNames({ 'margin-top-2': border })}>
         {back && (
           <Button
             type={back.type ?? 'button'}
@@ -69,10 +78,10 @@ export function Pager({
             {next.text ?? t('button.next')}
           </Button>
         )}
-      </div>
+      </ButtonGroup>
       {!saveExitHidden && (
         <Button
-          className="margin-top-2"
+          className="margin-top-2 display-flex flex-align-center"
           type="button"
           unstyled
           disabled={saveExitDisabled}
@@ -82,8 +91,8 @@ export function Pager({
             });
           }}
         >
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-          {t('button.saveAndExit')}
+          <IconArrowBack className="margin-right-05" />
+          {saveExitText || t('button.saveAndExit')}
         </Button>
       )}
     </div>

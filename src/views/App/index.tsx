@@ -8,6 +8,7 @@ import {
   useLocation
 } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
+import { GovBanner } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
@@ -31,6 +32,7 @@ import Home from 'views/Home';
 import Login from 'views/Login';
 import MakingARequest from 'views/MakingARequest';
 import MyRequests from 'views/MyRequests';
+import Navigation from 'views/Navigation';
 import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
@@ -227,8 +229,11 @@ const App = () => {
                 <TimeOutWrapper>
                   <NavContextProvider>
                     <PageWrapper>
+                      <GovBanner />
                       <Header />
-                      <AppRoutes />
+                      <Navigation>
+                        <AppRoutes />
+                      </Navigation>
                       <Footer />
                     </PageWrapper>
                   </NavContextProvider>

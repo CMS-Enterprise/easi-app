@@ -11,7 +11,11 @@ import {
 } from 'constants/jobCodes';
 import { Flags } from 'types/flags';
 
-export const isTrbAdmin = (groups: Array<String> = []) => {
+export const isTrbAdmin = (groups: Array<String> = [], flags: Flags) => {
+  if (flags.downgradeTrbAdmin) {
+    return false;
+  }
+
   if (groups.includes(TRB_ADMIN_DEV) || groups.includes(TRB_ADMIN_PROD)) {
     return true;
   }
@@ -86,7 +90,7 @@ export const isBasicUser = (groups: Array<String> = [], flags: Flags) => {
   if (
     !isAccessibilityTeam(groups, flags) &&
     !isGrtReviewer(groups, flags) &&
-    !isTrbAdmin(groups)
+    !isTrbAdmin(groups, flags)
   ) {
     return true;
   }

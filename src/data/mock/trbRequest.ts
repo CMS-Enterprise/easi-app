@@ -107,6 +107,7 @@ export const trbRequestAdviceLetter: AdviceLetter = {
   recommendations: [
     {
       __typename: 'TRBAdviceLetterRecommendation',
+      id: '682c9839-ac4c-48f5-8ac3-8693573e4dd8',
       title: 'Recommendation 1',
       recommendation: 'This is the recommendation text',
       links: ['easi.cms.gov', 'https://google.com']

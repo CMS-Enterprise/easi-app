@@ -9,6 +9,7 @@ import { AppState } from 'reducers/rootReducer';
 import { Flags } from 'types/flags';
 import user from 'utils/user';
 
+import '../Header/index.scss';
 import './index.scss';
 
 export type NavigationProps = {
@@ -25,7 +26,8 @@ export const navLinks = (
 ) => [
   {
     link: '/',
-    label: isUserSet && user.isTrbAdmin(userGroups) ? 'Admin home' : 'home',
+    label:
+      isUserSet && user.isTrbAdmin(userGroups, flags) ? 'Admin home' : 'home',
     isEnabled: true
   },
   {
@@ -119,16 +121,14 @@ const NavigationBar = ({
     <nav
       aria-label={t('header:navigation')}
       data-testid="navigation-bar"
-      className="border-top-light"
+      className="easi-header grid-container display-flex width-full"
     >
-      <div className="grid-container">
-        <PrimaryNav
-          onClick={() => toggle(false)}
-          mobileExpanded={mobile}
-          aria-label="Primary navigation"
-          items={navItems}
-        />
-      </div>
+      <PrimaryNav
+        onClick={() => toggle(false)}
+        mobileExpanded={mobile}
+        aria-label="Primary navigation"
+        items={navItems}
+      />
     </nav>
   );
 };

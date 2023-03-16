@@ -39,6 +39,8 @@ const UserInfo = () => {
           {`${user.isAccessibilityTester(userGroups, flags)}`}
         </p>
 
+        <p>User is TRB Admin: {`${user.isTrbAdmin(userGroups, flags)}`}</p>
+
         <h2>Raw Access Token Claims</h2>
         <pre>
           {JSON.stringify(
