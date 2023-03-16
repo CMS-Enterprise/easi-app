@@ -18,7 +18,7 @@ exports[`The making a request page matches the snapshot 1`] = `
   <p
     className="margin-top-0 font-body-lg"
   >
-    Request new Lifecycle IDs for your systems.
+    Request new Life Cycle IDs for your systems, services, or other contracts.
   </p>
   <div
     className="usa-summary-box easi-request__container margin-bottom-3 padding-x-2 padding-y-1"
@@ -40,7 +40,7 @@ exports[`The making a request page matches the snapshot 1`] = `
         </p>
         <ul>
           <li>
-            add a new system
+            add a new system or service
           </li>
           <li>
             make major changes or updates
