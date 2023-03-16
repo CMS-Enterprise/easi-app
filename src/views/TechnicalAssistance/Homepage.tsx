@@ -24,6 +24,7 @@ import {
   SiteAlert,
   Table
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -52,6 +53,8 @@ import NotFound from 'views/NotFound';
 function Homepage() {
   const { t } = useTranslation('technicalAssistance');
   const { url } = useRouteMatch();
+
+  const flags = useFlags();
 
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
@@ -155,7 +158,7 @@ function Homepage() {
     <>
       {
         // Admin site alert
-        user.isTrbAdmin(groups) && (
+        user.isTrbAdmin(groups, flags) && (
           <SiteAlert
             variant="info"
             heading={t('adminInfoBox.heading')}
