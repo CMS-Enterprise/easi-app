@@ -19,6 +19,7 @@ import {
   GetTrbTasklistVariables
 } from 'queries/types/GetTrbTasklist';
 import {
+  TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
@@ -208,14 +209,14 @@ function TaskList() {
                         <UswdsReactLink
                           variant="unstyled"
                           className="usa-button"
-                          to="/help/it-governance/prepare-for-trb-consult"
+                          to="/help/it-governance/prepare-for-trb-consult" // TODO: replace with link to help article
                         >
                           {t('taskList.downloadTemplates')}
                         </UswdsReactLink>
 
                         <UswdsReactLink
                           className="display-block margin-top-2"
-                          to={`/trb/request/${id}/upload-document`}
+                          to={`/trb/request/${id}/upload-document`} // TODO: replace with link to document upload
                         >
                           {t('taskList.uploadDocuments')}
                         </UswdsReactLink>
@@ -223,7 +224,7 @@ function TaskList() {
                         <UswdsReactLink
                           className="display-block margin-top-2"
                           target="_blank"
-                          to={`/trb/request/${id}/attendee-list`}
+                          to={`/trb/request/${id}/attendee-list`} // TODO: replace with link to view advice letter
                         >
                           {t('taskList.reviewAttendeeList')}
                         </UswdsReactLink>
@@ -231,7 +232,7 @@ function TaskList() {
                     ) : (
                       <UswdsReactLink
                         className="display-block margin-top-2"
-                        to="/help/it-governance/prepare-for-trb-consult"
+                        to="/help/it-governance/prepare-for-trb-consult" // TODO: replace with link to help article
                       >
                         {t('taskList.prepareForTRB')}
                       </UswdsReactLink>
@@ -286,7 +287,7 @@ function TaskList() {
                         <UswdsReactLink
                           className="display-block margin-top-2"
                           target="_blank"
-                          to={`/trb/request/${id}/attendee-list`}
+                          to={`/trb/request/${id}/attendee-list`} // TODO: replace with link to view attendee list
                         >
                           {t('taskList.viewAttendeeList')}
                         </UswdsReactLink>
@@ -304,6 +305,17 @@ function TaskList() {
                   <TaskListDescription>
                     <p>{taskListText[4].text}</p>
                   </TaskListDescription>
+
+                  {taskStatuses?.adviceLetterStatus ===
+                    TRBAdviceLetterStatus.COMPLETED && (
+                    <UswdsReactLink
+                      variant="unstyled"
+                      className="usa-button"
+                      to={`/trb/requests/${id}/advice-letter`} // TODO: replace with link to view advice letter
+                    >
+                      {t('taskList.viewAdviceLetter')}
+                    </UswdsReactLink>
+                  )}
                 </TaskListItem>
               </TaskListContainer>
             </div>

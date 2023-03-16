@@ -292,6 +292,7 @@ const technicalAssistance = {
       'If this day or time does not work for you, or if you need to reschedule, please contact the TRB at ',
     trbConsultAttended:
       'You attended your project’s TRB consult session on {{-datetime}}',
+    viewAdviceLetter: 'View advice letter',
     taskList: [
       {
         heading: 'Fill out the initial request form',
