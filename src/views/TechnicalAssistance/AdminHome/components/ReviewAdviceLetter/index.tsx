@@ -1,10 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from '@trussworks/react-uswds';
 
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { formatDateLocal } from 'utils/date';
+
+import RecommendationLinks from './RecommendationLinks';
 
 /**
  * Displays advice letter for review
@@ -62,29 +63,7 @@ const ReviewAdviceLetter = ({
                     {t('adviceLetter.resources')}
                   </p>
 
-                  <ul className="usa-list usa-list--unstyled">
-                    {links.map((link, index) => {
-                      /** Removes http:// or https:// from link string to standardize links */
-                      // TODO: handle formatting when creating recommendation so that links are standardized and we only have to do this in one place
-                      const formattedLink = link.replace(/^https?:\/\//i, '');
-                      return (
-                        <li
-                          key={`link-${index}`} // eslint-disable-line react/no-array-index-key
-                        >
-                          <Link
-                            aria-label={`Open ${formattedLink} in a new tab`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            variant="external"
-                            href={`http://${formattedLink}`}
-                            className="display-block margin-top-1"
-                          >
-                            {formattedLink}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  {links.length > 0 && <RecommendationLinks links={links} />}
                 </div>
               );
             })

@@ -6,7 +6,6 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import { Alert } from 'components/shared/Alert';
 import {
   DeleteTrbRecommendationQuery,
@@ -23,6 +22,7 @@ import {
 } from 'types/technicalAssistance';
 import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
+import RecommendationLinks from '../AdminHome/components/ReviewAdviceLetter/RecommendationLinks';
 import Pager from '../RequestForm/Pager';
 
 import RecommendationsForm from './RecommendationsForm';
@@ -122,22 +122,12 @@ const Recommendations = ({
                       <p className="margin-top-05 margin-bottom-0">
                         {recommendation}
                       </p>
-                      {
-                        /* Links list */
-                        links && (
-                          <ul className="usa-list usa-list--unstyled">
-                            {links.map((link, index) => (
-                              // TODO: Link formatting - remove http and fix href prop
-                              // eslint-disable-next-line react/no-array-index-key
-                              <li key={`${id}.${index}`}>
-                                <UswdsReactLink to={link} variant="external">
-                                  {link}
-                                </UswdsReactLink>
-                              </li>
-                            ))}
-                          </ul>
-                        )
-                      }
+                      {links.length > 0 && (
+                        <RecommendationLinks
+                          links={links}
+                          className="margin-top-1 margin-bottom-205"
+                        />
+                      )}
                       {/* TODO: Fix ButtonGroup margins - last item has margin-bottom-0 when nested within .usa-list */}
                       <ButtonGroup>
                         {/* Edit */}

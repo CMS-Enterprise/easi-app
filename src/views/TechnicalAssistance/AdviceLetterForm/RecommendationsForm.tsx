@@ -70,7 +70,10 @@ const RecommendationsForm = ({
       async formData => {
         if (isDirty) {
           /** Format links to array of strings */
-          const links = (formData.links || []).map(({ link }) => link);
+          const links = (formData.links || []).map(({ link }) =>
+            // Format link
+            link.replace('www.', '').replace(/^https?:\/\//i, '')
+          );
 
           const { id, title, recommendation } = formData;
 
