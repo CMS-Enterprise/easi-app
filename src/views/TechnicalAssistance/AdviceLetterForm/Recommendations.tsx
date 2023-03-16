@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -15,7 +17,11 @@ import {
   DeleteTRBRecommendationVariables
 } from 'queries/types/DeleteTRBRecommendation';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations as TRBRecommendation } from 'queries/types/GetTrbAdviceLetter';
-import { StepComponentProps } from 'types/technicalAssistance';
+import {
+  AdviceLetterRecommendationFields,
+  StepComponentProps
+} from 'types/technicalAssistance';
+import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
 import Pager from '../RequestForm/Pager';
 
@@ -41,7 +47,17 @@ const Recommendations = ({
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
 
-  const [deleteRecommendation, { loading }] = useMutation<
+  const formMethods = useForm<AdviceLetterRecommendationFields>({
+    resolver: yupResolver(adviceRecommendationSchema),
+    defaultValues: {
+      title: '',
+      recommendation: '',
+      links: []
+    }
+  });
+  const { reset } = formMethods;
+
+  const [remove, { loading }] = useMutation<
     DeleteTRBRecommendation,
     DeleteTRBRecommendationVariables
   >(DeleteTrbRecommendationQuery, {
@@ -63,10 +79,12 @@ const Recommendations = ({
     <Switch>
       {/* Recommendations Form */}
       <Route exact path={`${path}/form`}>
-        <RecommendationsForm
-          trbRequestId={trbRequestId}
-          setFormAlert={setFormAlert}
-        />
+        <FormProvider {...formMethods}>
+          <RecommendationsForm
+            trbRequestId={trbRequestId}
+            setFormAlert={setFormAlert}
+          />
+        </FormProvider>
       </Route>
 
       {/* Recommendations form step */}
@@ -95,7 +113,9 @@ const Recommendations = ({
             ) : (
               /* Recommendations list */
               <ul className="usa-list usa-list--unstyled margin-bottom-2">
-                {recommendations.map(({ title, recommendation, links, id }) => {
+                {recommendations.map(values => {
+                  const { title, recommendation, id, links } = values;
+
                   return (
                     <li key={id}>
                       <h4 className="margin-bottom-0">{title}</h4>
@@ -120,16 +140,29 @@ const Recommendations = ({
                       }
                       <ButtonGroup>
                         {/* Edit */}
-                        <Button type="button" unstyled>
+                        <Button
+                          type="button"
+                          onClick={e => {
+                            // Set form field values for editing
+                            reset({
+                              ...values,
+                              // Revert link strings to object for form array field
+                              links: links.map(link => ({ link }))
+                            });
+
+                            history.push(
+                              `/trb/${trbRequestId}/advice/recommendations/form`
+                            );
+                          }}
+                          unstyled
+                        >
                           {t('adviceLetterForm.editRecommendation')}
                         </Button>
                         {/* Remove */}
                         <Button
                           type="button"
                           className="text-secondary margin-left-1"
-                          onClick={() =>
-                            deleteRecommendation({ variables: { id } })
-                          }
+                          onClick={() => remove({ variables: { id } })}
                           unstyled
                         >
                           {t('adviceLetterForm.removeRecommendation')}

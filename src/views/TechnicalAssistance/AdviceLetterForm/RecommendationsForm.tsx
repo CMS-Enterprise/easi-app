@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
-import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ErrorMessage,
@@ -30,7 +29,6 @@ import {
   AdviceLetterRecommendationFields,
   FormAlertObject
 } from 'types/technicalAssistance';
-import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
 
@@ -51,21 +49,12 @@ const RecommendationsForm = ({
 
   const [showFormError, setShowFormError] = useState<boolean>(false);
 
-  const formObject = useForm<AdviceLetterRecommendationFields>({
-    resolver: yupResolver(adviceRecommendationSchema),
-    defaultValues: {
-      title: '',
-      recommendation: '',
-      links: []
-    }
-  });
-
   const {
     handleSubmit,
     control,
     watch,
     formState: { isSubmitting, isDirty }
-  } = formObject;
+  } = useFormContext<AdviceLetterRecommendationFields>();
 
   const [create] = useMutation<CreateTRBAdviceLetterRecommendationInput>(
     CreateTrbRecommendationQuery
@@ -83,16 +72,18 @@ const RecommendationsForm = ({
           /** Format links to array of strings */
           const links = (formData.links || []).map(({ link }) => link);
 
+          const { id, title, recommendation } = formData;
+
           /** Creates new or updates existing recommendation */
-          const mutate = formData?.id ? update : create;
+          const mutate = id ? update : create;
 
           await mutate({
             variables: {
               input: {
-                trbRequestId,
-                id: formData?.id,
-                title: formData.title,
-                recommendation: formData.recommendation,
+                ...(!id && { trbRequestId }),
+                id,
+                title,
+                recommendation,
                 links
               }
             },
@@ -229,9 +220,7 @@ const RecommendationsForm = ({
         />
 
         {/* Links */}
-        <FormProvider {...formObject}>
-          <LinksArrayField />
-        </FormProvider>
+        <LinksArrayField />
 
         {/* Save */}
         <Button
