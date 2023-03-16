@@ -38,51 +38,55 @@ exports[`TRB Advice Letter review component Matches the snapshot 1`] = `
       <h2>
         What we recommend
       </h2>
-      <div
-        class="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
+      <ul
+        class="usa-list usa-list--unstyled"
       >
-        <h3
-          class="margin-bottom-1"
+        <li
+          class="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
         >
-          Recommendation 1
-        </h3>
-        <p
-          class="margin-top-0 line-height-body-5"
-        >
-          This is the recommendation text
-        </p>
-        <p
-          class="text-bold margin-bottom-1 margin-top-3"
-        >
-          Resources
-        </p>
-        <ul
-          class="usa-list usa-list--unstyled"
-        >
-          <li>
-            <a
-              aria-label="Open easi.cms.gov in a new tab"
-              class="usa-link usa-link--external display-block margin-top-1"
-              href="http://easi.cms.gov"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              easi.cms.gov
-            </a>
-          </li>
-          <li>
-            <a
-              aria-label="Open google.com in a new tab"
-              class="usa-link usa-link--external display-block margin-top-1"
-              href="http://google.com"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              google.com
-            </a>
-          </li>
-        </ul>
-      </div>
+          <h3
+            class="margin-bottom-1"
+          >
+            Recommendation 1
+          </h3>
+          <p
+            class="margin-y-1"
+          >
+            This is the recommendation text
+          </p>
+          <p
+            class="text-bold margin-bottom-0 margin-top-3"
+          >
+            Resources
+          </p>
+          <ul
+            class="usa-list usa-list--unstyled"
+          >
+            <li>
+              <a
+                aria-label="Open easi.cms.gov in a new tab"
+                class="usa-link display-block margin-top-05"
+                href="/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                easi.cms.gov
+              </a>
+            </li>
+            <li>
+              <a
+                aria-label="Open https://google.com in a new tab"
+                class="usa-link usa-link--external display-block margin-top-05"
+                href="https://google.com/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                google.com
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
     <div
       class="easi-section easi-section__border-top margin-top-6 padding-top-1"
