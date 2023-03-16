@@ -112,12 +112,12 @@ const Recommendations = ({
               </Alert>
             ) : (
               /* Recommendations list */
-              <ul className="usa-list usa-list--unstyled margin-bottom-2">
+              <ul className="usa-list usa-list--unstyled margin-bottom-2 grid-row grid-gap-md">
                 {recommendations.map(values => {
                   const { title, recommendation, id, links } = values;
 
                   return (
-                    <li key={id}>
+                    <li key={id} className="desktop:grid-col-6">
                       <h4 className="margin-bottom-0">{title}</h4>
                       <p className="margin-top-05 margin-bottom-0">
                         {recommendation}
@@ -138,6 +138,7 @@ const Recommendations = ({
                           </ul>
                         )
                       }
+                      {/* TODO: Fix ButtonGroup margins - last item has margin-bottom-0 when nested within .usa-list */}
                       <ButtonGroup>
                         {/* Edit */}
                         <Button
