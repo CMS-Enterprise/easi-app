@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
-  Alert,
   Button,
   Grid,
   GridContainer,
@@ -11,6 +10,7 @@ import {
 } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+import { Alert } from 'components/shared/Alert';
 import StepHeader from 'components/StepHeader';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
