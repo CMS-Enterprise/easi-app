@@ -108,3 +108,8 @@
   position: -webkit-sticky;
   top: 0;
 }
+
+// Fixes button group item margins when nested inside .usa-list
+.usa-list li.usa-button-group__item:last-child {
+  margin-bottom: 0.25rem;
+}

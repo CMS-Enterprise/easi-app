@@ -128,7 +128,6 @@ const Recommendations = ({
                           className="margin-top-1 margin-bottom-205"
                         />
                       )}
-                      {/* TODO: Fix ButtonGroup margins - last item has margin-bottom-0 when nested within .usa-list */}
                       <ButtonGroup>
                         {/* Edit */}
                         <Button
