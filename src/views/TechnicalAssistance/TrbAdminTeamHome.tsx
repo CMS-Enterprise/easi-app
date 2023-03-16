@@ -110,7 +110,7 @@ function RequestNameCell({
   row
 }: CellProps<TrbAdminTeamHomeRequest, TrbAdminTeamHomeRequest['name']>) {
   return (
-    <UswdsReactLink to={`/trb/task-list/${row.original.id}`}>
+    <UswdsReactLink to={`/trb/${row.original.id}/request`}>
       {value}
     </UswdsReactLink>
   );
