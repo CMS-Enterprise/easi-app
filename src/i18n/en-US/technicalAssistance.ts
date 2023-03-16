@@ -795,7 +795,6 @@ const technicalAssistance = {
       }
     },
     actions: {
-      reviewRequest: 'Review request',
       assignLead: 'Assign lead',
       addDate: 'Add date'
     }
