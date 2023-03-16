@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import {
   CellProps,
@@ -15,7 +14,6 @@ import {
   Button,
   ButtonGroup,
   GridContainer,
-  IconFileDownload,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -24,6 +22,7 @@ import i18next from 'i18next';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import CsvDownloadLink from 'components/shared/CsvDownloadLink';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -78,23 +77,6 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
   });
 
   return [trbRequestsCsvHeader, ...rows];
-}
-
-function CsvDownloadLink({
-  children,
-  data,
-  filename
-}: {
-  children?: React.ReactNode;
-  data: any;
-  filename?: string;
-}) {
-  return (
-    <CSVLink className="usa-link" data={data} filename={filename}>
-      <IconFileDownload className="text-middle margin-right-1" />
-      {children}
-    </CSVLink>
-  );
 }
 
 function SubmissionDateCell({
@@ -230,14 +212,13 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
       </div>
 
       {/* Download new requests csv */}
-      <div className="margin-bottom-4 line-height-body-5">
-        <CsvDownloadLink
-          data={getTrbRequestDataAsCsv(requests)}
-          filename="new-trb-requests.csv"
-        >
-          {t('adminTeamHome.newRequests.downloadCsv')}
-        </CsvDownloadLink>
-      </div>
+      <CsvDownloadLink
+        data={getTrbRequestDataAsCsv(requests)}
+        filename="new-trb-requests.csv"
+        className="display-inline-block margin-bottom-4 line-height-body-5"
+      >
+        {t('adminTeamHome.newRequests.downloadCsv')}
+      </CsvDownloadLink>
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
@@ -441,14 +422,13 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       </div>
 
       {/* Download existing requests csv */}
-      <div className="margin-bottom-4 line-height-body-5">
-        <CsvDownloadLink
-          data={getTrbRequestDataAsCsv(requests)}
-          filename="existing-trb-requests.csv"
-        >
-          {t('adminTeamHome.existingRequests.downloadCsv')}
-        </CsvDownloadLink>
-      </div>
+      <CsvDownloadLink
+        data={getTrbRequestDataAsCsv(requests)}
+        filename="existing-trb-requests.csv"
+        className="display-inline-block margin-bottom-4 line-height-body-5"
+      >
+        {t('adminTeamHome.existingRequests.downloadCsv')}
+      </CsvDownloadLink>
 
       {/* Open | Closed requests tabs */}
       <nav aria-label={t('adminTeamHome.existingRequests.tabs.label')}>
