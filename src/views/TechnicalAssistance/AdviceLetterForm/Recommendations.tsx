@@ -32,6 +32,13 @@ export type RecommendationsProps = {
   recommendations: TRBRecommendation[];
 };
 
+const defaultValues: AdviceLetterRecommendationFields = {
+  id: undefined,
+  title: '',
+  recommendation: '',
+  links: []
+};
+
 const Recommendations = ({
   trbRequestId,
   adviceLetter,
@@ -49,11 +56,7 @@ const Recommendations = ({
 
   const formMethods = useForm<AdviceLetterRecommendationFields>({
     resolver: yupResolver(adviceRecommendationSchema),
-    defaultValues: {
-      title: '',
-      recommendation: '',
-      links: []
-    }
+    defaultValues
   });
   const { reset } = formMethods;
 
@@ -94,7 +97,10 @@ const Recommendations = ({
           <Button
             className="margin-top-5 margin-bottom-1"
             type="button"
-            onClick={() => history.push(`${url}/form`)}
+            onClick={() => {
+              reset(defaultValues);
+              history.push(`${url}/form`);
+            }}
             outline={hasRecommendations}
           >
             {t(
