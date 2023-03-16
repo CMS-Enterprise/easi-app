@@ -10,7 +10,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
+import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
 
 import Basic from './Basic';
 
@@ -58,7 +58,7 @@ const mockTrbRequestData: TrbRequest = {
     __typename: 'TRBRequestForm'
   },
   type: TRBRequestType.NEED_HELP,
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   taskStatuses: {} as any,
   feedback: [],
   __typename: 'TRBRequest'
@@ -98,7 +98,7 @@ describe('Trb Request form: Basic', () => {
               },
               feedback: [],
               type: TRBRequestType.NEED_HELP,
-              status: TRBRequestStatus.OPEN,
+              state: TRBRequestState.OPEN,
               taskStatuses: {} as any,
               __typename: 'TRBRequest'
             }}

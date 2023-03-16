@@ -11,7 +11,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
+import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
 
 import SubjectAreas from './SubjectAreas';
 
@@ -60,7 +60,7 @@ const mockTrbRequestData: TrbRequest = {
   },
   feedback: [],
   type: TRBRequestType.NEED_HELP,
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   taskStatuses: {} as any,
   __typename: 'TRBRequest'
 };
@@ -92,7 +92,7 @@ function renderSubjectAreas() {
             },
             feedback: [],
             type: TRBRequestType.NEED_HELP,
-            status: TRBRequestStatus.OPEN,
+            state: TRBRequestState.OPEN,
             taskStatuses: {} as any,
             __typename: 'TRBRequest'
           }}
