@@ -454,26 +454,36 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       <nav aria-label={t('adminTeamHome.existingRequests.tabs.label')}>
         <ul className="easi-request-repo__tab-list margin-bottom-4">
           <li
-            className={classnames('easi-request-repo__tab', {
+            className={classnames('easi-request-repo__tab font-body-2xs', {
               'easi-request-repo__tab--active': activeTable === 'open'
             })}
           >
             <button
               type="button"
-              className="easi-request-repo__tab-btn"
+              className={classnames(
+                'easi-request-repo__tab-btn line-height-body-3',
+                {
+                  'text-primary': activeTable === 'open'
+                }
+              )}
               onClick={() => setActiveTable('open')}
             >
               {t('adminTeamHome.existingRequests.tabs.open.name')}
             </button>
           </li>
           <li
-            className={classnames('easi-request-repo__tab', {
+            className={classnames('easi-request-repo__tab font-body-2xs', {
               'easi-request-repo__tab--active': activeTable === 'closed'
             })}
           >
             <button
               type="button"
-              className="easi-request-repo__tab-btn"
+              className={classnames(
+                'easi-request-repo__tab-btn line-height-body-3',
+                {
+                  'text-primary': activeTable === 'closed'
+                }
+              )}
               onClick={() => setActiveTable('closed')}
             >
               {t('adminTeamHome.existingRequests.tabs.closed.name')}
