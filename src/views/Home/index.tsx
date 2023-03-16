@@ -112,6 +112,9 @@ const Home = () => {
               <Grid row gap={2}>
                 {[
                   { ITGov: requestTypes.ITGov },
+                  ...(flags.technicalAssistance
+                    ? [{ TRB: requestTypes.TRB }]
+                    : []),
                   { TRB: requestTypes.TRB },
                   { 508: requestTypes[508] }
                 ].map(requestType => (
