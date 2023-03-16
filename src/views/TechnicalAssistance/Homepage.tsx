@@ -92,7 +92,7 @@ function Homepage() {
       },
       {
         Header: t<string>('table.header.status'),
-        accessor: 'status'
+        accessor: ({ status }) => t(`table.requestStatus.${status}`)
       },
       {
         Header: t<string>('table.header.submissionDate'),

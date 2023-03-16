@@ -800,7 +800,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   class="padding-left-0"
                   role="cell"
                 >
-                  OPEN
+                  New
                 </td>
                 <td
                   class="padding-left-0"
@@ -828,7 +828,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   class="padding-left-0"
                   role="cell"
                 >
-                  OPEN
+                  New
                 </td>
                 <td
                   class="padding-left-0"
