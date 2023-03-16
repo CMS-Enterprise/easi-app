@@ -440,6 +440,11 @@ export interface DeleteSystemIntakeContactInput {
   id: UUID;
 }
 
+export interface DeleteTRBRequestFundingSourcesInput {
+  trbRequestId: UUID;
+  fundingNumber: string;
+}
+
 /**
  * The input required to delete a test date/score
  */
@@ -751,6 +756,12 @@ export interface UpdateTRBRequestFormInput {
   collabGRBConsultRequested?: boolean | null;
   subjectAreaOptions?: TRBSubjectAreaOption[] | null;
   subjectAreaOptionOther?: string | null;
+}
+
+export interface UpdateTRBRequestFundingSourcesInput {
+  trbRequestId: UUID;
+  fundingNumber: string;
+  sources: string[];
 }
 
 /**

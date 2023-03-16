@@ -26,14 +26,19 @@ import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
+import DeleteTRBRequestFundingSource from 'queries/DeleteTRBRequestFundingSource';
+import {
+  DeleteTRBRequestFundingSource as DeleteTRBRequestFundingSourceType,
+  DeleteTRBRequestFundingSourceVariables
+} from 'queries/types/DeleteTRBRequestFundingSource';
 import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'queries/types/GetTrbRequest';
 import {
   UpdateTrbRequestAndForm,
   UpdateTrbRequestAndFormVariables
 } from 'queries/types/UpdateTrbRequestAndForm';
 import {
-  UpdateTRBRequestFundingSourcesVariables,
-  UpdateTRBRequestFundingSourcesVariables as UpdateTRBRequestFundingSourcesVariablesType
+  UpdateTRBRequestFundingSources as UpdateTRBRequestFundingSourcesType,
+  UpdateTRBRequestFundingSourcesVariables
 } from 'queries/types/UpdateTRBRequestFundingSources';
 import UpdateTrbRequestAndFormQuery from 'queries/UpdateTrbRequestAndFormQuery';
 import UpdateTRBRequestFundingSources from 'queries/UpdateTRBRequestFundingSources';
@@ -92,10 +97,15 @@ function Basic({
     UpdateTrbRequestAndFormVariables
   >(UpdateTrbRequestAndFormQuery);
 
-  const [updatefundingSources] = useMutation<
-    UpdateTRBRequestFundingSourcesVariablesType,
+  const [updatefundingSource] = useMutation<
+    UpdateTRBRequestFundingSourcesType,
     UpdateTRBRequestFundingSourcesVariables
   >(UpdateTRBRequestFundingSources);
+
+  const [deletefundingSource] = useMutation<
+    DeleteTRBRequestFundingSourceType,
+    DeleteTRBRequestFundingSourceVariables
+  >(DeleteTRBRequestFundingSource);
 
   const initialValues = nullFillObject(request.form, basicBlankValues);
 
@@ -129,6 +139,19 @@ function Basic({
       err?.scrollIntoView();
     }
   }, [errors, hasErrors]);
+
+  const handleApolloError = useCallback(
+    (err: any) => {
+      if (err instanceof ApolloError) {
+        setFormAlert({
+          type: 'error',
+          heading: t('errors.somethingWrong'),
+          message: t('basic.errors.submit')
+        });
+      }
+    },
+    [setFormAlert, t]
+  );
 
   const submit = useCallback<StepSubmit>(
     callback =>
@@ -204,60 +227,57 @@ function Basic({
         // Wait for submit to finish before continuing.
         // This essentially makes sure any effects like
         // `setIsStepSubmitting` are called before unmount.
-        .then(
-          () => {
-            callback?.();
-          },
-          err => {
-            if (err instanceof ApolloError) {
-              setFormAlert({
-                type: 'error',
-                heading: t('errors.somethingWrong'),
-                message: t('basic.errors.submit')
-              });
-            }
-          }
-        ),
+        .then(() => {
+          callback?.();
+        }, handleApolloError),
     [
       dirtyFields,
       handleSubmit,
       isDirty,
       refetchRequest,
       request,
-      setFormAlert,
-      t,
+      handleApolloError,
       updateForm
     ]
   );
 
-  // Handling the funding sources sumbission outside the scope of RHF handler
+  // Handling the funding sources update/delete sumbission outside the scope of RHF handler
   // Funding sources component has it's own validation
-  const submitFundingSources = ({
+  const addOrUpdateFundingSource = ({
     fundingNumber,
     sources
   }: {
     fundingNumber: string;
     sources: string[];
   }) => {
-    updatefundingSources({
+    updatefundingSource({
       variables: {
-        trbRequestId: request.id,
-        fundingNumber,
-        sources
+        input: {
+          trbRequestId: request.id,
+          fundingNumber,
+          sources
+        }
       }
     })
       .then(() => {
         refetchRequest();
       })
-      .catch(err => {
-        if (err instanceof ApolloError) {
-          setFormAlert({
-            type: 'error',
-            heading: t('errors.somethingWrong'),
-            message: t('basic.errors.submit')
-          });
+      .catch(handleApolloError);
+  };
+
+  const deleteFundingSource = (fundingNumber: string) => {
+    deletefundingSource({
+      variables: {
+        input: {
+          trbRequestId: request.id,
+          fundingNumber
         }
-      });
+      }
+    })
+      .then(() => {
+        refetchRequest();
+      })
+      .catch(handleApolloError);
   };
 
   useEffect(() => {
@@ -671,10 +691,9 @@ function Basic({
                   initialValues={field.value}
                   setFieldValue={(fieldName, value) => {
                     if (value.delete) {
-                      // TODO: Delete funding source submit handler
+                      deleteFundingSource(value.delete);
                     } else {
-                      // Add or edit funding source submit handler
-                      submitFundingSources(value);
+                      addOrUpdateFundingSource(value);
                     }
                   }}
                   fundingSourceOptions={intakeFundingSources}

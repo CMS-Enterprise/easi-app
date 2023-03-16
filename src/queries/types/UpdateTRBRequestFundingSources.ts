@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { UpdateTRBRequestFundingSourcesInput } from "./../../types/graphql-global-types";
+
 // ====================================================
 // GraphQL mutation operation: UpdateTRBRequestFundingSources
 // ====================================================
@@ -20,7 +22,5 @@ export interface UpdateTRBRequestFundingSources {
 }
 
 export interface UpdateTRBRequestFundingSourcesVariables {
-  trbRequestId: UUID;
-  sources: string[];
-  fundingNumber: string;
+  input: UpdateTRBRequestFundingSourcesInput;
 }
