@@ -1825,6 +1825,10 @@ input UpdateTRBRequestFundingSourcesInput {
   fundingNumber: String!
   sources: [String!]!
 }
+input DeleteTRBRequestFundingSourcesInput {
+  trbRequestId: UUID!
+  fundingNumber: String!
+}
 
 """
 Represents the action an admin is taking on a TRB request when leaving feedback
@@ -2125,6 +2129,7 @@ type Mutation {
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
+  deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
     @hasRole(role: EASI_TRB_ADMIN)

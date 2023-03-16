@@ -32,3 +32,12 @@ func UpdateTRBRequestFundingSources(
 	}
 	return store.UpdateTRBRequestFundingSources(ctx, trbRequestId, fundingNumber, fundingSources)
 }
+
+func DeleteTRBRequestFundingSources(
+	ctx context.Context,
+	store *storage.Store,
+	trbRequestId uuid.UUID,
+	fundingNumber string,
+) ([]*models.TRBFundingSource, error) {
+	return store.DeleteTRBRequestFundingSources(ctx, trbRequestId, fundingNumber)
+}

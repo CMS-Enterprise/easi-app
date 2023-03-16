@@ -539,6 +539,7 @@ type ComplexityRoot struct {
 		DeleteTRBAdviceLetterRecommendation              func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
+		DeleteTRBRequestFundingSources                   func(childComplexity int, input model.DeleteTRBRequestFundingSourcesInput) int
 		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
@@ -1177,6 +1178,7 @@ type MutationResolver interface {
 	DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error)
 	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
 	UpdateTRBRequestFundingSources(ctx context.Context, input model.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
+	DeleteTRBRequestFundingSources(ctx context.Context, input model.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
 	SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error)
 	CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error)
 	UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error)
@@ -3786,6 +3788,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteTRBRequestDocument(childComplexity, args["id"].(uuid.UUID)), true
 
+	case "Mutation.deleteTRBRequestFundingSources":
+		if e.complexity.Mutation.DeleteTRBRequestFundingSources == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteTRBRequestFundingSources_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteTRBRequestFundingSources(childComplexity, args["input"].(model.DeleteTRBRequestFundingSourcesInput)), true
+
 	case "Mutation.deleteTestDate":
 		if e.complexity.Mutation.DeleteTestDate == nil {
 			break
@@ -6311,6 +6325,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputDeleteAccessibilityRequestDocumentInput,
 		ec.unmarshalInputDeleteAccessibilityRequestInput,
 		ec.unmarshalInputDeleteSystemIntakeContactInput,
+		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
 		ec.unmarshalInputDeleteTestDateInput,
 		ec.unmarshalInputEmailNotificationRecipients,
 		ec.unmarshalInputGeneratePresignedUploadURLInput,
@@ -8236,6 +8251,10 @@ input UpdateTRBRequestFundingSourcesInput {
   fundingNumber: String!
   sources: [String!]!
 }
+input DeleteTRBRequestFundingSourcesInput {
+  trbRequestId: UUID!
+  fundingNumber: String!
+}
 
 """
 Represents the action an admin is taking on a TRB request when leaving feedback
@@ -8536,6 +8555,7 @@ type Mutation {
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
+  deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
     @hasRole(role: EASI_TRB_ADMIN)
@@ -9205,6 +9225,21 @@ func (ec *executionContext) field_Mutation_deleteTRBRequestDocument_args(ctx con
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteTRBRequestFundingSources_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.DeleteTRBRequestFundingSourcesInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteTRBRequestFundingSourcesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTRBRequestFundingSourcesInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -27090,6 +27125,78 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestFundingSources
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateTRBRequestFundingSources_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteTRBRequestFundingSources(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteTRBRequestFundingSources(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteTRBRequestFundingSources(rctx, fc.Args["input"].(model.DeleteTRBRequestFundingSourcesInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.TRBFundingSource)
+	fc.Result = res
+	return ec.marshalNTRBFundingSource2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFundingSourceᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteTRBRequestFundingSources(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBFundingSource_id(ctx, field)
+			case "trbRequestId":
+				return ec.fieldContext_TRBFundingSource_trbRequestId(ctx, field)
+			case "fundingNumber":
+				return ec.fieldContext_TRBFundingSource_fundingNumber(ctx, field)
+			case "source":
+				return ec.fieldContext_TRBFundingSource_source(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBFundingSource_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBFundingSource_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBFundingSource_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBFundingSource_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBFundingSource", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteTRBRequestFundingSources_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -45215,6 +45322,42 @@ func (ec *executionContext) unmarshalInputDeleteSystemIntakeContactInput(ctx con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDeleteTRBRequestFundingSourcesInput(ctx context.Context, obj interface{}) (model.DeleteTRBRequestFundingSourcesInput, error) {
+	var it model.DeleteTRBRequestFundingSourcesInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"trbRequestId", "fundingNumber"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "trbRequestId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+			it.TrbRequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "fundingNumber":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingNumber"))
+			it.FundingNumber, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Context, obj interface{}) (model.DeleteTestDateInput, error) {
 	var it model.DeleteTestDateInput
 	asMap := map[string]interface{}{}
@@ -51027,6 +51170,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateTRBRequestFundingSources(ctx, field)
 			})
 
+		case "deleteTRBRequestFundingSources":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteTRBRequestFundingSources(ctx, field)
+			})
+
 		case "setRolesForUserOnSystem":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -56012,6 +56161,11 @@ func (ec *executionContext) unmarshalNDeleteAccessibilityRequestInput2githubᚗc
 
 func (ec *executionContext) unmarshalNDeleteSystemIntakeContactInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteSystemIntakeContactInput(ctx context.Context, v interface{}) (model.DeleteSystemIntakeContactInput, error) {
 	res, err := ec.unmarshalInputDeleteSystemIntakeContactInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNDeleteTRBRequestFundingSourcesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTRBRequestFundingSourcesInput(ctx context.Context, v interface{}) (model.DeleteTRBRequestFundingSourcesInput, error) {
+	res, err := ec.unmarshalInputDeleteTRBRequestFundingSourcesInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

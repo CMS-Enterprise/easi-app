@@ -1943,6 +1943,11 @@ func (r *mutationResolver) UpdateTRBRequestFundingSources(ctx context.Context, i
 	return resolvers.UpdateTRBRequestFundingSources(ctx, r.store, input.TrbRequestID, input.FundingNumber, input.Sources)
 }
 
+// DeleteTRBRequestFundingSources is the resolver for the deleteTRBRequestFundingSources field.
+func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, input model.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
+	return resolvers.DeleteTRBRequestFundingSources(ctx, r.store, input.TrbRequestID, input.FundingNumber)
+}
+
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
 func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
 	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)

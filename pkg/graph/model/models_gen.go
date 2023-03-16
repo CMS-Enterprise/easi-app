@@ -321,6 +321,11 @@ type DeleteTRBRequestDocumentPayload struct {
 	Document *models.TRBRequestDocument `json:"document"`
 }
 
+type DeleteTRBRequestFundingSourcesInput struct {
+	TrbRequestID  uuid.UUID `json:"trbRequestId"`
+	FundingNumber string    `json:"fundingNumber"`
+}
+
 // The input required to delete a test date/score
 type DeleteTestDateInput struct {
 	ID uuid.UUID `json:"id"`

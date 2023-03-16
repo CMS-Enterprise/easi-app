@@ -62,3 +62,32 @@ func (s *Store) UpdateTRBRequestFundingSources(
 	tx.Commit()
 	return insertedFundingSources, nil
 }
+
+func (s *Store) DeleteTRBRequestFundingSources(
+	ctx context.Context,
+	trbRequestId uuid.UUID,
+	fundingNumber string,
+) ([]*models.TRBFundingSource, error) {
+	tx := s.db.MustBegin()
+	defer tx.Rollback()
+	deleteFundingSourcesSQL := `
+		DELETE FROM trb_request_funding_sources
+		WHERE trb_request_id = $1 AND funding_number = $2;
+	`
+	_, err := tx.Exec(deleteFundingSourcesSQL, trbRequestId, fundingNumber)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
+		return nil, err
+	}
+
+	getSourcesSQL := `SELECT * FROM trb_request_funding_sources WHERE trb_request_id = $1 AND funding_number = $2`
+	fundingSources := []*models.TRBFundingSource{}
+	err = tx.Select(&fundingSources, getSourcesSQL, trbRequestId, fundingNumber)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
+		return nil, err
+	}
+	tx.Commit()
+	return fundingSources, nil
+}
