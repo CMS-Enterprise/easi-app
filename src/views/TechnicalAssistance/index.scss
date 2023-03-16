@@ -32,12 +32,14 @@
     }
   }
   .trb-admin-team-home-actions {
-    @media screen and (min-width: $desktop) {
-      display: flex;
-      li {
-        height: units('205');
-        line-height: units('205');
-      }
+    li {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    li:not(:first-child) {
+      margin-left: 0;
+    }
+    @media screen and (min-width: $mobile) {
       li:not(:last-of-type) {
         margin-right: 1rem;
         padding-right: 1rem;

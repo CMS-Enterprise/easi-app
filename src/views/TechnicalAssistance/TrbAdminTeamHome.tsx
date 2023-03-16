@@ -13,6 +13,7 @@ import {
 import { useQuery } from '@apollo/client';
 import {
   Button,
+  ButtonGroup,
   GridContainer,
   IconFileDownload,
   Table
@@ -595,40 +596,36 @@ function TrbAdminTeamHome() {
   return (
     <GridContainer className="width-full">
       <PageHeading className="margin-bottom-1">{t('heading')}</PageHeading>
-      <div className="font-body-lg">{t('adminTeamHome.description')}</div>
+      <div className="font-body-lg line-height-body-5 text-light">
+        {t('adminTeamHome.description')}
+      </div>
       {loading && <PageLoading />}
       {Array.isArray(trbRequests) && (
         <>
-          <ul className="usa-list--unstyled trb-admin-team-home-actions margin-top-1 line-height-body-5">
-            <li>
-              <Button
-                type="button"
-                unstyled
-                className="usa-link"
-                onClick={() => {
-                  document
-                    .querySelector('.trb-existing-requests-table')
-                    ?.scrollIntoView();
-                }}
-              >
-                {t('adminTeamHome.jumpToExistingRequests')}
-              </Button>
-            </li>
-            <li>
-              <CsvDownloadLink
-                data={getTrbRequestDataAsCsv(trbRequests)}
-                filename="all-trb-requests.csv"
-              >
-                {t('adminTeamHome.downloadAllTrbRequests')}
-              </CsvDownloadLink>
-            </li>
-            {/* <li>{t('adminTeamHome.switchToDifferentAdminView')}</li> post-mvp */}
-            <li>
-              <UswdsReactLink to="/trb/start">
-                {t('adminTeamHome.submitYourOwnRequest')}
-              </UswdsReactLink>
-            </li>
-          </ul>
+          <ButtonGroup className="trb-admin-team-home-actions margin-top-1 line-height-body-5">
+            <Button
+              type="button"
+              unstyled
+              className="usa-link"
+              onClick={() => {
+                document
+                  .querySelector('.trb-existing-requests-table')
+                  ?.scrollIntoView();
+              }}
+            >
+              {t('adminTeamHome.jumpToExistingRequests')}
+            </Button>
+            <CsvDownloadLink
+              data={getTrbRequestDataAsCsv(trbRequests)}
+              filename="all-trb-requests.csv"
+            >
+              {t('adminTeamHome.downloadAllTrbRequests')}
+            </CsvDownloadLink>
+            {/* {t('adminTeamHome.switchToDifferentAdminView')} post-mvp */}
+            <UswdsReactLink to="/trb/start">
+              {t('adminTeamHome.submitYourOwnRequest')}
+            </UswdsReactLink>
+          </ButtonGroup>
           <div className="margin-top-6">
             <TrbNewRequestsTable
               requests={trbRequests.filter(d => d.isRecent)}
