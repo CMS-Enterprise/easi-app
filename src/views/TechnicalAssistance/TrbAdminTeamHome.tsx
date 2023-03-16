@@ -36,6 +36,7 @@ import {
   getColumnSortStatus,
   getHeaderSortIcon
 } from 'utils/tableSort';
+import NotFound from 'views/NotFound';
 
 function getPersonVal(name: string, component?: any) {
   return `${name}${typeof component === 'string' ? `, ${component}` : ''}`;
@@ -566,10 +567,13 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
 function TrbAdminTeamHome() {
   const { t } = useTranslation('technicalAssistance');
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { loading, error, data } = useQuery<GetTrbAdminTeamHome>(
     GetTrbAdminTeamHomeQuery
   );
+
+  if (error) {
+    return <NotFound />;
+  }
 
   // todo Refer to EASI-2725 on when backend will handle this filtering
   const trbRequests = data?.trbRequests.filter(
