@@ -5,7 +5,7 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { formatDateLocal } from 'utils/date';
 
-import RecommendationLinks from './RecommendationLinks';
+import RecommendationsList from './RecommendationsList';
 
 /**
  * Displays advice letter for review
@@ -48,25 +48,10 @@ const ReviewAdviceLetter = ({
           recommendations.length === 0 ? (
             <p>{t('adviceLetter.notSpecified')}</p>
           ) : (
-            // Display recommendations
-            recommendations.map(({ title, recommendation, links }) => {
-              return (
-                <div
-                  key={title}
-                  className="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
-                >
-                  <h3 className="margin-bottom-1">{title}</h3>
-                  <p className="margin-top-0 line-height-body-5">
-                    {recommendation}
-                  </p>
-                  <p className="text-bold margin-bottom-1 margin-top-3">
-                    {t('adviceLetter.resources')}
-                  </p>
-
-                  {links.length > 0 && <RecommendationLinks links={links} />}
-                </div>
-              );
-            })
+            <RecommendationsList
+              type="admin"
+              recommendations={recommendations}
+            />
           )
         }
       </SectionWrapper>

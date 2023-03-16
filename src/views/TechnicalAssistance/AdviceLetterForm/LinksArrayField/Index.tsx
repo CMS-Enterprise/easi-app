@@ -37,13 +37,12 @@ export default function LinkArrayField() {
   return (
     <div id="trbLinksField">
       {
-        /** Field inputs */
+        /* Field inputs */
         links.length > 0 && (
           <ul className="usa-list usa-list--unstyled">
             {fields.map((item, index) => {
               return (
                 <li key={item.id}>
-                  {/** Link input */}
                   <Controller
                     name={`links.${index}.link`}
                     control={control}
@@ -57,9 +56,11 @@ export default function LinkArrayField() {
                           >
                             {t('Link')}
                           </Label>
+
                           {error && (
                             <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
                           )}
+
                           <div className="margin-top-1 display-flex flex-align-center">
                             <TextInput
                               className="margin-top-0"
@@ -68,6 +69,7 @@ export default function LinkArrayField() {
                               {...field}
                               ref={null}
                             />
+                            {/* Remove link button */}
                             <Button
                               type="button"
                               className="text-secondary margin-top-0 margin-left-2"
@@ -81,7 +83,6 @@ export default function LinkArrayField() {
                       );
                     }}
                   />
-                  {/** Remove button */}
                 </li>
               );
             })}
@@ -89,7 +90,7 @@ export default function LinkArrayField() {
         )
       }
 
-      {/** Add link button */}
+      {/* Add link button */}
       <Button
         type="button"
         className="display-flex flex-align-center margin-top-4"

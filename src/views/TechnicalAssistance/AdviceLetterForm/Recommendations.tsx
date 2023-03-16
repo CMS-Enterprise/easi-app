@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
+import { Button } from '@trussworks/react-uswds';
 
 import { Alert } from 'components/shared/Alert';
 import {
@@ -22,7 +22,7 @@ import {
 } from 'types/technicalAssistance';
 import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
-import RecommendationLinks from '../AdminHome/components/ReviewAdviceLetter/RecommendationLinks';
+import RecommendationsList from '../AdminHome/components/ReviewAdviceLetter/RecommendationsList';
 import Pager from '../RequestForm/Pager';
 
 import RecommendationsForm from './RecommendationsForm';
@@ -111,57 +111,28 @@ const Recommendations = ({
                 {t('adviceLetterForm.noRecommendations')}
               </Alert>
             ) : (
-              /* Recommendations list */
-              <ul className="usa-list usa-list--unstyled margin-bottom-2 grid-row grid-gap-md">
-                {recommendations.map(values => {
-                  const { title, recommendation, id, links } = values;
+              <RecommendationsList
+                type="form"
+                recommendations={recommendations}
+                edit={{
+                  onClick: recommendation => {
+                    // Set form field values for editing
+                    reset({
+                      ...recommendation,
+                      // Revert link strings to object for form array field
+                      links: recommendation.links.map(link => ({ link }))
+                    });
 
-                  return (
-                    <li key={id} className="desktop:grid-col-6">
-                      <h4 className="margin-bottom-0">{title}</h4>
-                      <p className="margin-top-05 margin-bottom-0">
-                        {recommendation}
-                      </p>
-                      {links.length > 0 && (
-                        <RecommendationLinks
-                          links={links}
-                          className="margin-top-1 margin-bottom-205"
-                        />
-                      )}
-                      <ButtonGroup>
-                        {/* Edit */}
-                        <Button
-                          type="button"
-                          onClick={e => {
-                            // Set form field values for editing
-                            reset({
-                              ...values,
-                              // Revert link strings to object for form array field
-                              links: links.map(link => ({ link }))
-                            });
-
-                            history.push(
-                              `/trb/${trbRequestId}/advice/recommendations/form`
-                            );
-                          }}
-                          unstyled
-                        >
-                          {t('adviceLetterForm.editRecommendation')}
-                        </Button>
-                        {/* Remove */}
-                        <Button
-                          type="button"
-                          className="text-secondary margin-left-1"
-                          onClick={() => remove({ variables: { id } })}
-                          unstyled
-                        >
-                          {t('adviceLetterForm.removeRecommendation')}
-                        </Button>
-                      </ButtonGroup>
-                    </li>
-                  );
-                })}
-              </ul>
+                    history.push(
+                      `/trb/${trbRequestId}/advice/recommendations/form`
+                    );
+                  }
+                }}
+                remove={{
+                  onClick: recommendation =>
+                    remove({ variables: { id: recommendation.id } })
+                }}
+              />
             )
           }
 
