@@ -96,6 +96,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
         name="All Systems Search"
         role="searchbox"
         type="search"
+        value=""
       />
       <button
         class="usa-button grid-row flex-justify-center flex-align-center no-pointer"

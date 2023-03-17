@@ -21,7 +21,7 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { merge } from 'lodash';
+import { merge, omit } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -353,6 +353,7 @@ const RequestRepository = () => {
 
   // Sorts by previous view sort || desc:true, id: 'submittedAt'
   useEffect(() => {
+    // console.log(tableState);
     setSortBy(tableState.current.sortBy!);
   }, [setSortBy, tableState]);
 
@@ -368,7 +369,9 @@ const RequestRepository = () => {
     activeTableState.current = activeTable;
 
     return () => {
-      tableState.current = merge(tableState.current, state);
+      // Sortby is deep and not merged by shallow merge
+      tableState.current = merge(omit(tableState.current, 'sortBy'), state);
+      tableState.current.sortBy = state.sortBy;
     };
   }, [
     tableState,
