@@ -21,7 +21,6 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { merge, omit } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -33,6 +32,7 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import useTableState from 'hooks/useTableState';
 import { GetSystemIntake_systemIntake_lastAdminNote as LastAdminNote } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
@@ -346,43 +346,8 @@ const RequestRepository = () => {
     return intakes.map(intake => convertIntakeToCSV(intake));
   };
 
-  // Navigates to previously view page || 0
-  useEffect(() => {
-    gotoPage(tableState.current.pageIndex!);
-  }, [gotoPage, tableState]);
-
-  // Sorts by previous view sort || desc:true, id: 'submittedAt'
-  useEffect(() => {
-    // console.log(tableState);
-    setSortBy(tableState.current.sortBy!);
-  }, [setSortBy, tableState]);
-
-  // Filters by previous search term || ''
-  useEffect(() => {
-    if (data.length) {
-      setGlobalFilter(tableState.current.globalFilter);
-    }
-  }, [data.length, setGlobalFilter, tableState]);
-
-  // Set's context on unmount and sets previous active table || 'open'
-  useEffect(() => {
-    activeTableState.current = activeTable;
-
-    return () => {
-      // Sortby is deep and not merged by shallow merge
-      tableState.current = merge(omit(tableState.current, 'sortBy'), state);
-      tableState.current.sortBy = state.sortBy;
-    };
-  }, [
-    tableState,
-    state.pageIndex,
-    activeTable,
-    state.globalFilter,
-    state.sortBy,
-    state.pageSize,
-    activeTableState,
-    state
-  ]);
+  // Sets persisted table state and stores state on unmount
+  useTableState(state, gotoPage, setSortBy, setGlobalFilter, activeTable, data);
 
   return (
     <MainContent className="padding-x-4 margin-bottom-5">
