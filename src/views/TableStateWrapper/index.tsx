@@ -26,6 +26,7 @@ export type TableSortType = {
 type TableStateContextType = {
   tableQuery: MutableRefObject<string>;
   tablePage: MutableRefObject<number>;
+  tablePageSize: MutableRefObject<number>;
   tableState: MutableRefObject<TableTypes>;
   tableSort: MutableRefObject<SortingRule<TableSortType>[]>;
 };
@@ -36,6 +37,9 @@ const initialTableState: TableStateContextType = {
   },
   tablePage: {
     current: 0
+  },
+  tablePageSize: {
+    current: 50
   },
   tableState: {
     current: 'open'
@@ -66,6 +70,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
 
   const tableQuery = useRef<string>(initialTableState.tableQuery.current);
   const tablePage = useRef<number>(initialTableState.tablePage.current);
+  const tablePageSize = useRef<number>(initialTableState.tablePageSize.current);
   const tableState = useRef<TableTypes>(initialTableState.tableState.current);
   const tableSort = useRef<SortingRule<TableSortType>[]>(
     initialTableState.tableSort.current
@@ -76,6 +81,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
     if (!isGovTeamRoute) {
       tableQuery.current = initialTableState.tableQuery.current;
       tablePage.current = initialTableState.tablePage.current;
+      tablePageSize.current = initialTableState.tablePageSize.current;
       tableState.current = initialTableState.tableState.current;
       tableSort.current = initialTableState.tableSort.current;
     }
@@ -87,6 +93,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
       value={{
         tableQuery,
         tablePage,
+        tablePageSize,
         tableState,
         tableSort
       }}

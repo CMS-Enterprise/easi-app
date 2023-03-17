@@ -59,9 +59,13 @@ const RequestRepository = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
 
-  const { tableState, tableQuery, tablePage, tableSort } = useContext(
-    TableStateContext
-  );
+  const {
+    tableState,
+    tableQuery,
+    tablePage,
+    tableSort,
+    tablePageSize
+  } = useContext(TableStateContext);
 
   const [activeTable, setActiveTable] = useState<TableTypes>(
     tableState.current
@@ -330,7 +334,7 @@ const RequestRepository = () => {
       autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
-        pageSize: 10
+        pageSize: tablePageSize.current
       }
     },
     useFilters,
@@ -368,13 +372,11 @@ const RequestRepository = () => {
   useEffect(() => {
     tableState.current = activeTable;
 
-    if (tablePage.current !== state.pageIndex) {
-      tablePage.current = state.pageIndex;
-    }
-
     return () => {
+      tablePage.current = state.pageIndex;
       tableQuery.current = state.globalFilter;
       tableSort.current = state.sortBy;
+      tablePageSize.current = state.pageSize;
     };
   }, [
     tableState,
@@ -384,7 +386,9 @@ const RequestRepository = () => {
     tableQuery,
     state.globalFilter,
     tableSort,
-    state.sortBy
+    state.sortBy,
+    tablePageSize,
+    state.pageSize
   ]);
 
   return (
