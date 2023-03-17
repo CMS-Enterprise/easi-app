@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,6 +49,7 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import { TableStateContext, TableTypes } from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
 import tableMap from './tableMap';
@@ -50,10 +57,13 @@ import tableMap from './tableMap';
 import './index.scss';
 
 const RequestRepository = () => {
-  type TableTypes = 'open' | 'closed';
   const isMobile = useCheckResponsiveScreen('tablet');
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
+
+  const { tableState, setTableState, tableQuery, setTableQuery } = useContext(
+    TableStateContext
+  );
 
   const [activeTable, setActiveTable] = useState<TableTypes>('open');
 
@@ -64,14 +74,6 @@ const RequestRepository = () => {
     open: [{ id: 'submittedAt', desc: true }],
     closed: [{ id: 'lastAdminNote', desc: true }]
   });
-
-  // Select an active table and restore its last sort state
-  function selectActiveTable(nextActiveTable: TableTypes) {
-    if (nextActiveTable === activeTable) return;
-    setLastSort(prev => ({ ...prev, [activeTable]: state.sortBy }));
-    setActiveTable(nextActiveTable);
-    setSortBy(lastSort[nextActiveTable]);
-  }
 
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
@@ -320,7 +322,7 @@ const RequestRepository = () => {
       autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
-        pageSize: 50
+        pageSize: 10
       }
     },
     useFilters,
@@ -336,6 +338,66 @@ const RequestRepository = () => {
   const convertIntakesToCSV = (intakes: any[]) => {
     return intakes.map(intake => convertIntakeToCSV(intake));
   };
+
+  // Select an active table and restore its last sort state
+  const selectActiveTable = useCallback(
+    (nextActiveTable: TableTypes) => {
+      if (nextActiveTable === activeTable) return;
+      setLastSort(prev => ({ ...prev, [activeTable]: state.sortBy }));
+      setActiveTable(nextActiveTable);
+      setSortBy(lastSort[nextActiveTable]);
+      if (nextActiveTable === tableState.state) return;
+      setTableState({
+        state: nextActiveTable,
+        pageIndex: state.pageIndex
+      });
+    },
+    [
+      activeTable,
+      lastSort,
+      setSortBy,
+      setTableState,
+      tableState,
+      state.sortBy,
+      state.pageIndex
+    ]
+  );
+
+  useEffect(() => {
+    return () => {
+      setTableQuery(state.globalFilter);
+    };
+  }, [state.globalFilter, setTableQuery]);
+
+  useEffect(() => {
+    if (tableState.pageIndex !== state.pageIndex) {
+      gotoPage(tableState.pageIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (data.length) {
+      setGlobalFilter(tableQuery);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.length]);
+
+  useEffect(() => {
+    selectActiveTable(tableState.state);
+    if (tableState.pageIndex !== state.pageIndex) {
+      setTableState({
+        state: tableState.state,
+        pageIndex: state.pageIndex
+      });
+    }
+  }, [
+    selectActiveTable,
+    tableState,
+    state.pageIndex,
+    setTableState,
+    state.globalFilter
+  ]);
 
   return (
     <MainContent className="padding-x-4 margin-bottom-5">
@@ -408,6 +470,7 @@ const RequestRepository = () => {
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
+        initialFilter={tableQuery}
         tableID={t('requestRepository.id')}
         tableName={t('requestRepository.title')}
         className="margin-bottom-4"
