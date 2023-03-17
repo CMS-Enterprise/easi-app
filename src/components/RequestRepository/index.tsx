@@ -3,6 +3,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react';
 import { CSVLink } from 'react-csv';
@@ -64,6 +65,9 @@ const RequestRepository = () => {
   const { tableState, setTableState, tableQuery, setTableQuery } = useContext(
     TableStateContext
   );
+
+  const searchTerm = useRef<string>(tableQuery);
+  const pageIndex = useRef<number>(tableState.pageIndex);
 
   const [activeTable, setActiveTable] = useState<TableTypes>('open');
 
@@ -370,18 +374,14 @@ const RequestRepository = () => {
   }, [state.globalFilter, setTableQuery]);
 
   useEffect(() => {
-    if (tableState.pageIndex !== state.pageIndex) {
-      gotoPage(tableState.pageIndex);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    gotoPage(pageIndex.current);
+  }, [gotoPage]);
 
   useEffect(() => {
     if (data.length) {
-      setGlobalFilter(tableQuery);
+      setGlobalFilter(searchTerm.current);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.length]);
+  }, [data.length, setGlobalFilter]);
 
   useEffect(() => {
     selectActiveTable(tableState.state);
