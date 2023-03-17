@@ -10,7 +10,7 @@ import React, {
   useRef
 } from 'react';
 import { useLocation } from 'react-router-dom';
-import { SortingRule } from 'react-table';
+import { TableState } from 'react-table';
 
 type TableStateWrapperProps = {
   children: React.ReactNode;
@@ -24,33 +24,21 @@ export type TableSortType = {
 };
 
 type TableStateContextType = {
-  tableQuery: MutableRefObject<string>;
-  tablePage: MutableRefObject<number>;
-  tablePageSize: MutableRefObject<number>;
-  tableState: MutableRefObject<TableTypes>;
-  tableSort: MutableRefObject<SortingRule<TableSortType>[]>;
+  tableState: MutableRefObject<Partial<TableState>>;
+  activeTableState: MutableRefObject<TableTypes>;
 };
 
 const initialTableState: TableStateContextType = {
-  tableQuery: {
-    current: ''
-  },
-  tablePage: {
-    current: 0
-  },
-  tablePageSize: {
-    current: 50
-  },
   tableState: {
-    current: 'open'
+    current: {
+      pageIndex: 0,
+      globalFilter: '',
+      sortBy: [{ desc: true, id: 'submittedAt' }],
+      pageSize: 50
+    }
   },
-  tableSort: {
-    current: [
-      {
-        desc: true,
-        id: 'submittedAt'
-      }
-    ]
+  activeTableState: {
+    current: 'open'
   }
 };
 
@@ -68,22 +56,18 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   const isGovTeamRoute: boolean =
     routeParams[1] === 'governance-review-team' || pathname === '/';
 
-  const tableQuery = useRef<string>(initialTableState.tableQuery.current);
-  const tablePage = useRef<number>(initialTableState.tablePage.current);
-  const tablePageSize = useRef<number>(initialTableState.tablePageSize.current);
-  const tableState = useRef<TableTypes>(initialTableState.tableState.current);
-  const tableSort = useRef<SortingRule<TableSortType>[]>(
-    initialTableState.tableSort.current
+  const tableState = useRef<Partial<TableState>>(
+    initialTableState.tableState.current
+  );
+  const activeTableState = useRef<TableTypes>(
+    initialTableState.activeTableState.current
   );
 
   // Reset the state to their inital state in the abscence of isGovTeamRoute
   useEffect(() => {
     if (!isGovTeamRoute) {
-      tableQuery.current = initialTableState.tableQuery.current;
-      tablePage.current = initialTableState.tablePage.current;
-      tablePageSize.current = initialTableState.tablePageSize.current;
       tableState.current = initialTableState.tableState.current;
-      tableSort.current = initialTableState.tableSort.current;
+      activeTableState.current = initialTableState.activeTableState.current;
     }
   }, [isGovTeamRoute]);
 
@@ -91,11 +75,8 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
     // The Provider gives access to the context to its children
     <TableStateContext.Provider
       value={{
-        tableQuery,
-        tablePage,
-        tablePageSize,
         tableState,
-        tableSort
+        activeTableState
       }}
     >
       {children}

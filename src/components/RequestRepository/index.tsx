@@ -21,6 +21,7 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { merge } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -59,16 +60,10 @@ const RequestRepository = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
 
-  const {
-    tableState,
-    tableQuery,
-    tablePage,
-    tableSort,
-    tablePageSize
-  } = useContext(TableStateContext);
+  const { tableState, activeTableState } = useContext(TableStateContext);
 
   const [activeTable, setActiveTable] = useState<TableTypes>(
-    tableState.current
+    activeTableState.current
   );
 
   // Last sort states on active tables with their initial sort rules
@@ -334,7 +329,7 @@ const RequestRepository = () => {
       autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
-        pageSize: tablePageSize.current
+        pageSize: tableState.current.pageSize
       }
     },
     useFilters,
@@ -353,42 +348,37 @@ const RequestRepository = () => {
 
   // Navigates to previously view page || 0
   useEffect(() => {
-    gotoPage(tablePage.current);
-  }, [gotoPage, tablePage]);
+    gotoPage(tableState.current.pageIndex!);
+  }, [gotoPage, tableState]);
 
   // Sorts by previous view sort || desc:true, id: 'submittedAt'
   useEffect(() => {
-    setSortBy(tableSort.current);
-  }, [setSortBy, tableSort]);
+    setSortBy(tableState.current.sortBy!);
+  }, [setSortBy, tableState]);
 
   // Filters by previous search term || ''
   useEffect(() => {
     if (data.length) {
-      setGlobalFilter(tableQuery.current);
+      setGlobalFilter(tableState.current.globalFilter);
     }
-  }, [data.length, setGlobalFilter, tableQuery]);
+  }, [data.length, setGlobalFilter, tableState]);
 
   // Set's context on unmount and sets previous active table || 'open'
   useEffect(() => {
-    tableState.current = activeTable;
+    activeTableState.current = activeTable;
 
     return () => {
-      tablePage.current = state.pageIndex;
-      tableQuery.current = state.globalFilter;
-      tableSort.current = state.sortBy;
-      tablePageSize.current = state.pageSize;
+      tableState.current = merge(tableState.current, state);
     };
   }, [
     tableState,
     state.pageIndex,
-    tablePage,
     activeTable,
-    tableQuery,
     state.globalFilter,
-    tableSort,
     state.sortBy,
-    tablePageSize,
-    state.pageSize
+    state.pageSize,
+    activeTableState,
+    state
   ]);
 
   return (
@@ -462,7 +452,7 @@ const RequestRepository = () => {
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        initialFilter={tableQuery.current}
+        initialFilter={tableState.current.globalFilter}
         tableID={t('requestRepository.id')}
         tableName={t('requestRepository.title')}
         className="margin-bottom-4"
