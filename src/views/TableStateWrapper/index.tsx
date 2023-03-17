@@ -1,7 +1,6 @@
 /*
 Context wrapper for getting and setting table states
 */
-
 import React, {
   createContext,
   MutableRefObject,
@@ -9,6 +8,7 @@ import React, {
   useRef
 } from 'react';
 import { useLocation } from 'react-router-dom';
+import { SortingRule } from 'react-table';
 
 type TableStateWrapperProps = {
   children: React.ReactNode;
@@ -16,10 +16,16 @@ type TableStateWrapperProps = {
 
 export type TableTypes = 'open' | 'closed';
 
+export type TableSortType = {
+  desc: boolean;
+  id: string;
+};
+
 type TableStateContextType = {
   tableQuery: MutableRefObject<string>;
   tablePage: MutableRefObject<number>;
   tableState: MutableRefObject<TableTypes>;
+  tableSort: MutableRefObject<SortingRule<TableSortType>[]>;
 };
 
 const initialTableState: TableStateContextType = {
@@ -31,6 +37,14 @@ const initialTableState: TableStateContextType = {
   },
   tableState: {
     current: 'open'
+  },
+  tableSort: {
+    current: [
+      {
+        desc: true,
+        id: 'submittedAt'
+      }
+    ]
   }
 };
 
@@ -51,12 +65,16 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   const tableQuery = useRef<string>(initialTableState.tableQuery.current);
   const tablePage = useRef<number>(initialTableState.tablePage.current);
   const tableState = useRef<TableTypes>(initialTableState.tableState.current);
+  const tableSort = useRef<SortingRule<TableSortType>[]>(
+    initialTableState.tableSort.current
+  );
 
   useEffect(() => {
     if (!isGovTeamRoute) {
       tableQuery.current = initialTableState.tableQuery.current;
       tablePage.current = initialTableState.tablePage.current;
       tableState.current = initialTableState.tableState.current;
+      tableSort.current = initialTableState.tableSort.current;
     }
   }, [isGovTeamRoute]);
 
@@ -64,9 +82,10 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
     // The Provider gives access to the context to its children
     <TableStateContext.Provider
       value={{
-        tableState,
         tableQuery,
-        tablePage
+        tablePage,
+        tableState,
+        tableSort
       }}
     >
       {children}

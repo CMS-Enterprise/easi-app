@@ -43,7 +43,11 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
-import { TableStateContext, TableTypes } from 'views/TableStateWrapper';
+import {
+  TableSortType,
+  TableStateContext,
+  TableTypes
+} from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
 import tableMap from './tableMap';
@@ -55,7 +59,9 @@ const RequestRepository = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
 
-  const { tableState, tableQuery, tablePage } = useContext(TableStateContext);
+  const { tableState, tableQuery, tablePage, tableSort } = useContext(
+    TableStateContext
+  );
 
   const [activeTable, setActiveTable] = useState<TableTypes>(
     tableState.current
@@ -63,7 +69,7 @@ const RequestRepository = () => {
 
   // Last sort states on active tables with their initial sort rules
   const [lastSort, setLastSort] = useState<
-    Record<TableTypes, SortingRule<object>[]>
+    Record<TableTypes, SortingRule<TableSortType>[]>
   >({
     open: [{ id: 'submittedAt', desc: true }],
     closed: [{ id: 'lastAdminNote', desc: true }]
@@ -346,6 +352,10 @@ const RequestRepository = () => {
   }, [gotoPage, tablePage]);
 
   useEffect(() => {
+    setSortBy(tableSort.current);
+  }, [setSortBy, tableSort]);
+
+  useEffect(() => {
     if (data.length) {
       setGlobalFilter(tableQuery.current);
     }
@@ -360,6 +370,7 @@ const RequestRepository = () => {
 
     return () => {
       tableQuery.current = state.globalFilter;
+      tableSort.current = state.sortBy;
     };
   }, [
     tableState,
@@ -367,7 +378,9 @@ const RequestRepository = () => {
     tablePage,
     activeTable,
     tableQuery,
-    state.globalFilter
+    state.globalFilter,
+    tableSort,
+    state.sortBy
   ]);
 
   return (
