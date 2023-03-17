@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -62,14 +55,11 @@ const RequestRepository = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
 
-  const { tableState, setTableState, tableQuery, setTableQuery } = useContext(
-    TableStateContext
+  const { tableState, tableQuery, tablePage } = useContext(TableStateContext);
+
+  const [activeTable, setActiveTable] = useState<TableTypes>(
+    tableState.current
   );
-
-  const searchTerm = useRef<string>(tableQuery);
-  const pageIndex = useRef<number>(tableState.pageIndex);
-
-  const [activeTable, setActiveTable] = useState<TableTypes>('open');
 
   // Last sort states on active tables with their initial sort rules
   const [lastSort, setLastSort] = useState<
@@ -78,6 +68,14 @@ const RequestRepository = () => {
     open: [{ id: 'submittedAt', desc: true }],
     closed: [{ id: 'lastAdminNote', desc: true }]
   });
+
+  // Select an active table and restore its last sort state
+  function selectActiveTable(nextActiveTable: TableTypes) {
+    if (nextActiveTable === activeTable) return;
+    setLastSort(prev => ({ ...prev, [activeTable]: state.sortBy }));
+    setActiveTable(nextActiveTable);
+    setSortBy(lastSort[nextActiveTable]);
+  }
 
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
@@ -343,59 +341,32 @@ const RequestRepository = () => {
     return intakes.map(intake => convertIntakeToCSV(intake));
   };
 
-  // Select an active table and restore its last sort state
-  const selectActiveTable = useCallback(
-    (nextActiveTable: TableTypes) => {
-      if (nextActiveTable === activeTable) return;
-      setLastSort(prev => ({ ...prev, [activeTable]: state.sortBy }));
-      setActiveTable(nextActiveTable);
-      setSortBy(lastSort[nextActiveTable]);
-      if (nextActiveTable === tableState.state) return;
-      setTableState({
-        state: nextActiveTable,
-        pageIndex: state.pageIndex
-      });
-    },
-    [
-      activeTable,
-      lastSort,
-      setSortBy,
-      setTableState,
-      tableState,
-      state.sortBy,
-      state.pageIndex
-    ]
-  );
-
   useEffect(() => {
-    return () => {
-      setTableQuery(state.globalFilter);
-    };
-  }, [state.globalFilter, setTableQuery]);
-
-  useEffect(() => {
-    gotoPage(pageIndex.current);
-  }, [gotoPage]);
+    gotoPage(tablePage.current);
+  }, [gotoPage, tablePage]);
 
   useEffect(() => {
     if (data.length) {
-      setGlobalFilter(searchTerm.current);
+      setGlobalFilter(tableQuery.current);
     }
-  }, [data.length, setGlobalFilter]);
+  }, [data.length, setGlobalFilter, tableQuery]);
 
   useEffect(() => {
-    selectActiveTable(tableState.state);
-    if (tableState.pageIndex !== state.pageIndex) {
-      setTableState({
-        state: tableState.state,
-        pageIndex: state.pageIndex
-      });
+    tableState.current = activeTable;
+
+    if (tablePage.current !== state.pageIndex) {
+      tablePage.current = state.pageIndex;
     }
+
+    return () => {
+      tableQuery.current = state.globalFilter;
+    };
   }, [
-    selectActiveTable,
     tableState,
     state.pageIndex,
-    setTableState,
+    tablePage,
+    activeTable,
+    tableQuery,
     state.globalFilter
   ]);
 
@@ -470,7 +441,7 @@ const RequestRepository = () => {
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        initialFilter={tableQuery}
+        initialFilter={tableQuery.current}
         tableID={t('requestRepository.id')}
         tableName={t('requestRepository.title')}
         className="margin-bottom-4"

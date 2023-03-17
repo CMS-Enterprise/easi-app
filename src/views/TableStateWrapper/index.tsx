@@ -2,7 +2,12 @@
 Context wrapper for getting and setting table states
 */
 
-import React, { createContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  MutableRefObject,
+  useEffect,
+  useRef
+} from 'react';
 import { useLocation } from 'react-router-dom';
 
 type TableStateWrapperProps = {
@@ -11,33 +16,28 @@ type TableStateWrapperProps = {
 
 export type TableTypes = 'open' | 'closed';
 
-type TableStateType = {
-  state: TableTypes;
-  pageIndex: number;
+type TableStateContextType = {
+  tableQuery: MutableRefObject<string>;
+  tablePage: MutableRefObject<number>;
+  tableState: MutableRefObject<TableTypes>;
 };
 
-type TableStateContextType = {
-  tableQuery: string;
-  tableState: TableStateType;
-  setTableState: React.Dispatch<React.SetStateAction<TableStateType>>;
-  setTableQuery: React.Dispatch<React.SetStateAction<string>>;
+const initialTableState: TableStateContextType = {
+  tableQuery: {
+    current: ''
+  },
+  tablePage: {
+    current: 0
+  },
+  tableState: {
+    current: 'open'
+  }
 };
 
 // Create the table state context - fetched from IT gov table
-export const TableStateContext = createContext<TableStateContextType>({
-  tableQuery: '',
-  tableState: {
-    state: 'open',
-    pageIndex: 0
-  },
-  setTableState: () => null,
-  setTableQuery: () => null
-});
-
-const initialTableState: TableStateType = {
-  state: 'open',
-  pageIndex: 0
-};
+export const TableStateContext = createContext<TableStateContextType>(
+  initialTableState
+);
 
 const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   // Checks to see if the current route is a part of IT Gov or home
@@ -48,16 +48,15 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   const isGovTeamRoute: boolean =
     routeParams[1] === 'governance-review-team' || pathname === '/';
 
-  const [tableState, setTableState] = useState<TableStateType>(
-    initialTableState
-  );
-
-  const [tableQuery, setTableQuery] = useState<string>('');
+  const tableQuery = useRef<string>(initialTableState.tableQuery.current);
+  const tablePage = useRef<number>(initialTableState.tablePage.current);
+  const tableState = useRef<TableTypes>(initialTableState.tableState.current);
 
   useEffect(() => {
     if (!isGovTeamRoute) {
-      setTableState(initialTableState);
-      setTableQuery('');
+      tableQuery.current = initialTableState.tableQuery.current;
+      tablePage.current = initialTableState.tablePage.current;
+      tableState.current = initialTableState.tableState.current;
     }
   }, [isGovTeamRoute]);
 
@@ -67,8 +66,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
       value={{
         tableState,
         tableQuery,
-        setTableQuery,
-        setTableState
+        tablePage
       }}
     >
       {children}
