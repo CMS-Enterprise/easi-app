@@ -1,6 +1,8 @@
 /*
-Context wrapper for getting and setting table states
+Context wrapper for persisting and setting react-table states
+Ex: <RequestRepository />
 */
+
 import React, {
   createContext,
   MutableRefObject,
@@ -69,6 +71,7 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
     initialTableState.tableSort.current
   );
 
+  // Reset the state to their inital state in the abscence of isGovTeamRoute
   useEffect(() => {
     if (!isGovTeamRoute) {
       tableQuery.current = initialTableState.tableQuery.current;

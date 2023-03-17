@@ -347,20 +347,24 @@ const RequestRepository = () => {
     return intakes.map(intake => convertIntakeToCSV(intake));
   };
 
+  // Navigates to previously view page || 0
   useEffect(() => {
     gotoPage(tablePage.current);
   }, [gotoPage, tablePage]);
 
+  // Sorts by previous view sort || desc:true, id: 'submittedAt'
   useEffect(() => {
     setSortBy(tableSort.current);
   }, [setSortBy, tableSort]);
 
+  // Filters by previous search term || ''
   useEffect(() => {
     if (data.length) {
       setGlobalFilter(tableQuery.current);
     }
   }, [data.length, setGlobalFilter, tableQuery]);
 
+  // Set's context on unmount and sets previous active table || 'open'
   useEffect(() => {
     tableState.current = activeTable;
 
