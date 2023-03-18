@@ -101,4 +101,64 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 			})
 		}
 	})
+
+	s.Run("Setting a note to be archived sets IsArchived to true and sets ModifiedBy, ModifiedAt", func() {
+		ts := time.Now().UTC()
+
+		noteToUpdate := models.Note{
+			SystemIntakeID: intake.ID,
+			CreatedAt:      &ts,
+			AuthorEUAID:    euaID,
+			AuthorName:     null.StringFrom(ts.String()),
+			Content:        null.StringFrom(ts.String()),
+		}
+
+		createdNote, err := s.store.CreateNote(ctx, &noteToUpdate)
+
+		s.NoError(err)
+		s.False(createdNote.IsArchived)
+
+		archivingUser := "SF13"
+
+		noteToUpdate.IsArchived = true
+		noteToUpdate.ModifiedBy = &archivingUser
+		noteToUpdate.ModifiedAt = &ts
+
+		archivedNote, err := s.store.UpdateNote(ctx, &noteToUpdate)
+		s.NoError(err)
+
+		s.True(archivedNote.IsArchived)
+		s.EqualValues(archivingUser, *archivedNote.ModifiedBy)
+		s.NotNil(archivedNote.ModifiedAt) // don't care about exact value, just that it was set to *something*
+	})
+
+	s.Run("Updating a note sets modified content and sets ModifiedBy, ModifiedAt", func() {
+		ts := time.Now().UTC()
+
+		noteToUpdate := models.Note{
+			SystemIntakeID: intake.ID,
+			CreatedAt:      &ts,
+			AuthorEUAID:    euaID,
+			AuthorName:     null.StringFrom(ts.String()),
+			Content:        null.StringFrom("Test content before update"),
+		}
+
+		createdNote, err := s.store.CreateNote(ctx, &noteToUpdate)
+
+		s.NoError(err)
+		s.False(createdNote.IsArchived)
+
+		archivingUser := "SF13"
+		noteToUpdate.Content = null.StringFrom("Test content after updates")
+		noteToUpdate.ModifiedBy = &archivingUser
+		noteToUpdate.ModifiedAt = &ts
+
+		updatedNote, err := s.store.UpdateNote(ctx, &noteToUpdate)
+		s.NoError(err)
+
+		s.False(updatedNote.IsArchived)
+		s.EqualValues(noteToUpdate.Content, updatedNote.Content)
+		s.EqualValues(archivingUser, *updatedNote.ModifiedBy)
+		s.NotNil(updatedNote.ModifiedAt) // don't care about exact value, just that it was set to *something*
+	})
 }
