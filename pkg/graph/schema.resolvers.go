@@ -1967,6 +1967,16 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		})
 }
 
+// CreateTRBRequestLcid is the resolver for the createTRBRequestLCID field.
+func (r *mutationResolver) CreateTRBRequestLcid(ctx context.Context, trbRequestID uuid.UUID, lcid string) (*models.TRBRequestLCID, error) {
+	return resolvers.CreateTRBRequestLCID(ctx, r.store, trbRequestID, lcid)
+}
+
+// DeleteTRBRequestLcid is the resolver for the deleteTRBRequestLCID field.
+func (r *mutationResolver) DeleteTRBRequestLcid(ctx context.Context, trbRequestID uuid.UUID, lcid string) (*models.TRBRequestLCID, error) {
+	return resolvers.DeleteTRBRequestLCID(ctx, r.store, trbRequestID, lcid)
+}
+
 // UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
 func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
 	return resolvers.UpdateTRBRequestConsultMeetingTime(
@@ -2944,6 +2954,11 @@ func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequ
 // IsRecent is the resolver for the isRecent field.
 func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBRequest) (bool, error) {
 	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
+}
+
+// Lcids is the resolver for the lcids field.
+func (r *tRBRequestResolver) Lcids(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestLCID, error) {
+	return resolvers.GetTRBRequestLCIDsByTRBRequestID(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.

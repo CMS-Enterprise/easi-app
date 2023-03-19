@@ -1501,6 +1501,19 @@ input SendReportAProblemEmailInput {
 }
 
 """
+Represents an LCID that has been associated with a TRB request
+"""
+type TRBRequestLCID {
+  id: UUID!
+  trbRequestId: UUID!
+  lcid: String!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+
+"""
 Represents a request for support from the Technical Review Board (TRB)
 """
 type TRBRequest {
@@ -1524,6 +1537,7 @@ type TRBRequest {
   requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
+  lcids: [TRBRequestLCID!]!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -2226,6 +2240,10 @@ type Mutation {
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBRequestLCID(trbRequestId: UUID!, lcid: String!): TRBRequestLCID!
+    @hasRole(role: EASI_TRB_ADMIN)
+  deleteTRBRequestLCID(trbRequestId: UUID!, lcid: String!): TRBRequestLCID!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
