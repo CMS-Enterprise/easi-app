@@ -35,7 +35,6 @@ export type TableStatesTypes = ITGovRevType;
 
 type TableStateContextType = {
   [key: string]: TableStatesTypes;
-  itGovAdmin: ITGovRevType;
 };
 
 const initialTableState: TableStateContextType = {
