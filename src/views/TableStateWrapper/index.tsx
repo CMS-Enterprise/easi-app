@@ -24,14 +24,14 @@ export type TableSortType = {
 };
 
 type ITGovTableState = {
-  state: Partial<TableState>;
+  state: Pick<TableState, 'pageIndex' | 'globalFilter' | 'sortBy' | 'pageSize'>;
   activeTableState: TableTypes;
 };
 
-type ITGovRevType = MutableRefObject<ITGovTableState>;
+type ITGovRefType = MutableRefObject<ITGovTableState>;
 
 // Making extensible here for future table implementations
-export type TableStatesTypes = ITGovRevType;
+export type TableStatesTypes = ITGovRefType;
 
 type TableStateContextType = {
   [key: string]: TableStatesTypes;

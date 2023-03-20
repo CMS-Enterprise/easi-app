@@ -52,16 +52,14 @@ const useTableState = (
   // Navigates to previously view page || 0
   // Sorts by previous view sort || desc:true, id: 'submittedAt'
   useEffect(() => {
-    gotoPage(tableState.current.state.pageIndex || 0);
-    setSortBy(
-      tableState.current.state.sortBy || [{ desc: true, id: 'submittedAt' }]
-    );
+    gotoPage(tableState.current.state.pageIndex);
+    setSortBy(tableState.current.state.sortBy);
   }, [gotoPage, setSortBy, tableState]);
 
   // Filters by previous search term || ''
   useEffect(() => {
     if (data.length) {
-      setGlobalFilter(tableState.current.state.globalFilter || '');
+      setGlobalFilter(tableState.current.state.globalFilter);
     }
   }, [data.length, setGlobalFilter, tableState]);
 
