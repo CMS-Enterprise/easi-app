@@ -33,11 +33,7 @@ type ITGovRefType = MutableRefObject<ITGovTableState>;
 // Making extensible here for future table implementations
 export type TableStatesTypes = ITGovRefType;
 
-type TableStateContextType = {
-  [key: string]: TableStatesTypes;
-};
-
-const initialTableState: TableStateContextType = {
+const initialTableState: Record<string, TableStatesTypes> = {
   itGovAdmin: {
     current: {
       state: {
@@ -52,9 +48,9 @@ const initialTableState: TableStateContextType = {
 };
 
 // Create the table state context - fetched from IT gov table
-export const TableStateContext = createContext<TableStateContextType>(
-  initialTableState
-);
+export const TableStateContext = createContext<
+  Record<string, TableStatesTypes>
+>(initialTableState);
 
 const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   // Checks to see if the current route is a part of IT Gov or home
