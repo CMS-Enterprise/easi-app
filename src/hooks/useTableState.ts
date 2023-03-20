@@ -1,8 +1,13 @@
-// Custom hook for handling mouse clicks outside of mobile expanded side nav
+/*
+Hook for storing and setting table values
+Utilizes both local storage and context for persistence
+Storage method depends on the need of type of persistence
+Table setters are dependent on react-table exposed methods
+*/
 
 import { useContext, useEffect } from 'react';
 import { FilterValue, SortingRule, TableState } from 'react-table';
-import { merge, omit } from 'lodash';
+import { assign } from 'lodash';
 
 import { TableStateContext, TableTypes } from 'views/TableStateWrapper';
 
@@ -16,43 +21,41 @@ const useTableState = (
 ) => {
   const { tableState, activeTableState } = useContext(TableStateContext);
 
-  // Navigates to previously view page || 0
+  // Stores page size in local storage on every selection change
   useEffect(() => {
-    gotoPage(tableState.current.pageIndex!);
-  }, [gotoPage, tableState]);
+    localStorage.setItem(
+      'request-table-page-size',
+      JSON.stringify(state.pageSize)
+    );
+  }, [state.pageSize]);
 
+  // Stores state/sets context on unmount only on page change
+  useEffect(() => {
+    return () => {
+      tableState.current = assign({}, tableState.current, state);
+    };
+  }, [tableState, state]);
+
+  // The following hooks sets table settings from stored context state
+
+  // Navigates to previously view page || 0
   // Sorts by previous view sort || desc:true, id: 'submittedAt'
   useEffect(() => {
-    // console.log(tableState);
-    setSortBy(tableState.current.sortBy!);
-  }, [setSortBy, tableState]);
+    gotoPage(tableState.current.pageIndex || 0);
+    setSortBy(tableState.current.sortBy || [{ desc: true, id: 'submittedAt' }]);
+  }, [gotoPage, setSortBy, tableState]);
 
   // Filters by previous search term || ''
   useEffect(() => {
     if (data.length) {
-      setGlobalFilter(tableState.current.globalFilter);
+      setGlobalFilter(tableState.current.globalFilter || '');
     }
   }, [data.length, setGlobalFilter, tableState]);
 
-  // Set's context on unmount and sets previous active table || 'open'
+  // Sets previous active table || 'open'
   useEffect(() => {
     activeTableState.current = activeTable;
-
-    return () => {
-      // Sortby is deep and not merged by shallow merge
-      tableState.current = merge(omit(tableState.current, 'sortBy'), state);
-      tableState.current.sortBy = state.sortBy;
-    };
-  }, [
-    tableState,
-    state.pageIndex,
-    activeTable,
-    state.globalFilter,
-    state.sortBy,
-    state.pageSize,
-    activeTableState,
-    state
-  ]);
+  }, [activeTable, activeTableState]);
 
   return { tableState, activeTableState };
 };

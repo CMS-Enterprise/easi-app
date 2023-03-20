@@ -66,6 +66,10 @@ const RequestRepository = () => {
     activeTableState.current
   );
 
+  const defaultPageSize: number = window.localStorage['request-table-page-size']
+    ? Number(window.localStorage['request-table-page-size'])
+    : 50;
+
   // Last sort states on active tables with their initial sort rules
   const [lastSort, setLastSort] = useState<
     Record<TableTypes, SortingRule<TableSortType>[]>
@@ -77,6 +81,7 @@ const RequestRepository = () => {
   // Select an active table and restore its last sort state
   function selectActiveTable(nextActiveTable: TableTypes) {
     if (nextActiveTable === activeTable) return;
+    gotoPage(0);
     setLastSort(prev => ({ ...prev, [activeTable]: state.sortBy }));
     setActiveTable(nextActiveTable);
     setSortBy(lastSort[nextActiveTable]);
@@ -329,7 +334,7 @@ const RequestRepository = () => {
       autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
-        pageSize: tableState.current.pageSize
+        pageSize: defaultPageSize
       }
     },
     useFilters,
