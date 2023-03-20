@@ -287,11 +287,11 @@ const technicalAssistance = {
     viewAttendeeList: 'View attendee list',
     prepareForTRB: 'Prepare for your TRB consult meeting (opens in a new tab)',
     trbConsultInfoHeading:
-      'Your TRB consult session is scheduled for {{-datetime}}',
+      'Your TRB consult session is scheduled for {{-date}} at {{-time}}',
     trbConsultInfo:
       'If this day or time does not work for you, or if you need to reschedule, please contact the TRB at ',
     trbConsultAttended:
-      'You attended your project’s TRB consult session on {{-datetime}}',
+      'You attended your project’s TRB consult session on {{-date}} at {{-time}}',
     viewAdviceLetter: 'View advice letter',
     taskList: [
       {

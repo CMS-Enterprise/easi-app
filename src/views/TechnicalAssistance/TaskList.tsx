@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, Grid, GridContainer, Link } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
+import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -72,6 +73,21 @@ function TaskList() {
 
   const editsRequested: boolean =
     taskStatuses?.feedbackStatus === TRBFeedbackStatus.EDITS_REQUESTED;
+
+  let consultDate;
+  let consultTime;
+
+  // Breaking apart date and time as text is inserted in between
+  if (data?.trbRequest.consultMeetingTime) {
+    consultDate = formatDateLocal(
+      data.trbRequest.consultMeetingTime,
+      'MM/dd/yyyy'
+    );
+
+    consultTime = DateTime.fromISO(
+      data?.trbRequest.consultMeetingTime
+    ).toLocaleString(DateTime.TIME_SIMPLE);
+  }
 
   const initialRequestButtonText = (): string => {
     if (editsRequested) {
@@ -260,10 +276,8 @@ function TaskList() {
                         <h4 className="margin-0">
                           {data.trbRequest.consultMeetingTime &&
                             t('taskList.trbConsultInfoHeading', {
-                              datetime: formatDateLocal(
-                                data.trbRequest.consultMeetingTime,
-                                'MM/dd/yyyy'
-                              )
+                              date: consultDate,
+                              time: consultTime
                             })}
                         </h4>
                         {t('taskList.trbConsultInfo')}{' '}
@@ -287,10 +301,8 @@ function TaskList() {
                         >
                           {data.trbRequest.consultMeetingTime &&
                             t('taskList.trbConsultAttended', {
-                              datetime: formatDateLocal(
-                                data.trbRequest.consultMeetingTime,
-                                'MM/dd/yyyy'
-                              )
+                              date: consultDate,
+                              time: consultTime
                             })}
                         </Alert>
                         <UswdsReactLink
