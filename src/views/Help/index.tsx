@@ -10,6 +10,7 @@ import SampleBusinessCase from './ITGovernance/SampleBusinessCase';
 import StepsInvolved from './Section508/StepsInvolved';
 import TestingTemplates from './Section508/TestingTemplate';
 import ReportAProblem from './SendFeedback/ReportAProblem';
+import PrepareTrbConsultMeeting from './TechnicalReviewBoard/PrepareTrbConsultMeeting';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
@@ -54,6 +55,10 @@ const Help = () => {
         path="/help/section-508/templates-for-508-testing"
         render={() => <TestingTemplates />}
       />
+
+      <Route path="/help/trb/prepare-consult-meeting">
+        <PrepareTrbConsultMeeting />
+      </Route>
 
       {/* Help feedback forms */}
       <Route path="/help/send-feedback" render={() => <SendFeedback />} />
