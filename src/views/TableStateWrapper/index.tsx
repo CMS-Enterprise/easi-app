@@ -18,11 +18,6 @@ type TableStateWrapperProps = {
 
 export type TableTypes = 'open' | 'closed';
 
-export type TableSortType = {
-  desc: boolean;
-  id: string;
-};
-
 type ITGovTableState = {
   state: Pick<TableState, 'pageIndex' | 'globalFilter' | 'sortBy' | 'pageSize'>;
   activeTableState: TableTypes;

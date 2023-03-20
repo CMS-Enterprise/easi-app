@@ -44,11 +44,7 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
-import {
-  TableSortType,
-  TableStateContext,
-  TableTypes
-} from 'views/TableStateWrapper';
+import { TableStateContext, TableTypes } from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
 import tableMap from './tableMap';
@@ -72,7 +68,7 @@ const RequestRepository = () => {
 
   // Last sort states on active tables with their initial sort rules
   const [lastSort, setLastSort] = useState<
-    Record<TableTypes, SortingRule<TableSortType>[]>
+    Record<TableTypes, SortingRule<string>[]>
   >({
     open: [{ id: 'submittedAt', desc: true }],
     closed: [{ id: 'lastAdminNote', desc: true }]
