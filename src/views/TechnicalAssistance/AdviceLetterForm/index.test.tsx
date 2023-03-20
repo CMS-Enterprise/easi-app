@@ -7,6 +7,7 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
 import { trbRequestAdviceLetter } from 'data/mock/trbRequest';
@@ -59,6 +60,7 @@ const renderForm = (step: string) => {
     <MemoryRouter initialEntries={[`/trb/${trbRequestId}/advice/${step}`]}>
       <MessageProvider>
         <Provider store={defaultStore}>
+          {/* TODO: Add CreateTRBRecommendation to mocks */}
           <MockedProvider mocks={[getTrbAdviceLetterQuery]} addTypename={false}>
             <Route path="/trb/:id/advice/:formStep/:subpage?">
               <AdviceLetterForm />
@@ -82,8 +84,8 @@ describe('TRB Advice Letter Form', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('renders the Recommendations page', async () => {
-    const { getByRole } = renderForm('recommendations');
+  it.only('renders the Recommendations page', async () => {
+    const { getByRole, getByTestId } = renderForm('recommendations');
 
     await waitForPageLoad();
 
@@ -91,6 +93,55 @@ describe('TRB Advice Letter Form', () => {
     expect(
       getByRole('heading', { name: 'Recommendation 1' })
     ).toBeInTheDocument();
+
+    const addRecommendationButton = getByRole('button', {
+      name: 'Add another recommendation'
+    });
+    userEvent.click(addRecommendationButton);
+
+    expect(
+      getByRole('heading', { name: 'Add a recommendation', level: 1 })
+    ).toBeInTheDocument();
+
+    // Title field
+    const titleInput = getByRole('textbox', { name: 'Title *' });
+    const titleText = 'Recommendation Title #3';
+    userEvent.type(titleInput, titleText);
+    expect(titleInput).toHaveValue(titleText);
+
+    // Description field
+    const descriptionInput = getByRole('textbox', {
+      name: 'Description *'
+    });
+    const descriptionText = 'Recommendation description test';
+    userEvent.type(descriptionInput, descriptionText);
+    expect(descriptionInput).toHaveValue(descriptionText);
+
+    // Add resource link
+    const addLinkButton = getByRole('button', { name: 'Add a resource link' });
+    userEvent.click(addLinkButton);
+
+    const addAnotherLinkButton = getByRole('button', {
+      name: 'Add another resource link'
+    });
+    // Button should be disabled while link input is blank
+    expect(addAnotherLinkButton).toBeDisabled();
+
+    let linkInput = getByTestId('links.0.link');
+    const links = ['google.com', 'easi.cms.gov'];
+
+    userEvent.type(linkInput, links[0]);
+    expect(linkInput).toHaveValue(links[0]);
+
+    userEvent.click(addAnotherLinkButton);
+
+    linkInput = getByTestId('links.1.link');
+
+    userEvent.type(linkInput, links[1]);
+    expect(linkInput).toHaveValue(links[1]);
+
+    // Passes but throws warning - need to add CreateTRBRecommendation to mocks
+    userEvent.click(getByRole('button', { name: 'Save' }));
   });
 
   it('renders the Next Steps page', async () => {

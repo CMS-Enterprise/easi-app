@@ -65,7 +65,8 @@ export default function LinkArrayField() {
                             <TextInput
                               className="margin-top-0"
                               type="url"
-                              id={`link.${item.id}`}
+                              id={`links.${index}.link`}
+                              data-testid={`links.${index}.link`}
                               {...field}
                               ref={null}
                             />
