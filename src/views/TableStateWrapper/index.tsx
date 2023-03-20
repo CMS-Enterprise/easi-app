@@ -23,22 +23,32 @@ export type TableSortType = {
   id: string;
 };
 
+type ITGovTableState = {
+  state: Partial<TableState>;
+  activeTableState: TableTypes;
+};
+
+type ITGovRevType = MutableRefObject<ITGovTableState>;
+
+// Making extensible here for future table implementations
+export type TableStatesTypes = ITGovRevType;
+
 type TableStateContextType = {
-  tableState: MutableRefObject<Partial<TableState>>;
-  activeTableState: MutableRefObject<TableTypes>;
+  [key: string]: TableStatesTypes;
+  itGovAdmin: ITGovRevType;
 };
 
 const initialTableState: TableStateContextType = {
-  tableState: {
+  itGovAdmin: {
     current: {
-      pageIndex: 0,
-      globalFilter: '',
-      sortBy: [{ desc: true, id: 'submittedAt' }],
-      pageSize: 50
+      state: {
+        pageIndex: 0,
+        globalFilter: '',
+        sortBy: [{ desc: true, id: 'submittedAt' }],
+        pageSize: 50
+      },
+      activeTableState: 'open'
     }
-  },
-  activeTableState: {
-    current: 'open'
   }
 };
 
@@ -56,29 +66,20 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   const isGovTeamRoute: boolean =
     routeParams[1] === 'governance-review-team' || pathname === '/';
 
-  const tableState = useRef<Partial<TableState>>(
-    initialTableState.tableState.current
-  );
-  const activeTableState = useRef<TableTypes>(
-    initialTableState.activeTableState.current
+  const itGovAdmin = useRef<ITGovTableState>(
+    initialTableState.itGovAdmin.current
   );
 
   // Reset the state to their inital state in the abscence of isGovTeamRoute
   useEffect(() => {
     if (!isGovTeamRoute) {
-      tableState.current = initialTableState.tableState.current;
-      activeTableState.current = initialTableState.activeTableState.current;
+      itGovAdmin.current = initialTableState.itGovAdmin.current;
     }
   }, [isGovTeamRoute]);
 
   return (
     // The Provider gives access to the context to its children
-    <TableStateContext.Provider
-      value={{
-        tableState,
-        activeTableState
-      }}
-    >
+    <TableStateContext.Provider value={{ itGovAdmin }}>
       {children}
     </TableStateContext.Provider>
   );

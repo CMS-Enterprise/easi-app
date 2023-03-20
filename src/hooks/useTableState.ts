@@ -9,9 +9,14 @@ import { useContext, useEffect } from 'react';
 import { FilterValue, SortingRule, TableState } from 'react-table';
 import { assign } from 'lodash';
 
-import { TableStateContext, TableTypes } from 'views/TableStateWrapper';
+import {
+  TableStateContext,
+  TableStatesTypes,
+  TableTypes
+} from 'views/TableStateWrapper';
 
 const useTableState = (
+  tableName: string,
   state: Partial<TableState>,
   gotoPage: (updater: ((pageIndex: number) => number) | number) => void,
   setSortBy: (sortBy: Array<SortingRule<{}>>) => void,
@@ -19,7 +24,11 @@ const useTableState = (
   activeTable: TableTypes,
   data: any[]
 ) => {
-  const { tableState, activeTableState } = useContext(TableStateContext);
+  const tableStates: Record<string, TableStatesTypes> = useContext(
+    TableStateContext
+  );
+
+  const tableState = tableStates[tableName];
 
   // Stores page size in local storage on every selection change
   useEffect(() => {
@@ -31,8 +40,10 @@ const useTableState = (
 
   // Stores state/sets context on unmount only on page change
   useEffect(() => {
+    const tableStateRef = tableState.current;
+
     return () => {
-      tableState.current = assign({}, tableState.current, state);
+      tableStateRef.state = assign({}, tableStateRef.state, state);
     };
   }, [tableState, state]);
 
@@ -41,23 +52,23 @@ const useTableState = (
   // Navigates to previously view page || 0
   // Sorts by previous view sort || desc:true, id: 'submittedAt'
   useEffect(() => {
-    gotoPage(tableState.current.pageIndex || 0);
-    setSortBy(tableState.current.sortBy || [{ desc: true, id: 'submittedAt' }]);
+    gotoPage(tableState.current.state.pageIndex || 0);
+    setSortBy(
+      tableState.current.state.sortBy || [{ desc: true, id: 'submittedAt' }]
+    );
   }, [gotoPage, setSortBy, tableState]);
 
   // Filters by previous search term || ''
   useEffect(() => {
     if (data.length) {
-      setGlobalFilter(tableState.current.globalFilter || '');
+      setGlobalFilter(tableState.current.state.globalFilter || '');
     }
   }, [data.length, setGlobalFilter, tableState]);
 
   // Sets previous active table || 'open'
   useEffect(() => {
-    activeTableState.current = activeTable;
-  }, [activeTable, activeTableState]);
-
-  return { tableState, activeTableState };
+    tableState.current.activeTableState = activeTable;
+  }, [activeTable, tableState]);
 };
 
 export default useTableState;

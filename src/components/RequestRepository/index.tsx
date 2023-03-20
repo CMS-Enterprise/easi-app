@@ -60,10 +60,10 @@ const RequestRepository = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
 
-  const { tableState, activeTableState } = useContext(TableStateContext);
+  const { itGovAdmin } = useContext(TableStateContext);
 
   const [activeTable, setActiveTable] = useState<TableTypes>(
-    activeTableState.current
+    itGovAdmin.current.activeTableState
   );
 
   const defaultPageSize: number = window.localStorage['request-table-page-size']
@@ -352,7 +352,15 @@ const RequestRepository = () => {
   };
 
   // Sets persisted table state and stores state on unmount
-  useTableState(state, gotoPage, setSortBy, setGlobalFilter, activeTable, data);
+  useTableState(
+    'itGovAdmin',
+    state,
+    gotoPage,
+    setSortBy,
+    setGlobalFilter,
+    activeTable,
+    data
+  );
 
   return (
     <MainContent className="padding-x-4 margin-bottom-5">
@@ -425,7 +433,7 @@ const RequestRepository = () => {
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
-        initialFilter={tableState.current.globalFilter}
+        initialFilter={itGovAdmin.current.state.globalFilter}
         tableID={t('requestRepository.id')}
         tableName={t('requestRepository.title')}
         className="margin-bottom-4"
