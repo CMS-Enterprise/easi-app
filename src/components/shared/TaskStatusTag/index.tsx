@@ -27,7 +27,6 @@ export type TaskStatus =
 export const taskStatusClassName: Record<TaskStatus, string> = {
   COMPLETED: 'bg-success-dark text-white',
   IN_PROGRESS: 'bg-warning',
-  CANNOT_START: 'border-2px text-base',
   CANNOT_START_YET: 'border-2px text-base',
   NOT_NEEDED: 'border-2px text-base',
   EDITS_REQUESTED: 'bg-warning',

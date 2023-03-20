@@ -34,6 +34,7 @@ export interface GetTrbTasklist_trbRequest {
   form: GetTrbTasklist_trbRequest_form;
   taskStatuses: GetTrbTasklist_trbRequest_taskStatuses;
   feedback: GetTrbTasklist_trbRequest_feedback[];
+  consultMeetingTime: Time | null;
 }
 
 export interface GetTrbTasklist {

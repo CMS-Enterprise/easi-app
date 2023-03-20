@@ -25,6 +25,7 @@ import {
   TRBFeedbackStatus,
   TRBFormStatus
 } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
 import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 
 import Breadcrumbs from './Breadcrumbs';
@@ -257,9 +258,13 @@ function TaskList() {
                         className="margin-bottom-0 margin-top-205"
                       >
                         <h4 className="margin-0">
-                          {t('taskList.trbConsultInfoHeading', {
-                            datetime: '09/01/2023 at 2:00 pm' // TODO: replace with TRB consult scehduled date
-                          })}
+                          {data.trbRequest.consultMeetingTime &&
+                            t('taskList.trbConsultInfoHeading', {
+                              datetime: formatDateLocal(
+                                data.trbRequest.consultMeetingTime,
+                                'MM/dd/yyyy'
+                              )
+                            })}
                         </h4>
                         {t('taskList.trbConsultInfo')}{' '}
                         <Link
@@ -280,9 +285,13 @@ function TaskList() {
                           slim
                           className="margin-bottom-0 margin-top-205"
                         >
-                          {t('taskList.trbConsultAttended', {
-                            datetime: '09/01/2023 at 2:00 pm' // TODO: replace with TRB consult scehduled date
-                          })}
+                          {data.trbRequest.consultMeetingTime &&
+                            t('taskList.trbConsultAttended', {
+                              datetime: formatDateLocal(
+                                data.trbRequest.consultMeetingTime,
+                                'MM/dd/yyyy'
+                              )
+                            })}
                         </Alert>
                         <UswdsReactLink
                           className="display-block margin-top-2"

@@ -48,7 +48,7 @@ const TaskListItem = ({
     'task-list__item',
     'padding-bottom-4',
     {
-      'task-list__item--na': ['NOT_NEEDED', 'CANNOT_START'].includes(
+      'task-list__item--na': ['NOT_NEEDED', 'CANNOT_START_YET'].includes(
         status || ''
       )
     }

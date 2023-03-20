@@ -1,6 +1,6 @@
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
-export type TagEnum = 'COMPLETED' | 'CANNOT_START' | 'NOT_NEEDED';
+export type TagEnum = 'COMPLETED' | 'CANNOT_START_YET' | 'NOT_NEEDED';
 
 export const intakeTag = (status: string): TagEnum | undefined => {
   if (status === 'INTAKE_DRAFT') {
@@ -29,7 +29,7 @@ export const initialReviewTag = (intakeStatus: string): TagEnum | undefined => {
 
   return intakeCompletedStatuses.includes(intakeStatus)
     ? 'COMPLETED'
-    : 'CANNOT_START';
+    : 'CANNOT_START_YET';
 };
 
 export const businessCaseTag = (intake: SystemIntake): TagEnum | undefined => {
@@ -37,13 +37,13 @@ export const businessCaseTag = (intake: SystemIntake): TagEnum | undefined => {
     if (intake.status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
     }
-    return 'CANNOT_START';
+    return 'CANNOT_START_YET';
   }
 
   switch (intake.status) {
     case 'INTAKE_DRAFT':
     case 'INTAKE_SUBMITTED':
-      return 'CANNOT_START';
+      return 'CANNOT_START_YET';
     case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'BIZ_CASE_FINAL_NEEDED':
     case 'BIZ_CASE_FINAL_SUBMITTED':
@@ -62,7 +62,7 @@ export const finalBusinessCaseTag = (intake: SystemIntake) => {
     if (intake.status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
     }
-    return 'CANNOT_START';
+    return 'CANNOT_START_YET';
   }
 
   switch (intake.status) {
@@ -73,7 +73,7 @@ export const finalBusinessCaseTag = (intake: SystemIntake) => {
     case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'BIZ_CASE_CHANGES_NEEDED':
     case 'READY_FOR_GRT':
-      return 'CANNOT_START';
+      return 'CANNOT_START_YET';
     case 'BIZ_CASE_FINAL_SUBMITTED':
     case 'READY_FOR_GRB':
     case 'LCID_ISSUED':
@@ -94,7 +94,7 @@ export const attendGrbMeetingTag = (
     if (intake.status === 'LCID_ISSUED') {
       return 'NOT_NEEDED';
     }
-    return 'CANNOT_START';
+    return 'CANNOT_START_YET';
   }
 
   switch (intake.status) {
@@ -107,7 +107,7 @@ export const attendGrbMeetingTag = (
     case 'NO_GOVERNANCE':
       return 'COMPLETED';
     default:
-      return 'CANNOT_START';
+      return 'CANNOT_START_YET';
   }
 };
 
@@ -117,7 +117,7 @@ export const decisionTag = (intake: SystemIntake): TagEnum | undefined => {
     if (intake.status === 'LCID_ISSUED') {
       return undefined;
     }
-    return 'CANNOT_START';
+    return 'CANNOT_START_YET';
   }
 
   switch (intake.status) {
@@ -127,6 +127,6 @@ export const decisionTag = (intake: SystemIntake): TagEnum | undefined => {
     case 'NO_GOVERNANCE':
       return undefined;
     default:
-      return 'CANNOT_START';
+      return 'CANNOT_START_YET';
   }
 };

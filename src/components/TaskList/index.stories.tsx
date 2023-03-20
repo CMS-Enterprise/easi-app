@@ -49,7 +49,7 @@ export const Default = () => (
         </TaskListItem>
         <TaskListItem
           heading="Feedback from initial review"
-          status={'CANNOT_START' as TaskStatus}
+          status={'CANNOT_START_YET' as TaskStatus}
         >
           <TaskListDescription>
             <p className="margin-top-0">
