@@ -9,6 +9,7 @@ import './index.scss';
 
 type ReactTablePaginationProps = {
   className?: string;
+  transparentBg?: boolean;
 } & UsePaginationInstanceProps<{}> &
   UsePaginationState<{}>;
 
@@ -20,11 +21,13 @@ const TablePagination = ({
   canNextPage,
   pageIndex,
   pageOptions,
-  canPreviousPage
+  canPreviousPage,
+  transparentBg = false
 }: ReactTablePaginationProps) => {
   const { t } = useTranslation('systemProfile');
   const classNames = classnames(
     'usa-pagination',
+    { 'usa-pagination--transparent-bg': transparentBg },
     'padding-bottom-1',
     className
   );

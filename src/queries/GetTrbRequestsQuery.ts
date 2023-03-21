@@ -5,7 +5,7 @@ export default gql`
     trbRequests(archived: false) {
       id
       name
-      state
+      status
       createdAt
 
       form {
