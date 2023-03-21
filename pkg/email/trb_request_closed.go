@@ -39,11 +39,10 @@ func (c Client) SendTRBRequestClosedEmail(ctx context.Context, input SendTRBRequ
 	allRecipients := append(input.Recipients, c.config.TRBEmail)
 
 	templateParams := trbRequestClosedEmailTemplateParams{
-		TRBRequestName: input.TRBRequestName,
-		RequesterName:  input.RequesterName,
-		ReasonClosed:   input.ReasonClosed,
-		// TODO - figure out what this URL will be once it's in the frontend:
-		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice-letter", input.TRBRequestID.String())),
+		TRBRequestName:      input.TRBRequestName,
+		RequesterName:       input.RequesterName,
+		ReasonClosed:        input.ReasonClosed,
+		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice", input.TRBRequestID.String())),
 		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
 		TRBEmail:            c.config.TRBEmail,
 	}
