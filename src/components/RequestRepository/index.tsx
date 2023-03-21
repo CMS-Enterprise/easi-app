@@ -68,7 +68,7 @@ const RequestRepository = () => {
 
   // Last sort states on active tables with their initial sort rules
   const [lastSort, setLastSort] = useState<
-    Record<TableTypes, SortingRule<string>[]>
+    Record<TableTypes, SortingRule<{}>[]>
   >({
     open: [{ id: 'submittedAt', desc: true }],
     closed: [{ id: 'lastAdminNote', desc: true }]
