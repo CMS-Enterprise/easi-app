@@ -273,7 +273,7 @@ const technicalAssistance = {
     helpLinksNewTab: 'All help links open in a new tab',
     stepsInvolved:
       'Steps involved in getting technical assistance from the TRB',
-    sampleRequest: 'Sample TRB Request',
+    prepareConsultMeeting: 'Prepare for the consult meeting',
     viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
     taskList: [
       {
