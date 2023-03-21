@@ -33,7 +33,7 @@ export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
 
 type TaskListItemProps = {
   heading: string;
-  status: TaskStatus | '';
+  status: TaskStatus | undefined;
   children?: React.ReactNode;
   testId?: string;
 };
@@ -48,7 +48,9 @@ const TaskListItem = ({
     'task-list__item',
     'padding-bottom-4',
     {
-      'task-list__item--na': ['NOT_NEEDED', 'CANNOT_START'].includes(status)
+      'task-list__item--na': ['NOT_NEEDED', 'CANNOT_START_YET'].includes(
+        status || ''
+      )
     }
   );
   return (
@@ -58,7 +60,7 @@ const TaskListItem = ({
           <h3 className="task-list__task-heading line-height-heading-2 margin-top-0 margin-bottom-1">
             {heading}
           </h3>
-          {status !== '' && status in taskStatusClassName && (
+          {!!status && status in taskStatusClassName && (
             <TaskStatusTag status={status} />
           )}
         </div>
