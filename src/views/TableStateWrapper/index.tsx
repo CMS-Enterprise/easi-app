@@ -16,24 +16,22 @@ type TableStateWrapperProps = {
   children: React.ReactNode;
 };
 
-export type TableTypes = 'open' | 'closed';
+export type ActiveStateType = 'open' | 'closed';
 
 export type ReactTableStateType = Pick<
   TableState,
   'pageIndex' | 'globalFilter' | 'sortBy' | 'pageSize'
 >;
 
-type ITGovTableState = {
+interface ITGovTableState {
   state: ReactTableStateType;
-  activeTableState: TableTypes;
-};
-
-type ITGovRefType = MutableRefObject<ITGovTableState>;
+  activeTableState: ActiveStateType;
+}
 
 // Making extensible here for future table implementations
-export type TableStatesTypes = ITGovRefType;
+export interface TableStates extends MutableRefObject<ITGovTableState> {}
 
-const initialTableState: Record<string, TableStatesTypes> = {
+const initialTableState: Record<string, TableStates> = {
   itGovAdmin: {
     current: {
       state: {
@@ -48,9 +46,9 @@ const initialTableState: Record<string, TableStatesTypes> = {
 };
 
 // Create the table state context - fetched from IT gov table
-export const TableStateContext = createContext<
-  Record<string, TableStatesTypes>
->(initialTableState);
+export const TableStateContext = createContext<Record<string, TableStates>>(
+  initialTableState
+);
 
 const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   // Checks to see if the current route is a part of IT Gov or home

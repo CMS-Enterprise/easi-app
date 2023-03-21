@@ -10,10 +10,10 @@ import { FilterValue, SortingRule } from 'react-table';
 import { assign } from 'lodash';
 
 import {
+  ActiveStateType,
   ReactTableStateType,
   TableStateContext,
-  TableStatesTypes,
-  TableTypes
+  TableStates
 } from 'views/TableStateWrapper';
 
 const useTableState = (
@@ -22,10 +22,10 @@ const useTableState = (
   gotoPage: (updater: ((pageIndex: number) => number) | number) => void,
   setSortBy: (sortBy: Array<SortingRule<{}>>) => void,
   setGlobalFilter: (filterValue: FilterValue) => void,
-  activeTable: TableTypes,
+  activeTable: ActiveStateType,
   data: any[]
 ) => {
-  const tableStates: Record<string, TableStatesTypes> = useContext(
+  const tableStates: Record<string, TableStates> = useContext(
     TableStateContext
   );
 

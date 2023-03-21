@@ -44,7 +44,7 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
-import { TableStateContext, TableTypes } from 'views/TableStateWrapper';
+import { ActiveStateType, TableStateContext } from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
 import tableMap from './tableMap';
@@ -58,7 +58,7 @@ const RequestRepository = () => {
 
   const { itGovAdmin } = useContext(TableStateContext);
 
-  const [activeTable, setActiveTable] = useState<TableTypes>(
+  const [activeTable, setActiveTable] = useState<ActiveStateType>(
     itGovAdmin.current.activeTableState
   );
 
@@ -68,14 +68,14 @@ const RequestRepository = () => {
 
   // Last sort states on active tables with their initial sort rules
   const [lastSort, setLastSort] = useState<
-    Record<TableTypes, SortingRule<{}>[]>
+    Record<ActiveStateType, SortingRule<{}>[]>
   >({
     open: [{ id: 'submittedAt', desc: true }],
     closed: [{ id: 'lastAdminNote', desc: true }]
   });
 
   // Select an active table and restore its last sort state
-  function selectActiveTable(nextActiveTable: TableTypes) {
+  function selectActiveTable(nextActiveTable: ActiveStateType) {
     if (nextActiveTable === activeTable) return;
     gotoPage(0);
     setLastSort(prev => ({ ...prev, [activeTable]: state.sortBy }));
