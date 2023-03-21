@@ -16,6 +16,7 @@ import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
 import Section508 from './Section508';
 import SendFeedback from './SendFeedback';
+import TechnicalReviewBoard from './TechnicalReviewBoard';
 
 const Help = () => {
   return (
@@ -56,7 +57,11 @@ const Help = () => {
         render={() => <TestingTemplates />}
       />
 
-      <Route path="/help/trb/prepare-consult-meeting">
+      {/* TRB */}
+      <Route path="/help/trb" exact>
+        <TechnicalReviewBoard />
+      </Route>
+      <Route path="/help/trb/prepare-consult-meeting" exact>
         <PrepareTrbConsultMeeting />
       </Route>
 
