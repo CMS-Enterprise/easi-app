@@ -18,8 +18,13 @@ type TableStateWrapperProps = {
 
 export type TableTypes = 'open' | 'closed';
 
+export type ReactTableStateType = Pick<
+  TableState,
+  'pageIndex' | 'globalFilter' | 'sortBy' | 'pageSize'
+>;
+
 type ITGovTableState = {
-  state: Pick<TableState, 'pageIndex' | 'globalFilter' | 'sortBy' | 'pageSize'>;
+  state: ReactTableStateType;
   activeTableState: TableTypes;
 };
 

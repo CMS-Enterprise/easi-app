@@ -6,10 +6,11 @@ Table setters are dependent on react-table exposed methods
 */
 
 import { useContext, useEffect } from 'react';
-import { FilterValue, SortingRule, TableState } from 'react-table';
+import { FilterValue, SortingRule } from 'react-table';
 import { assign } from 'lodash';
 
 import {
+  ReactTableStateType,
   TableStateContext,
   TableStatesTypes,
   TableTypes
@@ -17,7 +18,7 @@ import {
 
 const useTableState = (
   tableName: string,
-  state: Partial<TableState>,
+  state: ReactTableStateType,
   gotoPage: (updater: ((pageIndex: number) => number) | number) => void,
   setSortBy: (sortBy: Array<SortingRule<{}>>) => void,
   setGlobalFilter: (filterValue: FilterValue) => void,
@@ -58,6 +59,7 @@ const useTableState = (
 
   // Filters by previous search term || ''
   useEffect(() => {
+    // Needs to wait for data to be present - react-table resets globalFilter if initialized before data
     if (data.length) {
       setGlobalFilter(tableState.current.state.globalFilter);
     }
