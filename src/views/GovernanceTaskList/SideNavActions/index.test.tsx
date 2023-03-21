@@ -35,11 +35,11 @@ describe('The TaskListSideNavActions', () => {
     });
   });
 
-  describe('remove your request to add a new system', () => {
+  describe('remove your request to add a new system or service', () => {
     it('displays text', () => {
       const component = renderComponent();
       expect(component.find('.test-withdraw-request').dive().text()).toEqual(
-        'Remove your request to add a new system'
+        'Remove your request to add a new system or service'
       );
     });
     it('has a closed modal by default', () => {
