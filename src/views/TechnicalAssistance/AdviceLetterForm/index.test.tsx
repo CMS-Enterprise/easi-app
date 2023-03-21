@@ -12,7 +12,10 @@ import configureMockStore from 'redux-mock-store';
 
 import { trbRequestAdviceLetter } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  CreateTrbRecommendationQuery,
+  GetTrbAdviceLetterQuery
+} from 'queries/TrbAdviceLetterQueries';
 import { GetTrbAdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 
@@ -44,6 +47,29 @@ const getTrbAdviceLetterQuery = {
   }
 };
 
+const mockRecommendation = {
+  title: 'Recommendation 3',
+  recommendation: 'Recommendation description text',
+  links: ['google.com', 'easi.cms.gov']
+};
+
+const createTrbRecommendationQuery = {
+  request: {
+    query: CreateTrbRecommendationQuery,
+    variables: {
+      input: { trbRequestId, ...mockRecommendation }
+    }
+  },
+  result: {
+    data: {
+      createTRBAdviceLetterRecommendation: {
+        id: '670fdf6d-761b-415f-a108-2ebc814288c3',
+        ...mockRecommendation
+      }
+    }
+  }
+};
+
 const mockStore = configureMockStore();
 
 const defaultStore = mockStore({
@@ -60,8 +86,10 @@ const renderForm = (step: string) => {
     <MemoryRouter initialEntries={[`/trb/${trbRequestId}/advice/${step}`]}>
       <MessageProvider>
         <Provider store={defaultStore}>
-          {/* TODO: Add CreateTRBRecommendation to mocks */}
-          <MockedProvider mocks={[getTrbAdviceLetterQuery]} addTypename={false}>
+          <MockedProvider
+            mocks={[getTrbAdviceLetterQuery, createTrbRecommendationQuery]}
+            addTypename={false}
+          >
             <Route path="/trb/:id/advice/:formStep/:subpage?">
               <AdviceLetterForm />
             </Route>
@@ -84,71 +112,75 @@ describe('TRB Advice Letter Form', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it.only('renders the Recommendations page', async () => {
-    const { getByRole, getByTestId } = renderForm('recommendations');
+  it('renders the recommendations form', async () => {
+    const { findByRole, findByTestId } = renderForm('recommendations');
 
-    await waitForPageLoad();
-
-    // Check that recommendations are rendered
-    expect(
-      getByRole('heading', { name: 'Recommendation 1' })
-    ).toBeInTheDocument();
-
-    const addRecommendationButton = getByRole('button', {
+    const button = await findByRole('button', {
       name: 'Add another recommendation'
     });
-    userEvent.click(addRecommendationButton);
 
-    expect(
-      getByRole('heading', { name: 'Add a recommendation', level: 1 })
-    ).toBeInTheDocument();
+    userEvent.click(button);
 
     // Title field
-    const titleInput = getByRole('textbox', { name: 'Title *' });
-    const titleText = 'Recommendation Title #3';
-    userEvent.type(titleInput, titleText);
-    expect(titleInput).toHaveValue(titleText);
+    const titleInput = await findByRole('textbox', { name: 'Title *' });
+    userEvent.type(titleInput, mockRecommendation.title);
+    expect(titleInput).toHaveValue(mockRecommendation.title);
 
     // Description field
-    const descriptionInput = getByRole('textbox', {
+    const descriptionInput = await findByRole('textbox', {
       name: 'Description *'
     });
-    const descriptionText = 'Recommendation description test';
-    userEvent.type(descriptionInput, descriptionText);
-    expect(descriptionInput).toHaveValue(descriptionText);
+    userEvent.type(descriptionInput, mockRecommendation.recommendation);
+    expect(descriptionInput).toHaveValue(mockRecommendation.recommendation);
 
     // Add resource link
-    const addLinkButton = getByRole('button', { name: 'Add a resource link' });
+    const addLinkButton = await findByRole('button', {
+      name: 'Add a resource link'
+    });
     userEvent.click(addLinkButton);
 
-    const addAnotherLinkButton = getByRole('button', {
+    const addAnotherLinkButton = await findByRole('button', {
       name: 'Add another resource link'
     });
     // Button should be disabled while link input is blank
     expect(addAnotherLinkButton).toBeDisabled();
 
-    let linkInput = getByTestId('links.0.link');
-    const links = ['google.com', 'easi.cms.gov'];
+    let linkInput = await findByTestId('links.0.link');
 
-    userEvent.type(linkInput, links[0]);
-    expect(linkInput).toHaveValue(links[0]);
+    userEvent.type(linkInput, mockRecommendation.links[0]);
+    expect(linkInput).toHaveValue(mockRecommendation.links[0]);
 
     userEvent.click(addAnotherLinkButton);
 
-    linkInput = getByTestId('links.1.link');
+    linkInput = await findByTestId('links.1.link');
 
-    userEvent.type(linkInput, links[1]);
-    expect(linkInput).toHaveValue(links[1]);
-
-    // Passes but throws warning - need to add CreateTRBRecommendation to mocks
-    userEvent.click(getByRole('button', { name: 'Save' }));
+    const linkText = `https://www.${mockRecommendation.links[1]}`;
+    userEvent.type(linkInput, linkText);
+    expect(linkInput).toHaveValue(linkText);
   });
 
-  it('renders the Next Steps page', async () => {
-    const { getByRole } = renderForm('next-steps');
+  it.only('renders the Next Steps form', async () => {
+    const { findByRole, getByRole } = renderForm('next-steps');
 
-    await waitForPageLoad();
+    const nextStepsInput = await findByRole('textbox', {
+      name: 'Next steps *'
+    });
 
-    expect(getByRole('textbox', { name: 'Next steps *' })).toBeInTheDocument();
+    expect(nextStepsInput).toHaveValue(trbRequestAdviceLetter.nextSteps);
+
+    expect(
+      getByRole('radio', {
+        name: 'Yes, a follow-up is recommended'
+      })
+    ).toBeChecked();
+
+    const followupPointInput = getByRole('textbox', { name: 'When?' });
+    expect(followupPointInput).toHaveValue(
+      trbRequestAdviceLetter.followupPoint
+    );
+
+    // Check that followup point input is hidden when followup radio field is false
+    userEvent.click(getByRole('radio', { name: 'Not necessary' }));
+    expect(followupPointInput).not.toBeInTheDocument();
   });
 });
