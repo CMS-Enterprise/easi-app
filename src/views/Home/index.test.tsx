@@ -38,6 +38,7 @@ const defaultFlags: Flags = {
   downgrade508Tester: false,
   downgrade508User: false,
   downgradeGovTeam: false,
+  downgradeTrbAdmin: false,
   sandbox: true
 } as Flags;
 

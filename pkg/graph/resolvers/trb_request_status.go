@@ -44,8 +44,13 @@ func getTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 	if feedback != nil {
 		// If the latest feedback exists, calculate the status based on the action
 		if feedback.Action == models.TRBFeedbackActionRequestEdits {
-			// If latest feedback requests edits, return "edits requested" status
-			status = models.TRBFeedbackStatus(models.TRBFeedbackStatusEditsRequested)
+			if form.Status == models.TRBFormStatusCompleted {
+				// If the form is completed, that means the edits were made
+				status = models.TRBFeedbackStatus(models.TRBFeedbackStatusInReview)
+			} else {
+				// If the form isn't complete, then "edits requested" still applies
+				status = models.TRBFeedbackStatus(models.TRBFeedbackStatusEditsRequested)
+			}
 		} else if feedback.Action == models.TRBFeedbackActionReadyForConsult {
 			// If latest feedback action is "ready for consult", return "completed" status
 			status = models.TRBFeedbackStatusCompleted
@@ -204,4 +209,76 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	}
 
 	return &statuses, nil
+}
+
+// GetTRBRequestStatus calculates the overall status of the TRB request
+func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (models.TRBRequestStatus, error) {
+	var status models.TRBRequestStatus
+	status = models.TRBRequestStatusNew
+
+	taskStatuses, err := GetTRBTaskStatuses(ctx, store, trbRequestID)
+	if err != nil {
+		return status, err
+	}
+	formStatus := taskStatuses.FormStatus
+	feedbackStatus := taskStatuses.FeedbackStatus
+	consultPrepStatus := taskStatuses.ConsultPrepStatus
+	attendConsultStatus := taskStatuses.AttendConsultStatus
+	adviceLetterStatus := taskStatuses.AdviceLetterStatus
+
+	// New - form status will be "ready to start"
+	if formStatus == models.TRBFormStatusReadyToStart {
+		status = models.TRBRequestStatusNew
+	}
+
+	// Draft request form - form status will be "in progress"
+	if formStatus == models.TRBFormStatusInProgress {
+		status = models.TRBRequestStatusDraftRequestForm
+	}
+
+	// Request form complete
+	if formStatus == models.TRBFormStatusCompleted {
+		status = models.TRBRequestStatusRequestFormComplete
+	}
+
+	// Ready for consult
+	if feedbackStatus == models.TRBFeedbackStatusCompleted {
+		status = models.TRBRequestStatusReadyForConsult
+	}
+
+	// Consult scheduled
+	if consultPrepStatus == models.TRBConsultPrepStatusCompleted {
+		status = models.TRBRequestStatusConsultScheduled
+	}
+
+	// Consult complete
+	if attendConsultStatus == models.TRBAttendConsultStatusCompleted && adviceLetterStatus == models.TRBAdviceLetterStatusReadyToStart {
+		status = models.TRBRequestStatusConsultComplete
+	}
+
+	// Draft advice letter
+	if adviceLetterStatus == models.TRBAdviceLetterStatusInProgress {
+		status = models.TRBRequestStatusDraftAdviceLetter
+	}
+
+	// Advice letter in review
+	if adviceLetterStatus == models.TRBAdviceLetterStatusReadyForReview {
+		status = models.TRBRequestStatusAdviceLetterInReview
+	}
+
+	// Advice letter sent
+	if adviceLetterStatus == models.TRBAdviceLetterStatusCompleted {
+		// Get the advice letter and check if follow-up was recommended
+		adviceLetter, err := GetTRBAdviceLetterByTRBRequestID(ctx, store, trbRequestID)
+		if err != nil {
+			return status, err
+		}
+		followupRecommended := adviceLetter.IsFollowupRecommended
+		if followupRecommended != nil && *followupRecommended {
+			status = models.TRBRequestStatusFollowUpRequested
+		} else {
+			status = models.TRBRequestStatusAdviceLetterSent
+		}
+	}
+	return status, nil
 }

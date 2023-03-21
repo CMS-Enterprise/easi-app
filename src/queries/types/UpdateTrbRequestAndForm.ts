@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateTRBRequestFormInput, TRBRequestChanges, TRBRequestType, TRBRequestStatus, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
+import { UpdateTRBRequestFormInput, TRBRequestChanges, TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: UpdateTrbRequestAndForm
@@ -79,7 +79,7 @@ export interface UpdateTrbRequestAndForm_updateTRBRequest {
   id: UUID;
   name: string;
   type: TRBRequestType;
-  status: TRBRequestStatus;
+  state: TRBRequestState;
   taskStatuses: UpdateTrbRequestAndForm_updateTRBRequest_taskStatuses;
   form: UpdateTrbRequestAndForm_updateTRBRequest_form;
   feedback: UpdateTrbRequestAndForm_updateTRBRequest_feedback[];

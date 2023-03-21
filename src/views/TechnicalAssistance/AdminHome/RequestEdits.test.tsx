@@ -77,7 +77,7 @@ describe('Trb Admin: Action: Request Edits', () => {
                   trbRequest: {
                     name: 'Draft',
                     type: 'NEED_HELP',
-                    status: 'OPEN',
+                    state: 'OPEN',
                     trbLead: null,
                     createdAt: '2023-02-16T15:21:34.156885Z',
                     taskStatuses: {

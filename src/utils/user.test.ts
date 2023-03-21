@@ -5,7 +5,9 @@ import {
   ACCESSIBILITY_TESTER_PROD,
   BASIC_USER_PROD,
   GOVTEAM_DEV,
-  GOVTEAM_PROD
+  GOVTEAM_PROD,
+  TRB_ADMIN_DEV,
+  TRB_ADMIN_PROD
 } from 'constants/jobCodes';
 import { Flags } from 'types/flags';
 
@@ -14,7 +16,8 @@ import {
   isAccessibilityTeam,
   isAccessibilityTester,
   isBasicUser,
-  isGrtReviewer
+  isGrtReviewer,
+  isTrbAdmin
 } from './user';
 
 describe('user', () => {
@@ -46,7 +49,7 @@ describe('user', () => {
       });
     });
 
-    describe('flags', () => {
+    describe('Gov team downgrade flags', () => {
       const groups = [GOVTEAM_DEV];
 
       describe('the downgrade flag is false', () => {
@@ -60,6 +63,23 @@ describe('user', () => {
         const flags = { downgradeGovTeam: true } as Flags;
         it('returns false', () => {
           expect(isGrtReviewer(groups, flags)).toBe(false);
+        });
+      });
+    });
+
+    describe('TRB downgrade flags', () => {
+      const groups = [TRB_ADMIN_DEV, TRB_ADMIN_PROD];
+      describe('the TRB downgrade flag is false', () => {
+        const flags = { downgradeTrbAdmin: false } as Flags;
+        it('returns true', () => {
+          expect(isTrbAdmin(groups, flags)).toBe(true);
+        });
+      });
+
+      describe('the TRB downgrade flag is true', () => {
+        const flags = { downgradeTrbAdmin: true } as Flags;
+        it('returns false', () => {
+          expect(isTrbAdmin(groups, flags)).toBe(false);
         });
       });
     });

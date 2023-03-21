@@ -9,9 +9,11 @@ import {
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
+  TRBRequestState,
   TRBRequestStatus,
   TRBRequestType
 } from 'types/graphql-global-types';
+import { TrbAdminTeamHomeRequest } from 'types/technicalAssistance';
 
 const trbRequestId: string = '441cb9e0-2cb3-43ca-b168-9d6a2a13ec91';
 
@@ -81,7 +83,7 @@ export const trbRequestSummary: Summary = {
   __typename: 'TRBRequest',
   name: 'TRB Request Mock',
   type: TRBRequestType.NEED_HELP,
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   trbLead: null,
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses: {
@@ -139,7 +141,7 @@ export const trbRequest: TrbRequest = {
     adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
   },
   feedback: [],
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   type: TRBRequestType.NEED_HELP,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
@@ -179,3 +181,198 @@ export const trbRequest: TrbRequest = {
   },
   __typename: 'TRBRequest'
 };
+
+export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
+  {
+    id: '0ba435ac-50ee-44d1-94cc-4dd480b70a75',
+    name: 'First help',
+    type: TRBRequestType.NEED_HELP,
+    isRecent: true,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.NEW,
+    consultMeetingTime: null,
+    trbLeadComponent: null,
+    trbLeadInfo: {
+      commonName: '',
+      __typename: 'UserInfo'
+    },
+    requesterComponent: null,
+    requesterInfo: {
+      commonName: 'Wava Upton',
+      __typename: 'UserInfo'
+    },
+    taskStatuses: {
+      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+      formStatus: TRBFormStatus.READY_TO_START,
+      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+      __typename: 'TRBTaskStatuses'
+    },
+    form: {
+      submittedAt: '2023-03-01T01:23:45Z',
+      __typename: 'TRBRequestForm'
+    },
+    __typename: 'TRBRequest'
+  },
+  {
+    id: '1ed1f39e-cfc3-47db-9837-4264dc1f8460',
+    name: 'Second brainstorm',
+    type: TRBRequestType.BRAINSTORM,
+    isRecent: true,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.NEW,
+    consultMeetingTime: null,
+    trbLeadComponent: null,
+    trbLeadInfo: {
+      commonName: '',
+      __typename: 'UserInfo'
+    },
+    requesterComponent: null,
+    requesterInfo: {
+      commonName: 'Derick Koss',
+      __typename: 'UserInfo'
+    },
+    taskStatuses: {
+      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+      formStatus: TRBFormStatus.READY_TO_START,
+      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+      __typename: 'TRBTaskStatuses'
+    },
+    form: {
+      submittedAt: '2023-03-02T01:23:45Z',
+      __typename: 'TRBRequestForm'
+    },
+    __typename: 'TRBRequest'
+  },
+  {
+    id: 'dfb9739e-bd4d-11ed-ae6c-7a788b7686d3',
+    name: 'Third open',
+    type: TRBRequestType.NEED_HELP,
+    isRecent: false,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.DRAFT_REQUEST_FORM,
+    consultMeetingTime: null,
+    trbLeadComponent: null,
+    trbLeadInfo: {
+      commonName: 'Astrid Howell',
+      __typename: 'UserInfo'
+    },
+    requesterComponent: null,
+    requesterInfo: {
+      commonName: 'Loraine Kirlin',
+      __typename: 'UserInfo'
+    },
+    taskStatuses: {
+      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+      formStatus: TRBFormStatus.READY_TO_START,
+      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+      __typename: 'TRBTaskStatuses'
+    },
+    form: {
+      submittedAt: '2023-03-03T01:23:45Z',
+      __typename: 'TRBRequestForm'
+    },
+    __typename: 'TRBRequest'
+  },
+  {
+    id: '143a7374-bd4f-11ed-a56b-7a788b7686d3',
+    name: 'Fourth open with date',
+    type: TRBRequestType.NEED_HELP,
+    isRecent: false,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.REQUEST_FORM_COMPLETE,
+    consultMeetingTime: '2023-04-01T09:23:45Z',
+    trbLeadComponent: null,
+    trbLeadInfo: {
+      commonName: 'Polly Sauer',
+      __typename: 'UserInfo'
+    },
+    requesterComponent: null,
+    requesterInfo: {
+      commonName: 'Clotilde Goodwin',
+      __typename: 'UserInfo'
+    },
+    taskStatuses: {
+      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+      formStatus: TRBFormStatus.READY_TO_START,
+      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+      __typename: 'TRBTaskStatuses'
+    },
+    form: {
+      submittedAt: '2023-03-04T01:23:45Z',
+      __typename: 'TRBRequestForm'
+    },
+    __typename: 'TRBRequest'
+  },
+  {
+    id: 'ef230178-bd4e-11ed-b9b4-7a788b7686d3',
+    name: 'Fifth closed',
+    type: TRBRequestType.NEED_HELP,
+    isRecent: false,
+    state: TRBRequestState.CLOSED,
+    status: TRBRequestStatus.READY_FOR_CONSULT,
+    consultMeetingTime: '2023-04-02T09:23:45Z',
+    trbLeadComponent: null,
+    trbLeadInfo: {
+      commonName: 'Sydni Reynolds',
+      __typename: 'UserInfo'
+    },
+    requesterComponent: null,
+    requesterInfo: {
+      commonName: 'Sylvester Mante',
+      __typename: 'UserInfo'
+    },
+    taskStatuses: {
+      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+      formStatus: TRBFormStatus.READY_TO_START,
+      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+      __typename: 'TRBTaskStatuses'
+    },
+    form: {
+      submittedAt: '2023-03-05T01:23:45Z',
+      __typename: 'TRBRequestForm'
+    },
+    __typename: 'TRBRequest'
+  },
+  {
+    id: '243f22b4-bd50-11ed-8714-7a788b7686d3',
+    name: 'Sixth open with component',
+    type: TRBRequestType.NEED_HELP,
+    isRecent: false,
+    state: TRBRequestState.OPEN,
+    status: TRBRequestStatus.CONSULT_SCHEDULED,
+    consultMeetingTime: '2023-04-02T09:23:45Z',
+    trbLeadComponent: 'TRB',
+    trbLeadInfo: {
+      commonName: 'Hosea Lemke',
+      __typename: 'UserInfo'
+    },
+    requesterComponent: 'BBQ',
+    requesterInfo: {
+      commonName: 'Damaris Langosh',
+      __typename: 'UserInfo'
+    },
+    taskStatuses: {
+      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+      formStatus: TRBFormStatus.READY_TO_START,
+      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+      __typename: 'TRBTaskStatuses'
+    },
+    form: {
+      submittedAt: '2023-03-06T01:23:45Z',
+      __typename: 'TRBRequestForm'
+    },
+    __typename: 'TRBRequest'
+  }
+];

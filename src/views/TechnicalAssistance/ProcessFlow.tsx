@@ -71,7 +71,7 @@ function ProcessFlow() {
         {t('steps.heading')}
       </PageHeading>
       <div>
-        <span className="line-height-body-5 text-base margin-right-2">
+        <span className="font-body-md line-height-body-4 text-base margin-right-2">
           {requestTypeText[requestType].heading}
         </span>
         <span>

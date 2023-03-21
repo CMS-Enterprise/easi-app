@@ -5,12 +5,12 @@ import "time"
 // TRBRequest represents a TRB request object
 type TRBRequest struct {
 	baseStruct
-	Name               string           `json:"name" db:"name"`
-	Archived           bool             `json:"archived" db:"archived"`
-	Type               TRBRequestType   `json:"type" db:"type"`     //TODO should this be a type?
-	Status             TRBRequestStatus `json:"status" db:"status"` //TODO should this be a type?
-	ConsultMeetingTime *time.Time       `json:"consultMeetingTime" db:"consult_meeting_time"`
-	TRBLead            *string          `json:"trbLead" db:"trb_lead"`
+	Name               string          `json:"name" db:"name"`
+	Archived           bool            `json:"archived" db:"archived"`
+	Type               TRBRequestType  `json:"type" db:"type"`
+	State              TRBRequestState `json:"state" db:"state"`
+	ConsultMeetingTime *time.Time      `json:"consultMeetingTime" db:"consult_meeting_time"`
+	TRBLead            *string         `json:"trbLead" db:"trb_lead"`
 }
 
 // NewTRBRequest returns a new trb request object
@@ -33,13 +33,13 @@ const (
 	TRBTFormalReview TRBRequestType = "FORMAL_REVIEW"
 )
 
-// TRBRequestStatus represents the types of TRBRequestStatus types
-type TRBRequestStatus string
+// TRBRequestState represents the types of TRBRequestState types
+type TRBRequestState string
 
 // These are the options for TRBRequestStatus
 const (
-	TRBSOpen   TRBRequestStatus = "OPEN"
-	TRBSClosed TRBRequestStatus = "CLOSED"
+	TRBRequestStateOpen   TRBRequestState = "OPEN"
+	TRBRequestStateClosed TRBRequestState = "CLOSED"
 )
 
 // TRBFeedbackStatus represents the types of TRBFeedbackStatus types
@@ -82,3 +82,20 @@ type TRBTaskStatuses struct {
 	AttendConsultStatus TRBAttendConsultStatus `json:"attendConsultStatus"`
 	AdviceLetterStatus  TRBAdviceLetterStatus  `json:"adviceLetterStatus"`
 }
+
+// TRBRequestStatus is an enumeration of the possible values for the overall status of a TRB request
+type TRBRequestStatus string
+
+// These are the possible values for TRBRequestStatus
+const (
+	TRBRequestStatusNew                  = "NEW"
+	TRBRequestStatusDraftRequestForm     = "DRAFT_REQUEST_FORM"
+	TRBRequestStatusRequestFormComplete  = "REQUEST_FORM_COMPLETE"
+	TRBRequestStatusReadyForConsult      = "READY_FOR_CONSULT"
+	TRBRequestStatusConsultScheduled     = "CONSULT_SCHEDULED"
+	TRBRequestStatusConsultComplete      = "CONSULT_COMPLETE"
+	TRBRequestStatusDraftAdviceLetter    = "DRAFT_ADVICE_LETTER"
+	TRBRequestStatusAdviceLetterInReview = "ADVICE_LETTER_IN_REVIEW"
+	TRBRequestStatusAdviceLetterSent     = "ADVICE_LETTER_SENT"
+	TRBRequestStatusFollowUpRequested    = "FOLLOW_UP_REQUESTED"
+)
