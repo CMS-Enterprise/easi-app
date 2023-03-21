@@ -16,13 +16,14 @@ type TableStateWrapperProps = {
   children: React.ReactNode;
 };
 
-export type ActiveStateType = 'open' | 'closed';
-
 export type ReactTableStateType = Pick<
   TableState,
   'pageIndex' | 'globalFilter' | 'sortBy' | 'pageSize'
 >;
 
+export type ActiveStateType = 'open' | 'closed';
+
+// React-Table state properties / EASI table properties
 interface ITGovTableState {
   state: ReactTableStateType;
   activeTableState: ActiveStateType;
