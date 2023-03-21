@@ -30,6 +30,7 @@ export interface GetTrbTasklist_trbRequest_feedback {
 
 export interface GetTrbTasklist_trbRequest {
   __typename: "TRBRequest";
+  name: string;
   type: TRBRequestType;
   form: GetTrbTasklist_trbRequest_form;
   taskStatuses: GetTrbTasklist_trbRequest_taskStatuses;

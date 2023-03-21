@@ -120,13 +120,17 @@ function TaskList() {
             <div className="line-height-body-4">
               {data && (
                 <div>
-                  <div className="trb-request-type text-light font-body-lg">
-                    {requestTypeText[data.trbRequest.type].heading}
+                  <div className="trb-request-type font-body-lg line-height-body-5 text-light">
+                    {data.trbRequest.name}
                   </div>
-
-                  <UswdsReactLink to={`/trb/type/${id}`}>
-                    {t('steps.changeRequestType')}
-                  </UswdsReactLink>
+                  <div>
+                    <span className="font-body-md line-height-body-4 text-base margin-right-1">
+                      {requestTypeText[data.trbRequest.type].heading}
+                    </span>
+                    <UswdsReactLink to={`/trb/type/${id}`}>
+                      {t('steps.changeRequestType')}
+                    </UswdsReactLink>
+                  </div>
                 </div>
               )}
 
