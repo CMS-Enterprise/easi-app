@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   Route,
@@ -8,44 +7,17 @@ import {
   useParams,
   useRouteMatch
 } from 'react-router-dom';
-import { ApolloQueryResult, useMutation } from '@apollo/client';
-import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Alert,
-  Button,
-  ErrorMessage,
-  Fieldset,
-  FileInput,
-  Form,
-  FormGroup,
-  Grid,
-  IconArrowBack,
-  Label,
-  Radio,
-  TextInput
-} from '@trussworks/react-uswds';
-import { clone } from 'lodash';
+import { ApolloQueryResult } from '@apollo/client';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
-import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
-import {
-  CreateTrbRequestDocument,
-  CreateTrbRequestDocumentVariables
-} from 'queries/types/CreateTrbRequestDocument';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
-import {
-  documentSchema,
-  TrbRequestInputDocument
-} from 'validations/trbRequestSchema';
-
-import Breadcrumbs from '../Breadcrumbs';
 
 import DocumentsTable from './DocumentsTable';
+import DocumentUpload from './DocumentUpload';
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
 
@@ -67,73 +39,18 @@ function Documents({
   const { t } = useTranslation('technicalAssistance');
   const { t: gt } = useTranslation('general');
 
-  const history = useHistory();
-  const { url } = useRouteMatch();
-
   const { view } = useParams<{
     view?: string;
   }>();
 
-  // Documents can be created from the upload form
-  const [createDocument] = useMutation<
-    CreateTrbRequestDocument,
-    CreateTrbRequestDocumentVariables
-  >(CreateTrbRequestDocumentQuery);
-
-  const [isUploadError, setIsUploadError] = useState(false);
-
-  const {
-    control,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors, isSubmitting, isDirty }
-  } = useForm<TrbRequestInputDocument>({
-    resolver: yupResolver(documentSchema),
-    defaultValues: {
-      documentType: undefined,
-      fileData: undefined,
-      otherTypeDescription: ''
-    }
-  });
+  const history = useHistory();
+  const { url } = useRouteMatch();
 
   const [documentsCount, setDocumentsCount] = useState(0);
   const [refetchDocuments, setRefetchDocuments] = useState<RefetchDocuments>(
     () => () => {}
   );
   const [loadingDocuments, setLoadingDocuments] = useState(true);
-
-  const submit = handleSubmit(async formData => {
-    const input: any = clone(formData);
-
-    // Clear out otherTypeDescription if documentType isn't OTHER
-    if (input.documentType !== 'OTHER') {
-      delete input.otherTypeDescription;
-    }
-
-    createDocument({
-      variables: {
-        input: {
-          requestID: request.id,
-          ...input
-        }
-      }
-    })
-      .then(() => {
-        refetchDocuments(); // Reload documents
-        setFormAlert({
-          type: 'success',
-          slim: true,
-          message: t('documents.upload.success')
-        });
-        // Go back to the documents step
-        history.push(`/trb/requests/${request.id}/documents`);
-      })
-      .catch(err => {
-        // console.log(err);
-        setIsUploadError(true);
-      });
-  });
 
   const submitNoop: StepSubmit = async callback => {
     callback?.();
@@ -142,29 +59,6 @@ function Documents({
   useEffect(() => {
     setStepSubmit(() => submitNoop);
   }, [setStepSubmit]);
-
-  useEffect(() => {
-    if (view === 'upload') setFormAlert(false);
-    if (!view) setIsUploadError(false);
-    if (!view && isDirty) reset();
-  }, [view, t, setFormAlert, isDirty, reset]);
-
-  // Scroll to the first error field if the form is invalid
-  useEffect(() => {
-    const fields = Object.keys(errors);
-    if (fields.length) {
-      const err = document.querySelector(`label[for=${fields[0]}]`);
-      err?.scrollIntoView();
-    }
-  }, [errors]);
-
-  // Scroll to the upload error if there's a problem
-  useEffect(() => {
-    if (isUploadError) {
-      const err = document.querySelector('.document-upload-error');
-      err?.scrollIntoView();
-    }
-  }, [isUploadError]);
 
   return (
     <Switch>
@@ -223,7 +117,13 @@ function Documents({
 
       {/* Upload document form */}
       <Route exact path="/trb/requests/:id/documents/upload">
-        <div>
+        <DocumentUpload
+          setFormAlert={setFormAlert}
+          refetchDocuments={refetchDocuments}
+          view={view}
+          isInitialRequest
+        />
+        {/* <div>
           <Breadcrumbs
             items={[
               { text: t('heading'), url: '/trb' },
@@ -361,7 +261,7 @@ function Documents({
               {t('documents.upload.dontUploadAndReturn')}
             </UswdsReactLink>
           </div>
-        </div>
+        </div> */}
       </Route>
     </Switch>
   );
