@@ -125,6 +125,7 @@ const technicalAssistance = {
     cancel: 'Cancel',
     back: 'Back',
     continue: 'Continue',
+    update: 'Update',
     next: 'Next',
     save: 'Save',
     saveAndExit: 'Save and exit',
@@ -136,7 +137,24 @@ const technicalAssistance = {
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission date',
-      status: 'Request status'
+      status: 'Request status',
+      trbConsultDate: 'TRB consult date'
+    },
+    requestTypes: {
+      NEED_HELP: 'System problem',
+      BRAINSTORM: 'Idea feedback'
+    },
+    requestStatus: {
+      NEW: 'New',
+      DRAFT_REQUEST_FORM: 'Draft request form',
+      REQUEST_FORM_COMPLETE: 'Request form complete',
+      READY_FOR_CONSULT: 'Ready for consult',
+      CONSULT_SCHEDULED: 'Consult scheduled',
+      CONSULT_COMPLETE: 'Consult complete',
+      DRAFT_ADVICE_LETTER: 'Draft advice letter',
+      ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
+      ADVICE_LETTER_SENT: 'Advice letter sent',
+      FOLLOW_UP_REQUESTED: 'Follow-up requested'
     }
   },
   // Higher level errors
@@ -275,6 +293,23 @@ const technicalAssistance = {
       'Steps involved in getting technical assistance from the TRB',
     sampleRequest: 'Sample TRB Request',
     viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
+    editsRequestedWarning:
+      'The TRB has requested edits to your initial request form. View their feedback and make any changes requested.',
+    noFeedback:
+      'The TRB had no feedback about your request form. If you have any questions, you may contact them at ',
+    downloadTemplates: 'Download presentation templates',
+    sendAnEmail: 'Send an email',
+    uploadDocuments: 'Upload additional documents',
+    reviewAttendeeList: 'Review attendee list',
+    viewAttendeeList: 'View attendee list',
+    prepareForTRB: 'Prepare for your TRB consult meeting (opens in a new tab)',
+    trbConsultInfoHeading:
+      'Your TRB consult session is scheduled for {{-date}} at {{-time}}',
+    trbConsultInfo:
+      'If this day or time does not work for you, or if you need to reschedule, please contact the TRB at ',
+    trbConsultAttended:
+      'You attended your project’s TRB consult session on {{-date}} at {{-time}}',
+    viewAdviceLetter: 'View advice letter',
     taskList: [
       {
         heading: 'Fill out the initial request form',
@@ -593,7 +628,8 @@ const technicalAssistance = {
     viewFeedback: 'View feedback',
     date: 'Date',
     from: 'Feedback from',
-    returnToForm: 'Return to request form'
+    returnToForm: 'Return to request form',
+    returnToTaskList: 'Return to task list'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
@@ -653,6 +689,47 @@ const technicalAssistance = {
       notes: 'Notes'
     },
     byNameOnDate: 'by {{name}} on {{date}}'
+  },
+  adminTeamHome: {
+    description:
+      'From EASi’s TRB home, you can review, assign, and manage incoming and existing TRB support requests.',
+    jumpToExistingRequests: 'Jump to existing requests',
+    downloadAllTrbRequests: 'Download all TRB requests (csv)',
+    switchToDifferentAdminView: 'Swich to a different admin view',
+    submitYourOwnRequest: 'Submit your own technical assistance request',
+    newRequests: {
+      heading: 'New requests',
+      description:
+        'Review these recently submitted technical assistance requests and assign a TRB lead.',
+      downloadCsv: 'Download all new requests (csv)',
+      noRequests:
+        'There are currently no new requests. The TRB Mailbox will receive an email notification when a new request is submitted, or you can check back here later.'
+    },
+    existingRequests: {
+      heading: 'Existing requests',
+      description:
+        'Use the tabs below to navigate between closed requests and those that are open and have been reviewed and assigned.',
+      downloadCsv: 'Download all existing requests (csv)',
+      tabs: {
+        label: 'Request Repository Table Navigation',
+        open: {
+          name: 'Open Requests'
+        },
+        closed: {
+          name: 'Closed Requests'
+        }
+      },
+      noRequests: {
+        open:
+          'There are currently no open requests that are in progress. Review any new requests above and assign a TRB lead.',
+        closed:
+          'There are currently no closed requests. Continue to work on open requests. When they are closed, they will appear here.'
+      }
+    },
+    actions: {
+      assignLead: 'Assign lead',
+      addDate: 'Add date'
+    }
   },
   actionRequestEdits: {
     heading: 'Action: request edits',

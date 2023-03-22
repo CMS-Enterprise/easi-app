@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import { sortBy } from 'lodash';
 
@@ -20,18 +21,28 @@ type FeedbackProps = {
 function Feedback({ request, taskListUrl }: FeedbackProps) {
   const { t } = useTranslation('technicalAssistance');
 
-  const returnUrl = `/trb/requests/${request.id}/check`;
+  const { state } = useLocation<{
+    fromTaskList: boolean;
+  }>();
+
+  const fromTaskList = state?.fromTaskList;
+
+  const returnUrl = fromTaskList
+    ? `/trb/task-list/${request.id}`
+    : `/trb/requests/${request.id}/check`;
 
   const returnToFormLink = useMemo(
     () => (
       <UswdsReactLink to={returnUrl}>
         <IconArrowBack className="margin-right-1 text-middle" />
         <span className="line-height-body-5">
-          {t('requestFeedback.returnToForm')}
+          {fromTaskList
+            ? t('requestFeedback.returnToTaskList')
+            : t('requestFeedback.returnToForm')}
         </span>
       </UswdsReactLink>
     ),
-    [returnUrl, t]
+    [returnUrl, fromTaskList, t]
   );
 
   return (
@@ -43,10 +54,15 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
             text: t('taskList.heading'),
             url: taskListUrl
           },
-          {
-            text: t('requestForm.heading'),
-            url: returnUrl
-          },
+          ...(fromTaskList
+            ? []
+            : [
+                {
+                  text: t('requestForm.heading'),
+                  url: returnUrl
+                }
+              ]),
+
           { text: t('requestFeedback.viewFeedback') }
         ]}
       />

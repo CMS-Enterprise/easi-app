@@ -114,7 +114,7 @@ describe('My Requests Table', () => {
           id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
           name: 'My excellent question',
           nextMeetingDate: null,
-          status: TRBRequestStatus.DRAFT_REQUEST_FORM,
+          status: TRBRequestStatus.CONSULT_COMPLETE,
           submittedAt: '2023-03-07T15:09:17.694681Z',
           __typename: 'TRBRequest'
         }

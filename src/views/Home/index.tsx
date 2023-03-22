@@ -27,13 +27,13 @@ import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
 import SystemsListTable from 'views/SystemList/Table';
+import TrbAdminTeamHome from 'views/TechnicalAssistance/TrbAdminTeamHome';
 
 import WelcomeText from './WelcomeText';
 
 const Home = () => {
   const { t } = useTranslation();
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
   const flags = useFlags();
 
   const { message } = useMessage();
@@ -45,7 +45,7 @@ const Home = () => {
   const { loading: loadingSystems, data: systems } = useQuery<GetCedarSystems>(
     GetCedarSystemsQuery,
     {
-      skip: !user.isBasicUser(userGroups, flags)
+      skip: !user.isBasicUser(groups, flags)
     }
   );
 
@@ -54,7 +54,7 @@ const Home = () => {
     data: systemsBookmarks,
     refetch: refetchBookmarks
   } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery, {
-    skip: !user.isBasicUser(userGroups, flags)
+    skip: !user.isBasicUser(groups, flags)
   });
 
   const systemsTableData = (systems?.cedarSystems ?? []) as CedarSystem[];
@@ -63,7 +63,7 @@ const Home = () => {
 
   const renderView = () => {
     if (isUserSet) {
-      if (user.isGrtReviewer(userGroups, flags)) {
+      if (user.isGrtReviewer(groups, flags)) {
         return (
           // Changed GRT table from grid-container to just slight margins. This is take up
           // entire screen to better fit the more expansive data in the table.
@@ -80,11 +80,19 @@ const Home = () => {
         );
       }
 
-      if (user.isAccessibilityTeam(userGroups, flags)) {
+      if (user.isAccessibilityTeam(groups, flags)) {
         return <List />;
       }
 
-      if (user.isBasicUser(userGroups, flags)) {
+      if (user.isTrbAdmin(groups, flags)) {
+        return (
+          <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
+            <TrbAdminTeamHome />
+          </MainContent>
+        );
+      }
+
+      if (user.isBasicUser(groups, flags)) {
         return (
           <div className="grid-container">
             {message && (
@@ -112,8 +120,12 @@ const Home = () => {
               <Grid row gap={2}>
                 {[
                   { ITGov: requestTypes.ITGov },
-                  { TRB: requestTypes.TRB },
-                  { 508: requestTypes[508] }
+                  ...(flags.technicalAssistance
+                    ? [{ TRB: requestTypes.TRB }]
+                    : []),
+                  ...(!flags.hide508Workflow
+                    ? [{ 508: requestTypes[508] }]
+                    : [])
                 ].map(requestType => (
                   <Grid tablet={{ col: 4 }} key={Object.keys(requestType)[0]}>
                     <LinkCard

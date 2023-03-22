@@ -51,6 +51,22 @@
     }
   }
 
+  .trb-admin-team-home-actions {
+    li {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    li:not(:first-child) {
+      margin-left: 0;
+    }
+    @media screen and (min-width: $mobile) {
+      li:not(:last-of-type) {
+        margin-right: 1rem;
+        padding-right: 1rem;
+        border-right: 1px solid color('base-light');
+      }
+    }
+  }
   .usa-form {
     /* Top margin for 1st level form groups */
     > .usa-form-group {
@@ -155,6 +171,10 @@
         }
       }
     }
+  }
+
+  .list-disc {
+    list-style-type: disc;
   }
 
   /* Form level error alert */
