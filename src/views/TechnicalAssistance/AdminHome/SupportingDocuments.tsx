@@ -11,7 +11,7 @@ import RequestNotes from './components/RequestNotes';
 const SupportingDocuments = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
   return (
-    <Grid row gap="lg">
+    <Grid row gap="lg" data-testid="trb-admin-home__documents">
       <Grid tablet={{ col: 8 }}>
         <h1 className="margin-y-0">
           {t('adminHome.subnav.supportingDocuments')}
