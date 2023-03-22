@@ -47,12 +47,12 @@ function TechnicalAssistance() {
           <TaskList />
         </Route>
 
-        {/* Documents table/upload requester view from task list - prepare for TRB meeting */}
+        {/* Documents table requester view from task list - prepare for TRB meeting */}
         <Route exact path={`${path}/task-list/:id/documents`}>
           <TRBDocuments />
         </Route>
 
-        {/* Documents table/upload requester view from task list - prepare for TRB meeting */}
+        {/* Documents upload requester view from task list - prepare for TRB meeting */}
         <Route exact path={`${path}/task-list/:id/documents/upload`}>
           <DocumentUpload />
         </Route>
