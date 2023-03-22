@@ -615,6 +615,14 @@ export interface RejectIntakeInput {
 }
 
 /**
+ * The data needed to reopen a TRB request
+ */
+export interface ReopenTRBRequestInput {
+  trbRequestId: UUID;
+  reasonReopened: string;
+}
+
+/**
  * The inputs to the user feedback form
  */
 export interface SendFeedbackEmailInput {

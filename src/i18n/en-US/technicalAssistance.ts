@@ -893,6 +893,17 @@ const technicalAssistance = {
       close: 'Close request',
       cancel: 'Cancel'
     }
+  },
+  actionReopenRequest: {
+    heading: 'Action: re-open request',
+    description:
+      'Reopen this request if additional work needs to be completed or if it was closed in error.',
+    label: 'Why are you re-opening this request?',
+    hint: 'Give a brief explanation.',
+    submit: 'Complete action and re-open request',
+    success: 'Action complete. This request is now open.',
+    error:
+      'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
   }
 };
 

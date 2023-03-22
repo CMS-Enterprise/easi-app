@@ -70,7 +70,10 @@ function TechnicalAssistance() {
         <Route exact path={`${path}/:id/:activePage/:action(schedule-consult)`}>
           <Consult />
         </Route>
-        <Route exact path={`${path}/:id/:activePage/:action(close-request)`}>
+        <Route
+          exact
+          path={`${path}/:id/:activePage/:action(close-request|reopen-request)`}
+        >
           <CloseRequest />
         </Route>
 

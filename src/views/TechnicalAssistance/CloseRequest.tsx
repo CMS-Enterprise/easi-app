@@ -25,20 +25,28 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import CloseTrbRequestQuery from 'queries/CloseTrbRequestQuery';
+import ReopenTrbRequestQuery from 'queries/ReopenTrbRequestQuery';
 import {
   CloseTrbRequest,
   CloseTrbRequestVariables
 } from 'queries/types/CloseTrbRequest';
+import {
+  ReopenTrbRequest,
+  ReopenTrbRequestVariables
+} from 'queries/types/ReopenTrbRequest';
 
 import Breadcrumbs from './Breadcrumbs';
 
+/**
+ * Close or Re-open a request
+ */
 function CloseRequest() {
   const { t } = useTranslation('technicalAssistance');
 
-  const { id, activePage } = useParams<{
+  const { id, activePage, action } = useParams<{
     id: string;
     activePage: string;
-    action: 'close-request';
+    action: 'close-request' | 'reopen-request';
   }>();
   const history = useHistory();
 
@@ -46,7 +54,13 @@ function CloseRequest() {
 
   const requestUrl = `/trb/${id}/${activePage}`;
 
-  const actionText = 'actionCloseRequest';
+  let actionText: 'actionCloseRequest' | 'actionReopenRequest';
+
+  if (action === 'close-request') {
+    actionText = 'actionCloseRequest';
+  } else {
+    actionText = 'actionReopenRequest';
+  }
 
   const {
     control,
@@ -58,19 +72,51 @@ function CloseRequest() {
     }
   });
 
-  const [mutate] = useMutation<CloseTrbRequest, CloseTrbRequestVariables>(
+  const [mutateClose] = useMutation<CloseTrbRequest, CloseTrbRequestVariables>(
     CloseTrbRequestQuery
   );
 
+  const [mutateReopen] = useMutation<
+    ReopenTrbRequest,
+    ReopenTrbRequestVariables
+  >(ReopenTrbRequestQuery);
+
+  // Confirm modal for closing a request
   const confirmModalRef = useRef<ModalRef>(null);
 
-  const submit = handleSubmit(formData => {
-    mutate({
+  const submitClose = handleSubmit(formData => {
+    mutateClose({
       variables: {
         input: {
           id,
           reasonClosed: formData.text,
           notifyEuaIds: ['ABCD'] // todo
+        }
+      }
+    })
+      .then(result => {
+        showMessageOnNextPage(
+          <Alert type="success" slim className="margin-top-3">
+            {t(`${actionText}.success`)}
+          </Alert>
+        );
+        history.push(`/trb/${id}/request`);
+      })
+      .catch(err => {
+        showMessage(
+          <Alert type="error" slim className="margin-top-3">
+            {t(`${actionText}.error`)}
+          </Alert>
+        );
+      });
+  });
+
+  const submitReopen = handleSubmit(formData => {
+    mutateReopen({
+      variables: {
+        input: {
+          trbRequestId: id,
+          reasonReopened: formData.text
         }
       }
     })
@@ -134,7 +180,7 @@ function CloseRequest() {
                     htmlFor="text"
                     hint={
                       <div className="margin-top-1">
-                        {t('actionCloseRequest.hint')}
+                        {t(`${actionText}.hint`)}
                       </div>
                     }
                     className="text-normal margin-top-6"
@@ -153,62 +199,77 @@ function CloseRequest() {
                 </FormGroup>
               )}
             />
-            <h3 className="margin-top-6">
-              {t('actionRequestEdits.notificationTitle')}
-            </h3>
-            <div>{t('actionRequestEdits.notificationDescription')}</div>
 
-            {/* todo cedar contacts */}
+            {action === 'close-request' && (
+              <>
+                <h3 className="margin-top-6">
+                  {t('actionRequestEdits.notificationTitle')}
+                </h3>
+                <div>{t('actionRequestEdits.notificationDescription')}</div>
 
-            <ModalToggleButton
-              disabled={isSubmitting}
-              modalRef={confirmModalRef}
-              opener
-            >
-              {t('actionCloseRequest.submit')}
-            </ModalToggleButton>
+                {/* todo cedar contacts */}
 
-            <Modal
-              ref={confirmModalRef}
-              id="confirm-modal"
-              aria-labelledby="confirm-modal-heading"
-              aria-describedby="confirm-modal-description"
-            >
-              <ModalHeading
-                id="confirm-modal-heading"
-                className="margin-bottom-2"
+                <ModalToggleButton
+                  disabled={isSubmitting}
+                  modalRef={confirmModalRef}
+                  opener
+                >
+                  {t('actionCloseRequest.submit')}
+                </ModalToggleButton>
+
+                <Modal
+                  ref={confirmModalRef}
+                  id="confirm-modal"
+                  aria-labelledby="confirm-modal-heading"
+                  aria-describedby="confirm-modal-description"
+                >
+                  <ModalHeading
+                    id="confirm-modal-heading"
+                    className="margin-bottom-2"
+                  >
+                    {t('actionCloseRequest.confirmModal.heading')}
+                  </ModalHeading>
+                  <div id="confirm-modal-description" className="usa-prose">
+                    <p>{t('actionCloseRequest.confirmModal.text.0')}</p>
+                    <ul className="usa-list margin-top-0">
+                      <li>{t('actionCloseRequest.confirmModal.text.1')}</li>
+                      <li>{t('actionCloseRequest.confirmModal.text.2')}</li>
+                      <li>{t('actionCloseRequest.confirmModal.text.3')}</li>
+                    </ul>
+                    <p>{t('actionCloseRequest.confirmModal.text.4')}</p>
+                  </div>
+                  <ModalFooter>
+                    <ButtonGroup>
+                      <Button
+                        type="button"
+                        data-close-modal="true"
+                        onClick={submitClose}
+                      >
+                        {t('actionCloseRequest.confirmModal.close')}
+                      </Button>
+                      <ModalToggleButton
+                        modalRef={confirmModalRef}
+                        closer
+                        unstyled
+                        className="padding-105 text-center"
+                      >
+                        {t('actionCloseRequest.confirmModal.cancel')}
+                      </ModalToggleButton>
+                    </ButtonGroup>
+                  </ModalFooter>
+                </Modal>
+              </>
+            )}
+
+            {action === 'reopen-request' && (
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                onClick={submitReopen}
               >
-                {t('actionCloseRequest.confirmModal.heading')}
-              </ModalHeading>
-              <div id="confirm-modal-description" className="usa-prose">
-                <p>{t('actionCloseRequest.confirmModal.text.0')}</p>
-                <ul className="usa-list margin-top-0">
-                  <li>{t('actionCloseRequest.confirmModal.text.1')}</li>
-                  <li>{t('actionCloseRequest.confirmModal.text.2')}</li>
-                  <li>{t('actionCloseRequest.confirmModal.text.3')}</li>
-                </ul>
-                <p>{t('actionCloseRequest.confirmModal.text.4')}</p>
-              </div>
-              <ModalFooter>
-                <ButtonGroup>
-                  <Button
-                    type="button"
-                    data-close-modal="true"
-                    onClick={submit}
-                  >
-                    {t('actionCloseRequest.confirmModal.close')}
-                  </Button>
-                  <ModalToggleButton
-                    modalRef={confirmModalRef}
-                    closer
-                    unstyled
-                    className="padding-105 text-center"
-                  >
-                    {t('actionCloseRequest.confirmModal.cancel')}
-                  </ModalToggleButton>
-                </ButtonGroup>
-              </ModalFooter>
-            </Modal>
+                {t('actionReopenRequest.submit')}
+              </Button>
+            )}
           </Form>
         </Grid>
       </Grid>
