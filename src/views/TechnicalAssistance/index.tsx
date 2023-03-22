@@ -7,7 +7,7 @@ import { NotFoundPartial } from 'views/NotFound';
 
 import Consult from './AdminHome/Consult';
 import RequestEdits from './AdminHome/RequestEdits';
-// import Documents from './RequestForm/Documents';
+import DocumentsTaskList from './RequestForm/DocumentsTaskList';
 import DocumentUpload from './RequestForm/DocumentUpload';
 import AdminHome from './AdminHome';
 import AdviceLetterForm from './AdviceLetterForm';
@@ -48,9 +48,9 @@ function TechnicalAssistance() {
         </Route>
 
         {/* Documents table/upload requester view from task list - prepare for TRB meeting */}
-        {/* <Route exact path={`${path}/task-list/:id/documents`}>
-          <TRBDocuments />
-        </Route> */}
+        <Route exact path={`${path}/task-list/:id/documents`}>
+          <DocumentsTaskList />
+        </Route>
 
         {/* Documents table/upload requester view from task list - prepare for TRB meeting */}
         <Route exact path={`${path}/task-list/:id/documents/upload`}>

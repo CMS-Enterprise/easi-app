@@ -668,8 +668,22 @@ const technicalAssistance = {
       success: 'Your document has been uploaded and is being scanned.'
     },
     continueWithoutAdding: 'Continue without adding documents',
-    adminInfo:
-      'The requester has uploaded these documents as a part of this request. If the TRB needs additional documentation, contact the requester.'
+    supportingDocuments: {
+      heading: 'Supporting documents',
+      info:
+        'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.',
+      addAnother: 'Add another document',
+      adminInfo:
+        'The requester has uploaded these documents as a part of this request. If the TRB needs additional documentation, contact the requester.',
+      removeHeading: 'Confirm you want to remove {{-documentName}}.',
+      removeInfo:
+        'You will not be able to access this document after it is removed, and the TRB team will not be able to view it.',
+      removeDocument: 'Remove document',
+      cancel: 'Cancel',
+      removeFail:
+        'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
+      removeSuccess: 'You have successfully removed {{-documentName}}.'
+    }
   },
   check: {
     submit: 'Submit request',

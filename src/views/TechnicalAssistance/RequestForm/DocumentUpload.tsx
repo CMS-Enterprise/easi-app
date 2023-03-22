@@ -23,6 +23,7 @@ import { clone } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import useMessage from 'hooks/useMessage';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import {
   CreateTrbRequestDocument,
@@ -56,7 +57,11 @@ const DocumentUpload = ({
     id: string;
   }>();
 
+  const prevRoute = isInitialRequest ? 'requests' : 'task-list';
+
   const [isUploadError, setIsUploadError] = useState(false);
+
+  const { showMessageOnNextPage } = useMessage();
 
   // Documents can be created from the upload form
   const [createDocument] = useMutation<
@@ -96,19 +101,24 @@ const DocumentUpload = ({
       }
     })
       .then(() => {
-        if (setFormAlert) {
+        if (isInitialRequest && setFormAlert) {
           if (refetchDocuments) refetchDocuments(); // Reload documents
           setFormAlert({
             type: 'success',
             slim: true,
             message: t('documents.upload.success')
           });
-          // Go back to the documents step
-          history.push(`/trb/requests/${requestID}/documents`);
+        } else {
+          showMessageOnNextPage(
+            <Alert type="success" slim className="margin-y-4">
+              {t('documents.upload.success')}
+            </Alert>
+          );
         }
+        // Go back to the prev page
+        history.push(`/trb/${prevRoute}/${requestID}/documents`);
       })
       .catch(err => {
-        // console.log(err);
         setIsUploadError(true);
       });
   });
@@ -148,8 +158,10 @@ const DocumentUpload = ({
             url: `/trb/task-list/${requestID}`
           },
           {
-            text: t('requestForm.heading'),
-            url: `/trb/requests/${requestID}/documents`
+            text: isInitialRequest
+              ? t('requestForm.heading')
+              : t('documents.supportingDocuments.heading'),
+            url: `/trb/${prevRoute}/${requestID}/documents`
           },
           { text: t('documents.upload.title') }
         ]}
@@ -269,7 +281,7 @@ const DocumentUpload = ({
       <div className="margin-top-2">
         <UswdsReactLink
           variant="unstyled"
-          to={`/trb/requests/${requestID}/documents`}
+          to={`/trb/${prevRoute}/${requestID}/documents`}
         >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('documents.upload.dontUploadAndReturn')}

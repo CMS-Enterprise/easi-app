@@ -18,7 +18,7 @@ const SupportingDocuments = ({ trbRequestId }: TrbAdminPageProps) => {
         </h1>
 
         <p className="line-height-body-5 margin-y-0">
-          {t('documents.adminInfo')}
+          {t('documents.supportingDocuments.adminInfo')}
         </p>
       </Grid>
       <Grid tablet={{ col: 4 }}>
