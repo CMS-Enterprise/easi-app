@@ -14,7 +14,7 @@ function PrepareTrbConsultMeeting() {
   const { t } = useTranslation('prepareTrbConsultMeeting');
   return (
     <>
-      <MainContent className="grid-container">
+      <MainContent className="grid-container margin-bottom-7">
         <HelpBreadcrumb type="Close tab" />
         <HelpPageIntro
           type="Technical Review Board"
@@ -25,7 +25,7 @@ function PrepareTrbConsultMeeting() {
         <h2 className="font-heading-xl line-height-heading-2 margin-top-3 margin-bottom-2">
           {t('what.title')}
         </h2>
-        <div className="line-height-body-5">{t('what.description')}</div>
+        <p className="line-height-body-5">{t('what.description')}</p>
 
         <h3 className="margin-top-3 margin-bottom-1">
           {t('whatToExpect.title')}
@@ -96,9 +96,7 @@ function PrepareTrbConsultMeeting() {
         />
       </MainContent>
 
-      <div className="margin-top-7">
-        <RelatedArticles type="Technical Review Board" />
-      </div>
+      <RelatedArticles type="Technical Review Board" />
     </>
   );
 }
