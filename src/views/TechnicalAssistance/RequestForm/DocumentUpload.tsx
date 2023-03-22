@@ -38,17 +38,19 @@ import Breadcrumbs from '../Breadcrumbs';
 
 import { TrbFormAlert } from '.';
 
+type DocumentUploadProps = {
+  isInitialRequest?: boolean;
+  setFormAlert?: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
+  view?: string;
+  refetchDocuments?: () => void;
+};
+
 const DocumentUpload = ({
   isInitialRequest,
   setFormAlert,
   view,
   refetchDocuments
-}: {
-  isInitialRequest?: boolean;
-  setFormAlert?: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
-  view?: string;
-  refetchDocuments?: () => void;
-}) => {
+}: DocumentUploadProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const history = useHistory();
@@ -57,6 +59,7 @@ const DocumentUpload = ({
     id: string;
   }>();
 
+  // Route param for navigation back to either inital request or task list
   const prevRoute = isInitialRequest ? 'requests' : 'task-list';
 
   const [isUploadError, setIsUploadError] = useState(false);
@@ -100,23 +103,27 @@ const DocumentUpload = ({
         }
       }
     })
-      .then(() => {
-        if (isInitialRequest && setFormAlert) {
-          if (refetchDocuments) refetchDocuments(); // Reload documents
-          setFormAlert({
-            type: 'success',
-            slim: true,
-            message: t('documents.upload.success')
-          });
+      .then(response => {
+        if (!response.errors) {
+          if (isInitialRequest && setFormAlert) {
+            if (refetchDocuments) refetchDocuments(); // Reload documents
+            setFormAlert({
+              type: 'success',
+              slim: true,
+              message: t('documents.upload.success')
+            });
+          } else {
+            showMessageOnNextPage(
+              <Alert type="success" slim className="margin-y-4">
+                {t('documents.upload.success')}
+              </Alert>
+            );
+          }
+          // Go back to the prev page
+          history.push(`/trb/${prevRoute}/${requestID}/documents`);
         } else {
-          showMessageOnNextPage(
-            <Alert type="success" slim className="margin-y-4">
-              {t('documents.upload.success')}
-            </Alert>
-          );
+          setIsUploadError(true);
         }
-        // Go back to the prev page
-        history.push(`/trb/${prevRoute}/${requestID}/documents`);
       })
       .catch(err => {
         setIsUploadError(true);

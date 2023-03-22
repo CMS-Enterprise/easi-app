@@ -530,8 +530,10 @@ describe('Trb Request form: Supporting documents', () => {
     // eslint-disable-next-line
     console.error = jest.fn();
 
+    // Opens modal
     userEvent.click(await findByRole('button', { name: 'Remove' }));
 
+    // Removes document from modal
     userEvent.click(await findByRole('button', { name: 'Remove document' }));
 
     await findByText('No documents uploaded');
