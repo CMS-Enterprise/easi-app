@@ -8,6 +8,17 @@ export default gql`
       form {
         status
       }
+      taskStatuses {
+        formStatus
+        feedbackStatus
+        consultPrepStatus
+        attendConsultStatus
+        adviceLetterStatus
+      }
+      feedback {
+        id
+      }
+      consultMeetingTime
     }
   }
 `;

@@ -125,6 +125,7 @@ const technicalAssistance = {
     cancel: 'Cancel',
     back: 'Back',
     continue: 'Continue',
+    update: 'Update',
     next: 'Next',
     save: 'Save',
     saveAndExit: 'Save and exit',
@@ -292,6 +293,23 @@ const technicalAssistance = {
       'Steps involved in getting technical assistance from the TRB',
     sampleRequest: 'Sample TRB Request',
     viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
+    editsRequestedWarning:
+      'The TRB has requested edits to your initial request form. View their feedback and make any changes requested.',
+    noFeedback:
+      'The TRB had no feedback about your request form. If you have any questions, you may contact them at ',
+    downloadTemplates: 'Download presentation templates',
+    sendAnEmail: 'Send an email',
+    uploadDocuments: 'Upload additional documents',
+    reviewAttendeeList: 'Review attendee list',
+    viewAttendeeList: 'View attendee list',
+    prepareForTRB: 'Prepare for your TRB consult meeting (opens in a new tab)',
+    trbConsultInfoHeading:
+      'Your TRB consult session is scheduled for {{-date}} at {{-time}}',
+    trbConsultInfo:
+      'If this day or time does not work for you, or if you need to reschedule, please contact the TRB at ',
+    trbConsultAttended:
+      'You attended your project’s TRB consult session on {{-date}} at {{-time}}',
+    viewAdviceLetter: 'View advice letter',
     taskList: [
       {
         heading: 'Fill out the initial request form',
@@ -699,7 +717,8 @@ const technicalAssistance = {
     viewFeedback: 'View feedback',
     date: 'Date',
     from: 'Feedback from',
-    returnToForm: 'Return to request form'
+    returnToForm: 'Return to request form',
+    returnToTaskList: 'Return to task list'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
