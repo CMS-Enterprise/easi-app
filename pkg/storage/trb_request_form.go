@@ -103,7 +103,6 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 // GetTRBRequestFormByTRBRequestID queries the DB for all the TRB request form records
 // matching the given TRB request ID
 func (s *Store) GetFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
-	fmt.Println("I am running!")
 	fundingSources := []*models.TRBFundingSource{}
 	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_funding_sources WHERE trb_request_id=:trb_request_id`)
 	if err != nil {

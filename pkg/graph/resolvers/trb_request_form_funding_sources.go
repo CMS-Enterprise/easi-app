@@ -10,6 +10,11 @@ import (
 	"github.com/google/uuid"
 )
 
+// GetTRBRequestFormByTRBRequestID retrieves a TRB request form record for a given TRB request ID
+func GetFundingSourcesByRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBFundingSource, error) {
+	return store.GetFundingSourcesByRequestID(ctx, id)
+}
+
 func UpdateTRBRequestFundingSources(
 	ctx context.Context,
 	store *storage.Store,

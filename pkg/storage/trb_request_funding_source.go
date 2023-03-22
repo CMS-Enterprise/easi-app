@@ -45,7 +45,6 @@ func (s *Store) UpdateTRBRequestFundingSources(
 			:created_by
 		)
 		`
-	fmt.Printf("%v", fundingSources)
 	_, err = tx.NamedExec(insertFundingSourcesSQL, fundingSources)
 
 	if err != nil {
