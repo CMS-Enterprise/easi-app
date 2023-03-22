@@ -408,6 +408,15 @@ export interface BasicActionInput {
 }
 
 /**
+ * The input needed to close a TRB request
+ */
+export interface CloseTRBRequestInput {
+  id: UUID;
+  reasonClosed: string;
+  notifyEuaIds: string[];
+}
+
+/**
  * The input data used for adding a document to a 508/accessibility request
  */
 export interface CreateAccessibilityRequestDocumentInput {

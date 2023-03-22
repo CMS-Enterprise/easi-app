@@ -9,6 +9,7 @@ import Consult from './AdminHome/Consult';
 import RequestEdits from './AdminHome/RequestEdits';
 import AdminHome from './AdminHome';
 import AdviceLetterForm from './AdviceLetterForm';
+import CloseRequest from './CloseRequest';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
@@ -68,6 +69,9 @@ function TechnicalAssistance() {
         </Route>
         <Route exact path={`${path}/:id/:activePage/:action(schedule-consult)`}>
           <Consult />
+        </Route>
+        <Route exact path={`${path}/:id/:activePage/:action(close-request)`}>
+          <CloseRequest />
         </Route>
 
         <Route path="*">

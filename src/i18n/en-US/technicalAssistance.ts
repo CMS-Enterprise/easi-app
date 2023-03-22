@@ -849,6 +849,31 @@ const technicalAssistance = {
     alert:
       'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
     breadcrumb: 'Schedule a consult'
+  },
+  actionCloseRequest: {
+    heading: 'Action: close request',
+    description:
+      'Use this action if work on this request is complete, or if it is not a TRB request.',
+    breadcrumb: 'Close request',
+    label: 'Why did you close this request?',
+    hint:
+      'Give a brief explanation, especially if you closed this request without sending an advice letter.',
+    submit: 'Complete action and close request',
+    success: 'Action complete. This request is now closed.',
+    error:
+      'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
+    confirmModal: {
+      heading: 'Are you sure you want to close this request?',
+      text: [
+        'Closing this request will:',
+        'send a notification email to the TRB mailbox',
+        'prevent any additional updates to the request',
+        'set the request status to closed',
+        'You may continue to add notes to closed requests, and you may reopen the request at any time.'
+      ],
+      close: 'Close request',
+      cancel: 'Cancel'
+    }
   }
 };
 
