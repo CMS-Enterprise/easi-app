@@ -9,4 +9,10 @@
         border: none;
         background-color: transparent;
     }
+
+    &--transparent-bg {
+      .usa-pagination__button:not(.usa-current) {
+        background: transparent;
+      }
+    }
 }

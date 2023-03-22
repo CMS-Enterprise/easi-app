@@ -1,16 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TaskStatusTag renders task status tag {"status":"CANNOT_START","className":"border-2px text-base"} 1`] = `
-<DocumentFragment>
-  <span
-    class="easi-tag border-2px text-base"
-    data-testid="task-list-task-tag"
-  >
-    Cannot start yet
-  </span>
-</DocumentFragment>
-`;
-
 exports[`TaskStatusTag renders task status tag {"status":"CANNOT_START_YET","className":"border-2px text-base"} 1`] = `
 <DocumentFragment>
   <span
@@ -33,6 +22,17 @@ exports[`TaskStatusTag renders task status tag {"status":"COMPLETED","className"
 </DocumentFragment>
 `;
 
+exports[`TaskStatusTag renders task status tag {"status":"EDITS_REQUESTED","className":"bg-warning"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-warning"
+    data-testid="task-list-task-tag"
+  >
+    Edits requested
+  </span>
+</DocumentFragment>
+`;
+
 exports[`TaskStatusTag renders task status tag {"status":"IN_PROGRESS","className":"bg-warning"} 1`] = `
 <DocumentFragment>
   <span
@@ -40,6 +40,17 @@ exports[`TaskStatusTag renders task status tag {"status":"IN_PROGRESS","classNam
     data-testid="task-list-task-tag"
   >
     In Progress
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag renders task status tag {"status":"IN_REVIEW","className":"bg-info"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-info"
+    data-testid="task-list-task-tag"
+  >
+    In review
   </span>
 </DocumentFragment>
 `;
@@ -66,6 +77,17 @@ exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","cla
 </DocumentFragment>
 `;
 
+exports[`TaskStatusTag renders task status tag {"status":"READY_TO_SCHEDULE","className":"bg-info"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-info"
+    data-testid="task-list-task-tag"
+  >
+    Ready to schedule
+  </span>
+</DocumentFragment>
+`;
+
 exports[`TaskStatusTag renders task status tag {"status":"READY_TO_START","className":"bg-info"} 1`] = `
 <DocumentFragment>
   <span
@@ -73,6 +95,17 @@ exports[`TaskStatusTag renders task status tag {"status":"READY_TO_START","class
     data-testid="task-list-task-tag"
   >
     Ready to start
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag renders task status tag {"status":"SCHEDULED","className":"bg-info"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-info"
+    data-testid="task-list-task-tag"
+  >
+    Scheduled
   </span>
 </DocumentFragment>
 `;
