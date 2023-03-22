@@ -11,7 +11,7 @@ const prepareTrbConsultMeeting = {
   whatToExpect: {
     title: 'What to expect at the meeting',
     description:
-      'TRB consultation meetings are there to help the TRB understand what your problem or idea is, and details surrounding any proposed solution.  You can expect the TRB and any additional Subject Matter Experts (SMEs) to ask many questions about your system, problem, and solution'
+      'TRB consultation meetings are there to help the TRB understand what your problem or idea is, and details surrounding any proposed solution. You can expect the TRB and any additional Subject Matter Experts (SMEs) to ask many questions about your system, problem, and solution.'
   },
   tips: {
     title: 'Tips for the meeting',
