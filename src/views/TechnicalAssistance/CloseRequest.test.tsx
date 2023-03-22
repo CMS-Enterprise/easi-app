@@ -29,7 +29,13 @@ describe('Trb Admin: Action: Close Request', () => {
   const text = 'test message';
 
   it('closes a request with a reason', async () => {
-    const { getByText, getByLabelText, getByRole, findByText } = render(
+    const {
+      getByText,
+      getByLabelText,
+      getByRole,
+      findByText,
+      findByRole
+    } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -123,10 +129,6 @@ describe('Trb Admin: Action: Close Request', () => {
       i18next.t<string>('technicalAssistance:actionCloseRequest.heading')
     );
 
-    const submitButton = getByRole('button', {
-      name: i18next.t<string>('technicalAssistance:actionCloseRequest.submit')
-    });
-
     userEvent.type(
       getByLabelText(
         RegExp(
@@ -136,7 +138,20 @@ describe('Trb Admin: Action: Close Request', () => {
       text
     );
 
-    userEvent.click(submitButton);
+    userEvent.click(
+      getByRole('button', {
+        name: i18next.t<string>('technicalAssistance:actionCloseRequest.submit')
+      })
+    );
+
+    // Click through the modal
+    userEvent.click(
+      await findByRole('button', {
+        name: i18next.t<string>(
+          'technicalAssistance:actionCloseRequest.confirmModal.close'
+        )
+      })
+    );
 
     await findByText(
       i18next.t<string>('technicalAssistance:actionCloseRequest.success')
@@ -144,7 +159,7 @@ describe('Trb Admin: Action: Close Request', () => {
   });
 
   it('shows error notice when submission fails', async () => {
-    const { getByLabelText, getByRole, findByText } = render(
+    const { getByLabelText, getByRole, findByText, findByRole } = render(
       <MockedProvider
         mocks={[
           {
@@ -186,6 +201,14 @@ describe('Trb Admin: Action: Close Request', () => {
     userEvent.click(
       getByRole('button', {
         name: i18next.t<string>('technicalAssistance:actionCloseRequest.submit')
+      })
+    );
+
+    userEvent.click(
+      await findByRole('button', {
+        name: i18next.t<string>(
+          'technicalAssistance:actionCloseRequest.confirmModal.close'
+        )
       })
     );
 

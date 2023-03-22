@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -6,13 +6,19 @@ import { useMutation } from '@apollo/client';
 import {
   Alert,
   Button,
+  ButtonGroup,
   CharacterCount,
   Form,
   FormGroup,
   Grid,
   GridContainer,
   IconArrowBack,
-  Label
+  Label,
+  Modal,
+  ModalFooter,
+  ModalHeading,
+  ModalRef,
+  ModalToggleButton
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -29,7 +35,7 @@ import Breadcrumbs from './Breadcrumbs';
 function CloseRequest() {
   const { t } = useTranslation('technicalAssistance');
 
-  const { id, activePage /* , action */ } = useParams<{
+  const { id, activePage } = useParams<{
     id: string;
     activePage: string;
     action: 'close-request';
@@ -55,6 +61,35 @@ function CloseRequest() {
   const [mutate] = useMutation<CloseTrbRequest, CloseTrbRequestVariables>(
     CloseTrbRequestQuery
   );
+
+  const confirmModalRef = useRef<ModalRef>(null);
+
+  const submit = handleSubmit(formData => {
+    mutate({
+      variables: {
+        input: {
+          id,
+          reasonClosed: formData.text,
+          notifyEuaIds: ['ABCD'] // todo
+        }
+      }
+    })
+      .then(result => {
+        showMessageOnNextPage(
+          <Alert type="success" slim className="margin-top-3">
+            {t(`${actionText}.success`)}
+          </Alert>
+        );
+        history.push(`/trb/${id}/request`);
+      })
+      .catch(err => {
+        showMessage(
+          <Alert type="error" slim className="margin-top-3">
+            {t(`${actionText}.error`)}
+          </Alert>
+        );
+      });
+  });
 
   return (
     <GridContainer className="width-full">
@@ -83,35 +118,7 @@ function CloseRequest() {
       </Grid>
       <Grid row gap>
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-          <Form
-            onSubmit={handleSubmit(formData => {
-              mutate({
-                variables: {
-                  input: {
-                    id,
-                    reasonClosed: formData.text,
-                    notifyEuaIds: ['ABCD'] // todo
-                  }
-                }
-              })
-                .then(result => {
-                  showMessageOnNextPage(
-                    <Alert type="success" slim className="margin-top-3">
-                      {t(`${actionText}.success`)}
-                    </Alert>
-                  );
-                  history.push(`/trb/${id}/request`);
-                })
-                .catch(err => {
-                  showMessage(
-                    <Alert type="error" slim className="margin-top-3">
-                      {t(`${actionText}.error`)}
-                    </Alert>
-                  );
-                });
-            })}
-            className="maxw-full"
-          >
+          <Form onSubmit={e => e.preventDefault()} className="maxw-full">
             <div className="margin-top-1 text-base">
               <Trans
                 i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
@@ -150,17 +157,63 @@ function CloseRequest() {
               {t('actionRequestEdits.notificationTitle')}
             </h3>
             <div>{t('actionRequestEdits.notificationDescription')}</div>
+
             {/* todo cedar contacts */}
-            <div>
-              <Button type="submit" className="" disabled={isSubmitting}>
-                {t('actionCloseRequest.submit')}
-              </Button>
-            </div>
+
+            <ModalToggleButton
+              disabled={isSubmitting}
+              modalRef={confirmModalRef}
+              opener
+            >
+              {t('actionCloseRequest.submit')}
+            </ModalToggleButton>
+
+            <Modal
+              ref={confirmModalRef}
+              id="confirm-modal"
+              aria-labelledby="confirm-modal-heading"
+              aria-describedby="confirm-modal-description"
+            >
+              <ModalHeading
+                id="confirm-modal-heading"
+                className="margin-bottom-2"
+              >
+                {t('actionCloseRequest.confirmModal.heading')}
+              </ModalHeading>
+              <div id="confirm-modal-description" className="usa-prose">
+                <p>{t('actionCloseRequest.confirmModal.text.0')}</p>
+                <ul className="usa-list margin-top-0">
+                  <li>{t('actionCloseRequest.confirmModal.text.1')}</li>
+                  <li>{t('actionCloseRequest.confirmModal.text.2')}</li>
+                  <li>{t('actionCloseRequest.confirmModal.text.3')}</li>
+                </ul>
+                <p>{t('actionCloseRequest.confirmModal.text.4')}</p>
+              </div>
+              <ModalFooter>
+                <ButtonGroup>
+                  <Button
+                    type="button"
+                    data-close-modal="true"
+                    onClick={submit}
+                  >
+                    {t('actionCloseRequest.confirmModal.close')}
+                  </Button>
+                  <ModalToggleButton
+                    modalRef={confirmModalRef}
+                    closer
+                    unstyled
+                    className="padding-105 text-center"
+                  >
+                    {t('actionCloseRequest.confirmModal.cancel')}
+                  </ModalToggleButton>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
           </Form>
         </Grid>
       </Grid>
       <div className="margin-top-2">
-        <UswdsReactLink to={`${requestUrl}/${activePage}`}>
+        <UswdsReactLink to={requestUrl}>
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
           {t('actionRequestEdits.cancelAndReturn')}
         </UswdsReactLink>
