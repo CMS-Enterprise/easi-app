@@ -649,7 +649,9 @@ const technicalAssistance = {
         'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
       success: 'Your document has been uploaded and is being scanned.'
     },
-    continueWithoutAdding: 'Continue without adding documents'
+    continueWithoutAdding: 'Continue without adding documents',
+    adminInfo:
+      'The requester has uploaded these documents as a part of this request. If the TRB needs additional documentation, contact the requester.'
   },
   check: {
     submit: 'Submit request',

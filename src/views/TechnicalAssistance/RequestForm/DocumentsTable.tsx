@@ -30,13 +30,15 @@ type Props = {
   setRefetchDocuments?: React.Dispatch<React.SetStateAction<RefetchDocuments>>;
   setLoadingDocuments?: React.Dispatch<React.SetStateAction<boolean>>;
   setDocumentsCount?: React.Dispatch<React.SetStateAction<number>>;
+  canEdit?: boolean;
 };
 
 function DocumentsTable({
   trbRequestId,
   setRefetchDocuments,
   setLoadingDocuments,
-  setDocumentsCount
+  setDocumentsCount,
+  canEdit = true
 }: Props) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -116,24 +118,26 @@ function DocumentsTable({
                   {t('documents.table.view')}
                 </Link>
                 {/* Delete document */}
-                <Button
-                  unstyled
-                  type="button"
-                  className="margin-left-2 text-error"
-                  onClick={() => {
-                    deleteDocument({
-                      variables: { id: row.original.id }
-                    })
-                      .then(() => {
-                        refetch(); // Refresh doc list
+                {canEdit && (
+                  <Button
+                    unstyled
+                    type="button"
+                    className="margin-left-2 text-error"
+                    onClick={() => {
+                      deleteDocument({
+                        variables: { id: row.original.id }
                       })
-                      .catch(() => {
-                        // todo no top level error message for the delete yet
-                      });
-                  }}
-                >
-                  {t('documents.table.remove')}
-                </Button>
+                        .then(() => {
+                          refetch(); // Refresh doc list
+                        })
+                        .catch(() => {
+                          // todo no top level error message for the delete yet
+                        });
+                    }}
+                  >
+                    {t('documents.table.remove')}
+                  </Button>
+                )}
               </>
             );
           // Infected unavailable
@@ -143,7 +147,7 @@ function DocumentsTable({
         }
       }
     ];
-  }, [deleteDocument, refetch, t]);
+  }, [deleteDocument, refetch, canEdit, t]);
 
   const {
     getTableBodyProps,
