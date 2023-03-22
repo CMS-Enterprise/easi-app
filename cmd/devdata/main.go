@@ -13,10 +13,33 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
+
+func fetchUserInfoMock(ctx context.Context, eua string) (*models.UserInfo, error) {
+	return &models.UserInfo{
+		EuaUserID:  eua,
+		CommonName: "Test Man",
+		Email:      "testman@example.com",
+	}, nil
+}
+
+func ctxWithLoggerAndPrincipal(logger *zap.Logger, euaID string) context.Context {
+	princ := &authentication.EUAPrincipal{
+		EUAID:            euaID,
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+	}
+	ctx := appcontext.WithLogger(context.Background(), logger)
+	ctx = appcontext.WithPrincipal(ctx, princ)
+	return ctx
+}
 
 func main() {
 	config := testhelpers.NewConfig()
@@ -172,21 +195,45 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
+	// Fresh request, no actions taken
 	makeTRBRequest(models.TRBTNeedHelp, logger, store, func(t *models.TRBRequest) {
-		t.ID = uuid.MustParse("1afc9242-f244-47a3-9f91-4d6fedd8eb91")
-		t.Name = "My excellent question"
+		t.Name = "0 - Brand new request"
 	})
 
-	makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
-		t.ID = uuid.MustParse("9841c768-bdcd-4856-bae2-62cfdaffacf6")
-		t.Name = "TACO Review"
-		t.CreatedBy = "TACO"
+	// In progress form, not submitted
+	inProgress := makeTRBRequest(models.TRBTNeedHelp, logger, store, func(t *models.TRBRequest) {
+		t.Name = "1 - In progress form"
 	})
-	makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
-		t.ID = uuid.MustParse("21f175b9-bcbe-41c1-9c07-9844869bc1ce")
-		t.Name = "Archived Request"
-		t.Archived = true
+	updateTRBRequestForm(logger, store, map[string]interface{}{
+		"trbRequestId":             inProgress.ID.String(),
+		"component":                "Center for Medicare",
+		"needsAssistanceWith":      "Something is wrong with my system",
+		"hasSolutionInMind":        true,
+		"proposedSolution":         "Get a tech support guru to fix it",
+		"whereInProcess":           models.TRBWhereInProcessOptionOther,
+		"whereInProcessOther":      "Just starting",
+		"hasExpectedStartEndDates": true,
+		"expectedStartDate":        "2023-02-27T05:00:00.000Z",
+		"expectedEndDate":          "2023-01-31T05:00:00.000Z",
+		"collabGroups": []models.TRBCollabGroupOption{
+			models.TRBCollabGroupOptionEnterpriseArchitecture,
+			models.TRBCollabGroupOptionOther,
+		},
+		"collabDateEnterpriseArchitecture": "The other day",
+		"collabGroupOther":                 "CMS Splunk Team",
+		"collabDateOther":                  "Last week",
 	})
+
+	// makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
+	// 	t.ID = uuid.MustParse("9841c768-bdcd-4856-bae2-62cfdaffacf6")
+	// 	t.Name = "TACO Review"
+	// 	t.CreatedBy = "TACO"
+	// })
+	// makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
+	// 	t.ID = uuid.MustParse("21f175b9-bcbe-41c1-9c07-9844869bc1ce")
+	// 	t.Name = "Archived Request"
+	// 	t.Archived = true
+	// })
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -392,14 +439,25 @@ func date(year, month, day int) *time.Time {
 }
 
 func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
-	ctx := appcontext.WithLogger(context.Background(), logger)
+	ctx := ctxWithLoggerAndPrincipal(logger, "ABCD") //TODO Parameterize the EUA ID
 
-	trb := models.NewTRBRequest("EASI")
-	trb.Type = rType
-	trb.State = models.TRBRequestStateOpen
+	trb, err := resolvers.CreateTRBRequest(ctx, rType, fetchUserInfoMock, store)
+	if err != nil {
+		panic(err)
+	}
 	for _, cb := range callbacks {
 		cb(trb)
 	}
-	ret, _ := store.CreateTRBRequest(ctx, trb)
-	return ret
+	must(store.UpdateTRBRequest(ctx, trb))
+	return trb
+}
+
+func updateTRBRequestForm(logger *zap.Logger, store *storage.Store, changes map[string]interface{}) *models.TRBRequestForm {
+	ctx := ctxWithLoggerAndPrincipal(logger, "ABCD") //TODO Parameterize the EUA ID
+
+	form, err := resolvers.UpdateTRBRequestForm(ctx, store, nil, fetchUserInfoMock, changes)
+	if err != nil {
+		panic(err)
+	}
+	return form
 }
