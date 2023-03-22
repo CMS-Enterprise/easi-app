@@ -83,6 +83,15 @@ function DocumentsTable({
     DeleteTrbRequestDocumentVariables
   >(DeleteTrbRequestDocumentQuery);
 
+  const setRemoveError = useMemo(() => {
+    return () => {
+      if (setDocumentMessage && setDocumentStatus) {
+        setDocumentMessage(t('documents.supportingDocuments.removeFail'));
+        setDocumentStatus('error');
+      }
+    };
+  }, [t, setDocumentMessage, setDocumentStatus]);
+
   const handleDelete = useMemo(() => {
     return (file: TrbRequestDocuments) => {
       deleteDocument({
@@ -91,24 +100,32 @@ function DocumentsTable({
         }
       })
         .then(response => {
-          if (setDocumentMessage && setDocumentStatus) {
-            setDocumentMessage(
-              t('documents.supportingDocuments.removeSuccess', {
-                documentName: file.fileName
-              })
-            );
-            setDocumentStatus('success');
+          if (response.errors) {
+            if (setDocumentMessage && setDocumentStatus) {
+              setDocumentMessage(
+                t('documents.supportingDocuments.removeSuccess', {
+                  documentName: file.fileName
+                })
+              );
+              setDocumentStatus('success');
+            }
+            refetch();
+          } else {
+            setRemoveError();
           }
-          refetch();
         })
         .catch(() => {
-          if (setDocumentMessage && setDocumentStatus) {
-            setDocumentMessage(t('documents.supportingDocuments.removeFail'));
-            setDocumentStatus('error');
-          }
+          setRemoveError();
         });
     };
-  }, [deleteDocument, refetch, t, setDocumentMessage, setDocumentStatus]);
+  }, [
+    deleteDocument,
+    refetch,
+    t,
+    setDocumentMessage,
+    setDocumentStatus,
+    setRemoveError
+  ]);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
     return [

@@ -29,7 +29,7 @@ const DocumentsTaskList = () => {
   const [documentsCount, setDocumentsCount] = useState(0);
   const [documentMessage, setDocumentMessage] = useState('');
   const [documentStatus, setDocumentStatus] = useState<DocumentStatusType>(
-    'error'
+    'success'
   );
 
   return (
@@ -48,8 +48,10 @@ const DocumentsTaskList = () => {
           ]}
         />
 
+        {/* Displays success message on this view from the document upload page */}
         {message && message}
 
+        {/* Displays document success/fail messages when removing a document on this view */}
         {documentMessage && (
           <Alert type={documentStatus} slim className="margin-y-4">
             {documentMessage}
