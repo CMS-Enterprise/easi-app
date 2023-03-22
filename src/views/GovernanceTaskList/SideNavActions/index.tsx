@@ -35,7 +35,7 @@ const SideNavActions = ({ intake, archiveIntake }: SideNavActionsProps) => {
             unstyled
             onClick={() => setModalOpen(true)}
           >
-            Remove your request to add a new system
+            Remove your request to add a new system or service
           </Button>
           <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
             <PageHeading headingLevel="h2" className="margin-top-0">
