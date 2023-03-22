@@ -1,11 +1,20 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
+import { CreateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  CreateTrbAdviceLetter,
+  CreateTrbAdviceLetterVariables
+} from 'queries/types/CreateTrbAdviceLetter';
 
 type AdminActionProps = {
+  trbRequestId: string;
   className?: string;
 };
 
@@ -13,8 +22,20 @@ type AdminActionProps = {
  * Admin action component for TRB admin home subpages
  * TODO: complete work on component - this is just a placeholder
  */
-const AdminAction = ({ className }: AdminActionProps) => {
+const AdminAction = ({ trbRequestId, className }: AdminActionProps) => {
   const { t } = useTranslation('technicalAssistance');
+
+  const history = useHistory();
+
+  const [createAdviceLetter] = useMutation<
+    CreateTrbAdviceLetter,
+    CreateTrbAdviceLetterVariables
+  >(CreateTrbAdviceLetterQuery, {
+    variables: {
+      trbRequestId
+    }
+  });
+
   return (
     <div
       className={classNames(
@@ -40,13 +61,23 @@ const AdminAction = ({ className }: AdminActionProps) => {
         Test link content
       </CollapsableLink>
       <div className="margin-top-4">
-        <UswdsReactLink
-          to="/"
+        <Button
+          type="button"
           className="usa-button margin-right-2"
-          variant="unstyled"
+          onClick={
+            () =>
+              createAdviceLetter()
+                .then(
+                  result =>
+                    !result.errors &&
+                    history.push(`/trb/${trbRequestId}/advice/summary`)
+                )
+                // TODO: Error handling
+                .catch(err => console.log(err)) // eslint-disable-line no-console
+          }
         >
-          {t('Continue advice letter')}
-        </UswdsReactLink>
+          {t('Create advice letter')}
+        </Button>
         <UswdsReactLink to="/">{t('or, close this request')}</UswdsReactLink>
       </div>
     </div>

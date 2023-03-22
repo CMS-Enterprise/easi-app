@@ -442,34 +442,34 @@ exports[`The GRT business case review matches the snapshot 1`] = `
         </dl>
       </div>
     </div>
-    <div
-      className="easi-pdf-export__controls margin-top-6"
+  </div>
+  <div
+    className="easi-pdf-export__controls margin-top-6"
+  >
+    <button
+      className="usa-button usa-button--unstyled easi-no-print display-flex flex-align-center"
+      onClick={[Function]}
+      type="button"
     >
-      <button
-        className="usa-button usa-button--unstyled easi-no-print display-flex flex-align-center"
-        onClick={[Function]}
-        type="button"
+      <svg
+        className="usa-icon margin-right-05"
+        focusable={false}
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          className="usa-icon margin-right-05"
-          focusable={false}
-          height="1em"
-          role="img"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-          />
-        </svg>
-        Download Business Case as PDF
-      </button>
-    </div>
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+        />
+      </svg>
+      Download Business Case as PDF
+    </button>
   </div>
   <a
     className="usa-button margin-top-5"

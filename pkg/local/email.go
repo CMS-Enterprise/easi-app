@@ -44,6 +44,11 @@ func NewSMTPSender(serverAddress string) SMTPSender {
 
 // Send sends and logs an email
 func (sender SMTPSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
+	// Don't send an email if there's no recipients (even if there are ccAddresses)
+	if len(toAddresses) == 0 {
+		return nil
+	}
+
 	e := email.Email{
 		From:    "testsender@oddball.dev",
 		To:      models.EmailAddressesToStrings(toAddresses),

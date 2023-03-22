@@ -9,6 +9,8 @@ import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
+import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { Flags } from 'types/flags';
 import Table from 'views/MyRequests/Table';
@@ -36,8 +38,46 @@ const defaultFlags: Flags = {
   downgrade508Tester: false,
   downgrade508User: false,
   downgradeGovTeam: false,
+  downgradeTrbAdmin: false,
   sandbox: true
 } as Flags;
+
+const mocks = [
+  {
+    request: {
+      query: GetRequestsQuery,
+      variables: { first: 20 }
+    },
+    result: {
+      data: {
+        requests: {
+          edges: []
+        },
+        trbRequests: []
+      }
+    }
+  },
+  {
+    request: {
+      query: GetCedarSystemsQuery
+    },
+    result: {
+      data: {
+        cedarSystems: []
+      }
+    }
+  },
+  {
+    request: {
+      query: GetCedarSystemBookmarksQuery
+    },
+    result: {
+      data: {
+        cedarSystemBookmarks: []
+      }
+    }
+  }
+];
 
 describe('The home page', () => {
   beforeEach(() => {
@@ -79,21 +119,7 @@ describe('The home page', () => {
           }
         });
         let component: any;
-        const mocks = [
-          {
-            request: {
-              query: GetRequestsQuery,
-              variables: { first: 20 }
-            },
-            result: {
-              data: {
-                requests: {
-                  edges: []
-                }
-              }
-            }
-          }
-        ];
+
         await act(async () => {
           component = mount(
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -110,13 +136,17 @@ describe('The home page', () => {
           expect(component.find('a[children="Start now"]').exists()).toEqual(
             false
           );
+
           expect(
-            component.find('a[children="IT Governance"]').exists()
+            component.find('h3[children="IT Governance"]').exists()
           ).toEqual(true);
-          expect(component.find('a[children="Section 508"]').exists()).toEqual(
+
+          expect(component.find('h3[children="Section 508"]').exists()).toEqual(
             true
           );
+
           expect(component.find('hr').exists()).toBeTruthy();
+
           expect(component.find(Table).exists()).toBeTruthy();
         });
       });
@@ -156,11 +186,13 @@ describe('The home page', () => {
       const store = mockStore(mockedStore);
       return mount(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <Provider store={store}>
-            <MessageProvider>
-              <Home />
-            </MessageProvider>
-          </Provider>
+          <MockedProvider mocks={mocks}>
+            <Provider store={store}>
+              <MessageProvider>
+                <Home />
+              </MessageProvider>
+            </Provider>
+          </MockedProvider>
         </MemoryRouter>
       );
     };

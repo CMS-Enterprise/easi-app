@@ -236,9 +236,22 @@ export enum TRBRequestDocumentStatus {
   UNAVAILABLE = "UNAVAILABLE",
 }
 
-export enum TRBRequestStatus {
+export enum TRBRequestState {
   CLOSED = "CLOSED",
   OPEN = "OPEN",
+}
+
+export enum TRBRequestStatus {
+  ADVICE_LETTER_IN_REVIEW = "ADVICE_LETTER_IN_REVIEW",
+  ADVICE_LETTER_SENT = "ADVICE_LETTER_SENT",
+  CONSULT_COMPLETE = "CONSULT_COMPLETE",
+  CONSULT_SCHEDULED = "CONSULT_SCHEDULED",
+  DRAFT_ADVICE_LETTER = "DRAFT_ADVICE_LETTER",
+  DRAFT_REQUEST_FORM = "DRAFT_REQUEST_FORM",
+  FOLLOW_UP_REQUESTED = "FOLLOW_UP_REQUESTED",
+  NEW = "NEW",
+  READY_FOR_CONSULT = "READY_FOR_CONSULT",
+  REQUEST_FORM_COMPLETE = "REQUEST_FORM_COMPLETE",
 }
 
 export enum TRBRequestType {
@@ -389,6 +402,16 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
+ * The input required to add a recommendation & links to a TRB advice letter
+ */
+export interface CreateTRBAdviceLetterRecommendationInput {
+  trbRequestId: UUID;
+  title: string;
+  recommendation: string;
+  links: string[];
+}
+
+/**
  * The data needed add a TRB request attendee to a TRB request
  */
 export interface CreateTRBRequestAttendeeInput {
@@ -406,6 +429,17 @@ export interface CreateTRBRequestDocumentInput {
   fileData: Upload;
   documentType: TRBDocumentCommonType;
   otherTypeDescription?: string | null;
+}
+
+/**
+ * The data needed to add feedback to a TRB request
+ */
+export interface CreateTRBRequestFeedbackInput {
+  trbRequestId: UUID;
+  feedbackMessage: string;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  action: TRBFeedbackAction;
 }
 
 /**
@@ -626,7 +660,6 @@ export interface TRBRequestChanges {
   name?: string | null;
   archived?: boolean | null;
   type?: TRBRequestType | null;
-  status?: TRBRequestStatus | null;
 }
 
 /**
@@ -722,12 +755,33 @@ export interface UpdateTRBAdviceLetterInput {
 }
 
 /**
+ * The input required to update a recommendation to a TRB advice letter
+ */
+export interface UpdateTRBAdviceLetterRecommendationInput {
+  id: UUID;
+  title?: string | null;
+  recommendation?: string | null;
+  links?: string[] | null;
+}
+
+/**
  * Represents an EUA user who is included as an attendee for a TRB request
  */
 export interface UpdateTRBRequestAttendeeInput {
   id: UUID;
   component: string;
   role: PersonRole;
+}
+
+/**
+ * The data needed schedule a TRB consult meeting time
+ */
+export interface UpdateTRBRequestConsultMeetingTimeInput {
+  trbRequestId: UUID;
+  consultMeetingTime: Time;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+  notes: string;
 }
 
 /**

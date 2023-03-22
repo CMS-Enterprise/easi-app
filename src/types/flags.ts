@@ -3,6 +3,7 @@ export type Flags = {
   downgradeGovTeam: boolean;
   downgrade508User: boolean;
   downgrade508Tester: boolean;
+  downgradeTrbAdmin: boolean;
   systemProfile: boolean;
   systemProfileHiddenFields: boolean;
   cedar508Requests: boolean;

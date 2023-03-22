@@ -5,11 +5,12 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-// import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import {
   GetTrbRequestSummary,
@@ -74,6 +75,8 @@ export default function AdminHome() {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
+  const flags = useFlags();
+
   // Get url params
   const { id, activePage } = useParams<{
     id: string;
@@ -89,6 +92,9 @@ export default function AdminHome() {
   });
   /** Current trb request */
   const trbRequest = data?.trbRequest;
+
+  // Alert feedback from children
+  const { message } = useMessage();
 
   // Get requester object from request attendees
   const {
@@ -128,7 +134,7 @@ export default function AdminHome() {
   }
 
   // If TRB request does not exist or user is not TRB admin, return page not found
-  if (!trbRequest || !user.isTrbAdmin(groups)) {
+  if (!trbRequest || !user.isTrbAdmin(groups, flags)) {
     return <NotFound />;
   }
 
@@ -140,7 +146,7 @@ export default function AdminHome() {
         name={trbRequest.name}
         requestType={trbRequest.type}
         createdAt={trbRequest.createdAt}
-        status={trbRequest.status}
+        state={trbRequest.state}
         taskStatuses={trbRequest.taskStatuses}
         trbLead={trbRequest.trbLead}
         requester={requester}
@@ -160,6 +166,7 @@ export default function AdminHome() {
       />
 
       <GridContainer>
+        {message}
         <Grid row className="margin-top-5 grid-gap">
           {/* Side navigation */}
           <Grid

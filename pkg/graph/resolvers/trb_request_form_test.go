@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-// TestCreateTRBRequestForm makes a new TRB request
+// TestCreateTRBRequestForm tests the creation a new TRB request form
 func (s *ResolverSuite) TestCreateTRBRequestForm() {
 	ctx := context.Background()
 
@@ -46,7 +46,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.Status = models.TRBSOpen
+	trbRequest.State = models.TRBRequestStateOpen
 	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 

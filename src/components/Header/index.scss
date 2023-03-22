@@ -2,9 +2,6 @@
 @use 'viewports' as *;
 
 .easi-header {
-  // HACK: Remove mystery 1px space underneath the border
-  margin-bottom: -1px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 
   &__basic {
     display: flex;

@@ -5,7 +5,7 @@ export default gql`
     id
     name
     type
-    status
+    state
     taskStatuses {
       formStatus
       feedbackStatus

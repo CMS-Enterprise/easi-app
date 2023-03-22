@@ -13,7 +13,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBRequestStatus, TRBRequestType } from 'types/graphql-global-types';
+import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
 
 import Documents from './Documents';
 
@@ -51,7 +51,7 @@ const mockTrbRequestData: TrbRequest = {
     __typename: 'TRBRequestForm'
   },
   type: TRBRequestType.NEED_HELP,
-  status: TRBRequestStatus.OPEN,
+  state: TRBRequestState.OPEN,
   taskStatuses: {} as any,
   feedback: [],
   __typename: 'TRBRequest'
@@ -77,6 +77,7 @@ const mockGetTrbRequestDocumentsQueryNoDocuments = {
   result: {
     data: {
       trbRequest: {
+        id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
         documents: []
       }
     }
@@ -94,7 +95,7 @@ const documents = (
         __typename: 'TRBRequestForm'
       },
       type: TRBRequestType.NEED_HELP,
-      status: TRBRequestStatus.OPEN,
+      state: TRBRequestState.OPEN,
       taskStatuses: {} as any,
       feedback: [],
       __typename: 'TRBRequest'
@@ -129,6 +130,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: []
                     }
                   }
@@ -176,6 +178,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: [
                         {
                           id: '21517ecf-a671-46f3-afec-35eebde49630',
@@ -293,6 +296,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: []
                     }
                   }
@@ -334,6 +338,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: [
                         {
                           id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
@@ -451,6 +456,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: [
                         {
                           id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
@@ -493,6 +499,7 @@ describe('Trb Request form: Supporting documents', () => {
                 result: {
                   data: {
                     trbRequest: {
+                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                       documents: []
                     }
                   }

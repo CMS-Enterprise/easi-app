@@ -28,7 +28,7 @@ import {
   sortColumnValues
 } from 'utils/tableSort';
 
-import tableMap from './tableMap';
+import tableMap, { isTRBRequestType } from './tableMap';
 
 import '../index.scss';
 
@@ -43,7 +43,12 @@ const Table = ({
   hiddenColumns,
   defaultPageSize = 10
 }: myRequestsTableProps) => {
-  const { t } = useTranslation(['home', 'intake', 'accessibility']);
+  const { t } = useTranslation([
+    'home',
+    'intake',
+    'accessibility',
+    'technicalAssistance'
+  ]);
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
     GetRequestsVariables
@@ -59,16 +64,22 @@ const Table = ({
         accessor: 'name',
         Cell: ({ row, value }: any) => {
           let link: string;
-          switch (row.original.type) {
-            case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
-              link = `/508/requests/${row.original.id}`;
-              break;
-            case t('requestsTable.types.GOVERNANCE_REQUEST'):
-              link = `/governance-task-list/${row.original.id}`;
-              break;
-            default:
-              link = '/';
+
+          if (isTRBRequestType(row.original)) {
+            link = `/trb/task-list/${row.original.id}`;
+          } else {
+            switch (row.original.type) {
+              case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
+                link = `/508/requests/${row.original.id}`;
+                break;
+              case t('requestsTable.types.GOVERNANCE_REQUEST'):
+                link = `/governance-task-list/${row.original.id}`;
+                break;
+              default:
+                link = '/';
+            }
           }
+
           return <UswdsReactLink to={link}>{value}</UswdsReactLink>;
         },
         width: '220px',
@@ -112,6 +123,8 @@ const Table = ({
               if (row.original.lcid) {
                 return `${value}: ${row.original.lcid}`;
               }
+              return value;
+            case t(`requestsTable.types.TRB`):
               return value;
             default:
               return '';
@@ -291,25 +304,30 @@ const Table = ({
       </UswdsTable>
 
       <div className="grid-row grid-gap grid-gap-lg">
-        <TablePagination
-          gotoPage={gotoPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
-          canNextPage={canNextPage}
-          pageIndex={state.pageIndex}
-          pageOptions={pageOptions}
-          canPreviousPage={canPreviousPage}
-          pageCount={pageCount}
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-          page={[]}
-          className="desktop:grid-col-fill"
-        />
-        <TablePageSize
-          className="desktop:grid-col-auto"
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-        />
+        {data.length > 10 && (
+          <TablePagination
+            gotoPage={gotoPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            canNextPage={canNextPage}
+            pageIndex={state.pageIndex}
+            pageOptions={pageOptions}
+            canPreviousPage={canPreviousPage}
+            pageCount={pageCount}
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+            page={[]}
+            className="desktop:grid-col-fill"
+          />
+        )}
+
+        {data.length > 10 && (
+          <TablePageSize
+            className="desktop:grid-col-auto"
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+          />
+        )}
       </div>
 
       <div
