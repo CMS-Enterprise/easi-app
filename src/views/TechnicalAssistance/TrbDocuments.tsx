@@ -12,9 +12,8 @@ import classNames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import useMessage from 'hooks/useMessage';
 
-import Breadcrumbs from '../Breadcrumbs';
-
-import DocumentsTable from './DocumentsTable';
+import DocumentsTable from './RequestForm/DocumentsTable';
+import Breadcrumbs from './Breadcrumbs';
 
 export type DocumentStatusType = 'success' | 'error';
 

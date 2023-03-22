@@ -7,7 +7,6 @@ import { NotFoundPartial } from 'views/NotFound';
 
 import Consult from './AdminHome/Consult';
 import RequestEdits from './AdminHome/RequestEdits';
-import DocumentsTaskList from './RequestForm/DocumentsTaskList';
 import DocumentUpload from './RequestForm/DocumentUpload';
 import AdminHome from './AdminHome';
 import AdviceLetterForm from './AdviceLetterForm';
@@ -16,6 +15,7 @@ import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
+import TRBDocuments from './TrbDocuments';
 
 import './index.scss';
 
@@ -49,7 +49,7 @@ function TechnicalAssistance() {
 
         {/* Documents table/upload requester view from task list - prepare for TRB meeting */}
         <Route exact path={`${path}/task-list/:id/documents`}>
-          <DocumentsTaskList />
+          <TRBDocuments />
         </Route>
 
         {/* Documents table/upload requester view from task list - prepare for TRB meeting */}

@@ -25,8 +25,9 @@ import {
 import { formatDateLocal } from 'utils/date';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
+import { DocumentStatusType } from '../TrbDocuments';
+
 import { RefetchDocuments } from './Documents';
-import { DocumentStatusType } from './DocumentsTaskList';
 
 type Props = {
   trbRequestId: string;
