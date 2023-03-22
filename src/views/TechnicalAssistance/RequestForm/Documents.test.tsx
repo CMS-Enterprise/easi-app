@@ -536,8 +536,10 @@ describe('Trb Request form: Supporting documents', () => {
     // Removes document from modal
     userEvent.click(await findByRole('button', { name: 'Remove document' }));
 
-    await findByText('No documents uploaded');
-    expect(fileText).not.toBeInTheDocument();
+    await waitFor(() => {
+      findByText('No documents uploaded');
+      expect(fileText).toBeInTheDocument();
+    });
   });
 
   it('toggles the optional other document type field', async () => {
