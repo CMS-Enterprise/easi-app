@@ -7,6 +7,7 @@ import {
   GridContainer,
   IconArrowBack
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import useMessage from 'hooks/useMessage';
@@ -26,6 +27,7 @@ const DocumentsTaskList = () => {
     id: string;
   }>();
 
+  const [documentsCount, setDocumentsCount] = useState(0);
   const [documentMessage, setDocumentMessage] = useState('');
   const [documentStatus, setDocumentStatus] = useState<DocumentStatusType>(
     'error'
@@ -72,16 +74,21 @@ const DocumentsTaskList = () => {
 
         <div className="display-block margin-top-5 margin-bottom-4">
           <UswdsReactLink
-            className="usa-button usa-button--outline"
+            className={classNames('usa-button', {
+              'usa-button usa-button--outline': documentsCount
+            })}
             variant="unstyled"
             to={`/trb/task-list/${requestID}/documents/upload`}
           >
-            {t('documents.supportingDocuments.addAnother')}
+            {documentsCount
+              ? t('documents.supportingDocuments.addAnother')
+              : t('documents.addDocument')}
           </UswdsReactLink>
         </div>
 
         <DocumentsTable
           trbRequestId={requestID}
+          setDocumentsCount={setDocumentsCount}
           setDocumentMessage={setDocumentMessage}
           setDocumentStatus={setDocumentStatus}
         />
