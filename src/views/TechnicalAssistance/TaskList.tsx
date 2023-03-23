@@ -230,7 +230,8 @@ function TaskList() {
                         <UswdsReactLink
                           variant="unstyled"
                           className="usa-button"
-                          to="/help/it-governance/prepare-for-trb-consult" // TODO: replace with link to help article
+                          to="/help/trb/prepare-consult-meeting"
+                          target="_blank"
                         >
                           {t('taskList.downloadTemplates')}
                         </UswdsReactLink>
@@ -253,7 +254,8 @@ function TaskList() {
                     ) : (
                       <UswdsReactLink
                         className="display-block margin-top-2"
-                        to="/help/it-governance/prepare-for-trb-consult" // TODO: replace with link to help article
+                        to="/help/trb/prepare-consult-meeting"
+                        target="_blank"
                       >
                         {t('taskList.prepareForTRB')}
                       </UswdsReactLink>
