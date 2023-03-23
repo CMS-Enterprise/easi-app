@@ -35,7 +35,7 @@ import {
   ReopenTrbRequestVariables
 } from 'queries/types/ReopenTrbRequest';
 
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs from '../Breadcrumbs';
 
 /**
  * Close or Re-open a request

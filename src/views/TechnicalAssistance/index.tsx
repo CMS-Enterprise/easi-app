@@ -5,11 +5,11 @@ import { GridContainer } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
+import CloseRequest from './AdminHome/CloseRequest';
 import Consult from './AdminHome/Consult';
 import RequestEdits from './AdminHome/RequestEdits';
 import AdminHome from './AdminHome';
 import AdviceLetterForm from './AdviceLetterForm';
-import CloseRequest from './CloseRequest';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';

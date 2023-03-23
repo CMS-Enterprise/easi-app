@@ -13,8 +13,8 @@ import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import ReopenTrbRequestQuery from 'queries/ReopenTrbRequestQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 
-import AdminHome from './AdminHome';
 import CloseRequest from './CloseRequest';
+import AdminHome from '.';
 
 describe('Trb Admin: Action: Close & Re-open Request', () => {
   const mockStore = configureMockStore();
