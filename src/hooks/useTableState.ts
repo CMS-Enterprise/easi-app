@@ -31,6 +31,8 @@ const useTableState = (
 
   const tableState = tableStates[tableName];
 
+  console.log(tableState);
+
   // Stores page size in local storage on every selection change
   useEffect(() => {
     localStorage.setItem(

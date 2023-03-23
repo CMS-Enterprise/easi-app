@@ -59,14 +59,14 @@ const TableStateWrapper = ({ children }: TableStateWrapperProps) => {
   const isGovTeamRoute: boolean =
     routeParams[1] === 'governance-review-team' || pathname === '/';
 
-  const itGovAdmin = useRef<ITGovTableState>(
-    initialTableStates.itGovAdmin.current
-  );
+  const itGovAdmin = useRef<ITGovTableState>({
+    ...initialTableStates.itGovAdmin.current
+  });
 
   // Reset the state to their inital state in the abscence of isGovTeamRoute
   useEffect(() => {
     if (!isGovTeamRoute) {
-      itGovAdmin.current = initialTableStates.itGovAdmin.current;
+      itGovAdmin.current = { ...initialTableStates.itGovAdmin.current };
     }
   }, [isGovTeamRoute]);
 
