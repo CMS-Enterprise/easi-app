@@ -58,8 +58,6 @@ const RequestRepository = () => {
 
   const { itGovAdmin } = useContext(TableStateContext);
 
-  // console.log(itGovAdmin);
-
   const [activeTable, setActiveTable] = useState<ActiveStateType>(
     itGovAdmin.current.activeTableState
   );
