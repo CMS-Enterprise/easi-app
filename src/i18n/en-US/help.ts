@@ -17,6 +17,10 @@ const help = {
     section508: {
       copy: 'View Section 508 articles',
       href: 'help/section-508'
+    },
+    technicalReviewBoard: {
+      copy: 'View TRB articles',
+      href: 'help/trb'
     }
   },
   read: 'Read',
@@ -40,6 +44,9 @@ const help = {
     subheading:
       'Get assistance with Section 508 processes and requirements, such as 508 testing. To learn more about Section 508, please visit ',
     website: 'www.section508.gov'
+  },
+  technicalReviewBoard: {
+    heading: 'Technical Review Board'
   },
   additionalContacts: {
     heading: 'Additional contacts',

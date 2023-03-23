@@ -113,9 +113,10 @@ type CedarSystemMaintainerInformation struct {
 
 // The input needed to close a TRB request
 type CloseTRBRequestInput struct {
-	ID           uuid.UUID `json:"id"`
-	ReasonClosed string    `json:"reasonClosed"`
-	NotifyEuaIds []string  `json:"notifyEuaIds"`
+	ID             uuid.UUID `json:"id"`
+	ReasonClosed   string    `json:"reasonClosed"`
+	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
+	NotifyEuaIds   []string  `json:"notifyEuaIds"`
 }
 
 // Represents a date used for start and end dates on a contract
@@ -390,6 +391,8 @@ type RejectIntakeInput struct {
 type ReopenTRBRequestInput struct {
 	TrbRequestID   uuid.UUID `json:"trbRequestId"`
 	ReasonReopened string    `json:"reasonReopened"`
+	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
+	NotifyEuaIds   []string  `json:"notifyEuaIds"`
 }
 
 // Represents a request being made with the EASi system
