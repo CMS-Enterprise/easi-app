@@ -51,7 +51,8 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                   input: {
                     id,
                     reasonClosed: text,
-                    notifyEuaIds: ['ABCD']
+                    notifyEuaIds: ['ABCD'],
+                    copyTrbMailbox: false
                   }
                 }
               },
@@ -170,7 +171,8 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 input: {
                   id,
                   reasonClosed: text,
-                  notifyEuaIds: ['ABCD']
+                  notifyEuaIds: ['ABCD'],
+                  copyTrbMailbox: false
                 }
               }
             },
@@ -233,7 +235,9 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 variables: {
                   input: {
                     trbRequestId: id,
-                    reasonReopened: text
+                    reasonReopened: text,
+                    notifyEuaIds: ['ABCD'],
+                    copyTrbMailbox: false
                   }
                 }
               },
@@ -344,7 +348,9 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
               variables: {
                 input: {
                   trbRequestId: id,
-                  reasonReopened: text
+                  reasonReopened: text,
+                  notifyEuaIds: ['ABCD'],
+                  copyTrbMailbox: false
                 }
               }
             },

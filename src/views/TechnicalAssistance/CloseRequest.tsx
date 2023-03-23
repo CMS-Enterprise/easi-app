@@ -90,7 +90,8 @@ function CloseRequest() {
         input: {
           id,
           reasonClosed: formData.text,
-          notifyEuaIds: ['ABCD'] // todo
+          notifyEuaIds: ['ABCD'], // todo
+          copyTrbMailbox: false // todo
         }
       }
     })
@@ -116,7 +117,9 @@ function CloseRequest() {
       variables: {
         input: {
           trbRequestId: id,
-          reasonReopened: formData.text
+          reasonReopened: formData.text,
+          notifyEuaIds: ['ABCD'], // todo
+          copyTrbMailbox: false // todo
         }
       }
     })
