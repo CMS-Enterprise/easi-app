@@ -24,6 +24,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
         name="Request Table Search"
         role="searchbox"
         type="search"
+        value=""
       />
       <button
         class="usa-button grid-row flex-justify-center flex-align-center no-pointer"
