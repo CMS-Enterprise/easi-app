@@ -100,7 +100,7 @@ function DocumentsTable({
         }
       })
         .then(response => {
-          if (response.errors) {
+          if (!response.errors) {
             if (setDocumentMessage && setDocumentStatus) {
               setDocumentMessage(
                 t('documents.supportingDocuments.removeSuccess', {
