@@ -15,7 +15,7 @@ import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import AdminAction from './components/AdminAction';
 import AdminTaskStatusTag from './components/AdminTaskStatusTag';
-import RequestNotes from './components/RequestNotes';
+import NoteBox from './components/NoteBox';
 import ReviewAdviceLetter from './components/ReviewAdviceLetter';
 
 import './AdviceLetter.scss';
@@ -66,7 +66,7 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
           />
         </Grid>
         <Grid tablet={{ col: 4 }}>
-          <RequestNotes trbRequestId={trbRequestId} />
+          <NoteBox trbRequestId={trbRequestId} />
         </Grid>
       </Grid>
 

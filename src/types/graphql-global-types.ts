@@ -147,6 +147,17 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * Represents the category of a single TRB admin note
+ */
+export enum TRBAdminNoteCategory {
+  ADVICE_LETTER = "ADVICE_LETTER",
+  CONSULT_SESSION = "CONSULT_SESSION",
+  GENERAL_REQUEST = "GENERAL_REQUEST",
+  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
+  SUPPORTING_DOCUMENTS = "SUPPORTING_DOCUMENTS",
+}
+
+/**
  * Represents the status of the TRB advice letter step
  */
 export enum TRBAdviceLetterStatus {

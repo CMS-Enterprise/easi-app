@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ButtonGroup } from '@trussworks/react-uswds';
 
-type RequestNotesProps = {
+type NoteBoxProps = {
   trbRequestId: string;
 };
 
-const RequestNotes = ({ trbRequestId }: RequestNotesProps) => {
+const NoteBox = ({ trbRequestId }: NoteBoxProps) => {
   const { t } = useTranslation('technicalAssistance');
   const notesCount = 0;
   return (
@@ -30,4 +30,4 @@ const RequestNotes = ({ trbRequestId }: RequestNotesProps) => {
   );
 };
 
-export default RequestNotes;
+export default NoteBox;

@@ -868,6 +868,28 @@ const technicalAssistance = {
     alert:
       'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
     breadcrumb: 'Schedule a consult'
+  },
+  notes: {
+    description:
+      'Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.',
+    addNote: 'Add note',
+    noNotes:
+      'No TRB member has added notes for this request yet. If you’d like to add a note, use the button above.',
+    date: 'Date',
+    author: 'Note author',
+    about: 'What is this note about?',
+    status: {
+      success: 'Your note has been added.',
+      error:
+        'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.'
+    },
+    categories: {
+      ADVICE_LETTER: 'Advice letter',
+      CONSULT_SESSION: 'Consult session',
+      GENERAL_REQUEST: 'General note about this request',
+      INITIAL_REQUEST_FORM: 'Initial request form',
+      SUPPORTING_DOCUMENTS: 'Supporting documents'
+    }
   }
 };
 
