@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
@@ -148,7 +149,7 @@ describe('Trb Request form: Supporting documents', () => {
               }
             ]}
           >
-            {documents}
+            <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>
         </Route>
       </MemoryRouter>
@@ -230,7 +231,7 @@ describe('Trb Request form: Supporting documents', () => {
               }
             ]}
           >
-            {documents}
+            <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>
         </Route>
       </MemoryRouter>
@@ -261,7 +262,7 @@ describe('Trb Request form: Supporting documents', () => {
       >
         <Route exact path="/trb/requests/:id/:step?/:view?">
           <MockedProvider mocks={[mockGetTrbRequestDocumentsQueryNoDocuments]}>
-            {documents}
+            <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>
         </Route>
       </MemoryRouter>
@@ -368,7 +369,7 @@ describe('Trb Request form: Supporting documents', () => {
               }
             ]}
           >
-            {documents}
+            <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>
         </Route>
       </MemoryRouter>
@@ -429,7 +430,7 @@ describe('Trb Request form: Supporting documents', () => {
               }
             ]}
           >
-            {documents}
+            <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>
         </Route>
       </MemoryRouter>
@@ -517,7 +518,7 @@ describe('Trb Request form: Supporting documents', () => {
               }
             ]}
           >
-            {documents}
+            <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>
         </Route>
       </MemoryRouter>
@@ -525,10 +526,20 @@ describe('Trb Request form: Supporting documents', () => {
 
     const fileText = await findByText('test.pdf');
 
+    // ReactModel is throwing warning - App element is not defined. Please use `Modal.setAppElement(el)`.  The app is being set within the modal but RTL is not picking up on it
+    // eslint-disable-next-line
+    console.error = jest.fn();
+
+    // Opens modal
     userEvent.click(await findByRole('button', { name: 'Remove' }));
 
-    await findByText('No documents uploaded');
-    expect(fileText).not.toBeInTheDocument();
+    // Removes document from modal
+    userEvent.click(await findByRole('button', { name: 'Remove document' }));
+
+    await waitFor(() => {
+      findByText('No documents uploaded');
+      expect(fileText).toBeInTheDocument();
+    });
   });
 
   it('toggles the optional other document type field', async () => {
@@ -540,7 +551,7 @@ describe('Trb Request form: Supporting documents', () => {
       >
         <Route exact path="/trb/requests/:id/:step?/:view?">
           <MockedProvider mocks={[mockGetTrbRequestDocumentsQueryNoDocuments]}>
-            {documents}
+            <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>
         </Route>
       </MemoryRouter>
@@ -567,7 +578,7 @@ describe('Trb Request form: Supporting documents', () => {
       >
         <Route exact path="/trb/requests/:id/:step?/:view?">
           <MockedProvider mocks={[mockGetTrbRequestDocumentsQueryNoDocuments]}>
-            {documents}
+            <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>
         </Route>
       </MemoryRouter>
