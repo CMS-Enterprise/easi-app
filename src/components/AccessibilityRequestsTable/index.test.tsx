@@ -81,15 +81,15 @@ describe('AccessibilityRequestsTable', () => {
     );
 
     // User event to typing in query with debounce
-    await waitFor(() => {
-      userEvent.type(screen.getByRole('searchbox'), 'Burrito v1');
-    });
+    userEvent.type(screen.getByRole('searchbox'), 'Burrito v1');
 
     // Mocked time for debounce of input
     await waitFor(() => new Promise(res => setTimeout(res, 200)));
 
+    expect(screen.getByRole('searchbox')).toHaveValue('Burrito v1');
+
     // Burrito v2 is a mocked table row text item that should not be included in filtered results
-    expect(await screen.queryByText('Burrito v2')).toBeNull();
+    expect(screen.queryByText('Burrito v2')).toBeNull();
   });
 
   it('contains the expected values in the rows', () => {
