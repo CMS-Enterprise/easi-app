@@ -6,6 +6,11 @@ import { render } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
+import {
+  // eslint-disable-next-line camelcase
+  GetTrbRequests_trbRequests
+} from 'queries/types/GetTrbRequests';
+import { TRBRequestStatus } from 'types/graphql-global-types';
 
 import ProcessFlow from './ProcessFlow';
 import RequestType from './RequestType';
@@ -14,25 +19,29 @@ import TechnicalAssistance from '.';
 const mockStore = configureMockStore();
 
 describe('Technical Assistance (TRB) homepage', () => {
-  /** GetTrbRequestsQuery return values */
-  const trbRequests = [
+  // eslint-disable-next-line camelcase
+  const trbRequests: GetTrbRequests_trbRequests[] = [
     {
       id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
       name: 'My excellent question',
-      status: 'OPEN',
+      status: TRBRequestStatus.NEW,
       createdAt: '2022-09-12T17:46:08.067675Z',
       form: {
-        submittedAt: '2023-01-23T20:06:52.123703Z'
-      }
+        submittedAt: '2023-01-23T20:06:52.123703Z',
+        __typename: 'TRBRequestForm'
+      },
+      __typename: 'TRBRequest'
     },
     {
       id: '9841c768-bdcd-4856-bae2-62cfdaffacf6',
       name: 'TACO Review',
-      status: 'OPEN',
+      status: TRBRequestStatus.NEW,
       createdAt: '2022-09-12T17:46:08.07031Z',
       form: {
-        submittedAt: ''
-      }
+        submittedAt: '',
+        __typename: 'TRBRequestForm'
+      },
+      __typename: 'TRBRequest'
     }
   ];
 

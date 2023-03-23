@@ -71,7 +71,7 @@ function ProcessFlow() {
         {t('steps.heading')}
       </PageHeading>
       <div>
-        <span className="line-height-body-5 text-base margin-right-2">
+        <span className="font-body-md line-height-body-4 text-base margin-right-2">
           {requestTypeText[requestType].heading}
         </span>
         <span>
@@ -120,7 +120,14 @@ function ProcessFlow() {
               <li>{stepsText[2].list[1]}</li>
               <li>{stepsText[2].list[2]}</li>
             </ul>
-            <p>{stepsText[2].text[1]}</p>
+            <p>
+              <UswdsReactLink
+                to="/help/trb/prepare-consult-meeting"
+                target="_blank"
+              >
+                {stepsText[2].text[1]}
+              </UswdsReactLink>
+            </p>
           </ProcessListItem>
           <ProcessListItem className="maxw-none">
             <ProcessListHeading type="h3">
