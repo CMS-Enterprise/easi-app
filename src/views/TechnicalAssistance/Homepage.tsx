@@ -92,7 +92,7 @@ function Homepage() {
       },
       {
         Header: t<string>('table.header.status'),
-        accessor: 'status'
+        accessor: ({ status }) => t(`table.requestStatus.${status}`)
       },
       {
         Header: t<string>('table.header.submissionDate'),
@@ -217,7 +217,7 @@ function Homepage() {
             setGlobalFilter={setGlobalFilter}
             tableID={t('systemTable.id')}
             tableName={t('systemTable.title')}
-            className="margin-bottom-4"
+            className="margin-bottom-4 maxw-mobile-lg"
           />
 
           <Table bordered={false} fullWidth scrollable {...getTableProps()}>

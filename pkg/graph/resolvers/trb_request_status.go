@@ -44,8 +44,13 @@ func getTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 	if feedback != nil {
 		// If the latest feedback exists, calculate the status based on the action
 		if feedback.Action == models.TRBFeedbackActionRequestEdits {
-			// If latest feedback requests edits, return "edits requested" status
-			status = models.TRBFeedbackStatus(models.TRBFeedbackStatusEditsRequested)
+			if form.Status == models.TRBFormStatusCompleted {
+				// If the form is completed, that means the edits were made
+				status = models.TRBFeedbackStatus(models.TRBFeedbackStatusInReview)
+			} else {
+				// If the form isn't complete, then "edits requested" still applies
+				status = models.TRBFeedbackStatus(models.TRBFeedbackStatusEditsRequested)
+			}
 		} else if feedback.Action == models.TRBFeedbackActionReadyForConsult {
 			// If latest feedback action is "ready for consult", return "completed" status
 			status = models.TRBFeedbackStatusCompleted
