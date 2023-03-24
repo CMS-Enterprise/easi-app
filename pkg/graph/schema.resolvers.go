@@ -2204,6 +2204,23 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
+// LcidOptions is the resolver for the lcidOptions field.
+func (r *queryResolver) LcidOptions(ctx context.Context) ([]*model.LCIDOption, error) {
+	intakes, err := r.store.GetSystemIntakesWithLCIDs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	opts := make([]*model.LCIDOption, len(intakes))
+	for i, intake := range intakes {
+		opts[i] = &model.LCIDOption{
+			Lcid:        intake.LifecycleID.ValueOrZero(),
+			ProjectName: intake.ProjectName.ValueOrZero(),
+		}
+	}
+	return opts, nil
+}
+
 // CurrentUser is the resolver for the currentUser field.
 func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, error) {
 	ldUser := flags.Principal(ctx)

@@ -365,6 +365,12 @@ type IssueLifecycleIDInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
+// Represents an existing LCID in the system along with the name of the intake it's assigned to
+type LCIDOption struct {
+	Lcid        string `json:"lcid"`
+	ProjectName string `json:"projectName"`
+}
+
 // The most recent note added by an admin to a system request
 type LastAdminNote struct {
 	Content   *string    `json:"content"`
