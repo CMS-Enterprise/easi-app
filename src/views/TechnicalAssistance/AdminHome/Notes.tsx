@@ -1,33 +1,37 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@apollo/client';
-import { Alert } from '@trussworks/react-uswds';
+// import { useQuery } from '@apollo/client';
+import { Alert, Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import PageLoading from 'components/PageLoading';
-import GetTRBAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
+// import PageLoading from 'components/PageLoading';
+// import GetTRBAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
-  GetTrbAdminNotes,
-  GetTrbAdminNotes_trbRequest_adminNotes as GetTrbAdminNotesType,
-  GetTrbAdminNotesVariables
+  // GetTrbAdminNotes,
+  GetTrbAdminNotes_trbRequest_adminNotes as GetTrbAdminNotesType
+  // GetTrbAdminNotesVariables
 } from 'queries/types/GetTrbAdminNotes';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
-import { NotFoundPartial } from 'views/NotFound';
 
+// import { NotFoundPartial } from 'views/NotFound';
 import Note from './components/Note';
+import { ModalViewType } from './components/NoteModal';
 
-const Notes = ({ trbRequestId }: TrbAdminPageProps) => {
+const Notes = ({
+  trbRequestId,
+  setModalView
+}: TrbAdminPageProps & {
+  setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
+}) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { data, error, loading } = useQuery<
-    GetTrbAdminNotes,
-    GetTrbAdminNotesVariables
-  >(GetTRBAdminNotesQuery, {
-    variables: { id: trbRequestId }
-  });
-
-  console.log(data);
+  // const { data, error, loading } = useQuery<
+  //   GetTrbAdminNotes,
+  //   GetTrbAdminNotesVariables
+  // >(GetTRBAdminNotesQuery, {
+  //   variables: { id: trbRequestId }
+  // });
 
   // const notes: GetTrbAdminNotesType | undefined = data?.trbRequest?.adminNotes;
 
@@ -60,9 +64,9 @@ const Notes = ({ trbRequestId }: TrbAdminPageProps) => {
     }
   ];
 
-  if (error) {
-    return <NotFoundPartial />;
-  }
+  // if (error) {
+  //   return <NotFoundPartial />;
+  // }
 
   return (
     <div
@@ -76,15 +80,27 @@ const Notes = ({ trbRequestId }: TrbAdminPageProps) => {
 
       <p>{t('notes.description')}</p>
 
-      <UswdsReactLink
-        to={`/trb/${trbRequestId}/notes/add-note`}
-        className="usa-button margin-bottom-6"
-        variant="unstyled"
-      >
-        {t('notes.addNote')}
-      </UswdsReactLink>
+      {setModalView ? (
+        <Button
+          type="button"
+          className=" margin-bottom-6"
+          onClick={() => {
+            setModalView('addNote');
+          }}
+        >
+          {t('notes.addNote')}
+        </Button>
+      ) : (
+        <UswdsReactLink
+          to={`/trb/${trbRequestId}/notes/add-note`}
+          className="usa-button margin-bottom-6"
+          variant="unstyled"
+        >
+          {t('notes.addNote')}
+        </UswdsReactLink>
+      )}
 
-      {loading && <PageLoading />}
+      {/* {loading && <PageLoading />} */}
 
       {!notes ? (
         <Alert type="info" slim>

@@ -1,0 +1,74 @@
+@use 'uswds-core' as *;
+@use 'viewports' as *;
+
+.easi-notes {
+    &__overlay {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 400;
+    }
+  
+    &__content {
+      position: absolute;
+      width: 50%;
+      height: auto;
+      min-height: 100%;
+      background-color: #fff;
+      right: 0;
+      z-index: 1;
+      line-height: 1.6em;
+  
+      @media screen and (max-width: $desktop) {
+        width: 100%;
+      }
+    }
+
+    &__x-button-container {
+        width: 100%;
+        box-shadow: 0px .25rem .5rem rgba(0, 0, 0, 0.1);
+        padding: 1rem 2rem 1rem 1rem;
+    }
+  
+    &__x-button {
+      background: none;
+      border: 0;
+      line-height: 0;
+  
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  
+    &__body {
+      padding: 4rem 2rem 2rem;
+    }
+
+    &__connected {
+      border-left: .25rem solid color('base-lightest');
+      margin-left: .9rem;
+      padding-left: 1.4rem;
+      margin-top: 0.25rem;
+    }
+
+    &__not-connected {
+      padding-left: 2.6rem;
+    }
+
+    &__single-discussion:last-of-type {
+      margin-bottom: -1rem;
+      margin-top: -.5rem;
+    }
+
+  }
+
+  .no-button > .usa-accordion__heading > .usa-accordion__button {
+    background-size: 0rem !important;
+  }
+
+  .usa-accordion__content {
+    padding: 0.75rem 1.25rem calc(1rem - 0.25rem) 1.25rem !important;
+  }

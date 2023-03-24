@@ -889,6 +889,8 @@ const technicalAssistance = {
     description:
       'Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.',
     addNote: 'Add note',
+    notes: 'Notes',
+    allNotes: 'All notes',
     noNotes:
       'No TRB member has added notes for this request yet. If you’d like to add a note, use the button above.',
     date: 'Date',

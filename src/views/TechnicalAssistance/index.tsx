@@ -5,6 +5,7 @@ import { GridContainer } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
+import AddNote from './AdminHome/AddNote';
 import Consult from './AdminHome/Consult';
 import RequestEdits from './AdminHome/RequestEdits';
 import DocumentUpload from './RequestForm/DocumentUpload';
@@ -80,6 +81,10 @@ function TechnicalAssistance() {
         </Route>
         <Route exact path={`${path}/:id/:activePage/:action(schedule-consult)`}>
           <Consult />
+        </Route>
+
+        <Route exact path={`${path}/:id/:activePage/add-note`}>
+          <AddNote />
         </Route>
 
         <Route path="*">

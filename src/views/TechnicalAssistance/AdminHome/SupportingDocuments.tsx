@@ -6,7 +6,7 @@ import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import DocumentsTable from '../RequestForm/DocumentsTable';
 
-import RequestNotes from './components/RequestNotes';
+import NoteBox from './components/NoteBox';
 
 const SupportingDocuments = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -22,7 +22,7 @@ const SupportingDocuments = ({ trbRequestId }: TrbAdminPageProps) => {
         </p>
       </Grid>
       <Grid tablet={{ col: 4 }}>
-        <RequestNotes trbRequestId={trbRequestId} />
+        <NoteBox trbRequestId={trbRequestId} />
       </Grid>
 
       <Grid desktop={{ col: 12 }} className="margin-top-2">
