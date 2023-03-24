@@ -1,72 +1,45 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-// import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Alert, Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
-// import PageLoading from 'components/PageLoading';
-// import GetTRBAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
+import PageLoading from 'components/PageLoading';
+import GetTRBAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
-  // GetTrbAdminNotes,
-  GetTrbAdminNotes_trbRequest_adminNotes as GetTrbAdminNotesType
-  // GetTrbAdminNotesVariables
+  GetTrbAdminNotes,
+  GetTrbAdminNotes_trbRequest_adminNotes as GetTrbAdminNotesType,
+  GetTrbAdminNotesVariables
 } from 'queries/types/GetTrbAdminNotes';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
+import { NotFoundPartial } from 'views/NotFound';
 
-// import { NotFoundPartial } from 'views/NotFound';
 import Note from './components/Note';
 import { ModalViewType } from './components/NoteModal';
 
 const Notes = ({
   trbRequestId,
-  setModalView
+  setModalView,
+  modalMessage
 }: TrbAdminPageProps & {
   setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
+  modalMessage?: string;
 }) => {
   const { t } = useTranslation('technicalAssistance');
 
-  // const { data, error, loading } = useQuery<
-  //   GetTrbAdminNotes,
-  //   GetTrbAdminNotesVariables
-  // >(GetTRBAdminNotesQuery, {
-  //   variables: { id: trbRequestId }
-  // });
+  const { data, error, loading } = useQuery<
+    GetTrbAdminNotes,
+    GetTrbAdminNotesVariables
+  >(GetTRBAdminNotesQuery, {
+    variables: { id: trbRequestId }
+  });
 
-  // const notes: GetTrbAdminNotesType | undefined = data?.trbRequest?.adminNotes;
+  const notes: GetTrbAdminNotesType[] | undefined =
+    data?.trbRequest?.adminNotes;
 
-  const notes: GetTrbAdminNotesType[] = [
-    {
-      __typename: 'TRBAdminNote',
-      id: '123',
-      isArchived: false,
-      category: TRBAdminNoteCategory.ADVICE_LETTER,
-      noteText:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget commodo, maecenas id scelerisque tortor velit mi, euismod arcu. Velit non vulputate tortor urna nulla sit diam at. Parturient leo in pellentesque cras in hendrerit. In sapien gravida ut enim arcu nunc at. Nam scelerisque nisl tempor a. Sit sit dolor donec at proin aliquet amet, lacus, morbi. Sed vel sit non quam gravida sem.',
-      author: {
-        __typename: 'UserInfo',
-        commonName: 'Patrick Segura'
-      },
-      createdAt: '2023-02-25T19:22:40Z'
-    },
-    {
-      __typename: 'TRBAdminNote',
-      id: '124',
-      isArchived: false,
-      category: TRBAdminNoteCategory.ADVICE_LETTER,
-      noteText:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget commodo, maecenas id scelerisque tortor velit mi, euismod arcu. Velit non vulputate tortor urna nulla sit diam at. Parturient leo in pellentesque cras in hendrerit. In sapien gravida ut enim arcu nunc at. Nam scelerisque nisl tempor a. Sit sit dolor donec at proin aliquet amet, lacus, morbi. Sed vel sit non quam gravida sem.',
-      author: {
-        __typename: 'UserInfo',
-        commonName: 'Vicente Martin'
-      },
-      createdAt: '2023-02-25T19:22:40Z'
-    }
-  ];
-
-  // if (error) {
-  //   return <NotFoundPartial />;
-  // }
+  if (error) {
+    return <NotFoundPartial />;
+  }
 
   return (
     <div
@@ -74,6 +47,12 @@ const Notes = ({
       data-testid="trb-admin-home__notes"
       id={`trbAdminNotes-${trbRequestId}`}
     >
+      {modalMessage && (
+        <Alert type="success" slim className="margin-top-neg-1 margin-bottom-4">
+          {modalMessage}
+        </Alert>
+      )}
+
       <h1 className="margin-top-0 margin-bottom-1 line-height-heading-2">
         {t('adminHome.subnav.notes')}
       </h1>
@@ -100,7 +79,7 @@ const Notes = ({
         </UswdsReactLink>
       )}
 
-      {/* {loading && <PageLoading />} */}
+      {loading && <PageLoading />}
 
       {!notes ? (
         <Alert type="info" slim>

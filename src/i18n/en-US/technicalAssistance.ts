@@ -888,7 +888,9 @@ const technicalAssistance = {
   notes: {
     description:
       'Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.',
-    addNote: 'Add note',
+    addNoteDescription:
+      'Add a note about this request for other TRB team members.',
+    addNote: 'Add a note',
     notes: 'Notes',
     allNotes: 'All notes',
     noNotes:
@@ -896,10 +898,15 @@ const technicalAssistance = {
     date: 'Date',
     author: 'Note author',
     about: 'What is this note about?',
+    save: 'Save',
     status: {
       success: 'Your note has been added.',
       error:
         'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.'
+    },
+    labels: {
+      category: 'What is this note about?',
+      noteText: 'Note'
     },
     categories: {
       ADVICE_LETTER: 'Advice letter',

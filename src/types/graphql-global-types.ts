@@ -496,6 +496,15 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
+ * The data needed to create a TRB admin note
+ */
+export interface CreateTRBAdminNoteInput {
+  trbRequestId: UUID;
+  category: TRBAdminNoteCategory;
+  noteText: string;
+}
+
+/**
  * The input required to add a recommendation & links to a TRB advice letter
  */
 export interface CreateTRBAdviceLetterRecommendationInput {

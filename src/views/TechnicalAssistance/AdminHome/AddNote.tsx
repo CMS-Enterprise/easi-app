@@ -7,44 +7,47 @@ import {
   Alert,
   Button,
   CharacterCount,
-  DatePicker,
+  Dropdown,
   ErrorMessage,
   Form,
   FormGroup,
   Grid,
-  GridContainer,
   IconArrowBack,
-  Label,
-  TimePicker
+  Label
 } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
+import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import useMessage from 'hooks/useMessage';
+import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
 import {
-  UpdateTrbRequestConsultMeeting,
-  UpdateTrbRequestConsultMeetingVariables
-} from 'queries/types/UpdateTrbRequestConsultMeeting';
-import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
+  CreateTrbAdminNote as CreateTrbAdminNoteType,
+  CreateTrbAdminNoteVariables
+} from 'queries/types/CreateTrbAdminNote';
+import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 
 import Breadcrumbs from '../Breadcrumbs';
 
 import { ModalViewType } from './components/NoteModal';
 
 const AddNote = ({
-  setModalView
+  trbRequestId,
+  setModalView,
+  setModalMessage
 }: {
+  trbRequestId?: string;
   setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
+  setModalMessage?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { id, activePage } = useParams<{
     id: string;
     activePage: string;
-    action: 'schedule-consult';
   }>();
+
   const history = useHistory();
 
   const { message, showMessage, showMessageOnNextPage } = useMessage();
@@ -52,9 +55,9 @@ const AddNote = ({
   const requestUrl = `/trb/${id}/${activePage}`;
 
   const [mutate] = useMutation<
-    UpdateTrbRequestConsultMeeting,
-    UpdateTrbRequestConsultMeetingVariables
-  >(UpdateTrbRequestConsultMeetingQuery);
+    CreateTrbAdminNoteType,
+    CreateTrbAdminNoteVariables
+  >(CreateTrbAdminNote);
 
   const {
     control,
@@ -62,9 +65,8 @@ const AddNote = ({
     formState: { errors, isDirty, isSubmitting }
   } = useForm({
     defaultValues: {
-      meetingDate: '',
-      meetingTime: '',
-      notes: ''
+      category: '' as TRBAdminNoteCategory,
+      noteText: ''
     }
   });
 
@@ -78,78 +80,77 @@ const AddNote = ({
   }, [errors, hasErrors]);
 
   return (
-    <GridContainer className="width-full">
-      <Breadcrumbs
-        items={[
-          { text: t('Home'), url: `/trb` },
-          {
-            text: t('adminHome.breadcrumb', { trbRequestId: id }),
-            url: requestUrl
-          },
-          {
-            text: t('actionScheduleConsult.breadcrumb')
-          }
-        ]}
-      />
+    <div
+      className={classNames({
+        'grid-container': !setModalView
+      })}
+    >
+      {!setModalView && (
+        <Breadcrumbs
+          items={[
+            { text: t('Home'), url: `/trb` },
+            {
+              text: t('adminHome.breadcrumb', { trbRequestId: id }),
+              url: requestUrl
+            },
+            {
+              text: t('notes.addNote')
+            }
+          ]}
+        />
+      )}
 
       {message}
 
       <Form
         onSubmit={handleSubmit(formData => {
-          // Format the time as utc iso from the components' default local format
-          const consultMeetingTime = DateTime.fromFormat(
-            `${formData.meetingDate} ${formData.meetingTime}`,
-            'MM/dd/yyyy HH:mm'
-          )
-            .toUTC()
-            .toISO();
-
           mutate({
             variables: {
               input: {
-                trbRequestId: id,
-                consultMeetingTime,
-                notes: formData.notes,
-                copyTrbMailbox: false,
-                notifyEuaIds: ['ABCD']
+                trbRequestId: trbRequestId || id,
+                category: formData.category,
+                noteText: formData.noteText
               }
             }
           })
             .then(result => {
-              showMessageOnNextPage(
-                <Alert type="success" slim className="margin-top-3">
-                  {t('actionScheduleConsult.success', {
-                    date: formData.meetingDate,
-                    time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
-                      .toFormat('t')
-                      .toLowerCase(),
-                    interpolation: {
-                      escapeValue: false
-                    }
-                  })}
-                </Alert>
-              );
-              history.push(requestUrl);
+              if (!setModalView) {
+                showMessageOnNextPage(
+                  <Alert type="success" slim className="margin-top-3">
+                    {t('notes.status.success')}
+                  </Alert>
+                );
+                history.push(requestUrl);
+              } else if (setModalView && setModalMessage) {
+                setModalView('viewNotes');
+                setModalMessage(t('notes.status.success'));
+              }
             })
             .catch(err => {
               showMessage(
                 <Alert type="error" slim className="margin-top-3">
-                  {t('actionScheduleConsult.error')}
+                  {t('notes.status.error')}
                 </Alert>
               );
             });
         })}
-        className="maxw-full"
+        className={classNames('maxw-full', {
+          'desktop:grid-col-6': !setModalView
+        })}
       >
         <Grid row>
           <Grid col>
-            <PageHeading className="margin-bottom-0">
-              {t('actionScheduleConsult.heading')}
+            <PageHeading
+              className={classNames('margin-bottom-0', {
+                'margin-top-0': setModalView
+              })}
+            >
+              {t('notes.addNote')}
             </PageHeading>
             <div className="line-height-body-5 font-body-lg text-light">
-              {t('actionScheduleConsult.description')}
+              {t('notes.addNoteDescription')}
             </div>
-            <div className="margin-top-1 margin-bottom-4 text-base">
+            <div className="margin-top-1 margin-bottom-2 text-base">
               <Trans
                 i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
                 components={{ red: <span className="text-red" /> }}
@@ -163,9 +164,7 @@ const AddNote = ({
                 className="trb-basic-fields-error"
               >
                 {Object.keys(errors).map(fieldName => {
-                  const msg: string = t(
-                    `actionScheduleConsult.labels.${fieldName}`
-                  );
+                  const msg: string = t(`notes.labels.${fieldName}`);
                   return (
                     <ErrorAlertMessage
                       key={fieldName}
@@ -180,127 +179,100 @@ const AddNote = ({
         </Grid>
 
         <Grid row gap>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            {/* Meeting date */}
-            <div className="date-time-wrapper">
-              <Controller
-                name="meetingDate"
-                control={control}
-                rules={{ required: true }}
-                render={({ field, fieldState: { error } }) => (
-                  <FormGroup error={!!error}>
-                    <Label
-                      htmlFor="meetingDate"
-                      hint={
-                        <div className="margin-top-1">
-                          {t('actionScheduleConsult.hints.meetingDate')}
-                        </div>
-                      }
-                      className="text-normal"
-                      error={!!error}
-                    >
-                      {t('actionScheduleConsult.labels.meetingDate')}{' '}
-                      <span className="text-red">*</span>
-                    </Label>
-                    {error && (
-                      <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
-                    )}
-                    <DatePicker
-                      id="meetingDate"
-                      name="meetingDate"
-                      onChange={val => {
-                        field.onChange(val);
-                      }}
-                    />
-                  </FormGroup>
-                )}
-              />
+          <Grid desktop={{ col: 12 }}>
+            {/* Category */}
 
-              {/* Meeting time */}
-              <Controller
-                name="meetingTime"
-                control={control}
-                rules={{ required: true }}
-                render={({ field, fieldState: { error } }) => (
-                  <FormGroup error={!!error}>
-                    <Label
-                      htmlFor="meetingTime"
-                      hint={
-                        <div className="margin-top-1">
-                          {t('actionScheduleConsult.hints.meetingTime')}
-                        </div>
-                      }
-                      className="text-normal"
-                      error={!!error}
-                    >
-                      {t('actionScheduleConsult.labels.meetingTime')}{' '}
-                      <span className="text-red">*</span>
-                    </Label>
-                    {error && (
-                      <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
-                    )}
-                    <TimePicker
-                      id="meetingTime"
-                      name="meetingTime"
-                      onChange={val => {
-                        field.onChange(val);
-                      }}
-                      step={5}
-                    />
-                  </FormGroup>
-                )}
-              />
-            </div>
-
-            {/* Notes */}
             <Controller
-              name="notes"
+              name="category"
+              control={control}
+              rules={{ required: true }}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup error={!!error}>
+                  <Label
+                    htmlFor="category"
+                    className="text-normal"
+                    error={!!error}
+                  >
+                    {t('notes.labels.category')}{' '}
+                    <span className="text-red">*</span>
+                  </Label>
+                  {error && (
+                    <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
+                  )}
+                  <Dropdown
+                    id="category"
+                    data-testid="note-category"
+                    {...field}
+                    ref={null}
+                  >
+                    <option>- {t('basic.options.select')} -</option>
+                    {[
+                      TRBAdminNoteCategory.GENERAL_REQUEST,
+                      TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
+                      TRBAdminNoteCategory.SUPPORTING_DOCUMENTS,
+                      TRBAdminNoteCategory.CONSULT_SESSION,
+                      TRBAdminNoteCategory.ADVICE_LETTER
+                    ].map(key => (
+                      <option key={key} value={key}>
+                        {t(`notes.categories.${key}`)}
+                      </option>
+                    ))}
+                  </Dropdown>
+                </FormGroup>
+              )}
+            />
+
+            {/* Note Text */}
+            <Controller
+              name="noteText"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <FormGroup>
                   <Label htmlFor="notes" className="text-normal">
-                    {t('actionScheduleConsult.labels.notes')}
+                    {t('notes.labels.noteText')}
                   </Label>
                   <CharacterCount
                     {...field}
                     ref={null}
-                    id="notes"
+                    id="noteText"
                     maxLength={2000}
                     isTextArea
                     rows={2}
-                    aria-describedby="notes-info notes-hint"
                     error={!!error}
                   />
                 </FormGroup>
               )}
             />
-
-            <h3 className="margin-top-6">
-              {t('actionRequestEdits.notificationTitle')}
-            </h3>
-            <div>{t('actionRequestEdits.notificationDescription')}</div>
-            {/* todo cedar contacts */}
-
-            <Alert type="warning" slim>
-              {t('actionScheduleConsult.alert')}
-            </Alert>
           </Grid>
         </Grid>
 
-        <div>
+        <div className="margin-top-3">
           <Button type="submit" disabled={!isDirty || isSubmitting}>
-            {t('actionRequestEdits.submit')}
+            {t('notes.save')}
           </Button>
         </div>
       </Form>
 
       <div className="margin-top-2">
-        <UswdsReactLink to={requestUrl}>
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-          {t('actionRequestEdits.cancelAndReturn')}
-        </UswdsReactLink>
+        {setModalView ? (
+          <Button
+            type="button"
+            className="usa-button--unstyled"
+            onClick={() => {
+              setModalView('viewNotes');
+            }}
+          >
+            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+            {t('actionRequestEdits.cancelAndReturn')}
+          </Button>
+        ) : (
+          <UswdsReactLink to={requestUrl}>
+            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+            {t('actionRequestEdits.cancelAndReturn')}
+          </UswdsReactLink>
+        )}
       </div>
-    </GridContainer>
+    </div>
   );
 };
 

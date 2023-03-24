@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 import {
+  Button,
   Grid,
   GridContainer,
   IconArrowBack,
@@ -32,6 +33,7 @@ const NotesModal = ({
   const { t } = useTranslation('technicalAssistance');
 
   const [viewType, setViewType] = useState<ModalViewType>('addNote');
+  const [modalMessage, setModalMessage] = useState<string>('');
 
   const handleOpenModal = () => {
     noScroll.on();
@@ -60,7 +62,7 @@ const NotesModal = ({
     >
       <div data-testid="discussion-modal">
         <div className="easi-notes__x-button-container display-flex text-base flex-align-center">
-          <button
+          <Button
             type="button"
             data-testid="close-discussions"
             className="easi-notes__x-button margin-right-2"
@@ -78,17 +80,25 @@ const NotesModal = ({
             ) : (
               <IconArrowBack size={4} className="text-base" />
             )}
-          </button>
+          </Button>
           <h4 className="margin-0">
             {viewType === 'viewNotes' ? t('notes.notes') : t('notes.allNotes')}
           </h4>
         </div>
-        <GridContainer className="padding-y-8">
+        <GridContainer className="padding-y-8 margin-left-2">
           <Grid desktop={{ col: 12 }}>
             {viewType === 'viewNotes' ? (
-              <Notes trbRequestId={trbRequestId} setModalView={setViewType} />
+              <Notes
+                trbRequestId={trbRequestId}
+                setModalView={setViewType}
+                modalMessage={modalMessage}
+              />
             ) : (
-              <AddNote setModalView={setViewType} />
+              <AddNote
+                trbRequestId={trbRequestId}
+                setModalView={setViewType}
+                setModalMessage={setModalMessage}
+              />
             )}
           </Grid>
         </GridContainer>
