@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import formatUrl from 'utils/formatUrl';
+
 type RecommendationLinksProps = {
   links: string[];
   className?: string;
@@ -14,9 +16,7 @@ export default function RecommendationLinks({
   return (
     <ul className={classNames('usa-list', 'usa-list--unstyled', className)}>
       {links.map((link, index) => {
-        const linkString = link
-          .replace('www.', '')
-          .replace(/^https?:\/\//i, '');
+        const linkString = formatUrl(link);
 
         const url = new URL(`https://${linkString}`);
 

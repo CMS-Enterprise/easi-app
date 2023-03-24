@@ -29,6 +29,7 @@ import {
   AdviceLetterRecommendationFields,
   FormAlertObject
 } from 'types/technicalAssistance';
+import formatUrl from 'utils/formatUrl';
 
 import Breadcrumbs from '../Breadcrumbs';
 
@@ -71,8 +72,7 @@ const RecommendationsForm = ({
         if (isDirty) {
           /** Format links to array of strings */
           const links = (formData.links || []).map(({ link }) =>
-            // Format link
-            link.replace('www.', '').replace(/^https?:\/\//i, '')
+            formatUrl(link)
           );
 
           const { id, title, recommendation } = formData;
