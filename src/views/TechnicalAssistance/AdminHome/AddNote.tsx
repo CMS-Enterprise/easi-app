@@ -34,12 +34,10 @@ import { ModalViewType } from './components/NoteModal';
 
 const AddNote = ({
   trbRequestId,
-  requestName = '',
   setModalView,
   setModalMessage
 }: {
   trbRequestId?: string;
-  requestName?: string;
   setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
   setModalMessage?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
@@ -92,7 +90,7 @@ const AddNote = ({
           items={[
             { text: t('Home'), url: `/trb` },
             {
-              text: requestName,
+              text: trbRequestId || '',
               url: requestUrl
             },
             {

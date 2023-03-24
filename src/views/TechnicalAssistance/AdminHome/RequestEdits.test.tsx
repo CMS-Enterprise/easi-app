@@ -118,7 +118,7 @@ describe('Trb Admin: Action: Request Edits', () => {
           >
             <MessageProvider>
               <Route exact path="/trb/:id/:activePage">
-                <AdminHome setRequestName={() => null} />
+                <AdminHome />
               </Route>
               <Route exact path="/trb/:id/:activePage/:action">
                 <RequestEdits />
