@@ -1013,14 +1013,6 @@ type SystemIntake {
 }
 
 """
-Represents an existing LCID in the system along with the name of the intake it's assigned to
-"""
-type LCIDOption {
-  lcid: String!
-  projectName: String!
-}
-
-"""
 The input data used to set the requester of a system request
 """
 input SystemIntakeRequesterInput {
@@ -2295,7 +2287,7 @@ type Query {
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
-  lcidOptions: [LCIDOption!]!
+  systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
