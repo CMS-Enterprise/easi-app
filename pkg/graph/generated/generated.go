@@ -532,7 +532,6 @@ type ComplexityRoot struct {
 		CreateTRBRequestAttendee                         func(childComplexity int, input model.CreateTRBRequestAttendeeInput) int
 		CreateTRBRequestDocument                         func(childComplexity int, input model.CreateTRBRequestDocumentInput) int
 		CreateTRBRequestFeedback                         func(childComplexity int, input model.CreateTRBRequestFeedbackInput) int
-		CreateTRBRequestSystemIntake                     func(childComplexity int, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) int
 		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
 		DeleteAccessibilityRequest                       func(childComplexity int, input model.DeleteAccessibilityRequestInput) int
 		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
@@ -541,10 +540,10 @@ type ComplexityRoot struct {
 		DeleteTRBAdviceLetterRecommendation              func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
-		DeleteTRBRequestSystemIntake                     func(childComplexity int, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) int
 		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
+		LinkSystemIntakeToTrbRequest                     func(childComplexity int, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
 		ReopenTrbRequest                                 func(childComplexity int, input model.ReopenTRBRequestInput) int
@@ -556,6 +555,7 @@ type ComplexityRoot struct {
 		SetRolesForUserOnSystem                          func(childComplexity int, input model.SetRolesForUserOnSystemInput) int
 		SetTRBAdminNoteArchived                          func(childComplexity int, id uuid.UUID, isArchived bool) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
+		UnlinkSystemIntakeFromTrbRequest                 func(childComplexity int, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) int
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
 		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
 		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
@@ -946,16 +946,6 @@ type ComplexityRoot struct {
 		WhereInProcessOther                            func(childComplexity int) int
 	}
 
-	TRBRequestSystemIntake struct {
-		CreatedAt      func(childComplexity int) int
-		CreatedBy      func(childComplexity int) int
-		ID             func(childComplexity int) int
-		ModifiedAt     func(childComplexity int) int
-		ModifiedBy     func(childComplexity int) int
-		SystemIntakeID func(childComplexity int) int
-		TRBRequestID   func(childComplexity int) int
-	}
-
 	TRBTaskStatuses struct {
 		AdviceLetterStatus  func(childComplexity int) int
 		AttendConsultStatus func(childComplexity int) int
@@ -1197,8 +1187,8 @@ type MutationResolver interface {
 	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
 	SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error)
 	CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error)
-	CreateTRBRequestSystemIntake(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (*models.TRBRequestSystemIntake, error)
-	DeleteTRBRequestSystemIntake(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (*models.TRBRequestSystemIntake, error)
+	LinkSystemIntakeToTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error)
+	UnlinkSystemIntakeFromTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error)
 	UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error)
 	UpdateTRBRequestTRBLead(ctx context.Context, input model.UpdateTRBRequestTRBLeadInput) (*models.TRBRequest, error)
 	CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error)
@@ -3736,18 +3726,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateTRBRequestFeedback(childComplexity, args["input"].(model.CreateTRBRequestFeedbackInput)), true
 
-	case "Mutation.createTRBRequestSystemIntake":
-		if e.complexity.Mutation.CreateTRBRequestSystemIntake == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createTRBRequestSystemIntake_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateTRBRequestSystemIntake(childComplexity, args["trbRequestId"].(uuid.UUID), args["systemIntakeId"].(uuid.UUID)), true
-
 	case "Mutation.createTestDate":
 		if e.complexity.Mutation.CreateTestDate == nil {
 			break
@@ -3844,18 +3822,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteTRBRequestDocument(childComplexity, args["id"].(uuid.UUID)), true
 
-	case "Mutation.deleteTRBRequestSystemIntake":
-		if e.complexity.Mutation.DeleteTRBRequestSystemIntake == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_deleteTRBRequestSystemIntake_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.DeleteTRBRequestSystemIntake(childComplexity, args["trbRequestId"].(uuid.UUID), args["systemIntakeId"].(uuid.UUID)), true
-
 	case "Mutation.deleteTestDate":
 		if e.complexity.Mutation.DeleteTestDate == nil {
 			break
@@ -3891,6 +3857,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.IssueLifecycleID(childComplexity, args["input"].(model.IssueLifecycleIDInput)), true
+
+	case "Mutation.linkSystemIntakeToTrbRequest":
+		if e.complexity.Mutation.LinkSystemIntakeToTrbRequest == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_linkSystemIntakeToTrbRequest_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.LinkSystemIntakeToTrbRequest(childComplexity, args["trbRequestId"].(uuid.UUID), args["systemIntakeId"].(uuid.UUID)), true
 
 	case "Mutation.markSystemIntakeReadyForGRB":
 		if e.complexity.Mutation.MarkSystemIntakeReadyForGrb == nil {
@@ -4023,6 +4001,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.SubmitIntake(childComplexity, args["input"].(model.SubmitIntakeInput)), true
+
+	case "Mutation.unlinkSystemIntakeFromTrbRequest":
+		if e.complexity.Mutation.UnlinkSystemIntakeFromTrbRequest == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_unlinkSystemIntakeFromTrbRequest_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UnlinkSystemIntakeFromTrbRequest(childComplexity, args["trbRequestId"].(uuid.UUID), args["systemIntakeId"].(uuid.UUID)), true
 
 	case "Mutation.updateAccessibilityRequestCedarSystem":
 		if e.complexity.Mutation.UpdateAccessibilityRequestCedarSystem == nil {
@@ -6237,55 +6227,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestForm.WhereInProcessOther(childComplexity), true
 
-	case "TRBRequestSystemIntake.createdAt":
-		if e.complexity.TRBRequestSystemIntake.CreatedAt == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestSystemIntake.CreatedAt(childComplexity), true
-
-	case "TRBRequestSystemIntake.createdBy":
-		if e.complexity.TRBRequestSystemIntake.CreatedBy == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestSystemIntake.CreatedBy(childComplexity), true
-
-	case "TRBRequestSystemIntake.id":
-		if e.complexity.TRBRequestSystemIntake.ID == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestSystemIntake.ID(childComplexity), true
-
-	case "TRBRequestSystemIntake.modifiedAt":
-		if e.complexity.TRBRequestSystemIntake.ModifiedAt == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestSystemIntake.ModifiedAt(childComplexity), true
-
-	case "TRBRequestSystemIntake.modifiedBy":
-		if e.complexity.TRBRequestSystemIntake.ModifiedBy == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestSystemIntake.ModifiedBy(childComplexity), true
-
-	case "TRBRequestSystemIntake.systemIntakeId":
-		if e.complexity.TRBRequestSystemIntake.SystemIntakeID == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestSystemIntake.SystemIntakeID(childComplexity), true
-
-	case "TRBRequestSystemIntake.trbRequestId":
-		if e.complexity.TRBRequestSystemIntake.TRBRequestID == nil {
-			break
-		}
-
-		return e.complexity.TRBRequestSystemIntake.TRBRequestID(childComplexity), true
-
 	case "TRBTaskStatuses.adviceLetterStatus":
 		if e.complexity.TRBTaskStatuses.AdviceLetterStatus == nil {
 			break
@@ -8089,19 +8030,6 @@ input SendReportAProblemEmailInput {
 }
 
 """
-Represents a system intake that has been associated with a TRB request
-"""
-type TRBRequestSystemIntake {
-  id: UUID!
-  trbRequestId: UUID!
-  systemIntakeId: UUID!
-  createdBy: String!
-  createdAt: Time!
-  modifiedBy: String
-  modifiedAt: Time
-}
-
-"""
 Represents a request for support from the Technical Review Board (TRB)
 """
 type TRBRequest {
@@ -8829,9 +8757,9 @@ type Mutation {
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
     @hasRole(role: EASI_TRB_ADMIN)
-  createTRBRequestSystemIntake(trbRequestId: UUID!, systemIntakeId: UUID!): TRBRequestSystemIntake!
+  linkSystemIntakeToTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
     @hasRole(role: EASI_TRB_ADMIN)
-  deleteTRBRequestSystemIntake(trbRequestId: UUID!, systemIntakeId: UUID!): TRBRequestSystemIntake!
+  unlinkSystemIntakeFromTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
@@ -9398,30 +9326,6 @@ func (ec *executionContext) field_Mutation_createTRBRequestFeedback_args(ctx con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_createTRBRequestSystemIntake_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 uuid.UUID
-	if tmp, ok := rawArgs["trbRequestId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["trbRequestId"] = arg0
-	var arg1 uuid.UUID
-	if tmp, ok := rawArgs["systemIntakeId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
-		arg1, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["systemIntakeId"] = arg1
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_createTRBRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -9557,30 +9461,6 @@ func (ec *executionContext) field_Mutation_deleteTRBRequestDocument_args(ctx con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_deleteTRBRequestSystemIntake_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 uuid.UUID
-	if tmp, ok := rawArgs["trbRequestId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["trbRequestId"] = arg0
-	var arg1 uuid.UUID
-	if tmp, ok := rawArgs["systemIntakeId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
-		arg1, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["systemIntakeId"] = arg1
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_deleteTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -9623,6 +9503,30 @@ func (ec *executionContext) field_Mutation_issueLifecycleId_args(ctx context.Con
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_linkSystemIntakeToTrbRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["trbRequestId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["trbRequestId"] = arg0
+	var arg1 uuid.UUID
+	if tmp, ok := rawArgs["systemIntakeId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
+		arg1, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["systemIntakeId"] = arg1
 	return args, nil
 }
 
@@ -9797,6 +9701,30 @@ func (ec *executionContext) field_Mutation_submitIntake_args(ctx context.Context
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_unlinkSystemIntakeFromTrbRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["trbRequestId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["trbRequestId"] = arg0
+	var arg1 uuid.UUID
+	if tmp, ok := rawArgs["systemIntakeId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
+		arg1, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["systemIntakeId"] = arg1
 	return args, nil
 }
 
@@ -27583,8 +27511,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequestFeedback(ctx c
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createTRBRequestSystemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createTRBRequestSystemIntake(ctx, field)
+func (ec *executionContext) _Mutation_linkSystemIntakeToTrbRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_linkSystemIntakeToTrbRequest(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -27598,7 +27526,7 @@ func (ec *executionContext) _Mutation_createTRBRequestSystemIntake(ctx context.C
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateTRBRequestSystemIntake(rctx, fc.Args["trbRequestId"].(uuid.UUID), fc.Args["systemIntakeId"].(uuid.UUID))
+			return ec.resolvers.Mutation().LinkSystemIntakeToTrbRequest(rctx, fc.Args["trbRequestId"].(uuid.UUID), fc.Args["systemIntakeId"].(uuid.UUID))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
@@ -27618,10 +27546,10 @@ func (ec *executionContext) _Mutation_createTRBRequestSystemIntake(ctx context.C
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.TRBRequestSystemIntake); ok {
+		if data, ok := tmp.(bool); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBRequestSystemIntake`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -27632,35 +27560,19 @@ func (ec *executionContext) _Mutation_createTRBRequestSystemIntake(ctx context.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBRequestSystemIntake)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNTRBRequestSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestSystemIntake(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_createTRBRequestSystemIntake(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_linkSystemIntakeToTrbRequest(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBRequestSystemIntake_id(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBRequestSystemIntake_trbRequestId(ctx, field)
-			case "systemIntakeId":
-				return ec.fieldContext_TRBRequestSystemIntake_systemIntakeId(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBRequestSystemIntake_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBRequestSystemIntake_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBRequestSystemIntake_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBRequestSystemIntake_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestSystemIntake", field.Name)
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	defer func() {
@@ -27670,15 +27582,15 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequestSystemIntake(c
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createTRBRequestSystemIntake_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_linkSystemIntakeToTrbRequest_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_deleteTRBRequestSystemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteTRBRequestSystemIntake(ctx, field)
+func (ec *executionContext) _Mutation_unlinkSystemIntakeFromTrbRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_unlinkSystemIntakeFromTrbRequest(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -27692,7 +27604,7 @@ func (ec *executionContext) _Mutation_deleteTRBRequestSystemIntake(ctx context.C
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteTRBRequestSystemIntake(rctx, fc.Args["trbRequestId"].(uuid.UUID), fc.Args["systemIntakeId"].(uuid.UUID))
+			return ec.resolvers.Mutation().UnlinkSystemIntakeFromTrbRequest(rctx, fc.Args["trbRequestId"].(uuid.UUID), fc.Args["systemIntakeId"].(uuid.UUID))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
@@ -27712,10 +27624,10 @@ func (ec *executionContext) _Mutation_deleteTRBRequestSystemIntake(ctx context.C
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.TRBRequestSystemIntake); ok {
+		if data, ok := tmp.(bool); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBRequestSystemIntake`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -27726,35 +27638,19 @@ func (ec *executionContext) _Mutation_deleteTRBRequestSystemIntake(ctx context.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBRequestSystemIntake)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNTRBRequestSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestSystemIntake(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_deleteTRBRequestSystemIntake(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_unlinkSystemIntakeFromTrbRequest(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBRequestSystemIntake_id(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBRequestSystemIntake_trbRequestId(ctx, field)
-			case "systemIntakeId":
-				return ec.fieldContext_TRBRequestSystemIntake_systemIntakeId(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBRequestSystemIntake_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBRequestSystemIntake_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBRequestSystemIntake_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBRequestSystemIntake_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBRequestSystemIntake", field.Name)
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	defer func() {
@@ -27764,7 +27660,7 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBRequestSystemIntake(c
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteTRBRequestSystemIntake_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_unlinkSystemIntakeFromTrbRequest_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -42664,308 +42560,6 @@ func (ec *executionContext) fieldContext_TRBRequestForm_modifiedAt(ctx context.C
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBRequestSystemIntake_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestSystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestSystemIntake_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestSystemIntake_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestSystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestSystemIntake_trbRequestId(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestSystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestSystemIntake_trbRequestId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TRBRequestID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestSystemIntake_trbRequestId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestSystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestSystemIntake_systemIntakeId(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestSystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestSystemIntake_systemIntakeId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SystemIntakeID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestSystemIntake_systemIntakeId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestSystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestSystemIntake_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestSystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestSystemIntake_createdBy(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedBy, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestSystemIntake_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestSystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestSystemIntake_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestSystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestSystemIntake_createdAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(time.Time)
-	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestSystemIntake_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestSystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestSystemIntake_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestSystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestSystemIntake_modifiedBy(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ModifiedBy, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestSystemIntake_modifiedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestSystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequestSystemIntake_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestSystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequestSystemIntake_modifiedAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ModifiedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequestSystemIntake_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequestSystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _TRBTaskStatuses_formStatus(ctx context.Context, field graphql.CollectedField, obj *models.TRBTaskStatuses) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBTaskStatuses_formStatus(ctx, field)
 	if err != nil {
@@ -52676,16 +52270,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_createTRBRequestFeedback(ctx, field)
 			})
 
-		case "createTRBRequestSystemIntake":
+		case "linkSystemIntakeToTrbRequest":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createTRBRequestSystemIntake(ctx, field)
+				return ec._Mutation_linkSystemIntakeToTrbRequest(ctx, field)
 			})
 
-		case "deleteTRBRequestSystemIntake":
+		case "unlinkSystemIntakeFromTrbRequest":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteTRBRequestSystemIntake(ctx, field)
+				return ec._Mutation_unlinkSystemIntakeFromTrbRequest(ctx, field)
 			})
 
 		case "updateTRBRequestConsultMeetingTime":
@@ -56242,70 +55836,6 @@ func (ec *executionContext) _TRBRequestForm(ctx context.Context, sel ast.Selecti
 	return out
 }
 
-var tRBRequestSystemIntakeImplementors = []string{"TRBRequestSystemIntake"}
-
-func (ec *executionContext) _TRBRequestSystemIntake(ctx context.Context, sel ast.SelectionSet, obj *models.TRBRequestSystemIntake) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBRequestSystemIntakeImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBRequestSystemIntake")
-		case "id":
-
-			out.Values[i] = ec._TRBRequestSystemIntake_id(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "trbRequestId":
-
-			out.Values[i] = ec._TRBRequestSystemIntake_trbRequestId(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "systemIntakeId":
-
-			out.Values[i] = ec._TRBRequestSystemIntake_systemIntakeId(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "createdBy":
-
-			out.Values[i] = ec._TRBRequestSystemIntake_createdBy(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "createdAt":
-
-			out.Values[i] = ec._TRBRequestSystemIntake_createdAt(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "modifiedBy":
-
-			out.Values[i] = ec._TRBRequestSystemIntake_modifiedBy(ctx, field, obj)
-
-		case "modifiedAt":
-
-			out.Values[i] = ec._TRBRequestSystemIntake_modifiedAt(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var tRBTaskStatusesImplementors = []string{"TRBTaskStatuses"}
 
 func (ec *executionContext) _TRBTaskStatuses(ctx context.Context, sel ast.SelectionSet, obj *models.TRBTaskStatuses) graphql.Marshaler {
@@ -59548,20 +59078,6 @@ func (ec *executionContext) marshalNTRBRequestStatus2githubᚗcomᚋcmsgovᚋeas
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) marshalNTRBRequestSystemIntake2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestSystemIntake(ctx context.Context, sel ast.SelectionSet, v models.TRBRequestSystemIntake) graphql.Marshaler {
-	return ec._TRBRequestSystemIntake(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNTRBRequestSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestSystemIntake(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequestSystemIntake) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._TRBRequestSystemIntake(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNTRBRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx context.Context, v interface{}) (models.TRBRequestType, error) {

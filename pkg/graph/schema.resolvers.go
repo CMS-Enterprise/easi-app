@@ -1967,13 +1967,13 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		})
 }
 
-// CreateTRBRequestSystemIntake is the resolver for the createTRBRequestSystemIntake field.
-func (r *mutationResolver) CreateTRBRequestSystemIntake(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (*models.TRBRequestSystemIntake, error) {
+// LinkSystemIntakeToTrbRequest is the resolver for the linkSystemIntakeToTrbRequest field.
+func (r *mutationResolver) LinkSystemIntakeToTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
 	return resolvers.CreateTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
 }
 
-// DeleteTRBRequestSystemIntake is the resolver for the deleteTRBRequestSystemIntake field.
-func (r *mutationResolver) DeleteTRBRequestSystemIntake(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (*models.TRBRequestSystemIntake, error) {
+// UnlinkSystemIntakeFromTrbRequest is the resolver for the unlinkSystemIntakeFromTrbRequest field.
+func (r *mutationResolver) UnlinkSystemIntakeFromTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
 	return resolvers.DeleteTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
 }
 

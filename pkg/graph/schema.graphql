@@ -1501,19 +1501,6 @@ input SendReportAProblemEmailInput {
 }
 
 """
-Represents a system intake that has been associated with a TRB request
-"""
-type TRBRequestSystemIntake {
-  id: UUID!
-  trbRequestId: UUID!
-  systemIntakeId: UUID!
-  createdBy: String!
-  createdAt: Time!
-  modifiedBy: String
-  modifiedAt: Time
-}
-
-"""
 Represents a request for support from the Technical Review Board (TRB)
 """
 type TRBRequest {
@@ -2241,9 +2228,9 @@ type Mutation {
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
     @hasRole(role: EASI_TRB_ADMIN)
-  createTRBRequestSystemIntake(trbRequestId: UUID!, systemIntakeId: UUID!): TRBRequestSystemIntake!
+  linkSystemIntakeToTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
     @hasRole(role: EASI_TRB_ADMIN)
-  deleteTRBRequestSystemIntake(trbRequestId: UUID!, systemIntakeId: UUID!): TRBRequestSystemIntake!
+  unlinkSystemIntakeFromTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)

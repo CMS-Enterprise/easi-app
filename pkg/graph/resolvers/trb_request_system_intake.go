@@ -16,16 +16,24 @@ func GetTRBRequestSystemIntakesByTRBRequestID(ctx context.Context, store *storag
 }
 
 // CreateTRBRequestSystemIntake relates a TRB request to an SystemIntake
-func CreateTRBRequestSystemIntake(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (*models.TRBRequestSystemIntake, error) {
+func CreateTRBRequestSystemIntake(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
 	trbLcid := &models.TRBRequestSystemIntake{
 		TRBRequestID:   trbRequestID,
 		SystemIntakeID: systemIntakeID,
 	}
 	trbLcid.CreatedBy = appcontext.Principal(ctx).ID()
-	return store.CreateTRBRequestSystemIntake(ctx, trbLcid)
+	_, err := store.CreateTRBRequestSystemIntake(ctx, trbLcid)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 // DeleteTRBRequestSystemIntake removes a TRB request/SystemIntake relationship
-func DeleteTRBRequestSystemIntake(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (*models.TRBRequestSystemIntake, error) {
-	return store.DeleteTRBRequestSystemIntake(ctx, trbRequestID, systemIntakeID)
+func DeleteTRBRequestSystemIntake(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
+	_, err := store.DeleteTRBRequestSystemIntake(ctx, trbRequestID, systemIntakeID)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
