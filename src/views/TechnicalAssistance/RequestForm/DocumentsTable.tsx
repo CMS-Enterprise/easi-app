@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 
+import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
@@ -23,6 +25,8 @@ import {
 import { formatDateLocal } from 'utils/date';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
+import { DocumentStatusType } from '../TrbDocuments';
+
 import { RefetchDocuments } from './Documents';
 
 type Props = {
@@ -30,15 +34,26 @@ type Props = {
   setRefetchDocuments?: React.Dispatch<React.SetStateAction<RefetchDocuments>>;
   setLoadingDocuments?: React.Dispatch<React.SetStateAction<boolean>>;
   setDocumentsCount?: React.Dispatch<React.SetStateAction<number>>;
+  setDocumentMessage?: (value: string) => void;
+  setDocumentStatus?: (value: DocumentStatusType) => void;
+  canEdit?: boolean;
 };
 
 function DocumentsTable({
   trbRequestId,
   setRefetchDocuments,
   setLoadingDocuments,
-  setDocumentsCount
+  setDocumentsCount,
+  setDocumentMessage,
+  setDocumentStatus,
+  canEdit = true
 }: Props) {
   const { t } = useTranslation('technicalAssistance');
+
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [fileToRemove, setFileToRemove] = useState<TrbRequestDocuments>(
+    {} as TrbRequestDocuments
+  );
 
   const { data, refetch, loading } = useQuery<
     GetTrbRequestDocuments,
@@ -67,6 +82,50 @@ function DocumentsTable({
     DeleteTrbRequestDocument,
     DeleteTrbRequestDocumentVariables
   >(DeleteTrbRequestDocumentQuery);
+
+  const setRemoveError = useMemo(() => {
+    return () => {
+      if (setDocumentMessage && setDocumentStatus) {
+        setDocumentMessage(t('documents.supportingDocuments.removeFail'));
+        setDocumentStatus('error');
+      }
+    };
+  }, [t, setDocumentMessage, setDocumentStatus]);
+
+  const handleDelete = useMemo(() => {
+    return (file: TrbRequestDocuments) => {
+      deleteDocument({
+        variables: {
+          id: file.id
+        }
+      })
+        .then(response => {
+          if (!response.errors) {
+            if (setDocumentMessage && setDocumentStatus) {
+              setDocumentMessage(
+                t('documents.supportingDocuments.removeSuccess', {
+                  documentName: file.fileName
+                })
+              );
+              setDocumentStatus('success');
+            }
+            refetch();
+          } else {
+            setRemoveError();
+          }
+        })
+        .catch(() => {
+          setRemoveError();
+        });
+    };
+  }, [
+    deleteDocument,
+    refetch,
+    t,
+    setDocumentMessage,
+    setDocumentStatus,
+    setRemoveError
+  ]);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
     return [
@@ -116,24 +175,19 @@ function DocumentsTable({
                   {t('documents.table.view')}
                 </Link>
                 {/* Delete document */}
-                <Button
-                  unstyled
-                  type="button"
-                  className="margin-left-2 text-error"
-                  onClick={() => {
-                    deleteDocument({
-                      variables: { id: row.original.id }
-                    })
-                      .then(() => {
-                        refetch(); // Refresh doc list
-                      })
-                      .catch(() => {
-                        // todo no top level error message for the delete yet
-                      });
-                  }}
-                >
-                  {t('documents.table.remove')}
-                </Button>
+                {canEdit && (
+                  <Button
+                    unstyled
+                    type="button"
+                    className="margin-left-2 text-error"
+                    onClick={() => {
+                      setModalOpen(true);
+                      setFileToRemove(row.original);
+                    }}
+                  >
+                    {t('documents.table.remove')}
+                  </Button>
+                )}
               </>
             );
           // Infected unavailable
@@ -143,7 +197,7 @@ function DocumentsTable({
         }
       }
     ];
-  }, [deleteDocument, refetch, t]);
+  }, [canEdit, t]);
 
   const {
     getTableBodyProps,
@@ -172,8 +226,42 @@ function DocumentsTable({
     );
   }
 
+  const renderModal = () => {
+    return (
+      <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
+        <PageHeading headingLevel="h2" className="margin-top-0 margin-bottom-0">
+          {t('documents.supportingDocuments.removeHeading', {
+            documentName: fileToRemove.fileName
+          })}
+        </PageHeading>
+
+        <p>{t('documents.supportingDocuments.removeInfo')}</p>
+
+        <Button
+          type="button"
+          onClick={() => {
+            handleDelete(fileToRemove);
+            setModalOpen(false);
+          }}
+        >
+          {t('documents.supportingDocuments.removeDocument')}
+        </Button>
+
+        <Button
+          type="button"
+          className="margin-left-2"
+          unstyled
+          onClick={() => setModalOpen(false)}
+        >
+          {t('documents.supportingDocuments.cancel')}
+        </Button>
+      </Modal>
+    );
+  };
+
   return (
     <div className="easi-table--bleed-x easi-table--bottomless">
+      {renderModal()}
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
