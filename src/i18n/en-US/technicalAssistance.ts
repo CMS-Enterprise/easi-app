@@ -108,7 +108,7 @@ const technicalAssistance = {
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
     error:
-      'There was an issue saving your {{type}}. Please try again, and if the problem persists, try again later.',
+      'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     recommendationSuccess:
       'Your recommendation was added to this advice letter.'
   },

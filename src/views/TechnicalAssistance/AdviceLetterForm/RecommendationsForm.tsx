@@ -156,7 +156,10 @@ const RecommendationsForm = ({
         /* Error alert for gql errors */
         showFormError && (
           <Alert type="error" className="margin-bottom-5" slim>
-            {t('adviceLetterForm.error', { type: 'recommendation' })}
+            {t('adviceLetterForm.error', {
+              action: 'saving',
+              type: 'recommendation'
+            })}
           </Alert>
         )
       }

@@ -87,7 +87,10 @@ const Summary = ({
           if (e instanceof ApolloError) {
             setFormAlert({
               type: 'error',
-              message: t('adviceLetterForm.error', { type: 'advice letter' })
+              message: t('adviceLetterForm.error', {
+                action: 'saving',
+                type: 'advice letter'
+              })
             });
           }
         }

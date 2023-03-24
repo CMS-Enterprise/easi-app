@@ -130,7 +130,15 @@ const Recommendations = ({
                 }}
                 remove={{
                   onClick: recommendation =>
-                    remove({ variables: { id: recommendation.id } })
+                    remove({ variables: { id: recommendation.id } }).catch(() =>
+                      setFormAlert({
+                        type: 'error',
+                        message: t('adviceLetterForm.error', {
+                          action: 'removing',
+                          type: 'recommendation'
+                        })
+                      })
+                    )
                 }}
               />
             )
