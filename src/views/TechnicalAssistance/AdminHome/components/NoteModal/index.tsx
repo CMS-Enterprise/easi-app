@@ -51,7 +51,7 @@ const NotesModal = ({
   return (
     <ReactModal
       isOpen={isOpen}
-      overlayClassName="easi-notes__overlay overflow-y-scroll"
+      overlayClassName="easi-notes__overlay"
       className="easi-notes__content"
       onAfterOpen={handleOpenModal}
       onAfterClose={noScroll.off}
@@ -65,7 +65,7 @@ const NotesModal = ({
           <Button
             type="button"
             data-testid="close-discussions"
-            className="easi-notes__x-button margin-right-2"
+            className="bg-transparent margin-right-2"
             aria-label="Close Modal"
             onClick={() => {
               if (viewType === 'addNote') {
