@@ -62,7 +62,7 @@ export default function RecommendationsList({
           <li
             key={id}
             className={classNames({
-              'grid-col-6': type === 'form',
+              'desktop:grid-col-6': type === 'form',
               'bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3':
                 type === 'admin'
             })}
