@@ -48,7 +48,7 @@ describe('TRB admin home', () => {
           <Provider store={defaultStore}>
             <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
               <Route path="/trb/:id/:activePage?">
-                <AdminHome />
+                <AdminHome setRequestName={() => null} />
               </Route>
             </MockedProvider>
           </Provider>
@@ -78,7 +78,7 @@ describe('TRB admin home', () => {
           <Provider store={defaultStore}>
             <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
               <Route path="/trb/:id/:activePage?">
-                <AdminHome />
+                <AdminHome setRequestName={() => null} />
               </Route>
             </MockedProvider>
           </Provider>

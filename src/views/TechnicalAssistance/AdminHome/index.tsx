@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
@@ -70,8 +70,12 @@ const SideNavigation = ({
   );
 };
 
+type AdminHomeProps = {
+  setRequestName: React.Dispatch<React.SetStateAction<string>>;
+};
+
 /** Wrapper for TRB admin view components */
-export default function AdminHome() {
+export default function AdminHome({ setRequestName }: AdminHomeProps) {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
@@ -128,6 +132,16 @@ export default function AdminHome() {
     ? formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy')
     : '';
 
+  // Request name rendered subpage form breadcrumbs
+  const requestName: string = data?.trbRequest.name || '';
+
+  // Note count for NoteBox modal rendered on each page
+  const noteCount: number = data?.trbRequest.adminNotes.length || 0;
+
+  useEffect(() => {
+    setRequestName(requestName);
+  }, [requestName, setRequestName]);
+
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
     return <PageLoading />;
@@ -183,7 +197,7 @@ export default function AdminHome() {
               <Route exact path={subpage.route} key={subpage.route}>
                 <subpage.component
                   trbRequestId={id}
-                  noteCount={data?.trbRequest.adminNotes.length || 0}
+                  noteCount={noteCount}
                   requesterString={requesterString}
                   submissionDate={submissionDate}
                 />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { GridContainer } from '@trussworks/react-uswds';
 
@@ -22,6 +22,8 @@ import './index.scss';
 
 function TechnicalAssistance() {
   const { path } = useRouteMatch();
+
+  const [requestName, setRequestName] = useState<string>('');
 
   return (
     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
@@ -69,7 +71,7 @@ function TechnicalAssistance() {
 
         {/* Admin view */}
         <Route exact path={`${path}/:id/:activePage`}>
-          <AdminHome />
+          <AdminHome setRequestName={setRequestName} />
         </Route>
 
         {/* Admin request form actions */}
@@ -84,7 +86,7 @@ function TechnicalAssistance() {
         </Route>
 
         <Route exact path={`${path}/:id/:activePage/add-note`}>
-          <AddNote />
+          <AddNote requestName={requestName} />
         </Route>
 
         <Route path="*">
