@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { Grid, GridContainer, IconClose } from '@trussworks/react-uswds';
+import {
+  Grid,
+  GridContainer,
+  IconArrowBack,
+  IconClose
+} from '@trussworks/react-uswds';
 import noScroll from 'no-scroll';
 
 import AddNote from '../../AddNote';
@@ -15,16 +20,14 @@ type NotesModalWrapperProps = {
   isOpen: boolean;
   trbRequestId: string;
   addNote?: boolean;
-  openModal?: () => void;
-  closeModal: () => void;
+  openModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const NotesModal = ({
   isOpen,
   trbRequestId,
   addNote,
-  openModal,
-  closeModal
+  openModal
 }: NotesModalWrapperProps) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -32,9 +35,6 @@ const NotesModal = ({
 
   const handleOpenModal = () => {
     noScroll.on();
-    if (openModal) {
-      openModal();
-    }
   };
 
   // Set initial view type
@@ -53,7 +53,7 @@ const NotesModal = ({
       className="easi-notes__content"
       onAfterOpen={handleOpenModal}
       onAfterClose={noScroll.off}
-      onRequestClose={closeModal}
+      onRequestClose={() => openModal(false)}
       shouldCloseOnOverlayClick
       contentLabel={t('ariaLabel')}
       appElement={document.getElementById('root')! as HTMLElement}
@@ -65,11 +65,23 @@ const NotesModal = ({
             data-testid="close-discussions"
             className="easi-notes__x-button margin-right-2"
             aria-label="Close Modal"
-            onClick={closeModal}
+            onClick={() => {
+              if (viewType === 'addNote') {
+                setViewType('viewNotes');
+              } else {
+                openModal(false);
+              }
+            }}
           >
-            <IconClose size={4} className="text-base" />
+            {viewType === 'viewNotes' ? (
+              <IconClose size={4} className="text-base" />
+            ) : (
+              <IconArrowBack size={4} className="text-base" />
+            )}
           </button>
-          <h4 className="margin-0">{t('notes.notes')}</h4>
+          <h4 className="margin-0">
+            {viewType === 'viewNotes' ? t('notes.notes') : t('notes.allNotes')}
+          </h4>
         </div>
         <GridContainer className="padding-y-8">
           <Grid desktop={{ col: 12 }}>

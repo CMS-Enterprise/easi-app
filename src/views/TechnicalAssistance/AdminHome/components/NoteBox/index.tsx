@@ -11,8 +11,8 @@ type NoteBoxProps = {
 const NoteBox = ({ trbRequestId }: NoteBoxProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const [isNotesOpen, setIsNotesOpen] = useState(false);
-  const [addNote, setAddNote] = useState(false);
+  const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
+  const [addNote, setAddNote] = useState<boolean>(false);
 
   const notesCount = 0;
 
@@ -23,7 +23,7 @@ const NoteBox = ({ trbRequestId }: NoteBoxProps) => {
           isOpen={isNotesOpen}
           trbRequestId={trbRequestId}
           addNote={addNote}
-          closeModal={() => setIsNotesOpen(false)}
+          openModal={setIsNotesOpen}
         />
       )}
       <div
