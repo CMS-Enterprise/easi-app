@@ -8581,6 +8581,7 @@ The input needed to close a TRB request
 input CloseTRBRequestInput {
   id: UUID!
   reasonClosed: String!
+  copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
 
@@ -8590,6 +8591,8 @@ The data needed to reopen a TRB request
 input ReopenTRBRequestInput {
   trbRequestId: UUID!
   reasonReopened: String!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
 }
 
 """
@@ -45112,7 +45115,7 @@ func (ec *executionContext) unmarshalInputCloseTRBRequestInput(ctx context.Conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "reasonClosed", "notifyEuaIds"}
+	fieldsInOrder := [...]string{"id", "reasonClosed", "copyTrbMailbox", "notifyEuaIds"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -45132,6 +45135,14 @@ func (ec *executionContext) unmarshalInputCloseTRBRequestInput(ctx context.Conte
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reasonClosed"))
 			it.ReasonClosed, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "copyTrbMailbox":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("copyTrbMailbox"))
+			it.CopyTrbMailbox, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -46212,7 +46223,7 @@ func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "reasonReopened"}
+	fieldsInOrder := [...]string{"trbRequestId", "reasonReopened", "copyTrbMailbox", "notifyEuaIds"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -46232,6 +46243,22 @@ func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reasonReopened"))
 			it.ReasonReopened, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "copyTrbMailbox":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("copyTrbMailbox"))
+			it.CopyTrbMailbox, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notifyEuaIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notifyEuaIds"))
+			it.NotifyEuaIds, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}

@@ -128,6 +128,7 @@ const technicalAssistance = {
     cancel: 'Cancel',
     back: 'Back',
     continue: 'Continue',
+    update: 'Update',
     next: 'Next',
     save: 'Save',
     saveAndExit: 'Save and exit',
@@ -293,8 +294,25 @@ const technicalAssistance = {
     helpLinksNewTab: 'All help links open in a new tab',
     stepsInvolved:
       'Steps involved in getting technical assistance from the TRB',
-    sampleRequest: 'Sample TRB Request',
+    prepareConsultMeeting: 'Prepare for the consult meeting',
     viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
+    editsRequestedWarning:
+      'The TRB has requested edits to your initial request form. View their feedback and make any changes requested.',
+    noFeedback:
+      'The TRB had no feedback about your request form. If you have any questions, you may contact them at ',
+    downloadTemplates: 'Download presentation templates',
+    sendAnEmail: 'Send an email',
+    uploadDocuments: 'Upload additional documents',
+    reviewAttendeeList: 'Review attendee list',
+    viewAttendeeList: 'View attendee list',
+    prepareForTRB: 'Prepare for your TRB consult meeting (opens in a new tab)',
+    trbConsultInfoHeading:
+      'Your TRB consult session is scheduled for {{-date}} at {{-time}}',
+    trbConsultInfo:
+      'If this day or time does not work for you, or if you need to reschedule, please contact the TRB at ',
+    trbConsultAttended:
+      'You attended your project’s TRB consult session on {{-date}} at {{-time}}',
+    viewAdviceLetter: 'View advice letter',
     taskList: [
       {
         heading: 'Fill out the initial request form',
@@ -652,7 +670,23 @@ const technicalAssistance = {
         'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
       success: 'Your document has been uploaded and is being scanned.'
     },
-    continueWithoutAdding: 'Continue without adding documents'
+    continueWithoutAdding: 'Continue without adding documents',
+    supportingDocuments: {
+      heading: 'Supporting documents',
+      info:
+        'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.',
+      addAnother: 'Add another document',
+      adminInfo:
+        'The requester has uploaded these documents as a part of this request. If the TRB needs additional documentation, contact the requester.',
+      removeHeading: 'Confirm you want to remove {{-documentName}}.',
+      removeInfo:
+        'You will not be able to access this document after it is removed, and the TRB team will not be able to view it.',
+      removeDocument: 'Remove document',
+      cancel: 'Cancel',
+      removeFail:
+        'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
+      removeSuccess: 'You have successfully removed {{-documentName}}.'
+    }
   },
   check: {
     submit: 'Submit request',
@@ -700,7 +734,8 @@ const technicalAssistance = {
     viewFeedback: 'View feedback',
     date: 'Date',
     from: 'Feedback from',
-    returnToForm: 'Return to request form'
+    returnToForm: 'Return to request form',
+    returnToTaskList: 'Return to task list'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',

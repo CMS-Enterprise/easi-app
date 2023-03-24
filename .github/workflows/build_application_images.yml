@@ -34,10 +34,9 @@ jobs:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
           cache: 'yarn'
       - name: Set up go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ env.EASI_APP_GO_VERSION }}
-          cache: true
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
       - name: Announce failure
