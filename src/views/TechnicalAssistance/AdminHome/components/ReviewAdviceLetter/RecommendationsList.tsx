@@ -21,19 +21,6 @@ type RecommendationsListProps = {
   className?: string;
 };
 
-type CardTitleProps = {
-  type: RecommendationsListProps['type'];
-  children: React.ReactNode;
-  className?: string;
-};
-
-const CardTitle = ({ type, children, className }: CardTitleProps) => {
-  if (type === 'admin') {
-    return <h3 className={className}>{children}</h3>;
-  }
-  return <h4 className={className}>{children}</h4>;
-};
-
 export default function RecommendationsList({
   type,
   recommendations,
@@ -42,6 +29,7 @@ export default function RecommendationsList({
   className
 }: RecommendationsListProps) {
   const { t } = useTranslation('technicalAssistance');
+
   return (
     <ul
       className={classNames(
@@ -67,9 +55,11 @@ export default function RecommendationsList({
                 type === 'admin'
             })}
           >
-            <CardTitle type={type} className="margin-bottom-1">
-              {title}
-            </CardTitle>
+            {type === 'admin' ? (
+              <h3 className="margin-bottom-1">{title}</h3>
+            ) : (
+              <h4 className="margin-bottom-1">{title}</h4>
+            )}
 
             <p className="margin-y-1">{description}</p>
 
