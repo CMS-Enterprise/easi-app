@@ -33,7 +33,7 @@ const technicalAssistance = {
   },
   adminAction: 'Admin Action',
   requestNotes: {
-    text: 'notes about this request',
+    text: 'note{{-plural}} about this request',
     viewNotes: 'View notes',
     addNote: 'Add a note'
   },

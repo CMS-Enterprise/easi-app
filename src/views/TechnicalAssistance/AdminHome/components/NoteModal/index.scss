@@ -40,35 +40,7 @@
   
       &:hover {
         cursor: pointer;
+        background-color: transparent;
       }
     }
-  
-    &__body {
-      padding: 4rem 2rem 2rem;
-    }
-
-    &__connected {
-      border-left: .25rem solid color('base-lightest');
-      margin-left: .9rem;
-      padding-left: 1.4rem;
-      margin-top: 0.25rem;
-    }
-
-    &__not-connected {
-      padding-left: 2.6rem;
-    }
-
-    &__single-discussion:last-of-type {
-      margin-bottom: -1rem;
-      margin-top: -.5rem;
-    }
-
-  }
-
-  .no-button > .usa-accordion__heading > .usa-accordion__button {
-    background-size: 0rem !important;
-  }
-
-  .usa-accordion__content {
-    padding: 0.75rem 1.25rem calc(1rem - 0.25rem) 1.25rem !important;
   }

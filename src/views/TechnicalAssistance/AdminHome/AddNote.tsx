@@ -100,8 +100,6 @@ const AddNote = ({
         />
       )}
 
-      {message}
-
       <Form
         onSubmit={handleSubmit(formData => {
           mutate({
@@ -156,6 +154,8 @@ const AddNote = ({
                 components={{ red: <span className="text-red" /> }}
               />
             </div>
+
+            {message}
 
             {hasErrors && (
               <Alert

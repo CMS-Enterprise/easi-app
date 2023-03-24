@@ -93,7 +93,13 @@ export const trbRequestSummary: Summary = {
     feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
     formStatus: TRBFormStatus.READY_TO_START,
     adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
-  }
+  },
+  adminNotes: [
+    {
+      __typename: 'TRBAdminNote',
+      id: '123'
+    }
+  ]
 };
 
 export const trbRequestAdviceLetter: AdviceLetter = {

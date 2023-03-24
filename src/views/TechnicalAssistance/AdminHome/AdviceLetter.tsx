@@ -20,7 +20,7 @@ import ReviewAdviceLetter from './components/ReviewAdviceLetter';
 
 import './AdviceLetter.scss';
 
-const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
+const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   // TRB request query
@@ -66,7 +66,7 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
           />
         </Grid>
         <Grid tablet={{ col: 4 }}>
-          <NoteBox trbRequestId={trbRequestId} />
+          <NoteBox trbRequestId={trbRequestId} noteCount={noteCount} />
         </Grid>
       </Grid>
 

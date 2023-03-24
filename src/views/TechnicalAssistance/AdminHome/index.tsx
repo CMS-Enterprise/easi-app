@@ -183,6 +183,7 @@ export default function AdminHome() {
               <Route exact path={subpage.route} key={subpage.route}>
                 <subpage.component
                   trbRequestId={id}
+                  noteCount={data?.trbRequest.adminNotes.length || 0}
                   requesterString={requesterString}
                   submissionDate={submissionDate}
                 />

@@ -142,7 +142,10 @@ describe('Trb Admin Initial Request Form', () => {
             ]}
           >
             <Route exact path="/trb/:id/:activePage">
-              <InitialRequestForm trbRequestId={mockTrbRequestData.id} />
+              <InitialRequestForm
+                trbRequestId={mockTrbRequestData.id}
+                noteCount={0}
+              />
             </Route>
           </MemoryRouter>
         </Provider>

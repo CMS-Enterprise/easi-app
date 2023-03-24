@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
+import { Button, Grid } from '@trussworks/react-uswds';
 
 import NotesModal from '../NoteModal';
 
 type NoteBoxProps = {
   trbRequestId: string;
+  noteCount: number;
 };
 
-const NoteBox = ({ trbRequestId }: NoteBoxProps) => {
+const NoteBox = ({ trbRequestId, noteCount }: NoteBoxProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
   const [addNote, setAddNote] = useState<boolean>(false);
-
-  const notesCount = 0;
 
   return (
     <>
@@ -31,34 +30,40 @@ const NoteBox = ({ trbRequestId }: NoteBoxProps) => {
         data-testid="trb-admin-home__request-notes"
       >
         <p className="margin-y-0 line-height-body-5">
-          <span className="text-bold">{notesCount}</span>{' '}
-          {t('requestNotes.text')}
+          <span className="text-bold">{noteCount}</span>{' '}
+          {t('requestNotes.text', {
+            plural: noteCount !== 1 ? 's' : ''
+          })}
         </p>
-        <ButtonGroup>
-          <Button
-            type="button"
-            data-testid="note-modal-button"
-            unstyled
-            onClick={() => {
-              setAddNote(false);
-              setIsNotesOpen(true);
-            }}
-          >
-            {t('requestNotes.viewNotes')}
-          </Button>
+        <div className="margin-top-05 display-flex">
+          <Grid desktop={{ col: 6 }}>
+            <Button
+              type="button"
+              data-testid="note-modal-button"
+              unstyled
+              onClick={() => {
+                setAddNote(false);
+                setIsNotesOpen(true);
+              }}
+            >
+              {t('requestNotes.viewNotes')}
+            </Button>
+          </Grid>
 
-          <Button
-            type="button"
-            data-testid="note-modal-button"
-            unstyled
-            onClick={() => {
-              setAddNote(true);
-              setIsNotesOpen(true);
-            }}
-          >
-            {t('requestNotes.addNote')}
-          </Button>
-        </ButtonGroup>
+          <Grid desktop={{ col: 6 }}>
+            <Button
+              type="button"
+              data-testid="note-modal-button"
+              unstyled
+              onClick={() => {
+                setAddNote(true);
+                setIsNotesOpen(true);
+              }}
+            >
+              {t('requestNotes.addNote')}
+            </Button>
+          </Grid>
+        </div>
       </div>
     </>
   );

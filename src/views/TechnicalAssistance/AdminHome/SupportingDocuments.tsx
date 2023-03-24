@@ -8,7 +8,10 @@ import DocumentsTable from '../RequestForm/DocumentsTable';
 
 import NoteBox from './components/NoteBox';
 
-const SupportingDocuments = ({ trbRequestId }: TrbAdminPageProps) => {
+const SupportingDocuments = ({
+  trbRequestId,
+  noteCount
+}: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
   return (
     <Grid row gap="lg" data-testid="trb-admin-home__documents">
@@ -22,7 +25,7 @@ const SupportingDocuments = ({ trbRequestId }: TrbAdminPageProps) => {
         </p>
       </Grid>
       <Grid tablet={{ col: 4 }}>
-        <NoteBox trbRequestId={trbRequestId} />
+        <NoteBox trbRequestId={trbRequestId} noteCount={noteCount} />
       </Grid>
 
       <Grid desktop={{ col: 12 }} className="margin-top-2">

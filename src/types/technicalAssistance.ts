@@ -48,6 +48,7 @@ export type FormattedTRBAttendees = {
 /** TRB Admin page props */
 export type TrbAdminPageProps = {
   trbRequestId: string;
+  noteCount: number;
   requesterString?: string | null;
   submissionDate?: string;
 };
