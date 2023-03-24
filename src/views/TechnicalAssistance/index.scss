@@ -157,6 +157,10 @@
     list-style-type: disc;
   }
 
+  .usa-alert__body {
+    margin-left: 0;
+  }
+
   /* Form level error alert */
   .usa-alert--error {
     button.usa-error-message {

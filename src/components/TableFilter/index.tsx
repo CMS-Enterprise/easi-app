@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FilterValue, useAsyncDebounce } from 'react-table';
 import {
@@ -17,6 +17,7 @@ import './index.scss';
 
 type GlobalClientFilterProps = {
   setGlobalFilter: (filterValue: FilterValue) => void;
+  initialFilter?: string | undefined;
   tableID: string;
   tableName: string;
   className?: string;
@@ -25,11 +26,15 @@ type GlobalClientFilterProps = {
 // Component for Global Filter for Client Side filtering
 const GlobalClientFilter = ({
   setGlobalFilter,
+  initialFilter,
   tableID,
   tableName,
   className
 }: GlobalClientFilterProps) => {
   const { t } = useTranslation('systemProfile');
+
+  const [query, setQuery] = useState<string>(initialFilter || '');
+
   // Set a debounce to capture set input before re-rendering on each character.  Preparation for BE fetching/filtering.
   // May not be necessary until then
   const onChange = useAsyncDebounce(value => {
@@ -56,7 +61,9 @@ const GlobalClientFilter = ({
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           // Currently only client-side filtering - updates search filter onChange
           onChange(e.target.value);
+          setQuery(e.target.value);
         }}
+        value={query}
         name={`${tableName} Search`}
       />
       {/* Right not search button doesn't need to do anything, it searches onChange -

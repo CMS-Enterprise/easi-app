@@ -610,6 +610,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
             name="systemTable.title Search"
             role="searchbox"
             type="search"
+            value=""
           />
           <button
             class="usa-button grid-row flex-justify-center flex-align-center no-pointer"
