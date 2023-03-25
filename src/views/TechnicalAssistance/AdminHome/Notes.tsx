@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@apollo/client';
 import { Alert, Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import useApolloCacheQuery from 'hooks/useApolloCacheQuery';
 import GetTRBAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
   GetTrbAdminNotes,
@@ -27,12 +27,13 @@ const Notes = ({
 }) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { data, error, loading } = useQuery<
+  const { data, error, loading } = useApolloCacheQuery<
     GetTrbAdminNotes,
     GetTrbAdminNotesVariables
   >(GetTRBAdminNotesQuery, {
-    variables: { id: trbRequestId },
-    notifyOnNetworkStatusChange: true
+    variables: {
+      id: trbRequestId
+    }
   });
 
   const notes: GetTrbAdminNotesType[] = data?.trbRequest?.adminNotes || [];
