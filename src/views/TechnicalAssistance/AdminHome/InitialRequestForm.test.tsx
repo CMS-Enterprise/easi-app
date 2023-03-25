@@ -23,6 +23,7 @@ import {
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import InitialRequestForm from './InitialRequestForm';
+import TRBRequestInfoWrapper from './RequestContext';
 
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
@@ -141,12 +142,14 @@ describe('Trb Admin Initial Request Form', () => {
               `/trb/${mockTrbRequestData.id}/initial-request-form`
             ]}
           >
-            <Route exact path="/trb/:id/:activePage">
-              <InitialRequestForm
-                trbRequestId={mockTrbRequestData.id}
-                noteCount={0}
-              />
-            </Route>
+            <TRBRequestInfoWrapper>
+              <Route exact path="/trb/:id/:activePage">
+                <InitialRequestForm
+                  trbRequestId={mockTrbRequestData.id}
+                  noteCount={0}
+                />
+              </Route>
+            </TRBRequestInfoWrapper>
           </MemoryRouter>
         </Provider>
       </VerboseMockedProvider>

@@ -31,7 +31,8 @@ const Notes = ({
     GetTrbAdminNotes,
     GetTrbAdminNotesVariables
   >(GetTRBAdminNotesQuery, {
-    variables: { id: trbRequestId }
+    variables: { id: trbRequestId },
+    notifyOnNetworkStatusChange: true
   });
 
   const notes: GetTrbAdminNotesType[] = data?.trbRequest?.adminNotes || [];

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -31,6 +31,7 @@ import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import Breadcrumbs from '../Breadcrumbs';
 
 import { ModalViewType } from './components/NoteModal';
+import { TRBRequestContext } from './RequestContext';
 
 const AddNote = ({
   trbRequestId,
@@ -43,16 +44,17 @@ const AddNote = ({
 }) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { id, activePage } = useParams<{
+  const { id } = useParams<{
     id: string;
-    activePage: string;
   }>();
 
   const history = useHistory();
 
+  const { data } = useContext(TRBRequestContext);
+
   const { message, showMessage, showMessageOnNextPage } = useMessage();
 
-  const requestUrl = `/trb/${id}/${activePage}`;
+  const requestUrl = `/trb/${id}/notes`;
 
   const [mutate] = useMutation<
     CreateTrbAdminNoteType,
@@ -90,7 +92,9 @@ const AddNote = ({
           items={[
             { text: t('Home'), url: `/trb` },
             {
-              text: trbRequestId || '',
+              text: t('adminHome.breadcrumb', {
+                trbRequestId: data?.trbRequest.name || ''
+              }),
               url: requestUrl
             },
             {
@@ -230,6 +234,7 @@ const AddNote = ({
                 <FormGroup>
                   <Label htmlFor="notes" className="text-normal">
                     {t('notes.labels.noteText')}
+                    <span className="text-red">*</span>
                   </Label>
                   <CharacterCount
                     {...field}

@@ -7,6 +7,7 @@ import { NotFoundPartial } from 'views/NotFound';
 
 import AddNote from './AdminHome/AddNote';
 import Consult from './AdminHome/Consult';
+import TRBRequestInfoWrapper from './AdminHome/RequestContext';
 import RequestEdits from './AdminHome/RequestEdits';
 import DocumentUpload from './RequestForm/DocumentUpload';
 import AdminHome from './AdminHome';
@@ -68,24 +69,29 @@ function TechnicalAssistance() {
         </Route>
 
         {/* Admin view */}
-        <Route exact path={`${path}/:id/:activePage`}>
-          <AdminHome />
-        </Route>
+        <TRBRequestInfoWrapper>
+          <Route exact path={`${path}/:id/:activePage`}>
+            <AdminHome />
+          </Route>
 
-        {/* Admin request form actions */}
-        <Route
-          exact
-          path={`${path}/:id/:activePage/:action(request-edits|ready-for-consult)`}
-        >
-          <RequestEdits />
-        </Route>
-        <Route exact path={`${path}/:id/:activePage/:action(schedule-consult)`}>
-          <Consult />
-        </Route>
+          {/* Admin request form actions */}
+          <Route
+            exact
+            path={`${path}/:id/:activePage/:action(request-edits|ready-for-consult)`}
+          >
+            <RequestEdits />
+          </Route>
+          <Route
+            exact
+            path={`${path}/:id/:activePage/:action(schedule-consult)`}
+          >
+            <Consult />
+          </Route>
 
-        <Route exact path={`${path}/:id/:activePage/add-note`}>
-          <AddNote />
-        </Route>
+          <Route exact path={`${path}/:id/notes/add-note`}>
+            <AddNote />
+          </Route>
+        </TRBRequestInfoWrapper>
 
         <Route path="*">
           <GridContainer className="width-full">
