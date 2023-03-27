@@ -15,7 +15,7 @@ function TrbRequestFeedbackList({ feedback }: TrbRequestFeedbackListProps) {
 
   return (
     <>
-      {feedback.map(item => (
+      {feedback.map((item, idx, arr) => (
         <React.Fragment key={item.id}>
           <Grid row gap className="margin-top-4 margin-bottom-6">
             <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
@@ -38,7 +38,7 @@ function TrbRequestFeedbackList({ feedback }: TrbRequestFeedbackListProps) {
               </div>
             </Grid>
           </Grid>
-          <Divider />
+          {idx < arr.length - 1 && <Divider />}
         </React.Fragment>
       ))}
     </>

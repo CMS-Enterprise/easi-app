@@ -99,8 +99,5 @@ exports[`TrbRequestFeedbackList renders 1`] = `
       </div>
     </div>
   </div>
-  <div
-    class="easi-divider"
-  />
 </DocumentFragment>
 `;

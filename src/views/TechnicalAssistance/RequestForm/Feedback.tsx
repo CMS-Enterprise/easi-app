@@ -6,6 +6,7 @@ import { sortBy } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Divider from 'components/shared/Divider';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBFeedbackAction } from 'types/graphql-global-types';
 
@@ -80,6 +81,7 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
         ).reverse()}
       />
 
+      <Divider />
       <div className="margin-top-7">{returnToFormLink}</div>
     </GridContainer>
   );
