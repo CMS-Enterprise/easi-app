@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
+import { Alert } from '@trussworks/react-uswds';
 import { sortBy } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
@@ -40,9 +41,15 @@ const Feedback = ({ trbRequestId }: TrbAdminPageProps) => {
           <p className="line-height-body-5 margin-top-0 margin-bottom-5">
             {t('requestFeedback.adminInfo')}
           </p>
-          <TrbRequestFeedbackList
-            feedback={sortBy(data.trbRequest.feedback, 'createdAt').reverse()}
-          />
+          {data.trbRequest.feedback.length > 0 ? (
+            <TrbRequestFeedbackList
+              feedback={sortBy(data.trbRequest.feedback, 'createdAt').reverse()}
+            />
+          ) : (
+            <Alert slim type="info">
+              {t('requestFeedback.noFeedbackAlert')}
+            </Alert>
+          )}
         </>
       )}
     </div>

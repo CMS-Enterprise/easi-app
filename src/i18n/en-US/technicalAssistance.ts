@@ -734,7 +734,8 @@ const technicalAssistance = {
     returnToForm: 'Return to request form',
     returnToTaskList: 'Return to task list',
     adminInfo:
-      'A history of feedback sent to the requester. The requester will receive a notification any time you add additional feedback to their request.'
+      'A history of feedback sent to the requester. The requester will receive a notification any time you add additional feedback to their request.',
+    noFeedbackAlert: 'No feedback has been added for this request.'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
