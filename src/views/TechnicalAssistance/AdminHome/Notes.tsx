@@ -4,7 +4,7 @@ import { Alert, Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
-import useApolloCacheQuery from 'hooks/useApolloCacheQuery';
+import useCacheQuery from 'hooks/useCacheQuery';
 import GetTRBAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
   GetTrbAdminNotes,
@@ -27,7 +27,7 @@ const Notes = ({
 }) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { data, error, loading } = useApolloCacheQuery<
+  const { data, error, loading } = useCacheQuery<
     GetTrbAdminNotes,
     GetTrbAdminNotesVariables
   >(GetTRBAdminNotesQuery, {
@@ -54,16 +54,10 @@ const Notes = ({
 
       <p>{t('notes.description')}</p>
 
-      {modalMessage && (
-        <Alert type="success" slim className="margin-top-0 margin-bottom-4">
-          {modalMessage}
-        </Alert>
-      )}
-
       {setModalView ? (
         <Button
           type="button"
-          className=" margin-bottom-6"
+          className="margin-bottom-4"
           onClick={() => {
             setModalView('addNote');
           }}
@@ -73,11 +67,17 @@ const Notes = ({
       ) : (
         <UswdsReactLink
           to={`/trb/${trbRequestId}/notes/add-note`}
-          className="usa-button margin-bottom-6"
+          className="usa-button margin-bottom-4"
           variant="unstyled"
         >
           {t('notes.addNote')}
         </UswdsReactLink>
+      )}
+
+      {modalMessage && (
+        <Alert type="success" slim className="margin-top-0 margin-bottom-4">
+          {modalMessage}
+        </Alert>
       )}
 
       {loading && <PageLoading />}
@@ -87,7 +87,16 @@ const Notes = ({
           {t('notes.noNotes')}
         </Alert>
       ) : (
-        notes.map(note => <Note note={note} key={note.id} />)
+        <div className="margin-top-2">
+          {/* Show most recent notes first */}
+          {[...notes]
+            .sort((a, b) => {
+              return a.createdAt < b.createdAt ? 1 : -1;
+            })
+            .map(note => (
+              <Note note={note} key={note.id} />
+            ))}
+        </div>
       )}
     </div>
   );

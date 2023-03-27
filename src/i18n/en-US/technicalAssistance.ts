@@ -899,6 +899,8 @@ const technicalAssistance = {
     author: 'Note author',
     about: 'What is this note about?',
     save: 'Save',
+    saveNote: 'Save note',
+    cancel: 'Cancel',
     status: {
       success: 'Your note has been added.',
       error:

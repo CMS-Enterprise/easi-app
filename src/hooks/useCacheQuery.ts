@@ -1,4 +1,10 @@
-// useApolloCacheQuery.ts
+/*
+useQuery wrapper hook to return an accurate loading state for the fetch-policy of cache-and-network
+Computes loading state of both cache and network loading
+Returns loading=false if cache exists, regardless if network is making a request
+Returns loading=true if cache does not exist and network is making a request
+*/
+
 import {
   DocumentNode,
   OperationVariables,
@@ -9,8 +15,7 @@ import {
   useQuery
 } from '@apollo/client';
 
-/** Custom hook to query the cache to determine if query result exists already */
-export default function useApolloCacheQuery<
+export default function useCacheQuery<
   TData = any,
   TVariables = OperationVariables
 >(
@@ -24,6 +29,8 @@ export default function useApolloCacheQuery<
   return {
     ...queryResult,
     loading:
+      // Checks to see if the existing cache can be fetched for the current request
+      // Returns a combined state of an existing complete cache and network loading
       !cache.diff({
         query: cache.transformDocument(query),
         variables: options?.variables,

@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   Button,
@@ -27,6 +28,7 @@ import {
   CreateTrbAdminNoteVariables
 } from 'queries/types/CreateTrbAdminNote';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import adminNotesSchema from 'validations/trbAdminFormsSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
 
@@ -66,6 +68,7 @@ const AddNote = ({
     handleSubmit,
     formState: { errors, isDirty, isSubmitting }
   } = useForm({
+    resolver: yupResolver(adminNotesSchema),
     defaultValues: {
       category: '' as TRBAdminNoteCategory,
       noteText: ''
@@ -252,31 +255,31 @@ const AddNote = ({
         </Grid>
 
         <div className="margin-top-3">
+          {setModalView && (
+            <Button
+              type="button"
+              className="usa-button--outline"
+              onClick={() => {
+                setModalView('viewNotes');
+              }}
+            >
+              {t('notes.cancel')}
+            </Button>
+          )}
           <Button type="submit" disabled={!isDirty || isSubmitting}>
-            {t('notes.save')}
+            {t('notes.saveNote')}
           </Button>
         </div>
       </Form>
 
-      <div className="margin-top-2">
-        {setModalView ? (
-          <Button
-            type="button"
-            className="usa-button--unstyled"
-            onClick={() => {
-              setModalView('viewNotes');
-            }}
-          >
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            {t('actionRequestEdits.cancelAndReturn')}
-          </Button>
-        ) : (
+      {!setModalView && (
+        <div className="margin-top-2">
           <UswdsReactLink to={requestUrl}>
             <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
             {t('actionRequestEdits.cancelAndReturn')}
           </UswdsReactLink>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
