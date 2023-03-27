@@ -3,7 +3,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   Button,
@@ -27,8 +26,10 @@ import {
   CreateTrbAdminNote as CreateTrbAdminNoteType,
   CreateTrbAdminNoteVariables
 } from 'queries/types/CreateTrbAdminNote';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
-import adminNotesSchema from 'validations/trbAdminFormsSchema';
+import {
+  CreateTRBAdminNoteInput,
+  TRBAdminNoteCategory
+} from 'types/graphql-global-types';
 
 import Breadcrumbs from '../Breadcrumbs';
 
@@ -63,17 +64,20 @@ const AddNote = ({
     CreateTrbAdminNoteVariables
   >(CreateTrbAdminNote);
 
+  const defaultValues: Omit<CreateTRBAdminNoteInput, 'trbRequestId'> = {
+    category: '' as TRBAdminNoteCategory,
+    noteText: ''
+  };
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isDirty, isSubmitting }
+    formState: { errors, isDirty, dirtyFields, isSubmitting }
   } = useForm({
-    resolver: yupResolver(adminNotesSchema),
-    defaultValues: {
-      category: '' as TRBAdminNoteCategory,
-      noteText: ''
-    }
+    defaultValues
   });
+
+  console.log(isDirty, dirtyFields);
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -212,7 +216,10 @@ const AddNote = ({
                     {...field}
                     ref={null}
                   >
-                    <option>- {t('basic.options.select')} -</option>
+                    {/* <option>- {t('basic.options.select')} -</option> */}
+                    <option key="default-select" disabled value="">
+                      - {t('basic.options.select')} -
+                    </option>
                     {[
                       TRBAdminNoteCategory.GENERAL_REQUEST,
                       TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
@@ -266,7 +273,13 @@ const AddNote = ({
               {t('notes.cancel')}
             </Button>
           )}
-          <Button type="submit" disabled={!isDirty || isSubmitting}>
+          <Button
+            type="submit"
+            disabled={
+              Object.keys(dirtyFields).length !==
+                Object.keys(defaultValues).length || isSubmitting
+            }
+          >
             {t('notes.saveNote')}
           </Button>
         </div>
