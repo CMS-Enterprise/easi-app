@@ -238,7 +238,7 @@ function TaskList() {
 
                         <UswdsReactLink
                           className="display-block margin-top-2"
-                          to={`/trb/request/${id}/upload-document`} // TODO: replace with link to document upload
+                          to={`/trb/task-list/${id}/documents`}
                         >
                           {t('taskList.uploadDocuments')}
                         </UswdsReactLink>
@@ -246,7 +246,7 @@ function TaskList() {
                         <UswdsReactLink
                           className="display-block margin-top-2"
                           target="_blank"
-                          to={`/trb/request/${id}/attendee-list`} // TODO: replace with link to view advice letter
+                          to={`/trb/task-list/${id}/attendee-list`} // TODO: replace with link to view advice letter
                         >
                           {t('taskList.reviewAttendeeList')}
                         </UswdsReactLink>

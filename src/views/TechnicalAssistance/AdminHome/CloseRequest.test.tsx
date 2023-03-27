@@ -14,6 +14,7 @@ import ReopenTrbRequestQuery from 'queries/ReopenTrbRequestQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 
 import CloseRequest from './CloseRequest';
+import TRBRequestInfoWrapper from './RequestContext';
 import AdminHome from '.';
 
 describe('Trb Admin: Action: Close & Re-open Request', () => {
@@ -115,12 +116,14 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             initialEntries={[`/trb/${id}/initial-request-form/close-request`]}
           >
             <MessageProvider>
-              <Route exact path="/trb/:id/:activePage">
-                <AdminHome />
-              </Route>
-              <Route exact path="/trb/:id/:activePage/:action">
-                <CloseRequest />
-              </Route>
+              <TRBRequestInfoWrapper>
+                <Route exact path="/trb/:id/:activePage">
+                  <AdminHome />
+                </Route>
+                <Route exact path="/trb/:id/:activePage/:action">
+                  <CloseRequest />
+                </Route>
+              </TRBRequestInfoWrapper>
             </MessageProvider>
           </MemoryRouter>
         </MockedProvider>
@@ -243,7 +246,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
               },
               result: {
                 data: {
-                  closeTRBRequest: {
+                  reopenTrbRequest: {
                     id,
                     __typename: 'TRBRequest'
                   }
@@ -300,12 +303,14 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             initialEntries={[`/trb/${id}/initial-request-form/reopen-request`]}
           >
             <MessageProvider>
-              <Route exact path="/trb/:id/:activePage">
-                <AdminHome />
-              </Route>
-              <Route exact path="/trb/:id/:activePage/:action">
-                <CloseRequest />
-              </Route>
+              <TRBRequestInfoWrapper>
+                <Route exact path="/trb/:id/:activePage">
+                  <AdminHome />
+                </Route>
+                <Route exact path="/trb/:id/:activePage/:action">
+                  <CloseRequest />
+                </Route>
+              </TRBRequestInfoWrapper>
             </MessageProvider>
           </MemoryRouter>
         </MockedProvider>
@@ -362,9 +367,11 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           initialEntries={[`/trb/${id}/initial-request-form/reopen-request`]}
         >
           <MessageProvider>
-            <Route exact path="/trb/:id/:activePage/:action">
-              <CloseRequest />
-            </Route>
+            <TRBRequestInfoWrapper>
+              <Route exact path="/trb/:id/:activePage/:action">
+                <CloseRequest />
+              </Route>
+            </TRBRequestInfoWrapper>
           </MessageProvider>
         </MemoryRouter>
       </MockedProvider>
