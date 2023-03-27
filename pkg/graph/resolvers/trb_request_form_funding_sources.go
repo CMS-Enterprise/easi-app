@@ -11,15 +11,16 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-// GetTRBRequestFormByTRBRequestID retrieves a TRB request form record for a given TRB request ID
+// GetFundingSourcesByRequestID retrieves funding sources for a TRB request form by TRB request ID
 func GetFundingSourcesByRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBFundingSource, error) {
 	return store.GetFundingSourcesByRequestID(ctx, id)
 }
 
+// UpdateTRBRequestFundingSources upserts funding sources for a TRB request form by TRB request ID and funding number
 func UpdateTRBRequestFundingSources(
 	ctx context.Context,
 	store *storage.Store,
-	trbRequestId uuid.UUID,
+	trbRequestID uuid.UUID,
 	fundingNumber string,
 	sources []string,
 ) ([]*models.TRBFundingSource, error) {
@@ -29,21 +30,22 @@ func UpdateTRBRequestFundingSources(
 	for i, source := range sources {
 		fundingSources[i] = &models.TRBFundingSource{
 			Source:        source,
-			TRBRequestID:  trbRequestId,
+			TRBRequestID:  trbRequestID,
 			FundingNumber: fundingNumber,
 		}
 		fundingSources[i].CreatedBy = createdBy
 		fundingSources[i].CreatedAt = now
 		fundingSources[i].ID = uuid.New()
 	}
-	return store.UpdateTRBRequestFundingSources(ctx, trbRequestId, fundingNumber, fundingSources)
+	return store.UpdateTRBRequestFundingSources(ctx, trbRequestID, fundingNumber, fundingSources)
 }
 
+// DeleteTRBRequestFundingSources deletes funding sources for a TRB request form by TRB request ID and funding number
 func DeleteTRBRequestFundingSources(
 	ctx context.Context,
 	store *storage.Store,
-	trbRequestId uuid.UUID,
+	trbRequestID uuid.UUID,
 	fundingNumber string,
 ) ([]*models.TRBFundingSource, error) {
-	return store.DeleteTRBRequestFundingSources(ctx, trbRequestId, fundingNumber)
+	return store.DeleteTRBRequestFundingSources(ctx, trbRequestID, fundingNumber)
 }

@@ -100,7 +100,7 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 	return &form, err
 }
 
-// GetTRBRequestFormByTRBRequestID queries the DB for all the TRB request form records
+// GetFundingSourcesByRequestID queries the DB for all the TRB request form funding sources
 // matching the given TRB request ID
 func (s *Store) GetFundingSourcesByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBFundingSource, error) {
 	fundingSources := []*models.TRBFundingSource{}
