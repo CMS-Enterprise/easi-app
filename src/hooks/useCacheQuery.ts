@@ -3,6 +3,28 @@ useQuery wrapper hook to return an accurate loading state for the fetch-policy o
 Computes loading state of both cache and network loading
 Returns loading=false if cache exists, regardless if network is making a request
 Returns loading=true if cache does not exist and network is making a request
+
+Current EASI Apollo fetchPolicy is set to 'cache-and-network' as default
+Apollo's loading state only reflects network requests, despite the presence of cache
+Since 'cache-and-network' always sends a network request, the loading state will never reflect the presence of cache
+
+Issue and alternative solutions referenced here:
+https://github.com/apollographql/react-apollo/issues/2601
+*/
+
+/*
+Implementation (should be identical to `useQuery`):
+
+const { data, loading, error } = useCacheQuery<
+    GetQueryType,
+    GetQueryVariables
+  >(GetQuery, {
+    variables: { id: id }
+  });
+
+if (loading) {
+    return <PageLoading />
+}
 */
 
 import {
