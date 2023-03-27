@@ -12,6 +12,7 @@ import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 
+import TRBRequestInfoWrapper from './RequestContext';
 import RequestEdits from './RequestEdits';
 import AdminHome from '.';
 
@@ -116,14 +117,16 @@ describe('Trb Admin: Action: Request Edits', () => {
               `/trb/${trbRequestId}/initial-request-form/request-edits`
             ]}
           >
-            <MessageProvider>
-              <Route exact path="/trb/:id/:activePage">
-                <AdminHome />
-              </Route>
-              <Route exact path="/trb/:id/:activePage/:action">
-                <RequestEdits />
-              </Route>
-            </MessageProvider>
+            <TRBRequestInfoWrapper>
+              <MessageProvider>
+                <Route exact path="/trb/:id/:activePage">
+                  <AdminHome />
+                </Route>
+                <Route exact path="/trb/:id/:activePage/:action">
+                  <RequestEdits />
+                </Route>
+              </MessageProvider>
+            </TRBRequestInfoWrapper>
           </MemoryRouter>
         </MockedProvider>
       </Provider>
@@ -183,11 +186,13 @@ describe('Trb Admin: Action: Request Edits', () => {
             `/trb/${trbRequestId}/initial-request-form/request-edits`
           ]}
         >
-          <MessageProvider>
-            <Route exact path="/trb/:id/:activePage/:action">
-              <RequestEdits />
-            </Route>
-          </MessageProvider>
+          <TRBRequestInfoWrapper>
+            <MessageProvider>
+              <Route exact path="/trb/:id/:activePage/:action">
+                <RequestEdits />
+              </Route>
+            </MessageProvider>
+          </TRBRequestInfoWrapper>
         </MemoryRouter>
       </MockedProvider>
     );
