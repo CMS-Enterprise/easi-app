@@ -732,7 +732,9 @@ const technicalAssistance = {
     date: 'Date',
     from: 'Feedback from',
     returnToForm: 'Return to request form',
-    returnToTaskList: 'Return to task list'
+    returnToTaskList: 'Return to task list',
+    adminInfo:
+      'A history of feedback sent to the requester. The requester will receive a notification any time you add additional feedback to their request.'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
