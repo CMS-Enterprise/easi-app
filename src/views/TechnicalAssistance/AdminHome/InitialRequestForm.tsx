@@ -58,7 +58,11 @@ const InitialRequestForm = ({
             )}
           </div>
 
-          <SubmittedRequest request={request} showSectionHeadingDescription />
+          <SubmittedRequest
+            request={request}
+            showSectionHeadingDescription
+            canRemoveDocument={false}
+          />
         </>
       )}
     </div>

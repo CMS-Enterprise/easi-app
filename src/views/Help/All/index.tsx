@@ -9,10 +9,14 @@ import MainContent from 'components/MainContent';
 import itGovernanceArticles from 'views/Help/ITGovernance/articles';
 import section508Articles from 'views/Help/Section508/articles';
 
+import trbArticles from '../TechnicalReviewBoard/articles';
+
 const AllHelp = () => {
   const { t } = useTranslation('help');
 
-  const allArticles = itGovernanceArticles.concat(section508Articles);
+  const allArticles = itGovernanceArticles
+    .concat(section508Articles)
+    .concat(trbArticles);
 
   return (
     <MainContent className="grid-container margin-bottom-10">

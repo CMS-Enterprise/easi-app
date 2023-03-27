@@ -291,7 +291,7 @@ const technicalAssistance = {
     helpLinksNewTab: 'All help links open in a new tab',
     stepsInvolved:
       'Steps involved in getting technical assistance from the TRB',
-    sampleRequest: 'Sample TRB Request',
+    prepareConsultMeeting: 'Prepare for the consult meeting',
     viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
     editsRequestedWarning:
       'The TRB has requested edits to your initial request form. View their feedback and make any changes requested.',
@@ -580,7 +580,23 @@ const technicalAssistance = {
         'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
       success: 'Your document has been uploaded and is being scanned.'
     },
-    continueWithoutAdding: 'Continue without adding documents'
+    continueWithoutAdding: 'Continue without adding documents',
+    supportingDocuments: {
+      heading: 'Supporting documents',
+      info:
+        'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.',
+      addAnother: 'Add another document',
+      adminInfo:
+        'The requester has uploaded these documents as a part of this request. If the TRB needs additional documentation, contact the requester.',
+      removeHeading: 'Confirm you want to remove {{-documentName}}.',
+      removeInfo:
+        'You will not be able to access this document after it is removed, and the TRB team will not be able to view it.',
+      removeDocument: 'Remove document',
+      cancel: 'Cancel',
+      removeFail:
+        'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
+      removeSuccess: 'You have successfully removed {{-documentName}}.'
+    }
   },
   check: {
     submit: 'Submit request',
@@ -781,6 +797,42 @@ const technicalAssistance = {
     alert:
       'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
     breadcrumb: 'Schedule a consult'
+  },
+  actionCloseRequest: {
+    heading: 'Action: close request',
+    description:
+      'Use this action if work on this request is complete, or if it is not a TRB request.',
+    breadcrumb: 'Close request',
+    label: 'Why did you close this request?',
+    hint:
+      'Give a brief explanation, especially if you closed this request without sending an advice letter.',
+    submit: 'Complete action and close request',
+    success: 'Action complete. This request is now closed.',
+    error:
+      'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
+    confirmModal: {
+      heading: 'Are you sure you want to close this request?',
+      text: [
+        'Closing this request will:',
+        'send a notification email to the TRB mailbox',
+        'prevent any additional updates to the request',
+        'set the request status to closed',
+        'You may continue to add notes to closed requests, and you may reopen the request at any time.'
+      ],
+      close: 'Close request',
+      cancel: 'Cancel'
+    }
+  },
+  actionReopenRequest: {
+    heading: 'Action: re-open request',
+    description:
+      'Reopen this request if additional work needs to be completed or if it was closed in error.',
+    label: 'Why are you re-opening this request?',
+    hint: 'Give a brief explanation.',
+    submit: 'Complete action and re-open request',
+    success: 'Action complete. This request is now open.',
+    error:
+      'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
   }
 };
 

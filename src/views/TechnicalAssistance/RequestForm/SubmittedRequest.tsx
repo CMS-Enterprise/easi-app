@@ -45,13 +45,15 @@ type SubmittedRequestProps = {
   showEditSectionLinks?: boolean;
   showSectionHeadingDescription?: boolean;
   showRequestHeaderInfo?: boolean;
+  canRemoveDocument?: boolean;
 };
 
 function SubmittedRequest({
   request,
   showEditSectionLinks,
   showSectionHeadingDescription,
-  showRequestHeaderInfo
+  showRequestHeaderInfo,
+  canRemoveDocument = true
 }: SubmittedRequestProps) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -323,7 +325,7 @@ function SubmittedRequest({
         </div>
       )}
       <div className="margin-top-3 margin-bottom-6">
-        <DocumentsTable trbRequestId={request.id} />
+        <DocumentsTable trbRequestId={request.id} canEdit={canRemoveDocument} />
       </div>
     </>
   );
