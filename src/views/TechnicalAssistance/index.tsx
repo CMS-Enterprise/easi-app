@@ -6,6 +6,7 @@ import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
 import AddNote from './AdminHome/AddNote';
+import CloseRequest from './AdminHome/CloseRequest';
 import Consult from './AdminHome/Consult';
 import TRBRequestInfoWrapper from './AdminHome/RequestContext';
 import RequestEdits from './AdminHome/RequestEdits';
@@ -73,7 +74,6 @@ function TechnicalAssistance() {
           <Route exact path={`${path}/:id/:activePage`}>
             <AdminHome />
           </Route>
-
           {/* Admin request form actions */}
           <Route
             exact
@@ -90,6 +90,13 @@ function TechnicalAssistance() {
 
           <Route exact path={`${path}/:id/notes/add-note`}>
             <AddNote />
+          </Route>
+
+          <Route
+            exact
+            path={`${path}/:id/:activePage/:action(close-request|reopen-request)`}
+          >
+            <CloseRequest />
           </Route>
         </TRBRequestInfoWrapper>
 

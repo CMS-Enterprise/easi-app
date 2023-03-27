@@ -917,6 +917,42 @@ const technicalAssistance = {
       INITIAL_REQUEST_FORM: 'Initial request form',
       SUPPORTING_DOCUMENTS: 'Supporting documents'
     }
+  },
+  actionCloseRequest: {
+    heading: 'Action: close request',
+    description:
+      'Use this action if work on this request is complete, or if it is not a TRB request.',
+    breadcrumb: 'Close request',
+    label: 'Why did you close this request?',
+    hint:
+      'Give a brief explanation, especially if you closed this request without sending an advice letter.',
+    submit: 'Complete action and close request',
+    success: 'Action complete. This request is now closed.',
+    error:
+      'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
+    confirmModal: {
+      heading: 'Are you sure you want to close this request?',
+      text: [
+        'Closing this request will:',
+        'send a notification email to the TRB mailbox',
+        'prevent any additional updates to the request',
+        'set the request status to closed',
+        'You may continue to add notes to closed requests, and you may reopen the request at any time.'
+      ],
+      close: 'Close request',
+      cancel: 'Cancel'
+    }
+  },
+  actionReopenRequest: {
+    heading: 'Action: re-open request',
+    description:
+      'Reopen this request if additional work needs to be completed or if it was closed in error.',
+    label: 'Why are you re-opening this request?',
+    hint: 'Give a brief explanation.',
+    submit: 'Complete action and re-open request',
+    success: 'Action complete. This request is now open.',
+    error:
+      'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
   }
 };
 
