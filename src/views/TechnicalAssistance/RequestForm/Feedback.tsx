@@ -1,17 +1,16 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import { GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import { sortBy } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import Divider from 'components/shared/Divider';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBFeedbackAction } from 'types/graphql-global-types';
-import { formatDateLocal } from 'utils/date';
 
 import Breadcrumbs from '../Breadcrumbs';
+import TrbRequestFeedbackList from '../TrbRequestFeedbackList';
 
 type FeedbackProps = {
   request: TrbRequest;
@@ -72,41 +71,14 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
       </PageHeading>
       {returnToFormLink}
 
-      {sortBy(
-        request.feedback.filter(
-          e => e.action === TRBFeedbackAction.REQUEST_EDITS
-        ),
-        'createdAt'
-      )
-        .reverse()
-        .map(item => {
-          return (
-            <React.Fragment key={item.id}>
-              <Grid row gap className="margin-top-4 margin-bottom-6">
-                <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-                  <dl className="easi-dl">
-                    <dt>{t('requestFeedback.date')}</dt>
-                    <dd data-testid="feedback-date">
-                      {formatDateLocal(item.createdAt, 'MMMM d, yyyy')}
-                    </dd>
-                  </dl>
-                </Grid>
-                <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-                  <dl className="easi-dl">
-                    <dt>{t('requestFeedback.from')}</dt>
-                    <dd>{item.author.commonName}, TRB</dd>
-                  </dl>
-                </Grid>
-                <Grid col={12}>
-                  <div className="padding-3 bg-base-lightest line-height-body-5">
-                    {item.feedbackMessage}
-                  </div>
-                </Grid>
-              </Grid>
-              <Divider />
-            </React.Fragment>
-          );
-        })}
+      <TrbRequestFeedbackList
+        feedback={sortBy(
+          request.feedback.filter(
+            e => e.action === TRBFeedbackAction.REQUEST_EDITS
+          ),
+          'createdAt'
+        ).reverse()}
+      />
 
       <div className="margin-top-7">{returnToFormLink}</div>
     </GridContainer>
