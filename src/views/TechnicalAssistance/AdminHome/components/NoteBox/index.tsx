@@ -36,7 +36,10 @@ const NoteBox = ({ trbRequestId, noteCount }: NoteBoxProps) => {
         className="trb-admin-home__request-notes bg-base-lightest padding-x-2 padding-y-1 margin-bottom-3"
         data-testid="trb-admin-home__request-notes"
       >
-        <p className="margin-y-0 line-height-body-5">
+        <p
+          className="margin-y-0 line-height-body-5"
+          data-testid="note-box-count"
+        >
           <span className="text-bold">{noteCount}</span>{' '}
           {t('requestNotes.text', {
             plural: noteCount !== 1 ? 's' : ''
