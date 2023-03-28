@@ -72,12 +72,10 @@ const AddNote = ({
   const {
     control,
     handleSubmit,
-    formState: { errors, isDirty, dirtyFields, isSubmitting }
+    formState: { errors, dirtyFields, isSubmitting }
   } = useForm({
     defaultValues
   });
-
-  console.log(isDirty, dirtyFields);
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -242,7 +240,7 @@ const AddNote = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <FormGroup>
-                  <Label htmlFor="notes" className="text-normal">
+                  <Label htmlFor="noteText" className="text-normal">
                     {t('notes.labels.noteText')}
                     <span className="text-red">*</span>
                   </Label>
@@ -275,6 +273,7 @@ const AddNote = ({
           )}
           <Button
             type="submit"
+            name={t('notes.saveNote')}
             disabled={
               Object.keys(dirtyFields).length !==
                 Object.keys(defaultValues).length || isSubmitting
