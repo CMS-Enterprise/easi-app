@@ -18,7 +18,7 @@ import { ModalViewType } from './components/NoteModal';
 
 const Notes = ({
   trbRequestId,
-  setModalView,
+  setModalView, // prop used to conditionall render text/links/etc specifically for modal
   modalMessage
 }: {
   trbRequestId: string;
@@ -89,7 +89,7 @@ const Notes = ({
       ) : (
         <div className="margin-top-2">
           {/* Show most recent notes first */}
-          {[...notes]
+          {[...notes] // TODO: BE will implement filter to ensure correct ordering
             .sort((a, b) => {
               return a.createdAt < b.createdAt ? 1 : -1;
             })

@@ -38,7 +38,7 @@ import { TRBRequestContext } from './RequestContext';
 
 const AddNote = ({
   trbRequestId,
-  setModalView,
+  setModalView, // prop used to conditionall render text/links/etc specifically for modal
   setModalMessage
 }: {
   trbRequestId?: string;
@@ -53,11 +53,12 @@ const AddNote = ({
 
   const history = useHistory();
 
+  // TRB request information to render name in breadcrumbs
   const { data } = useContext(TRBRequestContext);
 
   const { message, showMessage, showMessageOnNextPage } = useMessage();
 
-  const requestUrl = `/trb/${id}/notes`;
+  const requestUrl: string = `/trb/${id}/notes`;
 
   const [mutate] = useMutation<
     CreateTrbAdminNoteType,
@@ -77,7 +78,7 @@ const AddNote = ({
     defaultValues
   });
 
-  const hasErrors = Object.keys(errors).length > 0;
+  const hasErrors: boolean = Object.keys(errors).length > 0;
 
   useEffect(() => {
     if (hasErrors) {
@@ -114,7 +115,7 @@ const AddNote = ({
           mutate({
             variables: {
               input: {
-                trbRequestId: trbRequestId || id,
+                trbRequestId: trbRequestId || id, // Get id from prop(modal) or url param
                 category: formData.category,
                 noteText: formData.noteText
               }
@@ -205,19 +206,21 @@ const AddNote = ({
                     {t('notes.labels.category')}{' '}
                     <span className="text-red">*</span>
                   </Label>
+
                   {error && (
                     <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
                   )}
+
                   <Dropdown
                     id="category"
                     data-testid="note-category"
                     {...field}
                     ref={null}
                   >
-                    {/* <option>- {t('basic.options.select')} -</option> */}
                     <option key="default-select" disabled value="">
                       - {t('basic.options.select')} -
                     </option>
+
                     {[
                       TRBAdminNoteCategory.GENERAL_REQUEST,
                       TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
@@ -244,6 +247,7 @@ const AddNote = ({
                     {t('notes.labels.noteText')}
                     <span className="text-red">*</span>
                   </Label>
+
                   <CharacterCount
                     {...field}
                     ref={null}

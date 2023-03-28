@@ -32,7 +32,9 @@ const NotesModal = ({
 }: NotesModalWrapperProps) => {
   const { t } = useTranslation('technicalAssistance');
 
+  // State used to render <AddNote /> or <Notes />
   const [viewType, setViewType] = useState<ModalViewType>('addNote');
+
   const [modalMessage, setModalMessage] = useState<string>('');
 
   const handleOpenModal = () => {
@@ -81,6 +83,7 @@ const NotesModal = ({
               <IconArrowBack size={4} className="text-base" />
             )}
           </Button>
+
           <h4 className="margin-0">
             {viewType === 'viewNotes' ? t('notes.notes') : t('notes.allNotes')}
           </h4>

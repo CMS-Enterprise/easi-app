@@ -1,3 +1,8 @@
+/*
+Admin request component for toggling <NoteModal /> component
+Can open modal initiated with <AddNote /> or <Notes />
+*/
+
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid } from '@trussworks/react-uswds';
@@ -13,6 +18,8 @@ const NoteBox = ({ trbRequestId, noteCount }: NoteBoxProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
+
+  // Passes state to modal to render <AddNote /> or <Notes />
   const [addNote, setAddNote] = useState<boolean>(false);
 
   return (
@@ -35,7 +42,9 @@ const NoteBox = ({ trbRequestId, noteCount }: NoteBoxProps) => {
             plural: noteCount !== 1 ? 's' : ''
           })}
         </p>
+
         <div className="margin-top-05 display-flex">
+          {/* View notes */}
           <Grid desktop={{ col: 6 }}>
             <Button
               type="button"
@@ -51,6 +60,7 @@ const NoteBox = ({ trbRequestId, noteCount }: NoteBoxProps) => {
           </Grid>
 
           <Grid desktop={{ col: 6 }}>
+            {/* Add notes */}
             <Button
               type="button"
               data-testid="note-modal-button"
