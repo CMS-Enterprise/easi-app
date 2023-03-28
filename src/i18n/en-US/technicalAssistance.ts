@@ -110,7 +110,13 @@ const technicalAssistance = {
     error:
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     recommendationSuccess:
-      'Your recommendation was added to this advice letter.'
+      'Your recommendation was added to this advice letter.',
+    modal: {
+      title: 'Confirm you want to remove this recommendation.',
+      text:
+        'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
+      removingTitle: 'Removing: {{title}}'
+    }
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
