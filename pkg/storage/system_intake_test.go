@@ -654,7 +654,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 		intakeWithOneCommentID := intakeIDs[1]
 		intakeWithManyCommentsID := intakeIDs[2]
 
-		_, err := s.store.CreateNote(ctx, &models.Note{
+		_, err := s.store.CreateNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithOneCommentID,
 			Content:        null.StringFrom("the only comment"),
 			CreatedAt:      mustParseTime("2021-01-01"),
@@ -662,21 +662,21 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 		})
 		s.NoError(err)
 
-		_, err = s.store.CreateNote(ctx, &models.Note{
+		_, err = s.store.CreateNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
 			Content:        null.StringFrom("the first comment"),
 			CreatedAt:      mustParseTime("2021-01-01"),
 			AuthorEUAID:    "ABCD",
 		})
 		s.NoError(err)
-		_, err = s.store.CreateNote(ctx, &models.Note{
+		_, err = s.store.CreateNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
 			Content:        null.StringFrom("the third comment"),
 			CreatedAt:      mustParseTime("2021-01-03"),
 			AuthorEUAID:    "ABCD",
 		})
 		s.NoError(err)
-		_, err = s.store.CreateNote(ctx, &models.Note{
+		_, err = s.store.CreateNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
 			Content:        null.StringFrom("the second comment"),
 			CreatedAt:      mustParseTime("2021-01-02"),

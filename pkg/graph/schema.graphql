@@ -935,13 +935,14 @@ type SystemIntakeNoteAuthor {
 """
 A note added to a system request
 """
-type SystemIntakeNote {
+type Note {
   author: SystemIntakeNoteAuthor!
   content: String!
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
-  archived: Boolean!
+  isArchived: Boolean!
+  editor: UserInfo
   id: UUID!
 }
 

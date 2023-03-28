@@ -123,7 +123,7 @@ func (c *Client) PublishAction(ctx context.Context, action models.Action) error 
 }
 
 // PublishNote sends a note to CEDAR through the Intake API for eventual storage in Alfabet
-func (c *Client) PublishNote(ctx context.Context, note models.Note) error {
+func (c *Client) PublishNote(ctx context.Context, note models.SystemIntakeNote) error {
 	intakeObject := translation.TranslatableNote(note)
 	return c.publishIntakeObject(ctx, &intakeObject)
 }

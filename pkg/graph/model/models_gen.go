@@ -598,17 +598,6 @@ type SystemIntakeLCIDExpirationChange struct {
 	NewCostBaseline      *string   `json:"newCostBaseline"`
 }
 
-// A note added to a system request
-type SystemIntakeNote struct {
-	Author     *SystemIntakeNoteAuthor `json:"author"`
-	Content    string                  `json:"content"`
-	CreatedAt  time.Time               `json:"createdAt"`
-	ModifiedBy *string                 `json:"modifiedBy"`
-	ModifiedAt *time.Time              `json:"modifiedAt"`
-	Archived   bool                    `json:"archived"`
-	ID         uuid.UUID               `json:"id"`
-}
-
 // The author of a note added to a system request
 type SystemIntakeNoteAuthor struct {
 	Eua  string `json:"eua"`

@@ -25,7 +25,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 	s.NotEqual(uuid.Nil, intake.ID)
 
 	s.Run("create error cases", func() {
-		testCases := map[string]*models.Note{
+		testCases := map[string]*models.SystemIntakeNote{
 			"missing system intake foreign key": {
 				SystemIntakeID: uuid.Nil,
 				AuthorEUAID:    euaID,
@@ -45,12 +45,12 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 	})
 
 	s.Run("create and read", func() {
-		notes := map[uuid.UUID]*models.Note{}
+		notes := map[uuid.UUID]*models.SystemIntakeNote{}
 
 		// populate a set of notes for the given SystemIntake
 		for ix := 0; ix < 3; ix++ {
 			ts := time.Now().UTC()
-			in := &models.Note{
+			in := &models.SystemIntakeNote{
 				SystemIntakeID: intake.ID,
 				// CreatedAt:      &ts,
 				AuthorEUAID: euaID,
@@ -74,7 +74,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 
 		testCases := map[string]struct {
 			id    uuid.UUID
-			notes map[uuid.UUID]*models.Note
+			notes map[uuid.UUID]*models.SystemIntakeNote
 		}{
 			"happy path returnes several notes": {
 				id:    intake.ID,
@@ -82,7 +82,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 			},
 			"non-existent system intake returns zero notes": {
 				id:    uuid.Nil,
-				notes: map[uuid.UUID]*models.Note{},
+				notes: map[uuid.UUID]*models.SystemIntakeNote{},
 			},
 		}
 

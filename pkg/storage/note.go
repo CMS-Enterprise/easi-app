@@ -15,7 +15,7 @@ import (
 )
 
 // CreateNote inserts a new note into the database
-func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*models.Note, error) {
+func (s *Store) CreateNote(ctx context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error) {
 	note.ID = uuid.New()
 	if note.CreatedAt == nil {
 		ts := s.clock.Now()
@@ -48,7 +48,7 @@ func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*models.Note
 			fmt.Sprintf("Failed to create note with error %s", err),
 			zap.String("user", appcontext.Principal(ctx).ID()),
 		)
-		return &models.Note{}, &apperrors.QueryError{
+		return &models.SystemIntakeNote{}, &apperrors.QueryError{
 			Err:       err,
 			Model:     note,
 			Operation: apperrors.QueryPost,
@@ -58,8 +58,8 @@ func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*models.Note
 }
 
 // UpdateNote updates all of a IT governance admin note's mutable fields.
-// The note can also be archived (soft deleted) using this function by setting the IsArchived field
-func (s *Store) UpdateNote(ctx context.Context, note *models.Note) (*models.Note, error) {
+// The note's IsArchived field _can_ be set, though SetNoteArchived() should be used when archiving a note.
+func (s *Store) UpdateNote(ctx context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error) {
 	stmt, err := s.db.PrepareNamed(`
 	UPDATE notes
 	SET
@@ -80,7 +80,7 @@ func (s *Store) UpdateNote(ctx context.Context, note *models.Note) (*models.Note
 		return nil, err
 	}
 
-	updated := models.Note{}
+	updated := models.SystemIntakeNote{}
 
 	err = stmt.Get(&updated, note)
 	if err != nil {
@@ -100,8 +100,8 @@ func (s *Store) UpdateNote(ctx context.Context, note *models.Note) (*models.Note
 }
 
 // FetchNoteByID retrieves a single Note by its primary key identifier
-func (s *Store) FetchNoteByID(ctx context.Context, id uuid.UUID) (*models.Note, error) {
-	note := models.Note{}
+func (s *Store) FetchNoteByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeNote, error) {
+	note := models.SystemIntakeNote{}
 	err := s.db.Get(&note, "SELECT * FROM public.notes WHERE id=$1", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -117,8 +117,8 @@ func (s *Store) FetchNoteByID(ctx context.Context, id uuid.UUID) (*models.Note, 
 }
 
 // FetchNotesBySystemIntakeID retrieves all (non archived/deleted) Notes associated with a specific SystemIntake
-func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, id uuid.UUID) ([]*models.Note, error) {
-	notes := []*models.Note{}
+func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeNote, error) {
+	notes := []*models.SystemIntakeNote{}
 	err := s.db.Select(&notes, "SELECT * FROM notes WHERE system_intake=$1 AND is_archived=false ORDER BY created_at DESC", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(

@@ -7,9 +7,9 @@ import (
 	"github.com/guregu/null"
 )
 
-// Note holds commentary information submitted by the review team about
+// SystemIntakeNote holds commentary information submitted by the review team about
 // a SystemIntake
-type Note struct {
+type SystemIntakeNote struct {
 	ID             uuid.UUID   `json:"id"`
 	SystemIntakeID uuid.UUID   `json:"systemIntakeId" db:"system_intake"`
 	CreatedAt      *time.Time  `json:"createdAt" db:"created_at"`
