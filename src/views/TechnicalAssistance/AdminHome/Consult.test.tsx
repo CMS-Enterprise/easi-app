@@ -90,6 +90,11 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
                       adviceLetterStatus: 'IN_PROGRESS',
                       __typename: 'TRBTaskStatuses'
                     },
+                    adminNotes: [
+                      {
+                        id: '123'
+                      }
+                    ],
                     __typename: 'TRBRequest'
                   }
                 }
