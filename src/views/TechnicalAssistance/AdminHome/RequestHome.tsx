@@ -61,7 +61,9 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
         <PageLoading />
       ) : (
         <>
-          <h2 className="margin-y-4">{t('adminHome.consultDetails')}</h2>
+          <h2 className="margin-top-4 margin-bottom-3">
+            {t('adminHome.consultDetails')}
+          </h2>
 
           <p className="text-bold margin-bottom-1">{t('adminHome.dateTime')}</p>
 
@@ -100,7 +102,9 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
             </div>
           )}
 
-          <h3 className="margin-y-4">{t('adminHome.representative')}</h3>
+          <h3 className="margin-top-4 margin-bottom-3">
+            {t('adminHome.representative')}
+          </h3>
 
           <p className="text-bold">{t('adminHome.trbLead')}</p>
 
@@ -110,7 +114,7 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
                 <InitialsIcon
                   name={trbLeadInfo.commonName}
                   index={0}
-                  className="margin-right-2"
+                  className="margin-right-1"
                 />
                 <p className="text-bold margin-0">
                   {trbLeadInfo.commonName}, {trbLeadComponent}
@@ -118,7 +122,7 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
               </div>
               <Link
                 aria-label={t('adminHome.sendEmail')}
-                className="line-height-body-5 margin-left-6"
+                className="line-height-body-5 margin-left-5"
                 href={trbLeadInfo.email}
                 target="_blank"
               >
