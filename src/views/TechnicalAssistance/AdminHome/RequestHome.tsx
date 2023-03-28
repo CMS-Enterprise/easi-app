@@ -35,11 +35,17 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
     form,
     adviceLetter,
     consultMeetingTime,
-    trbLeadInfo,
-    trbLeadComponent,
+    // trbLeadInfo,
+    // trbLeadComponent,
     requesterInfo,
     documents
   } = data?.trbRequest || {};
+
+  const trbLeadInfo = {
+    commonName: 'Jerry Seinfeld',
+    email: 'js@oddball.io'
+  };
+  const trbLeadComponent = 'TRB';
 
   return (
     <div
@@ -55,13 +61,13 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
         <PageLoading />
       ) : (
         <>
-          <h2 className="margin-bottom-3">{t('adminHome.consultDetails')}</h2>
+          <h2 className="margin-y-4">{t('adminHome.consultDetails')}</h2>
 
-          <p className="text-bold margin-bottom-0">{t('adminHome.dateTime')}</p>
+          <p className="text-bold margin-bottom-1">{t('adminHome.dateTime')}</p>
 
           {taskStatuses?.formStatus !== TRBFormStatus.COMPLETED ? (
             // Unable to set consult until initial request form complete
-            <Alert type="info" slim className="margin-y-1">
+            <Alert type="info" slim className="margin-y-1 margin-top-2">
               {t('adminHome.reviewInitialRequest')}
             </Alert>
           ) : (
@@ -69,7 +75,7 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
               {!consultMeetingTime ? (
                 // Set meeting time
                 <UswdsReactLink
-                  className="usa-button usa-button--outline"
+                  className="usa-button usa-button--outline margin-top-1"
                   variant="unstyled"
                   to="request/schedule-consult"
                 >
@@ -77,33 +83,42 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
                 </UswdsReactLink>
               ) : (
                 // Display meeting time
-                <p>
-                  {t('adminHome.consultDate', {
-                    date: formatDateLocal(consultMeetingTime, 'MM/dd/yyyy'),
-                    time: DateTime.fromISO(consultMeetingTime).toLocaleString(
-                      DateTime.TIME_SIMPLE
-                    )
-                  })}
-                </p>
+                <div className="display-flex flex-align-center">
+                  <p className="margin-right-2 margin-y-0">
+                    {t('adminHome.consultDate', {
+                      date: formatDateLocal(consultMeetingTime, 'MM/dd/yyyy'),
+                      time: DateTime.fromISO(consultMeetingTime).toLocaleString(
+                        DateTime.TIME_SIMPLE
+                      )
+                    })}
+                  </p>
+                  <UswdsReactLink to="request/schedule-consult">
+                    {t('adminHome.change')}
+                  </UswdsReactLink>
+                </div>
               )}
             </div>
           )}
 
-          <h3 className="margin-top-3">{t('adminHome.representative')}</h3>
+          <h3 className="margin-y-4">{t('adminHome.representative')}</h3>
 
           <p className="text-bold">{t('adminHome.trbLead')}</p>
 
           {trbLeadInfo?.commonName ? (
             <>
-              <div className="display-flex">
-                <InitialsIcon name={trbLeadInfo.commonName} index={0} />
+              <div className="display-flex flex-align-center">
+                <InitialsIcon
+                  name={trbLeadInfo.commonName}
+                  index={0}
+                  className="margin-right-2"
+                />
                 <p className="text-bold margin-0">
                   {trbLeadInfo.commonName}, {trbLeadComponent}
                 </p>
               </div>
               <Link
                 aria-label={t('adminHome.sendEmail')}
-                className="line-height-body-5"
+                className="line-height-body-5 margin-left-6"
                 href={trbLeadInfo.email}
                 target="_blank"
               >

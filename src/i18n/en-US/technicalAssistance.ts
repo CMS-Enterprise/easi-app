@@ -782,6 +782,7 @@ const technicalAssistance = {
     assignLead: 'Assign a TRB Lead',
     consultDate: '{{-date}} at {{-time}}',
     sendEmail: 'Send an email',
+    change: 'Change',
     representative: 'TRB representatives',
     formAndDocs: 'Forms and documents',
     initialRequest: 'Initial request form',
@@ -802,7 +803,6 @@ const technicalAssistance = {
     trbLead: 'TRB Lead',
     notAssigned: 'Not assigned',
     assign: 'Assign',
-    change: 'Change',
     subnav: {
       back: 'Back to All Requests',
       requestHome: 'Request home',
