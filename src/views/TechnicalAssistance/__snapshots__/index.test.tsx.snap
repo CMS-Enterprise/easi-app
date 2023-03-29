@@ -152,7 +152,13 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             </li>
           </ul>
           <p>
-            Prepare for your TRB consult meeting (opens in new tab)
+            <a
+              class="usa-link"
+              href="/help/trb/prepare-consult-meeting"
+              target="_blank"
+            >
+              Prepare for your TRB consult meeting (opens in new tab)
+            </a>
           </p>
         </li>
         <li
@@ -604,6 +610,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
             name="systemTable.title Search"
             role="searchbox"
             type="search"
+            value=""
           />
           <button
             class="usa-button grid-row flex-justify-center flex-align-center no-pointer"

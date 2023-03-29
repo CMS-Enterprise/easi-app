@@ -1,4 +1,7 @@
-export type ArticleTypeProps = 'Section 508' | 'IT Governance';
+export type ArticleTypeProps =
+  | 'Section 508'
+  | 'IT Governance'
+  | 'Technical Review Board';
 
 export type ArticleProps = {
   route: string;

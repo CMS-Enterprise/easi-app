@@ -42,6 +42,7 @@ import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import SystemList from 'views/SystemList';
 import SystemProfile from 'views/SystemProfile';
+import TableStateWrapper from 'views/TableStateWrapper';
 import TechnicalAssistance from 'views/TechnicalAssistance';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
@@ -228,14 +229,16 @@ const App = () => {
               <UserInfoWrapper>
                 <TimeOutWrapper>
                   <NavContextProvider>
-                    <PageWrapper>
-                      <GovBanner />
-                      <Header />
-                      <Navigation>
-                        <AppRoutes />
-                      </Navigation>
-                      <Footer />
-                    </PageWrapper>
+                    <TableStateWrapper>
+                      <PageWrapper>
+                        <GovBanner />
+                        <Header />
+                        <Navigation>
+                          <AppRoutes />
+                        </Navigation>
+                        <Footer />
+                      </PageWrapper>
+                    </TableStateWrapper>
                   </NavContextProvider>
                 </TimeOutWrapper>
               </UserInfoWrapper>

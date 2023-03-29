@@ -230,14 +230,15 @@ function TaskList() {
                         <UswdsReactLink
                           variant="unstyled"
                           className="usa-button"
-                          to="/help/it-governance/prepare-for-trb-consult" // TODO: replace with link to help article
+                          to="/help/trb/prepare-consult-meeting"
+                          target="_blank"
                         >
                           {t('taskList.downloadTemplates')}
                         </UswdsReactLink>
 
                         <UswdsReactLink
                           className="display-block margin-top-2"
-                          to={`/trb/request/${id}/upload-document`} // TODO: replace with link to document upload
+                          to={`/trb/task-list/${id}/documents`}
                         >
                           {t('taskList.uploadDocuments')}
                         </UswdsReactLink>
@@ -245,7 +246,7 @@ function TaskList() {
                         <UswdsReactLink
                           className="display-block margin-top-2"
                           target="_blank"
-                          to={`/trb/request/${id}/attendee-list`} // TODO: replace with link to view advice letter
+                          to={`/trb/task-list/${id}/attendee-list`} // TODO: replace with link to view advice letter
                         >
                           {t('taskList.reviewAttendeeList')}
                         </UswdsReactLink>
@@ -253,7 +254,8 @@ function TaskList() {
                     ) : (
                       <UswdsReactLink
                         className="display-block margin-top-2"
-                        to="/help/it-governance/prepare-for-trb-consult" // TODO: replace with link to help article
+                        to="/help/trb/prepare-consult-meeting"
+                        target="_blank"
                       >
                         {t('taskList.prepareForTRB')}
                       </UswdsReactLink>
@@ -363,14 +365,19 @@ function TaskList() {
                 {t('taskList.additionalHelp')}
               </h4>
               <div className="text-base">{t('taskList.helpLinksNewTab')}</div>
+              {/* todo
               <div className="margin-top-1">
                 <UswdsReactLink to=".">
                   {t('taskList.stepsInvolved')}
                 </UswdsReactLink>
               </div>
+              */}
               <div className="margin-top-1">
-                <UswdsReactLink to=".">
-                  {t('taskList.sampleRequest')}
+                <UswdsReactLink
+                  to="/help/trb/prepare-consult-meeting"
+                  target="_blank"
+                >
+                  {t('taskList.prepareConsultMeeting')}
                 </UswdsReactLink>
               </div>
             </div>

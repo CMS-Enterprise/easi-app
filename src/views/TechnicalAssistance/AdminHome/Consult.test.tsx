@@ -13,6 +13,7 @@ import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 
 import Consult from './Consult';
+import TRBRequestInfoWrapper from './RequestContext';
 import AdminHome from '.';
 
 describe('Trb Admin: Action: Schedule a TRB consult session', () => {
@@ -117,14 +118,17 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
               `/trb/${trbRequestId}/initial-request-form/schedule-consult`
             ]}
           >
-            <MessageProvider>
-              <Route exact path="/trb/:id/:activePage">
-                <AdminHome />
-              </Route>
-              <Route exact path="/trb/:id/:activePage/:action">
-                <Consult />
-              </Route>
-            </MessageProvider>
+            <TRBRequestInfoWrapper>
+              <MessageProvider>
+                <Route exact path="/trb/:id/:activePage">
+                  <AdminHome />
+                </Route>
+
+                <Route exact path="/trb/:id/:activePage/:action">
+                  <Consult />
+                </Route>
+              </MessageProvider>{' '}
+            </TRBRequestInfoWrapper>
           </MemoryRouter>
         </MockedProvider>
       </Provider>
@@ -189,11 +193,13 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             `/trb/${trbRequestId}/initial-request-form/schedule-consult`
           ]}
         >
-          <MessageProvider>
-            <Route exact path="/trb/:id/:activePage/:action">
-              <Consult />
-            </Route>
-          </MessageProvider>
+          <TRBRequestInfoWrapper>
+            <MessageProvider>
+              <Route exact path="/trb/:id/:activePage/:action">
+                <Consult />
+              </Route>
+            </MessageProvider>
+          </TRBRequestInfoWrapper>
         </MemoryRouter>
       </MockedProvider>
     );
@@ -264,11 +270,13 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             `/trb/${trbRequestId}/initial-request-form/schedule-consult`
           ]}
         >
-          <MessageProvider>
-            <Route exact path="/trb/:id/:activePage/:action">
-              <Consult />
-            </Route>
-          </MessageProvider>
+          <TRBRequestInfoWrapper>
+            <MessageProvider>
+              <Route exact path="/trb/:id/:activePage/:action">
+                <Consult />
+              </Route>
+            </MessageProvider>
+          </TRBRequestInfoWrapper>
         </MemoryRouter>
       </MockedProvider>
     );
