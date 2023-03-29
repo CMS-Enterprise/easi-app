@@ -67,56 +67,33 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		expectedStartDate, _ := time.Parse(time.RFC3339, "2022-10-10T12:00:00+00:00")
 		expectedEndDate, _ := time.Parse(time.RFC3339, "2050-10-10T12:00:00+00:00")
 
-		subjectAreaTechnicalReferenceArchitecture := []models.TRBTechnicalReferenceArchitectureOption{
-			models.TRBTechnicalReferenceArchitectureOptionArchitectureChangeRequestProcessForTheTra,
-		}
-		subjectAreaNetworkAndSecurity := []models.TRBNetworkAndSecurityOption{
-			models.TRBNetworkAndSecurityOptionCmsCybersecurityIntegrationCenterIntegration,
-		}
-		subjectAreaCloudAndInfrastructure := []models.TRBCloudAndInfrastructureOption{
-			models.TRBCloudAndInfrastructureOptionCloudIaasAndPaasInfrastructure,
-		}
-		subjectAreaApplicationDevelopment := []models.TRBApplicationDevelopmentOption{
-			models.TRBApplicationDevelopmentOptionAccessibilityCompliance,
-		}
-		subjectAreaDataAndDataManagement := []models.TRBDataAndDataManagementOption{
-			models.TRBDataAndDataManagementOptionApisAndDataExchanges,
-		}
-		subjectAreaGovernmentProcessesAndPolicies := []models.TRBGovernmentProcessesAndPoliciesOption{
-			models.TRBGovernmentProcessesAndPoliciesOptionSecurityAssessments,
-		}
-		subjectAreaOtherTechnicalTopics := []models.TRBOtherTechnicalTopicsOption{
-			models.TRBOtherTechnicalTopicsOptionOther,
+		subjectAreaOptions := []models.TRBSubjectAreaOption{
+			models.TRBSubjectAreaOptionAccessControlAndIdentityMgmt,
+			models.TRBSubjectAreaOptionCloudMigration,
 		}
 
 		formChanges := map[string]interface{}{
-			"isSubmitted":                               false,
-			"trbRequestId":                              trbRequest.ID.String(),
-			"component":                                 "Taco Cart",
-			"needsAssistanceWith":                       "Some of the things",
-			"hasSolutionInMind":                         true,
-			"proposedSolution":                          "Tinder, but for cats",
-			"whereInProcess":                            models.TRBWhereInProcessOptionContractingWorkHasStarted,
-			"whereInProcessOther":                       "Fixing Wifi",
-			"hasExpectedStartEndDates":                  true,
-			"expectedStartDate":                         expectedStartDate,
-			"expectedEndDate":                           expectedEndDate,
-			"collabGroups":                              updatedCollabGroups,
-			"collabDateSecurity":                        "2021-10-20",
-			"collabDateEnterpriseArchitecture":          "2021-10-21",
-			"collabDateCloud":                           "2021-10-22",
-			"collabDatePrivacyAdvisor":                  "2021-10-23",
-			"collabDateGovernanceReviewBoard":           "2021-10-24",
-			"collabDateOther":                           "2021-10-25",
-			"collabGroupOther":                          "Geek Squad",
-			"subjectAreaTechnicalReferenceArchitecture": subjectAreaTechnicalReferenceArchitecture,
-			"subjectAreaNetworkAndSecurity":             subjectAreaNetworkAndSecurity,
-			"subjectAreaCloudAndInfrastructure":         subjectAreaCloudAndInfrastructure,
-			"subjectAreaApplicationDevelopment":         subjectAreaApplicationDevelopment,
-			"subjectAreaDataAndDataManagement":          subjectAreaDataAndDataManagement,
-			"subjectAreaGovernmentProcessesAndPolicies": subjectAreaGovernmentProcessesAndPolicies,
-			"subjectAreaOtherTechnicalTopics":           subjectAreaOtherTechnicalTopics,
-			"subjectAreaOtherTechnicalTopicsOther":      "Some other technical topic",
+			"isSubmitted":                      false,
+			"trbRequestId":                     trbRequest.ID.String(),
+			"component":                        "Taco Cart",
+			"needsAssistanceWith":              "Some of the things",
+			"hasSolutionInMind":                true,
+			"proposedSolution":                 "Tinder, but for cats",
+			"whereInProcess":                   models.TRBWhereInProcessOptionContractingWorkHasStarted,
+			"whereInProcessOther":              "Fixing Wifi",
+			"hasExpectedStartEndDates":         true,
+			"expectedStartDate":                expectedStartDate,
+			"expectedEndDate":                  expectedEndDate,
+			"collabGroups":                     updatedCollabGroups,
+			"collabDateSecurity":               "2021-10-20",
+			"collabDateEnterpriseArchitecture": "2021-10-21",
+			"collabDateCloud":                  "2021-10-22",
+			"collabDatePrivacyAdvisor":         "2021-10-23",
+			"collabDateGovernanceReviewBoard":  "2021-10-24",
+			"collabDateOther":                  "2021-10-25",
+			"collabGroupOther":                 "Geek Squad",
+			"subjectAreaOptions":               subjectAreaOptions,
+			"subjectAreaOptionOther":           "Some other technical topic",
 		}
 		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, formChanges)
 		s.NoError(err)
@@ -143,16 +120,11 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.EqualValues(formChanges["collabDateOther"], *updatedForm.CollabDateOther)
 
 		s.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
-		s.EqualValues(formChanges["subjectAreaOtherTechnicalTopicsOther"], *updatedForm.SubjectAreaOtherTechnicalTopicsOther)
 		s.EqualValues(3, len(updatedForm.CollabGroups))
 
-		s.EqualValues(subjectAreaTechnicalReferenceArchitecture[0], updatedForm.SubjectAreaTechnicalReferenceArchitecture[0])
-		s.EqualValues(subjectAreaNetworkAndSecurity[0], updatedForm.SubjectAreaNetworkAndSecurity[0])
-		s.EqualValues(subjectAreaCloudAndInfrastructure[0], updatedForm.SubjectAreaCloudAndInfrastructure[0])
-		s.EqualValues(subjectAreaApplicationDevelopment[0], updatedForm.SubjectAreaApplicationDevelopment[0])
-		s.EqualValues(subjectAreaDataAndDataManagement[0], updatedForm.SubjectAreaDataAndDataManagement[0])
-		s.EqualValues(subjectAreaGovernmentProcessesAndPolicies[0], updatedForm.SubjectAreaGovernmentProcessesAndPolicies[0])
-		s.EqualValues(subjectAreaOtherTechnicalTopics[0], updatedForm.SubjectAreaOtherTechnicalTopics[0])
+		s.EqualValues(subjectAreaOptions[0], updatedForm.SubjectAreaOptions[0])
+		s.EqualValues(subjectAreaOptions[1], updatedForm.SubjectAreaOptions[1])
+		s.EqualValues(formChanges["subjectAreaOptionOther"], *updatedForm.SubjectAreaOptionOther)
 
 		// confirm that the status is correctly marked "in progress"
 		s.EqualValues(updatedForm.Status, models.TRBFormStatusInProgress)
