@@ -20,6 +20,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
+const principalUser = "ABCD"
+
 func fetchUserInfoMock(ctx context.Context, eua string) (*models.UserInfo, error) {
 	return &models.UserInfo{
 		EuaUserID:  eua,
@@ -44,6 +46,7 @@ func ctxWithLoggerAndPrincipal(logger *zap.Logger, euaID string) context.Context
 func main() {
 	config := testhelpers.NewConfig()
 	logger, loggerErr := zap.NewDevelopment()
+
 	if loggerErr != nil {
 		panic(loggerErr)
 	}
@@ -195,13 +198,13 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
-	// Fresh request, no actions taken
-	makeTRBRequest(models.TRBTNeedHelp, logger, store, func(t *models.TRBRequest) {
+	// // Fresh request, no actions taken
+	makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, "9841c768-bdcd-4856-bae2-62cfdaffacf6", func(t *models.TRBRequest) {
 		t.Name = "0 - Brand new request"
 	})
 
 	// In progress form, not submitted
-	inProgress := makeTRBRequest(models.TRBTNeedHelp, logger, store, func(t *models.TRBRequest) {
+	inProgress := makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, "21f175b9-bcbe-41c1-9c07-9844869bc1ce", func(t *models.TRBRequest) {
 		t.Name = "1 - In progress form"
 	})
 	updateTRBRequestForm(logger, store, map[string]interface{}{
@@ -222,18 +225,33 @@ func main() {
 		"collabDateEnterpriseArchitecture": "The other day",
 		"collabGroupOther":                 "CMS Splunk Team",
 		"collabDateOther":                  "Last week",
-	})
+	}, principalUser)
+}
 
-	// makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
-	// 	t.ID = uuid.MustParse("9841c768-bdcd-4856-bae2-62cfdaffacf6")
-	// 	t.Name = "TACO Review"
-	// 	t.CreatedBy = "TACO"
-	// })
-	// makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
-	// 	t.ID = uuid.MustParse("21f175b9-bcbe-41c1-9c07-9844869bc1ce")
-	// 	t.Name = "Archived Request"
-	// 	t.Archived = true
-	// })
+func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, userEUA string, trbID string, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
+	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
+	trb := &models.TRBRequest{}
+	trb.ID = uuid.MustParse(trbID)
+	trb.CreatedBy = userEUA
+	trb, err := resolvers.CreateTRBRequest(ctx, rType, fetchUserInfoMock, store, trb)
+	if err != nil {
+		panic(err)
+	}
+	for _, cb := range callbacks {
+		cb(trb)
+	}
+	must(store.UpdateTRBRequest(ctx, trb))
+	return trb
+}
+
+func updateTRBRequestForm(logger *zap.Logger, store *storage.Store, changes map[string]interface{}, userEUA string) *models.TRBRequestForm {
+	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
+
+	form, err := resolvers.UpdateTRBRequestForm(ctx, store, nil, fetchUserInfoMock, changes)
+	if err != nil {
+		panic(err)
+	}
+	return form
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -251,7 +269,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	}
 
 	intake := models.SystemIntake{
-		EUAUserID: null.StringFrom("ABCD"),
+		EUAUserID: null.StringFrom(principalUser),
 		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
 
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
@@ -336,7 +354,7 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	noCost := 0
 	businessCase := models.BusinessCase{
 		SystemIntakeID:       intake.ID,
-		EUAUserID:            "ABCD",
+		EUAUserID:            principalUser,
 		Requester:            null.StringFrom("Shane Clark"),
 		RequesterPhoneNumber: null.StringFrom("3124567890"),
 		Status:               models.BusinessCaseStatusOPEN,
@@ -406,7 +424,7 @@ func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...fu
 	accessibilityRequest := models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
 		IntakeID:  &intake.ID,
-		EUAUserID: "ABCD",
+		EUAUserID: principalUser,
 	}
 	for _, cb := range callbacks {
 		cb(&accessibilityRequest)
@@ -436,28 +454,4 @@ func must(_ interface{}, err error) {
 func date(year, month, day int) *time.Time {
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	return &date
-}
-
-func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
-	ctx := ctxWithLoggerAndPrincipal(logger, "ABCD") //TODO Parameterize the EUA ID
-
-	trb, err := resolvers.CreateTRBRequest(ctx, rType, fetchUserInfoMock, store)
-	if err != nil {
-		panic(err)
-	}
-	for _, cb := range callbacks {
-		cb(trb)
-	}
-	must(store.UpdateTRBRequest(ctx, trb))
-	return trb
-}
-
-func updateTRBRequestForm(logger *zap.Logger, store *storage.Store, changes map[string]interface{}) *models.TRBRequestForm {
-	ctx := ctxWithLoggerAndPrincipal(logger, "ABCD") //TODO Parameterize the EUA ID
-
-	form, err := resolvers.UpdateTRBRequestForm(ctx, store, nil, fetchUserInfoMock, changes)
-	if err != nil {
-		panic(err)
-	}
-	return form
 }

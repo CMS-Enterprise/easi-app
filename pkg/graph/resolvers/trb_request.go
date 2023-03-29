@@ -16,7 +16,13 @@ import (
 )
 
 // CreateTRBRequest makes a new TRB request
-func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, fetchUserInfo func(context.Context, string) (*models.UserInfo, error), store *storage.Store) (*models.TRBRequest, error) {
+func CreateTRBRequest(
+	ctx context.Context,
+	requestType models.TRBRequestType,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	store *storage.Store,
+	trb *models.TRBRequest,
+) (*models.TRBRequest, error) {
 	princ := appcontext.Principal(ctx)
 
 	// Fetch user info for the "requester" attendee
@@ -25,10 +31,12 @@ func CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType, fe
 		return nil, err
 	}
 
-	trb := models.NewTRBRequest(princ.ID())
+	if trb == nil {
+		trb = models.NewTRBRequest(princ.ID())
+	}
+
 	trb.Type = requestType
 	trb.State = models.TRBRequestStateOpen
-	//TODO make sure this is wired up appropriately
 
 	createdTRB, err := store.CreateTRBRequest(ctx, trb)
 	if err != nil {

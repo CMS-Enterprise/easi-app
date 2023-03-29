@@ -1862,7 +1862,7 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 
 // CreateTRBRequest is the resolver for the createTRBRequest field.
 func (r *mutationResolver) CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType) (*models.TRBRequest, error) {
-	return resolvers.CreateTRBRequest(ctx, requestType, r.service.FetchUserInfo, r.store)
+	return resolvers.CreateTRBRequest(ctx, requestType, r.service.FetchUserInfo, r.store, nil)
 }
 
 // UpdateTRBRequest is the resolver for the updateTRBRequest field.
