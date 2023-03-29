@@ -24,7 +24,7 @@ type InformationCardProps = {
   type: 'inititalRequestForm' | 'adviceLetter';
 };
 
-interface RenderPropsType {
+interface CardDetailsType {
   header: string;
   description: string;
   status: TRBAdviceLetterStatus | TRBFormStatus;
@@ -35,12 +35,14 @@ interface RenderPropsType {
   disabled: boolean;
 }
 
+// Card component for rendering TRB Forms/Documents summary
+// ex: <RequestHome />
 const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const history = useHistory();
 
-  let renderProps: RenderPropsType = {
+  let cardDetails: CardDetailsType = {
     header: '',
     description: '',
     status: TRBFormStatus.READY_TO_START,
@@ -53,7 +55,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
 
   switch (type) {
     case 'inititalRequestForm':
-      renderProps = {
+      cardDetails = {
         header: t('adminHome.initialRequest'),
         description: t('adminHome.completedBy'),
         status: trbRequest.taskStatuses.formStatus,
@@ -67,7 +69,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
       };
       break;
     case 'adviceLetter':
-      renderProps = {
+      cardDetails = {
         header: t('adminHome.adviceLetter'),
         description: t('adminHome.toBeCompleted'),
         status: trbRequest.taskStatuses.adviceLetterStatus,
@@ -95,29 +97,29 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
   return (
     <Card className="flex-1 information-card margin-bottom-2">
       <CardHeader>
-        <h3 className="margin-0">{renderProps.header}</h3>
-        <p className="text-base margin-0">{renderProps.description}</p>
+        <h3 className="margin-0">{cardDetails.header}</h3>
+        <p className="text-base margin-0">{cardDetails.description}</p>
       </CardHeader>
 
       <CardBody>
         <div className="display-flex flex-align-center line-height-body-5 margin-bottom-2">
-          <TaskStatusTag status={renderProps.status} />
+          <TaskStatusTag status={cardDetails.status} />
         </div>
 
         <dt className="text-bold">{t('adminHome.lastUpdated')}</dt>
         <dd className="margin-left-0 margin-bottom-1">
-          {renderProps.modified}
+          {cardDetails.modified}
         </dd>
       </CardBody>
 
       <CardFooter>
         <Button
           type="button"
-          className={renderProps.buttonClass}
-          disabled={renderProps.disabled}
-          onClick={() => history.push(renderProps.buttonLink)}
+          className={cardDetails.buttonClass}
+          disabled={cardDetails.disabled}
+          onClick={() => history.push(cardDetails.buttonLink)}
         >
-          {renderProps.buttonText}
+          {cardDetails.buttonText}
         </Button>
       </CardFooter>
     </Card>

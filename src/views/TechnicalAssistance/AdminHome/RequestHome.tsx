@@ -4,6 +4,7 @@ import {
   Alert,
   Button,
   CardGroup,
+  Grid,
   IconArrowForward,
   Link
 } from '@trussworks/react-uswds';
@@ -19,14 +20,12 @@ import {
   GetTrbRequestHome as GetTrbRequestHomeType,
   GetTrbRequestHomeVariables
 } from 'queries/types/GetTrbRequestHome';
-import {
-  TRBAdviceLetterStatus,
-  TRBFormStatus
-} from 'types/graphql-global-types';
+import { TRBFormStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 
 import InformationCard from './components/InformationCard';
+import RequestNotes from './components/RequestNotes';
 
 const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -41,17 +40,11 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
   const {
     taskStatuses,
     consultMeetingTime,
-    // trbLeadInfo,
-    // trbLeadComponent,
-    documents,
-    adminNotes
+    trbLeadInfo,
+    trbLeadComponent,
+    documents
+    // adminNotes TODO: once <Note /> PR is merge, implement adminNotes data
   } = data?.trbRequest || {};
-
-  const trbLeadInfo = {
-    commonName: 'Jerry Seinfeld',
-    email: 'js@oddball.io'
-  };
-  const trbLeadComponent = 'TRB';
 
   return (
     <div
@@ -59,14 +52,23 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
       data-testid="trb-admin-home__request-home"
       id={`trbAdminRequestHome-${trbRequestId}`}
     >
-      <h1 className="margin-top-0 margin-bottom-4">
-        {t('adminHome.subnav.requestHome')}
-      </h1>
+      <Grid row gap="lg">
+        <Grid tablet={{ col: 8 }}>
+          <h1 className="margin-top-0 margin-bottom-4">
+            {t('adminHome.subnav.requestHome')}
+          </h1>
+        </Grid>
+
+        <Grid tablet={{ col: 4 }}>
+          <RequestNotes trbRequestId={trbRequestId} />
+        </Grid>
+      </Grid>
 
       {loading ? (
         <PageLoading />
       ) : (
         <>
+          {/* Consult details */}
           <h2 className="margin-top-4 margin-bottom-3">
             {t('adminHome.consultDetails')}
           </h2>
@@ -108,6 +110,7 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
             </div>
           )}
 
+          {/* TRB lead details */}
           <h3 className="margin-top-4 margin-bottom-3">
             {t('adminHome.representative')}
           </h3>
@@ -149,6 +152,7 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
 
           <Divider className="margin-y-6" />
 
+          {/* Forms and Documents */}
           <h2 className="margin-top-4 margin-bottom-3">
             {t('adminHome.formAndDocs')}
           </h2>
