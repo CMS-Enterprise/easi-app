@@ -19,7 +19,6 @@ export interface GetTrbRequestHome_trbRequest_form {
   __typename: "TRBRequestForm";
   id: UUID;
   modifiedAt: Time | null;
-  createdBy: string;
 }
 
 export interface GetTrbRequestHome_trbRequest_adviceLetter {
@@ -32,11 +31,6 @@ export interface GetTrbRequestHome_trbRequest_trbLeadInfo {
   __typename: "UserInfo";
   commonName: string;
   email: string;
-}
-
-export interface GetTrbRequestHome_trbRequest_requesterInfo {
-  __typename: "UserInfo";
-  commonName: string;
 }
 
 export interface GetTrbRequestHome_trbRequest_documents {
@@ -58,7 +52,6 @@ export interface GetTrbRequestHome_trbRequest {
   consultMeetingTime: Time | null;
   trbLeadInfo: GetTrbRequestHome_trbRequest_trbLeadInfo;
   trbLeadComponent: string | null;
-  requesterInfo: GetTrbRequestHome_trbRequest_requesterInfo;
   documents: GetTrbRequestHome_trbRequest_documents[];
   adminNotes: GetTrbRequestHome_trbRequest_adminNotes[];
 }

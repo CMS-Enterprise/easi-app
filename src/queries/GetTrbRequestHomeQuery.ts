@@ -11,7 +11,6 @@ export default gql`
       form {
         id
         modifiedAt
-        createdBy
       }
       adviceLetter {
         id
@@ -23,9 +22,6 @@ export default gql`
         email
       }
       trbLeadComponent
-      requesterInfo {
-        commonName
-      }
       documents {
         id
       }

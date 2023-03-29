@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, Link } from '@trussworks/react-uswds';
+import { Alert, Button, CardGroup, Link } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -20,6 +20,8 @@ import {
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 
+import InformationCard from './components/InformationCard';
+
 const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -35,17 +37,16 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
     form,
     adviceLetter,
     consultMeetingTime,
-    // trbLeadInfo,
-    // trbLeadComponent,
-    requesterInfo,
+    trbLeadInfo,
+    trbLeadComponent,
     documents
   } = data?.trbRequest || {};
 
-  const trbLeadInfo = {
-    commonName: 'Jerry Seinfeld',
-    email: 'js@oddball.io'
-  };
-  const trbLeadComponent = 'TRB';
+  // const trbLeadInfo = {
+  //   commonName: 'Jerry Seinfeld',
+  //   email: 'js@oddball.io'
+  // };
+  // const trbLeadComponent = 'TRB';
 
   return (
     <div
@@ -142,6 +143,24 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
           )}
 
           <Divider className="margin-y-6" />
+
+          <h2 className="margin-top-4 margin-bottom-3">
+            {t('adminHome.formAndDocs')}
+          </h2>
+
+          {data?.trbRequest && (
+            <CardGroup className="margin-right-15">
+              <InformationCard
+                type="inititalRequestForm"
+                trbRequest={data?.trbRequest}
+              />
+
+              <InformationCard
+                type="adviceLetter"
+                trbRequest={data?.trbRequest}
+              />
+            </CardGroup>
+          )}
         </>
       )}
     </div>
