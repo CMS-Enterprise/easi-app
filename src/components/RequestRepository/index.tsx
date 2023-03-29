@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +32,7 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import useTableState from 'hooks/useTableState';
 import { GetSystemIntake_systemIntake_lastAdminNote as LastAdminNote } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
@@ -43,6 +44,7 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import { ActiveStateType, TableStateContext } from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
 import tableMap from './tableMap';
@@ -50,24 +52,32 @@ import tableMap from './tableMap';
 import './index.scss';
 
 const RequestRepository = () => {
-  type TableTypes = 'open' | 'closed';
   const isMobile = useCheckResponsiveScreen('tablet');
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
 
-  const [activeTable, setActiveTable] = useState<TableTypes>('open');
+  const { itGovAdmin } = useContext(TableStateContext);
+
+  const [activeTable, setActiveTable] = useState<ActiveStateType>(
+    itGovAdmin.current.activeTableState
+  );
+
+  const defaultPageSize: number = window.localStorage['request-table-page-size']
+    ? Number(window.localStorage['request-table-page-size'])
+    : 50;
 
   // Last sort states on active tables with their initial sort rules
   const [lastSort, setLastSort] = useState<
-    Record<TableTypes, SortingRule<object>[]>
+    Record<ActiveStateType, SortingRule<{}>[]>
   >({
     open: [{ id: 'submittedAt', desc: true }],
     closed: [{ id: 'lastAdminNote', desc: true }]
   });
 
   // Select an active table and restore its last sort state
-  function selectActiveTable(nextActiveTable: TableTypes) {
+  function selectActiveTable(nextActiveTable: ActiveStateType) {
     if (nextActiveTable === activeTable) return;
+    gotoPage(0);
     setLastSort(prev => ({ ...prev, [activeTable]: state.sortBy }));
     setActiveTable(nextActiveTable);
     setSortBy(lastSort[nextActiveTable]);
@@ -320,7 +330,7 @@ const RequestRepository = () => {
       autoResetPage: false,
       initialState: {
         sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
-        pageSize: 50
+        pageSize: defaultPageSize
       }
     },
     useFilters,
@@ -336,6 +346,17 @@ const RequestRepository = () => {
   const convertIntakesToCSV = (intakes: any[]) => {
     return intakes.map(intake => convertIntakeToCSV(intake));
   };
+
+  // Sets persisted table state and stores state on unmount
+  useTableState(
+    'itGovAdmin',
+    state,
+    gotoPage,
+    setSortBy,
+    setGlobalFilter,
+    activeTable,
+    data
+  );
 
   return (
     <MainContent className="padding-x-4 margin-bottom-5">
@@ -408,6 +429,7 @@ const RequestRepository = () => {
 
       <GlobalClientFilter
         setGlobalFilter={setGlobalFilter}
+        initialFilter={itGovAdmin.current.state.globalFilter}
         tableID={t('requestRepository.id')}
         tableName={t('requestRepository.title')}
         className="margin-bottom-4"

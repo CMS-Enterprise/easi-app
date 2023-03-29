@@ -13,6 +13,7 @@ import { trbRequestSummary } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 
+import TRBRequestInfoWrapper from './RequestContext';
 import AdminHome from '.';
 
 const trbRequestId = 'a4093ec7-caec-4e73-be3d-a8d6262bc61b';
@@ -47,9 +48,11 @@ describe('TRB admin home', () => {
         <MessageProvider>
           <Provider store={defaultStore}>
             <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
-              <Route path="/trb/:id/:activePage?">
-                <AdminHome />
-              </Route>
+              <TRBRequestInfoWrapper>
+                <Route path="/trb/:id/:activePage?">
+                  <AdminHome />
+                </Route>
+              </TRBRequestInfoWrapper>
             </MockedProvider>
           </Provider>
         </MessageProvider>
@@ -77,9 +80,11 @@ describe('TRB admin home', () => {
         <MessageProvider>
           <Provider store={defaultStore}>
             <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
-              <Route path="/trb/:id/:activePage?">
-                <AdminHome />
-              </Route>
+              <TRBRequestInfoWrapper>
+                <Route path="/trb/:id/:activePage?">
+                  <AdminHome />
+                </Route>
+              </TRBRequestInfoWrapper>
             </MockedProvider>
           </Provider>
         </MessageProvider>

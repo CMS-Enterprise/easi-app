@@ -10,11 +10,13 @@ import SampleBusinessCase from './ITGovernance/SampleBusinessCase';
 import StepsInvolved from './Section508/StepsInvolved';
 import TestingTemplates from './Section508/TestingTemplate';
 import ReportAProblem from './SendFeedback/ReportAProblem';
+import PrepareTrbConsultMeeting from './TechnicalReviewBoard/PrepareTrbConsultMeeting';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
 import Section508 from './Section508';
 import SendFeedback from './SendFeedback';
+import TechnicalReviewBoard from './TechnicalReviewBoard';
 
 const Help = () => {
   return (
@@ -54,6 +56,14 @@ const Help = () => {
         path="/help/section-508/templates-for-508-testing"
         render={() => <TestingTemplates />}
       />
+
+      {/* TRB */}
+      <Route path="/help/trb" exact>
+        <TechnicalReviewBoard />
+      </Route>
+      <Route path="/help/trb/prepare-consult-meeting" exact>
+        <PrepareTrbConsultMeeting />
+      </Route>
 
       {/* Help feedback forms */}
       <Route path="/help/send-feedback" render={() => <SendFeedback />} />

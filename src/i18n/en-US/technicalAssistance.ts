@@ -125,6 +125,7 @@ const technicalAssistance = {
     cancel: 'Cancel',
     back: 'Back',
     continue: 'Continue',
+    update: 'Update',
     next: 'Next',
     save: 'Save',
     saveAndExit: 'Save and exit',
@@ -136,7 +137,24 @@ const technicalAssistance = {
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission date',
-      status: 'Request status'
+      status: 'Request status',
+      trbConsultDate: 'TRB consult date'
+    },
+    requestTypes: {
+      NEED_HELP: 'System problem',
+      BRAINSTORM: 'Idea feedback'
+    },
+    requestStatus: {
+      NEW: 'New',
+      DRAFT_REQUEST_FORM: 'Draft request form',
+      REQUEST_FORM_COMPLETE: 'Request form complete',
+      READY_FOR_CONSULT: 'Ready for consult',
+      CONSULT_SCHEDULED: 'Consult scheduled',
+      CONSULT_COMPLETE: 'Consult complete',
+      DRAFT_ADVICE_LETTER: 'Draft advice letter',
+      ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
+      ADVICE_LETTER_SENT: 'Advice letter sent',
+      FOLLOW_UP_REQUESTED: 'Follow-up requested'
     }
   },
   // Higher level errors
@@ -273,8 +291,25 @@ const technicalAssistance = {
     helpLinksNewTab: 'All help links open in a new tab',
     stepsInvolved:
       'Steps involved in getting technical assistance from the TRB',
-    sampleRequest: 'Sample TRB Request',
+    prepareConsultMeeting: 'Prepare for the consult meeting',
     viewSubmittedTrbRequest: 'View submitted TRB Request (opens in a new tab)',
+    editsRequestedWarning:
+      'The TRB has requested edits to your initial request form. View their feedback and make any changes requested.',
+    noFeedback:
+      'The TRB had no feedback about your request form. If you have any questions, you may contact them at ',
+    downloadTemplates: 'Download presentation templates',
+    sendAnEmail: 'Send an email',
+    uploadDocuments: 'Upload additional documents',
+    reviewAttendeeList: 'Review attendee list',
+    viewAttendeeList: 'View attendee list',
+    prepareForTRB: 'Prepare for your TRB consult meeting (opens in a new tab)',
+    trbConsultInfoHeading:
+      'Your TRB consult session is scheduled for {{-date}} at {{-time}}',
+    trbConsultInfo:
+      'If this day or time does not work for you, or if you need to reschedule, please contact the TRB at ',
+    trbConsultAttended:
+      'You attended your project’s TRB consult session on {{-date}} at {{-time}}',
+    viewAdviceLetter: 'View advice letter',
     taskList: [
       {
         heading: 'Fill out the initial request form',
@@ -632,7 +667,23 @@ const technicalAssistance = {
         'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
       success: 'Your document has been uploaded and is being scanned.'
     },
-    continueWithoutAdding: 'Continue without adding documents'
+    continueWithoutAdding: 'Continue without adding documents',
+    supportingDocuments: {
+      heading: 'Supporting documents',
+      info:
+        'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.',
+      addAnother: 'Add another document',
+      adminInfo:
+        'The requester has uploaded these documents as a part of this request. If the TRB needs additional documentation, contact the requester.',
+      removeHeading: 'Confirm you want to remove {{-documentName}}.',
+      removeInfo:
+        'You will not be able to access this document after it is removed, and the TRB team will not be able to view it.',
+      removeDocument: 'Remove document',
+      cancel: 'Cancel',
+      removeFail:
+        'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
+      removeSuccess: 'You have successfully removed {{-documentName}}.'
+    }
   },
   check: {
     submit: 'Submit request',
@@ -680,7 +731,8 @@ const technicalAssistance = {
     viewFeedback: 'View feedback',
     date: 'Date',
     from: 'Feedback from',
-    returnToForm: 'Return to request form'
+    returnToForm: 'Return to request form',
+    returnToTaskList: 'Return to task list'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
@@ -741,6 +793,47 @@ const technicalAssistance = {
     },
     byNameOnDate: 'by {{name}} on {{date}}'
   },
+  adminTeamHome: {
+    description:
+      'From EASi’s TRB home, you can review, assign, and manage incoming and existing TRB support requests.',
+    jumpToExistingRequests: 'Jump to existing requests',
+    downloadAllTrbRequests: 'Download all TRB requests (csv)',
+    switchToDifferentAdminView: 'Swich to a different admin view',
+    submitYourOwnRequest: 'Submit your own technical assistance request',
+    newRequests: {
+      heading: 'New requests',
+      description:
+        'Review these recently submitted technical assistance requests and assign a TRB lead.',
+      downloadCsv: 'Download all new requests (csv)',
+      noRequests:
+        'There are currently no new requests. The TRB Mailbox will receive an email notification when a new request is submitted, or you can check back here later.'
+    },
+    existingRequests: {
+      heading: 'Existing requests',
+      description:
+        'Use the tabs below to navigate between closed requests and those that are open and have been reviewed and assigned.',
+      downloadCsv: 'Download all existing requests (csv)',
+      tabs: {
+        label: 'Request Repository Table Navigation',
+        open: {
+          name: 'Open Requests'
+        },
+        closed: {
+          name: 'Closed Requests'
+        }
+      },
+      noRequests: {
+        open:
+          'There are currently no open requests that are in progress. Review any new requests above and assign a TRB lead.',
+        closed:
+          'There are currently no closed requests. Continue to work on open requests. When they are closed, they will appear here.'
+      }
+    },
+    actions: {
+      assignLead: 'Assign lead',
+      addDate: 'Add date'
+    }
+  },
   actionRequestEdits: {
     heading: 'Action: request edits',
     description:
@@ -791,6 +884,42 @@ const technicalAssistance = {
     alert:
       'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
     breadcrumb: 'Schedule a consult'
+  },
+  actionCloseRequest: {
+    heading: 'Action: close request',
+    description:
+      'Use this action if work on this request is complete, or if it is not a TRB request.',
+    breadcrumb: 'Close request',
+    label: 'Why did you close this request?',
+    hint:
+      'Give a brief explanation, especially if you closed this request without sending an advice letter.',
+    submit: 'Complete action and close request',
+    success: 'Action complete. This request is now closed.',
+    error:
+      'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
+    confirmModal: {
+      heading: 'Are you sure you want to close this request?',
+      text: [
+        'Closing this request will:',
+        'send a notification email to the TRB mailbox',
+        'prevent any additional updates to the request',
+        'set the request status to closed',
+        'You may continue to add notes to closed requests, and you may reopen the request at any time.'
+      ],
+      close: 'Close request',
+      cancel: 'Cancel'
+    }
+  },
+  actionReopenRequest: {
+    heading: 'Action: re-open request',
+    description:
+      'Reopen this request if additional work needs to be completed or if it was closed in error.',
+    label: 'Why are you re-opening this request?',
+    hint: 'Give a brief explanation.',
+    submit: 'Complete action and re-open request',
+    success: 'Action complete. This request is now open.',
+    error:
+      'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
   }
 };
 

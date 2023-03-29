@@ -1,20 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
-import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import {
-  GetTrbRequestSummary,
-  GetTrbRequestSummaryVariables
-} from 'queries/types/GetTrbRequestSummary';
 import { AppState } from 'reducers/rootReducer';
 import { formatDateLocal } from 'utils/date';
 import user from 'utils/user';
@@ -22,6 +17,7 @@ import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation'
 import NotFound from 'views/NotFound';
 
 import Summary from './components/Summary';
+import { TRBRequestContext } from './RequestContext';
 import subNavItems from './subNavItems';
 
 import './index.scss';
@@ -74,20 +70,18 @@ export default function AdminHome() {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
+  const flags = useFlags();
+
   // Get url params
   const { id, activePage } = useParams<{
     id: string;
     activePage: string;
   }>();
 
-  // TRB request query
-  const { data, loading } = useQuery<
-    GetTrbRequestSummary,
-    GetTrbRequestSummaryVariables
-  >(GetTrbRequestSummaryQuery, {
-    variables: { id }
-  });
-  /** Current trb request */
+  const trbContextData = useContext(TRBRequestContext);
+
+  const { data, loading } = trbContextData;
+
   const trbRequest = data?.trbRequest;
 
   // Alert feedback from children
@@ -131,7 +125,7 @@ export default function AdminHome() {
   }
 
   // If TRB request does not exist or user is not TRB admin, return page not found
-  if (!trbRequest || !user.isTrbAdmin(groups)) {
+  if (!trbRequest || !user.isTrbAdmin(groups, flags)) {
     return <NotFound />;
   }
 
@@ -143,7 +137,7 @@ export default function AdminHome() {
         name={trbRequest.name}
         requestType={trbRequest.type}
         createdAt={trbRequest.createdAt}
-        status={trbRequest.status}
+        state={trbRequest.state}
         taskStatuses={trbRequest.taskStatuses}
         trbLead={trbRequest.trbLead}
         requester={requester}

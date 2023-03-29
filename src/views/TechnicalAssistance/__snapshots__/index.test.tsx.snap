@@ -45,7 +45,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
     </h1>
     <div>
       <span
-        class="line-height-body-5 text-base margin-right-2"
+        class="font-body-md line-height-body-4 text-base margin-right-2"
       >
         I’m having a problem with my system
       </span>
@@ -152,7 +152,13 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             </li>
           </ul>
           <p>
-            Prepare for your TRB consult meeting (opens in new tab)
+            <a
+              class="usa-link"
+              href="/help/trb/prepare-consult-meeting"
+              target="_blank"
+            >
+              Prepare for your TRB consult meeting (opens in new tab)
+            </a>
           </p>
         </li>
         <li
@@ -586,7 +592,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
           My TRB Requests
         </h2>
         <form
-          class="usa-form usa-search margin-bottom-4"
+          class="usa-form usa-search margin-bottom-4 maxw-mobile-lg"
           data-testid="table-client-filter"
           role="search"
         >
@@ -604,6 +610,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
             name="systemTable.title Search"
             role="searchbox"
             type="search"
+            value=""
           />
           <button
             class="usa-button grid-row flex-justify-center flex-align-center no-pointer"
@@ -800,7 +807,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   class="padding-left-0"
                   role="cell"
                 >
-                  OPEN
+                  New
                 </td>
                 <td
                   class="padding-left-0"
@@ -828,7 +835,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
                   class="padding-left-0"
                   role="cell"
                 >
-                  OPEN
+                  New
                 </td>
                 <td
                   class="padding-left-0"

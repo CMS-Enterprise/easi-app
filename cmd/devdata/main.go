@@ -396,7 +396,7 @@ func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *stor
 
 	trb := models.NewTRBRequest("EASI")
 	trb.Type = rType
-	trb.Status = models.TRBSOpen
+	trb.State = models.TRBRequestStateOpen
 	for _, cb := range callbacks {
 		cb(trb)
 	}

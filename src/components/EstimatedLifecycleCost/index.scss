@@ -1,4 +1,5 @@
 /* autoprefixer grid: autoplace */
+@use 'uswds-core' as *;
 
 .est-lifecycle-cost {
   flex-direction: row-reverse;

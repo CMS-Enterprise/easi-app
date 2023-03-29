@@ -328,9 +328,22 @@ export enum TRBRequestDocumentStatus {
   UNAVAILABLE = "UNAVAILABLE",
 }
 
-export enum TRBRequestStatus {
+export enum TRBRequestState {
   CLOSED = "CLOSED",
   OPEN = "OPEN",
+}
+
+export enum TRBRequestStatus {
+  ADVICE_LETTER_IN_REVIEW = "ADVICE_LETTER_IN_REVIEW",
+  ADVICE_LETTER_SENT = "ADVICE_LETTER_SENT",
+  CONSULT_COMPLETE = "CONSULT_COMPLETE",
+  CONSULT_SCHEDULED = "CONSULT_SCHEDULED",
+  DRAFT_ADVICE_LETTER = "DRAFT_ADVICE_LETTER",
+  DRAFT_REQUEST_FORM = "DRAFT_REQUEST_FORM",
+  FOLLOW_UP_REQUESTED = "FOLLOW_UP_REQUESTED",
+  NEW = "NEW",
+  READY_FOR_CONSULT = "READY_FOR_CONSULT",
+  REQUEST_FORM_COMPLETE = "REQUEST_FORM_COMPLETE",
 }
 
 export enum TRBRequestType {
@@ -392,6 +405,16 @@ export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
   notificationRecipients?: EmailNotificationRecipients | null;
+}
+
+/**
+ * The input needed to close a TRB request
+ */
+export interface CloseTRBRequestInput {
+  id: UUID;
+  reasonClosed: string;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
 }
 
 /**
@@ -590,6 +613,16 @@ export interface RejectIntakeInput {
   nextSteps?: string | null;
   reason: string;
   notificationRecipients?: EmailNotificationRecipients | null;
+}
+
+/**
+ * The data needed to reopen a TRB request
+ */
+export interface ReopenTRBRequestInput {
+  trbRequestId: UUID;
+  reasonReopened: string;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
 }
 
 /**

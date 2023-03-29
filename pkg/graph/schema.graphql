@@ -1521,6 +1521,7 @@ type TRBRequest {
   name: String!
   archived: Boolean!
   type: TRBRequestType!
+  state: TRBRequestState!
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
   feedback: [TRBRequestFeedback!]!
@@ -2110,6 +2111,7 @@ The input needed to close a TRB request
 input CloseTRBRequestInput {
   id: UUID!
   reasonClosed: String!
+  copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
 
@@ -2119,6 +2121,8 @@ The data needed to reopen a TRB request
 input ReopenTRBRequestInput {
   trbRequestId: UUID!
   reasonReopened: String!
+  copyTrbMailbox: Boolean!
+  notifyEuaIds: [String!]!
 }
 
 """
@@ -2311,9 +2315,22 @@ enum TRBRequestType {
   FORMAL_REVIEW
 }
 
-enum TRBRequestStatus {
+enum TRBRequestState {
   OPEN
   CLOSED
+}
+
+enum TRBRequestStatus {
+  NEW
+  DRAFT_REQUEST_FORM
+  REQUEST_FORM_COMPLETE
+  READY_FOR_CONSULT
+  CONSULT_SCHEDULED
+  CONSULT_COMPLETE
+  DRAFT_ADVICE_LETTER
+  ADVICE_LETTER_IN_REVIEW
+  ADVICE_LETTER_SENT
+  FOLLOW_UP_REQUESTED
 }
 
 """
