@@ -175,17 +175,20 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
             {t('adminHome.supportingDocs')}
           </p>
 
-          <Trans
-            i18nKey={
-              documents?.length === 1
-                ? 'technicalAssistance:adminHome.docInfo'
-                : 'technicalAssistance:adminHome.docInfoPlural'
-            }
-            components={{
-              bold: <span className="text-bold" />,
-              docCount: documents?.length || 0
-            }}
-          />
+          {/* Documents count */}
+          <div data-testid="document-count">
+            <Trans
+              i18nKey={
+                documents?.length === 1
+                  ? 'technicalAssistance:adminHome.docInfo'
+                  : 'technicalAssistance:adminHome.docInfoPlural'
+              }
+              components={{
+                bold: <span className="text-bold" />,
+                docCount: documents?.length || 0
+              }}
+            />
+          </div>
 
           <UswdsReactLink
             to="documents"

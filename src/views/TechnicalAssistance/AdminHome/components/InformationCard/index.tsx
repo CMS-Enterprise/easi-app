@@ -63,7 +63,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
         buttonClass: 'usa-button--outline',
         buttonLink: 'initial-request-form',
         modified: trbRequest.form.modifiedAt
-          ? formatDateLocal(trbRequest.form.modifiedAt, 'MM/dd/yyyy')
+          ? formatDateLocal(trbRequest.form.modifiedAt, 'MMMM d, yyyy')
           : t('adminHome.notStarted'),
         disabled: false
       };
@@ -83,7 +83,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
         buttonClass: '',
         buttonLink: 'advice-letter',
         modified: trbRequest.adviceLetter?.modifiedAt
-          ? formatDateLocal(trbRequest.adviceLetter.modifiedAt, 'MM/dd/yyyy')
+          ? formatDateLocal(trbRequest.adviceLetter.modifiedAt, 'MMMM d, yyyy')
           : t('adminHome.notStarted'),
         disabled:
           trbRequest.taskStatuses.adviceLetterStatus ===
