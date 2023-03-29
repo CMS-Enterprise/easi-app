@@ -796,7 +796,9 @@ const technicalAssistance = {
     notStarted: 'Not started',
     supportingDocs: 'Supporting documents',
     docInfo:
-      'There are {{-docCount}} additional documents uploaded as a part of this request.',
+      'There is <bold>{{docCount}}</bold> additional document uploaded as a part of this request.',
+    docInfoPlural:
+      'There are <bold>{{docCount}}</bold> additional documents uploaded as a part of this request.',
     reviewInitialRequest:
       'Please review the initial request form before setting a date and time in EASi.',
     viewDocs: 'View documents',

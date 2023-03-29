@@ -11,7 +11,10 @@ import {
 
 import TaskStatusTag from 'components/shared/TaskStatusTag';
 import { GetTrbRequestHome_trbRequest as GetTrbRequestHomeType } from 'queries/types/GetTrbRequestHome';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
+import {
+  TRBAdviceLetterStatus,
+  TRBFormStatus
+} from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 import './index.scss';
@@ -24,6 +27,7 @@ type InformationCardProps = {
 interface RenderPropsType {
   header: string;
   description: string;
+  status: TRBAdviceLetterStatus | TRBFormStatus;
   buttonText: string;
   buttonClass: string;
   buttonLink: string;
@@ -39,6 +43,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
   let renderProps: RenderPropsType = {
     header: '',
     description: '',
+    status: TRBFormStatus.READY_TO_START,
     buttonText: '',
     buttonClass: '',
     buttonLink: '',
@@ -51,9 +56,10 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
       renderProps = {
         header: t('adminHome.initialRequest'),
         description: t('adminHome.completedBy'),
+        status: trbRequest.taskStatuses.formStatus,
         buttonText: t('adminHome.view'),
         buttonClass: 'usa-button--outline',
-        buttonLink: 'request/initial-request-form',
+        buttonLink: 'initial-request-form',
         modified: trbRequest.form.modifiedAt
           ? formatDateLocal(trbRequest.form.modifiedAt, 'MM/dd/yyyy')
           : t('adminHome.notStarted'),
@@ -64,6 +70,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
       renderProps = {
         header: t('adminHome.adviceLetter'),
         description: t('adminHome.toBeCompleted'),
+        status: trbRequest.taskStatuses.adviceLetterStatus,
         buttonText:
           trbRequest.taskStatuses.adviceLetterStatus ===
             TRBAdviceLetterStatus.CANNOT_START_YET ||
@@ -72,7 +79,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
             ? t('adminHome.startAdvice')
             : t('adminHome.viewAdvice'),
         buttonClass: '',
-        buttonLink: 'request/advice-letter',
+        buttonLink: 'advice-letter',
         modified: trbRequest.adviceLetter?.modifiedAt
           ? formatDateLocal(trbRequest.adviceLetter.modifiedAt, 'MM/dd/yyyy')
           : t('adminHome.notStarted'),
@@ -94,7 +101,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
 
       <CardBody>
         <div className="display-flex flex-align-center line-height-body-5 margin-bottom-2">
-          <TaskStatusTag status={trbRequest.taskStatuses.formStatus} />
+          <TaskStatusTag status={renderProps.status} />
         </div>
 
         <dt className="text-bold">{t('adminHome.lastUpdated')}</dt>

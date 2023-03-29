@@ -1,6 +1,12 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Alert, Button, CardGroup, Link } from '@trussworks/react-uswds';
+import { Trans, useTranslation } from 'react-i18next';
+import {
+  Alert,
+  Button,
+  CardGroup,
+  IconArrowForward,
+  Link
+} from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -34,19 +40,18 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
 
   const {
     taskStatuses,
-    form,
-    adviceLetter,
     consultMeetingTime,
-    trbLeadInfo,
-    trbLeadComponent,
-    documents
+    // trbLeadInfo,
+    // trbLeadComponent,
+    documents,
+    adminNotes
   } = data?.trbRequest || {};
 
-  // const trbLeadInfo = {
-  //   commonName: 'Jerry Seinfeld',
-  //   email: 'js@oddball.io'
-  // };
-  // const trbLeadComponent = 'TRB';
+  const trbLeadInfo = {
+    commonName: 'Jerry Seinfeld',
+    email: 'js@oddball.io'
+  };
+  const trbLeadComponent = 'TRB';
 
   return (
     <div
@@ -149,7 +154,7 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
           </h2>
 
           {data?.trbRequest && (
-            <CardGroup className="margin-right-15">
+            <CardGroup className="tablet:grid-col-10">
               <InformationCard
                 type="inititalRequestForm"
                 trbRequest={data?.trbRequest}
@@ -161,6 +166,30 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
               />
             </CardGroup>
           )}
+
+          <p className="text-bold margin-bottom-105">
+            {t('adminHome.supportingDocs')}
+          </p>
+
+          <Trans
+            i18nKey={
+              documents?.length === 1
+                ? 'technicalAssistance:adminHome.docInfo'
+                : 'technicalAssistance:adminHome.docInfoPlural'
+            }
+            components={{
+              bold: <span className="text-bold" />,
+              docCount: documents?.length || 0
+            }}
+          />
+
+          <UswdsReactLink
+            to="documents"
+            className="display-flex flex-align-center margin-top-2"
+          >
+            {t('adminHome.viewDocs')}
+            <IconArrowForward className="margin-left-1" />
+          </UswdsReactLink>
         </>
       )}
     </div>
