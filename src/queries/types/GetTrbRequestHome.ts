@@ -46,12 +46,12 @@ export interface GetTrbRequestHome_trbRequest_adminNotes {
 export interface GetTrbRequestHome_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
+  consultMeetingTime: Time | null;
   taskStatuses: GetTrbRequestHome_trbRequest_taskStatuses;
   form: GetTrbRequestHome_trbRequest_form;
   adviceLetter: GetTrbRequestHome_trbRequest_adviceLetter | null;
-  consultMeetingTime: Time | null;
-  trbLeadInfo: GetTrbRequestHome_trbRequest_trbLeadInfo;
   trbLeadComponent: string | null;
+  trbLeadInfo: GetTrbRequestHome_trbRequest_trbLeadInfo;
   documents: GetTrbRequestHome_trbRequest_documents[];
   adminNotes: GetTrbRequestHome_trbRequest_adminNotes[];
 }

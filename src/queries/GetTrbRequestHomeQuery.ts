@@ -4,27 +4,33 @@ export default gql`
   query GetTrbRequestHome($id: UUID!) {
     trbRequest(id: $id) {
       id
+      consultMeetingTime
+
       taskStatuses {
         formStatus
         adviceLetterStatus
       }
+
       form {
         id
         modifiedAt
       }
+
       adviceLetter {
         id
         modifiedAt
       }
-      consultMeetingTime
+
+      trbLeadComponent
       trbLeadInfo {
         commonName
         email
       }
-      trbLeadComponent
+
       documents {
         id
       }
+
       adminNotes {
         id
       }
