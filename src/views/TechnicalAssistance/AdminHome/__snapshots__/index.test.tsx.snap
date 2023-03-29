@@ -333,11 +333,152 @@ exports[`TRB admin home matches the snapshot 1`] = `
             data-testid="trb-admin-home__request-home"
             id="trbAdminRequestHome-a4093ec7-caec-4e73-be3d-a8d6262bc61b"
           >
-            <h1
-              class="margin-y-0"
+            <div
+              class="grid-row grid-gap-lg"
+              data-testid="grid"
             >
-              Request home
-            </h1>
+              <div
+                class="tablet:grid-col-8"
+                data-testid="grid"
+              >
+                <h1
+                  class="margin-top-0 margin-bottom-4"
+                >
+                  Request home
+                </h1>
+              </div>
+              <div
+                class="tablet:grid-col-4"
+                data-testid="grid"
+              >
+                <div
+                  class="trb-admin-home__request-notes bg-base-lightest padding-x-2 padding-y-1 margin-bottom-3"
+                  data-testid="trb-admin-home__request-notes"
+                >
+                  <p
+                    class="margin-y-0 line-height-body-5"
+                  >
+                    <span
+                      class="text-bold"
+                    >
+                      0
+                    </span>
+                     notes about this request
+                  </p>
+                  <ul
+                    class="usa-button-group"
+                  >
+                    <li
+                      class="usa-button-group__item"
+                    >
+                      <a
+                        class="margin-right-05"
+                        href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/notes"
+                      >
+                        View notes
+                      </a>
+                    </li>
+                    <li
+                      class="usa-button-group__item"
+                    >
+                      <a
+                        href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/notes"
+                      >
+                        Add a note
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <h2
+              class="margin-top-4 margin-bottom-3"
+            >
+              Consult meeting details
+            </h2>
+            <p
+              class="text-bold margin-bottom-1"
+            >
+              Date and time
+            </p>
+            <div
+              class="usa-alert usa-alert--info usa-alert--slim margin-y-1 margin-top-2"
+              data-testid="alert"
+            >
+              <div
+                class="usa-alert__body"
+              >
+                <p
+                  class="usa-alert__text"
+                >
+                  Please review the initial request form before setting a date and time in EASi.
+                </p>
+              </div>
+            </div>
+            <h3
+              class="margin-top-4 margin-bottom-3"
+            >
+              TRB representatives
+            </h3>
+            <p
+              class="text-bold"
+            >
+              TRB Lead
+            </p>
+            <button
+              class="usa-button usa-button--outline"
+              data-testid="button"
+              type="button"
+            >
+              Assign a TRB Lead
+            </button>
+            <div
+              class="easi-divider margin-y-6"
+            />
+            <h2
+              class="margin-top-4 margin-bottom-3"
+            >
+              Forms and documents
+            </h2>
+            <p
+              class="text-bold margin-bottom-105"
+            >
+              Supporting documents
+            </p>
+            <div
+              data-testid="document-count"
+            >
+              There are 
+              <span
+                class="text-bold"
+              >
+                0
+              </span>
+               additional documents uploaded as a part of this request.
+            </div>
+            <a
+              class="usa-link display-flex flex-align-center margin-top-2"
+              href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/documents"
+            >
+              View documents
+              <svg
+                class="usa-icon margin-left-1"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+                />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
