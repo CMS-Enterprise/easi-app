@@ -150,12 +150,10 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
             </Button>
           )}
 
-          <Divider className="margin-y-6" />
+          <Divider className="margin-top-6 margin-bottom-5" />
 
           {/* Forms and Documents */}
-          <h2 className="margin-top-4 margin-bottom-3">
-            {t('adminHome.formAndDocs')}
-          </h2>
+          <h2 className="margin-y-3">{t('adminHome.formAndDocs')}</h2>
 
           {data?.trbRequest && (
             <CardGroup className="tablet:grid-col-10">
