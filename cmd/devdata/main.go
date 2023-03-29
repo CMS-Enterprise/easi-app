@@ -207,8 +207,9 @@ func main() {
 	inProgress := makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, "21f175b9-bcbe-41c1-9c07-9844869bc1ce", func(t *models.TRBRequest) {
 		t.Name = "1 - In progress form"
 	})
-	updateTRBRequestForm(logger, store, map[string]interface{}{
+	updateTRBRequestForm(logger, store, principalUser, map[string]interface{}{
 		"trbRequestId":             inProgress.ID.String(),
+		"isSubmitted":              true, // Boolean
 		"component":                "Center for Medicare",
 		"needsAssistanceWith":      "Something is wrong with my system",
 		"hasSolutionInMind":        true,
@@ -225,33 +226,15 @@ func main() {
 		"collabDateEnterpriseArchitecture": "The other day",
 		"collabGroupOther":                 "CMS Splunk Team",
 		"collabDateOther":                  "Last week",
-	}, principalUser)
-}
+		"collabGRBConsultRequested":        true, // Boolean
+		"subjectAreaOptions": []models.TRBSubjectAreaOption{
+			models.TRBSubjectAreaOptionAssistanceWithSystemConceptDev,
+			models.TRBSubjectAreaOptionCloudMigration,
+		},
+		"subjectAreaOptionOther": "Rocket science", // String
+	})
 
-func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, userEUA string, trbID string, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
-	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
-	trb := &models.TRBRequest{}
-	trb.ID = uuid.MustParse(trbID)
-	trb.CreatedBy = userEUA
-	trb, err := resolvers.CreateTRBRequest(ctx, rType, fetchUserInfoMock, store, trb)
-	if err != nil {
-		panic(err)
-	}
-	for _, cb := range callbacks {
-		cb(trb)
-	}
-	must(store.UpdateTRBRequest(ctx, trb))
-	return trb
-}
-
-func updateTRBRequestForm(logger *zap.Logger, store *storage.Store, changes map[string]interface{}, userEUA string) *models.TRBRequestForm {
-	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
-
-	form, err := resolvers.UpdateTRBRequestForm(ctx, store, nil, fetchUserInfoMock, changes)
-	if err != nil {
-		panic(err)
-	}
-	return form
+	updateTRBRequestFundingSources(logger, store, principalUser, inProgress.ID, "33311", []string{"meatloaf", "spaghetti", "cereal"})
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -442,7 +425,6 @@ func makeTestDate(logger *zap.Logger, store *storage.Store, callbacks ...func(*m
 	}
 
 	must(store.CreateTestDate(ctx, &testDate))
-
 }
 
 func must(_ interface{}, err error) {
@@ -454,4 +436,46 @@ func must(_ interface{}, err error) {
 func date(year, month, day int) *time.Time {
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	return &date
+}
+
+func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, userEUA string, trbID string, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
+	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
+	trb := &models.TRBRequest{}
+	trb.ID = uuid.MustParse(trbID)
+	trb.CreatedBy = userEUA
+	trb, err := resolvers.CreateTRBRequest(ctx, rType, fetchUserInfoMock, store, trb)
+	if err != nil {
+		panic(err)
+	}
+	for _, cb := range callbacks {
+		cb(trb)
+	}
+	must(store.UpdateTRBRequest(ctx, trb))
+	return trb
+}
+
+func updateTRBRequestForm(logger *zap.Logger, store *storage.Store, userEUA string, changes map[string]interface{}) *models.TRBRequestForm {
+	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
+
+	form, err := resolvers.UpdateTRBRequestForm(ctx, store, nil, fetchUserInfoMock, changes)
+	if err != nil {
+		panic(err)
+	}
+	return form
+}
+
+func updateTRBRequestFundingSources(logger *zap.Logger, store *storage.Store, userEUA string, trbID uuid.UUID, fundingNumber string, fundingSources []string) []*models.TRBFundingSource {
+	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
+	sources, err := resolvers.UpdateTRBRequestFundingSources(
+		ctx,
+		store,
+		trbID,
+		fundingNumber,
+		fundingSources,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+	return sources
 }
