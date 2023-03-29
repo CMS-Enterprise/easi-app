@@ -129,7 +129,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 	})
 	s.NoError(intakeErr)
 
-	note1, noteErr := s.store.CreateNote(ctx, &models.SystemIntakeNote{
+	note1, noteErr := s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "QQQQ",
 		AuthorName:     null.StringFrom("Author Name Q"),
@@ -138,7 +138,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 	})
 	s.NoError(noteErr)
 
-	note2, noteErr := s.store.CreateNote(ctx, &models.SystemIntakeNote{
+	note2, noteErr := s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "WWWW",
 		AuthorName:     null.StringFrom("Author Name W"),

@@ -14,14 +14,14 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// CreateNote inserts a new note into the database
-func (s *Store) CreateNote(ctx context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error) {
+// CreateSystemIntakeNote inserts a new note into the database
+func (s *Store) CreateSystemIntakeNote(ctx context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error) {
 	note.ID = uuid.New()
 	if note.CreatedAt == nil {
 		ts := s.clock.Now()
 		note.CreatedAt = &ts
 	}
-	const createNoteSQL = `	
+	const createSystemIntakeNoteSQL = `	
 		INSERT INTO notes (
 			id,
 			system_intake,
@@ -39,7 +39,7 @@ func (s *Store) CreateNote(ctx context.Context, note *models.SystemIntakeNote) (
 		    :content
 		)`
 	_, err := s.db.NamedExec(
-		createNoteSQL,
+		createSystemIntakeNoteSQL,
 		note,
 	)
 
@@ -54,12 +54,12 @@ func (s *Store) CreateNote(ctx context.Context, note *models.SystemIntakeNote) (
 			Operation: apperrors.QueryPost,
 		}
 	}
-	return s.FetchNoteByID(ctx, note.ID)
+	return s.FetchSystemIntakeNoteByID(ctx, note.ID)
 }
 
-// UpdateNote updates all of a IT governance admin note's mutable fields.
+// UpdateSystemIntakeNote updates all of a IT governance admin note's mutable fields.
 // The note's IsArchived field _can_ be set, though SetNoteArchived() should be used when archiving a note.
-func (s *Store) UpdateNote(ctx context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error) {
+func (s *Store) UpdateSystemIntakeNote(ctx context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error) {
 	stmt, err := s.db.PrepareNamed(`
 	UPDATE notes
 	SET
@@ -99,8 +99,8 @@ func (s *Store) UpdateNote(ctx context.Context, note *models.SystemIntakeNote) (
 	return &updated, nil
 }
 
-// FetchNoteByID retrieves a single Note by its primary key identifier
-func (s *Store) FetchNoteByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeNote, error) {
+// FetchSystemIntakeNoteByID retrieves a single Note by its primary key identifier
+func (s *Store) FetchSystemIntakeNoteByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeNote, error) {
 	note := models.SystemIntakeNote{}
 	err := s.db.Get(&note, "SELECT * FROM public.notes WHERE id=$1", id)
 	if err != nil {

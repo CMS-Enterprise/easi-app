@@ -37,7 +37,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 
 		for name, tc := range testCases {
 			s.Run(name, func() {
-				_, err := s.store.CreateNote(ctx, tc)
+				_, err := s.store.CreateSystemIntakeNote(ctx, tc)
 				s.Error(err, name)
 				s.T().Logf("body: %v\n", err)
 			})
@@ -58,11 +58,11 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 				Content:     null.StringFrom(ts.String()),
 			}
 
-			createdNote, err := s.store.CreateNote(ctx, in)
+			createdNote, err := s.store.CreateSystemIntakeNote(ctx, in)
 			id := createdNote.ID
 			s.NoError(err)
 
-			out, err := s.store.FetchNoteByID(ctx, id)
+			out, err := s.store.FetchSystemIntakeNoteByID(ctx, id)
 			s.NoError(err)
 			s.Equal(id, out.ID)
 			s.Equal(in.SystemIntakeID, out.SystemIntakeID)
@@ -105,7 +105,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 	s.Run("Setting a note to be archived sets IsArchived to true and sets ModifiedBy, ModifiedAt", func() {
 		ts := time.Now().UTC()
 
-		noteToUpdate := models.Note{
+		noteToUpdate := models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
 			CreatedAt:      &ts,
 			AuthorEUAID:    euaID,
@@ -113,7 +113,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 			Content:        null.StringFrom(ts.String()),
 		}
 
-		createdNote, err := s.store.CreateNote(ctx, &noteToUpdate)
+		createdNote, err := s.store.CreateSystemIntakeNote(ctx, &noteToUpdate)
 
 		s.NoError(err)
 		s.False(createdNote.IsArchived)
@@ -124,7 +124,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 		noteToUpdate.ModifiedBy = &archivingUser
 		noteToUpdate.ModifiedAt = &ts
 
-		archivedNote, err := s.store.UpdateNote(ctx, &noteToUpdate)
+		archivedNote, err := s.store.UpdateSystemIntakeNote(ctx, &noteToUpdate)
 		s.NoError(err)
 
 		s.True(archivedNote.IsArchived)
@@ -135,7 +135,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 	s.Run("Updating a note sets modified content and sets ModifiedBy, ModifiedAt", func() {
 		ts := time.Now().UTC()
 
-		noteToUpdate := models.Note{
+		noteToUpdate := models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
 			CreatedAt:      &ts,
 			AuthorEUAID:    euaID,
@@ -143,7 +143,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 			Content:        null.StringFrom("Test content before update"),
 		}
 
-		createdNote, err := s.store.CreateNote(ctx, &noteToUpdate)
+		createdNote, err := s.store.CreateSystemIntakeNote(ctx, &noteToUpdate)
 
 		s.NoError(err)
 		s.False(createdNote.IsArchived)
@@ -153,7 +153,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 		noteToUpdate.ModifiedBy = &archivingUser
 		noteToUpdate.ModifiedAt = &ts
 
-		updatedNote, err := s.store.UpdateNote(ctx, &noteToUpdate)
+		updatedNote, err := s.store.UpdateSystemIntakeNote(ctx, &noteToUpdate)
 		s.NoError(err)
 
 		s.False(updatedNote.IsArchived)

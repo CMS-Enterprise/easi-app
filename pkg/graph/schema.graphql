@@ -935,7 +935,7 @@ type SystemIntakeNoteAuthor {
 """
 A note added to a system request
 """
-type Note {
+type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
   content: String!
   createdAt: Time!

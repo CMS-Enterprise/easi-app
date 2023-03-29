@@ -265,7 +265,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		Feedback:       null.StringFrom("This business case needs feedback"),
 	}))
 
-	must(store.CreateNote(ctx, &models.SystemIntakeNote{
+	must(store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "QQQQ",
 		AuthorName:     null.StringFrom("Author Name"),

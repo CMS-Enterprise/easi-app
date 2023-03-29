@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -20,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -1289,12 +1289,31 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 
 // CreateSystemIntakeNote is the resolver for the createSystemIntakeNote field.
 func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
-	panic(fmt.Errorf("not implemented: CreateSystemIntakeNote - createSystemIntakeNote"))
+	systemIntakeNote := models.SystemIntakeNote{
+		AuthorEUAID:    appcontext.Principal(ctx).ID(),
+		AuthorName:     null.StringFrom(input.AuthorName),
+		Content:        null.StringFrom(input.Content),
+		SystemIntakeID: input.IntakeID,
+	}
+
+	createdNote, err := r.store.CreateSystemIntakeNote(ctx, &systemIntakeNote)
+	return createdNote, err
 }
 
 // UpdateSystemIntakeNote is the resolver for the updateSystemIntakeNote field.
 func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input model.UpdateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
-	panic(fmt.Errorf("not implemented: UpdateSystemIntakeNote - updateSystemIntakeNote"))
+	userInfo, err := r.service.FetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+	if err != nil {
+		return nil, err
+	}
+
+	systemIntakeNote, err := r.store.UpdateSystemIntakeNote(ctx, &models.SystemIntakeNote{
+		Content:    null.StringFrom(input.Content),
+		IsArchived: input.IsArchived,
+		ID:         input.ID,
+		ModifiedBy: &userInfo.EuaUserID,
+	})
+	return systemIntakeNote, err
 }
 
 // CreateSystemIntake is the resolver for the createSystemIntake field.
@@ -2708,7 +2727,7 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 
 // Notes is the resolver for the notes field.
 func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error) {
-	panic(fmt.Errorf("not implemented: Notes - notes"))
+	return r.store.FetchNotesBySystemIntakeID(ctx, obj.ID)
 }
 
 // OitSecurityCollaborator is the resolver for the oitSecurityCollaborator field.
@@ -2829,7 +2848,20 @@ func (r *systemIntakeNoteResolver) Content(ctx context.Context, obj *models.Syst
 
 // Editor is the resolver for the editor field.
 func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error) {
-	panic(fmt.Errorf("not implemented: Editor - editor"))
+	var systemIntakeNoteEditorInfo *models.UserInfo
+	if obj.ModifiedBy != nil {
+		info, err := dataloaders.GetUserInfo(ctx, *obj.ModifiedBy)
+		if err != nil {
+			return nil, err
+		}
+		systemIntakeNoteEditorInfo = info
+	}
+
+	if systemIntakeNoteEditorInfo == nil {
+		systemIntakeNoteEditorInfo = &models.UserInfo{}
+	}
+
+	return systemIntakeNoteEditorInfo, nil
 }
 
 // Author is the resolver for the author field.
