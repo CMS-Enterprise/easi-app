@@ -5,7 +5,9 @@ import { GridContainer } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
+import CloseRequest from './AdminHome/CloseRequest';
 import Consult from './AdminHome/Consult';
+import TRBRequestInfoWrapper from './AdminHome/RequestContext';
 import RequestEdits from './AdminHome/RequestEdits';
 import DocumentUpload from './RequestForm/DocumentUpload';
 import AdminHome from './AdminHome';
@@ -67,20 +69,30 @@ function TechnicalAssistance() {
         </Route>
 
         {/* Admin view */}
-        <Route exact path={`${path}/:id/:activePage`}>
-          <AdminHome />
-        </Route>
-
-        {/* Admin request form actions */}
-        <Route
-          exact
-          path={`${path}/:id/:activePage/:action(request-edits|ready-for-consult)`}
-        >
-          <RequestEdits />
-        </Route>
-        <Route exact path={`${path}/:id/:activePage/:action(schedule-consult)`}>
-          <Consult />
-        </Route>
+        <TRBRequestInfoWrapper>
+          <Route exact path={`${path}/:id/:activePage`}>
+            <AdminHome />
+          </Route>
+          {/* Admin request form actions */}
+          <Route
+            exact
+            path={`${path}/:id/:activePage/:action(request-edits|ready-for-consult)`}
+          >
+            <RequestEdits />
+          </Route>
+          <Route
+            exact
+            path={`${path}/:id/:activePage/:action(schedule-consult)`}
+          >
+            <Consult />
+          </Route>
+          <Route
+            exact
+            path={`${path}/:id/:activePage/:action(close-request|reopen-request)`}
+          >
+            <CloseRequest />
+          </Route>
+        </TRBRequestInfoWrapper>
 
         <Route path="*">
           <GridContainer className="width-full">
