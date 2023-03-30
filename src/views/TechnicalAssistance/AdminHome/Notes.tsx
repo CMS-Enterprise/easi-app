@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Button } from '@trussworks/react-uswds';
 
@@ -26,6 +26,8 @@ const Notes = ({
   modalMessage?: string;
 }) => {
   const { t } = useTranslation('technicalAssistance');
+
+  const [noteCount, setNoteCount] = useState<number>(5);
 
   const { data, error, loading } = useCacheQuery<
     GetTrbAdminNotes,
@@ -93,9 +95,22 @@ const Notes = ({
             .sort((a, b) => {
               return a.createdAt < b.createdAt ? 1 : -1;
             })
+            .filter((note, index) => index < noteCount)
             .map(note => (
               <Note note={note} key={note.id} />
             ))}
+
+          {notes.length > 5 && !(noteCount > notes.length) && (
+            <Button
+              type="button"
+              className="usa-button usa-button--unstyled"
+              onClick={() => {
+                setNoteCount(noteCount + 5);
+              }}
+            >
+              {t('notes.viewMore')}
+            </Button>
+          )}
         </div>
       )}
     </div>

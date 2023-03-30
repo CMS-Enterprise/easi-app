@@ -893,6 +893,7 @@ const technicalAssistance = {
     addNote: 'Add a note',
     notes: 'Notes',
     allNotes: 'All notes',
+    viewMore: 'View more notes',
     noNotes:
       'No TRB member has added notes for this request yet. If you’d like to add a note, use the button above.',
     date: 'Date',
