@@ -29,6 +29,7 @@ import TablePagination from 'components/TablePagination';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
 import { TrbAdminTeamHomeRequest } from 'types/technicalAssistance';
+import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -77,7 +78,9 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
     ];
   });
 
-  return [trbRequestsCsvHeader, ...rows];
+  const cleanedRows = cleanCSVData(rows);
+
+  return [trbRequestsCsvHeader, ...cleanedRows];
 }
 
 function SubmissionDateCell({
