@@ -5,6 +5,7 @@ import classNames from 'classnames';
 
 import CheckboxField from 'components/shared/CheckboxField';
 import TruncatedContent from 'components/shared/TruncatedContent';
+import contactRoles from 'constants/enums/contactRoles';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
@@ -109,13 +110,13 @@ const EmailRecipientFields = ({
                   const { commonName, euaUserId } = attendee.userInfo || {};
                   const value = euaUserId || '';
 
+                  const role = attendee.role ? contactRoles[attendee.role] : '';
+
                   return (
                     <CheckboxField
                       key={attendee.id}
                       id={`${field.name}.${index + 1}`}
-                      label={`${commonName} (${t(
-                        'emailRecipientFields.projectTeamMember'
-                      )})`}
+                      label={`${commonName} (${role})`}
                       {...{ ...field, ref: null }}
                       onChange={e =>
                         field.onChange(
