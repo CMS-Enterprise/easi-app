@@ -203,6 +203,7 @@ function RequestEdits() {
               <EmailRecipientFields
                 requester={requester}
                 attendees={attendees}
+                className="margin-top-4 margin-bottom-3"
               />
             </FormProvider>
 

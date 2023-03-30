@@ -109,6 +109,12 @@ const technicalAssistance = {
     error:
       'There was an issue saving your advice letter. Please try again, and if the problem persists, try again later.'
   },
+  emailRecipientFields: {
+    label: 'Choose recipients',
+    selectedCount: '<0>{{count}}</0> recipients selected',
+    copyTrbMailbox: 'Copy TRB Mailbox',
+    projectTeamMember: 'Project team member'
+  },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
     COMPLETED: 'Completed',
