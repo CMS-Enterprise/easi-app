@@ -1,5 +1,5 @@
-import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import React, { useEffect, useMemo } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -14,16 +14,21 @@ import {
   Label
 } from '@trussworks/react-uswds';
 
+import EmailRecipientFields from 'components/EmailRecipientFields';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
+import useTRBAttendees from 'hooks/useTRBAttendees';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {
   CreateTrbRequestFeedback,
   CreateTrbRequestFeedbackVariables
 } from 'queries/types/CreateTrbRequestFeedback';
-import { TRBFeedbackAction } from 'types/graphql-global-types';
+import {
+  CreateTRBRequestFeedbackInput,
+  TRBFeedbackAction
+} from 'types/graphql-global-types';
 
 import Breadcrumbs from '../Breadcrumbs';
 
@@ -39,6 +44,10 @@ function RequestEdits() {
 
   const { message, showMessage, showMessageOnNextPage } = useMessage();
 
+  const {
+    data: { attendees, requester, loading }
+  } = useTRBAttendees(id);
+
   const requestUrl = `/trb/${id}/${activePage}`;
 
   let actionText: 'actionRequestEdits' | 'actionReadyForConsult';
@@ -52,20 +61,65 @@ function RequestEdits() {
     feedbackAction = TRBFeedbackAction.READY_FOR_CONSULT;
   }
 
+  const defaultValues = useMemo(
+    () => ({
+      trbRequestId: id,
+      action: feedbackAction,
+      feedbackMessage: '',
+      copyTrbMailbox: true,
+      notifyEuaIds: requester?.userInfo?.euaUserId
+        ? [requester?.userInfo?.euaUserId]
+        : []
+    }),
+    [id, requester, feedbackAction]
+  );
+
+  const actionForm = useForm<CreateTRBRequestFeedbackInput>({
+    defaultValues
+  });
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { isDirty, isSubmitting }
-  } = useForm({
-    defaultValues: {
-      feedbackMessage: ''
-    }
-  });
+  } = actionForm;
 
-  const [mutate] = useMutation<
+  const [sendFeedback] = useMutation<
     CreateTrbRequestFeedback,
     CreateTrbRequestFeedbackVariables
   >(CreateTrbRequestFeedbackQuery);
+
+  useEffect(() => {
+    if (!isDirty && !loading) {
+      reset(defaultValues);
+    }
+  }, [isDirty, loading, reset, defaultValues]);
+
+  const submitForm = (formData: CreateTRBRequestFeedbackInput) => {
+    sendFeedback({
+      variables: {
+        input: formData
+      }
+    })
+      .then(result => {
+        showMessageOnNextPage(
+          <Alert type="success" slim className="margin-top-3">
+            {t(`${actionText}.success`)}
+          </Alert>
+        );
+        history.push(requestUrl);
+      })
+      .catch(err => {
+        showMessage(
+          <Alert type="error" slim className="margin-top-3">
+            {t(`${actionText}.error`)}
+          </Alert>
+        );
+      });
+  };
+
+  if (loading) return null;
 
   return (
     <GridContainer className="width-full">
@@ -97,34 +151,7 @@ function RequestEdits() {
       <Grid row gap>
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           <Form
-            onSubmit={handleSubmit(formData => {
-              mutate({
-                variables: {
-                  input: {
-                    trbRequestId: id,
-                    feedbackMessage: formData.feedbackMessage,
-                    copyTrbMailbox: false, // todo
-                    notifyEuaIds: ['ABCD'], // todo
-                    action: feedbackAction
-                  }
-                }
-              })
-                .then(result => {
-                  showMessageOnNextPage(
-                    <Alert type="success" slim className="margin-top-3">
-                      {t(`${actionText}.success`)}
-                    </Alert>
-                  );
-                  history.push(requestUrl);
-                })
-                .catch(err => {
-                  showMessage(
-                    <Alert type="error" slim className="margin-top-3">
-                      {t(`${actionText}.error`)}
-                    </Alert>
-                  );
-                });
-            })}
+            onSubmit={handleSubmit(formData => submitForm(formData))}
             className="maxw-full"
           >
             <div className="margin-top-1 text-base">
@@ -171,7 +198,14 @@ function RequestEdits() {
               {t('actionRequestEdits.notificationTitle')}
             </h3>
             <div>{t('actionRequestEdits.notificationDescription')}</div>
-            {/* todo cedar contacts */}
+
+            <FormProvider {...actionForm}>
+              <EmailRecipientFields
+                requester={requester}
+                attendees={attendees}
+              />
+            </FormProvider>
+
             <div>
               <Button
                 type="submit"
