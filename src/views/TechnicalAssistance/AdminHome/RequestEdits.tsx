@@ -6,7 +6,6 @@ import { useMutation } from '@apollo/client';
 import {
   Alert,
   Button,
-  CharacterCount,
   Form,
   FormGroup,
   Grid,
@@ -17,6 +16,7 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {
@@ -136,37 +136,36 @@ function RequestEdits() {
             <Controller
               name="feedbackMessage"
               control={control}
-              render={({ field }) => (
-                <FormGroup>
-                  <Label
-                    htmlFor="feedbackMessage"
-                    hint={
-                      <div className="margin-top-1">
-                        {t('actionRequestEdits.hint')}
-                      </div>
-                    }
-                    className="text-normal margin-top-6"
-                  >
-                    {t(`${actionText}.label`)}
-                    {/* Show the required marker when the action is `request-edits` */}
-                    {action === 'request-edits' && (
-                      <>
-                        {' '}
-                        <span className="text-red">*</span>
-                      </>
-                    )}
-                  </Label>
-                  <CharacterCount
-                    {...field}
-                    ref={null}
-                    id="feedbackMessage"
-                    maxLength={2000}
-                    isTextArea
-                    rows={2}
-                    aria-describedby="feedbackMessage-info feedbackMessage-hint"
-                  />
-                </FormGroup>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormGroup>
+                    <Label
+                      htmlFor="feedbackMessage"
+                      hint={
+                        <div className="margin-top-1">
+                          {t('actionRequestEdits.hint')}
+                        </div>
+                      }
+                      className="text-normal margin-top-6"
+                    >
+                      {t(`${actionText}.label`)}
+                      {/* Show the required marker when the action is `request-edits` */}
+                      {action === 'request-edits' && (
+                        <>
+                          {' '}
+                          <span className="text-red">*</span>
+                        </>
+                      )}
+                    </Label>
+                    <TextAreaField
+                      id="feedbackMessage"
+                      {...field}
+                      ref={null}
+                      aria-describedby="feedbackMessage-info feedbackMessage-hint"
+                    />
+                  </FormGroup>
+                );
+              }}
             />
             <h3 className="margin-top-6">
               {t('actionRequestEdits.notificationTitle')}
