@@ -433,10 +433,10 @@ exports[`TRB admin home matches the snapshot 1`] = `
               Assign a TRB Lead
             </button>
             <div
-              class="easi-divider margin-y-6"
+              class="easi-divider margin-top-6 margin-bottom-5"
             />
             <h2
-              class="margin-top-4 margin-bottom-3"
+              class="margin-y-3"
             >
               Forms and documents
             </h2>
