@@ -35,21 +35,28 @@ const EmailRecipientFields = ({
   return (
     <fieldset className={classNames('usa-fieldset', className)}>
       <legend className="usa-label">
-        {t('emailRecipientFields.label')} <span className="text-error">*</span>
+        <Trans
+          i18nKey="technicalAssistance:emailRecipientFields.label"
+          components={{ red: <span className="text-error" /> }}
+        />
       </legend>
+
       <p className="margin-bottom-0 margin-top-05">
         <Trans
           i18nKey="technicalAssistance:emailRecipientFields.selectedCount"
+          components={{ bold: <span className="text-bold" /> }}
           count={selectedCount}
-        >
-          <span className="text-bold">count</span>
-          recipients selected
-        </Trans>
+        />
       </p>
+
       <TruncatedContent
         initialCount={2}
-        labelMore={t(`Show ${attendees.length} more recipients`)}
-        labelLess={t(`Show ${attendees.length} fewer recipients`)}
+        labelMore={t(`emailRecipientFields.showMore`, {
+          number: attendees.length
+        })}
+        labelLess={t(`emailRecipientFields.showFewer`, {
+          number: attendees.length
+        })}
         buttonClassName="margin-top-2"
       >
         {/* Requester */}
@@ -77,7 +84,7 @@ const EmailRecipientFields = ({
           }}
         />
 
-        {/* Mailbox */}
+        {/* Copy TRB Mailbox */}
         <Controller
           name="copyTrbMailbox"
           render={({ field }) => {

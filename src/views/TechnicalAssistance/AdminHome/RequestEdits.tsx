@@ -8,7 +8,6 @@ import {
   Button,
   Form,
   FormGroup,
-  Grid,
   GridContainer,
   IconArrowBack,
   Label
@@ -140,95 +139,89 @@ function RequestEdits() {
 
       {message}
 
-      <Grid row>
-        <PageHeading className="margin-bottom-0">
-          {t(`${actionText}.heading`)}
-        </PageHeading>
-        <div className="line-height-body-5 font-body-lg text-light">
-          {t(`${actionText}.description`)}
-        </div>
-      </Grid>
-      <Grid row gap>
-        <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-          <Form
-            onSubmit={handleSubmit(formData => submitForm(formData))}
-            className="maxw-full"
-          >
-            <div className="margin-top-1 text-base">
-              <Trans
-                i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
-                components={{ red: <span className="text-red" /> }}
-              />
-            </div>
-            <Controller
-              name="feedbackMessage"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormGroup>
-                    <Label
-                      htmlFor="feedbackMessage"
-                      hint={
-                        <div className="margin-top-1">
-                          {t('actionRequestEdits.hint')}
-                        </div>
-                      }
-                      className="text-normal margin-top-6"
-                    >
-                      {t(`${actionText}.label`)}
-                      {/* Show the required marker when the action is `request-edits` */}
-                      {action === 'request-edits' && (
-                        <>
-                          {' '}
-                          <span className="text-red">*</span>
-                        </>
-                      )}
-                    </Label>
-                    <TextAreaField
-                      id="feedbackMessage"
-                      {...field}
-                      ref={null}
-                      aria-describedby="feedbackMessage-info feedbackMessage-hint"
-                    />
-                  </FormGroup>
-                );
-              }}
-            />
-            <h3 className="margin-top-6">
-              {t('actionRequestEdits.notificationTitle')}
-            </h3>
-            <div>{t('actionRequestEdits.notificationDescription')}</div>
+      <PageHeading className="margin-bottom-0">
+        {t(`${actionText}.heading`)}
+      </PageHeading>
+      <p className="line-height-body-5 font-body-lg text-light margin-0">
+        {t(`${actionText}.description`)}
+      </p>
 
-            <FormProvider {...actionForm}>
-              <EmailRecipientFields
-                requester={requester}
-                attendees={attendees}
-                className="margin-top-4 margin-bottom-3"
-              />
-            </FormProvider>
+      <Form
+        onSubmit={handleSubmit(formData => submitForm(formData))}
+        className="maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
+      >
+        <p className="margin-top-1 text-base">
+          <Trans
+            i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
+            components={{ red: <span className="text-red" /> }}
+          />
+        </p>
+        <Controller
+          name="feedbackMessage"
+          control={control}
+          render={({ field }) => {
+            return (
+              <FormGroup>
+                <Label
+                  htmlFor="feedbackMessage"
+                  hint={
+                    <div className="margin-top-1">
+                      {t('actionRequestEdits.hint')}
+                    </div>
+                  }
+                  className="text-normal margin-top-6"
+                >
+                  {t(`${actionText}.label`)}
+                  {/* Show the required marker when the action is `request-edits` */}
+                  {action === 'request-edits' && (
+                    <>
+                      {' '}
+                      <span className="text-red">*</span>
+                    </>
+                  )}
+                </Label>
+                <TextAreaField
+                  id="feedbackMessage"
+                  {...field}
+                  ref={null}
+                  aria-describedby="feedbackMessage-info feedbackMessage-hint"
+                />
+              </FormGroup>
+            );
+          }}
+        />
+        <h3 className="margin-top-6 margin-bottom-0">
+          {t('actionRequestEdits.notificationTitle')}
+        </h3>
+        <p className="margin-0 line-height-body-5">
+          {t('actionRequestEdits.notificationDescription')}
+        </p>
 
-            <div>
-              <Button
-                type="submit"
-                className=""
-                // `feedbackMessage` is required for `request-edits` action
-                // Disable submit if request-edits feedbackMessage undefined
-                disabled={
-                  (action === 'request-edits' && !isDirty) || isSubmitting
-                }
-              >
-                {t('actionRequestEdits.submit')}
-              </Button>
-            </div>
-          </Form>
-        </Grid>
-      </Grid>
-      <div className="margin-top-2">
-        <UswdsReactLink to={requestUrl}>
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-          {t('actionRequestEdits.cancelAndReturn')}
-        </UswdsReactLink>
-      </div>
+        <FormProvider {...actionForm}>
+          <EmailRecipientFields
+            requester={requester}
+            attendees={attendees}
+            className="margin-top-4 margin-bottom-3"
+          />
+        </FormProvider>
+
+        <Button
+          type="submit"
+          // `feedbackMessage` is required for `request-edits` action
+          // Disable submit if request-edits feedbackMessage undefined
+          disabled={(action === 'request-edits' && !isDirty) || isSubmitting}
+        >
+          {t('actionRequestEdits.submit')}
+        </Button>
+      </Form>
+
+      <UswdsReactLink
+        to={requestUrl}
+        className="display-flex flex-align-center"
+      >
+        <IconArrowBack className="margin-right-05" />
+        {t('actionRequestEdits.cancelAndReturn')}
+      </UswdsReactLink>
     </GridContainer>
   );
 }
