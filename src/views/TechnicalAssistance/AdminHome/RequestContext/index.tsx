@@ -6,8 +6,9 @@ Updates on route change, as these values need to be reflected by current changes
 
 import React, { createContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import { QueryResult, useQuery } from '@apollo/client';
+import { QueryResult } from '@apollo/client';
 
+import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import {
   GetTrbRequestSummary,
@@ -41,7 +42,7 @@ const TRBRequestInfoWrapper = ({ children }: TRBRequestInfoWrapperProps) => {
   const requestID: string | undefined = pathname.split('/')[2];
 
   // TRB request query
-  const { data, loading, error } = useQuery<
+  const { data, loading, error } = useCacheQuery<
     GetTrbRequestSummary,
     GetTrbRequestSummaryVariables
   >(GetTrbRequestSummaryQuery, {

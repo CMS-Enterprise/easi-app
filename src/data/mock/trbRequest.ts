@@ -81,6 +81,7 @@ export const attendees: TRBAttendee[] = [
 
 export const trbRequestSummary: Summary = {
   __typename: 'TRBRequest',
+  id: trbRequestId,
   name: 'TRB Request Mock',
   type: TRBRequestType.NEED_HELP,
   state: TRBRequestState.OPEN,

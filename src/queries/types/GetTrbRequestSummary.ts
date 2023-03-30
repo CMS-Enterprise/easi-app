@@ -25,6 +25,7 @@ export interface GetTrbRequestSummary_trbRequest_adminNotes {
 
 export interface GetTrbRequestSummary_trbRequest {
   __typename: "TRBRequest";
+  id: UUID;
   name: string;
   type: TRBRequestType;
   state: TRBRequestState;
