@@ -115,7 +115,8 @@ const technicalAssistance = {
     copyTrbMailbox: 'Copy TRB Mailbox',
     projectTeamMember: 'Project team member',
     showMore: 'Show {{number}} more recipients',
-    showFewer: 'Show {{number}} Fewer recipients'
+    showFewer: 'Show {{number}} Fewer recipients',
+    addAnotherRecipient: 'Add another recipient'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
@@ -625,15 +626,15 @@ const technicalAssistance = {
       }
     },
     contactRoles: {
-      productOwner: 'Product Owner',
-      systemOwner: 'System Owner',
-      systemMaintainer: 'System Maintainer',
-      contractRep: 'Contracting Officer’s Representative (COR)',
-      cloudNavigator: 'Cloud Navigator',
-      privacyAdvisor: 'Privacy Advisor',
-      cra: 'CRA',
-      other: 'Other',
-      unknown: 'Unknown'
+      PRODUCT_OWNER: 'Product Owner',
+      SYSTEM_OWNER: 'System Owner',
+      SYSTEM_MAINTAINER: 'System Maintainer',
+      CONTRACT_REP: 'Contracting Officer’s Representative (COR)',
+      CLOUD_NAVIGATOR: 'Cloud Navigator',
+      PRIVACY_ADVISOR: 'Privacy Advisor',
+      CRA: 'CRA',
+      OTHER: 'Other',
+      UNKNOWN: 'Unknown'
     }
   },
   documents: {
