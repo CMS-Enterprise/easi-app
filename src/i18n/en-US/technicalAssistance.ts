@@ -732,7 +732,10 @@ const technicalAssistance = {
     date: 'Date',
     from: 'Feedback from',
     returnToForm: 'Return to request form',
-    returnToTaskList: 'Return to task list'
+    returnToTaskList: 'Return to task list',
+    adminInfo:
+      'A history of feedback sent to the requester. The requester will receive a notification any time you add additional feedback to their request.',
+    noFeedbackAlert: 'No feedback has been added for this request.'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
@@ -776,12 +779,37 @@ const technicalAssistance = {
         COMPLETED: 'Advice letter sent'
       }
     },
+    consultDetails: 'Consult meeting details',
+    dateTime: 'Date and time',
+    addDateTime: 'Add date and time',
+    assignLead: 'Assign a TRB Lead',
+    consultDate: '{{-date}} at {{-time}}',
+    sendEmail: 'Send an email',
+    change: 'Change',
+    representative: 'TRB representatives',
+    formAndDocs: 'Forms and documents',
+    initialRequest: 'Initial request form',
+    adviceLetter: 'Advice letter',
+    completedBy: 'Completed by requester',
+    toBeCompleted: 'To be completed by TRB',
+    lastUpdated: 'Last updated',
+    view: 'View',
+    viewAdvice: 'View advice letter',
+    startAdvice: 'Start advice letter',
+    notStarted: 'Not started',
+    supportingDocs: 'Supporting documents',
+    docInfo:
+      'There is <bold>{{docCount}}</bold> additional document uploaded as a part of this request.',
+    docInfoPlural:
+      'There are <bold>{{docCount}}</bold> additional documents uploaded as a part of this request.',
+    reviewInitialRequest:
+      'Please review the initial request form before setting a date and time in EASi.',
+    viewDocs: 'View documents',
     open: 'Open',
     closed: 'Closed',
     trbLead: 'TRB Lead',
     notAssigned: 'Not assigned',
     assign: 'Assign',
-    change: 'Change',
     subnav: {
       back: 'Back to All Requests',
       requestHome: 'Request home',
