@@ -21,6 +21,7 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	system_intake_contacts,
 	system_intake_funding_sources,
 	system_intakes,
+	trb_lead_options,
 	trb_request_documents,
 	trb_request_forms,
 	trb_request_attendees,
