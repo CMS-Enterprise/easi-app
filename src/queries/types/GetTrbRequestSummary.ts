@@ -20,6 +20,7 @@ export interface GetTrbRequestSummary_trbRequest_taskStatuses {
 
 export interface GetTrbRequestSummary_trbRequest {
   __typename: "TRBRequest";
+  id: UUID;
   name: string;
   type: TRBRequestType;
   state: TRBRequestState;
