@@ -732,7 +732,10 @@ const technicalAssistance = {
     date: 'Date',
     from: 'Feedback from',
     returnToForm: 'Return to request form',
-    returnToTaskList: 'Return to task list'
+    returnToTaskList: 'Return to task list',
+    adminInfo:
+      'A history of feedback sent to the requester. The requester will receive a notification any time you add additional feedback to their request.',
+    noFeedbackAlert: 'No feedback has been added for this request.'
   },
   adminHome: {
     breadcrumb: 'Request {{trbRequestId}}',
@@ -776,12 +779,37 @@ const technicalAssistance = {
         COMPLETED: 'Advice letter sent'
       }
     },
+    consultDetails: 'Consult meeting details',
+    dateTime: 'Date and time',
+    addDateTime: 'Add date and time',
+    assignLead: 'Assign a TRB Lead',
+    consultDate: '{{-date}} at {{-time}}',
+    sendEmail: 'Send an email',
+    change: 'Change',
+    representative: 'TRB representatives',
+    formAndDocs: 'Forms and documents',
+    initialRequest: 'Initial request form',
+    adviceLetter: 'Advice letter',
+    completedBy: 'Completed by requester',
+    toBeCompleted: 'To be completed by TRB',
+    lastUpdated: 'Last updated',
+    view: 'View',
+    viewAdvice: 'View advice letter',
+    startAdvice: 'Start advice letter',
+    notStarted: 'Not started',
+    supportingDocs: 'Supporting documents',
+    docInfo:
+      'There is <bold>{{docCount}}</bold> additional document uploaded as a part of this request.',
+    docInfoPlural:
+      'There are <bold>{{docCount}}</bold> additional documents uploaded as a part of this request.',
+    reviewInitialRequest:
+      'Please review the initial request form before setting a date and time in EASi.',
+    viewDocs: 'View documents',
     open: 'Open',
     closed: 'Closed',
     trbLead: 'TRB Lead',
     notAssigned: 'Not assigned',
     assign: 'Assign',
-    change: 'Change',
     subnav: {
       back: 'Back to All Requests',
       requestHome: 'Request home',
@@ -884,6 +912,42 @@ const technicalAssistance = {
     alert:
       'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
     breadcrumb: 'Schedule a consult'
+  },
+  actionCloseRequest: {
+    heading: 'Action: close request',
+    description:
+      'Use this action if work on this request is complete, or if it is not a TRB request.',
+    breadcrumb: 'Close request',
+    label: 'Why did you close this request?',
+    hint:
+      'Give a brief explanation, especially if you closed this request without sending an advice letter.',
+    submit: 'Complete action and close request',
+    success: 'Action complete. This request is now closed.',
+    error:
+      'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
+    confirmModal: {
+      heading: 'Are you sure you want to close this request?',
+      text: [
+        'Closing this request will:',
+        'send a notification email to the TRB mailbox',
+        'prevent any additional updates to the request',
+        'set the request status to closed',
+        'You may continue to add notes to closed requests, and you may reopen the request at any time.'
+      ],
+      close: 'Close request',
+      cancel: 'Cancel'
+    }
+  },
+  actionReopenRequest: {
+    heading: 'Action: re-open request',
+    description:
+      'Reopen this request if additional work needs to be completed or if it was closed in error.',
+    label: 'Why are you re-opening this request?',
+    hint: 'Give a brief explanation.',
+    submit: 'Complete action and re-open request',
+    success: 'Action complete. This request is now open.',
+    error:
+      'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
   }
 };
 
