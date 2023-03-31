@@ -1967,6 +1967,16 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		})
 }
 
+// LinkSystemIntakeToTrbRequest is the resolver for the linkSystemIntakeToTrbRequest field.
+func (r *mutationResolver) LinkSystemIntakeToTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
+	return resolvers.CreateTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
+}
+
+// UnlinkSystemIntakeFromTrbRequest is the resolver for the unlinkSystemIntakeFromTrbRequest field.
+func (r *mutationResolver) UnlinkSystemIntakeFromTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
+	return resolvers.DeleteTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
+}
+
 // UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
 func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
 	return resolvers.UpdateTRBRequestConsultMeetingTime(
@@ -2202,6 +2212,11 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
+}
+
+// SystemIntakesWithLcids is the resolver for the systemIntakesWithLcids field.
+func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error) {
+	return r.store.GetSystemIntakesWithLCIDs(ctx)
 }
 
 // CurrentUser is the resolver for the currentUser field.
@@ -2959,6 +2974,11 @@ func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequ
 // IsRecent is the resolver for the isRecent field.
 func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBRequest) (bool, error) {
 	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
+}
+
+// SystemIntakes is the resolver for the systemIntakes field.
+func (r *tRBRequestResolver) SystemIntakes(ctx context.Context, obj *models.TRBRequest) ([]*models.SystemIntake, error) {
+	return resolvers.GetTRBRequestSystemIntakesByTRBRequestID(ctx, r.store, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
