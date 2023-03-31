@@ -22,19 +22,42 @@ import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
+import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import intakeFundingSources from 'constants/enums/intakeFundingSources';
+import DeleteTRBRequestFundingSource from 'queries/DeleteTRBRequestFundingSource';
+import {
+  DeleteTRBRequestFundingSource as DeleteTRBRequestFundingSourceType,
+  DeleteTRBRequestFundingSourceVariables
+} from 'queries/types/DeleteTRBRequestFundingSource';
+import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'queries/types/GetTrbRequest';
 import {
   UpdateTrbRequestAndForm,
   UpdateTrbRequestAndFormVariables
 } from 'queries/types/UpdateTrbRequestAndForm';
+import {
+  UpdateTRBRequestFundingSources as UpdateTRBRequestFundingSourcesType,
+  UpdateTRBRequestFundingSourcesVariables
+} from 'queries/types/UpdateTRBRequestFundingSources';
 import UpdateTrbRequestAndFormQuery from 'queries/UpdateTrbRequestAndFormQuery';
+import UpdateTRBRequestFundingSources from 'queries/UpdateTRBRequestFundingSources';
 import { TRBCollabGroupOption } from 'types/graphql-global-types';
 import { FormFieldProps } from 'types/util';
 import nullFillObject from 'utils/nullFillObject';
-import { basicSchema, TrbRequestFormBasic } from 'validations/trbRequestSchema';
+import {
+  basicSchema,
+  // fundingSourcesBasicSchema,
+  TrbRequestFormBasic
+} from 'validations/trbRequestSchema';
+import FundingSources from 'views/SystemIntake/ContractDetails/FundingSources';
 
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
+
+type FundingSourcesFormType = {
+  fundingSources: GetTrbRequestFundingSourcesType[];
+};
 
 export const basicBlankValues = {
   component: '',
@@ -53,7 +76,8 @@ export const basicBlankValues = {
   collabDatePrivacyAdvisor: '',
   collabDateGovernanceReviewBoard: '',
   collabDateOther: '',
-  collabGroupOther: ''
+  collabGroupOther: '',
+  collabGRBConsultRequested: null
 };
 
 function Basic({
@@ -73,6 +97,16 @@ function Basic({
     UpdateTrbRequestAndFormVariables
   >(UpdateTrbRequestAndFormQuery);
 
+  const [updatefundingSource] = useMutation<
+    UpdateTRBRequestFundingSourcesType,
+    UpdateTRBRequestFundingSourcesVariables
+  >(UpdateTRBRequestFundingSources);
+
+  const [deletefundingSource] = useMutation<
+    DeleteTRBRequestFundingSourceType,
+    DeleteTRBRequestFundingSourceVariables
+  >(DeleteTRBRequestFundingSource);
+
   const initialValues = nullFillObject(request.form, basicBlankValues);
 
   const {
@@ -87,6 +121,14 @@ function Basic({
     }
   });
 
+  const { control: controlFundingSources, reset } = useForm<
+    FormFieldProps<FundingSourcesFormType>
+  >({
+    defaultValues: {
+      fundingSources: request.form.fundingSources ?? []
+    }
+  });
+
   // Using this instead of formState.isValid since it's not the same
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -97,6 +139,19 @@ function Basic({
       err?.scrollIntoView();
     }
   }, [errors, hasErrors]);
+
+  const handleApolloError = useCallback(
+    (err: any) => {
+      if (err instanceof ApolloError) {
+        setFormAlert({
+          type: 'error',
+          heading: t('errors.somethingWrong'),
+          message: t('basic.errors.submit')
+        });
+      }
+    },
+    [setFormAlert, t]
+  );
 
   const submit = useCallback<StepSubmit>(
     callback =>
@@ -172,31 +227,58 @@ function Basic({
         // Wait for submit to finish before continuing.
         // This essentially makes sure any effects like
         // `setIsStepSubmitting` are called before unmount.
-        .then(
-          () => {
-            callback?.();
-          },
-          err => {
-            if (err instanceof ApolloError) {
-              setFormAlert({
-                type: 'error',
-                heading: t('errors.somethingWrong'),
-                message: t('basic.errors.submit')
-              });
-            }
-          }
-        ),
+        .then(() => {
+          callback?.();
+        }, handleApolloError),
     [
       dirtyFields,
       handleSubmit,
       isDirty,
       refetchRequest,
       request,
-      setFormAlert,
-      t,
+      handleApolloError,
       updateForm
     ]
   );
+
+  // Handling the funding sources update/delete sumbission outside the scope of RHF handler
+  // Funding sources component has it's own validation
+  const addOrUpdateFundingSource = ({
+    fundingNumber,
+    sources
+  }: {
+    fundingNumber: string;
+    sources: string[];
+  }) => {
+    updatefundingSource({
+      variables: {
+        input: {
+          trbRequestId: request.id,
+          fundingNumber,
+          sources
+        }
+      }
+    })
+      .then(() => {
+        refetchRequest();
+      })
+      .catch(handleApolloError);
+  };
+
+  const deleteFundingSource = (fundingNumber: string) => {
+    deletefundingSource({
+      variables: {
+        input: {
+          trbRequestId: request.id,
+          fundingNumber
+        }
+      }
+    })
+      .then(() => {
+        refetchRequest();
+      })
+      .catch(handleApolloError);
+  };
 
   useEffect(() => {
     setStepSubmit(() => submit);
@@ -205,6 +287,12 @@ function Basic({
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
+
+  // effect runs when funding sources are updated
+  useEffect(() => {
+    // reset form with updated fundingsources
+    reset({ fundingSources: request.form.fundingSources || [] });
+  }, [request.form.fundingSources, reset]);
 
   return (
     <Form
@@ -255,7 +343,9 @@ function Basic({
               <FormGroup className="margin-top-5" error={!!error}>
                 <Label htmlFor="name" error={!!error}>
                   {t('basic.labels.name')}
+                  <RequiredAsterisk />
                 </Label>
+
                 {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
                 <TextInput
                   {...field}
@@ -280,6 +370,7 @@ function Basic({
                   error={!!error}
                 >
                   {t('basic.labels.component')}
+                  <RequiredAsterisk />
                 </Label>
                 {error && (
                   <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
@@ -297,6 +388,12 @@ function Basic({
             )}
           />
 
+          <Divider className="margin-top-6" />
+
+          <h4 className="margin-top-1">
+            {t('basic.labels.projectInformation')}
+          </h4>
+
           {/* What do you need technical assistance with? */}
           <Controller
             name="needsAssistanceWith"
@@ -309,6 +406,7 @@ function Basic({
                   error={!!error}
                 >
                   {t('basic.labels.needsAssistanceWith')}
+                  <RequiredAsterisk />
                 </Label>
                 {error && (
                   <ErrorMessage>{t('errors.includeExplanation')}</ErrorMessage>
@@ -335,6 +433,7 @@ function Basic({
               return (
                 <FormGroup error={!!error}>
                   <Fieldset legend={t('basic.labels.hasSolutionInMind')}>
+                    <RequiredAsterisk className="text-bold" />
                     {error && (
                       <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                     )}
@@ -360,6 +459,7 @@ function Basic({
                           <FormGroup error={!!error} className="margin-left-4">
                             <Label htmlFor="proposedSolution" error={!!error}>
                               {t('basic.labels.proposedSolution')}
+                              <RequiredAsterisk />
                             </Label>
                             {error && (
                               <ErrorMessage>
@@ -409,6 +509,7 @@ function Basic({
                   error={!!error}
                 >
                   {t('basic.labels.whereInProcess')}
+                  <RequiredAsterisk />
                 </Label>
                 {error && (
                   <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
@@ -447,7 +548,8 @@ function Basic({
                           error={!!error}
                           className="text-normal"
                         >
-                          {t('subject.labels.other')}
+                          {t('basic.labels.pleaseSpecify')}
+                          <RequiredAsterisk className="text-bold" />
                         </Label>
                         {error && (
                           <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
@@ -475,6 +577,7 @@ function Basic({
               return (
                 <FormGroup error={!!startOrEndError}>
                   <Fieldset legend={t('basic.labels.hasExpectedStartEndDates')}>
+                    <RequiredAsterisk className="text-bold" />
                     {startOrEndError && (
                       <ErrorMessage>
                         {startOrEndError.type === 'expected-start-or-end-date'
@@ -560,6 +663,44 @@ function Basic({
                 </FormGroup>
               );
             }}
+          />
+
+          <Divider className="margin-top-6" />
+
+          <h4 className="margin-top-1">
+            {t('basic.labels.collabAndGovernance')}
+          </h4>
+
+          <Controller
+            name="fundingSources"
+            control={controlFundingSources}
+            // eslint-disable-next-line no-shadow
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error} className="margin-bottom-4">
+                <Label
+                  htmlFor={field.name}
+                  error={!!error}
+                  hint={t('basic.hint.fundingSources')}
+                  className="text-normal"
+                >
+                  {t('basic.labels.fundingSources')}
+                </Label>
+                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+                <FundingSources
+                  id="trb-funding-sources"
+                  initialValues={field.value}
+                  setFieldValue={(fieldName, value) => {
+                    if (value.delete) {
+                      deleteFundingSource(value.delete);
+                    } else {
+                      addOrUpdateFundingSource(value);
+                    }
+                  }}
+                  fundingSourceOptions={intakeFundingSources}
+                  combinedFields
+                />
+              </FormGroup>
+            )}
           />
 
           {/* Select any other OIT groups that you have met with or collaborated with. */}
@@ -685,6 +826,62 @@ function Basic({
                                         type="text"
                                         validationStatus={error && 'error'}
                                       />
+                                      {val === 'GOVERNANCE_REVIEW_BOARD' && (
+                                        <Controller
+                                          name="collabGRBConsultRequested"
+                                          control={control}
+                                          render={({
+                                            // eslint-disable-next-line no-shadow
+                                            field,
+                                            // eslint-disable-next-line no-shadow
+                                            fieldState: { error }
+                                          }) => (
+                                            <FormGroup
+                                              error={!!error}
+                                              className="margin-bottom-1"
+                                            >
+                                              <Label
+                                                htmlFor={collabDateKey}
+                                                error={!!error}
+                                              >
+                                                {t(
+                                                  'basic.labels.collabGRBConsultRequested'
+                                                )}
+                                              </Label>
+                                              {error && (
+                                                <ErrorMessage>
+                                                  {t('errors.fillBlank')}
+                                                </ErrorMessage>
+                                              )}
+                                              <Radio
+                                                {...field}
+                                                ref={null}
+                                                id="grt-brb-consult-yes"
+                                                data-testid="grt-brb-consult-yes"
+                                                label={t('basic.options.yes')}
+                                                onChange={() =>
+                                                  field.onChange(true)
+                                                }
+                                                value="true"
+                                                checked={field.value === true}
+                                              />
+
+                                              <Radio
+                                                {...field}
+                                                ref={null}
+                                                id="grt-brb-consult-no"
+                                                data-testid="grt-brb-consult-no"
+                                                label={t('basic.options.no')}
+                                                onChange={() =>
+                                                  field.onChange(false)
+                                                }
+                                                value="false"
+                                                checked={field.value === false}
+                                              />
+                                            </FormGroup>
+                                          )}
+                                        />
+                                      )}
                                     </FormGroup>
                                   )}
                                 />
