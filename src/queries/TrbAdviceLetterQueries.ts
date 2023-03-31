@@ -36,6 +36,7 @@ export const GetTrbAdviceLetterQuery = gql`
   ${TRBAdviceLetter}
   query GetTrbAdviceLetter($id: UUID!) {
     trbRequest(id: $id) {
+      id
       name
       taskStatuses {
         adviceLetterStatus

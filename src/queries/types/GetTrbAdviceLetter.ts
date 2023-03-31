@@ -44,6 +44,7 @@ export interface GetTrbAdviceLetter_trbRequest_adviceLetter {
 
 export interface GetTrbAdviceLetter_trbRequest {
   __typename: "TRBRequest";
+  id: UUID;
   name: string;
   taskStatuses: GetTrbAdviceLetter_trbRequest_taskStatuses;
   adviceLetter: GetTrbAdviceLetter_trbRequest_adviceLetter | null;

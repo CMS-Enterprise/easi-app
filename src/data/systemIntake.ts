@@ -6,6 +6,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
+import { cleanCSVData } from 'utils/csv';
 import { formatContractDate, formatDateLocal, parseAsUTC } from 'utils/date';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
@@ -269,7 +270,7 @@ export const convertIntakeToCSV = (
     });
   }
 
-  return {
+  return cleanCSVData({
     ...intake,
     ...collaboratorTeams,
     lastAdminNote: intake.lastAdminNote
@@ -294,7 +295,7 @@ export const convertIntakeToCSV = (
     createdAt: intake.createdAt,
     decidedAt: intake.decidedAt,
     archivedAt: intake.archivedAt
-  };
+  });
 };
 
 /**
