@@ -317,3 +317,15 @@ export const nextStepsSchema = yup.object({
       then: schema => schema.required()
     })
 });
+
+// Action schemas
+
+export const trbFeedbackSchema = yup.object({
+  feedbackMessage: yup.string().required(),
+  copyTrbMailbox: yup.boolean(),
+  notifyEuaIds: yup.array(yup.string()).when('copyTrbMailbox', {
+    is: (copyTrbMailbox: boolean) => !copyTrbMailbox,
+    then: schema => schema.min(1),
+    otherwise: schema => schema.optional()
+  })
+});

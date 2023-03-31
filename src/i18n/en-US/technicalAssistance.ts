@@ -120,7 +120,8 @@ const technicalAssistance = {
     newRecipientName: 'New recipient name',
     newRecipientComponent: 'New recipient component',
     newRecipientRole: 'New recipient role',
-    addRecipient: 'Add recipient'
+    addRecipient: 'Add recipient',
+    selectRecipientError: 'Please select a recipient'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',

@@ -3,9 +3,11 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   Button,
+  ErrorMessage,
   Form,
   FormGroup,
   GridContainer,
@@ -29,6 +31,7 @@ import {
   CreateTRBRequestFeedbackInput,
   TRBFeedbackAction
 } from 'types/graphql-global-types';
+import { trbFeedbackSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
 
@@ -76,6 +79,7 @@ function RequestEdits() {
   );
 
   const actionForm = useForm<CreateTRBRequestFeedbackInput>({
+    resolver: yupResolver(trbFeedbackSchema),
     defaultValues
   });
 
@@ -164,9 +168,9 @@ function RequestEdits() {
         <Controller
           name="feedbackMessage"
           control={control}
-          render={({ field }) => {
+          render={({ field, fieldState: { error } }) => {
             return (
-              <FormGroup>
+              <FormGroup error={!!error}>
                 <Label
                   htmlFor="feedbackMessage"
                   className="text-normal margin-top-6"
@@ -177,6 +181,7 @@ function RequestEdits() {
                 <HelpText id="feedbackmessage-hint">
                   {t('actionRequestEdits.hint')}
                 </HelpText>
+                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
                 <TextAreaField
                   id="feedbackMessage"
                   {...field}

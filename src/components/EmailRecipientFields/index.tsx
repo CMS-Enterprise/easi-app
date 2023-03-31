@@ -1,6 +1,7 @@
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import CheckboxField from 'components/shared/CheckboxField';
@@ -33,118 +34,134 @@ const EmailRecipientFields = ({
 }: EmailRecipientFieldsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { watch, getValues } = useFormContext<Recipientfields>();
+  const {
+    watch,
+    getValues,
+    formState: { errors }
+  } = useFormContext<Recipientfields>();
 
   const selectedCount = watch(['notifyEuaIds', 'copyTrbMailbox'])
     .flat()
     .filter(item => item).length;
 
   return (
-    <fieldset className={classNames('usa-fieldset', className)}>
-      <legend className="usa-label">
-        <Trans
-          i18nKey="technicalAssistance:emailRecipientFields.label"
-          components={{ red: <span className="text-error" /> }}
-        />
-      </legend>
+    <FormGroup error={!!errors.notifyEuaIds}>
+      <fieldset className={classNames('usa-fieldset', className)}>
+        <legend className="usa-label">
+          <Trans
+            i18nKey="technicalAssistance:emailRecipientFields.label"
+            components={{ red: <span className="text-error" /> }}
+          />
+        </legend>
 
-      <p className="margin-bottom-0 margin-top-05">
-        <Trans
-          i18nKey="technicalAssistance:emailRecipientFields.selectedCount"
-          components={{ bold: <span className="text-bold" /> }}
-          count={selectedCount}
-        />
-      </p>
+        {errors.notifyEuaIds && (
+          <ErrorMessage>
+            {t('emailRecipientFields.selectRecipientError')}
+          </ErrorMessage>
+        )}
 
-      <TruncatedContent
-        initialCount={2}
-        labelMore={t(`emailRecipientFields.showMore`, {
-          number: attendees.length
-        })}
-        labelLess={t(`emailRecipientFields.showFewer`, {
-          number: attendees.length
-        })}
-        buttonClassName="margin-top-2"
-      >
-        {/* Requester */}
-        <Controller
-          name="notifyEuaIds"
-          render={({ field }) => {
-            const { component } = requester;
-            const { commonName, euaUserId } = requester?.userInfo || {};
+        <p className="margin-bottom-0 margin-top-05">
+          <Trans
+            i18nKey="technicalAssistance:emailRecipientFields.selectedCount"
+            components={{ bold: <span className="text-bold" /> }}
+            count={selectedCount}
+          />
+        </p>
 
-            const label = `${commonName}, ${component} (Requester)`;
-            const value = euaUserId || '';
+        <TruncatedContent
+          initialCount={2}
+          labelMore={t(`emailRecipientFields.showMore`, {
+            number: attendees.length
+          })}
+          labelLess={t(`emailRecipientFields.showFewer`, {
+            number: attendees.length
+          })}
+          buttonClassName="margin-top-2"
+        >
+          {/* Requester */}
+          <Controller
+            name="notifyEuaIds"
+            render={({ field }) => {
+              const { component } = requester;
+              const { commonName, euaUserId } = requester?.userInfo || {};
 
-            return (
-              <CheckboxField
-                id={`${field.name}.0`}
-                label={label}
-                {...{ ...field, ref: null }}
-                onChange={e => {
-                  field.onChange(toggleArrayValue(field.value, e.target.value));
-                }}
-                value={value}
-                checked={!!field.value?.includes(value)}
-              />
-            );
-          }}
-        />
+              const label = `${commonName}, ${component} (Requester)`;
+              const value = euaUserId || '';
 
-        {/* Copy TRB Mailbox */}
-        <Controller
-          name="copyTrbMailbox"
-          render={({ field }) => {
-            return (
-              <CheckboxField
-                id={field.name}
-                label={t('emailRecipientFields.copyTrbMailbox')}
-                {...{ ...field, ref: null }}
-                checked={!!field.value}
-              />
-            );
-          }}
-        />
+              return (
+                <CheckboxField
+                  id={`${field.name}.0`}
+                  label={label}
+                  {...{ ...field, ref: null }}
+                  onChange={e => {
+                    field.onChange(
+                      toggleArrayValue(field.value, e.target.value)
+                    );
+                  }}
+                  value={value}
+                  checked={!!field.value?.includes(value)}
+                />
+              );
+            }}
+          />
 
-        {/* Recipients */}
-        <Controller
-          name="notifyEuaIds"
-          render={({ field }) => {
-            return (
-              <>
-                {attendees.map((attendee, index) => {
-                  const { commonName, euaUserId } = attendee.userInfo || {};
-                  const value = euaUserId || '';
+          {/* Copy TRB Mailbox */}
+          <Controller
+            name="copyTrbMailbox"
+            render={({ field }) => {
+              return (
+                <CheckboxField
+                  id={field.name}
+                  label={t('emailRecipientFields.copyTrbMailbox')}
+                  {...{ ...field, ref: null }}
+                  checked={!!field.value}
+                />
+              );
+            }}
+          />
 
-                  const role = attendee.role ? contactRoles[attendee.role] : '';
+          {/* Recipients */}
+          <Controller
+            name="notifyEuaIds"
+            render={({ field }) => {
+              return (
+                <>
+                  {attendees.map((attendee, index) => {
+                    const { commonName, euaUserId } = attendee.userInfo || {};
+                    const value = euaUserId || '';
 
-                  return (
-                    <CheckboxField
-                      key={attendee.id}
-                      id={`${field.name}.${index + 1}`}
-                      label={`${commonName} (${role})`}
-                      {...{ ...field, ref: null }}
-                      onChange={e =>
-                        field.onChange(
-                          toggleArrayValue(field.value, e.target.value)
-                        )
-                      }
-                      value={value}
-                      checked={!!field.value?.includes(value)}
-                    />
-                  );
-                })}
-              </>
-            );
-          }}
-        />
+                    const role = attendee.role
+                      ? contactRoles[attendee.role]
+                      : '';
 
-        <AddRecipientForm
-          createAttendee={createAttendee}
-          trbRequestId={getValues('trbRequestId')}
-        />
-      </TruncatedContent>
-    </fieldset>
+                    return (
+                      <CheckboxField
+                        key={attendee.id}
+                        id={`${field.name}.${index + 1}`}
+                        label={`${commonName} (${role})`}
+                        {...{ ...field, ref: null }}
+                        onChange={e =>
+                          field.onChange(
+                            toggleArrayValue(field.value, e.target.value)
+                          )
+                        }
+                        value={value}
+                        checked={!!field.value?.includes(value)}
+                      />
+                    );
+                  })}
+                </>
+              );
+            }}
+          />
+
+          <AddRecipientForm
+            createAttendee={createAttendee}
+            trbRequestId={getValues('trbRequestId')}
+          />
+        </TruncatedContent>
+      </fieldset>
+    </FormGroup>
   );
 };
 
