@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@apollo/client';
 
 import PageLoading from 'components/PageLoading';
 import TaskStatusTag from 'components/shared/TaskStatusTag';
+import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
   GetTrbRequest,
@@ -23,7 +23,7 @@ const InitialRequestForm = ({
 }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { data, error, loading } = useQuery<
+  const { data, error, loading } = useCacheQuery<
     GetTrbRequest,
     GetTrbRequestVariables
   >(GetTrbRequestQuery, {
