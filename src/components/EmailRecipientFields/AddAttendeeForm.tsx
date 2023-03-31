@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ButtonGroup,
   Dropdown,
+  ErrorMessage,
   FormGroup
 } from '@trussworks/react-uswds';
 
@@ -17,6 +19,7 @@ import {
   PersonRole
 } from 'types/graphql-global-types';
 import { TRBAttendeeFields } from 'types/technicalAssistance';
+import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
 type AddAttendeeFormProps = {
   trbRequestId: string;
@@ -34,9 +37,10 @@ export default function AddAttendeeForm({
   const {
     control,
     handleSubmit,
-    reset
-    // formState: { errors }
-  } = useForm<TRBAttendeeFields>();
+    reset,
+    setError,
+    formState: { isSubmitting, dirtyFields }
+  } = useForm<TRBAttendeeFields>({ resolver: yupResolver(trbAttendeeSchema) });
 
   const submitForm = (formData: TRBAttendeeFields) => {
     const { euaUserId, component, role } = formData;
@@ -46,10 +50,18 @@ export default function AddAttendeeForm({
       euaUserId,
       component: component || '',
       role: role as PersonRole
-    }).then(result => {
-      reset();
-      setShowForm(false);
-    });
+    })
+      .then(() => {
+        reset();
+        setShowForm(false);
+      })
+      .catch(e => {
+        if (e.message.includes('duplicate key')) {
+          setError('euaUserId', {
+            message: 'Recipient has already been added'
+          });
+        }
+      });
   };
 
   if (showForm) {
@@ -59,12 +71,17 @@ export default function AddAttendeeForm({
         <Controller
           name="euaUserId"
           control={control}
-          render={({ field }) => {
+          render={({ field, fieldState: { error } }) => {
             return (
-              <FormGroup>
+              <FormGroup error={!!error}>
                 <Label htmlFor={field.name}>
                   {t('emailRecipientFields.newRecipientName')}
                 </Label>
+                {error && (
+                  <ErrorMessage>
+                    {t(error.message || 'errors.makeSelection')}
+                  </ErrorMessage>
+                )}
                 <CedarContactSelect
                   id={field.name}
                   {...{ ...field, ref: null }}
@@ -84,12 +101,15 @@ export default function AddAttendeeForm({
         <Controller
           name="component"
           control={control}
-          render={({ field }) => {
+          render={({ field, fieldState: { error } }) => {
             return (
-              <FormGroup>
+              <FormGroup error={!!error}>
                 <Label htmlFor={field.name}>
                   {t('emailRecipientFields.newRecipientComponent')}
                 </Label>
+                {error && (
+                  <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
+                )}
                 <Dropdown
                   id={field.name}
                   {...field}
@@ -107,12 +127,15 @@ export default function AddAttendeeForm({
         <Controller
           name="role"
           control={control}
-          render={({ field }) => {
+          render={({ field, fieldState: { error } }) => {
             return (
-              <FormGroup>
+              <FormGroup error={!!error}>
                 <Label htmlFor={field.name}>
                   {t('emailRecipientFields.newRecipientRole')}
                 </Label>
+                {error && (
+                  <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
+                )}
                 <Dropdown
                   id={field.name}
                   {...field}
@@ -136,6 +159,7 @@ export default function AddAttendeeForm({
           <Button
             type="button"
             onClick={() => handleSubmit(formData => submitForm(formData))()}
+            disabled={isSubmitting || Object.values(dirtyFields).length < 3}
           >
             {t('emailRecipientFields.addRecipient')}
           </Button>
