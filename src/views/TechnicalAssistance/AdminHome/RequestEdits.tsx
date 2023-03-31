@@ -44,7 +44,8 @@ function RequestEdits() {
   const { message, showMessage, showMessageOnNextPage } = useMessage();
 
   const {
-    data: { attendees, requester, loading }
+    data: { attendees, requester, loading },
+    createAttendee
   } = useTRBAttendees(id);
 
   const requestUrl = `/trb/${id}/${activePage}`;
@@ -81,6 +82,8 @@ function RequestEdits() {
     control,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { isDirty, isSubmitting }
   } = actionForm;
 
@@ -201,6 +204,14 @@ function RequestEdits() {
           <EmailRecipientFields
             requester={requester}
             attendees={attendees}
+            createAttendee={input =>
+              createAttendee({ variables: { input } }).then(result =>
+                setValue('notifyEuaIds', [
+                  ...getValues('notifyEuaIds'),
+                  input.euaUserId
+                ])
+              )
+            }
             className="margin-top-4 margin-bottom-3"
           />
         </FormProvider>

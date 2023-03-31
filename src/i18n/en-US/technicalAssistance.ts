@@ -115,8 +115,12 @@ const technicalAssistance = {
     copyTrbMailbox: 'Copy TRB Mailbox',
     projectTeamMember: 'Project team member',
     showMore: 'Show {{number}} more recipients',
-    showFewer: 'Show {{number}} Fewer recipients',
-    addAnotherRecipient: 'Add another recipient'
+    showFewer: 'Show {{number}} fewer recipients',
+    addAnotherRecipient: 'Add another recipient',
+    newRecipientName: 'New recipient name',
+    newRecipientComponent: 'New recipient component',
+    newRecipientRole: 'New recipient role',
+    addRecipient: 'Add recipient'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',

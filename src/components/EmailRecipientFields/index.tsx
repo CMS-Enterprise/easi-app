@@ -7,15 +7,20 @@ import CheckboxField from 'components/shared/CheckboxField';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import contactRoles from 'constants/enums/contactRoles';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
+import { CreateTRBRequestAttendeeInput } from 'types/graphql-global-types';
 import toggleArrayValue from 'utils/toggleArrayValue';
+
+import AddRecipientForm from './AddAttendeeForm';
 
 type EmailRecipientFieldsProps = {
   requester: TRBAttendee;
   attendees: TRBAttendee[];
+  createAttendee: (input: CreateTRBRequestAttendeeInput) => Promise<void>;
   className?: string;
 };
 
 interface Recipientfields {
+  trbRequestId: string;
   notifyEuaIds: string[];
   copyTrbMailbox: boolean;
 }
@@ -23,11 +28,12 @@ interface Recipientfields {
 const EmailRecipientFields = ({
   requester,
   attendees,
+  createAttendee,
   className
 }: EmailRecipientFieldsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { watch } = useFormContext<Recipientfields>();
+  const { watch, getValues } = useFormContext<Recipientfields>();
 
   const selectedCount = watch(['notifyEuaIds', 'copyTrbMailbox'])
     .flat()
@@ -131,6 +137,11 @@ const EmailRecipientFields = ({
               </>
             );
           }}
+        />
+
+        <AddRecipientForm
+          createAttendee={createAttendee}
+          trbRequestId={getValues('trbRequestId')}
         />
       </TruncatedContent>
     </fieldset>
