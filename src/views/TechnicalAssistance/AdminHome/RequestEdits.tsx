@@ -9,13 +9,14 @@ import {
   Form,
   FormGroup,
   GridContainer,
-  IconArrowBack,
-  Label
+  IconArrowBack
 } from '@trussworks/react-uswds';
 
 import EmailRecipientFields from 'components/EmailRecipientFields';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
@@ -61,7 +62,7 @@ function RequestEdits() {
     feedbackAction = TRBFeedbackAction.READY_FOR_CONSULT;
   }
 
-  const defaultValues = useMemo(
+  const defaultValues: CreateTRBRequestFeedbackInput = useMemo(
     () => ({
       trbRequestId: id,
       action: feedbackAction,
@@ -84,6 +85,7 @@ function RequestEdits() {
     reset,
     setValue,
     getValues,
+    watch,
     formState: { isDirty, isSubmitting }
   } = actionForm;
 
@@ -167,22 +169,14 @@ function RequestEdits() {
               <FormGroup>
                 <Label
                   htmlFor="feedbackMessage"
-                  hint={
-                    <div className="margin-top-1">
-                      {t('actionRequestEdits.hint')}
-                    </div>
-                  }
                   className="text-normal margin-top-6"
+                  required
                 >
                   {t(`${actionText}.label`)}
-                  {/* Show the required marker when the action is `request-edits` */}
-                  {action === 'request-edits' && (
-                    <>
-                      {' '}
-                      <span className="text-red">*</span>
-                    </>
-                  )}
                 </Label>
+                <HelpText id="feedbackmessage-hint">
+                  {t('actionRequestEdits.hint')}
+                </HelpText>
                 <TextAreaField
                   id="feedbackMessage"
                   {...field}
@@ -218,9 +212,11 @@ function RequestEdits() {
 
         <Button
           type="submit"
-          // `feedbackMessage` is required for `request-edits` action
-          // Disable submit if request-edits feedbackMessage undefined
-          disabled={(action === 'request-edits' && !isDirty) || isSubmitting}
+          disabled={
+            watch('notifyEuaIds').length === 0 ||
+            watch('feedbackMessage').length === 0 ||
+            isSubmitting
+          }
         >
           {t('actionRequestEdits.submit')}
         </Button>
