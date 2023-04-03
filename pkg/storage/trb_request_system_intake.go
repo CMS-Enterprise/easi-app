@@ -119,3 +119,38 @@ func (s *Store) DeleteTRBRequestSystemIntake(ctx context.Context, trbRequestID u
 
 	return &deleted, err
 }
+
+// DeleteTRBRequestSystemIntake deletes an existing TRB request attendee record in the database
+func (s *Store) DeleteTRBRequestSystemIntakesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestSystemIntake, error) {
+	deleted := []*models.TRBRequestSystemIntake{}
+
+	stmt, err := s.db.PrepareNamed(`
+		DELETE FROM trb_request_system_intakes
+		WHERE trb_request_id = :trb_request_id
+		RETURNING *;`)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to delete TRB request system intake relationships %s", err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, err
+	}
+
+	err = stmt.Select(&deleted, map[string]interface{}{
+		"trb_request_id": trbRequestID,
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to delete TRB request system intake relationships %s", err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     deleted,
+			Operation: apperrors.QueryUpdate,
+		}
+	}
+
+	return deleted, err
+}

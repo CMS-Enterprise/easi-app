@@ -1524,7 +1524,6 @@ type TRBRequest {
   requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
-  systemIntakes: [SystemIntake!]!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -1776,6 +1775,7 @@ type TRBRequestForm {
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
   fundingSources: [TRBFundingSource!]
+  systemIntakes: [SystemIntake!]!
   subjectAreaOptions: [TRBSubjectAreaOption!]
   subjectAreaOptionOther: String
   submittedAt: Time
@@ -1809,6 +1809,7 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   collabDateOther: String
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
+  systemIntakes: [UUID!]
   subjectAreaOptions: [TRBSubjectAreaOption!]
   subjectAreaOptionOther: String
 }
@@ -2151,10 +2152,10 @@ type Mutation {
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
     @hasRole(role: EASI_TRB_ADMIN)
-  linkSystemIntakeToTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
-    @hasRole(role: EASI_TRB_ADMIN)
-  unlinkSystemIntakeFromTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
-    @hasRole(role: EASI_TRB_ADMIN)
+  # linkSystemIntakeToTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
+  #   @hasRole(role: EASI_TRB_ADMIN)
+  # unlinkSystemIntakeFromTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
+  #   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
