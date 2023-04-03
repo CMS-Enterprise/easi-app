@@ -29,7 +29,7 @@ import {
 } from 'queries/types/CreateTrbRequestFeedback';
 import { TRBFeedbackAction } from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
-import { trbFeedbackSchema } from 'validations/trbRequestSchema';
+import { trbActionSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
 
@@ -79,7 +79,12 @@ function RequestEdits() {
   );
 
   const actionForm = useForm<RequestEditsFields>({
-    resolver: yupResolver(trbFeedbackSchema(feedbackAction)),
+    resolver: yupResolver(
+      trbActionSchema(
+        'feedbackMessage',
+        feedbackAction === TRBFeedbackAction.REQUEST_EDITS
+      )
+    ),
     defaultValues
   });
 

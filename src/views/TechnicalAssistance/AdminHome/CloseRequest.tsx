@@ -3,6 +3,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   Button,
@@ -36,6 +37,7 @@ import {
   ReopenTrbRequestVariables
 } from 'queries/types/ReopenTrbRequest';
 import { TrbRecipientFields } from 'types/technicalAssistance';
+import { trbActionSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
 
@@ -85,6 +87,7 @@ function CloseRequest() {
   );
 
   const formMethods = useForm<CloseRequestFields>({
+    resolver: yupResolver(trbActionSchema('text')),
     defaultValues
   });
 

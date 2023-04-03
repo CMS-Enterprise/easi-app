@@ -8,7 +8,6 @@ import {
   TRBCollabGroupOption,
   TRBDataAndDataManagementOption,
   TRBDocumentCommonType,
-  TRBFeedbackAction,
   TRBGovernmentProcessesAndPoliciesOption,
   TRBNetworkAndSecurityOption,
   TRBOtherTechnicalTopicsOption,
@@ -319,15 +318,10 @@ export const nextStepsSchema = yup.object({
     })
 });
 
-// Action schemas
-
-export const trbFeedbackSchema = (feedbackAction: TRBFeedbackAction) =>
+/** TRB action form schema */
+export const trbActionSchema = (messageKey: string, required?: boolean) =>
   yup.object({
-    // Only mark feedbackMessage required for Request Edits action
-    feedbackMessage:
-      feedbackAction === TRBFeedbackAction.REQUEST_EDITS
-        ? yup.string().required()
-        : yup.string(),
+    [messageKey]: required ? yup.string().required() : yup.string(),
     copyTrbMailbox: yup.boolean(),
     notifyEuaIds: yup.array(yup.string()).when('copyTrbMailbox', {
       is: (copyTrbMailbox: boolean) => !copyTrbMailbox,
