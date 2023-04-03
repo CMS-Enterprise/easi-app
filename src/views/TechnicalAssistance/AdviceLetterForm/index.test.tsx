@@ -26,6 +26,7 @@ const trbRequestId = 'fd1eec78-dff5-4c26-8924-44872a2b0414';
 const adviceLetterQueryResponse: GetTrbAdviceLetter = {
   trbRequest: {
     __typename: 'TRBRequest',
+    id: '560843f1-ee1e-4d65-8d6a-273c4ace92ef',
     name: 'Test advice letter',
     adviceLetter: trbRequestAdviceLetter,
     taskStatuses: {
