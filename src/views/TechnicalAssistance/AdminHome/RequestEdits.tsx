@@ -206,9 +206,17 @@ function RequestEdits() {
         <FormProvider {...actionForm}>
           <EmailRecipientFields
             requester={requester}
-            attendees={attendees}
-            createAttendee={input =>
-              createAttendee({ variables: { input } }).then(result =>
+            contacts={attendees}
+            mailboxes={[
+              {
+                key: 'copyTrbMailbox',
+                label: t('emailRecipientFields.copyTrbMailbox')
+              }
+            ]}
+            createContact={input =>
+              createAttendee({
+                variables: { input: { ...input, trbRequestId: id } }
+              }).then(result =>
                 setValue('notifyEuaIds', [
                   ...getValues('notifyEuaIds'),
                   input.euaUserId

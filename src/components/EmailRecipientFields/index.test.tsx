@@ -43,8 +43,9 @@ const TestComponent = () => {
       <FormProvider {...formMethods}>
         <EmailRecipientFields
           requester={requester}
-          attendees={attendees}
-          createAttendee={() => Promise.resolve()}
+          contacts={attendees}
+          mailboxes={[{ key: 'copyTrbMailbox', label: 'Copy TRB Mailbox' }]}
+          createContact={() => Promise.resolve()}
         />
       </FormProvider>
     </MockedProvider>

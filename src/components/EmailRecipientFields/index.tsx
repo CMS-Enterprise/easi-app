@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
@@ -7,34 +7,63 @@ import classNames from 'classnames';
 import CheckboxField from 'components/shared/CheckboxField';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import contactRoles from 'constants/enums/contactRoles';
-import { TRBAttendee } from 'queries/types/TRBAttendee';
-import { CreateTRBRequestAttendeeInput } from 'types/graphql-global-types';
-import { TrbRecipientFields } from 'types/technicalAssistance';
+import { PersonRole } from 'types/graphql-global-types';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
-import AddAttendeeForm from './AddAttendeeForm';
+import CreateContactForm from './CreateContactForm';
+
+type Mailbox = {
+  key: string;
+  label: string;
+};
+
+export type EmailRecipient = {
+  id: string;
+  userInfo: {
+    euaUserId: string;
+    commonName: string;
+    email: string;
+  } | null;
+  component: string | null;
+  role: PersonRole | null;
+  createdAt: string;
+};
 
 type EmailRecipientFieldsProps = {
-  requester: TRBAttendee;
-  attendees: TRBAttendee[];
-  createAttendee: (input: CreateTRBRequestAttendeeInput) => Promise<void>;
+  requester: EmailRecipient;
+  contacts: EmailRecipient[];
+  mailboxes: Mailbox[];
+  createContact: (input: {
+    euaUserId: string;
+    component: string;
+    role: PersonRole;
+  }) => Promise<any>;
   className?: string;
 };
 
 const EmailRecipientFields = ({
   requester,
-  attendees,
-  createAttendee,
+  contacts,
+  mailboxes,
+  createContact,
   className
 }: EmailRecipientFieldsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const {
     watch,
+    getValues,
     formState: { errors }
-  } = useFormContext<TrbRecipientFields>();
+  } = useFormContext();
 
-  const selectedCount = watch(['notifyEuaIds', 'copyTrbMailbox'])
+  const defaultMailboxes: Mailbox[] = useRef(
+    mailboxes.map(({ key }) => getValues(key))
+  ).current;
+
+  const selectedCount = watch([
+    'notifyEuaIds',
+    ...mailboxes.map(({ key }) => key)
+  ])
     .flat()
     .filter(item => item).length;
 
@@ -63,12 +92,12 @@ const EmailRecipientFields = ({
         </p>
 
         <TruncatedContent
-          initialCount={2}
+          initialCount={1 + defaultMailboxes.length}
           labelMore={t(`emailRecipientFields.showMore`, {
-            number: attendees.length
+            number: contacts.length
           })}
           labelLess={t(`emailRecipientFields.showFewer`, {
-            number: attendees.length
+            number: contacts.length
           })}
           buttonClassName="margin-top-2"
         >
@@ -99,20 +128,23 @@ const EmailRecipientFields = ({
             }}
           />
 
-          {/* Copy TRB Mailbox */}
-          <Controller
-            name="copyTrbMailbox"
-            render={({ field }) => {
-              return (
-                <CheckboxField
-                  id={field.name}
-                  label={t('emailRecipientFields.copyTrbMailbox')}
-                  {...{ ...field, ref: null }}
-                  checked={!!field.value}
-                />
-              );
-            }}
-          />
+          {mailboxes.map(mailbox => {
+            return (
+              <Controller
+                name={mailbox.key}
+                render={({ field }) => {
+                  return (
+                    <CheckboxField
+                      id={field.name}
+                      label={t(mailbox.label)}
+                      {...{ ...field, ref: null }}
+                      checked={!!field.value}
+                    />
+                  );
+                }}
+              />
+            );
+          })}
 
           {/* Recipients */}
           <Controller
@@ -120,17 +152,15 @@ const EmailRecipientFields = ({
             render={({ field }) => {
               return (
                 <>
-                  {attendees.map((attendee, index) => {
-                    const { commonName, euaUserId } = attendee.userInfo || {};
+                  {contacts.map((contact, index) => {
+                    const { commonName, euaUserId } = contact.userInfo || {};
                     const value = euaUserId || '';
 
-                    const role = attendee.role
-                      ? contactRoles[attendee.role]
-                      : '';
+                    const role = contact.role ? contactRoles[contact.role] : '';
 
                     return (
                       <CheckboxField
-                        key={attendee.id}
+                        key={contact.id}
                         id={`${field.name}.${index + 1}`}
                         label={`${commonName} (${role})`}
                         {...{ ...field, ref: null }}
@@ -149,10 +179,7 @@ const EmailRecipientFields = ({
             }}
           />
 
-          <AddAttendeeForm
-            createAttendee={createAttendee}
-            trbRequestId={requester.trbRequestId}
-          />
+          <CreateContactForm createContact={createContact} />
         </TruncatedContent>
       </fieldset>
     </FormGroup>

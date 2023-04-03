@@ -15,22 +15,21 @@ import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivi
 import CedarContactSelect from 'components/CedarContactSelect';
 import Label from 'components/shared/Label';
 import contactRoles from 'constants/enums/contactRoles';
-import {
-  CreateTRBRequestAttendeeInput,
-  PersonRole
-} from 'types/graphql-global-types';
+import { PersonRole } from 'types/graphql-global-types';
 import { TRBAttendeeFields } from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
-type AddAttendeeFormProps = {
-  trbRequestId: string;
-  createAttendee: (input: CreateTRBRequestAttendeeInput) => Promise<void>;
+type CreateContactFormProps = {
+  createContact: (input: {
+    euaUserId: string;
+    component: string;
+    role: PersonRole;
+  }) => Promise<any>;
 };
 
-export default function AddAttendeeForm({
-  trbRequestId,
-  createAttendee
-}: AddAttendeeFormProps) {
+export default function CreateContactForm({
+  createContact
+}: CreateContactFormProps) {
   const { t } = useTranslation('technicalAssistance');
 
   const [showForm, setShowForm] = useState(false);
@@ -46,8 +45,7 @@ export default function AddAttendeeForm({
   const submitForm = (formData: TRBAttendeeFields) => {
     const { euaUserId, component, role } = formData;
 
-    createAttendee({
-      trbRequestId,
+    createContact({
       euaUserId,
       component: component || '',
       role: role as PersonRole
