@@ -1524,7 +1524,6 @@ type TRBRequest {
   requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
-  systemIntakes: [SystemIntake!]!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -1776,6 +1775,7 @@ type TRBRequestForm {
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
   fundingSources: [TRBFundingSource!]
+  systemIntakes: [SystemIntake!]!
   subjectAreaOptions: [TRBSubjectAreaOption!]
   subjectAreaOptionOther: String
   submittedAt: Time
