@@ -31,6 +31,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
         >
           <p
             class="margin-y-0 line-height-body-5"
+            data-testid="note-box-count"
           >
             <span
               class="text-bold"
@@ -39,29 +40,34 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
             </span>
              notes about this request
           </p>
-          <ul
-            class="usa-button-group"
+          <div
+            class="margin-top-05 display-flex"
           >
-            <li
-              class="usa-button-group__item"
+            <div
+              class="desktop:grid-col-6"
+              data-testid="grid"
             >
-              <a
-                class="margin-right-05"
-                href="/trb/449ea115-8bfa-48c3-b1dd-5a613d79fbae/notes"
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="note-modal-button"
+                type="button"
               >
                 View notes
-              </a>
-            </li>
-            <li
-              class="usa-button-group__item"
+              </button>
+            </div>
+            <div
+              class="desktop:grid-col-6"
+              data-testid="grid"
             >
-              <a
-                href="/trb/449ea115-8bfa-48c3-b1dd-5a613d79fbae/notes"
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="note-modal-button"
+                type="button"
               >
                 Add a note
-              </a>
-            </li>
-          </ul>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

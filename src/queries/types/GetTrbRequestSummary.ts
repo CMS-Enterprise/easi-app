@@ -18,6 +18,11 @@ export interface GetTrbRequestSummary_trbRequest_taskStatuses {
   adviceLetterStatus: TRBAdviceLetterStatus;
 }
 
+export interface GetTrbRequestSummary_trbRequest_adminNotes {
+  __typename: "TRBAdminNote";
+  id: UUID;
+}
+
 export interface GetTrbRequestSummary_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
@@ -27,6 +32,7 @@ export interface GetTrbRequestSummary_trbRequest {
   trbLead: string | null;
   createdAt: Time;
   taskStatuses: GetTrbRequestSummary_trbRequest_taskStatuses;
+  adminNotes: GetTrbRequestSummary_trbRequest_adminNotes[];
 }
 
 export interface GetTrbRequestSummary {
