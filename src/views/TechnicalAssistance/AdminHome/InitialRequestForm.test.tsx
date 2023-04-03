@@ -40,6 +40,7 @@ const mockTrbRequestData: TrbRequest = {
     adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
     __typename: 'TRBTaskStatuses'
   },
+  systemIntakes: [],
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     component: null,

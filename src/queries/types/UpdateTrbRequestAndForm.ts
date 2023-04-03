@@ -57,6 +57,12 @@ export interface UpdateTrbRequestAndForm_updateTRBRequest_form {
   submittedAt: Time | null;
 }
 
+export interface UpdateTrbRequestAndForm_updateTRBRequest_systemIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+  lcid: string | null;
+}
+
 export interface UpdateTrbRequestAndForm_updateTRBRequest_feedback_author {
   __typename: "UserInfo";
   commonName: string;
@@ -79,6 +85,7 @@ export interface UpdateTrbRequestAndForm_updateTRBRequest {
   state: TRBRequestState;
   taskStatuses: UpdateTrbRequestAndForm_updateTRBRequest_taskStatuses;
   form: UpdateTrbRequestAndForm_updateTRBRequest_form;
+  systemIntakes: UpdateTrbRequestAndForm_updateTRBRequest_systemIntakes[];
   feedback: UpdateTrbRequestAndForm_updateTRBRequest_feedback[];
 }
 

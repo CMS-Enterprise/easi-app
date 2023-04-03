@@ -41,6 +41,7 @@ const mockTrbRequestData: TrbRequest = {
   },
   feedback: [],
   type: TRBRequestType.NEED_HELP,
+  systemIntakes: [],
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     component: 'CCSQ',

@@ -140,6 +140,13 @@ export const trbRequest: TrbRequest = {
     formStatus: TRBFormStatus.READY_TO_START,
     adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
   },
+  systemIntakes: [
+    {
+      __typename: 'SystemIntake',
+      id: '123',
+      lcid: '534123'
+    }
+  ],
   feedback: [],
   state: TRBRequestState.OPEN,
   type: TRBRequestType.NEED_HELP,

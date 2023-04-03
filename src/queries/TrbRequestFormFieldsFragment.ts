@@ -46,6 +46,11 @@ export default gql`
       submittedAt
     }
 
+    systemIntakes {
+      id
+      lcid
+    }
+
     feedback {
       id
       action

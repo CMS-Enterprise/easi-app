@@ -52,6 +52,12 @@ export interface TrbRequestFormFields_form {
   submittedAt: Time | null;
 }
 
+export interface TrbRequestFormFields_systemIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+  lcid: string | null;
+}
+
 export interface TrbRequestFormFields_feedback_author {
   __typename: "UserInfo";
   commonName: string;
@@ -74,5 +80,6 @@ export interface TrbRequestFormFields {
   state: TRBRequestState;
   taskStatuses: TrbRequestFormFields_taskStatuses;
   form: TrbRequestFormFields_form;
+  systemIntakes: TrbRequestFormFields_systemIntakes[];
   feedback: TrbRequestFormFields_feedback[];
 }

@@ -24,13 +24,17 @@ import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivi
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
+import useCacheQuery from 'hooks/useCacheQuery';
 import DeleteTRBRequestFundingSource from 'queries/DeleteTRBRequestFundingSource';
+import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import {
   DeleteTRBRequestFundingSource as DeleteTRBRequestFundingSourceType,
   DeleteTRBRequestFundingSourceVariables
 } from 'queries/types/DeleteTRBRequestFundingSource';
+import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'queries/types/GetSystemIntakesWithLCIDS';
 import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'queries/types/GetTrbRequest';
 import {
   UpdateTrbRequestAndForm,
@@ -69,6 +73,7 @@ export const basicBlankValues = {
   hasExpectedStartEndDates: null,
   expectedStartDate: '',
   expectedEndDate: '',
+  systemIntakes: [],
   collabGroups: [],
   collabDateSecurity: '',
   collabDateEnterpriseArchitecture: '',
@@ -91,6 +96,12 @@ function Basic({
 }: FormStepComponentProps) {
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
+
+  const { data } = useCacheQuery<GetSystemIntakesWithLCIDSType>(
+    GetSystemIntakesWithLCIDS
+  );
+
+  const systemIntakes = data?.systemIntakesWithLcids || [];
 
   const [updateForm] = useMutation<
     UpdateTrbRequestAndForm,
@@ -117,6 +128,7 @@ function Basic({
     resolver: yupResolver(basicSchema),
     defaultValues: {
       name: request.name,
+      systemIntakes: request.systemIntakes,
       ...initialValues
     }
   });
@@ -701,6 +713,44 @@ function Basic({
                 />
               </FormGroup>
             )}
+          />
+
+          <Controller
+            // @ts-ignore
+            name="systemIntakes"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <FormGroup
+                  // Use the same FormGroup error indicator for the related nested "other" field
+                  error={!!error || 'systemIntakes' in errors}
+                >
+                  <Label
+                    htmlFor="systemIntakes"
+                    hint={<div>{t(`basic.hint.relatedLCIDS`)}</div>}
+                    error={!!error}
+                  >
+                    {t(`basic.labels.relatedLCIDS`)}
+                  </Label>
+                  {error && (
+                    <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
+                  )}
+                  <MultiSelect
+                    inputId="systemIntakes"
+                    name="systemIntakes"
+                    options={systemIntakes.map(intake => ({
+                      value: intake.id,
+                      label: `${intake.lcid} - ${intake.requestName}` || ''
+                    }))}
+                    initialValues={initialValues.systemIntakes}
+                    onChange={values => {
+                      field.onChange(values);
+                    }}
+                    selectedLabel={t('basic.labels.selectedLCIDs')}
+                  />
+                </FormGroup>
+              );
+            }}
           />
 
           {/* Select any other OIT groups that you have met with or collaborated with. */}
