@@ -131,6 +131,7 @@ const EmailRecipientFields = ({
           {mailboxes.map(mailbox => {
             return (
               <Controller
+                key={mailbox.key}
                 name={mailbox.key}
                 render={({ field }) => {
                   return (
