@@ -5,8 +5,10 @@ import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
 import { PersonRole } from './graphql-global-types';
 
-// eslint-disable-next-line camelcase
+/* eslint-disable camelcase */
 export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'queries/types/GetTrbAdminTeamHome';
+export type { GetTrbRequestFeedback_trbRequest_feedback as TrbRequestFeedback } from 'queries/types/GetTrbRequestFeedback';
+/* eslint-enable camelcase */
 
 /** TRB attendee fields allows null role in form */
 export type TRBAttendeeFields = {

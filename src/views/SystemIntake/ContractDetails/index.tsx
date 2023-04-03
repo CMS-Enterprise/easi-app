@@ -196,7 +196,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   </HelpText>
                   <Field
                     as={FundingSources}
-                    id="IntakeForm-FundingSources"
+                    id="IntakeForm-Added-FundingSources"
                     name="fundingSources"
                     initialValues={values.fundingSources}
                     setFieldValue={setFieldValue}
