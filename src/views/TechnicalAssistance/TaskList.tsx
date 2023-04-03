@@ -22,7 +22,7 @@ import {
 import {
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
-  // TRBConsultPrepStatus,
+  TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus
 } from 'types/graphql-global-types';
@@ -224,33 +224,33 @@ function TaskList() {
                       <li>{taskListText[2].list![2]}</li>
                     </ul>
 
-                    {/* {taskStatuses?.consultPrepStatus !==
-                    TRBConsultPrepStatus.CANNOT_START_YET ? ( */}
-                    <div>
-                      <UswdsReactLink
-                        variant="unstyled"
-                        className="usa-button"
-                        to="/help/trb/prepare-consult-meeting"
-                        target="_blank"
-                      >
-                        {t('taskList.downloadTemplates')}
-                      </UswdsReactLink>
+                    {taskStatuses?.consultPrepStatus !==
+                    TRBConsultPrepStatus.CANNOT_START_YET ? (
+                      <div>
+                        <UswdsReactLink
+                          variant="unstyled"
+                          className="usa-button"
+                          to="/help/trb/prepare-consult-meeting"
+                          target="_blank"
+                        >
+                          {t('taskList.downloadTemplates')}
+                        </UswdsReactLink>
 
-                      <UswdsReactLink
-                        className="display-block margin-top-2"
-                        to={`/trb/task-list/${id}/documents`}
-                      >
-                        {t('taskList.uploadDocuments')}
-                      </UswdsReactLink>
+                        <UswdsReactLink
+                          className="display-block margin-top-2"
+                          to={`/trb/task-list/${id}/documents`}
+                        >
+                          {t('taskList.uploadDocuments')}
+                        </UswdsReactLink>
 
-                      <UswdsReactLink
-                        className="display-block margin-top-2"
-                        to={`/trb/task-list/${id}/attendees`} // TODO: replace with link to view advice letter
-                      >
-                        {t('taskList.reviewAttendeeList')}
-                      </UswdsReactLink>
-                    </div>
-                    {/* ) : (
+                        <UswdsReactLink
+                          className="display-block margin-top-2"
+                          to={`/trb/task-list/${id}/attendees`}
+                        >
+                          {t('taskList.reviewAttendeeList')}
+                        </UswdsReactLink>
+                      </div>
+                    ) : (
                       <UswdsReactLink
                         className="display-block margin-top-2"
                         to="/help/trb/prepare-consult-meeting"
@@ -258,7 +258,7 @@ function TaskList() {
                       >
                         {t('taskList.prepareForTRB')}
                       </UswdsReactLink>
-                    )} */}
+                    )}
                   </TaskListDescription>
                 </TaskListItem>
 
