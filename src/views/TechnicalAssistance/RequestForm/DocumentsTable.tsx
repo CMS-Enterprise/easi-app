@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
+import useCacheQuery from 'hooks/useCacheQuery';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import {
@@ -55,7 +56,7 @@ function DocumentsTable({
     {} as TrbRequestDocuments
   );
 
-  const { data, refetch, loading } = useQuery<
+  const { data, refetch, loading } = useCacheQuery<
     GetTrbRequestDocuments,
     GetTrbRequestDocumentsVariables
   >(GetTrbRequestDocumentsQuery, {

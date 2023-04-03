@@ -1537,6 +1537,7 @@ type TRBRequest {
   requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
+  systemIntakes: [SystemIntake!]!
   createdBy: String!
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
@@ -1740,109 +1741,26 @@ enum TRBAdviceLetterStatus {
 }
 
 """
-The possible answers to the "technical reference architecture" input on the TRB "Subject Areas" page
+The possible options on the TRB "Subject Areas" page
 """
-enum TRBTechnicalReferenceArchitectureOption {
-	GENERAL_TRA_INFORMATION
-	TRA_GUIDING_PRINCIPLES
-	CMS_PROCESSING_ENVIRONMENTS
-	CMS_TRA_MULTI_ZONE_ARCHITECTURE
-	CMS_TRA_BUSINESS_RULES
-	ABOUT_THE_TRB
-	ARCHITECTURE_CHANGE_REQUEST_PROCESS_FOR_THE_TRA
-	OTHER
-}
-
-"""
-The possible answers to the "network and security" input on the TRB "Subject Areas" page
-"""
-enum TRBNetworkAndSecurityOption {
-	GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION
-	SECURITY_SERVICES
-	CMS_CYBERSECURITY_INTEGRATION_CENTER_INTEGRATION
-	WIDE_AREA_NETWORK_SERVICES
-	ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
-	DOMAIN_NAME_SYSTEM_SERVICES
-	OTHER
-}
-
-"""
-The possible answers to the "cloud and infrastructure" input on the TRB "Subject Areas" page
-"""
-enum TRBCloudAndInfrastructureOption {
-	GENERAL_CLOUD_AND_INFRASTRUCTURE_SERVICES_INFORMATION
-	VIRTUALIZATION
-	CLOUD_IAAS_AND_PAAS_INFRASTRUCTURE
-	IT_PERFORMANCE_MANAGEMENT
-	FILE_TRANSFER
-	DATA_STORAGE_SERVICES
-	SOFTWARE_AS_A_SERVICE
-	KEYS_AND_SECRETS_MANAGEMENT
-	MOBILE_DEVICES_AND_APPLICATIONS
-	CLOUD_MIGRATION
-	DISASTER_RECOVERY
-	OTHER
-}
-
-"""
-The possible answers to the "application development" input on the TRB "Subject Areas" page
-"""
-enum TRBApplicationDevelopmentOption {
-	GENERAL_APPLICATION_DEVELOPMENT_SERVICES_INFORMATION
-	APPLICATION_DEVELOPMENT
-	WEB_SERVICES_AND_WEB_APIS
-	WEB_BASED_UI_SERVICES
-	OPEN_SOURCE_SOFTWARE
-	PORTAL_INTEGRATION
-	ACCESSIBILITY_COMPLIANCE
-	BUSINESS_INTELLIGENCE
-	CONTAINERS_AND_MICROSERVICES
-	ROBOTIC_PROCESS_AUTOMATION
-	SYSTEM_ARCHITECTURE_REVIEW
-	EMAIL_INTEGRATION
-	CONFIGURATION_MANAGEMENT
-	OTHER
-}
-
-"""
-The possible answers to the "data and data management" input on the TRB "Subject Areas" page
-"""
-enum TRBDataAndDataManagementOption {
-	GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION
-	ENTERPRISE_DATA_ENVIRONMENT_REVIEW
-	DATA_MART
-	DATA_WAREHOUSING
-	ANALYTIC_SANDBOXES
-	APIS_AND_DATA_EXCHANGES
-	FHIR
-	OTHER
-}
-
-"""
-The possible answers to the "government processes and policies" input on the TRB "Subject Areas" page
-"""
-enum TRBGovernmentProcessesAndPoliciesOption {
-	GENERAL_INFORMATION_ABOUT_CMS_PROCESSES_AND_POLICIES
-	OTHER_AVAILABLE_TRB_SERVICES
-	SECTION_508_AND_ACCESSIBILITY_TESTING
-	TARGET_LIFE_CYCLE
-	SYSTEM_DISPOSITION_PLANNING
-	INVESTMENT_AND_BUDGET_PLANNING
-	LIFECYCLE_IDS
-	CONTRACTING_AND_PROCUREMENT
-	SECURITY_ASSESSMENTS
-	INFRASTRUCTURE_AS_A_SERVICE
-	OTHER
-}
-
-"""
-The possible answers to the "other technical topics" input on the TRB "Subject Areas" page
-"""
-enum TRBOtherTechnicalTopicsOption {
-	ARTIFICIAL_INTELLIGENCE
-	MACHINE_LEARNING
-	ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT
-	OTHER
+enum TRBSubjectAreaOption {
+  ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
+  ACCESSIBILITY_COMPLIANCE
+  ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT
+  BUSINESS_INTELLIGENCE
+  CLOUD_MIGRATION
+  CONTAINERS_AND_MICROSERVICES
+  DISASTER_RECOVERY
+  EMAIL_INTEGRATION
+  ENTERPRISE_DATA_LAKE_INTEGRATION
+  FRAMEWORK_OR_TOOL_ALTERNATIVES
+  OPEN_SOURCE_SOFTWARE
+  PORTAL_INTEGRATION
+  TECHNICAL_REFERENCE_ARCHITECTURE
+  SYSTEM_ARCHITECTURE_REVIEW
+  SYSTEM_DISPOSITION_PLANNING
+  WEB_SERVICES_AND_APIS
+  WEB_BASED_UI_SERVICES
 }
 
 """
@@ -1869,22 +1787,11 @@ type TRBRequestForm {
   collabDateGovernanceReviewBoard: String
   collabDateOther: String
   collabGroupOther: String
-  subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
-  subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
-  subjectAreaCloudAndInfrastructure: [TRBCloudAndInfrastructureOption!]
-  subjectAreaApplicationDevelopment: [TRBApplicationDevelopmentOption!]
-  subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
-  subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
-  subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
-  subjectAreaTechnicalReferenceArchitectureOther: String
-  subjectAreaNetworkAndSecurityOther: String
-  subjectAreaCloudAndInfrastructureOther: String
-  subjectAreaApplicationDevelopmentOther: String
-  subjectAreaDataAndDataManagementOther: String
-  subjectAreaGovernmentProcessesAndPoliciesOther: String
-  subjectAreaOtherTechnicalTopicsOther: String
+  collabGRBConsultRequested: Boolean
+  fundingSources: [TRBFundingSource!]
+  subjectAreaOptions: [TRBSubjectAreaOption!]
+  subjectAreaOptionOther: String
   submittedAt: Time
-
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -1914,20 +1821,32 @@ input UpdateTRBRequestFormInput @goModel(model: "map[string]interface{}") {
   collabDateGovernanceReviewBoard: String
   collabDateOther: String
   collabGroupOther: String
-  subjectAreaTechnicalReferenceArchitecture: [TRBTechnicalReferenceArchitectureOption!]
-  subjectAreaNetworkAndSecurity: [TRBNetworkAndSecurityOption!]
-  subjectAreaCloudAndInfrastructure: [TRBCloudAndInfrastructureOption!]
-  subjectAreaApplicationDevelopment: [TRBApplicationDevelopmentOption!]
-  subjectAreaDataAndDataManagement: [TRBDataAndDataManagementOption!]
-  subjectAreaGovernmentProcessesAndPolicies: [TRBGovernmentProcessesAndPoliciesOption!]
-  subjectAreaOtherTechnicalTopics: [TRBOtherTechnicalTopicsOption!]
-  subjectAreaTechnicalReferenceArchitectureOther: String
-  subjectAreaNetworkAndSecurityOther: String
-  subjectAreaCloudAndInfrastructureOther: String
-  subjectAreaApplicationDevelopmentOther: String
-  subjectAreaDataAndDataManagementOther: String
-  subjectAreaGovernmentProcessesAndPoliciesOther: String
-  subjectAreaOtherTechnicalTopicsOther: String
+  collabGRBConsultRequested: Boolean
+  subjectAreaOptions: [TRBSubjectAreaOption!]
+  subjectAreaOptionOther: String
+}
+
+"""
+Represents a TRB funding source
+"""
+type TRBFundingSource {
+  id: UUID!
+  trbRequestId: UUID!
+  fundingNumber: String!
+  source: String!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+}
+input UpdateTRBRequestFundingSourcesInput {
+  trbRequestId: UUID!
+  fundingNumber: String!
+  sources: [String!]!
+}
+input DeleteTRBRequestFundingSourcesInput {
+  trbRequestId: UUID!
+  fundingNumber: String!
 }
 
 """
@@ -2242,8 +2161,14 @@ type Mutation {
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
+  updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
+  deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
+    @hasRole(role: EASI_TRB_ADMIN)
+  linkSystemIntakeToTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
+    @hasRole(role: EASI_TRB_ADMIN)
+  unlinkSystemIntakeFromTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
@@ -2287,6 +2212,7 @@ type Query {
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
+  systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
