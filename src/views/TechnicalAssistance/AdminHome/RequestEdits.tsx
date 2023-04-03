@@ -27,13 +27,15 @@ import {
   CreateTrbRequestFeedback,
   CreateTrbRequestFeedbackVariables
 } from 'queries/types/CreateTrbRequestFeedback';
-import {
-  CreateTRBRequestFeedbackInput,
-  TRBFeedbackAction
-} from 'types/graphql-global-types';
+import { TRBFeedbackAction } from 'types/graphql-global-types';
+import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbFeedbackSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
+
+interface RequestEditsFields extends TrbRecipientFields {
+  feedbackMessage: string;
+}
 
 function RequestEdits() {
   const { t } = useTranslation('technicalAssistance');
@@ -65,20 +67,18 @@ function RequestEdits() {
     feedbackAction = TRBFeedbackAction.READY_FOR_CONSULT;
   }
 
-  const defaultValues: CreateTRBRequestFeedbackInput = useMemo(
+  const defaultValues: RequestEditsFields = useMemo(
     () => ({
-      trbRequestId: id,
-      action: feedbackAction,
       feedbackMessage: '',
       copyTrbMailbox: true,
       notifyEuaIds: requester?.userInfo?.euaUserId
         ? [requester?.userInfo?.euaUserId]
         : []
     }),
-    [id, requester, feedbackAction]
+    [requester]
   );
 
-  const actionForm = useForm<CreateTRBRequestFeedbackInput>({
+  const actionForm = useForm<RequestEditsFields>({
     resolver: yupResolver(trbFeedbackSchema),
     defaultValues
   });
@@ -104,10 +104,10 @@ function RequestEdits() {
     }
   }, [isDirty, loading, reset, defaultValues]);
 
-  const submitForm = (formData: CreateTRBRequestFeedbackInput) => {
+  const submitForm = (formData: RequestEditsFields) => {
     sendFeedback({
       variables: {
-        input: formData
+        input: { ...formData, trbRequestId: id, action: feedbackAction }
       }
     })
       .then(result => {
