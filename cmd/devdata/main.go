@@ -11,37 +11,14 @@ import (
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
+	"github.com/cmsgov/easi-app/cmd/devdata/mocks"
+	"github.com/cmsgov/easi-app/cmd/devdata/seed"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
-
-const principalUser = "ABCD"
-
-func fetchUserInfoMock(ctx context.Context, eua string) (*models.UserInfo, error) {
-	return &models.UserInfo{
-		EuaUserID:  eua,
-		CommonName: "Test Man",
-		Email:      "testman@example.com",
-	}, nil
-}
-
-func ctxWithLoggerAndPrincipal(logger *zap.Logger, euaID string) context.Context {
-	princ := &authentication.EUAPrincipal{
-		EUAID:            euaID,
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-	}
-	ctx := appcontext.WithLogger(context.Background(), logger)
-	ctx = appcontext.WithPrincipal(ctx, princ)
-	return ctx
-}
 
 func main() {
 	config := testhelpers.NewConfig()
@@ -198,47 +175,7 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
-	// // Fresh request, no actions taken
-	makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, func(t *models.TRBRequest) {
-		t.Name = "0 - Brand new request"
-	})
-
-	// In progress form, not submitted
-	inProgress := makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, func(t *models.TRBRequest) {
-		t.Name = "1 - In progress form"
-	})
-	updateTRBRequestForm(logger, store, principalUser, map[string]interface{}{
-		"trbRequestId":             inProgress.ID.String(),
-		"isSubmitted":              false, // Boolean
-		"component":                "Center for Medicare",
-		"needsAssistanceWith":      "Something is wrong with my system",
-		"hasSolutionInMind":        true,
-		"proposedSolution":         "Get a tech support guru to fix it",
-		"whereInProcess":           models.TRBWhereInProcessOptionOther,
-		"whereInProcessOther":      "Just starting",
-		"hasExpectedStartEndDates": true,
-		"expectedStartDate":        "2023-02-27T05:00:00.000Z",
-		"expectedEndDate":          "2023-01-31T05:00:00.000Z",
-		"collabGroups": []models.TRBCollabGroupOption{
-			models.TRBCollabGroupOptionEnterpriseArchitecture,
-			models.TRBCollabGroupOptionOther,
-		},
-		"collabDateEnterpriseArchitecture": "The other day",
-		"collabGroupOther":                 "CMS Splunk Team",
-		"collabDateOther":                  "Last week",
-		"collabGRBConsultRequested":        true, // Boolean
-		"subjectAreaOptions": []models.TRBSubjectAreaOption{
-			models.TRBSubjectAreaOptionAssistanceWithSystemConceptDev,
-			models.TRBSubjectAreaOptionCloudMigration,
-		},
-		"subjectAreaOptionOther": "Rocket science", // String
-	})
-
-	updateTRBRequestFundingSources(logger, store, principalUser, inProgress.ID, "33311", []string{"meatloaf", "spaghetti", "cereal"})
-
-	if err := makeTRBLeadOptions(logger, store); err != nil {
-		panic(err)
-	}
+	must(nil, seed.TRBRequests(logger, store))
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -256,7 +193,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	}
 
 	intake := models.SystemIntake{
-		EUAUserID: null.StringFrom(principalUser),
+		EUAUserID: null.StringFrom(mocks.PrincipalUser),
 		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
 
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
@@ -341,7 +278,7 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	noCost := 0
 	businessCase := models.BusinessCase{
 		SystemIntakeID:       intake.ID,
-		EUAUserID:            principalUser,
+		EUAUserID:            mocks.PrincipalUser,
 		Requester:            null.StringFrom("Shane Clark"),
 		RequesterPhoneNumber: null.StringFrom("3124567890"),
 		Status:               models.BusinessCaseStatusOPEN,
@@ -411,7 +348,7 @@ func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...fu
 	accessibilityRequest := models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
 		IntakeID:  &intake.ID,
-		EUAUserID: principalUser,
+		EUAUserID: mocks.PrincipalUser,
 	}
 	for _, cb := range callbacks {
 		cb(&accessibilityRequest)
@@ -440,85 +377,4 @@ func must(_ interface{}, err error) {
 func date(year, month, day int) *time.Time {
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	return &date
-}
-
-func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, userEUA string, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
-	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
-	trb, err := resolvers.CreateTRBRequest(ctx, rType, fetchUserInfoMock, store)
-	if err != nil {
-		panic(err)
-	}
-	for _, cb := range callbacks {
-		cb(trb)
-	}
-	must(store.UpdateTRBRequest(ctx, trb))
-	return trb
-}
-
-func updateTRBRequestForm(logger *zap.Logger, store *storage.Store, userEUA string, changes map[string]interface{}) *models.TRBRequestForm {
-	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
-
-	form, err := resolvers.UpdateTRBRequestForm(ctx, store, nil, fetchUserInfoMock, changes)
-	if err != nil {
-		panic(err)
-	}
-	return form
-}
-
-func updateTRBRequestFundingSources(logger *zap.Logger, store *storage.Store, userEUA string, trbID uuid.UUID, fundingNumber string, fundingSources []string) []*models.TRBFundingSource {
-	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
-	sources, err := resolvers.UpdateTRBRequestFundingSources(
-		ctx,
-		store,
-		trbID,
-		fundingNumber,
-		fundingSources,
-	)
-
-	if err != nil {
-		panic(err)
-	}
-	return sources
-}
-
-func makeTRBLeadOptions(logger *zap.Logger, store *storage.Store) error {
-	ctx := appcontext.WithLogger(context.Background(), logger)
-	leadUsers := map[string]*models.UserInfo{
-		"ABCD": {
-			CommonName: "Adeline Aarons",
-			Email:      "adeline.aarons@local.fake",
-			EuaUserID:  "ABCD",
-		},
-		"TEST": {
-			CommonName: "Terry Thompson",
-			Email:      "terry.thompson@local.fake",
-			EuaUserID:  "TEST",
-		},
-		"A11Y": {
-			CommonName: "Ally Anderson",
-			Email:      "ally.anderson@local.fake",
-			EuaUserID:  "A11Y",
-		},
-		"GRTB": {
-			CommonName: "Gary Gordon",
-			Email:      "gary.gordon@local.fake",
-			EuaUserID:  "GRTB",
-		},
-	}
-
-	stubFetchUserInfo := func(ctx context.Context, euaID string) (*models.UserInfo, error) {
-		if userInfo, ok := leadUsers[euaID]; ok {
-			return userInfo, nil
-		}
-		return nil, nil
-	}
-
-	for euaID := range leadUsers {
-		_, err := resolvers.CreateTRBLeadOption(ctx, store, stubFetchUserInfo, euaID)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	return nil
 }
