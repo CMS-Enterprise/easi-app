@@ -21,7 +21,6 @@ func CreateTRBRequest(
 	requestType models.TRBRequestType,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	store *storage.Store,
-	trb *models.TRBRequest,
 ) (*models.TRBRequest, error) {
 	princ := appcontext.Principal(ctx)
 
@@ -31,10 +30,7 @@ func CreateTRBRequest(
 		return nil, err
 	}
 
-	if trb == nil {
-		trb = models.NewTRBRequest(princ.ID())
-	}
-
+	trb := models.NewTRBRequest(princ.ID())
 	trb.Type = requestType
 	trb.State = models.TRBRequestStateOpen
 

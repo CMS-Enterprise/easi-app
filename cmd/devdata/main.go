@@ -199,17 +199,17 @@ func main() {
 	})
 
 	// // Fresh request, no actions taken
-	makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, "9841c768-bdcd-4856-bae2-62cfdaffacf6", func(t *models.TRBRequest) {
+	makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, func(t *models.TRBRequest) {
 		t.Name = "0 - Brand new request"
 	})
 
 	// In progress form, not submitted
-	inProgress := makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, "21f175b9-bcbe-41c1-9c07-9844869bc1ce", func(t *models.TRBRequest) {
+	inProgress := makeTRBRequest(models.TRBTNeedHelp, logger, store, principalUser, func(t *models.TRBRequest) {
 		t.Name = "1 - In progress form"
 	})
 	updateTRBRequestForm(logger, store, principalUser, map[string]interface{}{
 		"trbRequestId":             inProgress.ID.String(),
-		"isSubmitted":              true, // Boolean
+		"isSubmitted":              false, // Boolean
 		"component":                "Center for Medicare",
 		"needsAssistanceWith":      "Something is wrong with my system",
 		"hasSolutionInMind":        true,
@@ -442,12 +442,9 @@ func date(year, month, day int) *time.Time {
 	return &date
 }
 
-func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, userEUA string, trbID string, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
+func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, userEUA string, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
 	ctx := ctxWithLoggerAndPrincipal(logger, userEUA)
-	trb := &models.TRBRequest{}
-	trb.ID = uuid.MustParse(trbID)
-	trb.CreatedBy = userEUA
-	trb, err := resolvers.CreateTRBRequest(ctx, rType, fetchUserInfoMock, store, trb)
+	trb, err := resolvers.CreateTRBRequest(ctx, rType, fetchUserInfoMock, store)
 	if err != nil {
 		panic(err)
 	}
