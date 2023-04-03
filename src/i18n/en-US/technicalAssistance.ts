@@ -488,6 +488,9 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without selecting subject areas'
   },
   attendees: {
+    heading: 'Attendees',
+    description:
+      'Confirm the names and contact information for any additional individuals who should be present at the TRB consult session. If you wish to, you may also add more attendees. If you’re not yet sure who should be present, you can always share the calendar invite at a later date.',
     additionalAttendees: 'Additional attendees',
     addAnAttendee: 'Add an attendee',
     editAttendee: 'Edit attendee',

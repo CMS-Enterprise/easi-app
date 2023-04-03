@@ -24,7 +24,7 @@ import { TrbFormAlert } from '..';
 
 import { AttendeeFields } from './components';
 
-interface AttendeesFormProps {
+interface AttendeesFormBaseProps {
   backToFormUrl?: string;
   activeAttendee: TRBAttendee;
   /** Set active attendee - used to edit attendee */
@@ -34,13 +34,29 @@ interface AttendeesFormProps {
   taskListUrl: string;
 }
 
+// Make FormStepComponentProps conditionally required on the presence of fromTaskList
+// Used to render Attendees/form from task list outside the scope of initial request form
+type AttendeesFormProps =
+  | {
+      fromTaskList?: true;
+      backToFormUrl?: string;
+      activeAttendee: TRBAttendee;
+      /** Set active attendee - used to edit attendee */
+      setActiveAttendee: (activeAttendee: TRBAttendee) => void;
+      trbRequestId: string;
+      setFormAlert: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
+      taskListUrl: string;
+    }
+  | ({ fromTaskList?: false } & AttendeesFormBaseProps);
+
 function AttendeesForm({
   backToFormUrl,
   activeAttendee,
   setActiveAttendee,
   trbRequestId,
   setFormAlert,
-  taskListUrl
+  taskListUrl,
+  fromTaskList
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
@@ -185,7 +201,9 @@ function AttendeesForm({
             { text: t('heading'), url: '/trb' },
             { text: t('taskList.heading'), url: '/trb/task-list' },
             {
-              text: t('requestForm.heading'),
+              text: fromTaskList
+                ? t('attendees.heading')
+                : t('requestForm.heading'),
               url: backToFormUrl
             },
             {
