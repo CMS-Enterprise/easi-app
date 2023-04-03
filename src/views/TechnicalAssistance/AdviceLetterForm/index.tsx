@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -8,6 +8,7 @@ import {
   GridContainer,
   IconArrowBack
 } from '@trussworks/react-uswds';
+import { isEqual } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
 import { Alert } from 'components/shared/Alert';
@@ -19,6 +20,10 @@ import {
 } from 'queries/types/GetTrbAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { FormAlertObject } from 'types/technicalAssistance';
+import {
+  meetingSummarySchema,
+  nextStepsSchema
+} from 'validations/trbRequestSchema';
 import NotFound from 'views/NotFound';
 
 import Breadcrumbs from '../Breadcrumbs';
@@ -33,6 +38,13 @@ import Summary from './Summary';
 import './index.scss';
 
 type StepsText = { name: string; longName?: string; description?: string }[];
+
+type FormStepKey =
+  | 'summary'
+  | 'recommendations'
+  | 'next-steps'
+  | 'internal-review'
+  | 'review';
 
 const adviceFormSteps = [
   {
@@ -90,6 +102,10 @@ const AdviceLetterForm = () => {
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
+  const [stepsCompleted, setStepsCompleted] = useState<FormStepKey[]>([
+    'recommendations'
+  ]);
+
   // Form level alerts from step components
   const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
 
@@ -103,6 +119,71 @@ const AdviceLetterForm = () => {
 
   /** Current form step object */
   const currentFormStep: AdviceFormStep = adviceFormSteps[currentStepIndex];
+
+  // When navigating to a different step, checks if all previous form steps are valid
+  const checkValidSteps = useCallback(
+    (index: number): boolean => {
+      const stepsToValidate = adviceFormSteps.slice(0, index);
+      const validSteps = stepsToValidate.filter(({ slug }) =>
+        stepsCompleted.includes(slug)
+      );
+      return stepsToValidate.length === validSteps.length;
+    },
+    [stepsCompleted]
+  );
+
+  useEffect(() => {
+    if (!adviceLetter) {
+      return;
+    }
+    (async () => {
+      const completed = [...stepsCompleted];
+      const stepValidators = [];
+
+      // Check the Meeting Summary step
+      if (!completed.includes('summary')) {
+        const { meetingSummary } = adviceLetter || {};
+        stepValidators.push(
+          meetingSummarySchema
+            .isValid(
+              { meetingSummary },
+              {
+                strict: true
+              }
+            )
+            .then(valid => {
+              if (valid) completed.push('summary');
+            })
+        );
+      }
+
+      // Check the Next Steps step
+      if (!completed.includes('next-steps')) {
+        const {
+          nextSteps,
+          isFollowupRecommended,
+          followupPoint
+        } = adviceLetter;
+
+        stepValidators.push(
+          nextStepsSchema
+            .isValid(
+              { nextSteps, isFollowupRecommended, followupPoint },
+              {
+                strict: true
+              }
+            )
+            .then(valid => {
+              if (valid) completed.push('next-steps');
+            })
+        );
+      }
+
+      Promise.allSettled(stepValidators).then(() => {
+        if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+      });
+    })();
+  }, [stepsCompleted, adviceLetter]);
 
   // Page loading
   if (loading) return <PageLoading />;
@@ -138,10 +219,14 @@ const AdviceLetterForm = () => {
             completed: index < currentStepIndex,
             onClick: async () => {
               const url = `/trb/${id}/advice/${adviceFormSteps[index].slug}`;
-              if (!isStepSubmitting && currentStepIndex !== index) {
-                // Save and go to step url
+
+              if (
+                !isStepSubmitting &&
+                currentStepIndex !== index &&
+                checkValidSteps(index)
+              ) {
                 if (stepSubmit) {
-                  stepSubmit(() => history.push(url));
+                  stepSubmit?.(() => history.push(url));
                 } else {
                   history.push(url);
                 }
