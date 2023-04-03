@@ -8,15 +8,18 @@ import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
-import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
+import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 
+import AddNote from './AddNote';
 import TRBRequestInfoWrapper from './RequestContext';
-import RequestEdits from './RequestEdits';
 import AdminHome from '.';
 
-describe('Trb Admin: Action: Request Edits', () => {
+describe('Trb Admin Notes: Add Note', () => {
+  Element.prototype.scrollIntoView = jest.fn();
+
   const mockStore = configureMockStore();
   const store = mockStore({
     auth: {
@@ -27,16 +30,9 @@ describe('Trb Admin: Action: Request Edits', () => {
     }
   });
   const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
-  const feedbackMessage = 'test message';
 
-  it('submits a feedback message', async () => {
-    const {
-      getByText,
-      getByLabelText,
-      getByRole,
-      findByText,
-      asFragment
-    } = render(
+  it('submits successfully ', async () => {
+    const { getByText, getByLabelText, getByRole } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -46,22 +42,20 @@ describe('Trb Admin: Action: Request Edits', () => {
           mocks={[
             {
               request: {
-                query: CreateTrbRequestFeedbackQuery,
+                query: CreateTrbAdminNote,
                 variables: {
                   input: {
                     trbRequestId,
-                    feedbackMessage,
-                    copyTrbMailbox: false,
-                    notifyEuaIds: ['ABCD'],
-                    action: 'REQUEST_EDITS'
+                    category: '' as TRBAdminNoteCategory,
+                    noteText: ''
                   }
                 }
               },
               result: {
                 data: {
-                  createTRBRequestFeedback: {
-                    id: '94ebed72-8c66-41fd-aaa6-085a715737c2',
-                    __typename: 'TRBRequestFeedback'
+                  updateTRBRequestConsultMeetingTime: {
+                    id: 'd35a1f08-e04e-48f9-8d58-7f2409bae8fe',
+                    __typename: 'TRBRequest'
                   }
                 }
               }
@@ -89,11 +83,6 @@ describe('Trb Admin: Action: Request Edits', () => {
                       adviceLetterStatus: 'IN_PROGRESS',
                       __typename: 'TRBTaskStatuses'
                     },
-                    adminNotes: [
-                      {
-                        id: '123'
-                      }
-                    ],
                     __typename: 'TRBRequest'
                   }
                 }
@@ -118,17 +107,16 @@ describe('Trb Admin: Action: Request Edits', () => {
           ]}
         >
           <MemoryRouter
-            initialEntries={[
-              `/trb/${trbRequestId}/initial-request-form/request-edits`
-            ]}
+            initialEntries={[`/trb/${trbRequestId}/notes/add-note`]}
           >
             <TRBRequestInfoWrapper>
               <MessageProvider>
                 <Route exact path="/trb/:id/:activePage">
                   <AdminHome />
                 </Route>
-                <Route exact path="/trb/:id/:activePage/:action">
-                  <RequestEdits />
+
+                <Route exact path="/trb/:id/notes/add-note">
+                  <AddNote />
                 </Route>
               </MessageProvider>
             </TRBRequestInfoWrapper>
@@ -138,47 +126,46 @@ describe('Trb Admin: Action: Request Edits', () => {
     );
 
     getByText(
-      i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
+      i18next.t<string>('technicalAssistance:notes.addNoteDescription')
     );
 
-    expect(asFragment()).toMatchSnapshot();
-
     const submitButton = getByRole('button', {
-      name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
+      name: i18next.t<string>('technicalAssistance:notes.saveNote')
     });
 
     expect(submitButton).toBeDisabled();
 
+    // Select note category
+    userEvent.selectOptions(
+      getByLabelText(
+        RegExp(i18next.t<string>('technicalAssistance:notes.labels.category'))
+      ),
+      ['Supporting documents']
+    );
+
+    // Enter note text
     userEvent.type(
       getByLabelText(
-        RegExp(
-          i18next.t<string>('technicalAssistance:actionRequestEdits.label')
-        )
+        RegExp(i18next.t<string>('technicalAssistance:notes.labels.noteText'))
       ),
-      feedbackMessage
+      'My cute note'
     );
 
     userEvent.click(submitButton);
-
-    await findByText(
-      i18next.t<string>('technicalAssistance:actionRequestEdits.success')
-    );
   });
 
-  it('shows error notice when submission fails', async () => {
+  it('shows an error notice when submission fails', async () => {
     const { getByLabelText, getByRole, findByText } = render(
       <MockedProvider
         mocks={[
           {
             request: {
-              query: CreateTrbRequestFeedbackQuery,
+              query: CreateTrbAdminNote,
               variables: {
                 input: {
                   trbRequestId,
-                  feedbackMessage,
-                  copyTrbMailbox: false,
-                  notifyEuaIds: ['ABCD'],
-                  action: 'REQUEST_EDITS'
+                  category: '' as TRBAdminNoteCategory,
+                  noteText: ''
                 }
               }
             },
@@ -186,15 +173,11 @@ describe('Trb Admin: Action: Request Edits', () => {
           }
         ]}
       >
-        <MemoryRouter
-          initialEntries={[
-            `/trb/${trbRequestId}/initial-request-form/request-edits`
-          ]}
-        >
+        <MemoryRouter initialEntries={[`/trb/${trbRequestId}/notes/add-note`]}>
           <TRBRequestInfoWrapper>
             <MessageProvider>
-              <Route exact path="/trb/:id/:activePage/:action">
-                <RequestEdits />
+              <Route exact path="/trb/:id/notes/add-note">
+                <AddNote />
               </Route>
             </MessageProvider>
           </TRBRequestInfoWrapper>
@@ -202,23 +185,30 @@ describe('Trb Admin: Action: Request Edits', () => {
       </MockedProvider>
     );
 
+    // Select note category
+    userEvent.selectOptions(
+      getByLabelText(
+        RegExp(i18next.t<string>('technicalAssistance:notes.labels.category'))
+      ),
+      ['Supporting documents']
+    );
+
+    // Enter note text
     userEvent.type(
       getByLabelText(
-        RegExp(
-          i18next.t<string>('technicalAssistance:actionRequestEdits.label')
-        )
+        RegExp(i18next.t<string>('technicalAssistance:notes.labels.noteText'))
       ),
-      feedbackMessage
+      'My cute note'
     );
 
     userEvent.click(
       getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
+        name: i18next.t<string>('technicalAssistance:notes.saveNote')
       })
     );
 
     await findByText(
-      i18next.t<string>('technicalAssistance:actionRequestEdits.error')
+      i18next.t<string>('technicalAssistance:notes.status.error')
     );
   });
 });
