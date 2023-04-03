@@ -1977,16 +1977,6 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		})
 }
 
-// LinkSystemIntakeToTrbRequest is the resolver for the linkSystemIntakeToTrbRequest field.
-func (r *mutationResolver) LinkSystemIntakeToTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
-	return resolvers.CreateTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
-}
-
-// UnlinkSystemIntakeFromTrbRequest is the resolver for the unlinkSystemIntakeFromTrbRequest field.
-func (r *mutationResolver) UnlinkSystemIntakeFromTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
-	return resolvers.DeleteTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
-}
-
 // UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
 func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
 	return resolvers.UpdateTRBRequestConsultMeetingTime(
@@ -3179,3 +3169,16 @@ type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
 type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *mutationResolver) LinkSystemIntakeToTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
+	return resolvers.CreateTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
+}
+func (r *mutationResolver) UnlinkSystemIntakeFromTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
+	return resolvers.DeleteTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
+}
