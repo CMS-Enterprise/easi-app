@@ -511,6 +511,13 @@ const technicalAssistance = {
         'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.',
       invalidForm: 'Invalid attendees form'
     },
+    modal: {
+      heading: 'Confirm you want to remove {{-attendee}}.',
+      description:
+        'If you remove this attendee, they will no longer receive updates about this request or the TRB consult session.',
+      remove: 'Remove attendee',
+      cancel: 'Cancel'
+    },
     fieldLabels: {
       requester: {
         euaUserId: 'Requester',
