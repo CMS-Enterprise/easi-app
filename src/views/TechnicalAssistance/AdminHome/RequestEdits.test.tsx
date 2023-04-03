@@ -11,6 +11,7 @@ import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { PersonRole } from 'types/graphql-global-types';
 
 import TRBRequestInfoWrapper from './RequestContext';
 import RequestEdits from './RequestEdits';
@@ -20,7 +21,7 @@ describe('Trb Admin: Action: Request Edits', () => {
   const mockStore = configureMockStore();
   const store = mockStore({
     auth: {
-      euaId: 'ABCD',
+      euaId: 'SF13',
       name: 'Jerry Seinfeld',
       isUserSet: true,
       groups: ['EASI_TRB_ADMIN_D']
@@ -29,14 +30,92 @@ describe('Trb Admin: Action: Request Edits', () => {
   const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
   const feedbackMessage = 'test message';
 
+  const mockCreateTrbRequestFeedback = {
+    request: {
+      query: CreateTrbRequestFeedbackQuery,
+      variables: {
+        input: {
+          trbRequestId,
+          feedbackMessage,
+          copyTrbMailbox: true,
+          notifyEuaIds: ['SF13'],
+          action: 'REQUEST_EDITS'
+        }
+      }
+    },
+    result: {
+      data: {
+        createTRBRequestFeedback: {
+          id: '94ebed72-8c66-41fd-aaa6-085a715737c2',
+          __typename: 'TRBRequestFeedback'
+        }
+      }
+    }
+  };
+
+  const mockGetTrbRequestSummary = {
+    request: {
+      query: GetTrbRequestSummaryQuery,
+      variables: {
+        id: trbRequestId
+      }
+    },
+    result: {
+      data: {
+        trbRequest: {
+          name: 'Draft',
+          type: 'NEED_HELP',
+          state: 'OPEN',
+          trbLead: null,
+          createdAt: '2023-02-16T15:21:34.156885Z',
+          taskStatuses: {
+            formStatus: 'IN_PROGRESS',
+            feedbackStatus: 'EDITS_REQUESTED',
+            consultPrepStatus: 'CANNOT_START_YET',
+            attendConsultStatus: 'CANNOT_START_YET',
+            adviceLetterStatus: 'IN_PROGRESS',
+            __typename: 'TRBTaskStatuses'
+          },
+          __typename: 'TRBRequest'
+        }
+      }
+    }
+  };
+
+  const mockGetTrbRequestAttendees = {
+    request: {
+      query: GetTRBRequestAttendees,
+      variables: {
+        id: trbRequestId
+      }
+    },
+    result: {
+      data: {
+        trbRequest: {
+          id: trbRequestId,
+          attendees: [
+            {
+              __typename: 'TRBRequestAttendee',
+              id: '91a14322-34a8-4838-bde3-17b1d483fb63',
+              trbRequestId,
+              userInfo: {
+                __typename: 'UserInfo',
+                commonName: 'Jerry Seinfeld',
+                email: 'jerry.seinfeld@local.fake',
+                euaUserId: 'SF13'
+              },
+              component: 'Office of Equal Opportunity and Civil Rights',
+              role: PersonRole.PRODUCT_OWNER,
+              createdAt: '2023-01-05T07:26:16.036618Z'
+            }
+          ]
+        }
+      }
+    }
+  };
+
   it('submits a feedback message', async () => {
-    const {
-      getByText,
-      getByLabelText,
-      getByRole,
-      findByText,
-      asFragment
-    } = render(
+    const { getByLabelText, getByRole, findByText, asFragment } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -44,72 +123,9 @@ describe('Trb Admin: Action: Request Edits', () => {
             query: { fetchPolicy: 'no-cache' }
           }}
           mocks={[
-            {
-              request: {
-                query: CreateTrbRequestFeedbackQuery,
-                variables: {
-                  input: {
-                    trbRequestId,
-                    feedbackMessage,
-                    copyTrbMailbox: false,
-                    notifyEuaIds: ['ABCD'],
-                    action: 'REQUEST_EDITS'
-                  }
-                }
-              },
-              result: {
-                data: {
-                  createTRBRequestFeedback: {
-                    id: '94ebed72-8c66-41fd-aaa6-085a715737c2',
-                    __typename: 'TRBRequestFeedback'
-                  }
-                }
-              }
-            },
-            {
-              request: {
-                query: GetTrbRequestSummaryQuery,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    name: 'Draft',
-                    type: 'NEED_HELP',
-                    state: 'OPEN',
-                    trbLead: null,
-                    createdAt: '2023-02-16T15:21:34.156885Z',
-                    taskStatuses: {
-                      formStatus: 'IN_PROGRESS',
-                      feedbackStatus: 'EDITS_REQUESTED',
-                      consultPrepStatus: 'CANNOT_START_YET',
-                      attendConsultStatus: 'CANNOT_START_YET',
-                      adviceLetterStatus: 'IN_PROGRESS',
-                      __typename: 'TRBTaskStatuses'
-                    },
-                    __typename: 'TRBRequest'
-                  }
-                }
-              }
-            },
-            {
-              request: {
-                query: GetTRBRequestAttendees,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id: trbRequestId,
-                    attendees: []
-                  }
-                }
-              }
-            }
+            mockCreateTrbRequestFeedback,
+            mockGetTrbRequestSummary,
+            mockGetTrbRequestAttendees
           ]}
         >
           <MemoryRouter
@@ -132,7 +148,7 @@ describe('Trb Admin: Action: Request Edits', () => {
       </Provider>
     );
 
-    getByText(
+    await findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
 
@@ -164,6 +180,7 @@ describe('Trb Admin: Action: Request Edits', () => {
     const { getByLabelText, getByRole, findByText } = render(
       <MockedProvider
         mocks={[
+          mockGetTrbRequestAttendees,
           {
             request: {
               query: CreateTrbRequestFeedbackQuery,
@@ -172,7 +189,7 @@ describe('Trb Admin: Action: Request Edits', () => {
                   trbRequestId,
                   feedbackMessage,
                   copyTrbMailbox: false,
-                  notifyEuaIds: ['ABCD'],
+                  notifyEuaIds: ['SF13'],
                   action: 'REQUEST_EDITS'
                 }
               }
@@ -195,6 +212,10 @@ describe('Trb Admin: Action: Request Edits', () => {
           </TRBRequestInfoWrapper>
         </MemoryRouter>
       </MockedProvider>
+    );
+
+    await findByText(
+      i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
 
     userEvent.type(
