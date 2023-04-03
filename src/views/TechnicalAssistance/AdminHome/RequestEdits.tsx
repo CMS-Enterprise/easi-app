@@ -89,7 +89,6 @@ function RequestEdits() {
     reset,
     setValue,
     getValues,
-    watch,
     formState: { isDirty, isSubmitting }
   } = actionForm;
 
@@ -215,14 +214,7 @@ function RequestEdits() {
           />
         </FormProvider>
 
-        <Button
-          type="submit"
-          disabled={
-            watch('notifyEuaIds').length === 0 ||
-            watch('feedbackMessage').length === 0 ||
-            isSubmitting
-          }
-        >
+        <Button type="submit" disabled={isSubmitting}>
           {t('actionRequestEdits.submit')}
         </Button>
       </Form>
