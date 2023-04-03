@@ -1,0 +1,36 @@
+@use 'uswds-core' as *;
+@use 'viewports' as *;
+
+.easi-notes {
+    &__overlay {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 400;
+      overflow-y: scroll;
+    }
+  
+    &__content {
+      position: absolute;
+      width: 50%;
+      height: auto;
+      min-height: 100%;
+      background-color: #fff;
+      right: 0;
+      z-index: 1;
+      line-height: 1.6em;
+  
+      @media screen and (max-width: $desktop) {
+        width: 100%;
+      }
+    }
+
+    &__x-button-container {
+        width: 100%;
+        box-shadow: 0px .25rem .5rem rgba(0, 0, 0, 0.1);
+        padding: 1rem 2rem 1rem 1rem;
+    }
+  }

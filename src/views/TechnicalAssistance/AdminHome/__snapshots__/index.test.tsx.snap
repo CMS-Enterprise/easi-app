@@ -357,6 +357,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 >
                   <p
                     class="margin-y-0 line-height-body-5"
+                    data-testid="note-box-count"
                   >
                     <span
                       class="text-bold"
@@ -365,29 +366,34 @@ exports[`TRB admin home matches the snapshot 1`] = `
                     </span>
                      notes about this request
                   </p>
-                  <ul
-                    class="usa-button-group"
+                  <div
+                    class="margin-top-05 display-flex"
                   >
-                    <li
-                      class="usa-button-group__item"
+                    <div
+                      class="desktop:grid-col-6"
+                      data-testid="grid"
                     >
-                      <a
-                        class="margin-right-05"
-                        href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/notes"
+                      <button
+                        class="usa-button usa-button--unstyled"
+                        data-testid="note-modal-button"
+                        type="button"
                       >
                         View notes
-                      </a>
-                    </li>
-                    <li
-                      class="usa-button-group__item"
+                      </button>
+                    </div>
+                    <div
+                      class="desktop:grid-col-6"
+                      data-testid="grid"
                     >
-                      <a
-                        href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/notes"
+                      <button
+                        class="usa-button usa-button--unstyled"
+                        data-testid="note-modal-button"
+                        type="button"
                       >
                         Add a note
-                      </a>
-                    </li>
-                  </ul>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

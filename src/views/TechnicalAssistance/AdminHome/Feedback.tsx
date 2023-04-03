@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@apollo/client';
 import { Alert } from '@trussworks/react-uswds';
 import { sortBy } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
+import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbRequestFeedbackQuery from 'queries/GetTrbRequestFeedbackQuery';
 import {
   GetTrbRequestFeedback,
@@ -18,7 +18,7 @@ import TrbRequestFeedbackList from '../TrbRequestFeedbackList';
 const Feedback = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { data, loading, error } = useQuery<
+  const { data, loading, error } = useCacheQuery<
     GetTrbRequestFeedback,
     GetTrbRequestFeedbackVariables
   >(GetTrbRequestFeedbackQuery, {

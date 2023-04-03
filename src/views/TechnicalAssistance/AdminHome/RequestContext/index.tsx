@@ -24,7 +24,7 @@ type TRBRequestContextType = Pick<
   'data' | 'loading' | 'error'
 >;
 
-const initialTRBRequestContet: TRBRequestContextType = {
+const initialTRBRequestContext: TRBRequestContextType = {
   loading: false,
   error: undefined,
   data: undefined
@@ -32,7 +32,7 @@ const initialTRBRequestContet: TRBRequestContextType = {
 
 // Create the trb request info context - can be used anywhere in a trb admin request view
 export const TRBRequestContext = createContext<TRBRequestContextType>(
-  initialTRBRequestContet
+  initialTRBRequestContext
 );
 
 const TRBRequestInfoWrapper = ({ children }: TRBRequestInfoWrapperProps) => {

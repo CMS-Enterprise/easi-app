@@ -2112,6 +2112,16 @@ func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.Reo
 	)
 }
 
+// CreateTrbLeadOption is the resolver for the createTrbLeadOption field.
+func (r *mutationResolver) CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error) {
+	return resolvers.CreateTRBLeadOption(ctx, r.store, r.service.FetchUserInfo, eua)
+}
+
+// DeleteTrbLeadOption is the resolver for the deleteTrbLeadOption field.
+func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error) {
+	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2479,6 +2489,11 @@ func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.T
 // TrbRequests is the resolver for the trbRequests field.
 func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	return resolvers.GetTRBRequests(ctx, archived, r.store)
+}
+
+// TrbLeadOptions is the resolver for the trbLeadOptions field.
+func (r *queryResolver) TrbLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
+	return resolvers.GetTRBLeadOptions(ctx, r.store, r.service.FetchUserInfos)
 }
 
 // TrbAdminNote is the resolver for the trbAdminNote field.

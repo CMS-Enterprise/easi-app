@@ -65,7 +65,7 @@ describe('Trb Admin Request Home', () => {
       >
         <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
           <Route exact path="/trb/:id/:activePage">
-            <RequestHome trbRequestId={trbRequestId} />
+            <RequestHome trbRequestId={trbRequestId} noteCount={0} />
           </Route>
         </MemoryRouter>
       </MockedProvider>
@@ -165,7 +165,7 @@ describe('Trb Admin Request Home', () => {
       >
         <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
           <Route exact path="/trb/:id/:activePage">
-            <RequestHome trbRequestId={trbRequestId} />
+            <RequestHome trbRequestId={trbRequestId} noteCount={0} />
           </Route>
         </MemoryRouter>
       </MockedProvider>

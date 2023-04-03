@@ -235,6 +235,10 @@ func main() {
 	})
 
 	updateTRBRequestFundingSources(logger, store, principalUser, inProgress.ID, "33311", []string{"meatloaf", "spaghetti", "cereal"})
+
+	if err := makeTRBLeadOptions(logger, store); err != nil {
+		panic(err)
+	}
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -478,4 +482,46 @@ func updateTRBRequestFundingSources(logger *zap.Logger, store *storage.Store, us
 		panic(err)
 	}
 	return sources
+}
+
+func makeTRBLeadOptions(logger *zap.Logger, store *storage.Store) error {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+	leadUsers := map[string]*models.UserInfo{
+		"ABCD": {
+			CommonName: "Adeline Aarons",
+			Email:      "adeline.aarons@local.fake",
+			EuaUserID:  "ABCD",
+		},
+		"TEST": {
+			CommonName: "Terry Thompson",
+			Email:      "terry.thompson@local.fake",
+			EuaUserID:  "TEST",
+		},
+		"A11Y": {
+			CommonName: "Ally Anderson",
+			Email:      "ally.anderson@local.fake",
+			EuaUserID:  "A11Y",
+		},
+		"GRTB": {
+			CommonName: "Gary Gordon",
+			Email:      "gary.gordon@local.fake",
+			EuaUserID:  "GRTB",
+		},
+	}
+
+	stubFetchUserInfo := func(ctx context.Context, euaID string) (*models.UserInfo, error) {
+		if userInfo, ok := leadUsers[euaID]; ok {
+			return userInfo, nil
+		}
+		return nil, nil
+	}
+
+	for euaID := range leadUsers {
+		_, err := resolvers.CreateTRBLeadOption(ctx, store, stubFetchUserInfo, euaID)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return nil
 }
