@@ -14,15 +14,14 @@ import {
 } from 'queries/types/GetTrbRequest';
 import {
   TRBAdviceLetterStatus,
-  TRBApplicationDevelopmentOption,
   TRBAttendConsultStatus,
   TRBCollabGroupOption,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
-  TRBNetworkAndSecurityOption,
   TRBRequestState,
   TRBRequestType,
+  TRBSubjectAreaOption,
   TRBWhereInProcessOption
 } from 'types/graphql-global-types';
 
@@ -63,28 +62,13 @@ const mockTrbRequestData: TrbRequest = {
     collabDateGovernanceReviewBoard: null,
     collabDateOther: 'Lorem ipsum dolor',
     collabGroupOther: 'Consectetur',
-    subjectAreaTechnicalReferenceArchitecture: [],
-    subjectAreaNetworkAndSecurity: [
-      TRBNetworkAndSecurityOption.GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION,
-      TRBNetworkAndSecurityOption.ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT
+    collabGRBConsultRequested: null,
+    subjectAreaOptions: [
+      TRBSubjectAreaOption.ACCESSIBILITY_COMPLIANCE,
+      TRBSubjectAreaOption.CLOUD_MIGRATION
     ],
-    subjectAreaCloudAndInfrastructure: [],
-    subjectAreaApplicationDevelopment: [
-      TRBApplicationDevelopmentOption.OPEN_SOURCE_SOFTWARE,
-      TRBApplicationDevelopmentOption.BUSINESS_INTELLIGENCE,
-      TRBApplicationDevelopmentOption.EMAIL_INTEGRATION,
-      TRBApplicationDevelopmentOption.OTHER
-    ],
-    subjectAreaDataAndDataManagement: [],
-    subjectAreaGovernmentProcessesAndPolicies: [],
-    subjectAreaOtherTechnicalTopics: [],
-    subjectAreaTechnicalReferenceArchitectureOther: null,
-    subjectAreaNetworkAndSecurityOther: null,
-    subjectAreaCloudAndInfrastructureOther: null,
-    subjectAreaApplicationDevelopmentOther: 'Lorem ipsum dolor',
-    subjectAreaDataAndDataManagementOther: null,
-    subjectAreaGovernmentProcessesAndPoliciesOther: null,
-    subjectAreaOtherTechnicalTopicsOther: null,
+    subjectAreaOptionOther: 'A few other subjects',
+    fundingSources: null,
     submittedAt: '2023-01-23T20:06:52.123703Z',
     __typename: 'TRBRequestForm'
   },
@@ -112,7 +96,7 @@ describe('Trb Request form: Check and submit', () => {
         name: requester?.userInfo?.commonName
       }
     });
-    const { asFragment, getByText, getAllByText, getByRole } = render(
+    const { asFragment, getByText, getByRole } = render(
       <MemoryRouter>
         <MockedProvider>
           <Provider store={store}>
@@ -149,15 +133,11 @@ describe('Trb Request form: Check and submit', () => {
     // Oit groups with other
     getByText('Security (06/01/2023), Other: Consectetur (Lorem ipsum dolor)');
     // Net sec options
-    getByText(
-      'General network and security services information, Access control and identity management'
-    );
+    getByText('Access Control and Identity Management');
     // App dev with other
-    getByText(
-      'Open source software, Business intelligence, Email integration, Other: Lorem ipsum dolor'
-    );
+    getByText('Cloud Migration');
     // Others with no topics
-    expect(getAllByText('No topics selected')).toHaveLength(5);
+    getByText('A few other subjects');
 
     // Snapshot of stuff in place
     expect(asFragment()).toMatchSnapshot();

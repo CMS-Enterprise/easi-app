@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBTechnicalReferenceArchitectureOption, TRBNetworkAndSecurityOption, TRBCloudAndInfrastructureOption, TRBApplicationDevelopmentOption, TRBDataAndDataManagementOption, TRBGovernmentProcessesAndPoliciesOption, TRBOtherTechnicalTopicsOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
+import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBConsultPrepStatus, TRBAttendConsultStatus, TRBAdviceLetterStatus, TRBWhereInProcessOption, TRBCollabGroupOption, TRBSubjectAreaOption, TRBFeedbackAction } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: TrbRequestFormFields
@@ -16,6 +16,13 @@ export interface TrbRequestFormFields_taskStatuses {
   consultPrepStatus: TRBConsultPrepStatus;
   attendConsultStatus: TRBAttendConsultStatus;
   adviceLetterStatus: TRBAdviceLetterStatus;
+}
+
+export interface TrbRequestFormFields_form_fundingSources {
+  __typename: "TRBFundingSource";
+  id: UUID;
+  fundingNumber: string;
+  source: string;
 }
 
 export interface TrbRequestFormFields_form {
@@ -38,20 +45,10 @@ export interface TrbRequestFormFields_form {
   collabDateGovernanceReviewBoard: string | null;
   collabDateOther: string | null;
   collabGroupOther: string | null;
-  subjectAreaTechnicalReferenceArchitecture: TRBTechnicalReferenceArchitectureOption[] | null;
-  subjectAreaNetworkAndSecurity: TRBNetworkAndSecurityOption[] | null;
-  subjectAreaCloudAndInfrastructure: TRBCloudAndInfrastructureOption[] | null;
-  subjectAreaApplicationDevelopment: TRBApplicationDevelopmentOption[] | null;
-  subjectAreaDataAndDataManagement: TRBDataAndDataManagementOption[] | null;
-  subjectAreaGovernmentProcessesAndPolicies: TRBGovernmentProcessesAndPoliciesOption[] | null;
-  subjectAreaOtherTechnicalTopics: TRBOtherTechnicalTopicsOption[] | null;
-  subjectAreaTechnicalReferenceArchitectureOther: string | null;
-  subjectAreaNetworkAndSecurityOther: string | null;
-  subjectAreaCloudAndInfrastructureOther: string | null;
-  subjectAreaApplicationDevelopmentOther: string | null;
-  subjectAreaDataAndDataManagementOther: string | null;
-  subjectAreaGovernmentProcessesAndPoliciesOther: string | null;
-  subjectAreaOtherTechnicalTopicsOther: string | null;
+  collabGRBConsultRequested: boolean | null;
+  subjectAreaOptions: TRBSubjectAreaOption[] | null;
+  subjectAreaOptionOther: string | null;
+  fundingSources: TrbRequestFormFields_form_fundingSources[] | null;
   submittedAt: Time | null;
 }
 

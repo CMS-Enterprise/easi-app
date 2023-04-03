@@ -11,16 +11,42 @@ import {
   UseIntakeFundingSources
 } from 'types/systemIntake';
 
+type GenericFundingSourceQueryType = {
+  fundingNumber: string;
+  source: string;
+};
+
 // Empty funding source
 const emptyFundingSource: MultiFundingSource = {
   fundingNumber: '',
   sources: []
 };
 
+export const formatFundingSourcesForRender = (
+  initialFundingSources: GenericFundingSourceQueryType[]
+): MultiFundingSource[] => {
+  const condenseadSources = initialFundingSources.reduce(
+    (acc: any, { fundingNumber, source }) => {
+      acc[fundingNumber] ??= {
+        fundingNumber,
+        sources: []
+      };
+      acc[fundingNumber].sources.push(source);
+
+      return acc;
+    },
+    {}
+  );
+  return Object.entries(condenseadSources).map(
+    entry => entry[1]
+  ) as MultiFundingSource[];
+};
+
 // Custom hook for system intake funding source actions
 export default function useIntakeFundingSources(
   initialFundingSources: FundingSource[],
-  setFieldValue: (field: string, value: any) => void
+  setFieldValue: (field: string, value: any) => void,
+  combinedFields?: boolean
 ): UseIntakeFundingSources {
   // Format initial funding sources
   const fundingSources = useMemo(() => {
@@ -85,25 +111,36 @@ export default function useIntakeFundingSources(
     const { fundingNumber } = data;
     let updatedFundingSources = { ...fundingSources };
 
-    // If deleting funding source, delete source
-    if (action === 'Delete') {
-      delete updatedFundingSources[fundingNumber];
-    } else {
-      // If editing funding source, delete initial source
-      if (action === 'Edit') {
-        delete updatedFundingSources[
-          (data as ExistingFundingSource).initialFundingNumber
-        ];
+    if (!combinedFields) {
+      // If deleting funding source, delete source
+      if (action === 'Delete') {
+        delete updatedFundingSources[fundingNumber];
+      } else {
+        // If editing funding source, delete initial source
+        if (action === 'Edit') {
+          delete updatedFundingSources[
+            (data as ExistingFundingSource).initialFundingNumber
+          ];
+        }
+        // If creating or editing funding source, add source
+        updatedFundingSources = {
+          ...updatedFundingSources,
+          [fundingNumber]: data
+        };
       }
-      // If creating or editing funding source, add source
-      updatedFundingSources = {
-        ...updatedFundingSources,
-        [fundingNumber]: data
-      };
-    }
 
-    // Set funding sources field value
-    setFieldValue('fundingSources', formatSourcesForApi(updatedFundingSources));
+      // Set funding sources field value
+      setFieldValue(
+        'fundingSources',
+        formatSourcesForApi(updatedFundingSources)
+      );
+    } else if (action === 'Delete') {
+      // Set funding number as value to delete
+      setFieldValue('fundingSources', { delete: fundingNumber });
+    } else {
+      // Set funding sources field value for a single combined source
+      setFieldValue('fundingSources', data);
+    }
   }
 
   // When funding source form is submitted, reset active funding source
