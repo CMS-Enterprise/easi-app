@@ -204,7 +204,6 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
       <button
         class="usa-button"
         data-testid="button"
-        disabled=""
         type="submit"
       >
         Complete action

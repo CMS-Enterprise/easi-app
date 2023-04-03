@@ -124,14 +124,20 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
         </label>
       </div>
       <fieldset
-        class="usa-fieldset"
+        class="usa-fieldset margin-top-4"
+        data-testid="fieldset"
       >
+        <legend
+          class="usa-legend"
+        >
+          Add another recipient
+        </legend>
         <div
-          class="usa-form-group"
+          class="usa-form-group margin-top-2"
           data-testid="formGroup"
         >
           <label
-            class="usa-label"
+            class="usa-label text-normal"
             for="euaUserId"
           >
             New recipient name
@@ -235,11 +241,11 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
           </div>
         </div>
         <div
-          class="usa-form-group"
+          class="usa-form-group margin-top-2"
           data-testid="formGroup"
         >
           <label
-            class="usa-label"
+            class="usa-label text-normal"
             for="component"
           >
             New recipient component
@@ -387,11 +393,11 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
           </select>
         </div>
         <div
-          class="usa-form-group"
+          class="usa-form-group margin-top-2"
           data-testid="formGroup"
         >
           <label
-            class="usa-label"
+            class="usa-label text-normal"
             for="role"
           >
             New recipient role
