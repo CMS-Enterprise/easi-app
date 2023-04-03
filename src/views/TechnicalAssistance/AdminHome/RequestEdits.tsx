@@ -79,7 +79,7 @@ function RequestEdits() {
   );
 
   const actionForm = useForm<RequestEditsFields>({
-    resolver: yupResolver(trbFeedbackSchema),
+    resolver: yupResolver(trbFeedbackSchema(feedbackAction)),
     defaultValues
   });
 
@@ -173,7 +173,7 @@ function RequestEdits() {
                 <Label
                   htmlFor="feedbackMessage"
                   className="text-normal margin-top-6"
-                  required
+                  required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
                 >
                   {t(`${actionText}.label`)}
                 </Label>
