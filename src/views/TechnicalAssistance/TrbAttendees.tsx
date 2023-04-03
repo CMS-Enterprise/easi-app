@@ -51,7 +51,7 @@ const TrbAttendees = () => {
             type={formAlert.type}
             heading={formAlert.heading}
             slim
-            className="margin-y-4"
+            className="margin-top-2 margin-bottom-0"
           >
             {formAlert.message}
           </Alert>

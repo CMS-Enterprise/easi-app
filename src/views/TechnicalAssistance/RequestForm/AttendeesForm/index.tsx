@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { Form, IconArrowBack } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Spinner from 'components/Spinner';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
@@ -60,6 +61,8 @@ function AttendeesForm({
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+
+  const [mutationLoading, setMutationLoading] = useState<boolean>(false);
 
   // Attendee data
   const {
@@ -124,6 +127,8 @@ function AttendeesForm({
     const { component, role, euaUserId } = formData;
     const { id } = activeAttendee;
 
+    setMutationLoading(true);
+
     // If attendee object has ID, update attendee
     if (id) {
       return updateAttendee({
@@ -164,6 +169,8 @@ function AttendeesForm({
             // Clear errors
             clearErrors('euaUserId');
 
+            setMutationLoading(false);
+
             // Set active attendee to initial
             setActiveAttendee({ ...initialAttendee, trbRequestId });
 
@@ -182,6 +189,8 @@ function AttendeesForm({
           })
           .catch(err => {
             if (err instanceof ApolloError) {
+              setMutationLoading(false);
+
               // Set form error
               setFormAlert({
                 type: 'error',
@@ -215,7 +224,7 @@ function AttendeesForm({
             }
           ]}
         />
-        <PageHeading className="margin-bottom-1">
+        <PageHeading className="margin-bottom-1 margin-top-5">
           {t(
             activeAttendee.id
               ? 'attendees.editAttendee'
@@ -234,29 +243,36 @@ function AttendeesForm({
             setValue={setValue}
             fieldLabels={fieldLabels[formType]}
           />
-          <Pager
-            next={{
-              text: t(
-                fieldLabels[formType as keyof typeof fieldLabels].submit || ''
-              ),
-              disabled:
-                isSubmitting ||
-                !values.component ||
-                !values.euaUserId ||
-                !values.role
-            }}
-            back={{
-              text: t('Cancel'),
-              onClick: () => {
-                setActiveAttendee({ ...initialAttendee, trbRequestId });
-                history.push(backToFormUrl);
-              },
-              disabled: isSubmitting
-            }}
-            className="border-top-0"
-            saveExitHidden
-            taskListUrl={taskListUrl}
-          />
+
+          <div className="display-flex flex-align-center">
+            <Pager
+              next={{
+                text: t(
+                  fieldLabels[formType as keyof typeof fieldLabels].submit || ''
+                ),
+                disabled:
+                  isSubmitting ||
+                  !values.component ||
+                  !values.euaUserId ||
+                  !values.role
+              }}
+              back={{
+                text: t('Cancel'),
+                onClick: () => {
+                  setActiveAttendee({ ...initialAttendee, trbRequestId });
+                  history.push(backToFormUrl);
+                },
+                disabled: isSubmitting
+              }}
+              className="border-top-0"
+              saveExitHidden
+              taskListUrl={taskListUrl}
+            />
+
+            {mutationLoading && (
+              <Spinner className="margin-left-2 margin-top-2" />
+            )}
+          </div>
           <div className="margin-top-2">
             <UswdsReactLink
               to={backToFormUrl}

@@ -116,7 +116,7 @@ const AttendeeFields = ({
           })}
         </Alert>
       )}
-      <Grid row className="margin-bottom-5">
+      <Grid row className="margin-bottom-2">
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           {/* Attendee name */}
           <Controller

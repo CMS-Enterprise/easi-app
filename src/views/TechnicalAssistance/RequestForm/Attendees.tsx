@@ -266,19 +266,19 @@ function Attendees({
                   control={control}
                 />
 
-                <Divider />
+                <Divider className="margin-top-4" />
               </>
             )}
 
             {fromTaskList && (
               <>
-                <h1 className="margin-bottom-0 margin-top-6">
+                <h1 className="margin-bottom-0 margin-top-4">
                   {t('attendees.heading')}
                 </h1>
                 <p className="line-height-body-5 margin-top-0 margin-bottom-2">
                   {t('attendees.description')}
                 </p>
-                <div className="margin-bottom-6">
+                <div className="margin-bottom-5">
                   <UswdsReactLink to={`/trb/task-list/${trbID}`}>
                     <IconArrowBack className="margin-right-1 text-middle" />
                     <span className="line-height-body-5">
