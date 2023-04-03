@@ -11,7 +11,7 @@ import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { CreateTRBRequestAttendeeInput } from 'types/graphql-global-types';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
-import AddRecipientForm from './AddAttendeeForm';
+import AddAttendeeForm from './AddAttendeeForm';
 
 type EmailRecipientFieldsProps = {
   requester: TRBAttendee;
@@ -20,7 +20,7 @@ type EmailRecipientFieldsProps = {
   className?: string;
 };
 
-interface Recipientfields {
+interface RecipientFields {
   trbRequestId: string;
   notifyEuaIds: string[];
   copyTrbMailbox: boolean;
@@ -38,7 +38,7 @@ const EmailRecipientFields = ({
     watch,
     getValues,
     formState: { errors }
-  } = useFormContext<Recipientfields>();
+  } = useFormContext<RecipientFields>();
 
   const selectedCount = watch(['notifyEuaIds', 'copyTrbMailbox'])
     .flat()
@@ -155,7 +155,7 @@ const EmailRecipientFields = ({
             }}
           />
 
-          <AddRecipientForm
+          <AddAttendeeForm
             createAttendee={createAttendee}
             trbRequestId={getValues('trbRequestId')}
           />
