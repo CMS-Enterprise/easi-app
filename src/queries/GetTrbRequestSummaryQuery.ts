@@ -16,6 +16,9 @@ export default gql`
         attendConsultStatus
         adviceLetterStatus
       }
+      adminNotes {
+        id
+      }
     }
   }
 `;

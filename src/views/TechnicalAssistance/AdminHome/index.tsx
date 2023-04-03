@@ -119,6 +119,9 @@ export default function AdminHome() {
     ? formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy')
     : '';
 
+  // Note count for NoteBox modal rendered on each page
+  const noteCount: number = data?.trbRequest.adminNotes.length || 0;
+
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
     return <PageLoading />;
@@ -174,6 +177,7 @@ export default function AdminHome() {
               <Route exact path={subpage.route} key={subpage.route}>
                 <subpage.component
                   trbRequestId={id}
+                  noteCount={noteCount}
                   requesterString={requesterString}
                   submissionDate={submissionDate}
                 />

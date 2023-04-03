@@ -52,7 +52,7 @@ describe('Trb Admin: Feedback', () => {
         ]}
       >
         <MemoryRouter>
-          <Feedback trbRequestId={id} />
+          <Feedback trbRequestId={id} noteCount={0} />
         </MemoryRouter>
       </MockedProvider>
     );
@@ -88,7 +88,7 @@ describe('Trb Admin: Feedback', () => {
         ]}
       >
         <MemoryRouter>
-          <Feedback trbRequestId={id} />
+          <Feedback trbRequestId={id} noteCount={0} />
         </MemoryRouter>
       </MockedProvider>
     );

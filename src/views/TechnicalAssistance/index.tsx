@@ -5,6 +5,7 @@ import { GridContainer } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
+import AddNote from './AdminHome/AddNote';
 import CloseRequest from './AdminHome/CloseRequest';
 import Consult from './AdminHome/Consult';
 import TRBRequestInfoWrapper from './AdminHome/RequestContext';
@@ -86,6 +87,11 @@ function TechnicalAssistance() {
           >
             <Consult />
           </Route>
+
+          <Route exact path={`${path}/:id/notes/add-note`}>
+            <AddNote />
+          </Route>
+
           <Route
             exact
             path={`${path}/:id/:activePage/:action(close-request|reopen-request)`}
