@@ -75,12 +75,24 @@ const authLink = setContext((request, { headers }) => {
   };
 });
 
-const typePolicies = {};
-
 const client = new ApolloClient({
   link: authLink.concat(uploadLink),
   cache: new InMemoryCache({
-    typePolicies
+    typePolicies: {
+      TRBRequest: {
+        fields: {
+          taskStatuses: {
+            merge: true
+          },
+          trbLeadInfo: {
+            merge: true
+          },
+          requesterInfo: {
+            merge: true
+          }
+        }
+      }
+    }
   }),
   defaultOptions: {
     watchQuery: {

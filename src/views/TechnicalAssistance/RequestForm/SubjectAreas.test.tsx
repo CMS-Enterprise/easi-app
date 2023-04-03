@@ -1,9 +1,8 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import selectEvent from 'react-select-event';
 import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -11,7 +10,11 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
+import {
+  TRBRequestState,
+  TRBRequestType,
+  TRBSubjectAreaOption
+} from 'types/graphql-global-types';
 
 import SubjectAreas from './SubjectAreas';
 
@@ -33,20 +36,10 @@ const mockEmptyFormFields = {
   collabDateGovernanceReviewBoard: null,
   collabDateOther: null,
   collabGroupOther: null,
-  subjectAreaTechnicalReferenceArchitecture: [],
-  subjectAreaNetworkAndSecurity: [],
-  subjectAreaCloudAndInfrastructure: [],
-  subjectAreaApplicationDevelopment: [],
-  subjectAreaDataAndDataManagement: [],
-  subjectAreaGovernmentProcessesAndPolicies: [],
-  subjectAreaOtherTechnicalTopics: [],
-  subjectAreaTechnicalReferenceArchitectureOther: null,
-  subjectAreaNetworkAndSecurityOther: null,
-  subjectAreaCloudAndInfrastructureOther: null,
-  subjectAreaApplicationDevelopmentOther: null,
-  subjectAreaDataAndDataManagementOther: null,
-  subjectAreaGovernmentProcessesAndPoliciesOther: null,
-  subjectAreaOtherTechnicalTopicsOther: null,
+  collabGRBConsultRequested: null,
+  subjectAreaOptions: [TRBSubjectAreaOption.CLOUD_MIGRATION],
+  subjectAreaOptionOther: null,
+  fundingSources: null,
   submittedAt: '2023-01-31T16:23:06.111436Z'
 };
 
@@ -113,112 +106,46 @@ function renderSubjectAreas() {
 }
 
 describe('Trb Request form: Subject areas', () => {
-  // Fields are from a loop so they should all behave the same.
-
-  it('submits the form successfully after a failed attempt', async () => {
-    const {
-      asFragment,
-      findByText,
-      getByLabelText,
-      getByRole
-    } = renderSubjectAreas();
+  it('checks subject area form elements', async () => {
+    const { asFragment, getByRole, getByTestId } = renderSubjectAreas();
 
     expect(asFragment()).toMatchSnapshot();
 
     Element.prototype.scrollIntoView = jest.fn();
 
-    // Check initial submit button
+    // Check Next button with existing selected subject areas
+    expect(getByRole('button', { name: 'Next' })).toBeInTheDocument();
+
+    // Get existing selectedsubect area checkbox and assert it's already checked
+    const checkboxCloud = getByRole('checkbox', {
+      name: /Cloud Migration/i
+    });
+    expect(checkboxCloud).toBeChecked();
+
+    // Unselect checkboxCloud
+    userEvent.click(checkboxCloud);
+    expect(checkboxCloud).not.toBeChecked();
+
+    // Check submit button has changed in the presence of no subject areas selected
     expect(
       getByRole('button', { name: 'Continue without selecting subject areas' })
     ).toBeInTheDocument();
 
-    // Select some options and toggle on the "other" field
-    await selectEvent.select(
-      getByLabelText(/Technical Reference Architecture \(TRA\)/),
-      ['General TRA information', 'Other']
-    );
-
-    // Leave "other" empty
-    // Submit validation error with incomplete form
-    const submitButton = getByRole('button', { name: 'Next' });
-    userEvent.click(submitButton);
-
-    // Form error message
-    const formErrorText = await findByText(
-      'Please check and fix the following'
-    );
-    expect(formErrorText).toBeInTheDocument();
-
-    // Field error message
-    expect(
-      await findByText('Technical Reference Architecture (TRA): Please specify')
-    ).toBeInTheDocument();
-    expect(await findByText('Please fill in the blank')).toBeInTheDocument();
-
-    // Fix and fill the error field
-    userEvent.type(getByLabelText(/Please specify/), 'testing');
-
-    // Submit success
-    userEvent.click(submitButton);
-    await waitFor(() => {
-      expect(formErrorText).not.toBeInTheDocument();
+    // Get subect area checkbox and assert it's not checked
+    const checkboxACIM = getByRole('checkbox', {
+      name: /Access Control and Identity Management/i
     });
-  });
+    expect(checkboxACIM).not.toBeChecked();
 
-  it('toggles the "other" field on and off again', async () => {
-    const { getByLabelText } = renderSubjectAreas();
+    // Click and assert clicked
+    userEvent.click(checkboxACIM);
+    expect(checkboxACIM).toBeChecked();
 
-    const fieldLabel = getByLabelText(
-      /Technical Reference Architecture \(TRA\)/
-    );
+    // Fills text in Other subject areas textAreaField
+    const textAreaInput = getByTestId('subjectAreaOptionOther');
+    userEvent.type(textAreaInput, 'System Architecture Review');
 
-    // On
-    await selectEvent.select(fieldLabel, ['Other']);
-    const otherLabel = getByLabelText(/Please specify/);
-    expect(otherLabel).toBeInTheDocument();
-    // Off
-    await selectEvent.clearFirst(fieldLabel);
-    await waitFor(() => {
-      expect(otherLabel).not.toBeInTheDocument();
-    });
-  });
-
-  it('clears the error on an empty field that is toggled off', async () => {
-    const { findByText, getByLabelText, getByRole } = renderSubjectAreas();
-
-    Element.prototype.scrollIntoView = jest.fn();
-
-    const fieldLabel = getByLabelText(
-      /Technical Reference Architecture \(TRA\)/
-    );
-
-    // Toggle on and left empty
-    await selectEvent.select(fieldLabel, ['Other']);
-    const otherLabel = getByLabelText(/Please specify/);
-    expect(otherLabel).toBeInTheDocument();
-
-    // Submit for error
-    const submitButton = getByRole('button', { name: 'Next' });
-    userEvent.click(submitButton);
-
-    // Field error message
-    const fieldErrorMessage = await findByText(
-      'Technical Reference Architecture (TRA): Please specify'
-    );
-    expect(fieldErrorMessage).toBeInTheDocument();
-    expect(await findByText('Please fill in the blank')).toBeInTheDocument();
-
-    // Toggle off
-    await selectEvent.clearFirst(fieldLabel);
-
-    // Field is gone
-    await waitFor(() => {
-      expect(otherLabel).not.toBeInTheDocument();
-    });
-
-    // Error is gone
-    await waitFor(() => {
-      expect(fieldErrorMessage).not.toBeInTheDocument();
-    });
+    // Get typed text
+    expect(textAreaInput).toHaveValue('System Architecture Review');
   });
 });

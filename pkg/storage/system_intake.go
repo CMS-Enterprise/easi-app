@@ -658,3 +658,16 @@ func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]
 	}
 	return intakes, nil
 }
+
+// GetSystemIntakesWithLCIDs retrieves all LCIDs that are in use
+func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.SystemIntake, error) {
+	intakes := []*models.SystemIntake{}
+	err := s.db.SelectContext(ctx, &intakes,
+		fetchSystemIntakeSQL+`
+		WHERE lcid IS NOT NULL;
+	`)
+	if err != nil {
+		return nil, err
+	}
+	return intakes, nil
+}

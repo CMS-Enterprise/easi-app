@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@apollo/client';
 import { Alert, Grid } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
 import PDFExport from 'components/PDFExport';
+import useCacheQuery from 'hooks/useCacheQuery';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   GetTrbAdviceLetter,
@@ -24,7 +24,7 @@ const AdviceLetter = ({ trbRequestId }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   // TRB request query
-  const { data, loading } = useQuery<
+  const { data, loading } = useCacheQuery<
     GetTrbAdviceLetter,
     GetTrbAdviceLetterVariables
   >(GetTrbAdviceLetterQuery, {
