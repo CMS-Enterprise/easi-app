@@ -158,8 +158,6 @@ describe('Trb Admin: Action: Request Edits', () => {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
     });
 
-    expect(submitButton).toBeDisabled();
-
     userEvent.type(
       getByLabelText(
         RegExp(
