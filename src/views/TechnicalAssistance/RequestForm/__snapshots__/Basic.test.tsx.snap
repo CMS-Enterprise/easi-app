@@ -38,6 +38,11 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             for="name"
           >
             Request name
+            <span
+              class="text-red margin-x-05"
+            >
+              *
+            </span>
           </label>
           <input
             class="usa-input"
@@ -58,6 +63,11 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             for="component"
           >
             Request component
+            <span
+              class="text-red margin-x-05"
+            >
+              *
+            </span>
             <span
               class="usa-hint"
             >
@@ -208,6 +218,14 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
           </select>
         </div>
         <div
+          class="easi-divider margin-top-6"
+        />
+        <h4
+          class="margin-top-1"
+        >
+          Project Information
+        </h4>
+        <div
           class="usa-form-group"
           data-testid="formGroup"
         >
@@ -217,6 +235,11 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             for="needsAssistanceWith"
           >
             What do you need technical assistance with?
+            <span
+              class="text-red margin-x-05"
+            >
+              *
+            </span>
             <span
               class="usa-hint"
             >
@@ -255,6 +278,11 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             >
               Do you have a solution in mind already?
             </legend>
+            <span
+              class="text-red margin-x-05 text-bold"
+            >
+              *
+            </span>
             <div
               class="usa-radio"
               data-testid="radio"
@@ -305,6 +333,11 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             for="whereInProcess"
           >
             Where are you in your process?
+            <span
+              class="text-red margin-x-05"
+            >
+              *
+            </span>
             <span
               class="usa-hint"
             >
@@ -365,6 +398,11 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             >
               Does your solution have an expected start and/or end date?
             </legend>
+            <span
+              class="text-red margin-x-05 text-bold"
+            >
+              *
+            </span>
             <div
               class="usa-radio"
               data-testid="radio"
@@ -404,6 +442,38 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
               </label>
             </div>
           </fieldset>
+        </div>
+        <div
+          class="easi-divider margin-top-6"
+        />
+        <h4
+          class="margin-top-1"
+        >
+          Collaboration and Governance
+        </h4>
+        <div
+          class="usa-form-group margin-bottom-4"
+          data-testid="formGroup"
+        >
+          <label
+            class="usa-label text-normal"
+            data-testid="label"
+            for="fundingSources"
+          >
+            Which existing funding sources will fund this project?
+            <span
+              class="usa-hint"
+            >
+              If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.
+            </span>
+          </label>
+          <button
+            class="usa-button usa-button--outline display-block margin-top-3"
+            data-testid="fundingSourcesAction-add"
+            type="button"
+          >
+            Add a funding source
+          </button>
         </div>
         <div
           class="usa-form-group"

@@ -129,6 +129,19 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
         </dd>
       </div>
       <div
+        class="tablet:grid-col-12"
+        data-testid="grid"
+      >
+        <dt>
+          Which existing funding sources will fund this project?
+        </dt>
+      </div>
+      0
+      <div
+        class="desktop:grid-col-12"
+        data-testid="grid"
+      />
+      <div
         class="tablet:grid-col-12 desktop:grid-col-6"
         data-testid="grid"
       >
@@ -139,6 +152,10 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
           Security (06/01/2023), Other: Consectetur (Lorem ipsum dolor)
         </dd>
       </div>
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      />
     </div>
   </dl>
   <div
@@ -157,101 +174,31 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
       Edit this section
     </a>
   </div>
+  <div
+    class="margin-top-3"
+  >
+    <span
+      class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
+      data-testid="tag"
+    >
+      Access Control and Identity Management
+    </span>
+    <span
+      class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
+      data-testid="tag"
+    >
+      Cloud Migration
+    </span>
+  </div>
   <dl
     class="easi-dl margin-y-3"
   >
-    <div
-      class="grid-row grid-gap"
-      data-testid="grid"
-    >
-      <div
-        class="tablet:grid-col-12 desktop:grid-col-6"
-        data-testid="grid"
-      >
-        <dt>
-          Technical Reference Architecture (TRA)
-        </dt>
-        <dd>
-          <em>
-            No topics selected
-          </em>
-        </dd>
-      </div>
-      <div
-        class="tablet:grid-col-12 desktop:grid-col-6"
-        data-testid="grid"
-      >
-        <dt>
-          Network and security
-        </dt>
-        <dd>
-          General network and security services information, Access control and identity management
-        </dd>
-      </div>
-      <div
-        class="tablet:grid-col-12 desktop:grid-col-6"
-        data-testid="grid"
-      >
-        <dt>
-          Cloud and infrastructure
-        </dt>
-        <dd>
-          <em>
-            No topics selected
-          </em>
-        </dd>
-      </div>
-      <div
-        class="tablet:grid-col-12 desktop:grid-col-6"
-        data-testid="grid"
-      >
-        <dt>
-          Application development
-        </dt>
-        <dd>
-          Open source software, Business intelligence, Email integration, Other: Lorem ipsum dolor
-        </dd>
-      </div>
-      <div
-        class="tablet:grid-col-12 desktop:grid-col-6"
-        data-testid="grid"
-      >
-        <dt>
-          Data and data management
-        </dt>
-        <dd>
-          <em>
-            No topics selected
-          </em>
-        </dd>
-      </div>
-      <div
-        class="tablet:grid-col-12 desktop:grid-col-6"
-        data-testid="grid"
-      >
-        <dt>
-          CMS Governance processes and policies
-        </dt>
-        <dd>
-          <em>
-            No topics selected
-          </em>
-        </dd>
-      </div>
-      <div
-        class="tablet:grid-col-12 desktop:grid-col-6"
-        data-testid="grid"
-      >
-        <dt>
-          Other technical topics
-        </dt>
-        <dd>
-          <em>
-            No topics selected
-          </em>
-        </dd>
-      </div>
-    </div>
+    <dt>
+      Other subject areas
+    </dt>
+    <dd>
+      A few other subjects
+    </dd>
   </dl>
   <div
     class="easi-divider"

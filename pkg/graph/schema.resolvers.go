@@ -1938,6 +1938,16 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 	)
 }
 
+// UpdateTRBRequestFundingSources is the resolver for the updateTRBRequestFundingSources field.
+func (r *mutationResolver) UpdateTRBRequestFundingSources(ctx context.Context, input model.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
+	return resolvers.UpdateTRBRequestFundingSources(ctx, r.store, input.TrbRequestID, input.FundingNumber, input.Sources)
+}
+
+// DeleteTRBRequestFundingSources is the resolver for the deleteTRBRequestFundingSources field.
+func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, input model.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
+	return resolvers.DeleteTRBRequestFundingSources(ctx, r.store, input.TrbRequestID, input.FundingNumber)
+}
+
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
 func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
 	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
@@ -3034,46 +3044,15 @@ func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.T
 	return collabGroups, nil
 }
 
-// SubjectAreaTechnicalReferenceArchitecture is the resolver for the subjectAreaTechnicalReferenceArchitecture field.
-func (r *tRBRequestFormResolver) SubjectAreaTechnicalReferenceArchitecture(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBTechnicalReferenceArchitectureOption, error) {
-	items := models.ConvertEnums[models.TRBTechnicalReferenceArchitectureOption](obj.SubjectAreaTechnicalReferenceArchitecture)
-	return items, nil
+// FundingSources is the resolver for the fundingSources field.
+func (r *tRBRequestFormResolver) FundingSources(ctx context.Context, obj *models.TRBRequestForm) ([]*models.TRBFundingSource, error) {
+	return resolvers.GetFundingSourcesByRequestID(ctx, r.store, obj.TRBRequestID)
 }
 
-// SubjectAreaNetworkAndSecurity is the resolver for the subjectAreaNetworkAndSecurity field.
-func (r *tRBRequestFormResolver) SubjectAreaNetworkAndSecurity(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBNetworkAndSecurityOption, error) {
-	items := models.ConvertEnums[models.TRBNetworkAndSecurityOption](obj.SubjectAreaNetworkAndSecurity)
-	return items, nil
-}
-
-// SubjectAreaCloudAndInfrastructure is the resolver for the subjectAreaCloudAndInfrastructure field.
-func (r *tRBRequestFormResolver) SubjectAreaCloudAndInfrastructure(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCloudAndInfrastructureOption, error) {
-	items := models.ConvertEnums[models.TRBCloudAndInfrastructureOption](obj.SubjectAreaCloudAndInfrastructure)
-	return items, nil
-}
-
-// SubjectAreaApplicationDevelopment is the resolver for the subjectAreaApplicationDevelopment field.
-func (r *tRBRequestFormResolver) SubjectAreaApplicationDevelopment(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBApplicationDevelopmentOption, error) {
-	items := models.ConvertEnums[models.TRBApplicationDevelopmentOption](obj.SubjectAreaApplicationDevelopment)
-	return items, nil
-}
-
-// SubjectAreaDataAndDataManagement is the resolver for the subjectAreaDataAndDataManagement field.
-func (r *tRBRequestFormResolver) SubjectAreaDataAndDataManagement(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBDataAndDataManagementOption, error) {
-	items := models.ConvertEnums[models.TRBDataAndDataManagementOption](obj.SubjectAreaDataAndDataManagement)
-	return items, nil
-}
-
-// SubjectAreaGovernmentProcessesAndPolicies is the resolver for the subjectAreaGovernmentProcessesAndPolicies field.
-func (r *tRBRequestFormResolver) SubjectAreaGovernmentProcessesAndPolicies(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBGovernmentProcessesAndPoliciesOption, error) {
-	items := models.ConvertEnums[models.TRBGovernmentProcessesAndPoliciesOption](obj.SubjectAreaGovernmentProcessesAndPolicies)
-	return items, nil
-}
-
-// SubjectAreaOtherTechnicalTopics is the resolver for the subjectAreaOtherTechnicalTopics field.
-func (r *tRBRequestFormResolver) SubjectAreaOtherTechnicalTopics(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBOtherTechnicalTopicsOption, error) {
-	items := models.ConvertEnums[models.TRBOtherTechnicalTopicsOption](obj.SubjectAreaOtherTechnicalTopics)
-	return items, nil
+// SubjectAreaOptions is the resolver for the subjectAreaOptions field.
+func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBSubjectAreaOption, error) {
+	subjectAreas := models.ConvertEnums[models.TRBSubjectAreaOption](obj.SubjectAreaOptions)
+	return subjectAreas, nil
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
