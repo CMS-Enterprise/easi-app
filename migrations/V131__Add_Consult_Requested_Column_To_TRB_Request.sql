@@ -1,1 +1,0 @@
-ALTER TABLE trb_request_forms ADD COLUMN collab_grb_consult_requested Boolean;
