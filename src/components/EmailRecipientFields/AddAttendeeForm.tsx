@@ -7,6 +7,7 @@ import {
   ButtonGroup,
   Dropdown,
   ErrorMessage,
+  Fieldset,
   FormGroup
 } from '@trussworks/react-uswds';
 
@@ -66,15 +67,18 @@ export default function AddAttendeeForm({
 
   if (showForm) {
     return (
-      <fieldset className="usa-fieldset">
+      <Fieldset
+        className="margin-top-4"
+        legend={t('emailRecipientFields.addAnotherRecipient')}
+      >
         {/* Name */}
         <Controller
           name="euaUserId"
           control={control}
           render={({ field, fieldState: { error } }) => {
             return (
-              <FormGroup error={!!error}>
-                <Label htmlFor={field.name}>
+              <FormGroup error={!!error} className="margin-top-2">
+                <Label htmlFor={field.name} className="text-normal">
                   {t('emailRecipientFields.newRecipientName')}
                 </Label>
                 {error && (
@@ -103,8 +107,8 @@ export default function AddAttendeeForm({
           control={control}
           render={({ field, fieldState: { error } }) => {
             return (
-              <FormGroup error={!!error}>
-                <Label htmlFor={field.name}>
+              <FormGroup error={!!error} className="margin-top-2">
+                <Label htmlFor={field.name} className="text-normal">
                   {t('emailRecipientFields.newRecipientComponent')}
                 </Label>
                 {error && (
@@ -129,8 +133,8 @@ export default function AddAttendeeForm({
           control={control}
           render={({ field, fieldState: { error } }) => {
             return (
-              <FormGroup error={!!error}>
-                <Label htmlFor={field.name}>
+              <FormGroup error={!!error} className="margin-top-2">
+                <Label htmlFor={field.name} className="text-normal">
                   {t('emailRecipientFields.newRecipientRole')}
                 </Label>
                 {error && (
@@ -164,7 +168,7 @@ export default function AddAttendeeForm({
             {t('emailRecipientFields.addRecipient')}
           </Button>
         </ButtonGroup>
-      </fieldset>
+      </Fieldset>
     );
   }
 
