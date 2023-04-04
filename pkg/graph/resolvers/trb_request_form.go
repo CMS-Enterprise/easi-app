@@ -82,23 +82,21 @@ func UpdateTRBRequestForm(
 	// additionally, delete it from the input so it's not included with ApplyChangesAndMetadata
 	if systemIntakes, systemIntakesProvided := input["systemIntakes"]; systemIntakesProvided {
 		delete(input, "systemIntakes")
-		// delete all existing intake relations for this TRB Request
-		_, err = store.DeleteTRBRequestSystemIntakesByTRBRequestID(ctx, id)
-		if err != nil {
-			return nil, err
-		}
+
+		systemIntakeUUIDs := []uuid.UUID{}
 		if systemIntakeIFCs, ok := systemIntakes.([]interface{}); ok {
 			for _, systemIntakeIFC := range systemIntakeIFCs {
 				if systemIntakeStr, ok := systemIntakeIFC.(string); ok {
-					systemIntakeUUID, err := uuid.Parse(systemIntakeStr)
-					if err != nil {
-						return nil, err
+					systemIntakeUUID, parseErr := uuid.Parse(systemIntakeStr)
+					if parseErr != nil {
+						return nil, parseErr
 					}
-					_, err = CreateTRBRequestSystemIntake(ctx, store, id, systemIntakeUUID)
-					if err != nil {
-						return nil, err
-					}
+					systemIntakeUUIDs = append(systemIntakeUUIDs, systemIntakeUUID)
 				}
+			}
+			_, err = store.CreateTRBRequestSystemIntakes(ctx, id, systemIntakeUUIDs)
+			if err != nil {
+				return nil, err
 			}
 		}
 	}

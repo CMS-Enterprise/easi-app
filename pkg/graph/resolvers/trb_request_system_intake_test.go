@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -23,7 +24,6 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 
 	lcids := []string{"111111", "111222", "111333"}
 	intakes := make([]*models.SystemIntake, 3)
-	var intakeIDToDelete uuid.UUID
 	for i, lcid := range lcids {
 		intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			Status:      models.SystemIntakeStatusLCIDISSUED,
@@ -34,38 +34,85 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		intake, err = store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err)
 		intakes[i] = intake
-
-		// We will delete this one later for testing deletion
-		if lcid == "111222" {
-			intakeIDToDelete = intake.ID
-		}
 	}
 
-	s.Run("create/read/delete TRB request system intakes", func() {
-		for _, intake := range intakes {
-			_, err := CreateTRBRequestSystemIntake(ctx, store, trbRequest.ID, intake.ID)
-			s.NoError(err)
-		}
-
+	s.Run("create/read/update TRB request system intakes", func() {
 		trbIntakes, err := GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
 		s.NoError(err)
-		s.EqualValues(3, len(trbIntakes))
+		s.Len(trbIntakes, 0)
 
-		for i, intake := range intakes {
-			s.EqualValues(intake.ID, trbIntakes[i].ID)
-		}
-
-		_, err = DeleteTRBRequestSystemIntake(ctx, store, trbRequest.ID, intakeIDToDelete)
+		// Insert just 2
+		fmt.Println("intake 0", intakes[0].ID)
+		fmt.Println("intake 1", intakes[1].ID)
+		_, err = store.CreateTRBRequestSystemIntakes(ctx, trbRequest.ID, []uuid.UUID{
+			intakes[0].ID,
+			intakes[1].ID,
+			// intakes[2].ID,
+		})
 		s.NoError(err)
+
 		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
 		s.NoError(err)
-		s.EqualValues(2, len(trbIntakes))
+		s.Len(trbIntakes, 2)
 
-		// Make a set to verify that the two expected LCIDs are represented by the two intakes left
+		// Make a set to verify that the two expected LCIDs are represented by the two intakes
 		lcidSet := make(map[string]bool)
 		lcidSet[trbIntakes[0].LifecycleID.ValueOrZero()] = true
 		lcidSet[trbIntakes[1].LifecycleID.ValueOrZero()] = true
 		s.True(lcidSet["111111"])
+		s.True(lcidSet["111222"])
+		s.False(lcidSet["111333"])
+
+		// Insert all 3
+		_, err = store.CreateTRBRequestSystemIntakes(ctx, trbRequest.ID, []uuid.UUID{
+			intakes[0].ID,
+			intakes[1].ID,
+			intakes[2].ID,
+		})
+		s.NoError(err)
+
+		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		s.NoError(err)
+		s.Len(trbIntakes, 3)
+
+		// Make a set to verify that the three expected LCIDs are represented by all three intakes
+		lcidSet = make(map[string]bool)
+		lcidSet[trbIntakes[0].LifecycleID.ValueOrZero()] = true
+		lcidSet[trbIntakes[1].LifecycleID.ValueOrZero()] = true
+		lcidSet[trbIntakes[2].LifecycleID.ValueOrZero()] = true
+		s.True(lcidSet["111111"])
+		s.True(lcidSet["111222"])
 		s.True(lcidSet["111333"])
+
+		// Insert just 1
+		_, err = store.CreateTRBRequestSystemIntakes(ctx, trbRequest.ID, []uuid.UUID{
+			// intakes[0].ID,
+			// intakes[1].ID,
+			intakes[2].ID,
+		})
+		s.NoError(err)
+
+		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		s.NoError(err)
+		s.Len(trbIntakes, 1)
+
+		// Make a set to verify that the two expected LCIDs are represented by the two intakes
+		lcidSet = make(map[string]bool)
+		lcidSet[trbIntakes[0].LifecycleID.ValueOrZero()] = true
+		s.False(lcidSet["111111"])
+		s.False(lcidSet["111222"])
+		s.True(lcidSet["111333"])
+
+		// Insert empty (should delete all)
+		_, err = store.CreateTRBRequestSystemIntakes(ctx, trbRequest.ID, []uuid.UUID{
+			// intakes[0].ID,
+			// intakes[1].ID,
+			// intakes[2].ID,
+		})
+		s.NoError(err)
+
+		trbIntakes, err = GetTRBRequestSystemIntakesByTRBRequestID(ctx, store, trbRequest.ID)
+		s.NoError(err)
+		s.Len(trbIntakes, 0)
 	})
 }
