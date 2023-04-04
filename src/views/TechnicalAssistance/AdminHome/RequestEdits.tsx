@@ -92,8 +92,6 @@ function RequestEdits() {
     control,
     handleSubmit,
     reset,
-    setValue,
-    getValues,
     formState: { isDirty, isSubmitting }
   } = actionForm;
 
@@ -130,8 +128,6 @@ function RequestEdits() {
         );
       });
   };
-
-  if (loading) return null;
 
   return (
     <GridContainer className="width-full">
@@ -213,15 +209,8 @@ function RequestEdits() {
                 label: t('emailRecipientFields.copyTrbMailbox')
               }
             ]}
-            createContact={input =>
-              createAttendee({
-                variables: { input: { ...input, trbRequestId: id } }
-              }).then(result =>
-                setValue('notifyEuaIds', [
-                  ...getValues('notifyEuaIds'),
-                  input.euaUserId
-                ])
-              )
+            createContact={contact =>
+              createAttendee({ ...contact, trbRequestId: id })
             }
             className="margin-top-4 margin-bottom-3"
           />

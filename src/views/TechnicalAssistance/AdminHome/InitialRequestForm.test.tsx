@@ -8,7 +8,7 @@ import configureMockStore from 'redux-mock-store';
 import { attendees, requester } from 'data/mock/trbRequest';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
@@ -99,7 +99,7 @@ describe('Trb Admin Initial Request Form', () => {
           },
           {
             request: {
-              query: GetTRBRequestAttendees,
+              query: GetTRBRequestAttendeesQuery,
               variables: {
                 id: mockTrbRequestData.id
               }

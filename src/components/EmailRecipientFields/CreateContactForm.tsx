@@ -19,12 +19,10 @@ import { PersonRole } from 'types/graphql-global-types';
 import { TRBAttendeeFields } from 'types/technicalAssistance';
 import { trbAttendeeSchema } from 'validations/trbRequestSchema';
 
+import { CreateContact } from '.';
+
 type CreateContactFormProps = {
-  createContact: (input: {
-    euaUserId: string;
-    component: string;
-    role: PersonRole;
-  }) => Promise<any>;
+  createContact: CreateContact;
 };
 
 export default function CreateContactForm({

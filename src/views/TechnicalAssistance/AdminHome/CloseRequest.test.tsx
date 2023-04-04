@@ -11,7 +11,7 @@ import { MessageProvider } from 'hooks/useMessage';
 import CloseTrbRequestQuery from 'queries/CloseTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import ReopenTrbRequestQuery from 'queries/ReopenTrbRequestQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { PersonRole } from 'types/graphql-global-types';
 
 import CloseRequest from './CloseRequest';
@@ -91,7 +91,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             },
             {
               request: {
-                query: GetTRBRequestAttendees,
+                query: GetTRBRequestAttendeesQuery,
                 variables: {
                   id
                 }
@@ -298,7 +298,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             },
             {
               request: {
-                query: GetTRBRequestAttendees,
+                query: GetTRBRequestAttendeesQuery,
                 variables: {
                   id
                 }

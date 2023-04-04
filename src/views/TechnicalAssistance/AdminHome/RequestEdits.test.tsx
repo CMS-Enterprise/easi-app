@@ -10,7 +10,7 @@ import configureMockStore from 'redux-mock-store';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { PersonRole } from 'types/graphql-global-types';
 
 import TRBRequestInfoWrapper from './RequestContext';
@@ -82,9 +82,9 @@ describe('Trb Admin: Action: Request Edits', () => {
     }
   };
 
-  const mockGetTrbRequestAttendees = {
+  const mockGetTrbRequestAttendeesQuery = {
     request: {
-      query: GetTRBRequestAttendees,
+      query: GetTRBRequestAttendeesQuery,
       variables: {
         id: trbRequestId
       }
@@ -125,7 +125,7 @@ describe('Trb Admin: Action: Request Edits', () => {
           mocks={[
             mockCreateTrbRequestFeedback,
             mockGetTrbRequestSummary,
-            mockGetTrbRequestAttendees
+            mockGetTrbRequestAttendeesQuery
           ]}
         >
           <MemoryRouter
@@ -178,7 +178,7 @@ describe('Trb Admin: Action: Request Edits', () => {
     const { getByLabelText, getByRole, findByText } = render(
       <MockedProvider
         mocks={[
-          mockGetTrbRequestAttendees,
+          mockGetTrbRequestAttendeesQuery,
           {
             request: {
               query: CreateTrbRequestFeedbackQuery,

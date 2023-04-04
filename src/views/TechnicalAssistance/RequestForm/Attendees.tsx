@@ -12,6 +12,7 @@ import PageLoading from 'components/PageLoading';
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
+import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
   TRBAttendeeFields
@@ -115,15 +116,12 @@ function Attendees({
         async formData => {
           // Submit the input only if there are changes
           if (isDirty && requester.id) {
+            const { component, role } = formData;
             // Update requester
             await updateAttendee({
-              variables: {
-                input: {
-                  id: requester.id,
-                  component: formData.component,
-                  role: formData.role
-                }
-              }
+              id: requester.id,
+              component: component || '',
+              role: role as PersonRole
             })
               // Refresh the RequestForm parent request query
               // to update things like `stepsCompleted`
@@ -250,9 +248,7 @@ function Attendees({
                 attendees={attendees}
                 setActiveAttendee={setActiveAttendee}
                 trbRequestId={request.id}
-                deleteAttendee={(id: string) =>
-                  deleteAttendee({ variables: { id } })
-                }
+                deleteAttendee={(id: string) => deleteAttendee(id)}
               />
             </div>
 

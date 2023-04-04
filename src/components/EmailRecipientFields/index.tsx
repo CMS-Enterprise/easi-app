@@ -29,15 +29,19 @@ export type EmailRecipient = {
   createdAt: string;
 };
 
+type Contact = {
+  euaUserId: string;
+  component: string;
+  role: PersonRole;
+};
+
+export type CreateContact = (contact: Contact) => Promise<any>;
+
 type EmailRecipientFieldsProps = {
   requester: EmailRecipient;
   contacts: EmailRecipient[];
   mailboxes: Mailbox[];
-  createContact: (input: {
-    euaUserId: string;
-    component: string;
-    role: PersonRole;
-  }) => Promise<any>;
+  createContact: CreateContact;
   className?: string;
 };
 
@@ -53,6 +57,7 @@ const EmailRecipientFields = ({
   const {
     watch,
     getValues,
+    setValue,
     formState: { errors }
   } = useFormContext();
 
@@ -180,7 +185,16 @@ const EmailRecipientFields = ({
             }}
           />
 
-          <CreateContactForm createContact={createContact} />
+          <CreateContactForm
+            createContact={contact =>
+              createContact(contact).then(() =>
+                setValue('notifyEuaIds', [
+                  ...getValues('notifyEuaIds'),
+                  contact.euaUserId
+                ])
+              )
+            }
+          />
         </TruncatedContent>
       </fieldset>
     </FormGroup>

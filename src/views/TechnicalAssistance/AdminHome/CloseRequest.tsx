@@ -95,8 +95,6 @@ function CloseRequest() {
     control,
     handleSubmit,
     reset,
-    getValues,
-    setValue,
     formState: { isSubmitting, isDirty }
   } = formMethods;
 
@@ -256,15 +254,8 @@ function CloseRequest() {
                     label: t('emailRecipientFields.copyTrbMailbox')
                   }
                 ]}
-                createContact={input =>
-                  createAttendee({
-                    variables: { input: { ...input, trbRequestId: id } }
-                  }).then(result =>
-                    setValue('notifyEuaIds', [
-                      ...getValues('notifyEuaIds'),
-                      input.euaUserId
-                    ])
-                  )
+                createContact={contact =>
+                  createAttendee({ ...contact, trbRequestId: id })
                 }
                 className="margin-top-4 margin-bottom-3"
               />
