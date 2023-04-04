@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -102,7 +102,17 @@ function Basic({
     GetSystemIntakesWithLCIDS
   );
 
-  const systemIntakes = data?.systemIntakesWithLcids || [];
+  const systemIntakesWithLCIDs = useMemo(() => {
+    const systemIntakes = data?.systemIntakesWithLcids
+      ? [...data?.systemIntakesWithLcids]
+      : [];
+    return systemIntakes
+      .sort((a, b) => Number(a.lcid) - Number(b.lcid))
+      .map(intake => ({
+        value: intake.id,
+        label: `${intake.lcid} - ${intake.requestName}` || ''
+      }));
+  }, [data?.systemIntakesWithLcids]);
 
   const [updateForm] = useMutation<
     UpdateTrbRequestAndForm,
@@ -736,10 +746,7 @@ function Basic({
                   <MultiSelect
                     inputId="systemIntakes"
                     name="systemIntakes"
-                    options={systemIntakes.map(intake => ({
-                      value: intake.id,
-                      label: `${intake.lcid} - ${intake.requestName}` || ''
-                    }))}
+                    options={systemIntakesWithLCIDs}
                     initialValues={initialValues.systemIntakes.map(
                       (intake: TrbRequestFormFieldsSystemIntakeType) =>
                         intake.id
