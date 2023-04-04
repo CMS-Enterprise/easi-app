@@ -45,7 +45,8 @@ const Modal = ({
         overlayClassName
       )}
       className={classNames('easi-modal__content', {
-        [`easi-modal__align-${alignment}`]: !!alignment
+        [`easi-modal__align-${alignment}`]: !!alignment,
+        'radius-md': !alignment
       })}
       onAfterOpen={handleOpenModal}
       onAfterClose={noScroll.off}
