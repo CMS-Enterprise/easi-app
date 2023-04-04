@@ -63,9 +63,7 @@ func TRBRequests(logger *zap.Logger, store *storage.Store) error {
 }
 
 func (s *trbSeeder) seedTRBCase1() error {
-	_, err := s.makeTRBRequest(models.TRBTNeedHelp, func(t *models.TRBRequest) {
-		t.Name = "Case 1 - Draft request form"
-	})
+	_, err := s.addTRBRequest(models.TRBTNeedHelp, "Case 1 - Draft request form")
 	if err != nil {
 		return err
 	}
@@ -226,15 +224,13 @@ func (s *trbSeeder) seedTRBLeadOptions() ([]*models.UserInfo, error) {
 }
 
 func (s *trbSeeder) seedTRBWithForm(trbName string, isSubmitted bool) (*models.TRBRequest, error) {
-	inProgress, err := s.makeTRBRequest(models.TRBTNeedHelp, func(t *models.TRBRequest) {
-		t.Name = trbName
-	})
+	trb, err := s.addTRBRequest(models.TRBTNeedHelp, trbName)
 	if err != nil {
 		return nil, err
 	}
 
 	_, err = s.updateTRBRequestForm(map[string]interface{}{
-		"trbRequestId":             inProgress.ID.String(),
+		"trbRequestId":             trb.ID.String(),
 		"isSubmitted":              isSubmitted,
 		"component":                "Center for Medicare",
 		"needsAssistanceWith":      "Something is wrong with my system",
@@ -263,25 +259,25 @@ func (s *trbSeeder) seedTRBWithForm(trbName string, isSubmitted bool) (*models.T
 		return nil, err
 	}
 
-	_, err = s.updateTRBRequestFundingSources(inProgress.ID, "33311", []string{"meatloaf", "spaghetti", "cereal"})
+	_, err = s.updateTRBRequestFundingSources(trb.ID, "33311", []string{"meatloaf", "spaghetti", "cereal"})
 	if err != nil {
 		return nil, err
 	}
-	return resolvers.GetTRBRequestByID(s.ctx, inProgress.ID, s.store)
+	return resolvers.GetTRBRequestByID(s.ctx, trb.ID, s.store)
 }
 
-func (s *trbSeeder) makeTRBRequest(rType models.TRBRequestType, callbacks ...func(*models.TRBRequest)) (*models.TRBRequest, error) {
+func (s *trbSeeder) addTRBRequest(rType models.TRBRequestType, name string) (*models.TRBRequest, error) {
 	trb, err := resolvers.CreateTRBRequest(s.ctx, rType, mocks.FetchUserInfoMock, s.store)
 	if err != nil {
 		return nil, err
 	}
-	for _, cb := range callbacks {
-		cb(trb)
-	}
+
+	trb.Name = name
 	trb, err = s.store.UpdateTRBRequest(s.ctx, trb)
 	if err != nil {
 		return nil, err
 	}
+
 	return trb, nil
 }
 
