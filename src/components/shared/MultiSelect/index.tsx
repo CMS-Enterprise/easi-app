@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import Select, { MultiValue, OptionProps } from 'react-select';
 import { IconClose, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -97,11 +97,22 @@ const MultiSelect = ({
   initialValues?: string[];
   className?: string;
 }) => {
-  const [selected, setSelected] = useState<MultiValue<MultiSelectOptionProps>>(
-    initialValues
-      ? options.filter(option => initialValues.includes(option.value))
-      : []
+  const [
+    selected,
+    setSelected
+  ] = useState<MultiValue<MultiSelectOptionProps> | null>(
+    initialValues && options.length
+      ? [...options].filter(option => initialValues.includes(option.value))
+      : null
   );
+
+  useEffect(() => {
+    if (!selected && initialValues && options.length) {
+      setSelected(
+        options.filter(option => initialValues.includes(option.value))
+      );
+    }
+  }, [options, initialValues, selected]);
 
   const customStyles: {
     [index: string]: (
@@ -177,10 +188,10 @@ const MultiSelect = ({
         }}
         value={selected}
         controlShouldRenderValue={false}
-        placeholder={`${selected.length} selected`}
+        placeholder={`${selected?.length || 0} selected`}
         styles={customStyles}
       />
-      {selected.length > 0 && (
+      {selected && selected.length > 0 && (
         <div className="easi-multiselect--selected">
           <h4 className="text-normal margin-bottom-1">
             {selectedLabel || 'Selected options'}

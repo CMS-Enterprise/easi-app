@@ -25,6 +25,13 @@ export interface GetTrbRequest_trbRequest_form_fundingSources {
   source: string;
 }
 
+export interface GetTrbRequest_trbRequest_form_systemIntakes {
+  __typename: "SystemIntake";
+  id: UUID;
+  requestName: string | null;
+  lcid: string | null;
+}
+
 export interface GetTrbRequest_trbRequest_form {
   __typename: "TRBRequestForm";
   id: UUID;
@@ -49,13 +56,8 @@ export interface GetTrbRequest_trbRequest_form {
   subjectAreaOptions: TRBSubjectAreaOption[] | null;
   subjectAreaOptionOther: string | null;
   fundingSources: GetTrbRequest_trbRequest_form_fundingSources[] | null;
+  systemIntakes: GetTrbRequest_trbRequest_form_systemIntakes[];
   submittedAt: Time | null;
-}
-
-export interface GetTrbRequest_trbRequest_systemIntakes {
-  __typename: "SystemIntake";
-  id: UUID;
-  lcid: string | null;
 }
 
 export interface GetTrbRequest_trbRequest_feedback_author {
@@ -80,7 +82,6 @@ export interface GetTrbRequest_trbRequest {
   state: TRBRequestState;
   taskStatuses: GetTrbRequest_trbRequest_taskStatuses;
   form: GetTrbRequest_trbRequest_form;
-  systemIntakes: GetTrbRequest_trbRequest_systemIntakes[];
   feedback: GetTrbRequest_trbRequest_feedback[];
 }
 

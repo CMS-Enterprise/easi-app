@@ -24,6 +24,7 @@ const mockEmptyFormFields = {
   hasExpectedStartEndDates: null,
   expectedStartDate: null,
   expectedEndDate: null,
+  systemIntakes: [],
   collabGroups: [],
   collabDateSecurity: null,
   collabDateEnterpriseArchitecture: null,
@@ -42,7 +43,6 @@ const mockEmptyFormFields = {
 const mockTrbRequestData: TrbRequest = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Draft',
-  systemIntakes: [],
   form: {
     ...mockEmptyFormFields,
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
@@ -82,7 +82,6 @@ describe('Trb Request form: Basic', () => {
             request={{
               id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
               name: 'Draft',
-              systemIntakes: [],
               form: {
                 ...mockEmptyFormFields,
                 id: '452cf444-69b2-41a9-b8ab-ed354d209307',

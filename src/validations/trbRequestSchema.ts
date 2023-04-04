@@ -21,7 +21,7 @@ type TrbFormInputBasic = Pick<
   | 'hasExpectedStartEndDates'
   | 'expectedStartDate'
   | 'expectedEndDate'
-  // | 'systemIntakes'
+  | 'systemIntakes'
   | 'collabGroups'
   | 'collabDateSecurity'
   | 'collabDateEnterpriseArchitecture'
@@ -63,7 +63,7 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     ),
   expectedStartDate: yup.string(),
   expectedEndDate: yup.string(),
-  systemIntakes: yup.array(yup.string().required()).ensure(),
+  systemIntakes: yup.array(yup.string().required()).nullable().ensure(),
   collabGroups: yup
     .array(
       yup

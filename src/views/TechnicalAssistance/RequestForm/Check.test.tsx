@@ -41,7 +41,6 @@ const mockTrbRequestData: TrbRequest = {
   },
   feedback: [],
   type: TRBRequestType.NEED_HELP,
-  systemIntakes: [],
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     component: 'CCSQ',
@@ -55,6 +54,7 @@ const mockTrbRequestData: TrbRequest = {
     hasExpectedStartEndDates: true,
     expectedStartDate: '2023-01-05T05:00:00Z',
     expectedEndDate: null,
+    systemIntakes: [],
     collabGroups: [TRBCollabGroupOption.SECURITY, TRBCollabGroupOption.OTHER],
     collabDateSecurity: '06/01/2023',
     collabDateEnterpriseArchitecture: null,

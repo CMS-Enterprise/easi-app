@@ -36,6 +36,7 @@ import {
 } from 'queries/types/DeleteTRBRequestFundingSource';
 import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'queries/types/GetSystemIntakesWithLCIDS';
 import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'queries/types/GetTrbRequest';
+import { TrbRequestFormFields_form_systemIntakes as TrbRequestFormFieldsSystemIntakeType } from 'queries/types/TrbRequestFormFields';
 import {
   UpdateTrbRequestAndForm,
   UpdateTrbRequestAndFormVariables
@@ -128,8 +129,9 @@ function Basic({
     resolver: yupResolver(basicSchema),
     defaultValues: {
       name: request.name,
-      systemIntakes: request.systemIntakes,
-      ...initialValues
+      ...initialValues,
+      // Mapping over intakes as mutation input only takes UUID
+      systemIntakes: systemIntakes?.map(intake => intake.id)
     }
   });
 
@@ -716,15 +718,11 @@ function Basic({
           />
 
           <Controller
-            // @ts-ignore
             name="systemIntakes"
             control={control}
             render={({ field, fieldState: { error } }) => {
               return (
-                <FormGroup
-                  // Use the same FormGroup error indicator for the related nested "other" field
-                  error={!!error || 'systemIntakes' in errors}
-                >
+                <FormGroup error={!!error || 'systemIntakes' in errors}>
                   <Label
                     htmlFor="systemIntakes"
                     hint={<div>{t(`basic.hint.relatedLCIDS`)}</div>}
@@ -742,7 +740,10 @@ function Basic({
                       value: intake.id,
                       label: `${intake.lcid} - ${intake.requestName}` || ''
                     }))}
-                    initialValues={initialValues.systemIntakes}
+                    initialValues={initialValues.systemIntakes.map(
+                      (intake: TrbRequestFormFieldsSystemIntakeType) =>
+                        intake.id
+                    )}
                     onChange={values => {
                       field.onChange(values);
                     }}
