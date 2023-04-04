@@ -219,32 +219,32 @@ function CloseRequest() {
           )}
         />
 
+        <h3 className="margin-top-6 margin-bottom-0">
+          {t('actionRequestEdits.notificationTitle')}
+        </h3>
+        <p className="margin-0 line-height-body-5">
+          {t('actionRequestEdits.notificationDescription')}
+        </p>
+
+        <FormProvider {...formMethods}>
+          <EmailRecipientFields
+            requester={requester}
+            contacts={attendees}
+            mailboxes={[
+              {
+                key: 'copyTrbMailbox',
+                label: t('emailRecipientFields.copyTrbMailbox')
+              }
+            ]}
+            createContact={contact =>
+              createAttendee({ ...contact, trbRequestId: id })
+            }
+            className="margin-top-4 margin-bottom-3"
+          />
+        </FormProvider>
+
         {action === 'close-request' && (
           <>
-            <h3 className="margin-top-6 margin-bottom-0">
-              {t('actionRequestEdits.notificationTitle')}
-            </h3>
-            <p className="margin-0 line-height-body-5">
-              {t('actionRequestEdits.notificationDescription')}
-            </p>
-
-            <FormProvider {...formMethods}>
-              <EmailRecipientFields
-                requester={requester}
-                contacts={attendees}
-                mailboxes={[
-                  {
-                    key: 'copyTrbMailbox',
-                    label: t('emailRecipientFields.copyTrbMailbox')
-                  }
-                ]}
-                createContact={contact =>
-                  createAttendee({ ...contact, trbRequestId: id })
-                }
-                className="margin-top-4 margin-bottom-3"
-              />
-            </FormProvider>
-
             <ModalToggleButton
               disabled={isSubmitting}
               modalRef={confirmModalRef}
