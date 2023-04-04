@@ -403,6 +403,7 @@ const technicalAssistance = {
       fundingSources: 'Which existing funding sources will fund this project?',
       relatedLCIDS:
         'Select any Life Cycle IDs (LCIDs) pertaining to this request.',
+      listLCIDS: 'List any Life Cycle IDs (LCIDs) pertaining to this request.',
       selectedLCIDs: 'Selected LCIDs',
       collabAndGovernance: 'Collaboration and Governance',
       collabGroups:
@@ -457,7 +458,8 @@ const technicalAssistance = {
       submit:
         'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.'
     },
-    allFieldsMandatory: 'All fields are mandatory'
+    allFieldsMandatory: 'All fields are mandatory',
+    noAnswer: 'No answer selected'
   },
   subject: {
     info:

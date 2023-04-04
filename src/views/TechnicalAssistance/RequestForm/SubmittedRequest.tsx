@@ -21,25 +21,6 @@ import { formatFundingSourcesForRender } from 'views/SystemIntake/ContractDetail
 import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';
 
-// function SubjectDefinition(
-//   form: any,
-//   field: keyof TrbRequestForm
-// ): React.ReactNode {
-//   const { t } = useTranslation('technicalAssistance');
-//   const { [field]: formField, [`${field}Other`]: formFieldOther } = form;
-//   return Array.isArray(formField) && formField.length ? (
-//     formField
-//       .map((v: string) =>
-//         v === 'OTHER'
-//           ? `${t('basic.options.other')}: ${formFieldOther}`
-//           : t(`subject.options.${field}.${v}`)
-//       )
-//       .join(', ')
-//   ) : (
-//     <em>{t('check.noTopicsSelected')}</em>
-//   );
-// }
-
 type SubmittedRequestProps = {
   request: TrbRequest;
   showEditSectionLinks?: boolean;
@@ -177,27 +158,38 @@ function SubmittedRequest({
             <dt>{t('basic.labels.fundingSources')}</dt>
           </Grid>
 
-          {fundingSources.length && (
-            <>
-              {fundingSources.map(fundingSource => (
-                <Grid
-                  tablet={{ col: 12 }}
-                  desktop={{ col: 6 }}
-                  key={fundingSource.fundingNumber}
-                >
-                  <dt>{t('basic.labels.fundingSource')}</dt>
-                  <dd className="margin-bottom-0">
-                    {t('basic.labels.fundingNumber')}:{' '}
-                    {fundingSource.fundingNumber}
-                  </dd>
-                  <dd>
-                    {t('basic.labels.fundingSourcesList')}:{' '}
-                    {fundingSource.sources.join(', ')}
-                  </dd>
-                </Grid>
-              ))}
-            </>
-          )}
+          <Grid row tablet={{ col: 12 }} className="margin-bottom-4">
+            {fundingSources.length > 0
+              ? fundingSources.map(fundingSource => (
+                  <Grid
+                    tablet={{ col: 12 }}
+                    desktop={{ col: 6 }}
+                    key={fundingSource.fundingNumber}
+                  >
+                    <dt>{t('basic.labels.fundingSource')}</dt>
+                    <dd className="margin-bottom-0">
+                      {t('basic.labels.fundingNumber')}:{' '}
+                      {fundingSource.fundingNumber}
+                    </dd>
+                    <dd className="margin-bottom-0">
+                      {t('basic.labels.fundingSourcesList')}:{' '}
+                      {fundingSource.sources.join(', ')}
+                    </dd>
+                  </Grid>
+                ))
+              : t('basic.noAnswer')}
+          </Grid>
+
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+            <dt>{t('basic.labels.listLCIDS')}</dt>
+            <dd>
+              {request.form.systemIntakes.length > 0
+                ? request.form.systemIntakes
+                    .map(intake => intake.lcid)
+                    .join(', ')
+                : t('basic.noAnswer')}
+            </dd>
+          </Grid>
 
           {/* Used to break up a potential uneven row */}
           <Grid desktop={{ col: 12 }} />
