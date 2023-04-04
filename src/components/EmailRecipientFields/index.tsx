@@ -7,6 +7,7 @@ import { orderBy } from 'lodash';
 
 import CheckboxField from 'components/shared/CheckboxField';
 import TruncatedContent from 'components/shared/TruncatedContent';
+import Spinner from 'components/Spinner';
 import contactRoles from 'constants/enums/contactRoles';
 import { PersonRole } from 'types/graphql-global-types';
 import toggleArrayValue from 'utils/toggleArrayValue';
@@ -88,6 +89,10 @@ const EmailRecipientFields = ({
       });
     }
   }, [isDirty, notifyEuaIds, requester, resetField]);
+
+  if (!requester?.userInfo?.euaUserId) {
+    return <Spinner className="display-block margin-top-2" />;
+  }
 
   return (
     <FormGroup error={!!errors.notifyEuaIds}>
