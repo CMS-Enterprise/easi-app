@@ -38,7 +38,7 @@ import { FormStepComponentProps, StepSubmit, TrbFormAlert } from '.';
 // Used to render Attendees/form from task list outside the scope of initial request form
 type AttendeesProps =
   | {
-      fromTaskList?: true;
+      fromTaskList: true;
       request?: TrbRequest;
       /** Refetch the trb request from the form wrapper */
       refetchRequest?: (
@@ -278,14 +278,15 @@ function Attendees({
                 <p className="line-height-body-5 margin-top-0 margin-bottom-2">
                   {t('attendees.description')}
                 </p>
-                <div className="margin-bottom-5">
-                  <UswdsReactLink to={`/trb/task-list/${trbID}`}>
-                    <IconArrowBack className="margin-right-1 text-middle" />
-                    <span className="line-height-body-5">
-                      {t('requestFeedback.returnToTaskList')}
-                    </span>
-                  </UswdsReactLink>
-                </div>
+                <UswdsReactLink
+                  to={`/trb/task-list/${trbID}`}
+                  className="display-block margin-bottom-5"
+                >
+                  <IconArrowBack className="margin-right-1 text-middle" />
+                  <span className="line-height-body-5">
+                    {t('requestFeedback.returnToTaskList')}
+                  </span>
+                </UswdsReactLink>
               </>
             )}
 
@@ -337,10 +338,11 @@ function Attendees({
               />
             </div>
 
-            {stepUrl && (
-              <Pager
-                className="margin-top-5"
-                next={{
+            <Pager
+              className="margin-top-5"
+              next={
+                // Hides button on task list
+                stepUrl && {
                   disabled: isSubmitting,
                   onClick: () => {
                     submitForm(() => {
@@ -353,20 +355,24 @@ function Attendees({
                       : 'attendees.continueWithoutAdding'
                   ),
                   outline: attendees.length === 0
-                }}
-                back={{
+                }
+              }
+              back={
+                stepUrl && {
                   disabled: isSubmitting,
                   onClick: () => {
                     submitForm(() => {
                       history.push(stepUrl.back);
                     });
                   }
-                }}
-                saveExitDisabled={isSubmitting}
-                submit={submitForm}
-                taskListUrl={taskListUrl}
-              />
-            )}
+                }
+              }
+              saveExitDisabled={isSubmitting}
+              saveExitText={t('requestFeedback.returnToTaskList')}
+              submit={submitForm}
+              submitDisabled={!stepUrl}
+              taskListUrl={taskListUrl}
+            />
           </Form>
         </Route>
       </Switch>

@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
-import {
-  Alert,
-  Grid,
-  GridContainer,
-  IconArrowBack
-} from '@trussworks/react-uswds';
-
-import UswdsReactLink from 'components/LinkWrapper';
+import { Alert, Grid, GridContainer } from '@trussworks/react-uswds';
 
 import Attendees from './RequestForm/Attendees';
 import Breadcrumbs from './Breadcrumbs';
@@ -62,17 +55,6 @@ const TrbAttendees = () => {
           setFormAlert={setFormAlert}
           taskListUrl={`/trb/task-list/${requestID}`}
         />
-
-        {!isForm && (
-          <div className="margin-top-5">
-            <UswdsReactLink to={`/trb/task-list/${requestID}`}>
-              <IconArrowBack className="margin-right-1 text-middle" />
-              <span className="line-height-body-5">
-                {t('requestFeedback.returnToTaskList')}
-              </span>
-            </UswdsReactLink>
-          </div>
-        )}
       </Grid>
     </GridContainer>
   );
