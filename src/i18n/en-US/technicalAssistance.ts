@@ -33,7 +33,7 @@ const technicalAssistance = {
   },
   adminAction: 'Admin Action',
   requestNotes: {
-    text: 'notes about this request',
+    text: 'note{{-plural}} about this request',
     viewNotes: 'View notes',
     addNote: 'Add a note'
   },
@@ -92,6 +92,7 @@ const technicalAssistance = {
     ],
     meetingSummary: 'Meeting summary',
     addRecommendation: 'Add a recommendation',
+    addAnotherRecommendation: 'Add another recommendation',
     noRecommendations:
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
     continueWithoutAdding: 'Continue without adding recommendations',
@@ -107,7 +108,15 @@ const technicalAssistance = {
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
     error:
-      'There was an issue saving your advice letter. Please try again, and if the problem persists, try again later.'
+      'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
+    recommendationSuccess:
+      'Your recommendation was added to this advice letter.',
+    modal: {
+      title: 'Confirm you want to remove this recommendation.',
+      text:
+        'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
+      removingTitle: 'Removing: {{title}}'
+    }
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
@@ -825,6 +834,40 @@ const technicalAssistance = {
     alert:
       'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
     breadcrumb: 'Schedule a consult'
+  },
+  notes: {
+    description:
+      'Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.',
+    addNoteDescription:
+      'Add a note about this request for other TRB team members.',
+    addNote: 'Add a note',
+    notes: 'Notes',
+    allNotes: 'All notes',
+    viewMore: 'View more notes',
+    noNotes:
+      'No TRB member has added notes for this request yet. If you’d like to add a note, use the button above.',
+    date: 'Date',
+    author: 'Note author',
+    about: 'What is this note about?',
+    save: 'Save',
+    saveNote: 'Save note',
+    cancel: 'Cancel',
+    status: {
+      success: 'Your note has been added.',
+      error:
+        'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.'
+    },
+    labels: {
+      category: 'What is this note about?',
+      noteText: 'Note'
+    },
+    categories: {
+      ADVICE_LETTER: 'Advice letter',
+      CONSULT_SESSION: 'Consult session',
+      GENERAL_REQUEST: 'General note about this request',
+      INITIAL_REQUEST_FORM: 'Initial request form',
+      SUPPORTING_DOCUMENTS: 'Supporting documents'
+    }
   },
   actionCloseRequest: {
     heading: 'Action: close request',

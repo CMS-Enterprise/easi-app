@@ -23,12 +23,11 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 		path.Join("trb", "task-list", trbID.String()),
 	)
 
-	// TODO - figure out what this URL will be once it's in the frontend
 	adviceLetterLink := fmt.Sprintf(
 		"%s://%s/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
-		path.Join("trb", "advice-letter", trbID.String()),
+		path.Join("trb", "advice", trbID.String()),
 	)
 
 	submissionDate, err := time.Parse(time.RFC3339, "2022-02-01T13:30:00+00:00")

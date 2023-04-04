@@ -89,6 +89,11 @@ describe('Trb Admin: Action: Request Edits', () => {
                       adviceLetterStatus: 'IN_PROGRESS',
                       __typename: 'TRBTaskStatuses'
                     },
+                    adminNotes: [
+                      {
+                        id: '123'
+                      }
+                    ],
                     __typename: 'TRBRequest'
                   }
                 }

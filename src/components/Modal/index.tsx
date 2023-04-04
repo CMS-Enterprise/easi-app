@@ -6,7 +6,7 @@ import noScroll from 'no-scroll';
 
 import './index.scss';
 
-type ModalProps = {
+export type ModalProps = {
   overlayClassName?: string;
   alignment?: 'right' | 'left';
   title?: string;
@@ -60,7 +60,7 @@ const Modal = ({
         onClick={closeModal}
       >
         <IconClose size={3} />
-        <h4 className="text-base margin-0 margin-left-1">{title}</h4>
+        {title && <h4 className="text-base margin-0 margin-left-1">{title}</h4>}
       </button>
       <div className="easi-modal__body">{children}</div>
     </ReactModal>

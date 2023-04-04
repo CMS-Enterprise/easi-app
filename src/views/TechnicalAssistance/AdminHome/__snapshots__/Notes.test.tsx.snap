@@ -1,0 +1,372 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Trb Admin Notes: View Notes renders successfully  1`] = `
+<DocumentFragment>
+  <div
+    class="trb-admin-home__notes line-height-body-5"
+    data-testid="trb-admin-home__notes"
+    id="trbAdminNotes-449ea115-8bfa-48c3-b1dd-5a613d79fbae"
+  >
+    <h1
+      class="margin-top-0 margin-bottom-1 line-height-heading-2"
+    >
+      Notes
+    </h1>
+    <p>
+      Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.
+    </p>
+    <a
+      class="usa-button margin-bottom-4"
+      href="/trb/449ea115-8bfa-48c3-b1dd-5a613d79fbae/notes/add-note"
+    >
+      Add a note
+    </a>
+    <div
+      class="margin-top-2"
+    >
+      <div
+        class="grid-row margin-bottom-4"
+        data-testid="grid"
+      >
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            March 28, 2024
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            Jerry Seinfeld
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 margin-top-1"
+          data-testid="grid"
+        >
+          <div
+            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          >
+            <p
+              class="margin-bottom-0 text-bold"
+            >
+              What is this note about?
+            </p>
+            <p
+              class="margin-top-0"
+            >
+              General note about this request
+            </p>
+            <p>
+              My cute original note
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid-row margin-bottom-4"
+        data-testid="grid"
+      >
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            May 29, 2023
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            Jerry Who
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 margin-top-1"
+          data-testid="grid"
+        >
+          <div
+            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          >
+            <p
+              class="margin-bottom-0 text-bold"
+            >
+              What is this note about?
+            </p>
+            <p
+              class="margin-top-0"
+            >
+              General note about this request
+            </p>
+            <p>
+              My cute note5
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid-row margin-bottom-4"
+        data-testid="grid"
+      >
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            May 29, 2023
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            Jerry Who
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 margin-top-1"
+          data-testid="grid"
+        >
+          <div
+            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          >
+            <p
+              class="margin-bottom-0 text-bold"
+            >
+              What is this note about?
+            </p>
+            <p
+              class="margin-top-0"
+            >
+              General note about this request
+            </p>
+            <p>
+              My cute note4
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid-row margin-bottom-4"
+        data-testid="grid"
+      >
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            May 29, 2023
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            Jerry Who
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 margin-top-1"
+          data-testid="grid"
+        >
+          <div
+            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          >
+            <p
+              class="margin-bottom-0 text-bold"
+            >
+              What is this note about?
+            </p>
+            <p
+              class="margin-top-0"
+            >
+              General note about this request
+            </p>
+            <p>
+              My cute note3
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid-row margin-bottom-4"
+        data-testid="grid"
+      >
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            May 29, 2023
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            Jerry Who
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 margin-top-1"
+          data-testid="grid"
+        >
+          <div
+            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          >
+            <p
+              class="margin-bottom-0 text-bold"
+            >
+              What is this note about?
+            </p>
+            <p
+              class="margin-top-0"
+            >
+              General note about this request
+            </p>
+            <p>
+              My cute note2
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid-row margin-bottom-4"
+        data-testid="grid"
+      >
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Date
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            May 29, 2021
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
+        >
+          <dt
+            class="text-bold"
+          >
+            Note author
+          </dt>
+          <dd
+            class="margin-left-0 margin-bottom-2 line-height-body-5"
+          >
+            Jerry Who
+          </dd>
+        </div>
+        <div
+          class="desktop:grid-col-12 margin-top-1"
+          data-testid="grid"
+        >
+          <div
+            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          >
+            <p
+              class="margin-bottom-0 text-bold"
+            >
+              What is this note about?
+            </p>
+            <p
+              class="margin-top-0"
+            >
+              General note about this request
+            </p>
+            <p>
+              My cute note more
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
