@@ -87,7 +87,10 @@ const Summary = ({
           if (e instanceof ApolloError) {
             setFormAlert({
               type: 'error',
-              message: t('adviceLetterForm.error')
+              message: t('adviceLetterForm.error', {
+                action: 'saving',
+                type: 'advice letter'
+              })
             });
           }
         }
@@ -111,7 +114,7 @@ const Summary = ({
       className="maxw-tablet"
     >
       {/* Required fields help text */}
-      <HelpText className="margin-top-1 margin-bottom-1">
+      <HelpText className="margin-top-1 margin-bottom-1 text-base">
         <Trans
           i18nKey="technicalAssistance:requiredFields"
           components={{ red: <span className="text-red" /> }}
