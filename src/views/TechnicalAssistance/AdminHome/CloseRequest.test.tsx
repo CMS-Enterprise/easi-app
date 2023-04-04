@@ -145,6 +145,12 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       i18next.t<string>('technicalAssistance:actionCloseRequest.heading')
     );
 
+    const requester = await findByRole('checkbox', {
+      name:
+        'Jerry Seinfeld, Office of Equal Opportunity and Civil Rights (Requester)'
+    });
+    expect(requester).toBeChecked();
+
     userEvent.type(
       getByLabelText(
         RegExp(
@@ -239,7 +245,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   });
 
   it('re-opens a request with a reason', async () => {
-    const { getByLabelText, getByRole, findByText } = render(
+    const { getByLabelText, getByRole, findByText, findByRole } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -351,6 +357,12 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     await findByText(
       i18next.t<string>('technicalAssistance:actionReopenRequest.heading')
     );
+
+    const requester = await findByRole('checkbox', {
+      name:
+        'Jerry Seinfeld, Office of Equal Opportunity and Civil Rights (Requester)'
+    });
+    expect(requester).toBeChecked();
 
     userEvent.type(
       getByLabelText(

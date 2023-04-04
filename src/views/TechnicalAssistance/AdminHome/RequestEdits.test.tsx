@@ -115,7 +115,13 @@ describe('Trb Admin: Action: Request Edits', () => {
   };
 
   it('submits a feedback message', async () => {
-    const { getByLabelText, getByRole, findByText, asFragment } = render(
+    const {
+      getByLabelText,
+      getByRole,
+      findByText,
+      asFragment,
+      findByRole
+    } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -151,6 +157,12 @@ describe('Trb Admin: Action: Request Edits', () => {
     await findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
+
+    const requester = await findByRole('checkbox', {
+      name:
+        'Jerry Seinfeld, Office of Equal Opportunity and Civil Rights (Requester)'
+    });
+    expect(requester).toBeChecked();
 
     expect(asFragment()).toMatchSnapshot();
 
