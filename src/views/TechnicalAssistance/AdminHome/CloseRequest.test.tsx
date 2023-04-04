@@ -71,6 +71,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
               result: {
                 data: {
                   trbRequest: {
+                    id,
                     name: 'Draft',
                     type: 'NEED_HELP',
                     state: 'OPEN',
@@ -84,6 +85,11 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                       adviceLetterStatus: 'IN_PROGRESS',
                       __typename: 'TRBTaskStatuses'
                     },
+                    adminNotes: [
+                      {
+                        id: '123'
+                      }
+                    ],
                     __typename: 'TRBRequest'
                   }
                 }
@@ -284,6 +290,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
               result: {
                 data: {
                   trbRequest: {
+                    id,
                     name: 'Draft',
                     type: 'NEED_HELP',
                     state: 'OPEN',
@@ -297,6 +304,11 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                       adviceLetterStatus: 'IN_PROGRESS',
                       __typename: 'TRBTaskStatuses'
                     },
+                    adminNotes: [
+                      {
+                        id: '123'
+                      }
+                    ],
                     __typename: 'TRBRequest'
                   }
                 }
