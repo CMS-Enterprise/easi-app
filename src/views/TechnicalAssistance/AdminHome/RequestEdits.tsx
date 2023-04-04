@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -50,7 +50,7 @@ function RequestEdits() {
   const { message, showMessage, showMessageOnNextPage } = useMessage();
 
   const {
-    data: { attendees, requester, loading },
+    data: { attendees, requester },
     createAttendee
   } = useTRBAttendees(id);
 
@@ -67,17 +67,6 @@ function RequestEdits() {
     feedbackAction = TRBFeedbackAction.READY_FOR_CONSULT;
   }
 
-  const defaultValues: RequestEditsFields = useMemo(
-    () => ({
-      feedbackMessage: '',
-      copyTrbMailbox: true,
-      notifyEuaIds: requester?.userInfo?.euaUserId
-        ? [requester?.userInfo?.euaUserId]
-        : []
-    }),
-    [requester]
-  );
-
   const actionForm = useForm<RequestEditsFields>({
     resolver: yupResolver(
       trbActionSchema(
@@ -85,26 +74,23 @@ function RequestEdits() {
         feedbackAction === TRBFeedbackAction.REQUEST_EDITS
       )
     ),
-    defaultValues
+    defaultValues: {
+      feedbackMessage: '',
+      copyTrbMailbox: true,
+      notifyEuaIds: []
+    }
   });
 
   const {
     control,
     handleSubmit,
-    reset,
-    formState: { isDirty, isSubmitting }
+    formState: { isSubmitting }
   } = actionForm;
 
   const [sendFeedback] = useMutation<
     CreateTrbRequestFeedback,
     CreateTrbRequestFeedbackVariables
   >(CreateTrbRequestFeedbackQuery);
-
-  useEffect(() => {
-    if (!isDirty && !loading) {
-      reset(defaultValues);
-    }
-  }, [isDirty, loading, reset, defaultValues]);
 
   const submitForm = (formData: RequestEditsFields) => {
     sendFeedback({

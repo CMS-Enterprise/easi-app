@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { orderBy } from 'lodash';
 
 import CheckboxField from 'components/shared/CheckboxField';
 import TruncatedContent from 'components/shared/TruncatedContent';
@@ -58,8 +59,11 @@ const EmailRecipientFields = ({
     watch,
     getValues,
     setValue,
-    formState: { errors }
+    resetField,
+    formState: { errors, isDirty }
   } = useFormContext();
+
+  const notifyEuaIds: string[] = watch('notifyEuaIds');
 
   const defaultMailboxes: Mailbox[] = useRef(
     mailboxes.map(({ key }) => getValues(key))
@@ -71,6 +75,19 @@ const EmailRecipientFields = ({
   ])
     .flat()
     .filter(item => item).length;
+
+  // Add requester as default recipient
+  useEffect(() => {
+    if (
+      !isDirty &&
+      notifyEuaIds.length === 0 &&
+      requester?.userInfo?.euaUserId
+    ) {
+      resetField('notifyEuaIds', {
+        defaultValue: [requester.userInfo.euaUserId]
+      });
+    }
+  }, [isDirty, notifyEuaIds, requester, resetField]);
 
   return (
     <FormGroup error={!!errors.notifyEuaIds}>
@@ -158,7 +175,7 @@ const EmailRecipientFields = ({
             render={({ field }) => {
               return (
                 <>
-                  {contacts.map((contact, index) => {
+                  {orderBy(contacts, 'createdAt').map((contact, index) => {
                     const { commonName, euaUserId } = contact.userInfo || {};
                     const value = euaUserId || '';
 
@@ -188,10 +205,7 @@ const EmailRecipientFields = ({
           <CreateContactForm
             createContact={contact =>
               createContact(contact).then(() =>
-                setValue('notifyEuaIds', [
-                  ...getValues('notifyEuaIds'),
-                  contact.euaUserId
-                ])
+                setValue('notifyEuaIds', [...notifyEuaIds, contact.euaUserId])
               )
             }
           />

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -71,31 +71,23 @@ function CloseRequest() {
   }
 
   const {
-    data: { attendees, requester, loading },
+    data: { attendees, requester },
     createAttendee
   } = useTRBAttendees(id);
 
-  const defaultValues: CloseRequestFields = useMemo(
-    () => ({
-      text: '',
-      copyTrbMailbox: true,
-      notifyEuaIds: requester?.userInfo?.euaUserId
-        ? [requester?.userInfo?.euaUserId]
-        : []
-    }),
-    [requester]
-  );
-
   const formMethods = useForm<CloseRequestFields>({
     resolver: yupResolver(trbActionSchema('text')),
-    defaultValues
+    defaultValues: {
+      text: '',
+      copyTrbMailbox: true,
+      notifyEuaIds: []
+    }
   });
 
   const {
     control,
     handleSubmit,
-    reset,
-    formState: { isSubmitting, isDirty }
+    formState: { isSubmitting }
   } = formMethods;
 
   const [mutateClose] = useMutation<CloseTrbRequest, CloseTrbRequestVariables>(
@@ -169,14 +161,6 @@ function CloseRequest() {
         });
     }
   );
-
-  useEffect(() => {
-    if (!isDirty && !loading) {
-      reset(defaultValues);
-    }
-  }, [isDirty, loading, reset, defaultValues]);
-
-  if (loading) return null;
 
   return (
     <GridContainer className="width-full">
