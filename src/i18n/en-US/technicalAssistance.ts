@@ -92,6 +92,7 @@ const technicalAssistance = {
     ],
     meetingSummary: 'Meeting summary',
     addRecommendation: 'Add a recommendation',
+    addAnotherRecommendation: 'Add another recommendation',
     noRecommendations:
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
     continueWithoutAdding: 'Continue without adding recommendations',
@@ -107,7 +108,15 @@ const technicalAssistance = {
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
     error:
-      'There was an issue saving your advice letter. Please try again, and if the problem persists, try again later.'
+      'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
+    recommendationSuccess:
+      'Your recommendation was added to this advice letter.',
+    modal: {
+      title: 'Confirm you want to remove this recommendation.',
+      text:
+        'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
+      removingTitle: 'Removing: {{title}}'
+    }
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',

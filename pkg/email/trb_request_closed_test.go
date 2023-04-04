@@ -22,12 +22,11 @@ func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
 		path.Join("trb", "task-list", trbID.String()),
 	)
 
-	// TODO - figure out what this URL will be once it's in the frontend
 	adviceLetterLink := fmt.Sprintf(
 		"%s://%s/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
-		path.Join("trb", "advice-letter", trbID.String()),
+		path.Join("trb", "advice", trbID.String()),
 	)
 
 	recipients := []models.EmailAddress{
