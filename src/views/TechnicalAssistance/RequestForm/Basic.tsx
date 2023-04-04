@@ -131,7 +131,7 @@ function Basic({
       name: request.name,
       ...initialValues,
       // Mapping over intakes as mutation input only takes UUID
-      systemIntakes: systemIntakes?.map(intake => intake.id)
+      systemIntakes: request.form.systemIntakes.map(intake => intake.id)
     }
   });
 
