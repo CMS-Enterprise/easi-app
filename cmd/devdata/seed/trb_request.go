@@ -58,6 +58,9 @@ func TRBRequests(logger *zap.Logger, store *storage.Store) error {
 	if err := s.seedTRBCase7(); err != nil {
 		return err
 	}
+	if err := s.seedTRBCase8(); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -156,7 +159,31 @@ func (s *trbSeeder) seedTRBCase6() error {
 }
 
 func (s *trbSeeder) seedTRBCase7() error {
-	trb, err := s.seedTRBWithForm("Case 7 - Advice letter in review", false)
+	trb, err := s.seedTRBWithForm("Case 7 - Advice letter in review", true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBConsultMeeting(trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addAdviceLetter(trb, false)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *trbSeeder) seedTRBCase8() error {
+	trb, err := s.seedTRBWithForm("Case 7 - Advice letter reviewed", true)
 	if err != nil {
 		return err
 	}
