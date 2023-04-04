@@ -22,6 +22,19 @@ func FetchUserInfoMock(ctx context.Context, eua string) (*models.UserInfo, error
 	}, nil
 }
 
+// FetchUserInfosMock mocks the fetch user info logic
+func FetchUserInfosMock(ctx context.Context, euas []string) ([]*models.UserInfo, error) {
+	userInfos := make([]*models.UserInfo, 0, len(euas))
+	for _, eua := range euas {
+		userInfo, err := FetchUserInfoMock(ctx, eua)
+		if err != nil {
+			return nil, err
+		}
+		userInfos = append(userInfos, userInfo)
+	}
+	return userInfos, nil
+}
+
 // CtxWithLoggerAndPrincipal makes a context with a mocked logger and principal
 func CtxWithLoggerAndPrincipal(logger *zap.Logger, euaID string) context.Context {
 	princ := &authentication.EUAPrincipal{
