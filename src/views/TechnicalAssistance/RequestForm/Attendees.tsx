@@ -1,16 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { ApolloError } from '@apollo/client';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useParams,
+  useRouteMatch
+} from 'react-router-dom';
+import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form } from '@trussworks/react-uswds';
+import { Form, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
+import {
+  GetTrbRequest,
+  GetTrbRequest_trbRequest as TrbRequest,
+  GetTrbRequestVariables
+} from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
   AttendeeFieldLabels,
@@ -21,7 +32,36 @@ import { trbRequesterSchema } from 'validations/trbRequestSchema';
 import { AttendeeFields, AttendeesTable } from './AttendeesForm/components';
 import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
-import { FormStepComponentProps, StepSubmit } from '.';
+import { FormStepComponentProps, StepSubmit, TrbFormAlert } from '.';
+
+// Make FormStepComponentProps conditionally required on the presence of fromTaskList
+// Used to render Attendees/form from task list outside the scope of initial request form
+type AttendeesProps =
+  | {
+      fromTaskList: true;
+      request?: TrbRequest;
+      /** Refetch the trb request from the form wrapper */
+      refetchRequest?: (
+        variables?: Partial<GetTrbRequestVariables> | undefined
+      ) => Promise<ApolloQueryResult<GetTrbRequest>>;
+      /**
+       * Set the current form step component submit handler
+       * so that in can be used in other places like the header.
+       * Form step components need to reassign the handler.
+       */
+      setStepSubmit?: React.Dispatch<React.SetStateAction<StepSubmit | null>>;
+      /** Set to update the submitting state from step components to the parent request form */
+      setIsStepSubmitting?: React.Dispatch<React.SetStateAction<boolean>>;
+      /** Set a form level alert message from within step components */
+      setFormAlert: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
+      stepUrl?: {
+        current: string;
+        next: string;
+        back: string;
+      };
+      taskListUrl: string;
+    }
+  | ({ fromTaskList?: false } & FormStepComponentProps);
 
 /** Initial blank attendee object */
 export const initialAttendee: TRBAttendee = {
@@ -46,11 +86,18 @@ function Attendees({
   refetchRequest,
   setIsStepSubmitting,
   setStepSubmit,
-  taskListUrl
-}: FormStepComponentProps) {
+  taskListUrl,
+  fromTaskList
+}: AttendeesProps) {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
+
+  const { id: trbID } = useParams<{
+    id: string;
+  }>();
+
+  const taskListAttendeesURL = `/trb/task-list/${trbID}/attendees`;
 
   /** Field labels object from translation file */
   const fieldLabels: AttendeeFieldLabels = t(
@@ -67,7 +114,7 @@ function Attendees({
    */
   const [activeAttendee, setActiveAttendee] = useState<TRBAttendee>({
     ...initialAttendee,
-    trbRequestId: request.id
+    trbRequestId: request?.id || trbID
   });
 
   // Initialize form
@@ -90,7 +137,7 @@ function Attendees({
     data: { attendees, requester, loading },
     updateAttendee,
     deleteAttendee
-  } = useTRBAttendees(request.id);
+  } = useTRBAttendees(request?.id || trbID);
 
   /**
    * Reset form with default values after useTRBAttendees query returns requester
@@ -127,7 +174,7 @@ function Attendees({
             })
               // Refresh the RequestForm parent request query
               // to update things like `stepsCompleted`
-              .then(() => refetchRequest())
+              .then(() => refetchRequest && refetchRequest())
               .catch(() => {
                 throw new Error(t<string>('attendees.alerts.error'));
               });
@@ -167,27 +214,36 @@ function Attendees({
   );
 
   useEffect(() => {
-    setStepSubmit(() => submitForm);
+    if (setStepSubmit) setStepSubmit(() => submitForm);
   }, [setStepSubmit, submitForm]);
 
   useEffect(() => {
-    setIsStepSubmitting(isSubmitting);
+    if (setIsStepSubmitting) setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
 
   // Wait until attendees query has completed to load form
   if (loading) return <PageLoading />;
 
+  if (fromTaskList && attendees.length === 0 && !path.includes('list')) {
+    history.push(`${taskListAttendeesURL}/list`);
+  }
+
   return (
-    <div className="trb-attendees margin-top-2">
+    <div
+      className={classNames('trb-attendees', {
+        'margin-top-2': !fromTaskList
+      })}
+    >
       <Switch>
         <Route exact path={`${path}/list`}>
           <AttendeesForm
-            backToFormUrl={stepUrl.current}
+            backToFormUrl={stepUrl?.current || taskListAttendeesURL}
             activeAttendee={activeAttendee}
             setActiveAttendee={setActiveAttendee}
-            trbRequestId={request.id}
+            trbRequestId={request?.id || trbID}
             setFormAlert={setFormAlert}
             taskListUrl={taskListUrl}
+            fromTaskList={fromTaskList}
           />
         </Route>
 
@@ -198,22 +254,48 @@ function Attendees({
             onSubmit={e => e.preventDefault()}
           >
             {/* Requester Fields */}
-            <AttendeeFields
-              type="requester"
-              activeAttendee={requester}
-              fieldLabels={fieldLabels}
-              errors={errors}
-              clearErrors={clearErrors}
-              setValue={setValue}
-              control={control}
-            />
+            {!fromTaskList && (
+              <>
+                <AttendeeFields
+                  type="requester"
+                  activeAttendee={requester}
+                  fieldLabels={fieldLabels}
+                  errors={errors}
+                  clearErrors={clearErrors}
+                  setValue={setValue}
+                  control={control}
+                />
 
-            <Divider />
+                <Divider className="margin-top-4" />
+              </>
+            )}
+
+            {fromTaskList && (
+              <>
+                <h1 className="margin-bottom-0 margin-top-4">
+                  {t('attendees.heading')}
+                </h1>
+                <p className="line-height-body-5 margin-top-0 margin-bottom-2">
+                  {t('attendees.description')}
+                </p>
+                <UswdsReactLink
+                  to={`/trb/task-list/${trbID}`}
+                  className="display-block margin-bottom-5"
+                >
+                  <IconArrowBack className="margin-right-1 text-middle" />
+                  <span className="line-height-body-5">
+                    {t('requestFeedback.returnToTaskList')}
+                  </span>
+                </UswdsReactLink>
+              </>
+            )}
 
             <div className="margin-bottom-6">
-              <h4 className="margin-bottom-2">
-                {t('attendees.additionalAttendees')}
-              </h4>
+              {!fromTaskList && (
+                <h4 className="margin-bottom-2">
+                  {t('attendees.additionalAttendees')}
+                </h4>
+              )}
 
               {/* Button to add additional attendee */}
               <UswdsReactLink
@@ -249,7 +331,7 @@ function Attendees({
               <AttendeesTable
                 attendees={attendees}
                 setActiveAttendee={setActiveAttendee}
-                trbRequestId={request.id}
+                trbRequestId={request?.id || trbID}
                 deleteAttendee={(id: string) =>
                   deleteAttendee({ variables: { id } })
                 }
@@ -258,30 +340,37 @@ function Attendees({
 
             <Pager
               className="margin-top-5"
-              next={{
-                disabled: isSubmitting,
-                onClick: () => {
-                  submitForm(() => {
-                    history.push(stepUrl.next);
-                  });
-                },
-                text: t(
-                  attendees.length > 0
-                    ? 'Next'
-                    : 'attendees.continueWithoutAdding'
-                ),
-                outline: attendees.length === 0
-              }}
-              back={{
-                disabled: isSubmitting,
-                onClick: () => {
-                  submitForm(() => {
-                    history.push(stepUrl.back);
-                  });
+              next={
+                // Hides button on task list
+                stepUrl && {
+                  disabled: isSubmitting,
+                  onClick: () => {
+                    submitForm(() => {
+                      history.push(stepUrl.next);
+                    });
+                  },
+                  text: t(
+                    attendees.length > 0
+                      ? 'Next'
+                      : 'attendees.continueWithoutAdding'
+                  ),
+                  outline: attendees.length === 0
                 }
-              }}
+              }
+              back={
+                stepUrl && {
+                  disabled: isSubmitting,
+                  onClick: () => {
+                    submitForm(() => {
+                      history.push(stepUrl.back);
+                    });
+                  }
+                }
+              }
               saveExitDisabled={isSubmitting}
+              saveExitText={t('requestFeedback.returnToTaskList')}
               submit={submitForm}
+              submitDisabled={!stepUrl}
               taskListUrl={taskListUrl}
             />
           </Form>
