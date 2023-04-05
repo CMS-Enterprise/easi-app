@@ -18,6 +18,7 @@ import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
+import TrbAttendees from './TrbAttendees';
 import TRBDocuments from './TrbDocuments';
 
 import './index.scss';
@@ -58,6 +59,10 @@ function TechnicalAssistance() {
         {/* Documents upload requester view from task list - prepare for TRB meeting */}
         <Route exact path={`${path}/task-list/:id/documents/upload`}>
           <DocumentUpload />
+        </Route>
+
+        <Route path={`${path}/task-list/:id/attendees`}>
+          <TrbAttendees />
         </Route>
 
         {/* Create new or edit exisiting request */}
