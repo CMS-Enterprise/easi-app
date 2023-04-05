@@ -37,8 +37,6 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
     variables: { id: trbRequestId }
   });
 
-  console.log(data, loading);
-
   const {
     taskStatuses,
     consultMeetingTime,
