@@ -23,6 +23,7 @@ type Props = {
   saveExitHidden?: boolean;
   saveExitDisabled?: boolean;
   submit?: StepSubmit;
+  submitDisabled?: boolean;
   className?: string;
   taskListUrl: string;
   border?: boolean;
@@ -42,6 +43,7 @@ export function Pager({
   saveExitHidden,
   saveExitDisabled,
   submit,
+  submitDisabled,
   className,
   taskListUrl,
   border = true
@@ -86,9 +88,13 @@ export function Pager({
           unstyled
           disabled={saveExitDisabled}
           onClick={() => {
-            submit?.(() => {
+            if (!submitDisabled) {
+              submit?.(() => {
+                history.push(taskListUrl);
+              });
+            } else {
               history.push(taskListUrl);
-            });
+            }
           }}
         >
           <IconArrowBack className="margin-right-05" />
