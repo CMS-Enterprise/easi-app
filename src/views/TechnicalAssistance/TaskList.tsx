@@ -245,8 +245,7 @@ function TaskList() {
 
                         <UswdsReactLink
                           className="display-block margin-top-2"
-                          target="_blank"
-                          to={`/trb/task-list/${id}/attendee-list`} // TODO: replace with link to view advice letter
+                          to={`/trb/task-list/${id}/attendees`}
                         >
                           {t('taskList.reviewAttendeeList')}
                         </UswdsReactLink>
