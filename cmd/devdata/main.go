@@ -11,14 +11,21 @@ import (
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mocks"
-	"github.com/cmsgov/easi-app/cmd/devdata/seed"
+	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
+
+type seederConfig struct {
+	ctx      context.Context
+	logger   *zap.Logger
+	store    *storage.Store
+	s3Client *upload.S3Client
+}
 
 func main() {
 	config := testhelpers.NewConfig()
@@ -46,6 +53,23 @@ func main() {
 	store, storeErr := storage.NewStore(logger, dbConfig, ldClient)
 	if storeErr != nil {
 		panic(storeErr)
+	}
+
+	// store.TruncateAllTablesDANGEROUS(logger)
+
+	s3Cfg := upload.Config{
+		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region:  config.GetString(appconfig.AWSRegion),
+		IsLocal: true,
+	}
+
+	s3Client := upload.NewS3Client(s3Cfg)
+
+	seederConfig := &seederConfig{
+		ctx:      mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser),
+		logger:   logger,
+		store:    store,
+		s3Client: &s3Client,
 	}
 
 	makeAccessibilityRequest("TACO", store)
@@ -175,7 +199,7 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
-	must(nil, seed.TRBRequests(logger, store))
+	must(nil, seederConfig.seedTRBRequests())
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -193,7 +217,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	}
 
 	intake := models.SystemIntake{
-		EUAUserID: null.StringFrom(mocks.PrincipalUser),
+		EUAUserID: null.StringFrom(mock.PrincipalUser),
 		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
 
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
@@ -278,7 +302,7 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	noCost := 0
 	businessCase := models.BusinessCase{
 		SystemIntakeID:       intake.ID,
-		EUAUserID:            mocks.PrincipalUser,
+		EUAUserID:            mock.PrincipalUser,
 		Requester:            null.StringFrom("Shane Clark"),
 		RequesterPhoneNumber: null.StringFrom("3124567890"),
 		Status:               models.BusinessCaseStatusOPEN,
@@ -348,7 +372,7 @@ func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...fu
 	accessibilityRequest := models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
 		IntakeID:  &intake.ID,
-		EUAUserID: mocks.PrincipalUser,
+		EUAUserID: mock.PrincipalUser,
 	}
 	for _, cb := range callbacks {
 		cb(&accessibilityRequest)
