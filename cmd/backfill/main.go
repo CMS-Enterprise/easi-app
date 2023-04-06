@@ -178,8 +178,8 @@ const (
 )
 
 type entry struct {
-	Intake models.SystemIntake `json:"intake"`
-	Notes  []models.Note       `json:"notes"`
+	Intake models.SystemIntake       `json:"intake"`
+	Notes  []models.SystemIntakeNote `json:"notes"`
 }
 
 func convert(row []string) (*entry, error) {
@@ -280,14 +280,14 @@ func convert(row []string) (*entry, error) {
 	data.Intake.AdminLead = null.StringFrom(row[colAdminLead])
 
 	if row[colGRTNotes] != "" {
-		data.Notes = append(data.Notes, models.Note{
+		data.Notes = append(data.Notes, models.SystemIntakeNote{
 			Content:    null.StringFrom(row[colGRTNotes]),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}
 
 	if row[colPeriod] != "" {
-		data.Notes = append(data.Notes, models.Note{
+		data.Notes = append(data.Notes, models.SystemIntakeNote{
 			Content:    null.StringFrom(fmt.Sprintf("Period of Performance - %s", row[colPeriod])),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
