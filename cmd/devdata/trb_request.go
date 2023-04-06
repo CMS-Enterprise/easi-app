@@ -14,35 +14,24 @@ import (
 )
 
 func (s *seederConfig) seedTRBRequests() error {
-	// ctx := mocks.CtxWithLoggerAndPrincipal(logger, mocks.PrincipalUser)
-	// s := newTRBSeeder(ctx, logger, store, mocks.PrincipalUser)
 	must(s.seedTRBLeadOptions())
 
-	if err := s.seedTRBCase1(); err != nil {
-		return err
-	}
-	if err := s.seedTRBCase2(); err != nil {
-		return err
-	}
-	if err := s.seedTRBCase3(); err != nil {
-		return err
-	}
-	if err := s.seedTRBCase4(); err != nil {
-		return err
-	}
-	if err := s.seedTRBCase5(); err != nil {
-		return err
-	}
-	if err := s.seedTRBCase6(); err != nil {
-		return err
-	}
-	if err := s.seedTRBCase7(); err != nil {
-		return err
-	}
-	if err := s.seedTRBCase8(); err != nil {
-		return err
+	cases := []func() error{
+		s.seedTRBCase1,
+		s.seedTRBCase2,
+		s.seedTRBCase3,
+		s.seedTRBCase4,
+		s.seedTRBCase5,
+		s.seedTRBCase6,
+		s.seedTRBCase7,
+		s.seedTRBCase8,
 	}
 
+	for _, seedFunc := range cases {
+		if err := seedFunc(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -164,7 +153,7 @@ func (s *seederConfig) seedTRBCase7() error {
 }
 
 func (s *seederConfig) seedTRBCase8() error {
-	trb, err := s.seedTRBWithForm("Case 7 - Advice letter reviewed", true)
+	trb, err := s.seedTRBWithForm("Case 8 - Advice letter reviewed", true)
 	if err != nil {
 		return err
 	}
