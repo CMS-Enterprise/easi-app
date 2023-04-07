@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -1287,22 +1288,32 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 }
 
 // CreateSystemIntakeNote is the resolver for the createSystemIntakeNote field.
-func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
-	note, err := r.store.CreateNote(ctx, &models.Note{
+func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
+	systemIntakeNote := models.SystemIntakeNote{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),
 		AuthorName:     null.StringFrom(input.AuthorName),
 		Content:        null.StringFrom(input.Content),
 		SystemIntakeID: input.IntakeID,
+	}
+
+	createdNote, err := r.store.CreateSystemIntakeNote(ctx, &systemIntakeNote)
+	return createdNote, err
+}
+
+// UpdateSystemIntakeNote is the resolver for the updateSystemIntakeNote field.
+func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input model.UpdateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
+	userInfo, err := r.service.FetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+	if err != nil {
+		return nil, err
+	}
+
+	systemIntakeNote, err := r.store.UpdateSystemIntakeNote(ctx, &models.SystemIntakeNote{
+		Content:    null.StringFrom(input.Content),
+		IsArchived: input.IsArchived,
+		ID:         input.ID,
+		ModifiedBy: &userInfo.EuaUserID,
 	})
-	return &model.SystemIntakeNote{
-		ID: note.ID,
-		Author: &model.SystemIntakeNoteAuthor{
-			Name: note.AuthorName.String,
-			Eua:  note.AuthorEUAID,
-		},
-		Content:   note.Content.String,
-		CreatedAt: *note.CreatedAt,
-	}, err
+	return systemIntakeNote, err
 }
 
 // CreateSystemIntake is the resolver for the createSystemIntake field.
@@ -2745,25 +2756,8 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 }
 
 // Notes is the resolver for the notes field.
-func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeNote, error) {
-	notes, notesErr := r.store.FetchNotesBySystemIntakeID(ctx, obj.ID)
-	if notesErr != nil {
-		return nil, notesErr
-	}
-
-	var graphNotes []*model.SystemIntakeNote
-	for _, n := range notes {
-		graphNotes = append(graphNotes, &model.SystemIntakeNote{
-			ID: n.ID,
-			Author: &model.SystemIntakeNoteAuthor{
-				Name: n.AuthorName.String,
-				Eua:  n.AuthorEUAID,
-			},
-			Content:   n.Content.String,
-			CreatedAt: *n.CreatedAt,
-		})
-	}
-	return graphNotes, nil
+func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error) {
+	return r.store.FetchNotesBySystemIntakeID(ctx, obj.ID)
 }
 
 // OitSecurityCollaborator is the resolver for the oitSecurityCollaborator field.
@@ -2867,6 +2861,37 @@ func (r *systemIntakeFundingSourceResolver) FundingNumber(ctx context.Context, o
 // Source is the resolver for the source field.
 func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
 	return obj.Source.Ptr(), nil
+}
+
+// Author is the resolver for the author field.
+func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.SystemIntakeNote) (*model.SystemIntakeNoteAuthor, error) {
+	return &model.SystemIntakeNoteAuthor{
+		Eua:  obj.AuthorEUAID,
+		Name: obj.AuthorName.ValueOrZero(),
+	}, nil
+}
+
+// Content is the resolver for the content field.
+func (r *systemIntakeNoteResolver) Content(ctx context.Context, obj *models.SystemIntakeNote) (string, error) {
+	return obj.Content.ValueOrZero(), nil
+}
+
+// Editor is the resolver for the editor field.
+func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error) {
+	var systemIntakeNoteEditorInfo *models.UserInfo
+	if obj.ModifiedBy != nil {
+		info, err := dataloaders.GetUserInfo(ctx, *obj.ModifiedBy)
+		if err != nil {
+			return nil, err
+		}
+		systemIntakeNoteEditorInfo = info
+	}
+
+	if systemIntakeNoteEditorInfo == nil {
+		systemIntakeNoteEditorInfo = &models.UserInfo{}
+	}
+
+	return systemIntakeNoteEditorInfo, nil
 }
 
 // Author is the resolver for the author field.
@@ -3109,6 +3134,11 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 	return &systemIntakeFundingSourceResolver{r}
 }
 
+// SystemIntakeNote returns generated.SystemIntakeNoteResolver implementation.
+func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
+	return &systemIntakeNoteResolver{r}
+}
+
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
@@ -3161,6 +3191,7 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
+type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBAdviceLetterResolver struct{ *Resolver }
 type tRBAdviceLetterRecommendationResolver struct{ *Resolver }
