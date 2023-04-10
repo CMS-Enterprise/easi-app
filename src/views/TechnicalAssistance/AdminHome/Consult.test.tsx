@@ -9,7 +9,7 @@ import configureMockStore from 'redux-mock-store';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -99,7 +99,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             },
             {
               request: {
-                query: GetTRBRequestAttendees,
+                query: GetTRBRequestAttendeesQuery,
                 variables: {
                   id: trbRequestId
                 }

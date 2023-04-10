@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event';
 import { attendees, requester, trbRequest } from 'data/mock/trbRequest';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { GetTrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 
@@ -34,7 +34,7 @@ describe('Trb Request form: Attendees', () => {
 
   const getAttendeesQuery = {
     request: {
-      query: GetTRBRequestAttendees,
+      query: GetTRBRequestAttendeesQuery,
       variables: {
         id: trbRequest.id
       }

@@ -7,7 +7,7 @@ import configureMockStore from 'redux-mock-store';
 
 import { requester, trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 
 import Summary from '.';
 
@@ -27,7 +27,7 @@ const getTrbRequestQuery = {
 
 const getTrbAttendeesQuery = {
   request: {
-    query: GetTRBRequestAttendees,
+    query: GetTRBRequestAttendeesQuery,
     variables: {
       id: trbRequestId
     }
