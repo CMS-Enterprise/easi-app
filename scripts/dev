@@ -343,7 +343,7 @@ namespace :db do
 
   desc "Load development dataset"
   task :seed do
-    sh "go run cmd/devdata/main.go"
+    sh "go run cmd/devdata/*.go"
   end
 
   task :drop_connections do
