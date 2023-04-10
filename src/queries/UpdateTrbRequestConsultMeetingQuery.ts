@@ -6,6 +6,7 @@ export default gql`
   ) {
     updateTRBRequestConsultMeetingTime(input: $input) {
       id
+      consultMeetingTime
     }
   }
 `;
