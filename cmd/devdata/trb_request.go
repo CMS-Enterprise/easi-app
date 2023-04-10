@@ -2,13 +2,17 @@ package main
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -25,6 +29,7 @@ func (s *seederConfig) seedTRBRequests() error {
 		s.seedTRBCase6,
 		s.seedTRBCase7,
 		s.seedTRBCase8,
+		s.seedTRBCase9,
 	}
 
 	for _, seedFunc := range cases {
@@ -153,7 +158,36 @@ func (s *seederConfig) seedTRBCase7() error {
 }
 
 func (s *seederConfig) seedTRBCase8() error {
-	trb, err := s.seedTRBWithForm("Case 8 - Advice letter reviewed", true)
+	trb, err := s.seedTRBWithForm("Case 8 - Advice letter in review with document", true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBConsultMeeting(trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addAdviceLetter(trb, false)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addDocument(trb)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase9() error {
+	trb, err := s.seedTRBWithForm("Case 9 - Advice letter reviewed", true)
 	if err != nil {
 		return err
 	}
@@ -392,4 +426,40 @@ func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*m
 	}
 
 	return letter, nil
+}
+
+func (s *seederConfig) addDocument(trb *models.TRBRequest) (*models.TRBRequestDocument, error) {
+	path, err := filepath.Abs("cmd/devdata/data/sample.pdf")
+	if err != nil {
+		return nil, err
+	}
+	file, err := os.Open(path) // #nosec
+	if err != nil {
+		return nil, err
+	}
+	fileStats, err := file.Stat()
+	if err != nil {
+		return nil, err
+	}
+
+	otherDesc := "Some other type of doc"
+	input := model.CreateTRBRequestDocumentInput{
+		RequestID: trb.ID,
+		FileData: graphql.Upload{
+			File:        file,
+			Filename:    "sample.pdf",
+			Size:        fileStats.Size(),
+			ContentType: "application/pdf",
+		},
+		DocumentType:         models.TRBRequestDocumentCommonTypeOther,
+		OtherTypeDescription: &otherDesc,
+	}
+	document, err := resolvers.CreateTRBRequestDocument(s.ctx, s.store, s.s3Client, input)
+	if err != nil {
+		return nil, err
+	}
+
+	// s.s3Client.TagValueForKey(document.S3Key, "av-status")
+
+	return document, nil
 }
