@@ -11,7 +11,8 @@ import { MessageProvider } from 'hooks/useMessage';
 import CloseTrbRequestQuery from 'queries/CloseTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import ReopenTrbRequestQuery from 'queries/ReopenTrbRequestQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+import { PersonRole } from 'types/graphql-global-types';
 
 import CloseRequest from './CloseRequest';
 import TRBRequestInfoWrapper from './RequestContext';
@@ -21,7 +22,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   const mockStore = configureMockStore();
   const store = mockStore({
     auth: {
-      euaId: 'ABCD',
+      euaId: 'SF13',
       name: 'Jerry Seinfeld',
       isUserSet: true,
       groups: ['EASI_TRB_ADMIN_D']
@@ -31,13 +32,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   const text = 'test message';
 
   it('closes a request with a reason', async () => {
-    const {
-      getByText,
-      getByLabelText,
-      getByRole,
-      findByText,
-      findByRole
-    } = render(
+    const { getByLabelText, getByRole, findByText, findByRole } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -52,8 +47,8 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                   input: {
                     id,
                     reasonClosed: text,
-                    notifyEuaIds: ['ABCD'],
-                    copyTrbMailbox: false
+                    notifyEuaIds: ['SF13'],
+                    copyTrbMailbox: true
                   }
                 }
               },
@@ -102,7 +97,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             },
             {
               request: {
-                query: GetTRBRequestAttendees,
+                query: GetTRBRequestAttendeesQuery,
                 variables: {
                   id
                 }
@@ -111,7 +106,23 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 data: {
                   trbRequest: {
                     id,
-                    attendees: []
+                    attendees: [
+                      {
+                        __typename: 'TRBRequestAttendee',
+                        id: '91a14322-34a8-4838-bde3-17b1d483fb63',
+                        trbRequestId: id,
+                        userInfo: {
+                          __typename: 'UserInfo',
+                          commonName: 'Jerry Seinfeld',
+                          email: 'jerry.seinfeld@local.fake',
+                          euaUserId: 'SF13'
+                        },
+                        component:
+                          'Office of Equal Opportunity and Civil Rights',
+                        role: PersonRole.PRODUCT_OWNER,
+                        createdAt: '2023-01-05T07:26:16.036618Z'
+                      }
+                    ]
                   }
                 }
               }
@@ -136,9 +147,15 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       </Provider>
     );
 
-    getByText(
+    await findByText(
       i18next.t<string>('technicalAssistance:actionCloseRequest.heading')
     );
+
+    const requester = await findByRole('checkbox', {
+      name:
+        'Jerry Seinfeld, Office of Equal Opportunity and Civil Rights (Requester)'
+    });
+    expect(requester).toBeChecked();
 
     userEvent.type(
       getByLabelText(
@@ -180,8 +197,8 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 input: {
                   id,
                   reasonClosed: text,
-                  notifyEuaIds: ['ABCD'],
-                  copyTrbMailbox: false
+                  notifyEuaIds: ['SF13'],
+                  copyTrbMailbox: true
                 }
               }
             },
@@ -199,6 +216,10 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           </MessageProvider>
         </MemoryRouter>
       </MockedProvider>
+    );
+
+    await findByText(
+      i18next.t<string>('technicalAssistance:actionCloseRequest.heading')
     );
 
     userEvent.type(
@@ -230,7 +251,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   });
 
   it('re-opens a request with a reason', async () => {
-    const { getByText, getByLabelText, getByRole, findByText } = render(
+    const { getByLabelText, getByRole, findByText, findByRole } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -245,8 +266,8 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                   input: {
                     trbRequestId: id,
                     reasonReopened: text,
-                    notifyEuaIds: ['ABCD'],
-                    copyTrbMailbox: false
+                    notifyEuaIds: ['SF13'],
+                    copyTrbMailbox: true
                   }
                 }
               },
@@ -295,7 +316,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             },
             {
               request: {
-                query: GetTRBRequestAttendees,
+                query: GetTRBRequestAttendeesQuery,
                 variables: {
                   id
                 }
@@ -304,7 +325,23 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 data: {
                   trbRequest: {
                     id,
-                    attendees: []
+                    attendees: [
+                      {
+                        __typename: 'TRBRequestAttendee',
+                        id: '91a14322-34a8-4838-bde3-17b1d483fb63',
+                        trbRequestId: id,
+                        userInfo: {
+                          __typename: 'UserInfo',
+                          commonName: 'Jerry Seinfeld',
+                          email: 'jerry.seinfeld@local.fake',
+                          euaUserId: 'SF13'
+                        },
+                        component:
+                          'Office of Equal Opportunity and Civil Rights',
+                        role: PersonRole.PRODUCT_OWNER,
+                        createdAt: '2023-01-05T07:26:16.036618Z'
+                      }
+                    ]
                   }
                 }
               }
@@ -329,9 +366,15 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       </Provider>
     );
 
-    getByText(
+    await findByText(
       i18next.t<string>('technicalAssistance:actionReopenRequest.heading')
     );
+
+    const requester = await findByRole('checkbox', {
+      name:
+        'Jerry Seinfeld, Office of Equal Opportunity and Civil Rights (Requester)'
+    });
+    expect(requester).toBeChecked();
 
     userEvent.type(
       getByLabelText(
@@ -366,8 +409,8 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 input: {
                   trbRequestId: id,
                   reasonReopened: text,
-                  notifyEuaIds: ['ABCD'],
-                  copyTrbMailbox: false
+                  notifyEuaIds: ['SF13'],
+                  copyTrbMailbox: true
                 }
               }
             },
@@ -387,6 +430,10 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
           </MessageProvider>
         </MemoryRouter>
       </MockedProvider>
+    );
+
+    await findByText(
+      i18next.t<string>('technicalAssistance:actionReopenRequest.heading')
     );
 
     userEvent.type(

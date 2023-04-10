@@ -123,3 +123,8 @@ export type StepComponentProps = {
   /** Set a form level alert message from within step components */
   setFormAlert: React.Dispatch<React.SetStateAction<FormAlertObject | null>>;
 };
+
+export interface TrbRecipientFields {
+  notifyEuaIds: string[];
+  copyTrbMailbox: boolean;
+}

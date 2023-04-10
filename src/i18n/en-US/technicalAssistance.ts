@@ -118,6 +118,20 @@ const technicalAssistance = {
       removingTitle: 'Removing: {{title}}'
     }
   },
+  emailRecipientFields: {
+    label: 'Choose recipients <red>*</red>',
+    selectedCount: '<bold>{{count}}</bold> recipients selected',
+    copyTrbMailbox: 'Copy TRB Mailbox',
+    projectTeamMember: 'Project team member',
+    showMore: 'Show {{number}} more recipients',
+    showFewer: 'Show {{number}} fewer recipients',
+    addAnotherRecipient: 'Add another recipient',
+    newRecipientName: 'New recipient name',
+    newRecipientComponent: 'New recipient component',
+    newRecipientRole: 'New recipient role',
+    addRecipient: 'Add recipient',
+    selectRecipientError: 'Please select a recipient'
+  },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
     COMPLETED: 'Completed',
@@ -556,15 +570,15 @@ const technicalAssistance = {
       }
     },
     contactRoles: {
-      productOwner: 'Product Owner',
-      systemOwner: 'System Owner',
-      systemMaintainer: 'System Maintainer',
-      contractRep: 'Contracting Officer’s Representative (COR)',
-      cloudNavigator: 'Cloud Navigator',
-      privacyAdvisor: 'Privacy Advisor',
-      cra: 'CRA',
-      other: 'Other',
-      unknown: 'Unknown'
+      PRODUCT_OWNER: 'Product Owner',
+      SYSTEM_OWNER: 'System Owner',
+      SYSTEM_MAINTAINER: 'System Maintainer',
+      CONTRACT_REP: 'Contracting Officer’s Representative (COR)',
+      CLOUD_NAVIGATOR: 'Cloud Navigator',
+      PRIVACY_ADVISOR: 'Privacy Advisor',
+      CRA: 'CRA',
+      OTHER: 'Other',
+      UNKNOWN: 'Unknown'
     }
   },
   documents: {
