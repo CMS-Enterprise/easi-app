@@ -1,0 +1,3 @@
+ALTER TABLE notes ADD COLUMN modified_by TEXT CHECK (modified_by ~ '^[A-Z0-9]{4}$');
+ALTER TABLE notes ADD COLUMN modified_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE notes ADD COLUMN is_archived BOOLEAN NOT NULL DEFAULT FALSE;

@@ -21,10 +21,10 @@ func NewBackfill(
 	fetchIntakeByLifecycleID func(ctx context.Context, lcid string) (*models.SystemIntake, error),
 	createIntake func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	updateIntake func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
-	createNote func(c context.Context, note *models.Note) (*models.Note, error),
+	createNote func(c context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error),
 	authorize func(context.Context) (bool, error),
-) func(context.Context, models.SystemIntake, []models.Note) (bool, error) {
-	return func(ctx context.Context, intake models.SystemIntake, notes []models.Note) (bool, error) {
+) func(context.Context, models.SystemIntake, []models.SystemIntakeNote) (bool, error) {
+	return func(ctx context.Context, intake models.SystemIntake, notes []models.SystemIntakeNote) (bool, error) {
 		if intake.LifecycleID.ValueOrZero() == "" {
 			return false, &apperrors.BadRequestError{
 				Err: errors.New("lifecycle ID is required"),
@@ -41,7 +41,7 @@ func NewBackfill(
 		if !ok {
 			return false, &apperrors.ResourceNotFoundError{
 				Err:      errors.New("failed to authorize backfill creation"),
-				Resource: models.Note{},
+				Resource: models.SystemIntakeNote{},
 			}
 		}
 

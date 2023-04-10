@@ -10,9 +10,9 @@ import (
 )
 
 // NewNote generates a note to use in tests
-func NewNote() models.Note {
+func NewNote() models.SystemIntakeNote {
 	now := time.Now().UTC()
-	return models.Note{
+	return models.SystemIntakeNote{
 		ID:          uuid.New(),
 		CreatedAt:   &now,
 		AuthorEUAID: "ABCDE",
