@@ -13,4 +13,4 @@ FROM modules AS build
 COPY cmd ./cmd
 COPY pkg ./pkg
 
-ENTRYPOINT ["go", "run", "cmd/devdata/*.go"]
+ENTRYPOINT ["go", "run", "cmd/devdata/main.go", "cmd/devdata/trb_request.go"]
