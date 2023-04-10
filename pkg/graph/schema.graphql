@@ -939,6 +939,10 @@ type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
   content: String!
   createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+  isArchived: Boolean!
+  editor: UserInfo
   id: UUID!
 }
 
@@ -1350,6 +1354,15 @@ input CreateSystemIntakeNoteInput {
   content: String!
   authorName: String!
   intakeId: UUID!
+}
+
+"""
+Input data for updating an IT governance admin note
+"""
+input UpdateSystemIntakeNoteInput {
+  content: String!
+  isArchived: Boolean!
+  id: UUID!
 }
 
 """
@@ -2096,6 +2109,8 @@ type Mutation {
     input: CreateSystemIntakeActionExtendLifecycleIdInput!
   ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
     @hasRole(role: EASI_USER)

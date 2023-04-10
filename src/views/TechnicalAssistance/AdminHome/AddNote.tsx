@@ -22,6 +22,7 @@ import PageHeading from 'components/PageHeading';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import useMessage from 'hooks/useMessage';
 import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
+import { TRBAdminNoteFragment } from 'queries/GetTrbAdminNotesQuery';
 import {
   CreateTrbAdminNote as CreateTrbAdminNoteType,
   CreateTrbAdminNoteVariables
@@ -63,7 +64,22 @@ const AddNote = ({
   const [mutate] = useMutation<
     CreateTrbAdminNoteType,
     CreateTrbAdminNoteVariables
-  >(CreateTrbAdminNote);
+  >(CreateTrbAdminNote, {
+    update(cache, { data: modifiedData }) {
+      cache.modify({
+        id: cache.identify({ __typename: 'TRBRequest', id }),
+        fields: {
+          adminNotes(existingNotes = []) {
+            const newNote = cache.writeFragment({
+              data: modifiedData?.createTRBAdminNote,
+              fragment: TRBAdminNoteFragment
+            });
+            return [...existingNotes, newNote];
+          }
+        }
+      });
+    }
+  });
 
   const defaultValues: Omit<CreateTRBAdminNoteInput, 'trbRequestId'> = {
     category: '' as TRBAdminNoteCategory,

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { Form, IconArrowBack } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Spinner from 'components/Spinner';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
@@ -24,7 +25,7 @@ import { TrbFormAlert } from '..';
 
 import { AttendeeFields } from './components';
 
-interface AttendeesFormProps {
+interface AttendeesFormBaseProps {
   backToFormUrl?: string;
   activeAttendee: TRBAttendee;
   /** Set active attendee - used to edit attendee */
@@ -34,16 +35,34 @@ interface AttendeesFormProps {
   taskListUrl: string;
 }
 
+// Make FormStepComponentProps conditionally required on the presence of fromTaskList
+// Used to render Attendees/form from task list outside the scope of initial request form
+type AttendeesFormProps =
+  | {
+      fromTaskList?: true;
+      backToFormUrl?: string;
+      activeAttendee: TRBAttendee;
+      /** Set active attendee - used to edit attendee */
+      setActiveAttendee: (activeAttendee: TRBAttendee) => void;
+      trbRequestId: string;
+      setFormAlert: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
+      taskListUrl: string;
+    }
+  | ({ fromTaskList?: false } & AttendeesFormBaseProps);
+
 function AttendeesForm({
   backToFormUrl,
   activeAttendee,
   setActiveAttendee,
   trbRequestId,
   setFormAlert,
-  taskListUrl
+  taskListUrl,
+  fromTaskList
 }: AttendeesFormProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+
+  const [mutationLoading, setMutationLoading] = useState<boolean>(false);
 
   // Attendee data
   const {
@@ -108,28 +127,22 @@ function AttendeesForm({
     const { component, role, euaUserId } = formData;
     const { id } = activeAttendee;
 
+    setMutationLoading(true);
+
     // If attendee object has ID, update attendee
     if (id) {
       return updateAttendee({
-        variables: {
-          input: {
-            id,
-            component,
-            role: role as PersonRole
-          }
-        }
+        id,
+        component: component || '',
+        role: role as PersonRole
       });
     }
     // If no ID is present, create new attendee
     return createAttendee({
-      variables: {
-        input: {
-          trbRequestId,
-          euaUserId,
-          component,
-          role: role as PersonRole
-        }
-      }
+      trbRequestId,
+      euaUserId,
+      component: component || '',
+      role: role as PersonRole
     });
   };
 
@@ -147,6 +160,8 @@ function AttendeesForm({
           .then(() => {
             // Clear errors
             clearErrors('euaUserId');
+
+            setMutationLoading(false);
 
             // Set active attendee to initial
             setActiveAttendee({ ...initialAttendee, trbRequestId });
@@ -166,6 +181,8 @@ function AttendeesForm({
           })
           .catch(err => {
             if (err instanceof ApolloError) {
+              setMutationLoading(false);
+
               // Set form error
               setFormAlert({
                 type: 'error',
@@ -185,7 +202,9 @@ function AttendeesForm({
             { text: t('heading'), url: '/trb' },
             { text: t('taskList.heading'), url: '/trb/task-list' },
             {
-              text: t('requestForm.heading'),
+              text: fromTaskList
+                ? t('attendees.heading')
+                : t('requestForm.heading'),
               url: backToFormUrl
             },
             {
@@ -197,7 +216,7 @@ function AttendeesForm({
             }
           ]}
         />
-        <PageHeading className="margin-bottom-1">
+        <PageHeading className="margin-bottom-1 margin-top-5">
           {t(
             activeAttendee.id
               ? 'attendees.editAttendee'
@@ -216,29 +235,36 @@ function AttendeesForm({
             setValue={setValue}
             fieldLabels={fieldLabels[formType]}
           />
-          <Pager
-            next={{
-              text: t(
-                fieldLabels[formType as keyof typeof fieldLabels].submit || ''
-              ),
-              disabled:
-                isSubmitting ||
-                !values.component ||
-                !values.euaUserId ||
-                !values.role
-            }}
-            back={{
-              text: t('Cancel'),
-              onClick: () => {
-                setActiveAttendee({ ...initialAttendee, trbRequestId });
-                history.push(backToFormUrl);
-              },
-              disabled: isSubmitting
-            }}
-            className="border-top-0"
-            saveExitHidden
-            taskListUrl={taskListUrl}
-          />
+
+          <div className="display-flex flex-align-center">
+            <Pager
+              next={{
+                text: t(
+                  fieldLabels[formType as keyof typeof fieldLabels].submit || ''
+                ),
+                disabled:
+                  isSubmitting ||
+                  !values.component ||
+                  !values.euaUserId ||
+                  !values.role
+              }}
+              back={{
+                text: t('Cancel'),
+                onClick: () => {
+                  setActiveAttendee({ ...initialAttendee, trbRequestId });
+                  history.push(backToFormUrl);
+                },
+                disabled: isSubmitting
+              }}
+              className="border-top-0"
+              saveExitHidden
+              taskListUrl={taskListUrl}
+            />
+
+            {mutationLoading && (
+              <Spinner className="margin-left-2 margin-top-2" />
+            )}
+          </div>
           <div className="margin-top-2">
             <UswdsReactLink
               to={backToFormUrl}

@@ -9,7 +9,7 @@ import (
 )
 
 // TranslatableNote is a wrapper around our Note model for translating into the CEDAR Intake API schema
-type TranslatableNote models.Note
+type TranslatableNote models.SystemIntakeNote
 
 // ObjectID is a unique identifier for a TranslatableNote
 func (note *TranslatableNote) ObjectID() string {

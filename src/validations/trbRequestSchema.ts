@@ -168,7 +168,11 @@ export const documentSchema = yup.object({
 export const adviceRecommendationSchema = yup.object({
   title: yup.string().required(),
   recommendation: yup.string().required(),
-  links: yup.array(yup.string())
+  links: yup.array(
+    yup.object({
+      link: yup.string().required()
+    })
+  )
 });
 
 export const meetingSummarySchema = yup.object({
@@ -186,3 +190,15 @@ export const nextStepsSchema = yup.object({
       then: schema => schema.required()
     })
 });
+
+/** TRB action form schema */
+export const trbActionSchema = (messageKey: string, required?: boolean) =>
+  yup.object({
+    [messageKey]: required ? yup.string().required() : yup.string(),
+    copyTrbMailbox: yup.boolean(),
+    notifyEuaIds: yup.array(yup.string()).when('copyTrbMailbox', {
+      is: (copyTrbMailbox: boolean) => !copyTrbMailbox,
+      then: schema => schema.min(1),
+      otherwise: schema => schema.optional()
+    })
+  });

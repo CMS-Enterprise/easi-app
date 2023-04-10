@@ -62,7 +62,7 @@ export const Alert = ({
 
   return (
     <div className={classes} data-testid="alert" {...props}>
-      <div className="usa-alert__body">
+      <div className="usa-alert__body maxw-none">
         {heading && <h3 className="usa-alert__heading">{heading}</h3>}
         {renderChildren()}
       </div>

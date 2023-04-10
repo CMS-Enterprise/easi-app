@@ -91,31 +91,33 @@ func CreateTRBRequestFeedback(
 		return nil, err
 	}
 
-	if feedback.Action == models.TRBFeedbackActionRequestEdits {
-		err = emailClient.SendTRBEditsNeededOnFormNotification(
-			ctx,
-			recipientEmails,
-			feedback.CopyTRBMailbox,
-			feedback.TRBRequestID,
-			request.Name,
-			requester.CommonName,
-			feedback.FeedbackMessage,
-		)
-		if err != nil {
-			return nil, err
-		}
-	} else if feedback.Action == models.TRBFeedbackActionReadyForConsult {
-		err = emailClient.SendTRBReadyForConsultNotification(
-			ctx,
-			recipientEmails,
-			feedback.CopyTRBMailbox,
-			feedback.TRBRequestID,
-			request.Name,
-			requester.CommonName,
-			feedback.FeedbackMessage,
-		)
-		if err != nil {
-			return nil, err
+	if emailClient != nil {
+		if feedback.Action == models.TRBFeedbackActionRequestEdits {
+			err = emailClient.SendTRBEditsNeededOnFormNotification(
+				ctx,
+				recipientEmails,
+				feedback.CopyTRBMailbox,
+				feedback.TRBRequestID,
+				request.Name,
+				requester.CommonName,
+				feedback.FeedbackMessage,
+			)
+			if err != nil {
+				return nil, err
+			}
+		} else if feedback.Action == models.TRBFeedbackActionReadyForConsult {
+			err = emailClient.SendTRBReadyForConsultNotification(
+				ctx,
+				recipientEmails,
+				feedback.CopyTRBMailbox,
+				feedback.TRBRequestID,
+				request.Name,
+				requester.CommonName,
+				feedback.FeedbackMessage,
+			)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 

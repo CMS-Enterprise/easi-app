@@ -12,6 +12,7 @@ import { UpdateTRBRequestConsultMeetingTimeInput } from "./../../types/graphql-g
 export interface UpdateTrbRequestConsultMeeting_updateTRBRequestConsultMeetingTime {
   __typename: "TRBRequest";
   id: UUID;
+  consultMeetingTime: Time | null;
 }
 
 export interface UpdateTrbRequestConsultMeeting {

@@ -120,7 +120,7 @@ export default function AdminHome() {
     : '';
 
   // Note count for NoteBox modal rendered on each page
-  const noteCount: number = data?.trbRequest.adminNotes.length || 0;
+  const noteCount: number = (data?.trbRequest?.adminNotes || []).length;
 
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
