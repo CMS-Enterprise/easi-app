@@ -178,11 +178,6 @@ func (s *seederConfig) seedTRBCase8() error {
 		return err
 	}
 
-	_, err = s.addDocument(trb)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -291,6 +286,23 @@ func (s *seederConfig) seedTRBWithForm(trbName string, isSubmitted bool) (*model
 	}
 
 	_, err = s.updateTRBRequestFundingSources(trb.ID, "33311", []string{"meatloaf", "spaghetti", "cereal"})
+	if err != nil {
+		return nil, err
+	}
+
+	scanStatus := "CLEAN"
+	_, err = s.addDocument(trb, &scanStatus)
+	if err != nil {
+		return nil, err
+	}
+
+	scanStatus = "INFECTED"
+	_, err = s.addDocument(trb, &scanStatus)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.addDocument(trb, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -428,7 +440,7 @@ func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*m
 	return letter, nil
 }
 
-func (s *seederConfig) addDocument(trb *models.TRBRequest) (*models.TRBRequestDocument, error) {
+func (s *seederConfig) addDocument(trb *models.TRBRequest, scanStatus *string) (*models.TRBRequestDocument, error) {
 	path, err := filepath.Abs("cmd/devdata/data/sample.pdf")
 	if err != nil {
 		return nil, err
@@ -459,7 +471,12 @@ func (s *seederConfig) addDocument(trb *models.TRBRequest) (*models.TRBRequestDo
 		return nil, err
 	}
 
-	// s.s3Client.TagValueForKey(document.S3Key, "av-status")
+	if scanStatus != nil {
+		err = s.s3Client.SetTagValueForKey(document.S3Key, "av-status", *scanStatus)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return document, nil
 }
