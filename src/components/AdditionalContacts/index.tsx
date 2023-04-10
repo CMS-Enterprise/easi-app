@@ -216,9 +216,9 @@ const ContactForm = ({
           <option value="" disabled>
             {t('contactDetails.additionalContacts.select')}
           </option>
-          {contactRoles.map(({ label }) => (
-            <option key={label} value={label}>
-              {t(label)}
+          {Object.values(contactRoles).map(role => (
+            <option key={role} value={role}>
+              {role}
             </option>
           ))}
         </Dropdown>

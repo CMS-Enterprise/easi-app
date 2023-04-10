@@ -23,6 +23,7 @@ import {
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
+import { PersonRole } from 'types/graphql-global-types';
 import {
   AttendeeFieldLabels,
   TRBAttendeeFields
@@ -162,15 +163,12 @@ function Attendees({
         async formData => {
           // Submit the input only if there are changes
           if (isDirty && requester.id) {
+            const { component, role } = formData;
             // Update requester
             await updateAttendee({
-              variables: {
-                input: {
-                  id: requester.id,
-                  component: formData.component,
-                  role: formData.role
-                }
-              }
+              id: requester.id,
+              component: component || '',
+              role: role as PersonRole
             })
               // Refresh the RequestForm parent request query
               // to update things like `stepsCompleted`
@@ -331,10 +329,8 @@ function Attendees({
               <AttendeesTable
                 attendees={attendees}
                 setActiveAttendee={setActiveAttendee}
+                deleteAttendee={(id: string) => deleteAttendee(id)}
                 trbRequestId={request?.id || trbID}
-                deleteAttendee={(id: string) =>
-                  deleteAttendee({ variables: { id } })
-                }
               />
             </div>
 

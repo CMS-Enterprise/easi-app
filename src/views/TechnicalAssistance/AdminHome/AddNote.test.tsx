@@ -10,7 +10,7 @@ import configureMockStore from 'redux-mock-store';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 
 import AddNote from './AddNote';
@@ -90,7 +90,7 @@ describe('Trb Admin Notes: Add Note', () => {
             },
             {
               request: {
-                query: GetTRBRequestAttendees,
+                query: GetTRBRequestAttendeesQuery,
                 variables: {
                   id: trbRequestId
                 }
