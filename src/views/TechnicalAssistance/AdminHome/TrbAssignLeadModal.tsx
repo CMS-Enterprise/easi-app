@@ -24,14 +24,12 @@ import {
   UpdateTrbRequestLeadVariables
 } from 'queries/types/UpdateTrbRequestLead';
 import UpdateTrbRequestLeadQuery from 'queries/UpdateTrbRequestLeadQuery';
-
-export type TrbRequestIdRef = string | null;
-export type TrbRequestIdRefObject = React.MutableRefObject<TrbRequestIdRef>;
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 
 type TrbAssignLeadModalOpenerProps = {
   trbRequestId: string;
   modalRef: React.RefObject<ModalRef>;
-  trbRequestIdRef: TrbRequestIdRefObject;
+  trbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
 } & JSX.IntrinsicElements['button'];
 
 export function TrbAssignLeadModalOpener({
@@ -39,10 +37,9 @@ export function TrbAssignLeadModalOpener({
   modalRef,
   trbRequestIdRef,
   className,
+  children,
   ...buttonProps
 }: TrbAssignLeadModalOpenerProps) {
-  const { t } = useTranslation('technicalAssistance');
-
   return (
     <button
       {...buttonProps}
@@ -57,7 +54,7 @@ export function TrbAssignLeadModalOpener({
       // Suggested modal attr by uswds, but no effect here, js doesn't catch
       // data-open-modal="true"
     >
-      {t('adminHome.request.assignLead')}
+      {children}
     </button>
   );
 }
@@ -70,7 +67,7 @@ const todoTrbLeads = [
 
 type TrbAssignLeadModalProps = {
   modalRef: React.RefObject<ModalRef>;
-  trbRequestIdRef: TrbRequestIdRefObject;
+  trbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
 };
 
 function TrbAssignLeadModal({
@@ -144,13 +141,10 @@ function TrbAssignLeadModal({
         mutationList.forEach(mutation => {
           if (
             mutation.type === 'attributes' &&
-            mutation.attributeName === 'class'
+            mutation.attributeName === 'class' &&
+            (mutation.target as HTMLElement).classList.contains('is-hidden')
           ) {
-            if (
-              (mutation.target as HTMLElement).classList.contains('is-hidden')
-            ) {
-              reset();
-            }
+            reset();
           }
         });
       });

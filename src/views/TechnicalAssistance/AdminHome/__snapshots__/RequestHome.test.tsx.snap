@@ -101,7 +101,6 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
     </p>
     <button
       class="usa-button usa-button--outline"
-      data-testid="button"
       type="button"
     >
       Assign a TRB Lead

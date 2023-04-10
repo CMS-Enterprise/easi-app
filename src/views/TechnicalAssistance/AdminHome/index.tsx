@@ -1,8 +1,13 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
-import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import {
+  Grid,
+  GridContainer,
+  IconArrowBack,
+  ModalRef
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -11,6 +16,7 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { AppState } from 'reducers/rootReducer';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 import user from 'utils/user';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
@@ -19,6 +25,7 @@ import NotFound from 'views/NotFound';
 import Summary from './components/Summary';
 import { TRBRequestContext } from './RequestContext';
 import subNavItems from './subNavItems';
+import TrbAssignLeadModal from './TrbAssignLeadModal';
 
 import './index.scss';
 
@@ -119,6 +126,10 @@ export default function AdminHome() {
     ? formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy')
     : '';
 
+  // Assign trb lead modal refs
+  const assignLeadModalRef = useRef<ModalRef>(null);
+  const assignLeadModalTrbRequestIdRef = useRef<TrbRequestIdRef>(null);
+
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
     return <PageLoading />;
@@ -176,12 +187,21 @@ export default function AdminHome() {
                   trbRequestId={id}
                   requesterString={requesterString}
                   submissionDate={submissionDate}
+                  assignLeadModalRef={assignLeadModalRef}
+                  assignLeadModalTrbRequestIdRef={
+                    assignLeadModalTrbRequestIdRef
+                  }
                 />
               </Route>
             ))}
           </Grid>
         </Grid>
       </GridContainer>
+
+      <TrbAssignLeadModal
+        modalRef={assignLeadModalRef}
+        trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+      />
     </div>
   );
 }
