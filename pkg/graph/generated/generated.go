@@ -8771,10 +8771,6 @@ type Mutation {
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
     @hasRole(role: EASI_TRB_ADMIN)
-  # linkSystemIntakeToTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
-  #   @hasRole(role: EASI_TRB_ADMIN)
-  # unlinkSystemIntakeFromTrbRequest(trbRequestId: UUID!, systemIntakeId: UUID!): Boolean!
-  #   @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
