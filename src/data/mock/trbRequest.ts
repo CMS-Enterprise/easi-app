@@ -85,6 +85,7 @@ export const trbRequestSummary: Summary = {
   name: 'TRB Request Mock',
   type: TRBRequestType.NEED_HELP,
   state: TRBRequestState.OPEN,
+  status: TRBRequestStatus.DRAFT_REQUEST_FORM,
   trbLead: null,
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses: {
