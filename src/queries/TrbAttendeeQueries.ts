@@ -20,7 +20,7 @@ const TRBAttendee = gql`
  * Get TRB request attendees
  */
 
-export const GetTRBRequestAttendees = gql`
+export const GetTRBRequestAttendeesQuery = gql`
   ${TRBAttendee}
   query GetTRBRequestAttendees($id: UUID!) {
     trbRequest(id: $id) {
@@ -35,7 +35,7 @@ export const GetTRBRequestAttendees = gql`
 /**
  * Create TRB request attendee
  */
-export const CreateTRBRequestAttendee = gql`
+export const CreateTRBRequestAttendeeQuery = gql`
   ${TRBAttendee}
   mutation CreateTRBRequestAttendee($input: CreateTRBRequestAttendeeInput!) {
     createTRBRequestAttendee(input: $input) {
@@ -47,7 +47,7 @@ export const CreateTRBRequestAttendee = gql`
 /**
  * Update TRB request attendee
  */
-export const UpdateTRBRequestAttendee = gql`
+export const UpdateTRBRequestAttendeeQuery = gql`
   ${TRBAttendee}
   mutation UpdateTRBRequestAttendee($input: UpdateTRBRequestAttendeeInput!) {
     updateTRBRequestAttendee(input: $input) {
@@ -59,7 +59,7 @@ export const UpdateTRBRequestAttendee = gql`
 /**
  * Delete TRB request attendee
  */
-export const DeleteTRBRequestAttendee = gql`
+export const DeleteTRBRequestAttendeeQuery = gql`
   ${TRBAttendee}
   mutation DeleteTRBRequestAttendee($id: UUID!) {
     deleteTRBRequestAttendee(id: $id) {

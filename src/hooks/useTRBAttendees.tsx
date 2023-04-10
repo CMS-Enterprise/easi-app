@@ -1,19 +1,29 @@
 import { useMemo } from 'react';
-import {
-  FetchResult,
-  OperationVariables,
-  useMutation,
-  useQuery
-} from '@apollo/client';
+import { FetchResult, useMutation, useQuery } from '@apollo/client';
 
 import {
-  CreateTRBRequestAttendee,
-  DeleteTRBRequestAttendee,
-  GetTRBRequestAttendees,
-  UpdateTRBRequestAttendee
+  CreateTRBRequestAttendeeQuery,
+  DeleteTRBRequestAttendeeQuery,
+  GetTRBRequestAttendeesQuery,
+  UpdateTRBRequestAttendeeQuery
 } from 'queries/TrbAttendeeQueries';
-import { GetTRBRequestAttendees as RequestResult } from 'queries/types/GetTRBRequestAttendees';
+import {
+  CreateTRBRequestAttendee,
+  CreateTRBRequestAttendeeVariables
+} from 'queries/types/CreateTRBRequestAttendee';
+import {
+  DeleteTRBRequestAttendee,
+  DeleteTRBRequestAttendeeVariables
+} from 'queries/types/DeleteTRBRequestAttendee';
+import {
+  GetTRBRequestAttendees,
+  GetTRBRequestAttendeesVariables
+} from 'queries/types/GetTRBRequestAttendees';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
+import {
+  UpdateTRBRequestAttendee,
+  UpdateTRBRequestAttendeeVariables
+} from 'queries/types/UpdateTRBRequestAttendee';
 import {
   CreateTRBRequestAttendeeInput,
   UpdateTRBRequestAttendeeInput
@@ -32,11 +42,17 @@ type UseTRBAttendees = {
     loading: boolean;
   };
   /** Creates new TRB attendee */
-  createAttendee: (variables: OperationVariables) => Promise<FetchResult>;
+  createAttendee: (
+    input: CreateTRBRequestAttendeeInput
+  ) => Promise<FetchResult<CreateTRBRequestAttendee>>;
   /** Updates TRB attendee */
-  updateAttendee: (variables: OperationVariables) => Promise<FetchResult>;
+  updateAttendee: (
+    input: UpdateTRBRequestAttendeeInput
+  ) => Promise<FetchResult<UpdateTRBRequestAttendee>>;
   /** Deletes TRB attendee */
-  deleteAttendee: (variables: OperationVariables) => Promise<FetchResult>;
+  deleteAttendee: (
+    id: string
+  ) => Promise<FetchResult<DeleteTRBRequestAttendee>>;
 };
 
 /**
@@ -49,7 +65,10 @@ export default function useTRBAttendees(
   /**
    * Query to get attendees by TRB request ID
    */
-  const { data, loading } = useQuery<RequestResult>(GetTRBRequestAttendees, {
+  const { data, loading } = useQuery<
+    GetTRBRequestAttendees,
+    GetTRBRequestAttendeesVariables
+  >(GetTRBRequestAttendeesQuery, {
     variables: { id: trbRequestId }
   });
 
@@ -69,28 +88,28 @@ export default function useTRBAttendees(
   const requester: TRBAttendee | undefined = attendees[attendees.length - 1];
 
   /** Create attendee mutation */
-  const [createAttendee] = useMutation<CreateTRBRequestAttendeeInput>(
+  const [createAttendee] = useMutation<
     CreateTRBRequestAttendee,
-    {
-      refetchQueries: ['GetTRBRequestAttendees']
-    }
-  );
+    CreateTRBRequestAttendeeVariables
+  >(CreateTRBRequestAttendeeQuery, {
+    refetchQueries: ['GetTRBRequestAttendees']
+  });
 
   /** Update attendee mutation */
-  const [updateAttendee] = useMutation<UpdateTRBRequestAttendeeInput>(
+  const [updateAttendee] = useMutation<
     UpdateTRBRequestAttendee,
-    {
-      refetchQueries: ['GetTRBRequestAttendees']
-    }
-  );
+    UpdateTRBRequestAttendeeVariables
+  >(UpdateTRBRequestAttendeeQuery, {
+    refetchQueries: ['GetTRBRequestAttendees']
+  });
 
   /** Delete attendee mutation */
-  const [deleteAttendee] = useMutation<{ id: string }>(
+  const [deleteAttendee] = useMutation<
     DeleteTRBRequestAttendee,
-    {
-      refetchQueries: ['GetTRBRequestAttendees']
-    }
-  );
+    DeleteTRBRequestAttendeeVariables
+  >(DeleteTRBRequestAttendeeQuery, {
+    refetchQueries: ['GetTRBRequestAttendees']
+  });
 
   return {
     data: {
@@ -98,8 +117,8 @@ export default function useTRBAttendees(
       attendees: loading ? [] : attendees.slice(0, attendees.length - 1),
       loading
     },
-    createAttendee,
-    updateAttendee,
-    deleteAttendee
+    createAttendee: async input => createAttendee({ variables: { input } }),
+    updateAttendee: async input => updateAttendee({ variables: { input } }),
+    deleteAttendee: async id => deleteAttendee({ variables: { id } })
   };
 }
