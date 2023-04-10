@@ -103,7 +103,7 @@ func UpdateTRBRequestForm(
 		return nil, err
 	}
 
-	if willSendNotifications {
+	if willSendNotifications && emailClient != nil {
 		emailErrGroup := new(errgroup.Group)
 
 		componentText := missingComponentFallbackText
