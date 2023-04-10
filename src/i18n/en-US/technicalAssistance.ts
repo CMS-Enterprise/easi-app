@@ -31,7 +31,50 @@ const technicalAssistance = {
       'The TRB has requested edits to your initial request form. Please make any necessary changes and re-submit your form.',
     viewFeedback: 'View feedback'
   },
-  adminAction: 'Admin Action',
+  adminAction: {
+    title: 'Admin Action',
+    statuses: {
+      REQUEST_FORM_COMPLETE: {
+        title: 'Is this request ready for a consult?',
+        description:
+          'Review the initial request form. If this request is ready to move on to a consult session, please mark it as ready. If the TRB needs further information in order to proceed, you may request edits or additional information from the project team.'
+      },
+      READY_FOR_CONSULT: {
+        title: 'Plan a consult session',
+        description: 'This request is aready for a consult session'
+      },
+      CONSULT_SCHEDULED: {
+        title: 'Review request documentation',
+        description:
+          'The consult session is scheduled. Continue to review the initial request form and the supporting documentation as needed before the meeting.'
+      },
+      CONSULT_COMPLETE: {
+        title: 'Draft advice letter',
+        description:
+          'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.'
+      },
+      DRAFT_ADVICE_LETTER: {
+        title: 'Draft advice letter',
+        description:
+          'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.'
+      },
+      ADVICE_LETTER_IN_REVIEW: {
+        title: 'Review advice letter',
+        description:
+          'Review this draft advice letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the advice letter to incorporate your comments and feedback before sending it to the requester and project team.'
+      },
+      ADVICE_LETTER_SENT: {
+        title: 'Close request',
+        description:
+          'If this is a Consult as a Service request (CaaS), you may choose to leave this request open until the engagement is complete. For all other requests, you may close this request at any time.'
+      },
+      REQUEST_CLOSED: {
+        title: 'Re-open request',
+        description:
+          'If this request was closed in error or if you wish to re-open it, use the button below.'
+      }
+    }
+  },
   requestNotes: {
     text: 'note{{-plural}} about this request',
     viewNotes: 'View notes',
