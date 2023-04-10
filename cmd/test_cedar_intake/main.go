@@ -35,7 +35,7 @@ type testData struct {
 	action       *models.Action
 	businessCase *models.BusinessCase
 	feedback     *models.GRTFeedback
-	note         *models.Note
+	note         *models.SystemIntakeNote
 	systemIntake *models.SystemIntake
 }
 
@@ -145,8 +145,8 @@ func makeTestAction(systemIntake models.SystemIntake) *models.Action {
 	return action
 }
 
-func makeTestNote(systemIntake models.SystemIntake) *models.Note {
-	note := &models.Note{
+func makeTestNote(systemIntake models.SystemIntake) *models.SystemIntakeNote {
+	note := &models.SystemIntakeNote{
 		ID:             uuid.New(),
 		SystemIntakeID: systemIntake.ID,
 		AuthorEUAID:    "BC0V",

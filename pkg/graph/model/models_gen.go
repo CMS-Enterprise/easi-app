@@ -606,14 +606,6 @@ type SystemIntakeLCIDExpirationChange struct {
 	NewCostBaseline      *string   `json:"newCostBaseline"`
 }
 
-// A note added to a system request
-type SystemIntakeNote struct {
-	Author    *SystemIntakeNoteAuthor `json:"author"`
-	Content   string                  `json:"content"`
-	CreatedAt time.Time               `json:"createdAt"`
-	ID        uuid.UUID               `json:"id"`
-}
-
 // The author of a note added to a system request
 type SystemIntakeNoteAuthor struct {
 	Eua  string `json:"eua"`
@@ -730,6 +722,13 @@ type UpdateSystemIntakeLinkedCedarSystemInput struct {
 type UpdateSystemIntakeLinkedContractInput struct {
 	ID             uuid.UUID `json:"id"`
 	ContractNumber *string   `json:"contractNumber"`
+}
+
+// Input data for updating an IT governance admin note
+type UpdateSystemIntakeNoteInput struct {
+	Content    string    `json:"content"`
+	IsArchived bool      `json:"isArchived"`
+	ID         uuid.UUID `json:"id"`
 }
 
 // The payload for updating a system's IT governance request
