@@ -58,14 +58,13 @@ func (c Client) SendTRBAdviceLetterSubmittedEmail(ctx context.Context, input Sen
 	}
 
 	templateParams := trbAdviceLetterSubmittedEmailTemplateParams{
-		RequestName:    input.RequestName,
-		RequesterName:  input.RequesterName,
-		Component:      input.Component,
-		RequestType:    input.RequestType,
-		SubmissionDate: submissionDate,
-		ConsultDate:    consultDate,
-		// TODO - figure out what this URL will be once it's in the frontend:
-		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice-letter", input.TRBRequestID.String())),
+		RequestName:         input.RequestName,
+		RequesterName:       input.RequesterName,
+		Component:           input.Component,
+		RequestType:         input.RequestType,
+		SubmissionDate:      submissionDate,
+		ConsultDate:         consultDate,
+		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice", input.TRBRequestID.String())),
 		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
 		TRBEmail:            c.config.TRBEmail,
 	}

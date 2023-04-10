@@ -329,6 +329,11 @@ type DeleteTRBRequestDocumentPayload struct {
 	Document *models.TRBRequestDocument `json:"document"`
 }
 
+type DeleteTRBRequestFundingSourcesInput struct {
+	TrbRequestID  uuid.UUID `json:"trbRequestId"`
+	FundingNumber string    `json:"fundingNumber"`
+}
+
 // The input required to delete a test date/score
 type DeleteTestDateInput struct {
 	ID uuid.UUID `json:"id"`
@@ -601,14 +606,6 @@ type SystemIntakeLCIDExpirationChange struct {
 	NewCostBaseline      *string   `json:"newCostBaseline"`
 }
 
-// A note added to a system request
-type SystemIntakeNote struct {
-	Author    *SystemIntakeNoteAuthor `json:"author"`
-	Content   string                  `json:"content"`
-	CreatedAt time.Time               `json:"createdAt"`
-	ID        uuid.UUID               `json:"id"`
-}
-
 // The author of a note added to a system request
 type SystemIntakeNoteAuthor struct {
 	Eua  string `json:"eua"`
@@ -727,6 +724,13 @@ type UpdateSystemIntakeLinkedContractInput struct {
 	ContractNumber *string   `json:"contractNumber"`
 }
 
+// Input data for updating an IT governance admin note
+type UpdateSystemIntakeNoteInput struct {
+	Content    string    `json:"content"`
+	IsArchived bool      `json:"isArchived"`
+	ID         uuid.UUID `json:"id"`
+}
+
 // The payload for updating a system's IT governance request
 type UpdateSystemIntakePayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
@@ -765,6 +769,12 @@ type UpdateTRBRequestConsultMeetingTimeInput struct {
 	CopyTrbMailbox     bool      `json:"copyTrbMailbox"`
 	NotifyEuaIds       []string  `json:"notifyEuaIds"`
 	Notes              string    `json:"notes"`
+}
+
+type UpdateTRBRequestFundingSourcesInput struct {
+	TrbRequestID  uuid.UUID `json:"trbRequestId"`
+	FundingNumber string    `json:"fundingNumber"`
+	Sources       []string  `json:"sources"`
 }
 
 // The data needed assign a TRB lead to a TRB request

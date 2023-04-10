@@ -126,6 +126,9 @@ export default function AdminHome() {
     ? formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy')
     : '';
 
+  // Note count for NoteBox modal rendered on each page
+  const noteCount: number = (data?.trbRequest?.adminNotes || []).length;
+
   // Assign trb lead modal refs
   const assignLeadModalRef = useRef<ModalRef>(null);
   const assignLeadModalTrbRequestIdRef = useRef<TrbRequestIdRef>(null);
@@ -185,6 +188,7 @@ export default function AdminHome() {
               <Route exact path={subpage.route} key={subpage.route}>
                 <subpage.component
                   trbRequestId={id}
+                  noteCount={noteCount}
                   requesterString={requesterString}
                   submissionDate={submissionDate}
                   assignLeadModalRef={assignLeadModalRef}

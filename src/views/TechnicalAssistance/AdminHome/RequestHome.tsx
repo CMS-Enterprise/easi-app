@@ -24,7 +24,7 @@ import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 
 import InformationCard from './components/InformationCard';
-import RequestNotes from './components/RequestNotes';
+import NoteBox from './components/NoteBox';
 import { TrbAssignLeadModalOpener } from './TrbAssignLeadModal';
 
 const RequestHome = ({
@@ -46,8 +46,8 @@ const RequestHome = ({
     consultMeetingTime,
     trbLeadInfo,
     trbLeadComponent,
-    documents
-    // adminNotes TODO: once <Note /> PR is merge, implement adminNotes data
+    documents,
+    adminNotes
   } = data?.trbRequest || {};
 
   return (
@@ -64,7 +64,10 @@ const RequestHome = ({
         </Grid>
 
         <Grid tablet={{ col: 4 }}>
-          <RequestNotes trbRequestId={trbRequestId} />
+          <NoteBox
+            trbRequestId={trbRequestId}
+            noteCount={adminNotes?.length || 0}
+          />
         </Grid>
       </Grid>
 

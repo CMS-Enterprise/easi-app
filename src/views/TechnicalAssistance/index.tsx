@@ -5,6 +5,7 @@ import { GridContainer } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
+import AddNote from './AdminHome/AddNote';
 import CloseRequest from './AdminHome/CloseRequest';
 import Consult from './AdminHome/Consult';
 import TRBRequestInfoWrapper from './AdminHome/RequestContext';
@@ -17,6 +18,7 @@ import ProcessFlow from './ProcessFlow';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
+import TrbAttendees from './TrbAttendees';
 import TRBDocuments from './TrbDocuments';
 
 import './index.scss';
@@ -59,6 +61,10 @@ function TechnicalAssistance() {
           <DocumentUpload />
         </Route>
 
+        <Route path={`${path}/task-list/:id/attendees`}>
+          <TrbAttendees />
+        </Route>
+
         {/* Create new or edit exisiting request */}
         <Route exact path={`${path}/requests/:id/:step?/:view?`}>
           <RequestForm />
@@ -86,6 +92,11 @@ function TechnicalAssistance() {
           >
             <Consult />
           </Route>
+
+          <Route exact path={`${path}/:id/notes/add-note`}>
+            <AddNote />
+          </Route>
+
           <Route
             exact
             path={`${path}/:id/:activePage/:action(close-request|reopen-request)`}

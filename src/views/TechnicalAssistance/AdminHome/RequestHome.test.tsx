@@ -71,6 +71,7 @@ describe('Trb Admin Request Home', () => {
           <Route exact path="/trb/:id/:activePage">
             <RequestHome
               trbRequestId={trbRequestId}
+              noteCount={0}
               assignLeadModalRef={modalRef}
               assignLeadModalTrbRequestIdRef={trbRequestIdRef}
             />
@@ -175,6 +176,7 @@ describe('Trb Admin Request Home', () => {
           <Route exact path="/trb/:id/:activePage">
             <RequestHome
               trbRequestId={trbRequestId}
+              noteCount={0}
               assignLeadModalRef={modalRef}
               assignLeadModalTrbRequestIdRef={trbRequestIdRef}
             />

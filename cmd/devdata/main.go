@@ -11,16 +11,26 @@ import (
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
+	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
+
+type seederConfig struct {
+	ctx      context.Context
+	logger   *zap.Logger
+	store    *storage.Store
+	s3Client *upload.S3Client
+}
 
 func main() {
 	config := testhelpers.NewConfig()
 	logger, loggerErr := zap.NewDevelopment()
+
 	if loggerErr != nil {
 		panic(loggerErr)
 	}
@@ -43,6 +53,23 @@ func main() {
 	store, storeErr := storage.NewStore(logger, dbConfig, ldClient)
 	if storeErr != nil {
 		panic(storeErr)
+	}
+
+	// store.TruncateAllTablesDANGEROUS(logger)
+
+	s3Cfg := upload.Config{
+		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region:  config.GetString(appconfig.AWSRegion),
+		IsLocal: true,
+	}
+
+	s3Client := upload.NewS3Client(s3Cfg)
+
+	seederConfig := &seederConfig{
+		ctx:      mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser),
+		logger:   logger,
+		store:    store,
+		s3Client: &s3Client,
 	}
 
 	makeAccessibilityRequest("TACO", store)
@@ -172,21 +199,7 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
-	makeTRBRequest(models.TRBTNeedHelp, logger, store, func(t *models.TRBRequest) {
-		t.ID = uuid.MustParse("1afc9242-f244-47a3-9f91-4d6fedd8eb91")
-		t.Name = "My excellent question"
-	})
-
-	makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
-		t.ID = uuid.MustParse("9841c768-bdcd-4856-bae2-62cfdaffacf6")
-		t.Name = "TACO Review"
-		t.CreatedBy = "TACO"
-	})
-	makeTRBRequest(models.TRBTFormalReview, logger, store, func(t *models.TRBRequest) {
-		t.ID = uuid.MustParse("21f175b9-bcbe-41c1-9c07-9844869bc1ce")
-		t.Name = "Archived Request"
-		t.Archived = true
-	})
+	must(nil, seederConfig.seedTRBRequests())
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -204,7 +217,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	}
 
 	intake := models.SystemIntake{
-		EUAUserID: null.StringFrom("ABCD"),
+		EUAUserID: null.StringFrom(mock.PrincipalUser),
 		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
 
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
@@ -265,7 +278,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		Feedback:       null.StringFrom("This business case needs feedback"),
 	}))
 
-	must(store.CreateNote(ctx, &models.Note{
+	must(store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "QQQQ",
 		AuthorName:     null.StringFrom("Author Name"),
@@ -289,7 +302,7 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	noCost := 0
 	businessCase := models.BusinessCase{
 		SystemIntakeID:       intake.ID,
-		EUAUserID:            "ABCD",
+		EUAUserID:            mock.PrincipalUser,
 		Requester:            null.StringFrom("Shane Clark"),
 		RequesterPhoneNumber: null.StringFrom("3124567890"),
 		Status:               models.BusinessCaseStatusOPEN,
@@ -359,7 +372,7 @@ func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...fu
 	accessibilityRequest := models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
 		IntakeID:  &intake.ID,
-		EUAUserID: "ABCD",
+		EUAUserID: mock.PrincipalUser,
 	}
 	for _, cb := range callbacks {
 		cb(&accessibilityRequest)
@@ -377,7 +390,6 @@ func makeTestDate(logger *zap.Logger, store *storage.Store, callbacks ...func(*m
 	}
 
 	must(store.CreateTestDate(ctx, &testDate))
-
 }
 
 func must(_ interface{}, err error) {
@@ -389,17 +401,4 @@ func must(_ interface{}, err error) {
 func date(year, month, day int) *time.Time {
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	return &date
-}
-
-func makeTRBRequest(rType models.TRBRequestType, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.TRBRequest)) *models.TRBRequest {
-	ctx := appcontext.WithLogger(context.Background(), logger)
-
-	trb := models.NewTRBRequest("EASI")
-	trb.Type = rType
-	trb.State = models.TRBRequestStateOpen
-	for _, cb := range callbacks {
-		cb(trb)
-	}
-	ret, _ := store.CreateTRBRequest(ctx, trb)
-	return ret
 }

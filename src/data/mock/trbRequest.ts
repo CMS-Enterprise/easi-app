@@ -94,7 +94,13 @@ export const trbRequestSummary: Summary = {
     feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
     formStatus: TRBFormStatus.READY_TO_START,
     adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
-  }
+  },
+  adminNotes: [
+    {
+      __typename: 'TRBAdminNote',
+      id: '123'
+    }
+  ]
 };
 
 export const trbRequestAdviceLetter: AdviceLetter = {
@@ -112,6 +118,13 @@ export const trbRequestAdviceLetter: AdviceLetter = {
       title: 'Recommendation 1',
       recommendation: 'This is the recommendation text',
       links: ['easi.cms.gov', 'https://google.com']
+    },
+    {
+      __typename: 'TRBAdviceLetterRecommendation',
+      id: 'a118705f-c87b-48ef-a812-b3264ad00abe',
+      title: 'Recommendation 2',
+      recommendation: 'This is the recommendation text',
+      links: ['easi.cms.gov', 'cms.gov']
     }
   ],
   author: {
@@ -156,20 +169,10 @@ export const trbRequest: TrbRequest = {
     collabDateGovernanceReviewBoard: null,
     collabDateOther: null,
     collabGroupOther: null,
-    subjectAreaTechnicalReferenceArchitecture: [],
-    subjectAreaNetworkAndSecurity: [],
-    subjectAreaCloudAndInfrastructure: [],
-    subjectAreaApplicationDevelopment: [],
-    subjectAreaDataAndDataManagement: [],
-    subjectAreaGovernmentProcessesAndPolicies: [],
-    subjectAreaOtherTechnicalTopics: [],
-    subjectAreaTechnicalReferenceArchitectureOther: null,
-    subjectAreaNetworkAndSecurityOther: null,
-    subjectAreaCloudAndInfrastructureOther: null,
-    subjectAreaApplicationDevelopmentOther: null,
-    subjectAreaDataAndDataManagementOther: null,
-    subjectAreaGovernmentProcessesAndPoliciesOther: null,
-    subjectAreaOtherTechnicalTopicsOther: null,
+    collabGRBConsultRequested: null,
+    subjectAreaOptions: null,
+    subjectAreaOptionOther: null,
+    fundingSources: null,
     submittedAt: null,
     __typename: 'TRBRequestForm'
   },

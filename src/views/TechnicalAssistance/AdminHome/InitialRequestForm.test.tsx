@@ -7,12 +7,14 @@ import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
 import { attendees, requester } from 'data/mock/trbRequest';
+import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
+  TRBAdminNoteCategory,
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
@@ -59,20 +61,10 @@ const mockTrbRequestData: TrbRequest = {
     collabDateGovernanceReviewBoard: null,
     collabDateOther: null,
     collabGroupOther: null,
-    subjectAreaTechnicalReferenceArchitecture: [],
-    subjectAreaNetworkAndSecurity: [],
-    subjectAreaCloudAndInfrastructure: [],
-    subjectAreaApplicationDevelopment: [],
-    subjectAreaDataAndDataManagement: [],
-    subjectAreaGovernmentProcessesAndPolicies: [],
-    subjectAreaOtherTechnicalTopics: [],
-    subjectAreaTechnicalReferenceArchitectureOther: null,
-    subjectAreaNetworkAndSecurityOther: null,
-    subjectAreaCloudAndInfrastructureOther: null,
-    subjectAreaApplicationDevelopmentOther: null,
-    subjectAreaDataAndDataManagementOther: null,
-    subjectAreaGovernmentProcessesAndPoliciesOther: null,
-    subjectAreaOtherTechnicalTopicsOther: null,
+    collabGRBConsultRequested: null,
+    subjectAreaOptions: null,
+    subjectAreaOptionOther: null,
+    fundingSources: null,
     submittedAt: null,
     __typename: 'TRBRequestForm'
   },
@@ -114,7 +106,7 @@ describe('Trb Admin Initial Request Form', () => {
           },
           {
             request: {
-              query: GetTRBRequestAttendees,
+              query: GetTRBRequestAttendeesQuery,
               variables: {
                 id: mockTrbRequestData.id
               }
@@ -138,6 +130,35 @@ describe('Trb Admin Initial Request Form', () => {
                 trbRequest: { id: mockTrbRequestData.id, documents: [] }
               }
             }
+          },
+          {
+            request: {
+              query: GetTrbAdminNotesQuery,
+              variables: {
+                id: mockTrbRequestData.id
+              }
+            },
+            result: {
+              data: {
+                trbRequest: {
+                  id: mockTrbRequestData.id,
+                  adminNotes: [
+                    {
+                      id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
+                      isArchived: false,
+                      category: TRBAdminNoteCategory.GENERAL_REQUEST,
+                      noteText: 'My cute original note',
+                      author: {
+                        __typename: 'UserInfo',
+                        commonName: 'Jerry Seinfeld'
+                      },
+                      createdAt: '2024-03-28T13:20:37.852099Z',
+                      __typename: 'TRBAdminNote'
+                    }
+                  ]
+                }
+              }
+            }
           }
         ]}
       >
@@ -151,6 +172,7 @@ describe('Trb Admin Initial Request Form', () => {
               <Route exact path="/trb/:id/:activePage">
                 <InitialRequestForm
                   trbRequestId={mockTrbRequestData.id}
+                  noteCount={0}
                   assignLeadModalRef={modalRef}
                   assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                 />
@@ -169,7 +191,7 @@ describe('Trb Admin Initial Request Form', () => {
     );
 
     // Task status tag rendered from query data
-    getByText(i18next.t<string>('taskList:taskStatus.IN_PROGRESS'));
+    await findByText(i18next.t<string>('taskList:taskStatus.IN_PROGRESS'));
 
     // Admin description text of request form steps, up to Documents
     for (let stepIdx = 0; stepIdx <= 3; stepIdx += 1) {

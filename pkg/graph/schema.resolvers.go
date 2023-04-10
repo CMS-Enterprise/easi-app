@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -1287,22 +1288,32 @@ func (r *mutationResolver) CreateSystemIntakeActionExtendLifecycleID(ctx context
 }
 
 // CreateSystemIntakeNote is the resolver for the createSystemIntakeNote field.
-func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
-	note, err := r.store.CreateNote(ctx, &models.Note{
+func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
+	systemIntakeNote := models.SystemIntakeNote{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),
 		AuthorName:     null.StringFrom(input.AuthorName),
 		Content:        null.StringFrom(input.Content),
 		SystemIntakeID: input.IntakeID,
+	}
+
+	createdNote, err := r.store.CreateSystemIntakeNote(ctx, &systemIntakeNote)
+	return createdNote, err
+}
+
+// UpdateSystemIntakeNote is the resolver for the updateSystemIntakeNote field.
+func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input model.UpdateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
+	userInfo, err := r.service.FetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+	if err != nil {
+		return nil, err
+	}
+
+	systemIntakeNote, err := r.store.UpdateSystemIntakeNote(ctx, &models.SystemIntakeNote{
+		Content:    null.StringFrom(input.Content),
+		IsArchived: input.IsArchived,
+		ID:         input.ID,
+		ModifiedBy: &userInfo.EuaUserID,
 	})
-	return &model.SystemIntakeNote{
-		ID: note.ID,
-		Author: &model.SystemIntakeNoteAuthor{
-			Name: note.AuthorName.String,
-			Eua:  note.AuthorEUAID,
-		},
-		Content:   note.Content.String,
-		CreatedAt: *note.CreatedAt,
-	}, err
+	return systemIntakeNote, err
 }
 
 // CreateSystemIntake is the resolver for the createSystemIntake field.
@@ -1938,6 +1949,16 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 	)
 }
 
+// UpdateTRBRequestFundingSources is the resolver for the updateTRBRequestFundingSources field.
+func (r *mutationResolver) UpdateTRBRequestFundingSources(ctx context.Context, input model.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
+	return resolvers.UpdateTRBRequestFundingSources(ctx, r.store, input.TrbRequestID, input.FundingNumber, input.Sources)
+}
+
+// DeleteTRBRequestFundingSources is the resolver for the deleteTRBRequestFundingSources field.
+func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, input model.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
+	return resolvers.DeleteTRBRequestFundingSources(ctx, r.store, input.TrbRequestID, input.FundingNumber)
+}
+
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
 func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
 	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
@@ -1965,6 +1986,16 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 			NotifyEUAIDs:    notifyEuas,
 			Action:          input.Action,
 		})
+}
+
+// LinkSystemIntakeToTrbRequest is the resolver for the linkSystemIntakeToTrbRequest field.
+func (r *mutationResolver) LinkSystemIntakeToTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
+	return resolvers.CreateTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
+}
+
+// UnlinkSystemIntakeFromTrbRequest is the resolver for the unlinkSystemIntakeFromTrbRequest field.
+func (r *mutationResolver) UnlinkSystemIntakeFromTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
+	return resolvers.DeleteTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
 }
 
 // UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
@@ -2092,6 +2123,16 @@ func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.Reo
 	)
 }
 
+// CreateTrbLeadOption is the resolver for the createTrbLeadOption field.
+func (r *mutationResolver) CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error) {
+	return resolvers.CreateTRBLeadOption(ctx, r.store, r.service.FetchUserInfo, eua)
+}
+
+// DeleteTrbLeadOption is the resolver for the deleteTrbLeadOption field.
+func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error) {
+	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
+}
+
 // AccessibilityRequest is the resolver for the accessibilityRequest field.
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	// deleted requests need to be returned to be able to show a deleted request view
@@ -2192,6 +2233,11 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
+}
+
+// SystemIntakesWithLcids is the resolver for the systemIntakesWithLcids field.
+func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error) {
+	return r.store.GetSystemIntakesWithLCIDs(ctx)
 }
 
 // CurrentUser is the resolver for the currentUser field.
@@ -2456,6 +2502,11 @@ func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*mode
 	return resolvers.GetTRBRequests(ctx, archived, r.store)
 }
 
+// TrbLeadOptions is the resolver for the trbLeadOptions field.
+func (r *queryResolver) TrbLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
+	return resolvers.GetTRBLeadOptions(ctx, r.store, r.service.FetchUserInfos)
+}
+
 // TrbAdminNote is the resolver for the trbAdminNote field.
 func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
 	return resolvers.GetTRBAdminNoteByID(ctx, r.store, id)
@@ -2715,25 +2766,8 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 }
 
 // Notes is the resolver for the notes field.
-func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeNote, error) {
-	notes, notesErr := r.store.FetchNotesBySystemIntakeID(ctx, obj.ID)
-	if notesErr != nil {
-		return nil, notesErr
-	}
-
-	var graphNotes []*model.SystemIntakeNote
-	for _, n := range notes {
-		graphNotes = append(graphNotes, &model.SystemIntakeNote{
-			ID: n.ID,
-			Author: &model.SystemIntakeNoteAuthor{
-				Name: n.AuthorName.String,
-				Eua:  n.AuthorEUAID,
-			},
-			Content:   n.Content.String,
-			CreatedAt: *n.CreatedAt,
-		})
-	}
-	return graphNotes, nil
+func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error) {
+	return r.store.FetchNotesBySystemIntakeID(ctx, obj.ID)
 }
 
 // OitSecurityCollaborator is the resolver for the oitSecurityCollaborator field.
@@ -2837,6 +2871,37 @@ func (r *systemIntakeFundingSourceResolver) FundingNumber(ctx context.Context, o
 // Source is the resolver for the source field.
 func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
 	return obj.Source.Ptr(), nil
+}
+
+// Author is the resolver for the author field.
+func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.SystemIntakeNote) (*model.SystemIntakeNoteAuthor, error) {
+	return &model.SystemIntakeNoteAuthor{
+		Eua:  obj.AuthorEUAID,
+		Name: obj.AuthorName.ValueOrZero(),
+	}, nil
+}
+
+// Content is the resolver for the content field.
+func (r *systemIntakeNoteResolver) Content(ctx context.Context, obj *models.SystemIntakeNote) (string, error) {
+	return obj.Content.ValueOrZero(), nil
+}
+
+// Editor is the resolver for the editor field.
+func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error) {
+	var systemIntakeNoteEditorInfo *models.UserInfo
+	if obj.ModifiedBy != nil {
+		info, err := dataloaders.GetUserInfo(ctx, *obj.ModifiedBy)
+		if err != nil {
+			return nil, err
+		}
+		systemIntakeNoteEditorInfo = info
+	}
+
+	if systemIntakeNoteEditorInfo == nil {
+		systemIntakeNoteEditorInfo = &models.UserInfo{}
+	}
+
+	return systemIntakeNoteEditorInfo, nil
 }
 
 // Author is the resolver for the author field.
@@ -2946,6 +3011,11 @@ func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBReques
 	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
 }
 
+// SystemIntakes is the resolver for the systemIntakes field.
+func (r *tRBRequestResolver) SystemIntakes(ctx context.Context, obj *models.TRBRequest) ([]*models.SystemIntake, error) {
+	return resolvers.GetTRBRequestSystemIntakesByTRBRequestID(ctx, r.store, obj.ID)
+}
+
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
 	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
@@ -2999,46 +3069,15 @@ func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.T
 	return collabGroups, nil
 }
 
-// SubjectAreaTechnicalReferenceArchitecture is the resolver for the subjectAreaTechnicalReferenceArchitecture field.
-func (r *tRBRequestFormResolver) SubjectAreaTechnicalReferenceArchitecture(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBTechnicalReferenceArchitectureOption, error) {
-	items := models.ConvertEnums[models.TRBTechnicalReferenceArchitectureOption](obj.SubjectAreaTechnicalReferenceArchitecture)
-	return items, nil
+// FundingSources is the resolver for the fundingSources field.
+func (r *tRBRequestFormResolver) FundingSources(ctx context.Context, obj *models.TRBRequestForm) ([]*models.TRBFundingSource, error) {
+	return resolvers.GetFundingSourcesByRequestID(ctx, r.store, obj.TRBRequestID)
 }
 
-// SubjectAreaNetworkAndSecurity is the resolver for the subjectAreaNetworkAndSecurity field.
-func (r *tRBRequestFormResolver) SubjectAreaNetworkAndSecurity(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBNetworkAndSecurityOption, error) {
-	items := models.ConvertEnums[models.TRBNetworkAndSecurityOption](obj.SubjectAreaNetworkAndSecurity)
-	return items, nil
-}
-
-// SubjectAreaCloudAndInfrastructure is the resolver for the subjectAreaCloudAndInfrastructure field.
-func (r *tRBRequestFormResolver) SubjectAreaCloudAndInfrastructure(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBCloudAndInfrastructureOption, error) {
-	items := models.ConvertEnums[models.TRBCloudAndInfrastructureOption](obj.SubjectAreaCloudAndInfrastructure)
-	return items, nil
-}
-
-// SubjectAreaApplicationDevelopment is the resolver for the subjectAreaApplicationDevelopment field.
-func (r *tRBRequestFormResolver) SubjectAreaApplicationDevelopment(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBApplicationDevelopmentOption, error) {
-	items := models.ConvertEnums[models.TRBApplicationDevelopmentOption](obj.SubjectAreaApplicationDevelopment)
-	return items, nil
-}
-
-// SubjectAreaDataAndDataManagement is the resolver for the subjectAreaDataAndDataManagement field.
-func (r *tRBRequestFormResolver) SubjectAreaDataAndDataManagement(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBDataAndDataManagementOption, error) {
-	items := models.ConvertEnums[models.TRBDataAndDataManagementOption](obj.SubjectAreaDataAndDataManagement)
-	return items, nil
-}
-
-// SubjectAreaGovernmentProcessesAndPolicies is the resolver for the subjectAreaGovernmentProcessesAndPolicies field.
-func (r *tRBRequestFormResolver) SubjectAreaGovernmentProcessesAndPolicies(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBGovernmentProcessesAndPoliciesOption, error) {
-	items := models.ConvertEnums[models.TRBGovernmentProcessesAndPoliciesOption](obj.SubjectAreaGovernmentProcessesAndPolicies)
-	return items, nil
-}
-
-// SubjectAreaOtherTechnicalTopics is the resolver for the subjectAreaOtherTechnicalTopics field.
-func (r *tRBRequestFormResolver) SubjectAreaOtherTechnicalTopics(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBOtherTechnicalTopicsOption, error) {
-	items := models.ConvertEnums[models.TRBOtherTechnicalTopicsOption](obj.SubjectAreaOtherTechnicalTopics)
-	return items, nil
+// SubjectAreaOptions is the resolver for the subjectAreaOptions field.
+func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *models.TRBRequestForm) ([]models.TRBSubjectAreaOption, error) {
+	subjectAreas := models.ConvertEnums[models.TRBSubjectAreaOption](obj.SubjectAreaOptions)
+	return subjectAreas, nil
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
@@ -3105,6 +3144,11 @@ func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSour
 	return &systemIntakeFundingSourceResolver{r}
 }
 
+// SystemIntakeNote returns generated.SystemIntakeNoteResolver implementation.
+func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
+	return &systemIntakeNoteResolver{r}
+}
+
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
@@ -3157,6 +3201,7 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
+type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBAdviceLetterResolver struct{ *Resolver }
 type tRBAdviceLetterRecommendationResolver struct{ *Resolver }

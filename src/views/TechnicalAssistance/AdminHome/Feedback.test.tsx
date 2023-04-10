@@ -58,6 +58,7 @@ describe('Trb Admin: Feedback', () => {
         <MemoryRouter>
           <Feedback
             trbRequestId={id}
+            noteCount={0}
             assignLeadModalRef={modalRef}
             assignLeadModalTrbRequestIdRef={trbRequestIdRef}
           />
@@ -98,6 +99,7 @@ describe('Trb Admin: Feedback', () => {
         <MemoryRouter>
           <Feedback
             trbRequestId={id}
+            noteCount={0}
             assignLeadModalRef={modalRef}
             assignLeadModalTrbRequestIdRef={trbRequestIdRef}
           />

@@ -3,19 +3,11 @@ import * as yup from 'yup';
 import {
   CreateTRBRequestDocumentInput,
   PersonRole,
-  TRBApplicationDevelopmentOption,
-  TRBCloudAndInfrastructureOption,
   TRBCollabGroupOption,
-  TRBDataAndDataManagementOption,
   TRBDocumentCommonType,
-  TRBGovernmentProcessesAndPoliciesOption,
-  TRBNetworkAndSecurityOption,
-  TRBOtherTechnicalTopicsOption,
-  TRBTechnicalReferenceArchitectureOption,
   TRBWhereInProcessOption,
   UpdateTRBRequestFormInput
 } from 'types/graphql-global-types';
-
 // import { fileObjectSchema } from './fileSchema';
 
 type TrbFormInputBasic = Pick<
@@ -37,6 +29,7 @@ type TrbFormInputBasic = Pick<
   | 'collabDateGovernanceReviewBoard'
   | 'collabDateOther'
   | 'collabGroupOther'
+  | 'collabGRBConsultRequested'
 >;
 
 export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
@@ -98,6 +91,13 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
     then: schema => schema.required()
   }),
+  collabGRBConsultRequested: yup
+    .boolean()
+    .nullable()
+    .when('collabGroups', {
+      is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
+      then: schema => schema.required()
+    }),
   collabGroupOther: yup.string().when('collabGroups', {
     is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
     then: schema => schema.required()
@@ -107,7 +107,6 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
     then: schema => schema.required()
   })
 });
-
 export interface TrbRequestFormBasic extends TrbFormInputBasic {
   name: string;
 }
@@ -142,138 +141,8 @@ export const trbAttendeeSchema = yup.object({
 
 export type TrbFormInputSubjectAreas = Pick<
   UpdateTRBRequestFormInput,
-  | 'subjectAreaTechnicalReferenceArchitecture'
-  | 'subjectAreaNetworkAndSecurity'
-  | 'subjectAreaCloudAndInfrastructure'
-  | 'subjectAreaApplicationDevelopment'
-  | 'subjectAreaDataAndDataManagement'
-  | 'subjectAreaGovernmentProcessesAndPolicies'
-  | 'subjectAreaOtherTechnicalTopics'
-  | 'subjectAreaTechnicalReferenceArchitectureOther'
-  | 'subjectAreaNetworkAndSecurityOther'
-  | 'subjectAreaCloudAndInfrastructureOther'
-  | 'subjectAreaApplicationDevelopmentOther'
-  | 'subjectAreaDataAndDataManagementOther'
-  | 'subjectAreaGovernmentProcessesAndPoliciesOther'
-  | 'subjectAreaOtherTechnicalTopicsOther'
+  'subjectAreaOptions' | 'subjectAreaOptionOther'
 >;
-
-export const subjectAreasSchema: yup.SchemaOf<TrbFormInputSubjectAreas> = yup.object(
-  {
-    subjectAreaTechnicalReferenceArchitecture: yup
-      .array(
-        yup
-          .mixed()
-          .oneOf<TRBTechnicalReferenceArchitectureOption>(
-            Object.values(TRBTechnicalReferenceArchitectureOption)
-          )
-          .required()
-      )
-      .ensure(),
-    subjectAreaNetworkAndSecurity: yup
-      .array(
-        yup
-          .mixed()
-          .oneOf<TRBNetworkAndSecurityOption>(
-            Object.values(TRBNetworkAndSecurityOption)
-          )
-          .required()
-      )
-      .ensure(),
-    subjectAreaCloudAndInfrastructure: yup
-      .array(
-        yup
-          .mixed()
-          .oneOf<TRBCloudAndInfrastructureOption>(
-            Object.values(TRBCloudAndInfrastructureOption)
-          )
-          .required()
-      )
-      .ensure(),
-    subjectAreaApplicationDevelopment: yup
-      .array(
-        yup
-          .mixed()
-          .oneOf<TRBApplicationDevelopmentOption>(
-            Object.values(TRBApplicationDevelopmentOption)
-          )
-          .required()
-      )
-      .ensure(),
-    subjectAreaDataAndDataManagement: yup
-      .array(
-        yup
-          .mixed()
-          .oneOf<TRBDataAndDataManagementOption>(
-            Object.values(TRBDataAndDataManagementOption)
-          )
-          .required()
-      )
-      .ensure(),
-    subjectAreaGovernmentProcessesAndPolicies: yup
-      .array(
-        yup
-          .mixed()
-          .oneOf<TRBGovernmentProcessesAndPoliciesOption>(
-            Object.values(TRBGovernmentProcessesAndPoliciesOption)
-          )
-          .required()
-      )
-      .ensure(),
-    subjectAreaOtherTechnicalTopics: yup
-      .array(
-        yup
-          .mixed()
-          .oneOf<TRBOtherTechnicalTopicsOption>(
-            Object.values(TRBOtherTechnicalTopicsOption)
-          )
-          .required()
-      )
-      .ensure(),
-    subjectAreaTechnicalReferenceArchitectureOther: yup
-      .string()
-      .when('subjectAreaTechnicalReferenceArchitecture', {
-        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-        then: schema => schema.required()
-      }),
-    subjectAreaNetworkAndSecurityOther: yup
-      .string()
-      .when('subjectAreaNetworkAndSecurity', {
-        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-        then: schema => schema.required()
-      }),
-    subjectAreaCloudAndInfrastructureOther: yup
-      .string()
-      .when('subjectAreaCloudAndInfrastructure', {
-        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-        then: schema => schema.required()
-      }),
-    subjectAreaApplicationDevelopmentOther: yup
-      .string()
-      .when('subjectAreaApplicationDevelopment', {
-        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-        then: schema => schema.required()
-      }),
-    subjectAreaDataAndDataManagementOther: yup
-      .string()
-      .when('subjectAreaDataAndDataManagement', {
-        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-        then: schema => schema.required()
-      }),
-    subjectAreaGovernmentProcessesAndPoliciesOther: yup
-      .string()
-      .when('subjectAreaGovernmentProcessesAndPolicies', {
-        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-        then: schema => schema.required()
-      }),
-    subjectAreaOtherTechnicalTopicsOther: yup
-      .string()
-      .when('subjectAreaOtherTechnicalTopics', {
-        is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-        then: schema => schema.required()
-      })
-  }
-);
 
 export type TrbRequestInputDocument = Omit<
   CreateTRBRequestDocumentInput,
@@ -299,7 +168,11 @@ export const documentSchema = yup.object({
 export const adviceRecommendationSchema = yup.object({
   title: yup.string().required(),
   recommendation: yup.string().required(),
-  links: yup.array(yup.string())
+  links: yup.array(
+    yup.object({
+      link: yup.string().required()
+    })
+  )
 });
 
 export const meetingSummarySchema = yup.object({
@@ -317,3 +190,15 @@ export const nextStepsSchema = yup.object({
       then: schema => schema.required()
     })
 });
+
+/** TRB action form schema */
+export const trbActionSchema = (messageKey: string, required?: boolean) =>
+  yup.object({
+    [messageKey]: required ? yup.string().required() : yup.string(),
+    copyTrbMailbox: yup.boolean(),
+    notifyEuaIds: yup.array(yup.string()).when('copyTrbMailbox', {
+      is: (copyTrbMailbox: boolean) => !copyTrbMailbox,
+      then: schema => schema.min(1),
+      otherwise: schema => schema.optional()
+    })
+  });

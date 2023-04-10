@@ -40,11 +40,10 @@ func (c Client) SendTRBRequestReopenedEmail(ctx context.Context, input SendTRBRe
 	allRecipients := append(input.Recipients, c.config.TRBEmail)
 
 	templateParams := trbRequestReopenedEmailTemplateParams{
-		TRBRequestName: input.TRBRequestName,
-		RequesterName:  input.RequesterName,
-		ReasonReopened: input.ReasonReopened,
-		// TODO - figure out what this URL will be once it's in the frontend:
-		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice-letter", input.TRBRequestID.String())),
+		TRBRequestName:      input.TRBRequestName,
+		RequesterName:       input.RequesterName,
+		ReasonReopened:      input.ReasonReopened,
+		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice", input.TRBRequestID.String())),
 		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
 		TRBEmail:            c.config.TRBEmail,
 	}
