@@ -9,7 +9,7 @@ import configureMockStore from 'redux-mock-store';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendees } from 'queries/TrbAttendeeQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
@@ -168,7 +168,7 @@ describe('Trb Admin Notes: View Notes', () => {
             },
             {
               request: {
-                query: GetTRBRequestAttendees,
+                query: GetTRBRequestAttendeesQuery,
                 variables: {
                   id: trbRequestId
                 }

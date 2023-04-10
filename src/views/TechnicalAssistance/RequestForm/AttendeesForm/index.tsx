@@ -132,25 +132,17 @@ function AttendeesForm({
     // If attendee object has ID, update attendee
     if (id) {
       return updateAttendee({
-        variables: {
-          input: {
-            id,
-            component,
-            role: role as PersonRole
-          }
-        }
+        id,
+        component: component || '',
+        role: role as PersonRole
       });
     }
     // If no ID is present, create new attendee
     return createAttendee({
-      variables: {
-        input: {
-          trbRequestId,
-          euaUserId,
-          component,
-          role: role as PersonRole
-        }
-      }
+      trbRequestId,
+      euaUserId,
+      component: component || '',
+      role: role as PersonRole
     });
   };
 

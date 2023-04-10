@@ -213,8 +213,8 @@ const AttendeeFields = ({
                       label={`- ${t('basic.options.select')} -`}
                       disabled
                     />
-                    {contactRoles.map(({ key, label }) => (
-                      <option key={key} value={key} label={label} />
+                    {(Object.keys(contactRoles) as PersonRole[]).map(key => (
+                      <option key={key} value={key} label={contactRoles[key]} />
                     ))}
                   </Dropdown>
                 </FormGroup>
@@ -248,9 +248,7 @@ const Attendee = ({
 
   /** Attendee role label */
   // Gets label from enum value in attendee object
-  const role =
-    contactRoles.find(contactRole => contactRole.key === attendee.role)
-      ?.label || '';
+  const role = attendee.role ? contactRoles[attendee.role] : '';
 
   /** Attendee component acronym */
   const component = cmsDivisionsAndOffices.find(
