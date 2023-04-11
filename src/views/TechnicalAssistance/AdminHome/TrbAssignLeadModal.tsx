@@ -165,18 +165,15 @@ function TrbAssignLeadModal({
   }, []);
 
   // console.log('watch', JSON.stringify(watch(), null, 2));
-  if (!data) {
-    return null;
-  }
 
   // Arrange options so that "Assigning myself" is first
-  const myself = data.trbLeadOptions.find(
+  const myself = data?.trbLeadOptions.find(
     ({ euaUserId }) => euaUserId === euaId
   );
-  const trbLeads = data.trbLeadOptions.filter(
+  const trbLeads = data?.trbLeadOptions.filter(
     ({ euaUserId }) => euaUserId !== euaId
   );
-  if (myself) trbLeads.unshift(myself);
+  if (myself) trbLeads?.unshift(myself);
 
   return (
     <Modal
@@ -203,7 +200,7 @@ function TrbAssignLeadModal({
           render={({ field }) => (
             <FormGroup>
               <Fieldset legend={t('assignTrbLeadModal.label')}>
-                {trbLeads.map(({ euaUserId, commonName }) => (
+                {trbLeads?.map(({ euaUserId, commonName }) => (
                   <Radio
                     key={euaUserId}
                     id={`${field.name}-${euaUserId}`}
