@@ -26,6 +26,7 @@ import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import Spinner from 'components/Spinner';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import useCacheQuery from 'hooks/useCacheQuery';
 import DeleteTRBRequestFundingSource from 'queries/DeleteTRBRequestFundingSource';
@@ -98,9 +99,10 @@ function Basic({
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
 
-  const { data } = useCacheQuery<GetSystemIntakesWithLCIDSType>(
-    GetSystemIntakesWithLCIDS
-  );
+  const {
+    data,
+    loading: intakesLoading
+  } = useCacheQuery<GetSystemIntakesWithLCIDSType>(GetSystemIntakesWithLCIDS);
 
   const systemIntakesWithLCIDs = useMemo(() => {
     const systemIntakes = data?.systemIntakesWithLcids
@@ -727,39 +729,48 @@ function Basic({
             )}
           />
 
-          <Controller
-            name="systemIntakes"
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup error={!!error || 'systemIntakes' in errors}>
-                  <Label
-                    htmlFor="systemIntakes"
-                    hint={<div>{t(`basic.hint.relatedLCIDS`)}</div>}
-                    error={!!error}
-                  >
-                    {t(`basic.labels.relatedLCIDS`)}
-                  </Label>
-                  {error && (
-                    <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
-                  )}
-                  <MultiSelect
-                    inputId="systemIntakes"
-                    name="systemIntakes"
-                    options={systemIntakesWithLCIDs}
-                    initialValues={initialValues.systemIntakes.map(
-                      (intake: TrbRequestFormFieldsSystemIntakeType) =>
-                        intake.id
+          <div className="display-flex flex-align-center">
+            <Controller
+              name="systemIntakes"
+              control={control}
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <FormGroup error={!!error || 'systemIntakes' in errors}>
+                    <Label
+                      htmlFor="systemIntakes"
+                      hint={<div>{t(`basic.hint.relatedLCIDS`)}</div>}
+                      error={!!error}
+                    >
+                      {t(`basic.labels.relatedLCIDS`)}
+                    </Label>
+                    {error && (
+                      <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                     )}
-                    onChange={values => {
-                      field.onChange(values);
-                    }}
-                    selectedLabel={t('basic.labels.selectedLCIDs')}
-                  />
-                </FormGroup>
-              );
-            }}
-          />
+                    <MultiSelect
+                      inputId="systemIntakes"
+                      name="systemIntakes"
+                      options={systemIntakesWithLCIDs}
+                      initialValues={initialValues.systemIntakes.map(
+                        (intake: TrbRequestFormFieldsSystemIntakeType) =>
+                          intake.id
+                      )}
+                      onChange={values => {
+                        field.onChange(values);
+                      }}
+                      selectedLabel={t('basic.labels.selectedLCIDs')}
+                    />
+                  </FormGroup>
+                );
+              }}
+            />
+
+            {intakesLoading && (
+              <Spinner
+                className="margin-left-2 intake-spinner"
+                data-testid="spinner"
+              />
+            )}
+          </div>
 
           {/* Select any other OIT groups that you have met with or collaborated with. */}
           <Controller
