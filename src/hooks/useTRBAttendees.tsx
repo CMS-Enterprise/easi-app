@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
 
 import {
@@ -117,8 +117,17 @@ export default function useTRBAttendees(
       attendees: loading ? [] : attendees.slice(0, attendees.length - 1),
       loading
     },
-    createAttendee: async input => createAttendee({ variables: { input } }),
-    updateAttendee: async input => updateAttendee({ variables: { input } }),
-    deleteAttendee: async id => deleteAttendee({ variables: { id } })
+    createAttendee: useCallback(
+      async input => createAttendee({ variables: { input } }),
+      [createAttendee]
+    ),
+    updateAttendee: useCallback(
+      async input => updateAttendee({ variables: { input } }),
+      [updateAttendee]
+    ),
+    deleteAttendee: useCallback(
+      async id => deleteAttendee({ variables: { id } }),
+      [deleteAttendee]
+    )
   };
 }
