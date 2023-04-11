@@ -157,6 +157,8 @@ export default function AdminHome() {
         requester={requester}
         requesterString={requesterString}
         submissionDate={submissionDate}
+        assignLeadModalRef={assignLeadModalRef}
+        assignLeadModalTrbRequestIdRef={assignLeadModalTrbRequestIdRef}
       />
 
       {/* Accordion navigation for tablet and mobile */}
