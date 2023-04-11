@@ -426,7 +426,7 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
             />
             <option
               label="Contracting Officer’s Representative (COR)"
-              value="CONTRACT_REP"
+              value="CONTRACT_OFFICE_RSREPRESENTATIVE"
             />
             <option
               label="Cloud Navigator"
