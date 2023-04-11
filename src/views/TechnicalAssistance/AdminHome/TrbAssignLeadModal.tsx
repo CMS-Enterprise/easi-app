@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Alert,
   Button,
@@ -19,6 +19,8 @@ import {
 import classnames from 'classnames';
 
 import useMessage from 'hooks/useMessage';
+import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
+import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
 import {
   UpdateTrbRequestLead,
   UpdateTrbRequestLeadVariables
@@ -59,12 +61,6 @@ export function TrbAssignLeadModalOpener({
   );
 }
 
-const todoTrbLeads = [
-  { name: 'Aye Bee', euaId: 'ABCD' },
-  { name: 'You', euaId: 'AAAA' },
-  { name: 'Everyone', euaId: 'AXYZ' }
-];
-
 type TrbAssignLeadModalProps = {
   modalRef: React.RefObject<ModalRef>;
   trbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
@@ -92,6 +88,8 @@ function TrbAssignLeadModal({
 
   const { showMessage } = useMessage();
 
+  const { data } = useQuery<GetTrbLeadOptions>(GetTrbLeadOptionsQuery);
+
   const [mutate] = useMutation<
     UpdateTrbRequestLead,
     UpdateTrbRequestLeadVariables
@@ -114,7 +112,9 @@ function TrbAssignLeadModal({
         showMessage(
           <Alert type="success" slim className="margin-top-3">
             {t(`assignTrbLeadModal.success`, {
-              name: todoTrbLeads.find(e => e.euaId === formData.trbLead)!.name
+              name: data?.trbLeadOptions.find(
+                e => e.euaUserId === formData.trbLead
+              )!.commonName
             })}
           </Alert>
         );
@@ -186,17 +186,17 @@ function TrbAssignLeadModal({
           render={({ field }) => (
             <FormGroup>
               <Fieldset legend={t('assignTrbLeadModal.label')}>
-                {todoTrbLeads.map(selection => (
+                {data?.trbLeadOptions.map(({ euaUserId, commonName }) => (
                   <Radio
-                    key={selection.euaId}
-                    id={`${field.name}-${selection.euaId}`}
-                    data-testid={`${field.name}-${selection.euaId}`}
+                    key={euaUserId}
+                    id={`${field.name}-${euaUserId}`}
+                    data-testid={`${field.name}-${euaUserId}`}
                     name={field.name}
                     onBlur={field.onBlur}
                     onChange={field.onChange}
-                    label={selection.name}
-                    value={selection.euaId}
-                    checked={field.value === selection.euaId}
+                    label={commonName}
+                    value={euaUserId}
+                    checked={field.value === euaUserId}
                   />
                 ))}
               </Fieldset>
