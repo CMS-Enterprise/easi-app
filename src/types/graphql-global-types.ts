@@ -848,6 +848,7 @@ export interface UpdateTRBRequestFormInput {
   collabDateOther?: string | null;
   collabGroupOther?: string | null;
   collabGRBConsultRequested?: boolean | null;
+  systemIntakes?: UUID[] | null;
   subjectAreaOptions?: TRBSubjectAreaOption[] | null;
   subjectAreaOptionOther?: string | null;
 }
