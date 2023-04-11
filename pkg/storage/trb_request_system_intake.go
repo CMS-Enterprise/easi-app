@@ -72,7 +72,6 @@ func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID 
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create TRB request system intakes transaction, error %s", err))
 		return nil, err
 	}
-	fmt.Println("insertedTRBRequestSystemIntakes", insertedTRBRequestSystemIntakes)
 	err = tx.Commit()
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create TRB request system intakes transaction, error %s", err))

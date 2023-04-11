@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -42,8 +41,6 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 		s.Len(trbIntakes, 0)
 
 		// Insert just 2
-		fmt.Println("intake 0", intakes[0].ID)
-		fmt.Println("intake 1", intakes[1].ID)
 		_, err = store.CreateTRBRequestSystemIntakes(ctx, trbRequest.ID, []uuid.UUID{
 			intakes[0].ID,
 			intakes[1].ID,
