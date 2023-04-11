@@ -932,7 +932,7 @@ const technicalAssistance = {
   assignTrbLeadModal: {
     heading: 'Assign an Admin Lead',
     label: 'Select a Lead from the TRB Team:',
-    selectMyself: 'Assign myself',
+    assignMyself: 'Assign myself',
     submit: 'Assign',
     success: '{{name}} is assigned as the TRB lead for this request.',
     error:

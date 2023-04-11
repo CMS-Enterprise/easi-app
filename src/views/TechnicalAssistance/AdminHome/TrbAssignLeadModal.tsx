@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   Alert,
@@ -26,6 +27,7 @@ import {
   UpdateTrbRequestLeadVariables
 } from 'queries/types/UpdateTrbRequestLead';
 import UpdateTrbRequestLeadQuery from 'queries/UpdateTrbRequestLeadQuery';
+import { AppState } from 'reducers/rootReducer';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 
 type TrbAssignLeadModalOpenerProps = {
@@ -73,6 +75,8 @@ function TrbAssignLeadModal({
   const modalElementId = 'trb-assign-lead-modal';
 
   const { t } = useTranslation('technicalAssistance');
+
+  const { euaId } = useSelector((state: AppState) => state.auth);
 
   const {
     control,
@@ -161,11 +165,24 @@ function TrbAssignLeadModal({
   }, []);
 
   // console.log('watch', JSON.stringify(watch(), null, 2));
+  if (!data) {
+    return null;
+  }
+
+  // Arrange options so that "Assigning myself" is first
+  const myself = data.trbLeadOptions.find(
+    ({ euaUserId }) => euaUserId === euaId
+  );
+  const trbLeads = data.trbLeadOptions.filter(
+    ({ euaUserId }) => euaUserId !== euaId
+  );
+  if (myself) trbLeads.unshift(myself);
 
   return (
     <Modal
       ref={modalRef}
       id={modalElementId}
+      className={modalElementId}
       aria-labelledby={`${modalElementId}-heading`}
       aria-describedby={`${modalElementId}-description`}
     >
@@ -186,7 +203,7 @@ function TrbAssignLeadModal({
           render={({ field }) => (
             <FormGroup>
               <Fieldset legend={t('assignTrbLeadModal.label')}>
-                {data?.trbLeadOptions.map(({ euaUserId, commonName }) => (
+                {trbLeads.map(({ euaUserId, commonName }) => (
                   <Radio
                     key={euaUserId}
                     id={`${field.name}-${euaUserId}`}
@@ -194,7 +211,11 @@ function TrbAssignLeadModal({
                     name={field.name}
                     onBlur={field.onBlur}
                     onChange={field.onChange}
-                    label={commonName}
+                    label={
+                      euaId === euaUserId
+                        ? t('assignTrbLeadModal.assignMyself')
+                        : commonName
+                    }
                     value={euaUserId}
                     checked={field.value === euaUserId}
                   />
