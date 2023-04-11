@@ -1988,16 +1988,6 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		})
 }
 
-// LinkSystemIntakeToTrbRequest is the resolver for the linkSystemIntakeToTrbRequest field.
-func (r *mutationResolver) LinkSystemIntakeToTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
-	return resolvers.CreateTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
-}
-
-// UnlinkSystemIntakeFromTrbRequest is the resolver for the unlinkSystemIntakeFromTrbRequest field.
-func (r *mutationResolver) UnlinkSystemIntakeFromTrbRequest(ctx context.Context, trbRequestID uuid.UUID, systemIntakeID uuid.UUID) (bool, error) {
-	return resolvers.DeleteTRBRequestSystemIntake(ctx, r.store, trbRequestID, systemIntakeID)
-}
-
 // UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
 func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
 	return resolvers.UpdateTRBRequestConsultMeetingTime(
@@ -3011,11 +3001,6 @@ func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBReques
 	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
 }
 
-// SystemIntakes is the resolver for the systemIntakes field.
-func (r *tRBRequestResolver) SystemIntakes(ctx context.Context, obj *models.TRBRequest) ([]*models.SystemIntake, error) {
-	return resolvers.GetTRBRequestSystemIntakesByTRBRequestID(ctx, r.store, obj.ID)
-}
-
 // UserInfo is the resolver for the userInfo field.
 func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error) {
 	userInfo, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
@@ -3072,6 +3057,11 @@ func (r *tRBRequestFormResolver) CollabGroups(ctx context.Context, obj *models.T
 // FundingSources is the resolver for the fundingSources field.
 func (r *tRBRequestFormResolver) FundingSources(ctx context.Context, obj *models.TRBRequestForm) ([]*models.TRBFundingSource, error) {
 	return resolvers.GetFundingSourcesByRequestID(ctx, r.store, obj.TRBRequestID)
+}
+
+// SystemIntakes is the resolver for the systemIntakes field.
+func (r *tRBRequestFormResolver) SystemIntakes(ctx context.Context, obj *models.TRBRequestForm) ([]*models.SystemIntake, error) {
+	return resolvers.GetTRBRequestSystemIntakesByTRBRequestID(ctx, r.store, obj.TRBRequestID)
 }
 
 // SubjectAreaOptions is the resolver for the subjectAreaOptions field.
