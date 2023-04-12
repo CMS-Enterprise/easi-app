@@ -36,6 +36,10 @@ type TrbAssignLeadModalOpenerProps = {
   trbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
 } & JSX.IntrinsicElements['button'];
 
+/**
+ * Button to open `<TrbAssignLeadModal>`.
+ * Uses `trbRequestId` to assign a lead to that request.
+ */
 export function TrbAssignLeadModalOpener({
   trbRequestId,
   modalRef,
@@ -68,6 +72,10 @@ type TrbAssignLeadModalProps = {
   trbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
 };
 
+/**
+ * Modal for assigning a TRB Lead to a request.
+ * Used in conjuction with `<TrbAssignLeadModalOpener>`.
+ */
 function TrbAssignLeadModal({
   modalRef,
   trbRequestIdRef
@@ -81,7 +89,6 @@ function TrbAssignLeadModal({
   const {
     control,
     handleSubmit,
-    // watch,
     reset,
     formState: { isSubmitting, isDirty }
   } = useForm({
@@ -100,8 +107,6 @@ function TrbAssignLeadModal({
   >(UpdateTrbRequestLeadQuery);
 
   const submit = handleSubmit(formData => {
-    // console.log('formData', formData, trbRequestIdRef.current);
-
     if (!trbRequestIdRef.current) return;
 
     mutate({
@@ -163,8 +168,6 @@ function TrbAssignLeadModal({
     // Run once on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // console.log('watch', JSON.stringify(watch(), null, 2));
 
   // Arrange options so that "Assigning myself" is first
   const myself = data?.trbLeadOptions.find(
