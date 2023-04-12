@@ -45,6 +45,7 @@ jobs:
 
   deploy_dev:
     # needs: Run_Tests
+    needs: Build_Application_Images
     if: ${{ github.event.inputs.env == 'dev' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
@@ -63,6 +64,7 @@ jobs:
 
   deploy_impl:
     # needs: Run_Tests
+    needs: Build_Application_Images
     if: ${{ github.event.inputs.env == 'impl' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
@@ -81,6 +83,7 @@ jobs:
 
   deploy_prod:
     # needs: Run_Tests
+    needs: Build_Application_Images
     if: ${{ github.event.inputs.env == 'prod' && github.event.inputs.confirm_production_deploy == true }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
