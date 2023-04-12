@@ -64,7 +64,7 @@ jobs:
           role-duration-seconds: 1800
           role-skip-session-tagging: true
       - name: Clean the database
-        if: contains(inputs.env, 'dev')
+        if: ${{ contains(inputs.env, 'dev') && vars.ENABLE_DEV_DB_CLEAN == '1' }}
         run: |
           ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
       - name: Backup the database
