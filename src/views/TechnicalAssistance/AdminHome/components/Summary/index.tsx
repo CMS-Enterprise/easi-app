@@ -55,7 +55,7 @@ export default function Summary({
     const statusKeys = [
       'formStatus',
       'feedbackStatus',
-      'attendConsultPrepStatus',
+      'attendConsultStatus',
       'consultPrepStatus',
       'adviceLetterStatus'
     ] as (keyof TRBRequestTaskStatuses)[];
