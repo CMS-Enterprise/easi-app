@@ -78,6 +78,29 @@ func UpdateTRBRequestForm(
 		})
 	}
 
+	// if systemIntakes is provided, we need to delete all intake relations and remake them
+	// additionally, delete it from the input so it's not included with ApplyChangesAndMetadata
+	if systemIntakes, systemIntakesProvided := input["systemIntakes"]; systemIntakesProvided {
+		delete(input, "systemIntakes")
+
+		systemIntakeUUIDs := []uuid.UUID{}
+		if systemIntakeIFCs, ok := systemIntakes.([]interface{}); ok {
+			for _, systemIntakeIFC := range systemIntakeIFCs {
+				if systemIntakeStr, ok := systemIntakeIFC.(string); ok {
+					systemIntakeUUID, parseErr := uuid.Parse(systemIntakeStr)
+					if parseErr != nil {
+						return nil, parseErr
+					}
+					systemIntakeUUIDs = append(systemIntakeUUIDs, systemIntakeUUID)
+				}
+			}
+			_, err = store.CreateTRBRequestSystemIntakes(ctx, id, systemIntakeUUIDs)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	err = ApplyChangesAndMetaData(input, form, appcontext.Principal(ctx))
 	if err != nil {
 		return nil, err
@@ -103,7 +126,7 @@ func UpdateTRBRequestForm(
 		return nil, err
 	}
 
-	if willSendNotifications {
+	if willSendNotifications && emailClient != nil {
 		emailErrGroup := new(errgroup.Group)
 
 		componentText := missingComponentFallbackText
