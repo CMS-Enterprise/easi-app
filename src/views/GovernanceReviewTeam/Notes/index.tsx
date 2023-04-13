@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
+import Modal from 'components/Modal';
 import {
   NoteByline,
   NoteContent,
@@ -31,6 +32,8 @@ import {
   GetAdminNotesAndActions,
   GetAdminNotesAndActionsVariables
 } from 'queries/types/GetAdminNotesAndActions';
+import { UpdateSystemIntakeNote } from 'queries/types/UpdateSystemIntakeNote';
+import UpdateSystemIntakeNoteQuery from 'queries/UpdateSystemIntakeNoteQuery';
 import { AppState } from 'reducers/rootReducer';
 import { formatDateUtc } from 'utils/date';
 
@@ -57,15 +60,68 @@ const Notes = () => {
     ]
   });
 
-  const { error, data } = useQuery<
+  const { error, data, refetch: refetchAdminNotesAndActions } = useQuery<
     GetAdminNotesAndActions,
     GetAdminNotesAndActionsVariables
   >(GetAdminNotesAndActionsQuery, {
     variables: {
       id: systemId
-    }
+    },
+    fetchPolicy: 'no-cache'
   });
+
+  const [
+    archiveNoteMutate,
+    archiveMutationResult
+  ] = useMutation<UpdateSystemIntakeNote>(UpdateSystemIntakeNoteQuery, {
+    errorPolicy: 'all'
+  });
+
+  // Archive System Intake Admin Note
+  const archiveSystemIntakeNote = (noteID: string, noteContent: string) => {
+    archiveNoteMutate({
+      variables: {
+        input: {
+          id: noteID,
+          isArchived: true,
+          content: noteContent
+        }
+      }
+    }).then(response => {
+      refetchAdminNotesAndActions(); // this is probably not necessary since modal close is a state hook
+    });
+  };
+
+  const [
+    updateNoteMutate,
+    updateMutationResult
+  ] = useMutation<UpdateSystemIntakeNote>(UpdateSystemIntakeNoteQuery, {
+    errorPolicy: 'all'
+  });
+
+  // Update content of System Intake Admin Note
+  const updateSystemIntakeNote = (noteID: string, noteContent: string) => {
+    updateNoteMutate({
+      variables: {
+        input: {
+          id: noteID,
+          isArchived: false,
+          content: noteContent
+        }
+      }
+    }).then(response => {
+      refetchAdminNotesAndActions(); // this is probably not necessary since modal close is a state hook
+    });
+  };
+
   const { t } = useTranslation('governanceReviewTeam');
+
+  const [noteModal, setupNoteModal] = useState({
+    isOpen: false,
+    id: '',
+    content: '',
+    type: '' // TODO - make this an enum?
+  });
 
   // Character limit for length of free text (LCID Scope, Next Steps, and Cost Baseline),
   // any text longer then this limit will be displayed with a button to allow users
@@ -95,7 +151,15 @@ const Notes = () => {
   // New
   const notesByTimestamp =
     data?.systemIntake?.notes.map(note => {
-      const { id, createdAt, content, author } = note;
+      const {
+        id,
+        createdAt,
+        content,
+        editor,
+        modifiedAt,
+        modifiedBy,
+        author
+      } = note;
       return {
         createdAt,
         element: (
@@ -106,6 +170,177 @@ const Notes = () => {
             ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
               createdAt
             ).toLocaleString(DateTime.TIME_SIMPLE)}`}</NoteByline>
+            {modifiedAt != null && modifiedBy != null && (
+              <div>
+                <NoteByline>{`last edited by ${
+                  editor?.commonName
+                } | ${DateTime.fromISO(modifiedAt).toFormat(
+                  'MMMM d, yyyy'
+                )} at ${DateTime.fromISO(modifiedAt).toLocaleString(
+                  DateTime.TIME_SIMPLE
+                )}`}</NoteByline>
+              </div>
+            )}
+            <div className="display-block margin-top-1">
+              {/* Edit Note */}
+              <NoteByline className="margin-right-1">
+                <Button
+                  type="button"
+                  id="GovernanceReviewTeam-EditNoteButton"
+                  unstyled
+                  onClick={() => {
+                    setupNoteModal({
+                      ...noteModal,
+                      ...{
+                        isOpen: true,
+                        id,
+                        content,
+                        type: 'edit'
+                      }
+                    });
+                  }}
+                >
+                  {t('notes.edit')}
+                </Button>
+              </NoteByline>
+              {noteModal.type === 'edit' && ( // TODO - is this the best way to do this. Maybe better to have two separate noteModal useState hooks?
+                <Modal
+                  isOpen={noteModal.isOpen}
+                  closeModal={() => {
+                    setupNoteModal({
+                      ...noteModal,
+                      ...{
+                        isOpen: false
+                      }
+                    });
+                  }}
+                >
+                  <PageHeading headingLevel="h2" className="margin-top-0">
+                    {t('notes.editModal.header')}
+                  </PageHeading>
+                  <p>{t('notes.editModal.description')}</p>
+                  <Label htmlFor="GovernanceReviewTeam-EditNote">
+                    {t('notes.editModal.contentLabel')}
+                  </Label>
+                  <Field
+                    as={TextAreaField}
+                    id="GovernanceReviewTeam-EditNote"
+                    name="editNote"
+                    className="easi-grt__note-textarea margin-bottom-4"
+                    onChange={(e: { target: { value: any } }) => {
+                      setupNoteModal({
+                        ...noteModal,
+                        ...{
+                          content: e.target.value
+                        }
+                      });
+                    }}
+                    value={noteModal.content}
+                    onBlur={() => {}}
+                  />
+                  <Button
+                    type="button"
+                    id="GovernanceReviewTeam-SaveEditsButton"
+                    className="margin-right-4"
+                    onClick={() => {
+                      updateSystemIntakeNote(noteModal.id, noteModal.content);
+                      setupNoteModal({
+                        ...noteModal,
+                        ...{
+                          isOpen: false
+                        }
+                      });
+                    }}
+                  >
+                    {t('notes.editModal.saveEdits')}
+                  </Button>
+                  <Button
+                    type="button"
+                    unstyled
+                    onClick={() => {
+                      setupNoteModal({
+                        ...noteModal,
+                        ...{
+                          isOpen: false
+                        }
+                      });
+                    }}
+                  >
+                    {t('notes.editModal.cancel')}
+                  </Button>
+                </Modal>
+              )}
+
+              {/* Remove Note */}
+              <NoteByline className="margin-left-1">
+                <Button
+                  type="button"
+                  id="GovernanceReviewTeam-RemoveNoteButton"
+                  unstyled
+                  onClick={() => {
+                    setupNoteModal({
+                      ...noteModal,
+                      ...{
+                        isOpen: true,
+                        id,
+                        content,
+                        type: 'remove'
+                      }
+                    });
+                  }}
+                >
+                  {t('notes.remove')}
+                </Button>
+              </NoteByline>
+              {noteModal.type === 'remove' && ( // TODO - is this the best way to do this. Maybe better to have two separate noteModal useState hooks?
+                <Modal
+                  isOpen={noteModal.isOpen}
+                  closeModal={() => {
+                    setupNoteModal({
+                      ...noteModal,
+                      ...{
+                        isOpen: false
+                      }
+                    });
+                  }}
+                >
+                  <PageHeading headingLevel="h2" className="margin-top-0">
+                    {t('notes.removeModal.header')}
+                  </PageHeading>
+                  <p>{t('notes.removeModal.description')}</p>
+                  <Button
+                    type="button"
+                    id="GovernanceReviewTeam-SaveArchiveButton"
+                    className="margin-right-4"
+                    onClick={() => {
+                      archiveSystemIntakeNote(noteModal.id, noteModal.content);
+                      setupNoteModal({
+                        ...noteModal,
+                        ...{
+                          isOpen: false
+                        }
+                      });
+                    }}
+                  >
+                    {t('notes.removeModal.removeNote')}
+                  </Button>
+                  <Button
+                    type="button"
+                    unstyled
+                    onClick={() => {
+                      setupNoteModal({
+                        ...noteModal,
+                        ...{
+                          isOpen: false
+                        }
+                      });
+                    }}
+                  >
+                    {t('notes.removeModal.cancel')}
+                  </Button>
+                </Modal>
+              )}
+            </div>
           </NoteListItem>
         )
       };
@@ -253,13 +488,22 @@ const Notes = () => {
   const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .map(a => a.element);
-  // New
 
   return (
     <>
       <PageHeading data-testid="grt-notes-view">
         {t('notes.heading')}
       </PageHeading>
+      {archiveMutationResult.error && (
+        <Alert type="error" className="padding-1">
+          <div>{t('notes.removeModal.error')}</div>
+        </Alert>
+      )}
+      {updateMutationResult.error && (
+        <Alert type="error" className="padding-1">
+          <div>{t('notes.editModal.error')}</div>
+        </Alert>
+      )}
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<NoteForm>) => {
           const { values, handleSubmit } = formikProps;
