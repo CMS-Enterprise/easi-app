@@ -38,7 +38,9 @@ type TrbAssignLeadModalOpenerProps = {
 
 /**
  * Button to open `<TrbAssignLeadModal>`.
- * Uses `trbRequestId` to assign a lead to that request.
+ * Uses `trbRequestId` for `UpdateTrbRequestLeadQuery`.
+ * The original ModalToggleButton did not work in some cases.
+ * This was made so that multiple opener buttons work on the same modal.
  */
 export function TrbAssignLeadModalOpener({
   trbRequestId,
@@ -59,7 +61,8 @@ export function TrbAssignLeadModalOpener({
         modalRef.current?.toggleModal(e, true);
       }}
 
-      // Suggested modal attr by uswds, but no effect here, js doesn't catch
+      // Suggested modal attr by uswds to open the modal
+      // No effect here, js doesn't catch
       // data-open-modal="true"
     >
       {children}
