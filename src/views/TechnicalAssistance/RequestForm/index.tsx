@@ -348,6 +348,7 @@ function RequestForm() {
   useEffect(() => {
     if (
       step !== 'view' &&
+      step !== 'feedback' &&
       request?.taskStatuses.formStatus === TRBFormStatus.COMPLETED
     ) {
       history.replace(`/trb/requests/${id}/view`);
