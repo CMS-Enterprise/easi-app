@@ -49,7 +49,7 @@ const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
       <Grid row gap="lg">
         <Grid tablet={{ col: 8 }}>
           <h1 className="margin-top-0 margin-bottom-05">
-            {t('adminHome.subnav.adviceLetter')}
+            {t('adminHome.adviceLetter.title')}
           </h1>
           <p className="margin-y-0 line-height-body-5 font-body-md">
             {t('adviceLetter.introText')}
@@ -79,7 +79,7 @@ const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
         ) : (
           /* Advice letter content */
           <PDFExport
-            title={t('adminHome.subnav.adviceLetter')}
+            title={t('adminHome.adviceLetter.title')}
             filename={`Advice letter for ${data?.trbRequest?.name}`}
             label={t('adviceLetter.downloadAsPdf')}
             linkPosition="top"

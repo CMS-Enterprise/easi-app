@@ -59,7 +59,7 @@ const InitialRequestForm = ({
     >
       <Grid tablet={{ col: 8 }}>
         <h1 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-          {t('adminHome.subnav.initialRequestForm')}
+          {t('adminHome.initialRequestForm.title')}
         </h1>
 
         {!loading && request && (

@@ -179,7 +179,7 @@ describe('Trb Admin Initial Request Form', () => {
     // Loaded okay
     await findByText(
       i18next.t<string>(
-        'technicalAssistance:adminHome.subnav.initialRequestForm'
+        'technicalAssistance:adminHome.initialRequestForm.title'
       )
     );
 

@@ -70,7 +70,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
       break;
     case 'adviceLetter':
       cardDetails = {
-        header: t('adminHome.adviceLetter'),
+        header: t('adminHome.adviceLetter.title'),
         description: t('adminHome.toBeCompleted'),
         status: trbRequest.taskStatuses.adviceLetterStatus,
         buttonText:

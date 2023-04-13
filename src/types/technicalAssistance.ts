@@ -55,12 +55,11 @@ export type TrbAdminPageProps = {
   submissionDate?: string;
 };
 
-/** Subnav item return type for admin home wrapper */
-export type SubNavItem = {
+export type TrbAdminPage = {
+  /** Translated text object */
+  text: { title: string; description: string };
   /** Route to use for navigation link */
   route: string;
-  /** Translation key to use for navigation link text */
-  text: string;
   /** Component to display on page */
   component: ({ trbRequestId }: TrbAdminPageProps) => JSX.Element;
   /**

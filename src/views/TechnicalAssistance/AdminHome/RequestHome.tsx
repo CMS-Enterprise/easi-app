@@ -24,7 +24,6 @@ import { TRBFormStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 
-import AdminAction from './components/AdminAction';
 import InformationCard from './components/InformationCard';
 import NoteBox from './components/NoteBox';
 
@@ -56,7 +55,7 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
       <Grid row gap="lg">
         <Grid tablet={{ col: 8 }}>
           <h1 className="margin-top-0 margin-bottom-4">
-            {t('adminHome.subnav.requestHome')}
+            {t('adminHome.requestHome.title')}
           </h1>
         </Grid>
 
@@ -72,7 +71,6 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
         <PageLoading />
       ) : (
         <>
-          <AdminAction trbRequestId={trbRequestId} />
           {/* Consult details */}
           <h2 className="margin-top-4 margin-bottom-3">
             {t('adminHome.consultDetails')}

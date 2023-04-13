@@ -73,7 +73,7 @@ describe('Trb Admin Request Home', () => {
 
     expect(
       getByText(
-        i18next.t<string>('technicalAssistance:adminHome.subnav.requestHome')
+        i18next.t<string>('technicalAssistance:adminHome.requestHome.title')
       )
     ).toBeInTheDocument();
 

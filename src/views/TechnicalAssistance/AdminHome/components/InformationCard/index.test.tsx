@@ -84,7 +84,9 @@ describe('TRB Admin InformationCard', () => {
     );
 
     expect(
-      getByText(i18next.t<string>('technicalAssistance:adminHome.adviceLetter'))
+      getByText(
+        i18next.t<string>('technicalAssistance:adminHome.adviceLetter.title')
+      )
     ).toBeInTheDocument();
 
     expect(getByText('February 5, 2023')).toBeInTheDocument();

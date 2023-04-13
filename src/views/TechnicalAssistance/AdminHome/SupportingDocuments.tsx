@@ -17,7 +17,7 @@ const SupportingDocuments = ({
     <Grid row gap="lg" data-testid="trb-admin-home__documents">
       <Grid tablet={{ col: 8 }}>
         <h1 className="margin-y-0">
-          {t('adminHome.subnav.supportingDocuments')}
+          {t('adminHome.supportingDocuments.title')}
         </h1>
 
         <p className="line-height-body-5 margin-y-0">

@@ -779,7 +779,6 @@ const technicalAssistance = {
     representative: 'TRB representatives',
     formAndDocs: 'Forms and documents',
     initialRequest: 'Initial request form',
-    adviceLetter: 'Advice letter',
     completedBy: 'Completed by requester',
     toBeCompleted: 'To be completed by TRB',
     lastUpdated: 'Last updated',
@@ -800,14 +799,30 @@ const technicalAssistance = {
     trbLead: 'TRB Lead',
     notAssigned: 'Not assigned',
     assign: 'Assign',
-    subnav: {
-      back: 'Back to All Requests',
-      requestHome: 'Request home',
-      initialRequestForm: 'Initial request form',
-      supportingDocuments: 'Supporting documents',
-      feedback: 'Feedback',
-      adviceLetter: 'Advice letter',
-      notes: 'Notes'
+    backToRequests: 'Back to All Requests',
+    requestHome: {
+      title: 'Request home',
+      description: ''
+    },
+    initialRequestForm: {
+      title: 'Initial request form',
+      description: ''
+    },
+    supportingDocuments: {
+      title: 'Supporting documents',
+      description: ''
+    },
+    feedback: {
+      title: 'Feedback',
+      description: ''
+    },
+    adviceLetter: {
+      title: 'Advice letter',
+      description: ''
+    },
+    notes: {
+      title: 'Notes',
+      description: ''
     },
     byNameOnDate: 'by {{name}} on {{date}}'
   },

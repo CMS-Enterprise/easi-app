@@ -59,7 +59,7 @@ const DocumentsTaskList = () => {
         )}
 
         <h1 className="margin-bottom-0 margin-top-6">
-          {t('adminHome.subnav.supportingDocuments')}
+          {t('adminHome.supportingDocuments.title')}
         </h1>
 
         <p className="line-height-body-5 margin-top-0 margin-bottom-2">

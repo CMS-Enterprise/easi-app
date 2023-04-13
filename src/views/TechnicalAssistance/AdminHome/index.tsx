@@ -18,7 +18,7 @@ import NotFound from 'views/NotFound';
 
 import Summary from './components/Summary';
 import { TRBRequestContext } from './RequestContext';
-import subNavItems from './subNavItems';
+import trbAdminPages from './trbAdminPages';
 
 import './index.scss';
 
@@ -41,21 +41,21 @@ const SideNavigation = ({
         <li className="trb-admin__view-all-link margin-bottom-4">
           <Link to="/">
             <IconArrowBack aria-hidden />
-            {t('adminHome.subnav.back')}
+            {t('adminHome.backToRequests')}
           </Link>
         </li>
-        {subNavItems(trbRequestId).map(({ route, text, groupEnd }) => {
+        {trbAdminPages(trbRequestId).map(({ route, text, groupEnd }) => {
           const isActivePage: boolean = route.split('/')[3] === activePage;
           return (
             <li
-              key={text}
+              key={text.title}
               className={classNames('trb-admin__nav-link', {
                 'trb-admin__nav-link--active': isActivePage,
                 'trb-admin__nav-link--border': groupEnd
               })}
             >
               <Link to={route}>
-                <span>{t(text)}</span>
+                <span>{t(text.title)}</span>
               </Link>
             </li>
           );
@@ -151,9 +151,9 @@ export default function AdminHome() {
       {/* Accordion navigation for tablet and mobile */}
       <AccordionNavigation
         activePage={activePage}
-        subNavItems={subNavItems(id).map(({ route, text, groupEnd }) => ({
+        subNavItems={trbAdminPages(id).map(({ route, text, groupEnd }) => ({
+          text: text.title,
           route,
-          text,
           groupEnd
         }))}
         defaultTitle="TRB Request"
@@ -173,7 +173,7 @@ export default function AdminHome() {
 
           {/* Page component */}
           <Grid col desktop={{ col: 9 }}>
-            {subNavItems(id).map(subpage => (
+            {trbAdminPages(id).map(subpage => (
               <Route exact path={subpage.route} key={subpage.route}>
                 <subpage.component
                   trbRequestId={id}

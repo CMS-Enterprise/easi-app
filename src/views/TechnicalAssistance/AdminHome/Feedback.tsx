@@ -37,7 +37,7 @@ const Feedback = ({ trbRequestId }: TrbAdminPageProps) => {
       {error && <NotFoundPartial />}
       {data && (
         <>
-          <h1 className="margin-y-0">{t('adminHome.subnav.feedback')}</h1>
+          <h1 className="margin-y-0">{t('adminHome.feedback.title')}</h1>
           <p className="line-height-body-5 margin-top-0 margin-bottom-5">
             {t('requestFeedback.adminInfo')}
           </p>
