@@ -153,7 +153,7 @@ export default function AdminHome() {
         createdAt={trbRequest.createdAt}
         state={trbRequest.state}
         taskStatuses={trbRequest.taskStatuses}
-        trbLead={trbRequest.trbLead}
+        trbLead={trbRequest.trbLeadInfo.commonName}
         requester={requester}
         requesterString={requesterString}
         submissionDate={submissionDate}
