@@ -25,6 +25,7 @@ func (s *seederConfig) seedTRBRequests() error {
 		s.seedTRBCase6,
 		s.seedTRBCase7,
 		s.seedTRBCase8,
+		s.seedTRBCase9,
 	}
 
 	for _, seedFunc := range cases {
@@ -169,6 +170,20 @@ func (s *seederConfig) seedTRBCase8() error {
 	}
 
 	_, err = s.addAdviceLetter(trb, true)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase9() error {
+	trb, err := s.seedTRBWithForm("Case 9 - Request form complete & Lead Assigned", true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(trb, "TEST")
 	if err != nil {
 		return err
 	}
@@ -344,6 +359,17 @@ func (s *seederConfig) addTRBConsultMeeting(trb *models.TRBRequest, dateIsPast b
 	}
 
 	return updatedTRB, nil
+}
+
+func (s *seederConfig) addTRBLead(trb *models.TRBRequest, leadEUA string) (*models.TRBRequest, error) {
+	return resolvers.UpdateTRBRequestTRBLead(
+		s.ctx,
+		s.store,
+		nil,
+		mock.FetchUserInfoMock,
+		trb.ID,
+		leadEUA,
+	)
 }
 
 func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*models.TRBAdviceLetter, error) {
