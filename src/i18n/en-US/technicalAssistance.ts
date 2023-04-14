@@ -573,7 +573,8 @@ const technicalAssistance = {
       PRODUCT_OWNER: 'Product Owner',
       SYSTEM_OWNER: 'System Owner',
       SYSTEM_MAINTAINER: 'System Maintainer',
-      CONTRACT_REP: 'Contracting Officer’s Representative (COR)',
+      CONTRACT_OFFICE_RSREPRESENTATIVE:
+        'Contracting Officer’s Representative (COR)',
       CLOUD_NAVIGATOR: 'Cloud Navigator',
       PRIVACY_ADVISOR: 'Privacy Advisor',
       CRA: 'CRA',
