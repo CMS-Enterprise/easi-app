@@ -45,6 +45,12 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
     [returnUrl, fromTaskList, t]
   );
 
+  const selectedFeedback = fromTaskList
+    ? request.feedback
+    : request.feedback.filter(
+        e => e.action === TRBFeedbackAction.REQUEST_EDITS
+      );
+
   return (
     <GridContainer className="width-full">
       <Breadcrumbs
@@ -73,12 +79,7 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
       {returnToFormLink}
 
       <TrbRequestFeedbackList
-        feedback={sortBy(
-          request.feedback.filter(
-            e => e.action === TRBFeedbackAction.REQUEST_EDITS
-          ),
-          'createdAt'
-        ).reverse()}
+        feedback={sortBy(selectedFeedback, 'createdAt').reverse()}
       />
 
       <Divider />
