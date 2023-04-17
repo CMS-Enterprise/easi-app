@@ -169,7 +169,6 @@ exports[`TRB admin home matches the snapshot 1`] = `
               </p>
               <button
                 class="usa-button usa-button--unstyled width-auto"
-                data-testid="button"
                 type="button"
               >
                 Assign
@@ -433,7 +432,6 @@ exports[`TRB admin home matches the snapshot 1`] = `
             </p>
             <button
               class="usa-button usa-button--outline"
-              data-testid="button"
               type="button"
             >
               Assign a TRB Lead
