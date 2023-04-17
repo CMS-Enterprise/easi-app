@@ -22,7 +22,6 @@ type SummaryProps = {
   trbRequestId: string;
   name: string;
   requestType: TRBRequestType;
-  createdAt: string;
   state: TRBRequestState;
   taskStatuses: TRBRequestTaskStatuses;
   trbLead: string | null;
@@ -37,7 +36,6 @@ export default function Summary({
   trbRequestId,
   name,
   requestType,
-  createdAt,
   state,
   taskStatuses,
   trbLead,

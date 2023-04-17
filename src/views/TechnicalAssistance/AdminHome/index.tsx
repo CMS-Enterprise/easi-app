@@ -144,7 +144,6 @@ export default function AdminHome() {
         trbRequestId={id}
         name={trbRequest.name}
         requestType={trbRequest.type}
-        createdAt={trbRequest.createdAt}
         state={trbRequest.state}
         taskStatuses={trbRequest.taskStatuses}
         trbLead={trbRequest.trbLeadInfo.commonName}
