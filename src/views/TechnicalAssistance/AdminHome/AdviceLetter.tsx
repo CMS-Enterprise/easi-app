@@ -18,7 +18,11 @@ import TrbAdminWrapper from './components/TrbAdminWrapper';
 
 import './AdviceLetter.scss';
 
-const AdviceLetter = ({ trbRequest }: TrbAdminPageProps) => {
+const AdviceLetter = ({
+  trbRequest,
+  assignLeadModalTrbRequestIdRef,
+  assignLeadModalRef
+}: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { id } = trbRequest;
@@ -60,7 +64,9 @@ const AdviceLetter = ({ trbRequest }: TrbAdminPageProps) => {
       noteCount={trbRequest.adminNotes.length}
       adminActionProps={{
         status: trbRequest.status,
-        state: trbRequest.state
+        state: trbRequest.state,
+        assignLeadModalTrbRequestIdRef,
+        assignLeadModalRef
       }}
     >
       {

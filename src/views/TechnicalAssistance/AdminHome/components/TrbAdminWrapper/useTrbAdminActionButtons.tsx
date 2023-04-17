@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { ModalRef } from '@trussworks/react-uswds';
 
 import { AdminActionButton } from 'components/shared/AdminAction';
 import { CreateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
@@ -10,20 +11,42 @@ import {
   CreateTrbAdviceLetterVariables
 } from 'queries/types/CreateTrbAdviceLetter';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
-import { TrbAdminPath } from 'types/technicalAssistance';
+import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
 type ActionButtonsProps = {
   trbRequestId: string;
   activePage: TrbAdminPath;
   status: TRBRequestStatus | undefined;
   state: TRBRequestState | undefined;
+  assignLeadModalRef: React.RefObject<ModalRef> | undefined;
+  assignLeadModalTrbRequestIdRef:
+    | React.MutableRefObject<TrbRequestIdRef>
+    | undefined;
 };
+
+type ActionButtonKey =
+  | 'orCloseRequest'
+  | 'closeRequest'
+  | 'reopenRequest'
+  | 'viewRequestForm'
+  | 'requestEdits'
+  | 'readyForConsult'
+  | 'addDateTime'
+  | 'assignTrbLead'
+  | 'viewSupportingDocuments'
+  | 'viewAdviceLetter'
+  | 'startAdviceLetter'
+  | 'continueAdviceLetter'
+  | 'editAdviceLetter'
+  | 'addNote';
 
 const useTrbAdminActionButtons = ({
   trbRequestId,
   activePage,
   status,
-  state
+  state,
+  assignLeadModalRef,
+  assignLeadModalTrbRequestIdRef
 }: ActionButtonsProps): AdminActionButton[] => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
@@ -38,7 +61,7 @@ const useTrbAdminActionButtons = ({
   });
 
   const actionButtons: AdminActionButton[] = useMemo(() => {
-    const buttons = {
+    const buttons: Record<ActionButtonKey, AdminActionButton> = {
       orCloseRequest: {
         label: t('adminAction.buttons.orCloseRequest'),
         onClick: () =>
@@ -81,7 +104,13 @@ const useTrbAdminActionButtons = ({
       },
       assignTrbLead: {
         label: t('adminAction.buttons.assignTrbLead'),
-        onClick: () => null
+        onClick: e => {
+          if (assignLeadModalRef && assignLeadModalTrbRequestIdRef) {
+            // eslint-disable-next-line no-param-reassign
+            assignLeadModalTrbRequestIdRef.current = trbRequestId;
+            assignLeadModalRef.current?.toggleModal(e, true);
+          }
+        }
       },
       viewSupportingDocuments: {
         label: t('adminAction.buttons.viewSupportingDocuments'),
@@ -194,7 +223,17 @@ const useTrbAdminActionButtons = ({
       default:
         return [];
     }
-  }, [activePage, status, state, trbRequestId, history, t, createAdviceLetter]);
+  }, [
+    t,
+    activePage,
+    status,
+    state,
+    trbRequestId,
+    history,
+    createAdviceLetter,
+    assignLeadModalRef,
+    assignLeadModalTrbRequestIdRef
+  ]);
 
   return actionButtons;
 };

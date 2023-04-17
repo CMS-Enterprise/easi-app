@@ -19,7 +19,9 @@ import TrbAdminWrapper from './components/TrbAdminWrapper';
 
 const InitialRequestForm = ({
   trbRequest,
-  requesterString
+  requesterString,
+  assignLeadModalRef,
+  assignLeadModalTrbRequestIdRef
 }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -50,7 +52,9 @@ const InitialRequestForm = ({
       }}
       adminActionProps={{
         status: trbRequest.status,
-        state: trbRequest.state
+        state: trbRequest.state,
+        assignLeadModalTrbRequestIdRef,
+        assignLeadModalRef
       }}
     >
       {loading && <PageLoading />}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Grid } from '@trussworks/react-uswds';
+import { Grid, ModalRef } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import i18next from 'i18next';
 
@@ -8,7 +8,7 @@ import AdminAction, { AdminActionButton } from 'components/shared/AdminAction';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { TaskStatus } from 'components/shared/TaskStatusTag';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
-import { TrbAdminPath } from 'types/technicalAssistance';
+import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import AdminTaskStatusTag from '../AdminTaskStatusTag';
 import NoteBox from '../NoteBox';
@@ -87,6 +87,7 @@ type TrbAdminWrapperProps = {
   activePage: TrbAdminPath;
   trbRequestId: string;
   children: React.ReactNode;
+
   /** Page title */
   title: string;
   /** Page description */
@@ -99,6 +100,9 @@ type TrbAdminWrapperProps = {
   adminActionProps?: {
     status: TRBRequestStatus;
     state: TRBRequestState;
+    // TRB Lead modal refs
+    assignLeadModalRef: React.RefObject<ModalRef>;
+    assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
   };
   /** Props to display status tag */
   statusTagProps?: {
@@ -121,11 +125,16 @@ export default function TrbAdminWrapper({
 }: TrbAdminWrapperProps) {
   const { t } = useTranslation('technicalAssistance');
 
+  const { status, state, assignLeadModalRef, assignLeadModalTrbRequestIdRef } =
+    adminActionProps || {};
+
   const actionButtons = useTrbAdminActionButtons({
     activePage,
     trbRequestId,
-    status: adminActionProps?.status,
-    state: adminActionProps?.state
+    status,
+    state,
+    assignLeadModalRef,
+    assignLeadModalTrbRequestIdRef
   });
 
   return (
