@@ -8,7 +8,7 @@ import configureMockStore from 'redux-mock-store';
 import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
 import {
   // eslint-disable-next-line camelcase
-  GetTrbRequests_trbRequests
+  GetTrbRequests_myTrbRequests
 } from 'queries/types/GetTrbRequests';
 import { TRBRequestStatus } from 'types/graphql-global-types';
 
@@ -20,7 +20,7 @@ const mockStore = configureMockStore();
 
 describe('Technical Assistance (TRB) homepage', () => {
   // eslint-disable-next-line camelcase
-  const trbRequests: GetTrbRequests_trbRequests[] = [
+  const trbRequests: GetTrbRequests_myTrbRequests[] = [
     {
       id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
       name: 'My excellent question',
