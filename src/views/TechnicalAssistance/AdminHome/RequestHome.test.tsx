@@ -4,6 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import i18next from 'i18next';
 
+import { trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestHomeQuery from 'queries/GetTrbRequestHomeQuery';
 import {
   TRBAdviceLetterStatus,
@@ -65,16 +66,17 @@ describe('Trb Admin Request Home', () => {
       >
         <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
           <Route exact path="/trb/:id/:activePage">
-            <RequestHome trbRequestId={trbRequestId} noteCount={0} />
+            <RequestHome
+              trbRequestId={trbRequestId}
+              trbRequest={trbRequestSummary}
+            />
           </Route>
         </MemoryRouter>
       </MockedProvider>
     );
 
     expect(
-      getByText(
-        i18next.t<string>('technicalAssistance:adminHome.requestHome.title')
-      )
+      getByText(i18next.t<string>('technicalAssistance:adminHome.requestHome'))
     ).toBeInTheDocument();
 
     await waitForElementToBeRemoved(() => getByTestId('page-loading'));
@@ -165,7 +167,10 @@ describe('Trb Admin Request Home', () => {
       >
         <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
           <Route exact path="/trb/:id/:activePage">
-            <RequestHome trbRequestId={trbRequestId} noteCount={0} />
+            <RequestHome
+              trbRequestId={trbRequestId}
+              trbRequest={trbRequestSummary}
+            />
           </Route>
         </MemoryRouter>
       </MockedProvider>

@@ -11,15 +11,12 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { AppState } from 'reducers/rootReducer';
-import { TrbAdminPath } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 import user from 'utils/user';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
 import NotFound from 'views/NotFound';
 
-import NoteBox from './components/NoteBox';
 import Summary from './components/Summary';
-import TrbAdminAction from './components/TrbAdminAction';
 import { TRBRequestContext } from './RequestContext';
 import trbAdminPages from './trbAdminPages';
 
@@ -50,14 +47,14 @@ const SideNavigation = ({
         {trbAdminPages.map(({ path, text, groupEnd }) => {
           return (
             <li
-              key={text.title}
+              key={text}
               className={classNames('trb-admin__nav-link', {
                 'trb-admin__nav-link--active': path === activePage,
                 'trb-admin__nav-link--border': groupEnd
               })}
             >
               <Link to={`/trb/${trbRequestId}/${path}`}>
-                <span>{t(text.title)}</span>
+                <span>{t(text)}</span>
               </Link>
             </li>
           );
@@ -69,8 +66,6 @@ const SideNavigation = ({
 
 /** Wrapper for TRB admin view components */
 export default function AdminHome() {
-  const { t } = useTranslation();
-
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
@@ -117,7 +112,7 @@ export default function AdminHome() {
   }, [requester, requesterLoading]);
 
   // Note count for NoteBox modal rendered on each page
-  const noteCount: number = (data?.trbRequest?.adminNotes || []).length;
+  // const noteCount: number = (data?.trbRequest?.adminNotes || []).length;
 
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
@@ -129,7 +124,6 @@ export default function AdminHome() {
     return <NotFound />;
   }
 
-  const { status, state } = trbRequest;
   const submissionDate = formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy');
 
   return (
@@ -152,7 +146,7 @@ export default function AdminHome() {
       <AccordionNavigation
         activePage={activePage}
         subNavItems={trbAdminPages.map(({ path, text, groupEnd }) => ({
-          text: text.title,
+          text,
           route: `/trb/${id}/${path}`,
           groupEnd
         }))}
@@ -179,35 +173,10 @@ export default function AdminHome() {
                 path={`/trb/${id}/${subpage.path as string}`}
                 key={subpage.path}
               >
-                <Grid row gap="lg">
-                  <Grid tablet={{ col: 8 }}>
-                    <h1 className="margin-top-0 margin-bottom-4">
-                      {t(subpage.text.title)}
-                    </h1>
-                    {subpage.text.description && (
-                      <p>{t(subpage.text.description)}</p>
-                    )}
-                  </Grid>
-
-                  {!['feedback', 'notes'].includes(subpage.path) && (
-                    <Grid tablet={{ col: 4 }}>
-                      <NoteBox trbRequestId={id} noteCount={noteCount} />
-                    </Grid>
-                  )}
-                </Grid>
-
-                <TrbAdminAction
-                  trbRequestId={id}
-                  activePage={activePage as TrbAdminPath}
-                  status={status}
-                  state={state}
-                />
-
                 <subpage.component
                   trbRequestId={id}
-                  noteCount={noteCount}
+                  trbRequest={trbRequest}
                   requesterString={requesterString}
-                  submissionDate={submissionDate}
                 />
               </Route>
             ))}

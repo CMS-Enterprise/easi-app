@@ -1,5 +1,3 @@
-import i18next from 'i18next';
-
 import { TrbAdminPage } from 'types/technicalAssistance';
 
 import AdviceLetter from './AdviceLetter';
@@ -12,46 +10,34 @@ import SupportingDocuments from './SupportingDocuments';
 const trbAdminPages: TrbAdminPage[] = [
   {
     path: 'request',
-    text: i18next.t('technicalAssistance:adminHome.requestHome', {
-      returnObjects: true
-    }),
+    text: 'technicalAssistance:adminHome.requestHome',
     component: RequestHome,
     groupEnd: true
   },
   {
     path: 'initial-request-form',
-    text: i18next.t('technicalAssistance:adminHome.initialRequestForm', {
-      returnObjects: true
-    }),
+    text: 'technicalAssistance:adminHome.initialRequestForm',
     component: InitialRequestForm
   },
   {
     path: 'documents',
-    text: i18next.t('technicalAssistance:adminHome.supportingDocuments', {
-      returnObjects: true
-    }),
+    text: 'technicalAssistance:adminHome.supportingDocuments',
     component: SupportingDocuments
   },
   {
     path: 'feedback',
-    text: i18next.t('technicalAssistance:adminHome.feedback', {
-      returnObjects: true
-    }),
+    text: 'technicalAssistance:adminHome.feedback',
     component: Feedback
   },
   {
     path: 'advice',
-    text: i18next.t('technicalAssistance:adminHome.adviceLetter', {
-      returnObjects: true
-    }),
+    text: 'technicalAssistance:adminHome.adviceLetter',
     component: AdviceLetter,
     groupEnd: true
   },
   {
     path: 'notes',
-    text: i18next.t('technicalAssistance:adminHome.notes', {
-      returnObjects: true
-    }),
+    text: 'technicalAssistance:adminHome.notes',
     component: Notes
   }
 ];

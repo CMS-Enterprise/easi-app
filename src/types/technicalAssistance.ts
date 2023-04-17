@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
+import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
 import { PersonRole } from './graphql-global-types';
@@ -48,12 +49,13 @@ export type FormattedTRBAttendees = {
 };
 
 /** TRB Admin page props */
-export type TrbAdminPageProps = {
+
+interface TrbAdminDefaultProps {
   trbRequestId: string;
-  noteCount: number;
+  trbRequest: TrbRequestSummary;
   requesterString?: string | null;
-  submissionDate?: string;
-};
+}
+export interface TrbAdminPageProps extends TrbAdminDefaultProps {}
 
 export type TrbAdminPath =
   | 'request'
@@ -64,12 +66,12 @@ export type TrbAdminPath =
   | 'notes';
 
 export type TrbAdminPage = {
-  /** Translated text object */
-  text: { title: string; description: string };
+  /** Label translation key */
+  text: string;
   /** Path to use for navigation link */
   path: TrbAdminPath;
   /** Component to display on page */
-  component: ({ trbRequestId }: TrbAdminPageProps) => JSX.Element;
+  component: ({ trbRequest }: TrbAdminPageProps) => JSX.Element;
   /**
    * Whether or not the navigation item is last in a group.
    * If true, border is shown beneath link.

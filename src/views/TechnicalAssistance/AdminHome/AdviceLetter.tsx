@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Grid } from '@trussworks/react-uswds';
+import { Alert } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
 import PDFExport from 'components/PDFExport';
@@ -13,21 +13,22 @@ import {
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
-import AdminTaskStatusTag from './components/AdminTaskStatusTag';
-import NoteBox from './components/NoteBox';
 import ReviewAdviceLetter from './components/ReviewAdviceLetter';
+import TrbAdminWrapper from './components/TrbAdminWrapper';
 
 import './AdviceLetter.scss';
 
-const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
+const AdviceLetter = ({ trbRequest }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
+
+  const { id } = trbRequest;
 
   // TRB request query
   const { data, loading } = useCacheQuery<
     GetTrbAdviceLetter,
     GetTrbAdviceLetterVariables
   >(GetTrbAdviceLetterQuery, {
-    variables: { id: trbRequestId }
+    variables: { id }
   });
 
   const { adviceLetter, taskStatuses } = data?.trbRequest || {};
@@ -40,35 +41,28 @@ const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
   if (loading) return <PageLoading />;
 
   return (
-    <div
-      className="trb-admin-home__advice"
-      data-testid="trb-admin-home__advice"
-      id={`trbAdminAdviceLetter-${trbRequestId}`}
+    <TrbAdminWrapper
+      activePage="advice"
+      trbRequestId={id}
+      title={t('adminHome.adviceLetter')}
+      description={t('adviceLetter.introText')}
+      disableStep={
+        taskStatuses?.adviceLetterStatus ===
+        TRBAdviceLetterStatus.CANNOT_START_YET
+      }
+      statusTagProps={{
+        status:
+          taskStatuses?.adviceLetterStatus ||
+          TRBAdviceLetterStatus.CANNOT_START_YET,
+        name: author?.commonName!,
+        date: adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''
+      }}
+      noteCount={trbRequest.adminNotes.length}
+      adminActionProps={{
+        status: trbRequest.status,
+        state: trbRequest.state
+      }}
     >
-      <Grid row gap="lg">
-        <Grid tablet={{ col: 8 }}>
-          <h1 className="margin-top-0 margin-bottom-05">
-            {t('adminHome.adviceLetter.title')}
-          </h1>
-          <p className="margin-y-0 line-height-body-5 font-body-md">
-            {t('adviceLetter.introText')}
-          </p>
-
-          {/* Status tag */}
-          <AdminTaskStatusTag
-            status={
-              adviceLetterStatus || TRBAdviceLetterStatus.CANNOT_START_YET
-            }
-            name={author?.commonName!}
-            date={adviceLetter?.modifiedAt || adviceLetter?.createdAt || ''}
-            className="margin-bottom-205"
-          />
-        </Grid>
-        <Grid tablet={{ col: 4 }}>
-          <NoteBox trbRequestId={trbRequestId} noteCount={noteCount} />
-        </Grid>
-      </Grid>
-
       {
         // If advice letter status is CANNOT_START_YET, show alert message
         adviceLetterStatus === 'CANNOT_START_YET' ? (
@@ -78,7 +72,7 @@ const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
         ) : (
           /* Advice letter content */
           <PDFExport
-            title={t('adminHome.adviceLetter.title')}
+            title={t('adminHome.adviceLetter')}
             filename={`Advice letter for ${data?.trbRequest?.name}`}
             label={t('adviceLetter.downloadAsPdf')}
             linkPosition="top"
@@ -88,7 +82,7 @@ const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
           </PDFExport>
         )
       }
-    </div>
+    </TrbAdminWrapper>
   );
 };
 

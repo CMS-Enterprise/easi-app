@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
+import { trbRequestSummary } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
@@ -153,8 +154,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
               <MessageProvider>
                 <Route exact path="/trb/:id/:activePage">
                   <InitialRequestForm
+                    trbRequest={trbRequestSummary}
                     trbRequestId={trbRequestId}
-                    noteCount={0}
                   />
                 </Route>
                 <Route exact path="/trb/:id/:activePage/:action">

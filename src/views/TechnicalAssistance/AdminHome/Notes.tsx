@@ -16,15 +16,17 @@ import { NotFoundPartial } from 'views/NotFound';
 import Note from './components/Note';
 import { ModalViewType } from './components/NoteModal';
 
+interface NotesProps {
+  trbRequestId: string;
+  setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
+  modalMessage?: string;
+}
+
 const Notes = ({
   trbRequestId,
   setModalView, // prop used to conditionall render text/links/etc specifically for modal
   modalMessage
-}: {
-  trbRequestId: string;
-  setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
-  modalMessage?: string;
-}) => {
+}: NotesProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const [noteCount, setNoteCount] = useState<number>(5);
@@ -51,7 +53,7 @@ const Notes = ({
       id={`trbAdminNotes-${trbRequestId}`}
     >
       <h1 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-        {t('adminHome.notes.title')}
+        {t('adminHome.notes')}
       </h1>
 
       <p>{t('notes.description')}</p>

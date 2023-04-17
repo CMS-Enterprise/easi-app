@@ -848,30 +848,12 @@ const technicalAssistance = {
     notAssigned: 'Not assigned',
     assign: 'Assign',
     backToRequests: 'Back to All Requests',
-    requestHome: {
-      title: 'Request home',
-      description: ''
-    },
-    initialRequestForm: {
-      title: 'Initial request form',
-      description: ''
-    },
-    supportingDocuments: {
-      title: 'Supporting documents',
-      description: ''
-    },
-    feedback: {
-      title: 'Feedback',
-      description: ''
-    },
-    adviceLetter: {
-      title: 'Advice letter',
-      description: ''
-    },
-    notes: {
-      title: 'Notes',
-      description: ''
-    },
+    requestHome: 'Request home',
+    initialRequestForm: 'Initial request form',
+    supportingDocuments: 'Supporting documents',
+    feedback: 'Feedback',
+    adviceLetter: 'Advice letter',
+    notes: 'Notes',
     byNameOnDate: 'by {{name}} on {{date}}'
   },
   adminTeamHome: {

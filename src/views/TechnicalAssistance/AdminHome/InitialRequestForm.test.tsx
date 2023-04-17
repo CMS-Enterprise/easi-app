@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
-import { attendees, requester } from 'data/mock/trbRequest';
+import { attendees, requester, trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
@@ -167,7 +167,7 @@ describe('Trb Admin Initial Request Form', () => {
               <Route exact path="/trb/:id/:activePage">
                 <InitialRequestForm
                   trbRequestId={mockTrbRequestData.id}
-                  noteCount={0}
+                  trbRequest={trbRequestSummary}
                 />
               </Route>
             </TRBRequestInfoWrapper>
@@ -178,9 +178,7 @@ describe('Trb Admin Initial Request Form', () => {
 
     // Loaded okay
     await findByText(
-      i18next.t<string>(
-        'technicalAssistance:adminHome.initialRequestForm.title'
-      )
+      i18next.t<string>('technicalAssistance:adminHome.initialRequestForm')
     );
 
     // Task status tag rendered from query data

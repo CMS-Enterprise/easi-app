@@ -6,32 +6,22 @@ import { TrbAdminPageProps } from 'types/technicalAssistance';
 
 import DocumentsTable from '../RequestForm/DocumentsTable';
 
-import NoteBox from './components/NoteBox';
+import TrbAdminWrapper from './components/TrbAdminWrapper';
 
-const SupportingDocuments = ({
-  trbRequestId,
-  noteCount
-}: TrbAdminPageProps) => {
+const SupportingDocuments = ({ trbRequest }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
   return (
-    <Grid row gap="lg" data-testid="trb-admin-home__documents">
-      <Grid tablet={{ col: 8 }}>
-        <h1 className="margin-y-0">
-          {t('adminHome.supportingDocuments.title')}
-        </h1>
-
-        <p className="line-height-body-5 margin-y-0">
-          {t('documents.supportingDocuments.adminInfo')}
-        </p>
-      </Grid>
-      <Grid tablet={{ col: 4 }}>
-        <NoteBox trbRequestId={trbRequestId} noteCount={noteCount} />
-      </Grid>
-
+    <TrbAdminWrapper
+      activePage="documents"
+      trbRequestId={trbRequest.id}
+      title={t('adminHome.supportingDocuments')}
+      description={t('documents.supportingDocuments.adminInfo')}
+      noteCount={trbRequest.adminNotes.length}
+    >
       <Grid desktop={{ col: 12 }} className="margin-top-2">
-        <DocumentsTable trbRequestId={trbRequestId} canEdit={false} />
+        <DocumentsTable trbRequestId={trbRequest.id} canEdit={false} />
       </Grid>
-    </Grid>
+    </TrbAdminWrapper>
   );
 };
 

@@ -4,6 +4,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { render } from '@testing-library/react';
 import i18next from 'i18next';
 
+import { trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestFeedbackQuery from 'queries/GetTrbRequestFeedbackQuery';
 
 import Feedback from './Feedback';
@@ -52,7 +53,7 @@ describe('Trb Admin: Feedback', () => {
         ]}
       >
         <MemoryRouter>
-          <Feedback trbRequestId={id} noteCount={0} />
+          <Feedback trbRequestId={id} trbRequest={trbRequestSummary} />
         </MemoryRouter>
       </MockedProvider>
     );
@@ -88,7 +89,7 @@ describe('Trb Admin: Feedback', () => {
         ]}
       >
         <MemoryRouter>
-          <Feedback trbRequestId={id} noteCount={0} />
+          <Feedback trbRequestId={id} trbRequest={trbRequestSummary} />
         </MemoryRouter>
       </MockedProvider>
     );

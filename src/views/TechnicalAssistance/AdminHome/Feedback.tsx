@@ -15,7 +15,9 @@ import { NotFoundPartial } from 'views/NotFound';
 
 import TrbRequestFeedbackList from '../TrbRequestFeedbackList';
 
-const Feedback = ({ trbRequestId }: TrbAdminPageProps) => {
+import TrbAdminWrapper from './components/TrbAdminWrapper';
+
+const Feedback = ({ trbRequest }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { data, loading, error } = useCacheQuery<
@@ -23,36 +25,29 @@ const Feedback = ({ trbRequestId }: TrbAdminPageProps) => {
     GetTrbRequestFeedbackVariables
   >(GetTrbRequestFeedbackQuery, {
     variables: {
-      id: trbRequestId
+      id: trbRequest.id
     }
   });
 
   return (
-    <div
-      className="trb-admin-home__feedback"
-      data-testid="trb-admin-home__feedback"
-      id={`trbAdminFeedback-${trbRequestId}`}
+    <TrbAdminWrapper
+      activePage="feedback"
+      trbRequestId={trbRequest.id}
+      title={t('adminHome.feedback')}
+      description={t('requestFeedback.adminInfo')}
     >
       {loading && <PageLoading />}
       {error && <NotFoundPartial />}
-      {data && (
-        <>
-          <h1 className="margin-y-0">{t('adminHome.feedback.title')}</h1>
-          <p className="line-height-body-5 margin-top-0 margin-bottom-5">
-            {t('requestFeedback.adminInfo')}
-          </p>
-          {data.trbRequest.feedback.length > 0 ? (
-            <TrbRequestFeedbackList
-              feedback={sortBy(data.trbRequest.feedback, 'createdAt').reverse()}
-            />
-          ) : (
-            <Alert slim type="info">
-              {t('requestFeedback.noFeedbackAlert')}
-            </Alert>
-          )}
-        </>
+      {data && data.trbRequest.feedback.length > 0 ? (
+        <TrbRequestFeedbackList
+          feedback={sortBy(data.trbRequest.feedback, 'createdAt').reverse()}
+        />
+      ) : (
+        <Alert slim type="info">
+          {t('requestFeedback.noFeedbackAlert')}
+        </Alert>
       )}
-    </div>
+    </TrbAdminWrapper>
   );
 };
 

@@ -24,15 +24,18 @@ import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 
 import InformationCard from './components/InformationCard';
+import TrbAdminWrapper from './components/TrbAdminWrapper';
 
-const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
+const RequestHome = ({ trbRequest }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
+
+  const { id } = trbRequest;
 
   const { data, loading } = useCacheQuery<
     GetTrbRequestHomeType,
     GetTrbRequestHomeVariables
   >(GetTrbRequestHomeQuery, {
-    variables: { id: trbRequestId }
+    variables: { id }
   });
 
   const {
@@ -46,7 +49,16 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
   if (loading) return <PageLoading />;
 
   return (
-    <>
+    <TrbAdminWrapper
+      activePage="request"
+      trbRequestId={id}
+      title={t('adminHome.requestHome')}
+      noteCount={trbRequest.adminNotes.length}
+      adminActionProps={{
+        status: trbRequest.status,
+        state: trbRequest.state
+      }}
+    >
       {/* Consult details */}
       <h2 className="margin-top-4 margin-bottom-3">
         {t('adminHome.consultDetails')}
@@ -171,7 +183,7 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
         {t('adminHome.viewDocs')}
         <IconArrowForward className="margin-left-1" />
       </UswdsReactLink>
-    </>
+    </TrbAdminWrapper>
   );
 };
 
