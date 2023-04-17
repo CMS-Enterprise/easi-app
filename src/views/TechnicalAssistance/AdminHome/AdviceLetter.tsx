@@ -13,7 +13,6 @@ import {
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 
-import AdminAction from './components/AdminAction';
 import AdminTaskStatusTag from './components/AdminTaskStatusTag';
 import NoteBox from './components/NoteBox';
 import ReviewAdviceLetter from './components/ReviewAdviceLetter';
@@ -85,10 +84,6 @@ const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
             linkPosition="top"
             disabled={!adviceLetter}
           >
-            <AdminAction
-              trbRequestId={trbRequestId}
-              className="margin-top-3 margin-bottom-5"
-            />
             {adviceLetter && <ReviewAdviceLetter adviceLetter={adviceLetter} />}
           </PDFExport>
         )
