@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import i18next from 'i18next';
 
 import AdminAction, { AdminActionButton } from 'components/shared/AdminAction';
@@ -42,7 +43,7 @@ const TrbAdminAction = ({
       title={text.title}
       description={text.description}
       buttons={actionButtons}
-      className="margin-top-2"
+      className="margin-top-0"
     >
       {list && (
         <CollapsableLink
@@ -129,7 +130,9 @@ export default function TrbAdminWrapper({
 
   return (
     <Grid
-      className={`trbAdmin__${activePage}`}
+      className={classNames(`trbAdmin__${activePage}`, {
+        'margin-bottom-2': !!adminActionProps && !disableStep
+      })}
       id={`trbAdmin__${activePage}`}
       data-testid={`trbAdmin__${activePage}`}
     >
