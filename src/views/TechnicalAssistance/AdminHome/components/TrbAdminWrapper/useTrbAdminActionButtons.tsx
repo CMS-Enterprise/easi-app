@@ -1,8 +1,14 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 
 import { AdminActionButton } from 'components/shared/AdminAction';
+import { CreateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  CreateTrbAdviceLetter,
+  CreateTrbAdviceLetterVariables
+} from 'queries/types/CreateTrbAdviceLetter';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath } from 'types/technicalAssistance';
 
@@ -22,20 +28,31 @@ const useTrbAdminActionButtons = ({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
+  const [createAdviceLetter] = useMutation<
+    CreateTrbAdviceLetter,
+    CreateTrbAdviceLetterVariables
+  >(CreateTrbAdviceLetterQuery, {
+    variables: {
+      trbRequestId
+    }
+  });
+
   const actionButtons: AdminActionButton[] = useMemo(() => {
     const buttons = {
       orCloseRequest: {
         label: t('adminAction.buttons.orCloseRequest'),
-        onClick: () => null,
+        onClick: () =>
+          history.push(`trb/${trbRequestId}/request/close-request`),
         unstyled: true
       },
       closeRequest: {
         label: t('adminAction.buttons.closeRequest'),
-        onClick: () => null
+        onClick: () => history.push(`trb/${trbRequestId}/request/close-request`)
       },
       reopenRequest: {
         label: t('adminAction.buttons.reopenRequest'),
-        onClick: () => null
+        onClick: () =>
+          history.push(`trb/${trbRequestId}/request/reopen-request`)
       },
       viewRequestForm: {
         label: t('adminAction.buttons.viewRequestForm'),
@@ -43,15 +60,24 @@ const useTrbAdminActionButtons = ({
       },
       requestEdits: {
         label: t('adminAction.buttons.requestEdits'),
-        onClick: () => null
+        onClick: () =>
+          history.push(
+            `/trb/${trbRequestId}/initial-request-form/request-edits`
+          )
       },
       readyForConsult: {
         label: t('adminAction.buttons.readyForConsult'),
-        onClick: () => null
+        onClick: () =>
+          history.push(
+            `/trb/${trbRequestId}/initial-request-form/ready-for-consult`
+          )
       },
       addDateTime: {
         label: t('adminAction.buttons.addDateTime'),
-        onClick: () => null
+        onClick: () =>
+          history.push(
+            `/trb/${trbRequestId}/initial-request-form/schedule-consult`
+          )
       },
       assignTrbLead: {
         label: t('adminAction.buttons.assignTrbLead'),
@@ -59,27 +85,39 @@ const useTrbAdminActionButtons = ({
       },
       viewSupportingDocuments: {
         label: t('adminAction.buttons.viewSupportingDocuments'),
-        onClick: () => null
+        onClick: () => history.push(`/trb/${trbRequestId}/documents`)
       },
       viewAdviceLetter: {
         label: t('adminAction.buttons.viewAdviceLetter'),
-        onClick: () => null
+        onClick: () => history.push(`/trb/${trbRequestId}/advice`)
       },
       startAdviceLetter: {
         label: t('adminAction.buttons.startAdviceLetter'),
-        onClick: () => null
+        onClick: () =>
+          createAdviceLetter()
+            .then(
+              result =>
+                !result.errors &&
+                history.push(`/trb/${trbRequestId}/advice/summary`)
+            )
+            // If error, display on advice letter form
+            .catch(error =>
+              history.push(`/trb/${trbRequestId}/advice/summary`, {
+                error
+              })
+            )
       },
       continueAdviceLetter: {
         label: t('adminAction.buttons.continueAdviceLetter'),
-        onClick: () => null
+        onClick: () => history.push(`/trb/${trbRequestId}/advice/summary`)
       },
       editAdviceLetter: {
         label: t('adminAction.buttons.editAdviceLetter'),
-        onClick: () => null
+        onClick: () => history.push(`/trb/${trbRequestId}/advice/summary`)
       },
       addNote: {
         label: t('adminAction.buttons.addNote'),
-        onClick: () => null
+        onClick: () => history.push(`/trb/${trbRequestId}/notes/add-note`)
       }
     };
 
@@ -156,7 +194,7 @@ const useTrbAdminActionButtons = ({
       default:
         return [];
     }
-  }, [activePage, status, state, trbRequestId, history, t]);
+  }, [activePage, status, state, trbRequestId, history, t, createAdviceLetter]);
 
   return actionButtons;
 };
