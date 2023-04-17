@@ -67,6 +67,10 @@ func (s *seederConfig) seedTRBCase3() error {
 	if err != nil {
 		return err
 	}
+	_, err = s.addTRBLead(trb, "TEST")
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -87,6 +91,11 @@ func (s *seederConfig) seedTRBCase4() error {
 		return err
 	}
 
+	_, err = s.addTRBLead(trb, "TEST")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -102,6 +111,11 @@ func (s *seederConfig) seedTRBCase5() error {
 	}
 
 	_, err = s.addTRBConsultMeeting(trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(trb, "TEST")
 	if err != nil {
 		return err
 	}
@@ -130,6 +144,11 @@ func (s *seederConfig) seedTRBCase6() error {
 		return err
 	}
 
+	_, err = s.addTRBLead(trb, "TEST")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -150,6 +169,11 @@ func (s *seederConfig) seedTRBCase7() error {
 	}
 
 	_, err = s.addAdviceLetter(trb, false)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(trb, "TEST")
 	if err != nil {
 		return err
 	}
@@ -178,6 +202,11 @@ func (s *seederConfig) seedTRBCase8() error {
 		return err
 	}
 
+	_, err = s.addTRBLead(trb, "ABCD")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -202,16 +231,7 @@ func (s *seederConfig) seedTRBCase9() error {
 		return err
 	}
 
-	return nil
-}
-
-func (s *seederConfig) seedTRBCase9() error {
-	trb, err := s.seedTRBWithForm("Case 9 - Request form complete & Lead Assigned", true)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBLead(trb, "TEST")
+	_, err = s.addTRBLead(trb, "GRTB")
 	if err != nil {
 		return err
 	}
