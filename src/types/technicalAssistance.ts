@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalRef } from '@trussworks/react-uswds';
 
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
@@ -48,11 +49,13 @@ export type FormattedTRBAttendees = {
   attendees: TRBAttendeeData[];
 };
 
-/** TRB Admin page props */
+export type TrbRequestIdRef = string | null;
 
 interface TrbAdminDefaultProps {
   trbRequestId: string;
   trbRequest: TrbRequestSummary;
+  assignLeadModalRef: React.RefObject<ModalRef>;
+  assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
   requesterString?: string | null;
 }
 export interface TrbAdminPageProps extends TrbAdminDefaultProps {}

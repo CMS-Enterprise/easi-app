@@ -1,8 +1,13 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
-import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
+import {
+  Grid,
+  GridContainer,
+  IconArrowBack,
+  ModalRef
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -11,6 +16,7 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { AppState } from 'reducers/rootReducer';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 import user from 'utils/user';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
@@ -19,6 +25,7 @@ import NotFound from 'views/NotFound';
 import Summary from './components/Summary';
 import { TRBRequestContext } from './RequestContext';
 import trbAdminPages from './trbAdminPages';
+import TrbAssignLeadModal from './TrbAssignLeadModal';
 
 import './index.scss';
 
@@ -114,6 +121,10 @@ export default function AdminHome() {
   // Note count for NoteBox modal rendered on each page
   // const noteCount: number = (data?.trbRequest?.adminNotes || []).length;
 
+  // Assign trb lead modal refs
+  const assignLeadModalRef = useRef<ModalRef>(null);
+  const assignLeadModalTrbRequestIdRef = useRef<TrbRequestIdRef>(null);
+
   // If TRB request is loading or user is not set, return page loading
   if (loading || !isUserSet) {
     return <PageLoading />;
@@ -136,10 +147,12 @@ export default function AdminHome() {
         createdAt={trbRequest.createdAt}
         state={trbRequest.state}
         taskStatuses={trbRequest.taskStatuses}
-        trbLead={trbRequest.trbLead}
+        trbLead={trbRequest.trbLeadInfo.commonName}
         requester={requester}
         requesterString={requesterString}
         submissionDate={submissionDate}
+        assignLeadModalRef={assignLeadModalRef}
+        assignLeadModalTrbRequestIdRef={assignLeadModalTrbRequestIdRef}
       />
 
       {/* Accordion navigation for tablet and mobile */}
@@ -177,12 +190,21 @@ export default function AdminHome() {
                   trbRequestId={id}
                   trbRequest={trbRequest}
                   requesterString={requesterString}
+                  assignLeadModalRef={assignLeadModalRef}
+                  assignLeadModalTrbRequestIdRef={
+                    assignLeadModalTrbRequestIdRef
+                  }
                 />
               </Route>
             ))}
           </Grid>
         </Grid>
       </GridContainer>
+
+      <TrbAssignLeadModal
+        modalRef={assignLeadModalRef}
+        trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+      />
     </div>
   );
 }

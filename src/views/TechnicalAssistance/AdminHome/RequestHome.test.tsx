@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 
 import { trbRequestSummary } from 'data/mock/trbRequest';
@@ -10,6 +11,7 @@ import {
   TRBAdviceLetterStatus,
   TRBFormStatus
 } from 'types/graphql-global-types';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 
 import RequestHome from './RequestHome';
 
@@ -17,6 +19,8 @@ describe('Trb Admin Request Home', () => {
   Element.prototype.scrollIntoView = jest.fn();
 
   const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
+  const modalRef = React.createRef<ModalRef>();
+  const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
   it('renders successfully with empty data', async () => {
     const { getByText, asFragment, getByRole, getByTestId } = render(
@@ -69,6 +73,8 @@ describe('Trb Admin Request Home', () => {
             <RequestHome
               trbRequestId={trbRequestId}
               trbRequest={trbRequestSummary}
+              assignLeadModalRef={modalRef}
+              assignLeadModalTrbRequestIdRef={trbRequestIdRef}
             />
           </Route>
         </MemoryRouter>
@@ -170,6 +176,8 @@ describe('Trb Admin Request Home', () => {
             <RequestHome
               trbRequestId={trbRequestId}
               trbRequest={trbRequestSummary}
+              assignLeadModalRef={modalRef}
+              assignLeadModalTrbRequestIdRef={trbRequestIdRef}
             />
           </Route>
         </MemoryRouter>

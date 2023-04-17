@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
@@ -13,6 +14,7 @@ import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Consult from './Consult';
@@ -32,6 +34,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     }
   });
   const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
+  const modalRef = React.createRef<ModalRef>();
+  const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
   it('submits successfully ', async () => {
     const { getByText, getByLabelText, getByRole, findByRole } = render(
@@ -156,6 +160,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
                   <InitialRequestForm
                     trbRequest={trbRequestSummary}
                     trbRequestId={trbRequestId}
+                    assignLeadModalRef={modalRef}
+                    assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                   />
                 </Route>
                 <Route exact path="/trb/:id/:activePage/:action">

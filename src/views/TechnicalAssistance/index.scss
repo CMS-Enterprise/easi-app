@@ -194,3 +194,8 @@
     display: contents !important;
   }
 }
+
+/* Override default auto margins on truss modal */
+.usa-modal-wrapper .usa-modal.trb-assign-lead-modal .usa-modal__main {
+  margin: 0;
+}

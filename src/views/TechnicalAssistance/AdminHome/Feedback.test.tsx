@@ -2,16 +2,20 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import { render } from '@testing-library/react';
+import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 
 import { trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestFeedbackQuery from 'queries/GetTrbRequestFeedbackQuery';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 
 import Feedback from './Feedback';
 
 describe('Trb Admin: Feedback', () => {
   const id = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
   const feedbackMessage = 'Can you hear me now?';
+  const modalRef = React.createRef<ModalRef>();
+  const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
   it('renders feedback', async () => {
     const { findByText } = render(
@@ -53,7 +57,12 @@ describe('Trb Admin: Feedback', () => {
         ]}
       >
         <MemoryRouter>
-          <Feedback trbRequestId={id} trbRequest={trbRequestSummary} />
+          <Feedback
+            trbRequestId={id}
+            trbRequest={trbRequestSummary}
+            assignLeadModalRef={modalRef}
+            assignLeadModalTrbRequestIdRef={trbRequestIdRef}
+          />
         </MemoryRouter>
       </MockedProvider>
     );
@@ -89,7 +98,12 @@ describe('Trb Admin: Feedback', () => {
         ]}
       >
         <MemoryRouter>
-          <Feedback trbRequestId={id} trbRequest={trbRequestSummary} />
+          <Feedback
+            trbRequestId={id}
+            trbRequest={trbRequestSummary}
+            assignLeadModalRef={modalRef}
+            assignLeadModalTrbRequestIdRef={trbRequestIdRef}
+          />
         </MemoryRouter>
       </MockedProvider>
     );

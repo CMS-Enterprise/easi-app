@@ -86,7 +86,10 @@ export const trbRequestSummary: Summary = {
   type: TRBRequestType.NEED_HELP,
   state: TRBRequestState.OPEN,
   status: TRBRequestStatus.DRAFT_REQUEST_FORM,
-  trbLead: null,
+  trbLeadInfo: {
+    __typename: 'UserInfo',
+    commonName: ''
+  },
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses: {
     __typename: 'TRBTaskStatuses',

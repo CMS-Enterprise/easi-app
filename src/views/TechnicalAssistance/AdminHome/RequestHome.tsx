@@ -2,7 +2,6 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   Alert,
-  Button,
   CardGroup,
   IconArrowForward,
   Link
@@ -25,8 +24,13 @@ import { formatDateLocal } from 'utils/date';
 
 import InformationCard from './components/InformationCard';
 import TrbAdminWrapper from './components/TrbAdminWrapper';
+import { TrbAssignLeadModalOpener } from './TrbAssignLeadModal';
 
-const RequestHome = ({ trbRequest }: TrbAdminPageProps) => {
+const RequestHome = ({
+  trbRequest,
+  assignLeadModalRef,
+  assignLeadModalTrbRequestIdRef
+}: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { id } = trbRequest;
@@ -130,15 +134,14 @@ const RequestHome = ({ trbRequest }: TrbAdminPageProps) => {
           </Link>
         </>
       ) : (
-        <Button
+        <TrbAssignLeadModalOpener
+          trbRequestId={trbRequest.id}
+          modalRef={assignLeadModalRef}
+          trbRequestIdRef={assignLeadModalTrbRequestIdRef}
           className="usa-button--outline"
-          type="button"
-          onClick={() => {
-            // TODO: Assign trb lead modal
-          }}
         >
           {t('adminHome.assignLead')}
-        </Button>
+        </TrbAssignLeadModalOpener>
       )}
 
       <Divider className="margin-top-6 margin-bottom-5" />
@@ -183,6 +186,8 @@ const RequestHome = ({ trbRequest }: TrbAdminPageProps) => {
         {t('adminHome.viewDocs')}
         <IconArrowForward className="margin-left-1" />
       </UswdsReactLink>
+
+      <Divider className="margin-top-6 margin-bottom-5" />
     </TrbAdminWrapper>
   );
 };

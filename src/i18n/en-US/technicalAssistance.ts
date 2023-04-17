@@ -1019,6 +1019,15 @@ const technicalAssistance = {
     success: 'Action complete. This request is now open.',
     error:
       'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
+  },
+  assignTrbLeadModal: {
+    heading: 'Assign an Admin Lead',
+    label: 'Select a Lead from the TRB Team:',
+    assignMyself: 'Assign myself',
+    submit: 'Assign',
+    success: '{{name}} is assigned as the TRB lead for this request.',
+    error:
+      'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.'
   }
 };
 
