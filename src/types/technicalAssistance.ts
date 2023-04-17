@@ -55,11 +55,19 @@ export type TrbAdminPageProps = {
   submissionDate?: string;
 };
 
+export type TrbAdminPath =
+  | 'request'
+  | 'initial-request-form'
+  | 'documents'
+  | 'feedback'
+  | 'advice'
+  | 'notes';
+
 export type TrbAdminPage = {
   /** Translated text object */
   text: { title: string; description: string };
-  /** Route to use for navigation link */
-  route: string;
+  /** Path to use for navigation link */
+  path: TrbAdminPath;
   /** Component to display on page */
   component: ({ trbRequestId }: TrbAdminPageProps) => JSX.Element;
   /**
