@@ -133,6 +133,8 @@ const technicalAssistance = {
       'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.',
     noAdviceLetter:
       'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.',
+    errorCreatingAdviceLetter:
+      'There was an error creating this advice letter. Please try again. If the error persists, please try again at a later date.',
     downloadAsPdf: 'Download advice letter as PDF',
     sendDate: 'Send date',
     notYetSent: 'Not yet sent',

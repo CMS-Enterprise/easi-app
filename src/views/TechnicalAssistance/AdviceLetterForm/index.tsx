@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
   Button,
@@ -18,13 +18,11 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { FormAlertObject } from 'types/technicalAssistance';
 import {
   meetingSummarySchema,
   nextStepsSchema
 } from 'validations/trbRequestSchema';
-import NotFound from 'views/NotFound';
 
 import Breadcrumbs from '../Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
@@ -77,6 +75,7 @@ type AdviceFormStep = typeof adviceFormSteps[number];
 const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+  const location = useLocation<{ error?: string }>();
 
   // Get url params
   const { id, formStep, subpage } = useParams<{
@@ -95,8 +94,7 @@ const AdviceLetterForm = () => {
 
   /** Current trb request */
   const trbRequest = data?.trbRequest;
-  const { adviceLetter, taskStatuses } = trbRequest || {};
-  const { adviceLetterStatus } = taskStatuses || {};
+  const { adviceLetter } = trbRequest || {};
 
   // References to the submit handler and submitting state of the current form step
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
@@ -107,7 +105,18 @@ const AdviceLetterForm = () => {
   ]);
 
   // Form level alerts from step components
-  const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
+  const [formAlert, setFormAlert] = useState<FormAlertObject | null>(
+    !adviceLetter
+      ? {
+          type: location?.state?.error ? 'error' : 'info',
+          message: t(
+            location?.state?.error
+              ? 'adviceLetter.errorCreatingAdviceLetter'
+              : 'adviceLetter.noAdviceLetter'
+          )
+        }
+      : null
+  );
 
   /** Form steps translated text object */
   const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
@@ -188,16 +197,6 @@ const AdviceLetterForm = () => {
   // Page loading
   if (loading) return <PageLoading />;
 
-  // If invalid URL or advice letter can't be started, return page not found
-  if (
-    currentStepIndex === -1 ||
-    !trbRequest ||
-    !adviceLetter ||
-    adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
-  ) {
-    return <NotFound />;
-  }
-
   return (
     <>
       {/** Form page header */}
@@ -252,37 +251,44 @@ const AdviceLetterForm = () => {
               </Alert>
             )
           }
+          hideSteps={!adviceLetter}
         >
-          {/* Save and return to request button */}
-          <Button
-            type="button"
-            unstyled
-            disabled={isStepSubmitting}
-            onClick={() => {
-              const url = `/trb/${id}/advice`;
-              if (stepSubmit) {
-                stepSubmit?.(() => history.push(url));
-              } else {
-                history.push(url);
-              }
-            }}
-          >
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            {t('adviceLetterForm.returnToRequest')}
-          </Button>
+          {
+            /* Save and return to request button */
+            !!adviceLetter && (
+              <Button
+                type="button"
+                unstyled
+                disabled={isStepSubmitting}
+                onClick={() => {
+                  const url = `/trb/${id}/advice`;
+                  if (stepSubmit) {
+                    stepSubmit?.(() => history.push(url));
+                  } else {
+                    history.push(url);
+                  }
+                }}
+              >
+                <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+                {t('adviceLetterForm.returnToRequest')}
+              </Button>
+            )
+          }
         </StepHeader>
       )}
 
       {/* Current form step component */}
       <GridContainer>
         <Grid>
-          <currentFormStep.component
-            trbRequestId={id}
-            adviceLetter={adviceLetter}
-            setFormAlert={setFormAlert}
-            setStepSubmit={setStepSubmit}
-            setIsStepSubmitting={setIsStepSubmitting}
-          />
+          {!!adviceLetter && (
+            <currentFormStep.component
+              trbRequestId={id}
+              adviceLetter={adviceLetter}
+              setFormAlert={setFormAlert}
+              setStepSubmit={setStepSubmit}
+              setIsStepSubmitting={setIsStepSubmitting}
+            />
+          )}
         </Grid>
       </GridContainer>
     </>
