@@ -136,6 +136,7 @@ export interface GetSystemIntake_systemIntake {
   archivedAt: Time | null;
   euaUserId: string;
   lastAdminNote: GetSystemIntake_systemIntake_lastAdminNote;
+  hasUiChanges: boolean | null;
 }
 
 export interface GetSystemIntake {

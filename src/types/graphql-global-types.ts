@@ -772,6 +772,7 @@ export interface UpdateSystemIntakeRequestDetailsInput {
   needsEaSupport?: boolean | null;
   currentStage?: string | null;
   cedarSystemId?: string | null;
+  hasUiChanges?: boolean | null;
 }
 
 /**

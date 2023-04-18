@@ -52,7 +52,8 @@ describe('The system intake data modifiers', () => {
         archivedAt: null,
         adminLead: '',
         lastAdminNote: null,
-        lcidScope: ''
+        lcidScope: '',
+        hasUiChanges: null
       });
     });
 
@@ -144,7 +145,8 @@ describe('The system intake data modifiers', () => {
           ).toISO()
         },
         lcidScope: '',
-        requesterNameAndComponent: ''
+        requesterNameAndComponent: '',
+        hasUiChanges: true
       };
 
       expect(convertIntakeToCSV(mockIntake)).toMatchObject({
@@ -198,7 +200,8 @@ describe('The system intake data modifiers', () => {
         archivedAt: '2020-06-28T20:22:04Z',
         adminLead: 'Test Admin Lead',
         lastAdminNote: 'last admin note (June 22, 2020)',
-        lcidScope: ''
+        lcidScope: '',
+        hasUiChanges: true
       });
     });
   });
