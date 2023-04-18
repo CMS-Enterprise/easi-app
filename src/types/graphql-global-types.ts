@@ -869,6 +869,14 @@ export interface UpdateTRBRequestFundingSourcesInput {
 }
 
 /**
+ * The data needed assign a TRB lead to a TRB request
+ */
+export interface UpdateTRBRequestTRBLeadInput {
+  trbRequestId: UUID;
+  trbLead: string;
+}
+
+/**
  * The input required to update a test date/score
  */
 export interface UpdateTestDateInput {

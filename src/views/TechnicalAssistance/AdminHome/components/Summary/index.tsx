@@ -5,15 +5,18 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Button,
   Grid,
   GridContainer,
-  IconError
+  IconError,
+  ModalRef
 } from '@trussworks/react-uswds';
 
 import { GetTrbRequest_trbRequest_taskStatuses as TRBRequestTaskStatuses } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
+
+import { TrbAssignLeadModalOpener } from '../../TrbAssignLeadModal';
 
 type SummaryProps = {
   trbRequestId: string;
@@ -26,6 +29,8 @@ type SummaryProps = {
   requester: TRBAttendee;
   requesterString?: string | null;
   submissionDate: string;
+  assignLeadModalRef: React.RefObject<ModalRef>;
+  assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
 };
 
 export default function Summary({
@@ -38,7 +43,9 @@ export default function Summary({
   trbLead,
   requester,
   requesterString,
-  submissionDate
+  submissionDate,
+  assignLeadModalRef,
+  assignLeadModalTrbRequestIdRef
 }: SummaryProps) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -48,7 +55,7 @@ export default function Summary({
     const statusKeys = [
       'formStatus',
       'feedbackStatus',
-      'attendConsultPrepStatus',
+      'attendConsultStatus',
       'consultPrepStatus',
       'adviceLetterStatus'
     ] as (keyof TRBRequestTaskStatuses)[];
@@ -170,9 +177,14 @@ export default function Summary({
                   )
                 }
               </p>
-              <Button unstyled type="button" className="width-auto">
+              <TrbAssignLeadModalOpener
+                trbRequestId={trbRequestId}
+                modalRef={assignLeadModalRef}
+                trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+                className="usa-button--unstyled width-auto"
+              >
                 {trbLead ? t('adminHome.change') : t('adminHome.assign')}
-              </Button>
+              </TrbAssignLeadModalOpener>
             </Grid>
           </Grid>
         </GridContainer>
