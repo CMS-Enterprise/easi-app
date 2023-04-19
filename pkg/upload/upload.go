@@ -153,6 +153,28 @@ func (c S3Client) TagValueForKey(key string, tagName string) (string, error) {
 	return "", nil
 }
 
+// SetTagValueForKey sets the tag value and returns an error if any was encountered.
+func (c S3Client) SetTagValueForKey(key string, tagName string, tagValue string) error {
+	input := &s3.PutObjectTaggingInput{
+		Bucket: aws.String(c.config.Bucket),
+		Key:    aws.String(key),
+		Tagging: &s3.Tagging{
+			TagSet: []*s3.Tag{
+				{
+					Key:   aws.String(tagName),
+					Value: aws.String(tagValue),
+				},
+			},
+		},
+	}
+	_, taggingErr := c.client.PutObjectTagging(input)
+	if taggingErr != nil {
+		return taggingErr
+	}
+
+	return nil
+}
+
 // UploadFile uploads a file to the configured bucket for saving documents.
 // Note that no file extension will be added to the key by this method; it assumes the caller has already added an extension, if desired.
 func (c S3Client) UploadFile(key string, body io.ReadSeeker) error {
