@@ -17,6 +17,9 @@ services:
       - DB_MAX_CONNECTIONS=20
       - AWS_REGION=us-west-2
       - AWS_S3_FILE_UPLOAD_BUCKET=easi-app-file-uploads
+      - MINIO_ADDRESS=minio
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
   easi:
     image: '${ECR_REGISTRY}/easi-backend:${GIT_HASH}'
     environment:
@@ -47,6 +50,7 @@ services:
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
       - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
+      - MINIO_ADDRESS=minio
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - PGHOST=db
