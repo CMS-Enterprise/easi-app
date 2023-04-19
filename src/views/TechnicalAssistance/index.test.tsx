@@ -11,6 +11,7 @@ import {
   GetTrbRequests_myTrbRequests
 } from 'queries/types/GetTrbRequests';
 import { TRBRequestStatus } from 'types/graphql-global-types';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ProcessFlow from './ProcessFlow';
 import RequestType from './RequestType';
@@ -20,7 +21,7 @@ const mockStore = configureMockStore();
 
 describe('Technical Assistance (TRB) homepage', () => {
   // eslint-disable-next-line camelcase
-  const trbRequests: GetTrbRequests_myTrbRequests[] = [
+  const myTrbRequests: GetTrbRequests_myTrbRequests[] = [
     {
       id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
       name: 'My excellent question',
@@ -60,7 +61,7 @@ describe('Technical Assistance (TRB) homepage', () => {
       <MemoryRouter initialEntries={['/trb']}>
         <Provider store={mockStore({ auth })}>
           <Route path="/trb">
-            <MockedProvider
+            <VerboseMockedProvider
               mocks={[
                 {
                   request: {
@@ -68,14 +69,14 @@ describe('Technical Assistance (TRB) homepage', () => {
                   },
                   result: {
                     data: {
-                      trbRequests
+                      myTrbRequests
                     }
                   }
                 }
               ]}
             >
               <TechnicalAssistance />
-            </MockedProvider>
+            </VerboseMockedProvider>
           </Route>
         </Provider>
       </MemoryRouter>
@@ -86,7 +87,7 @@ describe('Technical Assistance (TRB) homepage', () => {
     const { asFragment, findByTestId } = renderHomepage();
 
     /** TRB request */
-    const request = await findByTestId(`trbRequest-${trbRequests[0].id}`);
+    const request = await findByTestId(`trbRequest-${myTrbRequests[0].id}`);
     // Check that request is in document
     expect(request).toBeInTheDocument();
 
