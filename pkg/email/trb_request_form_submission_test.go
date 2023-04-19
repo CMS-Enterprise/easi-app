@@ -13,6 +13,7 @@ import (
 func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 	sender := mockSender{}
 	ctx := context.Background()
+	requestID := uuid.New()
 
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
@@ -41,7 +42,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 			"<li>Send a separate calendar invite with a remote video conferencing meeting link.</li>\n" +
 			"</ul>\n"
 
-		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestName, requesterName, component)
+		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, requestName, requesterName, component)
 
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.TRBEmail})
@@ -54,7 +55,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, "testRequest", "testRequester", "testComponent")
+		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -68,7 +69,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		s.NoError(err)
 		client.templates.trbFormSubmittedAdmin = mockFailedTemplateCaller{}
 
-		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, "testRequest", "testRequester", "testComponent")
+		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -83,7 +84,7 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, "testRequest", "testRequester", "testComponent")
+		err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, "testRequest", "testRequester", "testComponent")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

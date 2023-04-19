@@ -26,7 +26,7 @@ func (c Client) trbEditsOnFormRequestedEmailBody(requestID uuid.UUID, requestNam
 	requestTaskListPath := path.Join("trb", "task-list", requestID.String())
 
 	// TODO - EASI-2488 - put correct path here
-	requestAdminViewPath := path.Join("TODO", "admin-view")
+	requestAdminViewPath := path.Join("trb", requestID.String(), "request")
 
 	data := editsOnFormRequestedEmailParameters{
 		RequestName:          requestName,
