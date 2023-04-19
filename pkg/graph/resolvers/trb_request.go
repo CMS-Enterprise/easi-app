@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -93,6 +94,15 @@ func GetTRBRequestByID(ctx context.Context, id uuid.UUID, store *storage.Store) 
 // GetTRBRequests returns all TRB Requests
 func GetTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
 	TRBRequests, err := store.GetTRBRequests(ctx, archived)
+	if err != nil {
+		return nil, err
+	}
+	return TRBRequests, err
+}
+
+// GetMyTRBRequests returns all TRB Requests that belong to the principal in the context
+func GetMyTRBRequests(ctx context.Context, archived bool, store *storage.Store) ([]*models.TRBRequest, error) {
+	TRBRequests, err := store.GetMyTRBRequests(ctx, archived)
 	if err != nil {
 		return nil, err
 	}
@@ -432,6 +442,7 @@ func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, err
 // GetTRBRequesterInfo retrieves the user info of a TRB request's requester
 func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.UserInfo, error) {
 	requesterInfo, err := dataloaders.GetUserInfo(ctx, requesterEUA)
+	fmt.Println("REQUESTER INFO", requesterEUA, requesterInfo)
 	if err != nil {
 		return nil, err
 	}

@@ -2,8 +2,8 @@ import { TFunction } from 'i18next';
 
 import {
   GetRequests,
-  GetRequests_requests_edges_node as GetRequestsType,
-  GetRequests_trbRequests as GetTRBRequestsType
+  GetRequests_myTrbRequests as GetTRBRequestsType,
+  GetRequests_requests_edges_node as GetRequestsType
 } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
 import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
@@ -34,9 +34,9 @@ const tableMap = (
       return edge.node;
     }) || ([] as GetRequestsType[]);
 
-  const trbRequests: GetTRBRequestsType[] = tableData?.trbRequests || [];
+  const myTrbRequests: GetTRBRequestsType[] = tableData?.myTrbRequests || [];
 
-  const mergedRequests: MergedRequests[] = [...requests, ...trbRequests];
+  const mergedRequests: MergedRequests[] = [...requests, ...myTrbRequests];
 
   const mappedData = mergedRequests
     ?.filter(request =>
