@@ -30,9 +30,9 @@ type MockTrbAttendeeOptions = MockUserOptions<
 };
 
 /** Extends MockUsers class to mock TRB attendees for testing */
-class MockTrbAttendees extends MockUsers<MockTrbAttendee> {
+export default class MockTrbAttendees extends MockUsers<MockTrbAttendee> {
   constructor({
-    trbRequestId = mockTrbRequestId,
+    trbRequestId,
     allowDuplicates = false,
     defaultProps
   }: MockTrbAttendeeOptions = {}) {
@@ -41,11 +41,9 @@ class MockTrbAttendees extends MockUsers<MockTrbAttendee> {
       defaultProps: userInfo => ({
         ...defaultMockAttendeeProps,
         ...defaultProps,
-        trbRequestId,
+        ...(trbRequestId ? { trbRequestId } : {}),
         id: `user-${userInfo.euaUserId}`
       })
     });
   }
 }
-
-export default MockTrbAttendees;
