@@ -13,10 +13,10 @@ import {
   GetTrbPublicAdviceLetterVariables
 } from 'queries/types/GetTrbPublicAdviceLetter';
 import { formatDateLocal } from 'utils/date';
+import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
 
 import ReviewAdviceLetter from './AdminHome/components/ReviewAdviceLetter';
 import Breadcrumbs from './Breadcrumbs';
-import { getPersonVal } from './TrbAdminTeamHome';
 
 function PublicAdviceLetter() {
   const { t } = useTranslation('technicalAssistance');
@@ -91,7 +91,7 @@ function PublicAdviceLetter() {
                 <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
                   <dt>{t('adminHome.requester')}</dt>
                   <dd>
-                    {getPersonVal(
+                    {getPersonNameAndComponentVal(
                       request.requesterInfo.commonName,
                       request.requesterComponent
                     )}
