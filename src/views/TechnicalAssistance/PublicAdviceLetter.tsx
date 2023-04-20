@@ -61,23 +61,25 @@ function PublicAdviceLetter() {
             { text: t('adviceLetterForm.heading') }
           ]}
         />
-        <PageHeading>{t('adviceLetterForm.heading')}</PageHeading>
+        <PageHeading className="margin-top-6 margin-bottom-1">
+          {t('adviceLetterForm.heading')}
+        </PageHeading>
 
         {fromTaskList ? (
           <>
             <UswdsReactLink
-              className="margin-top-2 display-flex flex-align-center"
+              className="display-flex flex-align-center"
               to={`/trb/task-list/${id}`}
             >
               <IconArrowBack className="margin-right-05" />
               {t('requestFeedback.returnToTaskList')}
             </UswdsReactLink>
-            <p className="line-height-body-5 font-body-lg text-light margin-y-1">
+            <p className="line-height-body-5 font-body-lg text-light margin-top-6">
               {t('adviceLetter.thankYou')}
             </p>
           </>
         ) : (
-          <p className="line-height-body-5 font-body-lg text-light margin-y-1">
+          <p className="line-height-body-5 font-body-lg text-light margin-y-0">
             <Trans
               i18nKey="technicalAssistance:adviceLetter.description"
               components={{
@@ -90,18 +92,19 @@ function PublicAdviceLetter() {
       </GridContainer>
 
       {!fromTaskList && (
-        <div className="bg-primary-lighter">
+        <div className="bg-primary-lighter margin-y-6 padding-y-6 trb-advice-letter-request-summary">
           <GridContainer className="full-width">
-            <h2>{t('adviceLetter.requestSummary')}</h2>
+            <h2 className="margin-top-0 margin-bottom-3">
+              {t('adviceLetter.requestSummary')}
+            </h2>
             <CollapsableLink
-              className="margin-top-3"
               eyeIcon
               startOpen
               labelPosition="bottom"
-              closeLabel={t('Hide summary')}
+              closeLabel={t('adviceLetter.showSummary')}
               styleLeftBar={false}
-              id={t('singleSystem.id')}
-              label={t('Show summary')}
+              id="trb-advice-letter-request-summary"
+              label={t('adviceLetter.hideSummary')}
             >
               <dl className="easi-dl">
                 <Grid row gap>
@@ -152,9 +155,13 @@ function PublicAdviceLetter() {
             showSectionBorders={false}
           />
         )}
+
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <SummaryBox heading={t('adviceLetter.haveQuestions')}>
+            <SummaryBox
+              heading={t('adviceLetter.haveQuestions')}
+              className="margin-top-6"
+            >
               <Trans
                 i18nKey="technicalAssistance:adviceLetter.haveQuestionsContact"
                 components={{

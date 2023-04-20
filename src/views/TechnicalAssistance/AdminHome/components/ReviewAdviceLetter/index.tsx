@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
@@ -42,7 +43,10 @@ const ReviewAdviceLetter = ({
       {/* What we heard / meeting summary */}
       <SectionWrapper
         borderTop={showSectionBorders}
-        className="margin-top-6 padding-top-1"
+        className={classNames({
+          'margin-top-6 padding-top-1': showSectionBorders,
+          'margin-top-5': !showSectionBorders
+        })}
       >
         <h2>{t('adviceLetter.whatWeHeard')}</h2>
         <p className="text-bold margin-top-4 margin-bottom-0">
@@ -56,7 +60,10 @@ const ReviewAdviceLetter = ({
       {/* Recommendations */}
       <SectionWrapper
         borderTop={showSectionBorders}
-        className="margin-top-6 padding-top-1"
+        className={classNames({
+          'margin-top-6 padding-top-1': showSectionBorders,
+          'margin-top-5': !showSectionBorders
+        })}
       >
         <h2>{t('adviceLetter.whatWeRecommend')}</h2>
         {
@@ -75,7 +82,10 @@ const ReviewAdviceLetter = ({
       {/* Next steps */}
       <SectionWrapper
         borderTop={showSectionBorders}
-        className="margin-top-6 padding-top-1"
+        className={classNames({
+          'margin-top-6 padding-top-1': showSectionBorders,
+          'margin-top-5': !showSectionBorders
+        })}
       >
         <h2>{t('adviceLetter.nextSteps')}</h2>
 

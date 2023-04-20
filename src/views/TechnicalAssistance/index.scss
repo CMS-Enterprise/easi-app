@@ -67,6 +67,14 @@
       }
     }
   }
+
+  .trb-advice-letter-request-summary {
+    .easi-collapsable-link__content-no-bar {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
   .usa-form {
     /* Top margin for 1st level form groups */
     > .usa-form-group {
