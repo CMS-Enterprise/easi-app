@@ -1,11 +1,14 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
+import configureMockStore from 'redux-mock-store';
 
 import { trbAdminTeamHomeRequests } from 'data/mock/trbRequest';
+import { MessageProvider } from 'hooks/useMessage';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 
 import TrbAdminTeamHome, {
@@ -14,6 +17,16 @@ import TrbAdminTeamHome, {
 } from './TrbAdminTeamHome';
 
 describe('Trb Admin Team Home', () => {
+  const mockStore = configureMockStore();
+  const store = mockStore({
+    auth: {
+      euaId: 'SF13',
+      name: 'Jerry Seinfeld',
+      isUserSet: true,
+      groups: ['EASI_TRB_ADMIN_D']
+    }
+  });
+
   it('parses csv data from trb request data', () => {
     const csv = getTrbRequestDataAsCsv(trbAdminTeamHomeRequests);
     expect(csv).toEqual([
@@ -85,18 +98,22 @@ describe('Trb Admin Team Home', () => {
 
   it('renders empty tables with without any request data', async () => {
     const { getByText, findByText } = render(
-      <MemoryRouter>
-        <MockedProvider
-          mocks={[
-            {
-              request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-              result: { data: { trbRequests: [] } }
-            }
-          ]}
-        >
-          <TrbAdminTeamHome />
-        </MockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <MockedProvider
+            mocks={[
+              {
+                request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
+                result: { data: { trbRequests: [] } }
+              }
+            ]}
+          >
+            <MessageProvider>
+              <TrbAdminTeamHome />
+            </MessageProvider>
+          </MockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
 
     await findByText(
@@ -114,18 +131,22 @@ describe('Trb Admin Team Home', () => {
 
   it('renders tables from request data', async () => {
     const { findByRole } = render(
-      <MemoryRouter>
-        <MockedProvider
-          mocks={[
-            {
-              request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-              result: { data: { trbRequests: trbAdminTeamHomeRequests } }
-            }
-          ]}
-        >
-          <TrbAdminTeamHome />
-        </MockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <MockedProvider
+            mocks={[
+              {
+                request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
+                result: { data: { trbRequests: trbAdminTeamHomeRequests } }
+              }
+            ]}
+          >
+            <MessageProvider>
+              <TrbAdminTeamHome />
+            </MessageProvider>
+          </MockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
 
     // Page actions available
@@ -160,18 +181,22 @@ describe('Trb Admin Team Home', () => {
 
   it('renders table cells and states correctly', async () => {
     const { findByTestId } = render(
-      <MemoryRouter>
-        <MockedProvider
-          mocks={[
-            {
-              request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-              result: { data: { trbRequests: trbAdminTeamHomeRequests } }
-            }
-          ]}
-        >
-          <TrbAdminTeamHome />
-        </MockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <MockedProvider
+            mocks={[
+              {
+                request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
+                result: { data: { trbRequests: trbAdminTeamHomeRequests } }
+              }
+            ]}
+          >
+            <MessageProvider>
+              <TrbAdminTeamHome />
+            </MessageProvider>
+          </MockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
 
     // Default sort order on Submission Date desc
@@ -240,18 +265,22 @@ describe('Trb Admin Team Home', () => {
 
   it('switches table data between open and closed tabs', async () => {
     const { findByRole, findByTestId } = render(
-      <MemoryRouter>
-        <MockedProvider
-          mocks={[
-            {
-              request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-              result: { data: { trbRequests: trbAdminTeamHomeRequests } }
-            }
-          ]}
-        >
-          <TrbAdminTeamHome />
-        </MockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <MockedProvider
+            mocks={[
+              {
+                request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
+                result: { data: { trbRequests: trbAdminTeamHomeRequests } }
+              }
+            ]}
+          >
+            <MessageProvider>
+              <TrbAdminTeamHome />
+            </MessageProvider>
+          </MockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
 
     const open = await findByRole('button', {

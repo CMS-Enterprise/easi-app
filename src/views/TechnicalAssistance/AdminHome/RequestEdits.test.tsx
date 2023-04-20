@@ -66,7 +66,10 @@ describe('Trb Admin: Action: Request Edits', () => {
           name: 'Draft',
           type: 'NEED_HELP',
           state: 'OPEN',
-          trbLead: null,
+          trbLeadInfo: {
+            __typename: 'UserInfo',
+            commonName: ''
+          },
           createdAt: '2023-02-16T15:21:34.156885Z',
           taskStatuses: {
             formStatus: 'IN_PROGRESS',

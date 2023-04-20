@@ -3,11 +3,13 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, within } from '@testing-library/react';
+import { ModalRef } from '@trussworks/react-uswds';
 import configureMockStore from 'redux-mock-store';
 
 import { requester, trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 
 import Summary from '.';
 
@@ -57,6 +59,9 @@ const defaultStore = mockStore({
 });
 
 describe('TRB Admin Home summary', () => {
+  const modalRef = React.createRef<ModalRef>();
+  const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
+
   it('renders TRB request details', async () => {
     const { asFragment, findByTestId, getByTestId } = render(
       <MemoryRouter>
@@ -69,10 +74,12 @@ describe('TRB Admin Home summary', () => {
               createdAt={trbRequestSummary.createdAt}
               state={trbRequestSummary.state}
               taskStatuses={trbRequestSummary.taskStatuses}
-              trbLead={trbRequestSummary.trbLead}
+              trbLead={trbRequestSummary.trbLeadInfo.commonName}
               requester={requester}
               requesterString="Adeline Aarons, CMS"
               submissionDate="January 5, 2023"
+              assignLeadModalRef={modalRef}
+              assignLeadModalTrbRequestIdRef={trbRequestIdRef}
             />
           </Provider>
         </MockedProvider>

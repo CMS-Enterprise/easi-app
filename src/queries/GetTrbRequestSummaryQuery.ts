@@ -7,7 +7,9 @@ export default gql`
       name
       type
       state
-      trbLead
+      trbLeadInfo {
+        commonName
+      }
       createdAt
       taskStatuses {
         formStatus

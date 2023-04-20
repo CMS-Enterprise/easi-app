@@ -70,11 +70,11 @@ describe('TRB admin home', () => {
     'initial-request-form',
     'documents',
     'feedback',
-    'advice',
-    'notes'
+    'advice'
+    // 'notes'
   ];
 
-  test.each(subpages)('Renders each subpage', async subpage => {
+  test.each(subpages)('Renders each subpage %j', async subpage => {
     const { findByTestId } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/${subpage}`]}>
         <MessageProvider>

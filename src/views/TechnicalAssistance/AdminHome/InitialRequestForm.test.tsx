@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
+import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
@@ -22,6 +23,7 @@ import {
   TRBRequestState,
   TRBRequestType
 } from 'types/graphql-global-types';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import InitialRequestForm from './InitialRequestForm';
@@ -78,6 +80,9 @@ const initialRequester: TRBAttendee = {
 };
 
 describe('Trb Admin Initial Request Form', () => {
+  const modalRef = React.createRef<ModalRef>();
+  const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
+
   it('renders', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
@@ -169,6 +174,8 @@ describe('Trb Admin Initial Request Form', () => {
                 <InitialRequestForm
                   trbRequestId={mockTrbRequestData.id}
                   noteCount={0}
+                  assignLeadModalRef={modalRef}
+                  assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                 />
               </Route>
             </TRBRequestInfoWrapper>

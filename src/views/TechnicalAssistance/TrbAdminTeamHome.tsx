@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   CellProps,
@@ -14,6 +14,7 @@ import {
   Button,
   ButtonGroup,
   GridContainer,
+  ModalRef,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -28,7 +29,10 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
-import { TrbAdminTeamHomeRequest } from 'types/technicalAssistance';
+import {
+  TrbAdminTeamHomeRequest,
+  TrbRequestIdRef
+} from 'types/technicalAssistance';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
@@ -38,6 +42,10 @@ import {
   getHeaderSortIcon
 } from 'utils/tableSort';
 import NotFound from 'views/NotFound';
+
+import TrbAssignLeadModal, {
+  TrbAssignLeadModalOpener
+} from './AdminHome/TrbAssignLeadModal';
 
 function getPersonVal(name: string, component?: any) {
   return `${name}${typeof component === 'string' ? `, ${component}` : ''}`;
@@ -124,6 +132,10 @@ type TrbRequestsTableProps = {
 function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
   const { t } = useTranslation('technicalAssistance');
 
+  // Assign trb lead modal refs
+  const assignLeadModalRef = useRef<ModalRef>(null);
+  const assignLeadModalTrbRequestIdRef = useRef<TrbRequestIdRef>(null);
+
   // @ts-ignore
   const columns = useMemo<Column<TrbAdminTeamHomeRequest>[]>(() => {
     return [
@@ -150,10 +162,14 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
         Header: t<string>('documents.table.header.actions'),
         Cell: ({ row }: CellProps<TrbAdminTeamHomeRequest>) =>
           row.original.trbLeadInfo.commonName === '' ? (
-            // wip assign lead could be a modal popup
-            <Button type="button" unstyled>
+            <TrbAssignLeadModalOpener
+              trbRequestId={row.original.id}
+              modalRef={assignLeadModalRef}
+              trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+              className="usa-button--unstyled"
+            >
               {t('adminTeamHome.actions.assignLead')}
-            </Button>
+            </TrbAssignLeadModalOpener>
           ) : (
             ''
           ),
@@ -307,6 +323,11 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
           </div>
         </>
       )}
+
+      <TrbAssignLeadModal
+        modalRef={assignLeadModalRef}
+        trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+      />
     </div>
   );
 }
