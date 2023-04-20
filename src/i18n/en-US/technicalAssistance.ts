@@ -55,6 +55,7 @@ const technicalAssistance = {
     adviceLetter: 'Advice Letter',
     description:
       'This is an advice letter that was sent to the project team for the request summarized below. If you have any questions about this advice letter, you may reach out to the TRB at <a>{{email}}</a>.',
+    thankYou: 'Thank you for attending the TRB consult session!',
     requestSummary: 'Request summary',
     whatOtherRequestTypes: 'What other request types are there?',
     showSummary: 'Show summary',
