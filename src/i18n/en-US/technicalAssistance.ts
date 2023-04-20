@@ -51,7 +51,16 @@ const technicalAssistance = {
     resources: 'Resources',
     nextSteps: 'Next steps',
     notSpecified: 'Not specified yet',
-    followup: 'Should the team return for a follow-up session?'
+    followup: 'Should the team return for a follow-up session?',
+    adviceLetter: 'Advice Letter',
+    description:
+      'This is an advice letter that was sent to the project team for the request summarized below. If you have any questions about this advice letter, you may reach out to the TRB at <a>{{email}}</a>.',
+    requestSummary: 'Request summary',
+    whatOtherRequestTypes: 'What other request types are there?',
+    showSummary: 'Show summary',
+    hideSummary: 'Hide summary',
+    haveQuestions: 'Have questions about this advice letter?',
+    haveQuestionsContact: 'Reach out to the TRB at <a>{{email}}</a>'
   },
   requiredFields:
     'Fields marked with an asterisk ( <red>*</red> ) are required.',
@@ -141,7 +150,8 @@ const technicalAssistance = {
   },
   // Misc breadcrumb items
   breadcrumbs: {
-    startTrbRequest: 'Start a TRB Request'
+    startTrbRequest: 'Start a TRB Request',
+    technicalAssistance: 'Technical Assistance'
   },
   // Common button text
   button: {

@@ -47,7 +47,7 @@ import TrbAssignLeadModal, {
   TrbAssignLeadModalOpener
 } from './AdminHome/TrbAssignLeadModal';
 
-function getPersonVal(name: string, component?: any) {
+export function getPersonVal(name: string, component?: any) {
   return `${name}${typeof component === 'string' ? `, ${component}` : ''}`;
 }
 

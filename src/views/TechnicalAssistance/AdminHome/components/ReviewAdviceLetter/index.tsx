@@ -11,9 +11,13 @@ import RecommendationsList from './RecommendationsList';
  * Displays advice letter for review
  */
 const ReviewAdviceLetter = ({
-  adviceLetter
+  adviceLetter,
+  showDateSent = true,
+  showSectionBorders = true
 }: {
   adviceLetter: AdviceLetter;
+  showDateSent?: boolean;
+  showSectionBorders?: boolean;
 }) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -22,15 +26,24 @@ const ReviewAdviceLetter = ({
   return (
     <div>
       {/* Date sent */}
-      <p className="text-bold margin-bottom-0">{t('adviceLetter.sendDate')}</p>
-      <p className="margin-top-1">
-        {adviceLetter.dateSent
-          ? formatDateLocal(adviceLetter.dateSent, 'MMMM d, yyyy')
-          : t('adviceLetter.notYetSent')}
-      </p>
+      {showDateSent && (
+        <>
+          <p className="text-bold margin-bottom-0">
+            {t('adviceLetter.sendDate')}
+          </p>
+          <p className="margin-top-1">
+            {adviceLetter.dateSent
+              ? formatDateLocal(adviceLetter.dateSent, 'MMMM d, yyyy')
+              : t('adviceLetter.notYetSent')}
+          </p>
+        </>
+      )}
 
       {/* What we heard / meeting summary */}
-      <SectionWrapper borderTop className="margin-top-6 padding-top-1">
+      <SectionWrapper
+        borderTop={showSectionBorders}
+        className="margin-top-6 padding-top-1"
+      >
         <h2>{t('adviceLetter.whatWeHeard')}</h2>
         <p className="text-bold margin-top-4 margin-bottom-0">
           {t('adviceLetter.meetingSummary')}
@@ -41,7 +54,10 @@ const ReviewAdviceLetter = ({
       </SectionWrapper>
 
       {/* Recommendations */}
-      <SectionWrapper borderTop className="margin-top-6 padding-top-1">
+      <SectionWrapper
+        borderTop={showSectionBorders}
+        className="margin-top-6 padding-top-1"
+      >
         <h2>{t('adviceLetter.whatWeRecommend')}</h2>
         {
           // If no recommendations, return text
@@ -57,7 +73,10 @@ const ReviewAdviceLetter = ({
       </SectionWrapper>
 
       {/* Next steps */}
-      <SectionWrapper borderTop className="margin-top-6 padding-top-1">
+      <SectionWrapper
+        borderTop={showSectionBorders}
+        className="margin-top-6 padding-top-1"
+      >
         <h2>{t('adviceLetter.nextSteps')}</h2>
 
         <p className="text-bold margin-top-4 margin-bottom-1">
