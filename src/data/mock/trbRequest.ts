@@ -1,5 +1,6 @@
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
+import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
@@ -13,6 +14,7 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
+import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
 import {
   GetTrbRequest,
   GetTrbRequestVariables
@@ -50,6 +52,8 @@ import { MockedQuery } from 'types/util';
 import MockTrbAttendees, {
   MockTrbAttendee
 } from 'utils/testing/MockTrbAttendees';
+
+import { MockUserInfo } from './users';
 
 const trbRequestId = 'd8ebedca-0031-4ccd-9690-37390726c50e';
 const users = new MockTrbAttendees({ trbRequestId });
@@ -467,7 +471,25 @@ export const getTrbAdminTeamHomeQuery: MockedQuery<GetTrbAdminTeamHome> = {
   request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
   result: {
     data: {
-      trbRequests: { ...trbAdminTeamHomeRequests }
+      trbRequests: [...trbAdminTeamHomeRequests]
+    }
+  }
+};
+
+export const trbLeadOptions: MockUserInfo[] = [
+  users.next()?.userInfo!,
+  users.next()?.userInfo!,
+  users.next()?.userInfo!
+];
+
+export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptions> = {
+  request: {
+    query: GetTrbLeadOptionsQuery,
+    variables: {}
+  },
+  result: {
+    data: {
+      trbLeadOptions
     }
   }
 };
