@@ -4,14 +4,17 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
+import {
+  getTrbAdminNotesQuery,
+  getTRBRequestAttendeesQuery,
+  getTrbRequestQuery,
+  getTrbRequestSummaryQuery,
+  updateTrbRequestConsultMeetingQuery
+} from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
-import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
-import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import easiMockStore from 'utils/testing/easiMockStore';
+import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Consult from './Consult';
@@ -21,16 +24,7 @@ import TRBRequestInfoWrapper from './RequestContext';
 describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   Element.prototype.scrollIntoView = jest.fn();
 
-  const mockStore = configureMockStore();
-  const store = mockStore({
-    auth: {
-      euaId: 'ABCD',
-      name: 'Jerry Seinfeld',
-      isUserSet: true,
-      groups: ['EASI_TRB_ADMIN_D']
-    }
-  });
-  const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
+  const store = easiMockStore({ groups: ['EASI_TRB_ADMIN_D'] });
 
   it('submits successfully ', async () => {
     const { getByText, getByLabelText, getByRole, findByRole } = render(
@@ -41,119 +35,23 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             query: { fetchPolicy: 'no-cache' }
           }}
           mocks={[
-            {
-              request: {
-                query: UpdateTrbRequestConsultMeetingQuery,
-                variables: {
-                  input: {
-                    trbRequestId,
-                    consultMeetingTime: '2023-02-23T13:00:00.000Z',
-                    notes: '',
-                    copyTrbMailbox: false,
-                    notifyEuaIds: ['ABCD']
-                  }
-                }
-              },
-              result: {
-                data: {
-                  updateTRBRequestConsultMeetingTime: {
-                    id: 'd35a1f08-e04e-48f9-8d58-7f2409bae8fe',
-                    __typename: 'TRBRequest'
-                  }
-                }
-              }
-            },
-            {
-              request: {
-                query: GetTrbRequestSummaryQuery,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id: trbRequestId,
-                    name: 'Draft',
-                    type: 'NEED_HELP',
-                    state: 'OPEN',
-                    trbLead: null,
-                    createdAt: '2023-02-16T15:21:34.156885Z',
-                    taskStatuses: {
-                      formStatus: 'IN_PROGRESS',
-                      feedbackStatus: 'EDITS_REQUESTED',
-                      consultPrepStatus: 'CANNOT_START_YET',
-                      attendConsultStatus: 'CANNOT_START_YET',
-                      adviceLetterStatus: 'IN_PROGRESS',
-                      __typename: 'TRBTaskStatuses'
-                    },
-                    adminNotes: [
-                      {
-                        id: '123'
-                      }
-                    ],
-                    __typename: 'TRBRequest'
-                  }
-                }
-              }
-            },
-            {
-              request: {
-                query: GetTRBRequestAttendeesQuery,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id: trbRequestId,
-                    attendees: []
-                  }
-                }
-              }
-            },
-            {
-              request: {
-                query: GetTrbAdminNotesQuery,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id: trbRequestId,
-                    adminNotes: [
-                      {
-                        id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
-                        isArchived: false,
-                        category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                        noteText: 'My cute original note',
-                        author: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Seinfeld'
-                        },
-                        createdAt: '2024-03-28T13:20:37.852099Z',
-                        __typename: 'TRBAdminNote'
-                      }
-                    ]
-                  }
-                }
-              }
-            }
+            updateTrbRequestConsultMeetingQuery,
+            getTrbRequestQuery,
+            getTrbRequestSummaryQuery,
+            getTRBRequestAttendeesQuery,
+            getTrbAdminNotesQuery
           ]}
         >
           <MemoryRouter
             initialEntries={[
-              `/trb/${trbRequestId}/initial-request-form/schedule-consult`
+              `/trb/${mockTrbRequestId}/initial-request-form/schedule-consult`
             ]}
           >
             <TRBRequestInfoWrapper>
               <MessageProvider>
                 <Route exact path="/trb/:id/:activePage">
                   <InitialRequestForm
-                    trbRequestId={trbRequestId}
+                    trbRequestId={mockTrbRequestId}
                     noteCount={0}
                   />
                 </Route>
@@ -220,10 +118,10 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
 
   it('shows the error summary on missing required fields', async () => {
     const { getByLabelText, getByRole, findByText } = render(
-      <VerboseMockedProvider>
+      <VerboseMockedProvider mocks={[getTrbRequestSummaryQuery]}>
         <MemoryRouter
           initialEntries={[
-            `/trb/${trbRequestId}/initial-request-form/schedule-consult`
+            `/trb/${mockTrbRequestId}/initial-request-form/schedule-consult`
           ]}
         >
           <TRBRequestInfoWrapper>
@@ -281,26 +179,16 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     const { getByLabelText, getByRole, findByText } = render(
       <VerboseMockedProvider
         mocks={[
+          getTrbRequestSummaryQuery,
           {
-            request: {
-              query: UpdateTrbRequestConsultMeetingQuery,
-              variables: {
-                input: {
-                  trbRequestId,
-                  consultMeetingTime: '2023-02-23T18:00:00.000Z',
-                  notes: '',
-                  copyTrbMailbox: false,
-                  notifyEuaIds: ['ABCD']
-                }
-              }
-            },
+            ...updateTrbRequestConsultMeetingQuery,
             error: new Error()
           }
         ]}
       >
         <MemoryRouter
           initialEntries={[
-            `/trb/${trbRequestId}/initial-request-form/schedule-consult`
+            `/trb/${mockTrbRequestId}/initial-request-form/schedule-consult`
           ]}
         >
           <TRBRequestInfoWrapper>

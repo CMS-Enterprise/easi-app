@@ -104,7 +104,7 @@ function Consult() {
                 trbRequestId: id,
                 consultMeetingTime,
                 notes: formData.notes,
-                copyTrbMailbox: false,
+                copyTrbMailbox: true,
                 notifyEuaIds: ['ABCD']
               }
             }
