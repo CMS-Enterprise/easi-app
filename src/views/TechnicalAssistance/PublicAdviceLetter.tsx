@@ -23,12 +23,12 @@ import { formatDateLocal } from 'utils/date';
 import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
 
 import ReviewAdviceLetter from './AdminHome/components/ReviewAdviceLetter';
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs, { BreadcrumbsProps } from './Breadcrumbs';
 
 /**
  * The public view of a TRB Request Advice Letter.
- * This component's url is referred to from the Task List view,
- * as indicated by `fromTaskList`, or email link.
+ * This component's url is referred to from the Task List view, or email link.
+ * Views from the task list are indicated by `fromTaskList`.
  */
 function PublicAdviceLetter() {
   const { t } = useTranslation('technicalAssistance');
@@ -50,17 +50,23 @@ function PublicAdviceLetter() {
   const request = data?.trbRequest;
   const adviceLetter = request?.adviceLetter;
 
+  const breadcrumbs: BreadcrumbsProps['items'] = [
+    { text: t('breadcrumbs.technicalAssistance'), url: '/trb' }
+  ];
+  if (fromTaskList) {
+    breadcrumbs.push({
+      text: t('taskList.heading'),
+      url: `/trb/task-list/${id}`
+    });
+  }
+  breadcrumbs.push({ text: t('adviceLetterForm.heading') });
+
   if (!request || !adviceLetter) return null;
 
   return (
     <>
       <GridContainer className="full-width">
-        <Breadcrumbs
-          items={[
-            { text: t('breadcrumbs.technicalAssistance'), url: '/trb' },
-            { text: t('adviceLetterForm.heading') }
-          ]}
-        />
+        <Breadcrumbs items={breadcrumbs} />
         <PageHeading className="margin-top-6 margin-bottom-1">
           {t('adviceLetterForm.heading')}
         </PageHeading>
