@@ -12,6 +12,7 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
@@ -21,6 +22,7 @@ import {
 } from 'queries/types/GetTrbPublicAdviceLetter';
 import { formatDateLocal } from 'utils/date';
 import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
+import NotFound from 'views/NotFound';
 
 import ReviewAdviceLetter from './AdminHome/components/ReviewAdviceLetter';
 import Breadcrumbs, { BreadcrumbsProps } from './Breadcrumbs';
@@ -40,15 +42,25 @@ function PublicAdviceLetter() {
   const { state } = useLocation<{ fromTaskList: boolean }>();
   const fromTaskList = state?.fromTaskList;
 
-  const { data } = useQuery<
+  const { data, error, loading } = useQuery<
     GetTrbPublicAdviceLetter,
     GetTrbPublicAdviceLetterVariables
   >(GetTrbPublicAdviceLetterQuery, {
     variables: { id }
   });
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
+  if (error) {
+    return <NotFound />;
+  }
+
   const request = data?.trbRequest;
   const adviceLetter = request?.adviceLetter;
+
+  if (!request || !adviceLetter) return null;
 
   const breadcrumbs: BreadcrumbsProps['items'] = [
     { text: t('breadcrumbs.technicalAssistance'), url: '/trb' }
@@ -60,8 +72,6 @@ function PublicAdviceLetter() {
     });
   }
   breadcrumbs.push({ text: t('adviceLetterForm.heading') });
-
-  if (!request || !adviceLetter) return null;
 
   return (
     <>
