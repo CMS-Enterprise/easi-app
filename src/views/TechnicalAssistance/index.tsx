@@ -67,11 +67,11 @@ function TechnicalAssistance() {
         </Route>
 
         {/* Public advice letter */}
-        <Route exact path={`${path}/requests/:id/advice-letter`}>
+        <Route exact path={`${path}/advice-letter/:id`}>
           <PublicAdviceLetter />
         </Route>
 
-        {/* Create new or edit exisiting request */}
+        {/* Create new or edit existing request */}
         <Route exact path={`${path}/requests/:id/:step?/:view?`}>
           <RequestForm />
         </Route>

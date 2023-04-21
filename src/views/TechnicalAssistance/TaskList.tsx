@@ -331,9 +331,9 @@ function TaskList() {
                       variant="unstyled"
                       className="usa-button"
                       to={{
-                        pathname: `/trb/requests/${id}/advice-letter`,
+                        pathname: `/trb/advice-letter/${id}`,
                         state: { fromTaskList: true }
-                      }} // TODO: replace with link to view advice letter
+                      }}
                     >
                       {t('taskList.viewAdviceLetter')}
                     </UswdsReactLink>
