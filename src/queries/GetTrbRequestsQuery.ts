@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export default gql`
   query GetTrbRequests {
-    trbRequests(archived: false) {
+    myTrbRequests(archived: false) {
       id
       name
       status

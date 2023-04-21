@@ -76,6 +76,8 @@ services:
     restart: always
     image: minio/minio:latest
     entrypoint: minio server /data
+    ports:
+    - '9000:9000'
   minio_mc:
     image: minio/mc:latest
     depends_on:

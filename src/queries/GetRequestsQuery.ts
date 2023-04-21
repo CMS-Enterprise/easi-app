@@ -16,7 +16,7 @@ export default gql`
         }
       }
     }
-    trbRequests(archived: false) {
+    myTrbRequests(archived: false) {
       id
       name
       submittedAt: createdAt
