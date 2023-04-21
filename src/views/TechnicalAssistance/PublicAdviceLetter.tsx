@@ -73,11 +73,8 @@ function PublicAdviceLetter() {
 
         {fromTaskList ? (
           <>
-            <UswdsReactLink
-              className="display-flex flex-align-center"
-              to={`/trb/task-list/${id}`}
-            >
-              <IconArrowBack className="margin-right-05" />
+            <UswdsReactLink to={`/trb/task-list/${id}`}>
+              <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
               {t('requestFeedback.returnToTaskList')}
             </UswdsReactLink>
             <p className="line-height-body-5 font-body-lg text-light margin-top-6">
@@ -178,6 +175,16 @@ function PublicAdviceLetter() {
             </SummaryBox>
           </Grid>
         </Grid>
+
+        {fromTaskList && (
+          <UswdsReactLink
+            className="display-inline-block margin-top-5"
+            to={`/trb/task-list/${id}`}
+          >
+            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+            {t('requestFeedback.returnToTaskList')}
+          </UswdsReactLink>
+        )}
       </GridContainer>
     </>
   );
