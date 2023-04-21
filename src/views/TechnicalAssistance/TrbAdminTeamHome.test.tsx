@@ -5,11 +5,15 @@ import { MockedProvider } from '@apollo/react-testing';
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
-import { trbAdminTeamHomeRequests } from 'data/mock/trbRequest';
+import {
+  getTrbAdminTeamHomeQuery,
+  getTrbLeadOptionsQuery,
+  trbAdminTeamHomeRequests
+} from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
+import easiMockStore from 'utils/testing/easiMockStore';
 
 import TrbAdminTeamHome, {
   getTrbRequestDataAsCsv,
@@ -17,15 +21,7 @@ import TrbAdminTeamHome, {
 } from './TrbAdminTeamHome';
 
 describe('Trb Admin Team Home', () => {
-  const mockStore = configureMockStore();
-  const store = mockStore({
-    auth: {
-      euaId: 'SF13',
-      name: 'Jerry Seinfeld',
-      isUserSet: true,
-      groups: ['EASI_TRB_ADMIN_D']
-    }
-  });
+  const store = easiMockStore({ euaUserId: 'SF13' });
 
   it('parses csv data from trb request data', () => {
     const csv = getTrbRequestDataAsCsv(trbAdminTeamHomeRequests);
@@ -34,7 +30,7 @@ describe('Trb Admin Team Home', () => {
       [
         '03/01/2023',
         'First help',
-        'Wava Upton',
+        trbAdminTeamHomeRequests[0].requesterInfo.commonName,
         'System problem',
         '',
         i18next.t<string>('technicalAssistance:table.requestStatus.NEW'),
@@ -43,7 +39,7 @@ describe('Trb Admin Team Home', () => {
       [
         '03/02/2023',
         'Second brainstorm',
-        'Derick Koss',
+        trbAdminTeamHomeRequests[1].requesterInfo.commonName,
         'Idea feedback',
         '',
         i18next.t<string>('technicalAssistance:table.requestStatus.NEW'),
@@ -52,9 +48,9 @@ describe('Trb Admin Team Home', () => {
       [
         '03/03/2023',
         'Third open',
-        'Loraine Kirlin',
+        trbAdminTeamHomeRequests[2].requesterInfo.commonName,
         'System problem',
-        'Astrid Howell',
+        trbAdminTeamHomeRequests[2].trbLeadInfo.commonName,
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.DRAFT_REQUEST_FORM'
         ),
@@ -63,9 +59,9 @@ describe('Trb Admin Team Home', () => {
       [
         '03/04/2023',
         'Fourth open with date',
-        'Clotilde Goodwin',
+        trbAdminTeamHomeRequests[3].requesterInfo.commonName,
         'System problem',
-        'Polly Sauer',
+        trbAdminTeamHomeRequests[3].trbLeadInfo.commonName,
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.REQUEST_FORM_COMPLETE'
         ),
@@ -74,9 +70,9 @@ describe('Trb Admin Team Home', () => {
       [
         '03/05/2023',
         'Fifth closed',
-        'Sylvester Mante',
+        trbAdminTeamHomeRequests[4].requesterInfo.commonName,
         'System problem',
-        'Sydni Reynolds',
+        trbAdminTeamHomeRequests[4].trbLeadInfo.commonName,
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.READY_FOR_CONSULT'
         ),
@@ -85,9 +81,9 @@ describe('Trb Admin Team Home', () => {
       [
         '03/06/2023',
         'Sixth open with component',
-        'Damaris Langosh, BBQ',
+        `${trbAdminTeamHomeRequests[5].requesterInfo.commonName}, ${trbAdminTeamHomeRequests[5].requesterComponent}`,
         'System problem',
-        'Hosea Lemke, TRB',
+        `${trbAdminTeamHomeRequests[5].trbLeadInfo.commonName}, TRB`,
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.CONSULT_SCHEDULED'
         ),
@@ -105,7 +101,8 @@ describe('Trb Admin Team Home', () => {
               {
                 request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
                 result: { data: { trbRequests: [] } }
-              }
+              },
+              getTrbLeadOptionsQuery
             ]}
           >
             <MessageProvider>
@@ -134,12 +131,7 @@ describe('Trb Admin Team Home', () => {
       <Provider store={store}>
         <MemoryRouter>
           <MockedProvider
-            mocks={[
-              {
-                request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-                result: { data: { trbRequests: trbAdminTeamHomeRequests } }
-              }
-            ]}
+            mocks={[getTrbAdminTeamHomeQuery, getTrbLeadOptionsQuery]}
           >
             <MessageProvider>
               <TrbAdminTeamHome />
@@ -184,12 +176,7 @@ describe('Trb Admin Team Home', () => {
       <Provider store={store}>
         <MemoryRouter>
           <MockedProvider
-            mocks={[
-              {
-                request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-                result: { data: { trbRequests: trbAdminTeamHomeRequests } }
-              }
-            ]}
+            mocks={[getTrbAdminTeamHomeQuery, getTrbLeadOptionsQuery]}
           >
             <MessageProvider>
               <TrbAdminTeamHome />
@@ -230,7 +217,7 @@ describe('Trb Admin Team Home', () => {
 
     // Requester without component
     expect(await findByTestId('trb-new-cell-1-2')).toHaveTextContent(
-      'Wava Upton'
+      trbAdminTeamHomeRequests[0].requesterInfo.commonName
     );
 
     // Action links column of new requests
@@ -243,7 +230,7 @@ describe('Trb Admin Team Home', () => {
     // Existing requests
     // TRB Lead with Component
     expect(await findByTestId('trb-existing-cell-0-3')).toHaveTextContent(
-      'Hosea Lemke, TRB'
+      `${trbAdminTeamHomeRequests[5].trbLeadInfo.commonName}, TRB`
     );
     // TRB consult date
     expect(await findByTestId('trb-existing-cell-0-5')).toHaveTextContent(
@@ -268,12 +255,7 @@ describe('Trb Admin Team Home', () => {
       <Provider store={store}>
         <MemoryRouter>
           <MockedProvider
-            mocks={[
-              {
-                request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
-                result: { data: { trbRequests: trbAdminTeamHomeRequests } }
-              }
-            ]}
+            mocks={[getTrbAdminTeamHomeQuery, getTrbLeadOptionsQuery]}
           >
             <MessageProvider>
               <TrbAdminTeamHome />
