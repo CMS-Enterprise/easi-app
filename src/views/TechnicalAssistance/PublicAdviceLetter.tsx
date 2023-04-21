@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
+  Alert,
   Grid,
   GridContainer,
   IconArrowBack,
@@ -20,6 +21,7 @@ import {
   GetTrbPublicAdviceLetter,
   GetTrbPublicAdviceLetterVariables
 } from 'queries/types/GetTrbPublicAdviceLetter';
+import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
 import NotFound from 'views/NotFound';
@@ -55,6 +57,20 @@ function PublicAdviceLetter() {
 
   if (error) {
     return <NotFound />;
+  }
+
+  // Alert if the letter is incomplete
+  if (
+    data?.trbRequest.taskStatuses.adviceLetterStatus !==
+    TRBAdviceLetterStatus.COMPLETED
+  ) {
+    return (
+      <GridContainer className="full-width margin-y-6">
+        <Alert type="info" heading={t('adviceLetter.incomplete')}>
+          {t('adviceLetter.incompleteCheckLater')}
+        </Alert>
+      </GridContainer>
+    );
   }
 
   const request = data?.trbRequest;

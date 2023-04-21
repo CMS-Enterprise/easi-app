@@ -5,6 +5,7 @@ import { render } from '@testing-library/react';
 import i18next from 'i18next';
 
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
+import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 
 import PublicAdviceLetter from './PublicAdviceLetter';
 
@@ -52,6 +53,10 @@ describe('Trb Public Advice Letter', () => {
         createdAt: '2023-04-21T14:13:01.589972Z',
         modifiedAt: '2023-04-21T14:13:01.595102Z',
         __typename: 'TRBAdviceLetter'
+      },
+      taskStatuses: {
+        adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED,
+        __typename: 'TRBTaskStatuses'
       },
       __typename: 'TRBRequest'
     }
@@ -129,6 +134,49 @@ describe('Trb Public Advice Letter', () => {
     await findByRole('heading', {
       level: 1,
       name: i18next.t<string>('error:notFound.heading')
+    });
+  });
+
+  it('shows an incomplete alert for the letter', async () => {
+    const { findByRole } = render(
+      <MockedProvider
+        defaultOptions={{
+          watchQuery: { fetchPolicy: 'no-cache' },
+          query: { fetchPolicy: 'no-cache' }
+        }}
+        mocks={[
+          {
+            request: {
+              query: GetTrbPublicAdviceLetterQuery,
+              variables: {
+                id
+              }
+            },
+            result: {
+              data: {
+                trbRequest: {
+                  ...data.trbRequest,
+                  taskStatuses: {
+                    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+                    __typename: 'TRBTaskStatuses'
+                  }
+                }
+              }
+            }
+          }
+        ]}
+      >
+        <MemoryRouter initialEntries={[`/trb/advice-letter/${id}`]}>
+          <Route exact path="/trb/advice-letter/:id">
+            <PublicAdviceLetter />
+          </Route>
+        </MemoryRouter>
+      </MockedProvider>
+    );
+
+    await findByRole('heading', {
+      level: 4,
+      name: i18next.t<string>('technicalAssistance:adviceLetter.incomplete')
     });
   });
 

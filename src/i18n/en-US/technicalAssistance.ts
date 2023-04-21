@@ -61,7 +61,10 @@ const technicalAssistance = {
     showSummary: 'Show summary',
     hideSummary: 'Hide summary',
     haveQuestions: 'Have questions about this advice letter?',
-    haveQuestionsContact: 'Reach out to the TRB at <a>{{email}}</a>'
+    haveQuestionsContact: 'Reach out to the TRB at <a>{{email}}</a>',
+    incomplete: 'Advice letter incomplete',
+    incompleteCheckLater:
+      'The Technical Review Board is still compiling the advice letter for this project. Please check back later'
   },
   requiredFields:
     'Fields marked with an asterisk ( <red>*</red> ) are required.',

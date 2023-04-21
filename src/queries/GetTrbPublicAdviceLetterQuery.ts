@@ -23,6 +23,9 @@ export default gql`
       adviceLetter {
         ...TRBAdviceLetter
       }
+      taskStatuses {
+        adviceLetterStatus
+      }
     }
   }
 `;
