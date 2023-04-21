@@ -46,7 +46,7 @@ type NoteForm = {
 const Notes = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
-  const [mutate, mutationResult] = useMutation<
+  const [createNoteMutation, createMutationResult] = useMutation<
     CreateSystemIntakeNote,
     CreateSystemIntakeNoteVariables
   >(CreateSystemIntakeNoteQuery, {
@@ -67,7 +67,7 @@ const Notes = () => {
     variables: {
       id: systemId
     },
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   });
 
   const [
@@ -137,10 +137,11 @@ const Notes = () => {
       authorName: authState.name,
       content: values.note
     };
-    mutate({ variables: { input } }).then(response => {
+    createNoteMutation({ variables: { input } }).then(response => {
       if (!response.errors) {
         resetForm();
       }
+      refetchAdminNotesAndActions();
     });
   };
 
@@ -509,10 +510,10 @@ const Notes = () => {
           const { values, handleSubmit } = formikProps;
           return (
             <div className="tablet:grid-col-9 margin-bottom-7">
-              {mutationResult && mutationResult.error && (
+              {createMutationResult && createMutationResult.error && (
                 <ErrorAlert heading="Error">
                   <ErrorAlertMessage
-                    message={mutationResult.error.message}
+                    message={createMutationResult.error.message}
                     errorKey="note"
                   />
                 </ErrorAlert>
