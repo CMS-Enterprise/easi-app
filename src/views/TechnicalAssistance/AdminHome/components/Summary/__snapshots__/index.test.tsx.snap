@@ -172,7 +172,6 @@ exports[`TRB Admin Home summary renders TRB request details 1`] = `
             </p>
             <button
               class="usa-button usa-button--unstyled width-auto"
-              data-testid="button"
               type="button"
             >
               Assign

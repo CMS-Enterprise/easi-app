@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
+import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 
 import {
@@ -15,8 +16,9 @@ import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
-import mockUserAuth from 'utils/testing/easiMockStore';
+import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
@@ -43,8 +45,12 @@ const getTrbRequestDocumentsQuery: MockedQuery<
 };
 
 describe('Trb Admin Initial Request Form', () => {
-  it.only('renders', async () => {
-    const store = mockUserAuth();
+  it('renders', async () => {
+    const store = easiMockStore();
+
+    const modalRef = React.createRef<ModalRef>();
+    const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
+
     const { getByText, queryByText, queryAllByText, findByText } = render(
       <VerboseMockedProvider
         defaultOptions={{
@@ -68,6 +74,8 @@ describe('Trb Admin Initial Request Form', () => {
                 <InitialRequestForm
                   trbRequestId={mockTrbRequestId}
                   noteCount={0}
+                  assignLeadModalRef={modalRef}
+                  assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                 />
               </Route>
             </TRBRequestInfoWrapper>

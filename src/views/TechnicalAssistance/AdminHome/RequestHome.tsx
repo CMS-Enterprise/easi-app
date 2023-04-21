@@ -2,7 +2,6 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   Alert,
-  Button,
   CardGroup,
   Grid,
   IconArrowForward,
@@ -26,8 +25,13 @@ import { formatDateLocal } from 'utils/date';
 
 import InformationCard from './components/InformationCard';
 import NoteBox from './components/NoteBox';
+import { TrbAssignLeadModalOpener } from './TrbAssignLeadModal';
 
-const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
+const RequestHome = ({
+  trbRequestId,
+  assignLeadModalRef,
+  assignLeadModalTrbRequestIdRef
+}: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { data, loading } = useCacheQuery<
@@ -142,15 +146,14 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
               </Link>
             </>
           ) : (
-            <Button
+            <TrbAssignLeadModalOpener
+              trbRequestId={trbRequestId}
+              modalRef={assignLeadModalRef}
+              trbRequestIdRef={assignLeadModalTrbRequestIdRef}
               className="usa-button--outline"
-              type="button"
-              onClick={() => {
-                // TODO: Assign trb lead modal
-              }}
             >
               {t('adminHome.assignLead')}
-            </Button>
+            </TrbAssignLeadModalOpener>
           )}
 
           <Divider className="margin-top-6 margin-bottom-5" />

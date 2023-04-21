@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 
 import {
@@ -13,6 +14,7 @@ import {
   updateTrbRequestConsultMeetingQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
+import { TrbRequestIdRef } from 'types/technicalAssistance';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -25,6 +27,9 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   Element.prototype.scrollIntoView = jest.fn();
 
   const store = easiMockStore({ groups: ['EASI_TRB_ADMIN_D'] });
+
+  const modalRef = React.createRef<ModalRef>();
+  const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
   it('submits successfully ', async () => {
     const { getByText, getByLabelText, getByRole, findByRole } = render(
@@ -53,6 +58,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
                   <InitialRequestForm
                     trbRequestId={mockTrbRequestId}
                     noteCount={0}
+                    assignLeadModalRef={modalRef}
+                    assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                   />
                 </Route>
                 <Route exact path="/trb/:id/:activePage/:action">

@@ -2,13 +2,17 @@ package main
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -25,6 +29,7 @@ func (s *seederConfig) seedTRBRequests() error {
 		s.seedTRBCase6,
 		s.seedTRBCase7,
 		s.seedTRBCase8,
+		s.seedTRBCase9,
 	}
 
 	for _, seedFunc := range cases {
@@ -62,6 +67,10 @@ func (s *seederConfig) seedTRBCase3() error {
 	if err != nil {
 		return err
 	}
+	_, err = s.addTRBLead(trb, "TEST")
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -82,6 +91,11 @@ func (s *seederConfig) seedTRBCase4() error {
 		return err
 	}
 
+	_, err = s.addTRBLead(trb, "TEST")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -97,6 +111,11 @@ func (s *seederConfig) seedTRBCase5() error {
 	}
 
 	_, err = s.addTRBConsultMeeting(trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(trb, "TEST")
 	if err != nil {
 		return err
 	}
@@ -125,6 +144,11 @@ func (s *seederConfig) seedTRBCase6() error {
 		return err
 	}
 
+	_, err = s.addTRBLead(trb, "TEST")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -149,11 +173,45 @@ func (s *seederConfig) seedTRBCase7() error {
 		return err
 	}
 
+	_, err = s.addTRBLead(trb, "TEST")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (s *seederConfig) seedTRBCase8() error {
-	trb, err := s.seedTRBWithForm("Case 8 - Advice letter reviewed", true)
+	trb, err := s.seedTRBWithForm("Case 8 - Advice letter in review with document", true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBConsultMeeting(trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addAdviceLetter(trb, false)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(trb, "ABCD")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase9() error {
+	trb, err := s.seedTRBWithForm("Case 9 - Advice letter reviewed", true)
 	if err != nil {
 		return err
 	}
@@ -169,6 +227,11 @@ func (s *seederConfig) seedTRBCase8() error {
 	}
 
 	_, err = s.addAdviceLetter(trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(trb, "GRTB")
 	if err != nil {
 		return err
 	}
@@ -260,6 +323,23 @@ func (s *seederConfig) seedTRBWithForm(trbName string, isSubmitted bool) (*model
 	if err != nil {
 		return nil, err
 	}
+
+	scanStatus := "CLEAN"
+	_, err = s.addDocument(trb, &scanStatus)
+	if err != nil {
+		return nil, err
+	}
+
+	scanStatus = "INFECTED"
+	_, err = s.addDocument(trb, &scanStatus)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.addDocument(trb, nil)
+	if err != nil {
+		return nil, err
+	}
 	return resolvers.GetTRBRequestByID(s.ctx, trb.ID, s.store)
 }
 
@@ -346,6 +426,17 @@ func (s *seederConfig) addTRBConsultMeeting(trb *models.TRBRequest, dateIsPast b
 	return updatedTRB, nil
 }
 
+func (s *seederConfig) addTRBLead(trb *models.TRBRequest, leadEUA string) (*models.TRBRequest, error) {
+	return resolvers.UpdateTRBRequestTRBLead(
+		s.ctx,
+		s.store,
+		nil,
+		mock.FetchUserInfoMock,
+		trb.ID,
+		leadEUA,
+	)
+}
+
 func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*models.TRBAdviceLetter, error) {
 	_, err := resolvers.CreateTRBAdviceLetter(s.ctx, s.store, trb.ID)
 	if err != nil {
@@ -392,4 +483,45 @@ func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*m
 	}
 
 	return letter, nil
+}
+
+func (s *seederConfig) addDocument(trb *models.TRBRequest, scanStatus *string) (*models.TRBRequestDocument, error) {
+	path, err := filepath.Abs("cmd/devdata/data/sample.pdf")
+	if err != nil {
+		return nil, err
+	}
+	file, err := os.Open(path) // #nosec
+	if err != nil {
+		return nil, err
+	}
+	fileStats, err := file.Stat()
+	if err != nil {
+		return nil, err
+	}
+
+	otherDesc := "Some other type of doc"
+	input := model.CreateTRBRequestDocumentInput{
+		RequestID: trb.ID,
+		FileData: graphql.Upload{
+			File:        file,
+			Filename:    "sample.pdf",
+			Size:        fileStats.Size(),
+			ContentType: "application/pdf",
+		},
+		DocumentType:         models.TRBRequestDocumentCommonTypeOther,
+		OtherTypeDescription: &otherDesc,
+	}
+	document, err := resolvers.CreateTRBRequestDocument(s.ctx, s.store, s.s3Client, input)
+	if err != nil {
+		return nil, err
+	}
+
+	if scanStatus != nil {
+		err = s.s3Client.SetTagValueForKey(document.S3Key, "av-status", *scanStatus)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return document, nil
 }
