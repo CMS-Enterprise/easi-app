@@ -1,3 +1,4 @@
+import GetRequestsQuery from 'queries/GetRequestsQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
@@ -5,6 +6,12 @@ import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+import {
+  GetRequests,
+  GetRequests_myTrbRequests as MyTrbRequests,
+  GetRequests_requests as Requests,
+  GetRequestsVariables
+} from 'queries/types/GetRequests';
 import {
   GetTrbAdminNotes,
   GetTrbAdminNotesVariables
@@ -36,6 +43,7 @@ import {
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import {
   PersonRole,
+  RequestType,
   TRBAdminNoteCategory,
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
@@ -183,6 +191,99 @@ export const getTrbRequestSummaryQuery: MockedQuery<
     }
   }
 };
+
+const getRequestsData: {
+  edges: Requests['edges'];
+  myTrbRequests: MyTrbRequests[];
+} = {
+  edges: [
+    {
+      __typename: 'RequestEdge',
+      node: {
+        __typename: 'Request',
+        id: '123',
+        name: '508 Test 1',
+        submittedAt: '2021-05-25T19:22:40Z',
+        type: RequestType.ACCESSIBILITY_REQUEST,
+        status: 'OPEN',
+        statusCreatedAt: '2021-05-25T19:22:40Z',
+        lcid: null,
+        nextMeetingDate: null
+      }
+    },
+    {
+      __typename: 'RequestEdge',
+      node: {
+        __typename: 'Request',
+        id: '909',
+        name: '508 Test 2',
+        submittedAt: '2021-05-25T19:22:40Z',
+        type: RequestType.ACCESSIBILITY_REQUEST,
+        status: 'IN_REMEDIATION',
+        statusCreatedAt: '2021-05-26T19:22:40Z',
+        lcid: null,
+        nextMeetingDate: null
+      }
+    },
+    {
+      __typename: 'RequestEdge',
+      node: {
+        __typename: 'Request',
+        id: '456',
+        name: 'Intake 1',
+        submittedAt: '2021-05-22T19:22:40Z',
+        type: RequestType.GOVERNANCE_REQUEST,
+        status: 'INTAKE_DRAFT',
+        statusCreatedAt: null,
+        lcid: null,
+        nextMeetingDate: null
+      }
+    },
+    {
+      __typename: 'RequestEdge',
+      node: {
+        __typename: 'Request',
+        id: '789',
+        name: 'Intake 2',
+        submittedAt: '2021-05-20T19:22:40Z',
+        type: RequestType.GOVERNANCE_REQUEST,
+        status: 'LCID_ISSUED',
+        statusCreatedAt: null,
+        lcid: 'A123456',
+        nextMeetingDate: null
+      }
+    }
+  ],
+  myTrbRequests: [
+    {
+      id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
+      name: 'My excellent question',
+      nextMeetingDate: null,
+      status: TRBRequestStatus.CONSULT_COMPLETE,
+      submittedAt: '2023-03-07T15:09:17.694681Z',
+      __typename: 'TRBRequest'
+    }
+  ]
+};
+
+export const getRequestsQuery = (
+  edges: Requests['edges'] = getRequestsData.edges,
+  myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
+): MockedQuery<GetRequests, GetRequestsVariables> => ({
+  request: {
+    query: GetRequestsQuery,
+    variables: { first: 20 }
+  },
+  result: {
+    data: {
+      requests: {
+        __typename: 'RequestsConnection',
+        edges
+      },
+      myTrbRequests
+    }
+  }
+});
 
 export const getTRBRequestAttendeesQuery: MockedQuery<
   GetTRBRequestAttendees,
