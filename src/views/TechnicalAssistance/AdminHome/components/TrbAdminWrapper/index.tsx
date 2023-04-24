@@ -15,7 +15,7 @@ import NoteBox from '../NoteBox';
 
 import useTrbAdminActionButtons from './useTrbAdminActionButtons';
 
-type ActionText = {
+export type ActionText = {
   title: string;
   description?: string;
   list?: {
