@@ -112,6 +112,26 @@ const governanceReviewTeam = {
     }
   },
   notes: {
+    edit: 'Edit this note',
+    editModal: {
+      header: 'Edit note',
+      description:
+        'Editing your admin note will replace the current note. If you have new information to add, please consider adding a new note. Also, editing this note will not update the original timestamp. Please add a new note if you wish to update the timestamp.',
+      contentLabel: 'Note content',
+      saveEdits: 'Save edits',
+      cancel: 'Cancel',
+      error:
+        'There was a problem saving your edits. Please try again. If the error persists, please try again at a later date.'
+    },
+    remove: 'Remove this note',
+    removeModal: {
+      header: 'Are you sure you want to remove this admin note?',
+      description: 'This action cannot be undone',
+      removeNote: 'Remove note',
+      cancel: 'Cancel',
+      error:
+        'There was a problem removing your note. Please try again. If the error persists, please try again at a later date.'
+    },
     heading: 'Admin team notes',
     addNote: 'Add a note',
     addNoteCta: 'Add note',

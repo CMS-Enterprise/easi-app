@@ -130,6 +130,49 @@ describe('Governance Review Team', () => {
     });
   });
 
+  it('can edit a note', () => {
+    // Selecting name based on pre-seeded data
+    // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
+    cy.get(
+      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
+    ).click();
+
+    cy.get('[data-testid="user-note"]').then(() => {
+      cy.get('#GovernanceReviewTeam-EditNoteButton').click();
+
+      const noteFixture = 'Test note';
+      cy.get('#GovernanceReviewTeam-EditNote').contains(noteFixture);
+
+      cy.get('#GovernanceReviewTeam-EditNote')
+        .type(' edited', { force: true })
+        .should('have.value', 'Test note edited');
+
+      cy.get('#GovernanceReviewTeam-SaveEditsButton').click({ force: true });
+
+      cy.get('[data-testid="user-note"]').first().contains('Test note edited');
+    });
+  });
+
+  it('can remove/archive a note', () => {
+    // Selecting name based on pre-seeded data
+    // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
+    cy.get(
+      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/notes"]'
+    ).click();
+
+    cy.get('[data-testid="user-note"]').then(notes => {
+      const numOfNotes = notes.length;
+
+      cy.get('#GovernanceReviewTeam-RemoveNoteButton').click();
+
+      cy.get('#GovernanceReviewTeam-SaveArchiveButton').click({ force: true });
+
+      cy.get('[data-testid="user-note"]').should('have.length', numOfNotes - 1);
+    });
+  });
+
   it('can issue a Lifecycle ID', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
