@@ -55,7 +55,7 @@ exports[`admin action component Matches the snapshot 1`] = `
           data-testid="button"
           type="button"
         >
-          adminAction.buttons.requestEdits
+          Request edits
         </button>
       </li>
       <li
@@ -66,7 +66,7 @@ exports[`admin action component Matches the snapshot 1`] = `
           data-testid="button"
           type="button"
         >
-          adminAction.buttons.readyForConsult
+          Ready for consult
         </button>
       </li>
       <li
@@ -77,7 +77,7 @@ exports[`admin action component Matches the snapshot 1`] = `
           data-testid="button"
           type="button"
         >
-          adminAction.buttons.orCloseRequest
+          or, close this request
         </button>
       </li>
     </ul>

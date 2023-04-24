@@ -328,9 +328,9 @@ exports[`TRB admin home matches the snapshot 1`] = `
           data-testid="grid"
         >
           <div
-            class="trb-admin-home__request-home"
-            data-testid="trb-admin-home__request-home"
-            id="trbAdminRequestHome-a4093ec7-caec-4e73-be3d-a8d6262bc61b"
+            class="trbAdmin__request margin-bottom-2"
+            data-testid="trb-admin-home__request"
+            id="trbAdmin__request"
           >
             <div
               class="grid-row grid-gap-lg"
@@ -341,7 +341,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 data-testid="grid"
               >
                 <h1
-                  class="margin-top-0 margin-bottom-4"
+                  class="margin-top-0 margin-bottom-1"
                 >
                   Request home
                 </h1>
@@ -361,9 +361,9 @@ exports[`TRB admin home matches the snapshot 1`] = `
                     <span
                       class="text-bold"
                     >
-                      0
+                      1
                     </span>
-                     notes about this request
+                     note about this request
                   </p>
                   <div
                     class="margin-top-05 display-flex"
@@ -395,6 +395,21 @@ exports[`TRB admin home matches the snapshot 1`] = `
                   </div>
                 </div>
               </div>
+            </div>
+            <div
+              class="usa-summary-box margin-top-0"
+            >
+              <h5
+                class="text-base-dark text-uppercase margin-top-0 margin-bottom-05 line-height-body-1 text-normal text-body-xs"
+              >
+                Admin Action
+              </h5>
+              <h3
+                class="margin-y-0"
+              />
+              <ul
+                class="usa-button-group margin-top-3"
+              />
             </div>
             <h2
               class="margin-top-4 margin-bottom-3"
@@ -483,6 +498,9 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 />
               </svg>
             </a>
+            <div
+              class="easi-divider margin-top-6 margin-bottom-5"
+            />
           </div>
         </div>
       </div>

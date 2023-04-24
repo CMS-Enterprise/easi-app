@@ -143,7 +143,7 @@ export default function TrbAdminWrapper({
         'margin-bottom-2': !!adminActionProps && !disableStep
       })}
       id={`trbAdmin__${activePage}`}
-      data-testid={`trbAdmin__${activePage}`}
+      data-testid={`trb-admin-home__${activePage}`}
     >
       <Grid row gap="lg">
         <Grid tablet={{ col: 8 }}>
