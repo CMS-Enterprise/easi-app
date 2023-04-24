@@ -81,11 +81,11 @@ describe('Trb Admin Request Home', () => {
       </MockedProvider>
     );
 
+    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
+
     expect(
       getByText(i18next.t<string>('technicalAssistance:adminHome.requestHome'))
     ).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
 
     // Consult meeting time
     expect(
