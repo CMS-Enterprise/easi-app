@@ -89,7 +89,7 @@ const adminNotes: GetTrbAdminNotes['trbRequest']['adminNotes'] = [
     id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
     isArchived: false,
     category: TRBAdminNoteCategory.GENERAL_REQUEST,
-    noteText: 'Test Note Text',
+    noteText: 'My cute note',
     author: {
       __typename: 'UserInfo',
       commonName: requester.userInfo.commonName
