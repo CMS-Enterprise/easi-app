@@ -25,7 +25,6 @@ type readyForConsultEmailParameters struct {
 func (c Client) trbReadyForConsultEmailBody(requestID uuid.UUID, requestName string, requesterName string, feedback string) (string, error) {
 	requestTaskListPath := path.Join("trb", "task-list", requestID.String())
 
-	// TODO - EASI-2488 - put correct path here
 	requestAdminViewPath := path.Join("trb", requestID.String(), "request")
 
 	data := readyForConsultEmailParameters{

@@ -23,11 +23,11 @@ func (s *EmailTestSuite) TestSendTRBFormSubmissionTemplateToAdmins() {
 		requesterName := "Test Requester"
 		component := "TestComponent"
 
-		// TODO - EASI-2488 - put correct path here
 		adminViewOpeningTag := fmt.Sprintf(
-			"<a href=\"%s://%s/TODO/admin-view\" style=\"font-weight: bold\">",
+			"<a href=\"%s://%s/trb/%s/request\" style=\"font-weight: bold\">",
 			s.config.URLScheme,
 			s.config.URLHost,
+			requestID,
 		)
 
 		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +

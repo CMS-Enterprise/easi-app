@@ -21,7 +21,6 @@ type adminEmailParameters struct {
 }
 
 func (c Client) trbRequestFormSubmissionAdminEmailBody(requestID uuid.UUID, requestName string, requesterName string, component string) (string, error) {
-	// TODO - EASI-2488 - put correct path here
 	requestAdminViewPath := path.Join("trb", requestID.String(), "request")
 
 	data := adminEmailParameters{
