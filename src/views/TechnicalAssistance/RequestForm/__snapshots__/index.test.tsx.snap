@@ -810,20 +810,12 @@ exports[`TRB Request Form Feedback shows the View feedback warning banner in the
             </label>
             <textarea
               aria-describedby="needsAssistanceWith-info needsAssistanceWith-hint"
-              class="usa-textarea usa-character-count__field"
-              data-testid="textarea"
+              class="usa-textarea"
               id="needsAssistanceWith"
               name="needsAssistanceWith"
-              rows="2"
-            />
-            <span
-              aria-live="polite"
-              class="usa-hint usa-character-count__message"
-              data-testid="characterCountMessage"
-              id="needsAssistanceWith-info"
             >
-              2000 characters allowed
-            </span>
+              x
+            </textarea>
           </div>
           <div
             class="usa-form-group"
