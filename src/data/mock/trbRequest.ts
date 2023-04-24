@@ -126,6 +126,7 @@ export const trbRequest: GetTrbRequest['trbRequest'] = {
     hasExpectedStartEndDates: false,
     expectedStartDate: null,
     expectedEndDate: null,
+    systemIntakes: [],
     collabGroups: [TRBCollabGroupOption.ENTERPRISE_ARCHITECTURE],
     collabDateSecurity: null,
     collabDateEnterpriseArchitecture: 'x',

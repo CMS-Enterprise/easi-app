@@ -11,6 +11,13 @@ cy.trbRequest = {
         'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM'
       );
       cy.get('#hasExpectedStartEndDates-no').check({ force: true });
+      cy.get('#systemIntakes').within(() => {
+        cy.get("input[type='text']").click({ force: true });
+      });
+      cy.get('#react-select-2-option-0')
+        .check({ force: true })
+        .should('be.checked');
+      cy.clickOutside();
       cy.get('#collabGroups-Security').check({ force: true });
       cy.get('[name=collabDateSecurity]').type('October/November 2022');
     }

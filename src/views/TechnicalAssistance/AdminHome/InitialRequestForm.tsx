@@ -83,17 +83,19 @@ const InitialRequestForm = ({
         />
       </Grid>
 
-      {loading && <PageLoading />}
-      {error && <NotFoundPartial />}
-      {request && (
-        <>
-          <SubmittedRequest
-            request={request}
-            showSectionHeadingDescription
-            canRemoveDocument={false}
-          />
-        </>
-      )}
+      <Grid desktop={{ col: 12 }}>
+        {loading && <PageLoading />}
+        {error && <NotFoundPartial />}
+        {request && (
+          <>
+            <SubmittedRequest
+              request={request}
+              showSectionHeadingDescription
+              canRemoveDocument={false}
+            />
+          </>
+        )}
+      </Grid>
     </Grid>
   );
 };

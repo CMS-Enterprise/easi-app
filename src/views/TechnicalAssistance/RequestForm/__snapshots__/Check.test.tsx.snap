@@ -136,7 +136,23 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
           Which existing funding sources will fund this project?
         </dt>
       </div>
-      0
+      <div
+        class="grid-row tablet:grid-col-12 margin-bottom-4"
+        data-testid="grid"
+      >
+        No answer selected
+      </div>
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <dt>
+          List any Life Cycle IDs (LCIDs) pertaining to this request.
+        </dt>
+        <dd>
+          No answer selected
+        </dd>
+      </div>
       <div
         class="desktop:grid-col-12"
         data-testid="grid"

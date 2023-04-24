@@ -43,6 +43,12 @@ export default gql`
         source
       }
 
+      systemIntakes {
+        id
+        requestName
+        lcid
+      }
+
       submittedAt
     }
 
