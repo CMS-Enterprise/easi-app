@@ -884,6 +884,10 @@ type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
   content: String!
   createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
+  isArchived: Boolean!
+  editor: UserInfo
   id: UUID!
 }
 
@@ -1257,6 +1261,13 @@ input CreateSystemIntakeNoteInput {
   intakeId: UUID!
 }
 
+"""Input data for updating an IT governance admin note"""
+input UpdateSystemIntakeNoteInput {
+  content: String!
+  isArchived: Boolean!
+  id: UUID!
+}
+
 """The payload for updating a system's IT governance request"""
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
@@ -1628,6 +1639,7 @@ type TRBRequestForm {
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
   fundingSources: [TRBFundingSource!]
+  systemIntakes: [SystemIntake!]!
   subjectAreaOptions: [TRBSubjectAreaOption!]
   subjectAreaOptionOther: String
   submittedAt: Time
@@ -1659,6 +1671,7 @@ input UpdateTRBRequestFormInput {
   collabDateOther: String
   collabGroupOther: String
   collabGRBConsultRequested: Boolean
+  systemIntakes: [UUID!]
   subjectAreaOptions: [TRBSubjectAreaOption!]
   subjectAreaOptionOther: String
 }
@@ -1875,6 +1888,7 @@ type Mutation {
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload
   createSystemIntakeActionExtendLifecycleId(input: CreateSystemIntakeActionExtendLifecycleIdInput!): CreateSystemIntakeActionExtendLifecycleIdPayload
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
+  updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
@@ -1925,6 +1939,8 @@ type Mutation {
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
+  createTrbLeadOption(eua: String!): UserInfo!
+  deleteTrbLeadOption(eua: String!): Boolean!
 }
 
 """Query definition for the schema"""
@@ -1934,6 +1950,7 @@ type Query {
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
+  systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
@@ -1951,6 +1968,8 @@ type Query {
   relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
+  myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
+  trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
 }
 
