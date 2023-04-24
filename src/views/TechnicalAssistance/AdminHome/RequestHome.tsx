@@ -154,7 +154,7 @@ const RequestHome = ({
       {data?.trbRequest && (
         <CardGroup className="tablet:grid-col-10">
           <InformationCard
-            type="inititalRequestForm"
+            type="initialRequestForm"
             trbRequest={data?.trbRequest}
           />
 

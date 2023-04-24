@@ -21,7 +21,7 @@ import './index.scss';
 
 type InformationCardProps = {
   trbRequest: GetTrbRequestHomeType;
-  type: 'inititalRequestForm' | 'adviceLetter';
+  type: 'initialRequestForm' | 'adviceLetter';
 };
 
 interface CardDetailsType {
@@ -54,7 +54,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
   };
 
   switch (type) {
-    case 'inititalRequestForm':
+    case 'initialRequestForm':
       cardDetails = {
         header: t('adminHome.initialRequest'),
         description: t('adminHome.completedBy'),
