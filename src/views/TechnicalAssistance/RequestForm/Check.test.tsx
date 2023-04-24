@@ -54,6 +54,7 @@ const mockTrbRequestData: TrbRequest = {
     hasExpectedStartEndDates: true,
     expectedStartDate: '2023-01-05T05:00:00Z',
     expectedEndDate: null,
+    systemIntakes: [],
     collabGroups: [TRBCollabGroupOption.SECURITY, TRBCollabGroupOption.OTHER],
     collabDateSecurity: '06/01/2023',
     collabDateEnterpriseArchitecture: null,
