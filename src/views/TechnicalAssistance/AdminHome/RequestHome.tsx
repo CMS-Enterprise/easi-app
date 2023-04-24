@@ -65,131 +65,134 @@ const RequestHome = ({
         assignLeadModalRef
       }}
     >
-      {/* Consult details */}
-      <h2 className="margin-top-4 margin-bottom-3">
-        {t('adminHome.consultDetails')}
-      </h2>
+      {data?.trbRequest && (
+        /* Consult details */
+        <>
+          <h2 className="margin-top-4 margin-bottom-3">
+            {t('adminHome.consultDetails')}
+          </h2>
 
-      <p className="text-bold margin-bottom-1">{t('adminHome.dateTime')}</p>
+          <p className="text-bold margin-bottom-1">{t('adminHome.dateTime')}</p>
 
-      {taskStatuses?.formStatus !== TRBFormStatus.COMPLETED ? (
-        // Unable to set consult until initial request form complete
-        <Alert type="info" slim className="margin-y-1 margin-top-2">
-          {t('adminHome.reviewInitialRequest')}
-        </Alert>
-      ) : (
-        <div>
-          {!consultMeetingTime ? (
-            // Set meeting time
-            <UswdsReactLink
-              className="usa-button usa-button--outline margin-top-1"
-              variant="unstyled"
-              to="request/schedule-consult"
-            >
-              {t('adminHome.addDateTime')}
-            </UswdsReactLink>
+          {taskStatuses?.formStatus !== TRBFormStatus.COMPLETED ? (
+            // Unable to set consult until initial request form complete
+            <Alert type="info" slim className="margin-y-1 margin-top-2">
+              {t('adminHome.reviewInitialRequest')}
+            </Alert>
           ) : (
-            // Display meeting time
-            <div className="display-flex flex-align-center">
-              <p className="margin-right-2 margin-y-0">
-                {t('adminHome.consultDate', {
-                  date: formatDateLocal(consultMeetingTime, 'MM/dd/yyyy'),
-                  time: DateTime.fromISO(consultMeetingTime).toLocaleString(
-                    DateTime.TIME_SIMPLE
-                  )
-                })}
-              </p>
-              <UswdsReactLink to="request/schedule-consult">
-                {t('adminHome.change')}
-              </UswdsReactLink>
+            <div>
+              {!consultMeetingTime ? (
+                // Set meeting time
+                <UswdsReactLink
+                  className="usa-button usa-button--outline margin-top-1"
+                  variant="unstyled"
+                  to="request/schedule-consult"
+                >
+                  {t('adminHome.addDateTime')}
+                </UswdsReactLink>
+              ) : (
+                // Display meeting time
+                <div className="display-flex flex-align-center">
+                  <p className="margin-right-2 margin-y-0">
+                    {t('adminHome.consultDate', {
+                      date: formatDateLocal(consultMeetingTime, 'MM/dd/yyyy'),
+                      time: DateTime.fromISO(consultMeetingTime).toLocaleString(
+                        DateTime.TIME_SIMPLE
+                      )
+                    })}
+                  </p>
+                  <UswdsReactLink to="request/schedule-consult">
+                    {t('adminHome.change')}
+                  </UswdsReactLink>
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
 
-      {/* TRB lead details */}
-      <h3 className="margin-top-4 margin-bottom-3">
-        {t('adminHome.representative')}
-      </h3>
+          {/* TRB lead details */}
+          <h3 className="margin-top-4 margin-bottom-3">
+            {t('adminHome.representative')}
+          </h3>
 
-      <p className="text-bold">{t('adminHome.trbLead')}</p>
+          <p className="text-bold">{t('adminHome.trbLead')}</p>
 
-      {trbLeadInfo?.commonName ? (
-        <>
-          <div className="display-flex flex-align-center">
-            <InitialsIcon
-              name={trbLeadInfo.commonName}
-              index={0}
-              className="margin-right-1"
+          {trbLeadInfo?.commonName ? (
+            <>
+              <div className="display-flex flex-align-center">
+                <InitialsIcon
+                  name={trbLeadInfo.commonName}
+                  index={0}
+                  className="margin-right-1"
+                />
+                <p className="text-bold margin-0">
+                  {trbLeadInfo.commonName}, {trbLeadComponent}
+                </p>
+              </div>
+              <Link
+                aria-label={t('adminHome.sendEmail')}
+                className="line-height-body-5 margin-left-5"
+                href={trbLeadInfo.email}
+                target="_blank"
+              >
+                {trbLeadInfo.email}
+              </Link>
+            </>
+          ) : (
+            <TrbAssignLeadModalOpener
+              trbRequestId={trbRequest.id}
+              modalRef={assignLeadModalRef}
+              trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+              className="usa-button--outline"
+            >
+              {t('adminHome.assignLead')}
+            </TrbAssignLeadModalOpener>
+          )}
+
+          <Divider className="margin-top-6 margin-bottom-5" />
+
+          {/* Forms and Documents */}
+          <h2 className="margin-y-3">{t('adminHome.formAndDocs')}</h2>
+
+          <CardGroup className="tablet:grid-col-10">
+            <InformationCard
+              type="initialRequestForm"
+              trbRequest={data?.trbRequest}
             />
-            <p className="text-bold margin-0">
-              {trbLeadInfo.commonName}, {trbLeadComponent}
-            </p>
+
+            <InformationCard
+              type="adviceLetter"
+              trbRequest={data?.trbRequest}
+            />
+          </CardGroup>
+
+          <p className="text-bold margin-bottom-105">
+            {t('adminHome.supportingDocs')}
+          </p>
+
+          {/* Documents count */}
+          <div data-testid="document-count">
+            <Trans
+              i18nKey={
+                documents?.length === 1
+                  ? 'technicalAssistance:adminHome.docInfo'
+                  : 'technicalAssistance:adminHome.docInfoPlural'
+              }
+              components={{
+                bold: <span className="text-bold" />,
+                docCount: documents?.length || 0
+              }}
+            />
           </div>
-          <Link
-            aria-label={t('adminHome.sendEmail')}
-            className="line-height-body-5 margin-left-5"
-            href={trbLeadInfo.email}
-            target="_blank"
+
+          <UswdsReactLink
+            to="documents"
+            className="display-flex flex-align-center margin-top-2"
           >
-            {trbLeadInfo.email}
-          </Link>
+            {t('adminHome.viewDocs')}
+            <IconArrowForward className="margin-left-1" />
+          </UswdsReactLink>
         </>
-      ) : (
-        <TrbAssignLeadModalOpener
-          trbRequestId={trbRequest.id}
-          modalRef={assignLeadModalRef}
-          trbRequestIdRef={assignLeadModalTrbRequestIdRef}
-          className="usa-button--outline"
-        >
-          {t('adminHome.assignLead')}
-        </TrbAssignLeadModalOpener>
       )}
-
-      <Divider className="margin-top-6 margin-bottom-5" />
-
-      {/* Forms and Documents */}
-      <h2 className="margin-y-3">{t('adminHome.formAndDocs')}</h2>
-
-      {data?.trbRequest && (
-        <CardGroup className="tablet:grid-col-10">
-          <InformationCard
-            type="initialRequestForm"
-            trbRequest={data?.trbRequest}
-          />
-
-          <InformationCard type="adviceLetter" trbRequest={data?.trbRequest} />
-        </CardGroup>
-      )}
-
-      <p className="text-bold margin-bottom-105">
-        {t('adminHome.supportingDocs')}
-      </p>
-
-      {/* Documents count */}
-      <div data-testid="document-count">
-        <Trans
-          i18nKey={
-            documents?.length === 1
-              ? 'technicalAssistance:adminHome.docInfo'
-              : 'technicalAssistance:adminHome.docInfoPlural'
-          }
-          components={{
-            bold: <span className="text-bold" />,
-            docCount: documents?.length || 0
-          }}
-        />
-      </div>
-
-      <UswdsReactLink
-        to="documents"
-        className="display-flex flex-align-center margin-top-2"
-      >
-        {t('adminHome.viewDocs')}
-        <IconArrowForward className="margin-left-1" />
-      </UswdsReactLink>
-
-      <Divider className="margin-top-6 margin-bottom-5" />
     </TrbAdminWrapper>
   );
 };
