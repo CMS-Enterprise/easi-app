@@ -5,34 +5,42 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import GetRequestsQuery from 'queries/GetRequestsQuery';
-import { GetRequests as GetRequestsQueryType } from 'queries/types/GetRequests';
+import {
+  GetRequests as GetRequestsQueryType,
+  GetRequests_myTrbRequests as MyTrbRequests,
+  GetRequests_requests as Requests,
+  GetRequestsVariables
+} from 'queries/types/GetRequests';
 import { RequestType, TRBRequestStatus } from 'types/graphql-global-types';
+import { MockedQuery } from 'types/util';
 
 import Table from '.';
+
+const getRequestsQuery = (
+  edges: Requests['edges'] = [],
+  myTrbRequests: MyTrbRequests[] = []
+): MockedQuery<GetRequestsQueryType, GetRequestsVariables> => ({
+  request: {
+    query: GetRequestsQuery,
+    variables: { first: 20 }
+  },
+  result: {
+    data: {
+      requests: {
+        __typename: 'RequestsConnection',
+        edges
+      },
+      myTrbRequests
+    }
+  }
+});
 
 describe('My Requests Table', () => {
   describe('when there are no requests', () => {
     it('displays an empty message', async () => {
-      const mocks = [
-        {
-          request: {
-            query: GetRequestsQuery,
-            variables: { first: 20 }
-          },
-          result: {
-            data: {
-              requests: {
-                edges: []
-              },
-              trbRequests: []
-            }
-          }
-        }
-      ];
-
       render(
         <MemoryRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={[getRequestsQuery()]}>
             <Table />
           </MockedProvider>
         </MemoryRouter>
@@ -47,10 +55,9 @@ describe('My Requests Table', () => {
   });
 
   describe('when there are requests', () => {
-    const mockRequestData: GetRequestsQueryType = {
-      requests: {
-        __typename: 'RequestsConnection',
-        edges: [
+    const mocks = [
+      getRequestsQuery(
+        [
           {
             __typename: 'RequestEdge',
             node: {
@@ -107,35 +114,24 @@ describe('My Requests Table', () => {
               nextMeetingDate: null
             }
           }
+        ],
+        [
+          {
+            id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
+            name: 'My excellent question',
+            nextMeetingDate: null,
+            status: TRBRequestStatus.CONSULT_COMPLETE,
+            submittedAt: '2023-03-07T15:09:17.694681Z',
+            __typename: 'TRBRequest'
+          }
         ]
-      },
-      myTrbRequests: [
-        {
-          id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
-          name: 'My excellent question',
-          nextMeetingDate: null,
-          status: TRBRequestStatus.CONSULT_COMPLETE,
-          submittedAt: '2023-03-07T15:09:17.694681Z',
-          __typename: 'TRBRequest'
-        }
-      ]
-    };
-    const mocks = [
-      {
-        request: {
-          query: GetRequestsQuery,
-          variables: { first: 20 }
-        },
-        result: {
-          data: mockRequestData
-        }
-      }
+      )
     ];
 
     it('displays a table', async () => {
       render(
         <MemoryRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks}>
             <Table />
           </MockedProvider>
         </MemoryRouter>
@@ -151,7 +147,7 @@ describe('My Requests Table', () => {
     it('displays an IT Goverance request only table with hidden columns', async () => {
       render(
         <MemoryRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks}>
             <Table
               type={RequestType.GOVERNANCE_REQUEST}
               hiddenColumns={['Governance', 'Upcoming meeting date']}
@@ -168,7 +164,7 @@ describe('My Requests Table', () => {
     it('displays a 508 request only table with hidden columns', async () => {
       render(
         <MemoryRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks}>
             <Table
               type={RequestType.ACCESSIBILITY_REQUEST}
               hiddenColumns={['Governance', 'Upcoming meeting date']}
@@ -183,7 +179,7 @@ describe('My Requests Table', () => {
     it('displays relevant results from filter', async () => {
       render(
         <MemoryRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks}>
             <Table />
           </MockedProvider>
         </MemoryRouter>
@@ -204,7 +200,7 @@ describe('My Requests Table', () => {
     it('matches snapshot', async () => {
       const { asFragment } = render(
         <MemoryRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks}>
             <Table />
           </MockedProvider>
         </MemoryRouter>
