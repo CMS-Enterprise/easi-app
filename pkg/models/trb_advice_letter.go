@@ -20,7 +20,7 @@ const (
 
 // TRBAdviceLetter represents the data for a TRB advice letter
 type TRBAdviceLetter struct {
-	baseStruct
+	BaseStruct
 	TRBRequestID          uuid.UUID             `json:"trbRequestId" db:"trb_request_id"`
 	Status                TRBAdviceLetterStatus `json:"status" db:"status"`
 	MeetingSummary        *string               `json:"meetingSummary" db:"meeting_summary"`
