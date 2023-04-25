@@ -35,10 +35,12 @@ const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
   return (
     <div id="trbAdviceInternalReview">
       {/* Internal Review */}
-      <ReviewAdviceLetter adviceLetter={adviceLetter} />
+      <ReviewAdviceLetter
+        adviceLetter={adviceLetter}
+        className="margin-top-5 margin-bottom-4"
+      />
       {/** Form pager buttons */}
       <Pager
-        className="margin-top-4"
         back={{
           outline: true,
           onClick: () => history.push(`/trb/${trbRequestId}/advice/next-steps`)

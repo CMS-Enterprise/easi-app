@@ -8,24 +8,28 @@ import { formatDateLocal } from 'utils/date';
 
 import RecommendationsList from './RecommendationsList';
 
+type ReviewAdviceLetterProps = {
+  adviceLetter: AdviceLetter;
+  showDateSent?: boolean;
+  showSectionBorders?: boolean;
+  className?: string;
+};
+
 /**
  * Displays advice letter for review
  */
 const ReviewAdviceLetter = ({
   adviceLetter,
   showDateSent = true,
-  showSectionBorders = true
-}: {
-  adviceLetter: AdviceLetter;
-  showDateSent?: boolean;
-  showSectionBorders?: boolean;
-}) => {
+  showSectionBorders = true,
+  className
+}: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { recommendations } = adviceLetter;
 
   return (
-    <div>
+    <div className={className}>
       {/* Date sent */}
       {showDateSent && (
         <>
