@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -24,14 +24,20 @@ import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivi
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import Spinner from 'components/Spinner';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
+import useCacheQuery from 'hooks/useCacheQuery';
 import DeleteTRBRequestFundingSource from 'queries/DeleteTRBRequestFundingSource';
+import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import {
   DeleteTRBRequestFundingSource as DeleteTRBRequestFundingSourceType,
   DeleteTRBRequestFundingSourceVariables
 } from 'queries/types/DeleteTRBRequestFundingSource';
+import { GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType } from 'queries/types/GetSystemIntakesWithLCIDS';
 import { GetTrbRequest_trbRequest_form_fundingSources as GetTrbRequestFundingSourcesType } from 'queries/types/GetTrbRequest';
+import { TrbRequestFormFields_form_systemIntakes as TrbRequestFormFieldsSystemIntakeType } from 'queries/types/TrbRequestFormFields';
 import {
   UpdateTrbRequestAndForm,
   UpdateTrbRequestAndFormVariables
@@ -69,6 +75,7 @@ export const basicBlankValues = {
   hasExpectedStartEndDates: null,
   expectedStartDate: '',
   expectedEndDate: '',
+  systemIntakes: [],
   collabGroups: [],
   collabDateSecurity: '',
   collabDateEnterpriseArchitecture: '',
@@ -91,6 +98,23 @@ function Basic({
 }: FormStepComponentProps) {
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
+
+  const {
+    data,
+    loading: intakesLoading
+  } = useCacheQuery<GetSystemIntakesWithLCIDSType>(GetSystemIntakesWithLCIDS);
+
+  const systemIntakesWithLCIDs = useMemo(() => {
+    const systemIntakes = data?.systemIntakesWithLcids
+      ? [...data?.systemIntakesWithLcids]
+      : [];
+    return systemIntakes
+      .sort((a, b) => Number(a.lcid) - Number(b.lcid))
+      .map(intake => ({
+        value: intake.id,
+        label: `${intake.lcid} - ${intake.requestName}` || ''
+      }));
+  }, [data?.systemIntakesWithLcids]);
 
   const [updateForm] = useMutation<
     UpdateTrbRequestAndForm,
@@ -117,7 +141,9 @@ function Basic({
     resolver: yupResolver(basicSchema),
     defaultValues: {
       name: request.name,
-      ...initialValues
+      ...initialValues,
+      // Mapping over intakes as mutation input only takes UUID
+      systemIntakes: request.form.systemIntakes.map(intake => intake.id)
     }
   });
 
@@ -702,6 +728,49 @@ function Basic({
               </FormGroup>
             )}
           />
+
+          <div className="display-flex flex-align-center">
+            <Controller
+              name="systemIntakes"
+              control={control}
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <FormGroup error={!!error || 'systemIntakes' in errors}>
+                    <Label
+                      htmlFor="systemIntakes"
+                      hint={<div>{t(`basic.hint.relatedLCIDS`)}</div>}
+                      error={!!error}
+                    >
+                      {t(`basic.labels.relatedLCIDS`)}
+                    </Label>
+                    {error && (
+                      <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
+                    )}
+                    <MultiSelect
+                      inputId="systemIntakes"
+                      name="systemIntakes"
+                      options={systemIntakesWithLCIDs}
+                      initialValues={initialValues.systemIntakes.map(
+                        (intake: TrbRequestFormFieldsSystemIntakeType) =>
+                          intake.id
+                      )}
+                      onChange={values => {
+                        field.onChange(values);
+                      }}
+                      selectedLabel={t('basic.labels.selectedLCIDs')}
+                    />
+                  </FormGroup>
+                );
+              }}
+            />
+
+            {intakesLoading && (
+              <Spinner
+                className="margin-left-2 intake-spinner"
+                data-testid="spinner"
+              />
+            )}
+          </div>
 
           {/* Select any other OIT groups that you have met with or collaborated with. */}
           <Controller
