@@ -22,7 +22,6 @@ const InternalReview = ({
   adviceLetter,
   adviceLetterStatus,
   setFormAlert,
-  setStepSubmit,
   setIsStepSubmitting
 }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');

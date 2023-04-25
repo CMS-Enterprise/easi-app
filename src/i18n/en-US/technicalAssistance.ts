@@ -134,7 +134,8 @@ const technicalAssistance = {
       heading: 'Internal TRB review needed',
       text:
         'You cannot send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
-    }
+    },
+    notesCount: '<bold>{{count}}</bold> note{{plural}} about this advice letter'
   },
   emailRecipientFields: {
     label: 'Choose recipients <red>*</red>',
