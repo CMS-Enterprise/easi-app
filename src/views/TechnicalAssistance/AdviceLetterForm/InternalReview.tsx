@@ -38,6 +38,7 @@ const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
       <ReviewAdviceLetter
         adviceLetter={adviceLetter}
         className="margin-top-5 margin-bottom-4"
+        showEditLinks
       />
       {/** Form pager buttons */}
       <Pager
