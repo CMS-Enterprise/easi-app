@@ -115,3 +115,11 @@ export const DeleteTrbRecommendationQuery = gql`
     }
   }
 `;
+
+export const RequestReviewForTRBAdviceLetterQuery = gql`
+  mutation RequestReviewForTRBAdviceLetter($id: UUID!) {
+    requestReviewForTRBAdviceLetter(id: $id) {
+      id
+    }
+  }
+`;
