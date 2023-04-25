@@ -1,44 +1,45 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { Alert } from '@trussworks/react-uswds';
 
-import PageLoading from 'components/PageLoading';
 import Divider from 'components/shared/Divider';
-import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { RequestReviewForTRBAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {} from 'queries/types/GetTrbAdviceLetter';
 import {
-  GetTrbAdviceLetter,
-  GetTrbAdviceLetterVariables
-} from 'queries/types/GetTrbAdviceLetter';
+  RequestReviewForTRBAdviceLetter,
+  RequestReviewForTRBAdviceLetterVariables
+} from 'queries/types/RequestReviewForTRBAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
-import { NotFoundPartial } from 'views/NotFound';
+import { StepComponentProps } from 'types/technicalAssistance';
 
 import ReviewAdviceLetter from '../AdminHome/components/ReviewAdviceLetter';
 import Pager from '../RequestForm/Pager';
 
-const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
+const InternalReview = ({
+  trbRequestId,
+  adviceLetter,
+  adviceLetterStatus,
+  setFormAlert,
+  setStepSubmit,
+  setIsStepSubmitting
+}: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  const { data, loading } = useQuery<
-    GetTrbAdviceLetter,
-    GetTrbAdviceLetterVariables
-  >(GetTrbAdviceLetterQuery, {
+  const [requestReview, { loading: isSubmitting }] = useMutation<
+    RequestReviewForTRBAdviceLetter,
+    RequestReviewForTRBAdviceLetterVariables
+  >(RequestReviewForTRBAdviceLetterQuery, {
     variables: {
       id: trbRequestId
     }
   });
 
-  const trbRequest = data?.trbRequest;
-
-  if (loading) return <PageLoading />;
-  if (!trbRequest?.adviceLetter) return <NotFoundPartial />;
-
-  const {
-    adviceLetter,
-    taskStatuses: { adviceLetterStatus }
-  } = trbRequest;
+  useEffect(() => {
+    setIsStepSubmitting(isSubmitting);
+  }, [setIsStepSubmitting, isSubmitting]);
 
   return (
     <div id="trbAdviceInternalReview">
@@ -73,10 +74,23 @@ const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
         }}
         next={{
           text: 'Request internal review',
-          // disabled: isSubmitting,
+          disabled:
+            isSubmitting ||
+            adviceLetterStatus !== TRBAdviceLetterStatus.IN_PROGRESS,
           onClick: () => {
-            // TODO: Submit for internal review
-            history.push(`/trb/${trbRequestId}/advice/review`);
+            requestReview()
+              .then(() => history.push(`/trb/${trbRequestId}/advice`))
+              .catch(error => {
+                if (error instanceof ApolloError) {
+                  setFormAlert({
+                    type: 'error',
+                    message: t('adviceLetterForm.error', {
+                      action: 'submitting',
+                      type: 'advice letter for internal review'
+                    })
+                  });
+                }
+              });
           }
         }}
         taskListUrl={`/trb/${trbRequestId}/request`}
