@@ -144,7 +144,20 @@ const technicalAssistance = {
     resources: 'Resources',
     nextSteps: 'Next steps',
     notSpecified: 'Not specified yet',
-    followup: 'Should the team return for a follow-up session?'
+    followup: 'Should the team return for a follow-up session?',
+    adviceLetter: 'Advice Letter',
+    description:
+      'This is an advice letter that was sent to the project team for the request summarized below. If you have any questions about this advice letter, you may reach out to the TRB at <a>{{email}}</a>.',
+    thankYou: 'Thank you for attending the TRB consult session!',
+    requestSummary: 'Request summary',
+    whatOtherRequestTypes: 'What other request types are there?',
+    showSummary: 'Show summary',
+    hideSummary: 'Hide summary',
+    haveQuestions: 'Have questions about this advice letter?',
+    haveQuestionsContact: 'Reach out to the TRB at <a>{{email}}</a>',
+    incomplete: 'Advice letter incomplete',
+    incompleteCheckLater:
+      'The Technical Review Board is still compiling the advice letter for this project. Please check back later'
   },
   requiredFields:
     'Fields marked with an asterisk ( <red>*</red> ) are required.',
@@ -234,7 +247,8 @@ const technicalAssistance = {
   },
   // Misc breadcrumb items
   breadcrumbs: {
-    startTrbRequest: 'Start a TRB Request'
+    startTrbRequest: 'Start a TRB Request',
+    technicalAssistance: 'Technical Assistance'
   },
   // Common button text
   button: {
@@ -517,6 +531,10 @@ const technicalAssistance = {
       fundingNumber: 'Funding number',
       fundingSourcesList: 'Funding sources',
       fundingSources: 'Which existing funding sources will fund this project?',
+      relatedLCIDS:
+        'Select any Life Cycle IDs (LCIDs) pertaining to this request.',
+      listLCIDS: 'List any Life Cycle IDs (LCIDs) pertaining to this request.',
+      selectedLCIDs: 'Selected LCIDs',
       collabAndGovernance: 'Collaboration and Governance',
       collabGroups:
         'Select any other OIT groups that you have met with or collaborated with.',
@@ -536,7 +554,9 @@ const technicalAssistance = {
       whenMeet:
         'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.',
       fundingSources:
-        'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.'
+        'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
+      relatedLCIDS:
+        'Use the list below to select LCIDs within EASi that pertain to this request. Do not select any if there are no LCIDs related to this request.'
     },
     options: {
       select: 'Select',
@@ -568,7 +588,8 @@ const technicalAssistance = {
       submit:
         'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.'
     },
-    allFieldsMandatory: 'All fields are mandatory'
+    allFieldsMandatory: 'All fields are mandatory',
+    noAnswer: 'No answer selected'
   },
   subject: {
     info:

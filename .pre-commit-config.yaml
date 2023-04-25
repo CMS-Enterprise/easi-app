@@ -50,7 +50,7 @@ repos:
           )$
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.48.0
+    rev: v1.51.0
     hooks:
       - id: golangci-lint
         name: Lint go files
@@ -101,7 +101,7 @@ repos:
         pass_filenames: false
 
   # for some reason, trying to call "go run cmd/intake_schema_gen/main.go" directly from this config doesn't work;
-  # so call scripts/gen_intake_schema, which calls that command and works 
+  # so call scripts/gen_intake_schema, which calls that command and works
   - repo: local
     hooks:
       - id: check-intake-schema-generation

@@ -9,6 +9,7 @@ import configureMockStore from 'redux-mock-store';
 
 import { requester } from 'data/mock/trbRequest';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+import { TRBRequestState } from 'types/graphql-global-types';
 
 import RequestForm from '.';
 
@@ -42,6 +43,7 @@ function renderFeedbackTest() {
                   createdAt: '2023-01-31T16:23:06.111436Z',
                   type: 'NEED_HELP',
                   status: 'OPEN',
+                  state: TRBRequestState.OPEN,
                   taskStatuses: {
                     formStatus: 'IN_PROGRESS',
                     feedbackStatus: 'EDITS_REQUESTED',
@@ -62,6 +64,8 @@ function renderFeedbackTest() {
                     hasExpectedStartEndDates: false,
                     expectedStartDate: null,
                     expectedEndDate: null,
+                    fundingSources: [],
+                    systemIntakes: [],
                     collabGroups: ['ENTERPRISE_ARCHITECTURE'],
                     collabDateSecurity: null,
                     collabDateEnterpriseArchitecture: 'x',
@@ -70,20 +74,9 @@ function renderFeedbackTest() {
                     collabDateGovernanceReviewBoard: null,
                     collabDateOther: null,
                     collabGroupOther: null,
-                    subjectAreaTechnicalReferenceArchitecture: [],
-                    subjectAreaNetworkAndSecurity: [],
-                    subjectAreaCloudAndInfrastructure: [],
-                    subjectAreaApplicationDevelopment: [],
-                    subjectAreaDataAndDataManagement: [],
-                    subjectAreaGovernmentProcessesAndPolicies: [],
-                    subjectAreaOtherTechnicalTopics: [],
-                    subjectAreaTechnicalReferenceArchitectureOther: null,
-                    subjectAreaNetworkAndSecurityOther: null,
-                    subjectAreaCloudAndInfrastructureOther: null,
-                    subjectAreaApplicationDevelopmentOther: null,
-                    subjectAreaDataAndDataManagementOther: null,
-                    subjectAreaGovernmentProcessesAndPoliciesOther: null,
-                    subjectAreaOtherTechnicalTopicsOther: null,
+                    collabGRBConsultRequested: null,
+                    subjectAreaOptions: [],
+                    subjectAreaOptionOther: '',
                     submittedAt: null,
                     __typename: 'TRBRequestForm'
                   },

@@ -56,6 +56,7 @@ const mockTrbRequestData: TrbRequest = {
     hasExpectedStartEndDates: false,
     expectedStartDate: null,
     expectedEndDate: null,
+    systemIntakes: [],
     collabGroups: [],
     collabDateSecurity: null,
     collabDateEnterpriseArchitecture: null,

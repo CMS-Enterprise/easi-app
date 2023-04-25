@@ -31,7 +31,7 @@ export interface GetRequests_requests {
   edges: GetRequests_requests_edges[];
 }
 
-export interface GetRequests_trbRequests {
+export interface GetRequests_myTrbRequests {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
@@ -42,7 +42,7 @@ export interface GetRequests_trbRequests {
 
 export interface GetRequests {
   requests: GetRequests_requests | null;
-  trbRequests: GetRequests_trbRequests[];
+  myTrbRequests: GetRequests_myTrbRequests[];
 }
 
 export interface GetRequestsVariables {

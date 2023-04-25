@@ -9,6 +9,11 @@ import { SystemIntakeActionType } from "./../../types/graphql-global-types";
 // GraphQL query operation: GetAdminNotesAndActions
 // ====================================================
 
+export interface GetAdminNotesAndActions_systemIntake_notes_editor {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
 export interface GetAdminNotesAndActions_systemIntake_notes_author {
   __typename: "SystemIntakeNoteAuthor";
   name: string;
@@ -20,6 +25,10 @@ export interface GetAdminNotesAndActions_systemIntake_notes {
   id: UUID;
   createdAt: Time;
   content: string;
+  editor: GetAdminNotesAndActions_systemIntake_notes_editor | null;
+  modifiedBy: string | null;
+  modifiedAt: Time | null;
+  isArchived: boolean;
   author: GetAdminNotesAndActions_systemIntake_notes_author;
 }
 
