@@ -35,6 +35,7 @@ import {
 } from 'types/technicalAssistance';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
+import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -46,10 +47,6 @@ import NotFound from 'views/NotFound';
 import TrbAssignLeadModal, {
   TrbAssignLeadModalOpener
 } from './AdminHome/TrbAssignLeadModal';
-
-function getPersonVal(name: string, component?: any) {
-  return `${name}${typeof component === 'string' ? `, ${component}` : ''}`;
-}
 
 export const trbRequestsCsvHeader = [
   i18next.t<string>('technicalAssistance:table.header.submissionDate'),
@@ -69,11 +66,14 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
     const trbConsultDate = r.consultMeetingTime
       ? formatDateLocal(r.consultMeetingTime, 'MM/dd/yyyy')
       : '';
-    const requester = getPersonVal(
+    const requester = getPersonNameAndComponentVal(
       r.requesterInfo.commonName,
       r.requesterComponent
     );
-    const trbLead = getPersonVal(r.trbLeadInfo.commonName, r.trbLeadComponent);
+    const trbLead = getPersonNameAndComponentVal(
+      r.trbLeadInfo.commonName,
+      r.trbLeadComponent
+    );
 
     return [
       submissionDate,
@@ -112,14 +112,14 @@ function RequestNameCell({
 }
 
 function RequesterCell({ row }: CellProps<TrbAdminTeamHomeRequest>) {
-  return getPersonVal(
+  return getPersonNameAndComponentVal(
     row.original.requesterInfo.commonName,
     row.original.requesterComponent
   );
 }
 
 function TrbLeadCell({ row }: CellProps<TrbAdminTeamHomeRequest>) {
-  return getPersonVal(
+  return getPersonNameAndComponentVal(
     row.original.trbLeadInfo.commonName,
     row.original.trbLeadComponent
   );

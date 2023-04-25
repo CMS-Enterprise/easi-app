@@ -330,7 +330,10 @@ function TaskList() {
                     <UswdsReactLink
                       variant="unstyled"
                       className="usa-button"
-                      to={`/trb/requests/${id}/advice-letter`} // TODO: replace with link to view advice letter
+                      to={{
+                        pathname: `/trb/advice-letter/${id}`,
+                        state: { fromTaskList: true }
+                      }}
                     >
                       {t('taskList.viewAdviceLetter')}
                     </UswdsReactLink>
