@@ -130,10 +130,10 @@ function PublicAdviceLetter() {
               eyeIcon
               startOpen
               labelPosition="bottom"
-              closeLabel={t('adviceLetter.showSummary')}
+              closeLabel={t('adviceLetter.hideSummary')}
               styleLeftBar={false}
               id="trb-advice-letter-request-summary"
-              label={t('adviceLetter.hideSummary')}
+              label={t('adviceLetter.showSummary')}
             >
               <dl className="easi-dl">
                 <Grid row gap>
