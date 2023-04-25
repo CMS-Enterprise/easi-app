@@ -95,8 +95,7 @@ const AdviceLetterForm = () => {
 
   /** Current trb request */
   const trbRequest = data?.trbRequest;
-  const { adviceLetter, taskStatuses } = trbRequest || {};
-  const { adviceLetterStatus } = taskStatuses || {};
+  const { adviceLetter } = trbRequest || {};
 
   // References to the submit handler and submitting state of the current form step
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
@@ -193,10 +192,15 @@ const AdviceLetterForm = () => {
     currentStepIndex === -1 ||
     !trbRequest ||
     !adviceLetter ||
-    adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
+    trbRequest.taskStatuses.adviceLetterStatus ===
+      TRBAdviceLetterStatus.CANNOT_START_YET
   ) {
     return <NotFound />;
   }
+
+  const {
+    taskStatuses: { adviceLetterStatus }
+  } = trbRequest;
 
   return (
     <>
@@ -279,6 +283,7 @@ const AdviceLetterForm = () => {
           <currentFormStep.component
             trbRequestId={id}
             adviceLetter={adviceLetter}
+            adviceLetterStatus={adviceLetterStatus}
             setFormAlert={setFormAlert}
             setStepSubmit={setStepSubmit}
             setIsStepSubmitting={setIsStepSubmitting}
