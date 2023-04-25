@@ -129,6 +129,11 @@ const technicalAssistance = {
       text:
         'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
       removingTitle: 'Removing: {{title}}'
+    },
+    internalReviewNeeded: {
+      heading: 'Internal TRB review needed',
+      text:
+        'You cannot send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
     }
   },
   emailRecipientFields: {

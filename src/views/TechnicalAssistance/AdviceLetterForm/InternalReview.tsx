@@ -2,13 +2,16 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import { Alert } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+import Divider from 'components/shared/Divider';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
+import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { NotFoundPartial } from 'views/NotFound';
 
 import ReviewAdviceLetter from '../AdminHome/components/ReviewAdviceLetter';
@@ -27,10 +30,15 @@ const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
     }
   });
 
-  const adviceLetter = data?.trbRequest?.adviceLetter;
+  const trbRequest = data?.trbRequest;
 
   if (loading) return <PageLoading />;
-  if (!adviceLetter) return <NotFoundPartial />;
+  if (!trbRequest?.adviceLetter) return <NotFoundPartial />;
+
+  const {
+    adviceLetter,
+    taskStatuses: { adviceLetterStatus }
+  } = trbRequest;
 
   return (
     <div id="trbAdviceInternalReview">
@@ -40,7 +48,24 @@ const InternalReview = ({ trbRequestId }: { trbRequestId: string }) => {
         className="margin-top-5 margin-bottom-4"
         showEditLinks
       />
-      {/** Form pager buttons */}
+
+      <Divider />
+
+      {
+        /* Internal review needed alert */
+        (adviceLetterStatus === TRBAdviceLetterStatus.IN_PROGRESS ||
+          adviceLetterStatus === TRBAdviceLetterStatus.READY_FOR_REVIEW) && (
+          <Alert
+            type="warning"
+            heading={t('adviceLetterForm.internalReviewNeeded.heading')}
+            className="margin-top-4 margin-bottom-5"
+          >
+            {t('adviceLetterForm.internalReviewNeeded.text')}
+          </Alert>
+        )
+      }
+
+      {/* Form pager buttons */}
       <Pager
         back={{
           outline: true,
