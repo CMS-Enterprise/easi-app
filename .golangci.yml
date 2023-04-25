@@ -34,6 +34,8 @@ linters:
     - errcheck #requires patching code
 issues:
   exclude-use-default: false
+  exclude:
+    - "package-comments"
 
 run:
   # timeout for analysis, e.g. 30s, 5m, default is 1m

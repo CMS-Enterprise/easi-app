@@ -6,7 +6,7 @@ import (
 
 // TRBRequestSystemIntake represents a system intake that has been associated with a TRB request
 type TRBRequestSystemIntake struct {
-	baseStruct
+	BaseStruct
 	TRBRequestID   uuid.UUID `json:"trbRequestId" db:"trb_request_id"`
 	SystemIntakeID uuid.UUID `json:"systemIntakeId" db:"system_intake_id"`
 }

@@ -74,7 +74,7 @@ const (
 
 // TRBRequestForm represents the data entered into the TRB request form
 type TRBRequestForm struct {
-	baseStruct
+	BaseStruct
 	TRBRequestID             uuid.UUID                `json:"trbRequestId" db:"trb_request_id"`
 	Status                   TRBFormStatus            `json:"status" db:"status"`
 	Component                *string                  `json:"component" db:"component"`

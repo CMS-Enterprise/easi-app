@@ -17,7 +17,7 @@ const (
 
 // TRBRequestFeedback represents an individual feedback item given on a TRB request
 type TRBRequestFeedback struct {
-	baseStruct
+	BaseStruct
 	TRBRequestID    uuid.UUID         `json:"trbRequestId" db:"trb_request_id"`
 	FeedbackMessage string            `json:"feedbackMessage" db:"feedback_message"`
 	CopyTRBMailbox  bool              `json:"copyTrbMailbox" db:"copy_trb_mailbox"`
