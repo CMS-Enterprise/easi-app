@@ -12,7 +12,7 @@ import { TrbRequestIdRef } from 'types/technicalAssistance';
 import Feedback from './Feedback';
 
 describe('Trb Admin: Feedback', () => {
-  const id = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
+  const { id } = trbRequestSummary;
   const feedbackMessage = 'Can you hear me now?';
   const modalRef = React.createRef<ModalRef>();
   const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
