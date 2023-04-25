@@ -184,6 +184,13 @@ const AdviceLetterForm = () => {
     })();
   }, [stepsCompleted, adviceLetter]);
 
+  useEffect(() => {
+    if (formAlert) {
+      const err = document.querySelector('.trb-form-error');
+      err?.scrollIntoView();
+    }
+  }, [formAlert]);
+
   // Page loading
   if (loading) return <PageLoading />;
 
@@ -251,7 +258,11 @@ const AdviceLetterForm = () => {
           }
           errorAlert={
             formAlert && (
-              <Alert type={formAlert.type} className="margin-top-3" slim>
+              <Alert
+                type={formAlert.type}
+                className={`trb-form-${formAlert.type} margin-top-3`}
+                slim
+              >
                 {formAlert.message}
               </Alert>
             )
