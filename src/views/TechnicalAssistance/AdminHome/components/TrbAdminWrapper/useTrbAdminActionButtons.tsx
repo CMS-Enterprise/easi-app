@@ -65,17 +65,18 @@ const useTrbAdminActionButtons = ({
       orCloseRequest: {
         label: t('adminAction.buttons.orCloseRequest'),
         onClick: () =>
-          history.push(`trb/${trbRequestId}/request/close-request`),
+          history.push(`/trb/${trbRequestId}/request/close-request`),
         unstyled: true
       },
       closeRequest: {
         label: t('adminAction.buttons.closeRequest'),
-        onClick: () => history.push(`trb/${trbRequestId}/request/close-request`)
+        onClick: () =>
+          history.push(`/trb/${trbRequestId}/request/close-request`)
       },
       reopenRequest: {
         label: t('adminAction.buttons.reopenRequest'),
         onClick: () =>
-          history.push(`trb/${trbRequestId}/request/reopen-request`)
+          history.push(`/trb/${trbRequestId}/request/reopen-request`)
       },
       viewRequestForm: {
         label: t('adminAction.buttons.viewRequestForm'),
