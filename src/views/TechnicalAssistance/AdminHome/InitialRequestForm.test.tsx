@@ -13,6 +13,7 @@ import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
+import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'queries/types/TrbRequestFormFields';
 import {
   TRBAdminNoteCategory,
   TRBAdviceLetterStatus,
@@ -29,19 +30,21 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import InitialRequestForm from './InitialRequestForm';
 import TRBRequestInfoWrapper from './RequestContext';
 
+const taskStatuses: TaskStatuses = {
+  formStatus: TRBFormStatus.IN_PROGRESS,
+  feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+  consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+  attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+  adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
+  __typename: 'TRBTaskStatuses'
+};
+
 const mockTrbRequestData: TrbRequest = {
-  id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
+  id: trbRequestSummary.id,
   name: 'Lorem ipsum dolor sit amet, consectetur',
   type: TRBRequestType.NEED_HELP,
   state: TRBRequestState.OPEN,
-  taskStatuses: {
-    formStatus: TRBFormStatus.IN_PROGRESS,
-    feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-    consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-    attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
-    __typename: 'TRBTaskStatuses'
-  },
+  taskStatuses,
   form: {
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
     component: null,
@@ -172,7 +175,7 @@ describe('Trb Admin Initial Request Form', () => {
               <Route exact path="/trb/:id/:activePage">
                 <InitialRequestForm
                   trbRequestId={mockTrbRequestData.id}
-                  trbRequest={trbRequestSummary}
+                  trbRequest={{ ...trbRequestSummary, taskStatuses }}
                   assignLeadModalRef={modalRef}
                   assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                 />
