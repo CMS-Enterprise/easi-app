@@ -29,7 +29,6 @@ import {
   SendTRBAdviceLetter,
   SendTRBAdviceLetterVariables
 } from 'queries/types/SendTRBAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import {
   StepComponentProps,
   TrbRecipientFields
@@ -95,6 +94,7 @@ const Review = ({
 
   const {
     handleSubmit,
+    watch,
     formState: { isSubmitting }
   } = actionForm;
 
@@ -211,7 +211,7 @@ const Review = ({
               text: 'Send',
               disabled:
                 isSubmitting ||
-                adviceLetterStatus !== TRBAdviceLetterStatus.READY_FOR_REVIEW
+                (watch('notifyEuaIds').length === 0 && !watch('copyTrbMailbox'))
             }}
             taskListUrl={`/trb/${trbRequestId}/request`}
             saveExitText={t('adviceLetterForm.returnToRequest')}
