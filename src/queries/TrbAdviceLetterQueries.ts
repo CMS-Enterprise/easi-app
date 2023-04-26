@@ -123,3 +123,11 @@ export const RequestReviewForTRBAdviceLetterQuery = gql`
     }
   }
 `;
+
+export const SendTRBAdviceLetterQuery = gql`
+  mutation SendTRBAdviceLetter($input: SendTRBAdviceLetterInput!) {
+    sendTRBAdviceLetter(input: $input) {
+      id
+    }
+  }
+`;
