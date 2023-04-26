@@ -174,17 +174,10 @@ const AdviceLetterForm = () => {
               }
             )
             .then(valid => {
-              if (valid) completed.push('next-steps');
+              // Internal review should be marked completed with next steps
+              if (valid) completed.push('next-steps', 'internal-review');
             })
         );
-      }
-
-      if (
-        !completed.includes('internal-review') &&
-        trbRequest?.taskStatuses?.adviceLetterStatus ===
-          TRBAdviceLetterStatus.READY_FOR_REVIEW
-      ) {
-        completed.push('internal-review');
       }
 
       Promise.allSettled(stepValidators).then(() => {
