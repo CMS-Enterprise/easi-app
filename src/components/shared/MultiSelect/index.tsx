@@ -1,5 +1,10 @@
-import React, { CSSProperties, useState } from 'react';
-import Select, { MultiValue, OptionProps } from 'react-select';
+import React, { CSSProperties, useEffect, useState } from 'react';
+import Select, {
+  ClearIndicatorProps,
+  components,
+  MultiValue,
+  OptionProps
+} from 'react-select';
 import { IconClose, Tag } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
@@ -37,13 +42,40 @@ const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
   );
 };
 
+const ClearIndicator = (
+  props: ClearIndicatorProps<MultiSelectOptionProps, true>
+) => {
+  const {
+    selectProps: { id },
+    clearValue
+  } = props;
+
+  return (
+    <button
+      type="button"
+      id="clear-selection"
+      tabIndex={0}
+      onClick={() => {
+        clearValue();
+        document?.getElementById(`react-select-${id}-input`)?.focus();
+      }}
+      className="usa-button--unstyled"
+      aria-label="Clear selection"
+    >
+      <components.ClearIndicator {...props} />
+    </button>
+  );
+};
+
 const MultiSelectTag = ({
   id,
+  parentId,
   label,
   className,
   handleRemove
 }: {
   id: string;
+  parentId?: string;
   label: string;
   className?: string;
   handleRemove?: (value: string) => void;
@@ -61,7 +93,19 @@ const MultiSelectTag = ({
       {handleRemove && (
         <IconClose
           onClick={() => handleRemove(label)}
-          onKeyDown={() => handleRemove(label)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              handleRemove(label);
+              // Handler to focus on the first tag after one has been removed
+              if (parentId) {
+                setTimeout(() => {
+                  (document?.querySelector(
+                    `#${parentId} .easi-multiselect--tag .usa-icon`
+                  ) as HTMLElement)?.focus();
+                }, 0);
+              }
+            }
+          }}
           className="margin-left-05"
           tabIndex={0}
           role="button"
@@ -97,11 +141,22 @@ const MultiSelect = ({
   initialValues?: string[];
   className?: string;
 }) => {
-  const [selected, setSelected] = useState<MultiValue<MultiSelectOptionProps>>(
-    initialValues
-      ? options.filter(option => initialValues.includes(option.value))
-      : []
+  const [
+    selected,
+    setSelected
+  ] = useState<MultiValue<MultiSelectOptionProps> | null>(
+    initialValues && options.length
+      ? [...options].filter(option => initialValues.includes(option.value))
+      : null
   );
+
+  useEffect(() => {
+    if (!selected && initialValues && options.length) {
+      setSelected(
+        options.filter(option => initialValues.includes(option.value))
+      );
+    }
+  }, [options, initialValues, selected]);
 
   const customStyles: {
     [index: string]: (
@@ -134,14 +189,15 @@ const MultiSelect = ({
     }),
     clearIndicator: provided => ({
       ...provided,
-      color: color('base'),
+      color: color('base-dark'),
+      padding: '8px 6px',
       '&:hover': {
-        color: color('base'),
+        color: color('base-dark'),
         cursor: 'pointer'
       },
       '> svg': {
-        width: '26px',
-        height: '26px'
+        width: '22px',
+        height: '22px'
       }
     }),
     indicatorSeparator: provided => ({
@@ -166,8 +222,9 @@ const MultiSelect = ({
         inputId={inputId}
         name={name}
         className={classNames('easi-multiselect usa-combo-box', className)}
+        isClearable
         options={options}
-        components={{ Option }}
+        components={{ ClearIndicator, Option }}
         isMulti
         hideSelectedOptions={false}
         closeMenuOnSelect={false}
@@ -177,15 +234,15 @@ const MultiSelect = ({
         }}
         value={selected}
         controlShouldRenderValue={false}
-        placeholder={`${selected.length} selected`}
+        placeholder={`${selected?.length || 0} selected`}
         styles={customStyles}
       />
-      {selected.length > 0 && (
+      {selected && selected.length > 0 && (
         <div className="easi-multiselect--selected">
           <h4 className="text-normal margin-bottom-1">
             {selectedLabel || 'Selected options'}
           </h4>
-          <ul className="usa-list--unstyled">
+          <ul className="usa-list--unstyled" id={`${id}-tags`}>
             {selected.map(({ value, label }) => (
               <li
                 className="margin-bottom-05 margin-right-05 display-inline-block"
@@ -193,6 +250,7 @@ const MultiSelect = ({
               >
                 <MultiSelectTag
                   id={`selected-${value}`}
+                  parentId={`${id}-tags`}
                   key={value}
                   label={label}
                   handleRemove={() => {

@@ -10,7 +10,7 @@ const TRBRecommendation = gql`
 `;
 
 /** Advice letter fields fragment */
-const TRBAdviceLetter = gql`
+export const TRBAdviceLetter = gql`
   ${TRBRecommendation}
   fragment TRBAdviceLetter on TRBAdviceLetter {
     id

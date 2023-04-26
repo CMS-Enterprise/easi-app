@@ -2494,6 +2494,11 @@ func (r *queryResolver) TrbRequests(ctx context.Context, archived bool) ([]*mode
 	return resolvers.GetTRBRequests(ctx, archived, r.store)
 }
 
+// MyTrbRequests is the resolver for the myTrbRequests field.
+func (r *queryResolver) MyTrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
+	return resolvers.GetMyTRBRequests(ctx, archived, r.store)
+}
+
 // TrbLeadOptions is the resolver for the trbLeadOptions field.
 func (r *queryResolver) TrbLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
 	return resolvers.GetTRBLeadOptions(ctx, r.store, r.service.FetchUserInfos)

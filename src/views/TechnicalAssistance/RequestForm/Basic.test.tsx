@@ -24,6 +24,7 @@ const mockEmptyFormFields = {
   hasExpectedStartEndDates: null,
   expectedStartDate: null,
   expectedEndDate: null,
+  systemIntakes: [],
   collabGroups: [],
   collabDateSecurity: null,
   collabDateEnterpriseArchitecture: null,

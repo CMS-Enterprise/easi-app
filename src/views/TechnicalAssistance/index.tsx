@@ -15,6 +15,7 @@ import AdminHome from './AdminHome';
 import AdviceLetterForm from './AdviceLetterForm';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
+import PublicAdviceLetter from './PublicAdviceLetter';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
@@ -65,7 +66,12 @@ function TechnicalAssistance() {
           <TrbAttendees />
         </Route>
 
-        {/* Create new or edit exisiting request */}
+        {/* Public advice letter */}
+        <Route exact path={`${path}/advice-letter/:id`}>
+          <PublicAdviceLetter />
+        </Route>
+
+        {/* Create new or edit existing request */}
         <Route exact path={`${path}/requests/:id/:step?/:view?`}>
           <RequestForm />
         </Route>

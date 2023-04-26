@@ -37,7 +37,7 @@ import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
 import {
   GetTrbRequests,
   // eslint-disable-next-line camelcase
-  GetTrbRequests_trbRequests
+  GetTrbRequests_myTrbRequests
 } from 'queries/types/GetTrbRequests';
 import { AppState } from 'reducers/rootReducer';
 import { formatDateLocal } from 'utils/date';
@@ -70,7 +70,7 @@ function Homepage() {
   // @ts-ignore
   // Ignoring due to accessor props with dot property string values which break react-table typescripting
   // eslint-disable-next-line camelcase
-  const columns = useMemo<Column<GetTrbRequests_trbRequests>[]>(() => {
+  const columns = useMemo<Column<GetTrbRequests_myTrbRequests>[]>(() => {
     return [
       {
         Header: t<string>('table.header.requestName'),
@@ -79,7 +79,7 @@ function Homepage() {
           value,
           row
         }: // eslint-disable-next-line camelcase
-        CellProps<GetTrbRequests_trbRequests, string>) => {
+        CellProps<GetTrbRequests_myTrbRequests, string>) => {
           return (
             <UswdsReactLink
               to={`/trb/task-list/${row.original.id}`}
@@ -126,7 +126,7 @@ function Homepage() {
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),
-      data: useMemo(() => data?.trbRequests || [], [data?.trbRequests]),
+      data: useMemo(() => data?.myTrbRequests || [], [data?.myTrbRequests]),
       autoResetSortBy: false,
       autoResetPage: false,
       initialState: {

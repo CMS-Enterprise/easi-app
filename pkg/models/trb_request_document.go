@@ -28,7 +28,7 @@ const (
 
 // TRBRequestDocument represents a document attached to a TRB request that has been uploaded to S3
 type TRBRequestDocument struct {
-	baseStruct
+	BaseStruct
 	TRBRequestID       uuid.UUID             `json:"trbRequestId" db:"trb_request_id"`
 	CommonDocumentType TRBDocumentCommonType `db:"document_type"`
 	OtherType          string                `db:"other_type"`

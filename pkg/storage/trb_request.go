@@ -18,6 +18,9 @@ import (
 //go:embed SQL/trb_request_collection_get.sql
 var trbRequestCollectionGetSQL string
 
+//go:embed SQL/trb_request_collection_get_my.sql
+var trbRequestCollectionGetMySQL string
+
 //go:embed SQL/trb_request_create.sql
 var trbRequestCreateSQL string
 
@@ -153,7 +156,7 @@ func (s *Store) UpdateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 	return &retTRB, err
 }
 
-// GetTRBRequests returns the collection of models
+// GetTRBRequests returns the collection of TRB requests
 func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	trbRequests := []*models.TRBRequest{}
 
@@ -172,6 +175,37 @@ func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TR
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch trb requests",
+			zap.Error(err),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequest{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return trbRequests, err
+}
+
+// GetMyTRBRequests returns the collection of TRB requests that belong to the user in the context
+func (s *Store) GetMyTRBRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
+	trbRequests := []*models.TRBRequest{}
+
+	stmt, err := s.db.PrepareNamed(trbRequestCollectionGetMySQL)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch user's trb requests",
+			zap.Error(err),
+		)
+		return nil, err
+	}
+	arg := map[string]interface{}{
+		"archived":   archived,
+		"created_by": appcontext.Principal(ctx).ID(),
+	}
+	err = stmt.Select(&trbRequests, arg)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch user's trb requests",
 			zap.Error(err),
 		)
 		return nil, &apperrors.QueryError{

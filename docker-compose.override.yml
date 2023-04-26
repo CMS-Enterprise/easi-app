@@ -52,8 +52,6 @@ services:
     ports:
       - 3000:3000
   minio:
-    ports:
-      - '9000:9000'
     volumes:
       - ./tmp/minio:/data
   prince:
