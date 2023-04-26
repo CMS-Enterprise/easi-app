@@ -143,7 +143,7 @@ const useTrbAdminActionButtons = ({
       },
       editAdviceLetter: {
         label: t('adminAction.buttons.editAdviceLetter'),
-        onClick: () => history.push(`/trb/${trbRequestId}/advice/summary`)
+        onClick: () => history.push(`/trb/${trbRequestId}/advice/review`)
       },
       addNote: {
         label: t('adminAction.buttons.addNote'),
