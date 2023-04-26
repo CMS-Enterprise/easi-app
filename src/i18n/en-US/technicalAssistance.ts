@@ -138,6 +138,8 @@ const technicalAssistance = {
       text:
         'You cannot send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
     },
+    notesAlert:
+      'Your TRB team members have not yet left any notes about your draft advice letter. Please confirm with the team to make sure this advice letter has been reviewed before you proceed with sending the final letter.',
     notesCount:
       '<bold>{{count}}</bold> note{{plural}} about this advice letter',
     done: {

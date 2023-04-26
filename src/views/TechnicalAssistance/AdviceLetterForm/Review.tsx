@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Accordion, Form } from '@trussworks/react-uswds';
+import { Accordion, Alert, Form } from '@trussworks/react-uswds';
 
 import EmailRecipientFields from 'components/EmailRecipientFields';
 import SectionWrapper from 'components/shared/SectionWrapper';
@@ -113,19 +113,24 @@ const Review = ({
           values={{ plural: notes.length === 1 ? '' : 's' }}
         />
       </p>
-      <Accordion
-        items={notes.map((note, index) => ({
-          id: `trbAdminNote${index}`,
-          title: `from ${note.author.commonName} (${formatDateLocal(
-            note.createdAt,
-            'MM/dd/yyyy'
-          )})`,
-          content: note.noteText,
-          expanded: false
-        }))}
-        bordered
-      />
-
+      {notes.length > 0 ? (
+        <Accordion
+          items={notes.map((note, index) => ({
+            id: `trbAdminNote${index}`,
+            title: `from ${note.author.commonName} (${formatDateLocal(
+              note.createdAt,
+              'MM/dd/yyyy'
+            )})`,
+            content: note.noteText,
+            expanded: false
+          }))}
+          bordered
+        />
+      ) : (
+        <Alert type="warning" slim>
+          {t('adviceLetterForm.notesAlert')}
+        </Alert>
+      )}
       {/* Review */}
       <ReviewAdviceLetter
         adviceLetter={adviceLetter}
@@ -155,7 +160,6 @@ const Review = ({
         }}
         showSectionEditLinks
       />
-
       <SectionWrapper borderTop className="margin-top-6 padding-top-2">
         <h3 className="margin-bottom-1">
           {t('actionRequestEdits.notificationTitle')}
