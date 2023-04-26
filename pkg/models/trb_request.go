@@ -4,7 +4,7 @@ import "time"
 
 // TRBRequest represents a TRB request object
 type TRBRequest struct {
-	baseStruct
+	BaseStruct
 	Name               string          `json:"name" db:"name"`
 	Archived           bool            `json:"archived" db:"archived"`
 	Type               TRBRequestType  `json:"type" db:"type"`
@@ -17,7 +17,7 @@ type TRBRequest struct {
 func NewTRBRequest(createdBy string) *TRBRequest {
 	return &TRBRequest{
 		Name:       "Draft",
-		baseStruct: NewBaseStruct(createdBy),
+		BaseStruct: NewBaseStruct(createdBy),
 	}
 
 }

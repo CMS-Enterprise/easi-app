@@ -7,7 +7,7 @@ import (
 
 // TRBAdviceLetterRecommendation represents the data for a TRB advice letter recommendation
 type TRBAdviceLetterRecommendation struct {
-	baseStruct
+	BaseStruct
 	TRBRequestID   uuid.UUID      `json:"trbRequestId" db:"trb_request_id"`
 	Title          string         `json:"title" db:"title"`
 	Recommendation string         `json:"recommendation" db:"recommendation"`
