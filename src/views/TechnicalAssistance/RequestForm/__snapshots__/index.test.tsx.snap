@@ -1301,9 +1301,6 @@ exports[`TRB Request Form Feedback shows the View feedback warning banner in the
         >
           <li
             class="usa-button-group__item"
-          />
-          <li
-            class="usa-button-group__item"
           >
             <button
               class="usa-button margin-top-0"

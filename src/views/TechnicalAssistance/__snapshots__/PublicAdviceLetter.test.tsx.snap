@@ -178,7 +178,9 @@ exports[`Trb Public Advice Letter renders from email link 1`] = `
         class="easi-section margin-top-5"
         data-testid="section-wrapper"
       >
-        <h2>
+        <h2
+          class="margin-bottom-1"
+        >
           What we heard
         </h2>
         <p
@@ -196,29 +198,26 @@ exports[`Trb Public Advice Letter renders from email link 1`] = `
         class="easi-section margin-top-5"
         data-testid="section-wrapper"
       >
-        <h2>
+        <h2
+          class="margin-bottom-1"
+        >
           What we recommend
         </h2>
         <ul
-          class="usa-list usa-list--unstyled"
+          class="usa-list usa-list--unstyled grid-row grid-gap-lg"
         >
           <li
-            class="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
+            class="desktop:grid-col-6"
           >
-            <h3
+            <h4
               class="margin-bottom-1"
             >
               Restart your computer
-            </h3>
+            </h4>
             <p
               class="margin-y-1"
             >
               I recommend you restart your computer
-            </p>
-            <p
-              class="text-bold margin-bottom-0 margin-top-3"
-            >
-              Resources
             </p>
             <ul
               class="usa-list usa-list--unstyled"
@@ -253,7 +252,9 @@ exports[`Trb Public Advice Letter renders from email link 1`] = `
         class="easi-section margin-top-5"
         data-testid="section-wrapper"
       >
-        <h2>
+        <h2
+          class="margin-bottom-1"
+        >
           Next steps
         </h2>
         <p
@@ -410,7 +411,9 @@ exports[`Trb Public Advice Letter renders from task list link 1`] = `
         class="easi-section margin-top-5"
         data-testid="section-wrapper"
       >
-        <h2>
+        <h2
+          class="margin-bottom-1"
+        >
           What we heard
         </h2>
         <p
@@ -428,29 +431,26 @@ exports[`Trb Public Advice Letter renders from task list link 1`] = `
         class="easi-section margin-top-5"
         data-testid="section-wrapper"
       >
-        <h2>
+        <h2
+          class="margin-bottom-1"
+        >
           What we recommend
         </h2>
         <ul
-          class="usa-list usa-list--unstyled"
+          class="usa-list usa-list--unstyled grid-row grid-gap-lg"
         >
           <li
-            class="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
+            class="desktop:grid-col-6"
           >
-            <h3
+            <h4
               class="margin-bottom-1"
             >
               Restart your computer
-            </h3>
+            </h4>
             <p
               class="margin-y-1"
             >
               I recommend you restart your computer
-            </p>
-            <p
-              class="text-bold margin-bottom-0 margin-top-3"
-            >
-              Resources
             </p>
             <ul
               class="usa-list usa-list--unstyled"
@@ -485,7 +485,9 @@ exports[`Trb Public Advice Letter renders from task list link 1`] = `
         class="easi-section margin-top-5"
         data-testid="section-wrapper"
       >
-        <h2>
+        <h2
+          class="margin-bottom-1"
+        >
           Next steps
         </h2>
         <p

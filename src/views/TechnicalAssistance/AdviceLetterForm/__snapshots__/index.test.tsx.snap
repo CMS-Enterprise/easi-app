@@ -791,6 +791,32 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
                     </a>
                   </li>
                 </ul>
+                <ul
+                  class="usa-button-group margin-top-2"
+                >
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Edit recommendation
+                    </button>
+                  </li>
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled text-secondary margin-left-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Remove recommendation
+                    </button>
+                  </li>
+                </ul>
               </li>
               <li
                 class="desktop:grid-col-6"
@@ -829,6 +855,32 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
                     >
                       cms.gov
                     </a>
+                  </li>
+                </ul>
+                <ul
+                  class="usa-button-group margin-top-2"
+                >
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Edit recommendation
+                    </button>
+                  </li>
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled text-secondary margin-left-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Remove recommendation
+                    </button>
                   </li>
                 </ul>
               </li>
@@ -889,7 +941,7 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
             <p
               class="usa-alert__text"
             >
-              You cannot send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.
+              You should not send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.
             </p>
           </div>
         </div>
@@ -919,6 +971,18 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
                 type="submit"
               >
                 Request internal review
+              </button>
+            </li>
+            <li
+              class="usa-button-group__item"
+            >
+              or, 
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                progress to next step
               </button>
             </li>
           </ul>

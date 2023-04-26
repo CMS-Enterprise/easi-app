@@ -719,9 +719,6 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
       >
         <li
           class="usa-button-group__item"
-        />
-        <li
-          class="usa-button-group__item"
         >
           <button
             class="usa-button margin-top-0"
