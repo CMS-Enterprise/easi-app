@@ -113,6 +113,8 @@ const technicalAssistance = {
     addAnotherResourceLink: 'Add another resource link',
     returnToAdviceLetter:
       'Don’t add a recommendation and return to advice letter',
+    editReturnToAdviceLetter:
+      'Don’t edit recommendation and return to advice letter',
     editRecommendation: 'Edit recommendation',
     removeRecommendation: 'Remove recommendation',
     nextSteps: 'Next steps',
@@ -124,6 +126,7 @@ const technicalAssistance = {
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     recommendationSuccess:
       'Your recommendation was added to this advice letter.',
+    editRecommendationSuccess: 'Your recommendation was edited',
     modal: {
       title: 'Confirm you want to remove this recommendation.',
       text:

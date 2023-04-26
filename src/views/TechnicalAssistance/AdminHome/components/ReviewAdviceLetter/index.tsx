@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -29,6 +29,7 @@ const ReviewAdviceLetter = ({
   className
 }: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
+  const history = useHistory();
 
   const { recommendations } = adviceLetter;
 
@@ -101,6 +102,19 @@ const ReviewAdviceLetter = ({
             <RecommendationsList
               type="form"
               recommendations={recommendations}
+              edit={
+                showEditLinks
+                  ? {
+                      onClick: recommendation =>
+                        history.push(`/trb/${id}/advice/recommendations/form`, {
+                          recommendation: {
+                            ...recommendation,
+                            links: recommendation.links.map(link => ({ link }))
+                          }
+                        })
+                    }
+                  : undefined
+              }
             />
           )
         }
