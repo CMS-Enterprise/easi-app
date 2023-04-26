@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError, ApolloQueryResult, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
@@ -23,6 +23,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
+import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 import {
   IssueLifecycleId as IssueLifecycleIdType,
   IssueLifecycleIdVariables
@@ -37,7 +38,11 @@ import EmailRecipientsFields from './EmailRecipientsFields';
 
 const RADIX = 10;
 
-const IssueLifecycleId = () => {
+type IssueLifecycleIdProps = {
+  refetch(): Promise<ApolloQueryResult<GetSystemIntake>>;
+};
+
+const IssueLifecycleId = ({ refetch }: IssueLifecycleIdProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
@@ -127,6 +132,7 @@ const IssueLifecycleId = () => {
       .then(({ errors }) => {
         if (!errors) {
           // If no errors, view intake action notes
+          refetch();
           history.push(`/governance-review-team/${systemId}/notes`);
         }
       })
