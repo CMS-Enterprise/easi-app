@@ -19,6 +19,7 @@ type PageButtonProps =
 type Props = {
   back?: PageButtonProps;
   next?: PageButtonProps;
+  children?: React.ReactNode;
   saveExitText?: string;
   saveExitHidden?: boolean;
   saveExitDisabled?: boolean;
@@ -39,6 +40,7 @@ type Props = {
 export function Pager({
   back,
   next,
+  children,
   saveExitText,
   saveExitHidden,
   saveExitDisabled,
@@ -80,6 +82,7 @@ export function Pager({
             {next.text ?? t('button.next')}
           </Button>
         )}
+        {children}
       </ButtonGroup>
       {!saveExitHidden && (
         <Button
