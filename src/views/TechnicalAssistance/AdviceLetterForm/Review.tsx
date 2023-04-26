@@ -11,7 +11,15 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
-import { SendTRBAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  DeleteTrbRecommendationQuery,
+  GetTrbAdviceLetterQuery,
+  SendTRBAdviceLetterQuery
+} from 'queries/TrbAdviceLetterQueries';
+import {
+  DeleteTRBRecommendation,
+  DeleteTRBRecommendationVariables
+} from 'queries/types/DeleteTRBRecommendation';
 import {
   GetTrbAdminNotes,
   GetTrbAdminNotes_trbRequest_adminNotes as AdminNote,
@@ -36,6 +44,7 @@ const Review = ({
   trbRequestId,
   adviceLetter,
   adviceLetterStatus,
+  setFormAlert,
   setIsStepSubmitting
 }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -56,6 +65,20 @@ const Review = ({
     SendTRBAdviceLetter,
     SendTRBAdviceLetterVariables
   >(SendTRBAdviceLetterQuery);
+
+  const [remove] = useMutation<
+    DeleteTRBRecommendation,
+    DeleteTRBRecommendationVariables
+  >(DeleteTrbRecommendationQuery, {
+    refetchQueries: [
+      {
+        query: GetTrbAdviceLetterQuery,
+        variables: {
+          id: trbRequestId
+        }
+      }
+    ]
+  });
 
   const {
     data: { attendees, requester },
@@ -111,7 +134,30 @@ const Review = ({
       <ReviewAdviceLetter
         adviceLetter={adviceLetter}
         className="margin-top-5 margin-bottom-4"
-        showEditLinks
+        recommendationActions={{
+          edit: {
+            onClick: recommendation =>
+              history.push(`/trb/${trbRequestId}/advice/recommendations/form`, {
+                recommendation: {
+                  ...recommendation,
+                  links: recommendation.links.map(link => ({ link }))
+                }
+              })
+          },
+          remove: {
+            onClick: recommendation =>
+              remove({ variables: { id: recommendation.id } }).catch(() =>
+                setFormAlert({
+                  type: 'error',
+                  message: t('adviceLetterForm.error', {
+                    action: 'removing',
+                    type: 'recommendation'
+                  })
+                })
+              )
+          }
+        }}
+        showSectionEditLinks
       />
 
       <SectionWrapper borderTop className="margin-top-6 padding-top-2">

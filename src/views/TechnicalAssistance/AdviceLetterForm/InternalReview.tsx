@@ -5,7 +5,15 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { Alert } from '@trussworks/react-uswds';
 
 import Divider from 'components/shared/Divider';
-import { RequestReviewForTRBAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import {
+  DeleteTrbRecommendationQuery,
+  GetTrbAdviceLetterQuery,
+  RequestReviewForTRBAdviceLetterQuery
+} from 'queries/TrbAdviceLetterQueries';
+import {
+  DeleteTRBRecommendation,
+  DeleteTRBRecommendationVariables
+} from 'queries/types/DeleteTRBRecommendation';
 import {} from 'queries/types/GetTrbAdviceLetter';
 import {
   RequestReviewForTRBAdviceLetter,
@@ -36,6 +44,20 @@ const InternalReview = ({
     }
   });
 
+  const [remove] = useMutation<
+    DeleteTRBRecommendation,
+    DeleteTRBRecommendationVariables
+  >(DeleteTrbRecommendationQuery, {
+    refetchQueries: [
+      {
+        query: GetTrbAdviceLetterQuery,
+        variables: {
+          id: trbRequestId
+        }
+      }
+    ]
+  });
+
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
@@ -46,7 +68,30 @@ const InternalReview = ({
       <ReviewAdviceLetter
         adviceLetter={adviceLetter}
         className="margin-top-5 margin-bottom-4"
-        showEditLinks
+        recommendationActions={{
+          edit: {
+            onClick: recommendation =>
+              history.push(`/trb/${trbRequestId}/advice/recommendations/form`, {
+                recommendation: {
+                  ...recommendation,
+                  links: recommendation.links.map(link => ({ link }))
+                }
+              })
+          },
+          remove: {
+            onClick: recommendation =>
+              remove({ variables: { id: recommendation.id } }).catch(() =>
+                setFormAlert({
+                  type: 'error',
+                  message: t('adviceLetterForm.error', {
+                    action: 'removing',
+                    type: 'recommendation'
+                  })
+                })
+              )
+          }
+        }}
+        showSectionEditLinks
       />
 
       <Divider />

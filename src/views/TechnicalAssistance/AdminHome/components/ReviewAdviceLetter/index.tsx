@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -8,11 +8,18 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { formatDateLocal } from 'utils/date';
 
-import RecommendationsList from './RecommendationsList';
+import RecommendationsList, {
+  EditRecommendationProp,
+  RemoveRecommendationProp
+} from './RecommendationsList';
 
 type ReviewAdviceLetterProps = {
   adviceLetter: AdviceLetter;
-  showEditLinks?: boolean;
+  showSectionEditLinks?: boolean;
+  recommendationActions?: {
+    edit?: EditRecommendationProp;
+    remove?: RemoveRecommendationProp;
+  };
   showDateSent?: boolean;
   showSectionBorders?: boolean;
   className?: string;
@@ -23,13 +30,13 @@ type ReviewAdviceLetterProps = {
  */
 const ReviewAdviceLetter = ({
   adviceLetter,
-  showEditLinks = false,
+  showSectionEditLinks = false,
+  recommendationActions,
   showDateSent = true,
   showSectionBorders = true,
   className
 }: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
-  const history = useHistory();
 
   const { recommendations } = adviceLetter;
 
@@ -60,7 +67,7 @@ const ReviewAdviceLetter = ({
         })}
       >
         <h2 className="margin-bottom-1">{t('adviceLetter.whatWeHeard')}</h2>
-        {showEditLinks && (
+        {showSectionEditLinks && (
           <UswdsReactLink
             to={`/trb/${id}/advice/summary`}
             className="display-block margin-bottom-5"
@@ -85,7 +92,7 @@ const ReviewAdviceLetter = ({
         })}
       >
         <h2 className="margin-bottom-1">{t('adviceLetter.whatWeRecommend')}</h2>
-        {showEditLinks && (
+        {showSectionEditLinks && (
           <UswdsReactLink
             to={`/trb/${id}/advice/recommendations`}
             className="display-block margin-bottom-2"
@@ -102,19 +109,37 @@ const ReviewAdviceLetter = ({
             <RecommendationsList
               type="form"
               recommendations={recommendations}
-              edit={
-                showEditLinks
-                  ? {
-                      onClick: recommendation =>
-                        history.push(`/trb/${id}/advice/recommendations/form`, {
-                          recommendation: {
-                            ...recommendation,
-                            links: recommendation.links.map(link => ({ link }))
-                          }
-                        })
-                    }
-                  : undefined
-              }
+              {...recommendationActions}
+              // edit={
+              //   showSectionEditLinks
+              //     ? {
+              //         onClick: recommendation =>
+              //           history.push(`/trb/${id}/advice/recommendations/form`, {
+              //             recommendation: {
+              //               ...recommendation,
+              //               links: recommendation.links.map(link => ({ link }))
+              //             }
+              //           })
+              //       }
+              //     : undefined
+              // }
+              // remove={
+              //   showSectionEditLinks
+              //     ? {
+              //         onClick: recommendation =>
+              //           remove({ variables: { id: recommendation.id } }).catch(
+              //             () =>
+              //               setFormAlert({
+              //                 type: 'error',
+              //                 message: t('adviceLetterForm.error', {
+              //                   action: 'removing',
+              //                   type: 'recommendation'
+              //                 })
+              //               })
+              //           )
+              //       }
+              //     : undefined
+              // }
             />
           )
         }
@@ -129,7 +154,7 @@ const ReviewAdviceLetter = ({
         })}
       >
         <h2 className="margin-bottom-1">{t('adviceLetter.nextSteps')}</h2>
-        {showEditLinks && (
+        {showSectionEditLinks && (
           <UswdsReactLink
             to={`/trb/${id}/advice/next-steps`}
             className="display-block margin-bottom-5"
