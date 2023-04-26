@@ -179,11 +179,23 @@ const AdviceLetterForm = () => {
         );
       }
 
+      if (
+        !completed.includes('internal-review') &&
+        trbRequest?.taskStatuses?.adviceLetterStatus ===
+          TRBAdviceLetterStatus.READY_FOR_REVIEW
+      ) {
+        completed.push('internal-review');
+      }
+
       Promise.allSettled(stepValidators).then(() => {
         if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
       });
     })();
-  }, [stepsCompleted, adviceLetter]);
+  }, [
+    stepsCompleted,
+    adviceLetter,
+    trbRequest?.taskStatuses?.adviceLetterStatus
+  ]);
 
   // Redirect if previous step is not completed
   useEffect(() => {
