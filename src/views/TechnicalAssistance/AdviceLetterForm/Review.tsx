@@ -79,6 +79,10 @@ const Review = ({
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
 
+  if (adviceLetterStatus !== TRBAdviceLetterStatus.READY_FOR_REVIEW) {
+    history.replace(`/trb/${trbRequestId}/advice/summary`);
+  }
+
   return (
     <div id="trbAdviceReview" className="margin-top-5">
       {/* Notes */}

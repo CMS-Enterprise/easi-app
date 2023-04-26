@@ -102,9 +102,7 @@ const AdviceLetterForm = () => {
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
-  const [stepsCompleted, setStepsCompleted] = useState<FormStepKey[]>([
-    'recommendations'
-  ]);
+  const [stepsCompleted, setStepsCompleted] = useState<FormStepKey[]>();
 
   // Form level alerts from step components
   const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
@@ -125,7 +123,7 @@ const AdviceLetterForm = () => {
     (index: number): boolean => {
       const stepsToValidate = adviceFormSteps.slice(0, index);
       const validSteps = stepsToValidate.filter(({ slug }) =>
-        stepsCompleted.includes(slug)
+        stepsCompleted?.includes(slug)
       );
       return stepsToValidate.length === validSteps.length;
     },
@@ -137,7 +135,9 @@ const AdviceLetterForm = () => {
       return;
     }
     (async () => {
-      const completed = [...stepsCompleted];
+      const completed: FormStepKey[] = stepsCompleted
+        ? [...stepsCompleted]
+        : ['recommendations'];
       const stepValidators = [];
 
       // Check the Meeting Summary step
@@ -152,7 +152,7 @@ const AdviceLetterForm = () => {
               }
             )
             .then(valid => {
-              if (valid) completed.push('summary');
+              if (valid) completed.unshift('summary');
             })
         );
       }
@@ -184,6 +184,19 @@ const AdviceLetterForm = () => {
       });
     })();
   }, [stepsCompleted, adviceLetter]);
+
+  // Redirect if previous step is not completed
+  useEffect(() => {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex)) {
+      const lastStepCompletedIndex = adviceFormSteps.findIndex(
+        step => step.slug === stepsCompleted?.slice(-1)[0]
+      );
+      // Redirect to last available step
+      history.replace(
+        `/trb/${id}/advice/${adviceFormSteps[lastStepCompletedIndex + 1].slug}`
+      );
+    }
+  }, [stepsCompleted, currentStepIndex, history, id, checkValidSteps]);
 
   useEffect(() => {
     if (formAlert) {
