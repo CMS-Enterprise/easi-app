@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
-import { Alert } from '@trussworks/react-uswds';
+import { Alert, Button } from '@trussworks/react-uswds';
 
 import Divider from 'components/shared/Divider';
 import {
@@ -117,10 +117,14 @@ const InternalReview = ({
           onClick: () => history.push(`/trb/${trbRequestId}/advice/next-steps`)
         }}
         next={{
-          text: 'Request internal review',
-          disabled:
-            isSubmitting ||
-            adviceLetterStatus !== TRBAdviceLetterStatus.IN_PROGRESS,
+          text: t(
+            `adviceLetterForm.${
+              adviceLetterStatus === TRBAdviceLetterStatus.IN_PROGRESS
+                ? 'requestInternalReview'
+                : 'requestAnotherInternalReview'
+            }`
+          ),
+          disabled: isSubmitting,
           onClick: () => {
             requestReview()
               .then(() => history.push(`/trb/${trbRequestId}/advice`))
@@ -140,7 +144,18 @@ const InternalReview = ({
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
         border={false}
-      />
+      >
+        <Trans i18nKey="technicalAssistance:adviceLetterForm.progressToNextStep">
+          one
+          <Button
+            type="button"
+            unstyled
+            onClick={() => history.push(`/trb/${trbRequestId}/advice/review`)}
+          >
+            button
+          </Button>
+        </Trans>
+      </Pager>
     </div>
   );
 };

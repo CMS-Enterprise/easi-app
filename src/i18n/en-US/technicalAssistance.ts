@@ -136,8 +136,11 @@ const technicalAssistance = {
     internalReviewNeeded: {
       heading: 'Internal TRB review needed',
       text:
-        'You cannot send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
+        'You should not send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
     },
+    requestInternalReview: 'Request internal review',
+    requestAnotherInternalReview: 'Request another internal review',
+    progressToNextStep: 'or, <1>progress to next step</1>',
     notesAlert:
       'Your TRB team members have not yet left any notes about your draft advice letter. Please confirm with the team to make sure this advice letter has been reviewed before you proceed with sending the final letter.',
     notesCount:
