@@ -40,7 +40,7 @@ const InternalReview = ({
     RequestReviewForTRBAdviceLetterVariables
   >(RequestReviewForTRBAdviceLetterQuery, {
     variables: {
-      id: trbRequestId
+      id: adviceLetter.id
     }
   });
 
