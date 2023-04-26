@@ -111,7 +111,7 @@
     }
   }
   // Remove max width on alert body
-  &.usa-alert--slim .usa-alert__body {
+  &.usa-alert .usa-alert__body {
     max-width: none;
   }
 }
