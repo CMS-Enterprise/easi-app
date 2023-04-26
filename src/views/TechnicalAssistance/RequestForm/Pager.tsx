@@ -19,7 +19,7 @@ type PageButtonProps =
 type Props = {
   back?: PageButtonProps;
   next?: PageButtonProps;
-  children?: React.ReactNode;
+  buttons?: React.ReactNode[];
   saveExitText?: string;
   saveExitHidden?: boolean;
   saveExitDisabled?: boolean;
@@ -40,7 +40,7 @@ type Props = {
 export function Pager({
   back,
   next,
-  children,
+  buttons,
   saveExitText,
   saveExitHidden,
   saveExitDisabled,
@@ -53,14 +53,9 @@ export function Pager({
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 
-  return (
-    <div
-      className={classNames(className, {
-        'border-base-light border-top-1px': border
-      })}
-    >
-      <ButtonGroup className={classNames({ 'margin-top-2': border })}>
-        {back && (
+  const buttonItems = [
+    ...(back
+      ? [
           <Button
             type={back.type ?? 'button'}
             outline={back.outline !== undefined ? back.outline : true}
@@ -70,8 +65,10 @@ export function Pager({
           >
             {back.text ?? t('button.back')}
           </Button>
-        )}
-        {next && (
+        ]
+      : []),
+    ...(next
+      ? [
           <Button
             type={next.type ?? 'submit'}
             outline={next.outline}
@@ -81,9 +78,22 @@ export function Pager({
           >
             {next.text ?? t('button.next')}
           </Button>
-        )}
-        {children}
-      </ButtonGroup>
+        ]
+      : []),
+    ...(buttons || [])
+  ];
+
+  return (
+    <div
+      className={classNames(className, {
+        'border-base-light border-top-1px': border
+      })}
+    >
+      {buttonItems && (
+        <ButtonGroup className={classNames({ 'margin-top-2': border })}>
+          {buttonItems.map(button => button)}
+        </ButtonGroup>
+      )}
       {!saveExitHidden && (
         <Button
           className="margin-top-2 display-flex flex-align-center"

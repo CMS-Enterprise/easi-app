@@ -96,19 +96,14 @@ const InternalReview = ({
 
       <Divider />
 
-      {
-        /* Internal review needed alert */
-        (adviceLetterStatus === TRBAdviceLetterStatus.IN_PROGRESS ||
-          adviceLetterStatus === TRBAdviceLetterStatus.READY_FOR_REVIEW) && (
-          <Alert
-            type="warning"
-            heading={t('adviceLetterForm.internalReviewNeeded.heading')}
-            className="margin-top-4 margin-bottom-5"
-          >
-            {t('adviceLetterForm.internalReviewNeeded.text')}
-          </Alert>
-        )
-      }
+      {/* Internal review needed alert */}
+      <Alert
+        type="warning"
+        heading={t('adviceLetterForm.internalReviewNeeded.heading')}
+        className="margin-top-4 margin-bottom-5"
+      >
+        {t('adviceLetterForm.internalReviewNeeded.text')}
+      </Alert>
 
       {/* Form pager buttons */}
       <Pager
@@ -141,21 +136,22 @@ const InternalReview = ({
               });
           }
         }}
+        buttons={[
+          <Trans i18nKey="technicalAssistance:adviceLetterForm.progressToNextStep">
+            one
+            <Button
+              type="button"
+              unstyled
+              onClick={() => history.push(`/trb/${trbRequestId}/advice/review`)}
+            >
+              button
+            </Button>
+          </Trans>
+        ]}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
         border={false}
-      >
-        <Trans i18nKey="technicalAssistance:adviceLetterForm.progressToNextStep">
-          one
-          <Button
-            type="button"
-            unstyled
-            onClick={() => history.push(`/trb/${trbRequestId}/advice/review`)}
-          >
-            button
-          </Button>
-        </Trans>
-      </Pager>
+      />
     </div>
   );
 };
