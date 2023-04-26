@@ -135,7 +135,16 @@ const technicalAssistance = {
       text:
         'You cannot send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
     },
-    notesCount: '<bold>{{count}}</bold> note{{plural}} about this advice letter'
+    notesCount:
+      '<bold>{{count}}</bold> note{{plural}} about this advice letter',
+    done: {
+      success:
+        'Your advice letter for has been sent. Selected email notification recipients will receive a confirmation email with a link to the advice letter. Additionally, the original requester can view this letter from their request task list.',
+      error:
+        'Your advice letter was not sent. Please either return to the previous page and try again, or try again at a later date. The requester will not be able to view the advice letter until it is successfully sent.',
+      returnToRequestHome: 'Return to request home',
+      backToAdviceLetter: 'Back to advice letter'
+    }
   },
   emailRecipientFields: {
     label: 'Choose recipients <red>*</red>',

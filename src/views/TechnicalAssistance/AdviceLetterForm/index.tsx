@@ -29,6 +29,7 @@ import NotFound from 'views/NotFound';
 import Breadcrumbs from '../Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
+import Done from './Done';
 import InternalReview from './InternalReview';
 import NextSteps from './NextSteps';
 import Recommendations from './Recommendations';
@@ -194,9 +195,8 @@ const AdviceLetterForm = () => {
   // Page loading
   if (loading) return <PageLoading />;
 
-  // If invalid URL or advice letter can't be started, return page not found
+  // If advice letter can't be started, return page not found
   if (
-    currentStepIndex === -1 ||
     !trbRequest ||
     !adviceLetter ||
     trbRequest.taskStatuses.adviceLetterStatus ===
@@ -208,6 +208,10 @@ const AdviceLetterForm = () => {
   const {
     taskStatuses: { adviceLetterStatus }
   } = trbRequest;
+
+  if (formStep === 'done') {
+    return <Done />;
+  }
 
   return (
     <>
