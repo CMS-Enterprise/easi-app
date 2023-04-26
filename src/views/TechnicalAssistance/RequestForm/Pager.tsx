@@ -57,6 +57,7 @@ export function Pager({
     ...(back
       ? [
           <Button
+            key="buttonBack"
             type={back.type ?? 'button'}
             outline={back.outline !== undefined ? back.outline : true}
             disabled={back.disabled}
@@ -70,6 +71,7 @@ export function Pager({
     ...(next
       ? [
           <Button
+            key="buttonNext"
             type={next.type ?? 'submit'}
             outline={next.outline}
             disabled={next.disabled}

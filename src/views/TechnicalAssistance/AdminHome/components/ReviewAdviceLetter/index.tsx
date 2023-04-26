@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -15,6 +14,7 @@ import RecommendationsList, {
 
 type ReviewAdviceLetterProps = {
   adviceLetter: AdviceLetter;
+  trbRequestId: string;
   showSectionEditLinks?: boolean;
   recommendationActions?: {
     edit?: EditRecommendationProp;
@@ -30,6 +30,7 @@ type ReviewAdviceLetterProps = {
  */
 const ReviewAdviceLetter = ({
   adviceLetter,
+  trbRequestId,
   showSectionEditLinks = false,
   recommendationActions,
   showDateSent = true,
@@ -39,8 +40,6 @@ const ReviewAdviceLetter = ({
   const { t } = useTranslation('technicalAssistance');
 
   const { recommendations } = adviceLetter;
-
-  const { id } = useParams<{ id: string }>();
 
   return (
     <div className={className}>
@@ -69,7 +68,7 @@ const ReviewAdviceLetter = ({
         <h2 className="margin-bottom-1">{t('adviceLetter.whatWeHeard')}</h2>
         {showSectionEditLinks && (
           <UswdsReactLink
-            to={`/trb/${id}/advice/summary`}
+            to={`/trb/${trbRequestId}/advice/summary`}
             className="display-block margin-bottom-5"
           >
             {t('check.edit')}
@@ -94,7 +93,7 @@ const ReviewAdviceLetter = ({
         <h2 className="margin-bottom-1">{t('adviceLetter.whatWeRecommend')}</h2>
         {showSectionEditLinks && (
           <UswdsReactLink
-            to={`/trb/${id}/advice/recommendations`}
+            to={`/trb/${trbRequestId}/advice/recommendations`}
             className="display-block margin-bottom-2"
           >
             {t('check.edit')}
@@ -156,7 +155,7 @@ const ReviewAdviceLetter = ({
         <h2 className="margin-bottom-1">{t('adviceLetter.nextSteps')}</h2>
         {showSectionEditLinks && (
           <UswdsReactLink
-            to={`/trb/${id}/advice/next-steps`}
+            to={`/trb/${trbRequestId}/advice/next-steps`}
             className="display-block margin-bottom-5"
           >
             {t('check.edit')}

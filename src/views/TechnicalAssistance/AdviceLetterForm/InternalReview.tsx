@@ -66,6 +66,7 @@ const InternalReview = ({
     <div id="trbAdviceInternalReview">
       {/* Internal Review */}
       <ReviewAdviceLetter
+        trbRequestId={trbRequestId}
         adviceLetter={adviceLetter}
         className="margin-top-5 margin-bottom-4"
         recommendationActions={{

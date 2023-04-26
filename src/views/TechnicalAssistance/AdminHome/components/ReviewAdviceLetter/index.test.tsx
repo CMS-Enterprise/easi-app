@@ -8,7 +8,10 @@ import ReviewAdviceLetter from '.';
 describe('TRB Advice Letter review component', () => {
   it('Matches the snapshot', async () => {
     const { getByText, asFragment } = render(
-      <ReviewAdviceLetter adviceLetter={trbRequestAdviceLetter} />
+      <ReviewAdviceLetter
+        trbRequestId="8d8bbac8-4ce5-43c5-9d47-a698be37d152"
+        adviceLetter={trbRequestAdviceLetter}
+      />
     );
 
     // Advice letter renders
