@@ -170,15 +170,17 @@ const Review = ({
         <Form
           onSubmit={handleSubmit(formData =>
             mutate({
-              variables: { input: { ...formData, id: trbRequestId } }
+              variables: { input: { ...formData, id: adviceLetter.id } }
             })
               .then(() =>
-                history.push(`/trb/${trbRequestId}/done`, {
+                history.push(`/trb/${trbRequestId}/advice/done`, {
                   success: true
                 })
               )
               .catch(() =>
-                history.push(`/trb/${trbRequestId}/done`, { success: false })
+                history.push(`/trb/${trbRequestId}/advice/done`, {
+                  success: false
+                })
               )
           )}
           className="maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
