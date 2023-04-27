@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
-import PDFExport from 'components/PDFExport';
 import useCacheQuery from 'hooks/useCacheQuery';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
@@ -76,16 +75,9 @@ const AdviceLetter = ({
             {t('adviceLetter.noAdviceLetter')}
           </Alert>
         ) : (
-          /* Advice letter content */
-          <PDFExport
-            title={t('adminHome.adviceLetter')}
-            filename={`Advice letter for ${data?.trbRequest?.name}`}
-            label={t('adviceLetter.downloadAsPdf')}
-            linkPosition="top"
-            disabled={!adviceLetter}
-          >
+          <>
             {adviceLetter && <ReviewAdviceLetter adviceLetter={adviceLetter} />}
-          </PDFExport>
+          </>
         )
       }
     </TrbAdminWrapper>

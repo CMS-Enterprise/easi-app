@@ -9,7 +9,7 @@ import {
   GetTrbRequest_trbRequest as TrbRequest,
   GetTrbRequestVariables
 } from 'queries/types/GetTrbRequest';
-import { TRBFormStatus } from 'types/graphql-global-types';
+import { TRBFormStatus, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { NotFoundPartial } from 'views/NotFound';
 
@@ -43,7 +43,10 @@ const InitialRequestForm = ({
       title={t('adminHome.initialRequestForm')}
       noteCount={trbRequest.adminNotes.length}
       disableStep={
-        trbRequest.taskStatuses.formStatus === TRBFormStatus.IN_PROGRESS
+        trbRequest.status === TRBRequestStatus.READY_FOR_CONSULT ||
+        trbRequest.status === TRBRequestStatus.CONSULT_COMPLETE ||
+        trbRequest.status === TRBRequestStatus.DRAFT_ADVICE_LETTER ||
+        trbRequest.status === TRBRequestStatus.ADVICE_LETTER_IN_REVIEW
       }
       statusTagProps={{
         status: trbRequest.taskStatuses.formStatus || TRBFormStatus.IN_PROGRESS,

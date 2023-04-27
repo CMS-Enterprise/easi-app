@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Button } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
@@ -11,19 +12,24 @@ import {
   GetTrbAdminNotes_trbRequest_adminNotes as GetTrbAdminNotesType,
   GetTrbAdminNotesVariables
 } from 'queries/types/GetTrbAdminNotes';
+import { GetTrbRequestSummary_trbRequest as GetTrbRequestSummaryType } from 'queries/types/GetTrbRequestSummary';
+import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { NotFoundPartial } from 'views/NotFound';
 
 import Note from './components/Note';
 import { ModalViewType } from './components/NoteModal';
+import TrbAdminWrapper from './components/TrbAdminWrapper';
 
 interface NotesProps {
   trbRequestId: string;
+  trbRequest?: GetTrbRequestSummaryType;
   setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
   modalMessage?: string;
 }
 
 const Notes = ({
   trbRequestId,
+  trbRequest,
   setModalView, // prop used to conditionall render text/links/etc specifically for modal
   modalMessage
 }: NotesProps) => {
@@ -46,18 +52,22 @@ const Notes = ({
     return <NotFoundPartial />;
   }
 
+  const adminActionDisabled: boolean =
+    trbRequest?.state !== TRBRequestState.CLOSED &&
+    trbRequest?.status !== TRBRequestStatus.ADVICE_LETTER_SENT;
+
   return (
-    <div
-      className="trb-admin-home__notes line-height-body-5"
-      data-testid="trb-admin-home__notes"
-      id={`trbAdminNotes-${trbRequestId}`}
+    <TrbAdminWrapper
+      activePage="notes"
+      trbRequestId={trbRequestId}
+      title={t('adminHome.notes')}
+      description={t('notes.description')}
+      disableStep={adminActionDisabled}
+      adminActionProps={{
+        status: trbRequest?.status || TRBRequestStatus.NEW,
+        state: trbRequest?.state || TRBRequestState.OPEN
+      }}
     >
-      <h1 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-        {t('adminHome.notes')}
-      </h1>
-
-      <p>{t('notes.description')}</p>
-
       {setModalView ? (
         <Button
           type="button"
@@ -71,7 +81,9 @@ const Notes = ({
       ) : (
         <UswdsReactLink
           to={`/trb/${trbRequestId}/notes/add-note`}
-          className="usa-button margin-bottom-4"
+          className={classNames('usa-button margin-bottom-4', {
+            'margin-top-4': !adminActionDisabled
+          })}
           variant="unstyled"
         >
           {t('notes.addNote')}
@@ -115,7 +127,7 @@ const Notes = ({
           )}
         </div>
       )}
-    </div>
+    </TrbAdminWrapper>
   );
 };
 

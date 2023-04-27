@@ -88,7 +88,17 @@ const technicalAssistance = {
       DRAFT_ADVICE_LETTER: {
         title: 'Draft advice letter',
         description:
-          'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.'
+          'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
+        list: {
+          label: 'What should I include in the advice letter?',
+          text:
+            'EASi will direct you to complete the following parts of the advice letter:',
+          unorderedItems: [
+            '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
+            '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
+            '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
+          ]
+        }
       },
       ADVICE_LETTER_IN_REVIEW: {
         title: 'Review advice letter',

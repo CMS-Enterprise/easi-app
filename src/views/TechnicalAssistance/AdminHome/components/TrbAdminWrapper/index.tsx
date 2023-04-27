@@ -101,8 +101,8 @@ type TrbAdminWrapperProps = {
     status: TRBRequestStatus;
     state: TRBRequestState;
     // TRB Lead modal refs
-    assignLeadModalRef: React.RefObject<ModalRef>;
-    assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
+    assignLeadModalRef?: React.RefObject<ModalRef>;
+    assignLeadModalTrbRequestIdRef?: React.MutableRefObject<TrbRequestIdRef>;
   };
   /** Props to display status tag */
   statusTagProps?: {

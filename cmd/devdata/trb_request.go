@@ -139,7 +139,7 @@ func (s *seederConfig) seedTRBCase6() error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(trb, true)
+	_, err = s.addAdviceLetter(trb, true, false)
 	if err != nil {
 		return err
 	}
@@ -168,7 +168,7 @@ func (s *seederConfig) seedTRBCase7() error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(trb, false)
+	_, err = s.addAdviceLetter(trb, false, false)
 	if err != nil {
 		return err
 	}
@@ -197,7 +197,7 @@ func (s *seederConfig) seedTRBCase8() error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(trb, false)
+	_, err = s.addAdviceLetter(trb, false, false)
 	if err != nil {
 		return err
 	}
@@ -226,7 +226,7 @@ func (s *seederConfig) seedTRBCase9() error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(trb, true)
+	_, err = s.addAdviceLetter(trb, false, true)
 	if err != nil {
 		return err
 	}
@@ -437,7 +437,7 @@ func (s *seederConfig) addTRBLead(trb *models.TRBRequest, leadEUA string) (*mode
 	)
 }
 
-func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*models.TRBAdviceLetter, error) {
+func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool, shouldSend bool) (*models.TRBAdviceLetter, error) {
 	_, err := resolvers.CreateTRBAdviceLetter(s.ctx, s.store, trb.ID)
 	if err != nil {
 		return nil, err
@@ -459,9 +459,11 @@ func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*m
 			return nil, err
 		}
 
-		_, err = resolvers.SendTRBAdviceLetter(s.ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock)
-		if err != nil {
-			return nil, err
+		if shouldSend {
+			_, err = resolvers.SendTRBAdviceLetter(s.ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		recommendation := &models.TRBAdviceLetterRecommendation{
