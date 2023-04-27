@@ -21,7 +21,6 @@ import (
 )
 
 type seederConfig struct {
-	ctx      context.Context
 	logger   *zap.Logger
 	store    *storage.Store
 	s3Client *upload.S3Client
@@ -55,8 +54,6 @@ func main() {
 		panic(storeErr)
 	}
 
-	// store.TruncateAllTablesDANGEROUS(logger)
-
 	s3Cfg := upload.Config{
 		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
 		Region:  config.GetString(appconfig.AWSRegion),
@@ -65,8 +62,8 @@ func main() {
 
 	s3Client := upload.NewS3Client(s3Cfg)
 
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
 	seederConfig := &seederConfig{
-		ctx:      mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser),
 		logger:   logger,
 		store:    store,
 		s3Client: &s3Client,
@@ -199,7 +196,7 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
-	must(nil, seederConfig.seedTRBRequests())
+	must(nil, seederConfig.seedTRBRequests(ctx))
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
