@@ -100,7 +100,7 @@ describe('TRB Admin Home summary', () => {
 
     // Check that correct task status is rendered
     expect(getByTestId('trbSummary-status')).toHaveTextContent(
-      'Ready to start request form'
+      'Draft request form'
     );
 
     /** TRB Lead container */
