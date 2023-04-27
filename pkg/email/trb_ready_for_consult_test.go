@@ -35,9 +35,10 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 		)
 
 		adminViewOpeningTag := fmt.Sprintf(
-			"<a href=\"%s://%s/TODO/admin-view\">",
+			"<a href=\"%s://%s/trb/%s/request\">",
 			s.config.URLScheme,
 			s.config.URLHost,
+			requestID,
 		)
 
 		mailToTRBInboxElement := fmt.Sprintf(
