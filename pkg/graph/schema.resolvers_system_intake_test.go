@@ -1260,6 +1260,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				BusinessNeed     string
 				CurrentStage     string
 				NeedsEaSupport   bool
+				HasUIChanges     bool
 			}
 		}
 	}
@@ -1274,7 +1275,8 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				businessSolution: "My solution",
 				businessNeed: "My need",
 				currentStage:  "Just an idea",
-				needsEaSupport: false
+				needsEaSupport: false,
+				hasUiChanges: false,
 			}) {
 				systemIntake {
 					id
@@ -1283,6 +1285,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 					businessNeed
 					currentStage
 					needsEaSupport
+					hasUiChanges
 				}
 			}
 		}`, intake.ID), &resp)
@@ -1295,6 +1298,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.Equal(respIntake.BusinessNeed, "My need")
 	s.Equal(respIntake.CurrentStage, "Just an idea")
 	s.False(respIntake.NeedsEaSupport)
+	s.False(respIntake.HasUIChanges)
 }
 
 func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreation() {

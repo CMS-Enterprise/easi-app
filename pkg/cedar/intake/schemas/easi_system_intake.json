@@ -364,6 +364,10 @@
           "examples": [
             "J8YN"
           ]
+        },
+        "hasUiChanges": {
+          "type": "boolean",
+          "description": "Does the request have UI changes"
         }
       },
       "additionalProperties": false,
