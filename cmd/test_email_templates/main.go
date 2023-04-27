@@ -59,7 +59,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	err := client.SendTRBFormSubmissionNotificationToRequester(ctx, requestID, requestName, requesterEmail, requesterName)
 	noErr(err)
 
-	err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestName, requesterName, component)
+	err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, requestName, requesterName, component)
 	noErr(err)
 
 	readyForConsultFeedback := "You're good to go for the consult meeting!"
