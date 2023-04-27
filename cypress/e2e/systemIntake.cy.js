@@ -315,7 +315,7 @@ describe('The System Intake Form', () => {
 
     cy.contains(
       '.easi-review-row dt',
-      'Does your project involve any user interface component, or changes to an interface component?ed Enterprise Architecture (EA) support?'
+      'Does your project involve any user interface component, or changes to an interface component?'
     )
       .siblings('dd')
       .contains('No');
