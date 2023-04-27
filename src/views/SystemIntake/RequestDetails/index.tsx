@@ -361,10 +361,6 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                       Does your project involve any user interface component, or
                       changes to an interface component?
                     </legend>
-                    <HelpText id="IntakeForm-HasUiChangesHelp">
-                      If you are unsure, mark &quot;Yes&quot; and someone from
-                      the EA team will assess your needs.
-                    </HelpText>
                     <FieldErrorMsg>{flatErrors.hasUiChanges}</FieldErrorMsg>
                     <Field
                       as={Radio}
