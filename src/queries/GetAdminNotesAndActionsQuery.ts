@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 export default gql`
   query GetAdminNotesAndActions($id: UUID!) {
     systemIntake(id: $id) {
+      id
       lcid
       notes {
         id

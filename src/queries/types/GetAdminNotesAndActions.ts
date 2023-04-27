@@ -62,6 +62,7 @@ export interface GetAdminNotesAndActions_systemIntake_actions {
 
 export interface GetAdminNotesAndActions_systemIntake {
   __typename: "SystemIntake";
+  id: UUID;
   lcid: string | null;
   notes: GetAdminNotesAndActions_systemIntake_notes[];
   actions: GetAdminNotesAndActions_systemIntake_actions[];
