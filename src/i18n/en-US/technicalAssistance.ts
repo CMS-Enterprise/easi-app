@@ -33,7 +33,7 @@ const technicalAssistance = {
   },
   adminAction: 'Admin Action',
   requestNotes: {
-    text: 'notes about this request',
+    text: 'note{{-plural}} about this request',
     viewNotes: 'View notes',
     addNote: 'Add a note'
   },
@@ -51,7 +51,20 @@ const technicalAssistance = {
     resources: 'Resources',
     nextSteps: 'Next steps',
     notSpecified: 'Not specified yet',
-    followup: 'Should the team return for a follow-up session?'
+    followup: 'Should the team return for a follow-up session?',
+    adviceLetter: 'Advice Letter',
+    description:
+      'This is an advice letter that was sent to the project team for the request summarized below. If you have any questions about this advice letter, you may reach out to the TRB at <a>{{email}}</a>.',
+    thankYou: 'Thank you for attending the TRB consult session!',
+    requestSummary: 'Request summary',
+    whatOtherRequestTypes: 'What other request types are there?',
+    showSummary: 'Show summary',
+    hideSummary: 'Hide summary',
+    haveQuestions: 'Have questions about this advice letter?',
+    haveQuestionsContact: 'Reach out to the TRB at <a>{{email}}</a>',
+    incomplete: 'Advice letter incomplete',
+    incompleteCheckLater:
+      'The Technical Review Board is still compiling the advice letter for this project. Please check back later'
   },
   requiredFields:
     'Fields marked with an asterisk ( <red>*</red> ) are required.',
@@ -92,6 +105,7 @@ const technicalAssistance = {
     ],
     meetingSummary: 'Meeting summary',
     addRecommendation: 'Add a recommendation',
+    addAnotherRecommendation: 'Add another recommendation',
     noRecommendations:
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
     continueWithoutAdding: 'Continue without adding recommendations',
@@ -107,7 +121,29 @@ const technicalAssistance = {
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
     error:
-      'There was an issue saving your advice letter. Please try again, and if the problem persists, try again later.'
+      'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
+    recommendationSuccess:
+      'Your recommendation was added to this advice letter.',
+    modal: {
+      title: 'Confirm you want to remove this recommendation.',
+      text:
+        'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
+      removingTitle: 'Removing: {{title}}'
+    }
+  },
+  emailRecipientFields: {
+    label: 'Choose recipients <red>*</red>',
+    selectedCount: '<bold>{{count}}</bold> recipients selected',
+    copyTrbMailbox: 'Copy TRB Mailbox',
+    projectTeamMember: 'Project team member',
+    showMore: 'Show {{number}} more recipients',
+    showFewer: 'Show {{number}} fewer recipients',
+    addAnotherRecipient: 'Add another recipient',
+    newRecipientName: 'New recipient name',
+    newRecipientComponent: 'New recipient component',
+    newRecipientRole: 'New recipient role',
+    addRecipient: 'Add recipient',
+    selectRecipientError: 'Please select a recipient'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
@@ -118,7 +154,8 @@ const technicalAssistance = {
   },
   // Misc breadcrumb items
   breadcrumbs: {
-    startTrbRequest: 'Start a TRB Request'
+    startTrbRequest: 'Start a TRB Request',
+    technicalAssistance: 'Technical Assistance'
   },
   // Common button text
   button: {
@@ -388,6 +425,7 @@ const technicalAssistance = {
     labels: {
       name: 'Request name',
       component: 'Request component',
+      projectInformation: 'Project Information',
       needsAssistanceWith: 'What do you need technical assistance with?',
       hasSolutionInMind: 'Do you have a solution in mind already?',
       proposedSolution: 'Describe your proposed solution.',
@@ -396,10 +434,22 @@ const technicalAssistance = {
         'Does your solution have an expected start and/or end date?',
       expectedStartDate: 'Expected start date',
       expectedEndDate: 'Expected end date',
+      fundingSource: 'Funding source',
+      fundingNumber: 'Funding number',
+      fundingSourcesList: 'Funding sources',
+      fundingSources: 'Which existing funding sources will fund this project?',
+      relatedLCIDS:
+        'Select any Life Cycle IDs (LCIDs) pertaining to this request.',
+      listLCIDS: 'List any Life Cycle IDs (LCIDs) pertaining to this request.',
+      selectedLCIDs: 'Selected LCIDs',
+      collabAndGovernance: 'Collaboration and Governance',
       collabGroups:
         'Select any other OIT groups that you have met with or collaborated with.',
       collabGroupOther: 'Which other group(s)?',
-      whenMeet: 'When did you meet with them?'
+      whenMeet: 'When did you meet with them?',
+      collabGRBConsultRequested:
+        'Did the GRT or GRB request that you consult with the TRB as a part of your IT Governance or LCID issuance process?',
+      pleaseSpecify: 'Please specify'
     },
     hint: {
       component:
@@ -409,7 +459,11 @@ const technicalAssistance = {
       whereInProcess:
         'This helps the TRB provide the right type of support for your request.',
       whenMeet:
-        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.'
+        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.',
+      fundingSources:
+        'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
+      relatedLCIDS:
+        'Use the list below to select LCIDs within EASi that pertain to this request. Do not select any if there are no LCIDs related to this request.'
     },
     options: {
       select: 'Select',
@@ -441,133 +495,36 @@ const technicalAssistance = {
       submit:
         'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.'
     },
-    allFieldsMandatory: 'All fields are mandatory'
+    allFieldsMandatory: 'All fields are mandatory',
+    noAnswer: 'No answer selected'
   },
   subject: {
+    info:
+      'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.',
     labels: {
-      subjectAreaTechnicalReferenceArchitecture:
-        'Technical Reference Architecture (TRA)',
-      subjectAreaNetworkAndSecurity: 'Network and security',
-      subjectAreaCloudAndInfrastructure: 'Cloud and infrastructure',
-      subjectAreaApplicationDevelopment: 'Application development',
-      subjectAreaDataAndDataManagement: 'Data and data management',
-      subjectAreaGovernmentProcessesAndPolicies:
-        'CMS Governance processes and policies',
-      subjectAreaOtherTechnicalTopics: 'Other technical topics',
-
-      other: 'Please specify',
-      selectedTopics: 'Selected topics'
+      ACCESSIBILITY_COMPLIANCE: 'Access Control and Identity Management',
+      ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT: 'Accessibility Compliance',
+      ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT:
+        'Assistance with System Concept Development',
+      BUSINESS_INTELLIGENCE: 'Business Intelligence',
+      CLOUD_MIGRATION: 'Cloud Migration',
+      CONTAINERS_AND_MICROSERVICES: 'Containers and Microservices',
+      DISASTER_RECOVERY: 'Disaster Recovery',
+      EMAIL_INTEGRATION: 'Email Integration',
+      ENTERPRISE_DATA_LAKE_INTEGRATION: 'Enterprise Data Lake Integration',
+      FRAMEWORK_OR_TOOL_ALTERNATIVES: 'Framework or Tool Alternatives',
+      OPEN_SOURCE_SOFTWARE: 'Open Source Software',
+      PORTAL_INTEGRATION: 'Portal Integration',
+      SYSTEM_ARCHITECTURE_REVIEW: 'TRA Clarifications and/or Applicability',
+      SYSTEM_DISPOSITION_PLANNING: 'System Architecture Review',
+      TECHNICAL_REFERENCE_ARCHITECTURE: 'System Disposition Planning',
+      WEB_BASED_UI_SERVICES: 'Web Services and Web APIs',
+      WEB_SERVICES_AND_APIS: 'Web-based UI Services'
     },
-    hint: {
-      subjectAreaTechnicalReferenceArchitecture:
-        'Select any topics relevant to your request that are related to CMS’s Technical Reference Architecture or its foundational principles.',
-      subjectAreaNetworkAndSecurity:
-        'Select any network and security topics relevant to your request.',
-      subjectAreaCloudAndInfrastructure:
-        'Select any cloud and infrastructure topics relevant to your request.',
-      subjectAreaApplicationDevelopment:
-        'Select application development topics relevant to your request.',
-      subjectAreaDataAndDataManagement:
-        'Select any specific data topics relevant to your request.',
-      subjectAreaGovernmentProcessesAndPolicies:
-        'Select any specific CMS processes and policies that you would like to discuss as a part of your request.',
-      subjectAreaOtherTechnicalTopics:
-        'Select any additional topics related to your request.',
-
-      other: 'Explain which Other topic you would like to discuss with the TRB.'
-    },
-    options: {
-      subjectAreaTechnicalReferenceArchitecture: {
-        GENERAL_TRA_INFORMATION: 'General TRA information',
-        TRA_GUIDING_PRINCIPLES: 'TRA guiding principles',
-        CMS_PROCESSING_ENVIRONMENTS: 'CMS processing environments',
-        CMS_TRA_MULTI_ZONE_ARCHITECTURE: 'CMS TRA multi-zone architecture',
-        CMS_TRA_BUSINESS_RULES: 'CMS TRA business rules',
-        ABOUT_THE_TRB: 'About the TRB',
-        ARCHITECTURE_CHANGE_REQUEST_PROCESS_FOR_THE_TRA:
-          'Architecture change request process for the TRA',
-        OTHER: 'Other'
-      },
-      subjectAreaNetworkAndSecurity: {
-        GENERAL_NETWORK_AND_SECURITY_SERVICES_INFORMATION:
-          'General network and security services information',
-        SECURITY_SERVICES: 'Security services',
-        CMS_CYBERSECURITY_INTEGRATION_CENTER_INTEGRATION:
-          'CMS Cybersecurity Integration Center (CCIC) integration',
-        WIDE_AREA_NETWORK_SERVICES: 'Wide area network services',
-        ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT:
-          'Access control and identity management',
-        DOMAIN_NAME_SYSTEM_SERVICES: 'Domain name system services',
-        OTHER: 'Other'
-      },
-      subjectAreaCloudAndInfrastructure: {
-        GENERAL_CLOUD_AND_INFRASTRUCTURE_SERVICES_INFORMATION:
-          'General cloud and infrastructure services information',
-        VIRTUALIZATION: 'Virtualization',
-        CLOUD_IAAS_AND_PAAS_INFRASTRUCTURE:
-          'Cloud IaaS and PaaS infrastructure',
-        IT_PERFORMANCE_MANAGEMENT: 'IT performance management',
-        FILE_TRANSFER: 'File transfer',
-        DATA_STORAGE_SERVICES: 'Data storage services',
-        SOFTWARE_AS_A_SERVICE: 'Software as a Service',
-        KEYS_AND_SECRETS_MANAGEMENT: 'Keys and secrets management',
-        MOBILE_DEVICES_AND_APPLICATIONS: 'Mobile devices and applications',
-        CLOUD_MIGRATION: 'Cloud migration',
-        DISASTER_RECOVERY: 'Disaster recovery',
-        OTHER: 'Other'
-      },
-      subjectAreaApplicationDevelopment: {
-        GENERAL_APPLICATION_DEVELOPMENT_SERVICES_INFORMATION:
-          'General application development services information',
-        APPLICATION_DEVELOPMENT: 'Application development',
-        WEB_SERVICES_AND_WEB_APIS: 'Web services and web APIs',
-        WEB_BASED_UI_SERVICES: 'Web-based UI services',
-        OPEN_SOURCE_SOFTWARE: 'Open source software',
-        PORTAL_INTEGRATION: 'Portal integration',
-        ACCESSIBILITY_COMPLIANCE: 'Accessibility and 508',
-        BUSINESS_INTELLIGENCE: 'Business intelligence',
-        CONTAINERS_AND_MICROSERVICES: 'Containers and microservices',
-        ROBOTIC_PROCESS_AUTOMATION: 'Robotic Process Automation (RPA)',
-        SYSTEM_ARCHITECTURE_REVIEW: 'System architecture review',
-        EMAIL_INTEGRATION: 'Email integration',
-        CONFIGURATION_MANAGEMENT: 'Configuration management',
-        OTHER: 'Other'
-      },
-      subjectAreaDataAndDataManagement: {
-        GENERAL_DATA_AND_DATA_MANAGEMENT_INFORMATION:
-          'General data and data management information',
-        ENTERPRISE_DATA_ENVIRONMENT_REVIEW:
-          'Enterprise data environment review',
-        DATA_MART: 'Data mart',
-        DATA_WAREHOUSING: 'Data warehousing',
-        ANALYTIC_SANDBOXES: 'Analytic sandboxes',
-        APIS_AND_DATA_EXCHANGES: 'APIs and data exchanges',
-        FHIR: 'FHIR',
-        OTHER: 'Other'
-      },
-      subjectAreaGovernmentProcessesAndPolicies: {
-        GENERAL_INFORMATION_ABOUT_CMS_PROCESSES_AND_POLICIES:
-          'General information about CMS processes and policies',
-        OTHER_AVAILABLE_TRB_SERVICES: 'Other available TRB services',
-        SECTION_508_AND_ACCESSIBILITY_TESTING:
-          'Section 508 and accessibility testing',
-        TARGET_LIFE_CYCLE: 'Target Life Cycle (TLC)',
-        SYSTEM_DISPOSITION_PLANNING: 'System disposition planning',
-        INVESTMENT_AND_BUDGET_PLANNING: 'Investment and budget planning',
-        LIFECYCLE_IDS: 'Lifecycle IDs',
-        CONTRACTING_AND_PROCUREMENT: 'Contracting and procurement',
-        SECURITY_ASSESSMENTS: 'Security assessments (ATO, ACT, SIA, etc.)',
-        INFRASTRUCTURE_AS_A_SERVICE: 'Infrastructure as a service (BatCave)',
-        OTHER: 'Other'
-      },
-      subjectAreaOtherTechnicalTopics: {
-        ARTIFICIAL_INTELLIGENCE: 'Artificial Intelligence (AI)',
-        MACHINE_LEARNING: 'Machine Learning (ML)',
-        ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT:
-          'Assistance with system concept development',
-        OTHER: 'Other'
-      }
-    },
+    otherSubjectAreas: 'Other subject areas',
+    other: 'Other',
+    otherHint:
+      'Add a list of additional topics you’d like to discuss with the TRB. Please comma-separate your list if you are including multiple.',
     errors: {
       submit:
         'Your subject areas were not saved. Please try again. If the error persists, please try again at a later date.'
@@ -575,6 +532,9 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without selecting subject areas'
   },
   attendees: {
+    heading: 'Attendees',
+    description:
+      'Confirm the names and contact information for any additional individuals who should be present at the TRB consult session. If you wish to, you may also add more attendees. If you’re not yet sure who should be present, you can always share the calendar invite at a later date.',
     additionalAttendees: 'Additional attendees',
     addAnAttendee: 'Add an attendee',
     editAttendee: 'Edit attendee',
@@ -594,6 +554,13 @@ const technicalAssistance = {
       error:
         'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.',
       invalidForm: 'Invalid attendees form'
+    },
+    modal: {
+      heading: 'Confirm you want to remove {{-attendee}}.',
+      description:
+        'If you remove this attendee, they will no longer receive updates about this request or the TRB consult session.',
+      remove: 'Remove attendee',
+      cancel: 'Cancel'
     },
     fieldLabels: {
       requester: {
@@ -617,15 +584,16 @@ const technicalAssistance = {
       }
     },
     contactRoles: {
-      productOwner: 'Product Owner',
-      systemOwner: 'System Owner',
-      systemMaintainer: 'System Maintainer',
-      contractRep: 'Contracting Officer’s Representative (COR)',
-      cloudNavigator: 'Cloud Navigator',
-      privacyAdvisor: 'Privacy Advisor',
-      cra: 'CRA',
-      other: 'Other',
-      unknown: 'Unknown'
+      PRODUCT_OWNER: 'Product Owner',
+      SYSTEM_OWNER: 'System Owner',
+      SYSTEM_MAINTAINER: 'System Maintainer',
+      CONTRACT_OFFICE_RSREPRESENTATIVE:
+        'Contracting Officer’s Representative (COR)',
+      CLOUD_NAVIGATOR: 'Cloud Navigator',
+      PRIVACY_ADVISOR: 'Privacy Advisor',
+      CRA: 'CRA',
+      OTHER: 'Other',
+      UNKNOWN: 'Unknown'
     }
   },
   documents: {
@@ -913,6 +881,40 @@ const technicalAssistance = {
       'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
     breadcrumb: 'Schedule a consult'
   },
+  notes: {
+    description:
+      'Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.',
+    addNoteDescription:
+      'Add a note about this request for other TRB team members.',
+    addNote: 'Add a note',
+    notes: 'Notes',
+    allNotes: 'All notes',
+    viewMore: 'View more notes',
+    noNotes:
+      'No TRB member has added notes for this request yet. If you’d like to add a note, use the button above.',
+    date: 'Date',
+    author: 'Note author',
+    about: 'What is this note about?',
+    save: 'Save',
+    saveNote: 'Save note',
+    cancel: 'Cancel',
+    status: {
+      success: 'Your note has been added.',
+      error:
+        'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.'
+    },
+    labels: {
+      category: 'What is this note about?',
+      noteText: 'Note'
+    },
+    categories: {
+      ADVICE_LETTER: 'Advice letter',
+      CONSULT_SESSION: 'Consult session',
+      GENERAL_REQUEST: 'General note about this request',
+      INITIAL_REQUEST_FORM: 'Initial request form',
+      SUPPORTING_DOCUMENTS: 'Supporting documents'
+    }
+  },
   actionCloseRequest: {
     heading: 'Action: close request',
     description:
@@ -948,6 +950,15 @@ const technicalAssistance = {
     success: 'Action complete. This request is now open.',
     error:
       'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
+  },
+  assignTrbLeadModal: {
+    heading: 'Assign an Admin Lead',
+    label: 'Select a Lead from the TRB Team:',
+    assignMyself: 'Assign myself',
+    submit: 'Assign',
+    success: '{{name}} is assigned as the TRB lead for this request.',
+    error:
+      'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.'
   }
 };
 

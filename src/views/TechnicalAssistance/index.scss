@@ -31,6 +31,26 @@
       width: 200px;
     }
   }
+
+  .trb-checkbox-container {
+    border: 1px solid color('base');
+    border-radius: .25rem;
+    padding: .5rem;
+    margin-bottom: 1rem !important;
+
+    .usa-checkbox__label {
+      margin: 0 !important;
+    }
+  }
+
+  .subject-container-height {
+    height:  23rem;
+
+    @media screen and (max-width: $desktop) {
+      height:  auto;
+    }
+  }
+
   .trb-admin-team-home-actions {
     li {
       margin-top: 0;
@@ -47,6 +67,14 @@
       }
     }
   }
+
+  .trb-advice-letter-request-summary {
+    .easi-collapsable-link__content-no-bar {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
   .usa-form {
     /* Top margin for 1st level form groups */
     > .usa-form-group {
@@ -169,4 +197,17 @@
       text-align: left;
     }
   }
+
+  .usa-legend {
+    display: contents !important;
+  }
+
+  .intake-spinner {
+    margin-top: 6rem !important;
+  }
+}
+
+/* Override default auto margins on truss modal */
+.usa-modal-wrapper .usa-modal.trb-assign-lead-modal .usa-modal__main {
+  margin: 0;
 }

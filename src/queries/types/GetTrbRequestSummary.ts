@@ -9,6 +9,11 @@ import { TRBRequestType, TRBRequestState, TRBFormStatus, TRBFeedbackStatus, TRBC
 // GraphQL query operation: GetTrbRequestSummary
 // ====================================================
 
+export interface GetTrbRequestSummary_trbRequest_trbLeadInfo {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
 export interface GetTrbRequestSummary_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
   formStatus: TRBFormStatus;
@@ -18,15 +23,21 @@ export interface GetTrbRequestSummary_trbRequest_taskStatuses {
   adviceLetterStatus: TRBAdviceLetterStatus;
 }
 
+export interface GetTrbRequestSummary_trbRequest_adminNotes {
+  __typename: "TRBAdminNote";
+  id: UUID;
+}
+
 export interface GetTrbRequestSummary_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
   name: string;
   type: TRBRequestType;
   state: TRBRequestState;
-  trbLead: string | null;
+  trbLeadInfo: GetTrbRequestSummary_trbRequest_trbLeadInfo;
   createdAt: Time;
   taskStatuses: GetTrbRequestSummary_trbRequest_taskStatuses;
+  adminNotes: GetTrbRequestSummary_trbRequest_adminNotes[];
 }
 
 export interface GetTrbRequestSummary {

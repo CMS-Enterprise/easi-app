@@ -196,7 +196,7 @@ function TaskList() {
                       </Grid>
                     )}
 
-                  {data?.trbRequest.feedback.length !== 0 && (
+                  {data?.trbRequest.feedback.length > 0 && (
                     <UswdsReactLink
                       variant="unstyled"
                       className="usa-button usa-button--outline"
@@ -224,8 +224,8 @@ function TaskList() {
                       <li>{taskListText[2].list![2]}</li>
                     </ul>
 
-                    {taskStatuses?.consultPrepStatus !==
-                    TRBConsultPrepStatus.CANNOT_START_YET ? (
+                    {taskStatuses?.consultPrepStatus ===
+                    TRBConsultPrepStatus.READY_TO_START ? (
                       <div>
                         <UswdsReactLink
                           variant="unstyled"
@@ -245,8 +245,7 @@ function TaskList() {
 
                         <UswdsReactLink
                           className="display-block margin-top-2"
-                          target="_blank"
-                          to={`/trb/task-list/${id}/attendee-list`} // TODO: replace with link to view advice letter
+                          to={`/trb/task-list/${id}/attendees`}
                         >
                           {t('taskList.reviewAttendeeList')}
                         </UswdsReactLink>
@@ -311,13 +310,6 @@ function TaskList() {
                               time: consultTime
                             })}
                         </Alert>
-                        <UswdsReactLink
-                          className="display-block margin-top-2"
-                          target="_blank"
-                          to={`/trb/request/${id}/attendee-list`} // TODO: replace with link to view attendee list
-                        >
-                          {t('taskList.viewAttendeeList')}
-                        </UswdsReactLink>
                       </>
                     )}
                   </TaskListDescription>
@@ -338,7 +330,10 @@ function TaskList() {
                     <UswdsReactLink
                       variant="unstyled"
                       className="usa-button"
-                      to={`/trb/requests/${id}/advice-letter`} // TODO: replace with link to view advice letter
+                      to={{
+                        pathname: `/trb/advice-letter/${id}`,
+                        state: { fromTaskList: true }
+                      }}
                     >
                       {t('taskList.viewAdviceLetter')}
                     </UswdsReactLink>

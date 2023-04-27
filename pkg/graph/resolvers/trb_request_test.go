@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -60,16 +62,31 @@ func (s *ResolverSuite) TestGetTRBRequestByID() {
 
 // TestGetTRBRequests returns all TRB Requests
 func (s *ResolverSuite) TestGetTRBRequests() {
+	// Create a context to use for requests from another user
+	principalABCD := &authentication.EUAPrincipal{
+		EUAID:            "ABCD",
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+		JobCodeTRBAdmin:  true,
+	}
+	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
+	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
+
+	// Create a TRB request with TEST
 	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
-	//Check we return 1 value
+
+	// Check TEST sees 1 request
 	col, err := GetTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
 	s.NoError(err)
 	s.Len(col, 1)
 	s.EqualValues(trb, col[0])
 
-	trb2, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
+	// Create a TRB request under ABCD
+	trb2, err := CreateTRBRequest(ctxABCD, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb2)
 	//Check for 2 request
@@ -82,12 +99,80 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 		"archived": true,
 	}
 
-	//archive
-	trbUpdate, err := UpdateTRBRequest(s.testConfigs.Context, trb2.ID, changes, s.testConfigs.Store)
+	// archive
+	trbUpdate, err := UpdateTRBRequest(ctxABCD, trb2.ID, changes, s.testConfigs.Store)
 	s.NoError(err)
 
-	//GET archived collection
-	col, err = GetTRBRequests(s.testConfigs.Context, true, s.testConfigs.Store)
+	// GET archived collection from ABCD's perspective
+	col, err = GetTRBRequests(ctxABCD, true, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trbUpdate, col[0])
+}
+
+// TestGetMyTRBRequests returns a users TRB Requests
+func (s *ResolverSuite) TestGetMyTRBRequests() {
+	// Create a context to use for requests from another user
+	principalABCD := &authentication.EUAPrincipal{
+		EUAID:            "ABCD",
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+		JobCodeTRBAdmin:  true,
+	}
+	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
+	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
+
+	// Create a TRB request with TEST
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	// Check TEST sees 1 request
+	col, err := GetMyTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trb, col[0])
+
+	// Check ABCD sees 0 requests
+	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 0)
+
+	// Create a TRB request under ABCD
+	trb2, err := CreateTRBRequest(ctxABCD, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb2)
+
+	// TEST should see 1 request (their already created one)
+	col, err = GetMyTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trb, col[0])
+
+	// ABCD should see 1 request (the one we just created)
+	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trb2, col[0])
+
+	changes := map[string]interface{}{
+		"state":    models.TRBRequestStateClosed,
+		"archived": true,
+	}
+
+	// archive ABCD's request
+	trbUpdate, err := UpdateTRBRequest(ctxABCD, trb2.ID, changes, s.testConfigs.Store)
+	s.NoError(err)
+
+	// GET collection from ABCD's perspective and expect to not see any
+	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 0)
+
+	// GET collection from ABCD's perspective (with archived true) and expect to see one
+	col, err = GetMyTRBRequests(ctxABCD, true, s.testConfigs.Store)
 	s.NoError(err)
 	s.Len(col, 1)
 	s.EqualValues(trbUpdate, col[0])

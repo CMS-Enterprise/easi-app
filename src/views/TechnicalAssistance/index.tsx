@@ -5,6 +5,7 @@ import { GridContainer } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
 
+import AddNote from './AdminHome/AddNote';
 import CloseRequest from './AdminHome/CloseRequest';
 import Consult from './AdminHome/Consult';
 import TRBRequestInfoWrapper from './AdminHome/RequestContext';
@@ -14,9 +15,11 @@ import AdminHome from './AdminHome';
 import AdviceLetterForm from './AdviceLetterForm';
 import Homepage from './Homepage';
 import ProcessFlow from './ProcessFlow';
+import PublicAdviceLetter from './PublicAdviceLetter';
 import RequestForm from './RequestForm';
 import RequestType from './RequestType';
 import TaskList from './TaskList';
+import TrbAttendees from './TrbAttendees';
 import TRBDocuments from './TrbDocuments';
 
 import './index.scss';
@@ -59,7 +62,16 @@ function TechnicalAssistance() {
           <DocumentUpload />
         </Route>
 
-        {/* Create new or edit exisiting request */}
+        <Route path={`${path}/task-list/:id/attendees`}>
+          <TrbAttendees />
+        </Route>
+
+        {/* Public advice letter */}
+        <Route exact path={`${path}/advice-letter/:id`}>
+          <PublicAdviceLetter />
+        </Route>
+
+        {/* Create new or edit existing request */}
         <Route exact path={`${path}/requests/:id/:step?/:view?`}>
           <RequestForm />
         </Route>
@@ -86,6 +98,11 @@ function TechnicalAssistance() {
           >
             <Consult />
           </Route>
+
+          <Route exact path={`${path}/:id/notes/add-note`}>
+            <AddNote />
+          </Route>
+
           <Route
             exact
             path={`${path}/:id/:activePage/:action(close-request|reopen-request)`}

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Control,
   Controller,
@@ -25,6 +25,8 @@ import {
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
+import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
 import InitialsIcon from 'components/shared/InitialsIcon';
@@ -116,7 +118,7 @@ const AttendeeFields = ({
           })}
         </Alert>
       )}
-      <Grid row className="margin-bottom-5">
+      <Grid row className="margin-bottom-2">
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
           {/* Attendee name */}
           <Controller
@@ -211,8 +213,8 @@ const AttendeeFields = ({
                       label={`- ${t('basic.options.select')} -`}
                       disabled
                     />
-                    {contactRoles.map(({ key, label }) => (
-                      <option key={key} value={key} label={label} />
+                    {(Object.keys(contactRoles) as PersonRole[]).map(key => (
+                      <option key={key} value={key} label={contactRoles[key]} />
                     ))}
                   </Dropdown>
                 </FormGroup>
@@ -246,9 +248,7 @@ const Attendee = ({
 
   /** Attendee role label */
   // Gets label from enum value in attendee object
-  const role =
-    contactRoles.find(contactRole => contactRole.key === attendee.role)
-      ?.label || '';
+  const role = attendee.role ? contactRoles[attendee.role] : '';
 
   /** Attendee component acronym */
   const component = cmsDivisionsAndOffices.find(
@@ -329,6 +329,11 @@ const AttendeesTable = ({
   setActiveAttendee,
   deleteAttendee
 }: AttendeesTableProps) => {
+  const { t } = useTranslation('technicalAssistance');
+
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [attendeeToRemove, setAttendeeToRemove] = useState<TRBAttendee>();
+
   /** Format attendees for display in table */
   const data = useMemo(() => {
     return attendees.map(attendee => ({ attendee }));
@@ -375,8 +380,48 @@ const AttendeesTable = ({
   // If no attendees, return null
   if (attendees.length < 1) return null;
 
+  const renderModal = () => {
+    return (
+      <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
+        <PageHeading headingLevel="h2" className="margin-top-0 margin-bottom-0">
+          {t('attendees.modal.heading', {
+            attendee: attendeeToRemove?.userInfo?.commonName
+          })}
+        </PageHeading>
+
+        <p>{t('attendees.modal.description')}</p>
+
+        <Button
+          type="button"
+          onClick={() => {
+            if (deleteAttendee && attendeeToRemove?.id) {
+              deleteAttendee(attendeeToRemove?.id);
+              setModalOpen(false);
+              setActiveAttendee?.({
+                ...initialAttendee,
+                trbRequestId
+              });
+            }
+          }}
+        >
+          {t('attendees.modal.remove')}
+        </Button>
+
+        <Button
+          type="button"
+          className="margin-left-2"
+          unstyled
+          onClick={() => setModalOpen(false)}
+        >
+          {t('attendees.modal.cancel')}
+        </Button>
+      </Modal>
+    );
+  };
+
   return (
     <div className="trbAttendees-table margin-top-4 margin-bottom-neg-1">
+      {renderModal()}
       <Table bordered={false} fullWidth {...getTableProps()}>
         <tbody {...getTableBodyProps()} className="grid-row grid-gap-sm">
           {page.map((row, index) => {
@@ -411,11 +456,8 @@ const AttendeesTable = ({
                           deleteAttendee
                             ? () => {
                                 if (attendee.id) {
-                                  deleteAttendee(attendee.id);
-                                  setActiveAttendee?.({
-                                    ...initialAttendee,
-                                    trbRequestId
-                                  });
+                                  setAttendeeToRemove(attendee);
+                                  setModalOpen(true);
                                 }
                               }
                             : undefined

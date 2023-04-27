@@ -2,7 +2,6 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   Alert,
-  Button,
   CardGroup,
   Grid,
   IconArrowForward,
@@ -25,9 +24,14 @@ import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 
 import InformationCard from './components/InformationCard';
-import RequestNotes from './components/RequestNotes';
+import NoteBox from './components/NoteBox';
+import { TrbAssignLeadModalOpener } from './TrbAssignLeadModal';
 
-const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
+const RequestHome = ({
+  trbRequestId,
+  assignLeadModalRef,
+  assignLeadModalTrbRequestIdRef
+}: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { data, loading } = useCacheQuery<
@@ -42,8 +46,8 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
     consultMeetingTime,
     trbLeadInfo,
     trbLeadComponent,
-    documents
-    // adminNotes TODO: once <Note /> PR is merge, implement adminNotes data
+    documents,
+    adminNotes
   } = data?.trbRequest || {};
 
   return (
@@ -60,7 +64,10 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
         </Grid>
 
         <Grid tablet={{ col: 4 }}>
-          <RequestNotes trbRequestId={trbRequestId} />
+          <NoteBox
+            trbRequestId={trbRequestId}
+            noteCount={adminNotes?.length || 0}
+          />
         </Grid>
       </Grid>
 
@@ -139,15 +146,14 @@ const RequestHome = ({ trbRequestId }: TrbAdminPageProps) => {
               </Link>
             </>
           ) : (
-            <Button
+            <TrbAssignLeadModalOpener
+              trbRequestId={trbRequestId}
+              modalRef={assignLeadModalRef}
+              trbRequestIdRef={assignLeadModalTrbRequestIdRef}
               className="usa-button--outline"
-              type="button"
-              onClick={() => {
-                // TODO: Assign trb lead modal
-              }}
             >
               {t('adminHome.assignLead')}
-            </Button>
+            </TrbAssignLeadModalOpener>
           )}
 
           <Divider className="margin-top-6 margin-bottom-5" />

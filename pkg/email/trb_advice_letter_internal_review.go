@@ -35,10 +35,9 @@ func (c Client) SendTRBAdviceLetterInternalReviewEmail(ctx context.Context, inpu
 	subject := "Advice letter for " + input.TRBRequestName + " is ready for internal review"
 
 	templateParams := trbAdviceLetterInternalReviewEmailTemplateParams{
-		TRBLeadName:    input.TRBLeadName,
-		TRBRequestName: input.TRBRequestName,
-		// TODO - figure out what this URL will be once it's in the frontend:
-		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice-letter", input.TRBRequestID.String())),
+		TRBLeadName:         input.TRBLeadName,
+		TRBRequestName:      input.TRBRequestName,
+		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice", input.TRBRequestID.String())),
 		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
 	}
 

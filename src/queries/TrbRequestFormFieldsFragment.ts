@@ -34,21 +34,20 @@ export default gql`
       collabDateGovernanceReviewBoard
       collabDateOther
       collabGroupOther
+      collabGRBConsultRequested
+      subjectAreaOptions
+      subjectAreaOptionOther
+      fundingSources {
+        id
+        fundingNumber
+        source
+      }
 
-      subjectAreaTechnicalReferenceArchitecture
-      subjectAreaNetworkAndSecurity
-      subjectAreaCloudAndInfrastructure
-      subjectAreaApplicationDevelopment
-      subjectAreaDataAndDataManagement
-      subjectAreaGovernmentProcessesAndPolicies
-      subjectAreaOtherTechnicalTopics
-      subjectAreaTechnicalReferenceArchitectureOther
-      subjectAreaNetworkAndSecurityOther
-      subjectAreaCloudAndInfrastructureOther
-      subjectAreaApplicationDevelopmentOther
-      subjectAreaDataAndDataManagementOther
-      subjectAreaGovernmentProcessesAndPoliciesOther
-      subjectAreaOtherTechnicalTopicsOther
+      systemIntakes {
+        id
+        requestName
+        lcid
+      }
 
       submittedAt
     }

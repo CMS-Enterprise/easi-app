@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalRef } from '@trussworks/react-uswds';
 
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
@@ -47,11 +48,16 @@ export type FormattedTRBAttendees = {
   attendees: TRBAttendeeData[];
 };
 
+export type TrbRequestIdRef = string | null;
+
 /** TRB Admin page props */
 export type TrbAdminPageProps = {
   trbRequestId: string;
+  noteCount: number;
   requesterString?: string | null;
   submissionDate?: string;
+  assignLeadModalRef: React.RefObject<ModalRef>;
+  assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
 };
 
 /** Subnav item return type for admin home wrapper */
@@ -122,3 +128,8 @@ export type StepComponentProps = {
   /** Set a form level alert message from within step components */
   setFormAlert: React.Dispatch<React.SetStateAction<FormAlertObject | null>>;
 };
+
+export interface TrbRecipientFields {
+  notifyEuaIds: string[];
+  copyTrbMailbox: boolean;
+}
