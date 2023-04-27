@@ -81,7 +81,7 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
             ? t('adminHome.startAdvice')
             : t('adminHome.viewAdvice'),
         buttonClass: '',
-        buttonLink: 'advice-letter',
+        buttonLink: 'advice',
         modified: trbRequest.adviceLetter?.modifiedAt
           ? formatDateLocal(trbRequest.adviceLetter.modifiedAt, 'MMMM d, yyyy')
           : t('adminHome.notStarted'),

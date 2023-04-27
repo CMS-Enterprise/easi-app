@@ -207,6 +207,7 @@ const useTrbAdminActionButtons = ({
           default:
             return [buttons.viewAdviceLetter, buttons.orCloseRequest];
         }
+      case TRBRequestStatus.FOLLOW_UP_REQUESTED:
       case TRBRequestStatus.ADVICE_LETTER_SENT:
         return [buttons.closeRequest];
       default:

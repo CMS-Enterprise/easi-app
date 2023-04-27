@@ -110,6 +110,11 @@ const technicalAssistance = {
         description:
           'If this is a Consult as a Service request (CaaS), you may choose to leave this request open until the engagement is complete. For all other requests, you may close this request at any time.'
       },
+      FOLLOW_UP_REQUESTED: {
+        title: 'Re-open request',
+        description:
+          'If this request was closed in error or if you wish to re-open it, use the button below.'
+      },
       CLOSED: {
         title: 'Re-open request',
         description:
@@ -817,6 +822,18 @@ const technicalAssistance = {
     requestStatuses: {
       OPEN: 'Open',
       CLOSED: 'Closed'
+    },
+    trbRequestStatuses: {
+      ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
+      ADVICE_LETTER_SENT: 'Advice letter sent',
+      CONSULT_COMPLETE: 'Consult complete',
+      CONSULT_SCHEDULED: 'Consult scheduled',
+      DRAFT_ADVICE_LETTER: 'Draft advice letter',
+      DRAFT_REQUEST_FORM: 'Draft request form',
+      FOLLOW_UP_REQUESTED: 'Follow-up requested',
+      NEW: 'New',
+      READY_FOR_CONSULT: 'Ready for consult',
+      REQUEST_FORM_COMPLETE: 'Request form completed'
     },
     taskStatuses: {
       formStatus: {
