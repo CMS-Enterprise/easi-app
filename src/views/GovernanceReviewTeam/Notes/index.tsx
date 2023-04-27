@@ -66,8 +66,7 @@ const Notes = () => {
   >(GetAdminNotesAndActionsQuery, {
     variables: {
       id: systemId
-    },
-    fetchPolicy: 'cache-and-network'
+    }
   });
 
   const [

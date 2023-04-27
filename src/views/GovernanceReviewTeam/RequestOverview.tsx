@@ -302,7 +302,7 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/actions/issue-lcid"
-              render={() => <IssueLifecycleId />}
+              render={() => <IssueLifecycleId refetch={refetch} />}
             />
 
             {/* Only display extend LCID action if status is LCID_ISSUED or there has been an lcid issued in the past */}
