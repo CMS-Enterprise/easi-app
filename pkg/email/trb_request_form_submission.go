@@ -20,9 +20,8 @@ type adminEmailParameters struct {
 	RequestLink   string
 }
 
-func (c Client) trbRequestFormSubmissionAdminEmailBody(requestName string, requesterName string, component string) (string, error) {
-	// TODO - EASI-2488 - put correct path here
-	requestAdminViewPath := path.Join("TODO", "admin-view")
+func (c Client) trbRequestFormSubmissionAdminEmailBody(requestID uuid.UUID, requestName string, requesterName string, component string) (string, error) {
+	requestAdminViewPath := path.Join("trb", requestID.String(), "request")
 
 	data := adminEmailParameters{
 		RequestName:   requestName,
@@ -45,9 +44,9 @@ func (c Client) trbRequestFormSubmissionAdminEmailBody(requestName string, reque
 }
 
 // SendTRBFormSubmissionNotificationToAdmins notifies the TRB admin mailbox that a TRB Request form has been submitted
-func (c Client) SendTRBFormSubmissionNotificationToAdmins(ctx context.Context, requestName string, requesterName string, component string) error {
+func (c Client) SendTRBFormSubmissionNotificationToAdmins(ctx context.Context, requestID uuid.UUID, requestName string, requesterName string, component string) error {
 	subject := fmt.Sprintf("A new TRB Request has been submitted (%v)", requestName)
-	body, err := c.trbRequestFormSubmissionAdminEmailBody(requestName, requesterName, component)
+	body, err := c.trbRequestFormSubmissionAdminEmailBody(requestID, requestName, requesterName, component)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
