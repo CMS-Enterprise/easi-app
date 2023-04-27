@@ -192,7 +192,7 @@ const AdviceLetterForm = () => {
 
   // Redirect if previous step is not completed
   useEffect(() => {
-    if (stepsCompleted && !checkValidSteps(currentStepIndex)) {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
       /** Returns latest available step index */
       const stepRedirectIndex = !stepsCompleted.includes('summary')
         ? 0

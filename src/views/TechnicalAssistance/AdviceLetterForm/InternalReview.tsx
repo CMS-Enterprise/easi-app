@@ -151,6 +151,7 @@ const InternalReview = ({
         ]}
         taskListUrl={`/trb/${trbRequestId}/request`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
+        submitDisabled
         border={false}
       />
     </div>

@@ -218,6 +218,7 @@ const Review = ({
             }}
             taskListUrl={`/trb/${trbRequestId}/request`}
             saveExitText={t('adviceLetterForm.returnToRequest')}
+            submitDisabled
             border={false}
           />
         </Form>
