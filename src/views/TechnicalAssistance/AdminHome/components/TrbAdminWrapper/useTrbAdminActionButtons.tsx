@@ -64,44 +64,32 @@ const useTrbAdminActionButtons = ({
     const buttons: Record<ActionButtonKey, AdminActionButton> = {
       orCloseRequest: {
         label: t('adminAction.buttons.orCloseRequest'),
-        onClick: () =>
-          history.push(`/trb/${trbRequestId}/request/close-request`),
+        link: `/trb/${trbRequestId}/request/close-request`,
         unstyled: true
       },
       closeRequest: {
         label: t('adminAction.buttons.closeRequest'),
-        onClick: () =>
-          history.push(`/trb/${trbRequestId}/request/close-request`)
+        link: `/trb/${trbRequestId}/request/close-request`
       },
       reopenRequest: {
         label: t('adminAction.buttons.reopenRequest'),
-        onClick: () =>
-          history.push(`/trb/${trbRequestId}/request/reopen-request`)
+        link: `/trb/${trbRequestId}/request/reopen-request`
       },
       viewRequestForm: {
         label: t('adminAction.buttons.viewRequestForm'),
-        onClick: () => history.push(`/trb/${trbRequestId}/initial-request-form`)
+        link: `/trb/${trbRequestId}/initial-request-form`
       },
       requestEdits: {
         label: t('adminAction.buttons.requestEdits'),
-        onClick: () =>
-          history.push(
-            `/trb/${trbRequestId}/initial-request-form/request-edits`
-          )
+        link: `/trb/${trbRequestId}/initial-request-form/request-edits`
       },
       readyForConsult: {
         label: t('adminAction.buttons.readyForConsult'),
-        onClick: () =>
-          history.push(
-            `/trb/${trbRequestId}/initial-request-form/ready-for-consult`
-          )
+        link: `/trb/${trbRequestId}/initial-request-form/ready-for-consult`
       },
       addDateTime: {
         label: t('adminAction.buttons.addDateTime'),
-        onClick: () =>
-          history.push(
-            `/trb/${trbRequestId}/initial-request-form/schedule-consult`
-          )
+        link: `/trb/${trbRequestId}/initial-request-form/schedule-consult`
       },
       assignTrbLead: {
         label: t('adminAction.buttons.assignTrbLead'),
@@ -115,11 +103,11 @@ const useTrbAdminActionButtons = ({
       },
       viewSupportingDocuments: {
         label: t('adminAction.buttons.viewSupportingDocuments'),
-        onClick: () => history.push(`/trb/${trbRequestId}/documents`)
+        link: `/trb/${trbRequestId}/documents`
       },
       viewAdviceLetter: {
         label: t('adminAction.buttons.viewAdviceLetter'),
-        onClick: () => history.push(`/trb/${trbRequestId}/advice`)
+        link: `/trb/${trbRequestId}/advice`
       },
       startAdviceLetter: {
         label: t('adminAction.buttons.startAdviceLetter'),
@@ -139,15 +127,15 @@ const useTrbAdminActionButtons = ({
       },
       continueAdviceLetter: {
         label: t('adminAction.buttons.continueAdviceLetter'),
-        onClick: () => history.push(`/trb/${trbRequestId}/advice/summary`)
+        link: `/trb/${trbRequestId}/advice/summary`
       },
       editAdviceLetter: {
         label: t('adminAction.buttons.editAdviceLetter'),
-        onClick: () => history.push(`/trb/${trbRequestId}/advice/review`)
+        link: `/trb/${trbRequestId}/advice/review`
       },
       addNote: {
         label: t('adminAction.buttons.addNote'),
-        onClick: () => history.push(`/trb/${trbRequestId}/notes/add-note`)
+        link: `/trb/${trbRequestId}/notes/add-note`
       }
     };
 

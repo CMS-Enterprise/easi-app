@@ -3,9 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import UswdsReactLink from 'components/LinkWrapper';
+
 export type AdminActionButton = {
   label: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  link?: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   outline?: boolean;
   unstyled?: boolean;
 };
@@ -41,17 +44,30 @@ const AdminAction = ({
       )}
       {children}
       <ButtonGroup className="margin-top-3">
-        {buttons.map(button => (
-          <Button
-            key={button.label}
-            type="button"
-            onClick={button.onClick}
-            outline={button.outline}
-            unstyled={button.unstyled}
-          >
-            {button.label}
-          </Button>
-        ))}
+        {buttons.map(button =>
+          button.onClick ? (
+            <Button
+              key={button.label}
+              type="button"
+              onClick={button.onClick}
+              outline={button.outline}
+              unstyled={button.unstyled}
+            >
+              {button.label}
+            </Button>
+          ) : (
+            <UswdsReactLink
+              key={button.label}
+              to={button.link || ''}
+              className={classNames('usa-button', {
+                'usa-button--unstyled': button.unstyled,
+                'usa-button--outline': button.outline
+              })}
+            >
+              {button.label}
+            </UswdsReactLink>
+          )
+        )}
       </ButtonGroup>
     </div>
   );
