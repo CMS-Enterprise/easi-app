@@ -2861,7 +2861,7 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 
 // HasUIChanges is the resolver for the hasUiChanges field.
 func (r *systemIntakeResolver) HasUIChanges(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return &obj.HasUIChanges.Bool, nil
+	return obj.HasUIChanges.Ptr(), nil
 }
 
 // FundingNumber is the resolver for the fundingNumber field.
