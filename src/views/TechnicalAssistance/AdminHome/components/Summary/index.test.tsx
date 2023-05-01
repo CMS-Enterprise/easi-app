@@ -4,58 +4,22 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, within } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
-import configureMockStore from 'redux-mock-store';
 
-import { requester, trbRequestSummary } from 'data/mock/trbRequest';
-import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+import {
+  getTRBRequestAttendeesQuery,
+  getTrbRequestQuery,
+  requester,
+  trbRequestSummary
+} from 'data/mock/trbRequest';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
+import easiMockStore from 'utils/testing/easiMockStore';
+import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 
 import Summary from '.';
 
-const trbRequestId = 'a4093ec7-caec-4e73-be3d-a8d6262bc61b';
-
-const getTrbRequestQuery = {
-  request: {
-    query: GetTrbRequestSummaryQuery,
-    variables: {
-      id: trbRequestId
-    }
-  },
-  result: {
-    data: { trbRequest: trbRequestSummary }
-  }
-};
-
-const getTrbAttendeesQuery = {
-  request: {
-    query: GetTRBRequestAttendeesQuery,
-    variables: {
-      id: trbRequestId
-    }
-  },
-  result: {
-    data: {
-      trbRequest: {
-        attendees: [
-          {
-            ...requester,
-            trbRequestId
-          }
-        ]
-      }
-    }
-  }
-};
-
-const mockStore = configureMockStore();
-const defaultStore = mockStore({
-  auth: {
-    euaId: 'SF13',
-    name: 'Jerry Seinfeld',
-    isUserSet: true,
-    groups: ['EASI_TRB_ADMIN_D']
-  }
+const defaultStore = easiMockStore({
+  euaUserId: 'SF13',
+  groups: ['EASI_TRB_ADMIN_D']
 });
 
 describe('TRB Admin Home summary', () => {
@@ -65,10 +29,12 @@ describe('TRB Admin Home summary', () => {
   it('renders TRB request details', async () => {
     const { asFragment, findByTestId, getByTestId } = render(
       <MemoryRouter>
-        <MockedProvider mocks={[getTrbRequestQuery, getTrbAttendeesQuery]}>
+        <MockedProvider
+          mocks={[getTrbRequestQuery, getTRBRequestAttendeesQuery]}
+        >
           <Provider store={defaultStore}>
             <Summary
-              trbRequestId={trbRequestId}
+              trbRequestId={mockTrbRequestId}
               name={trbRequestSummary.name}
               requestType={trbRequestSummary.type}
               createdAt={trbRequestSummary.createdAt}
@@ -101,7 +67,7 @@ describe('TRB Admin Home summary', () => {
 
     // Check that correct task status is rendered
     expect(getByTestId('trbSummary-status')).toHaveTextContent(
-      'Ready to start request form'
+      'Draft request form'
     );
 
     /** TRB Lead container */
