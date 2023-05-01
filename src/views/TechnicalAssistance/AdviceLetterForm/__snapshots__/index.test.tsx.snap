@@ -45,10 +45,10 @@ exports[`TRB Advice Letter Form matches the snapshot 1`] = `
                 >
                   <a
                     class="usa-breadcrumb__link"
-                    href="/trb/fd1eec78-dff5-4c26-8924-44872a2b0414/advice"
+                    href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice"
                   >
                     <span>
-                      Request fd1eec78-dff5-4c26-8924-44872a2b0414
+                      Request d8ebedca-0031-4ccd-9690-37390726c50e
                     </span>
                   </a>
                 </li>
@@ -443,10 +443,10 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
                 >
                   <a
                     class="usa-breadcrumb__link"
-                    href="/trb/fd1eec78-dff5-4c26-8924-44872a2b0414/advice"
+                    href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice"
                   >
                     <span>
-                      Request fd1eec78-dff5-4c26-8924-44872a2b0414
+                      Request d8ebedca-0031-4ccd-9690-37390726c50e
                     </span>
                   </a>
                 </li>
@@ -719,7 +719,7 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
             </h2>
             <a
               class="usa-link display-block margin-bottom-5"
-              href="/trb/fd1eec78-dff5-4c26-8924-44872a2b0414/advice/summary"
+              href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice/summary"
             >
               Edit this section
             </a>
@@ -745,7 +745,7 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
             </h2>
             <a
               class="usa-link display-block margin-bottom-2"
-              href="/trb/fd1eec78-dff5-4c26-8924-44872a2b0414/advice/recommendations"
+              href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice/recommendations"
             >
               Edit this section
             </a>
@@ -897,7 +897,7 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
             </h2>
             <a
               class="usa-link display-block margin-bottom-5"
-              href="/trb/fd1eec78-dff5-4c26-8924-44872a2b0414/advice/next-steps"
+              href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice/next-steps"
             >
               Edit this section
             </a>
@@ -970,7 +970,7 @@ exports[`TRB Advice Letter Form renders the Internal Review step 1`] = `
                 data-testid="button"
                 type="submit"
               >
-                Request internal review
+                Request another internal review
               </button>
             </li>
             <li
