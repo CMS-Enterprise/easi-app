@@ -40,7 +40,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Request 441cb9e0-2cb3-43ca-b168-9d6a2a13ec91
+                Request d8ebedca-0031-4ccd-9690-37390726c50e
               </li>
             </ol>
           </nav>
@@ -264,7 +264,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link trb-admin__nav-link--active trb-admin__nav-link--border"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/request"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/request"
                 >
                   <span>
                     Request home
@@ -275,7 +275,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/initial-request-form"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/initial-request-form"
                 >
                   <span>
                     Initial request form
@@ -286,7 +286,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/documents"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/documents"
                 >
                   <span>
                     Supporting documents
@@ -297,7 +297,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/feedback"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/feedback"
                 >
                   <span>
                     Feedback
@@ -308,7 +308,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link trb-admin__nav-link--border"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/advice"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice"
                 >
                   <span>
                     Advice letter
@@ -319,7 +319,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/notes"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/notes"
                 >
                   <span>
                     Notes
@@ -499,10 +499,10 @@ exports[`TRB admin home matches the snapshot 1`] = `
                       class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
                     >
                       <span
-                        class="easi-tag bg-info"
+                        class="easi-tag bg-warning"
                         data-testid="task-list-task-tag"
                       >
-                        Ready to start
+                        In Progress
                       </span>
                     </div>
                     <dt
@@ -611,7 +611,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
             </div>
             <a
               class="usa-link display-flex flex-align-center margin-top-2"
-              href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/documents"
+              href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/documents"
             >
               View documents
               <svg

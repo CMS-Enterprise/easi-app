@@ -280,7 +280,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
     </div>
     <a
       class="usa-link display-flex flex-align-center margin-top-2"
-      href="/trb/441cb9e0-2cb3-43ca-b168-9d6a2a13ec91/documents"
+      href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/documents"
     >
       View documents
       <svg
