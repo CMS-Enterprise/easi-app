@@ -7,11 +7,11 @@ import { mount, ReactWrapper, shallow } from 'enzyme';
 import { mockFlags, resetLDMocks } from 'jest-launchdarkly-mock';
 import configureMockStore from 'redux-mock-store';
 
+import { getRequestsQuery } from 'data/mock/trbRequest';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
-import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { Flags } from 'types/flags';
 import Table from 'views/MyRequests/Table';
 
@@ -27,7 +27,7 @@ jest.mock('@okta/okta-react', () => ({
         getAccessToken: () => Promise.resolve('test-access-token'),
         getUser: () =>
           Promise.resolve({
-            name: 'John Doe'
+            name: 'Jerry Seinfeld'
           })
       }
     };
@@ -43,20 +43,7 @@ const defaultFlags: Flags = {
 } as Flags;
 
 const mocks = [
-  {
-    request: {
-      query: GetRequestsQuery,
-      variables: { first: 20 }
-    },
-    result: {
-      data: {
-        requests: {
-          edges: []
-        },
-        trbRequests: []
-      }
-    }
-  },
+  getRequestsQuery([], []),
   {
     request: {
       query: GetCedarSystemsQuery
