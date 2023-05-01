@@ -31,7 +31,7 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
         >
           <a
             class="usa-breadcrumb__link"
-            href="/trb/task-list/f727cb0d-5ba1-40a3-8172-00e4ce86da3c"
+            href="/trb/task-list/d8ebedca-0031-4ccd-9690-37390726c50e"
           >
             <span>
               Task list
@@ -43,7 +43,7 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
         >
           <a
             class="usa-breadcrumb__link"
-            href="/trb/requests/f727cb0d-5ba1-40a3-8172-00e4ce86da3c/check"
+            href="/trb/requests/d8ebedca-0031-4ccd-9690-37390726c50e/check"
           >
             <span>
               TRB Request
@@ -69,7 +69,7 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
     </h1>
     <a
       class="usa-link"
-      href="/trb/requests/f727cb0d-5ba1-40a3-8172-00e4ce86da3c/check"
+      href="/trb/requests/d8ebedca-0031-4ccd-9690-37390726c50e/check"
     >
       <svg
         class="usa-icon margin-right-1 text-middle"
@@ -126,7 +126,7 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
             Feedback from
           </dt>
           <dd>
-            George Louis Costanza, TRB
+            Audrey Abrams, TRB
           </dd>
         </dl>
       </div>
@@ -176,7 +176,7 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
             Feedback from
           </dt>
           <dd>
-            George Louis Costanza, TRB
+            Audrey Abrams, TRB
           </dd>
         </dl>
       </div>
@@ -199,7 +199,7 @@ exports[`TRB Request Form Feedback goes to and renders the feedback view 1`] = `
     >
       <a
         class="usa-link"
-        href="/trb/requests/f727cb0d-5ba1-40a3-8172-00e4ce86da3c/check"
+        href="/trb/requests/d8ebedca-0031-4ccd-9690-37390726c50e/check"
       >
         <svg
           class="usa-icon margin-right-1 text-middle"
@@ -274,7 +274,7 @@ exports[`TRB Request Form Feedback shows the View feedback warning banner in the
                 >
                   <a
                     class="usa-breadcrumb__link"
-                    href="/trb/task-list/f727cb0d-5ba1-40a3-8172-00e4ce86da3c"
+                    href="/trb/task-list/d8ebedca-0031-4ccd-9690-37390726c50e"
                   >
                     <span>
                       Task list
@@ -376,7 +376,7 @@ exports[`TRB Request Form Feedback shows the View feedback warning banner in the
         >
           <a
             class="usa-button usa-button--outline"
-            href="/trb/requests/f727cb0d-5ba1-40a3-8172-00e4ce86da3c/feedback"
+            href="/trb/requests/d8ebedca-0031-4ccd-9690-37390726c50e/feedback"
           >
             View feedback
           </a>
@@ -610,7 +610,7 @@ exports[`TRB Request Form Feedback shows the View feedback warning banner in the
               id="name"
               name="name"
               type="text"
-              value="Draft"
+              value="Mock TRB Request"
             />
           </div>
           <div
@@ -810,20 +810,12 @@ exports[`TRB Request Form Feedback shows the View feedback warning banner in the
             </label>
             <textarea
               aria-describedby="needsAssistanceWith-info needsAssistanceWith-hint"
-              class="usa-textarea usa-character-count__field"
-              data-testid="textarea"
+              class="usa-textarea"
               id="needsAssistanceWith"
               name="needsAssistanceWith"
-              rows="2"
-            />
-            <span
-              aria-live="polite"
-              class="usa-hint usa-character-count__message"
-              data-testid="characterCountMessage"
-              id="needsAssistanceWith-info"
             >
-              2000 characters allowed
-            </span>
+              x
+            </textarea>
           </div>
           <div
             class="usa-form-group"

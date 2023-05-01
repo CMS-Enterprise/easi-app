@@ -75,7 +75,7 @@ const tableMap = (
         }
       } else {
         // TRB status
-        status = t(`adminHome.requestStatuses.${request.status}`, {
+        status = t(`table.requestStatus.${request.status}`, {
           ns: 'technicalAssistance'
         });
       }

@@ -4,15 +4,13 @@ import { MockedProvider } from '@apollo/react-testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { attendees as attendeesData, requester } from 'data/mock/trbRequest';
+import { attendees as mockAttendees, requester } from 'data/mock/trbRequest';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 
 import EmailRecipientFields from '.';
 
+const [newAttendee, ...attendees] = mockAttendees;
 const { trbRequestId } = requester;
-
-const attendees = attendeesData.slice(1, attendeesData.length);
-const newAttendee = attendeesData[0];
 
 const cedarContactsMock = (commonName: string) => ({
   request: {
@@ -38,7 +36,7 @@ const TestComponent = () => {
   });
   return (
     <MockedProvider
-      mocks={[cedarContactsMock('An'), cedarContactsMock('Anabelle Jerde')]}
+      mocks={[cedarContactsMock('Al'), cedarContactsMock('Ally Anderson')]}
     >
       <FormProvider {...formMethods}>
         <EmailRecipientFields
@@ -93,7 +91,7 @@ describe('Email recipient fields component', () => {
     const submitButton = getByRole('button', { name: 'Add recipient' });
     expect(submitButton).toBeDisabled();
 
-    userEvent.type(getByRole('combobox', { name: 'Cedar-Users' }), 'An');
+    userEvent.type(getByRole('combobox', { name: 'Cedar-Users' }), 'Al');
     userEvent.click(
       await findByText(
         `${newAttendee.userInfo?.commonName}, ${newAttendee.userInfo?.euaUserId}`

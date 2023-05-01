@@ -4,96 +4,54 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
-import { attendees, requester, trbRequestSummary } from 'data/mock/trbRequest';
-import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
-import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
-import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
-import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
-import { TRBAttendee } from 'queries/types/TRBAttendee';
-import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'queries/types/TrbRequestFormFields';
 import {
-  TRBAdminNoteCategory,
-  TRBAdviceLetterStatus,
-  TRBAttendConsultStatus,
-  TRBConsultPrepStatus,
-  TRBFeedbackStatus,
-  TRBFormStatus,
-  TRBRequestState,
-  TRBRequestType
-} from 'types/graphql-global-types';
+  getTrbAdminNotesQuery,
+  getTRBRequestAttendeesQuery,
+  getTrbRequestQuery,
+  getTrbRequestSummaryQuery,
+  trbRequestSummary
+} from 'data/mock/trbRequest';
+import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import {
+  GetTrbRequestDocuments,
+  GetTrbRequestDocumentsVariables
+} from 'queries/types/GetTrbRequestDocuments';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
+import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
+import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import InitialRequestForm from './InitialRequestForm';
 import TRBRequestInfoWrapper from './RequestContext';
 
-const taskStatuses: TaskStatuses = {
-  formStatus: TRBFormStatus.IN_PROGRESS,
-  feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-  consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-  attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-  adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
-  __typename: 'TRBTaskStatuses'
-};
-
-const mockTrbRequestData: TrbRequest = {
-  id: trbRequestSummary.id,
-  name: 'Lorem ipsum dolor sit amet, consectetur',
-  type: TRBRequestType.NEED_HELP,
-  state: TRBRequestState.OPEN,
-  taskStatuses,
-  form: {
-    id: '452cf444-69b2-41a9-b8ab-ed354d209307',
-    component: null,
-    needsAssistanceWith: null,
-    hasSolutionInMind: false,
-    proposedSolution: null,
-    whereInProcess: null,
-    whereInProcessOther: null,
-    hasExpectedStartEndDates: false,
-    expectedStartDate: null,
-    expectedEndDate: null,
-    systemIntakes: [],
-    collabGroups: [],
-    collabDateSecurity: null,
-    collabDateEnterpriseArchitecture: null,
-    collabDateCloud: null,
-    collabDatePrivacyAdvisor: null,
-    collabDateGovernanceReviewBoard: null,
-    collabDateOther: null,
-    collabGroupOther: null,
-    collabGRBConsultRequested: null,
-    subjectAreaOptions: null,
-    subjectAreaOptionOther: null,
-    fundingSources: null,
-    submittedAt: null,
-    __typename: 'TRBRequestForm'
+const getTrbRequestDocumentsQuery: MockedQuery<
+  GetTrbRequestDocuments,
+  GetTrbRequestDocumentsVariables
+> = {
+  request: {
+    query: GetTrbRequestDocumentsQuery,
+    variables: { id: mockTrbRequestId }
   },
-  __typename: 'TRBRequest',
-  feedback: []
-};
-
-const initialRequester: TRBAttendee = {
-  ...requester,
-  component: null,
-  role: null
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        id: mockTrbRequestId,
+        documents: []
+      }
+    }
+  }
 };
 
 describe('Trb Admin Initial Request Form', () => {
-  const modalRef = React.createRef<ModalRef>();
-  const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
-
   it('renders', async () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      auth: {
-        euaId: requester?.userInfo?.euaUserId,
-        name: requester?.userInfo?.commonName
-      }
-    });
+    const store = easiMockStore();
+
+    const modalRef = React.createRef<ModalRef>();
+    const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
+
     const { getByText, queryByText, queryAllByText, findByText } = render(
       <VerboseMockedProvider
         defaultOptions={{
@@ -101,82 +59,22 @@ describe('Trb Admin Initial Request Form', () => {
           query: { fetchPolicy: 'no-cache' }
         }}
         mocks={[
-          {
-            request: {
-              query: GetTrbRequestQuery,
-              variables: { id: mockTrbRequestData.id }
-            },
-            result: { data: { trbRequest: mockTrbRequestData } }
-          },
-          {
-            request: {
-              query: GetTRBRequestAttendeesQuery,
-              variables: {
-                id: mockTrbRequestData.id
-              }
-            },
-            result: {
-              data: {
-                trbRequest: {
-                  id: mockTrbRequestData.id,
-                  attendees: [initialRequester, ...attendees]
-                }
-              }
-            }
-          },
-          {
-            request: {
-              query: GetTrbRequestDocumentsQuery,
-              variables: { id: mockTrbRequestData.id }
-            },
-            result: {
-              data: {
-                trbRequest: { id: mockTrbRequestData.id, documents: [] }
-              }
-            }
-          },
-          {
-            request: {
-              query: GetTrbAdminNotesQuery,
-              variables: {
-                id: mockTrbRequestData.id
-              }
-            },
-            result: {
-              data: {
-                trbRequest: {
-                  id: mockTrbRequestData.id,
-                  adminNotes: [
-                    {
-                      id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
-                      isArchived: false,
-                      category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                      noteText: 'My cute original note',
-                      author: {
-                        __typename: 'UserInfo',
-                        commonName: 'Jerry Seinfeld'
-                      },
-                      createdAt: '2024-03-28T13:20:37.852099Z',
-                      __typename: 'TRBAdminNote'
-                    }
-                  ]
-                }
-              }
-            }
-          }
+          getTrbRequestQuery,
+          getTrbRequestSummaryQuery,
+          getTRBRequestAttendeesQuery,
+          getTrbRequestDocumentsQuery,
+          getTrbAdminNotesQuery
         ]}
       >
         <Provider store={store}>
           <MemoryRouter
-            initialEntries={[
-              `/trb/${mockTrbRequestData.id}/initial-request-form`
-            ]}
+            initialEntries={[`/trb/${mockTrbRequestId}/initial-request-form`]}
           >
             <TRBRequestInfoWrapper>
               <Route exact path="/trb/:id/:activePage">
                 <InitialRequestForm
-                  trbRequestId={mockTrbRequestData.id}
-                  trbRequest={{ ...trbRequestSummary, taskStatuses }}
+                  trbRequestId={trbRequestSummary.id}
+                  trbRequest={trbRequestSummary}
                   assignLeadModalRef={modalRef}
                   assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                 />

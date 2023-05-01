@@ -47,7 +47,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
           <h2
             class="margin-top-05 margin-bottom-0"
           >
-            TRB Request Mock
+            Mock TRB Request
           </h2>
           <div
             class="grid-row"

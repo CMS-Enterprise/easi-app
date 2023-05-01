@@ -1,88 +1,170 @@
-import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
-import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
-import { GetTRBRequestAttendees_trbRequest_attendees as TRBAttendee } from 'queries/types/GetTRBRequestAttendees';
-import { GetTrbRequestSummary_trbRequest as Summary } from 'queries/types/GetTrbRequestSummary';
+import GetRequestsQuery from 'queries/GetRequestsQuery';
+import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
+import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
+import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
+import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
+import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
+import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+import {
+  GetRequests,
+  GetRequests_myTrbRequests as MyTrbRequests,
+  GetRequests_requests as Requests,
+  GetRequestsVariables
+} from 'queries/types/GetRequests';
+import {
+  GetTrbAdminNotes,
+  GetTrbAdminNotesVariables
+} from 'queries/types/GetTrbAdminNotes';
+import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
+import {
+  GetTrbAdviceLetter,
+  GetTrbAdviceLetterVariables
+} from 'queries/types/GetTrbAdviceLetter';
+import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
+import {
+  GetTrbRequest,
+  GetTrbRequestVariables
+} from 'queries/types/GetTrbRequest';
+import {
+  GetTRBRequestAttendees,
+  GetTRBRequestAttendeesVariables
+} from 'queries/types/GetTRBRequestAttendees';
+import {
+  GetTrbRequestSummary,
+  GetTrbRequestSummary_trbRequest as Summary,
+  GetTrbRequestSummaryVariables
+} from 'queries/types/GetTrbRequestSummary';
+import { TrbRequestFormFields_taskStatuses as TaskStatuses } from 'queries/types/TrbRequestFormFields';
+import {
+  UpdateTrbRequestConsultMeeting,
+  UpdateTrbRequestConsultMeetingVariables
+} from 'queries/types/UpdateTrbRequestConsultMeeting';
+import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import {
   PersonRole,
+  RequestType,
+  TRBAdminNoteCategory,
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
+  TRBCollabGroupOption,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
   TRBFormStatus,
   TRBRequestState,
   TRBRequestStatus,
-  TRBRequestType
+  TRBRequestType,
+  TRBWhereInProcessOption
 } from 'types/graphql-global-types';
-import { TrbAdminTeamHomeRequest } from 'types/technicalAssistance';
+import { MockedQuery } from 'types/util';
+import MockTrbAttendees, {
+  MockTrbAttendee
+} from 'utils/testing/MockTrbAttendees';
 
-const trbRequestId: string = '441cb9e0-2cb3-43ca-b168-9d6a2a13ec91';
+import { MockUserInfo } from './users';
 
-const euaUserId: string = 'ABCD';
+const trbRequestId = 'd8ebedca-0031-4ccd-9690-37390726c50e';
+const users = new MockTrbAttendees({ trbRequestId });
 
-export const requester: TRBAttendee = {
-  __typename: 'TRBRequestAttendee',
-  id: '330459da-b5d0-4265-b290-137c1273a0bc',
-  trbRequestId,
-  userInfo: {
-    __typename: 'UserInfo',
-    commonName: 'Adeline Aarons',
-    euaUserId,
-    email: 'adeline.aarons@local.fake'
-  },
-  component: 'CMS Wide',
-  role: PersonRole.PRODUCT_OWNER,
-  createdAt: '2023-01-05T07:26:16.036618Z'
+export const requester: MockTrbAttendee = users.findByEuaUserId('ABCD')!;
+export const attendees: MockTrbAttendee[] = [
+  users.next({
+    role: PersonRole.CLOUD_NAVIGATOR,
+    component: 'Center for Clinical Standards and Quality'
+  })!,
+  users.next({
+    role: PersonRole.PRIVACY_ADVISOR,
+    component: 'Center for Medicare'
+  })!,
+  users.next({
+    role: PersonRole.SYSTEM_MAINTAINER,
+    component: 'Center for Program Integrity'
+  })!
+];
+
+const taskStatuses: TaskStatuses = {
+  __typename: 'TRBTaskStatuses',
+  formStatus: TRBFormStatus.IN_PROGRESS,
+  feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+  consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+  attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+  adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
 };
 
-export const attendees: TRBAttendee[] = [
+const adminNotes: GetTrbAdminNotes['trbRequest']['adminNotes'] = [
   {
-    __typename: 'TRBRequestAttendee',
-    id: '9a6a3b4e-1a46-4a07-9e0e-e10f8aaf4f82',
-    trbRequestId,
-    userInfo: {
+    __typename: 'TRBAdminNote',
+    id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
+    isArchived: false,
+    category: TRBAdminNoteCategory.GENERAL_REQUEST,
+    noteText: 'My cute note',
+    author: {
       __typename: 'UserInfo',
-      commonName: 'Anabelle Jerde',
-      email: 'anabelle.jerde@local.fake',
-      euaUserId: 'JTTC'
+      commonName: requester.userInfo.commonName
     },
-    component: 'Center for Program Integrity',
-    role: PersonRole.PRIVACY_ADVISOR,
-    createdAt: '2023-01-05T07:26:16.036618Z'
-  },
-  {
-    __typename: 'TRBRequestAttendee',
-    id: '91a14322-34a8-4838-bde3-17b1d483fb63',
-    trbRequestId,
-    userInfo: {
-      __typename: 'UserInfo',
-      commonName: 'Jerry Seinfeld',
-      email: 'jerry.seinfeld@local.fake',
-      euaUserId: 'SF13'
-    },
-    component: 'Office of Equal Opportunity and Civil Rights',
-    role: PersonRole.PRODUCT_OWNER,
-    createdAt: '2023-01-05T07:26:16.036618Z'
-  },
-  {
-    __typename: 'TRBRequestAttendee',
-    id: 'a86ca9bb-518a-4669-9ce9-fd7f79f8262a',
-    trbRequestId,
-    userInfo: {
-      __typename: 'UserInfo',
-      commonName: 'Audrey Abrams',
-      email: 'audrey.abrams@local.fake',
-      euaUserId: 'ADMI'
-    },
-    component: 'CMS Wide',
-    role: PersonRole.SYSTEM_OWNER,
-    createdAt: '2023-01-05T07:26:16.036618Z'
+    createdAt: '2024-03-28T13:20:37.852099Z'
   }
 ];
+
+export const trbRequest: GetTrbRequest['trbRequest'] = {
+  __typename: 'TRBRequest',
+  id: trbRequestId,
+  name: 'Mock TRB Request',
+  type: TRBRequestType.NEED_HELP,
+  state: TRBRequestState.OPEN,
+  taskStatuses,
+  feedback: [],
+  form: {
+    id: '452cf444-69b2-41a9-b8ab-ed354d209307',
+    component: 'Center for Medicaid and CHIP Services',
+    needsAssistanceWith: 'x',
+    hasSolutionInMind: false,
+    proposedSolution: null,
+    whereInProcess:
+      TRBWhereInProcessOption.I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM,
+    whereInProcessOther: null,
+    hasExpectedStartEndDates: false,
+    expectedStartDate: null,
+    expectedEndDate: null,
+    systemIntakes: [],
+    collabGroups: [TRBCollabGroupOption.ENTERPRISE_ARCHITECTURE],
+    collabDateSecurity: null,
+    collabDateEnterpriseArchitecture: 'x',
+    collabDateCloud: null,
+    collabDatePrivacyAdvisor: null,
+    collabDateGovernanceReviewBoard: null,
+    collabDateOther: null,
+    collabGroupOther: null,
+    collabGRBConsultRequested: null,
+    subjectAreaOptions: null,
+    subjectAreaOptionOther: null,
+    fundingSources: null,
+    submittedAt: null,
+    __typename: 'TRBRequestForm'
+  }
+};
+
+export const getTrbRequestQuery: MockedQuery<
+  GetTrbRequest,
+  GetTrbRequestVariables
+> = {
+  request: {
+    query: GetTrbRequestQuery,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: {
+      trbRequest
+    }
+  }
+};
 
 export const trbRequestSummary: Summary = {
   __typename: 'TRBRequest',
   id: trbRequestId,
-  name: 'TRB Request Mock',
+  name: 'Mock TRB Request',
   type: TRBRequestType.NEED_HELP,
   state: TRBRequestState.OPEN,
   status: TRBRequestStatus.DRAFT_REQUEST_FORM,
@@ -91,23 +173,171 @@ export const trbRequestSummary: Summary = {
     commonName: ''
   },
   createdAt: '2023-01-05T07:26:16.036618Z',
-  taskStatuses: {
-    __typename: 'TRBTaskStatuses',
-    attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-    consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-    feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-    formStatus: TRBFormStatus.READY_TO_START,
-    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
+  taskStatuses,
+  adminNotes
+};
+
+export const getTrbRequestSummaryQuery: MockedQuery<
+  GetTrbRequestSummary,
+  GetTrbRequestSummaryVariables
+> = {
+  request: {
+    query: GetTrbRequestSummaryQuery,
+    variables: {
+      id: trbRequestId
+    }
   },
-  adminNotes: [
+  result: {
+    data: {
+      trbRequest: trbRequestSummary
+    }
+  }
+};
+
+const getRequestsData: {
+  edges: Requests['edges'];
+  myTrbRequests: MyTrbRequests[];
+} = {
+  edges: [
     {
-      __typename: 'TRBAdminNote',
-      id: '123'
+      __typename: 'RequestEdge',
+      node: {
+        __typename: 'Request',
+        id: '123',
+        name: '508 Test 1',
+        submittedAt: '2021-05-25T19:22:40Z',
+        type: RequestType.ACCESSIBILITY_REQUEST,
+        status: 'OPEN',
+        statusCreatedAt: '2021-05-25T19:22:40Z',
+        lcid: null,
+        nextMeetingDate: null
+      }
+    },
+    {
+      __typename: 'RequestEdge',
+      node: {
+        __typename: 'Request',
+        id: '909',
+        name: '508 Test 2',
+        submittedAt: '2021-05-25T19:22:40Z',
+        type: RequestType.ACCESSIBILITY_REQUEST,
+        status: 'IN_REMEDIATION',
+        statusCreatedAt: '2021-05-26T19:22:40Z',
+        lcid: null,
+        nextMeetingDate: null
+      }
+    },
+    {
+      __typename: 'RequestEdge',
+      node: {
+        __typename: 'Request',
+        id: '456',
+        name: 'Intake 1',
+        submittedAt: '2021-05-22T19:22:40Z',
+        type: RequestType.GOVERNANCE_REQUEST,
+        status: 'INTAKE_DRAFT',
+        statusCreatedAt: null,
+        lcid: null,
+        nextMeetingDate: null
+      }
+    },
+    {
+      __typename: 'RequestEdge',
+      node: {
+        __typename: 'Request',
+        id: '789',
+        name: 'Intake 2',
+        submittedAt: '2021-05-20T19:22:40Z',
+        type: RequestType.GOVERNANCE_REQUEST,
+        status: 'LCID_ISSUED',
+        statusCreatedAt: null,
+        lcid: 'A123456',
+        nextMeetingDate: null
+      }
+    }
+  ],
+  myTrbRequests: [
+    {
+      id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
+      name: 'My excellent question',
+      nextMeetingDate: null,
+      status: TRBRequestStatus.CONSULT_COMPLETE,
+      submittedAt: '2023-03-07T15:09:17.694681Z',
+      __typename: 'TRBRequest'
     }
   ]
 };
 
-export const trbRequestAdviceLetter: AdviceLetter = {
+export const getRequestsQuery = (
+  edges: Requests['edges'] = getRequestsData.edges,
+  myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
+): MockedQuery<GetRequests, GetRequestsVariables> => ({
+  request: {
+    query: GetRequestsQuery,
+    variables: { first: 20 }
+  },
+  result: {
+    data: {
+      requests: {
+        __typename: 'RequestsConnection',
+        edges
+      },
+      myTrbRequests
+    }
+  }
+});
+
+export const getTRBRequestAttendeesQuery: MockedQuery<
+  GetTRBRequestAttendees,
+  GetTRBRequestAttendeesVariables
+> = {
+  request: {
+    query: GetTRBRequestAttendeesQuery,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        id: trbRequestId,
+        attendees: [requester, ...attendees]
+      }
+    }
+  }
+};
+
+export const updateTrbRequestConsultMeetingQuery: MockedQuery<
+  UpdateTrbRequestConsultMeeting,
+  UpdateTrbRequestConsultMeetingVariables
+> = {
+  request: {
+    query: UpdateTrbRequestConsultMeetingQuery,
+    variables: {
+      input: {
+        trbRequestId,
+        consultMeetingTime: '2023-02-23T13:00:00.000Z',
+        notes: '',
+        copyTrbMailbox: true,
+        notifyEuaIds: [requester.userInfo.euaUserId]
+      }
+    }
+  },
+  result: {
+    data: {
+      updateTRBRequestConsultMeetingTime: {
+        __typename: 'TRBRequest',
+        id: trbRequestId,
+        consultMeetingTime: '2023-02-23T13:00:00.000Z'
+      }
+    }
+  }
+};
+
+export const adviceLetter: NonNullable<
+  GetTrbAdviceLetter['trbRequest']['adviceLetter']
+> = {
   __typename: 'TRBAdviceLetter',
   id: '1b68aeca-f0d4-42e8-90ef-70ed2de1a34b',
   meetingSummary: 'Meeting summary text',
@@ -133,58 +363,61 @@ export const trbRequestAdviceLetter: AdviceLetter = {
   ],
   author: {
     __typename: 'UserInfo',
-    euaUserId: 'SF13',
-    commonName: 'Jerry Seinfeld'
+    euaUserId: attendees[0].userInfo.euaUserId,
+    commonName: attendees[0].userInfo.commonName
   },
-  createdAt: '2023-01-05T07:26:16.036618Z',
+  createdAt: '2023-01-08T07:26:16.036618Z',
   modifiedAt: null
 };
 
-export const trbRequest: TrbRequest = {
-  id: trbRequestId,
-  name: 'Draft',
-  taskStatuses: {
-    __typename: 'TRBTaskStatuses',
-    attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-    consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-    feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-    formStatus: TRBFormStatus.READY_TO_START,
-    adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET
+export const getTrbAdviceLetterQuery: MockedQuery<
+  GetTrbAdviceLetter,
+  GetTrbAdviceLetterVariables
+> = {
+  request: {
+    query: GetTrbAdviceLetterQuery,
+    variables: {
+      id: trbRequestId
+    }
   },
-  feedback: [],
-  state: TRBRequestState.OPEN,
-  type: TRBRequestType.NEED_HELP,
-  form: {
-    id: '452cf444-69b2-41a9-b8ab-ed354d209307',
-    component: null,
-    needsAssistanceWith: null,
-    hasSolutionInMind: null,
-    proposedSolution: null,
-    whereInProcess: null,
-    whereInProcessOther: null,
-    hasExpectedStartEndDates: null,
-    expectedStartDate: null,
-    expectedEndDate: null,
-    systemIntakes: [],
-    collabGroups: [],
-    collabDateSecurity: null,
-    collabDateEnterpriseArchitecture: null,
-    collabDateCloud: null,
-    collabDatePrivacyAdvisor: null,
-    collabDateGovernanceReviewBoard: null,
-    collabDateOther: null,
-    collabGroupOther: null,
-    collabGRBConsultRequested: null,
-    subjectAreaOptions: null,
-    subjectAreaOptionOther: null,
-    fundingSources: null,
-    submittedAt: null,
-    __typename: 'TRBRequestForm'
-  },
-  __typename: 'TRBRequest'
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        id: trbRequestId,
+        name: trbRequest.name,
+        taskStatuses: {
+          ...taskStatuses,
+          adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED
+        },
+        adviceLetter
+      }
+    }
+  }
 };
 
-export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
+export const getTrbAdminNotesQuery: MockedQuery<
+  GetTrbAdminNotes,
+  GetTrbAdminNotesVariables
+> = {
+  request: {
+    query: GetTrbAdminNotesQuery,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        id: trbRequestId,
+        adminNotes
+      }
+    }
+  }
+};
+
+export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
   {
     id: '0ba435ac-50ee-44d1-94cc-4dd480b70a75',
     name: 'First help',
@@ -200,17 +433,10 @@ export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     },
     requesterComponent: null,
     requesterInfo: {
-      commonName: 'Wava Upton',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
-    taskStatuses: {
-      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-      formStatus: TRBFormStatus.READY_TO_START,
-      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
-      __typename: 'TRBTaskStatuses'
-    },
+    taskStatuses,
     form: {
       submittedAt: '2023-03-01T01:23:45Z',
       __typename: 'TRBRequestForm'
@@ -232,17 +458,10 @@ export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     },
     requesterComponent: null,
     requesterInfo: {
-      commonName: 'Derick Koss',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
-    taskStatuses: {
-      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-      formStatus: TRBFormStatus.READY_TO_START,
-      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
-      __typename: 'TRBTaskStatuses'
-    },
+    taskStatuses,
     form: {
       submittedAt: '2023-03-02T01:23:45Z',
       __typename: 'TRBRequestForm'
@@ -259,22 +478,15 @@ export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     consultMeetingTime: null,
     trbLeadComponent: null,
     trbLeadInfo: {
-      commonName: 'Astrid Howell',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
     requesterComponent: null,
     requesterInfo: {
-      commonName: 'Loraine Kirlin',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
-    taskStatuses: {
-      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-      formStatus: TRBFormStatus.READY_TO_START,
-      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
-      __typename: 'TRBTaskStatuses'
-    },
+    taskStatuses,
     form: {
       submittedAt: '2023-03-03T01:23:45Z',
       __typename: 'TRBRequestForm'
@@ -291,22 +503,15 @@ export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     consultMeetingTime: '2023-04-01T09:23:45Z',
     trbLeadComponent: null,
     trbLeadInfo: {
-      commonName: 'Polly Sauer',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
     requesterComponent: null,
     requesterInfo: {
-      commonName: 'Clotilde Goodwin',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
-    taskStatuses: {
-      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-      formStatus: TRBFormStatus.READY_TO_START,
-      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
-      __typename: 'TRBTaskStatuses'
-    },
+    taskStatuses,
     form: {
       submittedAt: '2023-03-04T01:23:45Z',
       __typename: 'TRBRequestForm'
@@ -323,22 +528,15 @@ export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     consultMeetingTime: '2023-04-02T09:23:45Z',
     trbLeadComponent: null,
     trbLeadInfo: {
-      commonName: 'Sydni Reynolds',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
     requesterComponent: null,
     requesterInfo: {
-      commonName: 'Sylvester Mante',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
-    taskStatuses: {
-      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-      formStatus: TRBFormStatus.READY_TO_START,
-      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
-      __typename: 'TRBTaskStatuses'
-    },
+    taskStatuses,
     form: {
       submittedAt: '2023-03-05T01:23:45Z',
       __typename: 'TRBRequestForm'
@@ -355,22 +553,15 @@ export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     consultMeetingTime: '2023-04-02T09:23:45Z',
     trbLeadComponent: 'TRB',
     trbLeadInfo: {
-      commonName: 'Hosea Lemke',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
-    requesterComponent: 'BBQ',
+    requesterComponent: 'CMS Wide',
     requesterInfo: {
-      commonName: 'Damaris Langosh',
+      commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
     },
-    taskStatuses: {
-      attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
-      consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
-      feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
-      formStatus: TRBFormStatus.READY_TO_START,
-      adviceLetterStatus: TRBAdviceLetterStatus.CANNOT_START_YET,
-      __typename: 'TRBTaskStatuses'
-    },
+    taskStatuses,
     form: {
       submittedAt: '2023-03-06T01:23:45Z',
       __typename: 'TRBRequestForm'
@@ -378,3 +569,30 @@ export const trbAdminTeamHomeRequests: TrbAdminTeamHomeRequest[] = [
     __typename: 'TRBRequest'
   }
 ];
+
+export const getTrbAdminTeamHomeQuery: MockedQuery<GetTrbAdminTeamHome> = {
+  request: { query: GetTrbAdminTeamHomeQuery, variables: {} },
+  result: {
+    data: {
+      trbRequests: [...trbAdminTeamHomeRequests]
+    }
+  }
+};
+
+export const trbLeadOptions: MockUserInfo[] = [
+  users.next()?.userInfo!,
+  users.next()?.userInfo!,
+  users.next()?.userInfo!
+];
+
+export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptions> = {
+  request: {
+    query: GetTrbLeadOptionsQuery,
+    variables: {}
+  },
+  result: {
+    data: {
+      trbLeadOptions
+    }
+  }
+};
