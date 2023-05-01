@@ -8,14 +8,14 @@ import (
 
 // IBaseStruct is an interface that all models must implement
 type IBaseStruct interface {
-	GetBaseStruct() *baseStruct
+	GetBaseStruct() *BaseStruct
 	GetID() uuid.UUID
 	GetCreatedBy() string
 	GetModifiedBy() *string
 }
 
-// baseStruct represents the shared data in common betwen all models
-type baseStruct struct {
+// BaseStruct represents the shared data in common betwen all models
+type BaseStruct struct {
 	ID         uuid.UUID  `json:"id" db:"id"`
 	CreatedBy  string     `json:"createdBy" db:"created_by"`
 	CreatedAt  time.Time  `json:"createdAt" db:"created_at"`
@@ -24,28 +24,28 @@ type baseStruct struct {
 }
 
 // NewBaseStruct returns a base struct object
-func NewBaseStruct(createdBy string) baseStruct {
-	return baseStruct{
+func NewBaseStruct(createdBy string) BaseStruct {
+	return BaseStruct{
 		CreatedBy: createdBy,
 	}
 }
 
 // GetBaseStruct returns the Base Struct
-func (b *baseStruct) GetBaseStruct() *baseStruct {
+func (b *BaseStruct) GetBaseStruct() *BaseStruct {
 	return b
 }
 
 // GetID returns the ID property for a PlanBasics struct
-func (b baseStruct) GetID() uuid.UUID {
+func (b BaseStruct) GetID() uuid.UUID {
 	return b.ID
 }
 
 // GetModifiedBy returns the ModifiedBy property for a PlanBasics struct
-func (b baseStruct) GetModifiedBy() *string {
+func (b BaseStruct) GetModifiedBy() *string {
 	return b.ModifiedBy
 }
 
 // GetCreatedBy implements the CreatedBy property
-func (b baseStruct) GetCreatedBy() string {
+func (b BaseStruct) GetCreatedBy() string {
 	return b.CreatedBy
 }

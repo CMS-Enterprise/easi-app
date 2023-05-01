@@ -16,7 +16,7 @@ const (
 
 // TRBAdminNote represents the data for a note attached to a TRB request by an admin
 type TRBAdminNote struct {
-	baseStruct
+	BaseStruct
 	TRBRequestID uuid.UUID            `json:"trbRequestId" db:"trb_request_id"`
 	Category     TRBAdminNoteCategory `json:"category" db:"category"`
 	NoteText     string               `json:"noteText" db:"note_text"`
