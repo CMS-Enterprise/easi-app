@@ -14,7 +14,6 @@ import {
   DeleteTRBRecommendation,
   DeleteTRBRecommendationVariables
 } from 'queries/types/DeleteTRBRecommendation';
-import {} from 'queries/types/GetTrbAdviceLetter';
 import {
   RequestReviewForTRBAdviceLetter,
   RequestReviewForTRBAdviceLetterVariables

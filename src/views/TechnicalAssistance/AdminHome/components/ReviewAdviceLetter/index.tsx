@@ -109,36 +109,6 @@ const ReviewAdviceLetter = ({
               type="form"
               recommendations={recommendations}
               {...recommendationActions}
-              // edit={
-              //   showSectionEditLinks
-              //     ? {
-              //         onClick: recommendation =>
-              //           history.push(`/trb/${id}/advice/recommendations/form`, {
-              //             recommendation: {
-              //               ...recommendation,
-              //               links: recommendation.links.map(link => ({ link }))
-              //             }
-              //           })
-              //       }
-              //     : undefined
-              // }
-              // remove={
-              //   showSectionEditLinks
-              //     ? {
-              //         onClick: recommendation =>
-              //           remove({ variables: { id: recommendation.id } }).catch(
-              //             () =>
-              //               setFormAlert({
-              //                 type: 'error',
-              //                 message: t('adviceLetterForm.error', {
-              //                   action: 'removing',
-              //                   type: 'recommendation'
-              //                 })
-              //               })
-              //           )
-              //       }
-              //     : undefined
-              // }
             />
           )
         }
