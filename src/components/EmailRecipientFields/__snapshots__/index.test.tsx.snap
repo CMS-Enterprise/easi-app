@@ -97,13 +97,13 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
           id="notifyEuaIds.1"
           name="notifyEuaIds"
           type="checkbox"
-          value="SF13"
+          value="ADMI"
         />
         <label
           class="usa-checkbox__label"
           for="notifyEuaIds.1"
         >
-          Jerry Seinfeld (Product Owner)
+          Audrey Abrams (Privacy Advisor)
         </label>
       </div>
       <div
@@ -114,13 +114,13 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
           id="notifyEuaIds.2"
           name="notifyEuaIds"
           type="checkbox"
-          value="ADMI"
+          value="ADMN"
         />
         <label
           class="usa-checkbox__label"
           for="notifyEuaIds.2"
         >
-          Audrey Abrams (System Owner)
+          Aaron Adams (System Maintainer)
         </label>
       </div>
       <fieldset
@@ -164,7 +164,7 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
               >
                 <div
                   class="cedar-contact-select__input-container css-1pndypt-Input"
-                  data-value="Anabelle Jerde, JTTC"
+                  data-value="Ally Anderson, A11Y"
                 >
                   <input
                     aria-autocomplete="list"
@@ -182,7 +182,7 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
                     style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
                     tabindex="0"
                     type="text"
-                    value="Anabelle Jerde, JTTC"
+                    value="Ally Anderson, A11Y"
                   />
                 </div>
               </div>
@@ -579,13 +579,13 @@ exports[`Email recipient fields component renders recipients 1`] = `
           id="notifyEuaIds.1"
           name="notifyEuaIds"
           type="checkbox"
-          value="SF13"
+          value="ADMI"
         />
         <label
           class="usa-checkbox__label"
           for="notifyEuaIds.1"
         >
-          Jerry Seinfeld (Product Owner)
+          Audrey Abrams (Privacy Advisor)
         </label>
       </div>
       <div
@@ -596,13 +596,13 @@ exports[`Email recipient fields component renders recipients 1`] = `
           id="notifyEuaIds.2"
           name="notifyEuaIds"
           type="checkbox"
-          value="ADMI"
+          value="ADMN"
         />
         <label
           class="usa-checkbox__label"
           for="notifyEuaIds.2"
         >
-          Audrey Abrams (System Owner)
+          Aaron Adams (System Maintainer)
         </label>
       </div>
       <button
