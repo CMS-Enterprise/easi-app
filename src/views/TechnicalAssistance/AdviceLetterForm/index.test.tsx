@@ -8,62 +8,41 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureMockStore from 'redux-mock-store';
 
-import { trbRequestAdviceLetter } from 'data/mock/trbRequest';
+import { adviceLetter, getTrbAdviceLetterQuery } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
+import { CreateTrbRecommendationQuery } from 'queries/TrbAdviceLetterQueries';
 import {
-  CreateTrbRecommendationQuery,
-  GetTrbAdviceLetterQuery
-} from 'queries/TrbAdviceLetterQueries';
-import { GetTrbAdviceLetter } from 'queries/types/GetTrbAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
+  CreateTRBRecommendation,
+  CreateTRBRecommendationVariables
+} from 'queries/types/CreateTRBRecommendation';
+import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
+import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 
 import AdviceLetterForm from '.';
 
-const trbRequestId = 'fd1eec78-dff5-4c26-8924-44872a2b0414';
-
-const adviceLetterQueryResponse: GetTrbAdviceLetter = {
-  trbRequest: {
-    __typename: 'TRBRequest',
-    id: '560843f1-ee1e-4d65-8d6a-273c4ace92ef',
-    name: 'Test advice letter',
-    adviceLetter: trbRequestAdviceLetter,
-    taskStatuses: {
-      __typename: 'TRBTaskStatuses',
-      adviceLetterStatus: TRBAdviceLetterStatus.IN_PROGRESS
-    }
-  }
-};
-
-const getTrbAdviceLetterQuery = {
-  request: {
-    query: GetTrbAdviceLetterQuery,
-    variables: {
-      id: trbRequestId
-    }
-  },
-  result: {
-    data: adviceLetterQueryResponse
-  }
-};
-
 const mockRecommendation = {
+  trbRequestId: mockTrbRequestId,
   title: 'Recommendation 3',
   recommendation: 'Recommendation description text',
   links: ['google.com', 'easi.cms.gov']
 };
 
-const createTrbRecommendationQuery = {
+const createTrbRecommendationQuery: MockedQuery<
+  CreateTRBRecommendation,
+  CreateTRBRecommendationVariables
+> = {
   request: {
     query: CreateTrbRecommendationQuery,
     variables: {
-      input: { trbRequestId, ...mockRecommendation }
+      input: mockRecommendation
     }
   },
   result: {
     data: {
       createTRBAdviceLetterRecommendation: {
+        __typename: 'TRBAdviceLetterRecommendation',
         id: '670fdf6d-761b-415f-a108-2ebc814288c3',
         ...mockRecommendation
       }
@@ -71,20 +50,14 @@ const createTrbRecommendationQuery = {
   }
 };
 
-const mockStore = configureMockStore();
-
-const defaultStore = mockStore({
-  auth: {
-    euaId: 'SF13',
-    name: 'Jerry Seinfeld',
-    isUserSet: true,
-    groups: ['EASI_TRB_ADMIN_D']
-  }
+const defaultStore = easiMockStore({
+  euaUserId: 'SF13',
+  groups: ['EASI_TRB_ADMIN_D']
 });
 
 const renderForm = (step: string) => {
   return render(
-    <MemoryRouter initialEntries={[`/trb/${trbRequestId}/advice/${step}`]}>
+    <MemoryRouter initialEntries={[`/trb/${mockTrbRequestId}/advice/${step}`]}>
       <MessageProvider>
         <Provider store={defaultStore}>
           <MockedProvider
@@ -167,7 +140,7 @@ describe('TRB Advice Letter Form', () => {
       name: 'Next steps *'
     });
 
-    expect(nextStepsInput).toHaveValue(trbRequestAdviceLetter.nextSteps);
+    expect(nextStepsInput).toHaveValue(adviceLetter.nextSteps);
 
     expect(
       getByRole('radio', {
@@ -176,9 +149,7 @@ describe('TRB Advice Letter Form', () => {
     ).toBeChecked();
 
     const followupPointInput = getByRole('textbox', { name: 'When?' });
-    expect(followupPointInput).toHaveValue(
-      trbRequestAdviceLetter.followupPoint
-    );
+    expect(followupPointInput).toHaveValue(adviceLetter.followupPoint);
 
     // Check that followup point input is hidden when followup radio field is false
     userEvent.click(getByRole('radio', { name: 'Not necessary' }));
