@@ -6,7 +6,6 @@ import { useMutation } from '@apollo/client';
 import {
   Alert,
   Button,
-  CharacterCount,
   DatePicker,
   ErrorMessage,
   Form,
@@ -22,6 +21,7 @@ import { DateTime } from 'luxon';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import {
   UpdateTrbRequestConsultMeeting,
@@ -104,7 +104,7 @@ function Consult() {
                 trbRequestId: id,
                 consultMeetingTime,
                 notes: formData.notes,
-                copyTrbMailbox: false,
+                copyTrbMailbox: true,
                 notifyEuaIds: ['ABCD']
               }
             }
@@ -255,13 +255,10 @@ function Consult() {
                   <Label htmlFor="notes" className="text-normal">
                     {t('actionScheduleConsult.labels.notes')}
                   </Label>
-                  <CharacterCount
+                  <TextAreaField
                     {...field}
                     ref={null}
-                    id="notes"
-                    maxLength={2000}
-                    isTextArea
-                    rows={2}
+                    id={field.name}
                     aria-describedby="notes-info notes-hint"
                     error={!!error}
                   />

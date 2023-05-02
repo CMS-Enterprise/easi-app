@@ -267,7 +267,7 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             >
               <a
                 class="usa-link"
-                href="/"
+                href="/trb/task-list/1afc9242-f244-47a3-9f91-4d6fedd8eb91"
               >
                 My excellent question
               </a>
@@ -287,7 +287,9 @@ exports[`My Requests Table when there are requests matches snapshot 1`] = `
             <td
               role="cell"
               style="width: 200px; padding-left: 0px;"
-            />
+            >
+              Consult complete
+            </td>
             <td
               role="cell"
               style="width: 150px; padding-left: 0px;"

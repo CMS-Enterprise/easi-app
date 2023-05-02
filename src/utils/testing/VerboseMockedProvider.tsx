@@ -37,7 +37,7 @@ const VerboseMockedProvider = (props: Props) => {
       );
     }
 
-    if (networkError) {
+    if (networkError && !!networkError.message) {
       console.log(`[Network error]: ${networkError}`);
     }
   });

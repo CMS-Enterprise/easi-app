@@ -6,12 +6,18 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
+import { getTrbLeadOptionsQuery, trbLeadOptions } from 'data/mock/trbRequest';
 import useMessage, { MessageProvider } from 'hooks/useMessage';
-import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
+import {
+  UpdateTrbRequestLead,
+  UpdateTrbRequestLeadVariables
+} from 'queries/types/UpdateTrbRequestLead';
 import UpdateTrbRequestLeadQuery from 'queries/UpdateTrbRequestLeadQuery';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
+import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
+import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 
 import TrbAssignLeadModal, {
   TrbAssignLeadModalOpener
@@ -22,39 +28,36 @@ function MockMessage() {
   return <>{message}</>;
 }
 
+const trbLeadInfo = trbLeadOptions[0];
+
+const updateTrbRequestLeadQuery: MockedQuery<
+  UpdateTrbRequestLead,
+  UpdateTrbRequestLeadVariables
+> = {
+  request: {
+    query: UpdateTrbRequestLeadQuery,
+    variables: {
+      input: {
+        trbRequestId: mockTrbRequestId,
+        trbLead: trbLeadInfo.euaUserId
+      }
+    }
+  },
+  result: {
+    data: {
+      updateTRBRequestTRBLead: {
+        id: mockTrbRequestId,
+        trbLead: trbLeadInfo.euaUserId,
+        trbLeadComponent: null,
+        trbLeadInfo,
+        __typename: 'TRBRequest'
+      }
+    }
+  }
+};
+
 describe('TrbAssignLeadModal', () => {
-  const mockStore = configureMockStore();
-  const store = mockStore({
-    auth: {
-      euaId: 'ABCD',
-      name: 'Jerry Seinfeld',
-      isUserSet: true,
-      groups: ['EASI_TRB_ADMIN_D']
-    }
-  });
-  const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
-  const trbLeadOptions = [
-    {
-      euaUserId: 'ABCD',
-      commonName: 'Adeline Aarons',
-      __typename: 'UserInfo'
-    },
-    {
-      euaUserId: 'TEST',
-      commonName: 'Terry Thompson',
-      __typename: 'UserInfo'
-    },
-    {
-      euaUserId: 'A11Y',
-      commonName: 'Ally Anderson',
-      __typename: 'UserInfo'
-    },
-    {
-      euaUserId: 'GRTB',
-      commonName: 'Gary Gordon',
-      __typename: 'UserInfo'
-    }
-  ];
+  const store = easiMockStore({ euaUserId: trbLeadInfo.euaUserId });
 
   it('opens and lists trb members', async () => {
     const modalRef = React.createRef<ModalRef>();
@@ -63,24 +66,11 @@ describe('TrbAssignLeadModal', () => {
     const { findByText, getByRole } = render(
       <>
         <Provider store={store}>
-          <MockedProvider
-            mocks={[
-              {
-                request: {
-                  query: GetTrbLeadOptionsQuery
-                },
-                result: {
-                  data: {
-                    trbLeadOptions
-                  }
-                }
-              }
-            ]}
-          >
+          <MockedProvider mocks={[getTrbLeadOptionsQuery]}>
             <MemoryRouter>
               <MessageProvider>
                 <TrbAssignLeadModalOpener
-                  trbRequestId={trbRequestId}
+                  trbRequestId={mockTrbRequestId}
                   modalRef={modalRef}
                   trbRequestIdRef={trbRequestIdRef}
                   className="usa-button--unstyled"
@@ -120,49 +110,13 @@ describe('TrbAssignLeadModal', () => {
     const { findByText, getByRole, getByTestId } = render(
       <Provider store={store}>
         <MockedProvider
-          mocks={[
-            {
-              request: {
-                query: GetTrbLeadOptionsQuery
-              },
-              result: {
-                data: {
-                  trbLeadOptions
-                }
-              }
-            },
-            {
-              request: {
-                query: UpdateTrbRequestLeadQuery,
-                variables: {
-                  input: {
-                    trbRequestId,
-                    trbLead: 'ABCD'
-                  }
-                }
-              },
-              result: {
-                data: {
-                  id: trbRequestId,
-                  trbLead: 'ABCD',
-                  trbLeadComponent: null,
-                  trbLeadInfo: {
-                    commonName: 'Adeline Aarons',
-                    email: 'adeline.aarons@local.fake',
-                    euaUserId: 'ABCD',
-                    __typename: 'UserInfo'
-                  },
-                  __typename: 'TRBRequest'
-                }
-              }
-            }
-          ]}
+          mocks={[getTrbLeadOptionsQuery, updateTrbRequestLeadQuery]}
         >
           <MemoryRouter>
             <MessageProvider>
               <MockMessage />
               <TrbAssignLeadModalOpener
-                trbRequestId={trbRequestId}
+                trbRequestId={mockTrbRequestId}
                 modalRef={modalRef}
                 trbRequestIdRef={trbRequestIdRef}
                 className="usa-button--unstyled"
@@ -189,7 +143,7 @@ describe('TrbAssignLeadModal', () => {
       i18next.t<string>('technicalAssistance:assignTrbLeadModal.assignMyself')
     );
 
-    userEvent.click(getByTestId('trbLead-ABCD'));
+    userEvent.click(getByTestId(`trbLead-${trbLeadInfo.euaUserId}`));
 
     userEvent.click(
       getByRole('button', {
@@ -199,7 +153,7 @@ describe('TrbAssignLeadModal', () => {
 
     await findByText(
       i18next.t<string>('technicalAssistance:assignTrbLeadModal.success', {
-        name: 'Adeline Aarons'
+        name: trbLeadInfo.commonName
       })
     );
   });
@@ -212,26 +166,9 @@ describe('TrbAssignLeadModal', () => {
       <Provider store={store}>
         <MockedProvider
           mocks={[
+            getTrbLeadOptionsQuery,
             {
-              request: {
-                query: GetTrbLeadOptionsQuery
-              },
-              result: {
-                data: {
-                  trbLeadOptions
-                }
-              }
-            },
-            {
-              request: {
-                query: UpdateTrbRequestLeadQuery,
-                variables: {
-                  input: {
-                    trbRequestId,
-                    trbLead: 'ABCD'
-                  }
-                }
-              },
+              request: updateTrbRequestLeadQuery.request,
               error: new Error()
             }
           ]}
@@ -240,7 +177,7 @@ describe('TrbAssignLeadModal', () => {
             <MessageProvider>
               <MockMessage />
               <TrbAssignLeadModalOpener
-                trbRequestId={trbRequestId}
+                trbRequestId={mockTrbRequestId}
                 modalRef={modalRef}
                 trbRequestIdRef={trbRequestIdRef}
                 className="usa-button--unstyled"
@@ -262,7 +199,7 @@ describe('TrbAssignLeadModal', () => {
     });
     userEvent.click(open);
 
-    userEvent.click(await findByTestId('trbLead-TEST'));
+    userEvent.click(await findByTestId(`trbLead-${trbLeadInfo.euaUserId}`));
 
     userEvent.click(
       getByRole('button', {

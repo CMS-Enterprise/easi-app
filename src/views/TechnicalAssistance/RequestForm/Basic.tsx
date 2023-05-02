@@ -6,7 +6,6 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
-  CharacterCount,
   Checkbox,
   Dropdown,
   ErrorMessage,
@@ -26,6 +25,7 @@ import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import useCacheQuery from 'hooks/useCacheQuery';
@@ -437,13 +437,10 @@ function Basic({
                 {error && (
                   <ErrorMessage>{t('errors.includeExplanation')}</ErrorMessage>
                 )}
-                <CharacterCount
+                <TextAreaField
                   {...field}
                   ref={null}
                   id="needsAssistanceWith"
-                  maxLength={2000}
-                  isTextArea
-                  rows={2}
                   aria-describedby="needsAssistanceWith-info needsAssistanceWith-hint"
                   error={!!error}
                 />
@@ -492,13 +489,10 @@ function Basic({
                                 {t('errors.includeExplanation')}
                               </ErrorMessage>
                             )}
-                            <CharacterCount
+                            <TextAreaField
                               {...field}
                               ref={null}
                               id="proposedSolution"
-                              maxLength={2000}
-                              isTextArea
-                              rows={2}
                               aria-describedby="proposedSolution-info proposedSolution-hint"
                               error={!!error}
                             />
