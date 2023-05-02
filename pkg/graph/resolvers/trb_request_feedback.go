@@ -39,7 +39,9 @@ func CreateTRBRequestFeedback(
 		}
 
 		for _, recipientInfo := range recipientInfos {
-			recipientEmails = append(recipientEmails, recipientInfo.Email)
+			if recipientInfo != nil {
+				recipientEmails = append(recipientEmails, recipientInfo.Email)
+			}
 		}
 		return nil
 	})
