@@ -1301,6 +1301,82 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.False(respIntake.HasUIChanges)
 }
 
+func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		EUAUserID:   null.StringFrom("TEST"),
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeRequestDetails struct {
+			SystemIntake struct {
+				ID           string
+				HasUIChanges *bool
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeRequestDetails(input: {
+				id: "%s",
+				hasUiChanges: null,
+			}) {
+				systemIntake {
+					id
+					hasUiChanges
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeRequestDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeRequestDetails.SystemIntake
+	s.Nil(respIntake.HasUIChanges)
+}
+
+func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		EUAUserID:   null.StringFrom("TEST"),
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		UpdateSystemIntakeRequestDetails struct {
+			SystemIntake struct {
+				ID           string
+				HasUIChanges *bool
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			updateSystemIntakeRequestDetails(input: {
+				id: "%s",
+				hasUiChanges: true,
+			}) {
+				systemIntake {
+					id
+					hasUiChanges
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeRequestDetails.SystemIntake.ID)
+
+	respIntake := resp.UpdateSystemIntakeRequestDetails.SystemIntake
+	s.True(*respIntake.HasUIChanges)
+}
+
 func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreation() {
 
 	ctx := context.Background()
