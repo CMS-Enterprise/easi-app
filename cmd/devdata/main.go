@@ -55,8 +55,6 @@ func main() {
 		panic(storeErr)
 	}
 
-	// store.TruncateAllTablesDANGEROUS(logger)
-
 	s3Cfg := upload.Config{
 		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
 		Region:  config.GetString(appconfig.AWSRegion),
@@ -242,7 +240,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 
 		ProcessStatus:      null.StringFrom("I have done some initial research"),
 		EASupportRequest:   null.BoolFrom(true),
-		HasUIChanges:       null.BoolFrom(false),
+		HasUIChanges:       null.BoolFrom(true),
 		ExistingContract:   null.StringFrom("HAVE_CONTRACT"),
 		CostIncrease:       null.StringFrom("YES"),
 		CostIncreaseAmount: null.StringFrom("10 million dollars?"),
