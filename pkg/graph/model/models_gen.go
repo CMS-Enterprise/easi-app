@@ -209,6 +209,19 @@ type CreateSystemIntakeContactPayload struct {
 	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
 }
 
+// The data needed to upload a System Intake document and attach it to a request with metadata
+type CreateSystemIntakeDocumentInput struct {
+	RequestID            uuid.UUID                             `json:"requestID"`
+	FileData             graphql.Upload                        `json:"fileData"`
+	DocumentType         models.SystemIntakeDocumentCommonType `json:"documentType"`
+	OtherTypeDescription *string                               `json:"otherTypeDescription"`
+}
+
+// Data returned after uploading a document to a System Intake
+type CreateSystemIntakeDocumentPayload struct {
+	Document *models.SystemIntakeDocument `json:"document"`
+}
+
 // The input data used to initialize an IT governance request for a system
 type CreateSystemIntakeInput struct {
 	RequestType models.SystemIntakeRequestType `json:"requestType"`
@@ -322,6 +335,11 @@ type DeleteSystemIntakeContactInput struct {
 // The payload when deleting a system intake contact
 type DeleteSystemIntakeContactPayload struct {
 	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
+}
+
+// Data returned after deleting a document attached to a System Intake
+type DeleteSystemIntakeDocumentPayload struct {
+	Document *models.SystemIntakeDocument `json:"document"`
 }
 
 // Data returned after deleting a document attached to a TRB request
@@ -554,6 +572,13 @@ type SystemIntakeCosts struct {
 type SystemIntakeCostsInput struct {
 	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
 	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
+}
+
+// Denotes the type of a document attached to a System Intake,
+// which can be one of a number of common types, or a free-text user-specified type
+type SystemIntakeDocumentType struct {
+	CommonType           models.SystemIntakeDocumentCommonType `json:"commonType"`
+	OtherTypeDescription *string                               `json:"otherTypeDescription"`
 }
 
 // Represents the source of funding for a system

@@ -1938,6 +1938,30 @@ func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid
 	}, nil
 }
 
+// CreateSystemIntakeDocument is the resolver for the createSystemIntakeDocument field.
+func (r *mutationResolver) CreateSystemIntakeDocument(ctx context.Context, input model.CreateSystemIntakeDocumentInput) (*model.CreateSystemIntakeDocumentPayload, error) {
+	doc, err := resolvers.CreateSystemIntakeDocument(ctx, r.store, r.s3Client, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.CreateSystemIntakeDocumentPayload{
+		Document: doc,
+	}, nil
+}
+
+// DeleteSystemIntakeDocument is the resolver for the deleteSystemIntakeDocument field.
+func (r *mutationResolver) DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*model.DeleteSystemIntakeDocumentPayload, error) {
+	doc, err := resolvers.DeleteSystemIntakeDocument(ctx, r.store, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteSystemIntakeDocumentPayload{
+		Document: doc,
+	}, nil
+}
+
 // UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
 func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
 	return resolvers.UpdateTRBRequestForm(
@@ -2858,6 +2882,34 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 	return obj.CedarSystemID.Ptr(), nil
 }
 
+// Documents is the resolver for the documents field.
+func (r *systemIntakeResolver) Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error) {
+	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
+}
+
+// DocumentType is the resolver for the documentType field.
+func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error) {
+	return &model.SystemIntakeDocumentType{
+		CommonType:           obj.CommonDocumentType,
+		OtherTypeDescription: &obj.OtherType,
+	}, nil
+}
+
+// Status is the resolver for the status field.
+func (r *systemIntakeDocumentResolver) Status(ctx context.Context, obj *models.SystemIntakeDocument) (models.SystemIntakeDocumentStatus, error) {
+	return resolvers.GetStatusForSystemIntakeDocument(r.s3Client, obj.S3Key)
+}
+
+// UploadedAt is the resolver for the uploadedAt field.
+func (r *systemIntakeDocumentResolver) UploadedAt(ctx context.Context, obj *models.SystemIntakeDocument) (*time.Time, error) {
+	return &obj.CreatedAt, nil
+}
+
+// URL is the resolver for the url field.
+func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error) {
+	return resolvers.GetURLForSystemIntakeDocument(r.s3Client, obj.S3Key)
+}
+
 // FundingNumber is the resolver for the fundingNumber field.
 func (r *systemIntakeFundingSourceResolver) FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
 	return obj.FundingNumber.Ptr(), nil
@@ -3134,6 +3186,11 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
+// SystemIntakeDocument returns generated.SystemIntakeDocumentResolver implementation.
+func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver {
+	return &systemIntakeDocumentResolver{r}
+}
+
 // SystemIntakeFundingSource returns generated.SystemIntakeFundingSourceResolver implementation.
 func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSourceResolver {
 	return &systemIntakeFundingSourceResolver{r}
@@ -3195,6 +3252,7 @@ type cedarThreatResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeFundingSourceResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }

@@ -1014,6 +1014,7 @@ type SystemIntake {
   businessCaseId: UUID
   lastAdminNote: LastAdminNote!
   cedarSystemId: String
+  documents: [SystemIntakeDocument!]!
 }
 
 """
@@ -1610,6 +1611,15 @@ enum TRBRequestDocumentStatus {
 }
 
 """
+Enumeration of the possible statuses of documents uploaded in the System Intake
+"""
+enum SystemIntakeDocumentStatus {
+  AVAILABLE
+  PENDING
+  UNAVAILABLE
+}
+
+"""
 Represents the common options for document type that is attached to a
 508/accessibility request
 """
@@ -1617,6 +1627,16 @@ enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM
   PRESENTATION_SLIDE_DECK
   BUSINESS_CASE
+  OTHER
+}
+
+"""
+Represents the common options for document type that is attached to a
+System Intake document
+"""
+enum SystemIntakeDocumentCommonType {
+  SOO_SOW
+  DRAFT_ICGE
   OTHER
 }
 
@@ -1652,6 +1672,16 @@ input CreateTRBRequestDocumentInput {
 }
 
 """
+The data needed to upload a System Intake document and attach it to a request with metadata
+"""
+input CreateSystemIntakeDocumentInput {
+  requestID: UUID!
+  fileData: Upload!
+  documentType: SystemIntakeDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""
 Data returned after uploading a document to a TRB request
 """
 type CreateTRBRequestDocumentPayload {
@@ -1663,6 +1693,35 @@ Data returned after deleting a document attached to a TRB request
 """
 type DeleteTRBRequestDocumentPayload {
   document: TRBRequestDocument
+}
+
+"""Represents a document attached to a System Intake"""
+type SystemIntakeDocument {
+  documentType: SystemIntakeDocumentType!
+  id: UUID!
+  fileName: String!
+  status: SystemIntakeDocumentStatus!
+  uploadedAt: Time!
+  url: String!
+}
+
+"""
+Denotes the type of a document attached to a System Intake,
+which can be one of a number of common types, or a free-text user-specified type
+"""
+type SystemIntakeDocumentType {
+  commonType: SystemIntakeDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""Data returned after uploading a document to a System Intake"""
+type CreateSystemIntakeDocumentPayload {
+  document: SystemIntakeDocument
+}
+
+"""Data returned after deleting a document attached to a System Intake"""
+type DeleteSystemIntakeDocumentPayload {
+  document: SystemIntakeDocument
 }
 
 """
@@ -2161,6 +2220,8 @@ type Mutation {
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
+  createSystemIntakeDocument(input: CreateSystemIntakeDocumentInput!): CreateSystemIntakeDocumentPayload
+  deleteSystemIntakeDocument(id: UUID!): DeleteSystemIntakeDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!

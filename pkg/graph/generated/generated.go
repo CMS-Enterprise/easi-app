@@ -54,6 +54,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
+	SystemIntakeDocument() SystemIntakeDocumentResolver
 	SystemIntakeFundingSource() SystemIntakeFundingSourceResolver
 	SystemIntakeNote() SystemIntakeNoteResolver
 	TRBAdminNote() TRBAdminNoteResolver
@@ -435,6 +436,10 @@ type ComplexityRoot struct {
 		SystemIntakeContact func(childComplexity int) int
 	}
 
+	CreateSystemIntakeDocumentPayload struct {
+		Document func(childComplexity int) int
+	}
+
 	CreateTRBRequestDocumentPayload struct {
 		Document func(childComplexity int) int
 	}
@@ -463,6 +468,10 @@ type ComplexityRoot struct {
 
 	DeleteSystemIntakeContactPayload struct {
 		SystemIntakeContact func(childComplexity int) int
+	}
+
+	DeleteSystemIntakeDocumentPayload struct {
+		Document func(childComplexity int) int
 	}
 
 	DeleteTRBRequestDocumentPayload struct {
@@ -525,6 +534,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeContact                        func(childComplexity int, input model.CreateSystemIntakeContactInput) int
+		CreateSystemIntakeDocument                       func(childComplexity int, input model.CreateSystemIntakeDocumentInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
 		CreateTRBAdminNote                               func(childComplexity int, input model.CreateTRBAdminNoteInput) int
 		CreateTRBAdviceLetter                            func(childComplexity int, trbRequestID uuid.UUID) int
@@ -539,6 +549,7 @@ type ComplexityRoot struct {
 		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
 		DeleteCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
 		DeleteSystemIntakeContact                        func(childComplexity int, input model.DeleteSystemIntakeContactInput) int
+		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
 		DeleteTRBAdviceLetterRecommendation              func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
@@ -660,6 +671,7 @@ type ComplexityRoot struct {
 		CurrentStage                func(childComplexity int) int
 		DecidedAt                   func(childComplexity int) int
 		DecisionNextSteps           func(childComplexity int) int
+		Documents                   func(childComplexity int) int
 		EaCollaborator              func(childComplexity int) int
 		EaCollaboratorName          func(childComplexity int) int
 		EuaUserID                   func(childComplexity int) int
@@ -747,6 +759,20 @@ type ComplexityRoot struct {
 	SystemIntakeCosts struct {
 		ExpectedIncreaseAmount func(childComplexity int) int
 		IsExpectingIncrease    func(childComplexity int) int
+	}
+
+	SystemIntakeDocument struct {
+		DocumentType func(childComplexity int) int
+		FileName     func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Status       func(childComplexity int) int
+		URL          func(childComplexity int) int
+		UploadedAt   func(childComplexity int) int
+	}
+
+	SystemIntakeDocumentType struct {
+		CommonType           func(childComplexity int) int
+		OtherTypeDescription func(childComplexity int) int
 	}
 
 	SystemIntakeFundingSource struct {
@@ -1196,6 +1222,8 @@ type MutationResolver interface {
 	DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error)
 	CreateTRBRequestDocument(ctx context.Context, input model.CreateTRBRequestDocumentInput) (*model.CreateTRBRequestDocumentPayload, error)
 	DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error)
+	CreateSystemIntakeDocument(ctx context.Context, input model.CreateSystemIntakeDocumentInput) (*model.CreateSystemIntakeDocumentPayload, error)
+	DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*model.DeleteSystemIntakeDocumentPayload, error)
 	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
 	UpdateTRBRequestFundingSources(ctx context.Context, input model.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
 	DeleteTRBRequestFundingSources(ctx context.Context, input model.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
@@ -1291,6 +1319,14 @@ type SystemIntakeResolver interface {
 
 	LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error)
 	CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error)
+}
+type SystemIntakeDocumentResolver interface {
+	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error)
+
+	Status(ctx context.Context, obj *models.SystemIntakeDocument) (models.SystemIntakeDocumentStatus, error)
+	UploadedAt(ctx context.Context, obj *models.SystemIntakeDocument) (*time.Time, error)
+	URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error)
 }
 type SystemIntakeFundingSourceResolver interface {
 	FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error)
@@ -3223,6 +3259,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateSystemIntakeContactPayload.SystemIntakeContact(childComplexity), true
 
+	case "CreateSystemIntakeDocumentPayload.document":
+		if e.complexity.CreateSystemIntakeDocumentPayload.Document == nil {
+			break
+		}
+
+		return e.complexity.CreateSystemIntakeDocumentPayload.Document(childComplexity), true
+
 	case "CreateTRBRequestDocumentPayload.document":
 		if e.complexity.CreateTRBRequestDocumentPayload.Document == nil {
 			break
@@ -3285,6 +3328,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DeleteSystemIntakeContactPayload.SystemIntakeContact(childComplexity), true
+
+	case "DeleteSystemIntakeDocumentPayload.document":
+		if e.complexity.DeleteSystemIntakeDocumentPayload.Document == nil {
+			break
+		}
+
+		return e.complexity.DeleteSystemIntakeDocumentPayload.Document(childComplexity), true
 
 	case "DeleteTRBRequestDocumentPayload.document":
 		if e.complexity.DeleteTRBRequestDocumentPayload.Document == nil {
@@ -3647,6 +3697,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeContact(childComplexity, args["input"].(model.CreateSystemIntakeContactInput)), true
 
+	case "Mutation.createSystemIntakeDocument":
+		if e.complexity.Mutation.CreateSystemIntakeDocument == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntakeDocument_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntakeDocument(childComplexity, args["input"].(model.CreateSystemIntakeDocumentInput)), true
+
 	case "Mutation.createSystemIntakeNote":
 		if e.complexity.Mutation.CreateSystemIntakeNote == nil {
 			break
@@ -3814,6 +3876,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteSystemIntakeContact(childComplexity, args["input"].(model.DeleteSystemIntakeContactInput)), true
+
+	case "Mutation.deleteSystemIntakeDocument":
+		if e.complexity.Mutation.DeleteSystemIntakeDocument == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteSystemIntakeDocument_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteSystemIntakeDocument(childComplexity, args["id"].(uuid.UUID)), true
 
 	case "Mutation.deleteTRBAdviceLetterRecommendation":
 		if e.complexity.Mutation.DeleteTRBAdviceLetterRecommendation == nil {
@@ -4794,6 +4868,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.DecisionNextSteps(childComplexity), true
 
+	case "SystemIntake.documents":
+		if e.complexity.SystemIntake.Documents == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.Documents(childComplexity), true
+
 	case "SystemIntake.eaCollaborator":
 		if e.complexity.SystemIntake.EaCollaborator == nil {
 			break
@@ -5234,6 +5315,62 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeCosts.IsExpectingIncrease(childComplexity), true
+
+	case "SystemIntakeDocument.documentType":
+		if e.complexity.SystemIntakeDocument.DocumentType == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.DocumentType(childComplexity), true
+
+	case "SystemIntakeDocument.fileName":
+		if e.complexity.SystemIntakeDocument.FileName == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.FileName(childComplexity), true
+
+	case "SystemIntakeDocument.id":
+		if e.complexity.SystemIntakeDocument.ID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.ID(childComplexity), true
+
+	case "SystemIntakeDocument.status":
+		if e.complexity.SystemIntakeDocument.Status == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.Status(childComplexity), true
+
+	case "SystemIntakeDocument.url":
+		if e.complexity.SystemIntakeDocument.URL == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.URL(childComplexity), true
+
+	case "SystemIntakeDocument.uploadedAt":
+		if e.complexity.SystemIntakeDocument.UploadedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocument.UploadedAt(childComplexity), true
+
+	case "SystemIntakeDocumentType.commonType":
+		if e.complexity.SystemIntakeDocumentType.CommonType == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocumentType.CommonType(childComplexity), true
+
+	case "SystemIntakeDocumentType.otherTypeDescription":
+		if e.complexity.SystemIntakeDocumentType.OtherTypeDescription == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeDocumentType.OtherTypeDescription(childComplexity), true
 
 	case "SystemIntakeFundingSource.fundingNumber":
 		if e.complexity.SystemIntakeFundingSource.FundingNumber == nil {
@@ -6505,6 +6642,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateCedarSystemBookmarkInput,
 		ec.unmarshalInputCreateSystemIntakeActionExtendLifecycleIdInput,
 		ec.unmarshalInputCreateSystemIntakeContactInput,
+		ec.unmarshalInputCreateSystemIntakeDocumentInput,
 		ec.unmarshalInputCreateSystemIntakeInput,
 		ec.unmarshalInputCreateSystemIntakeNoteInput,
 		ec.unmarshalInputCreateTRBAdminNoteInput,
@@ -7632,6 +7770,7 @@ type SystemIntake {
   businessCaseId: UUID
   lastAdminNote: LastAdminNote!
   cedarSystemId: String
+  documents: [SystemIntakeDocument!]!
 }
 
 """
@@ -8228,6 +8367,15 @@ enum TRBRequestDocumentStatus {
 }
 
 """
+Enumeration of the possible statuses of documents uploaded in the System Intake
+"""
+enum SystemIntakeDocumentStatus {
+  AVAILABLE
+  PENDING
+  UNAVAILABLE
+}
+
+"""
 Represents the common options for document type that is attached to a
 508/accessibility request
 """
@@ -8235,6 +8383,16 @@ enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM
   PRESENTATION_SLIDE_DECK
   BUSINESS_CASE
+  OTHER
+}
+
+"""
+Represents the common options for document type that is attached to a
+System Intake document
+"""
+enum SystemIntakeDocumentCommonType {
+  SOO_SOW
+  DRAFT_ICGE
   OTHER
 }
 
@@ -8270,6 +8428,16 @@ input CreateTRBRequestDocumentInput {
 }
 
 """
+The data needed to upload a System Intake document and attach it to a request with metadata
+"""
+input CreateSystemIntakeDocumentInput {
+  requestID: UUID!
+  fileData: Upload!
+  documentType: SystemIntakeDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""
 Data returned after uploading a document to a TRB request
 """
 type CreateTRBRequestDocumentPayload {
@@ -8281,6 +8449,35 @@ Data returned after deleting a document attached to a TRB request
 """
 type DeleteTRBRequestDocumentPayload {
   document: TRBRequestDocument
+}
+
+"""Represents a document attached to a System Intake"""
+type SystemIntakeDocument {
+  documentType: SystemIntakeDocumentType!
+  id: UUID!
+  fileName: String!
+  status: SystemIntakeDocumentStatus!
+  uploadedAt: Time!
+  url: String!
+}
+
+"""
+Denotes the type of a document attached to a System Intake,
+which can be one of a number of common types, or a free-text user-specified type
+"""
+type SystemIntakeDocumentType {
+  commonType: SystemIntakeDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""Data returned after uploading a document to a System Intake"""
+type CreateSystemIntakeDocumentPayload {
+  document: SystemIntakeDocument
+}
+
+"""Data returned after deleting a document attached to a System Intake"""
+type DeleteSystemIntakeDocumentPayload {
+  document: SystemIntakeDocument
 }
 
 """
@@ -8779,6 +8976,8 @@ type Mutation {
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
   createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
+  createSystemIntakeDocument(input: CreateSystemIntakeDocumentInput!): CreateSystemIntakeDocumentPayload
+  deleteSystemIntakeDocument(id: UUID!): DeleteSystemIntakeDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
@@ -9236,6 +9435,21 @@ func (ec *executionContext) field_Mutation_createSystemIntakeContact_args(ctx co
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createSystemIntakeDocument_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreateSystemIntakeDocumentInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateSystemIntakeDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeDocumentInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createSystemIntakeNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -9458,6 +9672,21 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeContact_args(ctx co
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteSystemIntakeDocument_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -13388,6 +13617,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -22234,6 +22465,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -22336,6 +22569,61 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeContactPayload_system
 				return ec.fieldContext_SystemIntakeContact_role(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CreateSystemIntakeDocumentPayload_document(ctx context.Context, field graphql.CollectedField, obj *model.CreateSystemIntakeDocumentPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateSystemIntakeDocumentPayload_document(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Document, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeDocument)
+	fc.Result = res
+	return ec.marshalOSystemIntakeDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocument(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateSystemIntakeDocumentPayload_document(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateSystemIntakeDocumentPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "documentType":
+				return ec.fieldContext_SystemIntakeDocument_documentType(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntakeDocument_id(ctx, field)
+			case "fileName":
+				return ec.fieldContext_SystemIntakeDocument_fileName(ctx, field)
+			case "status":
+				return ec.fieldContext_SystemIntakeDocument_status(ctx, field)
+			case "uploadedAt":
+				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
+			case "url":
+				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
 		},
 	}
 	return fc, nil
@@ -22765,6 +23053,61 @@ func (ec *executionContext) fieldContext_DeleteSystemIntakeContactPayload_system
 				return ec.fieldContext_SystemIntakeContact_role(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeleteSystemIntakeDocumentPayload_document(ctx context.Context, field graphql.CollectedField, obj *model.DeleteSystemIntakeDocumentPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_DeleteSystemIntakeDocumentPayload_document(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Document, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeDocument)
+	fc.Result = res
+	return ec.marshalOSystemIntakeDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocument(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_DeleteSystemIntakeDocumentPayload_document(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeleteSystemIntakeDocumentPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "documentType":
+				return ec.fieldContext_SystemIntakeDocument_documentType(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntakeDocument_id(ctx, field)
+			case "fileName":
+				return ec.fieldContext_SystemIntakeDocument_fileName(ctx, field)
+			case "status":
+				return ec.fieldContext_SystemIntakeDocument_status(ctx, field)
+			case "uploadedAt":
+				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
+			case "url":
+				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
 		},
 	}
 	return fc, nil
@@ -25359,6 +25702,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -27390,6 +27735,116 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBRequestDocument(ctx c
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteTRBRequestDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createSystemIntakeDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSystemIntakeDocument(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateSystemIntakeDocument(rctx, fc.Args["input"].(model.CreateSystemIntakeDocumentInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CreateSystemIntakeDocumentPayload)
+	fc.Result = res
+	return ec.marshalOCreateSystemIntakeDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeDocumentPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSystemIntakeDocument(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "document":
+				return ec.fieldContext_CreateSystemIntakeDocumentPayload_document(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CreateSystemIntakeDocumentPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSystemIntakeDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteSystemIntakeDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteSystemIntakeDocument(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteSystemIntakeDocument(rctx, fc.Args["id"].(uuid.UUID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeleteSystemIntakeDocumentPayload)
+	fc.Result = res
+	return ec.marshalODeleteSystemIntakeDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteSystemIntakeDocumentPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeDocument(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "document":
+				return ec.fieldContext_DeleteSystemIntakeDocumentPayload_document(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeleteSystemIntakeDocumentPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -29823,6 +30278,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -30028,6 +30485,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -31177,6 +31636,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34668,6 +35129,64 @@ func (ec *executionContext) fieldContext_SystemIntake_cedarSystemId(ctx context.
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_documents(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_documents(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().Documents(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeDocument)
+	fc.Result = res
+	return ec.marshalNSystemIntakeDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_documents(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "documentType":
+				return ec.fieldContext_SystemIntakeDocument_documentType(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntakeDocument_id(ctx, field)
+			case "fileName":
+				return ec.fieldContext_SystemIntakeDocument_fileName(ctx, field)
+			case "status":
+				return ec.fieldContext_SystemIntakeDocument_status(ctx, field)
+			case "uploadedAt":
+				return ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
+			case "url":
+				return ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocument", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAction_id(ctx, field)
 	if err != nil {
@@ -34845,6 +35364,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -36144,6 +36665,361 @@ func (ec *executionContext) _SystemIntakeCosts_isExpectingIncrease(ctx context.C
 func (ec *executionContext) fieldContext_SystemIntakeCosts_isExpectingIncrease(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeCosts",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_documentType(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_documentType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeDocument().DocumentType(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.SystemIntakeDocumentType)
+	fc.Result = res
+	return ec.marshalNSystemIntakeDocumentType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeDocumentType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_documentType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonType":
+				return ec.fieldContext_SystemIntakeDocumentType_commonType(ctx, field)
+			case "otherTypeDescription":
+				return ec.fieldContext_SystemIntakeDocumentType_otherTypeDescription(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeDocumentType", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_fileName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_fileName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FileName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_fileName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_status(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_status(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeDocument().Status(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeDocumentStatus)
+	fc.Result = res
+	return ec.marshalNSystemIntakeDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeDocumentStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_uploadedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_uploadedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeDocument().UploadedAt(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_uploadedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocument_url(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocument_url(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeDocument().URL(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocument_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocument",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocumentType_commonType(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeDocumentType) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocumentType_commonType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CommonType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeDocumentCommonType)
+	fc.Result = res
+	return ec.marshalNSystemIntakeDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentCommonType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocumentType_commonType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocumentType",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeDocumentCommonType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeDocumentType_otherTypeDescription(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeDocumentType) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeDocumentType_otherTypeDescription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OtherTypeDescription, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeDocumentType_otherTypeDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeDocumentType",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -42852,6 +43728,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -44007,6 +44885,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -46603,6 +47483,58 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx con
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
 			it.Role, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeDocumentInput, error) {
+	var it model.CreateSystemIntakeDocumentInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"requestID", "fileData", "documentType", "otherTypeDescription"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "requestID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
+			it.RequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "fileData":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileData"))
+			it.FileData, err = ec.unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "documentType":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("documentType"))
+			it.DocumentType, err = ec.unmarshalNSystemIntakeDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentCommonType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "otherTypeDescription":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherTypeDescription"))
+			it.OtherTypeDescription, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52241,6 +53173,31 @@ func (ec *executionContext) _CreateSystemIntakeContactPayload(ctx context.Contex
 	return out
 }
 
+var createSystemIntakeDocumentPayloadImplementors = []string{"CreateSystemIntakeDocumentPayload"}
+
+func (ec *executionContext) _CreateSystemIntakeDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateSystemIntakeDocumentPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createSystemIntakeDocumentPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateSystemIntakeDocumentPayload")
+		case "document":
+
+			out.Values[i] = ec._CreateSystemIntakeDocumentPayload_document(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var createTRBRequestDocumentPayloadImplementors = []string{"CreateTRBRequestDocumentPayload"}
 
 func (ec *executionContext) _CreateTRBRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateTRBRequestDocumentPayload) graphql.Marshaler {
@@ -52418,6 +53375,31 @@ func (ec *executionContext) _DeleteSystemIntakeContactPayload(ctx context.Contex
 		case "systemIntakeContact":
 
 			out.Values[i] = ec._DeleteSystemIntakeContactPayload_systemIntakeContact(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var deleteSystemIntakeDocumentPayloadImplementors = []string{"DeleteSystemIntakeDocumentPayload"}
+
+func (ec *executionContext) _DeleteSystemIntakeDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteSystemIntakeDocumentPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteSystemIntakeDocumentPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteSystemIntakeDocumentPayload")
+		case "document":
+
+			out.Values[i] = ec._DeleteSystemIntakeDocumentPayload_document(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -52996,6 +53978,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteTRBRequestDocument(ctx, field)
+			})
+
+		case "createSystemIntakeDocument":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSystemIntakeDocument(ctx, field)
+			})
+
+		case "deleteSystemIntakeDocument":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteSystemIntakeDocument(ctx, field)
 			})
 
 		case "updateTRBRequestForm":
@@ -54604,6 +55598,26 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
+		case "documents":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_documents(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -54958,6 +55972,153 @@ func (ec *executionContext) _SystemIntakeCosts(ctx context.Context, sel ast.Sele
 		case "isExpectingIncrease":
 
 			out.Values[i] = ec._SystemIntakeCosts_isExpectingIncrease(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeDocumentImplementors = []string{"SystemIntakeDocument"}
+
+func (ec *executionContext) _SystemIntakeDocument(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeDocument) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeDocumentImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeDocument")
+		case "documentType":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeDocument_documentType(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "id":
+
+			out.Values[i] = ec._SystemIntakeDocument_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "fileName":
+
+			out.Values[i] = ec._SystemIntakeDocument_fileName(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "status":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeDocument_status(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "uploadedAt":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeDocument_uploadedAt(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "url":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeDocument_url(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeDocumentTypeImplementors = []string{"SystemIntakeDocumentType"}
+
+func (ec *executionContext) _SystemIntakeDocumentType(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeDocumentType) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeDocumentTypeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeDocumentType")
+		case "commonType":
+
+			out.Values[i] = ec._SystemIntakeDocumentType_commonType(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "otherTypeDescription":
+
+			out.Values[i] = ec._SystemIntakeDocumentType_otherTypeDescription(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -58224,6 +59385,11 @@ func (ec *executionContext) unmarshalNCreateSystemIntakeContactInput2githubᚗco
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateSystemIntakeDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeDocumentInput(ctx context.Context, v interface{}) (model.CreateSystemIntakeDocumentInput, error) {
+	res, err := ec.unmarshalInputCreateSystemIntakeDocumentInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateSystemIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeInput(ctx context.Context, v interface{}) (model.CreateSystemIntakeInput, error) {
 	res, err := ec.unmarshalInputCreateSystemIntakeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -58917,6 +60083,106 @@ func (ec *executionContext) marshalNSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgov�
 		return graphql.Null
 	}
 	return ec._SystemIntakeCosts(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeDocument) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocument(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSystemIntakeDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocument(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeDocument) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeDocument(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentCommonType(ctx context.Context, v interface{}) (models.SystemIntakeDocumentCommonType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeDocumentCommonType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentCommonType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeDocumentCommonType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentStatus(ctx context.Context, v interface{}) (models.SystemIntakeDocumentStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeDocumentStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentStatus(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeDocumentStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) marshalNSystemIntakeDocumentType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeDocumentType(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeDocumentType) graphql.Marshaler {
+	return ec._SystemIntakeDocumentType(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeDocumentType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeDocumentType(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeDocumentType) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeDocumentType(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeFundingSource) graphql.Marshaler {
@@ -60658,6 +61924,13 @@ func (ec *executionContext) marshalOCreateSystemIntakeContactPayload2ᚖgithub�
 	return ec._CreateSystemIntakeContactPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCreateSystemIntakeDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateSystemIntakeDocumentPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateSystemIntakeDocumentPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOCreateTRBRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateTRBRequestDocumentPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -60705,6 +61978,13 @@ func (ec *executionContext) marshalODeleteSystemIntakeContactPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._DeleteSystemIntakeContactPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODeleteSystemIntakeDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteSystemIntakeDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteSystemIntakeDocumentPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeleteSystemIntakeDocumentPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODeleteTRBRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTRBRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteTRBRequestDocumentPayload) graphql.Marshaler {
@@ -61091,6 +62371,13 @@ func (ec *executionContext) unmarshalOSystemIntakeCostsInput2ᚖgithubᚗcomᚋc
 	}
 	res, err := ec.unmarshalInputSystemIntakeCostsInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocument(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeDocument) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeDocument(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeFundingSourcesInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSourcesInput(ctx context.Context, v interface{}) (*model.SystemIntakeFundingSourcesInput, error) {
