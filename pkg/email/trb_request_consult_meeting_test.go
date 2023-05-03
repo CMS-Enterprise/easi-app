@@ -25,6 +25,12 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 		s.config.URLHost,
 		path.Join("trb", "task-list", trbID.String()),
 	)
+	trbHelpLink := fmt.Sprintf(
+		"%s://%s/%s",
+		s.config.URLScheme,
+		s.config.URLHost,
+		path.Join("help", "trb", "prepare-consult-meeting"),
+	)
 
 	input := SendTRBRequestConsultMeetingEmailInput{
 		TRBRequestName:     "Test TRB Request",
@@ -50,7 +56,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 <p>Next steps:</p>
 <ul>
 <li>Mc Lovin and the project team should make sure to upload any documentation to EASi that should be reviewed as a part of this request.</li>
-<li>Attendees may also review guidance about preparing for the TRB consult session.</li>
+<li>Attendees may also review guidance about <a href="` + trbHelpLink + `" style="font-weight: bold">preparing for the TRB consult session</a>.</li>
 <li>TRB members may continue to review the initial request form and supporting documents in EASi.</li>
 <li>If a calendar invite has not already been sent, the TRB lead will send one with a remote video conferencing meeting link.</li>
 </ul>
