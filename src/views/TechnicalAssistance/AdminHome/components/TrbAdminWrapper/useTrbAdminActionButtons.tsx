@@ -140,7 +140,7 @@ const useTrbAdminActionButtons = ({
     };
 
     if (state === TRBRequestState.CLOSED) {
-      return [buttons.closeRequest];
+      return [buttons.reopenRequest];
     }
 
     switch (status) {
