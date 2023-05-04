@@ -31,6 +31,7 @@ type trbConsultMeetingEmailTemplateParams struct {
 	Notes                       string
 	RequesterName               string
 	TRBRequestLink              string
+	TRBHelpLink                 string
 	TRBEmail                    models.EmailAddress
 }
 
@@ -44,6 +45,7 @@ func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input Sen
 		Notes:                       input.Notes,
 		RequesterName:               input.RequesterName,
 		TRBRequestLink:              c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
+		TRBHelpLink:                 c.urlFromPath(path.Join("help", "trb", "prepare-consult-meeting")),
 		TRBEmail:                    c.config.TRBEmail,
 	}
 
