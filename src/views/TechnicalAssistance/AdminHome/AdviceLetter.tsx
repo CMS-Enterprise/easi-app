@@ -76,7 +76,12 @@ const AdviceLetter = ({
           </Alert>
         ) : (
           <>
-            {adviceLetter && <ReviewAdviceLetter adviceLetter={adviceLetter} />}
+            {adviceLetter && (
+              <ReviewAdviceLetter
+                adviceLetter={adviceLetter}
+                trbRequestId={trbRequest.id}
+              />
+            )}
           </>
         )
       }

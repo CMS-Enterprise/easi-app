@@ -221,6 +221,8 @@ const technicalAssistance = {
     addAnotherResourceLink: 'Add another resource link',
     returnToAdviceLetter:
       'Don’t add a recommendation and return to advice letter',
+    editReturnToAdviceLetter:
+      'Don’t edit recommendation and return to advice letter',
     editRecommendation: 'Edit recommendation',
     removeRecommendation: 'Remove recommendation',
     nextSteps: 'Next steps',
@@ -232,11 +234,32 @@ const technicalAssistance = {
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     recommendationSuccess:
       'Your recommendation was added to this advice letter.',
+    editRecommendationSuccess: 'Your recommendation was edited',
     modal: {
       title: 'Confirm you want to remove this recommendation.',
       text:
         'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
       removingTitle: 'Removing: {{title}}'
+    },
+    internalReviewNeeded: {
+      heading: 'Internal TRB review needed',
+      text:
+        'You should not send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
+    },
+    requestInternalReview: 'Request internal review',
+    requestAnotherInternalReview: 'Request another internal review',
+    progressToNextStep: 'or, <1>progress to next step</1>',
+    notesAlert:
+      'Your TRB team members have not yet left any notes about your draft advice letter. Please confirm with the team to make sure this advice letter has been reviewed before you proceed with sending the final letter.',
+    notesCount:
+      '<bold>{{count}}</bold> note{{plural}} about this advice letter',
+    done: {
+      success:
+        'Your advice letter for has been sent. Selected email notification recipients will receive a confirmation email with a link to the advice letter. Additionally, the original requester can view this letter from their request task list.',
+      error:
+        'Your advice letter was not sent. Please either return to the previous page and try again, or try again at a later date. The requester will not be able to view the advice letter until it is successfully sent.',
+      returnToRequestHome: 'Return to request home',
+      backToAdviceLetter: 'Back to advice letter'
     }
   },
   emailRecipientFields: {

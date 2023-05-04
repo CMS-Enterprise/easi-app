@@ -2,30 +2,47 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { formatDateLocal } from 'utils/date';
 
-import RecommendationsList from './RecommendationsList';
+import RecommendationsList, {
+  EditRecommendationProp,
+  RemoveRecommendationProp
+} from './RecommendationsList';
+
+type ReviewAdviceLetterProps = {
+  adviceLetter: AdviceLetter;
+  trbRequestId: string;
+  showSectionEditLinks?: boolean;
+  recommendationActions?: {
+    edit?: EditRecommendationProp;
+    remove?: RemoveRecommendationProp;
+  };
+  showDateSent?: boolean;
+  showSectionBorders?: boolean;
+  className?: string;
+};
 
 /**
  * Displays advice letter for review
  */
 const ReviewAdviceLetter = ({
   adviceLetter,
+  trbRequestId,
+  showSectionEditLinks = false,
+  recommendationActions,
   showDateSent = true,
-  showSectionBorders = true
-}: {
-  adviceLetter: AdviceLetter;
-  showDateSent?: boolean;
-  showSectionBorders?: boolean;
-}) => {
+  showSectionBorders = true,
+  className
+}: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { recommendations } = adviceLetter;
 
   return (
-    <div>
+    <div className={className}>
       {/* Date sent */}
       {showDateSent && (
         <>
@@ -48,7 +65,15 @@ const ReviewAdviceLetter = ({
           'margin-top-5': !showSectionBorders
         })}
       >
-        <h2>{t('adviceLetter.whatWeHeard')}</h2>
+        <h2 className="margin-bottom-1">{t('adviceLetter.whatWeHeard')}</h2>
+        {showSectionEditLinks && (
+          <UswdsReactLink
+            to={`/trb/${trbRequestId}/advice/summary`}
+            className="display-block margin-bottom-5"
+          >
+            {t('check.edit')}
+          </UswdsReactLink>
+        )}
         <p className="text-bold margin-top-4 margin-bottom-0">
           {t('adviceLetter.meetingSummary')}
         </p>
@@ -65,15 +90,25 @@ const ReviewAdviceLetter = ({
           'margin-top-5': !showSectionBorders
         })}
       >
-        <h2>{t('adviceLetter.whatWeRecommend')}</h2>
+        <h2 className="margin-bottom-1">{t('adviceLetter.whatWeRecommend')}</h2>
+        {showSectionEditLinks && (
+          <UswdsReactLink
+            to={`/trb/${trbRequestId}/advice/recommendations`}
+            className="display-block margin-bottom-2"
+          >
+            {t('check.edit')}
+          </UswdsReactLink>
+        )}
+
         {
           // If no recommendations, return text
           recommendations.length === 0 ? (
-            <p>{t('adviceLetter.notSpecified')}</p>
+            <p className="margin-top-4">{t('adviceLetter.notSpecified')}</p>
           ) : (
             <RecommendationsList
-              type="admin"
+              type="form"
               recommendations={recommendations}
+              {...recommendationActions}
             />
           )
         }
@@ -87,7 +122,15 @@ const ReviewAdviceLetter = ({
           'margin-top-5': !showSectionBorders
         })}
       >
-        <h2>{t('adviceLetter.nextSteps')}</h2>
+        <h2 className="margin-bottom-1">{t('adviceLetter.nextSteps')}</h2>
+        {showSectionEditLinks && (
+          <UswdsReactLink
+            to={`/trb/${trbRequestId}/advice/next-steps`}
+            className="display-block margin-bottom-5"
+          >
+            {t('check.edit')}
+          </UswdsReactLink>
+        )}
 
         <p className="text-bold margin-top-4 margin-bottom-1">
           {t('adviceLetter.nextSteps')}
