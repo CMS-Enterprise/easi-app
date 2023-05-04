@@ -2,7 +2,11 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
@@ -69,6 +73,9 @@ const getTrbRequestQueryWithFeedback: MockedQuery<
   }
 };
 
+const waitForPageLoad = () =>
+  waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
 function renderFeedbackTest() {
   const store = easiMockStore();
   return render(
@@ -94,6 +101,8 @@ describe('TRB Request Form Feedback', () => {
     getByRole('link', {
       name: i18next.t<string>('technicalAssistance:editsRequested.viewFeedback')
     });
+
+    await waitForPageLoad();
 
     expect(asFragment()).toMatchSnapshot();
   });

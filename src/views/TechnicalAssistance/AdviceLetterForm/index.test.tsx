@@ -74,7 +74,7 @@ const renderForm = (step: string) => {
   );
 };
 
-const waitForPageLoad = async () =>
+const waitForPageLoad = () =>
   waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
 describe('TRB Advice Letter Form', () => {
