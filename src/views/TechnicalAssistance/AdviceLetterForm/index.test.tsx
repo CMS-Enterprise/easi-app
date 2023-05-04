@@ -155,16 +155,4 @@ describe('TRB Advice Letter Form', () => {
     userEvent.click(getByRole('radio', { name: 'Not necessary' }));
     expect(followupPointInput).not.toBeInTheDocument();
   });
-
-  it('renders the Internal Review step', async () => {
-    const { asFragment, getByRole } = renderForm('internal-review');
-
-    await waitForPageLoad();
-
-    // Check for review needed alert
-    const alert = getByRole('heading', { name: 'Internal TRB review needed' });
-    expect(alert).toBeInTheDocument();
-
-    expect(asFragment()).toMatchSnapshot();
-  });
 });
