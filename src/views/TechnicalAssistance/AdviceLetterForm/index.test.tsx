@@ -133,7 +133,7 @@ describe('TRB Advice Letter Form', () => {
     expect(linkInput).toHaveValue(linkText);
   });
 
-  it.only('renders the Next Steps form', async () => {
+  it('renders the Next Steps form', async () => {
     const { findByRole, getByRole } = renderForm('next-steps');
 
     const nextStepsInput = await findByRole('textbox', {
@@ -154,5 +154,17 @@ describe('TRB Advice Letter Form', () => {
     // Check that followup point input is hidden when followup radio field is false
     userEvent.click(getByRole('radio', { name: 'Not necessary' }));
     expect(followupPointInput).not.toBeInTheDocument();
+  });
+
+  it('renders the Internal Review step', async () => {
+    const { asFragment, getByRole } = renderForm('internal-review');
+
+    await waitForPageLoad();
+
+    // Check for review needed alert
+    const alert = getByRole('heading', { name: 'Internal TRB review needed' });
+    expect(alert).toBeInTheDocument();
+
+    expect(asFragment()).toMatchSnapshot();
   });
 });
