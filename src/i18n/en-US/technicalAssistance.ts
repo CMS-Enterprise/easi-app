@@ -54,7 +54,7 @@ const technicalAssistance = {
       },
       READY_FOR_CONSULT: {
         title: 'Plan a consult session',
-        description: 'This request is aready for a consult session',
+        description: 'This request is ready for a consult session',
         list: {
           label: 'What do I need to do before adding session details in EASi?',
           orderedItems: [
