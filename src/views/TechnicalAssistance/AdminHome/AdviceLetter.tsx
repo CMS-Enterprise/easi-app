@@ -79,7 +79,7 @@ const AdviceLetter = ({
             {adviceLetter && (
               <ReviewAdviceLetter
                 adviceLetter={adviceLetter}
-                trbRequestId={id}
+                trbRequestId={trbRequest.id}
               />
             )}
           </>
