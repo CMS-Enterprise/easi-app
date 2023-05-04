@@ -133,6 +133,18 @@ const systemProfile = {
       federalFTE: 'Federal FTE',
       contractorFTE: 'Contractor FTE'
     },
+    editTeam: {
+      title: 'Edit System Profile: Team',
+      description:
+        'Add, remove, and edit the team members and roles for this system.',
+      helpText:
+        'All changes made here will be autosaved and applied to this system’s profile.',
+      form: {
+        addTeamMember: 'Add a team member',
+        addDescription:
+          'Look up your team member and then add their role(s) on this team.'
+      }
+    },
     toolsAndSoftware: {
       header: 'Tools and Software',
       productType: 'Product Type',
