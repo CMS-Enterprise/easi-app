@@ -146,7 +146,8 @@ describe('Governance Review Team', () => {
             content: null,
             createdAt: null
           },
-          grtReviewEmailBody: null
+          grtReviewEmailBody: null,
+          hasUiChanges: true
         }
       }
     }

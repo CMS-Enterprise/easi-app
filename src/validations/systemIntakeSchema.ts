@@ -89,7 +89,12 @@ const SystemIntakeValidationSchema: any = {
     currentStage: Yup.string().required('Tell us where you are in the process'),
     needsEaSupport: Yup.boolean()
       .nullable()
-      .required('Tell us if you need Enterprise Architecture (EA) support')
+      .required('Tell us if you need Enterprise Architecture (EA) support'),
+    hasUiChanges: Yup.boolean()
+      .nullable()
+      .required(
+        'Tell us if your request includes an interface component or changes'
+      )
   }),
   contractDetails: Yup.object().shape({
     costs: Yup.object().shape({

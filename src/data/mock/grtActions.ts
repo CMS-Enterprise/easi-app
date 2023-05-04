@@ -114,7 +114,8 @@ const systemIntake = {
   decidedAt: null,
   businessCaseId: null,
   lastAdminNote: null,
-  grtReviewEmailBody: ''
+  grtReviewEmailBody: '',
+  hasUiChanges: true
 };
 
 export const mockData = {

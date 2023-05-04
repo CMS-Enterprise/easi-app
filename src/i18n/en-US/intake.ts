@@ -103,6 +103,7 @@ const intake = {
     businessSolution: 'Business Solution',
     currentStage: 'Process Status',
     eaSupport: 'EA Support Requested',
+    hasUiChanges: 'Interface Component/Changes',
     isExpectingCostIncrease: 'Expecting Cost Increase',
     expectedIncreaseAmount: 'Expected Increase Amount',
     existingContract: 'Existing Contract',
@@ -246,6 +247,8 @@ const intake = {
     solving: 'How are you thinking of solving it?',
     process: 'Where are you in the process?',
     eaSupport: 'Do you need Enterprise Architecture (EA) support?',
+    hasUiChanges:
+      'Does your project involve any user interface component, or changes to an interface component?',
     contractDetails: 'Contract Details',
     costs:
       'Do the costs for this request exceed what you are currently spending to meet your business need?',

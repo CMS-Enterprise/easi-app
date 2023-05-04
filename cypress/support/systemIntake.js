@@ -53,6 +53,10 @@ cy.systemIntake = {
       cy.get('#IntakeForm-NeedsEaSupportNo')
         .check({ force: true })
         .should('be.checked');
+
+      cy.get('#IntakeForm-HasUiChangesNo')
+        .check({ force: true })
+        .should('be.checked');
     }
   },
   contractDetails: {

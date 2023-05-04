@@ -16,6 +16,7 @@ export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetai
   businessNeed: string | null;
   businessSolution: string | null;
   needsEaSupport: boolean | null;
+  hasUiChanges: boolean | null;
 }
 
 export interface UpdateSystemIntakeRequestDetails_updateSystemIntakeRequestDetails {
