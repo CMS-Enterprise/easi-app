@@ -2,11 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
@@ -73,9 +69,6 @@ const getTrbRequestQueryWithFeedback: MockedQuery<
   }
 };
 
-const waitForPageLoad = () =>
-  waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
-
 function renderFeedbackTest() {
   const store = easiMockStore();
   return render(
@@ -93,7 +86,12 @@ function renderFeedbackTest() {
 
 describe('TRB Request Form Feedback', () => {
   it('shows the View feedback warning banner in the header if there are edits requested', async () => {
-    const { asFragment, findByText, getByRole } = renderFeedbackTest();
+    const {
+      asFragment,
+      findByText,
+      getByRole,
+      getByTestId
+    } = renderFeedbackTest();
 
     await findByText(
       i18next.t<string>('technicalAssistance:editsRequested.alert')
@@ -102,7 +100,7 @@ describe('TRB Request Form Feedback', () => {
       name: i18next.t<string>('technicalAssistance:editsRequested.viewFeedback')
     });
 
-    await waitForPageLoad();
+    await expect(getByTestId('page-loading')).not.toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
   });
