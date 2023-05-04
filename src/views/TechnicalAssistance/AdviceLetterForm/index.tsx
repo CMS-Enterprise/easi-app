@@ -77,7 +77,7 @@ type AdviceFormStep = typeof adviceFormSteps[number];
 const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
-  const location = useLocation<{ error?: string }>();
+  const location = useLocation<{ error?: boolean }>();
 
   // Get url params
   const { id, formStep, subpage } = useParams<{

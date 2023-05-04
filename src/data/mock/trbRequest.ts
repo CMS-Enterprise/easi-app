@@ -82,7 +82,7 @@ export const attendees: MockTrbAttendee[] = [
   })!
 ];
 
-const taskStatuses: TaskStatuses = {
+export const taskStatuses: TaskStatuses = {
   __typename: 'TRBTaskStatuses',
   formStatus: TRBFormStatus.IN_PROGRESS,
   feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
@@ -387,7 +387,7 @@ export const getTrbAdviceLetterQuery: MockedQuery<
         id: trbRequestId,
         name: trbRequest.name,
         taskStatuses: {
-          ...taskStatuses,
+          __typename: 'TRBTaskStatuses',
           adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED
         },
         adviceLetter
