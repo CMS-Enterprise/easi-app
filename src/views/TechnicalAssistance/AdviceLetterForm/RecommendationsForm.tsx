@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
 import {
   Button,
@@ -47,6 +47,9 @@ const RecommendationsForm = ({
 }: RecommendationsFormProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+  const { state } = useLocation<{
+    recommendation: AdviceLetterRecommendationFields;
+  }>();
 
   const [showFormError, setShowFormError] = useState<boolean>(false);
 
@@ -54,6 +57,7 @@ const RecommendationsForm = ({
     handleSubmit,
     control,
     watch,
+    reset,
     formState: { isSubmitting, isDirty }
   } = useFormContext<AdviceLetterRecommendationFields>();
 
@@ -64,6 +68,21 @@ const RecommendationsForm = ({
   const [update] = useMutation<UpdateTRBAdviceLetterRecommendationInput>(
     UpdateTrbRecommendationQuery
   );
+
+  const returnLink = useMemo(
+    () =>
+      state?.recommendation
+        ? `/trb/${trbRequestId}/advice/internal-review`
+        : `/trb/${trbRequestId}/advice/recommendations`,
+    [state?.recommendation, trbRequestId]
+  );
+
+  // If editing from internal review step, set field values from location state
+  useEffect(() => {
+    if (state?.recommendation && !watch('id')) {
+      reset(state?.recommendation);
+    }
+  }, [state?.recommendation, watch, reset]);
 
   /** Submits form and executes recommendation mutation */
   const submit = useCallback(() => {
@@ -112,9 +131,15 @@ const RecommendationsForm = ({
         setShowFormError(false);
         setFormAlert({
           type: 'success',
-          message: t('adviceLetterForm.recommendationSuccess')
+          message: t(
+            `adviceLetterForm.${
+              watch('id')
+                ? 'editRecommendationSuccess'
+                : 'recommendationSuccess'
+            }`
+          )
         });
-        history.push(`/trb/${trbRequestId}/advice/recommendations`);
+        history.push(returnLink);
       },
       e => {
         if (e instanceof ApolloError) {
@@ -130,7 +155,9 @@ const RecommendationsForm = ({
     update,
     create,
     history,
-    setFormAlert
+    setFormAlert,
+    returnLink,
+    watch
   ]);
 
   return (
@@ -147,7 +174,9 @@ const RecommendationsForm = ({
             url: `/trb/${trbRequestId}/advice/recommendations`
           },
           {
-            text: t('adviceLetterForm.addRecommendation')
+            text: t(
+              `adviceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`
+            )
           }
         ]}
       />
@@ -165,7 +194,7 @@ const RecommendationsForm = ({
       }
 
       <h1 className="margin-bottom-0">
-        {t('adviceLetterForm.addRecommendation')}
+        {t(`adviceLetterForm.${watch('id') ? 'edit' : 'add'}Recommendation`)}
       </h1>
       {/* Required fields text */}
       <HelpText className="margin-top-1 margin-bottom-2 text-base">
@@ -248,12 +277,14 @@ const RecommendationsForm = ({
         className="margin-top-205 display-flex flex-align-center"
         type="button"
         unstyled
-        onClick={() =>
-          history.push(`/trb/${trbRequestId}/advice/recommendations`)
-        }
+        onClick={() => history.push(returnLink)}
       >
         <IconArrowBack className="margin-right-05" />
-        {t('adviceLetterForm.returnToAdviceLetter')}
+        {t(
+          `adviceLetterForm.${
+            watch('id') ? 'editReturnToAdviceLetter' : 'returnToAdviceLetter'
+          }`
+        )}
       </Button>
     </div>
   );
