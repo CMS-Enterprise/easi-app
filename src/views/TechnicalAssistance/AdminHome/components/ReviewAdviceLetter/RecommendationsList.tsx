@@ -9,17 +9,21 @@ import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 
 import RecommendationLinks from './RecommendationLinks';
 
+export type EditRecommendationProp = {
+  onClick: (recommendation: TRBRecommendation) => void;
+  text?: string;
+};
+
+export type RemoveRecommendationProp = {
+  onClick: (recommendation: TRBRecommendation) => void;
+  text?: string;
+};
+
 type RecommendationsListProps = {
   type: 'form' | 'admin';
   recommendations: TRBRecommendation[];
-  edit?: {
-    onClick: (recommendation: TRBRecommendation) => void;
-    text?: string;
-  };
-  remove?: {
-    onClick: (recommendation: TRBRecommendation) => void;
-    text?: string;
-  };
+  edit?: EditRecommendationProp;
+  remove?: RemoveRecommendationProp;
   className?: string;
 };
 
