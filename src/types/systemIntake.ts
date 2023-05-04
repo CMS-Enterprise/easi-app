@@ -95,6 +95,7 @@ export type SystemIntakeForm = {
     createdAt: string;
   } | null;
   requesterNameAndComponent: string;
+  hasUiChanges: boolean | null;
 } & ContractDetailsForm;
 
 export type ContactDetailsForm = {

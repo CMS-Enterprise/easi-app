@@ -151,7 +151,8 @@ describe('The GRT intake review view', () => {
       __typename: 'LastAdminNote',
       content: null,
       createdAt: null
-    }
+    },
+    hasUiChanges: false
   };
 
   const getSystemIntakeContactsQuery = {
