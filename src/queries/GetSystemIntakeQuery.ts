@@ -89,6 +89,7 @@ export default gql`
         content
         createdAt
       }
+      hasUiChanges
     }
   }
 `;

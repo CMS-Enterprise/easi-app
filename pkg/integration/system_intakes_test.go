@@ -124,6 +124,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 			ExistingContract:        null.StringFrom("Test Requester"),
 			UpdatedAt:               &updatedAt,
 			Status:                  models.SystemIntakeStatusINTAKESUBMITTED,
+			HasUIChanges:            null.BoolFrom(false),
 		}
 		body, err := json.Marshal(intake)
 		s.NoError(err)

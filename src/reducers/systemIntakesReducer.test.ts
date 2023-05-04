@@ -80,6 +80,7 @@ describe('The system intakes reducer', () => {
       solution: '',
       processStatus: '',
       eaSupportRequest: null,
+      hasUiChanges: null,
       existingContract: ''
     };
     const mockSuccessAction = {

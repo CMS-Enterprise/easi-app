@@ -72,6 +72,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			contract_end_date,
 			grt_date,
 			grb_date,
+			has_ui_changes,
 			created_at,
 			updated_at
 		)
@@ -117,6 +118,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:contract_end_date,
 			:grt_date,
 			:grb_date,
+			:has_ui_changes,
 			:created_at,
 			:updated_at
 		)`
@@ -191,7 +193,8 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			lcid_expiration_alert_ts = :lcid_expiration_alert_ts,
 			rejection_reason = :rejection_reason,
 			admin_lead = :admin_lead,
-			cedar_system_id = :cedar_system_id
+			cedar_system_id = :cedar_system_id,
+			has_ui_changes = :has_ui_changes
 		WHERE system_intakes.id = :id
 	`
 	_, err := s.db.NamedExec(

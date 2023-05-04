@@ -115,6 +115,7 @@ describe('The System Intake page', () => {
             content: null,
             createdAt: null
           },
+          hasUiChanges: null,
           grtReviewEmailBody: null
         }
       }

@@ -30,6 +30,7 @@ describe('The system intake reducer', () => {
     solution: '',
     processStatus: '',
     eaSupportRequest: null,
+    hasUiChanges: null,
     existingContract: '',
     archivedAt: null,
     createdAt: null,
