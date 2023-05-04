@@ -194,13 +194,15 @@ export const nextStepsSchema = yup.object({
 });
 
 /** TRB action form schema */
-export const trbActionSchema = (messageKey: string, required?: boolean) =>
+export const trbActionSchema = (messageKey?: string, required?: boolean) =>
   yup.object({
-    [messageKey]: required ? yup.string().required() : yup.string(),
     copyTrbMailbox: yup.boolean(),
     notifyEuaIds: yup.array(yup.string()).when('copyTrbMailbox', {
       is: (copyTrbMailbox: boolean) => !copyTrbMailbox,
       then: schema => schema.min(1),
       otherwise: schema => schema.optional()
-    })
+    }),
+    ...(messageKey
+      ? { [messageKey]: required ? yup.string().required() : yup.string() }
+      : {})
   });

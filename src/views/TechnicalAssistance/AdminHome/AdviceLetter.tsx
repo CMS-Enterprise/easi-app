@@ -89,7 +89,12 @@ const AdviceLetter = ({ trbRequestId, noteCount }: TrbAdminPageProps) => {
               trbRequestId={trbRequestId}
               className="margin-top-3 margin-bottom-5"
             />
-            {adviceLetter && <ReviewAdviceLetter adviceLetter={adviceLetter} />}
+            {adviceLetter && (
+              <ReviewAdviceLetter
+                trbRequestId={trbRequestId}
+                adviceLetter={adviceLetter}
+              />
+            )}
           </PDFExport>
         )
       }

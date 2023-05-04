@@ -593,6 +593,15 @@ export interface SendReportAProblemEmailInput {
 }
 
 /**
+ * The data needed to send a TRB advice letter, including who to notify
+ */
+export interface SendTRBAdviceLetterInput {
+  id: UUID;
+  copyTrbMailbox: boolean;
+  notifyEuaIds: string[];
+}
+
+/**
  * Input to submit an intake for review
  */
 export interface SubmitIntakeInput {
