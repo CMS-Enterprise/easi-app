@@ -253,6 +253,22 @@ exports[`The GRT intake review view matches the snapshot 1`] = `
               </dd>
             </div>
           </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Does your project involve any user interface component, or changes to an interface component?
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                No
+              </dd>
+            </div>
+          </div>
         </dl>
         <hr
           class="system-intake__hr"

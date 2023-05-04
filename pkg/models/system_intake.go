@@ -136,6 +136,7 @@ type SystemIntake struct {
 	FundingSource               null.String                  `json:"fundingSource" db:"funding_source"`
 	FundingNumber               null.String                  `json:"fundingNumber" db:"funding_number"`
 	FundingSources              []*SystemIntakeFundingSource `json:"fundingSources"`
+	HasUIChanges                null.Bool                    `json:"hasUiChanges" db:"has_ui_changes"`
 }
 
 // SystemIntakes is a list of System Intakes
