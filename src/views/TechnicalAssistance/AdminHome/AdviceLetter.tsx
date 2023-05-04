@@ -72,7 +72,7 @@ const AdviceLetter = ({
         // If advice letter status is CANNOT_START_YET, show alert message
         adviceLetterStatus === 'CANNOT_START_YET' ? (
           <Alert type="info" slim>
-            {t('adviceLetter.noAdviceLetter')}
+            {t('adviceLetter.alerts.error')}
           </Alert>
         ) : (
           <>

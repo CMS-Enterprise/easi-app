@@ -18,7 +18,6 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { FormAlertObject } from 'types/technicalAssistance';
 import {
   meetingSummarySchema,
@@ -106,18 +105,7 @@ const AdviceLetterForm = () => {
   const [stepsCompleted, setStepsCompleted] = useState<FormStepKey[]>();
 
   // Form level alerts from step components
-  const [formAlert, setFormAlert] = useState<FormAlertObject | null>(
-    !adviceLetter
-      ? {
-          type: location?.state?.error ? 'error' : 'info',
-          message: t(
-            location?.state?.error
-              ? 'adviceLetter.errorCreatingAdviceLetter'
-              : 'adviceLetter.noAdviceLetter'
-          )
-        }
-      : null
-  );
+  const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
 
   /** Form steps translated text object */
   const steps = t<StepsText>('adviceLetterForm.steps', { returnObjects: true });
@@ -227,16 +215,21 @@ const AdviceLetterForm = () => {
     }
   }, [formAlert]);
 
+  useEffect(() => {
+    if (!adviceLetter && !loading) {
+      const type = location?.state?.error ? 'error' : 'info';
+      setFormAlert({
+        type,
+        message: t(`adviceLetter.alerts.${type}`)
+      });
+    }
+  }, [adviceLetter, loading, location?.state?.error, t]);
+
   // Page loading
   if (loading) return <PageLoading />;
 
-  // If advice letter can't be started, return page not found
-  if (
-    !trbRequest ||
-    !adviceLetter ||
-    trbRequest.taskStatuses.adviceLetterStatus ===
-      TRBAdviceLetterStatus.CANNOT_START_YET
-  ) {
+  // If invalid trb request, show not found
+  if (!trbRequest) {
     return <NotFound />;
   }
 
@@ -335,14 +328,16 @@ const AdviceLetterForm = () => {
       {/* Current form step component */}
       <GridContainer>
         <Grid>
-          <currentFormStep.component
-            trbRequestId={id}
-            adviceLetter={adviceLetter}
-            adviceLetterStatus={adviceLetterStatus}
-            setFormAlert={setFormAlert}
-            setStepSubmit={setStepSubmit}
-            setIsStepSubmitting={setIsStepSubmitting}
-          />
+          {adviceLetter && (
+            <currentFormStep.component
+              trbRequestId={id}
+              adviceLetter={adviceLetter}
+              adviceLetterStatus={adviceLetterStatus}
+              setFormAlert={setFormAlert}
+              setStepSubmit={setStepSubmit}
+              setIsStepSubmitting={setIsStepSubmitting}
+            />
+          )}
         </Grid>
       </GridContainer>
     </>
