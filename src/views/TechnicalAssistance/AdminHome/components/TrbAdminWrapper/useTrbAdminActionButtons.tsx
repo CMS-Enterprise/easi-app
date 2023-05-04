@@ -179,7 +179,8 @@ const useTrbAdminActionButtons = ({
             return [
               buttons.viewRequestForm,
               buttons.viewSupportingDocuments,
-              buttons.assignTrbLead
+              buttons.assignTrbLead,
+              buttons.orCloseRequest
             ];
         }
       case TRBRequestStatus.CONSULT_COMPLETE:
