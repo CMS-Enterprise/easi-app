@@ -39,6 +39,7 @@ type RequestDetailsForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
+  hasUiChanges: boolean | null;
 };
 
 type RequestDetailsProps = {
@@ -52,7 +53,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     businessNeed,
     businessSolution,
     currentStage,
-    needsEaSupport
+    needsEaSupport,
+    hasUiChanges
   } = systemIntake;
   const formikRef = useRef<FormikProps<RequestDetailsForm>>(null);
   const history = useHistory();
@@ -62,7 +64,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     businessNeed: businessNeed || '',
     businessSolution: businessSolution || '',
     currentStage: currentStage || '',
-    needsEaSupport
+    needsEaSupport,
+    hasUiChanges
   };
 
   const [mutate] = useMutation<
@@ -342,6 +345,47 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                         </>
                       </CollapsableLink>
                     </div>
+                  </fieldset>
+                </FieldGroup>
+
+                <FieldGroup
+                  className="margin-bottom-4"
+                  scrollElement="hasUiChanges"
+                  error={!!flatErrors.hasUiChanges}
+                >
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="has-ui-changes"
+                  >
+                    <legend className="usa-label margin-bottom-1">
+                      Does your project involve any user interface component, or
+                      changes to an interface component?
+                    </legend>
+                    <FieldErrorMsg>{flatErrors.hasUiChanges}</FieldErrorMsg>
+                    <Field
+                      as={Radio}
+                      checked={values.hasUiChanges === true}
+                      id="IntakeForm-HasUiChangesYes"
+                      name="hasUiChanges"
+                      label="Yes"
+                      onChange={() => {
+                        setFieldValue('hasUiChanges', true);
+                      }}
+                      value
+                      aria-describedby="IntakeForm-HasUiChanges"
+                    />
+
+                    <Field
+                      as={Radio}
+                      checked={values.hasUiChanges === false}
+                      id="IntakeForm-HasUiChangesNo"
+                      name="hasUiChanges"
+                      label="No"
+                      onChange={() => {
+                        setFieldValue('hasUiChanges', false);
+                      }}
+                      value={false}
+                    />
                   </fieldset>
                 </FieldGroup>
 

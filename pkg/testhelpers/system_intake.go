@@ -51,5 +51,6 @@ func NewSystemIntake() models.SystemIntake {
 		LifecycleID:        null.StringFrom("123456"),
 		ContractStartDate:  &now,
 		ContractEndDate:    &now,
+		HasUIChanges:       null.BoolFrom(false),
 	}
 }

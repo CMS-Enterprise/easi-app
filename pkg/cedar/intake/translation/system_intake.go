@@ -70,6 +70,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 
 		ExistingFunding:       si.ExistingFunding.Ptr(),
 		EaSupportRequest:      si.EASupportRequest.Ptr(),
+		HasUIChanges:          si.HasUIChanges.Ptr(),
 		ContractStartDate:     pStr(strDate(si.ContractStartDate)),
 		ContractEndDate:       pStr(strDate(si.ContractEndDate)),
 		SubmittedAt:           strDateTime(si.SubmittedAt),

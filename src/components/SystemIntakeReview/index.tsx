@@ -207,6 +207,14 @@ export const SystemIntakeReview = ({
             />
           </div>
         </ReviewRow>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.hasUiChanges')} />
+            <DescriptionDefinition
+              definition={convertBoolToYesNo(systemIntake.hasUiChanges)}
+            />
+          </div>
+        </ReviewRow>
       </DescriptionList>
 
       <hr className="system-intake__hr" />

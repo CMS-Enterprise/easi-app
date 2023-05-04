@@ -52,6 +52,7 @@ type EASIIntake struct {
 	SubmittedAt                 string               `json:"submittedAt" jsonschema:"description=Timestamp of when request was submitted,example=2022-02-17T14:34:43Z"`
 	TrbCollaboratorName         *string              `json:"trbCollaboratorName,omitempty" jsonschema:"description=Technical Review Board (TRB) Collaborator,example=John Doe"`
 	UserEUA                     string               `json:"userEUA" jsonschema:"description=EUA id of the requester,example=J8YN"`
+	HasUIChanges                *bool                `json:"hasUiChanges,omitempty" jsonschema:"description=Does the request have UI changes,example=True"`
 }
 
 // EASIFundingSource represents a source of funding for a system intake

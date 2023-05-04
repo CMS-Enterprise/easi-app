@@ -70,6 +70,10 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.eaSupport')
   },
   {
+    key: 'hasUiChanges',
+    label: t('intake:csvHeadings.hasUiChanges')
+  },
+  {
     key: 'costs.isExpectingIncrease',
     label: t('intake:csvHeadings.isExpectingCostIncrease')
   },
