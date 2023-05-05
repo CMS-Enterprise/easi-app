@@ -1,11 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  Route,
-  Switch
-  // useParams
-} from 'react-router-dom';
+import { Route, Switch, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import {
   Form,
   FormGroup,
@@ -18,12 +15,18 @@ import {
 import PageHeading from 'components/PageHeading';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
+import Spinner from 'components/Spinner';
+import GetSystemProfileTeamQuery from 'queries/SystemProfileTeamQueries';
+import {
+  GetSystemProfileTeam,
+  GetSystemProfileTeamVariables
+} from 'queries/types/GetSystemProfileTeam';
 
 import TeamMemberForm from './TeamMemberForm';
 
 type EmployeeFields = {
-  federal: number;
-  contractors: number;
+  federal: string;
+  contractors: string;
 };
 
 /**
@@ -32,12 +35,49 @@ type EmployeeFields = {
 const EditTeam = () => {
   const { t } = useTranslation('systemProfile');
 
-  // const { systemId } = useParams<{
-  //   systemId: string;
-  //   action?: 'edit-roles' | 'add-team-member';
-  // }>();
+  const { systemId: cedarSystemId } = useParams<{
+    systemId: string;
+    action?: 'edit-roles' | 'add-team-member';
+  }>();
 
-  const { control } = useForm<EmployeeFields>();
+  const { data, loading } = useQuery<
+    GetSystemProfileTeam,
+    GetSystemProfileTeamVariables
+  >(GetSystemProfileTeamQuery, {
+    variables: {
+      cedarSystemId
+    }
+  });
+
+  const { numberOfContractorFte, numberOfFederalFte } =
+    data?.cedarSystemDetails?.businessOwnerInformation || {};
+
+  const { control, reset, watch } = useForm<EmployeeFields>({
+    defaultValues: {
+      federal: '',
+      contractors: ''
+    }
+  });
+
+  const federal = watch('federal');
+  const contractors = watch('contractors');
+
+  // Set default values after query data loads
+  useEffect(() => {
+    if (!federal && !contractors && !loading) {
+      reset({
+        federal: numberOfFederalFte || '',
+        contractors: numberOfContractorFte || ''
+      });
+    }
+  }, [
+    reset,
+    federal,
+    contractors,
+    numberOfContractorFte,
+    numberOfFederalFte,
+    loading
+  ]);
 
   return (
     <GridContainer className="margin-bottom-8">
@@ -56,48 +96,52 @@ const EditTeam = () => {
             <p>{t('singleSystem.editTeam.description')}</p>
             <HelpText>{t('singleSystem.editTeam.helpText')}</HelpText>
 
-            {/* Employee fields */}
-            <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
-              {/* Federal employees input */}
-              <Controller
-                name="federal"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <FormGroup error={!!error}>
-                    <Label htmlFor={field.name}>
-                      {t('singleSystem.editTeam.federalEmployees')}
-                    </Label>
-                    {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                    <TextInput
-                      {...field}
-                      ref={null}
-                      id={field.name}
-                      type="number"
-                    />
-                  </FormGroup>
-                )}
-              />
+            {loading ? (
+              <Spinner className="margin-top-3" />
+            ) : (
+              // Employees form
+              <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
+                {/* Federal employees input */}
+                <Controller
+                  name="federal"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <FormGroup error={!!error}>
+                      <Label htmlFor={field.name}>
+                        {t('singleSystem.editTeam.federalEmployees')}
+                      </Label>
+                      {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                      <TextInput
+                        {...field}
+                        ref={null}
+                        id={field.name}
+                        type="number"
+                      />
+                    </FormGroup>
+                  )}
+                />
 
-              {/* Contractors input */}
-              <Controller
-                name="contractors"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <FormGroup error={!!error}>
-                    <Label htmlFor={field.name}>
-                      {t('singleSystem.editTeam.contractors')}
-                    </Label>
-                    {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                    <TextInput
-                      {...field}
-                      ref={null}
-                      id={field.name}
-                      type="number"
-                    />
-                  </FormGroup>
-                )}
-              />
-            </Form>
+                {/* Contractors input */}
+                <Controller
+                  name="contractors"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <FormGroup error={!!error}>
+                      <Label htmlFor={field.name}>
+                        {t('singleSystem.editTeam.contractors')}
+                      </Label>
+                      {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                      <TextInput
+                        {...field}
+                        ref={null}
+                        id={field.name}
+                        type="number"
+                      />
+                    </FormGroup>
+                  )}
+                />
+              </Form>
+            )}
           </Route>
         </Switch>
       </Grid>
