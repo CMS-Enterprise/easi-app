@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Route, Switch, useParams } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
   Form,
   FormGroup,
   Grid,
   GridContainer,
+  IconArrowBack,
   Label,
   TextInput
 } from '@trussworks/react-uswds';
@@ -15,6 +16,7 @@ import {
 import PageHeading from 'components/PageHeading';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
+import IconButton from 'components/shared/IconButton';
 import Spinner from 'components/Spinner';
 import GetSystemProfileTeamQuery from 'queries/SystemProfileTeamQueries';
 import {
@@ -34,6 +36,7 @@ type EmployeeFields = {
  */
 const EditTeam = () => {
   const { t } = useTranslation('systemProfile');
+  const history = useHistory();
 
   const { systemId: cedarSystemId } = useParams<{
     systemId: string;
@@ -52,7 +55,13 @@ const EditTeam = () => {
   const { numberOfContractorFte, numberOfFederalFte } =
     data?.cedarSystemDetails?.businessOwnerInformation || {};
 
-  const { control, reset, watch } = useForm<EmployeeFields>({
+  const {
+    control,
+    reset,
+    watch,
+    handleSubmit,
+    formState: { isDirty }
+  } = useForm<EmployeeFields>({
     defaultValues: {
       federal: '',
       contractors: ''
@@ -61,6 +70,20 @@ const EditTeam = () => {
 
   const federal = watch('federal');
   const contractors = watch('contractors');
+
+  const returnAndSubmit = handleSubmit(
+    async formData => {
+      if (isDirty) {
+        // TODO: mutation to update system
+        // await mutate();
+      } else {
+        history.push(`/systems/${cedarSystemId}/team`);
+      }
+    },
+    error => {
+      // console.log(error);
+    }
+  );
 
   // Set default values after query data loads
   useEffect(() => {
@@ -80,7 +103,7 @@ const EditTeam = () => {
   ]);
 
   return (
-    <GridContainer className="margin-bottom-8">
+    <GridContainer className="margin-bottom-10">
       <Grid className="tablet:grid-col-6">
         <Switch>
           {/* Add/edit team member form */}
@@ -96,8 +119,18 @@ const EditTeam = () => {
             <p>{t('singleSystem.editTeam.description')}</p>
             <HelpText>{t('singleSystem.editTeam.helpText')}</HelpText>
 
+            <IconButton
+              type="button"
+              onClick={() => returnAndSubmit()}
+              icon={<IconArrowBack />}
+              className="margin-top-3 margin-bottom-6"
+              unstyled
+            >
+              {t('returnToSystemProfile')}
+            </IconButton>
+
             {loading ? (
-              <Spinner className="margin-top-3" />
+              <Spinner />
             ) : (
               // Employees form
               <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
@@ -142,6 +175,15 @@ const EditTeam = () => {
                 />
               </Form>
             )}
+            <IconButton
+              type="button"
+              onClick={() => returnAndSubmit()}
+              icon={<IconArrowBack />}
+              className="margin-top-6"
+              unstyled
+            >
+              {t('returnToSystemProfile')}
+            </IconButton>
           </Route>
         </Switch>
       </Grid>

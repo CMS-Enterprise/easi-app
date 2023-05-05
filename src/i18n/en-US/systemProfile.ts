@@ -278,7 +278,8 @@ const systemProfile = {
   },
   gql: {
     fail: 'Failed to retrieve systems data'
-  }
+  },
+  returnToSystemProfile: 'Return to system profile'
 };
 
 export default systemProfile;
