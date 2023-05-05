@@ -139,6 +139,9 @@ const systemProfile = {
         'Add, remove, and edit the team members and roles for this system.',
       helpText:
         'All changes made here will be autosaved and applied to this system’s profile.',
+      federalEmployees:
+        'How many full-time federal employees work on this system?',
+      contractors: 'How many full-time contractors work on this system?',
       form: {
         addTeamMember: 'Add a team member',
         addDescription:
