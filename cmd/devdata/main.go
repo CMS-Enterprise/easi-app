@@ -21,7 +21,6 @@ import (
 )
 
 type seederConfig struct {
-	ctx      context.Context
 	logger   *zap.Logger
 	store    *storage.Store
 	s3Client *upload.S3Client
@@ -55,8 +54,6 @@ func main() {
 		panic(storeErr)
 	}
 
-	// store.TruncateAllTablesDANGEROUS(logger)
-
 	s3Cfg := upload.Config{
 		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
 		Region:  config.GetString(appconfig.AWSRegion),
@@ -65,8 +62,8 @@ func main() {
 
 	s3Client := upload.NewS3Client(s3Cfg)
 
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
 	seederConfig := &seederConfig{
-		ctx:      mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser),
 		logger:   logger,
 		store:    store,
 		s3Client: &s3Client,
@@ -144,6 +141,7 @@ func main() {
 		i.Solution = null.StringFrom("The quick brown fox jumps over the lazy dog.")
 		i.ProcessStatus = null.StringFrom("Initial development underway")
 		i.EASupportRequest = null.BoolFrom(false)
+		i.HasUIChanges = null.BoolFrom(false)
 		i.ExistingContract = null.StringFrom("No")
 		i.GrtReviewEmailBody = null.StringFrom("")
 	})
@@ -199,7 +197,7 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
-	must(nil, seederConfig.seedTRBRequests())
+	must(nil, seederConfig.seedTRBRequests(ctx))
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -241,6 +239,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 
 		ProcessStatus:      null.StringFrom("I have done some initial research"),
 		EASupportRequest:   null.BoolFrom(true),
+		HasUIChanges:       null.BoolFrom(true),
 		ExistingContract:   null.StringFrom("HAVE_CONTRACT"),
 		CostIncrease:       null.StringFrom("YES"),
 		CostIncreaseAmount: null.StringFrom("10 million dollars?"),
