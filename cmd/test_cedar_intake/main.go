@@ -110,6 +110,7 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 
 		ProcessStatus:      null.StringFrom("I have done some initial research"),
 		EASupportRequest:   null.BoolFrom(true),
+		HasUIChanges:       null.BoolFrom(false),
 		ExistingContract:   null.StringFrom("NOT_STARTED"),
 		CostIncrease:       null.StringFrom("YES"),
 		CostIncreaseAmount: null.StringFrom("10 million dollars?"),

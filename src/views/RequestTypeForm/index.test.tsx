@@ -120,6 +120,7 @@ const intakeQuery = (intakeData: any) => {
             content: null,
             createdAt: null
           },
+          hasUiChanges: null,
           ...intakeData
         }
       }

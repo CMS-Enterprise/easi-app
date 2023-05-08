@@ -1568,6 +1568,7 @@ func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context,
 	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
+	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
@@ -2885,6 +2886,11 @@ func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.Sy
 // Documents is the resolver for the documents field.
 func (r *systemIntakeResolver) Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error) {
 	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
+}
+
+// HasUIChanges is the resolver for the hasUiChanges field.
+func (r *systemIntakeResolver) HasUIChanges(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.HasUIChanges.Ptr(), nil
 }
 
 // DocumentType is the resolver for the documentType field.

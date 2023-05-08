@@ -60,6 +60,7 @@ export const UpdateSystemIntakeRequestDetails = gql`
         businessNeed
         businessSolution
         needsEaSupport
+        hasUiChanges
       }
     }
   }

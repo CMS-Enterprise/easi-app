@@ -1015,6 +1015,7 @@ type SystemIntake {
   lastAdminNote: LastAdminNote!
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
+  hasUiChanges: Boolean
 }
 
 """
@@ -1106,6 +1107,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   needsEaSupport: Boolean
   currentStage: String
   cedarSystemId: String
+  hasUiChanges: Boolean
 }
 
 """

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIIntake",
-  "title": "EASIIntakeV06",
+  "title": "EASIIntakeV07",
   "definitions": {
     "EASIFundingSource": {
       "required": [
@@ -364,6 +364,10 @@
           "examples": [
             "J8YN"
           ]
+        },
+        "hasUiChanges": {
+          "type": "boolean",
+          "description": "Does the request have UI changes"
         }
       },
       "additionalProperties": false,

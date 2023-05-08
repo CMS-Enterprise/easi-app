@@ -42,7 +42,7 @@ const (
 	IntakeInputSchemaEASIGrtFeedbackVersion SchemaVersion = "EASIGrtFeedbackV02"
 
 	// IntakeInputSchemaEASIIntakeVersion captures the current schema version for System Intakes
-	IntakeInputSchemaEASIIntakeVersion SchemaVersion = "EASIIntakeV06"
+	IntakeInputSchemaEASIIntakeVersion SchemaVersion = "EASIIntakeV07"
 
 	// IntakeInputSchemaEASINoteVersion captures the current schema version for Notes
 	IntakeInputSchemaEASINoteVersion SchemaVersion = "EASINoteV01"
