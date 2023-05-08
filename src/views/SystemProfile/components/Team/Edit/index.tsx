@@ -217,7 +217,12 @@ const EditTeam = () => {
                       key={user.assigneeUsername}
                       // TODO in EASI-2447: Edit roles and remove team member functionality
                       footerActions={{
-                        editRoles: () => null,
+                        editRoles: () =>
+                          history.push(
+                            `/systems/${cedarSystemId}/team/edit/edit-roles`,
+                            // Send user info to edit form
+                            user
+                          ),
                         removeTeamMember: () => null
                       }}
                     />
