@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -96,8 +97,8 @@ func checkForLCIDExpiration(
 
 	for _, currIntake := range result {
 
-		// Skip intake if it doesn't have an LCID
-		if currIntake.LifecycleExpiresAt == nil || currIntake.Status == models.SystemIntakeStatusNOGOVERNANCE {
+		// Skip intake if it doesn't have an LCID or if it has a status of "NO GOVERNANCE"
+		if currIntake.LifecycleExpiresAt == nil || currIntake.ProcessStatus == null.StringFrom(string(models.SystemIntakeStatusNOGOVERNANCE)) {
 			continue
 		}
 
