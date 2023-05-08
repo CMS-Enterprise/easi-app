@@ -1,6 +1,9 @@
 import { gql } from '@apollo/client';
 
+import { CedarRole } from './GetSystemProfileQuery';
+
 const GetSystemProfileTeamQuery = gql`
+  ${CedarRole}
   query GetSystemProfileTeam($cedarSystemId: String!) {
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       businessOwnerInformation {
@@ -8,12 +11,7 @@ const GetSystemProfileTeamQuery = gql`
         numberOfContractorFte
       }
       roles {
-        objectID
-        assigneeFirstName
-        assigneeLastName
-        assigneeUsername
-        assigneeEmail
-        roleTypeName
+        ...CedarRole
       }
     }
   }
