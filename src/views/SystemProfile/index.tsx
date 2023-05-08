@@ -648,7 +648,8 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                         <Grid
                           desktop={{ col: 4 }}
                           className={classnames({
-                            'sticky side-nav padding-top-7': !isMobile
+                            'sticky side-nav padding-top-7': !isMobile,
+                            'margin-top-3': isMobile
                           })}
                         >
                           {/* Setting a ref here to reference the grid width for the fixed side nav */}
@@ -660,6 +661,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                               systemId={systemId}
                             />
                           </div>
+                          {subinfo === 'team' && isMobile && (
+                            <EditPageCallout
+                              className="margin-top-4"
+                              // TODO: Get system modifiedAt value and add to props
+                              // modifiedAt={}
+                            />
+                          )}
                         </Grid>
                       )}
                     </Grid>
