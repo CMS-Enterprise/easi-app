@@ -142,6 +142,9 @@ const systemProfile = {
       federalEmployees:
         'How many full-time federal employees work on this system?',
       contractors: 'How many full-time contractors work on this system?',
+      teamMembers: 'Team members',
+      addNewTeamMember: 'Add a new team member',
+      currentTeamMembers: 'Current team members',
       form: {
         addTeamMember: 'Add a team member',
         addDescription:

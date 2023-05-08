@@ -91,7 +91,7 @@ export function getTeam(
 /**
  * A card with team member info and a list of their roles.
  */
-const TeamContactCard = ({ user }: { user: UsernameWithRoles }) => {
+export const TeamContactCard = ({ user }: { user: UsernameWithRoles }) => {
   const { roles } = user;
   if (roles.length === 0) return null;
 
