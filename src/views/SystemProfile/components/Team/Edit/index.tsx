@@ -212,7 +212,15 @@ const EditTeam = () => {
                 </h4>
                 <CardGroup>
                   {team.map(user => (
-                    <TeamContactCard user={user} key={user.assigneeUsername} />
+                    <TeamContactCard
+                      user={user}
+                      key={user.assigneeUsername}
+                      // TODO in EASI-2447: Edit roles and remove team member functionality
+                      footerActions={{
+                        editRoles: () => null,
+                        removeTeamMember: () => null
+                      }}
+                    />
                   ))}
                 </CardGroup>
                 <IconButton

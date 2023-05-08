@@ -145,6 +145,8 @@ const systemProfile = {
       teamMembers: 'Team members',
       addNewTeamMember: 'Add a new team member',
       currentTeamMembers: 'Current team members',
+      editRoles: 'Edit roles',
+      removeTeamMember: 'Remove team member',
       form: {
         addTeamMember: 'Add a team member',
         addDescription:
