@@ -7,6 +7,14 @@ const GetSystemProfileTeamQuery = gql`
         numberOfFederalFte
         numberOfContractorFte
       }
+      roles {
+        objectID
+        assigneeFirstName
+        assigneeLastName
+        assigneeUsername
+        assigneeEmail
+        roleTypeName
+      }
     }
   }
 `;

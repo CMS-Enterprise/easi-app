@@ -13,9 +13,20 @@ export interface GetSystemProfileTeam_cedarSystemDetails_businessOwnerInformatio
   numberOfContractorFte: string | null;
 }
 
+export interface GetSystemProfileTeam_cedarSystemDetails_roles {
+  __typename: "CedarRole";
+  objectID: string;
+  assigneeFirstName: string | null;
+  assigneeLastName: string | null;
+  assigneeUsername: string | null;
+  assigneeEmail: string | null;
+  roleTypeName: string | null;
+}
+
 export interface GetSystemProfileTeam_cedarSystemDetails {
   __typename: "CedarSystemDetails";
   businessOwnerInformation: GetSystemProfileTeam_cedarSystemDetails_businessOwnerInformation;
+  roles: GetSystemProfileTeam_cedarSystemDetails_roles[];
 }
 
 export interface GetSystemProfileTeam {
