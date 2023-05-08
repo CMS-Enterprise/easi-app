@@ -9,6 +9,11 @@ import { CedarAssigneeType } from "./../../types/graphql-global-types";
 // GraphQL query operation: GetSystemProfileTeam
 // ====================================================
 
+export interface GetSystemProfileTeam_cedarSystemDetails_cedarSystem {
+  __typename: "CedarSystem";
+  name: string;
+}
+
 export interface GetSystemProfileTeam_cedarSystemDetails_businessOwnerInformation {
   __typename: "CedarBusinessOwnerInformation";
   numberOfFederalFte: string | null;
@@ -33,6 +38,7 @@ export interface GetSystemProfileTeam_cedarSystemDetails_roles {
 
 export interface GetSystemProfileTeam_cedarSystemDetails {
   __typename: "CedarSystemDetails";
+  cedarSystem: GetSystemProfileTeam_cedarSystemDetails_cedarSystem;
   businessOwnerInformation: GetSystemProfileTeam_cedarSystemDetails_businessOwnerInformation;
   roles: GetSystemProfileTeam_cedarSystemDetails_roles[];
 }
