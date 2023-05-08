@@ -1,7 +1,13 @@
 import React, { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Route, Switch, useHistory, useParams } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
   Button,
@@ -44,6 +50,8 @@ type EmployeeFields = {
 const EditTeam = () => {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
+
+  const { pathname } = useLocation();
 
   const { systemId: cedarSystemId } = useParams<{
     systemId: string;
@@ -204,7 +212,10 @@ const EditTeam = () => {
                 <h2 className="margin-top-6 margin-bottom-205">
                   {t('singleSystem.editTeam.teamMembers')}
                 </h2>
-                <Button type="button">
+                <Button
+                  type="button"
+                  onClick={() => history.push(`${pathname}/add-team-member`)}
+                >
                   {t('singleSystem.editTeam.addNewTeamMember')}
                 </Button>
                 <h4 className="margin-top-4">
@@ -219,7 +230,7 @@ const EditTeam = () => {
                       footerActions={{
                         editRoles: () =>
                           history.push(
-                            `/systems/${cedarSystemId}/team/edit/edit-roles`,
+                            `${pathname}/edit-roles`,
                             // Send user info to edit form
                             user
                           ),
