@@ -20,8 +20,8 @@ import (
 // swagger:model PersonFindResponse
 type PersonFindResponse struct {
 
-	// persons
-	Persons []*Person `json:"Persons"`
+	// users
+	Users []*Person `json:"Users"`
 
 	// count
 	// Required: true
@@ -32,7 +32,7 @@ type PersonFindResponse struct {
 func (m *PersonFindResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validatePersons(formats); err != nil {
+	if err := m.validateUsers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -46,22 +46,22 @@ func (m *PersonFindResponse) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *PersonFindResponse) validatePersons(formats strfmt.Registry) error {
-	if swag.IsZero(m.Persons) { // not required
+func (m *PersonFindResponse) validateUsers(formats strfmt.Registry) error {
+	if swag.IsZero(m.Users) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.Persons); i++ {
-		if swag.IsZero(m.Persons[i]) { // not required
+	for i := 0; i < len(m.Users); i++ {
+		if swag.IsZero(m.Users[i]) { // not required
 			continue
 		}
 
-		if m.Persons[i] != nil {
-			if err := m.Persons[i].Validate(formats); err != nil {
+		if m.Users[i] != nil {
+			if err := m.Users[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("Persons" + "." + strconv.Itoa(i))
+					return ve.ValidateName("Users" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Persons" + "." + strconv.Itoa(i))
+					return ce.ValidateName("Users" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -85,7 +85,7 @@ func (m *PersonFindResponse) validateCount(formats strfmt.Registry) error {
 func (m *PersonFindResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidatePersons(ctx, formats); err != nil {
+	if err := m.contextValidateUsers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -95,16 +95,16 @@ func (m *PersonFindResponse) ContextValidate(ctx context.Context, formats strfmt
 	return nil
 }
 
-func (m *PersonFindResponse) contextValidatePersons(ctx context.Context, formats strfmt.Registry) error {
+func (m *PersonFindResponse) contextValidateUsers(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.Persons); i++ {
+	for i := 0; i < len(m.Users); i++ {
 
-		if m.Persons[i] != nil {
-			if err := m.Persons[i].ContextValidate(ctx, formats); err != nil {
+		if m.Users[i] != nil {
+			if err := m.Users[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("Persons" + "." + strconv.Itoa(i))
+					return ve.ValidateName("Users" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Persons" + "." + strconv.Itoa(i))
+					return ce.ValidateName("Users" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

@@ -20,7 +20,11 @@ import (
 type BudgetIds struct {
 
 	// Contract deliverable ID tying this budget project to the contract
+	// Example: 22-123-00
 	ContractDeliverableID string `json:"contractDeliverableId,omitempty"`
+
+	// Flag indicating whether this budget was dissociated with the contract
+	Deleted bool `json:"deleted,omitempty"`
 
 	// OFM budget internal ID in system of record
 	// Example: 589-329-0
