@@ -38,8 +38,7 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *models.TestDate) (
 		    :created_at,
 			:updated_at
 		)`
-	_, err := s.db.NamedExecContext(
-		ctx,
+	_, err := s.db.NamedExec(
 		createTestDateSQL,
 		testDate,
 	)
@@ -54,7 +53,7 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *models.TestDate) (
 func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*models.TestDate, error) {
 	testDate := models.TestDate{}
 
-	err := s.db.GetContext(ctx, &testDate, `SELECT * FROM test_dates WHERE id=$1 AND deleted_at IS NULL`, id)
+	err := s.db.Get(&testDate, `SELECT * FROM test_dates WHERE id=$1 AND deleted_at IS NULL`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
@@ -74,7 +73,7 @@ func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*models.Te
 func (s *Store) FetchTestDatesByRequestID(ctx context.Context, requestID uuid.UUID) ([]*models.TestDate, error) {
 	results := []*models.TestDate{}
 
-	err := s.db.SelectContext(ctx, &results, `SELECT * FROM test_dates WHERE request_id=$1 AND deleted_at IS NULL`, requestID)
+	err := s.db.Select(&results, `SELECT * FROM test_dates WHERE request_id=$1 AND deleted_at IS NULL`, requestID)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error("Failed to fetch test dates", zap.Error(err), zap.String("requestID", requestID.String()))
 		return nil, &apperrors.QueryError{
@@ -98,8 +97,7 @@ func (s *Store) UpdateTestDate(ctx context.Context, testDate *models.TestDate) (
 		    score = :score,
 			updated_at = :updated_at
 		WHERE test_dates.id = :id`
-	_, err := s.db.NamedExecContext(
-		ctx,
+	_, err := s.db.NamedExec(
 		createTestDateSQL,
 		testDate,
 	)
@@ -123,8 +121,7 @@ func (s *Store) DeleteTestDate(ctx context.Context, testDate *models.TestDate) (
 			updated_at = :updated_at
 		WHERE test_dates.id = :id`
 
-	_, err := s.db.NamedExecContext(
-		ctx,
+	_, err := s.db.NamedExec(
 		deleteTestDateSQL,
 		testDate,
 	)
