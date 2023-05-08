@@ -1,8 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import PageHeading from 'components/PageHeading';
-
 /**
  * Form to add or edit a system profile team member
  */
@@ -11,9 +9,9 @@ const TeamMemberForm = () => {
 
   return (
     <>
-      <PageHeading className="margin-bottom-1">
+      <h1 className="margin-bottom-1">
         {t('singleSystem.editTeam.form.addTeamMember')}
-      </PageHeading>
+      </h1>
       <p>{t('singleSystem.editTeam.form.addDescription')}</p>
     </>
   );

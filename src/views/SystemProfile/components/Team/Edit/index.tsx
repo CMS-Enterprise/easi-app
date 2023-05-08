@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
+  Link,
   Route,
   Switch,
   useHistory,
@@ -10,6 +11,9 @@ import {
 } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
   Button,
   CardGroup,
   Form,
@@ -21,11 +25,10 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 
-import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconButton from 'components/shared/IconButton';
-import Spinner from 'components/Spinner';
 import GetSystemProfileTeamQuery from 'queries/SystemProfileTeamQueries';
 import {
   GetSystemProfileTeam,
@@ -33,6 +36,7 @@ import {
 } from 'queries/types/GetSystemProfileTeam';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import { UsernameWithRoles } from 'types/systemProfile';
+import NotFound from 'views/NotFound';
 import { getUsernamesWithRoles } from 'views/SystemProfile';
 
 import { getTeam, TeamContactCard } from '..';
@@ -53,7 +57,7 @@ const EditTeam = () => {
 
   const { pathname } = useLocation();
 
-  const { systemId: cedarSystemId } = useParams<{
+  const { systemId: cedarSystemId, action } = useParams<{
     systemId: string;
     action?: 'edit-roles' | 'add-team-member';
   }>();
@@ -67,8 +71,9 @@ const EditTeam = () => {
     }
   });
 
-  const { roles, businessOwnerInformation } = data?.cedarSystemDetails || {};
-
+  const { roles, businessOwnerInformation, cedarSystem } =
+    data?.cedarSystemDetails || {};
+  const { name } = cedarSystem || {};
   const { numberOfContractorFte, numberOfFederalFte } =
     businessOwnerInformation || {};
 
@@ -135,8 +140,48 @@ const EditTeam = () => {
     loading
   ]);
 
+  if (loading) return <PageLoading />;
+
+  if (!data) return <NotFound />;
+
   return (
     <GridContainer className="margin-bottom-10">
+      <BreadcrumbBar variant="wrap">
+        <Breadcrumb>
+          <BreadcrumbLink asCustom={Link} to="/systems">
+            {t('singleSystem.editTeam.systems')}
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb>
+          <BreadcrumbLink asCustom={Link} to={`/systems/${cedarSystemId}/team`}>
+            {name}
+          </BreadcrumbLink>
+        </Breadcrumb>
+        {action ? (
+          <>
+            <Breadcrumb>
+              <BreadcrumbLink
+                asCustom={Link}
+                to={`/systems/${cedarSystemId}/team/edit`}
+              >
+                {t('singleSystem.editTeam.title')}
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb>
+              {t(
+                `singleSystem.editTeam.${
+                  action === 'edit-roles'
+                    ? 'editTeamMemberRoles'
+                    : 'form.addTeamMember'
+                }`
+              )}
+            </Breadcrumb>
+          </>
+        ) : (
+          <Breadcrumb>{t('singleSystem.editTeam.title')}</Breadcrumb>
+        )}
+      </BreadcrumbBar>
+
       <Grid className="tablet:grid-col-6">
         <Switch>
           {/* Add/edit team member form */}
@@ -146,9 +191,9 @@ const EditTeam = () => {
 
           {/* Edit team page */}
           <Route path="/systems/:systemId/team/edit">
-            <PageHeading className="margin-bottom-1">
+            <h1 className="margin-bottom-1">
               {t('singleSystem.editTeam.title')}
-            </PageHeading>
+            </h1>
             <p>{t('singleSystem.editTeam.description')}</p>
             <HelpText>{t('singleSystem.editTeam.helpText')}</HelpText>
 
@@ -162,94 +207,88 @@ const EditTeam = () => {
               {t('returnToSystemProfile')}
             </IconButton>
 
-            {loading ? (
-              <Spinner />
-            ) : (
-              <>
-                {/* Employees form */}
-                <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
-                  {/* Federal employees input */}
-                  <Controller
-                    name="federal"
-                    control={control}
-                    render={({ field, fieldState: { error } }) => (
-                      <FormGroup error={!!error}>
-                        <Label htmlFor={field.name}>
-                          {t('singleSystem.editTeam.federalEmployees')}
-                        </Label>
-                        {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                        <TextInput
-                          {...field}
-                          ref={null}
-                          id={field.name}
-                          type="number"
-                        />
-                      </FormGroup>
-                    )}
-                  />
-
-                  {/* Contractors input */}
-                  <Controller
-                    name="contractors"
-                    control={control}
-                    render={({ field, fieldState: { error } }) => (
-                      <FormGroup error={!!error}>
-                        <Label htmlFor={field.name}>
-                          {t('singleSystem.editTeam.contractors')}
-                        </Label>
-                        {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                        <TextInput
-                          {...field}
-                          ref={null}
-                          id={field.name}
-                          type="number"
-                        />
-                      </FormGroup>
-                    )}
-                  />
-                </Form>
-                {/* Team Members section */}
-                <h2 className="margin-top-6 margin-bottom-205">
-                  {t('singleSystem.editTeam.teamMembers')}
-                </h2>
-                <Button
-                  type="button"
-                  onClick={() => history.push(`${pathname}/add-team-member`)}
-                >
-                  {t('singleSystem.editTeam.addNewTeamMember')}
-                </Button>
-                <h4 className="margin-top-4">
-                  {t('singleSystem.editTeam.currentTeamMembers')}
-                </h4>
-                <CardGroup>
-                  {team.map(user => (
-                    <TeamContactCard
-                      user={user}
-                      key={user.assigneeUsername}
-                      // TODO in EASI-2447: Edit roles and remove team member functionality
-                      footerActions={{
-                        editRoles: () =>
-                          history.push(
-                            `${pathname}/edit-roles`,
-                            // Send user info to edit form
-                            user
-                          ),
-                        removeTeamMember: () => null
-                      }}
+            {/* Employees form */}
+            <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
+              {/* Federal employees input */}
+              <Controller
+                name="federal"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup error={!!error}>
+                    <Label htmlFor={field.name}>
+                      {t('singleSystem.editTeam.federalEmployees')}
+                    </Label>
+                    {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                    <TextInput
+                      {...field}
+                      ref={null}
+                      id={field.name}
+                      type="number"
                     />
-                  ))}
-                </CardGroup>
-                <IconButton
-                  type="button"
-                  onClick={() => returnAndSubmit()}
-                  icon={<IconArrowBack />}
-                  className="margin-top-6"
-                  unstyled
-                >
-                  {t('returnToSystemProfile')}
-                </IconButton>
-              </>
-            )}
+                  </FormGroup>
+                )}
+              />
+
+              {/* Contractors input */}
+              <Controller
+                name="contractors"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup error={!!error}>
+                    <Label htmlFor={field.name}>
+                      {t('singleSystem.editTeam.contractors')}
+                    </Label>
+                    {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                    <TextInput
+                      {...field}
+                      ref={null}
+                      id={field.name}
+                      type="number"
+                    />
+                  </FormGroup>
+                )}
+              />
+            </Form>
+            {/* Team Members section */}
+            <h2 className="margin-top-6 margin-bottom-205">
+              {t('singleSystem.editTeam.teamMembers')}
+            </h2>
+            <Button
+              type="button"
+              onClick={() => history.push(`${pathname}/add-team-member`)}
+            >
+              {t('singleSystem.editTeam.addNewTeamMember')}
+            </Button>
+            <h4 className="margin-top-4">
+              {t('singleSystem.editTeam.currentTeamMembers')}
+            </h4>
+            <CardGroup>
+              {team.map(user => (
+                <TeamContactCard
+                  user={user}
+                  key={user.assigneeUsername}
+                  // TODO in EASI-2447: Edit roles and remove team member functionality
+                  footerActions={{
+                    editRoles: () =>
+                      history.push(
+                        `${pathname}/edit-roles`,
+                        // Send user info to edit form
+                        user
+                      ),
+                    removeTeamMember: () => null
+                  }}
+                />
+              ))}
+            </CardGroup>
+            <IconButton
+              type="button"
+              onClick={() => returnAndSubmit()}
+              icon={<IconArrowBack />}
+              className="margin-top-6"
+              unstyled
+            >
+              {t('returnToSystemProfile')}
+            </IconButton>
           </Route>
         </Switch>
       </Grid>

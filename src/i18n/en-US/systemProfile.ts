@@ -134,6 +134,7 @@ const systemProfile = {
       contractorFTE: 'Contractor FTE'
     },
     editTeam: {
+      systems: 'Systems',
       title: 'Edit System Profile: Team',
       description:
         'Add, remove, and edit the team members and roles for this system.',
@@ -146,6 +147,7 @@ const systemProfile = {
       addNewTeamMember: 'Add a new team member',
       currentTeamMembers: 'Current team members',
       editRoles: 'Edit roles',
+      editTeamMemberRoles: 'Edit team member roles',
       removeTeamMember: 'Remove team member',
       form: {
         addTeamMember: 'Add a team member',
