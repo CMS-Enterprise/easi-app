@@ -36,8 +36,7 @@ func (s *Store) CreateGRTFeedback(ctx context.Context, grtFeedback *models.GRTFe
 		    :created_at,
 			:updated_at
 		)`
-	_, err := s.db.NamedExecContext(
-		ctx,
+	_, err := s.db.NamedExec(
 		createGRTFeedbackSQL,
 		grtFeedback,
 	)
@@ -52,7 +51,7 @@ func (s *Store) CreateGRTFeedback(ctx context.Context, grtFeedback *models.GRTFe
 func (s *Store) FetchGRTFeedbackByID(ctx context.Context, id uuid.UUID) (*models.GRTFeedback, error) {
 	grtFeedback := models.GRTFeedback{}
 
-	err := s.db.GetContext(ctx, &grtFeedback, `SELECT * FROM grt_feedback WHERE id=$1`, id)
+	err := s.db.Get(&grtFeedback, `SELECT * FROM grt_feedback WHERE id=$1`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
@@ -72,7 +71,7 @@ func (s *Store) FetchGRTFeedbackByID(ctx context.Context, id uuid.UUID) (*models
 func (s *Store) FetchGRTFeedbacksByIntakeID(ctx context.Context, intakeID uuid.UUID) ([]*models.GRTFeedback, error) {
 	grtFeedbacks := []*models.GRTFeedback{}
 
-	err := s.db.SelectContext(ctx, &grtFeedbacks, `SELECT * FROM grt_feedback WHERE intake_id=$1 ORDER BY created_at DESC`, intakeID)
+	err := s.db.Select(&grtFeedbacks, `SELECT * FROM grt_feedback WHERE intake_id=$1 ORDER BY created_at DESC`, intakeID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return grtFeedbacks, nil
