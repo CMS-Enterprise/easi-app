@@ -155,6 +155,11 @@ const systemProfile = {
           'Look up your team member and then add their role(s) on this team.'
       }
     },
+    editPage: {
+      heading: 'Need to edit something on this page?',
+      lastUpdated: 'Last updated: {{lastUpdatedText}}',
+      buttonLabel: 'Edit {{page}}'
+    },
     toolsAndSoftware: {
       header: 'Tools and Software',
       productType: 'Product Type',
