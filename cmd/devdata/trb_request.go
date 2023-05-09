@@ -11,16 +11,15 @@ import (
 	"github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s *seederConfig) seedTRBRequests() error {
-	must(s.seedTRBLeadOptions())
+func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
+	must(s.seedTRBLeadOptions(ctx))
 
-	cases := []func() error{
+	cases := []func(context.Context) error{
 		s.seedTRBCase1,
 		s.seedTRBCase2,
 		s.seedTRBCase3,
@@ -33,41 +32,23 @@ func (s *seederConfig) seedTRBRequests() error {
 	}
 
 	for _, seedFunc := range cases {
-		if err := seedFunc(); err != nil {
+		if err := seedFunc(ctx); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func (s *seederConfig) seedTRBCase1() error {
-	_, err := s.addTRBRequest(models.TRBTNeedHelp, "Case 1 - Draft request form")
+func (s *seederConfig) seedTRBCase1(ctx context.Context) error {
+	_, err := s.addTRBRequest(ctx, models.TRBTNeedHelp, "Case 1 - Draft request form")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *seederConfig) seedTRBCase2() error {
-	_, err := s.seedTRBWithForm("Case 2 - Request form complete", true)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *seederConfig) seedTRBCase3() error {
-	trb, err := s.seedTRBWithForm("Case 3 - Ready for consult", true)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBFeedback(trb)
-	if err != nil {
-		return err
-	}
-	_, err = s.addTRBLead(trb, "TEST")
+func (s *seederConfig) seedTRBCase2(ctx context.Context) error {
+	_, err := s.seedTRBWithForm(ctx, "Case 2 - Request form complete", true)
 	if err != nil {
 		return err
 	}
@@ -75,23 +56,17 @@ func (s *seederConfig) seedTRBCase3() error {
 	return nil
 }
 
-func (s *seederConfig) seedTRBCase4() error {
-	trb, err := s.seedTRBWithForm("Case 4 - Consult scheduled", true)
+func (s *seederConfig) seedTRBCase3(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, "Case 3 - Ready for consult", true)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBFeedback(trb)
+	_, err = s.addTRBFeedback(ctx, trb)
 	if err != nil {
 		return err
 	}
-
-	_, err = s.addTRBConsultMeeting(trb, false)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBLead(trb, "TEST")
+	_, err = s.addTRBLead(ctx, trb, "TEST")
 	if err != nil {
 		return err
 	}
@@ -99,52 +74,23 @@ func (s *seederConfig) seedTRBCase4() error {
 	return nil
 }
 
-func (s *seederConfig) seedTRBCase5() error {
-	trb, err := s.seedTRBWithForm("Case 5 - Consult complete", true)
+func (s *seederConfig) seedTRBCase4(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, "Case 4 - Consult scheduled", true)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBFeedback(trb)
+	_, err = s.addTRBFeedback(ctx, trb)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBConsultMeeting(trb, true)
+	_, err = s.addTRBConsultMeeting(ctx, trb, false)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBLead(trb, "TEST")
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *seederConfig) seedTRBCase6() error {
-	trb, err := s.seedTRBWithForm("Case 6 - Draft advice letter", true)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBFeedback(trb)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBConsultMeeting(trb, true)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addAdviceLetter(trb, true)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBLead(trb, "TEST")
+	_, err = s.addTRBLead(ctx, trb, "TEST")
 	if err != nil {
 		return err
 	}
@@ -152,28 +98,23 @@ func (s *seederConfig) seedTRBCase6() error {
 	return nil
 }
 
-func (s *seederConfig) seedTRBCase7() error {
-	trb, err := s.seedTRBWithForm("Case 7 - Advice letter in review", true)
+func (s *seederConfig) seedTRBCase5(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, "Case 5 - Consult complete", true)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBFeedback(trb)
+	_, err = s.addTRBFeedback(ctx, trb)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBConsultMeeting(trb, true)
+	_, err = s.addTRBConsultMeeting(ctx, trb, true)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(trb, false)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBLead(trb, "TEST")
+	_, err = s.addTRBLead(ctx, trb, "TEST")
 	if err != nil {
 		return err
 	}
@@ -181,57 +122,28 @@ func (s *seederConfig) seedTRBCase7() error {
 	return nil
 }
 
-func (s *seederConfig) seedTRBCase8() error {
-	trb, err := s.seedTRBWithForm("Case 8 - Advice letter in review with document", true)
+func (s *seederConfig) seedTRBCase6(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, "Case 6 - Draft advice letter", true)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBFeedback(trb)
+	_, err = s.addTRBFeedback(ctx, trb)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBConsultMeeting(trb, true)
+	_, err = s.addTRBConsultMeeting(ctx, trb, true)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(trb, false)
+	_, err = s.addAdviceLetter(ctx, trb, true)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.addTRBLead(trb, "ABCD")
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *seederConfig) seedTRBCase9() error {
-	trb, err := s.seedTRBWithForm("Case 9 - Advice letter reviewed", true)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBFeedback(trb)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBConsultMeeting(trb, true)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addAdviceLetter(trb, true)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.addTRBLead(trb, "GRTB")
+	_, err = s.addTRBLead(ctx, trb, "TEST")
 	if err != nil {
 		return err
 	}
@@ -239,8 +151,94 @@ func (s *seederConfig) seedTRBCase9() error {
 	return nil
 }
 
-func (s *seederConfig) seedTRBLeadOptions() ([]*models.UserInfo, error) {
-	ctx := appcontext.WithLogger(context.Background(), s.logger)
+func (s *seederConfig) seedTRBCase7(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, "Case 7 - Advice letter in review", true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBConsultMeeting(ctx, trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addAdviceLetter(ctx, trb, false)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(ctx, trb, "TEST")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase8(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, "Case 8 - Advice letter in review with document", true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBConsultMeeting(ctx, trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addAdviceLetter(ctx, trb, false)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(ctx, trb, "ABCD")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, "Case 9 - Advice letter reviewed", true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBConsultMeeting(ctx, trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addAdviceLetter(ctx, trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(ctx, trb, "GRTB")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *seederConfig) seedTRBLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
 			CommonName: "Adeline Aarons",
@@ -283,13 +281,13 @@ func (s *seederConfig) seedTRBLeadOptions() ([]*models.UserInfo, error) {
 	return leadUserInfos, nil
 }
 
-func (s *seederConfig) seedTRBWithForm(trbName string, isSubmitted bool) (*models.TRBRequest, error) {
-	trb, err := s.addTRBRequest(models.TRBTNeedHelp, trbName)
+func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName string, isSubmitted bool) (*models.TRBRequest, error) {
+	trb, err := s.addTRBRequest(ctx, models.TRBTNeedHelp, trbName)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = s.updateTRBRequestForm(map[string]interface{}{
+	_, err = s.updateTRBRequestForm(ctx, map[string]interface{}{
 		"trbRequestId":             trb.ID.String(),
 		"isSubmitted":              isSubmitted,
 		"component":                "Center for Medicare",
@@ -319,38 +317,38 @@ func (s *seederConfig) seedTRBWithForm(trbName string, isSubmitted bool) (*model
 		return nil, err
 	}
 
-	_, err = s.updateTRBRequestFundingSources(trb.ID, "33311", []string{"meatloaf", "spaghetti", "cereal"})
+	_, err = s.updateTRBRequestFundingSources(ctx, trb.ID, "33311", []string{"meatloaf", "spaghetti", "cereal"})
 	if err != nil {
 		return nil, err
 	}
 
 	scanStatus := "CLEAN"
-	_, err = s.addDocument(trb, &scanStatus)
+	_, err = s.addDocument(ctx, trb, &scanStatus)
 	if err != nil {
 		return nil, err
 	}
 
 	scanStatus = "INFECTED"
-	_, err = s.addDocument(trb, &scanStatus)
+	_, err = s.addDocument(ctx, trb, &scanStatus)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = s.addDocument(trb, nil)
+	_, err = s.addDocument(ctx, trb, nil)
 	if err != nil {
 		return nil, err
 	}
-	return resolvers.GetTRBRequestByID(s.ctx, trb.ID, s.store)
+	return resolvers.GetTRBRequestByID(ctx, trb.ID, s.store)
 }
 
-func (s *seederConfig) addTRBRequest(rType models.TRBRequestType, name string) (*models.TRBRequest, error) {
-	trb, err := resolvers.CreateTRBRequest(s.ctx, rType, mock.FetchUserInfoMock, s.store)
+func (s *seederConfig) addTRBRequest(ctx context.Context, rType models.TRBRequestType, name string) (*models.TRBRequest, error) {
+	trb, err := resolvers.CreateTRBRequest(ctx, rType, mock.FetchUserInfoMock, s.store)
 	if err != nil {
 		return nil, err
 	}
 
 	trb.Name = name
-	trb, err = s.store.UpdateTRBRequest(s.ctx, trb)
+	trb, err = s.store.UpdateTRBRequest(ctx, trb)
 	if err != nil {
 		return nil, err
 	}
@@ -358,16 +356,15 @@ func (s *seederConfig) addTRBRequest(rType models.TRBRequestType, name string) (
 	return trb, nil
 }
 
-func (s *seederConfig) updateTRBRequestForm(changes map[string]interface{}) (*models.TRBRequestForm, error) {
-	form, err := resolvers.UpdateTRBRequestForm(s.ctx, s.store, nil, mock.FetchUserInfoMock, changes)
+func (s *seederConfig) updateTRBRequestForm(ctx context.Context, changes map[string]interface{}) (*models.TRBRequestForm, error) {
+	form, err := resolvers.UpdateTRBRequestForm(ctx, s.store, nil, mock.FetchUserInfoMock, changes)
 	if err != nil {
 		return nil, err
 	}
 	return form, nil
 }
 
-func (s *seederConfig) updateTRBRequestFundingSources(trbID uuid.UUID, fundingNumber string, fundingSources []string) ([]*models.TRBFundingSource, error) {
-	ctx := mock.CtxWithLoggerAndPrincipal(s.logger, mock.PrincipalUser)
+func (s *seederConfig) updateTRBRequestFundingSources(ctx context.Context, trbID uuid.UUID, fundingNumber string, fundingSources []string) ([]*models.TRBFundingSource, error) {
 	sources, err := resolvers.UpdateTRBRequestFundingSources(
 		ctx,
 		s.store,
@@ -382,7 +379,7 @@ func (s *seederConfig) updateTRBRequestFundingSources(trbID uuid.UUID, fundingNu
 	return sources, nil
 }
 
-func (s *seederConfig) addTRBFeedback(trb *models.TRBRequest) (*models.TRBRequestFeedback, error) {
+func (s *seederConfig) addTRBFeedback(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequestFeedback, error) {
 	feedback := &models.TRBRequestFeedback{
 		TRBRequestID:    trb.ID,
 		FeedbackMessage: "This is the most excellent TRB request ever created",
@@ -391,7 +388,7 @@ func (s *seederConfig) addTRBFeedback(trb *models.TRBRequest) (*models.TRBReques
 		Action:          models.TRBFeedbackActionReadyForConsult,
 	}
 
-	feedback, err := resolvers.CreateTRBRequestFeedback(s.ctx, s.store, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, feedback)
+	feedback, err := resolvers.CreateTRBRequestFeedback(ctx, s.store, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, feedback)
 	if err != nil {
 		return nil, err
 	}
@@ -399,7 +396,7 @@ func (s *seederConfig) addTRBFeedback(trb *models.TRBRequest) (*models.TRBReques
 	return feedback, nil
 }
 
-func (s *seederConfig) addTRBConsultMeeting(trb *models.TRBRequest, dateIsPast bool) (*models.TRBRequest, error) {
+func (s *seederConfig) addTRBConsultMeeting(ctx context.Context, trb *models.TRBRequest, dateIsPast bool) (*models.TRBRequest, error) {
 	var meetingDate time.Time
 	if dateIsPast {
 		meetingDate = time.Now().AddDate(0, 0, -7)
@@ -408,7 +405,7 @@ func (s *seederConfig) addTRBConsultMeeting(trb *models.TRBRequest, dateIsPast b
 	}
 
 	updatedTRB, err := resolvers.UpdateTRBRequestConsultMeetingTime(
-		s.ctx,
+		ctx,
 		s.store,
 		nil,
 		mock.FetchUserInfoMock,
@@ -426,9 +423,9 @@ func (s *seederConfig) addTRBConsultMeeting(trb *models.TRBRequest, dateIsPast b
 	return updatedTRB, nil
 }
 
-func (s *seederConfig) addTRBLead(trb *models.TRBRequest, leadEUA string) (*models.TRBRequest, error) {
+func (s *seederConfig) addTRBLead(ctx context.Context, trb *models.TRBRequest, leadEUA string) (*models.TRBRequest, error) {
 	return resolvers.UpdateTRBRequestTRBLead(
-		s.ctx,
+		ctx,
 		s.store,
 		nil,
 		mock.FetchUserInfoMock,
@@ -437,8 +434,8 @@ func (s *seederConfig) addTRBLead(trb *models.TRBRequest, leadEUA string) (*mode
 	)
 }
 
-func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*models.TRBAdviceLetter, error) {
-	_, err := resolvers.CreateTRBAdviceLetter(s.ctx, s.store, trb.ID)
+func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBRequest, isDraft bool) (*models.TRBAdviceLetter, error) {
+	_, err := resolvers.CreateTRBAdviceLetter(ctx, s.store, trb.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -448,18 +445,18 @@ func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*m
 		"meetingSummary":        "Talked about stuff",
 		"isFollowupRecommended": false,
 	}
-	letter, err := resolvers.UpdateTRBAdviceLetter(s.ctx, s.store, adviceLetterChanges)
+	letter, err := resolvers.UpdateTRBAdviceLetter(ctx, s.store, adviceLetterChanges)
 	if err != nil {
 		return nil, err
 	}
 
 	if !isDraft {
-		_, err = resolvers.RequestReviewForTRBAdviceLetter(s.ctx, s.store, nil, mock.FetchUserInfoMock, letter.ID)
+		_, err = resolvers.RequestReviewForTRBAdviceLetter(ctx, s.store, nil, mock.FetchUserInfoMock, letter.ID)
 		if err != nil {
 			return nil, err
 		}
 
-		_, err = resolvers.SendTRBAdviceLetter(s.ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock)
+		_, err = resolvers.SendTRBAdviceLetter(ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock)
 		if err != nil {
 			return nil, err
 		}
@@ -471,13 +468,13 @@ func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*m
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
 
-		_, err = resolvers.CreateTRBAdviceLetterRecommendation(s.ctx, s.store, recommendation)
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	letter, err = resolvers.GetTRBAdviceLetterByTRBRequestID(s.ctx, s.store, trb.ID)
+	letter, err = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, s.store, trb.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -485,7 +482,7 @@ func (s *seederConfig) addAdviceLetter(trb *models.TRBRequest, isDraft bool) (*m
 	return letter, nil
 }
 
-func (s *seederConfig) addDocument(trb *models.TRBRequest, scanStatus *string) (*models.TRBRequestDocument, error) {
+func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, scanStatus *string) (*models.TRBRequestDocument, error) {
 	path, err := filepath.Abs("cmd/devdata/data/sample.pdf")
 	if err != nil {
 		return nil, err
@@ -511,7 +508,7 @@ func (s *seederConfig) addDocument(trb *models.TRBRequest, scanStatus *string) (
 		DocumentType:         models.TRBRequestDocumentCommonTypeOther,
 		OtherTypeDescription: &otherDesc,
 	}
-	document, err := resolvers.CreateTRBRequestDocument(s.ctx, s.store, s.s3Client, input)
+	document, err := resolvers.CreateTRBRequestDocument(ctx, s.store, s.s3Client, input)
 	if err != nil {
 		return nil, err
 	}
