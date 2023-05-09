@@ -149,7 +149,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                             <dt
                               class="text-bold margin-bottom-05 font-body-md"
                             >
-                              Ally Anderson
+                              Audrey Abrams
                             </dt>
                           </div>
                         </div>
@@ -634,7 +634,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                         <h3
                           class="system-profile__subheader margin-bottom-1"
                         >
-                          Audrey Abrams
+                          Ally Anderson
                         </h3>
                         <div>
                           <h5
@@ -642,12 +642,22 @@ exports[`System Profile parent request matches snapshot 1`] = `
                           >
                             Project Lead
                           </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            System Issues Contact
+                          </h5>
+                          <h5
+                            class="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                          >
+                            QA Reviewer
+                          </h5>
                         </div>
                         <p>
                           <a
                             aria-label="Send an email"
                             class="usa-link line-height-body-5"
-                            href="mailto:audrey.abrams@local.fake"
+                            href="mailto:ally.anderson@local.fake"
                             target="_blank"
                           >
                             Send an email

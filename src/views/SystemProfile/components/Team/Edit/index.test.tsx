@@ -3,56 +3,23 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, within } from '@testing-library/react';
 import i18next from 'i18next';
 
-import { roles } from 'data/mock/systemProfile';
-import GetSystemProfileTeamQuery from 'queries/SystemProfileTeamQueries';
-import {
-  GetSystemProfileTeam,
-  GetSystemProfileTeamVariables
-} from 'queries/types/GetSystemProfileTeam';
-import { MockedQuery } from 'types/util';
-import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
+import { usernamesWithRoles } from 'data/mock/systemProfile';
 
 import EditTeam from '.';
 
 const cedarSystemId = '000-0000-1';
-
-const getSystemProfileTeam: MockedQuery<
-  GetSystemProfileTeam,
-  GetSystemProfileTeamVariables
-> = {
-  request: {
-    query: GetSystemProfileTeamQuery,
-    variables: {
-      cedarSystemId
-    }
-  },
-  result: {
-    data: {
-      cedarSystemDetails: {
-        __typename: 'CedarSystemDetails',
-        cedarSystem: {
-          __typename: 'CedarSystem',
-          name: 'Easy Access to System Information'
-        },
-        businessOwnerInformation: {
-          __typename: 'CedarBusinessOwnerInformation',
-          numberOfContractorFte: '4',
-          numberOfFederalFte: '6'
-        },
-        roles
-      }
-    }
-  }
-};
 
 describe('Edit team page', () => {
   it('Renders the edit team page', async () => {
     const { findByRole, getByRole, getByTestId } = render(
       <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/team/edit`]}>
         <Route path="/systems/:systemId/team/edit">
-          <VerboseMockedProvider mocks={[getSystemProfileTeam]}>
-            <EditTeam />
-          </VerboseMockedProvider>
+          <EditTeam
+            name="Easy Access to System Information"
+            team={usernamesWithRoles}
+            numberOfFederalFte={6}
+            numberOfContractorFte={4}
+          />
         </Route>
       </MemoryRouter>
     );
@@ -84,7 +51,7 @@ describe('Edit team page', () => {
     // Check number of team cards rendered
     const { getAllByTestId } = within(getByTestId('teamCardGroup'));
     const teamCards = getAllByTestId('Card');
-    expect(teamCards).toHaveLength(12);
+    expect(teamCards).toHaveLength(usernamesWithRoles.length);
 
     // Check for edit and remove buttons on team cards
     expect(

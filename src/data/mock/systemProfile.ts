@@ -9,12 +9,17 @@ import {
   GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
 import { CedarAssigneeType } from 'types/graphql-global-types';
-import { SystemProfileData } from 'types/systemProfile';
+import {
+  CedarRoleAssigneePerson,
+  SystemProfileData,
+  UsernameWithRoles
+} from 'types/systemProfile';
 import { MockedQuery } from 'types/util';
 import MockUsers from 'utils/testing/MockUsers';
-import { getSystemProfileData } from 'views/SystemProfile';
-
-const mockUsers = new MockUsers();
+import {
+  getSystemProfileData,
+  getUsernamesWithRoles
+} from 'views/SystemProfile';
 
 const emptyRoles: CedarRole[] = [
   {
@@ -229,21 +234,29 @@ const emptyRoles: CedarRole[] = [
   }
 ];
 
-export const roles: CedarRole[] = emptyRoles.map(user => {
-  if (user.assigneeType === CedarAssigneeType.ORGANIZATION) {
-    return user;
-  }
-  const userInfo = mockUsers.next()?.userInfo!;
+const mockUsers = new MockUsers();
+const users = [...mockUsers.splice(0, 4)];
+export const roles: CedarRole[] = emptyRoles.map((role, index) => {
+  if (role.assigneeType === CedarAssigneeType.ORGANIZATION) return role;
+
+  const userIndex = index % users.length;
+  const { userInfo } = users[userIndex];
   const [assigneeFirstName, assigneeLastName] = userInfo.commonName.split(' ');
 
   return {
-    ...user,
-    assigneeFirstName,
-    assigneeLastName,
+    ...role,
     assigneeUsername: userInfo.euaUserId,
-    assigneeEmail: userInfo.email
+    assigneeEmail: userInfo.email,
+    assigneeFirstName,
+    assigneeLastName
   };
 });
+
+export const usernamesWithRoles: UsernameWithRoles[] = getUsernamesWithRoles(
+  roles.filter(
+    ({ assigneeType }) => assigneeType === CedarAssigneeType.PERSON
+  ) as CedarRoleAssigneePerson[]
+);
 
 export const result: { data: GetSystemProfile } = {
   data: {
