@@ -79,8 +79,10 @@ const EditTeam = () => {
 
   /** Formatted array of role objects */
   const team: UsernameWithRoles[] = useMemo(() => {
+    if (!roles) return [];
+
     const usernamesWithRoles = getUsernamesWithRoles(
-      (roles || []).map(role => ({
+      roles.map(role => ({
         ...role,
         assigneeType: CedarAssigneeType.PERSON
       }))
@@ -262,7 +264,7 @@ const EditTeam = () => {
             <h4 className="margin-top-4">
               {t('singleSystem.editTeam.currentTeamMembers')}
             </h4>
-            <CardGroup>
+            <CardGroup data-testid="teamCardGroup">
               {team.map(user => (
                 <TeamContactCard
                   user={user}

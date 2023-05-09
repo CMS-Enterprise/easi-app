@@ -1,19 +1,249 @@
 import { cloneDeep } from 'lodash';
 
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
+import { CedarRole } from 'queries/types/CedarRole';
 import {
   GetSystemProfile,
   // eslint-disable-next-line camelcase
-  GetSystemProfile_cedarSystemDetails_roles
+  GetSystemProfile_cedarSystemDetails_roles,
+  GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import { SystemProfileData } from 'types/systemProfile';
+import { MockedQuery } from 'types/util';
+import MockUsers from 'utils/testing/MockUsers';
 import { getSystemProfileData } from 'views/SystemProfile';
 
-const assigneeUsername = 'JDOE';
-const assigneeEmail = 'jane.doe@psu.edo';
-const assigneeFirstName = 'Jane';
-const assigneeLastName = 'Doe';
+const mockUsers = new MockUsers();
+
+const emptyRoles: CedarRole[] = [
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-17-0',
+    assigneeType: CedarAssigneeType.ORGANIZATION,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: '261-1497-0',
+    assigneeOrgName: 'Web and Emerging Technologies Group',
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'Business Owner',
+    roleID: '384-16116-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-28-0',
+    assigneeType: CedarAssigneeType.ORGANIZATION,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: '261-1497-0',
+    assigneeOrgName: 'Web and Emerging Technologies Group',
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'System Maintainer',
+    roleID: '384-16406-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-17-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'Business Owner',
+    roleID: '384-16670-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-29-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'ISSO',
+    roleID: '384-17151-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-32-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'Project Lead',
+    roleID: '384-17330-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-53-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'Survey Point of Contact',
+    roleID: '384-17633-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-51-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'System Business Question Contact',
+    roleID: '384-17820-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-52-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'System Data Center Contact',
+    roleID: '384-18231-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-50-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'System Issues Contact',
+    roleID: '384-18509-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-50-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'System Issues Contact',
+    roleID: '384-18665-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-28-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'System Maintainer',
+    roleID: '384-18958-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-35-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: "Contracting Officer's Representative (COR)",
+    roleID: '384-19359-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-55-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'QA Reviewer',
+    roleID: '384-19403-0',
+    __typename: 'CedarRole'
+  },
+  {
+    application: 'alfabet',
+    objectID: '000-0000-0',
+    roleTypeID: '238-56-0',
+    assigneeType: CedarAssigneeType.PERSON,
+    assigneeUsername: null,
+    assigneeEmail: null,
+    assigneeOrgID: null,
+    assigneeOrgName: null,
+    assigneeFirstName: null,
+    assigneeLastName: null,
+    roleTypeName: 'DA Reviewer',
+    roleID: '384-20087-0',
+    __typename: 'CedarRole'
+  }
+];
+
+export const roles: CedarRole[] = emptyRoles.map(user => {
+  if (user.assigneeType === CedarAssigneeType.ORGANIZATION) {
+    return user;
+  }
+  const userInfo = mockUsers.next()?.userInfo!;
+  const [assigneeFirstName, assigneeLastName] = userInfo.commonName.split(' ');
+
+  return {
+    ...user,
+    assigneeFirstName,
+    assigneeLastName,
+    assigneeUsername: userInfo.euaUserId,
+    assigneeEmail: userInfo.email
+  };
+});
 
 export const result: { data: GetSystemProfile } = {
   data: {
@@ -366,218 +596,7 @@ export const result: { data: GetSystemProfile } = {
           __typename: 'CedarDeployment'
         }
       ],
-      roles: [
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-17-0',
-          assigneeType: CedarAssigneeType.ORGANIZATION,
-          assigneeUsername: null,
-          assigneeEmail: null,
-          assigneeOrgID: '261-1497-0',
-          assigneeOrgName: 'Web and Emerging Technologies Group',
-          assigneeFirstName: null,
-          assigneeLastName: null,
-          roleTypeName: 'Business Owner',
-          roleID: '384-16116-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-28-0',
-          assigneeType: CedarAssigneeType.ORGANIZATION,
-          assigneeUsername: null,
-          assigneeEmail: null,
-          assigneeOrgID: '261-1497-0',
-          assigneeOrgName: 'Web and Emerging Technologies Group',
-          assigneeFirstName: null,
-          assigneeLastName: null,
-          roleTypeName: 'System Maintainer',
-          roleID: '384-16406-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-17-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail: null,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'Business Owner',
-          roleID: '384-16670-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-29-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'ISSO',
-          roleID: '384-17151-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-32-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail: null,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'Project Lead',
-          roleID: '384-17330-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-53-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail: null,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'Survey Point of Contact',
-          roleID: '384-17633-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-51-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail: null,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'System Business Question Contact',
-          roleID: '384-17820-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-52-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'System Data Center Contact',
-          roleID: '384-18231-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-50-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'System Issues Contact',
-          roleID: '384-18509-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-50-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'System Issues Contact',
-          roleID: '384-18665-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-28-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'System Maintainer',
-          roleID: '384-18958-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-35-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail: null,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: "Contracting Officer's Representative (COR)",
-          roleID: '384-19359-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-55-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'QA Reviewer',
-          roleID: '384-19403-0',
-          __typename: 'CedarRole'
-        },
-        {
-          application: 'alfabet',
-          objectID: '000-0000-0',
-          roleTypeID: '238-56-0',
-          assigneeType: CedarAssigneeType.PERSON,
-          assigneeUsername,
-          assigneeEmail,
-          assigneeOrgID: null,
-          assigneeOrgName: null,
-          assigneeFirstName,
-          assigneeLastName,
-          roleTypeName: 'DA Reviewer',
-          roleID: '384-20087-0',
-          __typename: 'CedarRole'
-        }
-      ],
+      roles,
       urls: [
         {
           id: '000-0000-1',
@@ -604,7 +623,7 @@ export const result: { data: GetSystemProfile } = {
   }
 };
 
-export const query = {
+export const query: MockedQuery<GetSystemProfile, GetSystemProfileVariables> = {
   request: {
     query: GetSystemProfileQuery,
     variables: {
