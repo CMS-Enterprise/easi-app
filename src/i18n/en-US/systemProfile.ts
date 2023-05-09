@@ -166,8 +166,8 @@ const systemProfile = {
         name: 'Team member name',
         nameDescription:
           'Search by name. Looking up your team member will provide their name and email address.',
-        role: 'Team member role(s)',
-        roleDescription:
+        roles: 'Team member role(s)',
+        rolesDescription:
           'Add or remove roles by clicking in the box below. You must select at least one role for this team member.',
         selectedRoles: 'Selected roles'
       }
