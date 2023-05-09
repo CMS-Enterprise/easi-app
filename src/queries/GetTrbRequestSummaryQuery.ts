@@ -7,6 +7,7 @@ export default gql`
       name
       type
       state
+      status
       trbLeadInfo {
         commonName
       }
