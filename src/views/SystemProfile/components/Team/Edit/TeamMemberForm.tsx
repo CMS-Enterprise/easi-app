@@ -34,7 +34,7 @@ import { TeamContactCard } from '..';
 
 type TeamMemberFields = {
   euaUserId: string;
-  roles: string[];
+  desiredRoleTypeIDs: string[];
 };
 
 /**
@@ -65,18 +65,18 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
   } = useForm<TeamMemberFields>({
     defaultValues: {
       euaUserId: user?.assigneeUsername,
-      roles: user?.roles.map(({ roleTypeID }) => roleTypeID) || []
+      desiredRoleTypeIDs: user?.roles.map(({ roleTypeID }) => roleTypeID) || []
     }
   });
 
-  const submitForm = handleSubmit(formData => {
+  const submitForm = handleSubmit(({ euaUserId, desiredRoleTypeIDs }) => {
     if (isDirty) {
       update({
         variables: {
           input: {
             cedarSystemID: cedarSystemId,
-            euaUserId: formData.euaUserId,
-            desiredRoleTypeIDs: formData.roles
+            euaUserId,
+            desiredRoleTypeIDs
           }
         }
       });
@@ -125,7 +125,7 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
 
         {/* Role multiselect */}
         <Controller
-          name="roles"
+          name="desiredRoleTypeIDs"
           control={control}
           render={({ field, fieldState: { error } }) => (
             <FormGroup
