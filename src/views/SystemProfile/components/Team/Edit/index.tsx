@@ -1,5 +1,4 @@
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   Link,
@@ -15,28 +14,23 @@ import {
   BreadcrumbLink,
   Button,
   CardGroup,
-  Form,
-  FormGroup,
   Grid,
   GridContainer,
-  IconArrowBack,
-  Label,
-  TextInput
+  IconArrowBack
 } from '@trussworks/react-uswds';
 
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
-import IconButton from 'components/shared/IconButton';
+import IconLink from 'components/shared/IconLink';
 import { UsernameWithRoles } from 'types/systemProfile';
 
 import { TeamContactCard } from '..';
 
 import TeamMemberForm from './TeamMemberForm';
 
-type EmployeeFields = {
-  numberOfFederalFte: number;
-  numberOfContractorFte: number;
-};
+// type EmployeeFields = {
+//   numberOfFederalFte: number;
+//   numberOfContractorFte: number;
+// };
 
 type EditTeamProps = {
   name: string;
@@ -64,30 +58,34 @@ const EditTeam = ({
     action?: 'edit-roles' | 'add-team-member';
   }>();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { isDirty }
-  } = useForm<EmployeeFields>({
-    defaultValues: {
-      numberOfFederalFte,
-      numberOfContractorFte
-    }
-  });
+  /**
+   * Employees form hidden until work to update data in CEDAR is completed
+   */
 
-  const returnAndSubmit = handleSubmit(
-    async formData => {
-      if (isDirty) {
-        // TODO: mutation to update system
-        // await mutate();
-      } else {
-        history.push(`/systems/${cedarSystemId}/team`);
-      }
-    },
-    error => {
-      // console.log(error);
-    }
-  );
+  // const {
+  //   control,
+  //   handleSubmit,
+  //   formState: { isDirty }
+  // } = useForm<EmployeeFields>({
+  //   defaultValues: {
+  //     numberOfFederalFte,
+  //     numberOfContractorFte
+  //   }
+  // });
+
+  // const returnAndSubmit = handleSubmit(
+  //   async formData => {
+  //     if (isDirty) {
+  //       // TODO: mutation to update system
+  //       // await mutate();
+  //     } else {
+  //       history.push(`/systems/${cedarSystemId}/team`);
+  //     }
+  //   },
+  //   error => {
+  //     // console.log(error);
+  //   }
+  // );
 
   return (
     <GridContainer className="margin-bottom-10">
@@ -142,19 +140,17 @@ const EditTeam = ({
             <p>{t('singleSystem.editTeam.description')}</p>
             <HelpText>{t('singleSystem.editTeam.helpText')}</HelpText>
 
-            <IconButton
-              type="button"
-              onClick={() => returnAndSubmit()}
+            <IconLink
+              to={`/systems/${cedarSystemId}/team`}
               icon={<IconArrowBack />}
               className="margin-top-3 margin-bottom-6"
-              unstyled
             >
               {t('returnToSystemProfile')}
-            </IconButton>
+            </IconLink>
 
-            {/* Employees form */}
-            <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
-              {/* Federal employees input */}
+            {/* Employees fields hidden until work to update in CEDAR is completed */}
+
+            {/* <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
               <Controller
                 name="numberOfFederalFte"
                 control={control}
@@ -173,8 +169,6 @@ const EditTeam = ({
                   </FormGroup>
                 )}
               />
-
-              {/* Contractors input */}
               <Controller
                 name="numberOfContractorFte"
                 control={control}
@@ -193,7 +187,8 @@ const EditTeam = ({
                   </FormGroup>
                 )}
               />
-            </Form>
+            </Form> */}
+
             {/* Team Members section */}
             <h2 className="margin-top-6 margin-bottom-205">
               {t('singleSystem.editTeam.teamMembers')}
@@ -212,7 +207,7 @@ const EditTeam = ({
                 <TeamContactCard
                   user={user}
                   key={user.assigneeUsername}
-                  // TODO in EASI-2447: Edit roles and remove team member functionality
+                  // TODO in EASI-2447: Functionality to edit roles and remove team member
                   footerActions={{
                     editRoles: () =>
                       history.push(
@@ -225,15 +220,13 @@ const EditTeam = ({
                 />
               ))}
             </CardGroup>
-            <IconButton
-              type="button"
-              onClick={() => returnAndSubmit()}
+            <IconLink
+              to={`/systems/${cedarSystemId}/team`}
               icon={<IconArrowBack />}
               className="margin-top-6"
-              unstyled
             >
               {t('returnToSystemProfile')}
-            </IconButton>
+            </IconLink>
           </Route>
         </Switch>
       </Grid>

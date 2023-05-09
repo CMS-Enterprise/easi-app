@@ -30,17 +30,17 @@ describe('Edit team page', () => {
       })
     ).toBeInTheDocument();
 
-    // Federal employees field
-    const employeesFieldFederal = getByRole('spinbutton', {
-      name: i18next.t('systemProfile:singleSystem.editTeam.federalEmployees')
-    });
-    expect(employeesFieldFederal).toHaveValue(6);
+    /* Employee fields hidden until work to update in CEDAR is completed */
 
-    // Contractors field
-    const employeesFieldContractors = getByRole('spinbutton', {
-      name: i18next.t('systemProfile:singleSystem.editTeam.contractors')
-    });
-    expect(employeesFieldContractors).toHaveValue(4);
+    // const employeesFieldFederal = getByRole('spinbutton', {
+    //   name: i18next.t('systemProfile:singleSystem.editTeam.federalEmployees')
+    // });
+    // expect(employeesFieldFederal).toHaveValue(6);
+
+    // const employeesFieldContractors = getByRole('spinbutton', {
+    //   name: i18next.t('systemProfile:singleSystem.editTeam.contractors')
+    // });
+    // expect(employeesFieldContractors).toHaveValue(4);
 
     expect(
       getByRole('button', {
