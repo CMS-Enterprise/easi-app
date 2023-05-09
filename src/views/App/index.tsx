@@ -42,7 +42,6 @@ import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import SystemList from 'views/SystemList';
 import SystemProfile from 'views/SystemProfile';
-import EditTeam from 'views/SystemProfile/components/Team/Edit';
 import TableStateWrapper from 'views/TableStateWrapper';
 import TechnicalAssistance from 'views/TechnicalAssistance';
 import TermsAndConditions from 'views/TermsAndConditions';
@@ -160,14 +159,7 @@ const AppRoutes = () => {
       )}
       {flags.systemProfile && (
         <SecureRoute
-          path="/systems/:systemId/team/edit/:action(edit-roles|add-team-member)?"
-          exact
-          component={EditTeam}
-        />
-      )}
-      {flags.systemProfile && (
-        <SecureRoute
-          path="/systems/:systemId/:subinfo/:top?"
+          path="/systems/:systemId/:subinfo/:edit(edit)?/:action(edit-roles|add-team-member)?/:top(top)?"
           exact
           component={SystemProfile}
         />

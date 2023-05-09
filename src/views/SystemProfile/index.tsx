@@ -67,6 +67,7 @@ import EditPageCallout from './components/EditPageCallout';
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
+import EditTeam from './components/Team/Edit';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
@@ -322,10 +323,11 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   const params = useParams<{
     subinfo: SubpageKey;
     systemId: string;
+    edit?: 'edit';
     top: string;
   }>();
 
-  const { subinfo, top } = params;
+  const { subinfo, top, edit } = params;
   const systemId = id || params.systemId;
 
   const [modalSubpage, setModalSubpage] = useState<SubpageKey>('home');
@@ -436,6 +438,17 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   const subpageKey: SubpageKey = subinfo || modalSubpage || 'home';
 
   const subComponent = subComponents[subpageKey];
+
+  if (subinfo === 'team' && edit) {
+    return (
+      <EditTeam
+        name={cedarSystem.name}
+        team={systemProfileData.usernamesWithRoles}
+        numberOfFederalFte={systemProfileData.numberOfFederalFte}
+        numberOfContractorFte={systemProfileData.numberOfContractorFte}
+      />
+    );
+  }
 
   return (
     <MainContent>

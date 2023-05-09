@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,7 +9,6 @@ import {
   useLocation,
   useParams
 } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -25,33 +24,36 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 
-import PageLoading from 'components/PageLoading';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconButton from 'components/shared/IconButton';
-import GetSystemProfileTeamQuery from 'queries/SystemProfileTeamQueries';
-import {
-  GetSystemProfileTeam,
-  GetSystemProfileTeamVariables
-} from 'queries/types/GetSystemProfileTeam';
-import { CedarAssigneeType } from 'types/graphql-global-types';
 import { UsernameWithRoles } from 'types/systemProfile';
-import NotFound from 'views/NotFound';
-import { getUsernamesWithRoles } from 'views/SystemProfile';
 
-import { getTeam, TeamContactCard } from '..';
+import { TeamContactCard } from '..';
 
 import TeamMemberForm from './TeamMemberForm';
 
 type EmployeeFields = {
-  federal: string;
-  contractors: string;
+  numberOfFederalFte: number;
+  numberOfContractorFte: number;
+};
+
+type EditTeamProps = {
+  name: string;
+  team: UsernameWithRoles[];
+  numberOfFederalFte: number | undefined;
+  numberOfContractorFte: number | undefined;
 };
 
 /**
  * Edit system profile team form
  */
-const EditTeam = () => {
+const EditTeam = ({
+  name,
+  team,
+  numberOfFederalFte,
+  numberOfContractorFte
+}: EditTeamProps) => {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
 
@@ -62,54 +64,16 @@ const EditTeam = () => {
     action?: 'edit-roles' | 'add-team-member';
   }>();
 
-  const { data, loading } = useQuery<
-    GetSystemProfileTeam,
-    GetSystemProfileTeamVariables
-  >(GetSystemProfileTeamQuery, {
-    variables: {
-      cedarSystemId
-    }
-  });
-
-  const { roles, businessOwnerInformation, cedarSystem } =
-    data?.cedarSystemDetails || {};
-  const { name } = cedarSystem || {};
-  const { numberOfContractorFte, numberOfFederalFte } =
-    businessOwnerInformation || {};
-
-  /** Formatted array of role objects */
-  const team: UsernameWithRoles[] = useMemo(() => {
-    if (!roles) return [];
-
-    const usernamesWithRoles = getUsernamesWithRoles(
-      roles.map(role => ({
-        ...role,
-        assigneeType: CedarAssigneeType.PERSON
-      }))
-    );
-
-    const { businessOwners, projectLeads, additional } = getTeam(
-      usernamesWithRoles
-    );
-
-    return [...businessOwners, ...projectLeads, ...additional];
-  }, [roles]);
-
   const {
     control,
-    reset,
-    watch,
     handleSubmit,
     formState: { isDirty }
   } = useForm<EmployeeFields>({
     defaultValues: {
-      federal: '',
-      contractors: ''
+      numberOfFederalFte,
+      numberOfContractorFte
     }
   });
-
-  const federal = watch('federal');
-  const contractors = watch('contractors');
 
   const returnAndSubmit = handleSubmit(
     async formData => {
@@ -124,27 +88,6 @@ const EditTeam = () => {
       // console.log(error);
     }
   );
-
-  // Set default values after query data loads
-  useEffect(() => {
-    if (!federal && !contractors && !loading) {
-      reset({
-        federal: numberOfFederalFte || '',
-        contractors: numberOfContractorFte || ''
-      });
-    }
-  }, [
-    reset,
-    federal,
-    contractors,
-    numberOfContractorFte,
-    numberOfFederalFte,
-    loading
-  ]);
-
-  if (loading) return <PageLoading />;
-
-  if (!data) return <NotFound />;
 
   return (
     <GridContainer className="margin-bottom-10">
@@ -213,7 +156,7 @@ const EditTeam = () => {
             <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
               {/* Federal employees input */}
               <Controller
-                name="federal"
+                name="numberOfFederalFte"
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <FormGroup error={!!error}>
@@ -233,7 +176,7 @@ const EditTeam = () => {
 
               {/* Contractors input */}
               <Controller
-                name="contractors"
+                name="numberOfContractorFte"
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <FormGroup error={!!error}>
