@@ -96,6 +96,7 @@ export function getTeam(
 
 type TeamContactCardProps = {
   user: UsernameWithRoles;
+  displayRoles?: boolean;
   footerActions?: {
     editRoles: () => any;
     removeTeamMember: () => any;
@@ -107,6 +108,7 @@ type TeamContactCardProps = {
  */
 export const TeamContactCard = ({
   user,
+  displayRoles = true,
   footerActions
 }: TeamContactCardProps) => {
   const { t } = useTranslation('systemProfile');
@@ -118,31 +120,35 @@ export const TeamContactCard = ({
 
   return (
     <Card key={person.roleID} className="grid-col-12 margin-bottom-2">
-      <CardHeader className="padding-2 padding-bottom-0">
+      <CardHeader
+        className={`padding-x-2 padding-top-105 padding-bottom-${
+          displayRoles ? '0' : '2'
+        }`}
+      >
         <h3 className="margin-y-0">{getPersonFullName(person)}</h3>
         {person.assigneeEmail !== null && (
-          <div>
-            <Link
-              className="line-height-body-5"
-              href={`mailto:${person.assigneeEmail}`}
-              target="_blank"
-            >
-              {person.assigneeEmail}
-              <IconMailOutline className="margin-left-05 margin-bottom-2px text-tbottom" />
-            </Link>
-          </div>
+          <Link
+            className="line-height-body-5 display-flex flex-align-center"
+            href={`mailto:${person.assigneeEmail}`}
+            target="_blank"
+          >
+            {person.assigneeEmail}
+            <IconMailOutline className="margin-left-1" />
+          </Link>
         )}
       </CardHeader>
-      <CardBody className="padding-x-2 padding-top-0">
-        {roles.map(role => (
-          <h5
-            key={role.roleTypeName}
-            className="margin-y-0 font-sans-2xs text-normal"
-          >
-            {role.roleTypeName}
-          </h5>
-        ))}
-      </CardBody>
+      {displayRoles && (
+        <CardBody className="padding-x-2 padding-top-0">
+          {roles.map(role => (
+            <h5
+              key={role.roleTypeID}
+              className="margin-y-0 font-sans-2xs text-normal"
+            >
+              {role.roleTypeName}
+            </h5>
+          ))}
+        </CardBody>
+      )}
       {footerActions && (
         <CardFooter className="padding-x-0 padding-y-105 margin-top-105 margin-x-2 border-top-1px border-base-light">
           <ButtonGroup>
