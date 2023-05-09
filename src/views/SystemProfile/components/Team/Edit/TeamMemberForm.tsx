@@ -11,6 +11,7 @@ import {
   IconArrowBack,
   Label
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 // import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -27,13 +28,12 @@ import {
   SetRolesForUserOnSystem,
   SetRolesForUserOnSystemVariables
 } from 'queries/types/SetRolesForUserOnSystem';
-import { UserInfo } from 'queries/types/UserInfo';
 import { UsernameWithRoles } from 'types/systemProfile';
 
 import { TeamContactCard } from '..';
 
 type TeamMemberFields = {
-  userInfo: UserInfo;
+  euaUserId: string;
   roles: string[];
 };
 
@@ -43,7 +43,7 @@ type TeamMemberFields = {
 const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
   const { t } = useTranslation('systemProfile');
 
-  const { state } = useLocation<{ user: UsernameWithRoles }>();
+  const { state } = useLocation<{ user?: UsernameWithRoles }>();
   const user = state?.user;
 
   const keyPrefix = `singleSystem.editTeam.form.${user ? 'edit' : 'add'}`;
@@ -59,11 +59,13 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
 
   const {
     control,
+    setValue,
     handleSubmit,
     formState: { isDirty }
   } = useForm<TeamMemberFields>({
     defaultValues: {
-      roles: []
+      euaUserId: user?.assigneeUsername,
+      roles: user?.roles.map(({ roleTypeID }) => roleTypeID) || []
     }
   });
 
@@ -73,8 +75,8 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
         variables: {
           input: {
             cedarSystemID: cedarSystemId,
-            euaUserId: formData.userInfo.euaUserId,
-            desiredRoleTypeIDs: []
+            euaUserId: formData.euaUserId,
+            desiredRoleTypeIDs: formData.roles
           }
         }
       });
@@ -95,27 +97,29 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
         ) : (
           // If adding new contact, show CEDAR contact select field
           <Controller
-            name="userInfo"
+            name="euaUserId"
             control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <FormGroup error={!!error}>
-                  <Label htmlFor={field.name}>
-                    {t('singleSystem.editTeam.form.name')}
-                  </Label>
-                  <HelpText>
-                    {t('singleSystem.editTeam.form.nameDescription')}
-                  </HelpText>
-                  {/* {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>} */}
-                  <CedarContactSelect
-                    {...{ ...field, ref: null }}
-                    id={field.name}
-                    className="maxw-none"
-                    // onChange={cedarContact => console.log(cedarContact)}
-                  />
-                </FormGroup>
-              );
-            }}
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label htmlFor={field.name}>
+                  {t('singleSystem.editTeam.form.name')}
+                </Label>
+                <HelpText>
+                  {t('singleSystem.editTeam.form.nameDescription')}
+                </HelpText>
+                {/* {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>} */}
+                <CedarContactSelect
+                  {...{ ...field, ref: null }}
+                  id={field.name}
+                  value={user}
+                  onChange={contact =>
+                    contact && setValue('euaUserId', contact?.euaUserId)
+                  }
+                  className="maxw-none"
+                  // onChange={cedarContact => console.log(cedarContact)}
+                />
+              </FormGroup>
+            )}
           />
         )}
 
@@ -124,7 +128,10 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
           name="roles"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
+            <FormGroup
+              error={!!error}
+              className={classNames({ 'margin-top-1': !!user })}
+            >
               <Label htmlFor={field.name}>
                 {t('singleSystem.editTeam.form.roles')}
               </Label>
@@ -143,6 +150,7 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
                     value: role.id,
                     label: role.name
                   }))}
+                  initialValues={field.value}
                 />
               )}
             </FormGroup>
@@ -152,7 +160,7 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
         <Button
           type="submit"
           // disabled={isSubmitting}
-          className="margin-top-4"
+          className="margin-top-6"
         >
           {t(`${keyPrefix}.buttonLabel`)}
         </Button>
