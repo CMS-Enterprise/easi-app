@@ -19,20 +19,8 @@ import (
 // swagger:model Products
 type Products struct {
 
-	// actual version
-	ActualVersion string `json:"actual_version,omitempty"`
-
 	// api gateway use
 	APIGatewayUse bool `json:"api_gateway_use,omitempty"`
-
-	// closest version
-	ClosestVersion bool `json:"closest_version,omitempty"`
-
-	// ela purchase
-	ElaPurchase string `json:"ela_purchase,omitempty"`
-
-	// ela vendor id
-	ElaVendorID string `json:"ela_vendor_id,omitempty"`
 
 	// local component refstr
 	LocalComponentRefstr string `json:"local_component_refstr,omitempty"`

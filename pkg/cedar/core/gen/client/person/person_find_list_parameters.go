@@ -61,37 +61,37 @@ type PersonFindListParams struct {
 
 	/* Email.
 
-	   A person's email
+	   A person's email.
 	*/
 	Email *string
 
 	/* FirstName.
 
-	   A person's first name
+	   A person's first name.
 	*/
 	FirstName *string
 
 	/* ID.
 
-	   A person's id
+	   A person's EUA id.
 	*/
 	ID *string
 
 	/* LastName.
 
-	   A person's last name
+	   A person's last name.
 	*/
 	LastName *string
 
 	/* Phone.
 
-	   A person's phone number
+	   A person's phone number.
 	*/
 	Phone *string
 
 	/* UserName.
 
-	   A person's username
+	   A person's username.
 	*/
 	UserName *string
 

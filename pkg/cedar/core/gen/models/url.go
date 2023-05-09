@@ -8,8 +8,10 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // URL Url
@@ -17,31 +19,48 @@ import (
 // swagger:model Url
 type URL struct {
 
-	// A valid and full system URL
-	Link string `json:"link,omitempty"`
-
-	// A boolean flag to indicate Does this URL provide access to a versioned code repository?
-	// Example: Yes/No
-	ProvidesVerCodeAccess string `json:"providesVerCodeAccess,omitempty"`
+	// A valid and full URL
+	Address string `json:"address,omitempty"`
 
 	// A boolean flag to indicate whether URL is an API Endpoint
-	// Example: Yes/No
-	URLAPIEndpoint string `json:"urlApiEndpoint,omitempty"`
+	IsAPIEndpoint bool `json:"isApiEndpoint,omitempty"`
 
-	// A boolean flag to indicate whether application is behind a Web Application Firewall (WAF)
-	// Example: Yes/No
-	URLAPIWaf string `json:"urlApiWaf,omitempty"`
+	// A boolean flag to indicate whether the application is behind a Web Application Firewall (WAF)
+	IsBehindWebApplicationFirewall bool `json:"isBehindWebApplicationFirewall,omitempty"`
 
-	// A string that contains What hosting environment is this URL for?
+	// A boolean flag to indicate if this URL provides access to a versioned code repository?
+	IsVersionCodeRepository bool `json:"isVersionCodeRepository,omitempty"`
+
+	// The hosting environment associated with a specific URL
+	// Example: Production
 	URLHostingEnv string `json:"urlHostingEnv,omitempty"`
 
 	// Unique key that uniquely identified the URL in database
 	// Example: 218-10-0
-	URLID string `json:"urlId,omitempty"`
+	// Required: true
+	URLID *string `json:"urlId"`
 }
 
 // Validate validates this Url
 func (m *URL) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateURLID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *URL) validateURLID(formats strfmt.Registry) error {
+
+	if err := validate.Required("urlId", "body", m.URLID); err != nil {
+		return err
+	}
+
 	return nil
 }
 

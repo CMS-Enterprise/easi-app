@@ -30,15 +30,103 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
+	PersonAdd(params *PersonAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonAddOK, error)
+
+	PersonFindByID(params *PersonFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonFindByIDOK, error)
+
 	PersonFindList(params *PersonFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonFindListOK, error)
+
+	PersonUpdate(params *PersonUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonUpdateOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
 
 /*
-  PersonFindList retrieves a list of persons from l d a p
+  PersonAdd adds a person record to alfabet this interface takes in id user name first name last name phone and email
 
-  Retrieve a list of persons from LDAP based on query criteria
+  Add a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
+*/
+func (a *Client) PersonAdd(params *PersonAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonAddOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPersonAddParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "personAdd",
+		Method:             "POST",
+		PathPattern:        "/person",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PersonAddReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PersonAddOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for personAdd: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  PersonFindByID retrieves an existing person or a sigle person record based on the users e u a id
+
+  Retrieve an existing person or a sigle person record based on the users EUA id.
+*/
+func (a *Client) PersonFindByID(params *PersonFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonFindByIDOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPersonFindByIDParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "personFindById",
+		Method:             "GET",
+		PathPattern:        "/person/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PersonFindByIDReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PersonFindByIDOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for personFindById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  PersonFindList retrieves a list of persons based on the inputs passed in
+
+  Retrieve a list of persons based on the inputs passed in.
 */
 func (a *Client) PersonFindList(params *PersonFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonFindListOK, error) {
 	// TODO: Validate the params before sending
@@ -73,6 +161,47 @@ func (a *Client) PersonFindList(params *PersonFindListParams, authInfo runtime.C
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for personFindList: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  PersonUpdate updates a person record to alfabet this interface takes in id user name first name last name phone and email
+
+  Update a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
+*/
+func (a *Client) PersonUpdate(params *PersonUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonUpdateOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPersonUpdateParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "personUpdate",
+		Method:             "PUT",
+		PathPattern:        "/person",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PersonUpdateReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PersonUpdateOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for personUpdate: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

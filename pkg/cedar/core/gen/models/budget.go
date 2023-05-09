@@ -19,9 +19,6 @@ import (
 // swagger:model Budget
 type Budget struct {
 
-	// Flag indicating whether this budget was deleted by the user
-	Deleted bool `json:"deleted,omitempty"`
-
 	// Description of the allocation of this budget to the system in question
 	// Example: Most of this funding is directly and only for this system (over 80%)
 	Funding string `json:"funding,omitempty"`
@@ -39,12 +36,13 @@ type Budget struct {
 	// Required: true
 	ProjectID *string `json:"projectId"`
 
-	// Project Title in system of record
-	// Example: Consolidated Information Technology Infrastructure Contract (CITIC) - Baltimore Data Center Operations
+	// Title of this project
+	// Example: CMS Accountable Care Organizations
 	ProjectTitle string `json:"projectTitle,omitempty"`
 
-	// Flag indicating whether this budget was added or updated by the user
-	Updated bool `json:"updated,omitempty"`
+	// System which this budget funds
+	// Example: 123-45-678
+	SystemID string `json:"systemId,omitempty"`
 }
 
 // Validate validates this budget

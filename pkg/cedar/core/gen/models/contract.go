@@ -28,15 +28,13 @@ type Contract struct {
 	// budget ids
 	BudgetIds []*BudgetIds `json:"budgetIds"`
 
-	// Yes/No
-	ContractAdo string `json:"contractAdo,omitempty"`
+	// Is ADO Parent Contract, Yes/No
+	// Example: yes
+	ContractADO string `json:"contractADO,omitempty"`
 
 	// contract deliverable Id
 	// Example: 11-22-333
 	ContractDeliverableID string `json:"contractDeliverableId,omitempty"`
-
-	// Flag indicating whether this contract was deleted by the user
-	Deleted bool `json:"deleted,omitempty"`
 
 	// Contract description
 	// Example: Strategic partners acquisition readiness
@@ -52,14 +50,15 @@ type Contract struct {
 	// Required: true
 	ParentAwardID *string `json:"parentAwardId"`
 
+	// System which this budget funds
+	// Example: 123-45-678
+	SystemID string `json:"systemId,omitempty"`
+
 	// tbm cost pool
 	TbmCostPool []*ContractTbmCostPoolItems0 `json:"tbmCostPool"`
 
 	// tbm it tower category
 	TbmItTowerCategory []*ContractTbmItTowerCategoryItems0 `json:"tbmItTowerCategory"`
-
-	// Flag indicating whether this contract was added or updated by the user
-	Updated bool `json:"updated,omitempty"`
 }
 
 // Validate validates this contract

@@ -21,20 +21,14 @@ import (
 // swagger:model Exchange
 type Exchange struct {
 
-	// api ownership
-	APIOwnership string `json:"apiOwnership,omitempty"`
-
-	// business purpose of address
-	BusinessPurposeOfAddress string `json:"businessPurposeOfAddress,omitempty"`
-
 	// connection frequency
 	ConnectionFrequency []string `json:"connectionFrequency"`
 
+	// contains banking data
+	ContainsBankingData bool `json:"containsBankingData,omitempty"`
+
 	// contains beneficiary address
 	ContainsBeneficiaryAddress bool `json:"containsBeneficiaryAddress,omitempty"`
-
-	// contains health disparity data
-	ContainsHealthDisparityData bool `json:"containsHealthDisparityData,omitempty"`
 
 	// contains phi
 	ContainsPhi bool `json:"containsPhi,omitempty"`
@@ -94,9 +88,6 @@ type Exchange struct {
 	// from owner type
 	// Enum: [application organization]
 	FromOwnerType string `json:"fromOwnerType,omitempty"`
-
-	// is address editable
-	IsAddressEditable bool `json:"isAddressEditable,omitempty"`
 
 	// is beneficiary mailing file
 	IsBeneficiaryMailingFile bool `json:"isBeneficiaryMailingFile,omitempty"`
