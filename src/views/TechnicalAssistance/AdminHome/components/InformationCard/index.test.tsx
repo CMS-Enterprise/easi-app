@@ -52,7 +52,7 @@ describe('TRB Admin InformationCard', () => {
     const { getByText, asFragment, getByRole } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
         <Route exact path="/trb/:id/:activePage">
-          <InformationCard trbRequest={trbRequest} type="inititalRequestForm" />
+          <InformationCard trbRequest={trbRequest} type="initialRequestForm" />
         </Route>
       </MemoryRouter>
     );

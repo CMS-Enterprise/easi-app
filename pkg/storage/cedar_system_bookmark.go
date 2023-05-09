@@ -30,8 +30,7 @@ func (s *Store) CreateCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 			:cedar_system_id,
 			:created_at
 		) ON CONFLICT ON CONSTRAINT cedar_system_bookmarks_pkey DO UPDATE SET created_at = :created_at`
-	_, err := s.db.NamedExecContext(
-		ctx,
+	_, err := s.db.NamedExec(
 		createCedarSystemBookmarkSQL,
 		cedarSystemBookmark,
 	)
@@ -47,7 +46,7 @@ func (s *Store) FetchCedarSystemBookmarks(ctx context.Context) ([]*models.CedarS
 	results := []*models.CedarSystemBookmark{}
 
 	euaUserID := appcontext.Principal(ctx).ID()
-	err := s.db.SelectContext(ctx, &results, `SELECT * FROM cedar_system_bookmarks WHERE eua_user_id=$1`, euaUserID)
+	err := s.db.Select(&results, `SELECT * FROM cedar_system_bookmarks WHERE eua_user_id=$1`, euaUserID)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error("Failed to fetch cedar system bookmarks", zap.Error(err), zap.String("id", euaUserID))

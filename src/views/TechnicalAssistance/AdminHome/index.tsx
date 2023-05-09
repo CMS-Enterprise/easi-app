@@ -24,7 +24,7 @@ import NotFound from 'views/NotFound';
 
 import Summary from './components/Summary';
 import { TRBRequestContext } from './RequestContext';
-import subNavItems from './subNavItems';
+import trbAdminPages from './trbAdminPages';
 import TrbAssignLeadModal from './TrbAssignLeadModal';
 
 import './index.scss';
@@ -48,20 +48,19 @@ const SideNavigation = ({
         <li className="trb-admin__view-all-link margin-bottom-4">
           <Link to="/">
             <IconArrowBack aria-hidden />
-            {t('adminHome.subnav.back')}
+            {t('adminHome.backToRequests')}
           </Link>
         </li>
-        {subNavItems(trbRequestId).map(({ route, text, groupEnd }) => {
-          const isActivePage: boolean = route.split('/')[3] === activePage;
+        {trbAdminPages.map(({ path, text, groupEnd }) => {
           return (
             <li
               key={text}
               className={classNames('trb-admin__nav-link', {
-                'trb-admin__nav-link--active': isActivePage,
+                'trb-admin__nav-link--active': path === activePage,
                 'trb-admin__nav-link--border': groupEnd
               })}
             >
-              <Link to={route}>
+              <Link to={`/trb/${trbRequestId}/${path}`}>
                 <span>{t(text)}</span>
               </Link>
             </li>
@@ -119,15 +118,8 @@ export default function AdminHome() {
     return `${requester?.userInfo?.commonName}, ${requesterComponent?.acronym}`;
   }, [requester, requesterLoading]);
 
-  /**
-   * Request submission date for summary
-   */
-  const submissionDate = trbRequest?.createdAt
-    ? formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy')
-    : '';
-
   // Note count for NoteBox modal rendered on each page
-  const noteCount: number = (data?.trbRequest?.adminNotes || []).length;
+  // const noteCount: number = (data?.trbRequest?.adminNotes || []).length;
 
   // Assign trb lead modal refs
   const assignLeadModalRef = useRef<ModalRef>(null);
@@ -143,6 +135,8 @@ export default function AdminHome() {
     return <NotFound />;
   }
 
+  const submissionDate = formatDateLocal(trbRequest.createdAt, 'MMMM d, yyyy');
+
   return (
     <div id="trbAdminHome">
       {/* Request summary */}
@@ -150,9 +144,8 @@ export default function AdminHome() {
         trbRequestId={id}
         name={trbRequest.name}
         requestType={trbRequest.type}
-        createdAt={trbRequest.createdAt}
         state={trbRequest.state}
-        taskStatuses={trbRequest.taskStatuses}
+        taskStatus={trbRequest.status}
         trbLead={trbRequest.trbLeadInfo.commonName}
         requester={requester}
         requesterString={requesterString}
@@ -164,9 +157,9 @@ export default function AdminHome() {
       {/* Accordion navigation for tablet and mobile */}
       <AccordionNavigation
         activePage={activePage}
-        subNavItems={subNavItems(id).map(({ route, text, groupEnd }) => ({
-          route,
+        subNavItems={trbAdminPages.map(({ path, text, groupEnd }) => ({
           text,
+          route: `/trb/${id}/${path}`,
           groupEnd
         }))}
         defaultTitle="TRB Request"
@@ -186,13 +179,16 @@ export default function AdminHome() {
 
           {/* Page component */}
           <Grid col desktop={{ col: 9 }}>
-            {subNavItems(id).map(subpage => (
-              <Route exact path={subpage.route} key={subpage.route}>
+            {trbAdminPages.map(subpage => (
+              <Route
+                exact
+                path={`/trb/${id}/${subpage.path as string}`}
+                key={subpage.path}
+              >
                 <subpage.component
                   trbRequestId={id}
-                  noteCount={noteCount}
+                  trbRequest={trbRequest}
                   requesterString={requesterString}
-                  submissionDate={submissionDate}
                   assignLeadModalRef={assignLeadModalRef}
                   assignLeadModalTrbRequestIdRef={
                     assignLeadModalTrbRequestIdRef

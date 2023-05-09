@@ -40,7 +40,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Request a4093ec7-caec-4e73-be3d-a8d6262bc61b
+                Request d8ebedca-0031-4ccd-9690-37390726c50e
               </li>
             </ol>
           </nav>
@@ -85,6 +85,12 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 >
                   Requester
                 </h5>
+                <h4
+                  class="margin-y-05"
+                  data-testid="trbSummary-requester_ABCD"
+                >
+                  Adeline Aarons, CMS
+                </h4>
               </div>
               <div
                 class="margin-top-2 margin-bottom-05"
@@ -258,7 +264,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link trb-admin__nav-link--active trb-admin__nav-link--border"
               >
                 <a
-                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/request"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/request"
                 >
                   <span>
                     Request home
@@ -269,7 +275,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/initial-request-form"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/initial-request-form"
                 >
                   <span>
                     Initial request form
@@ -280,7 +286,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/documents"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/documents"
                 >
                   <span>
                     Supporting documents
@@ -291,7 +297,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/feedback"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/feedback"
                 >
                   <span>
                     Feedback
@@ -302,7 +308,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link trb-admin__nav-link--border"
               >
                 <a
-                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/advice"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice"
                 >
                   <span>
                     Advice letter
@@ -313,7 +319,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 class="trb-admin__nav-link"
               >
                 <a
-                  href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/notes"
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/notes"
                 >
                   <span>
                     Notes
@@ -328,9 +334,9 @@ exports[`TRB admin home matches the snapshot 1`] = `
           data-testid="grid"
         >
           <div
-            class="trb-admin-home__request-home"
-            data-testid="trb-admin-home__request-home"
-            id="trbAdminRequestHome-a4093ec7-caec-4e73-be3d-a8d6262bc61b"
+            class="trbAdmin__request margin-bottom-2"
+            data-testid="trb-admin-home__request"
+            id="trbAdmin__request"
           >
             <div
               class="grid-row grid-gap-lg"
@@ -341,7 +347,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 data-testid="grid"
               >
                 <h1
-                  class="margin-top-0 margin-bottom-4"
+                  class="margin-top-0 margin-bottom-1"
                 >
                   Request home
                 </h1>
@@ -361,9 +367,9 @@ exports[`TRB admin home matches the snapshot 1`] = `
                     <span
                       class="text-bold"
                     >
-                      0
+                      1
                     </span>
-                     notes about this request
+                     note about this request
                   </p>
                   <div
                     class="margin-top-05 display-flex"
@@ -395,6 +401,21 @@ exports[`TRB admin home matches the snapshot 1`] = `
                   </div>
                 </div>
               </div>
+            </div>
+            <div
+              class="usa-summary-box margin-top-0"
+            >
+              <h5
+                class="text-base-dark text-uppercase margin-top-0 margin-bottom-05 line-height-body-1 text-normal text-body-xs"
+              >
+                Admin Action
+              </h5>
+              <h3
+                class="margin-y-0"
+              />
+              <ul
+                class="usa-button-group margin-top-3"
+              />
             </div>
             <h2
               class="margin-top-4 margin-bottom-3"
@@ -444,6 +465,134 @@ exports[`TRB admin home matches the snapshot 1`] = `
             >
               Forms and documents
             </h2>
+            <ul
+              class="usa-card-group tablet:grid-col-10"
+              data-testid="CardGroup"
+            >
+              <li
+                class="usa-card flex-1 information-card margin-bottom-2"
+                data-testid="Card"
+              >
+                <div
+                  class="usa-card__container"
+                >
+                  <header
+                    class="usa-card__header"
+                    data-testid="CardHeader"
+                  >
+                    <h3
+                      class="margin-0"
+                    >
+                      Initial request form
+                    </h3>
+                    <p
+                      class="text-base margin-0"
+                    >
+                      Completed by requester
+                    </p>
+                  </header>
+                  <div
+                    class="usa-card__body"
+                    data-testid="CardBody"
+                  >
+                    <div
+                      class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
+                    >
+                      <span
+                        class="easi-tag bg-warning"
+                        data-testid="task-list-task-tag"
+                      >
+                        In Progress
+                      </span>
+                    </div>
+                    <dt
+                      class="text-bold"
+                    >
+                      Last updated
+                    </dt>
+                    <dd
+                      class="margin-left-0 margin-bottom-1"
+                    >
+                      Not started
+                    </dd>
+                  </div>
+                  <div
+                    class="usa-card__footer"
+                    data-testid="CardFooter"
+                  >
+                    <button
+                      class="usa-button usa-button--outline"
+                      data-testid="button"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="usa-card flex-1 information-card margin-bottom-2"
+                data-testid="Card"
+              >
+                <div
+                  class="usa-card__container"
+                >
+                  <header
+                    class="usa-card__header"
+                    data-testid="CardHeader"
+                  >
+                    <h3
+                      class="margin-0"
+                    >
+                      Advice letter
+                    </h3>
+                    <p
+                      class="text-base margin-0"
+                    >
+                      To be completed by TRB
+                    </p>
+                  </header>
+                  <div
+                    class="usa-card__body"
+                    data-testid="CardBody"
+                  >
+                    <div
+                      class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
+                    >
+                      <span
+                        class="easi-tag border-2px text-base"
+                        data-testid="task-list-task-tag"
+                      >
+                        Cannot start yet
+                      </span>
+                    </div>
+                    <dt
+                      class="text-bold"
+                    >
+                      Last updated
+                    </dt>
+                    <dd
+                      class="margin-left-0 margin-bottom-1"
+                    >
+                      Not started
+                    </dd>
+                  </div>
+                  <div
+                    class="usa-card__footer"
+                    data-testid="CardFooter"
+                  >
+                    <button
+                      class="usa-button"
+                      data-testid="button"
+                      disabled=""
+                      type="button"
+                    >
+                      Start advice letter
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ul>
             <p
               class="text-bold margin-bottom-105"
             >
@@ -462,7 +611,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
             </div>
             <a
               class="usa-link display-flex flex-align-center margin-top-2"
-              href="/trb/a4093ec7-caec-4e73-be3d-a8d6262bc61b/documents"
+              href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/documents"
             >
               View documents
               <svg
