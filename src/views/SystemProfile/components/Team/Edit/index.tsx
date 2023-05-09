@@ -120,7 +120,7 @@ const EditTeam = ({
       <Grid className="tablet:grid-col-6">
         {action ? (
           /* Add/edit team member form */
-          <TeamMemberForm user={state?.user} />
+          <TeamMemberForm cedarSystemId={cedarSystemId} />
         ) : (
           /* Edit team page */
           <>

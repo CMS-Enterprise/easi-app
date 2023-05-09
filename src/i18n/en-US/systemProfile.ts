@@ -147,12 +147,29 @@ const systemProfile = {
       addNewTeamMember: 'Add a new team member',
       currentTeamMembers: 'Current team members',
       editRoles: 'Edit roles',
-      editTeamMemberRoles: 'Edit team member roles',
       removeTeamMember: 'Remove team member',
       form: {
-        addTeamMember: 'Add a team member',
-        addDescription:
-          'Look up your team member and then add their role(s) on this team.'
+        add: {
+          title: 'Add a team member',
+          description:
+            'Look up your team member and then add their role(s) on this team.',
+          buttonLabel: 'Add this team member',
+          returnButtonLabel:
+            'Don’t add a team member and return to previous page'
+        },
+        edit: {
+          title: 'Edit team member roles',
+          description: 'Add or remove roles for this team member.',
+          buttonLabel: 'Save changes',
+          returnButtonLabel: 'Don’t edit roles and return to previous page'
+        },
+        name: 'Team member name',
+        nameDescription:
+          'Search by name. Looking up your team member will provide their name and email address.',
+        role: 'Team member role(s)',
+        roleDescription:
+          'Add or remove roles by clicking in the box below. You must select at least one role for this team member.',
+        selectedRoles: 'Selected roles'
       }
     },
     editPage: {
