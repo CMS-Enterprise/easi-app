@@ -83,6 +83,15 @@ describe('Edit team page', () => {
 
     // Check number of team cards rendered
     const { getAllByTestId } = within(getByTestId('teamCardGroup'));
-    expect(getAllByTestId('Card')).toHaveLength(12);
+    const teamCards = getAllByTestId('Card');
+    expect(teamCards).toHaveLength(12);
+
+    // Check for edit and remove buttons on team cards
+    expect(
+      within(teamCards[0]).getByRole('button', { name: 'Edit roles' })
+    ).toBeInTheDocument();
+    expect(
+      within(teamCards[0]).getByRole('button', { name: 'Remove team member' })
+    ).toBeInTheDocument();
   });
 });
