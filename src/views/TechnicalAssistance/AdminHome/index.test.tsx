@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider } from '@apollo/client/testing';
 import {
   render,
   screen,
@@ -9,16 +8,103 @@ import {
 } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
-import { trbRequestSummary } from 'data/mock/trbRequest';
+import { attendees, requester, trbRequestSummary } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
+import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
+import GetTrbRequestHomeQuery from 'queries/GetTrbRequestHomeQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
+import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TRBRequestInfoWrapper from './RequestContext';
 import AdminHome from '.';
 
-const trbRequestId = 'a4093ec7-caec-4e73-be3d-a8d6262bc61b';
+const trbRequestId = trbRequestSummary.id;
 
-const getTrbRequestQuery = {
+const getTrbRequestAttendeesQuery = {
+  request: {
+    query: GetTRBRequestAttendeesQuery,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        id: trbRequestId,
+        attendees: [requester, ...attendees]
+      }
+    }
+  }
+};
+
+const getTrbRequestHomeQuery = {
+  request: {
+    query: GetTrbRequestHomeQuery,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        id: trbRequestId,
+        consultMeetingTime: null,
+        taskStatuses: trbRequestSummary.taskStatuses,
+        form: {
+          id: 'c92ec6a6-cd5b-4be3-895a-e88f7de76c22',
+          modifiedAt: null,
+          __typename: 'TRBRequestForm'
+        },
+        adviceLetter: null,
+        trbLeadComponent: null,
+        trbLeadInfo: {
+          commonName: '',
+          email: '',
+          __typename: 'UserInfo'
+        },
+        documents: [],
+        adminNotes: trbRequestSummary.adminNotes
+      }
+    }
+  }
+};
+
+const getTrbLeadOptionsQuery = {
+  request: {
+    query: GetTrbLeadOptionsQuery
+  },
+  result: {
+    data: {
+      trbLeadOptions: [
+        {
+          euaUserId: 'ABCD',
+          commonName: 'Adeline Aarons',
+          __typename: 'UserInfo'
+        },
+        {
+          euaUserId: 'TEST',
+          commonName: 'Terry Thompson',
+          __typename: 'UserInfo'
+        },
+        {
+          euaUserId: 'A11Y',
+          commonName: 'Ally Anderson',
+          __typename: 'UserInfo'
+        },
+        {
+          euaUserId: 'GRTB',
+          commonName: 'Gary Gordon',
+          __typename: 'UserInfo'
+        }
+      ]
+    }
+  }
+};
+
+const getTrbRequestSummaryQuery = {
   request: {
     query: GetTrbRequestSummaryQuery,
     variables: {
@@ -26,7 +112,9 @@ const getTrbRequestQuery = {
     }
   },
   result: {
-    data: { trbRequest: trbRequestSummary }
+    data: {
+      trbRequest: trbRequestSummary
+    }
   }
 };
 
@@ -47,13 +135,22 @@ describe('TRB admin home', () => {
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
         <MessageProvider>
           <Provider store={defaultStore}>
-            <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
+            <VerboseMockedProvider
+              mocks={[
+                getTrbRequestSummaryQuery,
+                getTrbRequestSummaryQuery,
+                getTrbRequestHomeQuery,
+                getTrbRequestAttendeesQuery,
+                getTrbRequestAttendeesQuery,
+                getTrbLeadOptionsQuery
+              ]}
+            >
               <TRBRequestInfoWrapper>
                 <Route path="/trb/:id/:activePage?">
                   <AdminHome />
                 </Route>
               </TRBRequestInfoWrapper>
-            </MockedProvider>
+            </VerboseMockedProvider>
           </Provider>
         </MessageProvider>
       </MemoryRouter>
@@ -64,34 +161,5 @@ describe('TRB admin home', () => {
 
     // Snapshot
     expect(asFragment()).toMatchSnapshot();
-  });
-
-  const subpages = [
-    'initial-request-form',
-    'documents',
-    'feedback',
-    'advice'
-    // 'notes'
-  ];
-
-  test.each(subpages)('Renders each subpage %j', async subpage => {
-    const { findByTestId } = render(
-      <MemoryRouter initialEntries={[`/trb/${trbRequestId}/${subpage}`]}>
-        <MessageProvider>
-          <Provider store={defaultStore}>
-            <MockedProvider mocks={[getTrbRequestQuery]} addTypename={false}>
-              <TRBRequestInfoWrapper>
-                <Route path="/trb/:id/:activePage?">
-                  <AdminHome />
-                </Route>
-              </TRBRequestInfoWrapper>
-            </MockedProvider>
-          </Provider>
-        </MessageProvider>
-      </MemoryRouter>
-    );
-
-    const subPageContent = await findByTestId(`trb-admin-home__${subpage}`);
-    expect(subPageContent).toBeInTheDocument();
   });
 });

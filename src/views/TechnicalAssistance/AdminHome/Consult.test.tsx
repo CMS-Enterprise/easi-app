@@ -11,6 +11,7 @@ import {
   getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
   getTrbRequestSummaryQuery,
+  trbRequestSummary,
   updateTrbRequestConsultMeetingQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
@@ -56,8 +57,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
               <MessageProvider>
                 <Route exact path="/trb/:id/:activePage">
                   <InitialRequestForm
+                    trbRequest={trbRequestSummary}
                     trbRequestId={mockTrbRequestId}
-                    noteCount={0}
                     assignLeadModalRef={modalRef}
                     assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                   />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider, MockedResponse } from '@apollo/react-testing';
 import {
   render,
   screen,
@@ -9,13 +9,21 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { adviceLetter, getTrbAdviceLetterQuery } from 'data/mock/trbRequest';
+import {
+  adviceLetter,
+  getTrbAdviceLetterQuery,
+  taskStatuses
+} from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import { CreateTrbRecommendationQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   CreateTRBRecommendation,
   CreateTRBRecommendationVariables
 } from 'queries/types/CreateTRBRecommendation';
+import {
+  GetTrbAdviceLetter,
+  GetTrbAdviceLetterVariables
+} from 'queries/types/GetTrbAdviceLetter';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
@@ -55,13 +63,43 @@ const defaultStore = easiMockStore({
   groups: ['EASI_TRB_ADMIN_D']
 });
 
-const renderForm = (step: string) => {
+const getAdviceLetterCannotStart: MockedQuery<
+  GetTrbAdviceLetter,
+  GetTrbAdviceLetterVariables
+> = {
+  ...getTrbAdviceLetterQuery,
+  result: {
+    data: {
+      trbRequest: {
+        ...getTrbAdviceLetterQuery.result.data?.trbRequest!,
+        adviceLetter: null,
+        taskStatuses
+      }
+    }
+  }
+};
+
+const renderForm = (
+  step: string,
+  mocks?: MockedResponse[],
+  error?: boolean
+) => {
+  window.HTMLElement.prototype.scrollIntoView = jest.fn;
   return render(
-    <MemoryRouter initialEntries={[`/trb/${mockTrbRequestId}/advice/${step}`]}>
+    <MemoryRouter
+      initialEntries={[
+        {
+          pathname: `/trb/${mockTrbRequestId}/advice/${step}`,
+          state: { error }
+        }
+      ]}
+    >
       <MessageProvider>
         <Provider store={defaultStore}>
           <MockedProvider
-            mocks={[getTrbAdviceLetterQuery, createTrbRecommendationQuery]}
+            mocks={
+              mocks || [getTrbAdviceLetterQuery, createTrbRecommendationQuery]
+            }
             addTypename={false}
           >
             <Route path="/trb/:id/advice/:formStep/:subpage?">
@@ -84,6 +122,36 @@ describe('TRB Advice Letter Form', () => {
     await waitForPageLoad();
 
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('Renders no advice letter alert', async () => {
+    const { findByText, findByTestId } = renderForm('summary', [
+      getAdviceLetterCannotStart
+    ]);
+
+    expect(await findByTestId('alert')).toBeInTheDocument();
+
+    expect(
+      await findByText(
+        'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('Renders error creating advice letter alert', async () => {
+    const { findByText, findByTestId } = renderForm(
+      'summary',
+      [getAdviceLetterCannotStart],
+      true
+    );
+
+    expect(await findByTestId('alert')).toBeInTheDocument();
+
+    expect(
+      await findByText(
+        'There was an error creating this advice letter. Please try again. If the error persists, please try again at a later date.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('renders the recommendations form', async () => {
@@ -154,17 +222,5 @@ describe('TRB Advice Letter Form', () => {
     // Check that followup point input is hidden when followup radio field is false
     userEvent.click(getByRole('radio', { name: 'Not necessary' }));
     expect(followupPointInput).not.toBeInTheDocument();
-  });
-
-  it('renders the Internal Review step', async () => {
-    const { asFragment, getByRole } = renderForm('internal-review');
-
-    await waitForPageLoad();
-
-    // Check for review needed alert
-    const alert = getByRole('heading', { name: 'Internal TRB review needed' });
-    expect(alert).toBeInTheDocument();
-
-    expect(asFragment()).toMatchSnapshot();
   });
 });

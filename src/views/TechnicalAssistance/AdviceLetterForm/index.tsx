@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
   Button,
@@ -18,7 +18,6 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { FormAlertObject } from 'types/technicalAssistance';
 import {
   meetingSummarySchema,
@@ -78,6 +77,7 @@ type AdviceFormStep = typeof adviceFormSteps[number];
 const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+  const location = useLocation<{ error?: boolean }>();
 
   // Get url params
   const { id, formStep, subpage } = useParams<{
@@ -215,16 +215,21 @@ const AdviceLetterForm = () => {
     }
   }, [formAlert]);
 
+  useEffect(() => {
+    if (!adviceLetter && !loading) {
+      const type = location?.state?.error ? 'error' : 'info';
+      setFormAlert({
+        type,
+        message: t(`adviceLetter.alerts.${type}`)
+      });
+    }
+  }, [adviceLetter, loading, location?.state?.error, t]);
+
   // Page loading
   if (loading) return <PageLoading />;
 
-  // If advice letter can't be started, return page not found
-  if (
-    !trbRequest ||
-    !adviceLetter ||
-    trbRequest.taskStatuses.adviceLetterStatus ===
-      TRBAdviceLetterStatus.CANNOT_START_YET
-  ) {
+  // If invalid trb request, show not found
+  if (!trbRequest) {
     return <NotFound />;
   }
 
@@ -294,38 +299,45 @@ const AdviceLetterForm = () => {
               </Alert>
             )
           }
+          hideSteps={!adviceLetter}
         >
-          {/* Save and return to request button */}
-          <Button
-            type="button"
-            unstyled
-            disabled={isStepSubmitting}
-            onClick={() => {
-              const url = `/trb/${id}/advice`;
-              if (stepSubmit) {
-                stepSubmit?.(() => history.push(url));
-              } else {
-                history.push(url);
-              }
-            }}
-          >
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            {t('adviceLetterForm.returnToRequest')}
-          </Button>
+          {
+            /* Save and return to request button */
+            !!adviceLetter && (
+              <Button
+                type="button"
+                unstyled
+                disabled={isStepSubmitting}
+                onClick={() => {
+                  const url = `/trb/${id}/advice`;
+                  if (stepSubmit) {
+                    stepSubmit?.(() => history.push(url));
+                  } else {
+                    history.push(url);
+                  }
+                }}
+              >
+                <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+                {t('adviceLetterForm.returnToRequest')}
+              </Button>
+            )
+          }
         </StepHeader>
       )}
 
       {/* Current form step component */}
       <GridContainer>
         <Grid>
-          <currentFormStep.component
-            trbRequestId={id}
-            adviceLetter={adviceLetter}
-            adviceLetterStatus={adviceLetterStatus}
-            setFormAlert={setFormAlert}
-            setStepSubmit={setStepSubmit}
-            setIsStepSubmitting={setIsStepSubmitting}
-          />
+          {adviceLetter && (
+            <currentFormStep.component
+              trbRequestId={id}
+              adviceLetter={adviceLetter}
+              adviceLetterStatus={adviceLetterStatus}
+              setFormAlert={setFormAlert}
+              setStepSubmit={setStepSubmit}
+              setIsStepSubmitting={setIsStepSubmitting}
+            />
+          )}
         </Grid>
       </GridContainer>
     </>
