@@ -721,6 +721,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakeMetrics() {
 
 	// create a random year to avoid test collisions
 	// uses postgres max year minus 1000000
+	//nolint
 	rand.Seed(time.Now().UnixNano())
 	// #nosec G404
 	endYear := rand.Intn(294276)
