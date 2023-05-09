@@ -8,7 +8,7 @@ const CedarRoleType = gql`
   }
 `;
 
-export const GetCedarRoleTypes = gql`
+export const GetCedarRoleTypesQuery = gql`
   ${CedarRoleType}
   query GetCedarRoleTypes {
     roleTypes {

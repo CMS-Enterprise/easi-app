@@ -2,7 +2,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Button,
   CardGroup,
@@ -16,7 +16,13 @@ import CedarContactSelect from 'components/CedarContactSelect';
 // import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
-import { SetRolesForUserOnSystemQuery } from 'queries/CedarRoleQueries';
+import MultiSelect from 'components/shared/MultiSelect';
+import Spinner from 'components/Spinner';
+import {
+  GetCedarRoleTypesQuery,
+  SetRolesForUserOnSystemQuery
+} from 'queries/CedarRoleQueries';
+import { GetCedarRoleTypes } from 'queries/types/GetCedarRoleTypes';
 import {
   SetRolesForUserOnSystem,
   SetRolesForUserOnSystemVariables
@@ -42,6 +48,15 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
 
   const keyPrefix = `singleSystem.editTeam.form.${user ? 'edit' : 'add'}`;
 
+  const { data, loading: roleTypesLoading } = useQuery<GetCedarRoleTypes>(
+    GetCedarRoleTypesQuery
+  );
+
+  const [update] = useMutation<
+    SetRolesForUserOnSystem,
+    SetRolesForUserOnSystemVariables
+  >(SetRolesForUserOnSystemQuery);
+
   const {
     control,
     handleSubmit,
@@ -51,11 +66,6 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
       roles: []
     }
   });
-
-  const [update] = useMutation<
-    SetRolesForUserOnSystem,
-    SetRolesForUserOnSystemVariables
-  >(SetRolesForUserOnSystemQuery);
 
   const submitForm = handleSubmit(formData => {
     if (isDirty) {
@@ -122,6 +132,19 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
                 {t('singleSystem.editTeam.form.rolesDescription')}
               </HelpText>
               {/* {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>} */}
+              {roleTypesLoading ? (
+                <Spinner className="margin-top-1" />
+              ) : (
+                <MultiSelect
+                  {...{ ...field, ref: null }}
+                  className="margin-top-1 maxw-none"
+                  name={field.name}
+                  options={(data?.roleTypes || []).map(role => ({
+                    value: role.id,
+                    label: role.name
+                  }))}
+                />
+              )}
             </FormGroup>
           )}
         />
