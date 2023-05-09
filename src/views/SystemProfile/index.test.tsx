@@ -41,7 +41,7 @@ describe('System Profile parent request', () => {
     await waitForElementToBeRemoved(() => getByTestId('page-loading'));
     expect(asFragment()).toMatchSnapshot();
     expect(getByText('CMS.gov')).toBeInTheDocument();
-    expect(getAllByText('Jane Doe')[0]).toBeInTheDocument();
+    expect(getAllByText('Ally Anderson')[0]).toBeInTheDocument();
   });
 });
 
