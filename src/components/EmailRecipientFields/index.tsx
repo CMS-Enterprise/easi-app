@@ -84,9 +84,12 @@ const EmailRecipientFields = ({
       notifyEuaIds.length === 0 &&
       requester?.userInfo?.euaUserId
     ) {
-      reset({ notifyEuaIds: [requester.userInfo.euaUserId] });
+      reset({
+        ...getValues(),
+        notifyEuaIds: [requester.userInfo.euaUserId]
+      });
     }
-  }, [isDirty, notifyEuaIds, requester, reset]);
+  }, [isDirty, notifyEuaIds, requester, reset, getValues]);
 
   if (!requester?.userInfo?.euaUserId) {
     return (
