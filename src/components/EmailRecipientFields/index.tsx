@@ -60,7 +60,7 @@ const EmailRecipientFields = ({
     watch,
     getValues,
     setValue,
-    resetField,
+    reset,
     formState: { errors, isDirty }
   } = useFormContext();
 
@@ -84,14 +84,17 @@ const EmailRecipientFields = ({
       notifyEuaIds.length === 0 &&
       requester?.userInfo?.euaUserId
     ) {
-      resetField('notifyEuaIds', {
-        defaultValue: [requester.userInfo.euaUserId]
-      });
+      reset({ notifyEuaIds: [requester.userInfo.euaUserId] });
     }
-  }, [isDirty, notifyEuaIds, requester, resetField]);
+  }, [isDirty, notifyEuaIds, requester, reset]);
 
   if (!requester?.userInfo?.euaUserId) {
-    return <Spinner className="display-block margin-top-2" />;
+    return (
+      <Spinner
+        data-testid="emailRecipients-spinner"
+        className="display-block margin-top-2"
+      />
+    );
   }
 
   return (
