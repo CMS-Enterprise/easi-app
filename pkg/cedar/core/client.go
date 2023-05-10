@@ -13,7 +13,6 @@ import (
 	cache "github.com/patrickmn/go-cache"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
 	"github.com/cmsgov/easi-app/pkg/flags"
@@ -46,11 +45,10 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheR
 
 	hc := http.DefaultClient
 
-	basePath := "/gateway/CEDAR Core API/" + appconfig.CEDARCoreAPIVersion
 	api := apiclient.New(
 		httptransport.New(
 			cedarHost,
-			basePath,
+			apiclient.DefaultBasePath,
 			apiclient.DefaultSchemes,
 		),
 		strfmt.Default,
