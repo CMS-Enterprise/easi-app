@@ -9,7 +9,8 @@ import {
   getTrbAdminNotesQuery,
   getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
-  getTrbRequestSummaryQuery
+  getTrbRequestSummaryQuery,
+  trbRequestSummary
 } from 'data/mock/trbRequest';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import {
@@ -72,8 +73,8 @@ describe('Trb Admin Initial Request Form', () => {
             <TRBRequestInfoWrapper>
               <Route exact path="/trb/:id/:activePage">
                 <InitialRequestForm
-                  trbRequestId={mockTrbRequestId}
-                  noteCount={0}
+                  trbRequestId={trbRequestSummary.id}
+                  trbRequest={trbRequestSummary}
                   assignLeadModalRef={modalRef}
                   assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                 />
@@ -86,9 +87,7 @@ describe('Trb Admin Initial Request Form', () => {
 
     // Loaded okay
     await findByText(
-      i18next.t<string>(
-        'technicalAssistance:adminHome.subnav.initialRequestForm'
-      )
+      i18next.t<string>('technicalAssistance:adminHome.initialRequestForm')
     );
 
     // Task status tag rendered from query data

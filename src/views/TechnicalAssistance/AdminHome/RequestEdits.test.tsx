@@ -7,11 +7,13 @@ import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
+import { trbRequestSummary } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { PersonRole } from 'types/graphql-global-types';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TRBRequestInfoWrapper from './RequestContext';
 import RequestEdits from './RequestEdits';
@@ -27,7 +29,7 @@ describe('Trb Admin: Action: Request Edits', () => {
       groups: ['EASI_TRB_ADMIN_D']
     }
   });
-  const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
+  const trbRequestId = trbRequestSummary.id;
   const feedbackMessage = 'test message';
 
   const mockCreateTrbRequestFeedback = {
@@ -62,25 +64,7 @@ describe('Trb Admin: Action: Request Edits', () => {
     },
     result: {
       data: {
-        trbRequest: {
-          name: 'Draft',
-          type: 'NEED_HELP',
-          state: 'OPEN',
-          trbLeadInfo: {
-            __typename: 'UserInfo',
-            commonName: ''
-          },
-          createdAt: '2023-02-16T15:21:34.156885Z',
-          taskStatuses: {
-            formStatus: 'IN_PROGRESS',
-            feedbackStatus: 'EDITS_REQUESTED',
-            consultPrepStatus: 'CANNOT_START_YET',
-            attendConsultStatus: 'CANNOT_START_YET',
-            adviceLetterStatus: 'IN_PROGRESS',
-            __typename: 'TRBTaskStatuses'
-          },
-          __typename: 'TRBRequest'
-        }
+        trbRequest: trbRequestSummary
       }
     }
   };
@@ -126,7 +110,7 @@ describe('Trb Admin: Action: Request Edits', () => {
       findByRole
     } = render(
       <Provider store={store}>
-        <MockedProvider
+        <VerboseMockedProvider
           defaultOptions={{
             watchQuery: { fetchPolicy: 'no-cache' },
             query: { fetchPolicy: 'no-cache' }
@@ -153,7 +137,7 @@ describe('Trb Admin: Action: Request Edits', () => {
               </MessageProvider>
             </TRBRequestInfoWrapper>
           </MemoryRouter>
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     );
 
