@@ -2,6 +2,7 @@ package cedarcore
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -13,7 +14,6 @@ import (
 	cache "github.com/patrickmn/go-cache"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
 	"github.com/cmsgov/easi-app/pkg/flags"
@@ -26,7 +26,7 @@ const (
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheRefreshTime time.Duration, ldClient *ld.LDClient) *Client {
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, cacheRefreshTime time.Duration, ldClient *ld.LDClient) *Client {
 	fnEmit := func(ctx context.Context) bool {
 		lduser := flags.Principal(ctx)
 		result, err := ldClient.BoolVariation(cedarCoreEnabledKey, lduser, cedarCoreEnabledDefault)
@@ -46,7 +46,8 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheR
 
 	hc := http.DefaultClient
 
-	basePath := "/gateway/CEDAR Core API/" + appconfig.CEDARCoreAPIVersion
+	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
+	fmt.Println("~~~~~~\n\n\n\n" + basePath)
 	client := &Client{
 		cedarCoreEnabled: fnEmit,
 		auth: httptransport.APIKeyAuth(

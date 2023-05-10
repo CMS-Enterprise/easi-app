@@ -33,7 +33,7 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	s.NoError(err)
 
 	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
-		c := NewClient(ctx, "fake", "fake", time.Minute, ldClient)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
 		resp, err := c.GetSystemSummary(ctx, false)
 		s.NoError(err)
 
@@ -48,7 +48,7 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 	s.NoError(err)
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
-		c := NewClient(ctx, "fake", "fake", time.Minute, ldClient)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
 		resp, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
 
