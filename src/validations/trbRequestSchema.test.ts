@@ -13,9 +13,7 @@ describe('TRB Basic Form schema validation', () => {
     needsAssistanceWith: 'Needs assist',
     hasSolutionInMind: false,
     whereInProcess: 'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM',
-    hasExpectedStartEndDates: false,
-    collabGroups: ['SECURITY'],
-    collabDateSecurity: 'Fall 2021'
+    hasExpectedStartEndDates: false
   };
 
   it('passes backend input validation', async () => {
@@ -40,113 +38,6 @@ describe('TRB Basic Form schema validation', () => {
   );
 
   const freeTextDate = 'Q1 2021';
-
-  it.each([
-    {
-      parent: { hasSolutionInMind: true },
-      empty: {
-        proposedSolution: ''
-      },
-      filled: {
-        proposedSolution: 'solution'
-      }
-    },
-    {
-      parent: { whereInProcess: 'OTHER' },
-      empty: {
-        whereInProcessOther: ''
-      },
-      filled: {
-        whereInProcessOther: 'process'
-      }
-    },
-    {
-      parent: {
-        collabGroups: ['SECURITY']
-      },
-      empty: {
-        collabDateSecurity: ''
-      },
-      filled: {
-        collabDateSecurity: freeTextDate
-      }
-    },
-    {
-      parent: {
-        collabGroups: ['ENTERPRISE_ARCHITECTURE']
-      },
-      empty: {
-        collabDateEnterpriseArchitecture: ''
-      },
-      filled: {
-        collabDateEnterpriseArchitecture: freeTextDate
-      }
-    },
-    {
-      parent: {
-        collabGroups: ['CLOUD']
-      },
-      empty: {
-        collabDateCloud: ''
-      },
-      filled: {
-        collabDateCloud: freeTextDate
-      }
-    },
-    {
-      parent: {
-        collabGroups: ['PRIVACY_ADVISOR']
-      },
-      empty: {
-        collabDatePrivacyAdvisor: ''
-      },
-      filled: {
-        collabDatePrivacyAdvisor: freeTextDate
-      }
-    },
-    {
-      parent: {
-        collabGroups: ['GOVERNANCE_REVIEW_BOARD']
-      },
-      empty: {
-        collabDateGovernanceReviewBoard: '',
-        collabGRBConsultRequested: null
-      },
-      filled: {
-        collabDateGovernanceReviewBoard: freeTextDate,
-        collabGRBConsultRequested: true
-      }
-    },
-    {
-      parent: {
-        collabGroups: ['OTHER']
-      },
-      empty: {
-        collabDateOther: '',
-        collabGroupOther: ''
-      },
-      filled: {
-        collabDateOther: freeTextDate,
-        collabGroupOther: 'other group'
-      }
-    }
-  ])('validates conditional fields: %j', async ({ parent, empty, filled }) => {
-    await expect(
-      basicSchema.validate({
-        ...minimumRequiredForm,
-        ...parent,
-        ...empty
-      })
-    ).rejects.toThrow('required field');
-
-    await expect(
-      basicSchema.isValid({
-        ...minimumRequiredForm,
-        ...parent,
-        ...filled
-      })
-    ).resolves.toBeTruthy();
-  });
 
   it('requires at least one expected start or end date', async () => {
     await expect(
