@@ -79,7 +79,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   adminLead: '',
   lastAdminNote: null,
   lcidCostBaseline: '',
-  requesterNameAndComponent: ''
+  requesterNameAndComponent: '',
+  hasUiChanges: null
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -135,7 +136,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     grtDate: systemIntake.grtDate,
     grbDate: systemIntake.grbDate,
     submittedAt: systemIntake.submittedAt,
-    adminLead: systemIntake.adminLead
+    adminLead: systemIntake.adminLead,
+    hasUiChanges: systemIntake.hasUiChanges
   };
 };
 
@@ -244,7 +246,9 @@ export const prepareSystemIntakeForApp = (
         }
       : null,
     lcidCostBaseline: '',
-    requesterNameAndComponent: ''
+    requesterNameAndComponent: '',
+    hasUiChanges:
+      systemIntake.hasUiChanges === null ? null : systemIntake.hasUiChanges
   };
 };
 
@@ -330,6 +334,7 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.businessNeed ||
     intake.businessSolution ||
     intake.currentStage ||
-    intake.needsEaSupport
+    intake.needsEaSupport ||
+    intake.hasUiChanges
   );
 };

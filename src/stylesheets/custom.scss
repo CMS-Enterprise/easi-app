@@ -93,20 +93,26 @@
   z-index: 300;
 }
 
-.usa-alert.easi-inline-alert {
-  background-color: color('white');
-  background-size: 1.6rem;
-  background-position: 0.5rem 0.5rem;
-  padding: 0;
-  &::before {
-    width: 0.2rem;
-    background: color('base-dark');
+.usa-alert {
+  .easi-inline-alert {
+    background-color: color('white');
+    background-size: 1.6rem;
+    background-position: 0.5rem 0.5rem;
+    padding: 0;
+    &::before {
+      width: 0.2rem;
+      background: color('base-dark');
+    }
+    .usa-alert__body {
+      padding-left: 2.8rem;
+    }
+    .usa-alert__text:only-child {
+      margin-bottom: 0;
+    }
   }
-  .usa-alert__body {
-    padding-left: 2.8rem;
-  }
-  .usa-alert__text:only-child {
-    margin-bottom: 0;
+  // Remove max width on alert body
+  &.usa-alert .usa-alert__body {
+    max-width: none;
   }
 }
 

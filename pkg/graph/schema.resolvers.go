@@ -1568,6 +1568,7 @@ func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context,
 	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
+	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 
 	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
 	cedarSystemIDStr := cedarSystemID.ValueOrZero()
@@ -2856,6 +2857,11 @@ func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.Sy
 // CedarSystemID is the resolver for the cedarSystemId field.
 func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.CedarSystemID.Ptr(), nil
+}
+
+// HasUIChanges is the resolver for the hasUiChanges field.
+func (r *systemIntakeResolver) HasUIChanges(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.HasUIChanges.Ptr(), nil
 }
 
 // FundingNumber is the resolver for the fundingNumber field.

@@ -9,6 +9,7 @@ import (
 
 // RandomEUAID returns a random EUA ID for testing
 func RandomEUAID() string {
+	//nolint
 	rand.Seed(time.Now().UnixNano())
 	const euaLength = 4
 	var letter = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")

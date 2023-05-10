@@ -179,6 +179,7 @@ function PublicAdviceLetter() {
       <GridContainer className="full-width">
         {adviceLetter && (
           <ReviewAdviceLetter
+            trbRequestId={id}
             adviceLetter={adviceLetter}
             showDateSent={false}
             showSectionBorders={false}

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
   Button,
@@ -18,7 +18,6 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
-import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { FormAlertObject } from 'types/technicalAssistance';
 import {
   meetingSummarySchema,
@@ -29,6 +28,7 @@ import NotFound from 'views/NotFound';
 import Breadcrumbs from '../Breadcrumbs';
 import { StepSubmit } from '../RequestForm';
 
+import Done from './Done';
 import InternalReview from './InternalReview';
 import NextSteps from './NextSteps';
 import Recommendations from './Recommendations';
@@ -77,6 +77,7 @@ type AdviceFormStep = typeof adviceFormSteps[number];
 const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+  const location = useLocation<{ error?: boolean }>();
 
   // Get url params
   const { id, formStep, subpage } = useParams<{
@@ -95,16 +96,13 @@ const AdviceLetterForm = () => {
 
   /** Current trb request */
   const trbRequest = data?.trbRequest;
-  const { adviceLetter, taskStatuses } = trbRequest || {};
-  const { adviceLetterStatus } = taskStatuses || {};
+  const { adviceLetter } = trbRequest || {};
 
   // References to the submit handler and submitting state of the current form step
   const [stepSubmit, setStepSubmit] = useState<StepSubmit | null>(null);
   const [isStepSubmitting, setIsStepSubmitting] = useState<boolean>(false);
 
-  const [stepsCompleted, setStepsCompleted] = useState<FormStepKey[]>([
-    'recommendations'
-  ]);
+  const [stepsCompleted, setStepsCompleted] = useState<FormStepKey[]>();
 
   // Form level alerts from step components
   const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
@@ -125,7 +123,7 @@ const AdviceLetterForm = () => {
     (index: number): boolean => {
       const stepsToValidate = adviceFormSteps.slice(0, index);
       const validSteps = stepsToValidate.filter(({ slug }) =>
-        stepsCompleted.includes(slug)
+        stepsCompleted?.includes(slug)
       );
       return stepsToValidate.length === validSteps.length;
     },
@@ -137,7 +135,9 @@ const AdviceLetterForm = () => {
       return;
     }
     (async () => {
-      const completed = [...stepsCompleted];
+      const completed: FormStepKey[] = stepsCompleted
+        ? [...stepsCompleted]
+        : ['recommendations'];
       const stepValidators = [];
 
       // Check the Meeting Summary step
@@ -152,7 +152,7 @@ const AdviceLetterForm = () => {
               }
             )
             .then(valid => {
-              if (valid) completed.push('summary');
+              if (valid) completed.unshift('summary');
             })
         );
       }
@@ -174,7 +174,8 @@ const AdviceLetterForm = () => {
               }
             )
             .then(valid => {
-              if (valid) completed.push('next-steps');
+              // Internal review should be marked completed with next steps
+              if (valid) completed.push('next-steps', 'internal-review');
             })
         );
       }
@@ -183,19 +184,61 @@ const AdviceLetterForm = () => {
         if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
       });
     })();
-  }, [stepsCompleted, adviceLetter]);
+  }, [
+    stepsCompleted,
+    adviceLetter,
+    trbRequest?.taskStatuses?.adviceLetterStatus
+  ]);
+
+  // Redirect if previous step is not completed
+  useEffect(() => {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
+      /** Returns latest available step index */
+      const stepRedirectIndex = !stepsCompleted.includes('summary')
+        ? 0
+        : // If summary is completed, return index of last completed step plus 1
+          adviceFormSteps.findIndex(
+            step => step.slug === stepsCompleted?.slice(-1)[0]
+          ) + 1;
+
+      // Redirect to latest available step
+      history.replace(
+        `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
+      );
+    }
+  }, [stepsCompleted, currentStepIndex, history, id, checkValidSteps]);
+
+  useEffect(() => {
+    if (formAlert) {
+      const err = document.querySelector('.trb-form-error');
+      err?.scrollIntoView();
+    }
+  }, [formAlert]);
+
+  useEffect(() => {
+    if (!adviceLetter && !loading) {
+      const type = location?.state?.error ? 'error' : 'info';
+      setFormAlert({
+        type,
+        message: t(`adviceLetter.alerts.${type}`)
+      });
+    }
+  }, [adviceLetter, loading, location?.state?.error, t]);
 
   // Page loading
   if (loading) return <PageLoading />;
 
-  // If invalid URL or advice letter can't be started, return page not found
-  if (
-    currentStepIndex === -1 ||
-    !trbRequest ||
-    !adviceLetter ||
-    adviceLetterStatus === TRBAdviceLetterStatus.CANNOT_START_YET
-  ) {
+  // If invalid trb request, show not found
+  if (!trbRequest) {
     return <NotFound />;
+  }
+
+  const {
+    taskStatuses: { adviceLetterStatus }
+  } = trbRequest;
+
+  if (formStep === 'done') {
+    return <Done />;
   }
 
   return (
@@ -247,42 +290,54 @@ const AdviceLetterForm = () => {
           }
           errorAlert={
             formAlert && (
-              <Alert type={formAlert.type} className="margin-top-3" slim>
+              <Alert
+                type={formAlert.type}
+                className={`trb-form-${formAlert.type} margin-top-3`}
+                slim
+              >
                 {formAlert.message}
               </Alert>
             )
           }
+          hideSteps={!adviceLetter}
         >
-          {/* Save and return to request button */}
-          <Button
-            type="button"
-            unstyled
-            disabled={isStepSubmitting}
-            onClick={() => {
-              const url = `/trb/${id}/advice`;
-              if (stepSubmit) {
-                stepSubmit?.(() => history.push(url));
-              } else {
-                history.push(url);
-              }
-            }}
-          >
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            {t('adviceLetterForm.returnToRequest')}
-          </Button>
+          {
+            /* Save and return to request button */
+            !!adviceLetter && (
+              <Button
+                type="button"
+                unstyled
+                disabled={isStepSubmitting}
+                onClick={() => {
+                  const url = `/trb/${id}/advice`;
+                  if (stepSubmit) {
+                    stepSubmit?.(() => history.push(url));
+                  } else {
+                    history.push(url);
+                  }
+                }}
+              >
+                <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+                {t('adviceLetterForm.returnToRequest')}
+              </Button>
+            )
+          }
         </StepHeader>
       )}
 
       {/* Current form step component */}
       <GridContainer>
         <Grid>
-          <currentFormStep.component
-            trbRequestId={id}
-            adviceLetter={adviceLetter}
-            setFormAlert={setFormAlert}
-            setStepSubmit={setStepSubmit}
-            setIsStepSubmitting={setIsStepSubmitting}
-          />
+          {adviceLetter && (
+            <currentFormStep.component
+              trbRequestId={id}
+              adviceLetter={adviceLetter}
+              adviceLetterStatus={adviceLetterStatus}
+              setFormAlert={setFormAlert}
+              setStepSubmit={setStepSubmit}
+              setIsStepSubmitting={setIsStepSubmitting}
+            />
+          )}
         </Grid>
       </GridContainer>
     </>

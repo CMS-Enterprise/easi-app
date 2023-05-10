@@ -746,6 +746,7 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	NeedsEaSupport   *bool     `json:"needsEaSupport"`
 	CurrentStage     *string   `json:"currentStage"`
 	CedarSystemID    *string   `json:"cedarSystemId"`
+	HasUIChanges     *bool     `json:"hasUiChanges"`
 }
 
 // Input data used to update GRT and GRB dates for a system request

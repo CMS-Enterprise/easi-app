@@ -2,9 +2,10 @@ import React from 'react';
 import { ModalRef } from '@trussworks/react-uswds';
 
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
+import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
-import { PersonRole } from './graphql-global-types';
+import { PersonRole, TRBAdviceLetterStatus } from './graphql-global-types';
 
 /* eslint-disable camelcase */
 export type { GetTrbAdminTeamHome_trbRequests as TrbAdminTeamHomeRequest } from 'queries/types/GetTrbAdminTeamHome';
@@ -50,24 +51,30 @@ export type FormattedTRBAttendees = {
 
 export type TrbRequestIdRef = string | null;
 
-/** TRB Admin page props */
-export type TrbAdminPageProps = {
+interface TrbAdminDefaultProps {
   trbRequestId: string;
-  noteCount: number;
-  requesterString?: string | null;
-  submissionDate?: string;
+  trbRequest: TrbRequestSummary;
   assignLeadModalRef: React.RefObject<ModalRef>;
   assignLeadModalTrbRequestIdRef: React.MutableRefObject<TrbRequestIdRef>;
-};
+  requesterString?: string | null;
+}
+export interface TrbAdminPageProps extends TrbAdminDefaultProps {}
 
-/** Subnav item return type for admin home wrapper */
-export type SubNavItem = {
-  /** Route to use for navigation link */
-  route: string;
-  /** Translation key to use for navigation link text */
+export type TrbAdminPath =
+  | 'request'
+  | 'initial-request-form'
+  | 'documents'
+  | 'feedback'
+  | 'advice'
+  | 'notes';
+
+export type TrbAdminPage = {
+  /** Label translation key */
   text: string;
+  /** Path to use for navigation link */
+  path: TrbAdminPath;
   /** Component to display on page */
-  component: ({ trbRequestId }: TrbAdminPageProps) => JSX.Element;
+  component: ({ trbRequest }: TrbAdminPageProps) => JSX.Element;
   /**
    * Whether or not the navigation item is last in a group.
    * If true, border is shown beneath link.
@@ -117,6 +124,7 @@ export type FormAlertObject = {
 export type StepComponentProps = {
   trbRequestId: string;
   adviceLetter: AdviceLetter;
+  adviceLetterStatus: TRBAdviceLetterStatus;
   /**
    * Set the current form step component submit handler
    * so that in can be used in other places like the header.

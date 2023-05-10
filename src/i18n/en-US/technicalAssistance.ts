@@ -31,7 +31,113 @@ const technicalAssistance = {
       'The TRB has requested edits to your initial request form. Please make any necessary changes and re-submit your form.',
     viewFeedback: 'View feedback'
   },
-  adminAction: 'Admin Action',
+  adminAction: {
+    title: 'Admin Action',
+    statuses: {
+      REQUEST_FORM_COMPLETE: {
+        title: 'Is this request ready for a consult?',
+        description:
+          'Review the initial request form. If this request is ready to move on to a consult session, please mark it as ready. If the TRB needs further information in order to proceed, you may request edits or additional information from the project team.',
+        list: {
+          label:
+            'What should I consider when reviewing the initial request form?',
+          unorderedItems: [
+            'Is the support requested clear, i.e. design review vs. problem-solving?',
+            'If the customer is asking for assistance in solving a problem, is the problem definition clear?',
+            'Is the stated scope of the changes to the project clear?',
+            'If the scope is clear, are the architecture changes minor (i..e. simple or straightforward)?',
+            'Is there enough information available to determine which SMEs are needed?',
+            'Has the project been to a TRB consult session before?',
+            'If the project has been to a TRB consult session before, are the stakeholders, and the contractor the same as those that attended before?'
+          ]
+        }
+      },
+      READY_FOR_CONSULT: {
+        title: 'Plan a consult session',
+        description: 'This request is ready for a consult session',
+        list: {
+          label: 'What do I need to do before adding session details in EASi?',
+          orderedItems: [
+            'Confirm availability with the requester and make sure their additional attendees are also available for that date and time.',
+            'Find subject matter experts (SMEs) for the identified subject areas that have the bandwidth to join the consult session.'
+          ],
+          note:
+            'Note: EASi does not currently integrate with calendar scheduling, so you should still send a calendar invite before or after adding the date and time in EASi.'
+        }
+      },
+      CONSULT_SCHEDULED: {
+        title: 'Review request documentation',
+        description:
+          'The consult session is scheduled. Continue to review the initial request form and the supporting documentation as needed before the meeting.'
+      },
+      CONSULT_COMPLETE: {
+        title: 'Draft advice letter',
+        description:
+          'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
+        list: {
+          label: 'What should I include in the advice letter?',
+          text:
+            'EASi will direct you to complete the following parts of the advice letter:',
+          unorderedItems: [
+            '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
+            '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
+            '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
+          ]
+        }
+      },
+      DRAFT_ADVICE_LETTER: {
+        title: 'Draft advice letter',
+        description:
+          'Compile an advice letter for the requester and project team. Once you send the advice letter, the requester will get a notification and be able to see any recommendations, feedback, and next steps you include.',
+        list: {
+          label: 'What should I include in the advice letter?',
+          text:
+            'EASi will direct you to complete the following parts of the advice letter:',
+          unorderedItems: [
+            '<b>Meeting summary (“What we heard”):</b> Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.',
+            '<b>Recommendations and feedback (“What we recommend”):</b> Work with SMEs and other TRB members to compile recommendations for the requester and project team. Provide a title, description, and any useful resources for each recommendation.',
+            '<b>Next steps:</b> Outline any additional steps that the project team should take, including whether the project team should schedule another consult session with the TRB in the future.'
+          ]
+        }
+      },
+      ADVICE_LETTER_IN_REVIEW: {
+        title: 'Review advice letter',
+        description:
+          'Review this draft advice letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the advice letter to incorporate your comments and feedback before sending it to the requester and project team.'
+      },
+      ADVICE_LETTER_SENT: {
+        title: 'Close request',
+        description:
+          'If this is a Consult as a Service request (CaaS), you may choose to leave this request open until the engagement is complete. For all other requests, you may close this request at any time.'
+      },
+      FOLLOW_UP_REQUESTED: {
+        title: 'Re-open request',
+        description:
+          'If this request was closed in error or if you wish to re-open it, use the button below.'
+      },
+      CLOSED: {
+        title: 'Re-open request',
+        description:
+          'If this request was closed in error or if you wish to re-open it, use the button below.'
+      }
+    },
+    buttons: {
+      orCloseRequest: 'or, close this request',
+      closeRequest: 'Close this request',
+      reopenRequest: 'Re-open this request',
+      viewRequestForm: 'View request form',
+      requestEdits: 'Request edits',
+      readyForConsult: 'Ready for consult',
+      addDateTime: 'Add date and time',
+      assignTrbLead: 'Assign a TRB lead',
+      viewSupportingDocuments: 'View supporting documents',
+      viewAdviceLetter: 'View advice letter',
+      startAdviceLetter: 'Start advice letter',
+      continueAdviceLetter: 'Continue advice letter',
+      editAdviceLetter: 'Edit advice letter',
+      addNote: 'Add a note'
+    }
+  },
   requestNotes: {
     text: 'note{{-plural}} about this request',
     viewNotes: 'View notes',
@@ -40,8 +146,12 @@ const technicalAssistance = {
   adviceLetter: {
     introText:
       'The advice letter is sent to the requester after the consult is complete. It outlines any outcomes, advice, recommendations, and next steps that the TRB has for this request.',
-    noAdviceLetter:
-      'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.',
+    alerts: {
+      error:
+        'There was an error creating this advice letter. Please try again. If the error persists, please try again at a later date.',
+      info:
+        'There is no advice letter for this request yet. Once the consult date has passed, you may create an advice letter for this request.'
+    },
     downloadAsPdf: 'Download advice letter as PDF',
     sendDate: 'Send date',
     notYetSent: 'Not yet sent',
@@ -113,6 +223,8 @@ const technicalAssistance = {
     addAnotherResourceLink: 'Add another resource link',
     returnToAdviceLetter:
       'Don’t add a recommendation and return to advice letter',
+    editReturnToAdviceLetter:
+      'Don’t edit recommendation and return to advice letter',
     editRecommendation: 'Edit recommendation',
     removeRecommendation: 'Remove recommendation',
     nextSteps: 'Next steps',
@@ -124,11 +236,32 @@ const technicalAssistance = {
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     recommendationSuccess:
       'Your recommendation was added to this advice letter.',
+    editRecommendationSuccess: 'Your recommendation was edited',
     modal: {
       title: 'Confirm you want to remove this recommendation.',
       text:
         'This action cannot be undone. If you remove this recommendation, all content related to it will be removed and will not be sent as a part of the advice letter.',
       removingTitle: 'Removing: {{title}}'
+    },
+    internalReviewNeeded: {
+      heading: 'Internal TRB review needed',
+      text:
+        'You should not send this advice letter until it has been reviewed internally by other TRB members. Once it has been reviewed and you have made any suggested edits, choose notification recipients and send.'
+    },
+    requestInternalReview: 'Request internal review',
+    requestAnotherInternalReview: 'Request another internal review',
+    progressToNextStep: 'or, <1>progress to next step</1>',
+    notesAlert:
+      'Your TRB team members have not yet left any notes about your draft advice letter. Please confirm with the team to make sure this advice letter has been reviewed before you proceed with sending the final letter.',
+    notesCount:
+      '<bold>{{count}}</bold> note{{plural}} about this advice letter',
+    done: {
+      success:
+        'Your advice letter for has been sent. Selected email notification recipients will receive a confirmation email with a link to the advice letter. Additionally, the original requester can view this letter from their request task list.',
+      error:
+        'Your advice letter was not sent. Please either return to the previous page and try again, or try again at a later date. The requester will not be able to view the advice letter until it is successfully sent.',
+      returnToRequestHome: 'Return to request home',
+      backToAdviceLetter: 'Back to advice letter'
     }
   },
   emailRecipientFields: {
@@ -715,6 +848,18 @@ const technicalAssistance = {
       OPEN: 'Open',
       CLOSED: 'Closed'
     },
+    trbRequestStatuses: {
+      ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
+      ADVICE_LETTER_SENT: 'Advice letter sent',
+      CONSULT_COMPLETE: 'Consult complete',
+      CONSULT_SCHEDULED: 'Consult scheduled',
+      DRAFT_ADVICE_LETTER: 'Draft advice letter',
+      DRAFT_REQUEST_FORM: 'Draft request form',
+      FOLLOW_UP_REQUESTED: 'Follow-up requested',
+      NEW: 'New',
+      READY_FOR_CONSULT: 'Ready for consult',
+      REQUEST_FORM_COMPLETE: 'Request form completed'
+    },
     taskStatuses: {
       formStatus: {
         READY_TO_START: 'Ready to start request form',
@@ -757,7 +902,6 @@ const technicalAssistance = {
     representative: 'TRB representatives',
     formAndDocs: 'Forms and documents',
     initialRequest: 'Initial request form',
-    adviceLetter: 'Advice letter',
     completedBy: 'Completed by requester',
     toBeCompleted: 'To be completed by TRB',
     lastUpdated: 'Last updated',
@@ -778,15 +922,13 @@ const technicalAssistance = {
     trbLead: 'TRB Lead',
     notAssigned: 'Not assigned',
     assign: 'Assign',
-    subnav: {
-      back: 'Back to All Requests',
-      requestHome: 'Request home',
-      initialRequestForm: 'Initial request form',
-      supportingDocuments: 'Supporting documents',
-      feedback: 'Feedback',
-      adviceLetter: 'Advice letter',
-      notes: 'Notes'
-    },
+    backToRequests: 'Back to All Requests',
+    requestHome: 'Request home',
+    initialRequestForm: 'Initial request form',
+    supportingDocuments: 'Supporting documents',
+    feedback: 'Feedback',
+    adviceLetter: 'Advice letter',
+    notes: 'Notes',
     byNameOnDate: 'by {{name}} on {{date}}'
   },
   adminTeamHome: {

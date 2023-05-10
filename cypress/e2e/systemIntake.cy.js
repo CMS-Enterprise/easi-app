@@ -313,6 +313,13 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('No');
 
+    cy.contains(
+      '.easi-review-row dt',
+      'Does your project involve any user interface component, or changes to an interface component?'
+    )
+      .siblings('dd')
+      .contains('No');
+
     cy.contains('.easi-review-row dt', 'Where are you in the process?')
       .siblings('dd')
       .contains('Just an idea');
