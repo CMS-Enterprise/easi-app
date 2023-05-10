@@ -76,12 +76,13 @@ function RequestType() {
         {t('requestType.subhead')}
       </div>
 
-      <div className="margin-top-2">
-        <Button type="button" unstyled onClick={() => history.goBack()}>
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-          {t(isNew ? 'requestType.goBack' : 'requestType.goBackWithoutChange')}
-        </Button>
-      </div>
+      <UswdsReactLink
+        to="/trb"
+        className="display-flex flex-align-center margin-top-2"
+      >
+        <IconArrowBack className="margin-right-1" />
+        {t(isNew ? 'requestType.goBack' : 'requestType.goBackWithoutChange')}
+      </UswdsReactLink>
 
       <CardGroup className="flex-align-start margin-top-4 margin-bottom-4">
         {[
