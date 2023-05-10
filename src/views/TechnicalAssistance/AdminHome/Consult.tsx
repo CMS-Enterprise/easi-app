@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   Button,
@@ -18,18 +19,28 @@ import {
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
+import EmailRecipientFields from 'components/EmailRecipientFields';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
+import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
   UpdateTrbRequestConsultMeeting,
   UpdateTrbRequestConsultMeetingVariables
 } from 'queries/types/UpdateTrbRequestConsultMeeting';
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
+import { TrbRecipientFields } from 'types/technicalAssistance';
+import { consultSchema } from 'validations/trbRequestSchema';
 
 import Breadcrumbs from '../Breadcrumbs';
+
+interface ConsultFields extends TrbRecipientFields {
+  notes: string;
+  meetingDate: string;
+  meetingTime: string;
+}
 
 function Consult() {
   const { t } = useTranslation('technicalAssistance');
@@ -43,6 +54,11 @@ function Consult() {
 
   const { message, showMessage, showMessageOnNextPage } = useMessage();
 
+  const {
+    data: { attendees, requester },
+    createAttendee
+  } = useTRBAttendees(id);
+
   const requestUrl = `/trb/${id}/${activePage}`;
 
   const [mutate] = useMutation<
@@ -50,17 +66,22 @@ function Consult() {
     UpdateTrbRequestConsultMeetingVariables
   >(UpdateTrbRequestConsultMeetingQuery);
 
+  const actionForm = useForm<ConsultFields>({
+    resolver: yupResolver(consultSchema),
+    defaultValues: {
+      meetingDate: '',
+      meetingTime: '',
+      notes: '',
+      copyTrbMailbox: true,
+      notifyEuaIds: []
+    }
+  });
+
   const {
     control,
     handleSubmit,
     formState: { errors, isDirty, isSubmitting }
-  } = useForm({
-    defaultValues: {
-      meetingDate: '',
-      meetingTime: '',
-      notes: ''
-    }
-  });
+  } = actionForm;
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -104,8 +125,8 @@ function Consult() {
                 trbRequestId: id,
                 consultMeetingTime,
                 notes: formData.notes,
-                copyTrbMailbox: true,
-                notifyEuaIds: ['ABCD']
+                copyTrbMailbox: formData.copyTrbMailbox,
+                notifyEuaIds: formData.notifyEuaIds
               }
             }
           })
@@ -269,8 +290,26 @@ function Consult() {
             <h3 className="margin-top-6">
               {t('actionRequestEdits.notificationTitle')}
             </h3>
-            <div>{t('actionRequestEdits.notificationDescription')}</div>
-            {/* todo cedar contacts */}
+            <p className="margin-y-0">
+              {t('actionRequestEdits.notificationDescription')}
+            </p>
+
+            <FormProvider {...actionForm}>
+              <EmailRecipientFields
+                requester={requester}
+                contacts={attendees}
+                mailboxes={[
+                  {
+                    key: 'copyTrbMailbox',
+                    label: t('emailRecipientFields.copyTrbMailbox')
+                  }
+                ]}
+                createContact={contact =>
+                  createAttendee({ ...contact, trbRequestId: id })
+                }
+                className="margin-top-4 margin-bottom-3"
+              />
+            </FormProvider>
 
             <Alert type="warning" slim>
               {t('actionScheduleConsult.alert')}

@@ -1007,6 +1007,7 @@ const technicalAssistance = {
     description:
       'Once you have confirmed availability with the requester and project team, set a date and time for the consult session for this request.',
     labels: {
+      notifyEuaIds: 'Notification recipients',
       meetingDate: 'Meeting date',
       meetingTime: 'Meeting time',
       notes: 'Notes'
