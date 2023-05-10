@@ -1,13 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Link,
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  useParams
-} from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -21,6 +14,7 @@ import {
 
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
+import { CedarRole } from 'queries/types/CedarRole';
 import { UsernameWithRoles } from 'types/systemProfile';
 
 import { TeamContactCard } from '..';
@@ -51,11 +45,11 @@ const EditTeam = ({
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
 
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation<{ user?: CedarRole }>();
 
   const { systemId: cedarSystemId, action } = useParams<{
     systemId: string;
-    action?: 'edit-roles' | 'add-team-member';
+    action?: 'team-member';
   }>();
 
   /**
@@ -100,7 +94,7 @@ const EditTeam = ({
             {name}
           </BreadcrumbLink>
         </Breadcrumb>
-        {action ? (
+        {action === 'team-member' ? (
           <>
             <Breadcrumb>
               <BreadcrumbLink
@@ -113,9 +107,7 @@ const EditTeam = ({
             <Breadcrumb>
               {t(
                 `singleSystem.editTeam.${
-                  action === 'edit-roles'
-                    ? 'editTeamMemberRoles'
-                    : 'form.addTeamMember'
+                  state?.user ? 'editTeamMemberRoles' : 'form.addTeamMember'
                 }`
               )}
             </Breadcrumb>
@@ -126,14 +118,12 @@ const EditTeam = ({
       </BreadcrumbBar>
 
       <Grid className="tablet:grid-col-6">
-        <Switch>
-          {/* Add/edit team member form */}
-          <Route path="/systems/:systemId/team/edit/:action(edit-roles|add-team-member)">
-            <TeamMemberForm />
-          </Route>
-
-          {/* Edit team page */}
-          <Route path="/systems/:systemId/team/edit">
+        {action ? (
+          /* Add/edit team member form */
+          <TeamMemberForm user={state?.user} />
+        ) : (
+          /* Edit team page */
+          <>
             <h1 className="margin-bottom-1">
               {t('singleSystem.editTeam.title')}
             </h1>
@@ -149,59 +139,61 @@ const EditTeam = ({
             </IconLink>
 
             {/* Employees fields hidden until work to update in CEDAR is completed */}
-
             {/* <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
-              <Controller
-                name="numberOfFederalFte"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <FormGroup error={!!error}>
-                    <Label htmlFor={field.name}>
-                      {t('singleSystem.editTeam.federalEmployees')}
-                    </Label>
-                    {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                    <TextInput
-                      {...field}
-                      ref={null}
-                      id={field.name}
-                      type="number"
-                    />
-                  </FormGroup>
-                )}
-              />
-              <Controller
-                name="numberOfContractorFte"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <FormGroup error={!!error}>
-                    <Label htmlFor={field.name}>
-                      {t('singleSystem.editTeam.contractors')}
-                    </Label>
-                    {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                    <TextInput
-                      {...field}
-                      ref={null}
-                      id={field.name}
-                      type="number"
-                    />
-                  </FormGroup>
-                )}
-              />
-            </Form> */}
+                <Controller
+                  name="numberOfFederalFte"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <FormGroup error={!!error}>
+                      <Label htmlFor={field.name}>
+                        {t('singleSystem.editTeam.federalEmployees')}
+                      </Label>
+                      {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                      <TextInput
+                        {...field}
+                        ref={null}
+                        id={field.name}
+                        type="number"
+                      />
+                    </FormGroup>
+                  )}
+                />
+                <Controller
+                  name="numberOfContractorFte"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <FormGroup error={!!error}>
+                      <Label htmlFor={field.name}>
+                        {t('singleSystem.editTeam.contractors')}
+                      </Label>
+                      {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                      <TextInput
+                        {...field}
+                        ref={null}
+                        id={field.name}
+                        type="number"
+                      />
+                    </FormGroup>
+                  )}
+                />
+              </Form> */}
 
             {/* Team Members section */}
             <h2 className="margin-top-6 margin-bottom-205">
               {t('singleSystem.editTeam.teamMembers')}
             </h2>
+
             <Button
               type="button"
-              onClick={() => history.push(`${pathname}/add-team-member`)}
+              onClick={() => history.push(`${pathname}/team-member`)}
             >
               {t('singleSystem.editTeam.addNewTeamMember')}
             </Button>
+
             <h4 className="margin-top-4">
               {t('singleSystem.editTeam.currentTeamMembers')}
             </h4>
+
             <CardGroup data-testid="teamCardGroup">
               {team.map(user => (
                 <TeamContactCard
@@ -211,15 +203,16 @@ const EditTeam = ({
                   footerActions={{
                     editRoles: () =>
                       history.push(
-                        `${pathname}/edit-roles`,
+                        `${pathname}/team-member`,
                         // Send user info to edit form
-                        user
+                        { user }
                       ),
                     removeTeamMember: () => null
                   }}
                 />
               ))}
             </CardGroup>
+
             <IconLink
               to={`/systems/${cedarSystemId}/team`}
               icon={<IconArrowBack />}
@@ -227,8 +220,8 @@ const EditTeam = ({
             >
               {t('returnToSystemProfile')}
             </IconLink>
-          </Route>
-        </Switch>
+          </>
+        )}
       </Grid>
     </GridContainer>
   );

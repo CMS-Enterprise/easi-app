@@ -159,7 +159,7 @@ const AppRoutes = () => {
       )}
       {flags.systemProfile && (
         <SecureRoute
-          path="/systems/:systemId/:subinfo/:edit(edit)?/:action(edit-roles|add-team-member)?/:top(top)?"
+          path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
           exact
           component={SystemProfile}
         />

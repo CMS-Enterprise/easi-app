@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { CedarRole } from 'queries/types/CedarRole';
+
 /**
  * Form to add or edit a system profile team member
  */
-const TeamMemberForm = () => {
+const TeamMemberForm = ({ user }: { user?: CedarRole }) => {
   const { t } = useTranslation('systemProfile');
 
   return (
