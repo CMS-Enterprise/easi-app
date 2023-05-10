@@ -45,6 +45,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheR
 
 	hc := http.DefaultClient
 
+	basePath := "/gateway/CEDAR Core API/" + appconfig.CEDARCoreAPIVersion
 	client := &Client{
 		cedarCoreEnabled: fnEmit,
 		auth: httptransport.APIKeyAuth(
@@ -55,7 +56,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheR
 		sdk: apiclient.New(
 			httptransport.New(
 				cedarHost,
-				apiclient.DefaultBasePath,
+				basePath,
 				apiclient.DefaultSchemes,
 			),
 			strfmt.Default,
