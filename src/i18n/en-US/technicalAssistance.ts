@@ -489,7 +489,7 @@ const technicalAssistance = {
       {
         heading: 'Feedback from initial review',
         text:
-          'The TRB will review your Intake Request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps.'
+          'The TRB will review your request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps.'
       },
       {
         heading: 'Prepare for the TRB consult session',
