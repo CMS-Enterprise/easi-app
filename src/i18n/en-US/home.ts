@@ -69,7 +69,7 @@ const home = {
   easiPurpose: 'You can use EASi to make:',
   easiTasks: [
     'IT Governance requests, including those for Life Cycle IDs',
-    'technical assistance requests for your IT project'
+    'Technical assistance requests for your IT project'
   ]
 };
 
