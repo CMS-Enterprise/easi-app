@@ -33,13 +33,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
   it('submits successfully ', async () => {
-    const {
-      getByTestId,
-      findByText,
-      getByLabelText,
-      getByRole,
-      findByRole
-    } = render(
+    const { findByText, getByLabelText, getByRole, findByRole } = render(
       <Provider store={store}>
         <VerboseMockedProvider
           defaultOptions={{
@@ -84,9 +78,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       i18next.t<string>('technicalAssistance:actionScheduleConsult.heading')
     );
 
-    await waitForElementToBeRemoved(() =>
-      getByTestId('emailRecipients-spinner')
-    );
+    await findByText('Choose recipients');
 
     const submitButton = getByRole('button', {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
