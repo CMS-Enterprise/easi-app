@@ -77,7 +77,7 @@ function RequestType() {
       </div>
 
       <UswdsReactLink
-        to="/trb"
+        to={isNew ? '/trb' : `/trb/task-list/${id}`}
         className="display-flex flex-align-center margin-top-2"
       >
         <IconArrowBack className="margin-right-1" />
