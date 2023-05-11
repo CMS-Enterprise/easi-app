@@ -278,7 +278,7 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
     </div>
     <a
       class="usa-link display-flex flex-align-center margin-top-2"
-      href="/trb"
+      href="/trb/task-list/b1120f6a-87d7-4bcd-b8f2-0835c51b2d52"
     >
       <svg
         class="usa-icon margin-right-1"
