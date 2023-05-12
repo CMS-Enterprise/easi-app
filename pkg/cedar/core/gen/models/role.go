@@ -36,9 +36,6 @@ type Role struct {
 	// ID of the role assignee, if a person
 	AssigneeID string `json:"assigneeId,omitempty"`
 
-	// Indicated the person assigned the role is marked for deletion
-	AssigneeIsDeleted string `json:"assigneeIsDeleted,omitempty"`
-
 	// assignee last name
 	AssigneeLastName string `json:"assigneeLastName,omitempty"`
 
