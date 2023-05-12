@@ -381,6 +381,9 @@ const technicalAssistance = {
           'you are ready to go live and would like one final review with the TRB to make sure your team didn’t miss anything',
           'you would like a formal review of how your solution aligns with CMS’s Technical Reference Architecture (TRA)'
         ]
+      },
+      OTHER: {
+        heading: 'Other'
       }
     },
     whenOption: 'When should I choose this option?',
