@@ -858,16 +858,16 @@ const technicalAssistance = {
       FOLLOW_UP_REQUESTED: 'Follow-up requested',
       NEW: 'New',
       READY_FOR_CONSULT: 'Ready for consult',
-      REQUEST_FORM_COMPLETE: 'Request form completed'
+      REQUEST_FORM_COMPLETE: 'Request form complete'
     },
     taskStatuses: {
       formStatus: {
         READY_TO_START: 'Ready to start request form',
         IN_PROGRESS: 'Draft request form',
-        COMPLETED: 'Request form completed'
+        COMPLETED: 'Request form complete'
       },
       feedbackStatus: {
-        CANNOT_START_YET: 'Request form completed',
+        CANNOT_START_YET: 'Request form complete',
         READY_TO_START: 'Ready to start feedback',
         EDITS_REQUESTED: 'Feedback edits requested',
         IN_REVIEW: 'Feedback in review',
