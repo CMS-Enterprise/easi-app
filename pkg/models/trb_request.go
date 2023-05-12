@@ -31,6 +31,7 @@ const (
 	TRBTBrainstorm   TRBRequestType = "BRAINSTORM"
 	TRBTFollowup     TRBRequestType = "FOLLOWUP"
 	TRBTFormalReview TRBRequestType = "FORMAL_REVIEW"
+	TRBTOther        TRBRequestType = "OTHER"
 )
 
 // TRBRequestState represents the types of TRBRequestState types
