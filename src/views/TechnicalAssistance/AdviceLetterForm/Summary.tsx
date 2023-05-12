@@ -158,7 +158,7 @@ const Summary = ({
               history.push(`/trb/${trbRequestId}/advice/recommendations`)
             )
         }}
-        taskListUrl={`/trb/${trbRequestId}/request`}
+        taskListUrl={`/trb/${trbRequestId}/advice`}
         saveExitText={t('adviceLetterForm.returnToRequest')}
         submit={submit}
         border={false}
