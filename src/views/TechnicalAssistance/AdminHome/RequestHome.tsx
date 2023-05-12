@@ -21,6 +21,7 @@ import {
 import { TRBFormStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
+import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
 
 import InformationCard from './components/InformationCard';
 import TrbAdminWrapper from './components/TrbAdminWrapper';
@@ -42,13 +43,8 @@ const RequestHome = ({
     variables: { id }
   });
 
-  const {
-    taskStatuses,
-    consultMeetingTime,
-    trbLeadInfo,
-    trbLeadComponent,
-    documents
-  } = data?.trbRequest || {};
+  const { taskStatuses, consultMeetingTime, trbLeadInfo, documents } =
+    data?.trbRequest || {};
 
   if (loading) return <PageLoading />;
 
@@ -125,7 +121,7 @@ const RequestHome = ({
                   className="margin-right-1"
                 />
                 <p className="text-bold margin-0">
-                  {trbLeadInfo.commonName}, {trbLeadComponent}
+                  {getPersonNameAndComponentVal(trbLeadInfo.commonName, 'TRB')}
                 </p>
               </div>
               <Link

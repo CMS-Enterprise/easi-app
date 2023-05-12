@@ -72,7 +72,7 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
     );
     const trbLead = getPersonNameAndComponentVal(
       r.trbLeadInfo.commonName,
-      r.trbLeadComponent
+      'TRB'
     );
 
     return [
@@ -121,7 +121,7 @@ function RequesterCell({ row }: CellProps<TrbAdminTeamHomeRequest>) {
 function TrbLeadCell({ row }: CellProps<TrbAdminTeamHomeRequest>) {
   return getPersonNameAndComponentVal(
     row.original.trbLeadInfo.commonName,
-    row.original.trbLeadComponent
+    'TRB'
   );
 }
 
