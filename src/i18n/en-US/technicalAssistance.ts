@@ -973,6 +973,7 @@ const technicalAssistance = {
     }
   },
   actionRequestEdits: {
+    breadcrumb: 'Request edits',
     heading: 'Action: request edits',
     description:
       'Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.',
@@ -993,6 +994,7 @@ const technicalAssistance = {
     cancelAndReturn: 'Cancel action and return to request'
   },
   actionReadyForConsult: {
+    breadcrumb: 'Ready for consult',
     heading: 'Action: ready for consult',
     description:
       'Add any feedback you have for the requester based on your review of their initial intake form. If the consult session has already been scheduled, you may also add that information here.',
