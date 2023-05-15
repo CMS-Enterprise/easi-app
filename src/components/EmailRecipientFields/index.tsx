@@ -121,16 +121,19 @@ const EmailRecipientFields = ({
             i18nKey="technicalAssistance:emailRecipientFields.selectedCount"
             components={{ bold: <span className="text-bold" /> }}
             count={selectedCount}
+            values={{ plural: selectedCount === 1 ? '' : 's' }}
           />
         </p>
 
         <TruncatedContent
           initialCount={1 + defaultMailboxes.length}
           labelMore={t(`emailRecipientFields.showMore`, {
-            number: contacts.length
+            number: contacts.length,
+            plural: contacts.length > 1 ? 's' : ''
           })}
           labelLess={t(`emailRecipientFields.showFewer`, {
-            number: contacts.length
+            number: contacts.length,
+            plural: contacts.length > 1 ? 's' : ''
           })}
           buttonClassName="margin-top-2"
         >
