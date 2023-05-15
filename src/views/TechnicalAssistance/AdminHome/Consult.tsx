@@ -24,6 +24,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
+import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
@@ -61,7 +62,7 @@ function Consult() {
 
   const requestUrl = `/trb/${id}/${activePage}`;
 
-  const [mutate] = useMutation<
+  const [mutate, mutationResult] = useMutation<
     UpdateTrbRequestConsultMeeting,
     UpdateTrbRequestConsultMeetingVariables
   >(UpdateTrbRequestConsultMeetingQuery);
@@ -82,6 +83,8 @@ function Consult() {
     handleSubmit,
     formState: { errors, isDirty, isSubmitting }
   } = actionForm;
+
+  const formSubmitting: boolean = isSubmitting || mutationResult.loading;
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -317,10 +320,15 @@ function Consult() {
           </Grid>
         </Grid>
 
-        <div>
-          <Button type="submit" disabled={!isDirty || isSubmitting}>
+        <div className="display-flex flex-align-center margin-top-5">
+          <Button
+            type="submit"
+            disabled={!isDirty || formSubmitting}
+            className="margin-top-0 margin-right-105"
+          >
             {t('actionRequestEdits.submit')}
           </Button>
+          {formSubmitting && <Spinner />}
         </div>
       </Form>
 
