@@ -181,38 +181,57 @@ const EmailRecipientFields = ({
           })}
 
           {/* Recipients */}
-          <Controller
-            name="notifyEuaIds"
-            render={({ field }) => {
-              return (
-                <>
-                  {orderBy(contacts, 'createdAt').map((contact, index) => {
-                    const { commonName, euaUserId } = contact.userInfo || {};
-                    const value = euaUserId || '';
+          {contacts.length > 0 && (
+            <>
+              <Controller
+                name="notifyEuaIds"
+                render={({ field }) => {
+                  return (
+                    <>
+                      {orderBy(contacts, 'createdAt').map((contact, index) => {
+                        const { commonName, euaUserId } =
+                          contact.userInfo || {};
+                        const value = euaUserId || '';
 
-                    const role = contact.role ? contactRoles[contact.role] : '';
+                        const role = contact.role
+                          ? contactRoles[contact.role]
+                          : '';
 
-                    return (
-                      <CheckboxField
-                        key={contact.id}
-                        id={`${field.name}.${index + 1}`}
-                        label={`${commonName} (${role})`}
-                        {...{ ...field, ref: null }}
-                        onChange={e =>
-                          field.onChange(
-                            toggleArrayValue(field.value, e.target.value)
-                          )
-                        }
-                        value={value}
-                        checked={!!field.value?.includes(value)}
-                      />
-                    );
-                  })}
-                </>
-              );
-            }}
-          />
+                        return (
+                          <CheckboxField
+                            key={contact.id}
+                            id={`${field.name}.${index + 1}`}
+                            label={`${commonName} (${role})`}
+                            {...{ ...field, ref: null }}
+                            onChange={e =>
+                              field.onChange(
+                                toggleArrayValue(field.value, e.target.value)
+                              )
+                            }
+                            value={value}
+                            checked={!!field.value?.includes(value)}
+                          />
+                        );
+                      })}
+                    </>
+                  );
+                }}
+              />
 
+              <CreateContactForm
+                createContact={contact =>
+                  createContact(contact).then(() =>
+                    setValue('notifyEuaIds', [
+                      ...notifyEuaIds,
+                      contact.euaUserId
+                    ])
+                  )
+                }
+              />
+            </>
+          )}
+        </TruncatedContent>
+        {contacts.length === 0 && (
           <CreateContactForm
             createContact={contact =>
               createContact(contact).then(() =>
@@ -220,7 +239,7 @@ const EmailRecipientFields = ({
               )
             }
           />
-        </TruncatedContent>
+        )}
       </fieldset>
     </FormGroup>
   );
