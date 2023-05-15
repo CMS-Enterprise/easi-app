@@ -35,6 +35,7 @@ type trbAdviceLetterSubmittedEmailTemplateParams struct {
 	SubmissionDate      string
 	ConsultDate         string
 	TRBAdviceLetterLink string
+	TRBAdminRequestLink string
 	TRBRequestLink      string
 	TRBInboxAddress     string
 	TRBEmail            models.EmailAddress
@@ -64,7 +65,8 @@ func (c Client) SendTRBAdviceLetterSubmittedEmail(ctx context.Context, input Sen
 		RequestType:         input.RequestType,
 		SubmissionDate:      submissionDate,
 		ConsultDate:         consultDate,
-		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice", input.TRBRequestID.String())),
+		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice-letter", input.TRBRequestID.String())),
+		TRBAdminRequestLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "request")),
 		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
 		TRBEmail:            c.config.TRBEmail,
 	}

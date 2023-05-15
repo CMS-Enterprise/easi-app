@@ -23,11 +23,18 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 		path.Join("trb", "task-list", trbID.String()),
 	)
 
+	trbAdminLink := fmt.Sprintf(
+		"%s://%s/%s",
+		s.config.URLScheme,
+		s.config.URLHost,
+		path.Join("trb", trbID.String(), "request"),
+	)
+
 	adviceLetterLink := fmt.Sprintf(
 		"%s://%s/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
-		path.Join("trb", "advice", trbID.String()),
+		path.Join("trb", "advice-letter", trbID.String()),
 	)
 
 	submissionDate, err := time.Parse(time.RFC3339, "2022-02-01T13:30:00+00:00")
@@ -76,8 +83,8 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 
 <p>View this request in EASi:</p>
 <ul>
-<li>If you are the initial requester, you may <a href="` + adviceLetterLink + `">click here</a> to view the advice letter and your request task list.</li>
-<li>TRB team members may <a href="` + trbLink + `">click here</a> to view the request details.</li>
+<li>If you are the initial requester, you may <a href="` + trbLink + `">click here</a> to view the advice letter and your request task list.</li>
+<li>TRB team members may <a href="` + trbAdminLink + `">click here</a> to view the request details.</li>
 <li>Others should contact Mc Lovin or the TRB for more information about this request.</li>
 </ul>
 
