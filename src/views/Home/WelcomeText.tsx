@@ -14,10 +14,15 @@ const WelcomeText = () => {
   });
 
   return (
-    <div className="tablet:grid-col-9">
-      <PageHeading>{t('home:title')}</PageHeading>
-      <p>{t('easiPurpose')}</p>
-      <ul className="line-height-body-5 margin-bottom-4">
+    <div className="tablet:grid-col-9 margin-bottom-8">
+      <PageHeading className="margin-bottom-1">{t('home:title')}</PageHeading>
+      <p className="margin-top-1 margin-bottom-5 font-body-lg text-light line-height-body-5">
+        {t('easiIntro')}
+      </p>
+      <p className="font-body-lg text-light line-height-body-5 margin-bottom-1">
+        {t('easiPurpose')}
+      </p>
+      <ul className="font-body-lg text-light line-height-body-5 margin-top-1 margin-bottom-4">
         {easiTasks.map(task => (
           <li key={task}>{task}</li>
         ))}

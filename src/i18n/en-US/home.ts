@@ -64,10 +64,12 @@ const home = {
     caption:
       'Below is a list of governance requests that are in draft or submitted.'
   },
+  easiIntro:
+    'The place to find CMS IT Governance, assistance with technical issues, as well as comprehensive information about CMS systems.',
   easiPurpose: 'You can use EASi to make:',
   easiTasks: [
-    'IT Governance requests',
-    '508 testing request for your application'
+    'IT Governance requests, including those for Life Cycle IDs',
+    'Technical assistance requests for your IT project'
   ]
 };
 

@@ -381,6 +381,9 @@ const technicalAssistance = {
           'you are ready to go live and would like one final review with the TRB to make sure your team didn’t miss anything',
           'you would like a formal review of how your solution aligns with CMS’s Technical Reference Architecture (TRA)'
         ]
+      },
+      OTHER: {
+        heading: 'Other'
       }
     },
     whenOption: 'When should I choose this option?',
@@ -489,7 +492,7 @@ const technicalAssistance = {
       {
         heading: 'Feedback from initial review',
         text:
-          'The TRB will review your Intake Request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps.'
+          'The TRB will review your request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps.'
       },
       {
         heading: 'Prepare for the TRB consult session',

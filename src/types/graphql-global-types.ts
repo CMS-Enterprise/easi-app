@@ -270,6 +270,7 @@ export enum TRBRequestType {
   FOLLOWUP = "FOLLOWUP",
   FORMAL_REVIEW = "FORMAL_REVIEW",
   NEED_HELP = "NEED_HELP",
+  OTHER = "OTHER",
 }
 
 /**
