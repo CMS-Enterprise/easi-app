@@ -216,7 +216,7 @@ const Review = ({
                 isSubmitting ||
                 (watch('notifyEuaIds').length === 0 && !watch('copyTrbMailbox'))
             }}
-            taskListUrl={`/trb/${trbRequestId}/request`}
+            taskListUrl={`/trb/${trbRequestId}/advice`}
             saveExitText={t('adviceLetterForm.returnToRequest')}
             submitDisabled
             border={false}
