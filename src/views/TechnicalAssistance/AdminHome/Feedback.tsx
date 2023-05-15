@@ -34,6 +34,11 @@ const Feedback = ({
     }
   });
 
+  // Filter out any feedback that is an empty string
+  const validFeedback = data?.trbRequest.feedback.filter(
+    feedback => !!feedback.feedbackMessage
+  );
+
   return (
     <TrbAdminWrapper
       activePage="feedback"
@@ -53,9 +58,9 @@ const Feedback = ({
     >
       {loading && <PageLoading />}
       {error && <NotFoundPartial />}
-      {data && data.trbRequest.feedback.length > 0 ? (
+      {validFeedback && validFeedback.length > 0 ? (
         <TrbRequestFeedbackList
-          feedback={sortBy(data.trbRequest.feedback, 'createdAt').reverse()}
+          feedback={sortBy(validFeedback, 'createdAt').reverse()}
         />
       ) : (
         <Alert slim type="info">
