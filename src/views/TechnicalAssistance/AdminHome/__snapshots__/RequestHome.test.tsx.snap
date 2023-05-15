@@ -71,21 +71,6 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="usa-summary-box margin-top-0"
-    >
-      <h5
-        class="text-base-dark text-uppercase margin-top-0 margin-bottom-05 line-height-body-1 text-normal text-body-xs"
-      >
-        Admin Action
-      </h5>
-      <h3
-        class="margin-y-0"
-      />
-      <ul
-        class="usa-button-group margin-top-3"
-      />
-    </div>
     <h2
       class="margin-top-4 margin-bottom-3"
     >
