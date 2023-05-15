@@ -3,6 +3,7 @@ import {
   teamSectionKeys,
   threatLevelGrades
 } from 'constants/systemProfile';
+import { CedarRole } from 'queries/types/CedarRole';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
@@ -29,9 +30,7 @@ import { CedarAssigneeType } from './graphql-global-types';
 
 export type TeamSectionKey = typeof teamSectionKeys[number];
 
-export interface CedarRoleAssigneePerson
-  // eslint-disable-next-line camelcase
-  extends GetSystemProfile_cedarSystemDetails_roles {
+export interface CedarRoleAssigneePerson extends CedarRole {
   assigneeType: CedarAssigneeType.PERSON;
 }
 
