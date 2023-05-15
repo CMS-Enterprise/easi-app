@@ -20,7 +20,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 		"%s://%s/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
-		path.Join("trb", trbID.String(), "request"),
+		path.Join("trb", trbID.String(), "advice"),
 	)
 
 	input := SendTRBAdviceLetterInternalReviewEmailInput{
