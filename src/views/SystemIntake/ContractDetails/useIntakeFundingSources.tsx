@@ -79,8 +79,8 @@ export default function useIntakeFundingSources(
   // Active funding source - used in form
   const [activeFundingSource, setActiveFundingSource] = useState<{
     data: MultiFundingSource;
-    action: 'Add' | 'Edit' | 'Reset';
-  }>({ data: emptyFundingSource, action: 'Reset' });
+    action: 'Add' | 'Edit' | null;
+  }>({ data: emptyFundingSource, action: null });
 
   // Update active funding source - used in form
   const updateActiveFundingSource = ({
@@ -146,7 +146,7 @@ export default function useIntakeFundingSources(
   // When funding source form is submitted, reset active funding source
   useEffect(() => {
     setActiveFundingSource({
-      action: 'Reset',
+      action: null,
       data: emptyFundingSource
     });
   }, [fundingSources]);
