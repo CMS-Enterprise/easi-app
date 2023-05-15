@@ -224,7 +224,7 @@ const Review = ({
                 {formSubmitting && <Spinner />}
               </div>
             ]}
-            taskListUrl={`/trb/${trbRequestId}/request`}
+            taskListUrl={`/trb/${trbRequestId}/advice`}
             saveExitText={t('adviceLetterForm.returnToRequest')}
             submitDisabled
             border={false}

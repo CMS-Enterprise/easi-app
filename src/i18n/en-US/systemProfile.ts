@@ -133,6 +133,33 @@ const systemProfile = {
       federalFTE: 'Federal FTE',
       contractorFTE: 'Contractor FTE'
     },
+    editTeam: {
+      systems: 'Systems',
+      title: 'Edit System Profile: Team',
+      description:
+        'Add, remove, and edit the team members and roles for this system.',
+      helpText:
+        'All changes made here will be autosaved and applied to this system’s profile.',
+      federalEmployees:
+        'How many full-time federal employees work on this system?',
+      contractors: 'How many full-time contractors work on this system?',
+      teamMembers: 'Team members',
+      addNewTeamMember: 'Add a new team member',
+      currentTeamMembers: 'Current team members',
+      editRoles: 'Edit roles',
+      editTeamMemberRoles: 'Edit team member roles',
+      removeTeamMember: 'Remove team member',
+      form: {
+        addTeamMember: 'Add a team member',
+        addDescription:
+          'Look up your team member and then add their role(s) on this team.'
+      }
+    },
+    editPage: {
+      heading: 'Need to edit something on this page?',
+      lastUpdated: 'Last updated: {{lastUpdatedText}}',
+      buttonLabel: 'Edit {{page}}'
+    },
     toolsAndSoftware: {
       header: 'Tools and Software',
       productType: 'Product Type',
@@ -263,7 +290,8 @@ const systemProfile = {
   },
   gql: {
     fail: 'Failed to retrieve systems data'
-  }
+  },
+  returnToSystemProfile: 'Return to system profile'
 };
 
 export default systemProfile;

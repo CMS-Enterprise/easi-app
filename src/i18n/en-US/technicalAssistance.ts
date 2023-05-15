@@ -381,6 +381,9 @@ const technicalAssistance = {
           'you are ready to go live and would like one final review with the TRB to make sure your team didn’t miss anything',
           'you would like a formal review of how your solution aligns with CMS’s Technical Reference Architecture (TRA)'
         ]
+      },
+      OTHER: {
+        heading: 'Other'
       }
     },
     whenOption: 'When should I choose this option?',
@@ -858,16 +861,16 @@ const technicalAssistance = {
       FOLLOW_UP_REQUESTED: 'Follow-up requested',
       NEW: 'New',
       READY_FOR_CONSULT: 'Ready for consult',
-      REQUEST_FORM_COMPLETE: 'Request form completed'
+      REQUEST_FORM_COMPLETE: 'Request form complete'
     },
     taskStatuses: {
       formStatus: {
         READY_TO_START: 'Ready to start request form',
         IN_PROGRESS: 'Draft request form',
-        COMPLETED: 'Request form completed'
+        COMPLETED: 'Request form complete'
       },
       feedbackStatus: {
-        CANNOT_START_YET: 'Request form completed',
+        CANNOT_START_YET: 'Request form complete',
         READY_TO_START: 'Ready to start feedback',
         EDITS_REQUESTED: 'Feedback edits requested',
         IN_REVIEW: 'Feedback in review',
@@ -973,6 +976,7 @@ const technicalAssistance = {
     }
   },
   actionRequestEdits: {
+    breadcrumb: 'Request edits',
     heading: 'Action: request edits',
     description:
       'Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.',
@@ -993,6 +997,7 @@ const technicalAssistance = {
     cancelAndReturn: 'Cancel action and return to request'
   },
   actionReadyForConsult: {
+    breadcrumb: 'Ready for consult',
     heading: 'Action: ready for consult',
     description:
       'Add any feedback you have for the requester based on your review of their initial intake form. If the consult session has already been scheduled, you may also add that information here.',

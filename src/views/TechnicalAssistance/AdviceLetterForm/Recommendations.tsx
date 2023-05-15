@@ -162,7 +162,7 @@ const Recommendations = ({
                 history.push(`/trb/${trbRequestId}/advice/next-steps`),
               outline: !hasRecommendations
             }}
-            taskListUrl={`/trb/${trbRequestId}/request`}
+            taskListUrl={`/trb/${trbRequestId}/advice`}
             submit={async callback => callback?.()}
             saveExitText={t('adviceLetterForm.returnToRequest')}
             border={false}

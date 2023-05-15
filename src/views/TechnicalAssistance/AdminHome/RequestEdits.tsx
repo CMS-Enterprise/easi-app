@@ -128,9 +128,7 @@ function RequestEdits() {
             url: requestUrl
           },
           {
-            text: t(
-              'adminHome.taskStatuses.attendConsultStatus.READY_TO_SCHEDULE'
-            )
+            text: t(`${actionText}.breadcrumb`)
           }
         ]}
       />

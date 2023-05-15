@@ -9070,6 +9070,7 @@ enum TRBRequestType {
   BRAINSTORM
   FOLLOWUP
   FORMAL_REVIEW
+  OTHER
 }
 
 enum TRBRequestState {
