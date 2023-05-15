@@ -201,13 +201,17 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
           </button>
         </fieldset>
       </div>
-      <button
-        class="usa-button"
-        data-testid="button"
-        type="submit"
+      <div
+        class="display-flex flex-align-center margin-top-5"
       >
-        Complete action
-      </button>
+        <button
+          class="usa-button margin-top-0 margin-right-105"
+          data-testid="button"
+          type="submit"
+        >
+          Complete action
+        </button>
+      </div>
     </form>
     <a
       class="usa-link display-flex flex-align-center"
