@@ -74,10 +74,10 @@ const RequestHome = ({
 
           <p className="text-bold margin-bottom-1">{t('adminHome.dateTime')}</p>
 
-          {taskStatuses?.formStatus === TRBFormStatus.IN_PROGRESS ? (
+          {taskStatuses?.formStatus !== TRBFormStatus.COMPLETED ? (
             // Unable to set consult until initial request form complete
             <Alert type="info" slim className="margin-y-1 margin-top-2">
-              {t('adminHome.requestInDraft')}
+              {t('adminHome.reviewInitialRequest')}
             </Alert>
           ) : (
             <div>

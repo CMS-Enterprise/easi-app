@@ -65,7 +65,7 @@ const InitialRequestForm = ({
       {error && <NotFoundPartial />}
 
       {/* Alert for  initial request form still in draft */}
-      {request?.taskStatuses.formStatus === TRBFormStatus.IN_PROGRESS && (
+      {request && request.taskStatuses.formStatus !== TRBFormStatus.COMPLETED && (
         <Alert type="info" slim>
           {t('adminHome.requestInDraftAlt')}
         </Alert>
