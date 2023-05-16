@@ -50,9 +50,9 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 	input := SendTRBAdviceLetterSubmittedEmailInput{
 		TRBRequestID:   trbID,
 		RequestName:    "Test TRB Request",
-		RequestType:    "Tech Support",
+		RequestType:    "NEED_HELP",
 		RequesterName:  "Mc Lovin",
-		Component:      "Pickles",
+		Component:      "Center for Clinical Standards and Quality",
 		SubmissionDate: &submissionDate,
 		ConsultDate:    &consultDate,
 		Recipients:     recipients,
@@ -76,8 +76,8 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 <ul style="padding-left: 0;">
 <li style="list-style-type: none;">Submission date: ` + submissionDate.Format("January 2, 2006") + `</li>
 <li style="list-style-type: none;">Requester: ` + input.RequesterName + `</li>
-<li style="list-style-type: none;">Component: ` + input.Component + `</li>
-<li style="list-style-type: none;">Request type: ` + input.RequestType + `</li>
+<li style="list-style-type: none;">Component: CCSQ</li>
+<li style="list-style-type: none;">Request type: I’m having a problem with my system</li>
 <li style="list-style-type: none;">Date of TRB Consult: ` + consultDate.Format("January 2, 2006") + `</li>
 </ul>
 
