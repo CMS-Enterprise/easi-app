@@ -198,22 +198,26 @@ function SubmittedRequest({
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>{t('basic.labels.collabGroups')}</dt>
             <dd>
-              {request.form.collabGroups
-                .map(v => {
-                  if (v === 'OTHER') {
-                    return `${t('basic.options.other')}: ${
-                      request.form.collabGroupOther
-                    } (${request.form.collabDateOther})`;
-                  }
-                  return `${t(`basic.options.collabGroups.${camelCase(v)}`)} (${
-                    request.form[
-                      `collabDate${upperFirst(
-                        camelCase(v)
-                      )}` as keyof TrbRequestForm
-                    ]
-                  })`;
-                })
-                .join(', ')}
+              {request.form.collabGroups.length > 0
+                ? request.form.collabGroups
+                    .map(v => {
+                      if (v === 'OTHER') {
+                        return `${t('basic.options.other')}: ${
+                          request.form.collabGroupOther
+                        } (${request.form.collabDateOther})`;
+                      }
+                      return `${t(
+                        `basic.options.collabGroups.${camelCase(v)}`
+                      )} (${
+                        request.form[
+                          `collabDate${upperFirst(
+                            camelCase(v)
+                          )}` as keyof TrbRequestForm
+                        ]
+                      })`;
+                    })
+                    .join(', ')
+                : t('basic.noAnswer')}
             </dd>
           </Grid>
 
