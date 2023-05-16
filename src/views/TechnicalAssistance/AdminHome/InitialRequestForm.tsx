@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
@@ -62,6 +63,14 @@ const InitialRequestForm = ({
     >
       {loading && <PageLoading />}
       {error && <NotFoundPartial />}
+
+      {/* Alert for  initial request form still in draft */}
+      {request?.taskStatuses.formStatus === TRBFormStatus.IN_PROGRESS && (
+        <Alert type="info" slim>
+          {t('adminHome.requestInDraftAlt')}
+        </Alert>
+      )}
+
       {request && (
         <>
           <SubmittedRequest
