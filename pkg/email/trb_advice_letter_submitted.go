@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/email/translation"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -61,8 +62,8 @@ func (c Client) SendTRBAdviceLetterSubmittedEmail(ctx context.Context, input Sen
 	templateParams := trbAdviceLetterSubmittedEmailTemplateParams{
 		RequestName:         input.RequestName,
 		RequesterName:       input.RequesterName,
-		Component:           input.Component,
-		RequestType:         input.RequestType,
+		Component:           translation.GetComponentAcronym(input.Component),
+		RequestType:         translation.GetTRBResponseType(input.RequestType),
 		SubmissionDate:      submissionDate,
 		ConsultDate:         consultDate,
 		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice-letter", input.TRBRequestID.String())),
