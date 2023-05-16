@@ -178,3 +178,8 @@ export const trbActionSchema = (messageKey?: string, required?: boolean) =>
       ? { [messageKey]: required ? yup.string().required() : yup.string() }
       : {})
   });
+
+export const consultSchema = trbActionSchema('notes').shape({
+  meetingDate: yup.string().required(),
+  meetingTime: yup.string().required()
+});

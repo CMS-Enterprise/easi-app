@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -98,6 +98,10 @@ function Basic({
 }: FormStepComponentProps) {
   const history = useHistory();
   const { t } = useTranslation('technicalAssistance');
+
+  const [fundingSourcesFormActive, setFundingSourcesFormActive] = useState(
+    false
+  );
 
   const {
     data,
@@ -716,6 +720,7 @@ function Basic({
                     }
                   }}
                   fundingSourceOptions={intakeFundingSources}
+                  setFieldActive={setFundingSourcesFormActive}
                   combinedFields
                 />
               </FormGroup>
@@ -963,7 +968,7 @@ function Basic({
       <Pager
         className="margin-top-5"
         next={{
-          disabled: isSubmitting,
+          disabled: isSubmitting || fundingSourcesFormActive,
           onClick: () => {
             submit(() => {
               history.push(stepUrl.next);

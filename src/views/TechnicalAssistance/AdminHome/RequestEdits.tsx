@@ -20,6 +20,7 @@ import PageHeading from 'components/PageHeading';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
@@ -87,10 +88,12 @@ function RequestEdits() {
     formState: { isSubmitting }
   } = actionForm;
 
-  const [sendFeedback] = useMutation<
+  const [sendFeedback, feedbackResult] = useMutation<
     CreateTrbRequestFeedback,
     CreateTrbRequestFeedbackVariables
   >(CreateTrbRequestFeedbackQuery);
+
+  const formLoading: boolean = isSubmitting || feedbackResult.loading;
 
   const submitForm = (formData: RequestEditsFields) => {
     sendFeedback({
@@ -200,9 +203,16 @@ function RequestEdits() {
           />
         </FormProvider>
 
-        <Button type="submit" disabled={isSubmitting}>
-          {t('actionRequestEdits.submit')}
-        </Button>
+        <div className="display-flex flex-align-center margin-top-5">
+          <Button
+            type="submit"
+            disabled={formLoading}
+            className="margin-top-0 margin-right-105"
+          >
+            {t('actionRequestEdits.submit')}
+          </Button>
+          {formLoading && <Spinner />}
+        </div>
       </Form>
 
       <UswdsReactLink
