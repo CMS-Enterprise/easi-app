@@ -416,8 +416,13 @@ func ReopenTRBRequest(
 // IsRecentTRBRequest determines if a TRB Request should be determined to be flagged as "recent" or not.
 func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Time) bool {
 	numDaysToConsiderRecent := -7
-	recentIfAfterDate := now.AddDate(0, 0, numDaysToConsiderRecent)
-	isRecent := obj.State != models.TRBRequestStateClosed && (obj.CreatedAt.After(recentIfAfterDate) || obj.TRBLead != nil)
+	recencyDate := now.AddDate(0, 0, numDaysToConsiderRecent)
+	isRequestClosed := obj.State == models.TRBRequestStateClosed
+	hasNoLeadAssigned := obj.TRBLead != nil
+
+	// A request is only recent if it's not closed
+	// A request is only recent if it's either created after the recencyDate OR has no lead assigned
+	isRecent := !isRequestClosed && (obj.CreatedAt.After(recencyDate) || hasNoLeadAssigned)
 	return isRecent
 }
 
