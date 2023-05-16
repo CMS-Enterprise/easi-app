@@ -234,7 +234,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	const idMatchClause = `
 		WHERE system_intakes.id=$1
 `
-	err := s.db.GetContext(ctx, &intake, fetchSystemIntakeSQL+idMatchClause, id)
+	err := s.db.Get(&intake, fetchSystemIntakeSQL+idMatchClause, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			appcontext.ZLogger(ctx).Info(
@@ -266,7 +266,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	// required explicitly specifying all of the system intake columns, which seemed less than ideal
 	// given that any changes made to the models.SystemIntake struct would require also code changes to
 	// the code that would handle the joined query result.
-	err = s.db.SelectContext(ctx, &sources, `
+	err = s.db.Select(&sources, `
 		SELECT *
 		FROM system_intake_funding_sources
 		WHERE system_intake_id=$1
@@ -655,7 +655,7 @@ func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]
 			intakes_a.id = $1 AND intakes_b.id != $1;
 	`
 
-	err := s.db.SelectContext(ctx, &intakes, query, id)
+	err := s.db.Select(&intakes, query, id)
 	if err != nil {
 		return nil, err
 	}
@@ -665,7 +665,7 @@ func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]
 // GetSystemIntakesWithLCIDs retrieves all LCIDs that are in use
 func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := s.db.SelectContext(ctx, &intakes,
+	err := s.db.Select(&intakes,
 		fetchSystemIntakeSQL+`
 		WHERE lcid IS NOT NULL;
 	`)

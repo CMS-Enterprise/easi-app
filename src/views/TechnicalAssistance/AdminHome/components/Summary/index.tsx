@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
@@ -11,9 +11,12 @@ import {
   ModalRef
 } from '@trussworks/react-uswds';
 
-import { GetTrbRequest_trbRequest_taskStatuses as TRBRequestTaskStatuses } from 'queries/types/GetTrbRequest';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
-import { TRBRequestState, TRBRequestType } from 'types/graphql-global-types';
+import {
+  TRBRequestState,
+  TRBRequestStatus,
+  TRBRequestType
+} from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 
 import { TrbAssignLeadModalOpener } from '../../TrbAssignLeadModal';
@@ -22,9 +25,8 @@ type SummaryProps = {
   trbRequestId: string;
   name: string;
   requestType: TRBRequestType;
-  createdAt: string;
   state: TRBRequestState;
-  taskStatuses: TRBRequestTaskStatuses;
+  taskStatus?: TRBRequestStatus;
   trbLead: string | null;
   requester: TRBAttendee;
   requesterString?: string | null;
@@ -37,9 +39,8 @@ export default function Summary({
   trbRequestId,
   name,
   requestType,
-  createdAt,
   state,
-  taskStatuses,
+  taskStatus,
   trbLead,
   requester,
   requesterString,
@@ -49,32 +50,8 @@ export default function Summary({
 }: SummaryProps) {
   const { t } = useTranslation('technicalAssistance');
 
-  /** Get current task status */
-  const currentTaskStatus: keyof TRBRequestTaskStatuses = useMemo(() => {
-    /** Task status object keys */
-    const statusKeys = [
-      'formStatus',
-      'feedbackStatus',
-      'attendConsultStatus',
-      'consultPrepStatus',
-      'adviceLetterStatus'
-    ] as (keyof TRBRequestTaskStatuses)[];
-
-    /** Current step in the TRB request task list */
-    // Finds first task status that is not completed
-    // Returns undefined if all steps completed
-    const currentStatus = statusKeys.find(
-      statusKey => taskStatuses[statusKey] !== 'COMPLETED'
-    );
-
-    // Return current status
-    // If all task list steps have been completed, return last step
-    return currentStatus || statusKeys[-1]!;
-  }, [taskStatuses]);
-
-  /** Corresponding task status text from translation file */
   const taskStatusText: string = t(
-    `adminHome.taskStatuses.${currentTaskStatus}.${taskStatuses[currentTaskStatus]}`
+    `adminHome.trbRequestStatuses.${taskStatus}`
   );
 
   return (

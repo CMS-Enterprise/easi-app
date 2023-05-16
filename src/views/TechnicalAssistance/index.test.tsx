@@ -109,9 +109,13 @@ describe('Technical Assistance (TRB) homepage', () => {
 describe('TRB Subview snapshots', () => {
   it('matches Request Type', () => {
     const { asFragment } = render(
-      <MemoryRouter>
+      <MemoryRouter
+        initialEntries={['/trb/type/b1120f6a-87d7-4bcd-b8f2-0835c51b2d52']}
+      >
         <MockedProvider>
-          <RequestType />
+          <Route path="/trb/type/:id">
+            <RequestType />
+          </Route>
         </MockedProvider>
       </MemoryRouter>
     );

@@ -4,10 +4,11 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Accordion, Alert, Form } from '@trussworks/react-uswds';
+import { Accordion, Alert, Button, Form } from '@trussworks/react-uswds';
 
 import EmailRecipientFields from 'components/EmailRecipientFields';
 import SectionWrapper from 'components/shared/SectionWrapper';
+import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
@@ -60,7 +61,7 @@ const Review = ({
 
   const notes: AdminNote[] = data?.trbRequest?.adminNotes || [];
 
-  const [mutate] = useMutation<
+  const [mutate, adviceLetterResult] = useMutation<
     SendTRBAdviceLetter,
     SendTRBAdviceLetterVariables
   >(SendTRBAdviceLetterQuery);
@@ -94,9 +95,10 @@ const Review = ({
 
   const {
     handleSubmit,
-    watch,
-    formState: { isSubmitting }
+    formState: { isSubmitting, isDirty }
   } = actionForm;
+
+  const formSubmitting: boolean = isSubmitting || adviceLetterResult.loading;
 
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
@@ -209,14 +211,20 @@ const Review = ({
               onClick: () =>
                 history.push(`/trb/${trbRequestId}/advice/internal-review`)
             }}
-            next={{
-              type: 'submit',
-              text: 'Send',
-              disabled:
-                isSubmitting ||
-                (watch('notifyEuaIds').length === 0 && !watch('copyTrbMailbox'))
-            }}
-            taskListUrl={`/trb/${trbRequestId}/request`}
+            buttons={[
+              <div className="display-flex flex-align-center">
+                <Button
+                  key="buttonNext"
+                  type="submit"
+                  disabled={isDirty || formSubmitting}
+                  className="margin-top-0 margin-right-105"
+                >
+                  {t('Send')}
+                </Button>
+                {formSubmitting && <Spinner />}
+              </div>
+            ]}
+            taskListUrl={`/trb/${trbRequestId}/advice`}
             saveExitText={t('adviceLetterForm.returnToRequest')}
             submitDisabled
             border={false}

@@ -1,6 +1,24 @@
 import { gql } from '@apollo/client';
 
+export const CedarRole = gql`
+  fragment CedarRole on CedarRole {
+    application
+    objectID
+    roleTypeID
+    assigneeType
+    assigneeUsername
+    assigneeEmail
+    assigneeOrgID
+    assigneeOrgName
+    assigneeFirstName
+    assigneeLastName
+    roleTypeName
+    roleID
+  }
+`;
+
 export default gql`
+  ${CedarRole}
   query GetSystemProfile($cedarSystemId: String!) {
     cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
       uuid
@@ -39,18 +57,7 @@ export default gql`
         name
       }
       roles {
-        application
-        objectID
-        roleTypeID
-        assigneeType
-        assigneeUsername
-        assigneeEmail
-        assigneeOrgID
-        assigneeOrgName
-        assigneeFirstName
-        assigneeLastName
-        roleTypeName
-        roleID
+        ...CedarRole
       }
       urls {
         id

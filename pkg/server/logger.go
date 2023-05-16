@@ -24,11 +24,11 @@ func loggerMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 		fields := []zap.Field{
 			zap.String("accepted-language", r.Header.Get("accepted-language")),
 			zap.Int64("content-length", r.ContentLength),
-			zap.String("host", r.Host),
+			zap.String("app-host", r.Host),
 			zap.String("method", r.Method),
 			zap.String("protocol-version", r.Proto),
 			zap.String("referer", r.Header.Get("referer")),
-			zap.String("source", r.RemoteAddr),
+			zap.String("request-source", r.RemoteAddr),
 			zap.String("url", r.URL.String()),
 			zap.String("user-agent", r.UserAgent()),
 		}

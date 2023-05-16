@@ -10,12 +10,19 @@ import {
   GetTrbRequestFeedback,
   GetTrbRequestFeedbackVariables
 } from 'queries/types/GetTrbRequestFeedback';
+import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { NotFoundPartial } from 'views/NotFound';
 
 import TrbRequestFeedbackList from '../TrbRequestFeedbackList';
 
-const Feedback = ({ trbRequestId }: TrbAdminPageProps) => {
+import TrbAdminWrapper from './components/TrbAdminWrapper';
+
+const Feedback = ({
+  trbRequest,
+  assignLeadModalRef,
+  assignLeadModalTrbRequestIdRef
+}: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { data, loading, error } = useCacheQuery<
@@ -23,36 +30,44 @@ const Feedback = ({ trbRequestId }: TrbAdminPageProps) => {
     GetTrbRequestFeedbackVariables
   >(GetTrbRequestFeedbackQuery, {
     variables: {
-      id: trbRequestId
+      id: trbRequest.id
     }
   });
 
+  // Filter out any feedback that is an empty string
+  const validFeedback = data?.trbRequest.feedback.filter(
+    feedback => !!feedback.feedbackMessage
+  );
+
   return (
-    <div
-      className="trb-admin-home__feedback"
-      data-testid="trb-admin-home__feedback"
-      id={`trbAdminFeedback-${trbRequestId}`}
+    <TrbAdminWrapper
+      activePage="feedback"
+      trbRequestId={trbRequest.id}
+      title={t('adminHome.feedback')}
+      description={t('requestFeedback.adminInfo')}
+      disableStep={
+        trbRequest.state !== TRBRequestState.CLOSED &&
+        trbRequest.status !== TRBRequestStatus.ADVICE_LETTER_SENT
+      }
+      adminActionProps={{
+        status: trbRequest.status,
+        state: trbRequest.state,
+        assignLeadModalTrbRequestIdRef,
+        assignLeadModalRef
+      }}
     >
       {loading && <PageLoading />}
       {error && <NotFoundPartial />}
-      {data && (
-        <>
-          <h1 className="margin-y-0">{t('adminHome.subnav.feedback')}</h1>
-          <p className="line-height-body-5 margin-top-0 margin-bottom-5">
-            {t('requestFeedback.adminInfo')}
-          </p>
-          {data.trbRequest.feedback.length > 0 ? (
-            <TrbRequestFeedbackList
-              feedback={sortBy(data.trbRequest.feedback, 'createdAt').reverse()}
-            />
-          ) : (
-            <Alert slim type="info">
-              {t('requestFeedback.noFeedbackAlert')}
-            </Alert>
-          )}
-        </>
+      {validFeedback && validFeedback.length > 0 ? (
+        <TrbRequestFeedbackList
+          feedback={sortBy(validFeedback, 'createdAt').reverse()}
+        />
+      ) : (
+        <Alert slim type="info">
+          {t('requestFeedback.noFeedbackAlert')}
+        </Alert>
       )}
-    </div>
+    </TrbAdminWrapper>
   );
 };
 

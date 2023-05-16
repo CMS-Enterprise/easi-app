@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import {
   Alert,
   Button,
+  ButtonGroup,
   Card,
   CardBody,
+  CardFooter,
   CardGroup,
   CardHeader,
   Grid,
@@ -88,10 +90,23 @@ export function getTeam(
   };
 }
 
+type TeamContactCardProps = {
+  user: UsernameWithRoles;
+  footerActions?: {
+    editRoles: () => any;
+    removeTeamMember: () => any;
+  };
+};
+
 /**
  * A card with team member info and a list of their roles.
  */
-const TeamContactCard = ({ user }: { user: UsernameWithRoles }) => {
+export const TeamContactCard = ({
+  user,
+  footerActions
+}: TeamContactCardProps) => {
+  const { t } = useTranslation('systemProfile');
+
   const { roles } = user;
   if (roles.length === 0) return null;
 
@@ -124,6 +139,28 @@ const TeamContactCard = ({ user }: { user: UsernameWithRoles }) => {
           </h5>
         ))}
       </CardBody>
+      {footerActions && (
+        <CardFooter className="padding-x-0 padding-y-105 margin-top-105 margin-x-2 border-top-1px border-base-light">
+          <ButtonGroup>
+            <Button
+              unstyled
+              type="button"
+              className="margin-right-1"
+              onClick={() => footerActions.editRoles()}
+            >
+              {t('singleSystem.editTeam.editRoles')}
+            </Button>
+            <Button
+              unstyled
+              type="button"
+              className="text-error"
+              onClick={() => footerActions.removeTeamMember()}
+            >
+              {t('singleSystem.editTeam.removeTeamMember')}
+            </Button>
+          </ButtonGroup>
+        </CardFooter>
+      )}
     </Card>
   );
 };
