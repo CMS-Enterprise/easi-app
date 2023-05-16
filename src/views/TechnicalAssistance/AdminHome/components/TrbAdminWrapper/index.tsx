@@ -171,7 +171,7 @@ export default function TrbAdminWrapper({
       </Grid>
 
       {/* Admin Action box */}
-      {adminActionProps && !disableStep && (
+      {actionButtons.length > 0 && adminActionProps && !disableStep && (
         <TrbAdminAction
           translationKey={`technicalAssistance:adminAction.statuses.${
             adminActionProps.state === TRBRequestState.CLOSED
