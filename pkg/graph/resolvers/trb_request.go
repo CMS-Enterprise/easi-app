@@ -418,7 +418,7 @@ func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Ti
 	numDaysToConsiderRecent := -7
 	recencyDate := now.AddDate(0, 0, numDaysToConsiderRecent)
 	isRequestClosed := obj.State == models.TRBRequestStateClosed
-	hasNoLeadAssigned := obj.TRBLead != nil
+	hasNoLeadAssigned := obj.TRBLead == nil
 
 	// A request is only recent if it's not closed
 	// A request is only recent if it's either created after the recencyDate OR has no lead assigned
