@@ -144,14 +144,14 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 	return &deleted, err
 }
 
-// GetAttendeeComponentByEUA attempts to retrieve the component of a given EUA user ID
-func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string) (*string, error) {
+// GetAttendeeComponentByEUA attempts to retrieve the component of a given EUA user ID and TRB Request ID
+func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string, trbRequestID uuid.UUID) (*string, error) {
 	attendee := models.TRBRequestAttendee{}
 	stmt, err := s.db.PrepareNamed(`
 		SELECT *
 		FROM trb_request_attendees
 		WHERE eua_user_id = :eua_user_id
-		LIMIT 1
+		AND trb_request_id = :trb_request_id;
 	`)
 
 	if err != nil {
@@ -162,7 +162,10 @@ func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string) (*s
 		)
 		return nil, err
 	}
-	arg := map[string]interface{}{"eua_user_id": euaID}
+	arg := map[string]interface{}{
+		"eua_user_id":    euaID,
+		"trb_request_id": trbRequestID,
+	}
 	err = stmt.Get(&attendee, arg)
 
 	if err != nil {
