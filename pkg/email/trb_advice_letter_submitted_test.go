@@ -23,11 +23,18 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 		path.Join("trb", "task-list", trbID.String()),
 	)
 
+	trbAdminLink := fmt.Sprintf(
+		"%s://%s/%s",
+		s.config.URLScheme,
+		s.config.URLHost,
+		path.Join("trb", trbID.String(), "request"),
+	)
+
 	adviceLetterLink := fmt.Sprintf(
 		"%s://%s/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
-		path.Join("trb", "advice", trbID.String()),
+		path.Join("trb", "advice-letter", trbID.String()),
 	)
 
 	submissionDate, err := time.Parse(time.RFC3339, "2022-02-01T13:30:00+00:00")
@@ -43,9 +50,9 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 	input := SendTRBAdviceLetterSubmittedEmailInput{
 		TRBRequestID:   trbID,
 		RequestName:    "Test TRB Request",
-		RequestType:    "Tech Support",
+		RequestType:    "NEED_HELP",
 		RequesterName:  "Mc Lovin",
-		Component:      "Pickles",
+		Component:      "Center for Clinical Standards and Quality",
 		SubmissionDate: &submissionDate,
 		ConsultDate:    &consultDate,
 		Recipients:     recipients,
@@ -69,15 +76,15 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 <ul style="padding-left: 0;">
 <li style="list-style-type: none;">Submission date: ` + submissionDate.Format("January 2, 2006") + `</li>
 <li style="list-style-type: none;">Requester: ` + input.RequesterName + `</li>
-<li style="list-style-type: none;">Component: ` + input.Component + `</li>
-<li style="list-style-type: none;">Request type: ` + input.RequestType + `</li>
+<li style="list-style-type: none;">Component: CCSQ</li>
+<li style="list-style-type: none;">Request type: I’m having a problem with my system</li>
 <li style="list-style-type: none;">Date of TRB Consult: ` + consultDate.Format("January 2, 2006") + `</li>
 </ul>
 
 <p>View this request in EASi:</p>
 <ul>
-<li>If you are the initial requester, you may <a href="` + adviceLetterLink + `">click here</a> to view the advice letter and your request task list.</li>
-<li>TRB team members may <a href="` + trbLink + `">click here</a> to view the request details.</li>
+<li>If you are the initial requester, you may <a href="` + trbLink + `">click here</a> to view the advice letter and your request task list.</li>
+<li>TRB team members may <a href="` + trbAdminLink + `">click here</a> to view the request details.</li>
 <li>Others should contact Mc Lovin or the TRB for more information about this request.</li>
 </ul>
 

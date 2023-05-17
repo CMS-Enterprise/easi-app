@@ -15,18 +15,12 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 	ctx := context.Background()
 
 	trbID := uuid.New()
-	trbLink := fmt.Sprintf(
-		"%s://%s/%s",
-		s.config.URLScheme,
-		s.config.URLHost,
-		path.Join("trb", "task-list", trbID.String()),
-	)
 
-	trbAdviceLetterLink := fmt.Sprintf(
+	trbAdminAdviceLetterLink := fmt.Sprintf(
 		"%s://%s/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
-		path.Join("trb", "advice", trbID.String()),
+		path.Join("trb", trbID.String(), "advice"),
 	)
 
 	input := SendTRBAdviceLetterInternalReviewEmailInput{
@@ -47,9 +41,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 
 <p>TRB Lead: ` + input.TRBLeadName + `</p>
 
-<p><a href="` + trbAdviceLetterLink + `" style="font-weight: bold">View the Advice Letter</a></p>
-
-<p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
+<p><a href="` + trbAdminAdviceLetterLink + `" style="font-weight: bold">View the Advice Letter</a></p>
 `
 		err = client.SendTRBAdviceLetterInternalReviewEmail(ctx, input)
 		s.NoError(err)
@@ -63,9 +55,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterInternalReviewEmail() {
 
 <p>` + input.TRBRequestName + ` has a draft advice letter that is now ready for internal review. Please take a moment to look over the draft and make any suggestions for improvement.</p>
 
-<p><a href="` + trbAdviceLetterLink + `" style="font-weight: bold">View the Advice Letter</a></p>
-
-<p><a href="` + trbLink + `" style="font-weight: bold">View the request in EASi</a></p>
+<p><a href="` + trbAdminAdviceLetterLink + `" style="font-weight: bold">View the Advice Letter</a></p>
 `
 		err = client.SendTRBAdviceLetterInternalReviewEmail(ctx, input)
 		s.NoError(err)
