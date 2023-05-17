@@ -683,7 +683,7 @@ const technicalAssistance = {
     attendeeHelpText:
       'Please provide the name, CMS component, and role for this attendee.',
     attendeeNameHelpText:
-      'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at <1>cms-rb@cms.hhs.gov</1>.',
+      'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at <1>cms-trb@cms.hhs.gov</1>.',
     alerts: {
       success: 'Your attendee has been added',
       successEdit: 'Your attendee has been edited',
