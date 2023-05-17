@@ -50,7 +50,6 @@ export interface GetTrbRequestHome_trbRequest {
   taskStatuses: GetTrbRequestHome_trbRequest_taskStatuses;
   form: GetTrbRequestHome_trbRequest_form;
   adviceLetter: GetTrbRequestHome_trbRequest_adviceLetter | null;
-  trbLeadComponent: string | null;
   trbLeadInfo: GetTrbRequestHome_trbRequest_trbLeadInfo;
   documents: GetTrbRequestHome_trbRequest_documents[];
   adminNotes: GetTrbRequestHome_trbRequest_adminNotes[];
