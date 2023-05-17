@@ -2,17 +2,27 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
-import { trbRequestSummary } from 'data/mock/trbRequest';
+import {
+  getTrbLeadOptionsQuery,
+  getTRBRequestAttendeesQuery,
+  getTrbRequestQuery,
+  getTrbRequestSummaryQuery,
+  requester,
+  trbRequestSummary
+} from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
-import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
-import { PersonRole } from 'types/graphql-global-types';
+import {
+  CreateTrbRequestFeedback,
+  CreateTrbRequestFeedbackVariables
+} from 'queries/types/CreateTrbRequestFeedback';
+import { TRBFeedbackAction } from 'types/graphql-global-types';
+import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TRBRequestInfoWrapper from './RequestContext';
@@ -20,19 +30,15 @@ import RequestEdits from './RequestEdits';
 import AdminHome from '.';
 
 describe('Trb Admin: Action: Request Edits', () => {
-  const mockStore = configureMockStore();
-  const store = mockStore({
-    auth: {
-      euaId: 'SF13',
-      name: 'Jerry Seinfeld',
-      isUserSet: true,
-      groups: ['EASI_TRB_ADMIN_D']
-    }
-  });
+  const store = easiMockStore({ groups: ['EASI_TRB_ADMIN_D'] });
+
   const trbRequestId = trbRequestSummary.id;
   const feedbackMessage = 'test message';
 
-  const mockCreateTrbRequestFeedback = {
+  const createTrbRequestFeedbackQuery: MockedQuery<
+    CreateTrbRequestFeedback,
+    CreateTrbRequestFeedbackVariables
+  > = {
     request: {
       query: CreateTrbRequestFeedbackQuery,
       variables: {
@@ -40,8 +46,8 @@ describe('Trb Admin: Action: Request Edits', () => {
           trbRequestId,
           feedbackMessage,
           copyTrbMailbox: true,
-          notifyEuaIds: ['SF13'],
-          action: 'REQUEST_EDITS'
+          notifyEuaIds: [requester.userInfo.euaUserId],
+          action: TRBFeedbackAction.REQUEST_EDITS
         }
       }
     },
@@ -55,59 +61,13 @@ describe('Trb Admin: Action: Request Edits', () => {
     }
   };
 
-  const mockGetTrbRequestSummary = {
-    request: {
-      query: GetTrbRequestSummaryQuery,
-      variables: {
-        id: trbRequestId
-      }
-    },
-    result: {
-      data: {
-        trbRequest: trbRequestSummary
-      }
-    }
-  };
-
-  const mockGetTrbRequestAttendeesQuery = {
-    request: {
-      query: GetTRBRequestAttendeesQuery,
-      variables: {
-        id: trbRequestId
-      }
-    },
-    result: {
-      data: {
-        trbRequest: {
-          id: trbRequestId,
-          attendees: [
-            {
-              __typename: 'TRBRequestAttendee',
-              id: '91a14322-34a8-4838-bde3-17b1d483fb63',
-              trbRequestId,
-              userInfo: {
-                __typename: 'UserInfo',
-                commonName: 'Jerry Seinfeld',
-                email: 'jerry.seinfeld@local.fake',
-                euaUserId: 'SF13'
-              },
-              component: 'Office of Equal Opportunity and Civil Rights',
-              role: PersonRole.PRODUCT_OWNER,
-              createdAt: '2023-01-05T07:26:16.036618Z'
-            }
-          ]
-        }
-      }
-    }
-  };
-
   it('submits a feedback message', async () => {
     const {
       getByLabelText,
       getByRole,
       findByText,
       asFragment,
-      findByRole
+      getByTestId
     } = render(
       <Provider store={store}>
         <VerboseMockedProvider
@@ -116,9 +76,13 @@ describe('Trb Admin: Action: Request Edits', () => {
             query: { fetchPolicy: 'no-cache' }
           }}
           mocks={[
-            mockCreateTrbRequestFeedback,
-            mockGetTrbRequestSummary,
-            mockGetTrbRequestAttendeesQuery
+            createTrbRequestFeedbackQuery,
+            getTrbRequestQuery,
+            getTrbLeadOptionsQuery,
+            getTRBRequestAttendeesQuery,
+            getTRBRequestAttendeesQuery,
+            getTrbRequestSummaryQuery,
+            getTrbRequestSummaryQuery
           ]}
         >
           <MemoryRouter
@@ -141,15 +105,13 @@ describe('Trb Admin: Action: Request Edits', () => {
       </Provider>
     );
 
+    await waitForElementToBeRemoved(() =>
+      getByTestId('emailRecipients-spinner')
+    );
+
     await findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
-
-    const requester = await findByRole('checkbox', {
-      name:
-        'Jerry Seinfeld, Office of Equal Opportunity and Civil Rights (Requester)'
-    });
-    expect(requester).toBeChecked();
 
     expect(asFragment()).toMatchSnapshot();
 
@@ -177,20 +139,9 @@ describe('Trb Admin: Action: Request Edits', () => {
     const { getByLabelText, getByRole, findByText } = render(
       <MockedProvider
         mocks={[
-          mockGetTrbRequestAttendeesQuery,
+          getTRBRequestAttendeesQuery,
           {
-            request: {
-              query: CreateTrbRequestFeedbackQuery,
-              variables: {
-                input: {
-                  trbRequestId,
-                  feedbackMessage,
-                  copyTrbMailbox: false,
-                  notifyEuaIds: ['SF13'],
-                  action: 'REQUEST_EDITS'
-                }
-              }
-            },
+            ...createTrbRequestFeedbackQuery,
             error: new Error()
           }
         ]}

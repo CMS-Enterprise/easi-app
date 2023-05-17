@@ -60,7 +60,7 @@ const EmailRecipientFields = ({
     watch,
     getValues,
     setValue,
-    resetField,
+    reset,
     formState: { errors, isDirty }
   } = useFormContext();
 
@@ -84,14 +84,20 @@ const EmailRecipientFields = ({
       notifyEuaIds.length === 0 &&
       requester?.userInfo?.euaUserId
     ) {
-      resetField('notifyEuaIds', {
-        defaultValue: [requester.userInfo.euaUserId]
+      reset({
+        ...getValues(),
+        notifyEuaIds: [requester.userInfo.euaUserId]
       });
     }
-  }, [isDirty, notifyEuaIds, requester, resetField]);
+  }, [isDirty, notifyEuaIds, requester, reset, getValues]);
 
   if (!requester?.userInfo?.euaUserId) {
-    return <Spinner className="display-block margin-top-2" />;
+    return (
+      <Spinner
+        data-testid="emailRecipients-spinner"
+        className="display-block margin-top-2"
+      />
+    );
   }
 
   return (
@@ -115,16 +121,19 @@ const EmailRecipientFields = ({
             i18nKey="technicalAssistance:emailRecipientFields.selectedCount"
             components={{ bold: <span className="text-bold" /> }}
             count={selectedCount}
+            values={{ plural: selectedCount === 1 ? '' : 's' }}
           />
         </p>
 
         <TruncatedContent
           initialCount={1 + defaultMailboxes.length}
           labelMore={t(`emailRecipientFields.showMore`, {
-            number: contacts.length
+            number: contacts.length,
+            plural: contacts.length > 1 ? 's' : ''
           })}
           labelLess={t(`emailRecipientFields.showFewer`, {
-            number: contacts.length
+            number: contacts.length,
+            plural: contacts.length > 1 ? 's' : ''
           })}
           buttonClassName="margin-top-2"
         >
@@ -175,38 +184,57 @@ const EmailRecipientFields = ({
           })}
 
           {/* Recipients */}
-          <Controller
-            name="notifyEuaIds"
-            render={({ field }) => {
-              return (
-                <>
-                  {orderBy(contacts, 'createdAt').map((contact, index) => {
-                    const { commonName, euaUserId } = contact.userInfo || {};
-                    const value = euaUserId || '';
+          {contacts.length > 0 && (
+            <>
+              <Controller
+                name="notifyEuaIds"
+                render={({ field }) => {
+                  return (
+                    <>
+                      {orderBy(contacts, 'createdAt').map((contact, index) => {
+                        const { commonName, euaUserId } =
+                          contact.userInfo || {};
+                        const value = euaUserId || '';
 
-                    const role = contact.role ? contactRoles[contact.role] : '';
+                        const role = contact.role
+                          ? contactRoles[contact.role]
+                          : '';
 
-                    return (
-                      <CheckboxField
-                        key={contact.id}
-                        id={`${field.name}.${index + 1}`}
-                        label={`${commonName} (${role})`}
-                        {...{ ...field, ref: null }}
-                        onChange={e =>
-                          field.onChange(
-                            toggleArrayValue(field.value, e.target.value)
-                          )
-                        }
-                        value={value}
-                        checked={!!field.value?.includes(value)}
-                      />
-                    );
-                  })}
-                </>
-              );
-            }}
-          />
+                        return (
+                          <CheckboxField
+                            key={contact.id}
+                            id={`${field.name}.${index + 1}`}
+                            label={`${commonName} (${role})`}
+                            {...{ ...field, ref: null }}
+                            onChange={e =>
+                              field.onChange(
+                                toggleArrayValue(field.value, e.target.value)
+                              )
+                            }
+                            value={value}
+                            checked={!!field.value?.includes(value)}
+                          />
+                        );
+                      })}
+                    </>
+                  );
+                }}
+              />
 
+              <CreateContactForm
+                createContact={contact =>
+                  createContact(contact).then(() =>
+                    setValue('notifyEuaIds', [
+                      ...notifyEuaIds,
+                      contact.euaUserId
+                    ])
+                  )
+                }
+              />
+            </>
+          )}
+        </TruncatedContent>
+        {contacts.length === 0 && (
           <CreateContactForm
             createContact={contact =>
               createContact(contact).then(() =>
@@ -214,7 +242,7 @@ const EmailRecipientFields = ({
               )
             }
           />
-        </TruncatedContent>
+        )}
       </fieldset>
     </FormGroup>
   );

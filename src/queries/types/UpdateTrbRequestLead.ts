@@ -20,7 +20,6 @@ export interface UpdateTrbRequestLead_updateTRBRequestTRBLead {
   __typename: "TRBRequest";
   id: UUID;
   trbLead: string | null;
-  trbLeadComponent: string | null;
   trbLeadInfo: UpdateTrbRequestLead_updateTRBRequestTRBLead_trbLeadInfo;
 }
 

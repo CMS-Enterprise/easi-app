@@ -266,11 +266,11 @@ const technicalAssistance = {
   },
   emailRecipientFields: {
     label: 'Choose recipients <red>*</red>',
-    selectedCount: '<bold>{{count}}</bold> recipients selected',
+    selectedCount: '<bold>{{count}}</bold> recipient{{plural}} selected',
     copyTrbMailbox: 'Copy TRB Mailbox',
     projectTeamMember: 'Project team member',
-    showMore: 'Show {{number}} more recipients',
-    showFewer: 'Show {{number}} fewer recipients',
+    showMore: 'Show {{number}} more recipient{{plural}}',
+    showFewer: 'Show {{number}} fewer recipient{{plural}}',
     addAnotherRecipient: 'Add another recipient',
     newRecipientName: 'New recipient name',
     newRecipientComponent: 'New recipient component',
@@ -1012,6 +1012,7 @@ const technicalAssistance = {
     description:
       'Once you have confirmed availability with the requester and project team, set a date and time for the consult session for this request.',
     labels: {
+      notifyEuaIds: 'Notification recipients',
       meetingDate: 'Meeting date',
       meetingTime: 'Meeting time',
       notes: 'Notes'

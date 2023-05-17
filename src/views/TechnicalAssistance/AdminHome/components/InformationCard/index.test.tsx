@@ -31,7 +31,6 @@ const trbRequest: GetTrbRequestHomeType = {
     id: '123',
     modifiedAt: '2023-02-05T05:00:00Z'
   },
-  trbLeadComponent: 'TRB',
   trbLeadInfo: {
     commonName: 'Jerry Seinfeld',
     email: 'js@oddball.io',
