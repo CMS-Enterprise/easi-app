@@ -53,7 +53,6 @@ describe('Trb Admin Request Home', () => {
                     __typename: 'TRBRequestForm'
                   },
                   adviceLetter: null,
-                  trbLeadComponent: null,
                   trbLeadInfo: {
                     commonName: '',
                     email: '',
@@ -151,7 +150,6 @@ describe('Trb Admin Request Home', () => {
                     id: '123',
                     modifiedAt: '2023-02-05T05:00:00Z'
                   },
-                  trbLeadComponent: 'TRB',
                   trbLeadInfo: {
                     commonName: 'Jerry Seinfeld',
                     email: 'js@oddball.io',

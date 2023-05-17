@@ -59,7 +59,6 @@ const getTrbRequestHomeQuery = {
           __typename: 'TRBRequestForm'
         },
         adviceLetter: null,
-        trbLeadComponent: null,
         trbLeadInfo: {
           commonName: '',
           email: '',
