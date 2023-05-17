@@ -131,7 +131,7 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	t.Run("does not send for \"no governance\" status", func(t *testing.T) {
 		clearAlerts(systemIntakes)
 
-		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days
+		// Test that it does NOT send alerts for intakes with LCIDs expiring within 60 days that have a NO GOVERNANCE status
 		lcidExpirationAlertCount = 0
 		intakeWithLCIDExpiringIn46Days.Status = models.SystemIntakeStatusNOGOVERNANCE
 		intakeWithLCIDExpiringIn59Days.Status = models.SystemIntakeStatusNOGOVERNANCE
