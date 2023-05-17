@@ -23,10 +23,9 @@ type SendTRBAdviceLetterInternalReviewEmailInput struct {
 // trbAdviceLetterInternalReviewEmailTemplateParams contains the data needed for interpolation in
 // the TRB advice letter internal review email template
 type trbAdviceLetterInternalReviewEmailTemplateParams struct {
-	TRBLeadName         string
-	TRBRequestName      string
-	TRBAdviceLetterLink string
-	TRBRequestLink      string
+	TRBLeadName              string
+	TRBRequestName           string
+	TRBAdminAdviceLetterLink string
 }
 
 // SendTRBAdviceLetterInternalReviewEmail sends an email to the EASI admin team indicating that an advice letter
@@ -35,10 +34,9 @@ func (c Client) SendTRBAdviceLetterInternalReviewEmail(ctx context.Context, inpu
 	subject := "Advice letter for " + input.TRBRequestName + " is ready for internal review"
 
 	templateParams := trbAdviceLetterInternalReviewEmailTemplateParams{
-		TRBLeadName:         input.TRBLeadName,
-		TRBRequestName:      input.TRBRequestName,
-		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice", input.TRBRequestID.String())),
-		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
+		TRBLeadName:              input.TRBLeadName,
+		TRBRequestName:           input.TRBRequestName,
+		TRBAdminAdviceLetterLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "advice")),
 	}
 
 	var b bytes.Buffer
