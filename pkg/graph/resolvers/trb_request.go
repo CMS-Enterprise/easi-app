@@ -414,11 +414,16 @@ func ReopenTRBRequest(
 }
 
 // IsRecentTRBRequest determines if a TRB Request should be determined to be flagged as "recent" or not.
-// TODO: Add more logic in https://jiraent.cms.gov/browse/EASI-2711
 func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Time) bool {
 	numDaysToConsiderRecent := -7
-	recentIfAfterDate := now.AddDate(0, 0, numDaysToConsiderRecent)
-	return obj.CreatedAt.After(recentIfAfterDate)
+	recencyDate := now.AddDate(0, 0, numDaysToConsiderRecent)
+	isRequestClosed := obj.State == models.TRBRequestStateClosed
+	hasNoLeadAssigned := obj.TRBLead == nil
+
+	// A request is only recent if it's not closed
+	// A request is only recent if it's either created after the recencyDate OR has no lead assigned
+	isRecent := !isRequestClosed && (obj.CreatedAt.After(recencyDate) || hasNoLeadAssigned)
+	return isRecent
 }
 
 // GetTRBLeadInfo retrieves the user info of a TRB request's lead
