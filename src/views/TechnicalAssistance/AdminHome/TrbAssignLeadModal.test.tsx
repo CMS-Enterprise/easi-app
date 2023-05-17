@@ -48,7 +48,6 @@ const updateTrbRequestLeadQuery: MockedQuery<
       updateTRBRequestTRBLead: {
         id: mockTrbRequestId,
         trbLead: trbLeadInfo.euaUserId,
-        trbLeadComponent: null,
         trbLeadInfo,
         __typename: 'TRBRequest'
       }
