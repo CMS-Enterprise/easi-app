@@ -905,7 +905,6 @@ type ComplexityRoot struct {
 		Status             func(childComplexity int) int
 		TRBLead            func(childComplexity int) int
 		TaskStatuses       func(childComplexity int) int
-		TrbLeadComponent   func(childComplexity int) int
 		TrbLeadInfo        func(childComplexity int) int
 		Type               func(childComplexity int) int
 	}
@@ -1362,7 +1361,6 @@ type TRBRequestResolver interface {
 	TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error)
 
 	TrbLeadInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error)
-	TrbLeadComponent(ctx context.Context, obj *models.TRBRequest) (*string, error)
 	RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error)
 	RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error)
 	AdminNotes(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBAdminNote, error)
@@ -6025,13 +6023,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.TaskStatuses(childComplexity), true
 
-	case "TRBRequest.trbLeadComponent":
-		if e.complexity.TRBRequest.TrbLeadComponent == nil {
-			break
-		}
-
-		return e.complexity.TRBRequest.TrbLeadComponent(childComplexity), true
-
 	case "TRBRequest.trbLeadInfo":
 		if e.complexity.TRBRequest.TrbLeadInfo == nil {
 			break
@@ -8300,7 +8291,6 @@ type TRBRequest {
   consultMeetingTime: Time
   trbLead: String
   trbLeadInfo: UserInfo!
-  trbLeadComponent: String
   requesterInfo: UserInfo!
   requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
@@ -27281,8 +27271,6 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -27385,8 +27373,6 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -28374,8 +28360,6 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestConsultMeeting
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -28502,8 +28486,6 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -29654,8 +29636,6 @@ func (ec *executionContext) fieldContext_Mutation_closeTRBRequest(ctx context.Co
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -29782,8 +29762,6 @@ func (ec *executionContext) fieldContext_Mutation_reopenTrbRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -31748,8 +31726,6 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -31876,8 +31852,6 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -31980,8 +31954,6 @@ func (ec *executionContext) fieldContext_Query_myTrbRequests(ctx context.Context
 				return ec.fieldContext_TRBRequest_trbLead(ctx, field)
 			case "trbLeadInfo":
 				return ec.fieldContext_TRBRequest_trbLeadInfo(ctx, field)
-			case "trbLeadComponent":
-				return ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
 			case "requesterInfo":
 				return ec.fieldContext_TRBRequest_requesterInfo(ctx, field)
 			case "requesterComponent":
@@ -41013,47 +40985,6 @@ func (ec *executionContext) fieldContext_TRBRequest_trbLeadInfo(ctx context.Cont
 				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TRBRequest_trbLeadComponent(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBRequest_trbLeadComponent(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBRequest().TrbLeadComponent(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TRBRequest_trbLeadComponent(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TRBRequest",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -57213,23 +57144,6 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
-				return res
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
-		case "trbLeadComponent":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._TRBRequest_trbLeadComponent(ctx, field, obj)
 				return res
 			}
 

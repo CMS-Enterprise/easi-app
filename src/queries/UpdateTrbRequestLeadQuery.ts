@@ -5,7 +5,6 @@ export default gql`
     updateTRBRequestTRBLead(input: $input) {
       id
       trbLead
-      trbLeadComponent
       trbLeadInfo {
         commonName
         email
