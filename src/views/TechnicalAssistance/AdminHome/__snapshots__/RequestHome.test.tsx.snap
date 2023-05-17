@@ -91,7 +91,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
         <p
           class="usa-alert__text"
         >
-          Please review the initial request form before setting a date and time in EASi.
+          Please wait until the initial request form is submitted, then review the form before setting a date and time in EASi.
         </p>
       </div>
     </div>
