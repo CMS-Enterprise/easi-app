@@ -918,7 +918,9 @@ const technicalAssistance = {
     docInfoPlural:
       'There are <bold>{{docCount}}</bold> additional documents uploaded as a part of this request.',
     reviewInitialRequest:
-      'Please review the initial request form before setting a date and time in EASi.',
+      'Please wait until the initial request form is submitted, then review the form before setting a date and time in EASi.',
+    requestInDraftAlt:
+      'This request is still in a draft state. You will receive an email notification once the requester has submitted it for review.',
     viewDocs: 'View documents',
     open: 'Open',
     closed: 'Closed',
