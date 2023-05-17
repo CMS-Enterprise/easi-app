@@ -48,7 +48,7 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
   const selectedFeedback = fromTaskList
     ? request.feedback
     : request.feedback.filter(
-        e => e.action === TRBFeedbackAction.REQUEST_EDITS
+        e => e.action === TRBFeedbackAction.REQUEST_EDITS && !!e.feedbackMessage
       );
 
   return (

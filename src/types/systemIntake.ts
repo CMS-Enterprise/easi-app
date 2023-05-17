@@ -153,7 +153,7 @@ export type UpdateFundingSources =
 
 /** Update active funding source in form */
 export type UpdateActiveFundingSource = {
-  action: 'Add' | 'Edit' | 'Reset';
+  action: 'Add' | 'Edit' | null;
   data?: MultiFundingSource;
 };
 
@@ -166,7 +166,7 @@ export type UseIntakeFundingSources = {
   activeFundingSource: [
     activeFundingSource: MultiFundingSource,
     updateActiveFundingSource: (payload: UpdateActiveFundingSource) => void,
-    action: 'Add' | 'Edit' | 'Reset'
+    action: 'Add' | 'Edit' | null
   ];
 };
 

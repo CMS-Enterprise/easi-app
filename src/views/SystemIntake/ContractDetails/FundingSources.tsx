@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Fieldset, Label, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -84,7 +84,7 @@ type FundingSourceFormProps = {
   fundingSources: FormattedFundingSourcesObject;
   setFundingSources: ({ action, data }: UpdateFundingSources) => void;
   fundingSourceOptions: string[];
-  action: 'Add' | 'Edit' | 'Reset';
+  action: 'Add' | 'Edit' | null;
 };
 
 const FundingSourceForm = ({
@@ -242,7 +242,7 @@ const FundingSourceForm = ({
         type="button"
         onClick={() =>
           setActiveFundingSource({
-            action: 'Reset'
+            action: null
           })
         }
         className="display-inline-block margin-top-2"
@@ -257,7 +257,7 @@ const FundingSourceForm = ({
           const { err } = onSubmit();
           if (!err) {
             setActiveFundingSource({
-              action: 'Reset'
+              action: null
             });
           }
         }}
@@ -275,6 +275,7 @@ type FundingSourcesProps = {
   initialValues: FundingSource[];
   fundingSourceOptions: string[];
   setFieldValue: (field: string, value: any) => void;
+  setFieldActive?: (active: boolean) => void;
   combinedFields?: boolean;
 };
 
@@ -283,6 +284,7 @@ const FundingSources = ({
   initialValues,
   fundingSourceOptions,
   setFieldValue,
+  setFieldActive,
   combinedFields = false
 }: FundingSourcesProps) => {
   // Get funding sources actions from useIntakeFundingSources custom hook
@@ -299,6 +301,10 @@ const FundingSources = ({
   ] = fundingSourcesData.activeFundingSource;
   const { t } = useTranslation('intake');
   const editFundingSourceNumber = useRef('');
+
+  useEffect(() => {
+    setFieldActive?.(!!action);
+  }, [action, setFieldActive]);
 
   return (
     <>
@@ -352,7 +358,7 @@ const FundingSources = ({
           action={action}
         />
       )}
-      {action === 'Reset' && (
+      {!action && (
         <Button
           type="button"
           data-testid="fundingSourcesAction-add"
