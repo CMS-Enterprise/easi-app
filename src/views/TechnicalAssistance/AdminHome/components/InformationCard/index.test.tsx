@@ -31,7 +31,6 @@ const trbRequest: GetTrbRequestHomeType = {
     id: '123',
     modifiedAt: '2023-02-05T05:00:00Z'
   },
-  trbLeadComponent: 'TRB',
   trbLeadInfo: {
     commonName: 'Jerry Seinfeld',
     email: 'js@oddball.io',
@@ -52,7 +51,7 @@ describe('TRB Admin InformationCard', () => {
     const { getByText, asFragment, getByRole } = render(
       <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
         <Route exact path="/trb/:id/:activePage">
-          <InformationCard trbRequest={trbRequest} type="inititalRequestForm" />
+          <InformationCard trbRequest={trbRequest} type="initialRequestForm" />
         </Route>
       </MemoryRouter>
     );

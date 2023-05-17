@@ -276,34 +276,29 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
     >
       What is this request for?
     </div>
-    <div
-      class="margin-top-2"
+    <a
+      class="usa-link display-flex flex-align-center margin-top-2"
+      href="/trb/task-list/b1120f6a-87d7-4bcd-b8f2-0835c51b2d52"
     >
-      <button
-        class="usa-button usa-button--unstyled"
-        data-testid="button"
-        type="button"
+      <svg
+        class="usa-icon margin-right-1"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
-          focusable="false"
-          height="1em"
-          role="img"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-          />
-        </svg>
-        Go back without changing the request type
-      </button>
-    </div>
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+        />
+      </svg>
+      Go back without changing the request type
+    </a>
     <ul
       class="usa-card-group flex-align-start margin-top-4 margin-bottom-4"
       data-testid="CardGroup"

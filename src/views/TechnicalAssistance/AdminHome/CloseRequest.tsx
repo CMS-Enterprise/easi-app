@@ -24,6 +24,7 @@ import EmailRecipientFields from 'components/EmailRecipientFields';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import TextAreaField from 'components/shared/TextAreaField';
+import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import CloseTrbRequestQuery from 'queries/CloseTrbRequestQuery';
@@ -90,14 +91,18 @@ function CloseRequest() {
     formState: { isSubmitting }
   } = formMethods;
 
-  const [mutateClose] = useMutation<CloseTrbRequest, CloseTrbRequestVariables>(
-    CloseTrbRequestQuery
-  );
+  const [mutateClose, mutateCloseResult] = useMutation<
+    CloseTrbRequest,
+    CloseTrbRequestVariables
+  >(CloseTrbRequestQuery);
 
-  const [mutateReopen] = useMutation<
+  const [mutateReopen, mutateReopenResult] = useMutation<
     ReopenTrbRequest,
     ReopenTrbRequestVariables
   >(ReopenTrbRequestQuery);
+
+  const formSubmitting: boolean =
+    isSubmitting || mutateCloseResult.loading || mutateReopenResult.loading;
 
   // Confirm modal for closing a request
   const confirmModalRef = useRef<ModalRef>(null);
@@ -291,6 +296,7 @@ function CloseRequest() {
                   >
                     {t('actionCloseRequest.confirmModal.cancel')}
                   </ModalToggleButton>
+                  {formSubmitting && <Spinner className="margin-top-05" />}
                 </ButtonGroup>
               </ModalFooter>
             </Modal>
@@ -298,9 +304,17 @@ function CloseRequest() {
         )}
 
         {action === 'reopen-request' && (
-          <Button type="submit" disabled={isSubmitting} onClick={submitReopen}>
-            {t('actionReopenRequest.submit')}
-          </Button>
+          <div className="display-flex flex-align-center margin-top-5">
+            <Button
+              type="submit"
+              disabled={formSubmitting}
+              onClick={submitReopen}
+              className="margin-top-0 margin-right-105"
+            >
+              {t('actionReopenRequest.submit')}
+            </Button>
+            {formSubmitting && <Spinner />}
+          </div>
         )}
       </Form>
       <UswdsReactLink

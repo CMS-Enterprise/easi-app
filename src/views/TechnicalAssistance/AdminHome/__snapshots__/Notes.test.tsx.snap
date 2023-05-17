@@ -3,18 +3,30 @@
 exports[`Trb Admin Notes: View Notes renders successfully  1`] = `
 <DocumentFragment>
   <div
-    class="trb-admin-home__notes line-height-body-5"
+    class="trbAdmin__notes"
     data-testid="trb-admin-home__notes"
-    id="trbAdminNotes-449ea115-8bfa-48c3-b1dd-5a613d79fbae"
+    id="trbAdmin__notes"
   >
-    <h1
-      class="margin-top-0 margin-bottom-1 line-height-heading-2"
+    <div
+      class="grid-row grid-gap-lg"
+      data-testid="grid"
     >
-      Notes
-    </h1>
-    <p>
-      Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.
-    </p>
+      <div
+        class="tablet:grid-col-8"
+        data-testid="grid"
+      >
+        <h1
+          class="margin-top-0 margin-bottom-1"
+        >
+          Notes
+        </h1>
+        <p
+          class="line-height-body-5 font-body-md margin-top-0 mnargin-bottom-1"
+        >
+          Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.
+        </p>
+      </div>
+    </div>
     <a
       class="usa-button margin-bottom-4"
       href="/trb/449ea115-8bfa-48c3-b1dd-5a613d79fbae/notes/add-note"

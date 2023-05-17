@@ -86,16 +86,17 @@ function renderFeedbackTest() {
 
 describe('TRB Request Form Feedback', () => {
   it('shows the View feedback warning banner in the header if there are edits requested', async () => {
-    const { asFragment, findByText, getByRole } = renderFeedbackTest();
+    const { getByRole, findByText } = renderFeedbackTest();
 
-    await findByText(
-      i18next.t<string>('technicalAssistance:editsRequested.alert')
-    );
+    expect(
+      await findByText(
+        i18next.t<string>('technicalAssistance:editsRequested.alert')
+      )
+    ).toBeInTheDocument();
+
     getByRole('link', {
       name: i18next.t<string>('technicalAssistance:editsRequested.viewFeedback')
     });
-
-    expect(asFragment()).toMatchSnapshot();
   });
 
   it('goes to and renders the feedback view', async () => {

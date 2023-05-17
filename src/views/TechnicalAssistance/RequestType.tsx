@@ -76,19 +76,21 @@ function RequestType() {
         {t('requestType.subhead')}
       </div>
 
-      <div className="margin-top-2">
-        <Button type="button" unstyled onClick={() => history.goBack()}>
-          <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-          {t(isNew ? 'requestType.goBack' : 'requestType.goBackWithoutChange')}
-        </Button>
-      </div>
+      <UswdsReactLink
+        to={isNew ? '/trb' : `/trb/task-list/${id}`}
+        className="display-flex flex-align-center margin-top-2"
+      >
+        <IconArrowBack className="margin-right-1" />
+        {t(isNew ? 'requestType.goBack' : 'requestType.goBackWithoutChange')}
+      </UswdsReactLink>
 
       <CardGroup className="flex-align-start margin-top-4 margin-bottom-4">
         {[
-          'NEED_HELP',
-          'BRAINSTORM'
+          TRBRequestType.NEED_HELP,
+          TRBRequestType.BRAINSTORM
           // Post-mvp options
-          // 'FOLLOWUP', 'FORMAL_REVIEW'
+          // TRBRequestType.FOLLOWUP
+          // TRBRequestType.FORMAL_REVIEW
         ].map(requestType => (
           <Card
             key={requestType}
@@ -137,7 +139,7 @@ function RequestType() {
                   disabled={!!error || !!loading}
                   onClick={() => {
                     mutate({
-                      variables: { id, type: requestType as TRBRequestType }
+                      variables: { id, type: requestType }
                     });
                   }}
                 >
@@ -157,8 +159,7 @@ function RequestType() {
             <UswdsReactLink
               to={{
                 pathname: '/trb/process',
-                // Reuse a request type until there is one defined for "other"
-                state: { requestType: 'NEED_HELP' }
+                state: { requestType: TRBRequestType.OTHER }
               }}
             >
               {t('requestType.services.other')}

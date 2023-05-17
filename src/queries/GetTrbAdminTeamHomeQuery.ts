@@ -11,7 +11,6 @@ export default gql`
       state
       consultMeetingTime
 
-      trbLeadComponent
       trbLeadInfo {
         commonName
       }

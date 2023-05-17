@@ -4,7 +4,7 @@ Alleviates prop drilling and over querying
 Updates on route change, as these values need to be reflected by current changes in Admin data
 */
 
-import React, { createContext } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { QueryResult } from '@apollo/client';
 
@@ -21,13 +21,14 @@ type TRBRequestInfoWrapperProps = {
 
 type TRBRequestContextType = Pick<
   QueryResult<GetTrbRequestSummary, GetTrbRequestSummaryVariables>,
-  'data' | 'loading' | 'error'
+  'data' | 'loading' | 'error' | 'refetch'
 >;
 
 const initialTRBRequestContext: TRBRequestContextType = {
   loading: false,
   error: undefined,
-  data: undefined
+  data: undefined,
+  refetch: () => new Promise((resolve, reject) => {})
 };
 
 // Create the trb request info context - can be used anywhere in a trb admin request view
@@ -42,7 +43,7 @@ const TRBRequestInfoWrapper = ({ children }: TRBRequestInfoWrapperProps) => {
   const requestID: string | undefined = pathname.split('/')[2];
 
   // TRB request query
-  const { data, loading, error } = useCacheQuery<
+  const { data, loading, error, refetch } = useCacheQuery<
     GetTrbRequestSummary,
     GetTrbRequestSummaryVariables
   >(GetTrbRequestSummaryQuery, {
@@ -50,9 +51,13 @@ const TRBRequestInfoWrapper = ({ children }: TRBRequestInfoWrapperProps) => {
     skip: !requestID
   });
 
+  useEffect(() => {
+    refetch();
+  }, [pathname, refetch]);
+
   return (
     // The Provider gives access to the context to its children
-    <TRBRequestContext.Provider value={{ data, loading, error }}>
+    <TRBRequestContext.Provider value={{ data, loading, error, refetch }}>
       {children}
     </TRBRequestContext.Provider>
   );

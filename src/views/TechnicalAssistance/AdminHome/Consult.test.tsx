@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
@@ -11,6 +11,7 @@ import {
   getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
   getTrbRequestSummaryQuery,
+  trbRequestSummary,
   updateTrbRequestConsultMeetingQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
@@ -32,7 +33,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
   it('submits successfully ', async () => {
-    const { getByText, getByLabelText, getByRole, findByRole } = render(
+    const { findByText, getByLabelText, getByRole, findByRole } = render(
       <Provider store={store}>
         <VerboseMockedProvider
           defaultOptions={{
@@ -44,7 +45,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             getTrbRequestQuery,
             getTrbRequestSummaryQuery,
             getTRBRequestAttendeesQuery,
-            getTrbAdminNotesQuery
+            getTrbAdminNotesQuery,
+            getTrbRequestSummaryQuery
           ]}
         >
           <MemoryRouter
@@ -56,8 +58,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
               <MessageProvider>
                 <Route exact path="/trb/:id/:activePage">
                   <InitialRequestForm
+                    trbRequest={trbRequestSummary}
                     trbRequestId={mockTrbRequestId}
-                    noteCount={0}
                     assignLeadModalRef={modalRef}
                     assignLeadModalTrbRequestIdRef={trbRequestIdRef}
                   />
@@ -72,9 +74,11 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       </Provider>
     );
 
-    getByText(
+    await findByText(
       i18next.t<string>('technicalAssistance:actionScheduleConsult.heading')
     );
+
+    await findByText('Choose recipients');
 
     const submitButton = getByRole('button', {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
@@ -125,7 +129,9 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
 
   it('shows the error summary on missing required fields', async () => {
     const { getByLabelText, getByRole, findByText } = render(
-      <VerboseMockedProvider mocks={[getTrbRequestSummaryQuery]}>
+      <VerboseMockedProvider
+        mocks={[getTrbRequestSummaryQuery, getTRBRequestAttendeesQuery]}
+      >
         <MemoryRouter
           initialEntries={[
             `/trb/${mockTrbRequestId}/initial-request-form/schedule-consult`
@@ -183,9 +189,10 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   });
 
   it('shows an error notice when submission fails', async () => {
-    const { getByLabelText, getByRole, findByText } = render(
+    const { getByTestId, getByLabelText, getByRole, findByText } = render(
       <VerboseMockedProvider
         mocks={[
+          getTRBRequestAttendeesQuery,
           getTrbRequestSummaryQuery,
           {
             ...updateTrbRequestConsultMeetingQuery,
@@ -207,6 +214,10 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
           </TRBRequestInfoWrapper>
         </MemoryRouter>
       </VerboseMockedProvider>
+    );
+
+    await waitForElementToBeRemoved(() =>
+      getByTestId('emailRecipients-spinner')
     );
 
     userEvent.type(

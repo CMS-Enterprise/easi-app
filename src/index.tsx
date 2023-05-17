@@ -79,6 +79,9 @@ const client = new ApolloClient({
   link: authLink.concat(uploadLink),
   cache: new InMemoryCache({
     typePolicies: {
+      cedarSystemDetails: {
+        merge: true
+      },
       TRBRequest: {
         fields: {
           taskStatuses: {

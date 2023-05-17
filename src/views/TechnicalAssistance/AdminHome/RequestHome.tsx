@@ -3,7 +3,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
   Alert,
   CardGroup,
-  Grid,
   IconArrowForward,
   Link
 } from '@trussworks/react-uswds';
@@ -22,60 +21,49 @@ import {
 import { TRBFormStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
+import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
 
 import InformationCard from './components/InformationCard';
-import NoteBox from './components/NoteBox';
+import TrbAdminWrapper from './components/TrbAdminWrapper';
 import { TrbAssignLeadModalOpener } from './TrbAssignLeadModal';
 
 const RequestHome = ({
-  trbRequestId,
+  trbRequest,
   assignLeadModalRef,
   assignLeadModalTrbRequestIdRef
 }: TrbAdminPageProps) => {
   const { t } = useTranslation('technicalAssistance');
 
+  const { id } = trbRequest;
+
   const { data, loading } = useCacheQuery<
     GetTrbRequestHomeType,
     GetTrbRequestHomeVariables
   >(GetTrbRequestHomeQuery, {
-    variables: { id: trbRequestId }
+    variables: { id }
   });
 
-  const {
-    taskStatuses,
-    consultMeetingTime,
-    trbLeadInfo,
-    trbLeadComponent,
-    documents,
-    adminNotes
-  } = data?.trbRequest || {};
+  const { taskStatuses, consultMeetingTime, trbLeadInfo, documents } =
+    data?.trbRequest || {};
+
+  if (loading) return <PageLoading />;
 
   return (
-    <div
-      className="trb-admin-home__request-home"
-      data-testid="trb-admin-home__request-home"
-      id={`trbAdminRequestHome-${trbRequestId}`}
+    <TrbAdminWrapper
+      activePage="request"
+      trbRequestId={id}
+      title={t('adminHome.requestHome')}
+      noteCount={trbRequest.adminNotes.length}
+      adminActionProps={{
+        status: trbRequest.status,
+        state: trbRequest.state,
+        assignLeadModalTrbRequestIdRef,
+        assignLeadModalRef
+      }}
     >
-      <Grid row gap="lg">
-        <Grid tablet={{ col: 8 }}>
-          <h1 className="margin-top-0 margin-bottom-4">
-            {t('adminHome.subnav.requestHome')}
-          </h1>
-        </Grid>
-
-        <Grid tablet={{ col: 4 }}>
-          <NoteBox
-            trbRequestId={trbRequestId}
-            noteCount={adminNotes?.length || 0}
-          />
-        </Grid>
-      </Grid>
-
-      {loading ? (
-        <PageLoading />
-      ) : (
+      {data?.trbRequest && (
+        /* Consult details */
         <>
-          {/* Consult details */}
           <h2 className="margin-top-4 margin-bottom-3">
             {t('adminHome.consultDetails')}
           </h2>
@@ -133,7 +121,7 @@ const RequestHome = ({
                   className="margin-right-1"
                 />
                 <p className="text-bold margin-0">
-                  {trbLeadInfo.commonName}, {trbLeadComponent}
+                  {getPersonNameAndComponentVal(trbLeadInfo.commonName, 'TRB')}
                 </p>
               </div>
               <Link
@@ -147,7 +135,7 @@ const RequestHome = ({
             </>
           ) : (
             <TrbAssignLeadModalOpener
-              trbRequestId={trbRequestId}
+              trbRequestId={trbRequest.id}
               modalRef={assignLeadModalRef}
               trbRequestIdRef={assignLeadModalTrbRequestIdRef}
               className="usa-button--outline"
@@ -161,19 +149,17 @@ const RequestHome = ({
           {/* Forms and Documents */}
           <h2 className="margin-y-3">{t('adminHome.formAndDocs')}</h2>
 
-          {data?.trbRequest && (
-            <CardGroup className="tablet:grid-col-10">
-              <InformationCard
-                type="inititalRequestForm"
-                trbRequest={data?.trbRequest}
-              />
+          <CardGroup className="tablet:grid-col-10">
+            <InformationCard
+              type="initialRequestForm"
+              trbRequest={data?.trbRequest}
+            />
 
-              <InformationCard
-                type="adviceLetter"
-                trbRequest={data?.trbRequest}
-              />
-            </CardGroup>
-          )}
+            <InformationCard
+              type="adviceLetter"
+              trbRequest={data?.trbRequest}
+            />
+          </CardGroup>
 
           <p className="text-bold margin-bottom-105">
             {t('adminHome.supportingDocs')}
@@ -203,7 +189,7 @@ const RequestHome = ({
           </UswdsReactLink>
         </>
       )}
-    </div>
+    </TrbAdminWrapper>
   );
 };
 

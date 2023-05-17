@@ -1,29 +1,30 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider } from '@apollo/client/testing';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 
+import { trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestHomeQuery from 'queries/GetTrbRequestHomeQuery';
 import {
   TRBAdviceLetterStatus,
   TRBFormStatus
 } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import RequestHome from './RequestHome';
 
 describe('Trb Admin Request Home', () => {
   Element.prototype.scrollIntoView = jest.fn();
 
-  const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
+  const trbRequestId = trbRequestSummary.id;
   const modalRef = React.createRef<ModalRef>();
   const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
   it('renders successfully with empty data', async () => {
     const { getByText, asFragment, getByRole, getByTestId } = render(
-      <MockedProvider
+      <VerboseMockedProvider
         defaultOptions={{
           watchQuery: { fetchPolicy: 'no-cache' },
           query: { fetchPolicy: 'no-cache' }
@@ -52,7 +53,6 @@ describe('Trb Admin Request Home', () => {
                     __typename: 'TRBRequestForm'
                   },
                   adviceLetter: null,
-                  trbLeadComponent: null,
                   trbLeadInfo: {
                     commonName: '',
                     email: '',
@@ -71,22 +71,20 @@ describe('Trb Admin Request Home', () => {
           <Route exact path="/trb/:id/:activePage">
             <RequestHome
               trbRequestId={trbRequestId}
-              noteCount={0}
+              trbRequest={trbRequestSummary}
               assignLeadModalRef={modalRef}
               assignLeadModalTrbRequestIdRef={trbRequestIdRef}
             />
           </Route>
         </MemoryRouter>
-      </MockedProvider>
+      </VerboseMockedProvider>
     );
 
-    expect(
-      getByText(
-        i18next.t<string>('technicalAssistance:adminHome.subnav.requestHome')
-      )
-    ).toBeInTheDocument();
-
     await waitForElementToBeRemoved(() => getByTestId('page-loading'));
+
+    expect(
+      getByText(i18next.t<string>('technicalAssistance:adminHome.requestHome'))
+    ).toBeInTheDocument();
 
     // Consult meeting time
     expect(
@@ -119,7 +117,7 @@ describe('Trb Admin Request Home', () => {
 
   it('renders successfully with populated data', async () => {
     const { getByText, getByRole, getByTestId } = render(
-      <MockedProvider
+      <VerboseMockedProvider
         defaultOptions={{
           watchQuery: { fetchPolicy: 'no-cache' },
           query: { fetchPolicy: 'no-cache' }
@@ -152,7 +150,6 @@ describe('Trb Admin Request Home', () => {
                     id: '123',
                     modifiedAt: '2023-02-05T05:00:00Z'
                   },
-                  trbLeadComponent: 'TRB',
                   trbLeadInfo: {
                     commonName: 'Jerry Seinfeld',
                     email: 'js@oddball.io',
@@ -176,13 +173,13 @@ describe('Trb Admin Request Home', () => {
           <Route exact path="/trb/:id/:activePage">
             <RequestHome
               trbRequestId={trbRequestId}
-              noteCount={0}
+              trbRequest={trbRequestSummary}
               assignLeadModalRef={modalRef}
               assignLeadModalTrbRequestIdRef={trbRequestIdRef}
             />
           </Route>
         </MemoryRouter>
-      </MockedProvider>
+      </VerboseMockedProvider>
     );
 
     await waitForElementToBeRemoved(() => getByTestId('page-loading'));
