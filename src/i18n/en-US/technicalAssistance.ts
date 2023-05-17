@@ -111,9 +111,9 @@ const technicalAssistance = {
           'If this is a Consult as a Service request (CaaS), you may choose to leave this request open until the engagement is complete. For all other requests, you may close this request at any time.'
       },
       FOLLOW_UP_REQUESTED: {
-        title: 'Re-open request',
+        title: 'Close request',
         description:
-          'If this request was closed in error or if you wish to re-open it, use the button below.'
+          'If this is a Consult as a Service request (CaaS), you may choose to leave this request open until the engagement is complete. For all other requests, you may close this request at any time.'
       },
       CLOSED: {
         title: 'Re-open request',

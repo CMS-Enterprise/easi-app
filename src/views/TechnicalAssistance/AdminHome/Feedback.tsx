@@ -58,14 +58,17 @@ const Feedback = ({
     >
       {loading && <PageLoading />}
       {error && <NotFoundPartial />}
-      {validFeedback && validFeedback.length > 0 ? (
-        <TrbRequestFeedbackList
-          feedback={sortBy(validFeedback, 'createdAt').reverse()}
-        />
-      ) : (
+
+      {validFeedback && validFeedback.length === 0 && (
         <Alert slim type="info">
           {t('requestFeedback.noFeedbackAlert')}
         </Alert>
+      )}
+
+      {validFeedback && validFeedback.length > 0 && (
+        <TrbRequestFeedbackList
+          feedback={sortBy(validFeedback, 'createdAt').reverse()}
+        />
       )}
     </TrbAdminWrapper>
   );
