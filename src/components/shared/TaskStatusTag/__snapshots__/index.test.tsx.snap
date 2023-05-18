@@ -44,10 +44,10 @@ exports[`TaskStatusTag renders task status tag {"status":"IN_PROGRESS","classNam
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"IN_REVIEW","className":"bg-info"} 1`] = `
+exports[`TaskStatusTag renders task status tag {"status":"IN_REVIEW","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag bg-info"
+    class="easi-tag bg-info-light"
     data-testid="task-list-task-tag"
   >
     In review
@@ -66,10 +66,10 @@ exports[`TaskStatusTag renders task status tag {"status":"NOT_NEEDED","className
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","className":"bg-info-light-light"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag bg-info-light"
+    class="easi-tag bg-info-light-light"
     data-testid="task-list-task-tag"
   >
     Ready for review
@@ -77,10 +77,10 @@ exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","cla
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY_TO_SCHEDULE","className":"bg-info"} 1`] = `
+exports[`TaskStatusTag renders task status tag {"status":"READY_TO_SCHEDULE","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag bg-info"
+    class="easi-tag bg-info-light"
     data-testid="task-list-task-tag"
   >
     Ready to schedule
@@ -88,10 +88,10 @@ exports[`TaskStatusTag renders task status tag {"status":"READY_TO_SCHEDULE","cl
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY_TO_START","className":"bg-info"} 1`] = `
+exports[`TaskStatusTag renders task status tag {"status":"READY_TO_START","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag bg-info"
+    class="easi-tag bg-info-light"
     data-testid="task-list-task-tag"
   >
     Ready to start
@@ -99,10 +99,10 @@ exports[`TaskStatusTag renders task status tag {"status":"READY_TO_START","class
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"SCHEDULED","className":"bg-info"} 1`] = `
+exports[`TaskStatusTag renders task status tag {"status":"SCHEDULED","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag bg-info"
+    class="easi-tag bg-info-light"
     data-testid="task-list-task-tag"
   >
     Scheduled

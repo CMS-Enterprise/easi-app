@@ -30,13 +30,13 @@ export const taskStatusClassName: Record<TaskStatus, string> = {
   CANNOT_START_YET: 'border-2px text-base',
   NOT_NEEDED: 'border-2px text-base',
   EDITS_REQUESTED: 'bg-warning',
-  IN_REVIEW: 'bg-info',
-  READY_TO_SCHEDULE: 'bg-info',
-  SCHEDULED: 'bg-info',
+  IN_REVIEW: 'bg-info-light',
+  READY_TO_SCHEDULE: 'bg-info-light',
+  SCHEDULED: 'bg-info-light',
   // Error: 'bg-error-dark text-white'
-  READY_TO_START: 'bg-info',
+  READY_TO_START: 'bg-info-light',
   // No action needed: 'bg-base-lighter text-base-darker',
-  READY_FOR_REVIEW: 'bg-info-light'
+  READY_FOR_REVIEW: 'bg-info-light-light'
 };
 
 type TaskStatusTagProps = {
