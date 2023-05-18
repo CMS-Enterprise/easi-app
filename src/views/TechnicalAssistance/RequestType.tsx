@@ -156,15 +156,30 @@ function RequestType() {
         </h3>
         <ul className="list-style-none padding-0">
           <li>
-            <UswdsReactLink
-              to={{
-                pathname: '/trb/process',
-                state: { requestType: TRBRequestType.OTHER }
-              }}
-            >
-              {t('requestType.services.other')}
-              <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
-            </UswdsReactLink>
+            {isNew ? (
+              <UswdsReactLink
+                to={{
+                  pathname: '/trb/process',
+                  state: { requestType: TRBRequestType.OTHER }
+                }}
+              >
+                {t('requestType.services.other')}
+                <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
+              </UswdsReactLink>
+            ) : (
+              <Button
+                type="button"
+                className="usa-button usa-button--unstyled"
+                onClick={() => {
+                  mutate({
+                    variables: { id, type: TRBRequestType.OTHER }
+                  });
+                }}
+              >
+                {t('requestType.services.other')}
+                <IconArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
+              </Button>
+            )}
           </li>
         </ul>
       </div>
