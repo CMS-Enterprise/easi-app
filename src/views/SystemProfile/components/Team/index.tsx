@@ -136,7 +136,7 @@ export const TeamContactCard = ({
       <CardBody className="padding-x-2 padding-top-0">
         {roles.map(role => (
           <h5
-            key={role.roleTypeID}
+            key={role.roleTypeName}
             className="margin-y-0 font-sans-2xs text-normal"
           >
             {role.roleTypeName}

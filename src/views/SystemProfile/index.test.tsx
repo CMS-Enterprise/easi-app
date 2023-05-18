@@ -146,7 +146,7 @@ describe('System Profile Points of Contact by subpage', () => {
     // Collect all contacts matching all poc ids for the subpage
     const received = allowedSubpagePocIds.filter(pocid => {
       return contacts.every(contact =>
-        contact.roles.some(r => r.roleTypeID === pocid)
+        contact.roles.some(r => r.roleTypeName === pocid)
       );
     });
 
