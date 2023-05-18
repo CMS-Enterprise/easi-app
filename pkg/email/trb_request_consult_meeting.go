@@ -38,10 +38,15 @@ type trbConsultMeetingEmailTemplateParams struct {
 // SendTRBRequestConsultMeetingEmail sends an email to the EASI team containing a user's request for help
 func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input SendTRBRequestConsultMeetingEmailInput) error {
 	subject := "TRB consult session scheduled for " + input.TRBRequestName
+	est, err := time.LoadLocation("America/New_York")
+
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
 
 	templateParams := trbConsultMeetingEmailTemplateParams{
 		TRBRequestName:              input.TRBRequestName,
-		ConsultMeetingTimeFormatted: input.ConsultMeetingTime.Format("January 2, 2006 at 03:04 PM EST"),
+		ConsultMeetingTimeFormatted: input.ConsultMeetingTime.In(est).Format("January 2, 2006 at 03:04 PM EST"),
 		Notes:                       input.Notes,
 		RequesterName:               input.RequesterName,
 		TRBRequestLink:              c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
@@ -50,7 +55,7 @@ func (c Client) SendTRBRequestConsultMeetingEmail(ctx context.Context, input Sen
 	}
 
 	var b bytes.Buffer
-	err := c.templates.trbRequestConsultMeeting.Execute(&b, templateParams)
+	err = c.templates.trbRequestConsultMeeting.Execute(&b, templateParams)
 
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
