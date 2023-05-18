@@ -29,7 +29,7 @@ import {
   teamSectionKeys
 } from 'constants/systemProfile';
 import {
-  RoleTypeId,
+  RoleTypeName,
   SystemProfileSubviewProps,
   TeamSectionKey,
   UsernameWithRoles
@@ -59,13 +59,17 @@ export function getTeam(
 
     // Members in Business Owner and Project Lead roles appear in both sections
     if (
-      roles.some(({ roleTypeID }) => roleTypeID === RoleTypeId.BUSINESS_OWNER)
+      roles.some(
+        ({ roleTypeName }) => roleTypeName === RoleTypeName.BUSINESS_OWNER
+      )
     ) {
       businessOwners.push(person);
     }
 
     if (
-      roles.some(({ roleTypeID }) => roleTypeID === RoleTypeId.PROJECT_LEAD)
+      roles.some(
+        ({ roleTypeName }) => roleTypeName === RoleTypeName.PROJECT_LEAD
+      )
     ) {
       projectLeads.push(person);
     }
@@ -74,9 +78,9 @@ export function getTeam(
     // Anyone else not a business owner or project lead appears here
     if (
       roles.every(
-        ({ roleTypeID }) =>
-          roleTypeID !== RoleTypeId.BUSINESS_OWNER &&
-          roleTypeID !== RoleTypeId.PROJECT_LEAD
+        ({ roleTypeName }) =>
+          roleTypeName !== RoleTypeName.BUSINESS_OWNER &&
+          roleTypeName !== RoleTypeName.PROJECT_LEAD
       )
     ) {
       additional.push(person);

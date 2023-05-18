@@ -8,7 +8,7 @@ import {
   getMockSystemProfileData,
   result
 } from 'data/mock/systemProfile';
-import { RoleTypeId } from 'types/systemProfile';
+import { RoleTypeName } from 'types/systemProfile';
 
 import Team, { getTeam, TeamSection } from '.';
 
@@ -16,13 +16,13 @@ describe('System Profile Team subpage', () => {
   const resultdata = cloneDeep(result.data);
   // prettier-ignore
   resultdata.cedarSystemDetails!.roles = [
-    getMockPersonRole({assigneeUsername: 'A', roleTypeID: RoleTypeId.BUSINESS_OWNER}),
-    getMockPersonRole({assigneeUsername: 'B', roleTypeID: RoleTypeId.BUSINESS_OWNER}),
-    getMockPersonRole({assigneeUsername: 'B', roleTypeID: RoleTypeId.PROJECT_LEAD}),
-    getMockPersonRole({assigneeUsername: 'B', roleTypeID: '0'}),
-    getMockPersonRole({assigneeUsername: 'C', roleTypeID: '0'}),
-    getMockPersonRole({assigneeUsername: 'C', roleTypeID: '9'}),
-    getMockPersonRole({assigneeUsername: 'D', roleTypeID: '9'})
+    getMockPersonRole({assigneeUsername: 'A', roleTypeName: RoleTypeName.BUSINESS_OWNER}),
+    getMockPersonRole({assigneeUsername: 'B', roleTypeName: RoleTypeName.BUSINESS_OWNER}),
+    getMockPersonRole({assigneeUsername: 'B', roleTypeName: RoleTypeName.PROJECT_LEAD}),
+    getMockPersonRole({assigneeUsername: 'B', roleTypeName: '0'}),
+    getMockPersonRole({assigneeUsername: 'C', roleTypeName: '0'}),
+    getMockPersonRole({assigneeUsername: 'C', roleTypeName: '9'}),
+    getMockPersonRole({assigneeUsername: 'D', roleTypeName: '9'})
   ];
 
   const systemProfileDataWithTeam = getMockSystemProfileData(resultdata);
@@ -44,15 +44,15 @@ describe('System Profile Team subpage', () => {
         {
           "assigneeUsername": "A",
           "roles": [
-            { "application": "alfabet", "objectID": "", "roleTypeID": "238-17-0", "assigneeType": "PERSON", "assigneeUsername": "A", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "238-17-0", "assigneeType": "PERSON", "assigneeUsername": "A", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
           ]
         },
         {
           "assigneeUsername": "B",
           "roles": [
-            { "application": "alfabet", "objectID": "", "roleTypeID": "238-17-0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
-            { "application": "alfabet", "objectID": "", "roleTypeID": "238-32-0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
-            { "application": "alfabet", "objectID": "", "roleTypeID": "0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "238-17-0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "238-32-0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
           ]
         }
       ],
@@ -60,9 +60,9 @@ describe('System Profile Team subpage', () => {
         {
           "assigneeUsername": "B",
           "roles": [
-            { "application": "alfabet", "objectID": "", "roleTypeID": "238-17-0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
-            { "application": "alfabet", "objectID": "", "roleTypeID": "238-32-0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
-            { "application": "alfabet", "objectID": "", "roleTypeID": "0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "238-17-0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "238-32-0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "0", "assigneeType": "PERSON", "assigneeUsername": "B", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
           ]
         }
       ],
@@ -70,14 +70,14 @@ describe('System Profile Team subpage', () => {
         {
           "assigneeUsername": "C",
           "roles": [
-            { "application": "alfabet", "objectID": "", "roleTypeID": "0", "assigneeType": "PERSON", "assigneeUsername": "C", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
-            { "application": "alfabet", "objectID": "", "roleTypeID": "9", "assigneeType": "PERSON", "assigneeUsername": "C", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "0", "assigneeType": "PERSON", "assigneeUsername": "C", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" },
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "9", "assigneeType": "PERSON", "assigneeUsername": "C", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
           ]
         },
         {
           "assigneeUsername": "D",
           "roles": [
-            { "application": "alfabet", "objectID": "", "roleTypeID": "9", "assigneeType": "PERSON", "assigneeUsername": "D", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
+            { "application": "alfabet", "objectID": "", "roleTypeNAME": "9", "assigneeType": "PERSON", "assigneeUsername": "D", "assigneeEmail": null, "assigneeOrgID": null, "assigneeOrgName": null, "assigneeFirstName": null, "assigneeLastName": null, "roleTypeName": null, "roleID": null, "__typename": "CedarRole" }
           ]
         }
       ]
@@ -99,11 +99,11 @@ describe('System Profile Team subpage', () => {
 describe(`System Profile Team section collapse/expand toggle at ${TEAM_SECTION_MEMBER_COUNT_CAP}`, () => {
   const buttonExpandToggleMatchOpt = { name: /view \d+ more contact/i };
 
-  function fillRolesUniqueWithType(roleTypeID: string, count: number) {
+  function fillRolesUniqueWithType(roleTypeName: string, count: number) {
     return Array(count)
       .fill(0)
       .map(_ =>
-        getMockPersonRole({ assigneeUsername: uniqueId(), roleTypeID })
+        getMockPersonRole({ assigneeUsername: uniqueId(), roleTypeName })
       );
   }
 
@@ -113,11 +113,11 @@ describe(`System Profile Team section collapse/expand toggle at ${TEAM_SECTION_M
     // Doesn't show the button expand toggle at cap
     res.cedarSystemDetails!.roles = [
       ...fillRolesUniqueWithType(
-        RoleTypeId.BUSINESS_OWNER,
+        RoleTypeName.BUSINESS_OWNER,
         TEAM_SECTION_MEMBER_COUNT_CAP
       ),
       ...fillRolesUniqueWithType(
-        RoleTypeId.PROJECT_LEAD,
+        RoleTypeName.PROJECT_LEAD,
         TEAM_SECTION_MEMBER_COUNT_CAP
       ),
       ...fillRolesUniqueWithType('0', TEAM_SECTION_MEMBER_COUNT_CAP)
