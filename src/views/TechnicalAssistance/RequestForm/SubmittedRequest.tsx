@@ -46,6 +46,10 @@ function SubmittedRequest({
     data: { requester, attendees }
   } = useTRBAttendees(request.id);
 
+  /** Wraps valid collabDate in parenthesis */
+  const collabDate = (date: string | null): string =>
+    date ? ` (${date})` : '';
+
   return (
     <>
       {showRequestHeaderInfo && (
@@ -202,19 +206,21 @@ function SubmittedRequest({
                 ? request.form.collabGroups
                     .map(v => {
                       if (v === 'OTHER') {
-                        return `${t('basic.options.other')}: ${
+                        return `${t('basic.options.other')}${
                           request.form.collabGroupOther
-                        } (${request.form.collabDateOther})`;
+                            ? `: ${request.form.collabGroupOther}`
+                            : ''
+                        }${collabDate(request.form.collabDateOther)}`;
                       }
                       return `${t(
                         `basic.options.collabGroups.${camelCase(v)}`
-                      )} (${
+                      )}${collabDate(
                         request.form[
                           `collabDate${upperFirst(
                             camelCase(v)
                           )}` as keyof TrbRequestForm
-                        ]
-                      })`;
+                        ] as string | null
+                      )}`;
                     })
                     .join(', ')
                 : t('basic.noAnswer')}
