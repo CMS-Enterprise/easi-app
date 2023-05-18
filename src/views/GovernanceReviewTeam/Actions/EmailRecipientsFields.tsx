@@ -1,7 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Alert,
   Button,
   ButtonGroup,
   IconWarning,
@@ -11,6 +10,7 @@ import classnames from 'classnames';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import CedarContactSelect from 'components/CedarContactSelect';
+import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';

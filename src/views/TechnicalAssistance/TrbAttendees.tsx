@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
-import { Alert, Grid, GridContainer } from '@trussworks/react-uswds';
+import { Grid, GridContainer } from '@trussworks/react-uswds';
+
+import Alert from 'components/shared/Alert';
 
 import Attendees from './RequestForm/Attendees';
 import Breadcrumbs from './Breadcrumbs';

@@ -40,7 +40,7 @@ export const Alert = ({
   type,
   heading,
   children,
-  slim,
+  slim = type === 'success' || type === 'error',
   noIcon,
   className,
   inline,

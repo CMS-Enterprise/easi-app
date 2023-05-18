@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useMutation, useQuery } from '@apollo/client';
 import {
-  Alert,
   Button,
   ButtonGroup,
   Fieldset,
@@ -19,6 +18,7 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
 import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
@@ -122,7 +122,7 @@ function TrbAssignLeadModal({
     })
       .then(result => {
         showMessage(
-          <Alert type="success" slim className="margin-top-3">
+          <Alert type="success" className="margin-top-3">
             {t(`assignTrbLeadModal.success`, {
               name: data?.trbLeadOptions.find(
                 e => e.euaUserId === formData.trbLead
@@ -133,7 +133,7 @@ function TrbAssignLeadModal({
       })
       .catch(err => {
         showMessage(
-          <Alert type="error" slim className="margin-top-3">
+          <Alert type="error" className="margin-top-3">
             {t(`assignTrbLeadModal.error`)}
           </Alert>
         );
