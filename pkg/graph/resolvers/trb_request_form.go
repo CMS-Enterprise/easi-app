@@ -138,7 +138,7 @@ func UpdateTRBRequestForm(
 			return emailClient.SendTRBFormSubmissionNotificationToAdmins(
 				ctx,
 				id,
-				request.Name,
+				*request.Name,
 				requesterInfo.CommonName,
 				componentText,
 			)
@@ -148,7 +148,7 @@ func UpdateTRBRequestForm(
 			return emailClient.SendTRBFormSubmissionNotificationToRequester(
 				ctx,
 				request.ID,
-				request.Name,
+				*request.Name,
 				requesterInfo.Email,
 				requesterInfo.CommonName,
 			)

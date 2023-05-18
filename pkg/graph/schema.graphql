@@ -1521,7 +1521,7 @@ Represents a request for support from the Technical Review Board (TRB)
 """
 type TRBRequest {
   id: UUID!
-  name: String!
+  name: String
   archived: Boolean!
   type: TRBRequestType!
   state: TRBRequestState!

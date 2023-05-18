@@ -8277,7 +8277,7 @@ Represents a request for support from the Technical Review Board (TRB)
 """
 type TRBRequest {
   id: UUID!
-  name: String!
+  name: String
   archived: Boolean!
   type: TRBRequestType!
   state: TRBRequestState!
@@ -40234,14 +40234,11 @@ func (ec *executionContext) _TRBRequest_name(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequest_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -56962,9 +56959,6 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 
 			out.Values[i] = ec._TRBRequest_name(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "archived":
 
 			out.Values[i] = ec._TRBRequest_archived(ctx, field, obj)

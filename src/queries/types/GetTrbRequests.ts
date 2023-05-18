@@ -17,7 +17,7 @@ export interface GetTrbRequests_myTrbRequests_form {
 export interface GetTrbRequests_myTrbRequests {
   __typename: "TRBRequest";
   id: UUID;
-  name: string;
+  name: string | null;
   status: TRBRequestStatus;
   createdAt: Time;
   form: GetTrbRequests_myTrbRequests_form;

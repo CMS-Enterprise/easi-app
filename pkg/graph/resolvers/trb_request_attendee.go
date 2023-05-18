@@ -70,7 +70,7 @@ func CreateTRBRequestAttendee(
 	err = emailClient.SendTRBAttendeeAddedNotification(
 		ctx,
 		attendeeInfo.Email,
-		request.Name,
+		*request.Name,
 		requester.CommonName,
 	)
 	if err != nil {
