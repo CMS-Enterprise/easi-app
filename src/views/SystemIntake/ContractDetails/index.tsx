@@ -14,6 +14,7 @@ import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
+import CharacterCounter from 'components/CharacterCounter';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -265,6 +266,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                             name="costs.expectedIncreaseAmount"
                             aria-describedby="IntakeForm-ExpectedIncreaseHelp"
                             maxLength={100}
+                          />
+                          <CharacterCounter
+                            id="expectedIncreaseAmount-counter"
+                            characterCount={
+                              2000 - values.costs.expectedIncreaseAmount.length
+                            }
                           />
                         </FieldGroup>
                       </div>

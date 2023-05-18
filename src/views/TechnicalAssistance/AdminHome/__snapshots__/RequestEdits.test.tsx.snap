@@ -102,6 +102,14 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
           id="feedbackMessage"
           name="feedbackMessage"
         />
+        <span
+          aria-atomic="false"
+          aria-live="polite"
+          class="easi-character-counter margin-top-1"
+          id="feedbackMessage-counter"
+        >
+          2000 characters remaining
+        </span>
       </div>
       <h3
         class="margin-top-6 margin-bottom-0"
