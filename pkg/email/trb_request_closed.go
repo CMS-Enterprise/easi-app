@@ -25,8 +25,8 @@ type SendTRBRequestClosedEmailInput struct {
 type trbRequestClosedEmailTemplateParams struct {
 	TRBRequestName      string
 	ReasonClosed        string
-	TRBAdviceLetterLink string
 	TRBRequestLink      string
+	TRBAdminRequestLink string
 	RequesterName       string
 	TRBEmail            models.EmailAddress
 }
@@ -42,8 +42,8 @@ func (c Client) SendTRBRequestClosedEmail(ctx context.Context, input SendTRBRequ
 		TRBRequestName:      input.TRBRequestName,
 		RequesterName:       input.RequesterName,
 		ReasonClosed:        input.ReasonClosed,
-		TRBAdviceLetterLink: c.urlFromPath(path.Join("trb", "advice", input.TRBRequestID.String())),
 		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
+		TRBAdminRequestLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "request")),
 		TRBEmail:            c.config.TRBEmail,
 	}
 
