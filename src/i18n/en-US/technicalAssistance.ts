@@ -312,7 +312,8 @@ const technicalAssistance = {
     },
     requestTypes: {
       NEED_HELP: 'System problem',
-      BRAINSTORM: 'Idea feedback'
+      BRAINSTORM: 'Idea feedback',
+      OTHER: 'Other'
     },
     requestStatus: {
       NEW: 'New',

@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -132,16 +131,16 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	t.Run("does not send for \"no governance\" status", func(t *testing.T) {
 		clearAlerts(systemIntakes)
 
-		// Test that it sends alerts for the two intakes with LCIDs expiring within 60 days
+		// Test that it does NOT send alerts for intakes with LCIDs expiring within 60 days that have a NO GOVERNANCE status
 		lcidExpirationAlertCount = 0
-		intakeWithLCIDExpiringIn46Days.ProcessStatus = null.StringFrom(string(models.SystemIntakeStatusNOGOVERNANCE))
-		intakeWithLCIDExpiringIn59Days.ProcessStatus = null.StringFrom(string(models.SystemIntakeStatusNOGOVERNANCE))
-		intakeWithLCIDExpiringIn60Days.ProcessStatus = null.StringFrom(string(models.SystemIntakeStatusNOGOVERNANCE))
+		intakeWithLCIDExpiringIn46Days.Status = models.SystemIntakeStatusNOGOVERNANCE
+		intakeWithLCIDExpiringIn59Days.Status = models.SystemIntakeStatusNOGOVERNANCE
+		intakeWithLCIDExpiringIn60Days.Status = models.SystemIntakeStatusNOGOVERNANCE
 		err := checkForLCIDExpiration(ctx, testDate, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
 		// reset to original value of test helper
-		intakeWithLCIDExpiringIn46Days.ProcessStatus = null.StringFrom("Just an idea")
-		intakeWithLCIDExpiringIn59Days.ProcessStatus = null.StringFrom("Just an idea")
-		intakeWithLCIDExpiringIn60Days.ProcessStatus = null.StringFrom("Just an idea")
+		intakeWithLCIDExpiringIn46Days.Status = models.SystemIntakeStatusINTAKEDRAFT
+		intakeWithLCIDExpiringIn59Days.Status = models.SystemIntakeStatusINTAKEDRAFT
+		intakeWithLCIDExpiringIn60Days.Status = models.SystemIntakeStatusINTAKEDRAFT
 		assert.NoError(t, err)
 		assert.Equal(t, 0, lcidExpirationAlertCount)
 	})
