@@ -364,7 +364,6 @@ function Attendees({
                 }
               }
               saveExitDisabled={isSubmitting}
-              saveExitText={t('requestFeedback.returnToTaskList')}
               submit={submitForm}
               submitDisabled={!stepUrl}
               taskListUrl={taskListUrl}
