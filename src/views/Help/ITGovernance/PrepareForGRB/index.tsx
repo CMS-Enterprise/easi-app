@@ -13,7 +13,10 @@ const PrepareForGRB = () => {
         <PrepareForGRBBase helpArticle />
       </MainContent>
       <div className="margin-top-7">
-        <RelatedArticles type="IT Governance" />
+        <RelatedArticles
+          type="IT Governance"
+          currentArticle="governanceReviewBoard"
+        />
       </div>
     </>
   );
