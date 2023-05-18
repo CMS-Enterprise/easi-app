@@ -1,14 +1,12 @@
-import React from 'react';
+/*
+Wrapper for Truss' <Alert> component to allow for manually closing the component
+*/
+
+import React, { useState } from 'react';
+import { Alert as TrussAlert, Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-type AlertProps = {
-  type: 'success' | 'warning' | 'error' | 'info';
-  heading?: React.ReactNode;
-  children?: React.ReactNode;
-  slim?: boolean;
-  noIcon?: boolean;
-  inline?: boolean;
-} & JSX.IntrinsicElements['div'];
+import './index.scss';
 
 type AlertTextProps = {
   className?: string;
@@ -26,6 +24,18 @@ export const AlertText = ({
     </p>
   );
 };
+
+type AlertProps = {
+  type: 'success' | 'warning' | 'error' | 'info';
+  heading?: React.ReactNode;
+  children?: React.ReactNode;
+  'data-testid'?: string;
+  slim?: boolean;
+  noIcon?: boolean;
+  inline?: boolean;
+  isClosable?: boolean;
+} & JSX.IntrinsicElements['div'];
+
 export const Alert = ({
   type,
   heading,
@@ -34,39 +44,48 @@ export const Alert = ({
   noIcon,
   className,
   inline,
+  // Default to closable button if type = success or error
+  isClosable = type === 'success' || type === 'error',
   ...props
 }: AlertProps & React.HTMLAttributes<HTMLDivElement>): React.ReactElement => {
   const classes = classnames(
-    'usa-alert',
     {
-      'usa-alert--success': type === 'success',
-      'usa-alert--warning': type === 'warning',
-      'usa-alert--error': type === 'error',
-      'usa-alert--info': type === 'info',
-      'usa-alert--slim': slim,
-      'usa-alert--no-icon': noIcon,
-      'easi-inline-alert': inline
+      'easi-inline-alert': inline,
+      'easi-alert-text': isClosable
     },
+    'flex',
     className
   );
 
-  const renderChildren = () => {
-    if (children) {
-      if (typeof children === 'string') {
-        return <AlertText>{children}</AlertText>;
-      }
-      return children;
-    }
-    return <></>;
-  };
+  const [isClosed, setClosed] = useState<boolean>(false);
 
   return (
-    <div className={classes} data-testid="alert" {...props}>
-      <div className="usa-alert__body maxw-none">
-        {heading && <h3 className="usa-alert__heading">{heading}</h3>}
-        {renderChildren()}
-      </div>
-    </div>
+    <>
+      {!isClosed && (
+        <TrussAlert
+          type={type}
+          heading={heading}
+          slim={slim}
+          noIcon={noIcon}
+          className={classes}
+          {...props}
+        >
+          {children}
+          {isClosable && (
+            <Button
+              type="button"
+              role="button"
+              className="usa-button usa-button--unstyled text-no-underline text-black flex-align-end"
+              tabIndex={0}
+              aria-label="Close Button"
+              onClick={() => setClosed(true)}
+            >
+              &#10005;
+            </Button>
+          )}
+        </TrussAlert>
+      )}
+    </>
   );
 };
 
