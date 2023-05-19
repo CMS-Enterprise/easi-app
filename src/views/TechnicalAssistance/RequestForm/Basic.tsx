@@ -919,6 +919,7 @@ function Basic({
                                                 {t(
                                                   'basic.labels.collabGRBConsultRequested'
                                                 )}
+                                                <RequiredAsterisk />
                                               </Label>
                                               {error && (
                                                 <ErrorMessage>
