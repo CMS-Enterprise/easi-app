@@ -4,7 +4,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
-  Alert,
   Button,
   Dropdown,
   ErrorMessage,
@@ -18,6 +17,7 @@ import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
@@ -140,7 +140,7 @@ const AddNote = ({
             .then(result => {
               if (!setModalView) {
                 showMessageOnNextPage(
-                  <Alert type="success" slim className="margin-top-3">
+                  <Alert type="success" className="margin-top-3">
                     {t('notes.status.success')}
                   </Alert>
                 );
@@ -152,7 +152,7 @@ const AddNote = ({
             })
             .catch(err => {
               showMessage(
-                <Alert type="error" slim className="margin-top-3">
+                <Alert type="error" className="margin-top-3">
                   {t('notes.status.error')}
                 </Alert>
               );
@@ -187,6 +187,7 @@ const AddNote = ({
               <Alert
                 heading={t('errors.checkFix')}
                 type="error"
+                slim={false}
                 className="trb-basic-fields-error"
               >
                 {Object.keys(errors).map(fieldName => {

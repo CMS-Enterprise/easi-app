@@ -15,7 +15,7 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
         data-testid="grid"
       >
         <div
-          class="usa-alert usa-alert--info usa-alert--slim"
+          class="usa-alert usa-alert--info usa-alert--slim flex"
           data-testid="alert"
         >
           <div

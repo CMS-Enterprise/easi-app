@@ -2,9 +2,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Alert } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
+import Alert from 'components/shared/Alert';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import { useMessage } from 'hooks/useMessage';
 import CreateTestDateQuery from 'queries/CreateTestDateQuery';

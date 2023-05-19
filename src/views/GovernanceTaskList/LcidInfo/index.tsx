@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
-  Alert,
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
@@ -14,6 +13,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
   GetSystemIntake,
