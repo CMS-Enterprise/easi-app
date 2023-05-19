@@ -103,7 +103,7 @@ const AppRoutes = () => {
         path="/system/request-type"
         component={RequestTypeForm}
       />
-      <Route
+      <SecureRoute
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}
       />
@@ -195,15 +195,21 @@ const AppRoutes = () => {
       />
 
       {/* Misc Routes */}
-      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
       {flags.sandbox && (
-        <Route path="/sandbox/:systemId" exact component={SystemProfile} />
+        <SecureRoute path="/sandbox" exact component={Sandbox} />
+      )}
+      {flags.sandbox && (
+        <SecureRoute
+          path="/sandbox/:systemId"
+          exact
+          component={SystemProfile}
+        />
       )}
 
       <Route path="/implicit/callback" component={LoginCallback} />
 
       {/* 404 */}
-      <Route path="*" component={NotFound} />
+      <SecureRoute path="*" component={NotFound} />
     </Switch>
   );
 };

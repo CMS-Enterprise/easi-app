@@ -2,7 +2,10 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"time"
+
+	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
@@ -251,24 +254,62 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 	s.EqualValues("MCLV", *updated.TRBLead)
 }
 
+// TestIsRecentTRBRequest tests the IsRecentTRBRequest function
 func (s *ResolverSuite) TestIsRecentTRBRequest() {
-	// Set up a date to mock the current time
+	tests := []struct {
+		numDaysOld      int
+		isLeadAssigned  bool
+		isRequestClosed bool
+		expected        bool
+	}{{
+		numDaysOld:      10,
+		isLeadAssigned:  false,
+		isRequestClosed: false,
+		expected:        true,
+	}, {
+		numDaysOld:      10,
+		isLeadAssigned:  true,
+		isRequestClosed: false,
+		expected:        false,
+	}, {
+		numDaysOld:      10,
+		isLeadAssigned:  true,
+		isRequestClosed: true,
+		expected:        false,
+	}, {
+		numDaysOld:      5,
+		isLeadAssigned:  true,
+		isRequestClosed: false,
+		expected:        true,
+	}, {
+		numDaysOld:      5,
+		isLeadAssigned:  false,
+		isRequestClosed: false,
+		expected:        true,
+	}, {
+		numDaysOld:      5,
+		isLeadAssigned:  false,
+		isRequestClosed: true,
+		expected:        false,
+	}}
+
+	// Set up mocked "now" time
 	dateOnlyLayout := "2006-01-02"
 	now, err := time.Parse(dateOnlyLayout, "2020-01-10")
 	s.NoError(err)
 
-	// 10 Days old
-	tenDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
-	tenDaysOld.CreatedAt = now.AddDate(0, 0, -10)
-	s.False(IsRecentTRBRequest(s.testConfigs.Context, tenDaysOld, now))
-
-	// 6 days old
-	sixDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
-	sixDaysOld.CreatedAt = now.AddDate(0, 0, -6)
-	s.True(IsRecentTRBRequest(s.testConfigs.Context, sixDaysOld, now))
-
-	// 0 days old
-	zeroDaysOld := models.NewTRBRequest(s.testConfigs.DBConfig.Username)
-	zeroDaysOld.CreatedAt = now
-	s.True(IsRecentTRBRequest(s.testConfigs.Context, zeroDaysOld, now))
+	// Run all tests
+	for _, test := range tests {
+		s.Run(fmt.Sprintf("numDaysOld=%d, isLeadAssigned=%t, isRequestClosed=%t, expected=%t", test.numDaysOld, test.isLeadAssigned, test.isRequestClosed, test.expected), func() {
+			trb := models.NewTRBRequest(s.testConfigs.Principal.ID())
+			trb.CreatedAt = now.AddDate(0, 0, -test.numDaysOld)
+			if test.isLeadAssigned {
+				trb.TRBLead = zero.StringFrom("TRBA").Ptr()
+			}
+			if test.isRequestClosed {
+				trb.State = models.TRBRequestStateClosed
+			}
+			s.Equal(test.expected, IsRecentTRBRequest(s.testConfigs.Context, trb, now))
+		})
+	}
 }

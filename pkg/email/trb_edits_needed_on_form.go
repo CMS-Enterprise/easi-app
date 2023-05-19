@@ -14,12 +14,12 @@ import (
 )
 
 type editsOnFormRequestedEmailParameters struct {
-	RequestName          string
-	RequesterName        string
-	Feedback             string
-	RequestTaskListLink  string
-	RequestAdminViewLink string
-	TRBInboxAddress      string
+	RequestName         string
+	RequesterName       string
+	Feedback            string
+	TRBRequestLink      string
+	TRBAdminRequestLink string
+	TRBInboxAddress     string
 }
 
 func (c Client) trbEditsOnFormRequestedEmailBody(requestID uuid.UUID, requestName string, requesterName string, feedback string) (string, error) {
@@ -28,12 +28,12 @@ func (c Client) trbEditsOnFormRequestedEmailBody(requestID uuid.UUID, requestNam
 	requestAdminViewPath := path.Join("trb", requestID.String(), "request")
 
 	data := editsOnFormRequestedEmailParameters{
-		RequestName:          requestName,
-		RequesterName:        requesterName,
-		Feedback:             feedback,
-		RequestTaskListLink:  c.urlFromPath(requestTaskListPath),
-		RequestAdminViewLink: c.urlFromPath(requestAdminViewPath),
-		TRBInboxAddress:      c.config.TRBEmail.String(),
+		RequestName:         requestName,
+		RequesterName:       requesterName,
+		Feedback:            feedback,
+		TRBRequestLink:      c.urlFromPath(requestTaskListPath),
+		TRBAdminRequestLink: c.urlFromPath(requestAdminViewPath),
+		TRBInboxAddress:     c.config.TRBEmail.String(),
 	}
 
 	var b bytes.Buffer

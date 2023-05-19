@@ -452,9 +452,10 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
         class="list-style-none padding-0"
       >
         <li>
-          <a
-            class="usa-link"
-            href="/trb/process"
+          <button
+            class="usa-button usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
           >
             Other (I don’t see what I’m looking for)
             <svg
@@ -474,7 +475,7 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
                 d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
               />
             </svg>
-          </a>
+          </button>
         </li>
       </ul>
     </div>
