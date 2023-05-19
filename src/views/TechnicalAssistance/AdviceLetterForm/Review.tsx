@@ -188,7 +188,7 @@ const Review = ({
           )}
           className="maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
         >
-          <FormProvider {...actionForm}>
+          <FormProvider<TrbRecipientFields> {...actionForm}>
             <EmailRecipientFields
               requester={requester}
               contacts={attendees}
