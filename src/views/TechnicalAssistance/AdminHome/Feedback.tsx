@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from '@trussworks/react-uswds';
 import { sortBy } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbRequestFeedbackQuery from 'queries/GetTrbRequestFeedbackQuery';
 import {
@@ -58,14 +58,17 @@ const Feedback = ({
     >
       {loading && <PageLoading />}
       {error && <NotFoundPartial />}
-      {validFeedback && validFeedback.length > 0 ? (
-        <TrbRequestFeedbackList
-          feedback={sortBy(validFeedback, 'createdAt').reverse()}
-        />
-      ) : (
+
+      {validFeedback && validFeedback.length === 0 && (
         <Alert slim type="info">
           {t('requestFeedback.noFeedbackAlert')}
         </Alert>
+      )}
+
+      {validFeedback && validFeedback.length > 0 && (
+        <TrbRequestFeedbackList
+          feedback={sortBy(validFeedback, 'createdAt').reverse()}
+        />
       )}
     </TrbAdminWrapper>
   );

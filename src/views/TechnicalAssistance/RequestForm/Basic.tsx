@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Alert,
   Checkbox,
   Dropdown,
   ErrorMessage,
@@ -20,6 +19,7 @@ import {
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
+import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -336,6 +336,7 @@ function Basic({
           heading={t('errors.checkFix')}
           type="error"
           className="trb-basic-fields-error margin-bottom-2"
+          slim={false}
         >
           {Object.keys(errors).map(fieldName => {
             let msg: string;

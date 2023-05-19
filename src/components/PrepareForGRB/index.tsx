@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import HelpPageIntro from 'components/HelpPageIntro';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import { ArticleComponentProps } from 'types/articles';
 import NeedHelpBox from 'views/Help/InfoBox/NeedHelpBox';
 
