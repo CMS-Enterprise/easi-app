@@ -15,8 +15,7 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
         data-testid="grid"
       >
         <div
-          class="usa-alert usa-alert--info usa-alert--slim flex"
-          data-testid="alert"
+          class="easi-help-text margin-top-1 margin-bottom-1 text-base"
         >
           Fields marked with an asterisk ( 
           <span
