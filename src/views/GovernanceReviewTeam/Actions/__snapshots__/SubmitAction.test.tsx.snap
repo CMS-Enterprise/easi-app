@@ -366,7 +366,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 Email (optional)
               </h3>
               <div
-                class="usa-alert usa-alert--warning usa-alert--slim"
+                class="usa-alert usa-alert--warning usa-alert--slim flex"
                 data-testid="alert_unverified-recipients"
               >
                 <div

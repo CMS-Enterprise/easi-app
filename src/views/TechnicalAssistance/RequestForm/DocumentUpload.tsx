@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Alert,
   Button,
   ErrorMessage,
   Fieldset,
@@ -23,6 +22,7 @@ import { clone } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
 import {
@@ -114,7 +114,7 @@ const DocumentUpload = ({
             });
           } else {
             showMessageOnNextPage(
-              <Alert type="success" slim className="margin-y-4">
+              <Alert type="success" className="margin-y-4">
                 {t('documents.upload.success')}
               </Alert>
             );
@@ -174,7 +174,7 @@ const DocumentUpload = ({
         ]}
       />
       {isUploadError && (
-        <Alert type="error" slim className="document-upload-error">
+        <Alert type="error" className="document-upload-error">
           {t('documents.upload.error')}
         </Alert>
       )}

@@ -1,15 +1,11 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import {
-  Alert,
-  CardGroup,
-  IconArrowForward,
-  Link
-} from '@trussworks/react-uswds';
+import { CardGroup, IconArrowForward, Link } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import InitialsIcon from 'components/shared/InitialsIcon';
 import useCacheQuery from 'hooks/useCacheQuery';

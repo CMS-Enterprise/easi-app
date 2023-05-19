@@ -495,7 +495,7 @@ const Notes = () => {
         {t('notes.heading')}
       </PageHeading>
       {archiveMutationResult.error && (
-        <Alert type="error" className="padding-1">
+        <Alert type="error" slim className="padding-1">
           <div>{t('notes.removeModal.error')}</div>
         </Alert>
       )}

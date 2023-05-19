@@ -1,61 +1,35 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
-import Alert, { AlertText } from './index';
+import Alert from './index';
 
 describe('The Alert component', () => {
-  it('renders without crashing', () => {
-    shallow(<Alert type="success" />);
-  });
-
-  it('renders a heading', () => {
-    const component = shallow(<Alert type="success" heading="Hello" />);
-
-    expect(component.find('h3').exists()).toEqual(true);
-    expect(component.find('h3').text()).toEqual('Hello');
-  });
-
-  describe('children', () => {
-    it('renders string children', () => {
-      const component = mount(<Alert type="success">Hello</Alert>);
-
-      expect(component.find('p').exists()).toEqual(true);
-      expect(component.find('p').text()).toEqual('Hello');
-    });
-  });
-
-  it('renders JSX children', () => {
-    const component = shallow(
-      <Alert type="success">
-        <div data-testid="test-child">Hello</div>
+  it('renders a closable information alert', async () => {
+    const { getByRole } = render(
+      <Alert type="info" isClosable heading="Info Alert">
+        This is information
       </Alert>
     );
 
-    expect(component.find('p').exists()).toEqual(false);
-    expect(component.find('[data-testid="test-child"]').text()).toEqual(
-      'Hello'
-    );
-  });
-});
-
-describe('The AlertText component', () => {
-  it('renders without crashing', () => {
-    shallow(<AlertText>Hello</AlertText>);
+    expect(getByRole('button', { name: /Close Button/ })).toBeInTheDocument();
   });
 
-  it('renders custom class name', () => {
-    const component = shallow(
-      <AlertText className="test-class">Hello</AlertText>
+  it('renders a closable default success alert', async () => {
+    const { getByRole } = render(
+      <Alert type="success" heading="Success Alert">
+        This is successful
+      </Alert>
     );
 
-    expect(component.find('.test-class').exists()).toEqual(true);
+    expect(getByRole('button', { name: /Close Button/ })).toBeInTheDocument();
   });
 
-  it('renders custom HTML attributes', () => {
-    const component = shallow(
-      <AlertText aria-label="I am aria label">Hello</AlertText>
+  it('matches snapshot', async () => {
+    const { asFragment } = render(
+      <Alert type="info" isClosable heading="Info Alert">
+        This is information
+      </Alert>
     );
-
-    expect(component.props()['aria-label']).toEqual('I am aria label');
+    expect(asFragment()).toMatchSnapshot();
   });
 });

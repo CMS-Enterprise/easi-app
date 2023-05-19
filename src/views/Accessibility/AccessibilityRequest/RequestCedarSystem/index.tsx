@@ -7,18 +7,12 @@ import {
   useMutation,
   useQuery
 } from '@apollo/client';
-import {
-  Alert,
-  Button,
-  ComboBox,
-  IconArrowBack,
-  Link
-} from '@trussworks/react-uswds';
+import { Button, ComboBox, IconArrowBack, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { Form as FormikForm, Formik, FormikProps } from 'formik';
 
 import PageHeading from 'components/PageHeading';
-import { AlertText } from 'components/shared/Alert';
+import Alert, { AlertText } from 'components/shared/Alert';
 import CollapsibleLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';

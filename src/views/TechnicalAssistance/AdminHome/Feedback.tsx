@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from '@trussworks/react-uswds';
 import { sortBy } from 'lodash';
 
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbRequestFeedbackQuery from 'queries/GetTrbRequestFeedbackQuery';
 import {
