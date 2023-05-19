@@ -6,11 +6,11 @@ import userEvent from '@testing-library/user-event';
 
 import { attendees as mockAttendees, requester } from 'data/mock/trbRequest';
 import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
+import { TrbRecipientFields } from 'types/technicalAssistance';
 
 import EmailRecipientFields from '.';
 
 const [newAttendee, ...attendees] = mockAttendees;
-const { trbRequestId } = requester;
 
 const cedarContactsMock = (commonName: string) => ({
   request: {
@@ -27,9 +27,8 @@ const cedarContactsMock = (commonName: string) => ({
 });
 
 const TestComponent = () => {
-  const formMethods = useForm({
+  const formMethods = useForm<TrbRecipientFields>({
     defaultValues: {
-      trbRequestId,
       notifyEuaIds: [requester.userInfo?.euaUserId],
       copyTrbMailbox: true
     }
@@ -38,7 +37,7 @@ const TestComponent = () => {
     <MockedProvider
       mocks={[cedarContactsMock('Al'), cedarContactsMock('Ally Anderson')]}
     >
-      <FormProvider {...formMethods}>
+      <FormProvider<TrbRecipientFields> {...formMethods}>
         <EmailRecipientFields
           requester={requester}
           contacts={attendees}

@@ -231,7 +231,7 @@ function CloseRequest() {
           {t('actionRequestEdits.notificationDescription')}
         </p>
 
-        <FormProvider {...formMethods}>
+        <FormProvider<CloseRequestFields> {...formMethods}>
           <EmailRecipientFields
             requester={requester}
             contacts={attendees}

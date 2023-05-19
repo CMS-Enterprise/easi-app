@@ -76,7 +76,7 @@ const Recommendations = ({
     <Switch>
       {/* Recommendations Form */}
       <Route exact path={`${path}/form`}>
-        <FormProvider {...formMethods}>
+        <FormProvider<AdviceLetterRecommendationFields> {...formMethods}>
           <RecommendationsForm
             trbRequestId={trbRequestId}
             setFormAlert={setFormAlert}
