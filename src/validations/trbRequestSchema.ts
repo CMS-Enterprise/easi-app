@@ -77,7 +77,13 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
   collabDateCloud: yup.string(),
   collabDatePrivacyAdvisor: yup.string(),
   collabDateGovernanceReviewBoard: yup.string(),
-  collabGRBConsultRequested: yup.boolean().nullable(),
+  collabGRBConsultRequested: yup
+    .boolean()
+    .nullable()
+    .when('collabGroups', {
+      is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
+      then: schema => schema.required()
+    }),
   collabGroupOther: yup.string(),
   collabDateOther: yup.string()
 });
