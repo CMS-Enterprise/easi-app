@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,6 +23,7 @@ import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivi
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import HelpText from 'components/shared/HelpText';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -360,9 +361,13 @@ function Basic({
 
       <Grid row>
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-          <Alert type="info" slim>
-            {t('basic.allFieldsMandatory')}
-          </Alert>
+          {/* Required fields help text */}
+          <HelpText className="margin-top-1 margin-bottom-1 text-base">
+            <Trans
+              i18nKey="technicalAssistance:requiredFields"
+              components={{ red: <span className="text-red" /> }}
+            />
+          </HelpText>
 
           {/* Request name */}
           <Controller
