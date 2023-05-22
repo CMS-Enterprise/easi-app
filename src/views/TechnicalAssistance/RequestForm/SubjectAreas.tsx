@@ -82,54 +82,59 @@ function SubjectAreas({
     }
   }, [errors, hasErrors]);
 
+  const handleApolloError = useCallback(
+    (err: any) => {
+      if (err instanceof ApolloError) {
+        setFormAlert({
+          type: 'error',
+          heading: t('errors.somethingWrong'),
+          message: t('basic.errors.submit')
+        });
+      }
+    },
+    [setFormAlert, t]
+  );
+
   const submit = useCallback<StepSubmit>(
     callback =>
       handleSubmit(
         async formData => {
-          if (isDirty) {
-            const input: any = pick(formData, Object.keys(dirtyFields));
+          try {
+            if (isDirty) {
+              const input: any = pick(formData, Object.keys(dirtyFields));
 
-            Object.entries(input).forEach(([key, value]) => {
-              if (value === '') input[key] = null;
-            });
+              Object.entries(input).forEach(([key, value]) => {
+                if (value === '') input[key] = null;
+              });
 
-            await updateForm({
-              variables: {
-                input: {
-                  trbRequestId: request.id,
-                  ...input
+              await updateForm({
+                variables: {
+                  input: {
+                    trbRequestId: request.id,
+                    ...input
+                  }
                 }
-              }
-            });
+              });
 
-            await refetchRequest();
+              await refetchRequest();
+            }
+
+            callback?.();
+          } catch (e) {
+            handleApolloError(e);
           }
         },
         () => {
-          throw new Error('invalid subject areas form');
+          handleApolloError('Invalid subject areas form');
         }
-      )().then(
-        () => {
-          callback?.();
-        },
-        err => {
-          if (err instanceof ApolloError) {
-            setFormAlert({
-              type: 'error',
-              heading: t('errors.somethingWrong'),
-              message: t('subject.errors.submit')
-            });
-          }
-        }
-      ),
+      )(),
     [
       dirtyFields,
       handleSubmit,
       isDirty,
       refetchRequest,
       request.id,
-      setFormAlert,
-      t,
+      handleApolloError,
       updateForm
     ]
   );
