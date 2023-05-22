@@ -13,6 +13,7 @@ import trbArticles from 'views/Help/TechnicalReviewBoard/articles';
 type RelatedArticlesProps = {
   className?: string;
   type: ArticleTypeProps;
+  currentArticle: string;
 };
 
 const articleGroup: Record<ArticleTypeProps, ArticleProps[]> = {
@@ -21,10 +22,20 @@ const articleGroup: Record<ArticleTypeProps, ArticleProps[]> = {
   'Technical Review Board': trbArticles
 };
 
-const RelatedArticles = ({ className, type }: RelatedArticlesProps) => {
+const RelatedArticles = ({
+  className,
+  type,
+  currentArticle
+}: RelatedArticlesProps) => {
   const { t } = useTranslation('help');
 
-  const selectedArticles = articleGroup[type].slice(0, 3);
+  const selectedArticles = articleGroup[type]
+    .filter(article => article.translation !== currentArticle)
+    .slice(0, 3);
+
+  if (selectedArticles.length === 0) {
+    return <></>;
+  }
 
   return (
     <div className="bg-base-lightest">

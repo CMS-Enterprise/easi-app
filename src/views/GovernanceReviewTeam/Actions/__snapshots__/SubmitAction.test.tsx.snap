@@ -710,6 +710,14 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 maxlength="3000"
                 name="feedback"
               />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                class="easi-character-counter margin-top-1"
+                id="SubmitActionForm-Feedback-counter"
+              >
+                2000 characters remaining
+              </span>
             </div>
             <div>
               <button

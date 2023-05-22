@@ -96,7 +96,10 @@ function PrepareTrbConsultMeeting() {
         />
       </MainContent>
 
-      <RelatedArticles type="Technical Review Board" />
+      <RelatedArticles
+        type="Technical Review Board"
+        currentArticle="prepareTrbConsultMeeting"
+      />
     </>
   );
 }

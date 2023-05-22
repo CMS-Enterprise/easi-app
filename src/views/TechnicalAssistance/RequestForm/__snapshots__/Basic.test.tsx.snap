@@ -15,18 +15,15 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
         data-testid="grid"
       >
         <div
-          class="usa-alert usa-alert--info usa-alert--slim flex"
-          data-testid="alert"
+          class="easi-help-text margin-top-1 margin-bottom-1 text-base"
         >
-          <div
-            class="usa-alert__body"
+          Fields marked with an asterisk ( 
+          <span
+            class="text-red"
           >
-            <p
-              class="usa-alert__text"
-            >
-              All fields are mandatory
-            </p>
-          </div>
+            *
+          </span>
+           ) are required.
         </div>
         <div
           class="usa-form-group margin-top-5"
@@ -254,6 +251,14 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             id="needsAssistanceWith"
             name="needsAssistanceWith"
           />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            class="easi-character-counter margin-top-1"
+            id="needsAssistanceWith-counter"
+          >
+            2000 characters remaining
+          </span>
         </div>
         <div
           class="usa-form-group"
