@@ -1113,7 +1113,8 @@ const technicalAssistance = {
     success: '{{name}} is assigned as the TRB lead for this request.',
     error:
       'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.'
-  }
+  },
+  closeTab: 'Close tab'
 };
 
 export default technicalAssistance;
