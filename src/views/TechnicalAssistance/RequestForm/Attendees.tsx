@@ -154,6 +154,18 @@ function Attendees({
     reset(defaultValues);
   }, [requester, reset]);
 
+  const handleApolloError = useCallback(
+    (err: any) => {
+      if (err instanceof ApolloError) {
+        setFormAlert({
+          type: 'error',
+          message: t<string>('attendees.alerts.error')
+        });
+      }
+    },
+    [setFormAlert, t]
+  );
+
   /** Submit requester as attendee */
   const submitForm = useCallback<StepSubmit>(
     callback =>
@@ -161,51 +173,33 @@ function Attendees({
       handleSubmit(
         // Validation passed
         async formData => {
-          // Submit the input only if there are changes
-          if (isDirty && requester.id) {
-            const { component, role } = formData;
-            // Update requester
-            await updateAttendee({
-              id: requester.id,
-              component: component || '',
-              role: role as PersonRole
-            })
-              // Refresh the RequestForm parent request query
-              // to update things like `stepsCompleted`
-              .then(() => refetchRequest && refetchRequest())
-              .catch(() => {
-                throw new Error(t<string>('attendees.alerts.error'));
-              });
+          try {
+            // Submit the input only if there are changes
+            if (isDirty && requester.id) {
+              const { component, role } = formData;
+              // Update requester
+              await updateAttendee({
+                id: requester.id,
+                component: component || '',
+                role: role as PersonRole
+              })
+                // Refresh the RequestForm parent request query
+                // to update things like `stepsCompleted`
+                .then(() => refetchRequest?.());
+            }
+            callback?.();
+          } catch (e) {
+            handleApolloError(e);
           }
         },
         // Validation did not pass
-        () => {
-          // Need to throw from this error handler so that the promise is rejected
-          throw new Error(t<string>('attendees.alerts.invalidForm'));
-        }
-      )()
-        // Wait for submit to finish before continuing.
-        // This essentially makes sure any effects like
-        // `setIsStepSubmitting` are called before unmount.
-        .then(
-          () => {
-            callback?.();
-          },
-          err => {
-            if (err instanceof ApolloError) {
-              setFormAlert({
-                type: 'error',
-                message: t<string>('attendees.alerts.error')
-              });
-            }
-          }
-        ),
+        e => handleApolloError(e)
+      )(),
     [
-      t,
+      handleApolloError,
       handleSubmit,
       isDirty,
       refetchRequest,
-      setFormAlert,
       requester,
       updateAttendee
     ]
