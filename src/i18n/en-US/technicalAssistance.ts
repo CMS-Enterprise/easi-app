@@ -522,38 +522,6 @@ const technicalAssistance = {
     description: [
       'Tell the Technical Review Board (TRB) what type of technical support you need. The information you provide on this form helps the TRB understand context around your request in order to offer more targeted help.',
       'After submitting this form, you will receive an automatic email from the TRB mailbox, and an TRB team member will reach out regarding next steps.'
-    ],
-    steps: [
-      {
-        name: 'Basic request details',
-        adminDescription:
-          'These basic request details were input by the requester to explain this technical assistance request.'
-      },
-      {
-        name: 'Subject areas',
-        description:
-          'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.',
-        adminDescription:
-          'These subject areas were by the requester to be discussed during the consult session.'
-      },
-      {
-        name: 'Attendees',
-        description:
-          'As the primary requester, please add your CMS component and role on the project. If you wish to, you may also add the names and contact information for any additional individuals who should be present at the TRB consult session. If you’re not sure who should be present, you may add attendees later or share the calendar invite before the meeting.',
-        adminDescription:
-          'These attendees were added by the requester and should be included as a part of the consult session.'
-      },
-      {
-        name: 'Supporting documents',
-        description:
-          'Upload any documents relevant to your request. This could include documents such as presentation slide decks, concept papers, architecture diagrams, or other system information documents.',
-        adminDescription:
-          'These supporting documents were added by the requester and should be reviewed as needed for this request.'
-      },
-      {
-        name: 'Check and submit',
-        longName: 'Check your answers and submit your TRB Request'
-      }
     ]
   },
   //
