@@ -77,13 +77,6 @@ const help = {
           'The Enterprise Architecture team can help with questions related to your Enterprise Architecture needs.',
         email: 'EnterpriseArchitecture@cms.hhs.gov'
       },
-      itNavigator: {
-        title: 'IT Navigator',
-        type: 'IT Governance',
-        content:
-          'The IT Navigator team can help with questions related to choosing the type of IT Governance request that fits your needs.',
-        email: 'NavigatorInquiries@cms.hhs.gov'
-      },
       technicalReviewBoard: {
         title: 'Technical Review Board (TRB)',
         type: 'Technical Review Board',
