@@ -52,51 +52,55 @@ const Summary = ({
     }
   });
 
+  const handleApolloError = useCallback(
+    (err: any) => {
+      if (err instanceof ApolloError) {
+        setFormAlert({
+          type: 'error',
+          message: t('adviceLetterForm.error', {
+            action: 'saving',
+            type: 'advice letter'
+          })
+        });
+      }
+    },
+    [setFormAlert, t]
+  );
+
   /** Submit meeting summary fields and update advice letter */
-  const submit: StepSubmit = useCallback(
-    callback => {
-      /** Submits form and updates advice letter */
-      const submitForm = handleSubmit(
+  const submit = useCallback<StepSubmit>(
+    callback =>
+      handleSubmit(
         async formData => {
-          if (isDirty) {
-            // UpdateTrbAdviceLetter mutation
-            await update({
-              variables: {
-                input: {
-                  trbRequestId,
-                  ...formData
+          try {
+            if (isDirty) {
+              // UpdateTrbAdviceLetter mutation
+              await update({
+                variables: {
+                  input: {
+                    trbRequestId,
+                    ...formData
+                  }
                 }
-              }
-            });
+              });
+            }
+            setFormAlert(null);
+            callback?.();
+          } catch (e) {
+            handleApolloError(e);
           }
         },
         // Throw error to cause promise to fail
-        () => {
-          throw new Error('Invalid field submission');
-        }
-      );
-
-      return submitForm().then(
-        // If successful, set error to null and execute callback
-        () => {
-          setFormAlert(null);
-          callback?.();
-        },
-        // If apollo error, set form alert error message
-        e => {
-          if (e instanceof ApolloError) {
-            setFormAlert({
-              type: 'error',
-              message: t('adviceLetterForm.error', {
-                action: 'saving',
-                type: 'advice letter'
-              })
-            });
-          }
-        }
-      );
-    },
-    [handleSubmit, isDirty, trbRequestId, update, setFormAlert, t]
+        e => handleApolloError(e)
+      )(),
+    [
+      handleSubmit,
+      isDirty,
+      trbRequestId,
+      update,
+      setFormAlert,
+      handleApolloError
+    ]
   );
 
   useEffect(() => {
