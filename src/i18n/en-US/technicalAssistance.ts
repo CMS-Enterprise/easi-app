@@ -232,6 +232,7 @@ const technicalAssistance = {
     followupYes: 'Yes, a follow-up is recommended',
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
+    removeSuccess: 'Your recommendation was removed from this advice letter.',
     error:
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     recommendationSuccess:

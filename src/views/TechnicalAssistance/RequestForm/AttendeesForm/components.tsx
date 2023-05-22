@@ -418,7 +418,7 @@ const AttendeesTable = ({
           type="button"
           onClick={() => {
             if (deleteAttendee && attendeeToRemove?.id) {
-              deleteAttendee(attendeeToRemove?.id).then(attendee => {
+              deleteAttendee(attendeeToRemove?.id).then(() => {
                 if (setFormAlert) {
                   setFormAlert({
                     type: 'success',
