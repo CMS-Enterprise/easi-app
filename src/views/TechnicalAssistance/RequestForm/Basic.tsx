@@ -217,16 +217,15 @@ function Basic({
               input.expectedStartDate = null;
               input.expectedEndDate = null;
             }
-            if ('collabGroups' in input) {
-              Object.values(TRBCollabGroupOption).forEach(option => {
-                if (!input.collabGroups?.includes(option)) {
-                  input[`collabDate${upperFirst(camelCase(option))}`] = null;
-                  if (option === 'OTHER') {
-                    input.collabGroupOther = null;
-                  }
+
+            Object.values(TRBCollabGroupOption).forEach(option => {
+              if (!input.collabGroups?.includes(option)) {
+                input[`collabDate${upperFirst(camelCase(option))}`] = null;
+                if (option === 'OTHER') {
+                  input.collabGroupOther = null;
                 }
-              });
-            }
+              }
+            });
 
             // Some object adjustments
             const variables: any = {};
@@ -921,6 +920,7 @@ function Basic({
                                                 {t(
                                                   'basic.labels.collabGRBConsultRequested'
                                                 )}
+                                                <RequiredAsterisk />
                                               </Label>
                                               {error && (
                                                 <ErrorMessage>
