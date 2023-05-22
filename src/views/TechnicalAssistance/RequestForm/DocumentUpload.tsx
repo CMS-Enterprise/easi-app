@@ -192,7 +192,11 @@ const DocumentUpload = ({
               render={({ field, fieldState: { error } }) => {
                 return (
                   <FormGroup error={!!error} className="margin-top-5">
-                    <Label htmlFor={field.name} error={!!error}>
+                    <Label
+                      htmlFor={field.name}
+                      error={!!error}
+                      hint={t('documents.upload.docType')}
+                    >
                       {t('documents.upload.documentUpload')}
                     </Label>
                     {error && (
