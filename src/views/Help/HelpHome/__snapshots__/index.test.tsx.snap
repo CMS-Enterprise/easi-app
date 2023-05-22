@@ -191,7 +191,7 @@ exports[`HelpHome matches the snapshot 1`] = `
             <p
               class="text-base"
             >
-              3 of 7 articles
+              3 of 8 articles
             </p>
             <a
               class="usa-link help-home__link--all"
@@ -324,12 +324,12 @@ exports[`HelpHome matches the snapshot 1`] = `
             <h3
               class="margin-bottom-1 margin-top-2"
             >
-              IT Navigator
+              Technical Review Board (TRB)
             </h3>
             <p
               class="margin-top-1 line-height-body-4"
             >
-              The IT Navigator team can help with questions related to choosing the type of IT Governance request that fits your needs.
+              The TRB can help with any questions related to technical advice for your system, CMS Technical Reference Architecture (TRA), and more. 
             </p>
             <h4
               class="margin-y-1"
@@ -338,9 +338,9 @@ exports[`HelpHome matches the snapshot 1`] = `
             </h4>
             <a
               class="usa-link"
-              href="mailto:NavigatorInquiries@cms.hhs.gov"
+              href="mailto:cms-trb@cms.hhs.gov"
             >
-              NavigatorInquiries@cms.hhs.gov
+              cms-trb@cms.hhs.gov
             </a>
           </div>
         </div>
