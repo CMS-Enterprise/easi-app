@@ -686,11 +686,12 @@ const technicalAssistance = {
     attendeeNameHelpText:
       'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at <1>cms-trb@cms.hhs.gov</1>.',
     alerts: {
-      success: 'Your attendee has been added',
-      successEdit: 'Your attendee has been edited',
+      success: 'Your attendee has been added.',
+      successEdit: 'Your attendee has been edited.',
+      successRemove: 'Your attendee has been removed.',
       error:
         'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.',
-      invalidForm: 'Invalid attendees form'
+      invalidForm: 'Invalid attendees form.'
     },
     modal: {
       heading: 'Confirm you want to remove {{-attendee}}.',
