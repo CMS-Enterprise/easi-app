@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import {
@@ -24,6 +24,7 @@ import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
   trbRequestId: string;
+  setRecipientFormOpen?: (value: boolean) => void;
 };
 
 type TrbRecipient = {
@@ -53,7 +54,10 @@ const initialRecipient: TrbRecipient = {
 /**
  * TRB email recipients field
  */
-const Recipients = ({ trbRequestId }: RecipientsProps) => {
+const Recipients = ({
+  trbRequestId,
+  setRecipientFormOpen
+}: RecipientsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const {
@@ -73,6 +77,10 @@ const Recipients = ({ trbRequestId }: RecipientsProps) => {
   }>({
     name: 'recipients'
   });
+
+  useEffect(() => {
+    setRecipientFormOpen?.(!!(watch('recipients') || []).find(({ id }) => !id));
+  }, [setRecipientFormOpen, fields, watch]);
 
   // If values have not been loaded yet, return loading spinner
   if (isLoading) return <Spinner />;

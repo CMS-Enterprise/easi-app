@@ -6,19 +6,17 @@ import classNames from 'classnames';
 
 import { StepSubmit } from '.';
 
-type PageButtonProps =
-  | {
-      text?: string;
-      disabled?: boolean;
-      outline?: boolean;
-      type?: 'button' | 'submit';
-      onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-    }
-  | false;
+export type PageButtonProps = {
+  text?: string;
+  disabled?: boolean;
+  outline?: boolean;
+  type?: 'button' | 'submit';
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+};
 
 export type PagerProps = {
-  back?: PageButtonProps;
-  next?: PageButtonProps;
+  back?: PageButtonProps | false;
+  next?: PageButtonProps | false;
   buttons?: React.ReactNode[];
   saveExitText?: string;
   saveExitHidden?: boolean;

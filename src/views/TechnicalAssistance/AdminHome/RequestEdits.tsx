@@ -55,7 +55,7 @@ function RequestEdits() {
     control,
     ActionForm,
     handleSubmit,
-    formState: { isSubmitting }
+    watch
   } = useActionForm<RequestEditsFields>({
     trbRequestId: id,
     resolver: yupResolver(
@@ -107,7 +107,7 @@ function RequestEdits() {
       buttonProps={{
         next: {
           text: t('actionRequestEdits.submit'),
-          disabled: isSubmitting
+          disabled: !watch('feedbackMessage')
         },
         taskListUrl: requestUrl,
         saveExitText: t('actionRequestEdits.cancelAndReturn')

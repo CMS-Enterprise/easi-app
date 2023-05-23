@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Form, GridContainer } from '@trussworks/react-uswds';
@@ -7,7 +8,10 @@ import classNames from 'classnames';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs'; // BreadcrumbsProps
-import Pager, { PagerProps } from 'views/TechnicalAssistance/RequestForm/Pager';
+import Pager, {
+  PageButtonProps,
+  PagerProps
+} from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import Recipients from './Recipients';
 
@@ -18,11 +22,15 @@ type FormProps = {
   search?: boolean;
 } & JSX.IntrinsicElements['form'];
 
+type ButtonProps = Omit<PagerProps, 'border' | 'submitDisabled' | 'next'> & {
+  next: PageButtonProps;
+};
+
 export type ActionFormProps = {
   title: string;
   description: string;
   children: React.ReactNode;
-  buttonProps: Omit<PagerProps, 'border' | 'submitDisabled'>;
+  buttonProps: ButtonProps;
   // breadcrumbItems: BreadcrumbsProps['items'];
 } & FormProps;
 
@@ -43,6 +51,21 @@ const ActionForm = ({
   }>();
 
   const { message } = useMessage();
+
+  const {
+    formState: { isSubmitting, isDirty }
+  } = useFormContext();
+
+  const [recipientFormOpen, setRecipientFormOpen] = useState<boolean>(false);
+
+  const disableSubmit = useMemo(() => {
+    return (
+      recipientFormOpen ||
+      !isDirty ||
+      isSubmitting ||
+      buttonProps?.next?.disabled
+    );
+  }, [recipientFormOpen, isDirty, isSubmitting, buttonProps?.next?.disabled]);
 
   return (
     <GridContainer className="width-full">
@@ -90,10 +113,17 @@ const ActionForm = ({
           {t('actionRequestEdits.notificationDescription')}
         </p>
 
-        <Recipients trbRequestId={id} />
+        <Recipients
+          trbRequestId={id}
+          setRecipientFormOpen={setRecipientFormOpen}
+        />
 
         <Pager
           {...buttonProps}
+          next={{
+            ...buttonProps?.next,
+            disabled: disableSubmit
+          }}
           border={false}
           className={classNames('margin-top-5', buttonProps.className)}
           submitDisabled
