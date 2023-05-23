@@ -668,7 +668,7 @@ export function getMockPersonRole(
     assigneeOrgName: null,
     assigneeFirstName: null,
     assigneeLastName: null,
-    roleTypeName: null,
+    roleTypeName: '',
     roleID: null,
     __typename: 'CedarRole',
     ...data
