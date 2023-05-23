@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import {
@@ -72,10 +72,6 @@ const Recipients = ({
     name: 'recipients'
   });
 
-  useEffect(() => {
-    setRecipientFormOpen?.(!!(watch('recipients') || []).find(({ id }) => !id));
-  }, [setRecipientFormOpen, fields, watch]);
-
   const recipientsCount = watch('recipients').filter(
     ({ id, userInfo }) =>
       id && userInfo?.euaUserId !== requester?.userInfo?.euaUserId
@@ -84,6 +80,23 @@ const Recipients = ({
   const selectedCount = watch(['notifyEuaIds', 'copyTrbMailbox'])
     .flat()
     .filter(item => item).length;
+
+  /** Add and automatically select new recipient */
+  const addRecipient = (index: number, recipient: TrbRecipient) => {
+    // TODO: validate recipient
+
+    setValue(`recipients.${index}.id`, recipient.id);
+
+    const { euaUserId } = recipient?.userInfo || {};
+    if (euaUserId) {
+      setValue(
+        'notifyEuaIds',
+        toggleArrayValue(watch('notifyEuaIds'), euaUserId)
+      );
+    }
+
+    setRecipientFormOpen?.(false);
+  };
 
   return (
     <Fieldset
@@ -361,24 +374,12 @@ const Recipients = ({
                             </Button>
                             <Button
                               type="button"
-                              onClick={() => {
-                                setValue(
-                                  `recipients.${index}.id`,
-                                  recipientField.id
-                                );
-
-                                const { euaUserId } =
-                                  recipient.value?.userInfo || {};
-                                if (euaUserId) {
-                                  setValue(
-                                    'notifyEuaIds',
-                                    toggleArrayValue(
-                                      watch('notifyEuaIds'),
-                                      euaUserId
-                                    )
-                                  );
-                                }
-                              }}
+                              onClick={() =>
+                                addRecipient(index, {
+                                  ...recipient.value,
+                                  id: recipientField.id
+                                })
+                              }
                               disabled={
                                 !recipient.value.userInfo?.euaUserId ||
                                 !recipient.value.role ||
@@ -398,7 +399,10 @@ const Recipients = ({
           {!watch('recipients').find(({ id }) => !id) && (
             <Button
               type="button"
-              onClick={() => append(initialRecipient)}
+              onClick={() => {
+                append(initialRecipient);
+                setRecipientFormOpen?.(true);
+              }}
               className="margin-top-3"
               outline
             >
