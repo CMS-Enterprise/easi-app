@@ -45,8 +45,6 @@ type TrbRecipient = {
   role: PersonRole | null;
 };
 
-// type Recipients = { recipients: TrbRecipient[] };
-
 export type ActionFormFields<
   TFieldValues extends TrbRecipientFields = TrbRecipientFields
 > = TFieldValues & { recipients: TrbRecipient[] };

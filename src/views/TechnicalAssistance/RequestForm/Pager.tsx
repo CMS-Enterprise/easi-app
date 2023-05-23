@@ -16,7 +16,7 @@ type PageButtonProps =
     }
   | false;
 
-type Props = {
+export type PagerProps = {
   back?: PageButtonProps;
   next?: PageButtonProps;
   buttons?: React.ReactNode[];
@@ -49,7 +49,7 @@ export function Pager({
   className,
   taskListUrl,
   border = true
-}: Props) {
+}: PagerProps) {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
 

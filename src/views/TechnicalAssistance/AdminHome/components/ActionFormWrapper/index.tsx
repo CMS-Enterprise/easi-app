@@ -5,8 +5,9 @@ import { Form, GridContainer } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
-// import useMessage from 'hooks/useMessage';
+import useMessage from 'hooks/useMessage';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs'; // BreadcrumbsProps
+import Pager, { PagerProps } from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import Recipients from './Recipients';
 
@@ -21,6 +22,7 @@ export type ActionFormProps = {
   title: string;
   description: string;
   children: React.ReactNode;
+  buttonProps: Omit<PagerProps, 'border' | 'submitDisabled'>;
   // breadcrumbItems: BreadcrumbsProps['items'];
 } & FormProps;
 
@@ -31,6 +33,7 @@ const ActionForm = ({
   title,
   description,
   children,
+  buttonProps,
   ...formProps
 }: ActionFormProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -39,11 +42,7 @@ const ActionForm = ({
     id: string;
   }>();
 
-  // const {
-  //   message
-  //   // showMessage,
-  //   // showMessageOnNextPage
-  // } = useMessage();
+  const { message } = useMessage();
 
   return (
     <GridContainer className="width-full">
@@ -61,9 +60,9 @@ const ActionForm = ({
         ]}
       />
 
-      {/* {message} */}
+      {message}
 
-      <PageHeading className="margin-bottom-0">{t(title)}</PageHeading>
+      <PageHeading className="margin-bottom-0">{title}</PageHeading>
       <p className="line-height-body-5 font-body-lg text-light margin-0">
         {t(description)}
       </p>
@@ -77,7 +76,10 @@ const ActionForm = ({
 
       <Form
         {...formProps}
-        className={classNames('maxw-none', formProps.className)}
+        className={classNames(
+          'maxw-none tablet:grid-col-12 desktop:grid-col-6',
+          formProps.className
+        )}
       >
         {children}
 
@@ -89,6 +91,13 @@ const ActionForm = ({
         </p>
 
         <Recipients trbRequestId={id} />
+
+        <Pager
+          {...buttonProps}
+          border={false}
+          className={classNames('margin-top-5', buttonProps.className)}
+          submitDisabled
+        />
       </Form>
     </GridContainer>
   );
