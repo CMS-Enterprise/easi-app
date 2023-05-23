@@ -984,11 +984,12 @@ type ComplexityRoot struct {
 	}
 
 	TRBTaskStatuses struct {
-		AdviceLetterStatus  func(childComplexity int) int
-		AttendConsultStatus func(childComplexity int) int
-		ConsultPrepStatus   func(childComplexity int) int
-		FeedbackStatus      func(childComplexity int) int
-		FormStatus          func(childComplexity int) int
+		AdviceLetterStatus         func(childComplexity int) int
+		AdviceLetterStatusTaskList func(childComplexity int) int
+		AttendConsultStatus        func(childComplexity int) int
+		ConsultPrepStatus          func(childComplexity int) int
+		FeedbackStatus             func(childComplexity int) int
+		FormStatus                 func(childComplexity int) int
 	}
 
 	TestDate struct {
@@ -6457,6 +6458,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBTaskStatuses.AdviceLetterStatus(childComplexity), true
 
+	case "TRBTaskStatuses.adviceLetterStatusTaskList":
+		if e.complexity.TRBTaskStatuses.AdviceLetterStatusTaskList == nil {
+			break
+		}
+
+		return e.complexity.TRBTaskStatuses.AdviceLetterStatusTaskList(childComplexity), true
+
 	case "TRBTaskStatuses.attendConsultStatus":
 		if e.complexity.TRBTaskStatuses.AttendConsultStatus == nil {
 			break
@@ -8310,6 +8318,7 @@ type TRBTaskStatuses {
   consultPrepStatus: TRBConsultPrepStatus!
   attendConsultStatus: TRBAttendConsultStatus!
   adviceLetterStatus: TRBAdviceLetterStatus!
+  adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList!
 }
 
 """
@@ -8551,8 +8560,16 @@ enum TRBAdviceLetterStatus {
   CANNOT_START_YET
   READY_TO_START
   IN_PROGRESS
-  IN_REVIEW
   READY_FOR_REVIEW
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB advice letter step
+"""
+enum TRBAdviceLetterStatusTaskList {
+  CANNOT_START_YET
+  IN_REVIEW
   COMPLETED
 }
 
@@ -40850,6 +40867,8 @@ func (ec *executionContext) fieldContext_TRBRequest_taskStatuses(ctx context.Con
 				return ec.fieldContext_TRBTaskStatuses_attendConsultStatus(ctx, field)
 			case "adviceLetterStatus":
 				return ec.fieldContext_TRBTaskStatuses_adviceLetterStatus(ctx, field)
+			case "adviceLetterStatusTaskList":
+				return ec.fieldContext_TRBTaskStatuses_adviceLetterStatusTaskList(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBTaskStatuses", field.Name)
 		},
@@ -44246,6 +44265,50 @@ func (ec *executionContext) fieldContext_TRBTaskStatuses_adviceLetterStatus(ctx 
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type TRBAdviceLetterStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBTaskStatuses_adviceLetterStatusTaskList(ctx context.Context, field graphql.CollectedField, obj *models.TRBTaskStatuses) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBTaskStatuses_adviceLetterStatusTaskList(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AdviceLetterStatusTaskList, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.TRBAdviceLetterStatusTaskList)
+	fc.Result = res
+	return ec.marshalNTRBAdviceLetterStatusTaskList2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatusTaskList(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBTaskStatuses_adviceLetterStatusTaskList(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBTaskStatuses",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBAdviceLetterStatusTaskList does not have child fields")
 		},
 	}
 	return fc, nil
@@ -57875,6 +57938,13 @@ func (ec *executionContext) _TRBTaskStatuses(ctx context.Context, sel ast.Select
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "adviceLetterStatusTaskList":
+
+			out.Values[i] = ec._TRBTaskStatuses_adviceLetterStatusTaskList(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -60610,6 +60680,22 @@ func (ec *executionContext) unmarshalNTRBAdviceLetterStatus2githubᚗcomᚋcmsgo
 }
 
 func (ec *executionContext) marshalNTRBAdviceLetterStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBAdviceLetterStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNTRBAdviceLetterStatusTaskList2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatusTaskList(ctx context.Context, v interface{}) (models.TRBAdviceLetterStatusTaskList, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TRBAdviceLetterStatusTaskList(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTRBAdviceLetterStatusTaskList2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatusTaskList(ctx context.Context, sel ast.SelectionSet, v models.TRBAdviceLetterStatusTaskList) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {

@@ -164,9 +164,17 @@ export enum TRBAdviceLetterStatus {
   CANNOT_START_YET = "CANNOT_START_YET",
   COMPLETED = "COMPLETED",
   IN_PROGRESS = "IN_PROGRESS",
-  IN_REVIEW = "IN_REVIEW",
   READY_FOR_REVIEW = "READY_FOR_REVIEW",
   READY_TO_START = "READY_TO_START",
+}
+
+/**
+ * Represents the status of the TRB advice letter step
+ */
+export enum TRBAdviceLetterStatusTaskList {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  IN_REVIEW = "IN_REVIEW",
 }
 
 /**

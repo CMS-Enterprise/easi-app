@@ -82,6 +82,7 @@ type TRBTaskStatuses struct {
 	ConsultPrepStatus   TRBConsultPrepStatus   `json:"consultPrepStatus"`
 	AttendConsultStatus TRBAttendConsultStatus `json:"attendConsultStatus"`
 	AdviceLetterStatus  TRBAdviceLetterStatus  `json:"adviceLetterStatus"`
+	AdviceLetterStatusTaskList  TRBAdviceLetterStatusTaskList  `json:"adviceLetterStatusTaskList"`
 }
 
 // TRBRequestStatus is an enumeration of the possible values for the overall status of a TRB request
