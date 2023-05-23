@@ -61,10 +61,7 @@ func NewComponentAddParamsWithHTTPClient(client *http.Client) *ComponentAddParam
 */
 type ComponentAddParams struct {
 
-	/* Body.
-
-	   Component record to be added to Alfabet.
-	*/
+	// Body.
 	Body *models.ComponentAddRequest
 
 	timeout    time.Duration
