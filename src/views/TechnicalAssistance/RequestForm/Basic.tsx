@@ -628,55 +628,61 @@ function Basic({
                     {field.value === true && (
                       <div className="margin-left-4">
                         {/* Expected start date */}
-                        <Controller
-                          name="expectedStartDate"
-                          control={control}
-                          shouldUnregister
-                          // eslint-disable-next-line no-shadow
-                          render={({ field, fieldState: { error } }) => (
-                            <FormGroup error={!!(error || startOrEndError)}>
-                              <Label
-                                htmlFor="expectedStartDate"
-                                hint="mm/dd/yyyy"
-                                error={!!error}
-                              >
-                                {t('basic.labels.expectedStartDate')}
-                                <RequiredAsterisk />
-                              </Label>
-                              <DatePickerFormatted
-                                id="expectedStartDate"
-                                {...field}
-                                defaultValue={field.value}
-                                ref={null}
-                              />
-                            </FormGroup>
-                          )}
-                        />
-                        {/* Expected end date */}
-                        <Controller
-                          name="expectedEndDate"
-                          control={control}
-                          shouldUnregister
-                          // eslint-disable-next-line no-shadow
-                          render={({ field, fieldState: { error } }) => (
-                            <FormGroup error={!!(error || startOrEndError)}>
-                              <Label
-                                htmlFor="expectedEndDate"
-                                hint="mm/dd/yyyy"
-                                error={!!error}
-                              >
-                                {t('basic.labels.expectedEndDate')}
-                                <RequiredAsterisk />
-                              </Label>
-                              <DatePickerFormatted
-                                id="expectedEndDate"
-                                {...field}
-                                defaultValue={field.value}
-                                ref={null}
-                              />
-                            </FormGroup>
-                          )}
-                        />
+                        <Grid row gap>
+                          <Grid tablet={{ col: 6 }}>
+                            <Controller
+                              name="expectedStartDate"
+                              control={control}
+                              shouldUnregister
+                              // eslint-disable-next-line no-shadow
+                              render={({ field, fieldState: { error } }) => (
+                                <FormGroup error={!!(error || startOrEndError)}>
+                                  <Label
+                                    htmlFor="expectedStartDate"
+                                    hint="mm/dd/yyyy"
+                                    error={!!error}
+                                  >
+                                    {t('basic.labels.expectedStartDate')}
+                                    <RequiredAsterisk />
+                                  </Label>
+                                  <DatePickerFormatted
+                                    id="expectedStartDate"
+                                    {...field}
+                                    defaultValue={field.value}
+                                    ref={null}
+                                  />
+                                </FormGroup>
+                              )}
+                            />
+                          </Grid>
+                          {/* Expected end date */}
+                          <Grid tablet={{ col: 6 }}>
+                            <Controller
+                              name="expectedEndDate"
+                              control={control}
+                              shouldUnregister
+                              // eslint-disable-next-line no-shadow
+                              render={({ field, fieldState: { error } }) => (
+                                <FormGroup error={!!(error || startOrEndError)}>
+                                  <Label
+                                    htmlFor="expectedEndDate"
+                                    hint="mm/dd/yyyy"
+                                    error={!!error}
+                                  >
+                                    {t('basic.labels.expectedEndDate')}
+                                    <RequiredAsterisk />
+                                  </Label>
+                                  <DatePickerFormatted
+                                    id="expectedEndDate"
+                                    {...field}
+                                    defaultValue={field.value}
+                                    ref={null}
+                                  />
+                                </FormGroup>
+                              )}
+                            />
+                          </Grid>
+                        </Grid>
                       </div>
                     )}
 

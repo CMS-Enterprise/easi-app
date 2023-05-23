@@ -61,14 +61,8 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
         return !(value && !expectedStartDate && !expectedEndDate);
       }
     ),
-  expectedStartDate: yup.string().when('hasExpectedStartEndDates', {
-    is: true,
-    then: schema => schema.required()
-  }),
-  expectedEndDate: yup.string().when('hasExpectedStartEndDates', {
-    is: true,
-    then: schema => schema.required()
-  }),
+  expectedStartDate: yup.string(),
+  expectedEndDate: yup.string(),
   systemIntakes: yup.array(yup.mixed().required()).nullable(),
   collabGroups: yup
     .array(
