@@ -253,9 +253,7 @@ function Basic({
           } catch (e) {
             handleApolloError(e);
           }
-        },
-        // Validation did not pass
-        e => handleApolloError(e)
+        }
       )(),
     [
       dirtyFields,
