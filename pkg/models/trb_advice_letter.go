@@ -15,6 +15,7 @@ const (
 	TRBAdviceLetterStatusReadyToStart   TRBAdviceLetterStatus = "READY_TO_START"
 	TRBAdviceLetterStatusInProgress     TRBAdviceLetterStatus = "IN_PROGRESS"
 	TRBAdviceLetterStatusReadyForReview TRBAdviceLetterStatus = "READY_FOR_REVIEW"
+	TRBAdviceLetterStatusInReview       TRBAdviceLetterStatus = "IN_REVIEW"
 	TRBAdviceLetterStatusCompleted      TRBAdviceLetterStatus = "COMPLETED"
 )
 

@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -193,6 +194,13 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	var errAdviceLetter error
 	errGroup.Go(func() error {
 		adviceLetterStatus, errAdviceLetter = getTRBAdviceLetterStatus(ctx, store, trbRequestID)
+		// Convert the In Progress and Ready for Review statuses to In Review for Admins on task list step
+		userIsTRBAdmin := appcontext.Principal(ctx).AllowTRBAdmin()
+		adviceLetterStatusIsInReview := *adviceLetterStatus == models.TRBAdviceLetterStatusInProgress ||
+			*adviceLetterStatus == models.TRBAdviceLetterStatusReadyForReview
+		if userIsTRBAdmin && adviceLetterStatusIsInReview {
+			*adviceLetterStatus = models.TRBAdviceLetterStatusInReview
+		}
 		return errAdviceLetter
 	})
 
