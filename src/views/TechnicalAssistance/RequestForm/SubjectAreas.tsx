@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
 import {
-  Alert,
   ErrorMessage,
   Form,
   FormGroup,
@@ -13,6 +12,7 @@ import {
 } from '@trussworks/react-uswds';
 import { isEqual, pick } from 'lodash';
 
+import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -153,6 +153,7 @@ function SubjectAreas({
           heading={t('errors.checkFix')}
           type="error"
           className="trb-fields-error margin-y-2"
+          slim={false}
         >
           {Object.keys(errors).map(fieldName => {
             let msg: string;

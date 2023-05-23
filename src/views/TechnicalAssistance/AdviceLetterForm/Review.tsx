@@ -4,9 +4,10 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Accordion, Alert, Button, Form } from '@trussworks/react-uswds';
+import { Accordion, Button, Form } from '@trussworks/react-uswds';
 
 import EmailRecipientFields from 'components/EmailRecipientFields';
+import Alert from 'components/shared/Alert';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';

@@ -1,6 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
 
+import CharacterCounter from 'components/CharacterCounter';
+
 type TextAreaFieldProps = {
   id: string;
   className?: string;
@@ -48,6 +50,10 @@ const TextAreaField = ({
         value={value}
         maxLength={maxLength}
         {...props}
+      />
+      <CharacterCounter
+        id={`${id}-counter`}
+        characterCount={2000 - (value?.length || 0)}
       />
     </>
   );

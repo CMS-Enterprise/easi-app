@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button } from '@trussworks/react-uswds';
+import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import useCacheQuery from 'hooks/useCacheQuery';
 import GetTRBAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
@@ -91,7 +92,7 @@ const Notes = ({
       )}
 
       {modalMessage && (
-        <Alert type="success" slim className="margin-top-0 margin-bottom-4">
+        <Alert type="success" className="margin-top-0 margin-bottom-4">
           {modalMessage}
         </Alert>
       )}
