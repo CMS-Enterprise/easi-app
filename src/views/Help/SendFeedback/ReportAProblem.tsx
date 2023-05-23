@@ -16,6 +16,7 @@ import {
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik } from 'formik';
 
+import CharacterCounter from 'components/CharacterCounter';
 import MainContent from 'components/MainContent';
 import {
   ADDITIONAL_TEXT_INPUT_SUFFIX,
@@ -191,6 +192,10 @@ const ReportAProblem = () => {
                         id="whatWereYouDoing"
                         name="whatWereYouDoing"
                       />
+                      <CharacterCounter
+                        id="whatWereYouDoing-counter"
+                        characterCount={2000 - values.whatWereYouDoing.length}
+                      />
                     </FormGroup>
                     <FormGroup>
                       <Label htmlFor="whatWentWrong">
@@ -202,6 +207,10 @@ const ReportAProblem = () => {
                         as={Textarea}
                         id="whatWentWrong"
                         name="whatWentWrong"
+                      />
+                      <CharacterCounter
+                        id="whatWentWrong-counter"
+                        characterCount={2000 - values.whatWentWrong.length}
                       />
                     </FormGroup>
                     <RadioOptionGroupWithAdditionalText

@@ -337,6 +337,14 @@ exports[`TRB Advice Letter Form matches the snapshot 1`] = `
           >
             Meeting summary text
           </textarea>
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            class="easi-character-counter margin-top-1"
+            id="meetingSummary-counter"
+          >
+            1980 characters remaining
+          </span>
         </div>
         <div
           class="margin-top-4"

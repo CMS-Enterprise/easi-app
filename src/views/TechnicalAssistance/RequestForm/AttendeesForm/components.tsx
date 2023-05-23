@@ -10,7 +10,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
 import { Column, usePagination, useTable } from 'react-table';
 import {
-  Alert,
   Button,
   ButtonGroup,
   Dropdown,
@@ -27,6 +26,7 @@ import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
 import InitialsIcon from 'components/shared/InitialsIcon';
@@ -95,6 +95,7 @@ const AttendeeFields = ({
           heading={t('errors.checkFix')}
           type="error"
           className="trb-attendees-fields-error margin-bottom-2"
+          slim={false}
         >
           {Object.keys(errors).map(fieldName => {
             // Check if error has custom message

@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import {
-  Alert,
-  Grid,
-  GridContainer,
-  IconArrowBack
-} from '@trussworks/react-uswds';
+import { Grid, GridContainer, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 
 import DocumentsTable from './RequestForm/DocumentsTable';
