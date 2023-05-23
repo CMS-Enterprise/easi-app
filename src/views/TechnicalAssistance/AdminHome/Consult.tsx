@@ -261,6 +261,7 @@ function Consult() {
                     <TimePicker
                       id="meetingTime"
                       name="meetingTime"
+                      minTime="06:00"
                       onChange={val => {
                         field.onChange(val);
                       }}
