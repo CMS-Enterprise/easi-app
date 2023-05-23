@@ -2,7 +2,6 @@ package cedarcore
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -47,7 +46,6 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 	hc := http.DefaultClient
 
 	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
-	fmt.Println("~~~~~~\n\n\n\n" + basePath)
 	client := &Client{
 		cedarCoreEnabled: fnEmit,
 		auth: httptransport.APIKeyAuth(
