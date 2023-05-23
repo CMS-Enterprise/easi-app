@@ -361,12 +361,24 @@ const Recipients = ({
                             </Button>
                             <Button
                               type="button"
-                              onClick={() =>
+                              onClick={() => {
                                 setValue(
                                   `recipients.${index}.id`,
                                   recipientField.id
-                                )
-                              }
+                                );
+
+                                const { euaUserId } =
+                                  recipient.value?.userInfo || {};
+                                if (euaUserId) {
+                                  setValue(
+                                    'notifyEuaIds',
+                                    toggleArrayValue(
+                                      watch('notifyEuaIds'),
+                                      euaUserId
+                                    )
+                                  );
+                                }
+                              }}
                               disabled={
                                 !recipient.value.userInfo?.euaUserId ||
                                 !recipient.value.role ||
