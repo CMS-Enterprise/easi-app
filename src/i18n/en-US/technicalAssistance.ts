@@ -843,7 +843,8 @@ const technicalAssistance = {
     noFeedbackAlert: 'No feedback has been added for this request.'
   },
   adminHome: {
-    breadcrumb: 'Request {{trbRequestId}}',
+    home: 'Home',
+    breadcrumb: 'Request details',
     requestType: 'Request type',
     requester: 'Requester',
     submissionDate: 'Submission Date',
