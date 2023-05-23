@@ -96,7 +96,7 @@ const Recipients = ({ trbRequestId }: RecipientsProps) => {
           />
         </span>
       }
-      className="grid-col-6"
+      className="margin-top-4"
     >
       <p className="margin-bottom-0 margin-top-05">
         <Trans
@@ -228,7 +228,14 @@ const Recipients = ({ trbRequestId }: RecipientsProps) => {
 
                     return (
                       <li>
-                        <Fieldset>
+                        <Fieldset
+                          className="margin-top-4"
+                          legend={
+                            <span className="text-bold">
+                              {t('emailRecipientFields.addAnotherRecipient')}
+                            </span>
+                          }
+                        >
                           <Controller
                             name={`recipients.${index}.userInfo`}
                             control={control}
@@ -345,7 +352,7 @@ const Recipients = ({ trbRequestId }: RecipientsProps) => {
                               );
                             }}
                           />
-                          <ButtonGroup className="margin-top-3">
+                          <ButtonGroup>
                             <Button
                               type="button"
                               onClick={() => remove(index)}
