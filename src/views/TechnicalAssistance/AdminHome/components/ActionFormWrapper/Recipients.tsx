@@ -15,7 +15,6 @@ import CedarContactSelect from 'components/CedarContactSelect';
 import CheckboxField from 'components/shared/CheckboxField';
 import Label from 'components/shared/Label';
 import TruncatedContent from 'components/shared/TruncatedContent';
-import Spinner from 'components/Spinner';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
@@ -64,12 +63,7 @@ const Recipients = ({
     data: { requester }
   } = useTRBAttendees(trbRequestId);
 
-  const {
-    control,
-    setValue,
-    watch,
-    formState: { isLoading }
-  } = useFormContext<RecipientFields>();
+  const { control, setValue, watch } = useFormContext<RecipientFields>();
 
   // Recipients field
   const { fields, append, remove } = useFieldArray<{
@@ -81,9 +75,6 @@ const Recipients = ({
   useEffect(() => {
     setRecipientFormOpen?.(!!(watch('recipients') || []).find(({ id }) => !id));
   }, [setRecipientFormOpen, fields, watch]);
-
-  // If values have not been loaded yet, return loading spinner
-  if (isLoading) return <Spinner />;
 
   const recipientsCount = watch('recipients').filter(
     ({ id, userInfo }) =>

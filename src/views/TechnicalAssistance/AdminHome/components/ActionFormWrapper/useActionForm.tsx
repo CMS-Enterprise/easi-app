@@ -8,6 +8,7 @@ import {
 } from 'react-hook-form';
 import { useLazyQuery } from '@apollo/client';
 
+import PageLoading from 'components/PageLoading';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import {
   GetTRBRequestAttendees,
@@ -16,6 +17,7 @@ import {
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
+import NotFound from 'views/NotFound';
 
 import ActionForm, { ActionFormProps } from '.';
 
@@ -59,7 +61,7 @@ function useActionForm<
   ActionFormFields<TFieldValues>,
   TContext
 >): UseActionFormReturn<ActionFormFields<TFieldValues>, TContext> {
-  const [getAttendees] = useLazyQuery<
+  const [getAttendees, { data }] = useLazyQuery<
     GetTRBRequestAttendees,
     GetTRBRequestAttendeesVariables
   >(GetTRBRequestAttendeesQuery, {
@@ -72,7 +74,7 @@ function useActionForm<
       const response = await getAttendees();
 
       const attendees: TrbRecipient[] = (
-        response?.data?.trbRequest.attendees || []
+        response?.data?.trbRequest?.attendees || []
       ).map(({ id, userInfo, component, role }) => ({
         id,
         userInfo,
@@ -84,7 +86,7 @@ function useActionForm<
 
       const defaultValues = ({
         ...formProps?.defaultValues,
-        notifyEuaIds: [requesterEuaId],
+        notifyEuaIds: [...(requesterEuaId ? [requesterEuaId] : [])],
         recipients: attendees
       } as unknown) as ActionFormFields<TFieldValues>;
 
@@ -92,15 +94,28 @@ function useActionForm<
     }
   });
 
+  const {
+    formState: { isLoading }
+  } = form;
+
+  const FormWrapper = useCallback(
+    ({ children, ...props }: ActionFormProps) => {
+      if (isLoading) return <PageLoading />;
+      if (!data?.trbRequest) return <NotFound />;
+      return <ActionForm {...props}>{children}</ActionForm>;
+    },
+    [data?.trbRequest, isLoading]
+  );
+
   return {
     ...form,
     ActionForm: useCallback(
-      ({ children, ...props }: ActionFormProps) => (
+      (props: ActionFormProps) => (
         <FormProvider<ActionFormFields<TFieldValues>, TContext> {...form}>
-          <ActionForm {...props}>{children}</ActionForm>
+          <FormWrapper {...props} />
         </FormProvider>
       ),
-      [form]
+      [form, FormWrapper]
     )
   };
 }
