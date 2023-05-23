@@ -641,6 +641,7 @@ function Basic({
                                 error={!!error}
                               >
                                 {t('basic.labels.expectedStartDate')}
+                                <RequiredAsterisk />
                               </Label>
                               <DatePickerFormatted
                                 id="expectedStartDate"
@@ -665,6 +666,7 @@ function Basic({
                                 error={!!error}
                               >
                                 {t('basic.labels.expectedEndDate')}
+                                <RequiredAsterisk />
                               </Label>
                               <DatePickerFormatted
                                 id="expectedEndDate"
