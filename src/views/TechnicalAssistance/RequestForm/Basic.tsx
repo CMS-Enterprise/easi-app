@@ -351,7 +351,9 @@ function Basic({
             }
 
             if (errors[fieldName as keyof typeof errors]?.message) {
-              msg += `: ${errors[fieldName as keyof typeof errors]?.message}`;
+              msg += `: ${errors[
+                fieldName as keyof typeof errors
+              ]?.message?.replace(fieldName, ' This')}`;
             }
 
             return (
