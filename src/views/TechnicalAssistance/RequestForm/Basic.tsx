@@ -349,6 +349,11 @@ function Basic({
             } else {
               msg = t(`basic.labels.${fieldName}`);
             }
+
+            if (errors[fieldName as keyof typeof errors]?.message) {
+              msg += `: ${errors[fieldName as keyof typeof errors]?.message}`;
+            }
+
             return (
               <ErrorAlertMessage
                 key={fieldName}

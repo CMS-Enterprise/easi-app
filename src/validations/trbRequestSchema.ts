@@ -62,7 +62,14 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
       }
     ),
   expectedStartDate: yup.string(),
-  expectedEndDate: yup.string(),
+  expectedEndDate: yup.string().test({
+    name: 'expected-end-date-after-start-date',
+    message: 'Expected end date should not be before the expected start date',
+    test: (value, testContext) => {
+      if (value && testContext.parent.expectedStartDate > value) return false;
+      return true;
+    }
+  }),
   systemIntakes: yup.array(yup.mixed().required()).nullable(),
   collabGroups: yup
     .array(
