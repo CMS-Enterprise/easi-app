@@ -15,6 +15,7 @@ import CedarContactSelect from 'components/CedarContactSelect';
 import CheckboxField from 'components/shared/CheckboxField';
 import Label from 'components/shared/Label';
 import TruncatedContent from 'components/shared/TruncatedContent';
+import Spinner from 'components/Spinner';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
@@ -68,7 +69,8 @@ const Recipients = ({
     setValue,
     watch,
     setError,
-    clearErrors
+    clearErrors,
+    formState: { isLoading }
   } = useFormContext<RecipientFields>();
 
   // Recipients field
@@ -78,7 +80,7 @@ const Recipients = ({
     name: 'recipients'
   });
 
-  const recipientsCount = watch('recipients').filter(
+  const recipientsCount = (watch('recipients') || []).filter(
     ({ id, userInfo }) =>
       id && userInfo?.euaUserId !== requester?.userInfo?.euaUserId
   ).length;
@@ -147,6 +149,8 @@ const Recipients = ({
       setRecipientFormOpen?.(false);
     }
   };
+
+  if (isLoading) return <Spinner />;
 
   return (
     <Fieldset
@@ -423,11 +427,11 @@ const Recipients = ({
                             <Button
                               type="button"
                               onClick={() => addRecipient(index, recipient)}
-                              // disabled={
-                              //   !recipient.value.userInfo?.euaUserId ||
-                              //   !recipient.value.role ||
-                              //   !recipient.value.component
-                              // }
+                              disabled={
+                                !recipient.userInfo?.euaUserId ||
+                                !recipient.role ||
+                                !recipient.component
+                              }
                             >
                               {t('emailRecipientFields.addRecipient')}
                             </Button>

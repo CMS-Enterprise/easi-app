@@ -1,16 +1,13 @@
 import React, { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Accordion, Alert, Button, Form } from '@trussworks/react-uswds';
+import { Accordion, Alert, Form } from '@trussworks/react-uswds';
 
-import EmailRecipientFields from 'components/EmailRecipientFields';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
-import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import {
   DeleteTrbRecommendationQuery,
@@ -37,6 +34,8 @@ import {
 import { formatDateLocal } from 'utils/date';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 
+import Recipients from '../AdminHome/components/ActionFormWrapper/Recipients';
+import useActionForm from '../AdminHome/components/ActionFormWrapper/useActionForm';
 import ReviewAdviceLetter from '../AdminHome/components/ReviewAdviceLetter';
 import Pager from '../RequestForm/Pager';
 
@@ -80,12 +79,8 @@ const Review = ({
     ]
   });
 
-  const {
-    data: { attendees, requester },
-    createAttendee
-  } = useTRBAttendees(trbRequestId);
-
-  const actionForm = useForm<TrbRecipientFields>({
+  const actionForm = useActionForm<TrbRecipientFields>({
+    trbRequestId,
     resolver: yupResolver(trbActionSchema()),
     defaultValues: {
       copyTrbMailbox: true,
@@ -95,7 +90,7 @@ const Review = ({
 
   const {
     handleSubmit,
-    formState: { isSubmitting, isDirty }
+    formState: { isSubmitting }
   } = actionForm;
 
   const formSubmitting: boolean = isSubmitting || adviceLetterResult.loading;
@@ -189,19 +184,7 @@ const Review = ({
           className="maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
         >
           <FormProvider<TrbRecipientFields> {...actionForm}>
-            <EmailRecipientFields
-              requester={requester}
-              contacts={attendees}
-              mailboxes={[
-                {
-                  key: 'copyTrbMailbox',
-                  label: t('emailRecipientFields.copyTrbMailbox')
-                }
-              ]}
-              createContact={contact =>
-                createAttendee({ ...contact, trbRequestId })
-              }
-            />
+            <Recipients trbRequestId={trbRequestId} />
           </FormProvider>
           {/** Form pager buttons */}
           <Pager
@@ -211,19 +194,11 @@ const Review = ({
               onClick: () =>
                 history.push(`/trb/${trbRequestId}/advice/internal-review`)
             }}
-            buttons={[
-              <div className="display-flex flex-align-center">
-                <Button
-                  key="buttonNext"
-                  type="submit"
-                  disabled={isDirty || formSubmitting}
-                  className="margin-top-0 margin-right-105"
-                >
-                  {t('Send')}
-                </Button>
-                {formSubmitting && <Spinner />}
-              </div>
-            ]}
+            next={{
+              text: t('Send'),
+              disabled: formSubmitting,
+              loading: formSubmitting
+            }}
             taskListUrl={`/trb/${trbRequestId}/advice`}
             saveExitText={t('adviceLetterForm.returnToRequest')}
             submitDisabled
