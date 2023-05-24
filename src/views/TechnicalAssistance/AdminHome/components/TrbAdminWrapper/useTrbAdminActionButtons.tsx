@@ -55,7 +55,8 @@ const useTrbAdminActionButtons = ({
 
   const trbContextData = useContext(TRBRequestContext);
 
-  const leadAssigned = !!trbContextData.data?.trbRequest.trbLeadInfo.commonName;
+  const leadAssigned = !!trbContextData.data?.trbRequest?.trbLeadInfo
+    ?.commonName;
 
   const [createAdviceLetter] = useMutation<
     CreateTrbAdviceLetter,
