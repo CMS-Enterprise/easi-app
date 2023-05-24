@@ -684,6 +684,8 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding attendees',
     dontAddAndReturn: "Don't add and return to previous page",
     dontEditAndReturn: "Don't edit and return to previous page",
+    noAttendees:
+      'You have not added any additional attendees to this consult session. Use the button below to invite project team members or anyone else who should be present.',
     attendeeHelpText:
       'Please provide the name, CMS component, and role for this attendee.',
     attendeeNameHelpText:
