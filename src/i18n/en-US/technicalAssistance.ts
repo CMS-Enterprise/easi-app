@@ -276,7 +276,8 @@ const technicalAssistance = {
     newRecipientComponent: 'New recipient component',
     newRecipientRole: 'New recipient role',
     addRecipient: 'Add recipient',
-    selectRecipientError: 'Please select a recipient'
+    selectRecipientError: 'Please select a recipient',
+    duplicateRecipient: 'Contact has already been added as a recipient'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',

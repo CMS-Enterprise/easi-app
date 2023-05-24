@@ -63,7 +63,16 @@ const Recipients = ({
     data: { requester }
   } = useTRBAttendees(trbRequestId);
 
-  const { control, setValue, watch } = useFormContext<RecipientFields>();
+  const {
+    control,
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+    formState: { errors: formErrors }
+  } = useFormContext<RecipientFields>();
+
+  console.log(formErrors.recipients);
 
   // Recipients field
   const { fields, append, remove } = useFieldArray<{
@@ -81,21 +90,65 @@ const Recipients = ({
     .flat()
     .filter(item => item).length;
 
-  /** Add and automatically select new recipient */
-  const addRecipient = (index: number, recipient: TrbRecipient) => {
-    // TODO: validate recipient
+  /** Validates required fields and unique euaUserId */
+  const validateRecipient = async (
+    index: number,
+    recipient: TrbRecipient
+  ): Promise<boolean> => {
+    const errors: Partial<Record<keyof TrbRecipient, string>> = {};
 
-    setValue(`recipients.${index}.id`, recipient.id);
+    const { userInfo, role, component } = recipient;
+    const { euaUserId } = userInfo || {};
 
-    const { euaUserId } = recipient?.userInfo || {};
-    if (euaUserId) {
-      setValue(
-        'notifyEuaIds',
-        toggleArrayValue(watch('notifyEuaIds'), euaUserId)
-      );
+    const isUnique: boolean = !(watch('recipients') || []).find(
+      user =>
+        user.id && user?.userInfo?.euaUserId === recipient?.userInfo?.euaUserId
+    );
+
+    // Set field error messages
+    if (!euaUserId) {
+      errors.userInfo = t<string>('emailRecipientFields.selectRecipientError');
+    } else if (!isUnique) {
+      errors.userInfo = t<string>('emailRecipientFields.duplicateRecipient');
+    }
+    if (!component) {
+      errors.component = t<string>('errors.makeSelection');
+    }
+    if (!role) {
+      errors.role = t<string>('errors.makeSelection');
     }
 
-    setRecipientFormOpen?.(false);
+    // If field has error message, set error
+    // Otherwise, clear field errors
+    (Object.keys(recipient) as Array<keyof TrbRecipient>).forEach(key => {
+      if (errors[key]) {
+        setError(`recipients.${index}.${key}`, { message: errors[key] });
+      } else {
+        clearErrors(`recipients.${index}.${key}`);
+      }
+    });
+
+    // Return whether recipient is valid
+    return Object.keys(errors).length === 0;
+  };
+
+  /** Add and automatically select new recipient */
+  const addRecipient = async (index: number, recipient: TrbRecipient) => {
+    const isValid = await validateRecipient(index, recipient);
+
+    if (isValid) {
+      setValue(`recipients.${index}.id`, recipient.id);
+
+      const { euaUserId } = recipient?.userInfo || {};
+      if (euaUserId) {
+        setValue(
+          'notifyEuaIds',
+          toggleArrayValue(watch('notifyEuaIds'), euaUserId)
+        );
+      }
+
+      setRecipientFormOpen?.(false);
+    }
   };
 
   return (
@@ -201,8 +254,12 @@ const Recipients = ({
                   key={recipientField.id}
                   name={`recipients.${index}`}
                   control={control}
-                  render={({ field: recipient }) => {
-                    const { id, userInfo, role } = recipient.value;
+                  render={({ field: userField }) => {
+                    const recipient: TrbRecipient = {
+                      ...userField.value,
+                      id: recipientField.id
+                    };
+                    const { id, userInfo, role } = userField.value;
 
                     if (id) {
                       return (
@@ -260,20 +317,16 @@ const Recipients = ({
                                   <Label
                                     htmlFor={field.name}
                                     className="text-normal"
+                                    required
                                   >
                                     {t('emailRecipientFields.newRecipientName')}
                                   </Label>
                                   {error && (
-                                    <ErrorMessage>
-                                      {t(
-                                        error.message || 'errors.makeSelection'
-                                      )}
-                                    </ErrorMessage>
+                                    <ErrorMessage>{error.message}</ErrorMessage>
                                   )}
                                   <CedarContactSelect
                                     id={field.name}
                                     {...{ ...field, ref: null }}
-                                    // value={null}
                                     className="maxw-none"
                                   />
                                 </FormGroup>
@@ -293,15 +346,14 @@ const Recipients = ({
                                   <Label
                                     htmlFor={field.name}
                                     className="text-normal"
+                                    required
                                   >
                                     {t(
                                       'emailRecipientFields.newRecipientComponent'
                                     )}
                                   </Label>
                                   {error && (
-                                    <ErrorMessage>
-                                      {t('errors.makeSelection')}
-                                    </ErrorMessage>
+                                    <ErrorMessage>{error.message}</ErrorMessage>
                                   )}
                                   <Dropdown
                                     id={field.name}
@@ -332,13 +384,12 @@ const Recipients = ({
                                   <Label
                                     htmlFor={field.name}
                                     className="text-normal"
+                                    required
                                   >
                                     {t('emailRecipientFields.newRecipientRole')}
                                   </Label>
                                   {error && (
-                                    <ErrorMessage>
-                                      {t('errors.makeSelection')}
-                                    </ErrorMessage>
+                                    <ErrorMessage>{error.message}</ErrorMessage>
                                   )}
                                   <Dropdown
                                     id={field.name}
@@ -374,17 +425,12 @@ const Recipients = ({
                             </Button>
                             <Button
                               type="button"
-                              onClick={() =>
-                                addRecipient(index, {
-                                  ...recipient.value,
-                                  id: recipientField.id
-                                })
-                              }
-                              disabled={
-                                !recipient.value.userInfo?.euaUserId ||
-                                !recipient.value.role ||
-                                !recipient.value.component
-                              }
+                              onClick={() => addRecipient(index, recipient)}
+                              // disabled={
+                              //   !recipient.value.userInfo?.euaUserId ||
+                              //   !recipient.value.role ||
+                              //   !recipient.value.component
+                              // }
                             >
                               {t('emailRecipientFields.addRecipient')}
                             </Button>
