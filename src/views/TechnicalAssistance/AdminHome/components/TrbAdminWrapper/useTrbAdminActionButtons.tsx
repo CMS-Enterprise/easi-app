@@ -237,7 +237,8 @@ const useTrbAdminActionButtons = ({
     createAdviceLetter,
     assignLeadModalRef,
     assignLeadModalTrbRequestIdRef,
-    leadAssigned
+    leadAssigned,
+    openNotes
   ]);
 
   return actionButtons;
