@@ -97,6 +97,7 @@ func (s Server) NewS3Config() upload.Config {
 func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIURL)
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
+	s.checkRequiredConfig(appconfig.CEDARCoreAPIVersion)
 	s.checkRequiredConfig(appconfig.CEDARCacheIntervalKey)
 }
 

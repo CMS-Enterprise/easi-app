@@ -62,11 +62,10 @@ const NextSteps = ({
   });
 
   /** Submit next steps fields and update advice letter */
-  const submit: StepSubmit = useCallback(
-    callback => {
-      /** Submits form and updates advice letter */
-      const submitForm = handleSubmit(
-        async formData => {
+  const submit = useCallback<StepSubmit>(
+    callback =>
+      handleSubmit(async formData => {
+        try {
           if (isDirty) {
             // UpdateTrbAdviceLetter mutation
             await update({
@@ -82,21 +81,9 @@ const NextSteps = ({
               }
             });
           }
-        },
-        // Throw error to cause promise to fail
-        () => {
-          throw new Error('Invalid field submission');
-        }
-      );
-
-      return submitForm().then(
-        // If successful, set error to null and execute callback
-        () => {
           setFormAlert(null);
           callback?.();
-        },
-        // If apollo error, set form alert error message
-        e => {
+        } catch (e) {
           if (e instanceof ApolloError) {
             setFormAlert({
               type: 'error',
@@ -107,8 +94,7 @@ const NextSteps = ({
             });
           }
         }
-      );
-    },
+      })(),
     [handleSubmit, isDirty, trbRequestId, update, setFormAlert, t]
   );
 
