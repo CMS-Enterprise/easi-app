@@ -94,7 +94,7 @@ const ActionForm = ({
           { text: t('Home'), url: `/trb` },
           {
             text: t('adminHome.breadcrumb', { trbRequestId: id }),
-            url: `/trb/${id}/initialRequestForm`
+            url: `/trb/${id}/initial-request-form`
           },
           ...breadcrumbItems
         ]}
