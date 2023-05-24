@@ -165,6 +165,7 @@ function Consult() {
           </Alert>
         ) : undefined
       }
+      submitWarning={t('actionScheduleConsult.alert')}
     >
       {/* Meeting date */}
       <div className="date-time-wrapper">

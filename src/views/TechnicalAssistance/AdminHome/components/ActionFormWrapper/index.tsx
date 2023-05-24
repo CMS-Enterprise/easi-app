@@ -6,6 +6,7 @@ import { Form, GridContainer } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import Breadcrumbs, {
   BreadcrumbsProps
@@ -37,17 +38,19 @@ export type ActionFormProps = {
   title: string;
   /** Action description */
   description: string;
-  children?: React.ReactNode;
-  /** Pager button props */
-  buttonProps?: ButtonProps;
-  /** Alert component at top of form */
-  alert?: React.ReactElement;
   /**
    * Breadcrumb items specific to current action
    *
    * Home and request ID breadcrumbs are displayed as default
    */
   breadcrumbItems: BreadcrumbsProps['items'];
+  children?: React.ReactNode;
+  /** Pager button props */
+  buttonProps?: ButtonProps;
+  /** Alert component at top of form */
+  alert?: React.ReactElement;
+  /** Warning message above submit button */
+  submitWarning?: string;
 } & FormProps;
 
 /**
@@ -60,6 +63,7 @@ const ActionForm = ({
   buttonProps,
   breadcrumbItems,
   alert,
+  submitWarning,
   ...formProps
 }: ActionFormProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -136,6 +140,12 @@ const ActionForm = ({
         </p>
 
         <Recipients setRecipientFormOpen={setRecipientFormOpen} />
+
+        {submitWarning && (
+          <Alert type="warning" className="margin-top-4">
+            {t(submitWarning)}
+          </Alert>
+        )}
 
         {buttonProps && (
           <Pager
