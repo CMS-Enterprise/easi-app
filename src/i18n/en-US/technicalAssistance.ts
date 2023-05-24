@@ -596,7 +596,7 @@ const technicalAssistance = {
       whereInProcess:
         'This helps the TRB provide the right type of support for your request.',
       whenMeet:
-        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.',
+        'Format mm/dd/yyyy. If you are unsure of the specific date, you may pick a date that is your best guess.',
       fundingSources:
         'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
       relatedLCIDS:
