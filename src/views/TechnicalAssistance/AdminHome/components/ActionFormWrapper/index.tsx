@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -7,6 +7,7 @@ import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import useMessage from 'hooks/useMessage';
 import Breadcrumbs, {
   BreadcrumbsProps
@@ -47,8 +48,8 @@ export type ActionFormProps = {
   children?: React.ReactNode;
   /** Pager button props */
   buttonProps?: ButtonProps;
-  /** Alert component at top of form */
-  alert?: React.ReactElement;
+  /** Whether to show alert at top of form with summary of errors */
+  showErrorSummary?: boolean;
   /** Warning message above submit button */
   submitWarning?: string;
 } & FormProps;
@@ -62,8 +63,8 @@ const ActionForm = ({
   children,
   buttonProps,
   breadcrumbItems,
-  alert,
   submitWarning,
+  showErrorSummary = true,
   ...formProps
 }: ActionFormProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -75,7 +76,7 @@ const ActionForm = ({
   const { message } = useMessage();
 
   const {
-    formState: { isSubmitting }
+    formState: { isSubmitting, errors }
   } = useFormContext();
 
   const [recipientFormOpen, setRecipientFormOpen] = useState<boolean>(false);
@@ -93,6 +94,20 @@ const ActionForm = ({
       })
     );
   }, [buttonProps?.buttons, recipientFormOpen]);
+
+  /** Error keys not including recipients */
+  const errorKeys: string[] = Object.keys(errors).filter(
+    key => key !== 'recipients'
+  );
+
+  const hasErrors = errorKeys.length > 0;
+
+  useEffect(() => {
+    if (hasErrors) {
+      const err = document.querySelector('.trb-basic-fields-error');
+      err?.scrollIntoView();
+    }
+  }, [hasErrors]);
 
   return (
     <GridContainer className="width-full">
@@ -121,7 +136,25 @@ const ActionForm = ({
         />
       </p>
 
-      {alert && alert}
+      {showErrorSummary && errorKeys.length > 0 && (
+        <Alert
+          heading={t('errors.checkFix')}
+          type="error"
+          className="trb-basic-fields-error"
+          slim={false}
+        >
+          {errorKeys.map(fieldName => {
+            const msg: string = t(`actionErrorLabels.${fieldName}`);
+            return (
+              <ErrorAlertMessage
+                key={fieldName}
+                errorKey={fieldName}
+                message={msg}
+              />
+            );
+          })}
+        </Alert>
+      )}
 
       <Form
         {...formProps}

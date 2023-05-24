@@ -121,22 +121,15 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
       >
         A notification email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.
       </p>
-      <fieldset
-        class="usa-fieldset margin-top-4"
-        data-testid="fieldset"
+      <div
+        class="usa-form-group margin-top-4"
       >
-        <legend
-          class="usa-legend"
-        >
+        <legend>
+          Choose recipients 
           <span
-            class="text-bold"
+            class="text-error"
           >
-            Choose recipients 
-            <span
-              class="text-error"
-            >
-              *
-            </span>
+            *
           </span>
         </legend>
         <p
@@ -217,7 +210,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
              Show 3 more recipients
           </button>
         </ul>
-      </fieldset>
+      </div>
       <div
         class="margin-top-5"
       >

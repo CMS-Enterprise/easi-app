@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -14,7 +14,6 @@ import {
 import { DateTime } from 'luxon';
 
 import Alert from 'components/shared/Alert';
-import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import {
@@ -56,7 +55,7 @@ function Consult() {
     ActionForm,
     control,
     handleSubmit,
-    formState: { errors, isDirty, isSubmitting }
+    formState: { isDirty, isSubmitting }
   } = useActionForm<ConsultFields>({
     trbRequestId: id,
     resolver: yupResolver(consultSchema),
@@ -114,15 +113,6 @@ function Consult() {
       });
   };
 
-  const hasErrors = Object.keys(errors).length > 0;
-
-  useEffect(() => {
-    if (hasErrors) {
-      const err = document.querySelector('.trb-basic-fields-error');
-      err?.scrollIntoView();
-    }
-  }, [hasErrors]);
-
   return (
     <ActionForm
       title={t('actionScheduleConsult.heading')}
@@ -142,29 +132,6 @@ function Consult() {
         taskListUrl: requestUrl,
         saveExitText: t('actionRequestEdits.cancelAndReturn')
       }}
-      alert={
-        hasErrors ? (
-          <Alert
-            heading={t('errors.checkFix')}
-            type="error"
-            className="trb-basic-fields-error"
-            slim={false}
-          >
-            {Object.keys(errors).map(fieldName => {
-              const msg: string = t(
-                `actionScheduleConsult.labels.${fieldName}`
-              );
-              return (
-                <ErrorAlertMessage
-                  key={fieldName}
-                  errorKey={fieldName}
-                  message={msg}
-                />
-              );
-            })}
-          </Alert>
-        ) : undefined
-      }
       submitWarning={t('actionScheduleConsult.alert')}
     >
       {/* Meeting date */}
@@ -176,7 +143,7 @@ function Consult() {
           render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label
-                htmlFor="meetingDate"
+                htmlFor={field.name}
                 hint={
                   <div className="margin-top-1">
                     {t('actionScheduleConsult.hints.meetingDate')}
@@ -190,8 +157,9 @@ function Consult() {
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <DatePicker
-                id="meetingDate"
-                name="meetingDate"
+                id={field.name}
+                name={field.name}
+                className="margin-top-1"
                 onChange={val => {
                   field.onChange(val);
                 }}
@@ -207,7 +175,7 @@ function Consult() {
           render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label
-                htmlFor="meetingTime"
+                htmlFor={field.name}
                 hint={
                   <div className="margin-top-1">
                     {t('actionScheduleConsult.hints.meetingTime')}
@@ -221,8 +189,8 @@ function Consult() {
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
               <TimePicker
-                id="meetingTime"
-                name="meetingTime"
+                id={field.name}
+                name={field.name}
                 onChange={val => {
                   if (val) field.onChange(val);
                 }}

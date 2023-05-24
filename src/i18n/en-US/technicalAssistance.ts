@@ -979,6 +979,13 @@ const technicalAssistance = {
       addDate: 'Add date'
     }
   },
+  actionErrorLabels: {
+    notifyEuaIds: 'Notification recipients',
+    meetingDate: 'Meeting date',
+    meetingTime: 'Meeting time',
+    notes: 'Notes',
+    feedbackMessage: 'Edits requested'
+  },
   actionRequestEdits: {
     breadcrumb: 'Request edits',
     heading: 'Action: request edits',

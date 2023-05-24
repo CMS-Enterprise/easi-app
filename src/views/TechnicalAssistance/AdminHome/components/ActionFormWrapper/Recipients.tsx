@@ -13,6 +13,7 @@ import {
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
 import CheckboxField from 'components/shared/CheckboxField';
+import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import Spinner from 'components/Spinner';
@@ -62,7 +63,7 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
     setError,
     clearErrors,
     getValues,
-    formState: { isLoading }
+    formState: { isLoading, errors: formErrors }
   } = useFormContext<RecipientFields>();
 
   // Recipients field
@@ -101,7 +102,7 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
 
     // Set field error messages
     if (!euaUserId) {
-      errors.userInfo = t<string>('emailRecipientFields.selectRecipientError');
+      errors.userInfo = t<string>('errors.makeSelection');
     } else if (!isUnique) {
       errors.userInfo = t<string>('emailRecipientFields.duplicateRecipient');
     }
@@ -148,17 +149,13 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
   if (isLoading) return <Spinner />;
 
   return (
-    <Fieldset
-      legend={
-        <span className="text-bold">
-          <Trans
-            i18nKey="technicalAssistance:emailRecipientFields.label"
-            components={{ red: <span className="text-error" /> }}
-          />
-        </span>
-      }
-      className="margin-top-4"
-    >
+    <FieldGroup className="margin-top-4" error={!!formErrors.notifyEuaIds}>
+      <legend>
+        <Trans
+          i18nKey="technicalAssistance:emailRecipientFields.label"
+          components={{ red: <span className="text-error" /> }}
+        />
+      </legend>
       <p className="margin-bottom-0 margin-top-05">
         <Trans
           i18nKey="technicalAssistance:emailRecipientFields.selectedCount"
@@ -167,6 +164,12 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
           values={{ plural: selectedCount === 1 ? '' : 's' }}
         />
       </p>
+
+      {!!formErrors.notifyEuaIds && (
+        <ErrorMessage>
+          {t('emailRecipientFields.selectRecipientError')}
+        </ErrorMessage>
+      )}
 
       <ul className="usa-list usa-list--unstyled">
         <TruncatedContent
@@ -453,7 +456,7 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
           )}
         </TruncatedContent>
       </ul>
-    </Fieldset>
+    </FieldGroup>
   );
 };
 
