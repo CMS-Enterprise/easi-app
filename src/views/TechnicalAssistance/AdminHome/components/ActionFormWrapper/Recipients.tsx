@@ -68,11 +68,8 @@ const Recipients = ({
     setValue,
     watch,
     setError,
-    clearErrors,
-    formState: { errors: formErrors }
+    clearErrors
   } = useFormContext<RecipientFields>();
-
-  console.log(formErrors.recipients);
 
   // Recipients field
   const { fields, append, remove } = useFieldArray<{
