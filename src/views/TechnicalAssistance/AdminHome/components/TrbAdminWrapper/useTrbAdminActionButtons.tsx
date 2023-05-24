@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -24,6 +24,7 @@ type ActionButtonsProps = {
   assignLeadModalTrbRequestIdRef:
     | React.MutableRefObject<TrbRequestIdRef>
     | undefined;
+  openNotes: Dispatch<SetStateAction<boolean>>;
 };
 
 type ActionButtonKey =
@@ -48,7 +49,8 @@ const useTrbAdminActionButtons = ({
   status,
   state,
   assignLeadModalRef,
-  assignLeadModalTrbRequestIdRef
+  assignLeadModalTrbRequestIdRef,
+  openNotes
 }: ActionButtonsProps): AdminActionButton[] => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
@@ -142,7 +144,7 @@ const useTrbAdminActionButtons = ({
       },
       addNote: {
         label: t('adminAction.buttons.addNote'),
-        link: `/trb/${trbRequestId}/notes/add-note`
+        onClick: () => openNotes(true)
       }
     };
 

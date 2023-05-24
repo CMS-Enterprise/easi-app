@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Grid, ModalRef } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -11,7 +11,8 @@ import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
 import AdminTaskStatusTag from '../AdminTaskStatusTag';
-import NoteBox from '../NoteBox';
+import NoteBox, { noteCategoryPageMap } from '../NoteBox';
+import NotesModal from '../NoteModal';
 
 import useTrbAdminActionButtons from './useTrbAdminActionButtons';
 
@@ -130,13 +131,16 @@ export default function TrbAdminWrapper({
   const { status, state, assignLeadModalRef, assignLeadModalTrbRequestIdRef } =
     adminActionProps || {};
 
+  const [notesOpen, openNotes] = useState<boolean>(false);
+
   const actionButtons = useTrbAdminActionButtons({
     activePage,
     trbRequestId,
     status,
     state,
     assignLeadModalRef,
-    assignLeadModalTrbRequestIdRef
+    assignLeadModalTrbRequestIdRef,
+    openNotes
   });
 
   return (
@@ -147,6 +151,16 @@ export default function TrbAdminWrapper({
       id={`trbAdmin__${activePage}`}
       data-testid={`trb-admin-home__${activePage}`}
     >
+      {notesOpen && (
+        <NotesModal
+          isOpen={notesOpen}
+          trbRequestId={trbRequestId}
+          addNote
+          openModal={openNotes}
+          defaultSelect={noteCategoryPageMap[activePage]}
+        />
+      )}
+
       <Grid row gap="lg">
         <Grid tablet={{ col: 8 }}>
           <h1 className="margin-top-0 margin-bottom-1">{t(title)}</h1>
@@ -167,7 +181,11 @@ export default function TrbAdminWrapper({
 
         {noteCount !== undefined && (
           <Grid tablet={{ col: 4 }}>
-            <NoteBox trbRequestId={trbRequestId} noteCount={noteCount} />
+            <NoteBox
+              trbRequestId={trbRequestId}
+              noteCount={noteCount}
+              activePage={activePage}
+            />
           </Grid>
         )}
       </Grid>
