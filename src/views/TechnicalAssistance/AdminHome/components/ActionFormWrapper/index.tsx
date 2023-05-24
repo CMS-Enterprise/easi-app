@@ -24,8 +24,12 @@ type FormProps = {
   search?: boolean;
 } & JSX.IntrinsicElements['form'];
 
-type ButtonProps = Omit<PagerProps, 'border' | 'submitDisabled' | 'next'> & {
-  next: PageButtonProps;
+type ButtonProps = Omit<
+  PagerProps,
+  'border' | 'submitDisabled' | 'next' | 'buttons'
+> & {
+  next?: PageButtonProps;
+  buttons?: React.ReactElement[];
 };
 
 export type ActionFormProps = {
@@ -35,7 +39,7 @@ export type ActionFormProps = {
   description: string;
   children: React.ReactNode;
   /** Pager button props */
-  buttonProps: ButtonProps;
+  buttonProps?: ButtonProps;
   /**
    * Breadcrumb items specific to current action
    *
@@ -64,19 +68,24 @@ const ActionForm = ({
   const { message } = useMessage();
 
   const {
-    formState: { isSubmitting, isDirty }
+    formState: { isSubmitting }
   } = useFormContext();
 
   const [recipientFormOpen, setRecipientFormOpen] = useState<boolean>(false);
 
   const disableSubmit = useMemo(() => {
-    return (
-      recipientFormOpen ||
-      !isDirty ||
-      isSubmitting ||
-      buttonProps?.next?.disabled
+    return recipientFormOpen || isSubmitting || buttonProps?.next?.disabled;
+  }, [recipientFormOpen, isSubmitting, buttonProps?.next?.disabled]);
+
+  const buttons = useMemo(() => {
+    if (!buttonProps?.buttons) return undefined;
+
+    return buttonProps.buttons.map(button =>
+      React.cloneElement(button, {
+        disabled: button.props.disabled || recipientFormOpen
+      })
     );
-  }, [recipientFormOpen, isDirty, isSubmitting, buttonProps?.next?.disabled]);
+  }, [buttonProps?.buttons, recipientFormOpen]);
 
   return (
     <GridContainer className="width-full">
@@ -126,16 +135,23 @@ const ActionForm = ({
           setRecipientFormOpen={setRecipientFormOpen}
         />
 
-        <Pager
-          {...buttonProps}
-          next={{
-            ...buttonProps?.next,
-            disabled: disableSubmit
-          }}
-          border={false}
-          className={classNames('margin-top-5', buttonProps.className)}
-          submitDisabled
-        />
+        {buttonProps && (
+          <Pager
+            {...buttonProps}
+            next={
+              buttonProps?.next
+                ? {
+                    ...buttonProps?.next,
+                    disabled: disableSubmit
+                  }
+                : false
+            }
+            buttons={buttons}
+            border={false}
+            className={classNames('margin-top-5', buttonProps.className)}
+            submitDisabled
+          />
+        )}
       </Form>
     </GridContainer>
   );
