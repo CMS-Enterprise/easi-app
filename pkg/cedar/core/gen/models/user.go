@@ -33,6 +33,9 @@ type User struct {
 	// Required: true
 	ID *string `json:"id"`
 
+	// is deleted
+	IsDeleted bool `json:"isDeleted,omitempty"`
+
 	// last name
 	LastName string `json:"lastName,omitempty"`
 

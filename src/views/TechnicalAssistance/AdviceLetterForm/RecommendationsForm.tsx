@@ -32,6 +32,7 @@ import {
 import formatUrl from 'utils/formatUrl';
 
 import Breadcrumbs from '../Breadcrumbs';
+import { StepSubmit } from '../RequestForm';
 
 import LinksArrayField from './LinksArrayField/Index';
 
@@ -85,80 +86,70 @@ const RecommendationsForm = ({
   }, [state?.recommendation, watch, reset]);
 
   /** Submits form and executes recommendation mutation */
-  const submit = useCallback(() => {
-    const submitForm = handleSubmit(
-      async formData => {
-        if (isDirty) {
-          /** Format links to array of strings */
-          const links = (formData.links || []).map(({ link }) =>
-            formatUrl(link)
-          );
+  const submit = useCallback<StepSubmit>(
+    callback =>
+      handleSubmit(async formData => {
+        try {
+          if (isDirty) {
+            /** Format links to array of strings */
+            const links = (formData.links || []).map(({ link }) =>
+              formatUrl(link)
+            );
 
-          const { id, title, recommendation } = formData;
+            const { id, title, recommendation } = formData;
 
-          /** Creates new or updates existing recommendation */
-          const mutate = id ? update : create;
+            /** Creates new or updates existing recommendation */
+            const mutate = id ? update : create;
 
-          await mutate({
-            variables: {
-              input: {
-                ...(!id && { trbRequestId }),
-                id,
-                title,
-                recommendation,
-                links
-              }
-            },
-            refetchQueries: [
-              {
-                query: GetTrbAdviceLetterQuery,
-                variables: {
-                  id: trbRequestId
+            await mutate({
+              variables: {
+                input: {
+                  ...(!id && { trbRequestId }),
+                  id,
+                  title,
+                  recommendation,
+                  links
                 }
-              }
-            ]
-          });
+              },
+              refetchQueries: [
+                {
+                  query: GetTrbAdviceLetterQuery,
+                  variables: {
+                    id: trbRequestId
+                  }
+                }
+              ]
+            });
+            setShowFormError(false);
+            setFormAlert({
+              type: 'success',
+              message: t(
+                `adviceLetterForm.${
+                  watch('id')
+                    ? 'editRecommendationSuccess'
+                    : 'recommendationSuccess'
+                }`
+              )
+            });
+          }
+          callback?.();
+        } catch (e) {
+          if (e instanceof ApolloError) {
+            setShowFormError(true);
+          }
         }
-      },
-      // Throw error to cause promise to fail
-      e => {
-        throw new Error('Invalid form submission');
-      }
-    );
-
-    return submitForm().then(
-      () => {
-        setShowFormError(false);
-        setFormAlert({
-          type: 'success',
-          message: t(
-            `adviceLetterForm.${
-              watch('id')
-                ? 'editRecommendationSuccess'
-                : 'recommendationSuccess'
-            }`
-          )
-        });
-        history.push(returnLink);
-      },
-      e => {
-        if (e instanceof ApolloError) {
-          setShowFormError(true);
-        }
-      }
-    );
-  }, [
-    t,
-    handleSubmit,
-    isDirty,
-    trbRequestId,
-    update,
-    create,
-    history,
-    setFormAlert,
-    returnLink,
-    watch
-  ]);
+      })(),
+    [
+      t,
+      handleSubmit,
+      isDirty,
+      trbRequestId,
+      update,
+      create,
+      setFormAlert,
+      watch
+    ]
+  );
 
   return (
     <div>
@@ -215,14 +206,8 @@ const RecommendationsForm = ({
                 <Label className="text-normal" htmlFor="title" required>
                   {t('Title')}
                 </Label>
-                {error && <ErrorMessage>{t('fillBlank')}</ErrorMessage>}
-                <TextInput
-                  type="text"
-                  id="title"
-                  {...field}
-                  ref={null}
-                  required
-                />
+                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+                <TextInput type="text" id="title" {...field} ref={null} />
               </FormGroup>
             );
           }}
@@ -243,12 +228,7 @@ const RecommendationsForm = ({
                   {t('Description')}
                 </Label>
                 {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-                <TextAreaField
-                  id="recommendation"
-                  {...field}
-                  ref={null}
-                  required
-                />
+                <TextAreaField id="recommendation" {...field} ref={null} />
               </FormGroup>
             );
           }}
@@ -266,7 +246,7 @@ const RecommendationsForm = ({
             watch('recommendation').length === 0 ||
             isSubmitting
           }
-          onClick={() => submit()}
+          onClick={() => submit(() => history.push(returnLink))}
         >
           {t('button.save')}
         </Button>
