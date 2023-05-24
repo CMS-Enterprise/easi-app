@@ -112,6 +112,11 @@ function RequestEdits() {
         taskListUrl: requestUrl,
         saveExitText: t('actionRequestEdits.cancelAndReturn')
       }}
+      breadcrumbItems={[
+        {
+          text: t(`${actionText}.breadcrumb`)
+        }
+      ]}
     >
       <Controller
         name="feedbackMessage"

@@ -7,7 +7,9 @@ import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
-import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs'; // BreadcrumbsProps
+import Breadcrumbs, {
+  BreadcrumbsProps
+} from 'views/TechnicalAssistance/Breadcrumbs'; // BreadcrumbsProps
 import Pager, {
   PageButtonProps,
   PagerProps
@@ -27,11 +29,19 @@ type ButtonProps = Omit<PagerProps, 'border' | 'submitDisabled' | 'next'> & {
 };
 
 export type ActionFormProps = {
+  /** Action title */
   title: string;
+  /** Action description */
   description: string;
   children: React.ReactNode;
+  /** Pager button props */
   buttonProps: ButtonProps;
-  // breadcrumbItems: BreadcrumbsProps['items'];
+  /**
+   * Breadcrumb items specific to current action
+   *
+   * Home and request ID breadcrumbs are displayed as default
+   */
+  breadcrumbItems: BreadcrumbsProps['items'];
 } & FormProps;
 
 /**
@@ -42,6 +52,7 @@ const ActionForm = ({
   description,
   children,
   buttonProps,
+  breadcrumbItems,
   ...formProps
 }: ActionFormProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -76,10 +87,7 @@ const ActionForm = ({
             text: t('adminHome.breadcrumb', { trbRequestId: id }),
             url: `/trb/${id}/initialRequestForm`
           },
-          {
-            // TODO: default breadcrumb logic
-            text: t('Action text')
-          }
+          ...breadcrumbItems
         ]}
       />
 
