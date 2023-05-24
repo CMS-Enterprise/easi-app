@@ -172,7 +172,8 @@ function CloseRequest() {
           action === 'reopen-request'
             ? {
                 text: t('actionReopenRequest.submit'),
-                disabled: formSubmitting
+                disabled: formSubmitting,
+                loading: formSubmitting
               }
             : undefined,
         // Close request modal button

@@ -55,7 +55,8 @@ function RequestEdits() {
     control,
     ActionForm,
     handleSubmit,
-    watch
+    watch,
+    formState: { isSubmitting }
   } = useActionForm<RequestEditsFields>({
     trbRequestId: id,
     resolver: yupResolver(
@@ -71,7 +72,7 @@ function RequestEdits() {
     }
   });
 
-  const [sendFeedback] = useMutation<
+  const [sendFeedback, feedbackResult] = useMutation<
     CreateTrbRequestFeedback,
     CreateTrbRequestFeedbackVariables
   >(CreateTrbRequestFeedbackQuery);
@@ -109,7 +110,8 @@ function RequestEdits() {
           text: t('actionRequestEdits.submit'),
           disabled:
             feedbackAction === TRBFeedbackAction.REQUEST_EDITS &&
-            !watch('feedbackMessage')
+            !watch('feedbackMessage'),
+          loading: isSubmitting || feedbackResult.loading
         },
         taskListUrl: requestUrl,
         saveExitText: t('actionRequestEdits.cancelAndReturn')

@@ -56,7 +56,7 @@ function Consult() {
     ActionForm,
     control,
     handleSubmit,
-    formState: { errors, isDirty }
+    formState: { errors, isDirty, isSubmitting }
   } = useActionForm<ConsultFields>({
     trbRequestId: id,
     resolver: yupResolver(consultSchema),
@@ -136,7 +136,8 @@ function Consult() {
       buttonProps={{
         next: {
           text: t('actionRequestEdits.submit'),
-          disabled: mutationResult.loading || !isDirty
+          disabled: mutationResult.loading || !isDirty,
+          loading: isSubmitting || mutationResult.loading
         },
         taskListUrl: requestUrl,
         saveExitText: t('actionRequestEdits.cancelAndReturn')

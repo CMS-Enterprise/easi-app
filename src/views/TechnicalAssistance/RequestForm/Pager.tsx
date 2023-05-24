@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import Spinner from 'components/Spinner';
+
 import { StepSubmit } from '.';
 
 export type PageButtonProps = {
@@ -12,6 +14,7 @@ export type PageButtonProps = {
   outline?: boolean;
   type?: 'button' | 'submit';
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  loading?: boolean;
 };
 
 export type PagerProps = {
@@ -54,33 +57,40 @@ export function Pager({
   const buttonItems = [
     ...(back
       ? [
-          <Button
-            key="buttonBack"
-            type={back.type ?? 'button'}
-            outline={back.outline !== undefined ? back.outline : true}
-            disabled={back.disabled}
-            onClick={back.onClick}
-            className="margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-          >
-            {back.text ?? t('button.back')}
-          </Button>
+          <div className="display-flex flex-align-center" key="buttonBack">
+            <Button
+              type={back.type ?? 'button'}
+              outline={back.outline !== undefined ? back.outline : true}
+              disabled={back.disabled}
+              onClick={back.onClick}
+              className="margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            >
+              {back.text ?? t('button.back')}
+            </Button>
+            {back?.loading && <Spinner className="margin-left-105" />}
+          </div>
         ]
       : []),
     ...(next
       ? [
-          <Button
-            key="buttonNext"
-            type={next.type ?? 'submit'}
-            outline={next.outline}
-            disabled={next.disabled}
-            onClick={next.onClick}
-            className="margin-top-0"
-          >
-            {next.text ?? t('button.next')}
-          </Button>
+          <div className="display-flex flex-align-center" key="buttonNext">
+            <Button
+              type={next.type ?? 'submit'}
+              outline={next.outline}
+              disabled={next.disabled}
+              onClick={next.onClick}
+              className="margin-top-0"
+            >
+              {next.text ?? t('button.next')}
+            </Button>
+            {next?.loading && <Spinner className="margin-left-105" />}
+          </div>
         ]
       : []),
-    ...(buttons || [])
+    ...(buttons?.map((button, index) => {
+      // eslint-disable-next-line react/no-array-index-key
+      return <React.Fragment key={`button-${index}`}>{button}</React.Fragment>;
+    }) || [])
   ];
 
   return (
