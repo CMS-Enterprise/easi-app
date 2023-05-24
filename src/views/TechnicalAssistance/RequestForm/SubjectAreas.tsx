@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
 import {
-  Alert,
   ErrorMessage,
   Form,
   FormGroup,
@@ -13,6 +12,7 @@ import {
 } from '@trussworks/react-uswds';
 import { isEqual, pick } from 'lodash';
 
+import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -82,60 +82,49 @@ function SubjectAreas({
     }
   }, [errors, hasErrors]);
 
-  const handleApolloError = useCallback(
-    (err: any) => {
-      if (err instanceof ApolloError) {
-        setFormAlert({
-          type: 'error',
-          heading: t('errors.somethingWrong'),
-          message: t('basic.errors.submit')
-        });
-      }
-    },
-    [setFormAlert, t]
-  );
-
   const submit = useCallback<StepSubmit>(
     callback =>
-      handleSubmit(
-        async formData => {
-          try {
-            if (isDirty) {
-              const input: any = pick(formData, Object.keys(dirtyFields));
+      handleSubmit(async formData => {
+        try {
+          if (isDirty) {
+            const input: any = pick(formData, Object.keys(dirtyFields));
 
-              Object.entries(input).forEach(([key, value]) => {
-                if (value === '') input[key] = null;
-              });
+            Object.entries(input).forEach(([key, value]) => {
+              if (value === '') input[key] = null;
+            });
 
-              await updateForm({
-                variables: {
-                  input: {
-                    trbRequestId: request.id,
-                    ...input
-                  }
+            await updateForm({
+              variables: {
+                input: {
+                  trbRequestId: request.id,
+                  ...input
                 }
-              });
+              }
+            });
 
-              await refetchRequest();
-            }
-
-            callback?.();
-          } catch (e) {
-            handleApolloError(e);
+            await refetchRequest();
           }
-        },
-        () => {
-          handleApolloError('Invalid subject areas form');
+
+          callback?.();
+        } catch (e) {
+          if (e instanceof ApolloError) {
+            setFormAlert({
+              type: 'error',
+              heading: t('errors.somethingWrong'),
+              message: t('basic.errors.submit')
+            });
+          }
         }
-      )(),
+      })(),
     [
       dirtyFields,
       handleSubmit,
       isDirty,
       refetchRequest,
       request.id,
-      handleApolloError,
-      updateForm
+      updateForm,
+      setFormAlert,
+      t
     ]
   );
 
@@ -158,6 +147,7 @@ function SubjectAreas({
           heading={t('errors.checkFix')}
           type="error"
           className="trb-fields-error margin-y-2"
+          slim={false}
         >
           {Object.keys(errors).map(fieldName => {
             let msg: string;

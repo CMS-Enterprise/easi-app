@@ -2407,7 +2407,7 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 	var cedarRoles []*models.CedarRole
 	var errR error
 	g.Go(func() error {
-		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.String{})
+		cedarRoles, errR = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.String{})
 		return errR
 	})
 
@@ -3038,11 +3038,6 @@ func (r *tRBRequestResolver) TrbLeadInfo(ctx context.Context, obj *models.TRBReq
 	return resolvers.GetTRBLeadInfo(ctx, obj.TRBLead)
 }
 
-// TrbLeadComponent is the resolver for the trbLeadComponent field.
-func (r *tRBRequestResolver) TrbLeadComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
-	return resolvers.GetTRBUserComponent(ctx, r.store, obj.TRBLead)
-}
-
 // RequesterInfo is the resolver for the requesterInfo field.
 func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
 	return resolvers.GetTRBRequesterInfo(ctx, obj.CreatedBy)
@@ -3051,7 +3046,7 @@ func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBR
 // RequesterComponent is the resolver for the requesterComponent field.
 func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
 	requester := obj.CreatedBy
-	return resolvers.GetTRBUserComponent(ctx, r.store, &requester)
+	return resolvers.GetTRBUserComponent(ctx, r.store, &requester, obj.ID)
 }
 
 // AdminNotes is the resolver for the adminNotes field.

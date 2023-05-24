@@ -3,6 +3,7 @@ package cedarcore
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
@@ -32,11 +33,13 @@ func cedarRoleApplicationPtr() *string {
 }
 
 func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {
-	if rawAssigneeType == cedarPersonAssignee {
+	lowered := strings.ToLower(rawAssigneeType)
+
+	if lowered == cedarPersonAssignee {
 		return models.PersonAssignee, true
-	} else if rawAssigneeType == cedarOrganizationAssignee {
+	} else if lowered == cedarOrganizationAssignee {
 		return models.OrganizationAssignee, true
-	} else if rawAssigneeType == "" {
+	} else if lowered == "" {
 		return "", true
 	} else {
 		return "", false

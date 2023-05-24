@@ -82,7 +82,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
       Date and time
     </p>
     <div
-      class="usa-alert usa-alert--info usa-alert--slim margin-y-1 margin-top-2"
+      class="usa-alert usa-alert--info usa-alert--slim flex margin-y-1 margin-top-2"
       data-testid="alert"
     >
       <div
@@ -91,7 +91,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
         <p
           class="usa-alert__text"
         >
-          Please review the initial request form before setting a date and time in EASi.
+          Please wait until the initial request form is submitted, then review the form before setting a date and time in EASi.
         </p>
       </div>
     </div>
@@ -153,7 +153,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
               class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
             >
               <span
-                class="easi-tag bg-info"
+                class="easi-tag bg-info-light"
                 data-testid="task-list-task-tag"
               >
                 Ready to start

@@ -414,11 +414,16 @@ func ReopenTRBRequest(
 }
 
 // IsRecentTRBRequest determines if a TRB Request should be determined to be flagged as "recent" or not.
-// TODO: Add more logic in https://jiraent.cms.gov/browse/EASI-2711
 func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Time) bool {
 	numDaysToConsiderRecent := -7
-	recentIfAfterDate := now.AddDate(0, 0, numDaysToConsiderRecent)
-	return obj.CreatedAt.After(recentIfAfterDate)
+	recencyDate := now.AddDate(0, 0, numDaysToConsiderRecent)
+	isRequestClosed := obj.State == models.TRBRequestStateClosed
+	hasNoLeadAssigned := obj.TRBLead == nil
+
+	// A request is only recent if it's not closed
+	// A request is only recent if it's either created after the recencyDate OR has no lead assigned
+	isRecent := !isRequestClosed && (obj.CreatedAt.After(recencyDate) || hasNoLeadAssigned)
+	return isRecent
 }
 
 // GetTRBLeadInfo retrieves the user info of a TRB request's lead
@@ -455,12 +460,12 @@ func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.User
 }
 
 // GetTRBUserComponent retrieves the component of a TRB user from the TRB attendees table
-func GetTRBUserComponent(ctx context.Context, store *storage.Store, euaID *string) (*string, error) {
+func GetTRBUserComponent(ctx context.Context, store *storage.Store, euaID *string, trbRequestID uuid.UUID) (*string, error) {
 	// TODO/tech debt: This results in an N+1 problem and could be moved to a dataloader if
 	// performance ever becomes an issue
 	var component *string
 	if euaID != nil {
-		attendeeComponent, err := store.GetAttendeeComponentByEUA(ctx, *euaID)
+		attendeeComponent, err := store.GetAttendeeComponentByEUA(ctx, *euaID, trbRequestID)
 		if err != nil {
 			return nil, err
 		}

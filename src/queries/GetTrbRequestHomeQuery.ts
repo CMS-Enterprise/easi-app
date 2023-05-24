@@ -21,7 +21,6 @@ export default gql`
         modifiedAt
       }
 
-      trbLeadComponent
       trbLeadInfo {
         commonName
         email

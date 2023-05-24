@@ -89,7 +89,9 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             >
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                Business Owner
+              </h5>
             </div>
           </div>
         </li>
@@ -116,13 +118,19 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             >
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                Business Owner
+              </h5>
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                Project Lead
+              </h5>
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                0
+              </h5>
             </div>
           </div>
         </li>
@@ -166,13 +174,19 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             >
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                Business Owner
+              </h5>
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                Project Lead
+              </h5>
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                0
+              </h5>
             </div>
           </div>
         </li>
@@ -216,10 +230,14 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             >
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                0
+              </h5>
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                9
+              </h5>
             </div>
           </div>
         </li>
@@ -246,7 +264,9 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             >
               <h5
                 class="margin-y-0 font-sans-2xs text-normal"
-              />
+              >
+                9
+              </h5>
             </div>
           </div>
         </li>

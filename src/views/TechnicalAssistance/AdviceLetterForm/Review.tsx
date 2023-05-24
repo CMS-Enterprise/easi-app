@@ -4,8 +4,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Accordion, Alert, Form } from '@trussworks/react-uswds';
+import { Accordion, Form } from '@trussworks/react-uswds';
 
+import Alert from 'components/shared/Alert';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import useCacheQuery from 'hooks/useCacheQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';

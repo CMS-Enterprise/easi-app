@@ -61,59 +61,41 @@ const NextSteps = ({
     }
   });
 
-  const handleApolloError = useCallback(
-    (err: any) => {
-      if (err instanceof ApolloError) {
-        setFormAlert({
-          type: 'error',
-          message: t('adviceLetterForm.error', {
-            action: 'saving',
-            type: 'advice letter'
-          })
-        });
-      }
-    },
-    [setFormAlert, t]
-  );
-
   /** Submit next steps fields and update advice letter */
   const submit = useCallback<StepSubmit>(
     callback =>
-      handleSubmit(
-        async formData => {
-          try {
-            if (isDirty) {
-              // UpdateTrbAdviceLetter mutation
-              await update({
-                variables: {
-                  input: {
-                    trbRequestId,
-                    ...formData,
-                    // If isFollowUpRecommended is set to false, clear followupPoint value
-                    followupPoint: formData.isFollowupRecommended
-                      ? formData.followupPoint
-                      : null
-                  }
+      handleSubmit(async formData => {
+        try {
+          if (isDirty) {
+            // UpdateTrbAdviceLetter mutation
+            await update({
+              variables: {
+                input: {
+                  trbRequestId,
+                  ...formData,
+                  // If isFollowUpRecommended is set to false, clear followupPoint value
+                  followupPoint: formData.isFollowupRecommended
+                    ? formData.followupPoint
+                    : null
                 }
-              });
-            }
-            setFormAlert(null);
-            callback?.();
-          } catch (e) {
-            handleApolloError(e);
+              }
+            });
           }
-        },
-        // Throw error to cause promise to fail
-        e => handleApolloError(e)
-      )(),
-    [
-      handleSubmit,
-      isDirty,
-      trbRequestId,
-      update,
-      setFormAlert,
-      handleApolloError
-    ]
+          setFormAlert(null);
+          callback?.();
+        } catch (e) {
+          if (e instanceof ApolloError) {
+            setFormAlert({
+              type: 'error',
+              message: t('adviceLetterForm.error', {
+                action: 'saving',
+                type: 'advice letter'
+              })
+            });
+          }
+        }
+      })(),
+    [handleSubmit, isDirty, trbRequestId, update, setFormAlert, t]
   );
 
   useEffect(() => {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import useCacheQuery from 'hooks/useCacheQuery';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
@@ -72,7 +72,7 @@ const AdviceLetter = ({
         // If advice letter status is CANNOT_START_YET, show alert message
         adviceLetterStatus === 'CANNOT_START_YET' ? (
           <Alert type="info" slim>
-            {t('adviceLetter.alerts.error')}
+            {t('adviceLetter.alerts.info')}
           </Alert>
         ) : (
           <>

@@ -50,7 +50,7 @@ describe('Trb Admin Team Home', () => {
         'Third open',
         trbAdminTeamHomeRequests[2].requesterInfo.commonName,
         'System problem',
-        trbAdminTeamHomeRequests[2].trbLeadInfo.commonName,
+        `${trbAdminTeamHomeRequests[2].trbLeadInfo.commonName}, TRB`,
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.DRAFT_REQUEST_FORM'
         ),
@@ -61,7 +61,7 @@ describe('Trb Admin Team Home', () => {
         'Fourth open with date',
         trbAdminTeamHomeRequests[3].requesterInfo.commonName,
         'System problem',
-        trbAdminTeamHomeRequests[3].trbLeadInfo.commonName,
+        `${trbAdminTeamHomeRequests[3].trbLeadInfo.commonName}, TRB`,
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.REQUEST_FORM_COMPLETE'
         ),
@@ -72,7 +72,7 @@ describe('Trb Admin Team Home', () => {
         'Fifth closed',
         trbAdminTeamHomeRequests[4].requesterInfo.commonName,
         'System problem',
-        trbAdminTeamHomeRequests[4].trbLeadInfo.commonName,
+        `${trbAdminTeamHomeRequests[4].trbLeadInfo.commonName}, TRB`,
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.READY_FOR_CONSULT'
         ),

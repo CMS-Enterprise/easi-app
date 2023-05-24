@@ -154,18 +154,6 @@ function Attendees({
     reset(defaultValues);
   }, [requester, reset]);
 
-  const handleApolloError = useCallback(
-    (err: any) => {
-      if (err instanceof ApolloError) {
-        setFormAlert({
-          type: 'error',
-          message: t<string>('attendees.alerts.error')
-        });
-      }
-    },
-    [setFormAlert, t]
-  );
-
   /** Submit requester as attendee */
   const submitForm = useCallback<StepSubmit>(
     callback =>
@@ -189,19 +177,23 @@ function Attendees({
             }
             callback?.();
           } catch (e) {
-            handleApolloError(e);
+            if (e instanceof ApolloError) {
+              setFormAlert({
+                type: 'error',
+                message: t<string>('attendees.alerts.error')
+              });
+            }
           }
-        },
-        // Validation did not pass
-        e => handleApolloError(e)
+        }
       )(),
     [
-      handleApolloError,
       handleSubmit,
       isDirty,
       refetchRequest,
       requester,
-      updateAttendee
+      updateAttendee,
+      setFormAlert,
+      t
     ]
   );
 
@@ -358,7 +350,6 @@ function Attendees({
                 }
               }
               saveExitDisabled={isSubmitting}
-              saveExitText={t('requestFeedback.returnToTaskList')}
               submit={submitForm}
               submitDisabled={!stepUrl}
               taskListUrl={taskListUrl}

@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Alert,
   DatePicker,
   ErrorMessage,
   FormGroup,
@@ -14,6 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
+import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
@@ -91,7 +91,7 @@ function Consult() {
     })
       .then(result => {
         showMessageOnNextPage(
-          <Alert type="success" slim className="margin-top-3">
+          <Alert type="success" className="margin-top-3">
             {t('actionScheduleConsult.success', {
               date: formData.meetingDate,
               time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
@@ -107,7 +107,7 @@ function Consult() {
       })
       .catch(err => {
         showMessage(
-          <Alert type="error" slim className="margin-top-3">
+          <Alert type="error" className="margin-top-3">
             {t('actionScheduleConsult.error')}
           </Alert>
         );
@@ -148,6 +148,7 @@ function Consult() {
             heading={t('errors.checkFix')}
             type="error"
             className="trb-basic-fields-error"
+            slim={false}
           >
             {Object.keys(errors).map(fieldName => {
               const msg: string = t(

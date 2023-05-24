@@ -25,7 +25,7 @@ const (
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheRefreshTime time.Duration, ldClient *ld.LDClient) *Client {
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, cacheRefreshTime time.Duration, ldClient *ld.LDClient) *Client {
 	fnEmit := func(ctx context.Context) bool {
 		lduser := flags.Principal(ctx)
 		result, err := ldClient.BoolVariation(cedarCoreEnabledKey, lduser, cedarCoreEnabledDefault)
@@ -45,6 +45,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheR
 
 	hc := http.DefaultClient
 
+	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
 	client := &Client{
 		cedarCoreEnabled: fnEmit,
 		auth: httptransport.APIKeyAuth(
@@ -55,7 +56,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cacheR
 		sdk: apiclient.New(
 			httptransport.New(
 				cedarHost,
-				apiclient.DefaultBasePath,
+				basePath,
 				apiclient.DefaultSchemes,
 			),
 			strfmt.Default,

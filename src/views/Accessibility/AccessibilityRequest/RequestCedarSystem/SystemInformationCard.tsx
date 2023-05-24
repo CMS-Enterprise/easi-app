@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 import {
-  Alert,
   Button,
   Card,
   CardBody,
@@ -15,6 +14,7 @@ import {
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Alert from 'components/shared/Alert';
 import Spinner from 'components/Spinner';
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import {
@@ -57,11 +57,7 @@ const SystemInformationCard = ({
     );
 
   if (error)
-    return (
-      <Alert type="error" slim>
-        {t('newRequestForm.errorSystemInfo')}
-      </Alert>
-    );
+    return <Alert type="error">{t('newRequestForm.errorSystemInfo')}</Alert>;
 
   return (
     <CardGroup>

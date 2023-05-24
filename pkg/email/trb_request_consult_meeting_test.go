@@ -15,7 +15,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
 
-	meetingTime, err := time.Parse(time.RFC3339, "2022-01-01T13:30:00+00:00")
+	meetingTime, err := time.Parse(time.RFC3339, "2022-01-01T18:33:00+00:00") // UTC time, will convert to 13:33, or 01:33 PM EST
 	s.NoError(err)
 
 	trbID := uuid.New()
@@ -49,7 +49,7 @@ func (s *EmailTestSuite) TestTRBRequestConsultMeetingEmail() {
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>The Technical Review Board (TRB) has scheduled a consult session for Test TRB Request on January 1, 2022 at 01:30 PM EST. You should receive a calendar invite shortly if you have not already.
+<p>The Technical Review Board (TRB) has scheduled a consult session for Test TRB Request on January 1, 2022 at 01:33 PM EST. You should receive a calendar invite shortly if you have not already.
 
 <p>Additional notes about this consult session: Some notes</p>
 

@@ -19,7 +19,7 @@ const NewSystem = () => {
         />
         <GovernanceOverviewContent helpArticle className="padding-bottom-3" />
       </div>
-      <RelatedArticles type="IT Governance" />
+      <RelatedArticles type="IT Governance" currentArticle="newSystem" />
     </>
   );
 };

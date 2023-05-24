@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Alert,
   Button,
   ButtonGroup,
   FormGroup,
@@ -17,6 +16,7 @@ import {
   ModalToggleButton
 } from '@trussworks/react-uswds';
 
+import Alert from 'components/shared/Alert';
 import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
@@ -109,7 +109,7 @@ function CloseRequest() {
       })
         .then(result => {
           showMessageOnNextPage(
-            <Alert type="success" slim className="margin-top-3">
+            <Alert type="success" className="margin-top-3">
               {t(`${actionText}.success`)}
             </Alert>
           );
@@ -117,7 +117,7 @@ function CloseRequest() {
         })
         .catch(err => {
           showMessage(
-            <Alert type="error" slim className="margin-top-3">
+            <Alert type="error" className="margin-top-3">
               {t(`${actionText}.error`)}
             </Alert>
           );
@@ -139,7 +139,7 @@ function CloseRequest() {
       })
         .then(result => {
           showMessageOnNextPage(
-            <Alert type="success" slim className="margin-top-3">
+            <Alert type="success" className="margin-top-3">
               {t(`${actionText}.success`)}
             </Alert>
           );
@@ -147,7 +147,7 @@ function CloseRequest() {
         })
         .catch(err => {
           showMessage(
-            <Alert type="error" slim className="margin-top-3">
+            <Alert type="error" className="margin-top-3">
               {t(`${actionText}.error`)}
             </Alert>
           );

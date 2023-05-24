@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
-  Alert,
   Button,
   GridContainer,
   IconArrowBack,
@@ -13,6 +12,7 @@ import { isEqual } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {

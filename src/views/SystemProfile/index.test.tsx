@@ -19,7 +19,7 @@ import {
 } from 'data/mock/systemProfile';
 // eslint-disable-next-line camelcase
 import { GetSystemProfile_cedarSystemDetails_roles } from 'queries/types/GetSystemProfile';
-import { RoleTypeId, SubpageKey } from 'types/systemProfile';
+import { RoleTypeName, SubpageKey } from 'types/systemProfile';
 
 import SystemProfile, { getAtoStatus } from './index';
 import pointsOfContactIds from './pointsOfContactIds';
@@ -126,12 +126,12 @@ describe('System Profile Points of Contact by subpage', () => {
 
   // Reassign 1 person per Cedar Role Type
   resultdata.cedarSystemDetails!.roles = Object.values(
-    RoleTypeId
+    RoleTypeName
     // eslint-disable-next-line camelcase
-  ).map<GetSystemProfile_cedarSystemDetails_roles>((roleTypeID, idx) =>
+  ).map<GetSystemProfile_cedarSystemDetails_roles>((roleTypeName, idx) =>
     getMockPersonRole({
       assigneeUsername: `ABC${idx}`,
-      roleTypeID
+      roleTypeName
     })
   );
 
@@ -146,7 +146,7 @@ describe('System Profile Points of Contact by subpage', () => {
     // Collect all contacts matching all poc ids for the subpage
     const received = allowedSubpagePocIds.filter(pocid => {
       return contacts.every(contact =>
-        contact.roles.some(r => r.roleTypeID === pocid)
+        contact.roles.some(r => r.roleTypeName === pocid)
       );
     });
 

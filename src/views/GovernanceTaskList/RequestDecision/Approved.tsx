@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Alert from 'components/shared/Alert';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { formatDateUtc } from 'utils/date';
 

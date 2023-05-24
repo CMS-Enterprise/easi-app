@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, ErrorMessage, FormGroup } from '@trussworks/react-uswds';
+import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
+import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -85,7 +86,7 @@ function RequestEdits() {
     })
       .then(result => {
         showMessageOnNextPage(
-          <Alert type="success" slim className="margin-top-3">
+          <Alert type="success" className="margin-top-3">
             {t(`${actionText}.success`)}
           </Alert>
         );
@@ -93,7 +94,7 @@ function RequestEdits() {
       })
       .catch(err => {
         showMessage(
-          <Alert type="error" slim className="margin-top-3">
+          <Alert type="error" className="margin-top-3">
             {t(`${actionText}.error`)}
           </Alert>
         );

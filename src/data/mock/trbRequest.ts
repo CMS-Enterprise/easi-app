@@ -431,7 +431,6 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
     state: TRBRequestState.OPEN,
     status: TRBRequestStatus.NEW,
     consultMeetingTime: null,
-    trbLeadComponent: null,
     trbLeadInfo: {
       commonName: '',
       __typename: 'UserInfo'
@@ -456,7 +455,6 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
     state: TRBRequestState.OPEN,
     status: TRBRequestStatus.NEW,
     consultMeetingTime: null,
-    trbLeadComponent: null,
     trbLeadInfo: {
       commonName: '',
       __typename: 'UserInfo'
@@ -481,7 +479,6 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
     state: TRBRequestState.OPEN,
     status: TRBRequestStatus.DRAFT_REQUEST_FORM,
     consultMeetingTime: null,
-    trbLeadComponent: null,
     trbLeadInfo: {
       commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
@@ -506,7 +503,6 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
     state: TRBRequestState.OPEN,
     status: TRBRequestStatus.REQUEST_FORM_COMPLETE,
     consultMeetingTime: '2023-04-01T09:23:45Z',
-    trbLeadComponent: null,
     trbLeadInfo: {
       commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
@@ -531,7 +527,6 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
     state: TRBRequestState.CLOSED,
     status: TRBRequestStatus.READY_FOR_CONSULT,
     consultMeetingTime: '2023-04-02T09:23:45Z',
-    trbLeadComponent: null,
     trbLeadInfo: {
       commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
@@ -556,7 +551,6 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
     state: TRBRequestState.OPEN,
     status: TRBRequestStatus.CONSULT_SCHEDULED,
     consultMeetingTime: '2023-04-02T09:23:45Z',
-    trbLeadComponent: 'TRB',
     trbLeadInfo: {
       commonName: users.next()?.userInfo.commonName!,
       __typename: 'UserInfo'
