@@ -135,10 +135,7 @@ const ActionForm = ({
           {t('actionRequestEdits.notificationDescription')}
         </p>
 
-        <Recipients
-          trbRequestId={id}
-          setRecipientFormOpen={setRecipientFormOpen}
-        />
+        <Recipients setRecipientFormOpen={setRecipientFormOpen} />
 
         {buttonProps && (
           <Pager

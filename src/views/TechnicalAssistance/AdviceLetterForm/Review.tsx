@@ -185,7 +185,7 @@ const Review = ({
           className="maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
         >
           <FormProvider<TrbRecipientFields> {...actionForm}>
-            <Recipients trbRequestId={trbRequestId} />
+            <Recipients />
           </FormProvider>
           {/** Form pager buttons */}
           <Pager

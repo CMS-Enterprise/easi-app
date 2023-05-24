@@ -22,7 +22,6 @@ import { PersonRole } from 'types/graphql-global-types';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
-  trbRequestId: string;
   setRecipientFormOpen?: (value: boolean) => void;
 };
 
@@ -53,10 +52,7 @@ const initialRecipient: TrbRecipient = {
 /**
  * TRB email recipients field
  */
-const Recipients = ({
-  trbRequestId,
-  setRecipientFormOpen
-}: RecipientsProps) => {
+const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const {
