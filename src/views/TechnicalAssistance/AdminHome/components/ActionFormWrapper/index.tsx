@@ -40,6 +40,8 @@ export type ActionFormProps = {
   children: React.ReactNode;
   /** Pager button props */
   buttonProps?: ButtonProps;
+  /** Alert component at top of form */
+  alert?: React.ReactElement;
   /**
    * Breadcrumb items specific to current action
    *
@@ -57,6 +59,7 @@ const ActionForm = ({
   children,
   buttonProps,
   breadcrumbItems,
+  alert,
   ...formProps
 }: ActionFormProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -113,6 +116,8 @@ const ActionForm = ({
           components={{ red: <span className="text-red" /> }}
         />
       </p>
+
+      {alert && alert}
 
       <Form
         {...formProps}
