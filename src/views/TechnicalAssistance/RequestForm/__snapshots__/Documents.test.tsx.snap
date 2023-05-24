@@ -314,24 +314,32 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-          data-testid="button"
-          type="button"
+        <div
+          class="display-flex flex-align-center"
         >
-          Back
-        </button>
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
       </li>
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button margin-top-0"
-          data-testid="button"
-          type="submit"
+        <div
+          class="display-flex flex-align-center"
         >
-          Next
-        </button>
+          <button
+            class="usa-button margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Next
+          </button>
+        </div>
       </li>
     </ul>
     <button
@@ -591,24 +599,32 @@ exports[`Trb Request form: Supporting documents renders states without documents
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-          data-testid="button"
-          type="button"
+        <div
+          class="display-flex flex-align-center"
         >
-          Back
-        </button>
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
       </li>
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button usa-button--outline margin-top-0"
-          data-testid="button"
-          type="submit"
+        <div
+          class="display-flex flex-align-center"
         >
-          Continue without adding documents
-        </button>
+          <button
+            class="usa-button usa-button--outline margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Continue without adding documents
+          </button>
+        </div>
       </li>
     </ul>
     <button
