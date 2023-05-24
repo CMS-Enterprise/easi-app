@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import {
@@ -17,7 +17,6 @@ import Label from 'components/shared/Label';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import Spinner from 'components/Spinner';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import toggleArrayValue from 'utils/toggleArrayValue';
@@ -61,15 +60,12 @@ const Recipients = ({
   const { t } = useTranslation('technicalAssistance');
 
   const {
-    data: { requester }
-  } = useTRBAttendees(trbRequestId);
-
-  const {
     control,
     setValue,
     watch,
     setError,
     clearErrors,
+    getValues,
     formState: { isLoading }
   } = useFormContext<RecipientFields>();
 
@@ -79,6 +75,9 @@ const Recipients = ({
   }>({
     name: 'recipients'
   });
+
+  // Get initial first recipient as requester
+  const requester = useRef(getValues('recipients')[0]).current;
 
   const recipientsCount = (watch('recipients') || []).filter(
     ({ id, userInfo }) =>
