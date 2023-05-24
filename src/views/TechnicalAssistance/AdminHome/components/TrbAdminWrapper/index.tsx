@@ -110,6 +110,7 @@ type TrbAdminWrapperProps = {
     name: string;
     date: string;
   };
+  renderBottom?: boolean;
 };
 
 export default function TrbAdminWrapper({
@@ -121,7 +122,8 @@ export default function TrbAdminWrapper({
   disableStep,
   adminActionProps,
   noteCount,
-  statusTagProps
+  statusTagProps,
+  renderBottom
 }: TrbAdminWrapperProps) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -183,6 +185,21 @@ export default function TrbAdminWrapper({
       )}
 
       {children}
+
+      {/* Admin Action box rendered additionally at bottom */}
+      {renderBottom &&
+        actionButtons.length > 0 &&
+        adminActionProps &&
+        !disableStep && (
+          <TrbAdminAction
+            translationKey={`technicalAssistance:adminAction.statuses.${
+              adminActionProps.state === TRBRequestState.CLOSED
+                ? adminActionProps.state
+                : adminActionProps.status
+            }`}
+            actionButtons={actionButtons}
+          />
+        )}
     </Grid>
   );
 }
