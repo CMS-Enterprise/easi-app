@@ -107,7 +107,9 @@ function RequestEdits() {
       buttonProps={{
         next: {
           text: t('actionRequestEdits.submit'),
-          disabled: !watch('feedbackMessage')
+          disabled:
+            feedbackAction === TRBFeedbackAction.REQUEST_EDITS &&
+            !watch('feedbackMessage')
         },
         taskListUrl: requestUrl,
         saveExitText: t('actionRequestEdits.cancelAndReturn')
