@@ -315,6 +315,9 @@ const technicalAssistance = {
       BRAINSTORM: 'Idea feedback',
       OTHER: 'Other'
     },
+    requestState: {
+      CLOSED: 'Closed'
+    },
     requestStatus: {
       NEW: 'New',
       DRAFT_REQUEST_FORM: 'Draft request form',
