@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
   Button,
@@ -224,7 +224,13 @@ function Header({
   );
 }
 
-function EditsRequestedWarning({ requestId }: { requestId: string }) {
+function EditsRequestedWarning({
+  requestId,
+  step
+}: {
+  requestId: string;
+  step?: string;
+}) {
   const { t } = useTranslation('technicalAssistance');
   return (
     <div className="bg-error-lighter padding-y-2">
@@ -242,7 +248,10 @@ function EditsRequestedWarning({ requestId }: { requestId: string }) {
           <UswdsReactLink
             variant="unstyled"
             className="usa-button usa-button--outline"
-            to={`/trb/requests/${requestId}/feedback`}
+            to={{
+              pathname: `/trb/requests/${requestId}/feedback`,
+              state: { prevStep: step }
+            }}
           >
             {t('editsRequested.viewFeedback')}
           </UswdsReactLink>
@@ -259,6 +268,10 @@ function RequestForm() {
   const { t } = useTranslation('technicalAssistance');
 
   const history = useHistory();
+
+  const { state } = useLocation<{ prevStep?: string }>();
+
+  const prevStep = state?.prevStep;
 
   const { id, step, view } = useParams<{
     /** Request id */
@@ -414,9 +427,9 @@ function RequestForm() {
     () =>
       request?.taskStatuses.feedbackStatus ===
       TRBFeedbackStatus.EDITS_REQUESTED ? (
-        <EditsRequestedWarning requestId={request.id} />
+        <EditsRequestedWarning requestId={request.id} step={step} />
       ) : null,
-    [request?.id, request?.taskStatuses.feedbackStatus]
+    [request?.id, request?.taskStatuses.feedbackStatus, step]
   );
 
   // References to the submit handler and submitting state of the current form step
@@ -467,7 +480,13 @@ function RequestForm() {
   }
 
   if (step === 'feedback' && request) {
-    return <Feedback request={request} taskListUrl={taskListUrl} />;
+    return (
+      <Feedback
+        request={request}
+        taskListUrl={taskListUrl}
+        prevStep={prevStep}
+      />
+    );
   }
 
   const stepIdx = formStepSlugs.indexOf(step as FormStepSlug);

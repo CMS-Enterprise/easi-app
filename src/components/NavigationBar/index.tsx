@@ -72,27 +72,29 @@ const NavigationBar = ({
   const flags = useFlags();
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
-  const primaryLinks = navLinks(flags, groups, isUserSet).map(
-    route =>
-      route.isEnabled && (
-        <div className="easi-nav" key={route.label}>
-          <NavLink
-            to={route.link}
-            activeClassName="usa-current"
-            className="easi-nav__link"
-            onClick={() => toggle(false)}
-            exact={route.link === '/'}
-          >
-            <em
-              className="usa-logo__text easi-nav__label"
-              aria-label={t(`header:${route.label}`)}
+  const primaryLinks = navLinks(flags, groups, isUserSet)
+    .map(
+      route =>
+        route.isEnabled && (
+          <div className="easi-nav" key={route.label}>
+            <NavLink
+              to={route.link}
+              activeClassName="usa-current"
+              className="easi-nav__link"
+              onClick={() => toggle(false)}
+              exact={route.link === '/'}
             >
-              {t(`header:${route.label}`)}
-            </em>
-          </NavLink>
-        </div>
-      )
-  );
+              <em
+                className="usa-logo__text easi-nav__label"
+                aria-label={t(`header:${route.label}`)}
+              >
+                {t(`header:${route.label}`)}
+              </em>
+            </NavLink>
+          </div>
+        )
+    )
+    .filter(nav => nav);
 
   const userLinks = (
     <div className="easi-nav__signout-container">
