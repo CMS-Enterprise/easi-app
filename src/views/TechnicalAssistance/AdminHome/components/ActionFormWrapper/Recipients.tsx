@@ -77,7 +77,7 @@ const Recipients = ({
   });
 
   // Get initial first recipient as requester
-  const requester = useRef(getValues('recipients')[0]).current;
+  const requester = useRef(getValues('recipients')?.[0] || undefined).current;
 
   const recipientsCount = (watch('recipients') || []).filter(
     ({ id, userInfo }) =>

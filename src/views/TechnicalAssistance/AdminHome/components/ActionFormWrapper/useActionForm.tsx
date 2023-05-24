@@ -86,6 +86,7 @@ function useActionForm<
       const requesterEuaId = attendees[0]?.userInfo?.euaUserId;
 
       const defaultValues = ({
+        copyTrbMailbox: true,
         ...formProps?.defaultValues,
         notifyEuaIds: [...(requesterEuaId ? [requesterEuaId] : [])],
         recipients: attendees

@@ -37,7 +37,7 @@ export type ActionFormProps = {
   title: string;
   /** Action description */
   description: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /** Pager button props */
   buttonProps?: ButtonProps;
   /** Alert component at top of form */
