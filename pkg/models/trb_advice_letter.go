@@ -18,8 +18,10 @@ const (
 	TRBAdviceLetterStatusCompleted      TRBAdviceLetterStatus = "COMPLETED"
 )
 
+// TRBAdviceLetterStatusTaskList is an enum of statuses for the task list page.
 type TRBAdviceLetterStatusTaskList string
 
+// These statuses are a simplified version of the regular TRBAdviceLetterStatus enum above that are computed in the resolver.
 const (
 	TRBAdviceLetterStatusTaskListCannotStartYet TRBAdviceLetterStatusTaskList = "CANNOT_START_YET"
 	TRBAdviceLetterStatusTaskListInReview       TRBAdviceLetterStatusTaskList = "IN_REVIEW"

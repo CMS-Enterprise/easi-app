@@ -207,11 +207,11 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	}
 
 	statuses := models.TRBTaskStatuses{
-		FormStatus:          *formStatus,
-		FeedbackStatus:      *feedbackStatus,
-		ConsultPrepStatus:   *consultPrepStatus,
-		AttendConsultStatus: *attendConsultStatus,
-		AdviceLetterStatus:  *adviceLetterStatus,
+		FormStatus:                 *formStatus,
+		FeedbackStatus:             *feedbackStatus,
+		ConsultPrepStatus:          *consultPrepStatus,
+		AttendConsultStatus:        *attendConsultStatus,
+		AdviceLetterStatus:         *adviceLetterStatus,
 		AdviceLetterStatusTaskList: adviceLetterStatusTaskList,
 	}
 
