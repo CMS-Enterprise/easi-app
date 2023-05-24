@@ -101,6 +101,12 @@ func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARCacheIntervalKey)
 }
 
+// NewOktaAPIClientCheck checks if the Okta API client is configured
+func (s Server) NewOktaAPIClientCheck() {
+	s.checkRequiredConfig(appconfig.OKTAApiURL)
+	s.checkRequiredConfig(appconfig.OKTAAPIToken)
+}
+
 // OktaClientConfig is the okta client configuration
 type OktaClientConfig struct {
 	AltJobCodes  bool
