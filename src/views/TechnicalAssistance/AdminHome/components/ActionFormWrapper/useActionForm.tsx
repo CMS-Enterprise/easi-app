@@ -33,6 +33,7 @@ type UseActionFormReturn<
   formState: FormState<TFieldValues> & {
     isLoading: boolean;
   };
+  /** Action form wrapper component used to pass form context to recipient fields */
   ActionForm: ({
     title,
     description,
@@ -49,7 +50,7 @@ type TrbRecipient = {
 
 export type ActionFormFields<
   TFieldValues extends TrbRecipientFields = TrbRecipientFields
-> = TFieldValues & { recipients: TrbRecipient[] };
+> = TFieldValues & { recipients?: TrbRecipient[] };
 
 function useActionForm<
   TFieldValues extends TrbRecipientFields = TrbRecipientFields,
@@ -60,7 +61,7 @@ function useActionForm<
 }: UseActionFormProps<
   ActionFormFields<TFieldValues>,
   TContext
->): UseActionFormReturn<ActionFormFields<TFieldValues>, TContext> {
+>): UseActionFormReturn<TFieldValues, TContext> {
   const [getAttendees, { data }] = useLazyQuery<
     GetTRBRequestAttendees,
     GetTRBRequestAttendeesVariables
@@ -95,9 +96,11 @@ function useActionForm<
   });
 
   const {
+    handleSubmit,
     formState: { isLoading }
   } = form;
 
+  /** Form wrapper with loading and not found states */
   const FormWrapper = useCallback(
     ({ children, ...props }: ActionFormProps) => {
       if (isLoading) return <PageLoading />;
@@ -108,7 +111,13 @@ function useActionForm<
   );
 
   return {
-    ...form,
+    // Adjust type to remove recipients field from form return
+    ...(form as UseFormReturn<TFieldValues>),
+    // Refactor handleSubmit to remove recipients from returned values
+    handleSubmit: (onValid, onInvalid) =>
+      handleSubmit(({ recipients, ...values }) => {
+        return onValid(values as TFieldValues);
+      }, onInvalid),
     ActionForm: useCallback(
       (props: ActionFormProps) => (
         <FormProvider<ActionFormFields<TFieldValues>, TContext> {...form}>
