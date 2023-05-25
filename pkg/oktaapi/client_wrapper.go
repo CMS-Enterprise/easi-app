@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -22,7 +21,7 @@ type clientWrapper struct {
 }
 
 // NewClient creates a Client
-func NewClient(url string, token string) (cedarldap.Client, error) {
+func NewClient(url string, token string) (*clientWrapper, error) {
 	// TODO Do we need the "Context" response from okta.NewClient??
 	_, oktaClient, oktaClientErr := okta.NewClient(context.TODO(), okta.WithOrgUrl(url), okta.WithToken(token))
 	if oktaClientErr != nil {
@@ -79,6 +78,10 @@ func (o *oktaUserResponse) toUserInfo() *models.UserInfo {
 	}
 }
 
+func (cw *clientWrapper) FetchUserInfos(ctx context.Context, usernames []string) ([]*models.UserInfo, error) {
+	return nil, fmt.Errorf("not implemented")
+}
+
 func (cw *clientWrapper) FetchUserInfo(ctx context.Context, username string) (*models.UserInfo, error) {
 	logger := appcontext.ZLogger(ctx)
 
@@ -94,6 +97,11 @@ func (cw *clientWrapper) FetchUserInfo(ctx context.Context, username string) (*m
 	}
 
 	return profile.toUserInfo(), nil
+}
+
+func (cw *clientWrapper) SearchCommonNameContains(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
+	//TODO: verify this
+	return cw.SearchByName(ctx, searchTerm)
 }
 
 const euaSourceType = "EUA"
