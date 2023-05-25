@@ -125,7 +125,7 @@ exports[`TRB Advice Letter Form matches the snapshot 1`] = `
         >
           <li
             aria-current="true"
-            class="usa-step-indicator__segment usa-step-indicator__segment--current usa-step-indicator__segment--clickable"
+            class="usa-step-indicator__segment usa-step-indicator__segment--current usa-step-indicator__segment--disabled"
           >
             <span
               class="usa-step-indicator__segment-label"
