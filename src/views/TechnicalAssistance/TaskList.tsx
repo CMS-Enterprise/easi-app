@@ -360,13 +360,15 @@ function TaskList() {
                 {t('taskList.additionalHelp')}
               </h4>
               <div className="text-base">{t('taskList.helpLinksNewTab')}</div>
-              {/* todo
               <div className="margin-top-1">
-                <UswdsReactLink to=".">
+                <UswdsReactLink
+                  to="/help/trb/steps-involved-trb"
+                  target="_blank"
+                >
                   {t('taskList.stepsInvolved')}
                 </UswdsReactLink>
               </div>
-              */}
+
               <div className="margin-top-1">
                 <UswdsReactLink
                   to="/help/trb/prepare-consult-meeting"

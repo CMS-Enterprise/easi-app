@@ -46,7 +46,9 @@ const help = {
     website: 'www.section508.gov'
   },
   technicalReviewBoard: {
-    heading: 'Technical Review Board'
+    heading: 'Technical Review Board',
+    subheading:
+      'Get technical help and guidance for your system, as well as support for any open requests.'
   },
   additionalContacts: {
     heading: 'Additional contacts',
@@ -75,12 +77,12 @@ const help = {
           'The Enterprise Architecture team can help with questions related to your Enterprise Architecture needs.',
         email: 'EnterpriseArchitecture@cms.hhs.gov'
       },
-      itNavigator: {
-        title: 'IT Navigator',
-        type: 'IT Governance',
+      technicalReviewBoard: {
+        title: 'Technical Review Board (TRB)',
+        type: 'Technical Review Board',
         content:
-          'The IT Navigator team can help with questions related to choosing the type of IT Governance request that fits your needs.',
-        email: 'NavigatorInquiries@cms.hhs.gov'
+          'The TRB can help with any questions related to technical advice for your system, CMS Technical Reference Architecture (TRA), and more. ',
+        email: 'cms-trb@cms.hhs.gov'
       }
     }
   },
