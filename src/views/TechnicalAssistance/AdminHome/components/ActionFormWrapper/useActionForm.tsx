@@ -44,10 +44,14 @@ type TrbRecipient = {
   role: PersonRole | null;
 };
 
+/** Add recipients field to fields type */
 export type ActionFormFields<
   TFieldValues extends TrbRecipientFields = TrbRecipientFields
 > = TFieldValues & { recipients?: TrbRecipient[] };
 
+/**
+ * Custom hook for TRB action forms
+ */
 function useActionForm<
   TFieldValues extends TrbRecipientFields = TrbRecipientFields,
   TContext = any
