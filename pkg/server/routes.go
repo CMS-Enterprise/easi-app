@@ -28,6 +28,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
+	"github.com/cmsgov/easi-app/pkg/oktaapi"
 
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
@@ -100,13 +101,29 @@ func (s *Server) routes(
 		}
 	}
 
-	var cedarLDAPClient cedarldap.Client
-	cedarLDAPClient = cedarldap.NewTranslatedClient(
-		s.Config.GetString(appconfig.CEDARAPIURL),
-		s.Config.GetString(appconfig.CEDARAPIKey),
-	)
+	var userSearchClient cedarldap.Client //TODO: update this to have OKTA API live in it's own package?
+	var oktaClient oktaapi.Client
+
 	if s.environment.Local() || s.environment.Test() {
-		cedarLDAPClient = local.NewCedarLdapClient(s.logger)
+		userSearchClient = local.NewCedarLdapClient(s.logger)
+	} else {
+		useOKTAAPI := s.Config.GetBool(appconfig.USEOKTAAPI)
+		if useOKTAAPI {
+			// Create Okta API Client
+			var oktaClientErr error
+			// Ensure Okta API Variables are set
+			s.NewOktaAPIClientCheck()
+			oktaClient, oktaClientErr = oktaapi.NewClient(s.logger, s.Config.GetString(appconfig.OKTAApiURL), s.Config.GetString(appconfig.OKTAAPIToken))
+			if oktaClientErr != nil {
+				s.logger.Fatal("failed to create okta api client", zap.Error(oktaClientErr))
+			}
+		} else {
+			userSearchClient = cedarldap.NewTranslatedClient(
+				s.Config.GetString(appconfig.CEDARAPIURL),
+				s.Config.GetString(appconfig.CEDARAPIKey),
+			)
+		}
+
 	}
 
 	// set up CEDAR core API client
@@ -189,7 +206,7 @@ func (s *Server) routes(
 
 	saveAction := services.NewSaveAction(
 		store.CreateAction,
-		cedarLDAPClient.FetchUserInfo,
+		userSearchClient.FetchUserInfo,
 	)
 
 	resolver := graph.NewResolver(
@@ -256,9 +273,9 @@ func (s *Server) routes(
 				saveAction,
 				emailClient.SendSystemIntakeSubmissionEmail,
 			),
-			FetchUserInfo:            cedarLDAPClient.FetchUserInfo,
-			FetchUserInfos:           cedarLDAPClient.FetchUserInfos,
-			SearchCommonNameContains: cedarLDAPClient.SearchCommonNameContains,
+			FetchUserInfo:            userSearchClient.FetchUserInfo,
+			FetchUserInfos:           userSearchClient.FetchUserInfos,
+			SearchCommonNameContains: userSearchClient.SearchCommonNameContains,
 		},
 		&s3Client,
 		&emailClient,
@@ -279,7 +296,7 @@ func (s *Server) routes(
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
-	loaderMiddleware := dataloaders.Middleware(cedarLDAPClient.FetchUserInfos)
+	loaderMiddleware := dataloaders.Middleware(userSearchClient.FetchUserInfos)
 	s.router.Use(loaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)
@@ -341,7 +358,7 @@ func (s *Server) routes(
 			store.FetchSystemIntakeByID,
 			services.AuthorizeUserIsIntakeRequester,
 			store.CreateAction,
-			cedarLDAPClient.FetchUserInfo,
+			userSearchClient.FetchUserInfo,
 			store.CreateBusinessCase,
 			store.UpdateSystemIntake,
 		),
@@ -457,7 +474,7 @@ func (s *Server) routes(
 	// Check for upcoming LCID expirations every 24 hours
 	alerts.StartLcidExpirationCheck(
 		appcontext.WithLogger(context.Background(), s.logger),
-		cedarLDAPClient.FetchUserInfo,
+		userSearchClient.FetchUserInfo,
 		store.FetchSystemIntakes,
 		store.UpdateSystemIntake,
 		emailClient.SendLCIDExpirationAlertEmail,
