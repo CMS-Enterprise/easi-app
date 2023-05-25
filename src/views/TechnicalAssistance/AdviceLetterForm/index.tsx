@@ -120,13 +120,10 @@ const AdviceLetterForm = () => {
 
   // When navigating to a different step, checks if all previous form steps are valid
   const checkValidSteps = useCallback(
-    (index: number): boolean => {
-      const stepsToValidate = adviceFormSteps.slice(0, index);
-      const validSteps = stepsToValidate.filter(({ slug }) =>
-        stepsCompleted?.includes(slug)
-      );
-      return stepsToValidate.length === validSteps.length;
-    },
+    (index: number): boolean =>
+      adviceFormSteps.filter(
+        (step, i) => stepsCompleted?.includes(step.slug) && i < index
+      ).length === index,
     [stepsCompleted]
   );
 
@@ -192,14 +189,11 @@ const AdviceLetterForm = () => {
 
   // Redirect if previous step is not completed
   useEffect(() => {
-    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex)) {
       /** Returns latest available step index */
-      const stepRedirectIndex = !stepsCompleted.includes('summary')
-        ? 0
-        : // If summary is completed, return index of last completed step plus 1
-          adviceFormSteps.findIndex(
-            step => step.slug === stepsCompleted?.slice(-1)[0]
-          ) + 1;
+      const stepRedirectIndex = adviceFormSteps.findIndex(
+        step => !stepsCompleted?.includes(step.slug)
+      );
 
       // Redirect to latest available step
       history.replace(
@@ -252,6 +246,10 @@ const AdviceLetterForm = () => {
           step={currentStepIndex + 1}
           steps={steps.map((step, index) => ({
             key: step.name,
+            disabled:
+              isStepSubmitting ||
+              currentStepIndex === index ||
+              !checkValidSteps(index),
             label: (
               <>
                 <span className="name">{step.name}</span>
@@ -263,16 +261,10 @@ const AdviceLetterForm = () => {
             onClick: async () => {
               const url = `/trb/${id}/advice/${adviceFormSteps[index].slug}`;
 
-              if (
-                !isStepSubmitting &&
-                currentStepIndex !== index &&
-                checkValidSteps(index)
-              ) {
-                if (stepSubmit) {
-                  stepSubmit?.(() => history.push(url));
-                } else {
-                  history.push(url);
-                }
+              if (stepSubmit) {
+                stepSubmit?.(() => history.push(url));
+              } else {
+                history.push(url);
               }
             }
           }))}
