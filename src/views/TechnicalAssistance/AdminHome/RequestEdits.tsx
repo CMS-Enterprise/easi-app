@@ -186,7 +186,7 @@ function RequestEdits() {
           {t('actionRequestEdits.notificationDescription')}
         </p>
 
-        <FormProvider {...actionForm}>
+        <FormProvider<RequestEditsFields> {...actionForm}>
           <EmailRecipientFields
             requester={requester}
             contacts={attendees}

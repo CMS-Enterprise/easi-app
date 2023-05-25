@@ -41,7 +41,7 @@ const (
 	DefaultHost string = "webmethods-apigw.cedarimpl.cms.gov"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
-	DefaultBasePath string = "/gateway/CEDAR Core API/1.0.0"
+	DefaultBasePath string = "/gateway/CEDAR Core API/2.0.0"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file

@@ -190,9 +190,15 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	})
 
 	var adviceLetterStatus *models.TRBAdviceLetterStatus
+	adviceLetterStatusTaskList := models.TRBAdviceLetterStatusTaskListInReview
 	var errAdviceLetter error
 	errGroup.Go(func() error {
 		adviceLetterStatus, errAdviceLetter = getTRBAdviceLetterStatus(ctx, store, trbRequestID)
+		if *adviceLetterStatus == models.TRBAdviceLetterStatusCannotStartYet {
+			adviceLetterStatusTaskList = models.TRBAdviceLetterStatusTaskListCannotStartYet
+		} else if *adviceLetterStatus == models.TRBAdviceLetterStatusCompleted {
+			adviceLetterStatusTaskList = models.TRBAdviceLetterStatusTaskListCompleted
+		}
 		return errAdviceLetter
 	})
 
@@ -201,11 +207,12 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequestID 
 	}
 
 	statuses := models.TRBTaskStatuses{
-		FormStatus:          *formStatus,
-		FeedbackStatus:      *feedbackStatus,
-		ConsultPrepStatus:   *consultPrepStatus,
-		AttendConsultStatus: *attendConsultStatus,
-		AdviceLetterStatus:  *adviceLetterStatus,
+		FormStatus:                 *formStatus,
+		FeedbackStatus:             *feedbackStatus,
+		ConsultPrepStatus:          *consultPrepStatus,
+		AttendConsultStatus:        *attendConsultStatus,
+		AdviceLetterStatus:         *adviceLetterStatus,
+		AdviceLetterStatusTaskList: adviceLetterStatusTaskList,
 	}
 
 	return &statuses, nil
