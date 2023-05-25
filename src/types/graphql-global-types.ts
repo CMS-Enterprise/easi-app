@@ -169,6 +169,15 @@ export enum TRBAdviceLetterStatus {
 }
 
 /**
+ * Represents the status of the TRB advice letter step
+ */
+export enum TRBAdviceLetterStatusTaskList {
+  CANNOT_START_YET = "CANNOT_START_YET",
+  COMPLETED = "COMPLETED",
+  IN_REVIEW = "IN_REVIEW",
+}
+
+/**
  * Represents the status of the TRB consult attendance step
  */
 export enum TRBAttendConsultStatus {
