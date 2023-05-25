@@ -17,18 +17,20 @@ export type UseEasiFormHandleSubmit<TFieldValues extends FieldValues> = (
   }
 ) => (e?: React.BaseSyntheticEvent) => Promise<void>;
 
-type PartialSubmit<TFieldValues extends FieldValues> = (
+type PartialSubmit<TFieldValues extends FieldValues> = ({
+  update,
+  clearErrors,
+  callback
+}: {
   update: (
     /** Object containing valid dirty field values */
     formData: Partial<TFieldValues>
-  ) => Promise<any>,
-  options?: {
-    /** Whether to clear field error messages */
-    clearErrors?: boolean;
-    /** Callback to execute after updating */
-    callback?: () => void;
-  }
-) => Promise<void>;
+  ) => Promise<any>;
+  /** Callback to execute after updating */
+  callback?: () => void;
+  /** Whether to clear field error messages */
+  clearErrors?: boolean;
+}) => Promise<void>;
 
 /**
  * Extension of React Hook Form's `useForm` hook
@@ -46,15 +48,14 @@ function useEasiForm<
 
   const {
     getValues,
-    clearErrors,
     formState: { errors, dirtyFields, isDirty }
   } = form;
 
   /** Ignore errors and submit valid dirty field values */
   const partialSubmit: PartialSubmit<TFieldValues> = useCallback(
-    async (update, options) => {
+    async ({ update, callback, clearErrors = true }) => {
       // Clear field errors
-      if (options?.clearErrors) clearErrors();
+      if (clearErrors) form.clearErrors();
 
       if (isDirty) {
         const dirtyFieldKeys = Object.keys(dirtyFields)
@@ -77,15 +78,15 @@ function useEasiForm<
         // Update values
         return (
           update(data)
-            .then(() => options?.callback?.())
+            .then(() => callback?.())
             // Ignore errors and execute callback
-            .catch(() => options?.callback?.())
+            .catch(() => callback?.())
         );
       }
 
-      return options?.callback?.();
+      return callback?.();
     },
-    [dirtyFields, getValues, errors, clearErrors, isDirty]
+    [dirtyFields, getValues, errors, form, isDirty]
   );
 
   return {
