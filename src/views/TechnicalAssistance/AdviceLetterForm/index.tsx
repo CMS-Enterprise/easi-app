@@ -303,7 +303,7 @@ const AdviceLetterForm = () => {
                 onClick={() => {
                   const url = `/trb/${id}/advice`;
                   if (stepSubmit) {
-                    stepSubmit?.(() => history.push(url));
+                    stepSubmit?.(() => history.push(url), false);
                   } else {
                     history.push(url);
                   }
