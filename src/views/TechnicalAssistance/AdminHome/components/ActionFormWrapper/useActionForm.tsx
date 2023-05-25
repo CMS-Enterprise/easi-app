@@ -44,11 +44,6 @@ type TrbRecipient = {
   role: PersonRole | null;
 };
 
-/** Add recipients field to fields type */
-export type ActionFormFields<
-  TFieldValues extends TrbRecipientFields = TrbRecipientFields
-> = TFieldValues & { recipients?: TrbRecipient[] };
-
 /**
  * Custom hook for TRB action forms
  */
@@ -58,10 +53,10 @@ function useActionForm<
 >({
   trbRequestId,
   ...formProps
-}: UseActionFormProps<
-  ActionFormFields<TFieldValues>,
+}: UseActionFormProps<TFieldValues, TContext>): UseActionFormReturn<
+  TFieldValues,
   TContext
->): UseActionFormReturn<TFieldValues, TContext> {
+> {
   const [getAttendees, { data }] = useLazyQuery<
     GetTRBRequestAttendees,
     GetTRBRequestAttendeesVariables
@@ -69,7 +64,7 @@ function useActionForm<
     variables: { id: trbRequestId }
   });
 
-  const form = useForm<ActionFormFields<TFieldValues>, TContext>({
+  const form = useForm<TFieldValues, TContext>({
     ...formProps,
     defaultValues: async () => {
       const response = await getAttendees();
@@ -85,14 +80,12 @@ function useActionForm<
 
       const requesterEuaId = attendees[0]?.userInfo?.euaUserId;
 
-      const defaultValues = ({
+      return ({
         copyTrbMailbox: true,
         ...formProps?.defaultValues,
         notifyEuaIds: [...(requesterEuaId ? [requesterEuaId] : [])],
         recipients: attendees
-      } as unknown) as ActionFormFields<TFieldValues>;
-
-      return defaultValues;
+      } as unknown) as TFieldValues;
     }
   });
 
@@ -116,12 +109,17 @@ function useActionForm<
     ...(form as UseFormReturn<TFieldValues>),
     // Refactor handleSubmit to remove recipients from returned values
     handleSubmit: (onValid, onInvalid) =>
-      handleSubmit(({ recipients, ...values }) => {
+      handleSubmit(formData => {
+        const values = { ...formData } as TFieldValues & {
+          recipients?: TrbRecipient[];
+        };
+        delete values.recipients;
+
         return onValid(values as TFieldValues);
       }, onInvalid),
     ActionForm: useCallback(
       (props: ActionFormProps) => (
-        <FormProvider<ActionFormFields<TFieldValues>, TContext> {...form}>
+        <FormProvider<TFieldValues, TContext> {...form}>
           <FormWrapper {...props} />
         </FormProvider>
       ),
