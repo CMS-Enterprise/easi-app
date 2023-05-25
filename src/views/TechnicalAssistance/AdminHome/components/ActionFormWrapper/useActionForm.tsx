@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import {
   FormProvider,
-  FormState,
   useForm,
   UseFormProps,
   UseFormReturn
@@ -30,9 +29,6 @@ type UseActionFormReturn<
   TFieldValues extends TrbRecipientFields,
   TContext = any
 > = UseFormReturn<TFieldValues, TContext> & {
-  formState: FormState<TFieldValues> & {
-    isLoading: boolean;
-  };
   /** Action form wrapper component used to pass form context to recipient fields */
   ActionForm: ({
     title,
