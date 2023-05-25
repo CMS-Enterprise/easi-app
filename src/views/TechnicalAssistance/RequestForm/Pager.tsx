@@ -106,7 +106,7 @@ export function Pager({
             if (!submitDisabled) {
               submit?.(() => {
                 history.push(taskListUrl);
-              });
+              }, false);
             } else {
               history.push(taskListUrl);
             }
