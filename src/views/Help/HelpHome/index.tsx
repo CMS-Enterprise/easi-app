@@ -76,7 +76,9 @@ const HelpHome = () => {
           </div>
         </div>
         <Divider />
-        <HelpContacts type={['IT Governance', 'Section 508']} />
+        <HelpContacts
+          type={['IT Governance', 'Section 508', 'Technical Review Board']}
+        />
       </div>
     </MainContent>
   );

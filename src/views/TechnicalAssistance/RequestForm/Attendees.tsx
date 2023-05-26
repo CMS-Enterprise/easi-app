@@ -315,6 +315,7 @@ function Attendees({
               <AttendeesTable
                 attendees={attendees}
                 setActiveAttendee={setActiveAttendee}
+                setFormAlert={setFormAlert}
                 deleteAttendee={(id: string) => deleteAttendee(id)}
                 trbRequestId={request?.id || trbID}
               />
