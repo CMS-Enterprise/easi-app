@@ -32,7 +32,7 @@ func (s *ClientTestSuite) TestClient() {
 	s.NoError(err)
 
 	s.Run("Instantiation successful", func() {
-		c := NewClient(ctx, "fake", "fake", time.Minute, ldClient)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
 		s.NotNil(c)
 	})
 }

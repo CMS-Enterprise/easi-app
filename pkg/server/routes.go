@@ -55,7 +55,7 @@ func (s *Server) routes(
 	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
 
 	oktaAuthenticationMiddleware := okta.NewOktaAuthenticationMiddleware(
-		handlers.NewHandlerBase(s.logger),
+		handlers.NewHandlerBase(),
 		jwtVerifier,
 		oktaConfig.AltJobCodes,
 	)
@@ -68,14 +68,14 @@ func (s *Server) routes(
 	)
 
 	if s.NewLocalAuthIsEnabled() {
-		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(s.logger)
+		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware()
 		s.router.Use(localAuthenticationMiddleware)
 	}
 
-	requirePrincipalMiddleware := authorization.NewRequirePrincipalMiddleware(s.logger)
+	requirePrincipalMiddleware := authorization.NewRequirePrincipalMiddleware()
 
 	// set up handler base
-	base := handlers.NewHandlerBase(s.logger)
+	base := handlers.NewHandlerBase()
 
 	// endpoints that dont require authorization go directly on the main router
 	s.router.HandleFunc("/api/v1/healthcheck", handlers.NewHealthCheckHandler(base, s.Config).Handle())
@@ -114,6 +114,7 @@ func (s *Server) routes(
 		appcontext.WithLogger(context.Background(), s.logger),
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
+		s.Config.GetString(appconfig.CEDARCoreAPIVersion),
 		s.Config.GetDuration(appconfig.CEDARCacheIntervalKey),
 		ldClient,
 	)
@@ -171,7 +172,6 @@ func (s *Server) routes(
 	}
 
 	store, storeErr := storage.NewStore(
-		s.logger,
 		s.NewDBConfig(),
 		ldClient,
 	)

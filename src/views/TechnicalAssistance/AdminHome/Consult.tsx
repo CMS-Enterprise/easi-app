@@ -300,7 +300,7 @@ function Consult() {
               {t('actionRequestEdits.notificationDescription')}
             </p>
 
-            <FormProvider {...actionForm}>
+            <FormProvider<ConsultFields> {...actionForm}>
               <EmailRecipientFields
                 requester={requester}
                 contacts={attendees}

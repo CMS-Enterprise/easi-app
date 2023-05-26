@@ -190,76 +190,71 @@ function Basic({
       handleSubmit(
         // Validation passed
         async formData => {
-          // Submit the input only if there are changes
-          if (isDirty) {
-            const { id } = request;
-            const { name } = formData;
+          try {
+            // Submit the input only if there are changes
+            if (isDirty) {
+              const { id } = request;
+              const { name } = formData;
 
-            // Only send changed fields for a partial update to the input object
-            const input: any = pick(formData, Object.keys(dirtyFields));
+              // Only send changed fields for a partial update to the input object
+              const input: any = pick(formData, Object.keys(dirtyFields));
 
-            // Convert '' back to null for the backend
-            // so that cleared inputs on the client are actually removed
-            Object.entries(input).forEach(([key, value]) => {
-              if (value === '') input[key] = null;
-            });
+              // Convert '' back to null for the backend
+              // so that cleared inputs on the client are actually removed
+              Object.entries(input).forEach(([key, value]) => {
+                if (value === '') input[key] = null;
+              });
 
-            // Handle the clearing out of toggled off fields.
-            // Unmounted fields are removed from the form data and do not get marked
-            // as dirty, so they need to be set to null to be cleared.
-            if (input.hasSolutionInMind === false) {
-              input.proposedSolution = null;
-            }
-            if (input.whereInProcess !== 'OTHER') {
-              input.whereInProcessOther = null;
-            }
-            if (input.hasExpectedStartEndDates === false) {
-              input.expectedStartDate = null;
-              input.expectedEndDate = null;
-            }
-
-            Object.values(TRBCollabGroupOption).forEach(option => {
-              if (!input.collabGroups?.includes(option)) {
-                input[`collabDate${upperFirst(camelCase(option))}`] = null;
-                if (option === 'OTHER') {
-                  input.collabGroupOther = null;
-                }
+              // Handle the clearing out of toggled off fields.
+              // Unmounted fields are removed from the form data and do not get marked
+              // as dirty, so they need to be set to null to be cleared.
+              if (input.hasSolutionInMind === false) {
+                input.proposedSolution = null;
               }
-            });
+              if (input.whereInProcess !== 'OTHER') {
+                input.whereInProcessOther = null;
+              }
+              if (input.hasExpectedStartEndDates === false) {
+                input.expectedStartDate = null;
+                input.expectedEndDate = null;
+              }
 
-            // Some object adjustments
-            const variables: any = {};
+              Object.values(TRBCollabGroupOption).forEach(option => {
+                if (!input.collabGroups?.includes(option)) {
+                  input[`collabDate${upperFirst(camelCase(option))}`] = null;
+                  if (option === 'OTHER') {
+                    input.collabGroupOther = null;
+                  }
+                }
+              });
 
-            input.trbRequestId = id; // Use the id from the request object
-            variables.id = id;
+              // Some object adjustments
+              const variables: any = {};
 
-            // Move the name from the form fields object to changes
-            if ('name' in input) {
-              delete input.name;
-              variables.changes = { name };
+              input.trbRequestId = id; // Use the id from the request object
+              variables.id = id;
+
+              // Move the name from the form fields object to changes
+              if ('name' in input) {
+                delete input.name;
+                variables.changes = { name };
+              }
+
+              variables.input = input;
+
+              await updateForm({ variables });
+
+              // Refresh the RequestForm parent request query
+              // to update things like `stepsCompleted`
+              await refetchRequest();
             }
 
-            variables.input = input;
-
-            await updateForm({ variables });
-
-            // Refresh the RequestForm parent request query
-            // to update things like `stepsCompleted`
-            await refetchRequest();
+            callback?.();
+          } catch (e) {
+            handleApolloError(e);
           }
-        },
-        // Validation did not pass
-        () => {
-          // Need to throw from this error handler so that the promise is rejected
-          throw new Error('invalid basic form');
         }
-      )()
-        // Wait for submit to finish before continuing.
-        // This essentially makes sure any effects like
-        // `setIsStepSubmitting` are called before unmount.
-        .then(() => {
-          callback?.();
-        }, handleApolloError),
+      )(),
     [
       dirtyFields,
       handleSubmit,

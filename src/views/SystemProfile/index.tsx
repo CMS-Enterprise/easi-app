@@ -45,7 +45,7 @@ import {
   AtoStatus,
   CedarRoleAssigneePerson,
   DevelopmentTag,
-  RoleTypeId,
+  RoleTypeName,
   SubpageKey,
   SystemProfileData,
   UrlLocation,
@@ -223,7 +223,7 @@ export function getSystemProfileData(
   ) as CedarRoleAssigneePerson[];
 
   const businessOwners = personRoles.filter(
-    role => role.roleTypeID === RoleTypeId.BUSINESS_OWNER
+    role => role.roleTypeName === RoleTypeName.BUSINESS_OWNER
   );
 
   const usernamesWithRoles = getUsernamesWithRoles(personRoles);

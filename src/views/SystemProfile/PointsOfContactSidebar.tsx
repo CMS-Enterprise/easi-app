@@ -27,7 +27,7 @@ export function getPointsOfContact(
   // eslint-disable-next-line no-restricted-syntax
   for (const pocid of subPocIds) {
     const found = usernamesWithRoles.filter(user =>
-      user.roles.find(r => r.roleTypeID === pocid)
+      user.roles.find(r => r.roleTypeName === pocid)
     );
     if (found.length) {
       contacts = found;

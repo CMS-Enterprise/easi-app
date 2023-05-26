@@ -76,17 +76,35 @@ export type SubpageKey =
  * This is a borrowed set from `API/role/type/alfabet`.
  */
 // eslint-disable-next-line no-shadow
-export enum RoleTypeId {
-  API_CONTACT = '238-58-0',
-  BUSINESS_OWNER = '238-17-0',
-  COR = '238-35-0',
-  ISSO = '238-29-0',
-  PROJECT_LEAD = '238-32-0',
-  SYSTEM_BUSINESS_QUESTION_CONTACT = '238-51-0',
-  SYSTEM_DATA_CENTER_CONTACT = '238-52-0',
-  SYSTEM_ISSUES_CONTACT = '238-50-0',
-  SYSTEM_MAINTAINER = '238-28-0'
+export enum RoleTypeName {
+  API_CONTACT = 'API Contact',
+  BUSINESS_OWNER = 'Business Owner',
+  COR = "Contracting Officer's Representative (COR)",
+  ISSO = 'ISSO',
+  PROJECT_LEAD = 'Project Lead',
+  SYSTEM_BUSINESS_QUESTION_CONTACT = 'Business Question Contact',
+  SYSTEM_DATA_CENTER_CONTACT = 'Data Center Contact',
+  SYSTEM_ISSUES_CONTACT = 'System Issues Contact',
+  SYSTEM_MAINTAINER = 'System Maintainer'
 }
+
+/**
+ * A set of some Cedar Role Type Ids used in the client from the 2.0.0 version of the API
+ * So far it is certain team members and points of contact.
+ * This is a borrowed set from `API/role/type/alfabet`.
+ */
+// eslint-disable-next-line no-shadow
+// export enum RoleTypeIdSparx {
+//   API_CONTACT = '{1FD4F238-56A1-46d2-8CB1-8A7C87F63A01}',
+//   BUSINESS_OWNER = '{C95EA2F9-1A08-4b1a-AEE7-A83011D06113}',
+//   COR = '{AB303F45-E6ED-488d-95C1-065457F46028}',
+//   ISSO = '{CAE32572-2A36-4d50-9F73-A0EE0A1A6437}',
+//   PROJECT_LEAD = '{E324B687-8A7F-4463-BD1D-5A7D04EEB17A}',
+//   SYSTEM_BUSINESS_QUESTION_CONTACT = '{260896F7-76AB-4e8d-8FF6-E8A0431B1F6A}',
+//   SYSTEM_DATA_CENTER_CONTACT = '{C266D5BF-C298-4ec9-AE49-24DBB8577947}',
+//   SYSTEM_ISSUES_CONTACT = '{ED77C4FD-3078-4f65-8FD4-7350DBAE7283}',
+//   SYSTEM_MAINTAINER = '{36335B21-40F4-48de-8D16-8F85277C54B8}'
+// }
 
 // Development Tags
 
