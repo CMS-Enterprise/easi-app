@@ -14,17 +14,15 @@ import (
 )
 
 // NewHandlerBase is a constructor for HandlerBase
-func NewHandlerBase(logger *zap.Logger) HandlerBase {
+func NewHandlerBase() HandlerBase {
 	return HandlerBase{
-		Logger: logger,
-		clock:  clock.New(),
+		clock: clock.New(),
 	}
 }
 
 // HandlerBase is for shared handler utilities
 type HandlerBase struct {
-	Logger *zap.Logger
-	clock  clock.Clock
+	clock clock.Clock
 }
 
 type errorItem struct {
@@ -60,10 +58,7 @@ func (r *errorResponse) withMap(errMap map[string]string) {
 
 // WriteErrorResponse writes a response for a given application error
 func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWriter, appErr error) {
-	logger, ok := appcontext.Logger(ctx)
-	if !ok {
-		logger = b.Logger
-	}
+	logger := appcontext.ZLogger(ctx)
 
 	traceID, ok := appcontext.Trace(ctx)
 	if !ok {

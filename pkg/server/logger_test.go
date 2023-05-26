@@ -15,7 +15,7 @@ func (s *ServerTestSuite) TestLoggerMiddleware() {
 
 		req := httptest.NewRequest("GET", "/systems/", nil)
 		rr := httptest.NewRecorder()
-		traceMiddleware := NewTraceMiddleware(s.logger)
+		traceMiddleware := NewTraceMiddleware()
 		prodLogger, err := zap.NewProduction()
 		s.NoError(err)
 		env, err := appconfig.NewEnvironment("test")

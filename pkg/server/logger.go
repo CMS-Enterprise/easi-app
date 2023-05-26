@@ -20,11 +20,15 @@ func loggerMiddleware(logger *zap.Logger, environment appconfig.Environment, nex
 		} else {
 			logger.Error("Failed to get trace ID from context")
 		}
+
+		// Add app-name and app-env to ALL logs for easier filtering
+		logger = logger.With(
+			zap.String("app-name", "easi"),
+			zap.String("app-env", environment.String()),
+		)
 		ctx = appcontext.WithLogger(ctx, logger)
 
 		fields := []zap.Field{
-			zap.String("app-name", "easi"),
-			zap.String("app-env", environment.String()),
 			zap.String("accepted-language", r.Header.Get("accepted-language")),
 			zap.Int64("content-length", r.ContentLength),
 			zap.String("app-host", r.Host),

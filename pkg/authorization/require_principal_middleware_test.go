@@ -40,7 +40,7 @@ func (s *AuthorizationTestSuite) TestAllowsAuthenticatedRequests() {
 		handlerRun = true
 	})
 
-	middleware := requirePrincipalMiddleware(s.logger, testHandler)
+	middleware := requirePrincipalMiddleware(testHandler)
 	middleware.ServeHTTP(rr, req)
 
 	s.True(handlerRun)
@@ -55,7 +55,7 @@ func (s *AuthorizationTestSuite) TestRejectsAnonymousRequests() {
 		handlerRun = true
 	})
 
-	middleware := requirePrincipalMiddleware(s.logger, testHandler)
+	middleware := requirePrincipalMiddleware(testHandler)
 	middleware.ServeHTTP(rr, req)
 
 	s.False(handlerRun)
