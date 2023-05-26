@@ -56,7 +56,7 @@ func NewServer(config *viper.Viper) *Server {
 	s.routes(
 		newCORSMiddleware(clientAddress),
 		NewTraceMiddleware(zapLogger),
-		NewLoggerMiddleware(zapLogger))
+		NewLoggerMiddleware(zapLogger, environment))
 
 	return s
 }
