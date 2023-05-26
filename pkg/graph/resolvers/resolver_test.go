@@ -79,7 +79,7 @@ func (tc *TestConfigs) GetDefaults() {
 		Email:      "testuser@test.com",
 		EuaUserID:  "TEST",
 	}
-	tc.Store, _ = storage.NewStore(tc.Logger, tc.DBConfig, tc.LDClient)
+	tc.Store, _ = storage.NewStore(tc.DBConfig, tc.LDClient)
 
 	tc.Principal = &authentication.EUAPrincipal{
 		EUAID:            tc.UserInfo.EuaUserID,
