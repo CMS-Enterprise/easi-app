@@ -33,7 +33,7 @@ func (s *ServerTestSuite) TestLoggerMiddleware() {
 		traceMiddleware(loggerMiddleware(testHandler)).ServeHTTP(rr, req)
 	})
 
-	s.Run("get the same logger with no trace ID", func() {
+	s.Run("get a new logger with no trace ID", func() {
 
 		req := httptest.NewRequest("GET", "/systems/", nil)
 		rr := httptest.NewRecorder()
@@ -49,7 +49,7 @@ func (s *ServerTestSuite) TestLoggerMiddleware() {
 			logger, ok := appcontext.Logger(r.Context())
 
 			s.True(ok)
-			s.Equal(prodLogger, logger)
+			s.NotEqual(prodLogger, logger)
 		})
 
 		loggerMiddleware(testHandler).ServeHTTP(rr, req)
