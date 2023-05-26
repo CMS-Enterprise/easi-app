@@ -132,6 +132,7 @@ function Header({
   isStepSubmitting,
   warning,
   formAlert,
+  setFormAlert,
   taskListUrl
 }: {
   step: number;
@@ -143,6 +144,7 @@ function Header({
   isStepSubmitting: boolean;
   warning?: React.ReactNode;
   formAlert: TrbFormAlert;
+  setFormAlert: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
   taskListUrl: string;
 }) {
   const history = useHistory();
@@ -199,6 +201,7 @@ function Header({
             type={formAlert.type}
             slim={formAlert.slim}
             className="trb-form-error margin-top-3 margin-bottom-2"
+            closeAlert={setFormAlert}
           >
             {formAlert.message}
           </Alert>
@@ -507,6 +510,7 @@ function RequestForm() {
           isStepSubmitting={isStepSubmitting}
           warning={editsRequestedWarning}
           formAlert={formAlert}
+          setFormAlert={setFormAlert}
           taskListUrl={taskListUrl}
         />
       )}

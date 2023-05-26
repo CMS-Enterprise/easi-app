@@ -22,7 +22,7 @@ func (s *ServerTestSuite) TestTraceMiddleware() {
 
 	req := httptest.NewRequest("GET", "/systems/", nil)
 	rr := httptest.NewRecorder()
-	middleware := NewTraceMiddleware(s.logger)
+	middleware := NewTraceMiddleware()
 
 	middleware(testHandler).ServeHTTP(rr, req)
 

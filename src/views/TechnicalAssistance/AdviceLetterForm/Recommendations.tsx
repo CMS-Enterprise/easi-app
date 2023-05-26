@@ -76,7 +76,7 @@ const Recommendations = ({
     <Switch>
       {/* Recommendations Form */}
       <Route exact path={`${path}/form`}>
-        <FormProvider {...formMethods}>
+        <FormProvider<AdviceLetterRecommendationFields> {...formMethods}>
           <RecommendationsForm
             trbRequestId={trbRequestId}
             setFormAlert={setFormAlert}
@@ -130,15 +130,25 @@ const Recommendations = ({
                 }}
                 remove={{
                   onClick: recommendation =>
-                    remove({ variables: { id: recommendation.id } }).catch(() =>
-                      setFormAlert({
-                        type: 'error',
-                        message: t('adviceLetterForm.error', {
-                          action: 'removing',
-                          type: 'recommendation'
-                        })
+                    remove({ variables: { id: recommendation.id } })
+                      .then(() => {
+                        setFormAlert({
+                          type: 'success',
+                          message: t('adviceLetterForm.removeSuccess', {
+                            action: 'removing',
+                            type: 'recommendation'
+                          })
+                        });
                       })
-                    )
+                      .catch(() =>
+                        setFormAlert({
+                          type: 'error',
+                          message: t('adviceLetterForm.error', {
+                            action: 'removing',
+                            type: 'recommendation'
+                          })
+                        })
+                      )
                 }}
               />
             )

@@ -1554,6 +1554,7 @@ type TRBTaskStatuses {
   consultPrepStatus: TRBConsultPrepStatus!
   attendConsultStatus: TRBAttendConsultStatus!
   adviceLetterStatus: TRBAdviceLetterStatus!
+  adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList!
 }
 
 """
@@ -1796,6 +1797,15 @@ enum TRBAdviceLetterStatus {
   READY_TO_START
   IN_PROGRESS
   READY_FOR_REVIEW
+  COMPLETED
+}
+
+"""
+Represents the status of the TRB advice letter step
+"""
+enum TRBAdviceLetterStatusTaskList {
+  CANNOT_START_YET
+  IN_REVIEW
   COMPLETED
 }
 

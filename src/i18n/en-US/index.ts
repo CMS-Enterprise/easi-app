@@ -5,6 +5,7 @@ import governanceReviewTeam from './articles/governanceReviewTeam';
 import newSystem from './articles/newSystem';
 import prepareTrbConsultMeeting from './articles/prepareTrbConsultMeeting';
 import sampleBusinessCase from './articles/sampleBusinessCase';
+import stepsInTRBProcess from './articles/stepsInTRBProcess';
 import stepsInvolved508 from './articles/stepsInvolved508';
 import templatesFor508Testing from './articles/templatesFor508Testing';
 import accessibility from './accessibility';
@@ -52,6 +53,7 @@ const enUS = {
   newSystem,
   prepareTrbConsultMeeting,
   privacyPolicy,
+  stepsInTRBProcess,
   systemProfile,
   tableAndPagination,
   taskList,

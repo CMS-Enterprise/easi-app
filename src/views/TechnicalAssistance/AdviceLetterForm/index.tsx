@@ -294,6 +294,7 @@ const AdviceLetterForm = () => {
                 type={formAlert.type}
                 className={`trb-form-${formAlert.type} margin-top-3`}
                 slim
+                closeAlert={setFormAlert}
               >
                 {formAlert.message}
               </Alert>

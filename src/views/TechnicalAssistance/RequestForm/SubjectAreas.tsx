@@ -84,8 +84,8 @@ function SubjectAreas({
 
   const submit = useCallback<StepSubmit>(
     callback =>
-      handleSubmit(
-        async formData => {
+      handleSubmit(async formData => {
+        try {
           if (isDirty) {
             const input: any = pick(formData, Object.keys(dirtyFields));
 
@@ -104,33 +104,27 @@ function SubjectAreas({
 
             await refetchRequest();
           }
-        },
-        () => {
-          throw new Error('invalid subject areas form');
-        }
-      )().then(
-        () => {
+
           callback?.();
-        },
-        err => {
-          if (err instanceof ApolloError) {
+        } catch (e) {
+          if (e instanceof ApolloError) {
             setFormAlert({
               type: 'error',
               heading: t('errors.somethingWrong'),
-              message: t('subject.errors.submit')
+              message: t('basic.errors.submit')
             });
           }
         }
-      ),
+      })(),
     [
       dirtyFields,
       handleSubmit,
       isDirty,
       refetchRequest,
       request.id,
+      updateForm,
       setFormAlert,
-      t,
-      updateForm
+      t
     ]
   );
 

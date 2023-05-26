@@ -39,7 +39,7 @@ func TestServicesTestSuite(t *testing.T) {
 		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
 		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
 	}
-	store, err := storage.NewStore(logger, dbConfig, ldClient)
+	store, err := storage.NewStore(dbConfig, ldClient)
 	if err != nil {
 		t.Fail()
 		fmt.Printf("Failed to connect to database: %v", err)
