@@ -9,25 +9,25 @@ on:
       lambda_version:
         required: true
         type: string
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      LD_CLIENT_ID:
-        required: true
-      OKTA_CLIENT_ID:
-        required: true
-      OKTA_SERVER_ID:
-        required: true
-      STATIC_S3_BUCKET:
-        required: true
-      AWS_ROLE_TO_ASSUME:
-        required: true
-      ECR_REGISTRY:
-        required: true
-      SLACK_WEBHOOK_URL:
-        required: true
+    # secrets:
+    #   AWS_ACCESS_KEY_ID:
+    #     required: true
+    #   AWS_SECRET_ACCESS_KEY:
+    #     required: true
+    #   LD_CLIENT_ID:
+    #     required: true
+    #   OKTA_CLIENT_ID:
+    #     required: true
+    #   OKTA_SERVER_ID:
+    #     required: true
+    #   STATIC_S3_BUCKET:
+    #     required: true
+    #   AWS_ROLE_TO_ASSUME:
+    #     required: true
+    #   ECR_REGISTRY:
+    #     required: true
+    #   SLACK_WEBHOOK_URL:
+    #     required: true
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
@@ -54,15 +54,20 @@ jobs:
           cache: 'yarn'
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
-      - name: Configure AWS Credentials
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v1-node16
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: us-west-2
+      #     role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      #     role-duration-seconds: 1800
+      #     role-skip-session-tagging: true
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-duration-seconds: 1800
-          role-skip-session-tagging: true
+          aws-region: us-west-2
       - name: Clean the database
         if: ${{ contains(inputs.env, 'dev') && vars.ENABLE_DEV_DB_CLEAN == '1' }}
         run: |
@@ -81,16 +86,33 @@ jobs:
         run: |
           ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
           ./scripts/db_lambda_invoke "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-app-db-migrate"
-      - name: Deploy ECS service
+      # - name: Deploy ECS service
+      #   env:
+      #     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      #     ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+      #     ECR_REPOSITORY: easi-backend
+      #     LAMBDA_VERSION: ${{ inputs.lambda_version }}
+      #     ENV: ${{ inputs.env }}
+      #   run: |
+      #     ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
+      #     ./scripts/healthcheck "$GIT_HASH"
+      - name: Deploy EASI ECS service
         env:
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-backend
-          LAMBDA_VERSION: ${{ inputs.lambda_version }}
-          ENV: ${{ inputs.env }}
+          NEW_IMAGE_TAG: ${{ env.GIT_HASH }}
+          TASK_FAMILY: "easi-app-${{ inputs.env }}"
+          ECS_CLUSTER: "${{ inputs.env }}-easi-app"
+          SERVICE_NAME: easi-app
         run: |
-          ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
-          ./scripts/healthcheck "$GIT_HASH"
+          export TASK_REVISION=$(./scripts/update_ecs_task_definition.sh)
+          ./scripts/deploy_ecs_service.sh
+      - name: Wait for /healthcheck to return new version
+        env:
+          APP_ENV: ${{ inputs.env }}
+          NEW_IMAGE_TAG: ${{ env.GIT_HASH }}
+        run: |
+          ./scripts/healthcheck "$NEW_IMAGE_TAG"
       - name: Build static assets and release to S3
         env:
           LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
