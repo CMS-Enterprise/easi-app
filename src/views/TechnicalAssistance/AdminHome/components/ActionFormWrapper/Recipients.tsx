@@ -92,7 +92,7 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
   ): Promise<boolean> => {
     const errors: Partial<Record<keyof TrbRecipient, string>> = {};
 
-    const { userInfo, role, component } = recipient;
+    const { userInfo, role } = recipient;
     const { euaUserId } = userInfo || {};
 
     const isUnique: boolean = !(watch('recipients') || []).find(
@@ -105,9 +105,6 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
       errors.userInfo = t<string>('errors.makeSelection');
     } else if (!isUnique) {
       errors.userInfo = t<string>('emailRecipientFields.duplicateRecipient');
-    }
-    if (!component) {
-      errors.component = t<string>('errors.makeSelection');
     }
     if (!role) {
       errors.role = t<string>('errors.makeSelection');
@@ -336,24 +333,17 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
                           <Controller
                             name={`recipients.${index}.component`}
                             control={control}
-                            render={({ field, fieldState: { error } }) => {
+                            render={({ field }) => {
                               return (
-                                <FormGroup
-                                  error={!!error}
-                                  className="margin-top-2"
-                                >
+                                <FormGroup className="margin-top-2">
                                   <Label
                                     htmlFor={field.name}
                                     className="text-normal"
-                                    required
                                   >
                                     {t(
                                       'emailRecipientFields.newRecipientComponent'
                                     )}
                                   </Label>
-                                  {error && (
-                                    <ErrorMessage>{error.message}</ErrorMessage>
-                                  )}
                                   <Dropdown
                                     id={field.name}
                                     {...field}
