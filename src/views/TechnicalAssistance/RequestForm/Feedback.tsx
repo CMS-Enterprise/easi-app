@@ -6,6 +6,7 @@ import { sortBy } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import { GetTrbRequest_trbRequest as TrbRequest } from 'queries/types/GetTrbRequest';
 import { TRBFeedbackAction } from 'types/graphql-global-types';
@@ -46,7 +47,7 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
   );
 
   const selectedFeedback = fromTaskList
-    ? request.feedback
+    ? request.feedback.filter(e => !!e.feedbackMessage)
     : request.feedback.filter(
         e => e.action === TRBFeedbackAction.REQUEST_EDITS && !!e.feedbackMessage
       );
@@ -76,13 +77,25 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
       <PageHeading className="margin-top-6- margin-bottom-1">
         {t('requestFeedback.heading')}
       </PageHeading>
-      {returnToFormLink}
 
-      <TrbRequestFeedbackList
-        feedback={sortBy(selectedFeedback, 'createdAt').reverse()}
-      />
+      {selectedFeedback && selectedFeedback.length > 0 && { returnToFormLink }}
 
-      <Divider />
+      {selectedFeedback && selectedFeedback.length === 0 && (
+        <Alert slim type="info" className="margin-top-6">
+          {t('requestFeedback.noFeedbackAlert')}
+        </Alert>
+      )}
+
+      {selectedFeedback && selectedFeedback.length > 0 && (
+        <>
+          <TrbRequestFeedbackList
+            feedback={sortBy(selectedFeedback, 'createdAt').reverse()}
+          />
+
+          <Divider />
+        </>
+      )}
+
       <div className="margin-top-7">{returnToFormLink}</div>
     </GridContainer>
   );
