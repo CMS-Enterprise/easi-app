@@ -362,9 +362,6 @@ func ReopenTRBRequest(
 		return nil, err
 	}
 
-	fmt.Println("-----------")
-	fmt.Println("notify", notifyEUAIDs)
-	fmt.Println("-----------")
 	notifyUserInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
 	if err != nil {
 		return nil, err
