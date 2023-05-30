@@ -77,7 +77,7 @@ func getTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbReque
 			return nil, err
 		}
 
-		if trb.ConsultMeetingTime != nil {
+		if trb.ConsultMeetingTime != nil && time.Now().After(*trb.ConsultMeetingTime) {
 			status = models.TRBConsultPrepStatusCompleted
 		} else {
 			status = models.TRBConsultPrepStatusReadyToStart
