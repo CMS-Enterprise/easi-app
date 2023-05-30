@@ -219,7 +219,7 @@ function Header({
           onClick={() => {
             stepSubmit?.(() => {
               history.push(taskListUrl);
-            });
+            }, false);
           }}
         >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
