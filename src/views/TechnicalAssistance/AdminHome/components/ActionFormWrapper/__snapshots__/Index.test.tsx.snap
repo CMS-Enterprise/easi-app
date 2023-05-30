@@ -34,7 +34,7 @@ exports[`Email recipient fields component renders recipients 1`] = `
             href="/trb/undefined/initial-request-form"
           >
             <span>
-              Request 
+              Request details
             </span>
           </a>
         </li>
