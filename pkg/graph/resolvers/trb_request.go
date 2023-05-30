@@ -258,6 +258,7 @@ func CloseTRBRequest(
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 	id uuid.UUID,
 	reasonClosed string,
+	copyTRBMailbox bool,
 	notifyEUAIDs []string,
 ) (*models.TRBRequest, error) {
 	trb, err := store.GetTRBRequestByID(ctx, id)
@@ -305,6 +306,7 @@ func CloseTRBRequest(
 		TRBRequestName: trb.Name,
 		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
+		CopyTRBMailbox: copyTRBMailbox,
 		ReasonClosed:   reasonClosed,
 	}
 
@@ -326,6 +328,7 @@ func ReopenTRBRequest(
 	store *storage.Store,
 	id uuid.UUID,
 	reasonReopened string,
+	copyTRBMailbox bool,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
@@ -399,6 +402,7 @@ func ReopenTRBRequest(
 		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
 		ReasonReopened: reasonReopened,
+		CopyTRBMailbox: copyTRBMailbox,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this

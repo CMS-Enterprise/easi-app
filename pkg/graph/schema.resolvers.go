@@ -2121,6 +2121,7 @@ func (r *mutationResolver) CloseTRBRequest(ctx context.Context, input model.Clos
 		r.service.FetchUserInfos,
 		input.ID,
 		input.ReasonClosed,
+		input.CopyTrbMailbox,
 		input.NotifyEuaIds,
 	)
 }
@@ -2132,6 +2133,7 @@ func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.Reo
 		r.store,
 		input.TrbRequestID,
 		input.ReasonReopened,
+		input.CopyTrbMailbox,
 		r.emailClient,
 		r.service.FetchUserInfo,
 		r.service.FetchUserInfos,
