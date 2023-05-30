@@ -63,7 +63,7 @@ func (s *EmailTestSuite) TestTRBRequestTRBLeadAssigneeEmail() {
 		"%s://%s/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
-		path.Join("trb", "task-list", trbID.String()),
+		path.Join("trb", trbID.String(), "request"),
 	)
 
 	input := SendTRBRequestTRBLeadEmailInput{
