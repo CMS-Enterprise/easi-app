@@ -367,9 +367,7 @@ function Attendees({
                 stepUrl && {
                   disabled: isSubmitting,
                   onClick: () => {
-                    submitForm(() => {
-                      history.push(stepUrl.back);
-                    });
+                    history.push(stepUrl.back);
                   }
                 }
               }
