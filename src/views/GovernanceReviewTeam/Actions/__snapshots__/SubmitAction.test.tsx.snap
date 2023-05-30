@@ -374,9 +374,11 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 >
                   <p
                     class="usa-alert__text"
-                  >
+                  />
+                  <div>
                     There are multiple contacts for this request that have not been associated with a name and email address in EUA. In order to send an email to these recipients, you must first verify them with EUA.
-                  </p>
+                  </div>
+                  <p />
                 </div>
               </div>
               <div

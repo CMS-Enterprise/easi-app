@@ -64,6 +64,7 @@ func requireBusinessCaseID(reqVars map[string]string) (uuid.UUID, error) {
 // Handle handles a request for the business case form
 func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logger := appcontext.ZLogger(r.Context())
 		switch r.Method {
 		case "GET":
 			businessCaseID, err := requireBusinessCaseID(mux.Vars(r))
@@ -174,7 +175,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
+				logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
 
 				h.WriteErrorResponse(r.Context(), w, err)
 			}

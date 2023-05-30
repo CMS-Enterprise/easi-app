@@ -232,6 +232,7 @@ const technicalAssistance = {
     followupYes: 'Yes, a follow-up is recommended',
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
+    removeSuccess: 'Your recommendation was removed from this advice letter.',
     error:
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     recommendationSuccess:
@@ -687,11 +688,12 @@ const technicalAssistance = {
     attendeeNameHelpText:
       'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at <1>cms-trb@cms.hhs.gov</1>.',
     alerts: {
-      success: 'Your attendee has been added',
-      successEdit: 'Your attendee has been edited',
+      success: 'Your attendee has been added.',
+      successEdit: 'Your attendee has been edited.',
+      successRemove: 'Your attendee has been removed.',
       error:
         'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.',
-      invalidForm: 'Invalid attendees form'
+      invalidForm: 'Invalid attendees form.'
     },
     modal: {
       heading: 'Confirm you want to remove {{-attendee}}.',
@@ -741,7 +743,8 @@ const technicalAssistance = {
         fileName: 'File name',
         documentType: 'Document type',
         uploadDate: 'Upload date',
-        actions: 'Actions'
+        actions: 'Actions',
+        trbLead: 'TRB lead'
       },
       noDocument: 'No documents uploaded',
       view: 'View',
@@ -754,6 +757,7 @@ const technicalAssistance = {
       subtitle:
         'Choose a document to upload, such as a presentation slide deck, concept paper, or other system information document.',
       documentUpload: 'Document upload',
+      docType: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
       dragFile: 'Drag file here or choose from folder',
       selectedFile: 'Selected file',
       changeFile: 'Change file',
@@ -844,7 +848,8 @@ const technicalAssistance = {
     noFeedbackAlert: 'No feedback has been added for this request.'
   },
   adminHome: {
-    breadcrumb: 'Request {{trbRequestId}}',
+    home: 'Home',
+    breadcrumb: 'Request details',
     requestType: 'Request type',
     requester: 'Requester',
     submissionDate: 'Submission Date',
@@ -976,6 +981,7 @@ const technicalAssistance = {
     },
     actions: {
       assignLead: 'Assign lead',
+      changeLead: 'Change lead',
       addDate: 'Add date'
     }
   },
@@ -1118,7 +1124,8 @@ const technicalAssistance = {
     success: '{{name}} is assigned as the TRB lead for this request.',
     error:
       'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.'
-  }
+  },
+  closeTab: 'Close tab'
 };
 
 export default technicalAssistance;

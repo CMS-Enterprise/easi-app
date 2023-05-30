@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/go-openapi/swag"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
@@ -18,8 +17,9 @@ type DevUserConfig struct {
 	JobCodes []string `json:"jobCodes"`
 }
 
-func authenticateMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
+func authenticateMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger := appcontext.ZLogger(r.Context())
 		logger.Info("Using local authorization middleware")
 
 		if len(r.Header["Authorization"]) == 0 {
@@ -70,8 +70,8 @@ func authenticateMiddleware(logger *zap.Logger, next http.Handler) http.Handler 
 }
 
 // NewLocalAuthenticationMiddleware stubs out context info for local (non-Okta) authentication
-func NewLocalAuthenticationMiddleware(logger *zap.Logger) func(http.Handler) http.Handler {
+func NewLocalAuthenticationMiddleware() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		return authenticateMiddleware(logger, next)
+		return authenticateMiddleware(next)
 	}
 }
