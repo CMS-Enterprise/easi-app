@@ -89,12 +89,7 @@ exports[`Email recipient fields component renders recipients 1`] = `
         class="usa-form-group margin-top-4"
       >
         <legend>
-          Choose recipients 
-          <span
-            class="text-error"
-          >
-            *
-          </span>
+          Choose recipients
         </legend>
         <p
           class="margin-bottom-0 margin-top-05"

@@ -137,7 +137,7 @@ describe('Email recipient fields component', () => {
     );
 
     const componentSelect = getByRole('combobox', {
-      name: 'New recipient component *'
+      name: 'New recipient component'
     });
     userEvent.selectOptions(componentSelect, [newAttendee.component!]);
     expect(componentSelect).toHaveValue(newAttendee.component);
