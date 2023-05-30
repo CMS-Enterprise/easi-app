@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
@@ -295,11 +294,10 @@ func CloseTRBRequest(
 		return nil, err
 	}
 
-	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos)+1)
+	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos))
 	for _, recipientInfo := range notifyUserInfos {
 		recipientEmails = append(recipientEmails, recipientInfo.Email)
 	}
-	recipientEmails = append(recipientEmails, requester.Email)
 
 	emailInput := email.SendTRBRequestClosedEmailInput{
 		TRBRequestID:   trb.ID,
@@ -329,31 +327,15 @@ func ReopenTRBRequest(
 	id uuid.UUID,
 	reasonReopened string,
 	copyTRBMailbox bool,
+	notifyEUAIDs []string,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 ) (*models.TRBRequest, error) {
-	// Query the TRB request, attendees in parallel
-	errGroup := new(errgroup.Group)
-
 	// Query the TRB request
-	var trb *models.TRBRequest
-	var errTRB error
-	errGroup.Go(func() error {
-		trb, errTRB = store.GetTRBRequestByID(ctx, id)
-		return errTRB
-	})
-
-	// Query the TRB request attendees
-	var attendees []*models.TRBRequestAttendee
-	var errAttendees error
-	errGroup.Go(func() error {
-		attendees, errAttendees = store.GetTRBRequestAttendeesByTRBRequestID(ctx, id)
-		return errAttendees
-	})
-
-	if errG := errGroup.Wait(); errG != nil {
-		return nil, errG
+	trb, err := store.GetTRBRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
 	}
 
 	// Check if request is already open so an unnecesary email won't be sent
@@ -365,7 +347,7 @@ func ReopenTRBRequest(
 		"state": models.TRBRequestStateOpen,
 	}
 
-	err := ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -380,21 +362,18 @@ func ReopenTRBRequest(
 		return nil, err
 	}
 
-	recipientEuas := make([]string, 0, len(attendees))
-	for _, attendee := range attendees {
-		recipientEuas = append(recipientEuas, attendee.EUAUserID)
-	}
-
-	attendeeInfos, err := fetchUserInfos(ctx, recipientEuas)
+	fmt.Println("-----------")
+	fmt.Println("notify", notifyEUAIDs)
+	fmt.Println("-----------")
+	notifyUserInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	recipientEmails := make([]models.EmailAddress, 0, len(attendees)+1)
-	for _, attendeeInfo := range attendeeInfos {
-		recipientEmails = append(recipientEmails, attendeeInfo.Email)
+	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos))
+	for _, recipientInfo := range notifyUserInfos {
+		recipientEmails = append(recipientEmails, recipientInfo.Email)
 	}
-	recipientEmails = append(recipientEmails, requester.Email)
 
 	emailInput := email.SendTRBRequestReopenedEmailInput{
 		TRBRequestID:   trb.ID,

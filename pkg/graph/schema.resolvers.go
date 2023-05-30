@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2128,12 +2129,16 @@ func (r *mutationResolver) CloseTRBRequest(ctx context.Context, input model.Clos
 
 // ReopenTrbRequest is the resolver for the reopenTrbRequest field.
 func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.ReopenTRBRequestInput) (*models.TRBRequest, error) {
+	fmt.Println("-----------")
+	fmt.Println("INPUT notify", input.NotifyEuaIds)
+	fmt.Println("-----------")
 	return resolvers.ReopenTRBRequest(
 		ctx,
 		r.store,
 		input.TrbRequestID,
 		input.ReasonReopened,
 		input.CopyTrbMailbox,
+		input.NotifyEuaIds,
 		r.emailClient,
 		r.service.FetchUserInfo,
 		r.service.FetchUserInfos,
