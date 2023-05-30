@@ -16,19 +16,21 @@ exports[`The Alert component matches snapshot 1`] = `
       </h4>
       <p
         class="usa-alert__text"
-      >
+      />
+      <div>
         This is information
-        <button
-          aria-label="Close Button"
-          class="usa-button usa-button usa-button--unstyled text-no-underline text-black flex-align-end"
-          data-testid="button"
-          role="button"
-          tabindex="0"
-          type="button"
-        >
-          ✕
-        </button>
-      </p>
+      </div>
+      <button
+        aria-label="Close Button"
+        class="usa-button usa-button usa-button--unstyled text-no-underline text-black margin-top-neg-4"
+        data-testid="button"
+        role="button"
+        tabindex="0"
+        type="button"
+      >
+        ✕
+      </button>
+      <p />
     </div>
   </div>
 </DocumentFragment>
