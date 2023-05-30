@@ -742,6 +742,7 @@ const technicalAssistance = {
         fileName: 'File name',
         documentType: 'Document type',
         uploadDate: 'Upload date',
+        actions: 'Actions',
         trbLead: 'TRB lead'
       },
       noDocument: 'No documents uploaded',

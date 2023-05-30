@@ -181,7 +181,7 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
                 <div
                   class="flex-fill text-no-wrap"
                 >
-                  documents.table.header.actions
+                  Actions
                 </div>
                 <div
                   class="position-relative width-205 margin-left-05"
@@ -543,7 +543,7 @@ exports[`Trb Request form: Supporting documents renders states without documents
                 <div
                   class="flex-fill text-no-wrap"
                 >
-                  documents.table.header.actions
+                  Actions
                 </div>
                 <div
                   class="position-relative width-205 margin-left-05"
