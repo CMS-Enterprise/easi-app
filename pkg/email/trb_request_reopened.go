@@ -18,6 +18,7 @@ type SendTRBRequestReopenedEmailInput struct {
 	TRBRequestName string
 	RequesterName  string
 	Recipients     []models.EmailAddress
+	CopyTRBMailbox bool
 	ReasonReopened string
 }
 
@@ -37,7 +38,10 @@ type trbRequestReopenedEmailTemplateParams struct {
 func (c Client) SendTRBRequestReopenedEmail(ctx context.Context, input SendTRBRequestReopenedEmailInput) error {
 	subject := "The TRB request " + input.TRBRequestName + " has been re-opened."
 
-	allRecipients := append(input.Recipients, c.config.TRBEmail)
+	allRecipients := input.Recipients
+	if input.CopyTRBMailbox {
+		allRecipients = append(input.Recipients, c.config.TRBEmail)
+	}
 
 	templateParams := trbRequestReopenedEmailTemplateParams{
 		TRBRequestName:      input.TRBRequestName,

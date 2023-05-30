@@ -40,6 +40,7 @@ func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
 		RequesterName:  "Mc Lovin",
 		Recipients:     recipients,
 		ReasonClosed:   "Just felt like it",
+		CopyTRBMailbox: true,
 	}
 	allRecipients := append(recipients, s.config.TRBEmail)
 
