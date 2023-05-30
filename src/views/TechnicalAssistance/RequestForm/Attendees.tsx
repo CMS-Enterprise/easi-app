@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   Route,
@@ -17,6 +16,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
+import useEasiForm from 'hooks/useEasiForm';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
   GetTrbRequest,
@@ -122,13 +122,14 @@ function Attendees({
   // Initialize form
   const {
     control,
+    partialSubmit,
     handleSubmit,
     setValue,
     clearErrors,
     getValues,
     reset,
     formState: { errors, isSubmitting, isDirty }
-  } = useForm<TRBAttendeeFields>({
+  } = useEasiForm<TRBAttendeeFields>({
     resolver: yupResolver(trbRequesterSchema)
   });
 
@@ -157,14 +158,14 @@ function Attendees({
 
   /** Submit requester as attendee */
   const submitForm = useCallback<StepSubmit>(
-    callback =>
+    (callback, shouldValidate) =>
       // Start the submit promise
       handleSubmit(
         // Validation passed
         async formData => {
           try {
             // Submit the input only if there are changes
-            if (isDirty && requester.id) {
+            if (isDirty) {
               const { component, role } = formData;
               // Update requester
               await updateAttendee({
@@ -185,6 +186,19 @@ function Attendees({
               });
             }
           }
+        },
+        async () => {
+          if (!shouldValidate) {
+            await partialSubmit({
+              update: formData =>
+                updateAttendee({
+                  id: requester.id,
+                  component: formData?.component || '',
+                  role: formData?.role as PersonRole
+                }),
+              callback
+            });
+          }
         }
       )(),
     [
@@ -194,6 +208,7 @@ function Attendees({
       requester,
       updateAttendee,
       setFormAlert,
+      partialSubmit,
       t
     ]
   );
