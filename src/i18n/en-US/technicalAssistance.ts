@@ -265,7 +265,7 @@ const technicalAssistance = {
     }
   },
   emailRecipientFields: {
-    label: 'Choose recipients <red>*</red>',
+    label: 'Choose recipients',
     selectedCount: '<bold>{{count}}</bold> recipient{{plural}} selected',
     copyTrbMailbox: 'Copy TRB Mailbox',
     projectTeamMember: 'Project team member',

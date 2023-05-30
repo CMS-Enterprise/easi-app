@@ -147,12 +147,7 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
 
   return (
     <FieldGroup className="margin-top-4" error={!!formErrors.notifyEuaIds}>
-      <legend>
-        <Trans
-          i18nKey="technicalAssistance:emailRecipientFields.label"
-          components={{ red: <span className="text-error" /> }}
-        />
-      </legend>
+      <legend>{t('emailRecipientFields.label')}</legend>
       <p className="margin-bottom-0 margin-top-05">
         <Trans
           i18nKey="technicalAssistance:emailRecipientFields.selectedCount"
