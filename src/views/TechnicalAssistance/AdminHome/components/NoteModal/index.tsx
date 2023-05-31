@@ -10,6 +10,8 @@ import {
 } from '@trussworks/react-uswds';
 import noScroll from 'no-scroll';
 
+import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+
 import AddNote from '../../AddNote';
 import Notes from '../../Notes';
 
@@ -22,13 +24,15 @@ type NotesModalWrapperProps = {
   trbRequestId: string;
   addNote?: boolean;
   openModal: React.Dispatch<React.SetStateAction<boolean>>;
+  defaultSelect?: TRBAdminNoteCategory;
 };
 
 const NotesModal = ({
   isOpen,
   trbRequestId,
   addNote,
-  openModal
+  openModal,
+  defaultSelect
 }: NotesModalWrapperProps) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -101,6 +105,7 @@ const NotesModal = ({
                 trbRequestId={trbRequestId}
                 setModalView={setViewType}
                 setModalMessage={setModalMessage}
+                defaultSelect={defaultSelect}
               />
             )}
           </Grid>
