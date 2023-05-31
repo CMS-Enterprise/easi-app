@@ -54,7 +54,7 @@ const initialRecipient: TrbRecipient = {
 /**
  * TRB email recipients field
  */
-const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
+const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const {
@@ -63,7 +63,7 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
     watch,
     setError,
     clearErrors,
-    formState: { isLoading, errors: formErrors }
+    formState: { errors: formErrors }
   } = useFormContext<RecipientFields>();
 
   // Recipients field
@@ -73,10 +73,9 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
     name: 'recipients'
   });
 
-  const recipients = watch('recipients');
-
   // Get initial first recipient as requester
-  const requester = useRef(recipients[0]).current;
+  const requester: TrbRecipient | undefined = useRef(watch('recipients')[0])
+    .current;
 
   const recipientsCount = (watch('recipients') || []).filter(
     ({ id, userInfo }) =>
@@ -144,8 +143,6 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
       setRecipientFormOpen?.(false);
     }
   };
-
-  if (isLoading) return <Spinner />;
 
   return (
     <FieldGroup className="margin-top-4" error={!!formErrors.notifyEuaIds}>
@@ -448,6 +445,16 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
       </ul>
     </FieldGroup>
   );
+};
+
+const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
+  const {
+    formState: { isLoading }
+  } = useFormContext();
+
+  if (isLoading) return <Spinner />;
+
+  return <RecipientsForm setRecipientFormOpen={setRecipientFormOpen} />;
 };
 
 export default Recipients;

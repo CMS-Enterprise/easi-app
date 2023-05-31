@@ -84,8 +84,7 @@ const Review = ({
     trbRequestId,
     resolver: yupResolver(trbActionSchema()),
     defaultValues: {
-      copyTrbMailbox: true,
-      notifyEuaIds: []
+      copyTrbMailbox: true
     }
   });
 
