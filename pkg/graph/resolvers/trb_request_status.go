@@ -224,6 +224,7 @@ func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID
 	status = models.TRBRequestStatusNew
 
 	taskStatuses, err := GetTRBTaskStatuses(ctx, store, trbRequestID)
+	trb, err := store.GetTRBRequestByID(ctx, trbRequestID)
 	if err != nil {
 		return status, err
 	}
@@ -254,7 +255,7 @@ func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID
 	}
 
 	// Consult scheduled
-	if consultPrepStatus == models.TRBConsultPrepStatusCompleted {
+	if trb.ConsultMeetingTime != nil || consultPrepStatus == models.TRBConsultPrepStatusCompleted {
 		status = models.TRBRequestStatusConsultScheduled
 	}
 
