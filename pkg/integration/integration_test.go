@@ -87,7 +87,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
 		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
 	}
-	store, err := storage.NewStore(logger, dbConfig, ldClient)
+	store, err := storage.NewStore(dbConfig, ldClient)
 	if err != nil {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.Fail()
@@ -106,7 +106,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 		server:      testServer,
 		user:        user{euaID: config.GetString("OKTA_TEST_USERNAME"), accessToken: accessToken},
 		store:       store,
-		base:        handlers.NewHandlerBase(logger),
+		base:        handlers.NewHandlerBase(),
 	}
 
 	suite.Run(t, testSuite)

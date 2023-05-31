@@ -123,7 +123,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
 	assert.NoError(t, err)
 
-	store, err := storage.NewStore(logger, dbConfig, ldClient)
+	store, err := storage.NewStore(dbConfig, ldClient)
 	if err != nil {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.FailNow()

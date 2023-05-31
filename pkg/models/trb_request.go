@@ -77,11 +77,12 @@ const (
 
 // TRBTaskStatuses contains the individual statuses for the steps of the TRB task list
 type TRBTaskStatuses struct {
-	FormStatus          TRBFormStatus          `json:"formStatus"`
-	FeedbackStatus      TRBFeedbackStatus      `json:"feedbackStatus"`
-	ConsultPrepStatus   TRBConsultPrepStatus   `json:"consultPrepStatus"`
-	AttendConsultStatus TRBAttendConsultStatus `json:"attendConsultStatus"`
-	AdviceLetterStatus  TRBAdviceLetterStatus  `json:"adviceLetterStatus"`
+	FormStatus                 TRBFormStatus                 `json:"formStatus"`
+	FeedbackStatus             TRBFeedbackStatus             `json:"feedbackStatus"`
+	ConsultPrepStatus          TRBConsultPrepStatus          `json:"consultPrepStatus"`
+	AttendConsultStatus        TRBAttendConsultStatus        `json:"attendConsultStatus"`
+	AdviceLetterStatus         TRBAdviceLetterStatus         `json:"adviceLetterStatus"`
+	AdviceLetterStatusTaskList TRBAdviceLetterStatusTaskList `json:"adviceLetterStatusTaskList"`
 }
 
 // TRBRequestStatus is an enumeration of the possible values for the overall status of a TRB request

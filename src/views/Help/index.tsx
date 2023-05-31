@@ -11,6 +11,7 @@ import StepsInvolved from './Section508/StepsInvolved';
 import TestingTemplates from './Section508/TestingTemplate';
 import ReportAProblem from './SendFeedback/ReportAProblem';
 import PrepareTrbConsultMeeting from './TechnicalReviewBoard/PrepareTrbConsultMeeting';
+import StepsInProcess from './TechnicalReviewBoard/StepsInProcess';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
@@ -63,6 +64,9 @@ const Help = () => {
       </Route>
       <Route path="/help/trb/prepare-consult-meeting" exact>
         <PrepareTrbConsultMeeting />
+      </Route>
+      <Route path="/help/trb/steps-involved-trb" exact>
+        <StepsInProcess />
       </Route>
 
       {/* Help feedback forms */}

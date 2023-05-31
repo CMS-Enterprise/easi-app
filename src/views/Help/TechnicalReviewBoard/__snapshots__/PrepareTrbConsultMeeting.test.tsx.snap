@@ -227,5 +227,80 @@ exports[`Trb Help Prepare Consult Meeting renders 1`] = `
       </div>
     </div>
   </main>
+  <div
+    class="bg-base-lightest"
+  >
+    <main
+      class="easi-main-content grid-container padding-y-2"
+      id="main-content"
+      role="main"
+      tabindex="-1"
+    >
+      <h2
+        class="margin-bottom-1"
+      >
+        Related help articles
+      </h2>
+      <dt
+        class="margin-bottom-4"
+      >
+        Below are some additional help articles that you may find useful.
+      </dt>
+      <ul
+        class="usa-card-group margin-y-2"
+        data-testid="CardGroup"
+      >
+        <li
+          class="usa-card desktop:grid-col-4 article article-card--isLink"
+          data-testid="article-card"
+        >
+          <div
+            class="usa-card__container radius-md shadow-2 minh-mobile"
+          >
+            <header
+              class="usa-card__header padding-x-3 padding-top-3"
+              data-testid="CardHeader"
+            >
+              <h3
+                class="line-height-body-4 margin-bottom-1"
+              >
+                Steps involved in getting technical assistance from the TRB
+              </h3>
+              <a
+                class="usa-link display-inline-block margin-bottom-1"
+                href="/help/trb"
+              >
+                <span
+                  class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+                  data-testid="tag"
+                >
+                  Technical Review Board
+                </span>
+              </a>
+            </header>
+            <div
+              class="usa-card__body padding-top-0 article__body"
+              data-testid="CardBody"
+            >
+              <p>
+                The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer padding-top-2 article__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-link easi-request__button-link padding-x-2"
+                href="/"
+              >
+                Read
+              </a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </main>
+  </div>
 </DocumentFragment>
 `;
