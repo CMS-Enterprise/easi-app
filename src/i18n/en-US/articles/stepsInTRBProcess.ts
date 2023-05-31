@@ -2,7 +2,7 @@ const stepsInTRBProcess = {
   title: 'Steps involved in getting technical assistance from the TRB',
   tag: 'Technical Review Board',
   description:
-    'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.',
+    'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also guides project teams on adhering to CMS technical standards and leveraging existing technologies.',
 
   info: {
     text: [
@@ -11,7 +11,7 @@ const stepsInTRBProcess = {
     ],
     list: [
       'ask for help with a technical problem',
-      'consult with SMEs from across the agency',
+      'consult with Subject Matter Experts (SMEs) from across the agency',
       'consult with the TRB about CMS guidelines and standards'
     ]
   },
