@@ -1022,9 +1022,9 @@ const technicalAssistance = {
     description:
       'Use this action if work on this request is complete, or if it is not a TRB request.',
     breadcrumb: 'Close request',
-    label: 'Why did you close this request?',
+    label: 'Why are you closing this request?',
     hint:
-      'Give a brief explanation, especially if you closed this request without sending an advice letter.',
+      'Give a brief explanation, especially if you are closing this request without sending an advice letter.',
     submit: 'Complete action and close request',
     success: 'Action complete. This request is now closed.',
     error:
