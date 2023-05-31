@@ -330,7 +330,9 @@ const technicalAssistance = {
       ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
       ADVICE_LETTER_SENT: 'Advice letter sent',
       FOLLOW_UP_REQUESTED: 'Follow-up requested'
-    }
+    },
+    noRequests:
+      'You haven’t started any technical assistance requests with the TRB. Use the button above if you wish to open a new request.'
   },
   // Higher level errors
   errors: {
