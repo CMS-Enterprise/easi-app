@@ -3,15 +3,21 @@
     max-width: 100%;
 }
 
-.usa-alert__heading {
-    line-height: 1.6rem !important;
+.easi-alert-text .usa-alert__body {
+    padding-right: 3.5rem !important;
+
+    .easi-alert__close-button {
+        position: absolute;
+        top: .75rem;
+        right: .75rem;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
-
-.easi-alert-text {
-    .usa-alert__text {
-        justify-content: space-between !important;
-        display: flex !important;
-        word-wrap: break-word;
-    }
+.usa-alert__heading {
+    line-height: 1.6rem !important;
 }
