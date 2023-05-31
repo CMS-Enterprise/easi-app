@@ -20,7 +20,7 @@ func (s *ResolverSuite) TestCreateTRBRequest() {
 	s.NotNil(trb)
 
 	s.EqualValues(false, trb.Archived)
-	s.EqualValues("Draft", trb.Name)
+	s.Nil(trb.Name)
 	s.EqualValues(models.TRBRequestStateOpen, trb.State)
 	s.EqualValues(s.testConfigs.Principal.EUAID, trb.CreatedBy)
 	s.NotNil(trb.ID)

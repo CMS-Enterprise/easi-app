@@ -100,3 +100,12 @@ const (
 	TRBRequestStatusAdviceLetterSent     = "ADVICE_LETTER_SENT"
 	TRBRequestStatusFollowUpRequested    = "FOLLOW_UP_REQUESTED"
 )
+
+// GetName returns the name of the TRB request as a string. If the "Name" property is nil, it returns "Draft"
+func (t *TRBRequest) GetName() string {
+	if t.Name != nil {
+		return *t.Name
+	}
+
+	return "Draft"
+}
