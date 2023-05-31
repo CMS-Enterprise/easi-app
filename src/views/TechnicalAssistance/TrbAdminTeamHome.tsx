@@ -651,9 +651,7 @@ function TrbAdminTeamHome() {
             />
           </div>
           <div className="margin-top-6 trb-existing-requests-table">
-            <TrbExistingRequestsTable
-              requests={trbRequests.filter(d => !d.isRecent)}
-            />
+            <TrbExistingRequestsTable requests={trbRequests} />
           </div>
         </>
       )}
