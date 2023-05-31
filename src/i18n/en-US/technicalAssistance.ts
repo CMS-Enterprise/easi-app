@@ -742,7 +742,8 @@ const technicalAssistance = {
         fileName: 'File name',
         documentType: 'Document type',
         uploadDate: 'Upload date',
-        actions: 'Actions'
+        actions: 'Actions',
+        trbLead: 'TRB lead'
       },
       noDocument: 'No documents uploaded',
       view: 'View',
@@ -846,7 +847,8 @@ const technicalAssistance = {
     noFeedbackAlert: 'No feedback has been added for this request.'
   },
   adminHome: {
-    breadcrumb: 'Request {{trbRequestId}}',
+    home: 'Home',
+    breadcrumb: 'Request details',
     requestType: 'Request type',
     requester: 'Requester',
     submissionDate: 'Submission Date',
@@ -978,6 +980,7 @@ const technicalAssistance = {
     },
     actions: {
       assignLead: 'Assign lead',
+      changeLead: 'Change lead',
       addDate: 'Add date'
     }
   },

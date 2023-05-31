@@ -90,7 +90,9 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
             <p
               className="usa-alert__text"
             >
-              You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
+              <div>
+                You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
+              </div>
             </p>
           </div>
         </div>

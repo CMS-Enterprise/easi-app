@@ -8,6 +8,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db_migrations
+      args:
+        TAG: '9.10' # Multi arch tag, rather than '9.10-alpine'
     volumes:
       - ./migrations:/flyway/sql
   easi:
