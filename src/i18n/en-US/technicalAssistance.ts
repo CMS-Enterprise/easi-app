@@ -304,7 +304,7 @@ const technicalAssistance = {
     removeYourRequest: 'Remove your request'
   },
   table: {
-    heading: 'My TRB Requests',
+    heading: 'My TRB requests',
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission date',
