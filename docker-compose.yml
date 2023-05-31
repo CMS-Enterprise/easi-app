@@ -92,4 +92,4 @@ services:
       /usr/bin/mc policy set public local/easi-app-file-uploads;
       "
   email:
-    image: dockage/mailcatcher:0.7.1
+    image: dockage/mailcatcher:0.8.2
