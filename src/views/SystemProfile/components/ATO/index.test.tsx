@@ -13,9 +13,9 @@ describe('ATO subpage for System Profile', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('renders a yellow card for In Progress', () => {
+  it('renders a yellow card for In progress', () => {
     const { getByTestId } = render(
-      <ATO system={{ ...systemProfileData, atoStatus: 'In Progress' }} />
+      <ATO system={{ ...systemProfileData, atoStatus: 'In progress' }} />
     );
     expect(getByTestId('Card')).toHaveClass('bg-warning');
   });
