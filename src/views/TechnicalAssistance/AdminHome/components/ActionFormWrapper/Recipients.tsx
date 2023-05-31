@@ -20,6 +20,7 @@ import Spinner from 'components/Spinner';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
+import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
@@ -62,7 +63,6 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
     watch,
     setError,
     clearErrors,
-    getValues,
     formState: { isLoading, errors: formErrors }
   } = useFormContext<RecipientFields>();
 
@@ -73,8 +73,10 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
     name: 'recipients'
   });
 
+  const recipients = watch('recipients');
+
   // Get initial first recipient as requester
-  const requester = useRef(getValues('recipients')?.[0] || undefined).current;
+  const requester = useRef(recipients[0]).current;
 
   const recipientsCount = (watch('recipients') || []).filter(
     ({ id, userInfo }) =>
@@ -178,40 +180,43 @@ const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
           })}
           buttonClassName="margin-top-2"
         >
-          <li>
-            <Controller
-              name="notifyEuaIds"
-              control={control}
-              render={({ field }) => {
-                const { commonName, euaUserId } = requester?.userInfo || {};
+          {!!requester?.userInfo && (
+            <li>
+              <Controller
+                name="notifyEuaIds"
+                control={control}
+                render={({ field }) => {
+                  if (!requester?.userInfo) return <></>;
 
-                const component = cmsDivisionsAndOffices.find(
-                  value => value.name === requester.component
-                )?.acronym;
+                  const { commonName, euaUserId } = requester.userInfo;
 
-                const label = `${commonName}${
-                  component ? `, ${component}` : ''
-                } (${t('Requester')})`;
+                  const component = cmsDivisionsAndOffices.find(
+                    value => value.name === requester?.component
+                  )?.acronym;
 
-                const value = euaUserId || '';
+                  const label = `${getPersonNameAndComponentVal(
+                    commonName,
+                    component
+                  )} (${t('Requester')})`;
 
-                return (
-                  <CheckboxField
-                    id={`${field.name}.0`}
-                    label={label}
-                    {...{ ...field, ref: null }}
-                    onChange={e => {
-                      field.onChange(
-                        toggleArrayValue(field.value, e.target.value)
-                      );
-                    }}
-                    value={value}
-                    checked={field.value.includes(value)}
-                  />
-                );
-              }}
-            />
-          </li>
+                  return (
+                    <CheckboxField
+                      id={`${field.name}.0`}
+                      label={label}
+                      {...{ ...field, ref: null }}
+                      onChange={e => {
+                        field.onChange(
+                          toggleArrayValue(field.value, e.target.value)
+                        );
+                      }}
+                      value={euaUserId}
+                      checked={field.value.includes(euaUserId)}
+                    />
+                  );
+                }}
+              />
+            </li>
+          )}
 
           <li>
             <Controller
