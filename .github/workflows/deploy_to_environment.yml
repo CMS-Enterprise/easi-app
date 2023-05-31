@@ -54,7 +54,7 @@ jobs:
           cache: 'yarn'
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
-      # - name: Configure AWS Credentials
+      # ###- name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v1-node16
       #   with:
       #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
