@@ -39,7 +39,7 @@ import './index.scss';
 
 type StepsText = { name: string; longName?: string; description?: string }[];
 
-type FormStepKey =
+export type FormStepKey =
   | 'summary'
   | 'recommendations'
   | 'next-steps'
@@ -77,7 +77,13 @@ type AdviceFormStep = typeof adviceFormSteps[number];
 const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
-  const location = useLocation<{ error?: boolean }>();
+  const location = useLocation<{
+    error?: boolean;
+    state: { fromAdmin?: boolean };
+    fromAdmin?: boolean;
+  }>();
+
+  const fromAdmin = location.state?.fromAdmin;
 
   // Get url params
   const { id, formStep, subpage } = useParams<{
@@ -121,23 +127,47 @@ const AdviceLetterForm = () => {
   // When navigating to a different step, checks if all previous form steps are valid
   const checkValidSteps = useCallback(
     (index: number): boolean => {
-      const stepsToValidate = adviceFormSteps.slice(0, index);
-      const validSteps = stepsToValidate.filter(({ slug }) =>
-        stepsCompleted?.includes(slug)
+      return (
+        adviceFormSteps.filter(
+          (step, i) => stepsCompleted?.includes(step.slug) && i < index
+        ).length === index
       );
-      return stepsToValidate.length === validSteps.length;
     },
     [stepsCompleted]
   );
+
+  /** Redirect if previous steps are not completed */
+  const redirectStep = useCallback(() => {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
+      /** Returns latest available step index */
+      const stepRedirectIndex = !stepsCompleted.includes('summary')
+        ? 0
+        : // If summary is completed, return index of last completed step plus 1
+          adviceFormSteps.findIndex(
+            step => step.slug === stepsCompleted?.slice(-1)[0]
+          ) + 1;
+
+      if (!fromAdmin && currentStepIndex === 0) return;
+      // Redirect to latest available step
+      history.replace(
+        `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
+      );
+    }
+  }, [
+    stepsCompleted,
+    currentStepIndex,
+    history,
+    id,
+    checkValidSteps,
+    fromAdmin
+  ]);
 
   useEffect(() => {
     if (!adviceLetter) {
       return;
     }
     (async () => {
-      const completed: FormStepKey[] = stepsCompleted
-        ? [...stepsCompleted]
-        : ['recommendations'];
+      let completed: FormStepKey[] = stepsCompleted ? [...stepsCompleted] : [];
       const stepValidators = [];
 
       // Check the Meeting Summary step
@@ -152,7 +182,7 @@ const AdviceLetterForm = () => {
               }
             )
             .then(valid => {
-              if (valid) completed.unshift('summary');
+              if (valid) completed = ['summary'];
             })
         );
       }
@@ -175,38 +205,29 @@ const AdviceLetterForm = () => {
             )
             .then(valid => {
               // Internal review should be marked completed with next steps
-              if (valid) completed.push('next-steps', 'internal-review');
+              if (valid) {
+                if (valid)
+                  completed = ['summary', 'recommendations', 'next-steps'];
+              }
             })
         );
       }
 
       Promise.allSettled(stepValidators).then(() => {
-        if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+        if (!isEqual(completed, stepsCompleted)) {
+          setStepsCompleted(completed);
+        } else {
+          /** Once stepsCompleted is finished evaluating, redirect to last valid step if necessary */
+          redirectStep();
+        }
       });
     })();
   }, [
     stepsCompleted,
     adviceLetter,
-    trbRequest?.taskStatuses?.adviceLetterStatus
+    trbRequest?.taskStatuses?.adviceLetterStatus,
+    redirectStep
   ]);
-
-  // Redirect if previous step is not completed
-  useEffect(() => {
-    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
-      /** Returns latest available step index */
-      const stepRedirectIndex = !stepsCompleted.includes('summary')
-        ? 0
-        : // If summary is completed, return index of last completed step plus 1
-          adviceFormSteps.findIndex(
-            step => step.slug === stepsCompleted?.slice(-1)[0]
-          ) + 1;
-
-      // Redirect to latest available step
-      history.replace(
-        `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
-      );
-    }
-  }, [stepsCompleted, currentStepIndex, history, id, checkValidSteps]);
 
   useEffect(() => {
     if (formAlert) {
@@ -337,6 +358,8 @@ const AdviceLetterForm = () => {
               setFormAlert={setFormAlert}
               setStepSubmit={setStepSubmit}
               setIsStepSubmitting={setIsStepSubmitting}
+              stepsCompleted={stepsCompleted}
+              setStepsCompleted={setStepsCompleted}
             />
           )}
         </Grid>
