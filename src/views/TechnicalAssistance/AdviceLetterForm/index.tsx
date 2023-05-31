@@ -206,8 +206,7 @@ const AdviceLetterForm = () => {
             .then(valid => {
               // Internal review should be marked completed with next steps
               if (valid) {
-                if (valid)
-                  completed = ['summary', 'recommendations', 'next-steps'];
+                completed = ['summary', 'recommendations', 'next-steps'];
               }
             })
         );
