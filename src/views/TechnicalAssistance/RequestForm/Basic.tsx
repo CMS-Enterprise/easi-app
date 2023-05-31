@@ -145,7 +145,7 @@ function Basic({
   } = useForm<FormFieldProps<TrbRequestFormBasic>>({
     resolver: yupResolver(basicSchema),
     defaultValues: {
-      name: request.name,
+      name: request.name || '',
       ...initialValues,
       // Mapping over intakes as mutation input only takes UUID
       systemIntakes: request.form.systemIntakes.map(intake => intake.id)

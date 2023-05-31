@@ -20,7 +20,7 @@ func (s *ResolverSuite) TestCreateTRBRequest() {
 	s.NotNil(trb)
 
 	s.EqualValues(false, trb.Archived)
-	s.EqualValues("Draft", trb.Name)
+	s.Nil(trb.Name)
 	s.EqualValues(models.TRBRequestStateOpen, trb.State)
 	s.EqualValues(s.testConfigs.Principal.EUAID, trb.CreatedBy)
 	s.NotNil(trb.ID)
@@ -45,7 +45,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 	updated, err := UpdateTRBRequest(s.testConfigs.Context, trb.ID, changes, s.testConfigs.Store)
 	s.NotNil(updated)
 	s.NoError(err)
-	s.EqualValues(updated.Name, "Testing")
+	s.EqualValues(*updated.Name, "Testing")
 	s.EqualValues(updated.State, models.TRBRequestStateClosed)
 	s.EqualValues(updated.Archived, false)
 	s.EqualValues(updated.ModifiedBy, &princ)

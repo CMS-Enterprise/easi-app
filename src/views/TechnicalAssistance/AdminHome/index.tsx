@@ -76,6 +76,8 @@ export default function AdminHome() {
   // Current user info from redux
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
+  const { t } = useTranslation('technicalAssistance');
+
   const flags = useFlags();
 
   // Get url params
@@ -142,7 +144,7 @@ export default function AdminHome() {
       {/* Request summary */}
       <Summary
         trbRequestId={id}
-        name={trbRequest.name}
+        name={trbRequest.name || t('taskList.defaultName')}
         requestType={trbRequest.type}
         state={trbRequest.state}
         taskStatus={trbRequest.status}
