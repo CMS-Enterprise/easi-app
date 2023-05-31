@@ -897,7 +897,7 @@ const technicalAssistance = {
     newRequests: {
       heading: 'New requests',
       description:
-        'Review these recently submitted technical assistance requests and assign a TRB lead.',
+        'Review these recently submitted technical assistance requests and assign a TRB lead. The requests below were either submitted within the past 7 days, or have not had a lead assigned.',
       downloadCsv: 'Download all new requests (csv)',
       noRequests:
         'There are currently no new requests. The TRB Mailbox will receive an email notification when a new request is submitted, or you can check back here later.'
