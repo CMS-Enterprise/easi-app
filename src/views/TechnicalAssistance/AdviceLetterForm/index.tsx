@@ -39,7 +39,7 @@ import './index.scss';
 
 type StepsText = { name: string; longName?: string; description?: string }[];
 
-type FormStepKey =
+export type FormStepKey =
   | 'summary'
   | 'recommendations'
   | 'next-steps'
@@ -137,7 +137,7 @@ const AdviceLetterForm = () => {
     (async () => {
       const completed: FormStepKey[] = stepsCompleted
         ? [...stepsCompleted]
-        : ['recommendations'];
+        : [];
       const stepValidators = [];
 
       // Check the Meeting Summary step
@@ -152,7 +152,7 @@ const AdviceLetterForm = () => {
               }
             )
             .then(valid => {
-              if (valid) completed.unshift('summary');
+              if (valid) completed.push('summary');
             })
         );
       }
@@ -175,7 +175,12 @@ const AdviceLetterForm = () => {
             )
             .then(valid => {
               // Internal review should be marked completed with next steps
-              if (valid) completed.push('next-steps', 'internal-review');
+              if (valid) {
+                if (!completed.includes('summary')) completed.push('summary');
+                if (!completed.includes('recommendations'))
+                  completed.push('recommendations');
+                completed.push('next-steps');
+              }
             })
         );
       }
@@ -192,7 +197,11 @@ const AdviceLetterForm = () => {
 
   // Redirect if previous step is not completed
   useEffect(() => {
-    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
+    if (
+      stepsCompleted &&
+      currentStepIndex !== 0 &&
+      !checkValidSteps(currentStepIndex - 1)
+    ) {
       /** Returns latest available step index */
       const stepRedirectIndex = !stepsCompleted.includes('summary')
         ? 0
@@ -337,6 +346,8 @@ const AdviceLetterForm = () => {
               setFormAlert={setFormAlert}
               setStepSubmit={setStepSubmit}
               setIsStepSubmitting={setIsStepSubmitting}
+              stepsCompleted={stepsCompleted}
+              setStepsCompleted={setStepsCompleted}
             />
           )}
         </Grid>
