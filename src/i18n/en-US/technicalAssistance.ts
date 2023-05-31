@@ -531,7 +531,7 @@ const technicalAssistance = {
       collabGroupOther: 'Which other group(s)?',
       whenMeet: 'When did you meet with them?',
       collabGRBConsultRequested:
-        'Did the GRT or GRB request that you consult with the TRB as a part of your IT Governance or LCID issuance process?',
+        'Did the GRT or GRB request that you consult with the TRB as a part of your IT Governance or Life Cycle ID (LCID) issuance process?',
       pleaseSpecify: 'Please specify'
     },
     hint: {
