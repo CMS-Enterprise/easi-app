@@ -65,13 +65,11 @@ export default function Summary({
                 <span className="text-white">{t('adminHome.home')}</span>
               </BreadcrumbLink>
             </Breadcrumb>
-            <Breadcrumb current>{name}</Breadcrumb>
+            <Breadcrumb current>{t('adminHome.breadcrumb')}</Breadcrumb>
           </BreadcrumbBar>
 
           {/* Request name */}
-          <h2 className="margin-top-05 margin-bottom-0">
-            {name || t('taskList.defaultName')}
-          </h2>
+          <h2 className="margin-top-05 margin-bottom-0">{name}</h2>
 
           {/* Request details */}
           <Grid row>
