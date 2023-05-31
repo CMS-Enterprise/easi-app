@@ -444,10 +444,6 @@ exports[`Email recipient fields component renders Add Attendee form 1`] = `
               label="Other"
               value="OTHER"
             />
-            <option
-              label="Unknown"
-              value="UNKNOWN"
-            />
           </select>
         </div>
         <ul
