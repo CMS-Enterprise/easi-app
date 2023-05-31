@@ -65,7 +65,7 @@ export default function Summary({
                 <span className="text-white">{t('adminHome.home')}</span>
               </BreadcrumbLink>
             </Breadcrumb>
-            <Breadcrumb current>{t('adminHome.breadcrumb')}</Breadcrumb>
+            <Breadcrumb current>{name}</Breadcrumb>
           </BreadcrumbBar>
 
           {/* Request name */}
