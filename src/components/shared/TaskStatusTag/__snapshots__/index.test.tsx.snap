@@ -66,10 +66,10 @@ exports[`TaskStatusTag renders task status tag {"status":"NOT_NEEDED","className
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","className":"bg-info-light-light"} 1`] = `
+exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag bg-info-light-light"
+    class="easi-tag bg-info-light"
     data-testid="task-list-task-tag"
   >
     Ready for review
