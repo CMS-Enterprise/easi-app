@@ -61,7 +61,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
     <div
       class="margin-top-2 font-body-lg line-height-body-5 text-light"
     >
-      The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.
+      The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also guides project teams on adhering to CMS technical standards and leveraging existing technologies.
     </div>
     <div
       class="margin-top-4 padding-2 line-height-body-5 bg-gray-5"
@@ -76,7 +76,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
           ask for help with a technical problem
         </li>
         <li>
-          consult with SMEs from across the agency
+          consult with Subject Matter Experts (SMEs) from across the agency
         </li>
         <li>
           consult with the TRB about CMS guidelines and standards
@@ -179,7 +179,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
             class="list-style-middot"
           >
             <li>
-              Subject Matter Experts (SMEs) to provide additional advice and insight
+              SMEs to provide additional advice and insight
             </li>
             <li>
               any additional project team members you’ve specified
@@ -509,12 +509,12 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
         <p
           class="line-height-body-5 font-body-lg text-light margin-y-1"
         >
-          Request help or feedback for your system, or ask the TRB for other technical assistance.
+          Request help or feedback for your system or ask the TRB for other technical assistance.
         </p>
         <p
           class="line-height-body-5 margin-top-1"
         >
-          The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.
+          The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also guides project teams on adhering to CMS technical standards and leveraging existing technologies.
         </p>
         <div
           class="bg-base-lightest padding-y-205 padding-x-2 margin-y-3"
@@ -533,7 +533,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
             <li
               class="margin-bottom-1"
             >
-              review potential solutions or ideas with the TRB and other SMEs
+              review potential solutions or ideas with the TRB and other Subject Matter Experts (SMEs)
             </li>
             <li
               class="margin-bottom-1"
@@ -585,7 +585,7 @@ exports[`Technical Assistance (TRB) homepage renders the homepage with a list of
         class="trb-requests-table"
       >
         <h2>
-          My TRB Requests
+          My TRB requests
         </h2>
         <form
           class="usa-form usa-search margin-bottom-4 maxw-mobile-lg"

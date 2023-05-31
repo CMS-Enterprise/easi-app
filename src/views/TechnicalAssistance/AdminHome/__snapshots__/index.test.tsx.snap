@@ -489,7 +489,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                         class="easi-tag bg-warning"
                         data-testid="task-list-task-tag"
                       >
-                        In Progress
+                        In progress
                       </span>
                     </div>
                     <dt
