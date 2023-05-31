@@ -224,6 +224,9 @@ func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID
 	status = models.TRBRequestStatusNew
 
 	taskStatuses, err := GetTRBTaskStatuses(ctx, store, trbRequestID)
+	if err != nil {
+		return status, err
+	}
 	trb, err := store.GetTRBRequestByID(ctx, trbRequestID)
 	if err != nil {
 		return status, err
