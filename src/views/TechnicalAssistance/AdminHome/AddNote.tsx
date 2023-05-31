@@ -181,7 +181,7 @@ const AddNote = ({
               />
             </div>
 
-            {message}
+            {!setModalView && message}
 
             {hasErrors && (
               <Alert
