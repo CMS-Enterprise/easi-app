@@ -281,7 +281,7 @@ const DocumentUpload = ({
         <div>
           <Button
             type="submit"
-            disabled={!isDirty || isSubmitting}
+            disabled={!watch('fileData') || isSubmitting}
             className="margin-top-4"
           >
             {t('documents.upload.uploadDocument')}
