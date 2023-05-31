@@ -33,7 +33,7 @@ function TrbRequestFeedbackList({ feedback }: TrbRequestFeedbackListProps) {
               </dl>
             </Grid>
             <Grid col={12}>
-              <div className="padding-3 bg-base-lightest line-height-body-5">
+              <div className="padding-3 bg-base-lightest line-height-body-5 text-pre-wrap">
                 {item.feedbackMessage}
               </div>
             </Grid>

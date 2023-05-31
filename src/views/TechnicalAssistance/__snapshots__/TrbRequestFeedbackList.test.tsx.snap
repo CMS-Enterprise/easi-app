@@ -43,7 +43,7 @@ exports[`TrbRequestFeedbackList renders 1`] = `
       data-testid="grid"
     >
       <div
-        class="padding-3 bg-base-lightest line-height-body-5"
+        class="padding-3 bg-base-lightest line-height-body-5 text-pre-wrap"
       >
         Please
       </div>
@@ -93,7 +93,7 @@ exports[`TrbRequestFeedbackList renders 1`] = `
       data-testid="grid"
     >
       <div
-        class="padding-3 bg-base-lightest line-height-body-5"
+        class="padding-3 bg-base-lightest line-height-body-5 text-pre-wrap"
       >
         Thank you
       </div>

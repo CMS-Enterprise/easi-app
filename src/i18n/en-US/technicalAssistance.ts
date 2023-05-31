@@ -317,6 +317,9 @@ const technicalAssistance = {
       BRAINSTORM: 'Idea feedback',
       OTHER: 'Other'
     },
+    requestState: {
+      CLOSED: 'Closed'
+    },
     requestStatus: {
       NEW: 'New',
       DRAFT_REQUEST_FORM: 'Draft request form',
@@ -598,7 +601,7 @@ const technicalAssistance = {
       whereInProcess:
         'This helps the TRB provide the right type of support for your request.',
       whenMeet:
-        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.',
+        'Format mm/dd/yyyy. If you are unsure of the specific date, you may pick a date that is your best guess.',
       fundingSources:
         'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
       relatedLCIDS:
@@ -683,6 +686,8 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding attendees',
     dontAddAndReturn: "Don't add and return to previous page",
     dontEditAndReturn: "Don't edit and return to previous page",
+    noAttendees:
+      'You have not added any additional attendees to this consult session. Use the button below to invite project team members or anyone else who should be present.',
     attendeeHelpText:
       'Please provide the name, CMS component, and role for this attendee.',
     attendeeNameHelpText:

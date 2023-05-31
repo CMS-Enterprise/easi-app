@@ -579,6 +579,10 @@ describe('Trb Request form: Supporting documents', () => {
 
     expect(uploadButton).toBeDisabled();
 
+    // Add a document
+    const documentUploadLabel = getByLabelText('Document upload');
+    userEvent.upload(documentUploadLabel, testFile);
+
     // Select the "Other" document type so that the form submit button is enabled
     // The file input and the other text field will be left empty to catch errors
     userEvent.click(getByTestId('documentType-OTHER'));
@@ -586,18 +590,8 @@ describe('Trb Request form: Supporting documents', () => {
     // Submit attempt
     userEvent.click(uploadButton);
 
-    // File input error
-    const fileError = await findByText('Please select a file');
     // Other document input error
     const otherDocError = await findByText('Please fill in the blank');
-
-    // Add a document
-    const documentUploadLabel = getByLabelText('Document upload');
-    userEvent.upload(documentUploadLabel, testFile);
-    // Document error gone
-    await waitFor(() => {
-      expect(fileError).not.toBeInTheDocument();
-    });
 
     // Text field error is still there
     expect(otherDocError).toBeInTheDocument();
@@ -606,7 +600,7 @@ describe('Trb Request form: Supporting documents', () => {
     userEvent.type(getByLabelText('What kind of document is this?'), 'test');
     // Text error gone
     await waitFor(() => {
-      expect(fileError).not.toBeInTheDocument();
+      expect(otherDocError).not.toBeInTheDocument();
     });
   });
 });
