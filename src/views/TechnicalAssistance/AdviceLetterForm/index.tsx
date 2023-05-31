@@ -279,9 +279,9 @@ const AdviceLetterForm = () => {
           breadcrumbBar={
             <Breadcrumbs
               items={[
-                { text: t('Home'), url: '/trb' },
+                { text: t('adminHome.home'), url: '/trb' },
                 {
-                  text: t(`Request ${id}`),
+                  text: t('adminHome.breadcrumb'),
                   url: `/trb/${id}/advice`
                 },
                 { text: t('adviceLetterForm.heading') }
@@ -294,6 +294,7 @@ const AdviceLetterForm = () => {
                 type={formAlert.type}
                 className={`trb-form-${formAlert.type} margin-top-3`}
                 slim
+                closeAlert={setFormAlert}
               >
                 {formAlert.message}
               </Alert>

@@ -17,6 +17,7 @@ type SendTRBRequestClosedEmailInput struct {
 	TRBRequestName string
 	RequesterName  string
 	Recipients     []models.EmailAddress
+	CopyTRBMailbox bool
 	ReasonClosed   string
 }
 
@@ -36,7 +37,10 @@ type trbRequestClosedEmailTemplateParams struct {
 func (c Client) SendTRBRequestClosedEmail(ctx context.Context, input SendTRBRequestClosedEmailInput) error {
 	subject := "The TRB request " + input.TRBRequestName + " has been closed."
 
-	allRecipients := append(input.Recipients, c.config.TRBEmail)
+	allRecipients := input.Recipients
+	if input.CopyTRBMailbox {
+		allRecipients = append(input.Recipients, c.config.TRBEmail)
+	}
 
 	templateParams := trbRequestClosedEmailTemplateParams{
 		TRBRequestName:      input.TRBRequestName,

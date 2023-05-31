@@ -232,6 +232,7 @@ const technicalAssistance = {
     followupYes: 'Yes, a follow-up is recommended',
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
+    removeSuccess: 'Your recommendation was removed from this advice letter.',
     error:
       'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     recommendationSuccess:
@@ -314,6 +315,9 @@ const technicalAssistance = {
       NEED_HELP: 'System problem',
       BRAINSTORM: 'Idea feedback',
       OTHER: 'Other'
+    },
+    requestState: {
+      CLOSED: 'Closed'
     },
     requestStatus: {
       NEW: 'New',
@@ -596,7 +600,7 @@ const technicalAssistance = {
       whereInProcess:
         'This helps the TRB provide the right type of support for your request.',
       whenMeet:
-        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.',
+        'Format mm/dd/yyyy. If you are unsure of the specific date, you may pick a date that is your best guess.',
       fundingSources:
         'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
       relatedLCIDS:
@@ -681,16 +685,19 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding attendees',
     dontAddAndReturn: "Don't add and return to previous page",
     dontEditAndReturn: "Don't edit and return to previous page",
+    noAttendees:
+      'You have not added any additional attendees to this consult session. Use the button below to invite project team members or anyone else who should be present.',
     attendeeHelpText:
       'Please provide the name, CMS component, and role for this attendee.',
     attendeeNameHelpText:
       'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at <1>cms-trb@cms.hhs.gov</1>.',
     alerts: {
-      success: 'Your attendee has been added',
-      successEdit: 'Your attendee has been edited',
+      success: 'Your attendee has been added.',
+      successEdit: 'Your attendee has been edited.',
+      successRemove: 'Your attendee has been removed.',
       error:
         'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.',
-      invalidForm: 'Invalid attendees form'
+      invalidForm: 'Invalid attendees form.'
     },
     modal: {
       heading: 'Confirm you want to remove {{-attendee}}.',
@@ -740,7 +747,8 @@ const technicalAssistance = {
         fileName: 'File name',
         documentType: 'Document type',
         uploadDate: 'Upload date',
-        actions: 'Actions'
+        actions: 'Actions',
+        trbLead: 'TRB lead'
       },
       noDocument: 'No documents uploaded',
       view: 'View',
@@ -753,6 +761,7 @@ const technicalAssistance = {
       subtitle:
         'Choose a document to upload, such as a presentation slide deck, concept paper, or other system information document.',
       documentUpload: 'Document upload',
+      docType: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
       dragFile: 'Drag file here or choose from folder',
       selectedFile: 'Selected file',
       changeFile: 'Change file',
@@ -843,7 +852,8 @@ const technicalAssistance = {
     noFeedbackAlert: 'No feedback has been added for this request.'
   },
   adminHome: {
-    breadcrumb: 'Request {{trbRequestId}}',
+    home: 'Home',
+    breadcrumb: 'Request details',
     requestType: 'Request type',
     requester: 'Requester',
     submissionDate: 'Submission Date',
@@ -975,6 +985,7 @@ const technicalAssistance = {
     },
     actions: {
       assignLead: 'Assign lead',
+      changeLead: 'Change lead',
       addDate: 'Add date'
     }
   },
@@ -1110,7 +1121,8 @@ const technicalAssistance = {
     success: '{{name}} is assigned as the TRB lead for this request.',
     error:
       'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.'
-  }
+  },
+  closeTab: 'Close tab'
 };
 
 export default technicalAssistance;

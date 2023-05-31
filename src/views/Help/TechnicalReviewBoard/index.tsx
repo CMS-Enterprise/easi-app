@@ -17,7 +17,10 @@ const TechnicalReviewBoard = () => {
   return (
     <MainContent className="grid-container">
       <HelpBreadcrumb type="Back" />
-      <HelpPageIntro heading={t('technicalReviewBoard.heading')} />
+      <HelpPageIntro
+        heading={t('technicalReviewBoard.heading')}
+        subheading={t('technicalReviewBoard.subheading')}
+      />
       <CardGroup className="padding-top-1 padding-bottom-4">
         {trbArticles.map(article => {
           return (

@@ -17,7 +17,6 @@ import (
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/spf13/cobra"
-	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
@@ -68,10 +67,6 @@ var store *storage.Store
 
 func connect() {
 	config := testhelpers.NewConfig()
-	logger, loggerErr := zap.NewDevelopment()
-	if loggerErr != nil {
-		panic(loggerErr)
-	}
 
 	dbConfig := storage.DBConfig{
 		Host:           config.GetString(appconfig.DBHostConfigKey),
@@ -88,7 +83,7 @@ func connect() {
 		panic(ldErr)
 	}
 
-	storeInstance, storeErr := storage.NewStore(logger, dbConfig, ldClient)
+	storeInstance, storeErr := storage.NewStore(dbConfig, ldClient)
 	if storeErr != nil {
 		panic(storeErr)
 	}

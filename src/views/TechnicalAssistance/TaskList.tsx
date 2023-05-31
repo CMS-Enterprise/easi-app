@@ -20,7 +20,7 @@ import {
   GetTrbTasklistVariables
 } from 'queries/types/GetTrbTasklist';
 import {
-  TRBAdviceLetterStatus,
+  TRBAdviceLetterStatusTaskList,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
   TRBFeedbackStatus,
@@ -318,15 +318,15 @@ function TaskList() {
                 {/* Advice letter and next steps */}
                 <TaskListItem
                   heading={taskListText[4].heading}
-                  status={taskStatuses?.adviceLetterStatus}
+                  status={taskStatuses?.adviceLetterStatusTaskList}
                   testId={kebabCase(taskListText[4].heading)}
                 >
                   <TaskListDescription>
                     <p>{taskListText[4].text}</p>
                   </TaskListDescription>
 
-                  {taskStatuses?.adviceLetterStatus ===
-                    TRBAdviceLetterStatus.COMPLETED && (
+                  {taskStatuses?.adviceLetterStatusTaskList ===
+                    TRBAdviceLetterStatusTaskList.COMPLETED && (
                     <UswdsReactLink
                       variant="unstyled"
                       className="usa-button"
@@ -360,13 +360,15 @@ function TaskList() {
                 {t('taskList.additionalHelp')}
               </h4>
               <div className="text-base">{t('taskList.helpLinksNewTab')}</div>
-              {/* todo
               <div className="margin-top-1">
-                <UswdsReactLink to=".">
+                <UswdsReactLink
+                  to="/help/trb/steps-involved-trb"
+                  target="_blank"
+                >
                   {t('taskList.stepsInvolved')}
                 </UswdsReactLink>
               </div>
-              */}
+
               <div className="margin-top-1">
                 <UswdsReactLink
                   to="/help/trb/prepare-consult-meeting"

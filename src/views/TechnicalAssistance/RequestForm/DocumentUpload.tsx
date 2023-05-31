@@ -195,6 +195,9 @@ const DocumentUpload = ({
                     <Label htmlFor={field.name} error={!!error}>
                       {t('documents.upload.documentUpload')}
                     </Label>
+                    <span className="usa-hint">
+                      {t('documents.upload.docType')}
+                    </span>
                     {error && (
                       <ErrorMessage>{t('errors.selectFile')}</ErrorMessage>
                     )}
@@ -278,7 +281,7 @@ const DocumentUpload = ({
         <div>
           <Button
             type="submit"
-            disabled={!isDirty || isSubmitting}
+            disabled={!watch('fileData') || isSubmitting}
             className="margin-top-4"
           >
             {t('documents.upload.uploadDocument')}

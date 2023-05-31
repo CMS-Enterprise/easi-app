@@ -29,6 +29,7 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
+import { TRBRequestState } from 'types/graphql-global-types';
 import {
   TrbAdminTeamHomeRequest,
   TrbRequestIdRef
@@ -159,20 +160,24 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
         accessor: ({ type }) => t(`table.requestTypes.${type}`)
       },
       {
-        Header: t<string>('documents.table.header.actions'),
-        Cell: ({ row }: CellProps<TrbAdminTeamHomeRequest>) =>
-          row.original.trbLeadInfo.commonName === '' ? (
+        Header: t<string>('documents.table.header.trbLead'),
+        Cell: ({ row }: CellProps<TrbAdminTeamHomeRequest>) => (
+          <>
+            {row.original.trbLeadInfo.commonName && (
+              <p>{row.original.trbLeadInfo.commonName}</p>
+            )}
             <TrbAssignLeadModalOpener
               trbRequestId={row.original.id}
               modalRef={assignLeadModalRef}
               trbRequestIdRef={assignLeadModalTrbRequestIdRef}
               className="usa-button--unstyled"
             >
-              {t('adminTeamHome.actions.assignLead')}
+              {row.original.trbLeadInfo.commonName === ''
+                ? t('adminTeamHome.actions.assignLead')
+                : t('adminTeamHome.actions.changeLead')}
             </TrbAssignLeadModalOpener>
-          ) : (
-            ''
-          ),
+          </>
+        ),
         disableSortBy: true
       }
     ];
@@ -362,7 +367,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       },
       {
         Header: t<string>('adminHome.status'),
-        accessor: ({ status }) => t(`table.requestStatus.${status}`)
+        accessor: ({ status, state }) =>
+          state === TRBRequestState.CLOSED
+            ? t(`table.requestState.${state}`)
+            : t(`table.requestStatus.${status}`)
       },
       {
         Header: t<string>('table.header.trbConsultDate'),

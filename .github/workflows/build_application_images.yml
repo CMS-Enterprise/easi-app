@@ -92,7 +92,7 @@ jobs:
           if [[ $IMAGE_FOUND == 1 ]]; then
             echo "Image found, skipping build"
           else
-            docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" --file Dockerfile.db_migrations .
+            docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" --build-arg TAG=9.10-alpine --file Dockerfile.db_migrations .
             docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
           fi
       - name: Announce failure

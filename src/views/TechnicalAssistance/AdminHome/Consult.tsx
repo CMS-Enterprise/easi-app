@@ -46,9 +46,8 @@ interface ConsultFields extends TrbRecipientFields {
 function Consult() {
   const { t } = useTranslation('technicalAssistance');
 
-  const { id, activePage } = useParams<{
+  const { id } = useParams<{
     id: string;
-    activePage: string;
     action: 'schedule-consult';
   }>();
   const history = useHistory();
@@ -60,7 +59,7 @@ function Consult() {
     createAttendee
   } = useTRBAttendees(id);
 
-  const requestUrl = `/trb/${id}/${activePage}`;
+  const requestUrl = `/trb/${id}/request`;
 
   const [mutate, mutationResult] = useMutation<
     UpdateTrbRequestConsultMeeting,
@@ -261,6 +260,8 @@ function Consult() {
                     <TimePicker
                       id="meetingTime"
                       name="meetingTime"
+                      minTime="08:00"
+                      maxTime="18:00"
                       onChange={val => {
                         field.onChange(val);
                       }}

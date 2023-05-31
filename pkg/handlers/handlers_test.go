@@ -17,7 +17,7 @@ func TestHandlerTestSuite(t *testing.T) {
 	handlerTestSuite := &HandlerTestSuite{
 		Suite:  suite.Suite{},
 		logger: zap.NewNop(),
-		base:   NewHandlerBase(zap.NewNop()),
+		base:   NewHandlerBase(),
 	}
 	suite.Run(t, handlerTestSuite)
 }
