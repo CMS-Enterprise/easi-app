@@ -18,6 +18,7 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
+import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { FormAlertObject } from 'types/technicalAssistance';
 import {
   meetingSummarySchema,
@@ -210,6 +211,18 @@ const AdviceLetterForm = () => {
               }
             })
         );
+      }
+
+      if (
+        trbRequest?.taskStatuses.adviceLetterStatus ===
+        TRBAdviceLetterStatus.READY_FOR_REVIEW
+      ) {
+        completed = [
+          'summary',
+          'recommendations',
+          'next-steps',
+          'internal-review'
+        ];
       }
 
       Promise.allSettled(stepValidators).then(() => {
