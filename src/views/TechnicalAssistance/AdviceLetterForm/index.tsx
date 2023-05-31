@@ -132,9 +132,7 @@ const AdviceLetterForm = () => {
       return;
     }
     (async () => {
-      const completed: FormStepKey[] = stepsCompleted
-        ? [...stepsCompleted]
-        : ['recommendations'];
+      const completed: FormStepKey[] = ['recommendations'];
       const stepValidators = [];
 
       // Check the Meeting Summary step
