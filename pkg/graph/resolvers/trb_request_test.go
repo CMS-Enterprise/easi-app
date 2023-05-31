@@ -45,7 +45,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 	updated, err := UpdateTRBRequest(s.testConfigs.Context, trb.ID, changes, s.testConfigs.Store)
 	s.NotNil(updated)
 	s.NoError(err)
-	s.EqualValues(updated.Name, "Testing")
+	s.EqualValues(*updated.Name, "Testing")
 	s.EqualValues(updated.State, models.TRBRequestStateClosed)
 	s.EqualValues(updated.Archived, false)
 	s.EqualValues(updated.ModifiedBy, &princ)
