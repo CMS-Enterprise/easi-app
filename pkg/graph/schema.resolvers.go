@@ -2121,6 +2121,7 @@ func (r *mutationResolver) CloseTRBRequest(ctx context.Context, input model.Clos
 		r.service.FetchUserInfos,
 		input.ID,
 		input.ReasonClosed,
+		input.CopyTrbMailbox,
 		input.NotifyEuaIds,
 	)
 }
@@ -2132,6 +2133,8 @@ func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.Reo
 		r.store,
 		input.TrbRequestID,
 		input.ReasonReopened,
+		input.CopyTrbMailbox,
+		input.NotifyEuaIds,
 		r.emailClient,
 		r.service.FetchUserInfo,
 		r.service.FetchUserInfos,
@@ -2407,7 +2410,7 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 	var cedarRoles []*models.CedarRole
 	var errR error
 	g.Go(func() error {
-		cedarRoles, errS = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.String{})
+		cedarRoles, errR = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.String{})
 		return errR
 	})
 

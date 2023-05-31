@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
-import { Alert, Button } from '@trussworks/react-uswds';
+import { Button } from '@trussworks/react-uswds';
 
+import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import {
   DeleteTrbRecommendationQuery,

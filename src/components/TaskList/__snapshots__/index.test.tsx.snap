@@ -17,7 +17,7 @@ exports[`The TaskListItem matches snapshot 1`] = `
           Fill out the Intake Request form
         </h3>
         <span
-          class="easi-tag bg-info"
+          class="easi-tag bg-info-light"
           data-testid="task-list-task-tag"
         >
           Ready to start

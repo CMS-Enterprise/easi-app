@@ -1,8 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, IconMailOutline, Link } from '@trussworks/react-uswds';
+import { IconMailOutline, Link } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Alert from 'components/shared/Alert';
 import {
   SubpageKey,
   SystemProfileSubviewProps,
@@ -26,7 +27,7 @@ export function getPointsOfContact(
   // eslint-disable-next-line no-restricted-syntax
   for (const pocid of subPocIds) {
     const found = usernamesWithRoles.filter(user =>
-      user.roles.find(r => r.roleTypeID === pocid)
+      user.roles.find(r => r.roleTypeName === pocid)
     );
     if (found.length) {
       contacts = found;

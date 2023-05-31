@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Alert,
   Button,
   Card,
   CardFooter,
@@ -18,6 +17,7 @@ import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { camelCase } from 'lodash';
 
+import Alert from 'components/shared/Alert';
 import {
   DescriptionDefinition,
   DescriptionTerm

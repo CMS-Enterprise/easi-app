@@ -12,7 +12,10 @@ const TestingTemplates = () => {
         <HelpBreadcrumb type="Close tab" />
         <TestingTemplatesBase helpArticle />
       </MainContent>
-      <RelatedArticles type="Section 508" />
+      <RelatedArticles
+        type="Section 508"
+        currentArticle="templatesFor508Testing"
+      />
     </>
   );
 };

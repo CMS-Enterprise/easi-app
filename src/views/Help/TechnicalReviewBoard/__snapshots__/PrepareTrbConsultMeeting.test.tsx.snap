@@ -264,7 +264,7 @@ exports[`Trb Help Prepare Consult Meeting renders 1`] = `
               <h3
                 class="line-height-body-4 margin-bottom-1"
               >
-                Prepare for your TRB consult meeting
+                Steps involved in getting technical assistance from the TRB
               </h3>
               <a
                 class="usa-link display-inline-block margin-bottom-1"
@@ -283,7 +283,7 @@ exports[`Trb Help Prepare Consult Meeting renders 1`] = `
               data-testid="CardBody"
             >
               <p>
-                Learn what to expect during and after the meeting, including what to prepare for, and what to bring.
+                The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.
               </p>
             </div>
             <div

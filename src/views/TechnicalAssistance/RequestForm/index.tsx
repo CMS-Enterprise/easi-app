@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
-  Alert,
   Button,
   GridContainer,
   IconArrowBack,
@@ -13,6 +12,7 @@ import { isEqual } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import {
@@ -132,6 +132,7 @@ function Header({
   isStepSubmitting,
   warning,
   formAlert,
+  setFormAlert,
   taskListUrl
 }: {
   step: number;
@@ -143,6 +144,7 @@ function Header({
   isStepSubmitting: boolean;
   warning?: React.ReactNode;
   formAlert: TrbFormAlert;
+  setFormAlert: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
   taskListUrl: string;
 }) {
   const history = useHistory();
@@ -199,6 +201,7 @@ function Header({
             type={formAlert.type}
             slim={formAlert.slim}
             className="trb-form-error margin-top-3 margin-bottom-2"
+            closeAlert={setFormAlert}
           >
             {formAlert.message}
           </Alert>
@@ -488,6 +491,7 @@ function RequestForm() {
           isStepSubmitting={isStepSubmitting}
           warning={editsRequestedWarning}
           formAlert={formAlert}
+          setFormAlert={setFormAlert}
           taskListUrl={taskListUrl}
         />
       )}

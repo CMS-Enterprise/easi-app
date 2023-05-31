@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { GridContainer } from '@trussworks/react-uswds';
+import { useHistory } from 'react-router-dom';
+import { Button, GridContainer, IconClose } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -18,21 +20,39 @@ function ViewSubmittedRequest({
   taskListUrl: string;
 }) {
   const { t } = useTranslation('technicalAssistance');
+
+  const history = useHistory();
+  const newTab = history.length === 1;
+
   return (
     <GridContainer className="width-full">
-      {breadcrumbBar}
+      {!newTab && breadcrumbBar}
 
-      <PageHeading className="margin-top-6 margin-bottom-4">
+      {newTab && (
+        <Button type="button" unstyled onClick={() => window.close()}>
+          <IconClose className="margin-right-05 margin-top-6 text-tbottom" />
+          {t('closeTab')}
+        </Button>
+      )}
+
+      <PageHeading
+        className={classNames('margin-bottom-4', {
+          'margin-top-6': !newTab,
+          'margin-top-4': newTab
+        })}
+      >
         {t('viewSubmitted.heading')}
       </PageHeading>
 
-      <UswdsReactLink
-        variant="unstyled"
-        className="usa-button usa-button--outline"
-        to={taskListUrl}
-      >
-        {t('done.returnToTaskList')}
-      </UswdsReactLink>
+      {!newTab && (
+        <UswdsReactLink
+          variant="unstyled"
+          className="usa-button usa-button--outline"
+          to={taskListUrl}
+        >
+          {t('done.returnToTaskList')}
+        </UswdsReactLink>
+      )}
 
       <SubmittedRequest request={request} showRequestHeaderInfo />
     </GridContainer>

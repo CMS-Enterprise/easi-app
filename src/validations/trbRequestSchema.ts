@@ -62,7 +62,14 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
       }
     ),
   expectedStartDate: yup.string(),
-  expectedEndDate: yup.string(),
+  expectedEndDate: yup.string().test({
+    name: 'expected-end-date-after-start-date',
+    message: 'Expected end date should not be before the expected start date',
+    test: (value, testContext) => {
+      if (value && testContext.parent.expectedStartDate > value) return false;
+      return true;
+    }
+  }),
   systemIntakes: yup.array(yup.mixed().required()).nullable(),
   collabGroups: yup
     .array(
@@ -71,28 +78,12 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
         .oneOf<TRBCollabGroupOption>(Object.values(TRBCollabGroupOption))
         .required()
     )
-    .min(1)
     .ensure(),
-  collabDateSecurity: yup.string().when('collabGroups', {
-    is: (v: any) => Array.isArray(v) && v.includes('SECURITY'),
-    then: schema => schema.required()
-  }),
-  collabDateEnterpriseArchitecture: yup.string().when('collabGroups', {
-    is: (v: any) => Array.isArray(v) && v.includes('ENTERPRISE_ARCHITECTURE'),
-    then: schema => schema.required()
-  }),
-  collabDateCloud: yup.string().when('collabGroups', {
-    is: (v: any) => Array.isArray(v) && v.includes('CLOUD'),
-    then: schema => schema.required()
-  }),
-  collabDatePrivacyAdvisor: yup.string().when('collabGroups', {
-    is: (v: any) => Array.isArray(v) && v.includes('PRIVACY_ADVISOR'),
-    then: schema => schema.required()
-  }),
-  collabDateGovernanceReviewBoard: yup.string().when('collabGroups', {
-    is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
-    then: schema => schema.required()
-  }),
+  collabDateSecurity: yup.string(),
+  collabDateEnterpriseArchitecture: yup.string(),
+  collabDateCloud: yup.string(),
+  collabDatePrivacyAdvisor: yup.string(),
+  collabDateGovernanceReviewBoard: yup.string(),
   collabGRBConsultRequested: yup
     .boolean()
     .nullable()
@@ -100,14 +91,8 @@ export const inputBasicSchema: yup.SchemaOf<TrbFormInputBasic> = yup.object({
       is: (v: any) => Array.isArray(v) && v.includes('GOVERNANCE_REVIEW_BOARD'),
       then: schema => schema.required()
     }),
-  collabGroupOther: yup.string().when('collabGroups', {
-    is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-    then: schema => schema.required()
-  }),
-  collabDateOther: yup.string().when('collabGroups', {
-    is: (v: any) => Array.isArray(v) && v.includes('OTHER'),
-    then: schema => schema.required()
-  })
+  collabGroupOther: yup.string(),
+  collabDateOther: yup.string()
 });
 export interface TrbRequestFormBasic extends TrbFormInputBasic {
   name: string;

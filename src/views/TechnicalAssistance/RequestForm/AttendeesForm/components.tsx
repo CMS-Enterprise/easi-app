@@ -9,8 +9,8 @@ import {
 import { Trans, useTranslation } from 'react-i18next';
 import { useRouteMatch } from 'react-router-dom';
 import { Column, usePagination, useTable } from 'react-table';
+import { FetchResult } from '@apollo/client';
 import {
-  Alert,
   Button,
   ButtonGroup,
   Dropdown,
@@ -27,12 +27,15 @@ import CedarContactSelect from 'components/CedarContactSelect';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
 import InitialsIcon from 'components/shared/InitialsIcon';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TablePagination from 'components/TablePagination';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
+import { DeleteTRBRequestAttendee } from 'queries/types/DeleteTRBRequestAttendee';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import {
@@ -41,6 +44,7 @@ import {
 } from 'types/technicalAssistance';
 
 import { initialAttendee } from '../Attendees';
+import { TrbFormAlert } from '..';
 
 /** Attendee form props */
 type AttendeeFieldsProps = {
@@ -95,6 +99,7 @@ const AttendeeFields = ({
           heading={t('errors.checkFix')}
           type="error"
           className="trb-attendees-fields-error margin-bottom-2"
+          slim={false}
         >
           {Object.keys(errors).map(fieldName => {
             // Check if error has custom message
@@ -120,6 +125,14 @@ const AttendeeFields = ({
       )}
       <Grid row className="margin-bottom-2">
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+          {/* Required fields help text */}
+          <HelpText className="margin-top-1 margin-bottom-1 text-base">
+            <Trans
+              i18nKey="technicalAssistance:requiredFields"
+              components={{ red: <span className="text-red" /> }}
+            />
+          </HelpText>
+
           {/* Attendee name */}
           <Controller
             name="euaUserId"
@@ -127,7 +140,10 @@ const AttendeeFields = ({
             render={({ fieldState: { error } }) => {
               return (
                 <FormGroup error={!!error}>
-                  <Label htmlFor="euaUserId">{t(fieldLabels.euaUserId)}</Label>
+                  <Label htmlFor="euaUserId">
+                    {t(fieldLabels.euaUserId)}
+                    <RequiredAsterisk />
+                  </Label>
                   {error && (
                     <ErrorMessage>
                       {t(
@@ -198,7 +214,10 @@ const AttendeeFields = ({
             render={({ field, fieldState: { error } }) => {
               return (
                 <FormGroup className="margin-top-3" error={!!error}>
-                  <Label htmlFor="role">{t(fieldLabels.role)}</Label>
+                  <Label htmlFor="role">
+                    {t(fieldLabels.role)}
+                    <RequiredAsterisk />
+                  </Label>
                   {error && (
                     <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                   )}
@@ -319,14 +338,18 @@ type AttendeesTableProps = {
   trbRequestId: string;
   /** Set active attendee - used to edit attendee */
   setActiveAttendee?: (activeAttendee: TRBAttendee) => void;
+  setFormAlert?: React.Dispatch<React.SetStateAction<TrbFormAlert>>;
   /** Delete attendee */
-  deleteAttendee?: (id: string) => void;
+  deleteAttendee?: (
+    id: string
+  ) => Promise<FetchResult<DeleteTRBRequestAttendee>>;
 };
 
 const AttendeesTable = ({
   attendees,
   trbRequestId,
   setActiveAttendee,
+  setFormAlert,
   deleteAttendee
 }: AttendeesTableProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -395,12 +418,19 @@ const AttendeesTable = ({
           type="button"
           onClick={() => {
             if (deleteAttendee && attendeeToRemove?.id) {
-              deleteAttendee(attendeeToRemove?.id);
-              setModalOpen(false);
+              deleteAttendee(attendeeToRemove?.id).then(() => {
+                if (setFormAlert) {
+                  setFormAlert({
+                    type: 'success',
+                    message: t<string>('attendees.alerts.successRemove')
+                  });
+                }
+              });
               setActiveAttendee?.({
                 ...initialAttendee,
                 trbRequestId
               });
+              setModalOpen(false);
             }
           }}
         >

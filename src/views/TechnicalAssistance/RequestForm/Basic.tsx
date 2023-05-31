@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Alert,
   Checkbox,
   Dropdown,
   ErrorMessage,
@@ -20,9 +19,11 @@ import {
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
+import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import HelpText from 'components/shared/HelpText';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -189,34 +190,35 @@ function Basic({
       handleSubmit(
         // Validation passed
         async formData => {
-          // Submit the input only if there are changes
-          if (isDirty) {
-            const { id } = request;
-            const { name } = formData;
+          try {
+            // Submit the input only if there are changes
+            if (isDirty) {
+              const { id } = request;
+              const { name } = formData;
 
-            // Only send changed fields for a partial update to the input object
-            const input: any = pick(formData, Object.keys(dirtyFields));
+              // Only send changed fields for a partial update to the input object
+              const input: any = pick(formData, Object.keys(dirtyFields));
 
-            // Convert '' back to null for the backend
-            // so that cleared inputs on the client are actually removed
-            Object.entries(input).forEach(([key, value]) => {
-              if (value === '') input[key] = null;
-            });
+              // Convert '' back to null for the backend
+              // so that cleared inputs on the client are actually removed
+              Object.entries(input).forEach(([key, value]) => {
+                if (value === '') input[key] = null;
+              });
 
-            // Handle the clearing out of toggled off fields.
-            // Unmounted fields are removed from the form data and do not get marked
-            // as dirty, so they need to be set to null to be cleared.
-            if (input.hasSolutionInMind === false) {
-              input.proposedSolution = null;
-            }
-            if (input.whereInProcess !== 'OTHER') {
-              input.whereInProcessOther = null;
-            }
-            if (input.hasExpectedStartEndDates === false) {
-              input.expectedStartDate = null;
-              input.expectedEndDate = null;
-            }
-            if ('collabGroups' in input) {
+              // Handle the clearing out of toggled off fields.
+              // Unmounted fields are removed from the form data and do not get marked
+              // as dirty, so they need to be set to null to be cleared.
+              if (input.hasSolutionInMind === false) {
+                input.proposedSolution = null;
+              }
+              if (input.whereInProcess !== 'OTHER') {
+                input.whereInProcessOther = null;
+              }
+              if (input.hasExpectedStartEndDates === false) {
+                input.expectedStartDate = null;
+                input.expectedEndDate = null;
+              }
+
               Object.values(TRBCollabGroupOption).forEach(option => {
                 if (!input.collabGroups?.includes(option)) {
                   input[`collabDate${upperFirst(camelCase(option))}`] = null;
@@ -225,41 +227,34 @@ function Basic({
                   }
                 }
               });
+
+              // Some object adjustments
+              const variables: any = {};
+
+              input.trbRequestId = id; // Use the id from the request object
+              variables.id = id;
+
+              // Move the name from the form fields object to changes
+              if ('name' in input) {
+                delete input.name;
+                variables.changes = { name };
+              }
+
+              variables.input = input;
+
+              await updateForm({ variables });
+
+              // Refresh the RequestForm parent request query
+              // to update things like `stepsCompleted`
+              await refetchRequest();
             }
 
-            // Some object adjustments
-            const variables: any = {};
-
-            input.trbRequestId = id; // Use the id from the request object
-            variables.id = id;
-
-            // Move the name from the form fields object to changes
-            if ('name' in input) {
-              delete input.name;
-              variables.changes = { name };
-            }
-
-            variables.input = input;
-
-            await updateForm({ variables });
-
-            // Refresh the RequestForm parent request query
-            // to update things like `stepsCompleted`
-            await refetchRequest();
+            callback?.();
+          } catch (e) {
+            handleApolloError(e);
           }
-        },
-        // Validation did not pass
-        () => {
-          // Need to throw from this error handler so that the promise is rejected
-          throw new Error('invalid basic form');
         }
-      )()
-        // Wait for submit to finish before continuing.
-        // This essentially makes sure any effects like
-        // `setIsStepSubmitting` are called before unmount.
-        .then(() => {
-          callback?.();
-        }, handleApolloError),
+      )(),
     [
       dirtyFields,
       handleSubmit,
@@ -335,6 +330,7 @@ function Basic({
           heading={t('errors.checkFix')}
           type="error"
           className="trb-basic-fields-error margin-bottom-2"
+          slim={false}
         >
           {Object.keys(errors).map(fieldName => {
             let msg: string;
@@ -348,6 +344,13 @@ function Basic({
             } else {
               msg = t(`basic.labels.${fieldName}`);
             }
+
+            if (errors[fieldName as keyof typeof errors]?.message) {
+              msg += `: ${errors[
+                fieldName as keyof typeof errors
+              ]?.message?.replace(fieldName, ' This')}`;
+            }
+
             return (
               <ErrorAlertMessage
                 key={fieldName}
@@ -361,9 +364,13 @@ function Basic({
 
       <Grid row>
         <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-          <Alert type="info" slim>
-            {t('basic.allFieldsMandatory')}
-          </Alert>
+          {/* Required fields help text */}
+          <HelpText className="margin-top-1 margin-bottom-1 text-base">
+            <Trans
+              i18nKey="technicalAssistance:requiredFields"
+              components={{ red: <span className="text-red" /> }}
+            />
+          </HelpText>
 
           {/* Request name */}
           <Controller
@@ -623,53 +630,61 @@ function Basic({
                     {field.value === true && (
                       <div className="margin-left-4">
                         {/* Expected start date */}
-                        <Controller
-                          name="expectedStartDate"
-                          control={control}
-                          shouldUnregister
-                          // eslint-disable-next-line no-shadow
-                          render={({ field, fieldState: { error } }) => (
-                            <FormGroup error={!!(error || startOrEndError)}>
-                              <Label
-                                htmlFor="expectedStartDate"
-                                hint="mm/dd/yyyy"
-                                error={!!error}
-                              >
-                                {t('basic.labels.expectedStartDate')}
-                              </Label>
-                              <DatePickerFormatted
-                                id="expectedStartDate"
-                                {...field}
-                                defaultValue={field.value}
-                                ref={null}
-                              />
-                            </FormGroup>
-                          )}
-                        />
-                        {/* Expected end date */}
-                        <Controller
-                          name="expectedEndDate"
-                          control={control}
-                          shouldUnregister
-                          // eslint-disable-next-line no-shadow
-                          render={({ field, fieldState: { error } }) => (
-                            <FormGroup error={!!(error || startOrEndError)}>
-                              <Label
-                                htmlFor="expectedEndDate"
-                                hint="mm/dd/yyyy"
-                                error={!!error}
-                              >
-                                {t('basic.labels.expectedEndDate')}
-                              </Label>
-                              <DatePickerFormatted
-                                id="expectedEndDate"
-                                {...field}
-                                defaultValue={field.value}
-                                ref={null}
-                              />
-                            </FormGroup>
-                          )}
-                        />
+                        <Grid row gap>
+                          <Grid tablet={{ col: 6 }}>
+                            <Controller
+                              name="expectedStartDate"
+                              control={control}
+                              shouldUnregister
+                              // eslint-disable-next-line no-shadow
+                              render={({ field, fieldState: { error } }) => (
+                                <FormGroup error={!!(error || startOrEndError)}>
+                                  <Label
+                                    htmlFor="expectedStartDate"
+                                    hint="mm/dd/yyyy"
+                                    error={!!error}
+                                  >
+                                    {t('basic.labels.expectedStartDate')}
+                                    <RequiredAsterisk />
+                                  </Label>
+                                  <DatePickerFormatted
+                                    id="expectedStartDate"
+                                    {...field}
+                                    defaultValue={field.value}
+                                    ref={null}
+                                  />
+                                </FormGroup>
+                              )}
+                            />
+                          </Grid>
+                          {/* Expected end date */}
+                          <Grid tablet={{ col: 6 }}>
+                            <Controller
+                              name="expectedEndDate"
+                              control={control}
+                              shouldUnregister
+                              // eslint-disable-next-line no-shadow
+                              render={({ field, fieldState: { error } }) => (
+                                <FormGroup error={!!(error || startOrEndError)}>
+                                  <Label
+                                    htmlFor="expectedEndDate"
+                                    hint="mm/dd/yyyy"
+                                    error={!!error}
+                                  >
+                                    {t('basic.labels.expectedEndDate')}
+                                    <RequiredAsterisk />
+                                  </Label>
+                                  <DatePickerFormatted
+                                    id="expectedEndDate"
+                                    {...field}
+                                    defaultValue={field.value}
+                                    ref={null}
+                                  />
+                                </FormGroup>
+                              )}
+                            />
+                          </Grid>
+                        </Grid>
                       </div>
                     )}
 
@@ -915,6 +930,7 @@ function Basic({
                                                 {t(
                                                   'basic.labels.collabGRBConsultRequested'
                                                 )}
+                                                <RequiredAsterisk />
                                               </Label>
                                               {error && (
                                                 <ErrorMessage>

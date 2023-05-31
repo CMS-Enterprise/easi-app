@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The Alert component matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-alert usa-alert--info easi-alert-text flex"
+    data-testid="alert"
+  >
+    <div
+      class="usa-alert__body"
+    >
+      <h4
+        class="usa-alert__heading"
+      >
+        Info Alert
+      </h4>
+      <p
+        class="usa-alert__text"
+      />
+      <div>
+        This is information
+      </div>
+      <button
+        aria-label="Close Button"
+        class="usa-button usa-button usa-button--unstyled text-no-underline text-black margin-top-neg-4"
+        data-testid="button"
+        role="button"
+        tabindex="0"
+        type="button"
+      >
+        ✕
+      </button>
+      <p />
+    </div>
+  </div>
+</DocumentFragment>
+`;

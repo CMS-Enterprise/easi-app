@@ -366,7 +366,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 Email (optional)
               </h3>
               <div
-                class="usa-alert usa-alert--warning usa-alert--slim"
+                class="usa-alert usa-alert--warning usa-alert--slim flex"
                 data-testid="alert_unverified-recipients"
               >
                 <div
@@ -374,9 +374,11 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 >
                   <p
                     class="usa-alert__text"
-                  >
+                  />
+                  <div>
                     There are multiple contacts for this request that have not been associated with a name and email address in EUA. In order to send an email to these recipients, you must first verify them with EUA.
-                  </p>
+                  </div>
+                  <p />
                 </div>
               </div>
               <div
@@ -710,6 +712,14 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 maxlength="3000"
                 name="feedback"
               />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                class="easi-character-counter margin-top-1"
+                id="SubmitActionForm-Feedback-counter"
+              >
+                2000 characters remaining
+              </span>
             </div>
             <div>
               <button

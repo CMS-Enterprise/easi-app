@@ -123,7 +123,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
 	assert.NoError(t, err)
 
-	store, err := storage.NewStore(logger, dbConfig, ldClient)
+	store, err := storage.NewStore(dbConfig, ldClient)
 	if err != nil {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.FailNow()
@@ -149,7 +149,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	cedarLdapClient := local.NewCedarLdapClient(logger)
 
-	cedarCoreClient := cedarcore.NewClient(appcontext.WithLogger(context.Background(), logger), "fake", "fake", time.Minute, ldClient)
+	cedarCoreClient := cedarcore.NewClient(appcontext.WithLogger(context.Background(), logger), "fake", "fake", "1.0.0", time.Minute, ldClient)
 
 	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		return next(ctx)

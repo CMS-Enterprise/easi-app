@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Alert,
   Button,
   ButtonGroup,
   Card,
@@ -17,6 +16,7 @@ import {
 } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import Alert from 'components/shared/Alert';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -29,7 +29,7 @@ import {
   teamSectionKeys
 } from 'constants/systemProfile';
 import {
-  RoleTypeId,
+  RoleTypeName,
   SystemProfileSubviewProps,
   TeamSectionKey,
   UsernameWithRoles
@@ -59,13 +59,17 @@ export function getTeam(
 
     // Members in Business Owner and Project Lead roles appear in both sections
     if (
-      roles.some(({ roleTypeID }) => roleTypeID === RoleTypeId.BUSINESS_OWNER)
+      roles.some(
+        ({ roleTypeName }) => roleTypeName === RoleTypeName.BUSINESS_OWNER
+      )
     ) {
       businessOwners.push(person);
     }
 
     if (
-      roles.some(({ roleTypeID }) => roleTypeID === RoleTypeId.PROJECT_LEAD)
+      roles.some(
+        ({ roleTypeName }) => roleTypeName === RoleTypeName.PROJECT_LEAD
+      )
     ) {
       projectLeads.push(person);
     }
@@ -74,9 +78,9 @@ export function getTeam(
     // Anyone else not a business owner or project lead appears here
     if (
       roles.every(
-        ({ roleTypeID }) =>
-          roleTypeID !== RoleTypeId.BUSINESS_OWNER &&
-          roleTypeID !== RoleTypeId.PROJECT_LEAD
+        ({ roleTypeName }) =>
+          roleTypeName !== RoleTypeName.BUSINESS_OWNER &&
+          roleTypeName !== RoleTypeName.PROJECT_LEAD
       )
     ) {
       additional.push(person);
@@ -132,7 +136,7 @@ export const TeamContactCard = ({
       <CardBody className="padding-x-2 padding-top-0">
         {roles.map(role => (
           <h5
-            key={role.roleTypeID}
+            key={role.roleTypeName}
             className="margin-y-0 font-sans-2xs text-normal"
           >
             {role.roleTypeName}

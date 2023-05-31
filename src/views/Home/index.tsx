@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Alert, Grid } from '@trussworks/react-uswds';
+import { Grid } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import LinkCard, { LinkRequestType } from 'components/LinkCard';
@@ -11,6 +11,7 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequestRepository from 'components/RequestRepository';
+import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
@@ -70,7 +71,7 @@ const Home = () => {
           <div>
             {message && (
               <div className="grid-container margin-top-6">
-                <Alert type="success" slim role="alert">
+                <Alert type="success" role="alert">
                   {message}
                 </Alert>
               </div>
@@ -97,7 +98,7 @@ const Home = () => {
           <div className="grid-container">
             {message && (
               <div className="grid-container margin-top-6">
-                <Alert type="success" slim role="alert">
+                <Alert type="success" role="alert">
                   {message}
                 </Alert>
               </div>

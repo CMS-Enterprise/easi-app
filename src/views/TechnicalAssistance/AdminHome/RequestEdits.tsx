@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Alert,
   Button,
   ErrorMessage,
   Form,
@@ -17,6 +16,7 @@ import {
 import EmailRecipientFields from 'components/EmailRecipientFields';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -103,7 +103,7 @@ function RequestEdits() {
     })
       .then(result => {
         showMessageOnNextPage(
-          <Alert type="success" slim className="margin-top-3">
+          <Alert type="success" className="margin-top-3">
             {t(`${actionText}.success`)}
           </Alert>
         );
@@ -111,7 +111,7 @@ function RequestEdits() {
       })
       .catch(err => {
         showMessage(
-          <Alert type="error" slim className="margin-top-3">
+          <Alert type="error" className="margin-top-3">
             {t(`${actionText}.error`)}
           </Alert>
         );
@@ -186,7 +186,7 @@ function RequestEdits() {
           {t('actionRequestEdits.notificationDescription')}
         </p>
 
-        <FormProvider {...actionForm}>
+        <FormProvider<RequestEditsFields> {...actionForm}>
           <EmailRecipientFields
             requester={requester}
             contacts={attendees}

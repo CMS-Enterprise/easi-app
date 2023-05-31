@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Alert,
   Button,
   DatePicker,
   ErrorMessage,
@@ -22,6 +21,7 @@ import { DateTime } from 'luxon';
 import EmailRecipientFields from 'components/EmailRecipientFields';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
@@ -135,7 +135,7 @@ function Consult() {
           })
             .then(result => {
               showMessageOnNextPage(
-                <Alert type="success" slim className="margin-top-3">
+                <Alert type="success" className="margin-top-3">
                   {t('actionScheduleConsult.success', {
                     date: formData.meetingDate,
                     time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
@@ -151,7 +151,7 @@ function Consult() {
             })
             .catch(err => {
               showMessage(
-                <Alert type="error" slim className="margin-top-3">
+                <Alert type="error" className="margin-top-3">
                   {t('actionScheduleConsult.error')}
                 </Alert>
               );
@@ -179,6 +179,7 @@ function Consult() {
                 heading={t('errors.checkFix')}
                 type="error"
                 className="trb-basic-fields-error"
+                slim={false}
               >
                 {Object.keys(errors).map(fieldName => {
                   const msg: string = t(
@@ -260,6 +261,8 @@ function Consult() {
                     <TimePicker
                       id="meetingTime"
                       name="meetingTime"
+                      minTime="08:00"
+                      maxTime="18:00"
                       onChange={val => {
                         field.onChange(val);
                       }}
@@ -297,7 +300,7 @@ function Consult() {
               {t('actionRequestEdits.notificationDescription')}
             </p>
 
-            <FormProvider {...actionForm}>
+            <FormProvider<ConsultFields> {...actionForm}>
               <EmailRecipientFields
                 requester={requester}
                 contacts={attendees}

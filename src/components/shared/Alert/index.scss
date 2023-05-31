@@ -1,0 +1,17 @@
+.usa-alert__body {
+    padding-right: 2rem !important;
+    max-width: 100%;
+}
+
+.usa-alert__heading {
+    line-height: 1.6rem !important;
+}
+
+
+.easi-alert-text {
+    .usa-alert__text {
+        justify-content: space-between !important;
+        display: flex !important;
+        word-wrap: break-word;
+    }
+}

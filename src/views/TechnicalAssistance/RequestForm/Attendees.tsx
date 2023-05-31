@@ -161,53 +161,39 @@ function Attendees({
       handleSubmit(
         // Validation passed
         async formData => {
-          // Submit the input only if there are changes
-          if (isDirty && requester.id) {
-            const { component, role } = formData;
-            // Update requester
-            await updateAttendee({
-              id: requester.id,
-              component: component || '',
-              role: role as PersonRole
-            })
-              // Refresh the RequestForm parent request query
-              // to update things like `stepsCompleted`
-              .then(() => refetchRequest && refetchRequest())
-              .catch(() => {
-                throw new Error(t<string>('attendees.alerts.error'));
-              });
-          }
-        },
-        // Validation did not pass
-        () => {
-          // Need to throw from this error handler so that the promise is rejected
-          throw new Error(t<string>('attendees.alerts.invalidForm'));
-        }
-      )()
-        // Wait for submit to finish before continuing.
-        // This essentially makes sure any effects like
-        // `setIsStepSubmitting` are called before unmount.
-        .then(
-          () => {
+          try {
+            // Submit the input only if there are changes
+            if (isDirty && requester.id) {
+              const { component, role } = formData;
+              // Update requester
+              await updateAttendee({
+                id: requester.id,
+                component: component || '',
+                role: role as PersonRole
+              })
+                // Refresh the RequestForm parent request query
+                // to update things like `stepsCompleted`
+                .then(() => refetchRequest?.());
+            }
             callback?.();
-          },
-          err => {
-            if (err instanceof ApolloError) {
+          } catch (e) {
+            if (e instanceof ApolloError) {
               setFormAlert({
                 type: 'error',
                 message: t<string>('attendees.alerts.error')
               });
             }
           }
-        ),
+        }
+      )(),
     [
-      t,
       handleSubmit,
       isDirty,
       refetchRequest,
-      setFormAlert,
       requester,
-      updateAttendee
+      updateAttendee,
+      setFormAlert,
+      t
     ]
   );
 
@@ -329,6 +315,7 @@ function Attendees({
               <AttendeesTable
                 attendees={attendees}
                 setActiveAttendee={setActiveAttendee}
+                setFormAlert={setFormAlert}
                 deleteAttendee={(id: string) => deleteAttendee(id)}
                 trbRequestId={request?.id || trbID}
               />
@@ -364,7 +351,6 @@ function Attendees({
                 }
               }
               saveExitDisabled={isSubmitting}
-              saveExitText={t('requestFeedback.returnToTaskList')}
               submit={submitForm}
               submitDisabled={!stepUrl}
               taskListUrl={taskListUrl}

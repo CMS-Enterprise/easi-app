@@ -61,7 +61,7 @@ func (s *AuthenticationMiddlewareTestSuite) buildMiddleware(verify func(jwt stri
 	}
 
 	return NewOktaAuthenticationMiddleware(
-		handlers.NewHandlerBase(s.logger),
+		handlers.NewHandlerBase(),
 		verifier,
 		false,
 	)

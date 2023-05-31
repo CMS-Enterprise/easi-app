@@ -1,15 +1,11 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import {
-  Alert,
-  CardGroup,
-  IconArrowForward,
-  Link
-} from '@trussworks/react-uswds';
+import { CardGroup, IconArrowForward, Link } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import InitialsIcon from 'components/shared/InitialsIcon';
 import useCacheQuery from 'hooks/useCacheQuery';
@@ -18,7 +14,7 @@ import {
   GetTrbRequestHome as GetTrbRequestHomeType,
   GetTrbRequestHomeVariables
 } from 'queries/types/GetTrbRequestHome';
-import { TRBFormStatus } from 'types/graphql-global-types';
+import { TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
 import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
@@ -43,8 +39,7 @@ const RequestHome = ({
     variables: { id }
   });
 
-  const { taskStatuses, consultMeetingTime, trbLeadInfo, documents } =
-    data?.trbRequest || {};
+  const { consultMeetingTime, trbLeadInfo, documents } = data?.trbRequest || {};
 
   if (loading) return <PageLoading />;
 
@@ -70,7 +65,9 @@ const RequestHome = ({
 
           <p className="text-bold margin-bottom-1">{t('adminHome.dateTime')}</p>
 
-          {taskStatuses?.formStatus !== TRBFormStatus.COMPLETED ? (
+          {trbRequest.status === TRBRequestStatus.REQUEST_FORM_COMPLETE ||
+          trbRequest.status === TRBRequestStatus.DRAFT_REQUEST_FORM ||
+          trbRequest.status === TRBRequestStatus.NEW ? (
             // Unable to set consult until initial request form complete
             <Alert type="info" slim className="margin-y-1 margin-top-2">
               {t('adminHome.reviewInitialRequest')}
