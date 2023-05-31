@@ -51,8 +51,7 @@ Default.args = {
     {
       key: 'Subject areas',
       label: 'Subject areas',
-      description:
-        'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.'
+      description: 'Select any and all'
     },
     {
       key: 'Attendees',

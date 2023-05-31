@@ -477,7 +477,7 @@ const technicalAssistance = {
       {
         name: 'Subject areas',
         description:
-          'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.',
+          'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional Subject Matter Experts (SMEs) who may be able to provide additional assistance.',
         adminDescription:
           'These subject areas were by the requester to be discussed during the consult session.'
       },
@@ -582,8 +582,6 @@ const technicalAssistance = {
     noAnswer: 'No answer selected'
   },
   subject: {
-    info:
-      'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.',
     labels: {
       ACCESSIBILITY_COMPLIANCE: 'Access Control and Identity Management',
       ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT: 'Accessibility Compliance',
