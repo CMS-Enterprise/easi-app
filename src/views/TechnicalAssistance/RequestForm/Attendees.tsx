@@ -15,6 +15,7 @@ import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
@@ -262,6 +263,7 @@ function Attendees({
                 <p className="line-height-body-5 margin-top-0 margin-bottom-2">
                   {t('attendees.description')}
                 </p>
+
                 <UswdsReactLink
                   to={`/trb/task-list/${trbID}`}
                   className="display-block margin-bottom-5"
@@ -271,6 +273,12 @@ function Attendees({
                     {t('requestFeedback.returnToTaskList')}
                   </span>
                 </UswdsReactLink>
+
+                {attendees?.length === 0 && (
+                  <Alert type="info" slim className="margin-bottom-3">
+                    {t('attendees.noAttendees')}
+                  </Alert>
+                )}
               </>
             )}
 

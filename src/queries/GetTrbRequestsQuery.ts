@@ -6,6 +6,7 @@ export default gql`
       id
       name
       status
+      state
       createdAt
 
       form {

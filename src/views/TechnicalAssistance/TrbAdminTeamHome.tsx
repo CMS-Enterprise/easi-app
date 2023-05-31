@@ -29,6 +29,7 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
+import { TRBRequestState } from 'types/graphql-global-types';
 import {
   TrbAdminTeamHomeRequest,
   TrbRequestIdRef
@@ -366,7 +367,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       },
       {
         Header: t<string>('adminHome.status'),
-        accessor: ({ status }) => t(`table.requestStatus.${status}`)
+        accessor: ({ status, state }) =>
+          state === TRBRequestState.CLOSED
+            ? t(`table.requestState.${state}`)
+            : t(`table.requestStatus.${status}`)
       },
       {
         Header: t<string>('table.header.trbConsultDate'),
