@@ -1,7 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
@@ -148,6 +152,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       </VerboseMockedProvider>
     );
 
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
     userEvent.type(
       getByLabelText(
         RegExp(
@@ -189,7 +195,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   });
 
   it('shows an error notice when submission fails', async () => {
-    const { getByTestId, getByLabelText, getByRole, findByText } = render(
+    const { getByLabelText, getByRole, findByText } = render(
       <VerboseMockedProvider
         mocks={[
           getTRBRequestAttendeesQuery,
@@ -216,9 +222,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       </VerboseMockedProvider>
     );
 
-    await waitForElementToBeRemoved(() =>
-      getByTestId('emailRecipients-spinner')
-    );
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     userEvent.type(
       getByLabelText(

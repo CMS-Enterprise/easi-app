@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
+exports[`Email recipient fields component renders recipients 1`] = `
 <DocumentFragment>
   <div
     class="grid-container width-full"
@@ -31,7 +31,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
         >
           <a
             class="usa-breadcrumb__link"
-            href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/initial-request-form"
+            href="/trb/undefined/initial-request-form"
           >
             <span>
               Request details
@@ -43,7 +43,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
           class="usa-breadcrumb__list-item usa-current"
         >
           <span>
-            Request edits
+            Page title
           </span>
         </li>
       </ol>
@@ -53,12 +53,12 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
       class="easi-h1 margin-bottom-0"
       tabindex="-1"
     >
-      Action: request edits
+      form title
     </h1>
     <p
       class="line-height-body-5 font-body-lg text-light margin-0"
     >
-      Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.
+      Form description
     </p>
     <p
       class="margin-top-1 text-base"
@@ -75,42 +75,6 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
       class="usa-form maxw-none tablet:grid-col-12 desktop:grid-col-6"
       data-testid="form"
     >
-      <div
-        class="usa-form-group"
-        data-testid="formGroup"
-      >
-        <label
-          class="usa-label text-normal margin-top-6"
-          for="feedbackMessage"
-        >
-          What type of edits are needed prior to scheduling the consult session?
-          <span
-            class="text-red"
-          >
-             *
-          </span>
-        </label>
-        <div
-          class="easi-help-text"
-          id="feedbackmessage-hint"
-        >
-          Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.
-        </div>
-        <textarea
-          aria-describedby="feedbackMessage-info feedbackMessage-hint"
-          class="usa-textarea"
-          id="feedbackMessage"
-          name="feedbackMessage"
-        />
-        <span
-          aria-atomic="false"
-          aria-live="polite"
-          class="easi-character-counter margin-top-1"
-          id="feedbackMessage-counter"
-        >
-          2000 characters remaining
-        </span>
-      </div>
       <h3
         class="margin-top-6 margin-bottom-0"
       >
@@ -199,60 +163,70 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
                 fill="none"
               />
               <path
-                d="m7 10 5 5 5-5z"
+                d="m7 14 5-5 5 5z"
               />
             </svg>
-             Show 3 more recipients
+             Show 3 fewer recipients
+          </button>
+          <div
+            class="easi-checkbox usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input"
+              id="notifyEuaIds.2"
+              name="notifyEuaIds"
+              type="checkbox"
+              value="A11Y"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="notifyEuaIds.2"
+            >
+              Ally Anderson (Cloud Navigator)
+            </label>
+          </div>
+          <div
+            class="easi-checkbox usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input"
+              id="notifyEuaIds.3"
+              name="notifyEuaIds"
+              type="checkbox"
+              value="ADMI"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="notifyEuaIds.3"
+            >
+              Audrey Abrams (Privacy Advisor)
+            </label>
+          </div>
+          <div
+            class="easi-checkbox usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input"
+              id="notifyEuaIds.4"
+              name="notifyEuaIds"
+              type="checkbox"
+              value="ADMN"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="notifyEuaIds.4"
+            >
+              Aaron Adams (System Maintainer)
+            </label>
+          </div>
+          <button
+            class="usa-button usa-button--outline margin-top-3"
+            data-testid="button"
+            type="button"
+          >
+            Add another recipient
           </button>
         </ul>
-      </div>
-      <div
-        class="margin-top-5"
-      >
-        <ul
-          class="usa-button-group"
-        >
-          <li
-            class="usa-button-group__item"
-          >
-            <div
-              class="display-flex flex-align-center"
-            >
-              <button
-                class="usa-button margin-top-0"
-                data-testid="button"
-                disabled=""
-                type="submit"
-              >
-                Complete action
-              </button>
-            </div>
-          </li>
-        </ul>
-        <button
-          class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
-          data-testid="button"
-          type="button"
-        >
-          <svg
-            class="usa-icon margin-right-05"
-            focusable="false"
-            height="1em"
-            role="img"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-            />
-          </svg>
-          Cancel action and return to request
-        </button>
       </div>
     </form>
   </div>
