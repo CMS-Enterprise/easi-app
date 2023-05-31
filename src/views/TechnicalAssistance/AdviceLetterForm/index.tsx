@@ -120,17 +120,33 @@ const AdviceLetterForm = () => {
 
   // When navigating to a different step, checks if all previous form steps are valid
   const checkValidSteps = useCallback(
-    (index: number): boolean =>
-      adviceFormSteps.filter(
-        (step, i) => stepsCompleted?.includes(step.slug) && i < index
-      ).length === index,
+    (index: number): boolean => {
+      return (
+        adviceFormSteps.filter(
+          (step, i) => stepsCompleted?.includes(step.slug) && i < index
+        ).length === index
+      );
+    },
     [stepsCompleted]
   );
 
-  useEffect(() => {
-    if (!adviceLetter) {
-      return;
+  /** Redirect if previous steps are not completed */
+  const redirectStep = useCallback(() => {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex)) {
+      /** Returns latest available step index */
+      const stepRedirectIndex = adviceFormSteps.findIndex(
+        step => !stepsCompleted?.includes(step.slug)
+      );
+
+      // Redirect to latest available step
+      history.replace(
+        `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
+      );
     }
+  }, [stepsCompleted, currentStepIndex, history, id, checkValidSteps]);
+
+  useEffect(() => {
+    if (!adviceLetter) return;
     (async () => {
       const completed: FormStepKey[] = ['recommendations'];
       const stepValidators = [];
@@ -176,29 +192,20 @@ const AdviceLetterForm = () => {
       }
 
       Promise.allSettled(stepValidators).then(() => {
-        if (!isEqual(completed, stepsCompleted)) setStepsCompleted(completed);
+        if (!isEqual(completed, stepsCompleted)) {
+          setStepsCompleted(completed);
+        } else {
+          /** Once stepsCompleted is finished evaluating, redirect to last valid step if necessary */
+          redirectStep();
+        }
       });
     })();
   }, [
     stepsCompleted,
     adviceLetter,
-    trbRequest?.taskStatuses?.adviceLetterStatus
+    trbRequest?.taskStatuses?.adviceLetterStatus,
+    redirectStep
   ]);
-
-  // Redirect if previous step is not completed
-  useEffect(() => {
-    if (stepsCompleted && !checkValidSteps(currentStepIndex)) {
-      /** Returns latest available step index */
-      const stepRedirectIndex = adviceFormSteps.findIndex(
-        step => !stepsCompleted?.includes(step.slug)
-      );
-
-      // Redirect to latest available step
-      history.replace(
-        `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
-      );
-    }
-  }, [stepsCompleted, currentStepIndex, history, id, checkValidSteps]);
 
   useEffect(() => {
     if (formAlert) {
