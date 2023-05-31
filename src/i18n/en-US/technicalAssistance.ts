@@ -462,6 +462,7 @@ const technicalAssistance = {
   },
   taskList: {
     heading: 'Task list',
+    defaultName: 'Draft',
     additionalHelp: 'Additional Help',
     helpLinksNewTab: 'All help links open in a new tab',
     stepsInvolved:

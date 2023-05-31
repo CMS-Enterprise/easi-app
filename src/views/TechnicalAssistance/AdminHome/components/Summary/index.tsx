@@ -69,7 +69,9 @@ export default function Summary({
           </BreadcrumbBar>
 
           {/* Request name */}
-          <h2 className="margin-top-05 margin-bottom-0">{name}</h2>
+          <h2 className="margin-top-05 margin-bottom-0">
+            {name || t('taskList.defaultName')}
+          </h2>
 
           {/* Request details */}
           <Grid row>
