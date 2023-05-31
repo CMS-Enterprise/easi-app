@@ -77,7 +77,13 @@ type AdviceFormStep = typeof adviceFormSteps[number];
 const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
-  const location = useLocation<{ error?: boolean }>();
+  const location = useLocation<{
+    error?: boolean;
+    state: { fromAdmin?: boolean };
+    fromAdmin?: boolean;
+  }>();
+
+  const fromAdmin = location.state?.fromAdmin;
 
   // Get url params
   const { id, formStep, subpage } = useParams<{
@@ -218,11 +224,7 @@ const AdviceLetterForm = () => {
 
   // Redirect if previous step is not completed
   useEffect(() => {
-    if (
-      stepsCompleted &&
-      currentStepIndex !== 0 &&
-      !checkValidSteps(currentStepIndex - 1)
-    ) {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
       /** Returns latest available step index */
       const stepRedirectIndex = !stepsCompleted.includes('summary')
         ? 0
@@ -231,12 +233,20 @@ const AdviceLetterForm = () => {
             step => step.slug === stepsCompleted?.slice(-1)[0]
           ) + 1;
 
+      if (!fromAdmin && currentStepIndex === 0) return;
       // Redirect to latest available step
       history.replace(
         `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
       );
     }
-  }, [stepsCompleted, currentStepIndex, history, id, checkValidSteps]);
+  }, [
+    stepsCompleted,
+    currentStepIndex,
+    history,
+    id,
+    checkValidSteps,
+    fromAdmin
+  ]);
 
   useEffect(() => {
     if (formAlert) {
