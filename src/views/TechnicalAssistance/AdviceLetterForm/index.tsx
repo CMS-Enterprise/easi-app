@@ -156,9 +156,7 @@ const AdviceLetterForm = () => {
       return;
     }
     (async () => {
-      const completed: FormStepKey[] = stepsCompleted
-        ? [...stepsCompleted]
-        : [];
+      let completed: FormStepKey[] = stepsCompleted ? [...stepsCompleted] : [];
       const stepValidators = [];
 
       // Check the Meeting Summary step
@@ -173,7 +171,7 @@ const AdviceLetterForm = () => {
               }
             )
             .then(valid => {
-              if (valid) completed.push('summary');
+              if (valid) completed = ['summary'];
             })
         );
       }
@@ -197,10 +195,8 @@ const AdviceLetterForm = () => {
             .then(valid => {
               // Internal review should be marked completed with next steps
               if (valid) {
-                if (!completed.includes('summary')) completed.push('summary');
-                if (!completed.includes('recommendations'))
-                  completed.push('recommendations');
-                completed.push('next-steps');
+                if (valid)
+                  completed = ['summary', 'recommendations', 'next-steps'];
               }
             })
         );
