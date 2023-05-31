@@ -49,7 +49,7 @@ const stepsInTRBProcess = {
         'Consult sessions are usually scheduled as 1-hour sessions on Tuesday or Thursday.'
       ],
       list: [
-        'Subject Matter Experts (SMEs) to provide additional advice and insight',
+        'SMEs to provide additional advice and insight',
         'any additional project team members you’ve specified',
         '1 or more TRB team members'
       ]
