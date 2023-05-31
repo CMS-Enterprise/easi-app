@@ -78,7 +78,7 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
         {t('requestFeedback.heading')}
       </PageHeading>
 
-      {selectedFeedback && selectedFeedback.length > 0 && { returnToFormLink }}
+      {selectedFeedback && selectedFeedback.length > 0 && returnToFormLink}
 
       {selectedFeedback && selectedFeedback.length === 0 && (
         <Alert slim type="info" className="margin-top-6">
