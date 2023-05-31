@@ -1054,7 +1054,7 @@ const technicalAssistance = {
       'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
   },
   assignTrbLeadModal: {
-    heading: 'Assign an Admin Lead',
+    heading: 'Assign an Admin lead for this request',
     label: 'Select a Lead from the TRB Team:',
     assignMyself: 'Assign myself',
     submit: 'Assign',
