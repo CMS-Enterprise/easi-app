@@ -160,20 +160,24 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
         accessor: ({ type }) => t(`table.requestTypes.${type}`)
       },
       {
-        Header: t<string>('documents.table.header.actions'),
-        Cell: ({ row }: CellProps<TrbAdminTeamHomeRequest>) =>
-          row.original.trbLeadInfo.commonName === '' ? (
+        Header: t<string>('documents.table.header.trbLead'),
+        Cell: ({ row }: CellProps<TrbAdminTeamHomeRequest>) => (
+          <>
+            {row.original.trbLeadInfo.commonName && (
+              <p>{row.original.trbLeadInfo.commonName}</p>
+            )}
             <TrbAssignLeadModalOpener
               trbRequestId={row.original.id}
               modalRef={assignLeadModalRef}
               trbRequestIdRef={assignLeadModalTrbRequestIdRef}
               className="usa-button--unstyled"
             >
-              {t('adminTeamHome.actions.assignLead')}
+              {row.original.trbLeadInfo.commonName === ''
+                ? t('adminTeamHome.actions.assignLead')
+                : t('adminTeamHome.actions.changeLead')}
             </TrbAssignLeadModalOpener>
-          ) : (
-            ''
-          ),
+          </>
+        ),
         disableSortBy: true
       }
     ];

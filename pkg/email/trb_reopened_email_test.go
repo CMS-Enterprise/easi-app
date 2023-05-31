@@ -39,6 +39,7 @@ func (s *EmailTestSuite) TestTRBRequestReopenedEmail() {
 		TRBRequestName: "Test TRB Request",
 		RequesterName:  "Mc Lovin",
 		Recipients:     recipients,
+		CopyTRBMailbox: true,
 		ReasonReopened: "Just felt like it",
 	}
 	allRecipients := append(recipients, s.config.TRBEmail)

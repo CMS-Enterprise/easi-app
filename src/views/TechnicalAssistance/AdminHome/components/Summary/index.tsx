@@ -63,12 +63,10 @@ export default function Summary({
           <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
             <Breadcrumb>
               <BreadcrumbLink asCustom={Link} to="/">
-                <span className="text-white">{t('Home')}</span>
+                <span className="text-white">{t('adminHome.home')}</span>
               </BreadcrumbLink>
             </Breadcrumb>
-            <Breadcrumb current>
-              {t('adminHome.breadcrumb', { trbRequestId })}
-            </Breadcrumb>
+            <Breadcrumb current>{t('adminHome.breadcrumb')}</Breadcrumb>
           </BreadcrumbBar>
 
           {/* Request name */}

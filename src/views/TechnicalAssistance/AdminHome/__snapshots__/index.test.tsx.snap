@@ -40,7 +40,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Request d8ebedca-0031-4ccd-9690-37390726c50e
+                Request details
               </li>
             </ol>
           </nav>
@@ -421,9 +421,11 @@ exports[`TRB admin home matches the snapshot 1`] = `
               >
                 <p
                   class="usa-alert__text"
-                >
+                />
+                <div>
                   Please wait until the initial request form is submitted, then review the form before setting a date and time in EASi.
-                </p>
+                </div>
+                <p />
               </div>
             </div>
             <h3

@@ -60,9 +60,11 @@ exports[`Prepare for GRB renders help mode without crashing 1`] = `
         >
           <p
             class="usa-alert__text"
-          >
+          />
+          <div>
             You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
-          </p>
+          </div>
+          <p />
         </div>
       </div>
       <div
@@ -210,9 +212,11 @@ exports[`Prepare for GRB renders without crashing 1`] = `
         >
           <p
             class="usa-alert__text"
-          >
+          />
+          <div>
             You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
-          </p>
+          </div>
+          <p />
         </div>
       </div>
       <div

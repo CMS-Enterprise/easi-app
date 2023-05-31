@@ -49,7 +49,9 @@ Array [
       <p
         className="usa-alert__text"
       >
-        Finish these next steps to complete the governance review process.
+        <div>
+          Finish these next steps to complete the governance review process.
+        </div>
       </p>
     </div>
   </div>,
