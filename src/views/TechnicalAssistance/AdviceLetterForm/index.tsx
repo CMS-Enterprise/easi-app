@@ -132,7 +132,11 @@ const AdviceLetterForm = () => {
 
   /** Redirect if previous steps are not completed */
   const redirectStep = useCallback(() => {
-    if (stepsCompleted && !checkValidSteps(currentStepIndex)) {
+    if (
+      stepsCompleted &&
+      stepsCompleted.length < 4 &&
+      !checkValidSteps(currentStepIndex)
+    ) {
       /** Returns latest available step index */
       const stepRedirectIndex = adviceFormSteps.findIndex(
         step => !stepsCompleted?.includes(step.slug)
