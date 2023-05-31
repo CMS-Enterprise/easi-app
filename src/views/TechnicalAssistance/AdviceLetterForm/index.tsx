@@ -164,9 +164,7 @@ const AdviceLetterForm = () => {
   ]);
 
   useEffect(() => {
-    if (!adviceLetter) {
-      return;
-    }
+    if (!adviceLetter) return;
     (async () => {
       let completed: FormStepKey[] = stepsCompleted ? [...stepsCompleted] : [];
       const stepValidators = [];
@@ -285,6 +283,10 @@ const AdviceLetterForm = () => {
           step={currentStepIndex + 1}
           steps={steps.map((step, index) => ({
             key: step.name,
+            disabled:
+              isStepSubmitting ||
+              currentStepIndex === index ||
+              !checkValidSteps(index),
             label: (
               <>
                 <span className="name">{step.name}</span>
@@ -296,16 +298,10 @@ const AdviceLetterForm = () => {
             onClick: async () => {
               const url = `/trb/${id}/advice/${adviceFormSteps[index].slug}`;
 
-              if (
-                !isStepSubmitting &&
-                currentStepIndex !== index &&
-                checkValidSteps(index)
-              ) {
-                if (stepSubmit) {
-                  stepSubmit?.(() => history.push(url));
-                } else {
-                  history.push(url);
-                }
+              if (stepSubmit) {
+                stepSubmit?.(() => history.push(url));
+              } else {
+                history.push(url);
               }
             }
           }))}
@@ -345,7 +341,7 @@ const AdviceLetterForm = () => {
                 onClick={() => {
                   const url = `/trb/${id}/advice`;
                   if (stepSubmit) {
-                    stepSubmit?.(() => history.push(url));
+                    stepSubmit?.(() => history.push(url), false);
                   } else {
                     history.push(url);
                   }

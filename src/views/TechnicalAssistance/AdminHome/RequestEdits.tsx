@@ -1,28 +1,16 @@
 import React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
+import { Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Button,
-  ErrorMessage,
-  Form,
-  FormGroup,
-  GridContainer,
-  IconArrowBack
-} from '@trussworks/react-uswds';
+import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
-import EmailRecipientFields from 'components/EmailRecipientFields';
-import UswdsReactLink from 'components/LinkWrapper';
-import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
-import useTRBAttendees from 'hooks/useTRBAttendees';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {
   CreateTrbRequestFeedback,
@@ -32,7 +20,8 @@ import { TRBFeedbackAction } from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 
-import Breadcrumbs from '../Breadcrumbs';
+// import Breadcrumbs from '../Breadcrumbs';
+import useActionForm from './components/ActionFormWrapper/useActionForm';
 
 interface RequestEditsFields extends TrbRecipientFields {
   feedbackMessage: string;
@@ -48,12 +37,7 @@ function RequestEdits() {
   }>();
   const history = useHistory();
 
-  const { message, showMessage, showMessageOnNextPage } = useMessage();
-
-  const {
-    data: { attendees, requester },
-    createAttendee
-  } = useTRBAttendees(id);
+  const { showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl = `/trb/${id}/${activePage}`;
 
@@ -68,7 +52,14 @@ function RequestEdits() {
     feedbackAction = TRBFeedbackAction.READY_FOR_CONSULT;
   }
 
-  const actionForm = useForm<RequestEditsFields>({
+  const {
+    control,
+    ActionForm,
+    handleSubmit,
+    watch,
+    formState: { isSubmitting }
+  } = useActionForm<RequestEditsFields>({
+    trbRequestId: id,
     resolver: yupResolver(
       trbActionSchema(
         'feedbackMessage',
@@ -82,18 +73,10 @@ function RequestEdits() {
     }
   });
 
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting }
-  } = actionForm;
-
   const [sendFeedback, feedbackResult] = useMutation<
     CreateTrbRequestFeedback,
     CreateTrbRequestFeedbackVariables
   >(CreateTrbRequestFeedbackQuery);
-
-  const formLoading: boolean = isSubmitting || feedbackResult.loading;
 
   const submitForm = (formData: RequestEditsFields) => {
     sendFeedback({
@@ -119,110 +102,55 @@ function RequestEdits() {
   };
 
   return (
-    <GridContainer className="width-full">
-      <Breadcrumbs
-        items={[
-          { text: t('Home'), url: `/trb` },
-          {
-            text: t('adminHome.breadcrumb', { trbRequestId: id }),
-            url: requestUrl
-          },
-          {
-            text: t(`${actionText}.breadcrumb`)
-          }
-        ]}
+    <ActionForm
+      title={t(`${actionText}.heading`)}
+      description={t(`${actionText}.description`)}
+      onSubmit={handleSubmit(formData => submitForm(formData))}
+      buttonProps={{
+        next: {
+          text: t('actionRequestEdits.submit'),
+          disabled:
+            feedbackAction === TRBFeedbackAction.REQUEST_EDITS &&
+            !watch('feedbackMessage'),
+          loading: isSubmitting || feedbackResult.loading
+        },
+        taskListUrl: requestUrl,
+        saveExitText: t('actionRequestEdits.cancelAndReturn')
+      }}
+      breadcrumbItems={[
+        {
+          text: t(`${actionText}.breadcrumb`)
+        }
+      ]}
+    >
+      <Controller
+        name="feedbackMessage"
+        control={control}
+        render={({ field, fieldState: { error } }) => {
+          return (
+            <FormGroup error={!!error}>
+              <Label
+                htmlFor="feedbackMessage"
+                className="text-normal margin-top-6"
+                required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
+              >
+                {t(`${actionText}.label`)}
+              </Label>
+              <HelpText id="feedbackmessage-hint">
+                {t('actionRequestEdits.hint')}
+              </HelpText>
+              {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+              <TextAreaField
+                id="feedbackMessage"
+                {...field}
+                ref={null}
+                aria-describedby="feedbackMessage-info feedbackMessage-hint"
+              />
+            </FormGroup>
+          );
+        }}
       />
-
-      {message}
-
-      <PageHeading className="margin-bottom-0">
-        {t(`${actionText}.heading`)}
-      </PageHeading>
-      <p className="line-height-body-5 font-body-lg text-light margin-0">
-        {t(`${actionText}.description`)}
-      </p>
-
-      <Form
-        onSubmit={handleSubmit(formData => submitForm(formData))}
-        className="maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
-      >
-        <p className="margin-top-1 text-base">
-          <Trans
-            i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
-            components={{ red: <span className="text-red" /> }}
-          />
-        </p>
-        <Controller
-          name="feedbackMessage"
-          control={control}
-          render={({ field, fieldState: { error } }) => {
-            return (
-              <FormGroup error={!!error}>
-                <Label
-                  htmlFor="feedbackMessage"
-                  className="text-normal margin-top-6"
-                  required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
-                >
-                  {t(`${actionText}.label`)}
-                </Label>
-                <HelpText id="feedbackmessage-hint">
-                  {t('actionRequestEdits.hint')}
-                </HelpText>
-                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-                <TextAreaField
-                  id="feedbackMessage"
-                  {...field}
-                  ref={null}
-                  aria-describedby="feedbackMessage-info feedbackMessage-hint"
-                />
-              </FormGroup>
-            );
-          }}
-        />
-        <h3 className="margin-top-6 margin-bottom-0">
-          {t('actionRequestEdits.notificationTitle')}
-        </h3>
-        <p className="margin-0 line-height-body-5">
-          {t('actionRequestEdits.notificationDescription')}
-        </p>
-
-        <FormProvider<RequestEditsFields> {...actionForm}>
-          <EmailRecipientFields
-            requester={requester}
-            contacts={attendees}
-            mailboxes={[
-              {
-                key: 'copyTrbMailbox',
-                label: t('emailRecipientFields.copyTrbMailbox')
-              }
-            ]}
-            createContact={contact =>
-              createAttendee({ ...contact, trbRequestId: id })
-            }
-            className="margin-top-4 margin-bottom-3"
-          />
-        </FormProvider>
-
-        <div className="display-flex flex-align-center margin-top-5">
-          <Button
-            type="submit"
-            disabled={formLoading}
-            className="margin-top-0 margin-right-105"
-          >
-            {t('actionRequestEdits.submit')}
-          </Button>
-          {formLoading && <Spinner />}
-        </div>
-      </Form>
-
-      <UswdsReactLink
-        to={requestUrl}
-        className="display-flex flex-align-center"
-      >
-        <IconArrowBack className="margin-right-05" />
-        {t('actionRequestEdits.cancelAndReturn')}
-      </UswdsReactLink>
-    </GridContainer>
+    </ActionForm>
   );
 }
 

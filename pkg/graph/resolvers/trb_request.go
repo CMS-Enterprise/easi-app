@@ -159,7 +159,7 @@ func UpdateTRBRequestConsultMeetingTime(
 
 	emailInput := email.SendTRBRequestConsultMeetingEmailInput{
 		TRBRequestID:       trb.ID,
-		TRBRequestName:     trb.Name,
+		TRBRequestName:     trb.GetName(),
 		ConsultMeetingTime: meetingTime,
 		CopyTRBMailbox:     copyTRBMailbox,
 		NotifyEmails:       notifyEmails,
@@ -229,7 +229,7 @@ func UpdateTRBRequestTRBLead(
 
 	emailInput := email.SendTRBRequestTRBLeadEmailInput{
 		TRBRequestID:   trb.ID,
-		TRBRequestName: trb.Name,
+		TRBRequestName: trb.GetName(),
 		TRBLeadName:    leadInfo.CommonName,
 		RequesterName:  requesterInfo.CommonName,
 		Component:      component,
@@ -301,7 +301,7 @@ func CloseTRBRequest(
 
 	emailInput := email.SendTRBRequestClosedEmailInput{
 		TRBRequestID:   trb.ID,
-		TRBRequestName: trb.Name,
+		TRBRequestName: trb.GetName(),
 		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
 		CopyTRBMailbox: copyTRBMailbox,
@@ -374,7 +374,7 @@ func ReopenTRBRequest(
 
 	emailInput := email.SendTRBRequestReopenedEmailInput{
 		TRBRequestID:   trb.ID,
-		TRBRequestName: trb.Name,
+		TRBRequestName: trb.GetName(),
 		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
 		ReasonReopened: reasonReopened,

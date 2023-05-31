@@ -327,24 +327,32 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-          data-testid="button"
-          type="button"
+        <div
+          class="display-flex flex-align-center"
         >
-          Back
-        </button>
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
       </li>
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button margin-top-0"
-          data-testid="button"
-          type="submit"
+        <div
+          class="display-flex flex-align-center"
         >
-          Submit request
-        </button>
+          <button
+            class="usa-button margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Submit request
+          </button>
+        </div>
       </li>
     </ul>
     <button

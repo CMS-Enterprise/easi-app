@@ -5,7 +5,7 @@ import "time"
 // TRBRequest represents a TRB request object
 type TRBRequest struct {
 	BaseStruct
-	Name               string          `json:"name" db:"name"`
+	Name               *string         `json:"name" db:"name"`
 	Archived           bool            `json:"archived" db:"archived"`
 	Type               TRBRequestType  `json:"type" db:"type"`
 	State              TRBRequestState `json:"state" db:"state"`
@@ -16,7 +16,6 @@ type TRBRequest struct {
 // NewTRBRequest returns a new trb request object
 func NewTRBRequest(createdBy string) *TRBRequest {
 	return &TRBRequest{
-		Name:       "Draft",
 		BaseStruct: NewBaseStruct(createdBy),
 	}
 
@@ -101,3 +100,12 @@ const (
 	TRBRequestStatusAdviceLetterSent     = "ADVICE_LETTER_SENT"
 	TRBRequestStatusFollowUpRequested    = "FOLLOW_UP_REQUESTED"
 )
+
+// GetName returns the name of the TRB request as a string. If the "Name" property is nil, it returns "Draft"
+func (t *TRBRequest) GetName() string {
+	if t.Name != nil {
+		return *t.Name
+	}
+
+	return "Draft"
+}
