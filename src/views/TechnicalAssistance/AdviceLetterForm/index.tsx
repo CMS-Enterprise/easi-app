@@ -138,18 +138,29 @@ const AdviceLetterForm = () => {
 
   /** Redirect if previous steps are not completed */
   const redirectStep = useCallback(() => {
-    if (stepsCompleted && !checkValidSteps(currentStepIndex)) {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
       /** Returns latest available step index */
-      const stepRedirectIndex = adviceFormSteps.findIndex(
-        step => !stepsCompleted?.includes(step.slug)
-      );
+      const stepRedirectIndex = !stepsCompleted.includes('summary')
+        ? 0
+        : // If summary is completed, return index of last completed step plus 1
+          adviceFormSteps.findIndex(
+            step => step.slug === stepsCompleted?.slice(-1)[0]
+          ) + 1;
 
+      if (!fromAdmin && currentStepIndex === 0) return;
       // Redirect to latest available step
       history.replace(
         `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
       );
     }
-  }, [stepsCompleted, currentStepIndex, history, id, checkValidSteps]);
+  }, [
+    stepsCompleted,
+    currentStepIndex,
+    history,
+    id,
+    checkValidSteps,
+    fromAdmin
+  ]);
 
   useEffect(() => {
     if (!adviceLetter) {
@@ -216,32 +227,6 @@ const AdviceLetterForm = () => {
     adviceLetter,
     trbRequest?.taskStatuses?.adviceLetterStatus,
     redirectStep
-  ]);
-
-  // Redirect if previous step is not completed
-  useEffect(() => {
-    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
-      /** Returns latest available step index */
-      const stepRedirectIndex = !stepsCompleted.includes('summary')
-        ? 0
-        : // If summary is completed, return index of last completed step plus 1
-          adviceFormSteps.findIndex(
-            step => step.slug === stepsCompleted?.slice(-1)[0]
-          ) + 1;
-
-      if (!fromAdmin && currentStepIndex === 0) return;
-      // Redirect to latest available step
-      history.replace(
-        `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
-      );
-    }
-  }, [
-    stepsCompleted,
-    currentStepIndex,
-    history,
-    id,
-    checkValidSteps,
-    fromAdmin
   ]);
 
   useEffect(() => {
