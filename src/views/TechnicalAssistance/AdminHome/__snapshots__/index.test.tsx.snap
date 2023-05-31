@@ -132,7 +132,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 Status
               </h4>
               <span
-                class="bg-info-dark text-white text-bold padding-y-05 padding-x-105 margin-x-1"
+                class="text-white text-bold padding-y-05 padding-x-105 margin-x-1 bg-info-dark"
               >
                 Open
               </span>

@@ -862,6 +862,7 @@ function Basic({
                                       {t('errors.fillBlank')}
                                     </ErrorMessage>
                                   )}
+
                                   <TextInput
                                     {...field}
                                     ref={null}
@@ -902,13 +903,18 @@ function Basic({
                                           {t('errors.fillBlank')}
                                         </ErrorMessage>
                                       )}
-                                      <TextInput
-                                        {...field}
-                                        ref={null}
-                                        id={collabDateKey}
-                                        type="text"
-                                        validationStatus={error && 'error'}
-                                      />
+
+                                      <Grid row>
+                                        <Grid tablet={{ col: 6 }}>
+                                          <DatePickerFormatted
+                                            id={collabDateKey}
+                                            {...field}
+                                            defaultValue={field.value}
+                                            ref={null}
+                                          />{' '}
+                                        </Grid>
+                                      </Grid>
+
                                       {val === 'GOVERNANCE_REVIEW_BOARD' && (
                                         <Controller
                                           name="collabGRBConsultRequested"
