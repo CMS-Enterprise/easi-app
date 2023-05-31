@@ -92,7 +92,7 @@ func RequestReviewForTRBAdviceLetter(
 
 	emailInput := email.SendTRBAdviceLetterInternalReviewEmailInput{
 		TRBRequestID:   trb.ID,
-		TRBRequestName: trb.Name,
+		TRBRequestName: trb.GetName(),
 		TRBLeadName:    leadName,
 		RequesterName:  requesterInfo.CommonName,
 	}
@@ -183,7 +183,7 @@ func SendTRBAdviceLetter(ctx context.Context,
 
 	emailInput := email.SendTRBAdviceLetterSubmittedEmailInput{
 		TRBRequestID:   trb.ID,
-		RequestName:    trb.Name,
+		RequestName:    trb.GetName(),
 		RequestType:    string(trb.Type),
 		RequesterName:  requester.CommonName,
 		Component:      component,
