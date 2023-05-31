@@ -23,7 +23,7 @@ import { TrbAssignLeadModalOpener } from '../../TrbAssignLeadModal';
 
 type SummaryProps = {
   trbRequestId: string;
-  name: string;
+  name: string | null;
   requestType: TRBRequestType;
   state: TRBRequestState;
   taskStatus?: TRBRequestStatus;
