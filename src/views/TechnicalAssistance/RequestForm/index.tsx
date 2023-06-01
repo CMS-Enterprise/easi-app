@@ -304,10 +304,7 @@ function RequestForm() {
   // Determine the steps that are already completed by attempting to pre-validate them
   const [stepsCompleted, setStepsCompleted] = useState<
     FormStepSlug[] | undefined
-  >(
-    // undefined // TODO set this back
-    ['basic', 'attendees']
-  );
+  >();
 
   // Prevalidate certain steps that will be checked against
   // to enable slug paths and links in the StepHeader
@@ -316,9 +313,7 @@ function RequestForm() {
       return;
     }
     (async () => {
-      const completed = Array.isArray(stepsCompleted)
-        ? [...stepsCompleted]
-        : [];
+      const completed: FormStepSlug[] = [];
       const stepValidators = [];
 
       // Check the Basic step
