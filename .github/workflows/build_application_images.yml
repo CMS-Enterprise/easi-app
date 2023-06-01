@@ -20,6 +20,10 @@ env:
   GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   pre_deps:
     runs-on: ubuntu-latest

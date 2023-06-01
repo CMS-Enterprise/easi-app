@@ -18,6 +18,10 @@ on:
         type: boolean
         description: Confirm that you want to deploy to production
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   Build_Application_Images:
     uses: ./.github/workflows/build_application_images.yml
