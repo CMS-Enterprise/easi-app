@@ -2,7 +2,7 @@ import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   DatePicker,
@@ -13,9 +13,15 @@ import {
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
+import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
+import GetTrbRequestConsultMeetingQuery from 'queries/GetTrbRequestConsultMeetingQuery';
+import {
+  GetTrbRequestConsultMeeting,
+  GetTrbRequestConsultMeetingVariables
+} from 'queries/types/GetTrbRequestConsultMeeting';
 import {
   UpdateTrbRequestConsultMeeting,
   UpdateTrbRequestConsultMeetingVariables
@@ -23,6 +29,7 @@ import {
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { consultSchema } from 'validations/trbRequestSchema';
+import NotFound from 'views/NotFound';
 
 import useActionForm from './components/ActionFormWrapper/useActionForm';
 
@@ -45,6 +52,25 @@ function Consult() {
 
   const requestUrl = `/trb/${id}/request`;
 
+  const { loading, data, error: pageError } = useQuery<
+    GetTrbRequestConsultMeeting,
+    GetTrbRequestConsultMeetingVariables
+  >(GetTrbRequestConsultMeetingQuery, {
+    variables: {
+      id
+    }
+  });
+
+  const date = data?.trbRequest.consultMeetingTime
+    ? DateTime.fromISO(data.trbRequest.consultMeetingTime).toFormat(
+        'yyyy-MM-dd'
+      )
+    : '';
+
+  const time = data?.trbRequest.consultMeetingTime
+    ? DateTime.fromISO(data.trbRequest.consultMeetingTime).toFormat('HH:mm')
+    : '';
+
   const [mutate, mutationResult] = useMutation<
     UpdateTrbRequestConsultMeeting,
     UpdateTrbRequestConsultMeetingVariables
@@ -54,13 +80,14 @@ function Consult() {
     ActionForm,
     control,
     handleSubmit,
+    // watch,
     formState: { isDirty, isSubmitting }
   } = useActionForm<ConsultFields>({
     trbRequestId: id,
     resolver: yupResolver(consultSchema),
     defaultValues: {
-      meetingDate: '',
-      meetingTime: '',
+      meetingDate: date,
+      meetingTime: time,
       notes: '',
       copyTrbMailbox: true,
       notifyEuaIds: []
@@ -112,6 +139,17 @@ function Consult() {
       });
   };
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
+  if (pageError) {
+    return <NotFound />;
+  }
+
+  // console.log('vals', watch());
+  // console.log(data?.trbRequest.consultMeetingTime, date, time);
+
   return (
     <ActionForm
       title={t('actionScheduleConsult.heading')}
@@ -162,6 +200,7 @@ function Consult() {
                 onChange={val => {
                   field.onChange(val);
                 }}
+                defaultValue={field.value}
               />
             </FormGroup>
           )}
@@ -196,6 +235,7 @@ function Consult() {
                   if (val) field.onChange(val);
                 }}
                 step={5}
+                defaultValue={field.value}
               />
             </FormGroup>
           )}
