@@ -158,7 +158,7 @@ function Attendees({
 
   /** Submit requester as attendee */
   const submitForm = useCallback<StepSubmit>(
-    (callback, shouldValidate) =>
+    (callback, shouldValidate = true) =>
       // Start the submit promise
       handleSubmit(
         // Validation passed
