@@ -15,6 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -185,17 +186,55 @@ func main() {
 	})
 	makeBusinessCase("With GRT scheduled", logger, store, intake)
 
-	intake = makeSystemIntake("With LCID Issued", logger, store, func(i *models.SystemIntake) {
-		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour)
+	intake = makeSystemIntake("With LCID Issued - all fields filled", logger, store, func(i *models.SystemIntake) {
 		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
 		i.LifecycleID = null.StringFrom("210001")
+
+		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour) // expires 1 month from now
 		i.LifecycleExpiresAt = &lifecycleExpiresAt
+
+		i.LifecycleScope = null.StringFrom("scope1")
+		i.LifecycleCostBaseline = null.StringFrom("baseline1")
+		i.DecisionNextSteps = null.StringFrom("nextSteps1")
 		i.Status = models.SystemIntakeStatusLCIDISSUED
 		i.SubmittedAt = &submittedAt
 	})
 	makeBusinessCase("With LCID Issued", logger, store, intake, func(c *models.BusinessCase) {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
+
+	makeSystemIntake("With LCID Issued - optional fields empty", logger, store, func(i *models.SystemIntake) {
+		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
+		i.LifecycleID = null.StringFrom("210002")
+
+		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour) // expires 1 month from now
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+
+		i.LifecycleScope = null.StringFrom("scope1")
+		// LifecycleCostBaseline is optional (in frontend), leave it empty
+		i.DecisionNextSteps = null.StringFrom("nextSteps1")
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.SubmittedAt = &submittedAt
+	})
+
+	intakeToExtend := makeSystemIntake("With LCID issued and extended", logger, store, func(i *models.SystemIntake) {
+		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
+		i.LifecycleID = null.StringFrom("210003")
+
+		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour) // expires 1 month from now
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+
+		i.LifecycleScope = null.StringFrom("initial scope")
+		i.LifecycleCostBaseline = null.StringFrom("initial baseline")
+		i.DecisionNextSteps = null.StringFrom("initial next steps")
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.SubmittedAt = &submittedAt
+	})
+	newExpirationDate := intakeToExtend.LifecycleExpiresAt.Add(time.Hour * 24 * 30 * 3) // add 3 months to expiration date
+	extendedNextSteps := "extended next steps"
+	extendedScope := "extended scope"
+	extendedCostBaseline := "extended baseline"
+	extendLCID(logger, store, intakeToExtend, &newExpirationDate, &extendedNextSteps, extendedScope, &extendedCostBaseline)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 }
@@ -389,6 +428,62 @@ func makeTestDate(logger *zap.Logger, store *storage.Store, callbacks ...func(*m
 	}
 
 	must(store.CreateTestDate(ctx, &testDate))
+}
+
+// calls the services function instead of directly accessing the database via store methods, so we don't have to replicate the logic in the service
+// TODO - a lot of the mocking/setup code could be factored out of this function for reuse
+func extendLCID(logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, newExpirationDate *time.Time, newNextSteps *string, newScope string, newCostBaseline *string) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
+	fakeLDClient, ldErr := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	if ldErr != nil {
+		panic(ldErr)
+	}
+
+	mockServiceConfig := services.NewConfig(logger, fakeLDClient)
+
+	saveAction := services.NewSaveAction(
+		store.CreateAction,
+		mock.FetchUserInfoMock,
+	)
+
+	// no-op, we don't care about sending emails
+	mockSendExtendLCIDEmails := func(
+		ctx context.Context,
+		recipients models.EmailNotificationRecipients,
+		systemIntakeID uuid.UUID,
+		projectName string,
+		requester string,
+		newExpiresAt *time.Time,
+		newScope string,
+		newNextSteps string,
+		newCostBaseline string,
+	) error {
+		return nil
+	}
+
+	extendLCIDFunction := services.NewCreateActionExtendLifecycleID(
+		mockServiceConfig,
+		saveAction,
+		store.FetchSystemIntakeByID,
+		store.UpdateSystemIntake,
+		mockSendExtendLCIDEmails,
+	)
+
+	// setup finished, now actually extend the LCID
+	must(extendLCIDFunction(
+		ctx,
+		&models.Action{
+			IntakeID:   &intake.ID,
+			ActionType: models.ActionTypeEXTENDLCID,
+		},
+		intake.ID,
+		newExpirationDate,
+		newNextSteps,
+		newScope,
+		newCostBaseline,
+		&models.EmailNotificationRecipients{},
+	))
 }
 
 func must(_ interface{}, err error) {
