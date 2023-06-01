@@ -190,7 +190,7 @@ func main() {
 		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
 		i.LifecycleID = null.StringFrom("210001")
 
-		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour) // expires 1 month from now
+		lifecycleExpiresAt := time.Now().Add(3 * 30 * 24 * time.Hour) // expires 3 months from now, long enough to not trigger expiration alerts
 		i.LifecycleExpiresAt = &lifecycleExpiresAt
 
 		i.LifecycleScope = null.StringFrom("scope1")
@@ -207,7 +207,7 @@ func main() {
 		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
 		i.LifecycleID = null.StringFrom("210002")
 
-		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour) // expires 1 month from now
+		lifecycleExpiresAt := time.Now().Add(3 * 30 * 24 * time.Hour) // expires 3 months from now, long enough to not trigger expiration alerts
 		i.LifecycleExpiresAt = &lifecycleExpiresAt
 
 		i.LifecycleScope = null.StringFrom("scope1")
@@ -221,7 +221,7 @@ func main() {
 		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
 		i.LifecycleID = null.StringFrom("210003")
 
-		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour) // expires 1 month from now
+		lifecycleExpiresAt := time.Now().Add(3 * 30 * 24 * time.Hour) // expires 3 months from now, long enough to not trigger expiration alerts
 		i.LifecycleExpiresAt = &lifecycleExpiresAt
 
 		i.LifecycleScope = null.StringFrom("initial scope")
@@ -230,11 +230,25 @@ func main() {
 		i.Status = models.SystemIntakeStatusLCIDISSUED
 		i.SubmittedAt = &submittedAt
 	})
-	newExpirationDate := intakeToExtend.LifecycleExpiresAt.Add(time.Hour * 24 * 30 * 3) // add 3 months to expiration date
+	newExpirationDate := intakeToExtend.LifecycleExpiresAt.Add(4 * 30 * 24 * time.Hour) // add additional 4 months to expiration date
 	extendedNextSteps := "extended next steps"
 	extendedScope := "extended scope"
 	extendedCostBaseline := "extended baseline"
 	extendLCID(logger, store, intakeToExtend, &newExpirationDate, &extendedNextSteps, extendedScope, &extendedCostBaseline)
+
+	makeSystemIntake("With LCID expiring soon", logger, store, func(i *models.SystemIntake) {
+		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
+		i.LifecycleID = null.StringFrom("210004")
+
+		lifecycleExpiresAt := time.Now().Add(50 * 24 * time.Hour) // expires in 50 days, soon enough to trigger expiration alert
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+
+		i.LifecycleScope = null.StringFrom("initial scope")
+		i.LifecycleCostBaseline = null.StringFrom("initial baseline")
+		i.DecisionNextSteps = null.StringFrom("initial next steps")
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.SubmittedAt = &submittedAt
+	})
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 }
