@@ -58,7 +58,7 @@ export interface GetTrbPublicAdviceLetter_trbRequest_taskStatuses {
 export interface GetTrbPublicAdviceLetter_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
-  name: string;
+  name: string | null;
   requesterInfo: GetTrbPublicAdviceLetter_trbRequest_requesterInfo;
   requesterComponent: string | null;
   form: GetTrbPublicAdviceLetter_trbRequest_form;

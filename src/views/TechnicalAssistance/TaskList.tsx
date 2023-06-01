@@ -121,7 +121,7 @@ function TaskList() {
               {data && (
                 <div>
                   <div className="trb-request-type font-body-lg line-height-body-5 text-light">
-                    {data.trbRequest.name}
+                    {data.trbRequest.name || t('taskList.defaultName')}
                   </div>
                   <div>
                     <span className="font-body-md line-height-body-4 text-base margin-right-1">

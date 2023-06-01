@@ -715,13 +715,17 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
         <li
           class="usa-button-group__item"
         >
-          <button
-            class="usa-button margin-top-0"
-            data-testid="button"
-            type="submit"
+          <div
+            class="display-flex flex-align-center"
           >
-            Next
-          </button>
+            <button
+              class="usa-button margin-top-0"
+              data-testid="button"
+              type="submit"
+            >
+              Next
+            </button>
+          </div>
         </li>
       </ul>
       <button

@@ -82,7 +82,7 @@ export interface UpdateTrbRequestAndForm_updateTRBRequest_feedback {
 export interface UpdateTrbRequestAndForm_updateTRBRequest {
   __typename: "TRBRequest";
   id: UUID;
-  name: string;
+  name: string | null;
   type: TRBRequestType;
   state: TRBRequestState;
   taskStatuses: UpdateTrbRequestAndForm_updateTRBRequest_taskStatuses;

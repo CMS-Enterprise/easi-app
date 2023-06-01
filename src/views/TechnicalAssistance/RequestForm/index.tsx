@@ -61,7 +61,10 @@ type ViewSlug = typeof viewSlugs[number];
  * Run the `onValid` callback after successful validation.
  * Use this to change address urls after submissions are successfully completed.
  */
-export type StepSubmit = (onValid?: () => void) => Promise<void>;
+export type StepSubmit = (
+  onValid?: () => void,
+  shouldValidate?: boolean
+) => Promise<void>;
 
 export type TrbFormAlert =
   | {
