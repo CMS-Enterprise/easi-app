@@ -5,9 +5,16 @@ import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 
+type StateLink = {
+  pathname: string;
+  state: {
+    fromAdmin: boolean;
+  };
+};
+
 export type AdminActionButton = {
   label: string;
-  link?: string;
+  link?: string | StateLink;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   outline?: boolean;
   unstyled?: boolean;

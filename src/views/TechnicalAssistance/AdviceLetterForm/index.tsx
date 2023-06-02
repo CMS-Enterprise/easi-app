@@ -18,6 +18,7 @@ import {
   GetTrbAdviceLetter,
   GetTrbAdviceLetterVariables
 } from 'queries/types/GetTrbAdviceLetter';
+import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { FormAlertObject } from 'types/technicalAssistance';
 import {
   meetingSummarySchema,
@@ -39,7 +40,7 @@ import './index.scss';
 
 type StepsText = { name: string; longName?: string; description?: string }[];
 
-type FormStepKey =
+export type FormStepKey =
   | 'summary'
   | 'recommendations'
   | 'next-steps'
@@ -77,7 +78,13 @@ type AdviceFormStep = typeof adviceFormSteps[number];
 const AdviceLetterForm = () => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
-  const location = useLocation<{ error?: boolean }>();
+  const location = useLocation<{
+    error?: boolean;
+    state: { fromAdmin?: boolean };
+    fromAdmin?: boolean;
+  }>();
+
+  const fromAdmin = location.state?.fromAdmin;
 
   // Get url params
   const { id, formStep, subpage } = useParams<{
@@ -132,27 +139,34 @@ const AdviceLetterForm = () => {
 
   /** Redirect if previous steps are not completed */
   const redirectStep = useCallback(() => {
-    if (
-      stepsCompleted &&
-      stepsCompleted.length < 4 &&
-      !checkValidSteps(currentStepIndex)
-    ) {
+    if (stepsCompleted && !checkValidSteps(currentStepIndex - 1)) {
       /** Returns latest available step index */
-      const stepRedirectIndex = adviceFormSteps.findIndex(
-        step => !stepsCompleted?.includes(step.slug)
-      );
+      const stepRedirectIndex = !stepsCompleted.includes('summary')
+        ? 0
+        : // If summary is completed, return index of last completed step plus 1
+          adviceFormSteps.findIndex(
+            step => step.slug === stepsCompleted?.slice(-1)[0]
+          ) + 1;
 
+      if (!fromAdmin && currentStepIndex === 0) return;
       // Redirect to latest available step
       history.replace(
         `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
       );
     }
-  }, [stepsCompleted, currentStepIndex, history, id, checkValidSteps]);
+  }, [
+    stepsCompleted,
+    currentStepIndex,
+    history,
+    id,
+    checkValidSteps,
+    fromAdmin
+  ]);
 
   useEffect(() => {
     if (!adviceLetter) return;
     (async () => {
-      const completed: FormStepKey[] = ['recommendations'];
+      let completed: FormStepKey[] = stepsCompleted ? [...stepsCompleted] : [];
       const stepValidators = [];
 
       // Check the Meeting Summary step
@@ -167,7 +181,7 @@ const AdviceLetterForm = () => {
               }
             )
             .then(valid => {
-              if (valid) completed.unshift('summary');
+              if (valid) completed = ['summary'];
             })
         );
       }
@@ -190,9 +204,23 @@ const AdviceLetterForm = () => {
             )
             .then(valid => {
               // Internal review should be marked completed with next steps
-              if (valid) completed.push('next-steps', 'internal-review');
+              if (valid) {
+                completed = ['summary', 'recommendations', 'next-steps'];
+              }
             })
         );
+      }
+
+      if (
+        trbRequest?.taskStatuses.adviceLetterStatus ===
+        TRBAdviceLetterStatus.READY_FOR_REVIEW
+      ) {
+        completed = [
+          'summary',
+          'recommendations',
+          'next-steps',
+          'internal-review'
+        ];
       }
 
       Promise.allSettled(stepValidators).then(() => {
@@ -338,6 +366,8 @@ const AdviceLetterForm = () => {
               setFormAlert={setFormAlert}
               setStepSubmit={setStepSubmit}
               setIsStepSubmitting={setIsStepSubmitting}
+              stepsCompleted={stepsCompleted}
+              setStepsCompleted={setStepsCompleted}
             />
           )}
         </Grid>

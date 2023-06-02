@@ -56,7 +56,7 @@ const Summary = ({
 
   /** Submit meeting summary fields and update advice letter */
   const submit = useCallback<StepSubmit>(
-    (callback, shouldValidate) =>
+    (callback, shouldValidate = true) =>
       handleSubmit(
         async formData => {
           try {
