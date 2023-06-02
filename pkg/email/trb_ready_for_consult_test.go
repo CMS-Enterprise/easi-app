@@ -109,8 +109,8 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +
 			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
 			"<p>The Technical Review Board (TRB) has reviewed the initial request form for " + requestName + " and is now ready to schedule a consult session.</p>\n\n" +
-			"Next steps:\n" +
 			"\n\n" + // this is where I'd put my feedback... IF I HAD ONE
+			"Next steps:\n" +
 			"<ul>\n" +
 			"<li>If they haven't already, the TRB will assign a TRB lead for this request to help process the request and facilitate the consult session.</li>\n" +
 			"<li>The TRB lead will work with " + requesterName + " and their project team to decide on a day and time for the TRB consult session.</li>\n" +
