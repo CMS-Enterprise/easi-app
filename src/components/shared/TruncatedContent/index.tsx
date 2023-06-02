@@ -12,6 +12,8 @@ type TruncatedContentProps = {
   labelMore?: string;
   labelLess?: string;
   buttonClassName?: string;
+  expanded?: boolean;
+  hideToggle?: boolean;
 };
 
 export default function TruncatedContent({
@@ -19,9 +21,11 @@ export default function TruncatedContent({
   initialCount,
   labelMore = 'Show more',
   labelLess = 'Show less',
-  buttonClassName
+  buttonClassName,
+  expanded,
+  hideToggle
 }: TruncatedContentProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [isExpanded, setExpanded] = useState(expanded);
   const defaultContent = children
     .filter(child => child) // Filter out conditional children
     .flat()
@@ -30,16 +34,16 @@ export default function TruncatedContent({
     .filter(child => child) // Filter out conditional children
     .flat()
     .slice(initialCount);
-  const Icon = expanded ? IconArrowDropUp : IconArrowDropDown;
+  const Icon = isExpanded ? IconArrowDropUp : IconArrowDropDown;
   return (
     <>
       {defaultContent}
-      {expandedContent.length > 0 && (
+      {expandedContent.length > 0 && !hideToggle && (
         <Button
           data-testid="truncatedContentButton"
           type="button"
           unstyled
-          onClick={() => setExpanded(!expanded)}
+          onClick={() => setExpanded(!isExpanded)}
           className={classNames(
             'truncated-content-button',
             'display-flex',
@@ -47,10 +51,10 @@ export default function TruncatedContent({
             buttonClassName
           )}
         >
-          <Icon className="margin-x-05" /> {expanded ? labelLess : labelMore}
+          <Icon className="margin-x-05" /> {isExpanded ? labelLess : labelMore}
         </Button>
       )}
-      {expanded && expandedContent}
+      {isExpanded && expandedContent}
     </>
   );
 }

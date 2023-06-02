@@ -73,6 +73,65 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 		s.Equal(expectedEmail, sender.body)
 	})
 
+	s.Run("successful call has the right content (no feedback)", func() {
+		client, err := NewClient(s.config, &sender)
+		s.NoError(err)
+
+		requestID := uuid.MustParse("3306730d-a16a-407c-b73f-3b0bfffac6b5")
+		requestName := "TestRequest"
+		requesterName := "Test Requester"
+		feedback := ""
+		recipients := []models.EmailAddress{
+			models.NewEmailAddress("abcd@local.fake"),
+			models.NewEmailAddress("efgh@local.fake"),
+		}
+
+		taskListViewOpeningTag := fmt.Sprintf(
+			"<a href=\"%s://%s/trb/task-list/%s\">",
+			s.config.URLScheme,
+			s.config.URLHost,
+			requestID,
+		)
+
+		adminViewOpeningTag := fmt.Sprintf(
+			"<a href=\"%s://%s/trb/%s/request\">",
+			s.config.URLScheme,
+			s.config.URLHost,
+			requestID,
+		)
+
+		mailToTRBInboxElement := fmt.Sprintf(
+			"<a href=\"mailto:%s\">%s</a>",
+			s.config.TRBEmail,
+			s.config.TRBEmail,
+		)
+
+		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +
+			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
+			"<p>The Technical Review Board (TRB) has reviewed the initial request form for " + requestName + " and is now ready to schedule a consult session.</p>\n\n" +
+			"\n\n" + // this is where I'd put my feedback... IF I HAD ONE
+			"Next steps:\n" +
+			"<ul>\n" +
+			"<li>If they haven't already, the TRB will assign a TRB lead for this request to help process the request and facilitate the consult session.</li>\n" +
+			"<li>The TRB lead will work with " + requesterName + " and their project team to decide on a day and time for the TRB consult session.</li>\n" +
+			"<li>Then they will add the date in EASi and send a separate calendar invite with a remote video conferencing meeting link.</li>\n" +
+			"</ul>\n\n" +
+			"View this request in EASi:\n" +
+			"<ul>\n" +
+			"<li>If you are the initial requester, you may " + taskListViewOpeningTag + "click here</a> to view your request task list.</li>\n" +
+			"<li>TRB team members may " + adminViewOpeningTag + "click here</a> to view the request details.</li>\n" +
+			"<li>Others should contact " + requesterName + " or the TRB for more information about this request.</li>\n" +
+			"</ul>\n\n" +
+			"<p>If you have questions, please email the TRB at " + mailToTRBInboxElement + ".</p>\n\n" +
+			"<hr>\n\n" +
+			"<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>\n"
+
+		err = client.SendTRBReadyForConsultNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		s.NoError(err)
+		s.Equal(fmt.Sprintf("%v is ready for a consult session", requestName), sender.subject)
+		s.Equal(expectedEmail, sender.body)
+	})
+
 	s.Run("successful call copying the TRB mailbox sends to all recipients and the TRB mailbox", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)

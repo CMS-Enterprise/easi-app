@@ -36,7 +36,7 @@ export const taskStatusClassName: Record<TaskStatus, string> = {
   // Error: 'bg-error-dark text-white'
   READY_TO_START: 'bg-info-light',
   // No action needed: 'bg-base-lighter text-base-darker',
-  READY_FOR_REVIEW: 'bg-info-light-light'
+  READY_FOR_REVIEW: 'bg-info-light'
 };
 
 type TaskStatusTagProps = {
