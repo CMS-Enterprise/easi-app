@@ -266,7 +266,7 @@ const technicalAssistance = {
     }
   },
   emailRecipientFields: {
-    label: 'Choose recipients <red>*</red>',
+    label: 'Choose recipients',
     selectedCount: '<bold>{{count}}</bold> recipient{{plural}} selected',
     copyTrbMailbox: 'Copy TRB Mailbox',
     projectTeamMember: 'Project team member',
@@ -277,7 +277,8 @@ const technicalAssistance = {
     newRecipientComponent: 'New recipient component',
     newRecipientRole: 'New recipient role',
     addRecipient: 'Add recipient',
-    selectRecipientError: 'Please select a recipient'
+    selectRecipientError: 'Please select a recipient',
+    duplicateRecipient: 'Contact has already been added as a recipient'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
@@ -465,6 +466,7 @@ const technicalAssistance = {
   },
   taskList: {
     heading: 'Task list',
+    defaultName: 'Draft',
     additionalHelp: 'Additional Help',
     helpLinksNewTab: 'All help links open in a new tab',
     stepsInvolved:
@@ -988,6 +990,13 @@ const technicalAssistance = {
       changeLead: 'Change lead',
       addDate: 'Add date'
     }
+  },
+  actionErrorLabels: {
+    notifyEuaIds: 'Notification recipients',
+    meetingDate: 'Meeting date',
+    meetingTime: 'Meeting time',
+    notes: 'Notes',
+    feedbackMessage: 'Edits requested'
   },
   actionRequestEdits: {
     breadcrumb: 'Request edits',

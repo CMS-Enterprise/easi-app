@@ -61,7 +61,10 @@ type ViewSlug = typeof viewSlugs[number];
  * Run the `onValid` callback after successful validation.
  * Use this to change address urls after submissions are successfully completed.
  */
-export type StepSubmit = (onValid?: () => void) => Promise<void>;
+export type StepSubmit = (
+  onValid?: () => void,
+  shouldValidate?: boolean
+) => Promise<void>;
 
 export type TrbFormAlert =
   | {
@@ -216,7 +219,7 @@ function Header({
           onClick={() => {
             stepSubmit?.(() => {
               history.push(taskListUrl);
-            });
+            }, false);
           }}
         >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
@@ -301,10 +304,7 @@ function RequestForm() {
   // Determine the steps that are already completed by attempting to pre-validate them
   const [stepsCompleted, setStepsCompleted] = useState<
     FormStepSlug[] | undefined
-  >(
-    // undefined // TODO set this back
-    ['basic', 'attendees']
-  );
+  >();
 
   // Prevalidate certain steps that will be checked against
   // to enable slug paths and links in the StepHeader
@@ -313,9 +313,7 @@ function RequestForm() {
       return;
     }
     (async () => {
-      const completed = Array.isArray(stepsCompleted)
-        ? [...stepsCompleted]
-        : [];
+      const completed: FormStepSlug[] = [];
       const stepValidators = [];
 
       // Check the Basic step

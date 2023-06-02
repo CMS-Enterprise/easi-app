@@ -7,6 +7,7 @@ import {
 } from '@trussworks/react-uswds';
 // eslint-disable-next-line import/no-unresolved
 import { StepIndicatorStepProps } from '@trussworks/react-uswds/lib/components/stepindicator/StepIndicatorStep/StepIndicatorStep';
+import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 
@@ -17,6 +18,7 @@ export type StepHeaderStepProps = {
   label: React.ReactNode;
   description?: string;
   completed?: boolean;
+  disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLLIElement>;
 };
 
@@ -104,10 +106,14 @@ function StepHeader({
                 <StepIndicatorStep
                   key={stp.key}
                   status={status}
-                  onClick={stp.onClick ? stp.onClick : undefined}
-                  className={
-                    stp.onClick ? 'usa-step-indicator__segment--clickable' : ''
+                  onClick={
+                    stp.onClick && !stp.disabled ? stp.onClick : undefined
                   }
+                  className={classNames({
+                    'usa-step-indicator__segment--clickable':
+                      !!stp.onClick && !stp.disabled,
+                    'usa-step-indicator__segment--disabled': stp.disabled
+                  })}
                   // `label` expects a string but can render jsx
                   label={(stp.label as unknown) as string}
                 />

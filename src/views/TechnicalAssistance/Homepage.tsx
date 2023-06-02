@@ -86,7 +86,7 @@ function Homepage() {
               to={`/trb/task-list/${row.original.id}`}
               data-testid={`trbRequest-${row.original.id}`}
             >
-              {value}
+              {value || t('taskList.defaultName')}
             </UswdsReactLink>
           );
         }

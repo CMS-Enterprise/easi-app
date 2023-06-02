@@ -35,7 +35,7 @@ describe('TRB Admin Home summary', () => {
           <Provider store={defaultStore}>
             <Summary
               trbRequestId={mockTrbRequestId}
-              name={trbRequestSummary.name}
+              name={trbRequestSummary.name || 'Draft'}
               requestType={trbRequestSummary.type}
               state={trbRequestSummary.state}
               taskStatus={trbRequestSummary.status}
