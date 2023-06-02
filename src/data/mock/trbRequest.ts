@@ -82,6 +82,11 @@ export const attendees: MockTrbAttendee[] = [
   })!
 ];
 
+export const newAttendee: MockTrbAttendee = users.next({
+  role: PersonRole.CRA,
+  component: 'Center for Clinical Standards and Quality'
+})!;
+
 export const taskStatuses: TaskStatuses = {
   __typename: 'TRBTaskStatuses',
   formStatus: TRBFormStatus.IN_PROGRESS,

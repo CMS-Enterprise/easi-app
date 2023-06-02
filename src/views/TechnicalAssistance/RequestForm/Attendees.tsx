@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   Route,
@@ -15,7 +14,9 @@ import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
+import useEasiForm from 'hooks/useEasiForm';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
   GetTrbRequest,
@@ -121,13 +122,14 @@ function Attendees({
   // Initialize form
   const {
     control,
+    partialSubmit,
     handleSubmit,
     setValue,
     clearErrors,
     getValues,
     reset,
     formState: { errors, isSubmitting, isDirty }
-  } = useForm<TRBAttendeeFields>({
+  } = useEasiForm<TRBAttendeeFields>({
     resolver: yupResolver(trbRequesterSchema)
   });
 
@@ -156,14 +158,14 @@ function Attendees({
 
   /** Submit requester as attendee */
   const submitForm = useCallback<StepSubmit>(
-    callback =>
+    (callback, shouldValidate = true) =>
       // Start the submit promise
       handleSubmit(
         // Validation passed
         async formData => {
           try {
             // Submit the input only if there are changes
-            if (isDirty && requester.id) {
+            if (isDirty) {
               const { component, role } = formData;
               // Update requester
               await updateAttendee({
@@ -184,6 +186,19 @@ function Attendees({
               });
             }
           }
+        },
+        async () => {
+          if (!shouldValidate) {
+            await partialSubmit({
+              update: formData =>
+                updateAttendee({
+                  id: requester.id,
+                  component: formData?.component || '',
+                  role: formData?.role as PersonRole
+                }),
+              callback
+            });
+          }
         }
       )(),
     [
@@ -193,6 +208,7 @@ function Attendees({
       requester,
       updateAttendee,
       setFormAlert,
+      partialSubmit,
       t
     ]
   );
@@ -262,6 +278,7 @@ function Attendees({
                 <p className="line-height-body-5 margin-top-0 margin-bottom-2">
                   {t('attendees.description')}
                 </p>
+
                 <UswdsReactLink
                   to={`/trb/task-list/${trbID}`}
                   className="display-block margin-bottom-5"
@@ -271,6 +288,12 @@ function Attendees({
                     {t('requestFeedback.returnToTaskList')}
                   </span>
                 </UswdsReactLink>
+
+                {attendees?.length === 0 && (
+                  <Alert type="info" slim className="margin-bottom-3">
+                    {t('attendees.noAttendees')}
+                  </Alert>
+                )}
               </>
             )}
 
@@ -344,9 +367,7 @@ function Attendees({
                 stepUrl && {
                   disabled: isSubmitting,
                   onClick: () => {
-                    submitForm(() => {
-                      history.push(stepUrl.back);
-                    });
+                    history.push(stepUrl.back);
                   }
                 }
               }

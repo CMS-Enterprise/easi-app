@@ -17,9 +17,10 @@ import TrbRequestFeedbackList from '../TrbRequestFeedbackList';
 type FeedbackProps = {
   request: TrbRequest;
   taskListUrl: string;
+  prevStep?: string;
 };
 
-function Feedback({ request, taskListUrl }: FeedbackProps) {
+function Feedback({ request, taskListUrl, prevStep }: FeedbackProps) {
   const { t } = useTranslation('technicalAssistance');
 
   const { state } = useLocation<{
@@ -30,7 +31,7 @@ function Feedback({ request, taskListUrl }: FeedbackProps) {
 
   const returnUrl = fromTaskList
     ? `/trb/task-list/${request.id}`
-    : `/trb/requests/${request.id}/check`;
+    : `/trb/requests/${request.id}/${prevStep || 'check'}`;
 
   const returnToFormLink = useMemo(
     () => (

@@ -266,7 +266,7 @@ const technicalAssistance = {
     }
   },
   emailRecipientFields: {
-    label: 'Choose recipients <red>*</red>',
+    label: 'Choose recipients',
     selectedCount: '<bold>{{count}}</bold> recipient{{plural}} selected',
     copyTrbMailbox: 'Copy TRB Mailbox',
     projectTeamMember: 'Project team member',
@@ -277,7 +277,8 @@ const technicalAssistance = {
     newRecipientComponent: 'New recipient component',
     newRecipientRole: 'New recipient role',
     addRecipient: 'Add recipient',
-    selectRecipientError: 'Please select a recipient'
+    selectRecipientError: 'Please select a recipient',
+    duplicateRecipient: 'Contact has already been added as a recipient'
   },
   statusLabels: {
     CANNOT_START_YET: 'Cannot start yet',
@@ -315,6 +316,9 @@ const technicalAssistance = {
       NEED_HELP: 'System problem',
       BRAINSTORM: 'Idea feedback',
       OTHER: 'Other'
+    },
+    requestState: {
+      CLOSED: 'Closed'
     },
     requestStatus: {
       NEW: 'New',
@@ -462,6 +466,7 @@ const technicalAssistance = {
   },
   taskList: {
     heading: 'Task list',
+    defaultName: 'Draft',
     additionalHelp: 'Additional Help',
     helpLinksNewTab: 'All help links open in a new tab',
     stepsInvolved:
@@ -597,7 +602,7 @@ const technicalAssistance = {
       whereInProcess:
         'This helps the TRB provide the right type of support for your request.',
       whenMeet:
-        'Please include specific date(s) if you are able. If not, specifying the month, quarter, or year is acceptable.',
+        'Format mm/dd/yyyy. If you are unsure of the specific date, you may pick a date that is your best guess.',
       fundingSources:
         'If you are unsure, please get in touch with your Contracting Officer Representative (COR). If this will not use an existing funding source, skip this question.',
       relatedLCIDS:
@@ -682,6 +687,8 @@ const technicalAssistance = {
     continueWithoutAdding: 'Continue without adding attendees',
     dontAddAndReturn: "Don't add and return to previous page",
     dontEditAndReturn: "Don't edit and return to previous page",
+    noAttendees:
+      'You have not added any additional attendees to this consult session. Use the button below to invite project team members or anyone else who should be present.',
     attendeeHelpText:
       'Please provide the name, CMS component, and role for this attendee.',
     attendeeNameHelpText:
@@ -983,6 +990,13 @@ const technicalAssistance = {
       changeLead: 'Change lead',
       addDate: 'Add date'
     }
+  },
+  actionErrorLabels: {
+    notifyEuaIds: 'Notification recipients',
+    meetingDate: 'Meeting date',
+    meetingTime: 'Meeting time',
+    notes: 'Notes',
+    feedbackMessage: 'Edits requested'
   },
   actionRequestEdits: {
     breadcrumb: 'Request edits',

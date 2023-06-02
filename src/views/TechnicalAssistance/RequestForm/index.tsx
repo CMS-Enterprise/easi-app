@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
   Button,
@@ -61,7 +61,10 @@ type ViewSlug = typeof viewSlugs[number];
  * Run the `onValid` callback after successful validation.
  * Use this to change address urls after submissions are successfully completed.
  */
-export type StepSubmit = (onValid?: () => void) => Promise<void>;
+export type StepSubmit = (
+  onValid?: () => void,
+  shouldValidate?: boolean
+) => Promise<void>;
 
 export type TrbFormAlert =
   | {
@@ -216,7 +219,7 @@ function Header({
           onClick={() => {
             stepSubmit?.(() => {
               history.push(taskListUrl);
-            });
+            }, false);
           }}
         >
           <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
@@ -227,7 +230,13 @@ function Header({
   );
 }
 
-function EditsRequestedWarning({ requestId }: { requestId: string }) {
+function EditsRequestedWarning({
+  requestId,
+  step
+}: {
+  requestId: string;
+  step?: string;
+}) {
   const { t } = useTranslation('technicalAssistance');
   return (
     <div className="bg-error-lighter padding-y-2">
@@ -245,7 +254,10 @@ function EditsRequestedWarning({ requestId }: { requestId: string }) {
           <UswdsReactLink
             variant="unstyled"
             className="usa-button usa-button--outline"
-            to={`/trb/requests/${requestId}/feedback`}
+            to={{
+              pathname: `/trb/requests/${requestId}/feedback`,
+              state: { prevStep: step }
+            }}
           >
             {t('editsRequested.viewFeedback')}
           </UswdsReactLink>
@@ -262,6 +274,10 @@ function RequestForm() {
   const { t } = useTranslation('technicalAssistance');
 
   const history = useHistory();
+
+  const { state } = useLocation<{ prevStep?: string }>();
+
+  const prevStep = state?.prevStep;
 
   const { id, step, view } = useParams<{
     /** Request id */
@@ -288,10 +304,7 @@ function RequestForm() {
   // Determine the steps that are already completed by attempting to pre-validate them
   const [stepsCompleted, setStepsCompleted] = useState<
     FormStepSlug[] | undefined
-  >(
-    // undefined // TODO set this back
-    ['basic', 'attendees']
-  );
+  >();
 
   // Prevalidate certain steps that will be checked against
   // to enable slug paths and links in the StepHeader
@@ -300,9 +313,7 @@ function RequestForm() {
       return;
     }
     (async () => {
-      const completed = Array.isArray(stepsCompleted)
-        ? [...stepsCompleted]
-        : [];
+      const completed: FormStepSlug[] = [];
       const stepValidators = [];
 
       // Check the Basic step
@@ -417,9 +428,9 @@ function RequestForm() {
     () =>
       request?.taskStatuses.feedbackStatus ===
       TRBFeedbackStatus.EDITS_REQUESTED ? (
-        <EditsRequestedWarning requestId={request.id} />
+        <EditsRequestedWarning requestId={request.id} step={step} />
       ) : null,
-    [request?.id, request?.taskStatuses.feedbackStatus]
+    [request?.id, request?.taskStatuses.feedbackStatus, step]
   );
 
   // References to the submit handler and submitting state of the current form step
@@ -470,7 +481,13 @@ function RequestForm() {
   }
 
   if (step === 'feedback' && request) {
-    return <Feedback request={request} taskListUrl={taskListUrl} />;
+    return (
+      <Feedback
+        request={request}
+        taskListUrl={taskListUrl}
+        prevStep={prevStep}
+      />
+    );
   }
 
   const stepIdx = formStepSlugs.indexOf(step as FormStepSlug);

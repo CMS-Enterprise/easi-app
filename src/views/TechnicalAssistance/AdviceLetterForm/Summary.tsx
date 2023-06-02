@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
@@ -9,6 +9,7 @@ import { ErrorMessage, Form, FormGroup } from '@trussworks/react-uswds';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import useEasiForm from 'hooks/useEasiForm';
 import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   UpdateTrbAdviceLetter,
@@ -44,8 +45,9 @@ const Summary = ({
     handleSubmit,
     control,
     watch,
+    partialSubmit,
     formState: { isSubmitting, isDirty }
-  } = useForm<AdviceLetterSummary>({
+  } = useEasiForm<AdviceLetterSummary>({
     resolver: yupResolver(meetingSummarySchema),
     defaultValues: {
       meetingSummary
@@ -54,35 +56,62 @@ const Summary = ({
 
   /** Submit meeting summary fields and update advice letter */
   const submit = useCallback<StepSubmit>(
-    callback =>
-      handleSubmit(async formData => {
-        try {
-          if (isDirty) {
-            // UpdateTrbAdviceLetter mutation
-            await update({
-              variables: {
-                input: {
-                  trbRequestId,
-                  ...formData
+    (callback, shouldValidate = true) =>
+      handleSubmit(
+        async formData => {
+          try {
+            if (isDirty) {
+              // UpdateTrbAdviceLetter mutation
+              await update({
+                variables: {
+                  input: {
+                    trbRequestId,
+                    ...formData
+                  }
                 }
-              }
-            });
+              });
+            }
+            setFormAlert(null);
+            callback?.();
+          } catch (e) {
+            if (e instanceof ApolloError) {
+              setFormAlert({
+                type: 'error',
+                message: t('adviceLetterForm.error', {
+                  action: 'saving',
+                  type: 'advice letter'
+                })
+              });
+            }
           }
-          setFormAlert(null);
-          callback?.();
-        } catch (e) {
-          if (e instanceof ApolloError) {
-            setFormAlert({
-              type: 'error',
-              message: t('adviceLetterForm.error', {
-                action: 'saving',
-                type: 'advice letter'
-              })
+        },
+        async () => {
+          // Save valid dirty fields on save and exit
+          if (!shouldValidate) {
+            await partialSubmit({
+              update: formData =>
+                update({
+                  variables: {
+                    input: {
+                      trbRequestId,
+                      ...formData
+                    }
+                  }
+                }),
+              callback
             });
           }
         }
-      })(),
-    [handleSubmit, isDirty, trbRequestId, update, setFormAlert, t]
+      )(),
+    [
+      handleSubmit,
+      isDirty,
+      trbRequestId,
+      update,
+      setFormAlert,
+      t,
+      partialSubmit
+    ]
   );
 
   useEffect(() => {

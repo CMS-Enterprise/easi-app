@@ -149,6 +149,9 @@ describe('Trb Admin Notes: View Notes', () => {
                     type: 'NEED_HELP',
                     state: 'OPEN',
                     trbLead: null,
+                    trbLeadInfo: {
+                      commonName: 'John Doe'
+                    },
                     createdAt: '2023-02-16T15:21:34.156885Z',
                     taskStatuses: {
                       formStatus: 'IN_PROGRESS',
