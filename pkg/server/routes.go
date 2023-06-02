@@ -102,11 +102,9 @@ func (s *Server) routes(
 		}
 	}
 
-	// var userSearchClient cedarldap.Client //TODO: update this to have OKTA API live in it's own package?
-
+	//TODO: update this to have OKTA API live in it's own package?
 	var userSearchClient usersearch.Client
-	if false {
-		// if s.environment.Local() || s.environment.Test() {
+	if s.environment.Local() || s.environment.Test() {
 		userSearchClient = local.NewCedarLdapClient(s.logger)
 	} else {
 		useOKTAAPI := s.Config.GetBool(appconfig.USEOKTAAPI)

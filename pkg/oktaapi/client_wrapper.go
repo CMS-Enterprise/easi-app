@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/okta/okta-sdk-golang/v2/okta"
 	"github.com/okta/okta-sdk-golang/v2/okta/query"
@@ -13,21 +14,21 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// Client is a wrapper around github.com/okta/okta-sdk-golang/v2/okta Client type.
+// ClientWrapper is a wrapper around github.com/okta/okta-sdk-golang/v2/okta Client type.
 // The purpose of this package is to act as a drop-in replacement for the CEDAR LDAP API, so this package should implement the same
 // methods that the Client interface defines in ./client.go
-type clientWrapper struct {
+type ClientWrapper struct {
 	oktaClient *okta.Client
 }
 
 // NewClient creates a Client
-func NewClient(url string, token string) (*clientWrapper, error) {
+func NewClient(url string, token string) (*ClientWrapper, error) {
 	// TODO Do we need the "Context" response from okta.NewClient??
 	_, oktaClient, oktaClientErr := okta.NewClient(context.TODO(), okta.WithOrgUrl(url), okta.WithToken(token))
 	if oktaClientErr != nil {
 		return nil, oktaClientErr
 	}
-	return &clientWrapper{ //TODO: implement the next function
+	return &ClientWrapper{ //TODO: implement the next function
 		oktaClient: oktaClient,
 	}, nil
 }
@@ -42,7 +43,7 @@ type oktaUserResponse struct {
 	SourceType  string `json:"SourceType"`
 }
 
-func (cw *clientWrapper) parseOktaProfileResponse(ctx context.Context, profile *okta.UserProfile) (*oktaUserResponse, error) {
+func (cw *ClientWrapper) parseOktaProfileResponse(ctx context.Context, profile *okta.UserProfile) (*oktaUserResponse, error) {
 	logger := appcontext.ZLogger(ctx)
 
 	// Create an okaUserProfile to return
@@ -78,11 +79,40 @@ func (o *oktaUserResponse) toUserInfo() *models.UserInfo {
 	}
 }
 
-func (cw *clientWrapper) FetchUserInfos(ctx context.Context, usernames []string) ([]*models.UserInfo, error) {
-	return nil, fmt.Errorf("not implemented")
+// FetchUserInfos fetches users from Okta by EUA ID
+func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string) ([]*models.UserInfo, error) {
+	logger := appcontext.ZLogger(ctx)
+	users := []*models.UserInfo{}
+	if len(usernames) == 0 {
+		return users, nil
+	}
+
+	var euaSearches []string
+	for _, username := range usernames {
+		euaSearches = append(euaSearches, fmt.Sprintf(`profile.login eq "%v"`, username))
+	}
+	euaSearch := strings.Join(euaSearches, " or ")
+	searchString := fmt.Sprintf(`(%v)`, euaSearch)
+	search := query.NewQueryParams(query.WithSearch(searchString))
+
+	searchedUsers, _, err := cw.oktaClient.User.ListUsers(ctx, search)
+	if err != nil {
+		logger.Error("Error searching Okta users", zap.Error(err), zap.String("usernames", strings.Join(usernames, ", ")))
+		return nil, err
+	}
+
+	for _, user := range searchedUsers {
+		profile, err := cw.parseOktaProfileResponse(ctx, user.Profile)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, profile.toUserInfo())
+	}
+	return users, nil
 }
 
-func (cw *clientWrapper) FetchUserInfo(ctx context.Context, username string) (*models.UserInfo, error) {
+// FetchUserInfo fetches a single user from Okta by EUA ID
+func (cw *ClientWrapper) FetchUserInfo(ctx context.Context, username string) (*models.UserInfo, error) {
 	logger := appcontext.ZLogger(ctx)
 
 	user, _, err := cw.oktaClient.User.GetUser(ctx, username)
@@ -99,15 +129,16 @@ func (cw *clientWrapper) FetchUserInfo(ctx context.Context, username string) (*m
 	return profile.toUserInfo(), nil
 }
 
-func (cw *clientWrapper) SearchCommonNameContains(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
-	//TODO: verify this
+// SearchCommonNameContains is a wrapper for SearchByName
+func (cw *ClientWrapper) SearchCommonNameContains(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
 	return cw.SearchByName(ctx, searchTerm)
 }
 
 const euaSourceType = "EUA"
 const euaADSourceType = "EUA-AD"
 
-func (cw *clientWrapper) SearchByName(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
+// SearchByName searches for a user by their First/Last name in Okta
+func (cw *ClientWrapper) SearchByName(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
 	logger := appcontext.ZLogger(ctx)
 
 	// profile.SourceType can be EUA, EUA-AD, or cmsidm
