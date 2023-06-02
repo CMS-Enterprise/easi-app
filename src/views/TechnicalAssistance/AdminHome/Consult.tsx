@@ -80,7 +80,6 @@ function Consult() {
     ActionForm,
     control,
     handleSubmit,
-    // watch,
     formState: { isDirty, isSubmitting }
   } = useActionForm<ConsultFields>({
     trbRequestId: id,
@@ -147,9 +146,6 @@ function Consult() {
     return <NotFound />;
   }
 
-  // console.log('vals', watch());
-  // console.log(data?.trbRequest.consultMeetingTime, date, time);
-
   return (
     <ActionForm
       title={t('actionScheduleConsult.heading')}
@@ -200,7 +196,7 @@ function Consult() {
                 onChange={val => {
                   field.onChange(val);
                 }}
-                defaultValue={field.value}
+                defaultValue={field.value || date}
               />
             </FormGroup>
           )}
@@ -232,7 +228,7 @@ function Consult() {
                 minTime="08:00"
                 maxTime="18:00"
                 onChange={val => {
-                  if (val) field.onChange(val);
+                  field.onChange(val);
                 }}
                 step={5}
                 defaultValue={field.value}
