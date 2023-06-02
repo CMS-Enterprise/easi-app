@@ -106,10 +106,7 @@ export const basicSchema: yup.SchemaOf<TrbRequestFormBasic> = inputBasicSchema.c
 
 export const trbRequesterSchema = yup.object({
   euaUserId: yup.string().required('Requester name is a required field'),
-  component: yup
-    .string()
-    .nullable()
-    .required('Requester component is a required field'),
+  component: yup.string().nullable(),
   role: yup
     .mixed<PersonRole>()
     .nullable()
@@ -119,7 +116,7 @@ export const trbRequesterSchema = yup.object({
 
 export const trbAttendeeSchema = yup.object({
   euaUserId: yup.string().required('Attendee name is a required field'),
-  component: yup.string().required('Attendee component is a required field'),
+  component: yup.string(),
   role: yup
     .mixed<PersonRole>()
     .oneOf(Object.values(PersonRole))
@@ -182,11 +179,7 @@ export const nextStepsSchema = yup.object({
 export const trbActionSchema = (messageKey?: string, required?: boolean) =>
   yup.object({
     copyTrbMailbox: yup.boolean(),
-    notifyEuaIds: yup.array(yup.string()).when('copyTrbMailbox', {
-      is: (copyTrbMailbox: boolean) => !copyTrbMailbox,
-      then: schema => schema.min(1),
-      otherwise: schema => schema.optional()
-    }),
+    notifyEuaIds: yup.array(yup.string()),
     ...(messageKey
       ? { [messageKey]: required ? yup.string().required() : yup.string() }
       : {})

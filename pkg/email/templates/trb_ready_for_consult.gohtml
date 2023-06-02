@@ -2,7 +2,7 @@
 
 <p>The Technical Review Board (TRB) has reviewed the initial request form for {{.RequestName}} and is now ready to schedule a consult session.</p>
 
-<p>Feedback: {{.Feedback}}</p>
+{{if .Feedback}}<p>Feedback: {{.Feedback}}</p>{{end}}
 
 Next steps:
 <ul>
