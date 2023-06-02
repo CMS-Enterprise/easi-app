@@ -404,7 +404,10 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                           <ButtonGroup>
                             <Button
                               type="button"
-                              onClick={() => remove(index)}
+                              onClick={() => {
+                                remove(index);
+                                setRecipientFormOpen?.(false);
+                              }}
                               outline
                             >
                               {t('Cancel')}
