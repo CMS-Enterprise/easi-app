@@ -183,6 +183,7 @@ function PublicAdviceLetter() {
             adviceLetter={adviceLetter}
             showDateSent={false}
             showSectionBorders={false}
+            publicForm
           />
         )}
 
