@@ -77,7 +77,7 @@ func getTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbReque
 			return nil, err
 		}
 
-		if trb.ConsultMeetingTime != nil {
+		if trb.ConsultMeetingTime != nil && time.Now().After(*trb.ConsultMeetingTime) {
 			status = models.TRBConsultPrepStatusCompleted
 		} else {
 			status = models.TRBConsultPrepStatusReadyToStart
@@ -227,6 +227,10 @@ func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID
 	if err != nil {
 		return status, err
 	}
+	trb, err := store.GetTRBRequestByID(ctx, trbRequestID)
+	if err != nil {
+		return status, err
+	}
 	formStatus := taskStatuses.FormStatus
 	feedbackStatus := taskStatuses.FeedbackStatus
 	consultPrepStatus := taskStatuses.ConsultPrepStatus
@@ -254,7 +258,7 @@ func GetTRBRequestStatus(ctx context.Context, store *storage.Store, trbRequestID
 	}
 
 	// Consult scheduled
-	if consultPrepStatus == models.TRBConsultPrepStatusCompleted {
+	if trb.ConsultMeetingTime != nil || consultPrepStatus == models.TRBConsultPrepStatusCompleted {
 		status = models.TRBRequestStatusConsultScheduled
 	}
 
