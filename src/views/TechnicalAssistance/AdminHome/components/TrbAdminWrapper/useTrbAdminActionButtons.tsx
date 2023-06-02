@@ -136,7 +136,12 @@ const useTrbAdminActionButtons = ({
       },
       continueAdviceLetter: {
         label: t('adminAction.buttons.continueAdviceLetter'),
-        link: `/trb/${trbRequestId}/advice/summary`
+        link: {
+          pathname: `/trb/${trbRequestId}/advice/summary`,
+          state: {
+            fromAdmin: true
+          }
+        }
       },
       editAdviceLetter: {
         label: t('adminAction.buttons.editAdviceLetter'),
