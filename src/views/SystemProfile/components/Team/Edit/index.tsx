@@ -52,6 +52,8 @@ const EditTeam = ({
     action?: 'team-member';
   }>();
 
+  const actionType = state?.user ? 'edit' : 'add';
+
   /**
    * Employees form hidden until work to update data in CEDAR is completed
    */
@@ -105,11 +107,7 @@ const EditTeam = ({
               </BreadcrumbLink>
             </Breadcrumb>
             <Breadcrumb>
-              {t(
-                `singleSystem.editTeam.${
-                  state?.user ? 'editTeamMemberRoles' : 'form.addTeamMember'
-                }`
-              )}
+              {t(`singleSystem.editTeam.form.${actionType}.title`)}
             </Breadcrumb>
           </>
         ) : (
