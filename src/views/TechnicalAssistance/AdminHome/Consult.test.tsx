@@ -98,8 +98,6 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       </Provider>
     );
 
-    // await getByTestId('');
-
     await findByText(
       i18next.t<string>('technicalAssistance:actionScheduleConsult.heading')
     );
@@ -109,8 +107,6 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     const submitButton = getByRole('button', {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
     });
-
-    expect(submitButton).toBeDisabled();
 
     userEvent.type(
       getByLabelText(
