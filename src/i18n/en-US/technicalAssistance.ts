@@ -678,8 +678,7 @@ const technicalAssistance = {
       CLOUD_NAVIGATOR: 'Cloud Navigator',
       PRIVACY_ADVISOR: 'Privacy Advisor',
       CRA: 'CRA',
-      OTHER: 'Other',
-      UNKNOWN: 'Unknown'
+      OTHER: 'Other'
     }
   },
   documents: {

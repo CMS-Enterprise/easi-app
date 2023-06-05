@@ -344,11 +344,6 @@ exports[`Additional contacts component displays form when editing contact 1`] = 
               >
                 Other
               </option>
-              <option
-                value="Unknown"
-              >
-                Unknown
-              </option>
             </select>
           </div>
           <div
