@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   CardGroup,
@@ -16,7 +17,7 @@ import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import PageLoading from 'components/PageLoading';
-// import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import MultiSelect from 'components/shared/MultiSelect';
@@ -30,10 +31,11 @@ import {
   SetRolesForUserOnSystemVariables
 } from 'queries/types/SetRolesForUserOnSystem';
 import { UsernameWithRoles } from 'types/systemProfile';
+import teamMemberSchema from 'validations/systemProfileSchema';
 
 import { TeamContactCard } from '..';
 
-type TeamMemberFields = {
+export type TeamMemberFields = {
   euaUserId: string;
   desiredRoleTypeIDs: string[];
 };
@@ -65,6 +67,7 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
     watch,
     formState: { isDirty, isSubmitting }
   } = useForm<TeamMemberFields>({
+    resolver: yupResolver(teamMemberSchema),
     defaultValues: {
       euaUserId: user?.assigneeUsername,
       desiredRoleTypeIDs: user?.roles.map(({ roleTypeID }) => roleTypeID) || []
@@ -113,7 +116,11 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
                 <HelpText>
                   {t('singleSystem.editTeam.form.nameDescription')}
                 </HelpText>
-                {/* {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>} */}
+                {!!error && (
+                  <FieldErrorMsg>
+                    {t('singleSystem.editTeam.form.nameError')}
+                  </FieldErrorMsg>
+                )}
                 <CedarContactSelect
                   {...{ ...field, ref: null }}
                   id={field.name}
@@ -144,7 +151,11 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
               <HelpText>
                 {t('singleSystem.editTeam.form.rolesDescription')}
               </HelpText>
-              {/* {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>} */}
+              {!!error && (
+                <FieldErrorMsg>
+                  {t('singleSystem.editTeam.form.rolesError')}
+                </FieldErrorMsg>
+              )}
               <MultiSelect
                 {...{ ...field, ref: null }}
                 className="margin-top-1 maxw-none"

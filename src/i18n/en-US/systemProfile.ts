@@ -166,9 +166,11 @@ const systemProfile = {
         name: 'Team member name',
         nameDescription:
           'Search by name. Looking up your team member will provide their name and email address.',
+        nameError: 'Team member name is a required field',
         roles: 'Team member role(s)',
         rolesDescription:
           'Add or remove roles by clicking in the box below. You must select at least one role for this team member.',
+        rolesError: 'You must select at least one role for this team member',
         selectedRoles: 'Selected roles'
       }
     },
