@@ -7,11 +7,15 @@ import HelpPageIntro from 'components/HelpPageIntro';
 import MainContent from 'components/MainContent';
 import RelatedArticles from 'components/RelatedArticles';
 import { CMS_TRB_EMAIL, TRB_DECK_TEMPLATES } from 'constants/externalUrls';
+import useScrollToLocation from 'hooks/useScrollToLocation';
 
 import NeedHelpBox from '../InfoBox/NeedHelpBox';
 
 function PrepareTrbConsultMeeting() {
   const { t } = useTranslation('prepareTrbConsultMeeting');
+
+  useScrollToLocation();
+
   return (
     <>
       <MainContent className="grid-container margin-bottom-7">
@@ -58,6 +62,7 @@ function PrepareTrbConsultMeeting() {
           <li>{t('whatToBring.list.2')}</li>
         </ul>
 
+        <div id="download-presentation-templates" />
         <SummaryBox
           heading={t('downloadTemplates.title')}
           className="desktop:grid-col-6 margin-top-4"

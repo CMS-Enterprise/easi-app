@@ -149,6 +149,7 @@ const AdviceLetterForm = () => {
           ) + 1;
 
       if (!fromAdmin && currentStepIndex === 0) return;
+      if (!adviceFormSteps[stepRedirectIndex]?.slug) return;
       // Redirect to latest available step
       history.replace(
         `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`

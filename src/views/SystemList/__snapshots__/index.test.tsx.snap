@@ -51,7 +51,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
     <h2
       class="margin-bottom-0"
     >
-      Bookmarked Systems
+      Bookmarked systems
     </h2>
     <p
       class="margin-bottom-3"
@@ -70,7 +70,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
     <h2
       class="margin-bottom-0"
     >
-      All Systems
+      All systems
     </h2>
     <p
       class="margin-bottom-5"
@@ -93,7 +93,7 @@ exports[`System List View when there are requests matches snapshot 1`] = `
         class="usa-input"
         data-testid="textInput"
         id="system-list-search"
-        name="All Systems Search"
+        name="All systems Search"
         role="searchbox"
         type="search"
         value=""
