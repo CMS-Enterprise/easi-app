@@ -8,17 +8,18 @@ import {
   CardGroup,
   Form,
   FormGroup,
+  Grid,
   IconArrowBack,
   Label
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
+import PageLoading from 'components/PageLoading';
 // import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import MultiSelect from 'components/shared/MultiSelect';
-import Spinner from 'components/Spinner';
 import {
   GetCedarRoleTypesQuery,
   SetRolesForUserOnSystemQuery
@@ -84,8 +85,12 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
     }
   });
 
+  if (roleTypesLoading) {
+    return <PageLoading />;
+  }
+
   return (
-    <>
+    <Grid className="tablet:grid-col-6">
       <h1 className="margin-bottom-1">{t(`${keyPrefix}.title`)}</h1>
       <p className="margin-bottom-6">{t(`${keyPrefix}.description`)}</p>
 
@@ -102,7 +107,7 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
             control={control}
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
-                <Label htmlFor={field.name}>
+                <Label htmlFor={field.name} className="margin-bottom-05">
                   {t('singleSystem.editTeam.form.name')}
                 </Label>
                 <HelpText>
@@ -133,27 +138,23 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
               error={!!error}
               className={classNames({ 'margin-top-1': !!user })}
             >
-              <Label htmlFor={field.name}>
+              <Label htmlFor={field.name} className="margin-bottom-05">
                 {t('singleSystem.editTeam.form.roles')}
               </Label>
               <HelpText>
                 {t('singleSystem.editTeam.form.rolesDescription')}
               </HelpText>
               {/* {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>} */}
-              {roleTypesLoading ? (
-                <Spinner className="margin-top-1" />
-              ) : (
-                <MultiSelect
-                  {...{ ...field, ref: null }}
-                  className="margin-top-1 maxw-none"
-                  name={field.name}
-                  options={(data?.roleTypes || []).map(role => ({
-                    value: role.id,
-                    label: role.name
-                  }))}
-                  initialValues={field.value}
-                />
-              )}
+              <MultiSelect
+                {...{ ...field, ref: null }}
+                className="margin-top-1 maxw-none"
+                name={field.name}
+                options={(data?.roleTypes || []).map(role => ({
+                  value: role.id,
+                  label: role.name
+                }))}
+                initialValues={field.value}
+              />
             </FormGroup>
           )}
         />
@@ -178,7 +179,7 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
       >
         {t(`${keyPrefix}.returnButtonLabel`)}
       </IconLink>
-    </>
+    </Grid>
   );
 };
 

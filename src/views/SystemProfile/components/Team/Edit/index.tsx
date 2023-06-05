@@ -115,29 +115,28 @@ const EditTeam = ({
         )}
       </BreadcrumbBar>
 
-      <Grid className="tablet:grid-col-6">
-        {action ? (
-          /* Add/edit team member form */
-          <TeamMemberForm cedarSystemId={cedarSystemId} />
-        ) : (
-          /* Edit team page */
-          <>
-            <h1 className="margin-bottom-1">
-              {t('singleSystem.editTeam.title')}
-            </h1>
-            <p>{t('singleSystem.editTeam.description')}</p>
-            <HelpText>{t('singleSystem.editTeam.helpText')}</HelpText>
+      {action ? (
+        /* Add/edit team member form */
+        <TeamMemberForm cedarSystemId={cedarSystemId} />
+      ) : (
+        /* Edit team page */
+        <Grid className="tablet:grid-col-6">
+          <h1 className="margin-bottom-1">
+            {t('singleSystem.editTeam.title')}
+          </h1>
+          <p>{t('singleSystem.editTeam.description')}</p>
+          <HelpText>{t('singleSystem.editTeam.helpText')}</HelpText>
 
-            <IconLink
-              to={`/systems/${cedarSystemId}/team`}
-              icon={<IconArrowBack />}
-              className="margin-top-3 margin-bottom-6"
-            >
-              {t('returnToSystemProfile')}
-            </IconLink>
+          <IconLink
+            to={`/systems/${cedarSystemId}/team`}
+            icon={<IconArrowBack />}
+            className="margin-top-3 margin-bottom-6"
+          >
+            {t('returnToSystemProfile')}
+          </IconLink>
 
-            {/* Employees fields hidden until work to update in CEDAR is completed */}
-            {/* <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
+          {/* Employees fields hidden until work to update in CEDAR is completed */}
+          {/* <Form className="maxw-none" onSubmit={e => e.preventDefault()}>
                 <Controller
                   name="numberOfFederalFte"
                   control={control}
@@ -176,51 +175,50 @@ const EditTeam = ({
                 />
               </Form> */}
 
-            {/* Team Members section */}
-            <h2 className="margin-top-6 margin-bottom-205">
-              {t('singleSystem.editTeam.teamMembers')}
-            </h2>
+          {/* Team Members section */}
+          <h2 className="margin-top-6 margin-bottom-205">
+            {t('singleSystem.editTeam.teamMembers')}
+          </h2>
 
-            <Button
-              type="button"
-              onClick={() => history.push(`${pathname}/team-member`)}
-            >
-              {t('singleSystem.editTeam.addNewTeamMember')}
-            </Button>
+          <Button
+            type="button"
+            onClick={() => history.push(`${pathname}/team-member`)}
+          >
+            {t('singleSystem.editTeam.addNewTeamMember')}
+          </Button>
 
-            <h4 className="margin-top-4">
-              {t('singleSystem.editTeam.currentTeamMembers')}
-            </h4>
+          <h4 className="margin-top-4">
+            {t('singleSystem.editTeam.currentTeamMembers')}
+          </h4>
 
-            <CardGroup data-testid="teamCardGroup">
-              {team.map(user => (
-                <TeamContactCard
-                  user={user}
-                  key={user.assigneeUsername}
-                  // TODO in EASI-2447: Functionality to edit roles and remove team member
-                  footerActions={{
-                    editRoles: () =>
-                      history.push(
-                        `${pathname}/team-member`,
-                        // Send user info to edit form
-                        { user }
-                      ),
-                    removeTeamMember: () => null
-                  }}
-                />
-              ))}
-            </CardGroup>
+          <CardGroup data-testid="teamCardGroup">
+            {team.map(user => (
+              <TeamContactCard
+                user={user}
+                key={user.assigneeUsername}
+                // TODO in EASI-2447: Functionality to edit roles and remove team member
+                footerActions={{
+                  editRoles: () =>
+                    history.push(
+                      `${pathname}/team-member`,
+                      // Send user info to edit form
+                      { user }
+                    ),
+                  removeTeamMember: () => null
+                }}
+              />
+            ))}
+          </CardGroup>
 
-            <IconLink
-              to={`/systems/${cedarSystemId}/team`}
-              icon={<IconArrowBack />}
-              className="margin-top-6"
-            >
-              {t('returnToSystemProfile')}
-            </IconLink>
-          </>
-        )}
-      </Grid>
+          <IconLink
+            to={`/systems/${cedarSystemId}/team`}
+            icon={<IconArrowBack />}
+            className="margin-top-6"
+          >
+            {t('returnToSystemProfile')}
+          </IconLink>
+        </Grid>
+      )}
     </GridContainer>
   );
 };
