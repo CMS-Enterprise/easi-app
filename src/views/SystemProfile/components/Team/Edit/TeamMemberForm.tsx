@@ -61,7 +61,8 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
     control,
     setValue,
     handleSubmit,
-    formState: { isDirty }
+    watch,
+    formState: { isDirty, isSubmitting }
   } = useForm<TeamMemberFields>({
     defaultValues: {
       euaUserId: user?.assigneeUsername,
@@ -159,7 +160,11 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
 
         <Button
           type="submit"
-          // disabled={isSubmitting}
+          disabled={
+            isSubmitting ||
+            watch('desiredRoleTypeIDs').length === 0 ||
+            !watch('euaUserId')
+          }
           className="margin-top-6"
         >
           {t(`${keyPrefix}.buttonLabel`)}
