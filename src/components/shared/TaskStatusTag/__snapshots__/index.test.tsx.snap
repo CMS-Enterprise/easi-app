@@ -39,7 +39,7 @@ exports[`TaskStatusTag renders task status tag {"status":"IN_PROGRESS","classNam
     class="easi-tag bg-warning"
     data-testid="task-list-task-tag"
   >
-    In Progress
+    In progress
   </span>
 </DocumentFragment>
 `;

@@ -92,7 +92,7 @@ export function getAtoStatus(
   // No ato if it doesn't exist
   if (!cedarAuthorityToOperate) return 'No ATO';
 
-  // return 'In Progress'; // tbd
+  // return 'In progress'; // tbd
 
   const { dateAuthorizationMemoExpires } = cedarAuthorityToOperate;
 

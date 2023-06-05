@@ -374,7 +374,7 @@ exports[`All help articles matches the snapshot 1`] = `
             data-testid="CardBody"
           >
             <p>
-              Learn what to expect during and after the meeting, including what to prepare for, and what to bring.
+              Learn what to expect during and after the meeting, including what to prepare for and what to bring.
             </p>
           </div>
           <div
@@ -423,7 +423,7 @@ exports[`All help articles matches the snapshot 1`] = `
             data-testid="CardBody"
           >
             <p>
-              The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.
+              The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also guides project teams on adhering to CMS technical standards and leveraging existing technologies.
             </p>
           </div>
           <div

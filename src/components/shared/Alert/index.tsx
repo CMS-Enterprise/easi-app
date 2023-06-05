@@ -55,7 +55,6 @@ export const Alert = ({
       'easi-inline-alert': inline,
       'easi-alert-text': isClosable
     },
-    'flex',
     className
   );
 
@@ -77,19 +76,16 @@ export const Alert = ({
           className={classes}
           {...props}
         >
-          <div>{children}</div>
+          {children}
           {isClosable && (
             <Button
               type="button"
               role="button"
-              className={classnames(
-                'usa-button usa-button--unstyled text-no-underline text-black',
-                { 'margin-top-neg-4': heading },
-                { 'margin-top-05': !heading }
-              )}
+              className="easi-alert__close-button text-black text-no-underline margin-top-0"
               tabIndex={0}
               aria-label="Close Button"
               onClick={() => setClosed(true)}
+              unstyled
             >
               &#10005;
             </Button>

@@ -272,6 +272,12 @@ function Homepage() {
             </tbody>
           </Table>
 
+          {rows.length === 0 && (
+            <div className="padding-bottom-2 border-bottom-1px margin-top-neg-05">
+              {t('table.noRequests')}
+            </div>
+          )}
+
           <div className="grid-row grid-gap grid-gap-lg">
             <TablePagination
               gotoPage={gotoPage}

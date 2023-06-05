@@ -6791,7 +6791,6 @@ enum PersonRole {
   PRIVACY_ADVISOR
   CRA
   OTHER
-  UNKNOWN
 }
 
 """

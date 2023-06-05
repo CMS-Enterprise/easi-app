@@ -1,9 +1,9 @@
 const technicalAssistance = {
   heading: 'Technical assistance requests',
   subheading:
-    'Request help or feedback for your system, or ask the TRB for other technical assistance.',
+    'Request help or feedback for your system or ask the TRB for other technical assistance.',
   introText:
-    'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.',
+    'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also guides project teams on adhering to CMS technical standards and leveraging existing technologies.',
   infoBox: {
     text: [
       'You can make a request to:',
@@ -11,7 +11,7 @@ const technicalAssistance = {
     ],
     list: [
       'ask for help with a technical problem',
-      'review potential solutions or ideas with the TRB and other SMEs',
+      'review potential solutions or ideas with the TRB and other Subject Matter Experts (SMEs)',
       'schedule an ongoing cadence of technical consultations',
       'consult with SMEs from across the agency',
       'consult with the TRB about CMS guidelines and standards',
@@ -305,7 +305,7 @@ const technicalAssistance = {
     removeYourRequest: 'Remove your request'
   },
   table: {
-    heading: 'My TRB Requests',
+    heading: 'My TRB requests',
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission date',
@@ -331,7 +331,9 @@ const technicalAssistance = {
       ADVICE_LETTER_IN_REVIEW: 'Advice letter in review',
       ADVICE_LETTER_SENT: 'Advice letter sent',
       FOLLOW_UP_REQUESTED: 'Follow-up requested'
-    }
+    },
+    noRequests:
+      'You haven’t started any technical assistance requests with the TRB. Use the button above if you wish to open a new request.'
   },
   // Higher level errors
   errors: {
@@ -401,66 +403,6 @@ const technicalAssistance = {
   steps: {
     heading: 'Get technical assistance',
     changeRequestType: 'Change request type',
-    description:
-      'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.',
-
-    info: {
-      text: [
-        'Using this process will allow you to:',
-        'Requests are usually reviewed and have TRB consult sessions scheduled within a week.'
-      ],
-      list: [
-        'ask for help with a technical problem',
-        'consult with SMEs from across the agency',
-        'consult with the TRB about CMS guidelines and standards'
-      ]
-    },
-    stepsInTheProcess: 'Steps in the process',
-    list: [
-      {
-        heading: 'Fill out the initial request form',
-        text: [
-          'Tell the Technical Review Board (TRB) what you need help with, including an overview of your question, problem, and/or solution. You may also upload any documentation that you think the TRB may find helpful (don’t worry, you’ll also be able to add documents later if you aren’t sure what to upload at this stage).',
-          'This step helps TRB team members better understand what type of help you’re looking for and how best to assist you. It also lets the TRB prepare ahead of time so that you get more value from your consult session.'
-        ]
-      },
-      {
-        heading: 'Feedback from the initial review',
-        text: [
-          'The TRB will review your request form and decide if they need additional information from you. If not, they’ll direct you to go through the remaining steps as they schedule a consult session for you and/or your team.'
-        ]
-      },
-      {
-        heading: 'Prepare for the TRB consult session',
-        text: [
-          'Prepare by completing some or all of the following:',
-          'Prepare for your TRB consult meeting (opens in new tab)'
-        ],
-        list: [
-          'download the TRB presentation deck template and fill it out for your project',
-          'upload any additional documentation that may help the TRB and SMEs better understand what you need help with',
-          'confirm the list of attendees (if any) from your project team'
-        ]
-      },
-      {
-        heading: 'Attend the TRB consult session',
-        text: [
-          'A TRB team member will schedule a consult session for your project. Attendees could include:',
-          'Consult sessions are usually scheduled as 1-hour sessions on Tuesday or Thursday.'
-        ],
-        list: [
-          'Subject Matter Experts (SMEs) to provide additional advice and insight',
-          'any additional project team members you’ve specified',
-          '1 or more TRB team members'
-        ]
-      },
-      {
-        heading: 'Advice letter and next steps',
-        text: [
-          'The TRB will work with any SMEs who attended your consult session to compile a letter that documents any advice for your project team as well as any recommended next steps.'
-        ]
-      }
-    ],
     back: 'Back',
     continue: 'Continue'
   },
@@ -537,7 +479,7 @@ const technicalAssistance = {
       {
         name: 'Subject areas',
         description:
-          'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.',
+          'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional Subject Matter Experts (SMEs) who may be able to provide additional assistance.',
         adminDescription:
           'These subject areas were by the requester to be discussed during the consult session.'
       },
@@ -591,7 +533,7 @@ const technicalAssistance = {
       collabGroupOther: 'Which other group(s)?',
       whenMeet: 'When did you meet with them?',
       collabGRBConsultRequested:
-        'Did the GRT or GRB request that you consult with the TRB as a part of your IT Governance or LCID issuance process?',
+        'Did the GRT or GRB request that you consult with the TRB as a part of your IT Governance or Life Cycle ID (LCID) issuance process?',
       pleaseSpecify: 'Please specify'
     },
     hint: {
@@ -642,8 +584,6 @@ const technicalAssistance = {
     noAnswer: 'No answer selected'
   },
   subject: {
-    info:
-      'Select any and all subjects or topics that are relevant to your request or that you would like specific help with. This will help the TRB invite any additional subject matter experts (SMEs) who may be able to provide additional assistance.',
     labels: {
       ACCESSIBILITY_COMPLIANCE: 'Access Control and Identity Management',
       ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT: 'Accessibility Compliance',
@@ -738,8 +678,7 @@ const technicalAssistance = {
       CLOUD_NAVIGATOR: 'Cloud Navigator',
       PRIVACY_ADVISOR: 'Privacy Advisor',
       CRA: 'CRA',
-      OTHER: 'Other',
-      UNKNOWN: 'Unknown'
+      OTHER: 'Other'
     }
   },
   documents: {
@@ -959,7 +898,7 @@ const technicalAssistance = {
     newRequests: {
       heading: 'New requests',
       description:
-        'Review these recently submitted technical assistance requests and assign a TRB lead.',
+        'Review these recently submitted technical assistance requests and assign a TRB lead. The requests below were either submitted within the past 7 days, or have not had a lead assigned.',
       downloadCsv: 'Download all new requests (csv)',
       noRequests:
         'There are currently no new requests. The TRB Mailbox will receive an email notification when a new request is submitted, or you can check back here later.'
@@ -1091,9 +1030,9 @@ const technicalAssistance = {
     description:
       'Use this action if work on this request is complete, or if it is not a TRB request.',
     breadcrumb: 'Close request',
-    label: 'Why did you close this request?',
+    label: 'Why are you closing this request?',
     hint:
-      'Give a brief explanation, especially if you closed this request without sending an advice letter.',
+      'Give a brief explanation, especially if you are closing this request without sending an advice letter.',
     submit: 'Complete action and close request',
     success: 'Action complete. This request is now closed.',
     error:
@@ -1123,7 +1062,7 @@ const technicalAssistance = {
       'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
   },
   assignTrbLeadModal: {
-    heading: 'Assign an Admin Lead',
+    heading: 'Assign an Admin lead for this request',
     label: 'Select a Lead from the TRB Team:',
     assignMyself: 'Assign myself',
     submit: 'Assign',

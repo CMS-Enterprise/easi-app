@@ -45,7 +45,9 @@ const Review = ({
   adviceLetter,
   adviceLetterStatus,
   setFormAlert,
-  setIsStepSubmitting
+  setIsStepSubmitting,
+  stepsCompleted,
+  setStepsCompleted
 }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
@@ -170,16 +172,30 @@ const Review = ({
             mutate({
               variables: { input: { ...formData, id: adviceLetter.id } }
             })
-              .then(() =>
+              .then(() => {
+                if (
+                  setStepsCompleted &&
+                  stepsCompleted &&
+                  !stepsCompleted?.includes('review')
+                ) {
+                  setStepsCompleted([...stepsCompleted, 'review']);
+                }
                 history.push(`/trb/${trbRequestId}/advice/done`, {
                   success: true
-                })
-              )
-              .catch(() =>
+                });
+              })
+              .catch(() => {
+                if (
+                  setStepsCompleted &&
+                  stepsCompleted &&
+                  !stepsCompleted?.includes('review')
+                ) {
+                  setStepsCompleted([...stepsCompleted, 'review']);
+                }
                 history.push(`/trb/${trbRequestId}/advice/done`, {
                   success: false
-                })
-              )
+                });
+              })
           )}
           className="maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
         >
