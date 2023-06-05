@@ -2,11 +2,11 @@ const prepareTrbConsultMeeting = {
   title: 'Prepare for your TRB consult meeting',
   tag: 'Technical Review Board',
   description:
-    'Learn what to expect during and after the meeting, including what to prepare for, and what to bring.',
+    'Learn what to expect during and after the meeting, including what to prepare for and what to bring.',
   what: {
     title: 'What is the Technical Review Board?',
     description:
-      'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also provides guidance to project teams on adhering to CMS technical standards and leveraging existing technologies.'
+      'The CMS Technical Review Board (TRB) is a technical assistance resource for project teams across the agency at all stages of their system’s life cycle. It offers consultations and reviews on an ongoing or one-off basis, allowing project teams to consult with a cross-functional team of technical advisors. It also guides project teams on adhering to CMS technical standards and leveraging existing technologies.'
   },
   whatToExpect: {
     title: 'What to expect at the meeting',
@@ -45,9 +45,9 @@ const prepareTrbConsultMeeting = {
     description:
       'After the meeting, the TRB will deliberate and provide recommendations and next steps. Within 5 business days, the TRB will compile an advice letter for your project and send it to you. The advice letter may contain:',
     list: [
-      'recommendations for changes to your system or solution.',
-      'additional teams or points of contact to reach out to who may be able to help you further.',
-      'suggestions for systems, services, or solutions to use to implement your idea or solve your problem.',
+      'recommendations for changes to your system or solution',
+      'additional teams or points of contact to reach out to who may be able to help you further',
+      'suggestions for systems, services, or solutions to use to implement your idea or solve your problem',
       'a request for a follow-up consultation session'
     ]
   },

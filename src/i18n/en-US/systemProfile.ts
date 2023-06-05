@@ -35,7 +35,7 @@ const systemProfile = {
       less: 'Read less'
     },
     summary: {
-      back: 'Back to All Systems',
+      back: 'Back to All systems',
       expand: 'Expand system summary',
       hide: 'Hide system summary',
       label: 'Open system external link',
@@ -260,7 +260,7 @@ const systemProfile = {
     }
   },
   systemTable: {
-    title: 'All Systems',
+    title: 'All systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
     noResults: 'No systems found.',
     id: 'system-list',
@@ -273,7 +273,7 @@ const systemProfile = {
     }
   },
   bookmark: {
-    header: 'Bookmarked Systems',
+    header: 'Bookmarked systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
     subHeader1: 'CMS Component',
     subHeader2: 'ATO Status'

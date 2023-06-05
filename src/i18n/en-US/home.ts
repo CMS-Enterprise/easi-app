@@ -8,7 +8,7 @@ const home = {
     heading: '508 Requests',
     newRequest: 'Add a new request'
   },
-  actionTitle: 'Available Services',
+  actionTitle: 'Available services',
   actions: {
     ITGov: {
       heading: 'IT Governance',

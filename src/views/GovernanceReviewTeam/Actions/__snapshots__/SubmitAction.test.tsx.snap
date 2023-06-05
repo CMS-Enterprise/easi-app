@@ -366,7 +366,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 Email (optional)
               </h3>
               <div
-                class="usa-alert usa-alert--warning usa-alert--slim flex"
+                class="usa-alert usa-alert--warning usa-alert--slim"
                 data-testid="alert_unverified-recipients"
               >
                 <div
@@ -374,11 +374,9 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 >
                   <p
                     class="usa-alert__text"
-                  />
-                  <div>
+                  >
                     There are multiple contacts for this request that have not been associated with a name and email address in EUA. In order to send an email to these recipients, you must first verify them with EUA.
-                  </div>
-                  <p />
+                  </p>
                 </div>
               </div>
               <div
