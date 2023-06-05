@@ -96,6 +96,46 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		RequesterName:      requesterName,
 	})
 	noErr(err)
+
+	err = client.SendTRBRequestClosedEmail(ctx, email.SendTRBRequestClosedEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		CopyTRBMailbox: true,
+		ReasonClosed:   "This is a reason",
+		Recipients:     emailRecipients,
+	})
+	noErr(err)
+
+	err = client.SendTRBRequestReopenedEmail(ctx, email.SendTRBRequestReopenedEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		CopyTRBMailbox: true,
+		ReasonReopened: "This is a reason to reopen",
+		Recipients:     emailRecipients,
+	})
+	noErr(err)
+
+	err = client.SendTRBRequestClosedEmail(ctx, email.SendTRBRequestClosedEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		CopyTRBMailbox: false,
+		ReasonClosed:   "",
+		Recipients:     emailRecipients,
+	})
+	noErr(err)
+
+	err = client.SendTRBRequestReopenedEmail(ctx, email.SendTRBRequestReopenedEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		CopyTRBMailbox: false,
+		ReasonReopened: "",
+		Recipients:     emailRecipients,
+	})
+	noErr(err)
 }
 
 func main() {
