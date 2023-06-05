@@ -230,7 +230,7 @@ function TaskList() {
                         <UswdsReactLink
                           variant="unstyled"
                           className="usa-button"
-                          to="/help/trb/prepare-consult-meeting"
+                          to="/help/trb/prepare-consult-meeting#download-presentation-templates"
                           target="_blank"
                         >
                           {t('taskList.downloadTemplates')}
