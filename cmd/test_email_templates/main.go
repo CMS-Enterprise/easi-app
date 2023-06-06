@@ -62,8 +62,10 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, requestName, requesterName, component)
 	noErr(err)
 
-	readyForConsultFeedback := "You're good to go for the consult meeting!"
-	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, readyForConsultFeedback)
+	// Ready for Consult (Feedback and No Feedback)
+	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, "You're good to go for the consult meeting!")
+	noErr(err)
+	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, "")
 	noErr(err)
 
 	editsRequestedFeedback := "Please provide a better form."
