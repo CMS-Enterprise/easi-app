@@ -10,7 +10,6 @@ import LinkCard, { LinkRequestType } from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import RequestRepository from 'components/RequestRepository';
 import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
@@ -28,8 +27,8 @@ import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
 import SystemsListTable from 'views/SystemList/Table';
-import TrbAdminTeamHome from 'views/TechnicalAssistance/TrbAdminTeamHome';
 
+import AdminHome from './AdminHome';
 import WelcomeText from './WelcomeText';
 
 const Home = () => {
@@ -64,34 +63,38 @@ const Home = () => {
 
   const renderView = () => {
     if (isUserSet) {
-      if (user.isGrtReviewer(groups, flags)) {
+      if (user.isGrtReviewer(groups, flags) || user.isTrbAdmin(groups, flags)) {
         return (
-          // Changed GRT table from grid-container to just slight margins. This is take up
-          // entire screen to better fit the more expansive data in the table.
-          <div>
-            {message && (
-              <div className="grid-container margin-top-6">
-                <Alert type="success" role="alert">
-                  {message}
-                </Alert>
-              </div>
-            )}
-            <RequestRepository />
-          </div>
+          <AdminHome
+            isGrtReviewer={user.isGrtReviewer(groups, flags)}
+            isTrbAdmin={user.isTrbAdmin(groups, flags)}
+          />
         );
+        // return (
+        //   <div>
+        //     {message && (
+        //       <div className="grid-container margin-top-6">
+        //         <Alert type="success" role="alert">
+        //           {message}
+        //         </Alert>
+        //       </div>
+        //     )}
+        //     <RequestRepository />
+        //   </div>
+        // );
       }
 
       if (user.isAccessibilityTeam(groups, flags)) {
         return <List />;
       }
 
-      if (user.isTrbAdmin(groups, flags)) {
-        return (
-          <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
-            <TrbAdminTeamHome />
-          </MainContent>
-        );
-      }
+      // if (user.isTrbAdmin(groups, flags)) {
+      //   return (
+      //     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
+      //       <TrbAdminTeamHome />
+      //     </MainContent>
+      //   );
+      // }
 
       if (user.isBasicUser(groups, flags)) {
         return (
