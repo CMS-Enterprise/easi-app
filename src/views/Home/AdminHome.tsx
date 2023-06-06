@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -22,21 +22,30 @@ type AdminHomeProps = { isTrbAdmin: boolean; isGrtReviewer: boolean };
  */
 const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
   const { t } = useTranslation('home');
+  const { message } = useMessage();
 
   /**
    * Which admin view to display
    *
    * Defaults to TRB if user is both TRB and GRT admin
    */
-  const [adminView, setAdminView] = useState<AdminView | undefined>(() => {
-    if (isTrbAdmin) return 'TRB';
-    if (isGrtReviewer) return 'GRT';
-    return undefined;
-  });
+  const [adminView, setAdminView] = useState<AdminView | null | undefined>(
+    () => {
+      if (localStorage.getItem('admin-view'))
+        return localStorage.getItem('admin-view') as AdminView;
+
+      if (isTrbAdmin) return 'TRB';
+      if (isGrtReviewer) return 'GRT';
+      return undefined;
+    }
+  );
 
   const showViewSelect: boolean = isTrbAdmin && isGrtReviewer;
 
-  const { message } = useMessage();
+  // Update local storage with admin view selection
+  useEffect(() => {
+    localStorage.setItem('admin-view', adminView || '');
+  }, [adminView]);
 
   // Hide admin view if user is not TRB or GRT admin
   if (!adminView) return null;
@@ -80,7 +89,11 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
           {t(`adminHome.${adminView}.description`)}
         </p>
       </GridContainer>
-      {adminView === 'GRT' ? <RequestRepository /> : <TrbAdminTeamHome />}
+
+      {
+        /* Requests table */
+        adminView === 'GRT' ? <RequestRepository /> : <TrbAdminTeamHome />
+      }
     </div>
   );
 };
