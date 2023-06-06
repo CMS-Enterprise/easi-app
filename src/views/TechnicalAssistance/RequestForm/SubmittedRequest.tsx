@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid } from '@trussworks/react-uswds';
+import { Alert, Grid } from '@trussworks/react-uswds';
 import { camelCase, upperFirst } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -300,7 +300,9 @@ function SubmittedRequest({
       )}
       <div className="margin-top-3 margin-bottom-6">
         {attendees.length === 0 ? (
-          <span className="font-body-2xs">{t('check.noAttendees')}</span>
+          <Alert type="info" slim>
+            {t('check.noAttendees')}
+          </Alert>
         ) : (
           <AttendeesTable
             attendees={[requester, ...attendees]}
