@@ -214,7 +214,8 @@ const AdviceLetterForm = () => {
 
       if (
         trbRequest?.taskStatuses.adviceLetterStatus ===
-        TRBAdviceLetterStatus.READY_FOR_REVIEW
+          TRBAdviceLetterStatus.READY_FOR_REVIEW &&
+        !stepsCompleted?.includes('review')
       ) {
         completed = [
           'summary',
@@ -237,7 +238,8 @@ const AdviceLetterForm = () => {
     stepsCompleted,
     adviceLetter,
     trbRequest?.taskStatuses?.adviceLetterStatus,
-    redirectStep
+    redirectStep,
+    formStep
   ]);
 
   useEffect(() => {
