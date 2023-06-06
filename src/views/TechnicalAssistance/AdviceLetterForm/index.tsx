@@ -214,23 +214,14 @@ const AdviceLetterForm = () => {
 
       if (
         trbRequest?.taskStatuses.adviceLetterStatus ===
-        TRBAdviceLetterStatus.READY_FOR_REVIEW
+          TRBAdviceLetterStatus.READY_FOR_REVIEW &&
+        !stepsCompleted?.includes('review')
       ) {
         completed = [
           'summary',
           'recommendations',
           'next-steps',
           'internal-review'
-        ];
-      }
-
-      if (formStep === 'done') {
-        completed = [
-          'summary',
-          'recommendations',
-          'next-steps',
-          'internal-review',
-          'review'
         ];
       }
 
