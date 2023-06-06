@@ -283,7 +283,7 @@ function SubmittedRequest({
           </div>
         ) : (
           <Alert type="info" slim>
-            {t('check.empty.subjectAreas')}
+            {t('check.noSubjectAreas')}
           </Alert>
         )}
       </div>
