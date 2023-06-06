@@ -83,7 +83,8 @@ const home = {
       title: 'IT Governance requests',
       label: 'IT Governance',
       description:
-        "From EASi's IT Governance home, you can review, assign, and manage incoming and existing IT Governance requests, as well as manage previously-issued Life Cycle IDs (LCIDs)."
+        "From EASi's IT Governance home, you can review, assign, and manage incoming and existing IT Governance requests, as well as manage previously-issued Life Cycle IDs (LCIDs).",
+      csvDownloadLabel: 'Download all IT Governance requests (csv)'
     }
   }
 };
