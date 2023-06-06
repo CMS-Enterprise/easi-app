@@ -224,6 +224,16 @@ const AdviceLetterForm = () => {
         ];
       }
 
+      if (formStep === 'done') {
+        completed = [
+          'summary',
+          'recommendations',
+          'next-steps',
+          'internal-review',
+          'review'
+        ];
+      }
+
       Promise.allSettled(stepValidators).then(() => {
         if (!isEqual(completed, stepsCompleted)) {
           setStepsCompleted(completed);
@@ -237,7 +247,8 @@ const AdviceLetterForm = () => {
     stepsCompleted,
     adviceLetter,
     trbRequest?.taskStatuses?.adviceLetterStatus,
-    redirectStep
+    redirectStep,
+    formStep
   ]);
 
   useEffect(() => {
