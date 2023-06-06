@@ -749,6 +749,8 @@ const technicalAssistance = {
     expectedStart: 'expected start',
     expectedGoLive: 'expected go live',
     and: 'and',
+    noSubjectAreas:
+      'You have not specified any subject areas for this request.',
     noAttendees:
       'You have not specified any additional attendees for this request.',
     whatNext: {

@@ -264,22 +264,31 @@ function SubmittedRequest({
           </UswdsReactLink>
         </div>
       )}
-      <div className="margin-top-3">
-        {request.form.subjectAreaOptions?.map(subject => (
-          <Tag
-            className="text-base-darker bg-base-lighter margin-bottom-1"
-            key={subject}
-          >
-            {t(`subject.labels.${subject}`)}
-          </Tag>
-        ))}
+      <div className="margin-top-3 margin-bottom-6">
+        {request.form.subjectAreaOptions?.length ||
+        request.form.subjectAreaOptionOther ? (
+          <div>
+            {request.form.subjectAreaOptions?.map(subject => (
+              <Tag
+                className="text-base-darker bg-base-lighter margin-bottom-1"
+                key={subject}
+              >
+                {t(`subject.labels.${subject}`)}
+              </Tag>
+            ))}
+            {request.form.subjectAreaOptionOther && (
+              <dl className="easi-dl margin-top-3">
+                <dt>{t('subject.otherSubjectAreas')}</dt>
+                <dd>{request.form.subjectAreaOptionOther}</dd>
+              </dl>
+            )}
+          </div>
+        ) : (
+          <Alert type="info" slim>
+            {t('check.empty.subjectAreas')}
+          </Alert>
+        )}
       </div>
-
-      <dl className="easi-dl margin-y-3">
-        <dt>{t('subject.otherSubjectAreas')}</dt>
-        <dd>{request.form.subjectAreaOptionOther}</dd>
-      </dl>
-
       <Divider />
 
       {/* Attendees */}
