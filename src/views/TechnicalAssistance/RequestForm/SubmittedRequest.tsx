@@ -198,7 +198,6 @@ function SubmittedRequest({
           {/* Used to break up a potential uneven row */}
           <Grid desktop={{ col: 12 }} />
 
-          {/* <Grid row desktop={{ col: 12 }}> */}
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>{t('basic.labels.collabGroups')}</dt>
             <dd>
@@ -243,7 +242,6 @@ function SubmittedRequest({
               </>
             )}
           </Grid>
-          {/* </Grid> */}
         </Grid>
       </dl>
       <Divider />
