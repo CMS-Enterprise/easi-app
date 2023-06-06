@@ -8,8 +8,10 @@ import {
 } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
+import RequestRepository from 'components/RequestRepository';
 import Label from 'components/shared/Label';
 import useMessage from 'hooks/useMessage';
+import TrbAdminTeamHome from 'views/TechnicalAssistance/TrbAdminTeamHome';
 
 type AdminView = 'TRB' | 'GRT';
 
@@ -78,6 +80,7 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
           {t(`adminHome.${adminView}.description`)}
         </p>
       </GridContainer>
+      {adminView === 'GRT' ? <RequestRepository /> : <TrbAdminTeamHome />}
     </div>
   );
 };
