@@ -67,7 +67,7 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
         {
           /* Admin view dropdown */
           showViewSelect && (
-            <FormGroup className="display-flex">
+            <FormGroup className="tablet:display-flex">
               <Label htmlFor="select-admin-view" className="margin-right-2">
                 {t('adminHome.selectLabel')}
               </Label>
