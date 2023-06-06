@@ -295,9 +295,7 @@ const AddNote = ({
           <Button
             type="submit"
             name={t('notes.saveNote')}
-            disabled={
-              isSubmitting || (!!watch('category') && !watch('noteText'))
-            }
+            disabled={isSubmitting || !watch('category') || !watch('noteText')}
           >
             {t('notes.saveNote')}
           </Button>
