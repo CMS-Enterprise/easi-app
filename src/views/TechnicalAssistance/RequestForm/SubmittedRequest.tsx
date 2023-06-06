@@ -340,6 +340,7 @@ function SubmittedRequest({
       <div className="margin-top-3 margin-bottom-6">
         <DocumentsTable trbRequestId={request.id} canEdit={canRemoveDocument} />
       </div>
+      <Divider />
     </>
   );
 }

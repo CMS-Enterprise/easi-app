@@ -691,7 +691,8 @@ const technicalAssistance = {
         actions: 'Actions',
         trbLead: 'TRB lead'
       },
-      noDocument: 'No documents uploaded',
+      noDocuments:
+        'You have not uploaded any supporting documents for this request.',
       view: 'View',
       remove: 'Remove',
       unavailable: 'Unavailable',
