@@ -72,7 +72,7 @@ const home = {
     'Technical assistance requests for your IT project'
   ],
   adminHome: {
-    selectLabel: 'Select your admin view',
+    selectLabel: 'Select your admin view:',
     TRB: {
       title: 'Technical assistance requests',
       label: 'TRB',
