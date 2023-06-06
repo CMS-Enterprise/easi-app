@@ -386,6 +386,9 @@ const RequestRepository = () => {
                 activeTable === 'open' ? 'primary' : 'base-dark'
               }`}
               onClick={() => selectActiveTable('open')}
+              aria-label={
+                activeTable === 'open' ? 'Open requests selected' : ''
+              }
             >
               {t(
                 'technicalAssistance:adminTeamHome.existingRequests.tabs.open.name'
@@ -403,6 +406,10 @@ const RequestRepository = () => {
                 activeTable === 'closed' ? 'primary' : 'base-dark'
               }`}
               onClick={() => selectActiveTable('closed')}
+              data-testid="view-closed-intakes-btn"
+              aria-label={
+                activeTable === 'closed' ? 'Closed requests selected' : ''
+              }
             >
               {t(
                 'technicalAssistance:adminTeamHome.existingRequests.tabs.closed.name'
