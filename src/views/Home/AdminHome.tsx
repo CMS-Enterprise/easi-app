@@ -31,7 +31,7 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
    */
   const [adminView, setAdminView] = useState<AdminView | null | undefined>(
     () => {
-      if (localStorage.getItem('admin-view'))
+      if (isTrbAdmin && isGrtReviewer && localStorage.getItem('admin-view'))
         return localStorage.getItem('admin-view') as AdminView;
 
       if (isTrbAdmin) return 'TRB';
