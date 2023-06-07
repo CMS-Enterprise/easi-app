@@ -74,6 +74,7 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
               <Dropdown
                 id="select-admin-view-field"
                 name="select-admin-view"
+                data-testid="select-admin-view"
                 className="maxw-card"
                 value={adminView}
                 onChange={e => setAdminView(e.target.value as AdminView)}
