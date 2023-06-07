@@ -252,6 +252,7 @@ describe('The home page', () => {
 
   describe('Admin home view', () => {
     it('renders the select admin view dropdown', async () => {
+      window.localStorage.clear();
       const mockStore = configureMockStore();
       const store = mockStore({
         auth: {
