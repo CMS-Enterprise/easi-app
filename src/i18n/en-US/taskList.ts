@@ -109,7 +109,7 @@ const taskList = {
   },
   taskStatus: {
     COMPLETED: 'Completed',
-    IN_PROGRESS: 'In Progress',
+    IN_PROGRESS: 'In progress',
     READY_TO_START: 'Ready to start',
     NOT_NEEDED: 'Not needed',
     // Additional statuses for trb admin tasks

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -13,18 +12,16 @@ import {
   useTable
 } from 'react-table';
 import {
-  Breadcrumb,
-  BreadcrumbBar,
-  BreadcrumbLink,
+  ButtonGroup,
+  GridContainer,
   IconError,
-  IconFileDownload,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import CsvDownloadLink from 'components/shared/CsvDownloadLink';
 import TruncatedText from 'components/shared/TruncatedText';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
@@ -359,62 +356,64 @@ const RequestRepository = () => {
   );
 
   return (
-    <MainContent className="padding-x-4 margin-bottom-5">
-      <div className="display-flex flex-justify flex-wrap margin-bottom-2">
-        <BreadcrumbBar variant="wrap">
-          <Breadcrumb>
-            <BreadcrumbLink asCustom={Link} to="/">
-              <span>Home</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-          <Breadcrumb current>Requests</Breadcrumb>
-        </BreadcrumbBar>
-        <CSVLink
-          className="flex-align-self-center text-no-underline"
-          data={convertIntakesToCSV(data)}
-          filename="request-repository.csv"
-          headers={csvHeaders}
-        >
-          <IconFileDownload />
-          &nbsp;{' '}
-          <span className="text-underline">
-            Download all requests as excel file
-          </span>
-        </CSVLink>
-      </div>
-      <nav aria-label="Request Repository Table Navigation">
-        <ul className="easi-request-repo__tab-list">
+    <div className="padding-x-4 margin-bottom-5">
+      <GridContainer>
+        <ButtonGroup className="trb-admin-team-home-actions margin-bottom-2 margin-top-1 line-height-body-5">
+          <CsvDownloadLink
+            data={convertIntakesToCSV(data)}
+            filename="request-repository.csv"
+            headers={csvHeaders}
+          >
+            {t('home:adminHome.GRT.csvDownloadLabel')}
+          </CsvDownloadLink>
+        </ButtonGroup>
+      </GridContainer>
+
+      <nav
+        aria-label={t(
+          'technicalAssistance:adminTeamHome.existingRequests.tabs.label'
+        )}
+      >
+        <ul className="easi-request-repo__tab-list margin-bottom-4 margin-top-0">
           <li
-            className={classnames('easi-request-repo__tab', {
+            className={classnames('easi-request-repo__tab font-body-2xs', {
               'easi-request-repo__tab--active': activeTable === 'open'
             })}
           >
             <button
               type="button"
-              className="easi-request-repo__tab-btn"
+              className={`easi-request-repo__tab-btn line-height-body-3 text-${
+                activeTable === 'open' ? 'primary' : 'base-dark'
+              }`}
               onClick={() => selectActiveTable('open')}
               aria-label={
                 activeTable === 'open' ? 'Open requests selected' : ''
               }
             >
-              Open Requests
+              {t(
+                'technicalAssistance:adminTeamHome.existingRequests.tabs.open.name'
+              )}
             </button>
           </li>
           <li
-            className={classnames('easi-request-repo__tab', {
+            className={classnames('easi-request-repo__tab font-body-2xs', {
               'easi-request-repo__tab--active': activeTable === 'closed'
             })}
           >
             <button
               type="button"
-              className="easi-request-repo__tab-btn"
+              className={`easi-request-repo__tab-btn line-height-body-3 text-${
+                activeTable === 'closed' ? 'primary' : 'base-dark'
+              }`}
               onClick={() => selectActiveTable('closed')}
               data-testid="view-closed-intakes-btn"
               aria-label={
                 activeTable === 'closed' ? 'Closed requests selected' : ''
               }
             >
-              Closed Requests
+              {t(
+                'technicalAssistance:adminTeamHome.existingRequests.tabs.closed.name'
+              )}
             </button>
           </li>
         </ul>
@@ -535,7 +534,7 @@ const RequestRepository = () => {
           setPageSize={setPageSize}
         />
       </div>
-    </MainContent>
+    </div>
   );
 };
 

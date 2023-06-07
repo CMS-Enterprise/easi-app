@@ -62,8 +62,10 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, requestName, requesterName, component)
 	noErr(err)
 
-	readyForConsultFeedback := "You're good to go for the consult meeting!"
-	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, readyForConsultFeedback)
+	// Ready for Consult (Feedback and No Feedback)
+	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, "You're good to go for the consult meeting!")
+	noErr(err)
+	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, "")
 	noErr(err)
 
 	editsRequestedFeedback := "Please provide a better form."
@@ -94,6 +96,46 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		TRBRequestName:     requestName,
 		Notes:              "Have a good time at the consult meeting!",
 		RequesterName:      requesterName,
+	})
+	noErr(err)
+
+	err = client.SendTRBRequestClosedEmail(ctx, email.SendTRBRequestClosedEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		CopyTRBMailbox: true,
+		ReasonClosed:   "This is a reason",
+		Recipients:     emailRecipients,
+	})
+	noErr(err)
+
+	err = client.SendTRBRequestReopenedEmail(ctx, email.SendTRBRequestReopenedEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		CopyTRBMailbox: true,
+		ReasonReopened: "This is a reason to reopen",
+		Recipients:     emailRecipients,
+	})
+	noErr(err)
+
+	err = client.SendTRBRequestClosedEmail(ctx, email.SendTRBRequestClosedEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		CopyTRBMailbox: false,
+		ReasonClosed:   "",
+		Recipients:     emailRecipients,
+	})
+	noErr(err)
+
+	err = client.SendTRBRequestReopenedEmail(ctx, email.SendTRBRequestReopenedEmailInput{
+		TRBRequestID:   requestID,
+		TRBRequestName: requestName,
+		RequesterName:  requesterName,
+		CopyTRBMailbox: false,
+		ReasonReopened: "",
+		Recipients:     emailRecipients,
 	})
 	noErr(err)
 }

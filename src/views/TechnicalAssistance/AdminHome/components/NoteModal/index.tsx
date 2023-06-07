@@ -67,7 +67,7 @@ const NotesModal = ({
       appElement={document.getElementById('root')! as HTMLElement}
     >
       <div data-testid="discussion-modal">
-        <div className="easi-notes__x-button-container display-flex text-base flex-align-center">
+        <div className="easi-notes__x-button-container display-flex text-base flex-align-center padding-y-0 padding-x-3">
           <Button
             type="button"
             data-testid="close-discussions"

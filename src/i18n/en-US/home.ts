@@ -8,7 +8,7 @@ const home = {
     heading: '508 Requests',
     newRequest: 'Add a new request'
   },
-  actionTitle: 'Available Services',
+  actionTitle: 'Available services',
   actions: {
     ITGov: {
       heading: 'IT Governance',
@@ -70,7 +70,23 @@ const home = {
   easiTasks: [
     'IT Governance requests, including those for Life Cycle IDs',
     'Technical assistance requests for your IT project'
-  ]
+  ],
+  adminHome: {
+    selectLabel: 'Select your admin view:',
+    TRB: {
+      title: 'Technical assistance requests',
+      label: 'TRB',
+      description:
+        "From EASi's TRB home, you can review, assign, and manage incoming and existing TRB support requests."
+    },
+    GRT: {
+      title: 'IT Governance requests',
+      label: 'IT Governance',
+      description:
+        "From EASi's IT Governance home, you can review, assign, and manage incoming and existing IT Governance requests, as well as manage previously-issued Life Cycle IDs (LCIDs).",
+      csvDownloadLabel: 'Download all IT Governance requests (csv)'
+    }
+  }
 };
 
 export default home;
