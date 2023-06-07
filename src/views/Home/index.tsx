@@ -70,31 +70,11 @@ const Home = () => {
             isTrbAdmin={user.isTrbAdmin(groups, flags)}
           />
         );
-        // return (
-        //   <div>
-        //     {message && (
-        //       <div className="grid-container margin-top-6">
-        //         <Alert type="success" role="alert">
-        //           {message}
-        //         </Alert>
-        //       </div>
-        //     )}
-        //     <RequestRepository />
-        //   </div>
-        // );
       }
 
       if (user.isAccessibilityTeam(groups, flags)) {
         return <List />;
       }
-
-      // if (user.isTrbAdmin(groups, flags)) {
-      //   return (
-      //     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
-      //       <TrbAdminTeamHome />
-      //     </MainContent>
-      //   );
-      // }
 
       if (user.isBasicUser(groups, flags)) {
         return (
