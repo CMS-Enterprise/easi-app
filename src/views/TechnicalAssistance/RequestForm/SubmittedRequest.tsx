@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid } from '@trussworks/react-uswds';
+import { Alert, Grid } from '@trussworks/react-uswds';
 import { camelCase, upperFirst } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -198,7 +198,6 @@ function SubmittedRequest({
           {/* Used to break up a potential uneven row */}
           <Grid desktop={{ col: 12 }} />
 
-          {/* <Grid row desktop={{ col: 12 }}> */}
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <dt>{t('basic.labels.collabGroups')}</dt>
             <dd>
@@ -243,7 +242,6 @@ function SubmittedRequest({
               </>
             )}
           </Grid>
-          {/* </Grid> */}
         </Grid>
       </dl>
       <Divider />
@@ -264,22 +262,31 @@ function SubmittedRequest({
           </UswdsReactLink>
         </div>
       )}
-      <div className="margin-top-3">
-        {request.form.subjectAreaOptions?.map(subject => (
-          <Tag
-            className="text-base-darker bg-base-lighter margin-bottom-1"
-            key={subject}
-          >
-            {t(`subject.labels.${subject}`)}
-          </Tag>
-        ))}
+      <div className="margin-top-3 margin-bottom-6">
+        {request.form.subjectAreaOptions?.length ||
+        request.form.subjectAreaOptionOther ? (
+          <div>
+            {request.form.subjectAreaOptions?.map(subject => (
+              <Tag
+                className="text-base-darker bg-base-lighter margin-bottom-1"
+                key={subject}
+              >
+                {t(`subject.labels.${subject}`)}
+              </Tag>
+            ))}
+            {request.form.subjectAreaOptionOther && (
+              <dl className="easi-dl margin-top-3">
+                <dt>{t('subject.otherSubjectAreas')}</dt>
+                <dd>{request.form.subjectAreaOptionOther}</dd>
+              </dl>
+            )}
+          </div>
+        ) : (
+          <Alert type="info" slim>
+            {t('check.noSubjectAreas')}
+          </Alert>
+        )}
       </div>
-
-      <dl className="easi-dl margin-y-3">
-        <dt>{t('subject.otherSubjectAreas')}</dt>
-        <dd>{request.form.subjectAreaOptionOther}</dd>
-      </dl>
-
       <Divider />
 
       {/* Attendees */}
@@ -300,7 +307,9 @@ function SubmittedRequest({
       )}
       <div className="margin-top-3 margin-bottom-6">
         {attendees.length === 0 ? (
-          <span className="font-body-2xs">{t('check.noAttendees')}</span>
+          <Alert type="info" slim>
+            {t('check.noAttendees')}
+          </Alert>
         ) : (
           <AttendeesTable
             attendees={[requester, ...attendees]}
@@ -329,6 +338,7 @@ function SubmittedRequest({
       <div className="margin-top-3 margin-bottom-6">
         <DocumentsTable trbRequestId={request.id} canEdit={canRemoveDocument} />
       </div>
+      <Divider />
     </>
   );
 }

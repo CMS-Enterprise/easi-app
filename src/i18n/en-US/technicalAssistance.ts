@@ -691,7 +691,8 @@ const technicalAssistance = {
         actions: 'Actions',
         trbLead: 'TRB lead'
       },
-      noDocument: 'No documents uploaded',
+      noDocuments:
+        'You have not uploaded any supporting documents for this request.',
       view: 'View',
       remove: 'Remove',
       unavailable: 'Unavailable',
@@ -749,7 +750,10 @@ const technicalAssistance = {
     expectedStart: 'expected start',
     expectedGoLive: 'expected go live',
     and: 'and',
-    noAttendees: 'There are no attendees',
+    noSubjectAreas:
+      'You have not specified any subject areas for this request.',
+    noAttendees:
+      'You have not specified any additional attendees for this request.',
     whatNext: {
       title: 'What happens next?',
       text: [
@@ -911,10 +915,10 @@ const technicalAssistance = {
       tabs: {
         label: 'Request Repository Table Navigation',
         open: {
-          name: 'Open Requests'
+          name: 'Open requests'
         },
         closed: {
-          name: 'Closed Requests'
+          name: 'Closed requests'
         }
       },
       noRequests: {

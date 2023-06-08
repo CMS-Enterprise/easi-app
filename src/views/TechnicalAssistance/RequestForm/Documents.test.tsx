@@ -4,6 +4,7 @@ import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
@@ -146,7 +147,9 @@ describe('Trb Request form: Supporting documents', () => {
       </MemoryRouter>
     );
 
-    await findByText('No documents uploaded');
+    await findByText(
+      i18next.t<string>('technicalAssistance:documents.table.noDocuments')
+    );
 
     expect(asFragment()).toMatchSnapshot();
 
@@ -366,7 +369,11 @@ describe('Trb Request form: Supporting documents', () => {
       </MemoryRouter>
     );
 
-    expect(await findByText('No documents uploaded')).toBeInTheDocument();
+    expect(
+      await findByText(
+        i18next.t<string>('technicalAssistance:documents.table.noDocuments')
+      )
+    ).toBeInTheDocument();
 
     // Add document button opens upload document form
     userEvent.click(getByRole('link', { name: 'Add a document' }));
