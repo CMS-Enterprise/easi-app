@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -46,6 +46,7 @@ export type TeamMemberFields = {
 const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
   const { t } = useTranslation('systemProfile');
 
+  const history = useHistory();
   const { state } = useLocation<{ user?: UsernameWithRoles }>();
   const user = state?.user;
 
@@ -58,7 +59,9 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
   const [update] = useMutation<
     SetRolesForUserOnSystem,
     SetRolesForUserOnSystemVariables
-  >(SetRolesForUserOnSystemQuery);
+  >(SetRolesForUserOnSystemQuery, {
+    refetchQueries: ['GetSystemProfile']
+  });
 
   const {
     control,
@@ -84,6 +87,8 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
             desiredRoleTypeIDs
           }
         }
+      }).then(() => {
+        history.push(`/systems/${cedarSystemId}/team/edit`);
       });
     }
   });
