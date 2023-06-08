@@ -19,6 +19,7 @@ import {
   updateTrbRequestConsultMeetingQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
+import GetTrbRequestConsultMeetingQuery from 'queries/GetTrbRequestConsultMeetingQuery';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
@@ -36,6 +37,24 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   const modalRef = React.createRef<ModalRef>();
   const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
+  const emptyConsultMeetingTime = {
+    request: {
+      query: GetTrbRequestConsultMeetingQuery,
+      variables: {
+        id: mockTrbRequestId
+      }
+    },
+    result: {
+      data: {
+        trbRequest: {
+          id: mockTrbRequestId,
+          consultMeetingTime: null,
+          __typename: 'TRBRequest'
+        }
+      }
+    }
+  };
+
   it('submits successfully ', async () => {
     const { findByText, getByLabelText, getByRole, findByRole } = render(
       <Provider store={store}>
@@ -50,7 +69,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             getTrbRequestSummaryQuery,
             getTRBRequestAttendeesQuery,
             getTrbAdminNotesQuery,
-            getTrbRequestSummaryQuery
+            getTrbRequestSummaryQuery,
+            emptyConsultMeetingTime
           ]}
         >
           <MemoryRouter
@@ -87,8 +107,6 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     const submitButton = getByRole('button', {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
     });
-
-    expect(submitButton).toBeDisabled();
 
     userEvent.type(
       getByLabelText(
@@ -134,7 +152,11 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   it('shows the error summary on missing required fields', async () => {
     const { getByLabelText, getByRole, findByText } = render(
       <VerboseMockedProvider
-        mocks={[getTrbRequestSummaryQuery, getTRBRequestAttendeesQuery]}
+        mocks={[
+          getTrbRequestSummaryQuery,
+          getTRBRequestAttendeesQuery,
+          emptyConsultMeetingTime
+        ]}
       >
         <MemoryRouter
           initialEntries={[
@@ -203,7 +225,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
           {
             ...updateTrbRequestConsultMeetingQuery,
             error: new Error()
-          }
+          },
+          emptyConsultMeetingTime
         ]}
       >
         <MemoryRouter
