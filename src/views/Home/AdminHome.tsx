@@ -67,7 +67,7 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
         {
           /* Admin view dropdown */
           showViewSelect && (
-            <FormGroup className="tablet:display-flex">
+            <FormGroup className="tablet:display-flex tablet:flex-align-center">
               <Label htmlFor="select-admin-view" className="margin-right-2">
                 {t('adminHome.selectLabel')}
               </Label>
@@ -75,7 +75,7 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
                 id="select-admin-view-field"
                 name="select-admin-view"
                 data-testid="select-admin-view"
-                className="maxw-card"
+                className="maxw-card tablet:margin-top-0"
                 value={adminView}
                 onChange={e => setAdminView(e.target.value as AdminView)}
               >
