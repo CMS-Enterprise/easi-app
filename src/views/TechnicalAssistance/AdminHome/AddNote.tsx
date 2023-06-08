@@ -91,7 +91,8 @@ const AddNote = ({
   const {
     control,
     handleSubmit,
-    formState: { errors, dirtyFields, isSubmitting }
+    watch,
+    formState: { errors, isSubmitting }
   } = useForm({
     defaultValues
   });
@@ -294,10 +295,7 @@ const AddNote = ({
           <Button
             type="submit"
             name={t('notes.saveNote')}
-            disabled={
-              Object.keys(dirtyFields).length !==
-                Object.keys(defaultValues).length || isSubmitting
-            }
+            disabled={isSubmitting || !watch('category') || !watch('noteText')}
           >
             {t('notes.saveNote')}
           </Button>

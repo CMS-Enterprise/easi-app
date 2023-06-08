@@ -119,7 +119,7 @@ describe('Trb Admin Initial Request Form', () => {
 
     // Empty documents table loaded
     await findByText(
-      i18next.t<string>('technicalAssistance:documents.table.noDocument')
+      i18next.t<string>('technicalAssistance:documents.table.noDocuments')
     );
   });
 });

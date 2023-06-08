@@ -306,7 +306,7 @@ describe('Governance Review Team', () => {
       }
     });
 
-    cy.get('button').contains('Closed Requests').click();
+    cy.get('button').contains('Closed requests').click();
 
     cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
 
@@ -355,7 +355,7 @@ describe('Governance Review Team', () => {
       }
     });
 
-    cy.get('button').contains('Closed Requests').click();
+    cy.get('button').contains('Closed requests').click();
 
     cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
 
