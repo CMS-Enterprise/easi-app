@@ -2896,6 +2896,13 @@ func (r *systemIntakeResolver) HasUIChanges(ctx context.Context, obj *models.Sys
 	return obj.HasUIChanges.Ptr(), nil
 }
 
+// ItGovTaskListStatuses is the resolver for the itGovTaskListStatuses field.
+func (r *systemIntakeResolver) ItGovTaskListStatuses(ctx context.Context, obj *models.SystemIntake) (*models.ITGovTaskListStatuses, error) {
+	return &models.ITGovTaskListStatuses{
+		ParentSystemIntake: obj,
+	}, nil
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error) {
 	return &model.SystemIntakeDocumentType{

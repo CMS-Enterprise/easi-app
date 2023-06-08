@@ -1015,6 +1015,16 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
+  itGovTaskListStatuses:  ITGovTaskListStatuses!
+}
+type ITGovTaskListStatuses {
+  intakeFormStatus: ITGovTaskListStatus!
+  feedbackFromInitialReviewStatus: ITGovTaskListStatus!
+  decisionAndNextStepsStatus: ITGovTaskListStatus!
+  bizCaseDraftStatus: ITGovTaskListStatus!
+  grtMeetingStatus: ITGovTaskListStatus!
+  bizCaseFinalStatus: ITGovTaskListStatus!
+  grbMeetingStatus: ITGovTaskListStatus!
 }
 
 """
@@ -2396,4 +2406,14 @@ enum Role {
   A generic EASi user
   """
   EASI_USER
+}
+
+
+enum ITGovTaskListStatus {
+    READY
+    CANT_START
+    IN_PROGRESS
+    IN_REVIEW
+    EDITS_REQUESTED
+    COMPLETED
 }
