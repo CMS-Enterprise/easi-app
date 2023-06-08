@@ -915,10 +915,10 @@ const technicalAssistance = {
       tabs: {
         label: 'Request Repository Table Navigation',
         open: {
-          name: 'Open Requests'
+          name: 'Open requests'
         },
         closed: {
-          name: 'Closed Requests'
+          name: 'Closed requests'
         }
       },
       noRequests: {
