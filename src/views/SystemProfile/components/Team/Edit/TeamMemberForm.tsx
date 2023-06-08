@@ -2,7 +2,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { FetchResult, MutationFunctionOptions, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -21,10 +21,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import MultiSelect from 'components/shared/MultiSelect';
-import {
-  GetCedarRoleTypesQuery,
-  SetRolesForUserOnSystemQuery
-} from 'queries/CedarRoleQueries';
+import { GetCedarRoleTypesQuery } from 'queries/CedarRoleQueries';
 import { GetCedarRoleTypes } from 'queries/types/GetCedarRoleTypes';
 import {
   SetRolesForUserOnSystem,
@@ -40,10 +37,23 @@ export type TeamMemberFields = {
   desiredRoleTypeIDs: string[];
 };
 
+type TeamMemberFormProps = {
+  cedarSystemId: string;
+  updateRoles: (
+    options?: MutationFunctionOptions<
+      SetRolesForUserOnSystem,
+      SetRolesForUserOnSystemVariables
+    >
+  ) => Promise<FetchResult<SetRolesForUserOnSystem>>;
+};
+
 /**
  * Form to add or edit a system profile team member
  */
-const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
+const TeamMemberForm = ({
+  cedarSystemId,
+  updateRoles
+}: TeamMemberFormProps) => {
   const { t } = useTranslation('systemProfile');
 
   const history = useHistory();
@@ -55,13 +65,6 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
   const { data, loading: roleTypesLoading } = useQuery<GetCedarRoleTypes>(
     GetCedarRoleTypesQuery
   );
-
-  const [update] = useMutation<
-    SetRolesForUserOnSystem,
-    SetRolesForUserOnSystemVariables
-  >(SetRolesForUserOnSystemQuery, {
-    refetchQueries: ['GetSystemProfile']
-  });
 
   const {
     control,
@@ -79,7 +82,7 @@ const TeamMemberForm = ({ cedarSystemId }: { cedarSystemId: string }) => {
 
   const submitForm = handleSubmit(({ euaUserId, desiredRoleTypeIDs }) => {
     if (isDirty) {
-      update({
+      updateRoles({
         variables: {
           input: {
             cedarSystemID: cedarSystemId,

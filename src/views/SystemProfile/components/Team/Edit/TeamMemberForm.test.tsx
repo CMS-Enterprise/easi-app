@@ -1,10 +1,12 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { FetchResult } from '@apollo/client';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import i18next from 'i18next';
 
 import { GetCedarRoleTypesQuery } from 'queries/CedarRoleQueries';
 import { GetCedarRoleTypes } from 'queries/types/GetCedarRoleTypes';
+import { SetRolesForUserOnSystem } from 'queries/types/SetRolesForUserOnSystem';
 import { CedarAssigneeType } from 'types/graphql-global-types';
 import { UsernameWithRoles } from 'types/systemProfile';
 import { MockedQuery } from 'types/util';
@@ -63,13 +65,26 @@ const user: UsernameWithRoles = {
   ]
 };
 
+const mockUpdateRoles = async (): Promise<
+  FetchResult<SetRolesForUserOnSystem>
+> => {
+  return {
+    data: {
+      setRolesForUserOnSystem: null
+    }
+  };
+};
+
 describe('Edit team page', () => {
   it('Renders add team member form', async () => {
     const { getByRole, getByTestId } = render(
       <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/team/edit`]}>
         <VerboseMockedProvider mocks={[getCedarRoleTypesQuery]}>
           <Route path="/systems/:systemId/team/edit">
-            <TeamMemberForm cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c" />
+            <TeamMemberForm
+              cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
+              updateRoles={mockUpdateRoles}
+            />
           </Route>
         </VerboseMockedProvider>
       </MemoryRouter>
@@ -98,7 +113,10 @@ describe('Edit team page', () => {
       >
         <VerboseMockedProvider mocks={[getCedarRoleTypesQuery]}>
           <Route path="/systems/:systemId/team/edit">
-            <TeamMemberForm cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c" />
+            <TeamMemberForm
+              cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
+              updateRoles={mockUpdateRoles}
+            />
           </Route>
         </VerboseMockedProvider>
       </MemoryRouter>

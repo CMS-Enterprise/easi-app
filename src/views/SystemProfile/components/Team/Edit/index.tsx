@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -14,7 +15,12 @@ import {
 
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
+import { SetRolesForUserOnSystemQuery } from 'queries/CedarRoleQueries';
 import { CedarRole } from 'queries/types/CedarRole';
+import {
+  SetRolesForUserOnSystem,
+  SetRolesForUserOnSystemVariables
+} from 'queries/types/SetRolesForUserOnSystem';
 import { UsernameWithRoles } from 'types/systemProfile';
 
 import { TeamContactCard } from '..';
@@ -53,6 +59,26 @@ const EditTeam = ({
   }>();
 
   const actionType = state?.user ? 'edit' : 'add';
+
+  const [updateRoles] = useMutation<
+    SetRolesForUserOnSystem,
+    SetRolesForUserOnSystemVariables
+  >(SetRolesForUserOnSystemQuery, {
+    refetchQueries: ['GetSystemProfile']
+  });
+
+  const removeUser = (euaUserId: string) => {
+    // Set roles to empty string to remove user
+    updateRoles({
+      variables: {
+        input: {
+          cedarSystemID: cedarSystemId,
+          euaUserId,
+          desiredRoleTypeIDs: []
+        }
+      }
+    });
+  };
 
   /**
    * Employees form hidden until work to update data in CEDAR is completed
@@ -117,7 +143,10 @@ const EditTeam = ({
 
       {action ? (
         /* Add/edit team member form */
-        <TeamMemberForm cedarSystemId={cedarSystemId} />
+        <TeamMemberForm
+          cedarSystemId={cedarSystemId}
+          updateRoles={updateRoles}
+        />
       ) : (
         /* Edit team page */
         <Grid className="tablet:grid-col-6">
@@ -196,7 +225,6 @@ const EditTeam = ({
               <TeamContactCard
                 user={user}
                 key={user.assigneeUsername}
-                // TODO in EASI-2447: Functionality to edit roles and remove team member
                 footerActions={{
                   editRoles: () =>
                     history.push(
@@ -204,7 +232,7 @@ const EditTeam = ({
                       // Send user info to edit form
                       { user }
                     ),
-                  removeTeamMember: () => null
+                  removeTeamMember: () => removeUser(user.assigneeUsername)
                 }}
               />
             ))}
