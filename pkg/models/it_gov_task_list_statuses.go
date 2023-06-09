@@ -6,7 +6,7 @@ type ITGovTaskListStatuses struct {
 }
 
 // IntakeFormStatus calculates the ITGovTaskListStatus for a system intake
-func (i *ITGovTaskListStatuses) IntakeFormStatus() ITGovTaskListStatus {
+func (i *ITGovTaskListStatuses) IntakeFormStatus() ITGovTaskListStatus { //TODO: we might want to make these statuses individual for each section so it is clearer
 	return ITGTLSReady
 }
 
@@ -22,7 +22,7 @@ func (i *ITGovTaskListStatuses) DecisionAndNextStepsStatus() ITGovTaskListStatus
 
 // BizCaseDraftStatus calculates the ITGovTaskListStatus for the BizCaseDraft section for the system intake task list
 func (i *ITGovTaskListStatuses) BizCaseDraftStatus() ITGovTaskListStatus {
-	return ITGTLSReady
+	return ITGTLSReady //TODO: This might require a DB call, so should maybe be placed in a resolver file instead of in models.
 }
 
 // GrtMeetingStatus calculates the ITGovTaskListStatus for the GrtMeeting section for the system intake task list
@@ -51,4 +51,6 @@ const (
 	ITGTLSInReview       ITGovTaskListStatus = "IN_REVIEW"
 	ITGTLSEditsRequested ITGovTaskListStatus = "EDITS_REQUESTED"
 	ITGTLSCompleted      ITGovTaskListStatus = "COMPLETED"
+	ITGTLSScheduled      ITGovTaskListStatus = "SCHEDULED"
+	ITGTLSAwaiting       ITGovTaskListStatus = "AWAITING"
 )
