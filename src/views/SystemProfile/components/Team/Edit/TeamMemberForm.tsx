@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -17,10 +17,12 @@ import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import MultiSelect from 'components/shared/MultiSelect';
+import useMessage from 'hooks/useMessage';
 import { GetCedarRoleTypesQuery } from 'queries/CedarRoleQueries';
 import { GetCedarRoleTypes } from 'queries/types/GetCedarRoleTypes';
 import {
@@ -56,9 +58,17 @@ const TeamMemberForm = ({
 }: TeamMemberFormProps) => {
   const { t } = useTranslation('systemProfile');
 
+  const { showMessageOnNextPage, showMessage } = useMessage();
   const history = useHistory();
   const { state } = useLocation<{ user?: UsernameWithRoles }>();
   const user = state?.user;
+
+  /* User commonName prop used for setting success/error messages */
+  const [commonName, setCommonName] = useState<string>(
+    user
+      ? `${user?.roles[0].assigneeFirstName} ${user?.roles[0].assigneeLastName}`
+      : ''
+  );
 
   const keyPrefix = `singleSystem.editTeam.form.${user ? 'edit' : 'add'}`;
 
@@ -90,9 +100,23 @@ const TeamMemberForm = ({
             desiredRoleTypeIDs
           }
         }
-      }).then(() => {
-        history.push(`/systems/${cedarSystemId}/team/edit`);
-      });
+      })
+        .then(() => {
+          showMessageOnNextPage(
+            <Alert type="success">
+              Roles for {commonName} have been updated
+            </Alert>
+          );
+          history.push(`/systems/${cedarSystemId}/team/edit`);
+        })
+        .catch(() => {
+          showMessage(
+            <Alert type="error">
+              There was a problem saving your changes. Please try again. If the
+              error persists, please try again at a later date.
+            </Alert>
+          );
+        });
     }
   });
 
@@ -133,9 +157,12 @@ const TeamMemberForm = ({
                   {...{ ...field, ref: null }}
                   id={field.name}
                   value={user}
-                  onChange={contact =>
-                    contact && setValue('euaUserId', contact?.euaUserId)
-                  }
+                  onChange={contact => {
+                    if (contact) {
+                      setValue('euaUserId', contact?.euaUserId);
+                      setCommonName(contact.commonName);
+                    }
+                  }}
                   className="maxw-none"
                   // onChange={cedarContact => console.log(cedarContact)}
                 />
@@ -182,6 +209,7 @@ const TeamMemberForm = ({
           type="submit"
           disabled={
             isSubmitting ||
+            !isDirty ||
             watch('desiredRoleTypeIDs').length === 0 ||
             !watch('euaUserId')
           }

@@ -15,6 +15,7 @@ import {
 
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
+import useMessage from 'hooks/useMessage';
 import { SetRolesForUserOnSystemQuery } from 'queries/CedarRoleQueries';
 import { CedarRole } from 'queries/types/CedarRole';
 import {
@@ -50,6 +51,7 @@ const EditTeam = ({
 }: EditTeamProps) => {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
+  const { message } = useMessage();
 
   const { pathname, state } = useLocation<{ user?: CedarRole }>();
 
@@ -140,6 +142,8 @@ const EditTeam = ({
           <Breadcrumb>{t('singleSystem.editTeam.title')}</Breadcrumb>
         )}
       </BreadcrumbBar>
+
+      {message}
 
       {action ? (
         /* Add/edit team member form */
