@@ -171,7 +171,17 @@ const systemProfile = {
         rolesDescription:
           'Add or remove roles by clicking in the box below. You must select at least one role for this team member.',
         rolesError: 'You must select at least one role for this team member',
-        selectedRoles: 'Selected roles'
+        selectedRoles: 'Selected roles',
+        successUpdateRoles: 'Roles for {{commonName}} have been updated.',
+        errorUpdateRoles:
+          'There was a problem saving your changes. Please try again. If the error persists, please try again at a later date.',
+        successAddContact: '{{commonName}} has been added as a team member.',
+        errorAddContact:
+          'There was a problem adding a team member. Please try again. If the error persists, please try again at a later date.',
+        successRemoveContact:
+          '{{commonName}} has been removed as a team member.',
+        errorRemoveContact:
+          'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.'
       }
     },
     editPage: {

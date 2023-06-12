@@ -104,7 +104,14 @@ const TeamMemberForm = ({
         .then(() => {
           showMessageOnNextPage(
             <Alert type="success">
-              Roles for {commonName} have been updated
+              {t(
+                `singleSystem.editTeam.form.${
+                  user ? 'successUpdateRoles' : 'successAddContact'
+                }`,
+                {
+                  commonName
+                }
+              )}
             </Alert>
           );
           history.push(`/systems/${cedarSystemId}/team/edit`);
@@ -112,8 +119,11 @@ const TeamMemberForm = ({
         .catch(() => {
           showMessage(
             <Alert type="error">
-              There was a problem saving your changes. Please try again. If the
-              error persists, please try again at a later date.
+              {t(
+                `singleSystem.editTeam.form.${
+                  user ? 'errorUpdateRoles' : 'errorAddContact'
+                }`
+              )}
             </Alert>
           );
         });
