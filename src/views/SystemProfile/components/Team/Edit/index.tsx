@@ -62,7 +62,7 @@ const EditTeam = ({
 
   const actionType = state?.user ? 'edit' : 'add';
 
-  const [updateRoles] = useMutation<
+  const [updateRoles, { loading }] = useMutation<
     SetRolesForUserOnSystem,
     SetRolesForUserOnSystemVariables
   >(SetRolesForUserOnSystemQuery, {
@@ -150,6 +150,7 @@ const EditTeam = ({
         <TeamMemberForm
           cedarSystemId={cedarSystemId}
           updateRoles={updateRoles}
+          loading={loading}
         />
       ) : (
         /* Edit team page */

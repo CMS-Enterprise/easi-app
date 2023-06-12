@@ -22,6 +22,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import MultiSelect from 'components/shared/MultiSelect';
+import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
 import { GetCedarRoleTypesQuery } from 'queries/CedarRoleQueries';
 import { GetCedarRoleTypes } from 'queries/types/GetCedarRoleTypes';
@@ -47,6 +48,7 @@ type TeamMemberFormProps = {
       SetRolesForUserOnSystemVariables
     >
   ) => Promise<FetchResult<SetRolesForUserOnSystem>>;
+  loading: boolean;
 };
 
 /**
@@ -54,7 +56,8 @@ type TeamMemberFormProps = {
  */
 const TeamMemberForm = ({
   cedarSystemId,
-  updateRoles
+  updateRoles,
+  loading
 }: TeamMemberFormProps) => {
   const { t } = useTranslation('systemProfile');
 
@@ -215,18 +218,22 @@ const TeamMemberForm = ({
           )}
         />
 
-        <Button
-          type="submit"
-          disabled={
-            isSubmitting ||
-            !isDirty ||
-            watch('desiredRoleTypeIDs').length === 0 ||
-            !watch('euaUserId')
-          }
-          className="margin-top-6"
-        >
-          {t(`${keyPrefix}.buttonLabel`)}
-        </Button>
+        <div className="display-flex flex-align-center margin-top-6">
+          <Button
+            type="submit"
+            disabled={
+              isSubmitting ||
+              loading ||
+              !isDirty ||
+              watch('desiredRoleTypeIDs').length === 0 ||
+              !watch('euaUserId')
+            }
+            className="margin-0"
+          >
+            {t(`${keyPrefix}.buttonLabel`)}
+          </Button>
+          {loading && <Spinner className="margin-left-1" />}
+        </div>
       </Form>
 
       <IconLink
