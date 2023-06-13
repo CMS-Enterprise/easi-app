@@ -44,7 +44,7 @@ export interface UsernameWithRoles {
 export type AtoStatus =
   | 'Active'
   | 'Due Soon'
-  | 'In Progress'
+  | 'In progress'
   | 'Expired'
   | 'No ATO';
 

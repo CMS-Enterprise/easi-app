@@ -116,7 +116,7 @@ export const trbRequesterSchema = yup.object({
 
 export const trbAttendeeSchema = yup.object({
   euaUserId: yup.string().required('Attendee name is a required field'),
-  component: yup.string(),
+  component: yup.string().nullable(),
   role: yup
     .mixed<PersonRole>()
     .oneOf(Object.values(PersonRole))

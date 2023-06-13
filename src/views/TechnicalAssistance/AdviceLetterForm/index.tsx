@@ -149,6 +149,7 @@ const AdviceLetterForm = () => {
           ) + 1;
 
       if (!fromAdmin && currentStepIndex === 0) return;
+      if (!adviceFormSteps[stepRedirectIndex]?.slug) return;
       // Redirect to latest available step
       history.replace(
         `/trb/${id}/advice/${adviceFormSteps[stepRedirectIndex].slug}`
@@ -213,7 +214,8 @@ const AdviceLetterForm = () => {
 
       if (
         trbRequest?.taskStatuses.adviceLetterStatus ===
-        TRBAdviceLetterStatus.READY_FOR_REVIEW
+          TRBAdviceLetterStatus.READY_FOR_REVIEW &&
+        !stepsCompleted?.includes('review')
       ) {
         completed = [
           'summary',
@@ -236,7 +238,8 @@ const AdviceLetterForm = () => {
     stepsCompleted,
     adviceLetter,
     trbRequest?.taskStatuses?.adviceLetterStatus,
-    redirectStep
+    redirectStep,
+    formStep
   ]);
 
   useEffect(() => {

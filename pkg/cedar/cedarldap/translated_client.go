@@ -102,9 +102,7 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) ([]*models2.UserInfo, error) {
 	if len(euaIDs) == 0 {
 		appcontext.ZLogger(ctx).Warn("No EUA IDs specified; unable to request user info from CEDAR LDAP")
-		return nil, &apperrors.InvalidParametersError{
-			FunctionName: "cedarldap.FetchUserInfos",
-		}
+		return nil, nil
 	}
 
 	idsStr := strings.Join(euaIDs, ",")

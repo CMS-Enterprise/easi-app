@@ -3,6 +3,7 @@ package oktaapi
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -16,7 +17,7 @@ import (
 
 // ClientWrapper is a wrapper around github.com/okta/okta-sdk-golang/v2/okta Client type.
 // The purpose of this package is to act as a drop-in replacement for the CEDAR LDAP API, so this package should implement the same
-// methods that the Client interface defines in ./client.go
+// methods that the Client interface defined in package usersearch
 type ClientWrapper struct {
 	oktaClient *okta.Client
 }
@@ -144,8 +145,6 @@ func (cw *ClientWrapper) SearchByName(ctx context.Context, searchTerm string) ([
 	// profile.SourceType can be EUA, EUA-AD, or cmsidm
 	// the first 2 represent EUA users, the latter represents users created directly in IDM
 	// status eq "ACTIVE" or status eq "STAGED" ensures we only get users who have EUAs (Staged means they just haven't logged in yet)
-	// TODO: Searching on MAC users might be something like profile.cmsRolesArray eq "mint-medicare-admin-contractor"
-	// TODO: If we need to search on MAC users, validate that this works even if the user has OTHER IDM roles (not _just_ this one)
 	isFromEUA := fmt.Sprintf(`(profile.SourceType eq "%v" or profile.SourceType eq "%v")`, euaSourceType, euaADSourceType)
 	isActiveOrStaged := `(status eq "ACTIVE" or status eq "STAGED")`
 	nameSearch := fmt.Sprintf(`(profile.firstName sw "%v" or profile.lastName sw "%v" or profile.displayName sw "%v")`, searchTerm, searchTerm, searchTerm)
@@ -153,7 +152,7 @@ func (cw *ClientWrapper) SearchByName(ctx context.Context, searchTerm string) ([
 	search := query.NewQueryParams(query.WithSearch(searchString))
 
 	searchedUsers, _, err := cw.oktaClient.User.ListUsers(ctx, search)
-	if err != nil {
+	if err != nil && !errors.Is(err, context.Canceled) {
 		logger.Error("Error searching Okta users", zap.Error(err), zap.String("searchTerm", searchTerm))
 		return nil, err
 	}

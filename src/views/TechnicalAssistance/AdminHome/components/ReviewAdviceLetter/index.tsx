@@ -148,7 +148,7 @@ const ReviewAdviceLetter = ({
         <p className="margin-top-1 line-height-body-5">
           {adviceLetter.isFollowupRecommended
             ? t(`Yes, ${adviceLetter.followupPoint}`)
-            : t('adviceLetter.notSpecified')}
+            : t('adviceLetterForm.notNecessary')}
         </p>
       </SectionWrapper>
     </div>
