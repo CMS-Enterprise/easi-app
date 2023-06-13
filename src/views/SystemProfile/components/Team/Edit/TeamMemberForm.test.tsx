@@ -4,6 +4,7 @@ import { FetchResult } from '@apollo/client';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import i18next from 'i18next';
 
+import { MessageProvider } from 'hooks/useMessage';
 import { GetCedarRoleTypesQuery } from 'queries/CedarRoleQueries';
 import { GetCedarRoleTypes } from 'queries/types/GetCedarRoleTypes';
 import { SetRolesForUserOnSystem } from 'queries/types/SetRolesForUserOnSystem';
@@ -80,13 +81,15 @@ describe('Edit team page', () => {
     const { getByRole, getByTestId } = render(
       <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/team/edit`]}>
         <VerboseMockedProvider mocks={[getCedarRoleTypesQuery]}>
-          <Route path="/systems/:systemId/team/edit">
-            <TeamMemberForm
-              cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
-              updateRoles={mockUpdateRoles}
-              loading={false}
-            />
-          </Route>
+          <MessageProvider>
+            <Route path="/systems/:systemId/team/edit">
+              <TeamMemberForm
+                cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
+                updateRoles={mockUpdateRoles}
+                loading={false}
+              />
+            </Route>
+          </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -113,13 +116,15 @@ describe('Edit team page', () => {
         ]}
       >
         <VerboseMockedProvider mocks={[getCedarRoleTypesQuery]}>
-          <Route path="/systems/:systemId/team/edit">
-            <TeamMemberForm
-              cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
-              updateRoles={mockUpdateRoles}
-              loading={false}
-            />
-          </Route>
+          <MessageProvider>
+            <Route path="/systems/:systemId/team/edit">
+              <TeamMemberForm
+                cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
+                updateRoles={mockUpdateRoles}
+                loading={false}
+              />
+            </Route>
+          </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );

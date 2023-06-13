@@ -119,7 +119,7 @@ export const TeamContactCard = ({
   const person = roles[0]; // Get assignee info from the first role
 
   return (
-    <Card key={person.roleID} className="grid-col-12 margin-bottom-2">
+    <Card className="grid-col-12 margin-bottom-2">
       <CardHeader
         className={`padding-x-2 padding-top-105 padding-bottom-${
           displayRoles ? '0' : '2'
@@ -139,9 +139,10 @@ export const TeamContactCard = ({
       </CardHeader>
       {displayRoles && (
         <CardBody className="padding-x-2 padding-top-0">
-          {roles.map(role => (
+          {roles.map((role, index) => (
             <h5
-              key={role.roleTypeID}
+              // eslint-disable-next-line react/no-array-index-key
+              key={`role-${index}`}
               className="margin-y-0 font-sans-2xs text-normal"
             >
               {role.roleTypeName}
