@@ -3003,7 +3003,7 @@ func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj 
 
 // Status is the resolver for the status field.
 func (r *tRBRequestResolver) Status(ctx context.Context, obj *models.TRBRequest) (models.TRBRequestStatus, error) {
-	return resolvers.GetTRBRequestStatus(ctx, r.store, obj.ID)
+	return resolvers.GetTRBRequestStatus(ctx, r.store, *obj)
 }
 
 // Attendees is the resolver for the attendees field.
@@ -3033,7 +3033,7 @@ func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRe
 
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
-	return resolvers.GetTRBTaskStatuses(ctx, r.store, obj.ID)
+	return resolvers.GetTRBTaskStatuses(ctx, r.store, *obj)
 }
 
 // TrbLeadInfo is the resolver for the trbLeadInfo field.
