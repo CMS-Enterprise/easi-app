@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const SystemIntakeDocument = gql`
+export const SystemIntakeDocument = gql`
   fragment SystemIntakeDocument on SystemIntakeDocument {
     documentType {
       commonType
