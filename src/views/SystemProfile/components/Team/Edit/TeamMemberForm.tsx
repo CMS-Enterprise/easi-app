@@ -35,6 +35,8 @@ import teamMemberSchema from 'validations/systemProfileSchema';
 
 import { TeamContactCard } from '..';
 
+import { getTeamMemberName } from '.';
+
 export type TeamMemberFields = {
   euaUserId: string;
   desiredRoleTypeIDs: string[];
@@ -68,9 +70,7 @@ const TeamMemberForm = ({
 
   /* User commonName prop used for setting success/error messages */
   const [commonName, setCommonName] = useState<string>(
-    user
-      ? `${user?.roles[0].assigneeFirstName} ${user?.roles[0].assigneeLastName}`
-      : ''
+    user ? getTeamMemberName(user) : ''
   );
 
   const keyPrefix = `singleSystem.editTeam.form.${user ? 'edit' : 'add'}`;
