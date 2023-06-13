@@ -1015,18 +1015,27 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
-  itGovTaskListStatuses:  ITGovTaskListStatuses!
+  itGovTaskStatuses:  ITGovTaskStatuses!
 }
-type ITGovTaskListStatuses {
-  intakeFormStatus: ITGovTaskListStatus!
-  feedbackFromInitialReviewStatus: ITGovTaskListStatus!
-  decisionAndNextStepsStatus: ITGovTaskListStatus!
-  bizCaseDraftStatus: ITGovTaskListStatus!
-  grtMeetingStatus: ITGovTaskListStatus!
-  bizCaseFinalStatus: ITGovTaskListStatus!
-  grbMeetingStatus: ITGovTaskListStatus!
+type ITGovTaskStatuses {
+  requesterStatuses: ITGovTaskStatusesRequester!
+  adminStatuses: ITGovTaskStatusesAdmin!
+
+}
+type ITGovTaskStatusesRequester {
+  intakeFormStatus: ITGovIntakeStatusReq!
+  feedbackFromInitialReviewStatus: ITGovFeedbackStatusReq!
+  decisionAndNextStepsStatus: ITGovDecisionStatusReq!
+  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatusReq!
+  grtMeetingStatus: ITGovGRTStatusReq!
+  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatusReq!
+  grbMeetingStatus: ITGovGRBStatusReq!
 }
 
+# TODO: to be implemented in a future ticket
+type ITGovTaskStatusesAdmin { 
+    grtMeetingStatus: String! #TBD, this is a placeholder for valid GQL
+}
 """
 The input data used to set the requester of a system request
 """
@@ -2409,11 +2418,60 @@ enum Role {
 }
 
 
-enum ITGovTaskListStatus {
-    READY
-    CANT_START
-    IN_PROGRESS
-    IN_REVIEW
-    EDITS_REQUESTED
-    COMPLETED
+enum ITGovIntakeStatusReq {
+  READY
+  IN_PROGRESS
+  EDITS_REQUESTED
+  COMPLETED
+}
+
+enum ITGovFeedbackStatusReq {
+  CANT_START
+  IN_REVIEW
+  COMPLETED
+}
+
+enum ITGovDecisionStatusReq {
+  CANT_START
+  IN_REVIEW
+  COMPLETED
+}
+
+enum ITGovDraftBuisnessCaseStatusReq {
+  CANT_START
+  NOT_NEEDED
+  READY
+  IN_PROGRESS
+  IN_REVIEW
+  EDITS_REQUESTED
+  COMPLETED
+}
+
+enum ITGovGRTStatusReq {
+  CANT_START
+  NOT_NEEDED
+  READY_TO_SCHEDULE
+  SCHEDULED
+  AWAITING_DECISION
+  COMPLETED
+}
+
+enum ITGovFinalBuisnessCaseStatusReq {
+  CANT_START
+  NOT_NEEDED
+  READY
+  IN_PROGRESS
+  IN_REVIEW
+  EDITS_REQUESTED
+  COMPLETED
+}
+
+
+enum ITGovGRBStatusReq {
+  CANT_START
+  NOT_NEEDED
+  READY_TO_SCHEDULE
+  SCHEDULED
+  AWAITING_DECISION
+  COMPLETED
 }

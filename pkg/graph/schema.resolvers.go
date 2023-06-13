@@ -713,6 +713,20 @@ func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models
 	return obj.WeaknessRiskLevel.Ptr(), nil
 }
 
+// RequesterStatuses is the resolver for the requesterStatuses field.
+func (r *iTGovTaskStatusesResolver) RequesterStatuses(ctx context.Context, obj *models.ITGovTaskStatuses) (*models.ITGovTaskStatusesRequester, error) {
+	return &models.ITGovTaskStatusesRequester{
+		ParentStatus: obj,
+	}, nil
+}
+
+// AdminStatuses is the resolver for the adminStatuses field.
+func (r *iTGovTaskStatusesResolver) AdminStatuses(ctx context.Context, obj *models.ITGovTaskStatuses) (*models.ITGovTaskStatusesAdmin, error) {
+	return &models.ITGovTaskStatusesAdmin{
+		ParentStatus: obj,
+	}, nil
+}
+
 // AddGRTFeedbackAndKeepBusinessCaseInDraft is the resolver for the addGRTFeedbackAndKeepBusinessCaseInDraft field.
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
@@ -794,7 +808,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}
 
 	if input.IntakeID == nil && (input.CedarSystemID == nil || len(*input.CedarSystemID) == 0) {
-		return nil, errors.New("Either a system intake ID or a CEDAR system ID is required to create a 508 request")
+		return nil, errors.New("either a system intake ID or a CEDAR system ID is required to create a 508 request")
 	}
 
 	newRequest := &models.AccessibilityRequest{
@@ -2896,9 +2910,9 @@ func (r *systemIntakeResolver) HasUIChanges(ctx context.Context, obj *models.Sys
 	return obj.HasUIChanges.Ptr(), nil
 }
 
-// ItGovTaskListStatuses is the resolver for the itGovTaskListStatuses field.
-func (r *systemIntakeResolver) ItGovTaskListStatuses(ctx context.Context, obj *models.SystemIntake) (*models.ITGovTaskListStatuses, error) {
-	return &models.ITGovTaskListStatuses{
+// ItGovTaskStatuses is the resolver for the itGovTaskStatuses field.
+func (r *systemIntakeResolver) ItGovTaskStatuses(ctx context.Context, obj *models.SystemIntake) (*models.ITGovTaskStatuses, error) {
+	return &models.ITGovTaskStatuses{
 		ParentSystemIntake: obj,
 	}, nil
 }
@@ -3188,6 +3202,11 @@ func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 // CedarThreat returns generated.CedarThreatResolver implementation.
 func (r *Resolver) CedarThreat() generated.CedarThreatResolver { return &cedarThreatResolver{r} }
 
+// ITGovTaskStatuses returns generated.ITGovTaskStatusesResolver implementation.
+func (r *Resolver) ITGovTaskStatuses() generated.ITGovTaskStatusesResolver {
+	return &iTGovTaskStatusesResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -3260,6 +3279,7 @@ type cedarRoleResolver struct{ *Resolver }
 type cedarRoleTypeResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
+type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
