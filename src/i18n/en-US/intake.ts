@@ -20,6 +20,16 @@ const intake = {
     lastAdminNote: 'Last Admin Note',
     contractNumber: 'Contract number'
   },
+  documents: {
+    description:
+      'Choose a document to upload, such as a draft IGCE, contracting document, or another document related to your Intake Request.',
+    returnToIntake: "Don't upload and return to Intake Request",
+    type: {
+      SOO_SOW: 'SOO or SOW',
+      DRAFT_ICGE: 'Draft ICGE',
+      OTHER: 'Other'
+    }
+  },
   submission: {
     confirmation: {
       heading: 'Your Intake Request has been submitted',

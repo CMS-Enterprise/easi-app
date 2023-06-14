@@ -17,6 +17,7 @@ import {
 } from 'queries/types/GetSystemIntake';
 import NotFound, { NotFoundPartial } from 'views/NotFound';
 
+import DocumentsTable from './Documents/Index';
 import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
 import ContractDetails from './ContractDetails';
@@ -84,6 +85,10 @@ export const SystemIntake = () => {
           <Route
             path="/system/:systemId/contract-details"
             render={() => <ContractDetails systemIntake={systemIntake} />}
+          />
+          <Route
+            path="/system/:systemId/documents"
+            render={() => <DocumentsTable systemIntake={systemIntake} />}
           />
           <Route
             path="/system/:systemId/review"
