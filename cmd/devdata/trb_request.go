@@ -30,6 +30,7 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 		s.seedTRBCase7,
 		s.seedTRBCase8,
 		s.seedTRBCase9,
+		s.seedTRBCase10,
 	}
 
 	for _, seedFunc := range cases {
@@ -139,7 +140,7 @@ func (s *seederConfig) seedTRBCase6(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, true, false)
+	_, err = s.addAdviceLetter(ctx, trb, true, false, false)
 	if err != nil {
 		return err
 	}
@@ -168,7 +169,7 @@ func (s *seederConfig) seedTRBCase7(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, false, false)
+	_, err = s.addAdviceLetter(ctx, trb, false, false, false)
 	if err != nil {
 		return err
 	}
@@ -197,7 +198,7 @@ func (s *seederConfig) seedTRBCase8(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, false, false)
+	_, err = s.addAdviceLetter(ctx, trb, false, false, false)
 	if err != nil {
 		return err
 	}
@@ -226,7 +227,36 @@ func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.addAdviceLetter(ctx, trb, false, true)
+	_, err = s.addAdviceLetter(ctx, trb, false, true, false)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBLead(ctx, trb, "GRTB")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase10(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 10 - Advice letter reviewed (follow up)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBConsultMeeting(ctx, trb, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addAdviceLetter(ctx, trb, false, true, true)
 	if err != nil {
 		return err
 	}
@@ -435,7 +465,7 @@ func (s *seederConfig) addTRBLead(ctx context.Context, trb *models.TRBRequest, l
 	)
 }
 
-func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBRequest, isDraft bool, shouldSend bool) (*models.TRBAdviceLetter, error) {
+func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBRequest, isDraft bool, shouldSend bool, isFollowUpRequested bool) (*models.TRBAdviceLetter, error) {
 	_, err := resolvers.CreateTRBAdviceLetter(ctx, s.store, trb.ID)
 	if err != nil {
 		return nil, err
@@ -444,7 +474,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 	adviceLetterChanges := map[string]interface{}{
 		"trbRequestId":          trb.ID.String(),
 		"meetingSummary":        "Talked about stuff",
-		"isFollowupRecommended": false,
+		"isFollowupRecommended": isFollowUpRequested,
 	}
 	letter, err := resolvers.UpdateTRBAdviceLetter(ctx, s.store, adviceLetterChanges)
 	if err != nil {
