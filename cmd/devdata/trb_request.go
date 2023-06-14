@@ -212,7 +212,7 @@ func (s *seederConfig) seedTRBCase8(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
-	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 9 - Advice letter reviewed").Ptr(), true)
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 9 - Advice letter sent").Ptr(), true)
 	if err != nil {
 		return err
 	}
@@ -241,7 +241,7 @@ func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase10(ctx context.Context) error {
-	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 10 - Advice letter reviewed (follow up)").Ptr(), true)
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 10 - Advice letter sent (follow up)").Ptr(), true)
 	if err != nil {
 		return err
 	}
