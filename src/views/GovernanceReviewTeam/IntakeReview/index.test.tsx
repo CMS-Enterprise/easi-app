@@ -152,7 +152,8 @@ describe('The GRT intake review view', () => {
       content: null,
       createdAt: null
     },
-    hasUiChanges: false
+    hasUiChanges: false,
+    documents: []
   };
 
   const getSystemIntakeContactsQuery = {
