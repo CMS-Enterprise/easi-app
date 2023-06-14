@@ -610,6 +610,12 @@ export interface SendTRBAdviceLetterInput {
   notifyEuaIds: string[];
 }
 
+export interface SetRolesForUserOnSystemInput {
+  cedarSystemID: string;
+  euaUserId: string;
+  desiredRoleTypeIDs: string[];
+}
+
 /**
  * Input to submit an intake for review
  */
