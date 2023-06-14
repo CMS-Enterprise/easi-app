@@ -74,7 +74,7 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             class="usa-card__container"
           >
             <header
-              class="usa-card__header padding-2 padding-bottom-0"
+              class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
               <h3
@@ -103,7 +103,7 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             class="usa-card__container"
           >
             <header
-              class="usa-card__header padding-2 padding-bottom-0"
+              class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
               <h3
@@ -159,7 +159,7 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             class="usa-card__container"
           >
             <header
-              class="usa-card__header padding-2 padding-bottom-0"
+              class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
               <h3
@@ -215,7 +215,7 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             class="usa-card__container"
           >
             <header
-              class="usa-card__header padding-2 padding-bottom-0"
+              class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
               <h3
@@ -249,7 +249,7 @@ exports[`System Profile Team subpage matches snapshot 1`] = `
             class="usa-card__container"
           >
             <header
-              class="usa-card__header padding-2 padding-bottom-0"
+              class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
               <h3
