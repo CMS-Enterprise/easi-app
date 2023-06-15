@@ -504,6 +504,15 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
+	GovernanceRequestFeedback struct {
+		CreatedAt  func(childComplexity int) int
+		CreatedBy  func(childComplexity int) int
+		Feedback   func(childComplexity int) int
+		ID         func(childComplexity int) int
+		ModifiedAt func(childComplexity int) int
+		ModifiedBy func(childComplexity int) int
+	}
+
 	LastAdminNote struct {
 		Content   func(childComplexity int) int
 		CreatedAt func(childComplexity int) int
@@ -679,6 +688,7 @@ type ComplexityRoot struct {
 		FundingSources              func(childComplexity int) int
 		GRBDate                     func(childComplexity int) int
 		GRTDate                     func(childComplexity int) int
+		GovernanceRequestFeedbacks  func(childComplexity int) int
 		GovernanceTeams             func(childComplexity int) int
 		GrtFeedbacks                func(childComplexity int) int
 		GrtReviewEmailBody          func(childComplexity int) int
@@ -1293,6 +1303,7 @@ type SystemIntakeResolver interface {
 	EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error)
 	ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 
+	GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error)
 	GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error)
 
 	GrtFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GRTFeedback, error)
@@ -3442,6 +3453,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
 
+	case "GovernanceRequestFeedback.createdAt":
+		if e.complexity.GovernanceRequestFeedback.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.CreatedAt(childComplexity), true
+
+	case "GovernanceRequestFeedback.createdBy":
+		if e.complexity.GovernanceRequestFeedback.CreatedBy == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.CreatedBy(childComplexity), true
+
+	case "GovernanceRequestFeedback.feedback":
+		if e.complexity.GovernanceRequestFeedback.Feedback == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.Feedback(childComplexity), true
+
+	case "GovernanceRequestFeedback.id":
+		if e.complexity.GovernanceRequestFeedback.ID == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.ID(childComplexity), true
+
+	case "GovernanceRequestFeedback.modifiedAt":
+		if e.complexity.GovernanceRequestFeedback.ModifiedAt == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.ModifiedAt(childComplexity), true
+
+	case "GovernanceRequestFeedback.modifiedBy":
+		if e.complexity.GovernanceRequestFeedback.ModifiedBy == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.ModifiedBy(childComplexity), true
+
 	case "LastAdminNote.content":
 		if e.complexity.LastAdminNote.Content == nil {
 			break
@@ -4924,6 +4977,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.GRTDate(childComplexity), true
+
+	case "SystemIntake.governanceRequestFeedbacks":
+		if e.complexity.SystemIntake.GovernanceRequestFeedbacks == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GovernanceRequestFeedbacks(childComplexity), true
 
 	case "SystemIntake.governanceTeams":
 		if e.complexity.SystemIntake.GovernanceTeams == nil {
@@ -7747,6 +7807,7 @@ type SystemIntake {
   euaUserId: String!
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSource!]!
+  governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
@@ -8487,6 +8548,18 @@ type CreateSystemIntakeDocumentPayload {
 """Data returned after deleting a document attached to a System Intake"""
 type DeleteSystemIntakeDocumentPayload {
   document: SystemIntakeDocument
+}
+
+"""
+Feedback given to the requester on a governance request
+"""
+type GovernanceRequestFeedback {
+  id: UUID!
+  feedback: String!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
 }
 
 """
@@ -13576,6 +13649,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -22426,6 +22501,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -23791,6 +23868,264 @@ func (ec *executionContext) fieldContext_GeneratePresignedUploadURLPayload_userE
 				return ec.fieldContext_UserError_path(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_id(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_feedback(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_feedback(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Feedback, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_feedback(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_createdBy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedBy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_modifiedBy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedBy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_modifiedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_modifiedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -25665,6 +26000,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -30231,6 +30568,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -30440,6 +30779,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -31593,6 +31934,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -33822,6 +34165,64 @@ func (ec *executionContext) fieldContext_SystemIntake_fundingSources(ctx context
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_governanceRequestFeedbacks(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GovernanceRequestFeedbacks(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.GovernanceRequestFeedback)
+	fc.Result = res
+	return ec.marshalNGovernanceRequestFeedback2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_governanceRequestFeedbacks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GovernanceRequestFeedback_id(ctx, field)
+			case "feedback":
+				return ec.fieldContext_GovernanceRequestFeedback_feedback(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_GovernanceRequestFeedback_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_GovernanceRequestFeedback_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_GovernanceRequestFeedback_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_GovernanceRequestFeedback_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GovernanceRequestFeedback", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_governanceTeams(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 	if err != nil {
@@ -35358,6 +35759,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -43682,6 +44085,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -44885,6 +45290,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
 			case "fundingSources":
 				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
 			case "governanceTeams":
 				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
 			case "grbDate":
@@ -53656,6 +54063,63 @@ func (ec *executionContext) _GeneratePresignedUploadURLPayload(ctx context.Conte
 	return out
 }
 
+var governanceRequestFeedbackImplementors = []string{"GovernanceRequestFeedback"}
+
+func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel ast.SelectionSet, obj *models.GovernanceRequestFeedback) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, governanceRequestFeedbackImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GovernanceRequestFeedback")
+		case "id":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "feedback":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_feedback(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdBy":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_createdBy(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdAt":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_createdAt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "modifiedBy":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_modifiedBy(ctx, field, obj)
+
+		case "modifiedAt":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_modifiedAt(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var lastAdminNoteImplementors = []string{"LastAdminNote"}
 
 func (ec *executionContext) _LastAdminNote(ctx context.Context, sel ast.SelectionSet, obj *model.LastAdminNote) graphql.Marshaler {
@@ -55258,6 +55722,26 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "governanceRequestFeedbacks":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_governanceRequestFeedbacks(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "governanceTeams":
 			field := field
 
@@ -59644,6 +60128,60 @@ func (ec *executionContext) marshalNGRTFeedback2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 func (ec *executionContext) unmarshalNGeneratePresignedUploadURLInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx context.Context, v interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	res, err := ec.unmarshalInputGeneratePresignedUploadURLInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GovernanceRequestFeedback) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNGovernanceRequestFeedback2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedback(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedback(ctx context.Context, sel ast.SelectionSet, v *models.GovernanceRequestFeedback) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GovernanceRequestFeedback(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {

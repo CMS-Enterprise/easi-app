@@ -983,6 +983,7 @@ type SystemIntake {
   euaUserId: String!
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSource!]!
+  governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
@@ -1723,6 +1724,18 @@ type CreateSystemIntakeDocumentPayload {
 """Data returned after deleting a document attached to a System Intake"""
 type DeleteSystemIntakeDocumentPayload {
   document: SystemIntakeDocument
+}
+
+"""
+Feedback given to the requester on a governance request
+"""
+type GovernanceRequestFeedback {
+  id: UUID!
+  feedback: String!
+  createdBy: String!
+  createdAt: Time!
+  modifiedBy: String
+  modifiedAt: Time
 }
 
 """
