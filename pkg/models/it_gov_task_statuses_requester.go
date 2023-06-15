@@ -5,41 +5,6 @@ type ITGovTaskStatusesRequester struct {
 	ParentStatus *ITGovTaskStatuses
 }
 
-// IntakeFormStatus calculates the ITGovTaskListStatus of a system intake for the requester view
-func (i *ITGovTaskStatusesRequester) IntakeFormStatus() ITGovIntakeStatusReq {
-	return ITGISRReady
-}
-
-// FeedbackFromInitialReviewStatus calculates the ITGovTaskListStatus for the feedback section of a system intake task list  for the requester view
-func (i *ITGovTaskStatusesRequester) FeedbackFromInitialReviewStatus() ITGovFeedbackStatusReq {
-	return ITGFBSRCantStart
-}
-
-// DecisionAndNextStepsStatus calculates the ITGovDecisionStatusReq for the Decisions section for the system intake task list for the requester view
-func (i *ITGovTaskStatusesRequester) DecisionAndNextStepsStatus() ITGovDecisionStatusReq {
-	return ITGDSRCantStart
-}
-
-// BizCaseDraftStatus calculates the ITGovDraftBuisnessCaseStatusReq for the BizCaseDraft section for the system intake task list for the requester view
-func (i *ITGovTaskStatusesRequester) BizCaseDraftStatus() ITGovDraftBuisnessCaseStatusReq {
-	return ITGDBCSRCantStart //TODO: This might require a DB call, so should maybe be placed in a resolver file instead of in models.
-}
-
-// GrtMeetingStatus calculates the ITGovGRTStatusReq for the GrtMeeting section for the system intake task list for the requester view
-func (i *ITGovTaskStatusesRequester) GrtMeetingStatus() ITGovGRTStatusReq {
-	return ITGGRTSRCantStart
-}
-
-// BizCaseFinalStatus calculates the ITGovFinalBuisnessCaseStatusReq for the BizCaseFinal section for the system intake task list for the requester view
-func (i *ITGovTaskStatusesRequester) BizCaseFinalStatus() ITGovFinalBuisnessCaseStatusReq {
-	return ITGFBCSRCantStart
-}
-
-// GrbMeetingStatus calculates the ITGovGRBStatusReq for the GrbMeeting section for the system intake task list for the requester view
-func (i *ITGovTaskStatusesRequester) GrbMeetingStatus() ITGovGRBStatusReq {
-	return ITGGRBSRCantStart
-}
-
 // ITGovIntakeStatusReq represents the types of ITGovIntakeStatusReq types. This is what the requester sees for the first task
 type ITGovIntakeStatusReq string
 

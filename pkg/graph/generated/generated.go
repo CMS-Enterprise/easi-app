@@ -52,6 +52,7 @@ type ResolverRoot interface {
 	CedarSystemDetails() CedarSystemDetailsResolver
 	CedarThreat() CedarThreatResolver
 	ITGovTaskStatuses() ITGovTaskStatusesResolver
+	ITGovTaskStatusesRequester() ITGovTaskStatusesRequesterResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
@@ -1194,6 +1195,15 @@ type CedarThreatResolver interface {
 type ITGovTaskStatusesResolver interface {
 	RequesterStatuses(ctx context.Context, obj *models.ITGovTaskStatuses) (*models.ITGovTaskStatusesRequester, error)
 	AdminStatuses(ctx context.Context, obj *models.ITGovTaskStatuses) (*models.ITGovTaskStatusesAdmin, error)
+}
+type ITGovTaskStatusesRequesterResolver interface {
+	IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovIntakeStatusReq, error)
+	FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovFeedbackStatusReq, error)
+	DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovDecisionStatusReq, error)
+	BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovDraftBuisnessCaseStatusReq, error)
+	GrtMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovGRTStatusReq, error)
+	BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovFinalBuisnessCaseStatusReq, error)
+	GrbMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovGRBStatusReq, error)
 }
 type MutationResolver interface {
 	AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
@@ -24279,7 +24289,7 @@ func (ec *executionContext) _ITGovTaskStatusesRequester_intakeFormStatus(ctx con
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.IntakeFormStatus(), nil
+		return ec.resolvers.ITGovTaskStatusesRequester().IntakeFormStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24301,7 +24311,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatusesRequester_intakeFormSt
 		Object:     "ITGovTaskStatusesRequester",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: false,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ITGovIntakeStatusReq does not have child fields")
 		},
@@ -24323,7 +24333,7 @@ func (ec *executionContext) _ITGovTaskStatusesRequester_feedbackFromInitialRevie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.FeedbackFromInitialReviewStatus(), nil
+		return ec.resolvers.ITGovTaskStatusesRequester().FeedbackFromInitialReviewStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24345,7 +24355,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatusesRequester_feedbackFrom
 		Object:     "ITGovTaskStatusesRequester",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: false,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ITGovFeedbackStatusReq does not have child fields")
 		},
@@ -24367,7 +24377,7 @@ func (ec *executionContext) _ITGovTaskStatusesRequester_decisionAndNextStepsStat
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.DecisionAndNextStepsStatus(), nil
+		return ec.resolvers.ITGovTaskStatusesRequester().DecisionAndNextStepsStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24389,7 +24399,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatusesRequester_decisionAndN
 		Object:     "ITGovTaskStatusesRequester",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: false,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ITGovDecisionStatusReq does not have child fields")
 		},
@@ -24411,7 +24421,7 @@ func (ec *executionContext) _ITGovTaskStatusesRequester_bizCaseDraftStatus(ctx c
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.BizCaseDraftStatus(), nil
+		return ec.resolvers.ITGovTaskStatusesRequester().BizCaseDraftStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24433,7 +24443,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatusesRequester_bizCaseDraft
 		Object:     "ITGovTaskStatusesRequester",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: false,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ITGovDraftBuisnessCaseStatusReq does not have child fields")
 		},
@@ -24455,7 +24465,7 @@ func (ec *executionContext) _ITGovTaskStatusesRequester_grtMeetingStatus(ctx con
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.GrtMeetingStatus(), nil
+		return ec.resolvers.ITGovTaskStatusesRequester().GrtMeetingStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24477,7 +24487,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatusesRequester_grtMeetingSt
 		Object:     "ITGovTaskStatusesRequester",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: false,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ITGovGRTStatusReq does not have child fields")
 		},
@@ -24499,7 +24509,7 @@ func (ec *executionContext) _ITGovTaskStatusesRequester_bizCaseFinalStatus(ctx c
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.BizCaseFinalStatus(), nil
+		return ec.resolvers.ITGovTaskStatusesRequester().BizCaseFinalStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24521,7 +24531,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatusesRequester_bizCaseFinal
 		Object:     "ITGovTaskStatusesRequester",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: false,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ITGovFinalBuisnessCaseStatusReq does not have child fields")
 		},
@@ -24543,7 +24553,7 @@ func (ec *executionContext) _ITGovTaskStatusesRequester_grbMeetingStatus(ctx con
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.GrbMeetingStatus(), nil
+		return ec.resolvers.ITGovTaskStatusesRequester().GrbMeetingStatus(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24565,7 +24575,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatusesRequester_grbMeetingSt
 		Object:     "ITGovTaskStatusesRequester",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: false,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ITGovGRBStatusReq does not have child fields")
 		},
@@ -54597,54 +54607,145 @@ func (ec *executionContext) _ITGovTaskStatusesRequester(ctx context.Context, sel
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("ITGovTaskStatusesRequester")
 		case "intakeFormStatus":
+			field := field
 
-			out.Values[i] = ec._ITGovTaskStatusesRequester_intakeFormStatus(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ITGovTaskStatusesRequester_intakeFormStatus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "feedbackFromInitialReviewStatus":
+			field := field
 
-			out.Values[i] = ec._ITGovTaskStatusesRequester_feedbackFromInitialReviewStatus(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ITGovTaskStatusesRequester_feedbackFromInitialReviewStatus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "decisionAndNextStepsStatus":
+			field := field
 
-			out.Values[i] = ec._ITGovTaskStatusesRequester_decisionAndNextStepsStatus(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ITGovTaskStatusesRequester_decisionAndNextStepsStatus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "bizCaseDraftStatus":
+			field := field
 
-			out.Values[i] = ec._ITGovTaskStatusesRequester_bizCaseDraftStatus(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ITGovTaskStatusesRequester_bizCaseDraftStatus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "grtMeetingStatus":
+			field := field
 
-			out.Values[i] = ec._ITGovTaskStatusesRequester_grtMeetingStatus(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ITGovTaskStatusesRequester_grtMeetingStatus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "bizCaseFinalStatus":
+			field := field
 
-			out.Values[i] = ec._ITGovTaskStatusesRequester_bizCaseFinalStatus(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ITGovTaskStatusesRequester_bizCaseFinalStatus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "grbMeetingStatus":
+			field := field
 
-			out.Values[i] = ec._ITGovTaskStatusesRequester_grbMeetingStatus(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ITGovTaskStatusesRequester_grbMeetingStatus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
