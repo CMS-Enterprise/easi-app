@@ -197,6 +197,14 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
+	// Currently, this creates a system intake along with feedback, but with no action(s) associated with the feedback.
+	// Those will be added later in EASI-2888 and EASI-3019.
+	// We may want to rework or remove the makeSystemIntakeWithGovernanceRequestFeedback() utility function then.
+
+	// TODO - EASI-2888 - create a system intake, then take the request edits action on it, with feedback attached.
+	// TODO - EASI-3019 - create a system intake, then take the "progress to new step" action on it, with feedback attached.
+	makeSystemIntakeWithGovernanceRequestFeedback("Intake with governance request feedback for IT Gov v2", logger, store, "example feedback 1", "USR1")
+
 	must(nil, seederConfig.seedTRBRequests(ctx))
 }
 
@@ -288,6 +296,25 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	must(store.UpdateSystemIntakeFundingSources(ctx, intake.ID, fundingSources))
 
 	return &intake
+}
+
+func makeSystemIntakeWithGovernanceRequestFeedback(name string, logger *zap.Logger, store *storage.Store, feedbackText string, creatingUser string) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
+	intakeID := uuid.MustParse("ddfb24da-a2b9-4b2f-9fda-740ee2161be8")
+	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
+		i.ID = intakeID
+	})
+
+	feedback := models.GovernanceRequestFeedback{
+		BaseStruct: models.BaseStruct{
+			CreatedBy: creatingUser,
+		},
+		IntakeID: intakeID,
+		Feedback: feedbackText,
+	}
+
+	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
 }
 
 func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {
