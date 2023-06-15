@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2700,7 +2699,7 @@ func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.
 
 // GovernanceRequestFeedbacks is the resolver for the governanceRequestFeedbacks field.
 func (r *systemIntakeResolver) GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error) {
-	panic(fmt.Errorf("not implemented: GovernanceRequestFeedbacks - governanceRequestFeedbacks"))
+	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, r.store, obj.ID)
 }
 
 // GovernanceTeams is the resolver for the governanceTeams field.
