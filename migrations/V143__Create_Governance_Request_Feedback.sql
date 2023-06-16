@@ -1,3 +1,10 @@
+CREATE TYPE feedback_target AS ENUM (
+    'NO_TARGET'
+    'INTAKE_REQUEST',
+    'DRAFT_BUSINESS_CASE',
+    'FINAL_BUSINESS_CASE'
+);
+
 CREATE TABLE governance_request_feedback (
     -- PK
     id UUID PRIMARY KEY NOT NULL,
@@ -7,6 +14,7 @@ CREATE TABLE governance_request_feedback (
 
     -- required fields
     feedback TEXT NOT NULL,
+    target feedback_target NOT NULL,
 
     -- general metadata
     -- use created_by to denote who the feedback is from
