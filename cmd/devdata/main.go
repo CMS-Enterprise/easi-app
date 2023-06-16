@@ -197,13 +197,22 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
-	// Currently, this creates a system intake along with feedback, but with no action(s) associated with the feedback.
-	// Those will be added later in EASI-2888 and EASI-3019.
-	// We may want to rework or remove the makeSystemIntakeWithGovernanceRequestFeedback() utility function then.
+	// TODO - EASI-2888 - remove mention of this ticket in comments below; remove whole comment block if EASI-3019 also implemented
+	// TODO - EASI-3019 - remove mention of this ticket in comments below; remove whole comment block if EASI-2888 also implemented
 
-	// TODO - EASI-2888 - create a system intake, then take the request edits action on it, with feedback attached.
-	// TODO - EASI-3019 - create a system intake, then take the "progress to new step" action on it, with feedback attached.
-	makeSystemIntakeWithGovernanceRequestFeedback("Intake with governance request feedback for IT Gov v2", logger, store, "example feedback 1", "USR1")
+	// Currently, these create system intakes along with feedback, but with no action(s) associated with the feedback.
+	// The actions will be added later in EASI-2888 and EASI-3019.
+	intakeID := uuid.MustParse("4d3f9821-e043-42bf-9cd0-faa5f053ed32")
+	makeSystemIntakeWithProgressToNextStep("Intake with feedback on progression to next step", logger, store, "USR1", intakeID, "progression feedback")
+
+	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
+	makeSystemIntakeWithEditsRequested("Edits requested on intake request", logger, store, "USR1", intakeID, "intake request feedback", models.GovernanceRequestFeedbackTargetIntakeRequest)
+
+	intakeID = uuid.MustParse("ce874e71-de26-46da-bbfe-a8e3af960108")
+	makeSystemIntakeWithEditsRequested("Edits requested on draft business case", logger, store, "USR1", intakeID, "draft biz case feedback", models.GovernanceRequestFeedbackTargetDraftBusinessCase)
+
+	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
+	makeSystemIntakeWithEditsRequested("Edits requested on final business case", logger, store, "USR1", intakeID, "final biz case feedback", models.GovernanceRequestFeedbackTargetFinalBusinessCase)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 }
@@ -298,10 +307,18 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	return &intake
 }
 
-func makeSystemIntakeWithGovernanceRequestFeedback(name string, logger *zap.Logger, store *storage.Store, feedbackText string, creatingUser string) {
+// TODO - EASI-3019 - call functions/methods to take "progress to new step" action;
+// also, remove direct call to store.CreateGovernanceRequestFeedback(), action should save feedback
+func makeSystemIntakeWithProgressToNextStep(
+	name string,
+	logger *zap.Logger,
+	store *storage.Store,
+	creatingUser string,
+	intakeID uuid.UUID,
+	feedbackText string,
+) {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 
-	intakeID := uuid.MustParse("ddfb24da-a2b9-4b2f-9fda-740ee2161be8")
 	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
 		i.ID = intakeID
 	})
@@ -312,6 +329,36 @@ func makeSystemIntakeWithGovernanceRequestFeedback(name string, logger *zap.Logg
 		},
 		IntakeID: intakeID,
 		Feedback: feedbackText,
+		Target:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
+	}
+
+	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
+}
+
+// TODO - EASI-2888 - call functions/methods to take "request edits" action;
+// also, remove direct call to store.CreateGovernanceRequestFeedback(), action should save feedback
+func makeSystemIntakeWithEditsRequested(
+	name string,
+	logger *zap.Logger,
+	store *storage.Store,
+	creatingUser string,
+	intakeID uuid.UUID,
+	feedbackText string,
+	targetedForm models.GovernanceRequestFeedbackTarget,
+) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
+	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
+		i.ID = intakeID
+	})
+
+	feedback := models.GovernanceRequestFeedback{
+		BaseStruct: models.BaseStruct{
+			CreatedBy: creatingUser,
+		},
+		IntakeID: intakeID,
+		Feedback: feedbackText,
+		Target:   targetedForm,
 	}
 
 	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))

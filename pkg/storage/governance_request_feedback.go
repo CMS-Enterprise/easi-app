@@ -23,11 +23,13 @@ func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeed
 			id,
 			intake_id,
 			feedback,
+			target,
 			created_by
 		) VALUES (
 			:id,
 			:intake_id,
 			:feedback,
+			:target,
 			:created_by
 		) RETURNING *;
 	`
