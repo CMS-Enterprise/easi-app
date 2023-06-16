@@ -103,7 +103,7 @@ func (s Server) NewCEDARClientCheck() {
 
 // NewOktaAPIClientCheck checks if the Okta API client is configured
 func (s Server) NewOktaAPIClientCheck() {
-	s.checkRequiredConfig(appconfig.OKTAApiURL)
+	s.checkRequiredConfig(appconfig.OKTAAPIURL)
 	s.checkRequiredConfig(appconfig.OKTAAPIToken)
 }
 

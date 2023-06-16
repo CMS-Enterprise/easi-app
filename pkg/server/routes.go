@@ -113,7 +113,7 @@ func (s *Server) routes(
 			var oktaClientErr error
 			// Ensure Okta API Variables are set
 			s.NewOktaAPIClientCheck()
-			userSearchClient, oktaClientErr = oktaapi.NewClient(s.Config.GetString(appconfig.OKTAApiURL), s.Config.GetString(appconfig.OKTAAPIToken))
+			userSearchClient, oktaClientErr = oktaapi.NewClient(s.Config.GetString(appconfig.OKTAAPIURL), s.Config.GetString(appconfig.OKTAAPIToken))
 			if oktaClientErr != nil {
 				s.logger.Fatal("failed to create okta api client", zap.Error(oktaClientErr))
 			}

@@ -219,8 +219,8 @@ const (
 	FlagSourceLaunchDarkly FlagSourceOption = "LAUNCH_DARKLY"
 )
 
-// OKTAApiURL is the key for the Okta API url
-const OKTAApiURL = "OKTA_API_URL"
+// OKTAAPIURL is the key for the Okta API url
+const OKTAAPIURL = "OKTA_API_URL"
 
 // OKTAAPIToken is the key for the Okta API token
 const OKTAAPIToken = "OKTA_API_TOKEN" // #nosec G101 false positive - not the actual API key itself

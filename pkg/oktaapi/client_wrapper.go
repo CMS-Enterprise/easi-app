@@ -44,10 +44,11 @@ type oktaUserResponse struct {
 	SourceType  string `json:"SourceType"`
 }
 
+// Converts the generic JSON type of okta.UserProfile into oktaUserResponse
 func (cw *ClientWrapper) parseOktaProfileResponse(ctx context.Context, profile *okta.UserProfile) (*oktaUserResponse, error) {
 	logger := appcontext.ZLogger(ctx)
 
-	// Create an okaUserProfile to return
+	// Create an oktaUserProfile to return
 	parsedProfile := &oktaUserResponse{}
 
 	// Marshal the profile into a string so we can later unmarshal it into a struct
@@ -72,11 +73,6 @@ func (o *oktaUserResponse) toUserInfo() *models.UserInfo {
 		CommonName: o.DisplayName,
 		Email:      models.NewEmailAddress(o.Email),
 		EuaUserID:  o.Login,
-		// DisplayName: o.DisplayName,
-		// Email:       o.Email,
-		// Username:    o.Login,
-		// FirstName:   o.FirstName,
-		// LastName:    o.LastName,
 	}
 }
 
@@ -130,21 +126,17 @@ func (cw *ClientWrapper) FetchUserInfo(ctx context.Context, username string) (*m
 	return profile.toUserInfo(), nil
 }
 
-// SearchCommonNameContains is a wrapper for SearchByName
-func (cw *ClientWrapper) SearchCommonNameContains(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
-	return cw.SearchByName(ctx, searchTerm)
-}
-
 const euaSourceType = "EUA"
 const euaADSourceType = "EUA-AD"
 
-// SearchByName searches for a user by their First/Last name in Okta
-func (cw *ClientWrapper) SearchByName(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
+// SearchCommonNameContains searches for a user by their First/Last name in Okta
+func (cw *ClientWrapper) SearchCommonNameContains(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
 	logger := appcontext.ZLogger(ctx)
 
 	// profile.SourceType can be EUA, EUA-AD, or cmsidm
 	// the first 2 represent EUA users, the latter represents users created directly in IDM
 	// status eq "ACTIVE" or status eq "STAGED" ensures we only get users who have EUAs (Staged means they just haven't logged in yet)
+	// Okta API only supports matching by "starts with" (sw) or strict equality and not wildcards or "ends with"
 	isFromEUA := fmt.Sprintf(`(profile.SourceType eq "%v" or profile.SourceType eq "%v")`, euaSourceType, euaADSourceType)
 	isActiveOrStaged := `(status eq "ACTIVE" or status eq "STAGED")`
 	nameSearch := fmt.Sprintf(`(profile.firstName sw "%v" or profile.lastName sw "%v" or profile.displayName sw "%v")`, searchTerm, searchTerm, searchTerm)
