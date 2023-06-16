@@ -9376,10 +9376,7 @@ enum ITGovDraftBuisnessCaseStatusReq {
   The form has started to be filled out
   """
   IN_PROGRESS
-  """
-  This draft buisness case is being reviewd
-  """
-  IN_REVIEW
+
   """
   This draft buisness case has edits requested
   """
@@ -9443,10 +9440,6 @@ enum ITGovFinalBuisnessCaseStatusReq {
   """
   IN_PROGRESS
   """
-  This buisness case is being reviewd
-  """  
-  IN_REVIEW
-  """
   This buisness case has edits requested
   """  
   EDITS_REQUESTED
@@ -9476,10 +9469,6 @@ enum ITGovGRBStatusReq {
   The GRB meeting has been scheduled
   """
   SCHEDULED
-  """
-  The GRB meeting has already happened, and an outcome hasn't been noted yet
-  """
-  AWAITING_DECISION
   """
   The step is completed
   """    

@@ -45,7 +45,6 @@ const (
 	ITGDBCSRNotNeeded      ITGovDraftBuisnessCaseStatusReq = "NOT_NEEDED"
 	ITGDBCSRReady          ITGovDraftBuisnessCaseStatusReq = "READY"
 	ITGDBCSRInProgress     ITGovDraftBuisnessCaseStatusReq = "IN_PROGRESS"
-	ITGDBCSRInReview       ITGovDraftBuisnessCaseStatusReq = "IN_REVIEW"
 	ITGDBCSREditsRequested ITGovDraftBuisnessCaseStatusReq = "EDITS_REQUESTED"
 	ITGDBCSRCompleted      ITGovDraftBuisnessCaseStatusReq = "COMPLETED"
 )
@@ -72,7 +71,6 @@ const (
 	ITGFBCSRNotNeeded      ITGovFinalBuisnessCaseStatusReq = "NOT_NEEDED"
 	ITGFBCSRReady          ITGovFinalBuisnessCaseStatusReq = "READY"
 	ITGFBCSRInProgress     ITGovFinalBuisnessCaseStatusReq = "IN_PROGRESS"
-	ITGFBCSRInReview       ITGovFinalBuisnessCaseStatusReq = "IN_REVIEW"
 	ITGFBCSREditsRequested ITGovFinalBuisnessCaseStatusReq = "EDITS_REQUESTED"
 	ITGFBCSRCompleted      ITGovFinalBuisnessCaseStatusReq = "COMPLETED"
 )
@@ -82,10 +80,9 @@ type ITGovGRBStatusReq string
 
 // These are the options for ITGovGRBStatusReq
 const (
-	ITGGRBSRCantStart        ITGovGRBStatusReq = "CANT_START"
-	ITGGRBSRNotNeeded        ITGovGRBStatusReq = "NOT_NEEDED"
-	ITGGRBSRReadyToSchedule  ITGovGRBStatusReq = "READY_TO_SCHEDULE"
-	ITGGRBSRScheduled        ITGovGRBStatusReq = "SCHEDULED"
-	ITGGRBSRAwaitingDecision ITGovGRBStatusReq = "AWAITING_DECISION"
-	ITGGRBSRCompleted        ITGovGRBStatusReq = "COMPLETED"
+	ITGGRBSRCantStart       ITGovGRBStatusReq = "CANT_START"
+	ITGGRBSRNotNeeded       ITGovGRBStatusReq = "NOT_NEEDED"
+	ITGGRBSRReadyToSchedule ITGovGRBStatusReq = "READY_TO_SCHEDULE"
+	ITGGRBSRScheduled       ITGovGRBStatusReq = "SCHEDULED"
+	ITGGRBSRCompleted       ITGovGRBStatusReq = "COMPLETED"
 )
