@@ -14,11 +14,6 @@ func FeedbackFromInitialReviewStatusReq(intake *models.SystemIntake) models.ITGo
 	return models.ITGFBSRCantStart
 }
 
-// DecisionAndNextStepsStatusReq calculates the ITGovDecisionStatusReq for the Decisions section for the system intake task list for the requester view
-func DecisionAndNextStepsStatusReq(intake *models.SystemIntake) models.ITGovDecisionStatusReq {
-	return models.ITGDSRCantStart
-}
-
 // BizCaseDraftStatusReq calculates the ITGovDraftBuisnessCaseStatusReq for the BizCaseDraft section for the system intake task list for the requester view
 func BizCaseDraftStatusReq(intake *models.SystemIntake) models.ITGovDraftBuisnessCaseStatusReq {
 	return models.ITGDBCSRCantStart
@@ -37,4 +32,9 @@ func BizCaseFinalStatusReq(intake *models.SystemIntake) models.ITGovFinalBuisnes
 // GrbMeetingStatusReq calculates the ITGovGRBStatusReq for the GrbMeeting section for the system intake task list for the requester view
 func GrbMeetingStatusReq(intake *models.SystemIntake) models.ITGovGRBStatusReq {
 	return models.ITGGRBSRCantStart
+}
+
+// DecisionAndNextStepsStatusReq calculates the ITGovDecisionStatusReq for the Decisions section for the system intake task list for the requester view
+func DecisionAndNextStepsStatusReq(intake *models.SystemIntake) models.ITGovDecisionStatusReq {
+	return models.ITGDSRCantStart
 }

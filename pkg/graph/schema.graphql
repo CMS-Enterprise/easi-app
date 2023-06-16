@@ -1025,11 +1025,11 @@ type ITGovTaskStatuses {
 type ITGovTaskStatusesRequester {
   intakeFormStatus: ITGovIntakeStatusReq!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatusReq!
-  decisionAndNextStepsStatus: ITGovDecisionStatusReq!
   bizCaseDraftStatus: ITGovDraftBuisnessCaseStatusReq!
   grtMeetingStatus: ITGovGRTStatusReq!
   bizCaseFinalStatus: ITGovFinalBuisnessCaseStatusReq!
   grbMeetingStatus: ITGovGRBStatusReq!
+  decisionAndNextStepsStatus: ITGovDecisionStatusReq!
 }
 
 # TODO: to be implemented in a future ticket
