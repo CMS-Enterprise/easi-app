@@ -1727,11 +1727,22 @@ type DeleteSystemIntakeDocumentPayload {
 }
 
 """
+Represents the kind of item a GovernanceRequestFeedback might be providing feedback for
+"""
+enum GovernanceRequestFeedbackTarget {
+  NO_TARGET_PROVIDED
+  INTAKE_REQUEST
+  DRAFT_BUSINESS_CASE
+  FINAL_BUSINESS_CASE
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
   id: UUID!
   feedback: String!
+  target: GovernanceRequestFeedbackTarget!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
