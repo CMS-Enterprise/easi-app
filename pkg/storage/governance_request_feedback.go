@@ -2,10 +2,12 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -14,6 +16,18 @@ import (
 
 // CreateGovernanceRequestFeedback creates a governance request feedback record in the database
 func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeedback *models.GovernanceRequestFeedback) (*models.GovernanceRequestFeedback, error) {
+	// validate first
+	isFeedbackValid := validateSourceActionTargetFormCombination(*requestFeedback)
+	if !isFeedbackValid {
+		errorMessage := fmt.Sprintf(
+			"Invalid combination of source action and target feedback; %v is an invalid target form for a %v action",
+			requestFeedback.TargetForm,
+			requestFeedback.SourceAction,
+		)
+		fmt.Println(errorMessage)
+		return nil, errors.New(errorMessage)
+	}
+
 	if requestFeedback.ID == uuid.Nil {
 		requestFeedback.ID = uuid.New()
 	}
@@ -92,4 +106,24 @@ func (s *Store) GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, int
 	}
 
 	return feedbacks, nil
+}
+
+func validateSourceActionTargetFormCombination(feedback models.GovernanceRequestFeedback) bool {
+	validCombinations := map[models.GovernanceRequestFeedbackSourceAction][]models.GovernanceRequestFeedbackTargetForm{
+		models.GovernanceRequestFeedbackSourceActionProgressToNewStep: {
+			models.GovernanceRequestFeedbackTargetNoTargetProvided,
+		},
+		models.GovernanceRequestFeedbackSourceActionRequestEdits: {
+			models.GovernanceRequestFeedbackTargetDraftBusinessCase,
+			models.GovernanceRequestFeedbackTargetFinalBusinessCase,
+			models.GovernanceRequestFeedbackTargetIntakeRequest,
+		},
+	}
+
+	validTargets, ok := validCombinations[feedback.SourceAction]
+	if !ok {
+		return false
+	}
+
+	return slices.Contains(validTargets, feedback.TargetForm)
 }
