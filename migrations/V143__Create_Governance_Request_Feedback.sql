@@ -29,3 +29,12 @@ CREATE TABLE governance_request_feedback (
     modified_by TEXT CHECK (modified_by ~ '^[A-Z0-9]{4}$'),
     modified_at TIMESTAMP WITH TIME ZONE
 );
+
+ALTER TABLE governance_request_feedback
+ADD CONSTRAINT valid_governance_request_feedback_source_target_combinations
+CHECK (
+    CASE WHEN source_action = 'PROGRESS_TO_NEW_STEP' THEN target_form IN ('NO_TARGET_PROVIDED')
+         WHEN source_action = 'REQUEST_EDITS' THEN target_form IN ('INTAKE_REQUEST', 'DRAFT_BUSINESS_CASE', 'FINAL_BUSINESS_CASE')
+         ELSE false
+    END
+);
