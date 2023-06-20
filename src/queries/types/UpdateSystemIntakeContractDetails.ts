@@ -18,7 +18,12 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_costs {
   __typename: "SystemIntakeCosts";
   expectedIncreaseAmount: string | null;
-  isExpectingIncrease: string | null;
+}
+
+export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_annualSpending {
+  __typename: "SystemIntakeAnnualSpending";
+  currentAnnualSpending: string | null;
+  plannedYearOneSpending: string | null;
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_endDate {
@@ -50,6 +55,7 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
   currentStage: string | null;
   fundingSources: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_fundingSources[];
   costs: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_costs;
+  annualSpending: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_annualSpending;
   contract: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract;
 }
 

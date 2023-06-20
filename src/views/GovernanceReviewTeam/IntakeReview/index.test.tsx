@@ -108,6 +108,11 @@ describe('The GRT intake review view', () => {
       expectedIncreaseAmount: '',
       isExpectingIncrease: 'NO'
     },
+    annualSpending: {
+      __typename: 'SystemIntakeAnnualSpending',
+      currentAnnualSpending: '',
+      plannedYearOneSpending: ''
+    },
     contract: {
       __typename: 'SystemIntakeContract',
       hasContract: 'IN_PROGRESS',

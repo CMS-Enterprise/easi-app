@@ -29,7 +29,6 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
-import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -54,13 +53,23 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const formikRef = useRef<FormikProps<ContractDetailsForm>>(null);
   const { t } = useTranslation('intake');
 
-  const { id, fundingSources, costs, contract, existingFunding } = systemIntake;
+  const {
+    id,
+    fundingSources,
+    annualSpending,
+    contract,
+    existingFunding
+  } = systemIntake;
   const initialValues: ContractDetailsForm = {
     existingFunding,
     fundingSources,
-    costs: {
-      expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
-      isExpectingIncrease: costs.isExpectingIncrease || ''
+    // costs: {
+    //   expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
+    //   isExpectingIncrease: costs.isExpectingIncrease || ''
+    // },
+    annualSpending: {
+      currentAnnualSpending: annualSpending.currentAnnualSpending || '',
+      plannedYearOneSpending: annualSpending.plannedYearOneSpending || ''
     },
     contract: {
       contractor: contract.contractor || '',
@@ -128,7 +137,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         existingFunding: !!(values.fundingSources.length > 0),
         fundingSources: values.fundingSources
       },
-      costs: values.costs,
+      // costs: values.costs,
+      annualSpending: values.annualSpending,
       contract: {
         ...values.contract,
         startDate,
@@ -204,8 +214,60 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     fundingSourceOptions={intakeFundingSources}
                   />
                 </FieldGroup>
-
                 <FieldGroup
+                  scrollElement="costs.annualSpending"
+                  error={!!flatErrors['costs.annualSpending']}
+                >
+                  <fieldset
+                    className="usa-fieldset margin-top-4"
+                    data-testid="annual-spend-fieldset"
+                  >
+                    <legend className="usa-label margin-bottom-1">
+                      What is the current annual spending?
+                    </legend>
+                    <FieldErrorMsg>
+                      {flatErrors['costs.annualSpending']}
+                    </FieldErrorMsg>
+                    <Field
+                      as={Textarea}
+                      className="system-intake__current-annual-spending"
+                      error={!!flatErrors['costs.annualSpending']}
+                      id="IntakeForm-CurrentAnnualSpending"
+                      name="costs.currentAnnualSpending"
+                      maxLength={100}
+                    />
+                    <CharacterCounter
+                      id="currentAnnualSpending-counter"
+                      characterCount={
+                        2000 -
+                        values.annualSpending.currentAnnualSpending.length
+                      }
+                    />
+                    <legend className="usa-label margin-bottom-1">
+                      What is the planned annual spending of the first year of
+                      the new contract?
+                    </legend>
+                    <FieldErrorMsg>
+                      {flatErrors['costs.annualSpending']}
+                    </FieldErrorMsg>
+                    <Field
+                      as={Textarea}
+                      className="system-intake__year-one-annual-spending"
+                      error={!!flatErrors['costs.annualSpending']}
+                      id="IntakeForm-YearOneAnnualSpending"
+                      name="costs.YearOneAnnualSpending"
+                      maxLength={100}
+                    />
+                    <CharacterCounter
+                      id="plannedYearOneAnnualSpending-counter"
+                      characterCount={
+                        2000 -
+                        values.annualSpending.plannedYearOneSpending.length
+                      }
+                    />
+                  </fieldset>
+                </FieldGroup>
+                {/* <FieldGroup
                   scrollElement="conts.isExpectingIncrease"
                   error={!!flatErrors['costs.isExpectingIncrease']}
                 >
@@ -301,7 +363,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       }}
                     />
                   </fieldset>
-                </FieldGroup>
+                </FieldGroup> */}
 
                 <FieldGroup
                   scrollElement="contract.hasContract"
