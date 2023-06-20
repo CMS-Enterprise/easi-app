@@ -24,7 +24,7 @@ func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeed
 			requestFeedback.TargetForm,
 			requestFeedback.SourceAction,
 		)
-		fmt.Println(errorMessage)
+		appcontext.ZLogger(ctx).Error(errorMessage)
 		return nil, errors.New(errorMessage)
 	}
 
