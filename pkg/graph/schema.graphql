@@ -1746,7 +1746,15 @@ type DeleteSystemIntakeDocumentPayload {
 }
 
 """
-Represents the possible forms on a governance intake request that can receive feedback
+Represents the possible actions that can provide feedback on a governance request
+"""
+enum GovernanceRequestFeedbackSourceAction {
+  REQUEST_EDITS
+  PROGRESS_TO_NEW_STEP
+}
+
+"""
+Represents the possible forms on a governance request that can receive feedback
 """
 enum GovernanceRequestFeedbackTargetForm {
   NO_TARGET_PROVIDED
@@ -1761,6 +1769,7 @@ Feedback given to the requester on a governance request
 type GovernanceRequestFeedback {
   id: UUID!
   feedback: String!
+  sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
   createdBy: String!
   createdAt: Time!

@@ -19,7 +19,7 @@ CREATE TABLE governance_request_feedback (
 
     -- required fields
     feedback TEXT NOT NULL,
-    -- source_action feedback_source_action NOT NULL,
+    source_action feedback_source_action NOT NULL,
     target_form feedback_target_form NOT NULL,
 
     -- general metadata
