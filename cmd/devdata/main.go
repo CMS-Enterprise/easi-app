@@ -327,9 +327,9 @@ func makeSystemIntakeWithProgressToNextStep(
 		BaseStruct: models.BaseStruct{
 			CreatedBy: creatingUser,
 		},
-		IntakeID: intakeID,
-		Feedback: feedbackText,
-		Target:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
+		IntakeID:   intakeID,
+		Feedback:   feedbackText,
+		TargetForm: models.GovernanceRequestFeedbackTargetNoTargetProvided,
 	}
 
 	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
@@ -344,7 +344,7 @@ func makeSystemIntakeWithEditsRequested(
 	creatingUser string,
 	intakeID uuid.UUID,
 	feedbackText string,
-	targetedForm models.GovernanceRequestFeedbackTarget,
+	targetedForm models.GovernanceRequestFeedbackTargetForm,
 ) {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 
@@ -356,9 +356,9 @@ func makeSystemIntakeWithEditsRequested(
 		BaseStruct: models.BaseStruct{
 			CreatedBy: creatingUser,
 		},
-		IntakeID: intakeID,
-		Feedback: feedbackText,
-		Target:   targetedForm,
+		IntakeID:   intakeID,
+		Feedback:   feedbackText,
+		TargetForm: targetedForm,
 	}
 
 	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))

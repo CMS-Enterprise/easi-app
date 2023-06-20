@@ -2,21 +2,21 @@ package models
 
 import "github.com/google/uuid"
 
-// GovernanceRequestFeedbackTarget is an enumeration of the possible items that a GovernanceRequestFeedback is providing feedback for
-type GovernanceRequestFeedbackTarget string
+// GovernanceRequestFeedbackTargetForm is an enumeration of the possible forms on a governance intake request that can receive feedback
+type GovernanceRequestFeedbackTargetForm string
 
-// These are the possible targets for governance request feedback
+// These are the possible forms that can have governance request feedback
 const (
-	GovernanceRequestFeedbackTargetNoTargetProvided  GovernanceRequestFeedbackTarget = "NO_TARGET_PROVIDED"
-	GovernanceRequestFeedbackTargetIntakeRequest     GovernanceRequestFeedbackTarget = "INTAKE_REQUEST"
-	GovernanceRequestFeedbackTargetDraftBusinessCase GovernanceRequestFeedbackTarget = "DRAFT_BUSINESS_CASE"
-	GovernanceRequestFeedbackTargetFinalBusinessCase GovernanceRequestFeedbackTarget = "FINAL_BUSINESS_CASE"
+	GovernanceRequestFeedbackTargetNoTargetProvided  GovernanceRequestFeedbackTargetForm = "NO_TARGET_PROVIDED"
+	GovernanceRequestFeedbackTargetIntakeRequest     GovernanceRequestFeedbackTargetForm = "INTAKE_REQUEST"
+	GovernanceRequestFeedbackTargetDraftBusinessCase GovernanceRequestFeedbackTargetForm = "DRAFT_BUSINESS_CASE"
+	GovernanceRequestFeedbackTargetFinalBusinessCase GovernanceRequestFeedbackTargetForm = "FINAL_BUSINESS_CASE"
 )
 
 // GovernanceRequestFeedback represents feedback given to the requester on a governance request
 type GovernanceRequestFeedback struct {
 	BaseStruct
-	IntakeID uuid.UUID `db:"intake_id"`
-	Feedback string
-	Target   GovernanceRequestFeedbackTarget
+	IntakeID   uuid.UUID `db:"intake_id"`
+	Feedback   string
+	TargetForm GovernanceRequestFeedbackTargetForm `db:"target_form"`
 }

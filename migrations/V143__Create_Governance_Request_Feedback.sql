@@ -3,7 +3,7 @@ CREATE TYPE feedback_source_action AS ENUM (
     'PROGRESS_TO_NEW_STEP'
 );
 
-CREATE TYPE feedback_target AS ENUM (
+CREATE TYPE feedback_target_form AS ENUM (
     'NO_TARGET_PROVIDED',
     'INTAKE_REQUEST',
     'DRAFT_BUSINESS_CASE',
@@ -19,8 +19,8 @@ CREATE TABLE governance_request_feedback (
 
     -- required fields
     feedback TEXT NOT NULL,
-    source_action feedback_source_action NOT NULL,
-    target feedback_target NOT NULL,
+    -- source_action feedback_source_action NOT NULL,
+    target_form feedback_target_form NOT NULL,
 
     -- general metadata
     -- use created_by to denote who the feedback is from

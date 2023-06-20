@@ -513,7 +513,7 @@ type ComplexityRoot struct {
 		ID         func(childComplexity int) int
 		ModifiedAt func(childComplexity int) int
 		ModifiedBy func(childComplexity int) int
-		Target     func(childComplexity int) int
+		TargetForm func(childComplexity int) int
 	}
 
 	ITGovTaskStatuses struct {
@@ -3532,12 +3532,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GovernanceRequestFeedback.ModifiedBy(childComplexity), true
 
-	case "GovernanceRequestFeedback.target":
-		if e.complexity.GovernanceRequestFeedback.Target == nil {
+	case "GovernanceRequestFeedback.targetForm":
+		if e.complexity.GovernanceRequestFeedback.TargetForm == nil {
 			break
 		}
 
-		return e.complexity.GovernanceRequestFeedback.Target(childComplexity), true
+		return e.complexity.GovernanceRequestFeedback.TargetForm(childComplexity), true
 
 	case "ITGovTaskStatuses.adminStatuses":
 		if e.complexity.ITGovTaskStatuses.AdminStatuses == nil {
@@ -8691,9 +8691,9 @@ type DeleteSystemIntakeDocumentPayload {
 }
 
 """
-Represents the kind of item a GovernanceRequestFeedback might be providing feedback for
+Represents the possible forms on a governance intake request that can receive feedback
 """
-enum GovernanceRequestFeedbackTarget {
+enum GovernanceRequestFeedbackTargetForm {
   NO_TARGET_PROVIDED
   INTAKE_REQUEST
   DRAFT_BUSINESS_CASE
@@ -8706,7 +8706,7 @@ Feedback given to the requester on a governance request
 type GovernanceRequestFeedback {
   id: UUID!
   feedback: String!
-  target: GovernanceRequestFeedbackTarget!
+  targetForm: GovernanceRequestFeedbackTargetForm!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -24296,8 +24296,8 @@ func (ec *executionContext) fieldContext_GovernanceRequestFeedback_feedback(ctx 
 	return fc, nil
 }
 
-func (ec *executionContext) _GovernanceRequestFeedback_target(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GovernanceRequestFeedback_target(ctx, field)
+func (ec *executionContext) _GovernanceRequestFeedback_targetForm(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_targetForm(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -24310,7 +24310,7 @@ func (ec *executionContext) _GovernanceRequestFeedback_target(ctx context.Contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Target, nil
+		return obj.TargetForm, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24322,19 +24322,19 @@ func (ec *executionContext) _GovernanceRequestFeedback_target(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.GovernanceRequestFeedbackTarget)
+	res := resTmp.(models.GovernanceRequestFeedbackTargetForm)
 	fc.Result = res
-	return ec.marshalNGovernanceRequestFeedbackTarget2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackTarget(ctx, field.Selections, res)
+	return ec.marshalNGovernanceRequestFeedbackTargetForm2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackTargetForm(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GovernanceRequestFeedback_target(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_targetForm(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GovernanceRequestFeedback",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type GovernanceRequestFeedbackTarget does not have child fields")
+			return nil, errors.New("field of type GovernanceRequestFeedbackTargetForm does not have child fields")
 		},
 	}
 	return fc, nil
@@ -35055,8 +35055,8 @@ func (ec *executionContext) fieldContext_SystemIntake_governanceRequestFeedbacks
 				return ec.fieldContext_GovernanceRequestFeedback_id(ctx, field)
 			case "feedback":
 				return ec.fieldContext_GovernanceRequestFeedback_feedback(ctx, field)
-			case "target":
-				return ec.fieldContext_GovernanceRequestFeedback_target(ctx, field)
+			case "targetForm":
+				return ec.fieldContext_GovernanceRequestFeedback_targetForm(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_GovernanceRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -54992,9 +54992,9 @@ func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "target":
+		case "targetForm":
 
-			out.Values[i] = ec._GovernanceRequestFeedback_target(ctx, field, obj)
+			out.Values[i] = ec._GovernanceRequestFeedback_targetForm(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -61366,13 +61366,13 @@ func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚖgithubᚗcomᚋ
 	return ec._GovernanceRequestFeedback(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGovernanceRequestFeedbackTarget2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackTarget(ctx context.Context, v interface{}) (models.GovernanceRequestFeedbackTarget, error) {
+func (ec *executionContext) unmarshalNGovernanceRequestFeedbackTargetForm2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackTargetForm(ctx context.Context, v interface{}) (models.GovernanceRequestFeedbackTargetForm, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.GovernanceRequestFeedbackTarget(tmp)
+	res := models.GovernanceRequestFeedbackTargetForm(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGovernanceRequestFeedbackTarget2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackTarget(ctx context.Context, sel ast.SelectionSet, v models.GovernanceRequestFeedbackTarget) graphql.Marshaler {
+func (ec *executionContext) marshalNGovernanceRequestFeedbackTargetForm2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackTargetForm(ctx context.Context, sel ast.SelectionSet, v models.GovernanceRequestFeedbackTargetForm) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
