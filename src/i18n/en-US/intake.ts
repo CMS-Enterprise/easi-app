@@ -21,7 +21,13 @@ const intake = {
     contractNumber: 'Contract number'
   },
   documents: {
-    description:
+    title: 'Additional documentation',
+    tableTitle: 'Documents',
+    tableDescription:
+      'Upload any documents relevant to your Intake Request. This could include documents such as draft IGCEs, contracting documents such as a SOO or SOW, presentation slide decks, or other informational documents.',
+    continueWithoutDocuments: 'Continue without documents',
+    noDocuments: 'No documents uploaded',
+    formDescription:
       'Choose a document to upload, such as a draft IGCE, contracting document, or another document related to your Intake Request.',
     returnToIntake: "Don't upload and return to Intake Request",
     type: {

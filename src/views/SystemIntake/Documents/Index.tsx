@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation } from '@apollo/client';
-import { Button, Link, Table } from '@trussworks/react-uswds';
+import { Button, Table } from '@trussworks/react-uswds';
 
-import Alert from 'components/shared/Alert';
+import PageHeading from 'components/PageHeading';
 import { DeleteSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
 import {
   DeleteSystemIntakeDocument,
@@ -18,10 +19,15 @@ import {
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
+import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+import './index.scss';
 
 type DocumentsTableProps = {
   systemIntake: SystemIntake;
 };
+
+// const documents = [] as SystemIntakeDocument[];
 
 const documents = [
   {
@@ -73,6 +79,9 @@ const documents = [
  */
 const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
   const { t } = useTranslation();
+
+  const history = useHistory();
+  const { pathname } = useLocation();
 
   // const { documents } = systemIntake;
 
@@ -131,7 +140,7 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
             return (
               <>
                 {/* View document */}
-                <Link target="_blank" href={row.original.url}>
+                <Link target="_blank" to={row.original.url}>
                   {t('technicalAssistance:documents.table.view')}
                 </Link>
 
@@ -185,59 +194,92 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
   );
 
   return (
-    <div className="easi-table--bleed-x easi-table--bottomless">
+    <>
+      <PageHeading className="margin-top-4 margin-bottom-1">
+        {t('intake:documents.title')}
+      </PageHeading>
+      <p className="margin-top-1 font-body-md line-height-body-5 tablet:grid-col-12 desktop:grid-col-8">
+        {t('intake:documents.tableDescription')}
+      </p>
+
+      <h4 className="margin-bottom-1 margin-top-5">
+        {t('intake:documents.tableTitle')}
+      </h4>
+      <Button
+        className="margin-bottom-1"
+        type="button"
+        onClick={() => history.push(`${pathname}/upload`)}
+      >
+        {t('technicalAssistance:documents.addDocument')}
+      </Button>
+
       {/* {renderModal()} */}
-      {documents.length ? (
-        <Table bordered={false} fullWidth scrollable {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, index) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    aria-sort={getColumnSortStatus(column)}
-                    scope="col"
-                    className="border-bottom-2px"
+      <Table bordered={false} fullWidth scrollable {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column, index) => (
+                <th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  aria-sort={getColumnSortStatus(column)}
+                  scope="col"
+                  className="border-bottom-2px"
+                >
+                  <Button
+                    type="button"
+                    unstyled
+                    className="width-full display-flex"
+                    {...column.getSortByToggleProps()}
                   >
-                    <Button
-                      type="button"
-                      unstyled
-                      className="width-full display-flex"
-                      {...column.getSortByToggleProps()}
-                    >
-                      <div className="flex-fill text-no-wrap">
-                        {column.render('Header')}
-                      </div>
-                      <div className="position-relative width-205 margin-left-05">
-                        {getHeaderSortIcon(column)}
-                      </div>
-                    </Button>
-                  </th>
-                ))}
+                    <div className="flex-fill text-no-wrap">
+                      {column.render('Header')}
+                    </div>
+                    <div className="position-relative width-205 margin-left-05">
+                      {getHeaderSortIcon(column)}
+                    </div>
+                  </Button>
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, index) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  );
+                })}
               </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(row => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      ) : (
-        <Alert type="info">
-          {t('technicalAssistance:documents.table.noDocuments')}
-        </Alert>
-      )}
-    </div>
+            );
+          })}
+        </tbody>
+      </Table>
+
+      {!documents.length && <p>{t('intake:documents.noDocuments')}</p>}
+
+      <Pager
+        className="margin-top-6"
+        next={{
+          text: t(
+            documents.length > 0
+              ? 'Next'
+              : 'intake:documents.continueWithoutDocuments'
+          ),
+          outline: documents.length === 0,
+          onClick: () => history.push(`/system/${systemIntake.id}/review`)
+        }}
+        back={{
+          onClick: () =>
+            history.push(`/system/${systemIntake.id}/contract-details`)
+        }}
+        taskListUrl={`/governance-task-list/${systemIntake.id}`}
+        border={false}
+      />
+    </>
   );
 };
 
