@@ -7867,7 +7867,6 @@ type ITGovTaskStatuses {
   bizCaseFinalStatus: ITGovFinalBuisnessCaseStatus!
   grbMeetingStatus: ITGovGRBStatus!
   decisionAndNextStepsStatus: ITGovDecisionStatus!
-
 }
 
 """
