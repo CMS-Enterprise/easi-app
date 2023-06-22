@@ -185,7 +185,10 @@ const UploadForm = () => {
                 control={control}
                 // eslint-disable-next-line no-shadow
                 render={({ field, fieldState: { error } }) => (
-                  <FormGroup className="margin-top-1" error={!!error}>
+                  <FormGroup
+                    className="margin-top-1 margin-left-4"
+                    error={!!error}
+                  >
                     <Label htmlFor={field.name}>
                       {t('technicalAssistance:documents.upload.whatKind')}
                     </Label>
