@@ -35,8 +35,8 @@ const UploadForm = () => {
 
   const history = useHistory();
 
-  const { id } = useParams<{
-    id: string;
+  const { systemId } = useParams<{
+    systemId: string;
   }>();
 
   const [createDocument] = useMutation<
@@ -47,8 +47,24 @@ const UploadForm = () => {
   const {
     control,
     watch,
+    handleSubmit,
     formState: { isSubmitting }
   } = useForm<DocumentUploadFields>();
+
+  const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
+    createDocument({
+      variables: {
+        input: {
+          ...formData,
+          // If type is set to 'Other', include description field
+          ...(formData.documentType === 'OTHER'
+            ? { otherTypeDescription }
+            : {}),
+          requestID: systemId
+        }
+      }
+    });
+  });
 
   return (
     <div className="tablet:grid-col-12 desktop:grid-col-8 margin-top-6 margin-bottom-8 padding-bottom-4">
@@ -58,11 +74,11 @@ const UploadForm = () => {
       <p className="margin-top-1 font-body-md line-height-body-5">
         {t('intake:documents.formDescription')}
       </p>
-      <IconLink to={`/system/${id}/documents`} icon={<IconArrowBack />}>
+      <IconLink to={`/system/${systemId}/documents`} icon={<IconArrowBack />}>
         {t('intake:documents.returnToIntake')}
       </IconLink>
 
-      <Form className="maxw-full" onSubmit={() => null}>
+      <Form className="maxw-full" onSubmit={submit}>
         {/* Upload field */}
         <Controller
           name="fileData"
@@ -177,7 +193,7 @@ const UploadForm = () => {
         </Button>
       </Form>
 
-      <IconLink to={`/system/${id}/documents`} icon={<IconArrowBack />}>
+      <IconLink to={`/system/${systemId}/documents`} icon={<IconArrowBack />}>
         {t('intake:documents.returnToIntake')}
       </IconLink>
     </div>
