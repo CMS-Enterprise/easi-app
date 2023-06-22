@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2035,10 +2036,15 @@ func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, i
 
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
 func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
-	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
+	rs, err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("CEDAR response: ", rs)
+
+	// Email results
+	// Lookup name from UserLookupService (concurrent w/ calling CEDAR)
 
 	resp := "Roles changed successfully"
 	return &resp, nil
