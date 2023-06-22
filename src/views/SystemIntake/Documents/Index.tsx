@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation } from '@apollo/client';
 import { Button, Table } from '@trussworks/react-uswds';
 
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import { DeleteSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
 import {
@@ -27,8 +29,6 @@ import './index.scss';
 type DocumentsTableProps = {
   systemIntake: SystemIntake;
 };
-
-// const documents = [] as SystemIntakeDocument[];
 
 // const documents = [
 //   {
@@ -83,7 +83,11 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
 
   const history = useHistory();
 
-  const { message } = useMessage();
+  const { message, showMessage } = useMessage();
+
+  const [fileToDelete, setFileToDelete] = useState<SystemIntakeDocument | null>(
+    null
+  );
 
   const { documents } = systemIntake;
 
@@ -146,21 +150,15 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
                   {t('technicalAssistance:documents.table.view')}
                 </Link>
 
-                {/* TODO: Delete document */}
-                {/* {canEdit && ( */}
+                {/* Delete document */}
                 <Button
                   unstyled
                   type="button"
                   className="margin-left-2 text-error"
-                  onClick={() => {
-                    deleteDocument({ variables: { id: row.id } });
-                    // setModalOpen(true);
-                    // setFileToRemove(row.original);
-                  }}
+                  onClick={() => setFileToDelete(row.original)}
                 >
                   {t('technicalAssistance:documents.table.remove')}
                 </Button>
-                {/* )} */}
               </>
             );
           // Infected unavailable
@@ -172,7 +170,7 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
     ];
   }, [
     // canEdit,
-    deleteDocument,
+    setFileToDelete,
     t
   ]);
 
@@ -194,6 +192,69 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
     },
     useSortBy
   );
+
+  const ConfirmDeleteModal = () => {
+    if (!fileToDelete) return null;
+    return (
+      <Modal isOpen={!!fileToDelete} closeModal={() => setFileToDelete(null)}>
+        <h3 className="margin-top-0 margin-bottom-0">
+          {t(
+            'technicalAssistance:documents.supportingDocuments.removeHeading',
+            {
+              documentName: fileToDelete.fileName
+            }
+          )}
+        </h3>
+
+        <p>
+          {t('technicalAssistance:documents.supportingDocuments.removeInfo')}
+        </p>
+
+        <Button
+          type="button"
+          onClick={() => {
+            deleteDocument({ variables: { id: fileToDelete.id } })
+              .then(() => {
+                showMessage(
+                  <Alert type="success">
+                    {t(
+                      'technicalAssistance:documents.supportingDocuments.removeSuccess',
+                      {
+                        documentName: fileToDelete.fileName
+                      }
+                    )}
+                  </Alert>
+                );
+              })
+              .catch(() => {
+                showMessage(
+                  <Alert type="error">
+                    {t(
+                      'technicalAssistance:documents.supportingDocuments.removeFail'
+                    )}
+                  </Alert>
+                );
+              });
+
+            setFileToDelete(null);
+          }}
+        >
+          {t(
+            'technicalAssistance:documents.supportingDocuments.removeDocument'
+          )}
+        </Button>
+
+        <Button
+          type="button"
+          className="margin-left-2"
+          unstyled
+          onClick={() => setFileToDelete(null)}
+        >
+          {t('technicalAssistance:documents.supportingDocuments.cancel')}
+        </Button>
+      </Modal>
+    );
+  };
 
   return (
     <>
@@ -224,7 +285,8 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
         )}
       </Button>
 
-      {/* {renderModal()} */}
+      <ConfirmDeleteModal />
+
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
