@@ -43,7 +43,7 @@ const Review = ({ systemIntake }: ReviewProps) => {
         type="button"
         outline
         onClick={() => {
-          const newUrl = 'contract-details';
+          const newUrl = 'documents';
           history.push(newUrl);
         }}
       >

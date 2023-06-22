@@ -838,7 +838,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           }
                         }).then(res => {
                           if (!res.errors) {
-                            history.push('review');
+                            history.push('documents');
                           }
                         });
                       } else {
