@@ -879,7 +879,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               }}
               debounceDelay={3000}
             />
-            <PageNumber currentPage={3} totalPages={3} />
+            <PageNumber currentPage={3} totalPages={5} />
           </>
         );
       }}

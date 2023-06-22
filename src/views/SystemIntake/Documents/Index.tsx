@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
+import PageNumber from 'components/PageNumber';
 import useMessage from 'hooks/useMessage';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
@@ -60,7 +61,7 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
       <DocumentsTable systemIntake={systemIntake} />
 
       <Pager
-        className="margin-top-6"
+        className="margin-top-6 margin-bottom-8"
         next={{
           text: t(
             documents.length > 0
@@ -77,6 +78,8 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
         taskListUrl={`/governance-task-list/${systemIntake.id}`}
         border={false}
       />
+
+      <PageNumber currentPage={4} totalPages={5} />
     </>
   );
 };
