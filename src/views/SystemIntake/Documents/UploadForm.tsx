@@ -19,6 +19,7 @@ import { Alert } from 'components/shared/Alert';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import useMessage from 'hooks/useMessage';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { CreateSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
 import {
   CreateSystemIntakeDocument,
@@ -45,7 +46,16 @@ const UploadForm = () => {
   const [createDocument] = useMutation<
     CreateSystemIntakeDocument,
     CreateSystemIntakeDocumentVariables
-  >(CreateSystemIntakeDocumentQuery);
+  >(CreateSystemIntakeDocumentQuery, {
+    refetchQueries: [
+      {
+        query: GetSystemIntakeQuery,
+        variables: {
+          id: systemId
+        }
+      }
+    ]
+  });
 
   const {
     control,
