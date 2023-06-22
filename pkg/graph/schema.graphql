@@ -1015,8 +1015,27 @@ type SystemIntake {
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
+  itGovTaskStatuses:  ITGovTaskStatuses!
+}
+type ITGovTaskStatuses {
+  requesterStatuses: ITGovTaskStatusesRequester!
+  adminStatuses: ITGovTaskStatusesAdmin!
+
+}
+type ITGovTaskStatusesRequester {
+  intakeFormStatus: ITGovIntakeStatusReq!
+  feedbackFromInitialReviewStatus: ITGovFeedbackStatusReq!
+  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatusReq!
+  grtMeetingStatus: ITGovGRTStatusReq!
+  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatusReq!
+  grbMeetingStatus: ITGovGRBStatusReq!
+  decisionAndNextStepsStatus: ITGovDecisionStatusReq!
 }
 
+# TODO: to be implemented in a future ticket
+type ITGovTaskStatusesAdmin { 
+    grtMeetingStatus: String! #TBD, this is a placeholder for valid GQL
+}
 """
 The input data used to set the requester of a system request
 """
@@ -2396,4 +2415,185 @@ enum Role {
   A generic EASi user
   """
   EASI_USER
+}
+
+
+"""
+The requester view of the IT gov intake step status
+"""
+enum ITGovIntakeStatusReq {
+  """
+  Ready to begin filling out
+  """
+  READY
+  """
+  The form has started to be filled out
+  """
+  IN_PROGRESS
+  """
+  The form has edits requested
+  """
+  EDITS_REQUESTED
+  """
+  The Form is completed
+  """
+  COMPLETED
+}
+
+
+"""
+The requester view of the IT gov feedback step status
+"""
+enum ITGovFeedbackStatusReq {
+  """
+  This step can't be started yet
+  """
+  CANT_START
+  """
+  This step is in review
+  """
+  IN_REVIEW
+  """
+  The step is completed
+  """
+  COMPLETED
+}
+
+
+"""
+The requester view of the IT gov Decision step status
+"""
+enum ITGovDecisionStatusReq {
+  """
+  This step can't be started yet
+  """
+  CANT_START
+  """
+  This step is in review
+  """
+  IN_REVIEW
+  """
+  The step is completed
+  """
+  COMPLETED
+}
+
+
+"""
+The requester view of the IT gov draft buisness case step status
+"""
+enum ITGovDraftBuisnessCaseStatusReq {
+  """
+  This step can't be started yet
+  """
+  CANT_START
+  """
+  This step is no longer needed
+  """
+  NOT_NEEDED
+  """
+  Ready to begin filling out
+  """
+  READY
+  """
+  The form has started to be filled out
+  """
+  IN_PROGRESS
+
+  """
+  This draft buisness case has edits requested
+  """
+  EDITS_REQUESTED
+
+  """
+  The draft buisness case is completed
+  """
+  COMPLETED
+}
+
+
+"""
+The requester view of the IT Gov GRT step status
+"""
+enum ITGovGRTStatusReq {
+  """
+  This step can't be started yet
+  """  
+  CANT_START
+  """
+  This step is not needed and has been skipped
+  """
+  NOT_NEEDED
+  """
+  The GRT meeting is waiting to be scheduled
+  """
+  READY_TO_SCHEDULE
+  """
+  The GRT meeting has been scheduled
+  """
+  SCHEDULED
+  """
+  The GRT meeting has already happened, and an outcome hasn't been noted yet
+  """
+  AWAITING_DECISION
+  """
+  The step is completed
+  """  
+  COMPLETED
+}
+
+"""
+The requester view of the IT Gov Final Buisness Case step status
+"""
+enum ITGovFinalBuisnessCaseStatusReq {
+  """
+  This step can't be started yet
+  """
+  CANT_START
+  """
+  This step is not needed and has been skipped
+  """  
+  NOT_NEEDED
+  """
+  Ready to begin filling out
+  """  
+  READY
+  """
+  The form has started to be filled out
+  """
+  IN_PROGRESS
+  """
+  This buisness case has edits requested
+  """  
+  EDITS_REQUESTED
+  """
+  This buisness case has been completed
+  """  
+  COMPLETED
+}
+
+"""
+The requester view of the IT Gov GRB step status
+"""
+enum ITGovGRBStatusReq {
+  """
+  This step can't be started yet
+  """
+  CANT_START
+  """
+  This step is not needed and has been skipped
+  """  
+  NOT_NEEDED
+  """
+  The GRB meeting is waiting to be scheduled
+  """
+  READY_TO_SCHEDULE
+  """
+  The GRB meeting has been scheduled
+  """
+  SCHEDULED
+  """
+  The step is completed
+  """    
+  COMPLETED
 }
