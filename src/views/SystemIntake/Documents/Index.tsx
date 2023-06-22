@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/client';
 import { Button, Table } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
+import useMessage from 'hooks/useMessage';
 import { DeleteSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
 import {
   DeleteSystemIntakeDocument,
@@ -81,6 +82,8 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
   const { t } = useTranslation();
 
   const history = useHistory();
+
+  const { message } = useMessage();
 
   // const { documents } = systemIntake;
 
@@ -194,6 +197,8 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
 
   return (
     <>
+      {message}
+
       <PageHeading className="margin-top-4 margin-bottom-1">
         {t('intake:documents.title')}
       </PageHeading>
