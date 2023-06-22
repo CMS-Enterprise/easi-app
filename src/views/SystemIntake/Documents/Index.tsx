@@ -77,6 +77,7 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
         }}
         taskListUrl={`/governance-task-list/${systemIntake.id}`}
         border={false}
+        submitDisabled
       />
 
       <PageNumber currentPage={4} totalPages={5} />
