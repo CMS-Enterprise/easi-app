@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ErrorMessage,
@@ -26,6 +27,7 @@ import {
   CreateSystemIntakeDocumentVariables
 } from 'queries/types/CreateSystemIntakeDocument';
 import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
+import { documentSchema } from 'validations/systemIntakeSchema';
 
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
@@ -62,7 +64,9 @@ const UploadForm = () => {
     watch,
     handleSubmit,
     formState: { isSubmitting }
-  } = useForm<DocumentUploadFields>();
+  } = useForm<DocumentUploadFields>({
+    resolver: yupResolver(documentSchema)
+  });
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     createDocument({
@@ -228,7 +232,9 @@ const UploadForm = () => {
 
           <Button
             type="submit"
-            disabled={!watch('fileData') || isSubmitting}
+            disabled={
+              !watch('fileData') || !watch('documentType') || isSubmitting
+            }
             className="margin-y-4"
           >
             {t('technicalAssistance:documents.upload.uploadDocument')}
