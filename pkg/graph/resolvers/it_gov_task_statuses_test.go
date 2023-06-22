@@ -3,72 +3,72 @@ package resolvers
 import "github.com/cmsgov/easi-app/pkg/models"
 
 // TODO: fullly implement the unit tests whent he status calculations have been developed. Store methods should ideally happen on a parent resolver, so the child requests can utilize the same object
-func (suite *ResolverSuite) TestIntakeFormStatusReq() {
+func (suite *ResolverSuite) TestIntakeFormStatus() {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := IntakeFormStatusReq(&intake)
+	status := IntakeFormStatus(&intake)
 	suite.EqualValues(models.ITGISRReady, status)
 
 }
 
-func (suite *ResolverSuite) TestFeedbackFromInitialReviewStatusReq() {
+func (suite *ResolverSuite) TestFeedbackFromInitialReviewStatus() {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := FeedbackFromInitialReviewStatusReq(&intake)
+	status := FeedbackFromInitialReviewStatus(&intake)
 
 	suite.EqualValues(models.ITGFBSRCantStart, status)
 
 }
-func (suite *ResolverSuite) TestDecisionAndNextStepsStatusReq() {
+func (suite *ResolverSuite) TestDecisionAndNextStepsStatus() {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := DecisionAndNextStepsStatusReq(&intake)
+	status := DecisionAndNextStepsStatus(&intake)
 
 	suite.EqualValues(models.ITGDSRCantStart, status)
 
 }
-func (suite *ResolverSuite) TestBizCaseDraftStatusReq() {
+func (suite *ResolverSuite) TestBizCaseDraftStatus() {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := BizCaseDraftStatusReq(&intake)
+	status := BizCaseDraftStatus(&intake)
 
 	suite.EqualValues(models.ITGDBCSRCantStart, status)
 
 }
-func (suite *ResolverSuite) TestGrtMeetingStatusReq() {
+func (suite *ResolverSuite) TestGrtMeetingStatus() {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := GrtMeetingStatusReq(&intake)
+	status := GrtMeetingStatus(&intake)
 
 	suite.EqualValues(models.ITGGRTSRCantStart, status)
 
 }
-func (suite *ResolverSuite) TestBizCaseFinalStatusReq() {
+func (suite *ResolverSuite) TestBizCaseFinalStatus() {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := BizCaseFinalStatusReq(&intake)
+	status := BizCaseFinalStatus(&intake)
 
 	suite.EqualValues(models.ITGFBCSRCantStart, status)
 
 }
-func (suite *ResolverSuite) TestGrbMeetingStatusReq() {
+func (suite *ResolverSuite) TestGrbMeetingStatus() {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := GrbMeetingStatusReq(&intake)
+	status := GrbMeetingStatus(&intake)
 
 	suite.EqualValues(models.ITGGRBSRCantStart, status)
 
