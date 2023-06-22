@@ -9,7 +9,7 @@ func (suite *ResolverSuite) TestIntakeFormStatus() {
 	}
 
 	status := IntakeFormStatus(&intake)
-	suite.EqualValues(models.ITGISRReady, status)
+	suite.EqualValues(models.ITGISReady, status)
 
 }
 
@@ -20,7 +20,7 @@ func (suite *ResolverSuite) TestFeedbackFromInitialReviewStatus() {
 
 	status := FeedbackFromInitialReviewStatus(&intake)
 
-	suite.EqualValues(models.ITGFBSRCantStart, status)
+	suite.EqualValues(models.ITGFBSCantStart, status)
 
 }
 func (suite *ResolverSuite) TestDecisionAndNextStepsStatus() {
@@ -30,7 +30,7 @@ func (suite *ResolverSuite) TestDecisionAndNextStepsStatus() {
 
 	status := DecisionAndNextStepsStatus(&intake)
 
-	suite.EqualValues(models.ITGDSRCantStart, status)
+	suite.EqualValues(models.ITGDSCantStart, status)
 
 }
 func (suite *ResolverSuite) TestBizCaseDraftStatus() {
@@ -40,7 +40,7 @@ func (suite *ResolverSuite) TestBizCaseDraftStatus() {
 
 	status := BizCaseDraftStatus(&intake)
 
-	suite.EqualValues(models.ITGDBCSRCantStart, status)
+	suite.EqualValues(models.ITGDBCSCantStart, status)
 
 }
 func (suite *ResolverSuite) TestGrtMeetingStatus() {
@@ -50,7 +50,7 @@ func (suite *ResolverSuite) TestGrtMeetingStatus() {
 
 	status := GrtMeetingStatus(&intake)
 
-	suite.EqualValues(models.ITGGRTSRCantStart, status)
+	suite.EqualValues(models.ITGGRTSCantStart, status)
 
 }
 func (suite *ResolverSuite) TestBizCaseFinalStatus() {
@@ -60,7 +60,7 @@ func (suite *ResolverSuite) TestBizCaseFinalStatus() {
 
 	status := BizCaseFinalStatus(&intake)
 
-	suite.EqualValues(models.ITGFBCSRCantStart, status)
+	suite.EqualValues(models.ITGFBCSCantStart, status)
 
 }
 func (suite *ResolverSuite) TestGrbMeetingStatus() {
@@ -70,6 +70,6 @@ func (suite *ResolverSuite) TestGrbMeetingStatus() {
 
 	status := GrbMeetingStatus(&intake)
 
-	suite.EqualValues(models.ITGGRBSRCantStart, status)
+	suite.EqualValues(models.ITGGRBSCantStart, status)
 
 }
