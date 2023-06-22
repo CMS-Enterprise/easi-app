@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory} from 'react-router-dom';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation } from '@apollo/client';
 import { Button, Table } from '@trussworks/react-uswds';
@@ -81,7 +81,6 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
   const { t } = useTranslation();
 
   const history = useHistory();
-  const { pathname } = useLocation();
 
   // const { documents } = systemIntake;
 
@@ -208,7 +207,7 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
       <Button
         className="margin-bottom-1"
         type="button"
-        onClick={() => history.push(`${pathname}/upload`)}
+        onClick={() => history.push(`/system/${systemIntake.id}/documents/upload`)}
       >
         {t('technicalAssistance:documents.addDocument')}
       </Button>

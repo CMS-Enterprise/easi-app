@@ -30,6 +30,7 @@ const intake = {
     formDescription:
       'Choose a document to upload, such as a draft IGCE, contracting document, or another document related to your Intake Request.',
     returnToIntake: "Don't upload and return to Intake Request",
+    selectDocument: 'Select your document',
     type: {
       SOO_SOW: 'SOO or SOW',
       DRAFT_ICGE: 'Draft ICGE',
