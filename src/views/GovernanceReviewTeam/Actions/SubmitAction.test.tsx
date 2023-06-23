@@ -9,6 +9,7 @@ import configureMockStore from 'redux-mock-store';
 import { businessCaseInitialData } from 'data/businessCase';
 import { contactQueries, grtActions, mockData } from 'data/mock/grtActions';
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
 import CreateSystemIntakeActionBusinessCaseNeeded from 'queries/CreateSystemIntakeActionBusinessCaseNeededQuery';
 import CreateSystemIntakeActionBusinessCaseNeedsChanges from 'queries/CreateSystemIntakeActionBusinessCaseNeedsChangesQuery';
 import CreateSystemIntakeActionGuideReceievedClose from 'queries/CreateSystemIntakeActionGuideReceievedCloseQuery';
@@ -101,14 +102,16 @@ describe('Submit Action', () => {
       >
         <MockedProvider mocks={mocks} addTypename={false}>
           <Provider store={defaultStore}>
-            <Route
-              path={[
-                '/governance-review-team/:systemId/intake-request',
-                `/governance-review-team/:systemId/actions/${slug}`
-              ]}
-            >
-              <RequestOverview />
-            </Route>
+            <MessageProvider>
+              <Route
+                path={[
+                  '/governance-review-team/:systemId/intake-request',
+                  `/governance-review-team/:systemId/actions/${slug}`
+                ]}
+              >
+                <RequestOverview />
+              </Route>
+            </MessageProvider>
           </Provider>
         </MockedProvider>
       </MemoryRouter>
