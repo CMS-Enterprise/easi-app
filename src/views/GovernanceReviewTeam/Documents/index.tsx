@@ -20,7 +20,7 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
       <PageHeading className="margin-top-0">
         {t('documents.uploadedDocuments')}
       </PageHeading>
-      <DocumentsTable systemIntake={systemIntake} />
+      <DocumentsTable systemIntake={systemIntake} canEdit={false} />
     </div>
   );
 };
