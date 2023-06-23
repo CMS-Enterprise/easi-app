@@ -201,6 +201,7 @@ type SetRoleResponseMetadata struct {
 	DidDelete           bool
 	RoleTypeNamesBefore []string
 	RoleTypeNamesAfter  []string
+	SystemName          string
 }
 
 // SetRolesForUser sets the desired roles for a user on a given system to *exactly* the requested role types, adding and deleting role assignments in CEDAR as necessary
@@ -326,6 +327,13 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	roleResponse.RoleTypeNamesAfter = lo.Map(roleTypesAfter, func(roleType models.CedarRoleType, _ int) string {
 		return roleType.Name
 	})
+
+	// fetch the system name (likely from cache) and add it to the response
+	system, getSystemErr := c.GetSystem(ctx, cedarSystemID)
+	if getSystemErr != nil {
+		return nil, getSystemErr
+	}
+	roleResponse.SystemName = system.Name
 
 	return roleResponse, nil
 }

@@ -7,16 +7,18 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
@@ -2041,10 +2043,27 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 		return nil, err
 	}
 
-	fmt.Println("CEDAR response: ", rs)
+	// Asyncronously send an email to the CEDAR team notifying them of the change
+	go func() {
+		// make a new context, or else the request will cancel when the parent context cancels
+		emailCtx := context.Background()
+		appcontext.WithLogger(emailCtx, appcontext.ZLogger(ctx)) // copy the logger over
 
-	// Email results
-	// Lookup name from UserLookupService (concurrent w/ calling CEDAR)
+		userInfo, err := r.service.FetchUserInfo(emailCtx, input.EuaUserID)
+		if err != nil {
+			// don't fail the request if the lookup fails, just log and return from the go func
+			appcontext.ZLogger(emailCtx).Error("failed to lookup user info for CEDAR notification email", zap.Error(err))
+			return
+		}
+
+		cedarEmailAddress := os.Getenv(appconfig.CEDAREmailAddress)
+		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, models.NewEmailAddress(cedarEmailAddress), userInfo.CommonName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
+		if err != nil {
+			// don't fail the request if the email fails, just log and return from the go func
+			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))
+			return
+		}
+	}()
 
 	resp := "Roles changed successfully"
 	return &resp, nil

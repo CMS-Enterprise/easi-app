@@ -99,6 +99,7 @@ func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
 	s.checkRequiredConfig(appconfig.CEDARCoreAPIVersion)
 	s.checkRequiredConfig(appconfig.CEDARCacheIntervalKey)
+	s.checkRequiredConfig(appconfig.CEDAREmailAddress)
 }
 
 // NewOktaAPIClientCheck checks if the Okta API client is configured
