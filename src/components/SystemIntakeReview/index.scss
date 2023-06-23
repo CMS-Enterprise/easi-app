@@ -1,4 +1,4 @@
 // Remove bottom border from documents table
-dl[title="Documents"] table tr:last-child td {
+#systemIntakeDocuments table tr:last-child td {
   border-bottom: none !important;
 }

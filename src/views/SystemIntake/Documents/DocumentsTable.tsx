@@ -253,7 +253,7 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
   };
 
   return (
-    <>
+    <div id="systemIntakeDocuments">
       {/* {message}
 
       <PageHeading className="margin-top-4 margin-bottom-1">
@@ -348,7 +348,7 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
         taskListUrl={`/governance-task-list/${systemIntake.id}`}
         border={false}
       /> */}
-    </>
+    </div>
   );
 };
 

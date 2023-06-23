@@ -311,9 +311,7 @@ export const SystemIntakeReview = ({
 
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">{t('review.documents')}</h2>
-      <DescriptionList title={t('review.documents')}>
-        <DocumentsTable systemIntake={systemIntake} />
-      </DescriptionList>
+      <DocumentsTable systemIntake={systemIntake} />
     </div>
   );
 };
