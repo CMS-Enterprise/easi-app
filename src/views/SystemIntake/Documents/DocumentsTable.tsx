@@ -8,6 +8,7 @@ import { Button, Table } from '@trussworks/react-uswds';
 import Modal from 'components/Modal';
 import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { DeleteSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
 import {
   DeleteSystemIntakeDocument,
@@ -90,7 +91,16 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
   const [deleteDocument] = useMutation<
     DeleteSystemIntakeDocument,
     DeleteSystemIntakeDocumentVariables
-  >(DeleteSystemIntakeDocumentQuery);
+  >(DeleteSystemIntakeDocumentQuery, {
+    refetchQueries: [
+      {
+        query: GetSystemIntakeQuery,
+        variables: {
+          id: systemIntake.id
+        }
+      }
+    ]
+  });
 
   const columns = useMemo<Column<SystemIntakeDocument>[]>(() => {
     return [
