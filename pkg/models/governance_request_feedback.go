@@ -25,8 +25,8 @@ const (
 // GovernanceRequestFeedback represents feedback given to the requester on a governance request
 type GovernanceRequestFeedback struct {
 	BaseStruct
-	IntakeID     uuid.UUID `db:"intake_id"`
-	Feedback     string
-	SourceAction GovernanceRequestFeedbackSourceAction `db:"source_action"`
-	TargetForm   GovernanceRequestFeedbackTargetForm   `db:"target_form"`
+	IntakeID     uuid.UUID                             `json:"intakeId" db:"intake_id"`
+	Feedback     string                                `json:"feedback" db:"feedback"`
+	SourceAction GovernanceRequestFeedbackSourceAction `json:"sourceAction" db:"source_action"`
+	TargetForm   GovernanceRequestFeedbackTargetForm   `json:"targetForm" db:"target_form"`
 }
