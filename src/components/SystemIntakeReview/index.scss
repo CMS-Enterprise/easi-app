@@ -1,4 +1,4 @@
 // Remove bottom border from documents table
-#systemIntakeDocuments table tr:last-child td {
+.system-intake__review #systemIntakeDocuments table tr:last-child td {
   border-bottom: none !important;
 }
