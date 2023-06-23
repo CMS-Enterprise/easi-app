@@ -7,6 +7,7 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -245,6 +246,39 @@ describe('The System Intake page', () => {
 
     expect(
       screen.getByRole('heading', { name: /contract details/i, level: 1 })
+    ).toBeInTheDocument();
+  });
+
+  it('renders document upload', async () => {
+    render(
+      <MemoryRouter initialEntries={[`/system/${systemIntake.id}/documents`]}>
+        <MockedProvider mocks={[intakeQuery]}>
+          <MessageProvider>
+            <Route path="/system/:systemId/:formPage">
+              <SystemIntake />
+            </Route>
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(
+      screen.getByRole('heading', {
+        name: /additional documentation/i,
+        level: 1
+      })
+    ).toBeInTheDocument();
+
+    const button = screen.getByRole('button', { name: 'Add another document' });
+    userEvent.click(button);
+
+    // Check that upload form page renders
+    expect(
+      screen.getByRole('heading', {
+        name: /upload a document/i,
+        level: 1
+      })
     ).toBeInTheDocument();
   });
 
