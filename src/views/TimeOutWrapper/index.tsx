@@ -28,12 +28,29 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
 
-  const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('milliseconds');
+  // Give the user 85 minutes of inactivity time before prompting the modal
+  const activeDuration = Duration.fromObject({ minutes: 85 }).as(
+    'milliseconds'
+  );
+  // Give the user 5 minutes to respond to the modal before logging them out
+  const modalDuration = Duration.fromObject({ minutes: 5 }).as('milliseconds');
 
-  // Since 5 minutes is used for the `promptTimeout` AND the `timeout`, you effectively have 10 minutes before you're logged out due to inactivity.
-  // 5 of those minutes will be uninterrupted, the other 5 will be when the prompt is up.
   const idleTimer = useIdleTimer({
-    events: ['mousedown', 'keydown'],
+    // Only events NOT included here are 'mousemove' and 'MSPointerMove', as simply moving the cursor across the screen isn't really "activity"
+    // compared to scrolling, switching tabs, typing, or clicking.
+    // Events sourced from https://idletimer.dev/docs/api/use-idle-timer
+    events: [
+      'keydown',
+      'wheel',
+      'DOMMouseScroll',
+      'mousewheel',
+      'mousedown',
+      'touchstart',
+      'touchmove',
+      'MSPointerDown',
+      'visibilitychange',
+      'focus'
+    ],
     onIdle: () => {
       if (!isLocalAuth && authState?.isAuthenticated) {
         oktaAuth.signOut();
@@ -41,14 +58,14 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     },
     onPrompt: () => {
       if (!isLocalAuth && authState?.isAuthenticated) {
-        setTimeRemainingArr(formatSessionTimeRemaining(fiveMinutes));
+        setTimeRemainingArr(formatSessionTimeRemaining(modalDuration));
       }
     },
-    promptTimeout: fiveMinutes,
+    promptTimeout: modalDuration,
     crossTab: true,
     syncTimers: 1000,
     debounce: 500,
-    timeout: fiveMinutes
+    timeout: activeDuration
   });
 
   const forceRenew = async () => {
