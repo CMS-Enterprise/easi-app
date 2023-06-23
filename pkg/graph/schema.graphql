@@ -1768,6 +1768,7 @@ Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
   id: UUID!
+  intakeId: UUID!
   feedback: String!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!

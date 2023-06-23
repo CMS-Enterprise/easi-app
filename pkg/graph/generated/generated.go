@@ -511,6 +511,7 @@ type ComplexityRoot struct {
 		CreatedBy    func(childComplexity int) int
 		Feedback     func(childComplexity int) int
 		ID           func(childComplexity int) int
+		IntakeID     func(childComplexity int) int
 		ModifiedAt   func(childComplexity int) int
 		ModifiedBy   func(childComplexity int) int
 		SourceAction func(childComplexity int) int
@@ -3518,6 +3519,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GovernanceRequestFeedback.ID(childComplexity), true
+
+	case "GovernanceRequestFeedback.intakeId":
+		if e.complexity.GovernanceRequestFeedback.IntakeID == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.IntakeID(childComplexity), true
 
 	case "GovernanceRequestFeedback.modifiedAt":
 		if e.complexity.GovernanceRequestFeedback.ModifiedAt == nil {
@@ -8721,6 +8729,7 @@ Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
   id: UUID!
+  intakeId: UUID!
   feedback: String!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
@@ -24269,6 +24278,50 @@ func (ec *executionContext) fieldContext_GovernanceRequestFeedback_id(ctx contex
 	return fc, nil
 }
 
+func (ec *executionContext) _GovernanceRequestFeedback_intakeId(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_intakeId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IntakeID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_intakeId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GovernanceRequestFeedback_feedback(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GovernanceRequestFeedback_feedback(ctx, field)
 	if err != nil {
@@ -35114,6 +35167,8 @@ func (ec *executionContext) fieldContext_SystemIntake_governanceRequestFeedbacks
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_GovernanceRequestFeedback_id(ctx, field)
+			case "intakeId":
+				return ec.fieldContext_GovernanceRequestFeedback_intakeId(ctx, field)
 			case "feedback":
 				return ec.fieldContext_GovernanceRequestFeedback_feedback(ctx, field)
 			case "sourceAction":
@@ -55044,6 +55099,13 @@ func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel 
 		case "id":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "intakeId":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_intakeId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
