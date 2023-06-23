@@ -39,6 +39,7 @@ import AccordionNavigation from './AccordionNavigation';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
+import Documents from './Documents';
 import IntakeReview from './IntakeReview';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
@@ -158,6 +159,12 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/intake-request"
               render={() => {
                 return <IntakeReview systemIntake={systemIntake} />;
+              }}
+            />
+            <Route
+              path="/governance-review-team/:systemId/documents"
+              render={() => {
+                return <Documents systemIntake={systemIntake} />;
               }}
             />
             <Route
