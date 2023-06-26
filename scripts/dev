@@ -323,8 +323,8 @@ namespace :db do
     sh "docker-compose start db_migrate"
     loop do
       sleep 0.5
-      status = `docker-compose ps | grep "db_migrate_1"`
-      match = /Exit (\d+)/.match(status)
+      status = `docker-compose ps -a | grep "db_migrate-1"`
+      match = /Exited \((\d+)\)/.match(status)
       if match
         unless match[1] == "0"
           puts "\n\n🚨 Migration failed! 🚨 Displaying logs from that container:\n\n"
@@ -366,6 +366,7 @@ namespace :db do
       estimated_lifecycle_costs
       business_cases
       grt_feedback
+      governance_request_feedback
       system_intake_contacts
       system_intake_funding_sources
       system_intake_documents
