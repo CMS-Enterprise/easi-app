@@ -72,6 +72,10 @@ describe('The System Intake page', () => {
             currentAnnualSpending: null,
             plannedYearOneSpending: null
           },
+          costs: {
+            isExpectingIncrease: null,
+            expectedIncreaseAmount: null
+          },
           currentStage: null,
           decisionNextSteps: null,
           grbDate: null,

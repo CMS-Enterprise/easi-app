@@ -39,10 +39,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   existingFunding: null,
   fundingSources: [],
-  // costs: {
-  //   isExpectingIncrease: '',
-  //   expectedIncreaseAmount: ''
-  // },
   annualSpending: {
     currentAnnualSpending: '',
     plannedYearOneSpending: ''
@@ -123,8 +119,6 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     eaSupportRequest: systemIntake.needsEaSupport,
     existingContract: systemIntake.contract.hasContract,
     grtReviewEmailBody: systemIntake.grtReviewEmailBody,
-    // costIncrease: systemIntake.costs.isExpectingIncrease,
-    // costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
     contractor: systemIntake.contract.contractor,
     contractNumber: systemIntake.contract.number,
     contractStartDate: DateTime.fromObject({
