@@ -211,13 +211,6 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return nil, nil
 	}
 
-	roleResponse := &SetRoleResponseMetadata{
-		DidAdd:              false,
-		DidDelete:           false,
-		RoleTypeNamesBefore: []string{},
-		RoleTypeNamesAfter:  []string{},
-	}
-
 	roleTypesBefore := []models.CedarRoleType{}
 	roleTypesAfter := []models.CedarRoleType{}
 
@@ -246,6 +239,14 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 			continue
 		}
 		roleTypesBefore = append(roleTypesBefore, *roleType)
+	}
+
+	for _, roleTypeID := range desiredRoleTypeIDs {
+		roleType, ok := roleTypesByID[roleTypeID]
+		if !ok || roleType == nil {
+			appcontext.ZLogger(ctx).Warn("error decoding role; role type ID not found in role types map")
+			continue
+		}
 		roleTypesAfter = append(roleTypesAfter, *roleType)
 	}
 
@@ -256,15 +257,6 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	// first return value from lo.Difference is the role types to add;
 	// second return would be the role types to delete, but we ignore that and calculate it later because we need the *role* IDs
 	roleTypesToAdd, _ := lo.Difference(desiredRoleTypeIDs, lo.Keys(currentRolesForUserByRoleTypes))
-
-	for _, roleTypeID := range roleTypesToAdd {
-		roleType, ok := roleTypesByID[roleTypeID]
-		if !ok || roleType == nil {
-			appcontext.ZLogger(ctx).Warn("error decoding role; role type ID not found in role types map")
-			continue
-		}
-		roleTypesAfter = append(roleTypesAfter, *roleType)
-	}
 
 	// augment the list of role type IDs to add with the user's EUA ID
 	newRoles := lo.Map(roleTypesToAdd, func(roleTypeID string, _ int) newRole {
@@ -281,20 +273,12 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return role.RoleID.ValueOrZero()
 	})
 
-	roleTypesToDelete := lo.Map(lo.Values(rolesToDelete), func(role *models.CedarRole, _ int) models.CedarRoleType {
-		return *roleTypesByID[role.RoleTypeID]
-	})
-	roleTypesAfter = lo.Filter(roleTypesAfter, func(roleType models.CedarRoleType, idx int) bool {
-		return !lo.Contains(roleTypesToDelete, roleType)
-	})
-
 	// addRoles() and deleteRoles() each take several hundred milliseconds for CEDAR to respond; calling them concurrently noticeably helps
 	g := new(errgroup.Group)
 
 	g.Go(func() error {
 		// length check is necessary because CEDAR will error if we call addRoles() with no role type IDs
 		if len(newRoles) > 0 {
-			roleResponse.DidAdd = true
 			err = c.addRoles(ctx, cedarSystemID, newRoles)
 			if err != nil {
 				return err
@@ -307,7 +291,6 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	g.Go(func() error {
 		// length check is necessary because CEDAR will error if we call deleteRoles() with no role IDs
 		if len(roleIDsToDelete) > 0 {
-			roleResponse.DidDelete = true
 			err = c.deleteRoles(ctx, roleIDsToDelete)
 			if err != nil {
 				return err
@@ -319,6 +302,11 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 
 	if err := g.Wait(); err != nil {
 		return nil, err
+	}
+
+	roleResponse := &SetRoleResponseMetadata{
+		DidAdd:    len(newRoles) > 0,
+		DidDelete: len(roleIDsToDelete) > 0,
 	}
 
 	roleResponse.RoleTypeNamesBefore = lo.Map(roleTypesBefore, func(roleType models.CedarRoleType, _ int) string {
