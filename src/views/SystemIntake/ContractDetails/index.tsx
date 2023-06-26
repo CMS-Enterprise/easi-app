@@ -215,8 +215,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   />
                 </FieldGroup>
                 <FieldGroup
-                  scrollElement="costs.annualSpending"
-                  error={!!flatErrors['costs.annualSpending']}
+                  scrollElement="annualSpending.currentAnnualSpending"
+                  error={!!flatErrors['annualSpending.currentAnnualSpending']}
                 >
                   <fieldset
                     className="usa-fieldset margin-top-4"
@@ -226,14 +226,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       What is the current annual spending?
                     </legend>
                     <FieldErrorMsg>
-                      {flatErrors['costs.annualSpending']}
+                      {flatErrors['annualSpending.currentAnnualSpending']}
                     </FieldErrorMsg>
                     <Field
                       as={Textarea}
                       className="system-intake__current-annual-spending"
-                      error={!!flatErrors['costs.annualSpending']}
+                      error={
+                        !!flatErrors['annualSpending.currentAnnualSpending']
+                      }
                       id="IntakeForm-CurrentAnnualSpending"
-                      name="costs.currentAnnualSpending"
+                      name="annualSpending.currentAnnualSpending"
                       maxLength={100}
                     />
                     <CharacterCounter
@@ -248,14 +250,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       the new contract?
                     </legend>
                     <FieldErrorMsg>
-                      {flatErrors['costs.annualSpending']}
+                      {flatErrors['annualSpending.plannedYearOneSpending']}
                     </FieldErrorMsg>
                     <Field
                       as={Textarea}
                       className="system-intake__year-one-annual-spending"
-                      error={!!flatErrors['costs.annualSpending']}
+                      error={
+                        !!flatErrors['annualSpending.plannedYearOneSpending']
+                      }
                       id="IntakeForm-YearOneAnnualSpending"
-                      name="costs.YearOneAnnualSpending"
+                      name="annualSpending.plannedYearOneSpending"
                       maxLength={100}
                     />
                     <CharacterCounter

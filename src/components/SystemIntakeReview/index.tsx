@@ -227,12 +227,21 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>
-        {/* TODO: NJD - conditionally render costs or new annual spending */}
         {systemIntake.annualSpending ? (
-          <div>
-            {/* <DescriptionTerm term={t('review.costs')} /> */}
-            <DescriptionTerm term="NJD REVIEW ANNUAL SPENDING" />
-          </div>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.currentAnnualSpending')} />
+              <DescriptionDefinition
+                definition={systemIntake.annualSpending.currentAnnualSpending}
+              />
+            </div>
+            <div>
+              <DescriptionTerm term={t('review.plannedYearOneSpending')} />
+              <DescriptionDefinition
+                definition={systemIntake.annualSpending.plannedYearOneSpending}
+              />
+            </div>
+          </ReviewRow>
         ) : (
           <ReviewRow>
             <div>
