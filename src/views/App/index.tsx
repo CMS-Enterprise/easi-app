@@ -23,7 +23,8 @@ import Cookies from 'views/Cookies';
 import FlagsWrapper from 'views/FlagsWrapper';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
-import GovernanceTaskList from 'views/GovernanceTaskListV1';
+import GovernanceTaskList from 'views/GovernanceTaskList';
+import GovernanceTaskListV1 from 'views/GovernanceTaskListV1';
 import GovernanceFeedback from 'views/GovernanceTaskListV1/Feedback';
 import LcidInfo from 'views/GovernanceTaskListV1/LcidInfo';
 import RequestDecision from 'views/GovernanceTaskListV1/RequestDecision';
@@ -110,7 +111,9 @@ const AppRoutes = () => {
       <SecureRoute
         path="/governance-task-list/:systemId"
         exact
-        component={GovernanceTaskList}
+        component={
+          flags.itGovV2Enabled ? GovernanceTaskList : GovernanceTaskListV1
+        }
       />
       <SecureRoute
         path="/governance-task-list/:systemId/feedback"
