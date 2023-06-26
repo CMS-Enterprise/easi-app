@@ -174,10 +174,6 @@ export type UseIntakeFundingSources = {
 export type ContractDetailsForm = {
   existingFunding: boolean | null;
   fundingSources: FundingSource[] | [];
-  // costs: {
-  //   isExpectingIncrease: string;
-  //   expectedIncreaseAmount: string;
-  // };
   annualSpending: {
     currentAnnualSpending: string;
     plannedYearOneSpending: string;

@@ -982,8 +982,8 @@ type SystemIntake {
   businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
   contract: SystemIntakeContract!
-  costs: SystemIntakeCosts!
-  annualSpending: SystemIntakeAnnualSpending!
+  costs: SystemIntakeCosts
+  annualSpending: SystemIntakeAnnualSpending
   createdAt: Time!
   currentStage: String
   decisionNextSteps: String

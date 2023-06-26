@@ -194,10 +194,6 @@ export const prepareSystemIntakeForApp = (
     },
     existingFunding: systemIntake.existingFunding,
     fundingSources: systemIntake.fundingSources || [],
-    // costs: {
-    //   isExpectingIncrease: systemIntake.costIncrease || '',
-    //   expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
-    // },
     annualSpending: {
       currentAnnualSpending: systemIntake.currentAnnualSpending || '',
       plannedYearOneSpending: systemIntake.plannedYearOneSpending || ''
@@ -330,10 +326,8 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.governanceTeams.isPresent ||
     (intake.governanceTeams.teams && intake.governanceTeams.teams.length > 0) ||
     intake.fundingSources.length > 0 ||
-    // intake.costs.isExpectingIncrease ||
-    // intake.costs.expectedIncreaseAmount ||
-    intake.annualSpending.currentAnnualSpending ||
-    intake.annualSpending.plannedYearOneSpending ||
+    intake.annualSpending?.currentAnnualSpending ||
+    intake.annualSpending?.plannedYearOneSpending ||
     intake.contract.hasContract ||
     intake.contract.contractor ||
     intake.contract.number ||

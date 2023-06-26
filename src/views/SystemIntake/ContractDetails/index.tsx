@@ -63,13 +63,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const initialValues: ContractDetailsForm = {
     existingFunding,
     fundingSources,
-    // costs: {
-    //   expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
-    //   isExpectingIncrease: costs.isExpectingIncrease || ''
-    // },
     annualSpending: {
-      currentAnnualSpending: annualSpending.currentAnnualSpending || '',
-      plannedYearOneSpending: annualSpending.plannedYearOneSpending || ''
+      currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
+      plannedYearOneSpending: annualSpending?.plannedYearOneSpending || ''
     },
     contract: {
       contractor: contract.contractor || '',
@@ -271,104 +267,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     />
                   </fieldset>
                 </FieldGroup>
-                {/* <FieldGroup
-                  scrollElement="conts.isExpectingIncrease"
-                  error={!!flatErrors['costs.isExpectingIncrease']}
-                >
-                  <fieldset
-                    className="usa-fieldset margin-top-4"
-                    data-testid="exceed-cost-fieldset"
-                  >
-                    <legend className="usa-label margin-bottom-1">
-                      Do the costs for this request exceed what you are
-                      currently spending to meet your business need?
-                    </legend>
-                    <HelpText id="IntakeForm-IncreasedCostsHelp">
-                      Compare the first year of new contract spending to current
-                      annual spending
-                    </HelpText>
-                    <FieldErrorMsg>
-                      {flatErrors['costs.isExpectingIncrease']}
-                    </FieldErrorMsg>
-                    <Field
-                      as={Radio}
-                      checked={values.costs.isExpectingIncrease === 'YES'}
-                      id="IntakeForm-CostsExpectingIncreaseYes"
-                      name="costs.isExpectingIncrease"
-                      label={yesNoMap.YES}
-                      value="YES"
-                      aria-describedby="IntakeForm-IncreasedCostsHelp"
-                      aria-expanded={values.costs.isExpectingIncrease === 'YES'}
-                      aria-controls="expected-increase-container"
-                    />
-                    {values.costs.isExpectingIncrease === 'YES' && (
-                      <div
-                        id="expected-increase-container"
-                        className="width-mobile-lg margin-top-neg-2 margin-left-4 margin-bottom-1"
-                      >
-                        <FieldGroup
-                          scrollElement="costs.expectedIncreaseAmount"
-                          error={!!flatErrors['costs.expectedIncreaseAmount']}
-                        >
-                          <Label
-                            htmlFor="IntakeForm-CostsExpectedIncrease"
-                            className="margin-bottom-1"
-                          >
-                            Approximately how much do you expect the cost to
-                            increase?
-                          </Label>
-                          <HelpText id="IntakeForm-ExpectedIncreaseHelp">
-                            This information helps the team decide on the right
-                            approval process for this request
-                          </HelpText>
-                          <FieldErrorMsg>
-                            {flatErrors['costs.expectedIncreaseAmount']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={Textarea}
-                            className="system-intake__cost-amount"
-                            error={!!flatErrors['costs.expectedIncreaseAmount']}
-                            id="IntakeForm-CostsExpectedIncrease"
-                            name="costs.expectedIncreaseAmount"
-                            aria-describedby="IntakeForm-ExpectedIncreaseHelp"
-                            maxLength={100}
-                          />
-                          <CharacterCounter
-                            id="expectedIncreaseAmount-counter"
-                            characterCount={
-                              2000 - values.costs.expectedIncreaseAmount.length
-                            }
-                          />
-                        </FieldGroup>
-                      </div>
-                    )}
-                    <Field
-                      as={Radio}
-                      checked={values.costs.isExpectingIncrease === 'NO'}
-                      id="IntakeForm-CostsExpectingIncreaseNo"
-                      name="costs.isExpectingIncrease"
-                      label={yesNoMap.NO}
-                      value="NO"
-                      onChange={() => {
-                        setFieldValue('costs.isExpectingIncrease', 'NO');
-                        setFieldValue('costs.expectedIncreaseAmount', '');
-                      }}
-                    />
-                    <Field
-                      as={Radio}
-                      checked={values.costs.isExpectingIncrease === 'NOT_SURE'}
-                      id="IntakeForm-CostsExpectingIncreaseNotSure"
-                      name="costs.isExpectingIncrease"
-                      label={yesNoMap.NOT_SURE}
-                      value="NOT_SURE"
-                      onChange={() => {
-                        setFieldValue('costs.isExpectingIncrease', 'NOT_SURE');
-                        setFieldValue('costs.expectedIncreaseAmount', '');
-                      }}
-                    />
-                  </fieldset>
-                </FieldGroup> */}
-
                 <FieldGroup
                   scrollElement="contract.hasContract"
                   error={!!flatErrors['contract.hasContract']}

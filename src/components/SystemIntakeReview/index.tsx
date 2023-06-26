@@ -227,7 +227,8 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>
-        {systemIntake.annualSpending ? (
+        {/* Conditionally render annual spending (current) or cost (legacy) questions and answers */}
+        {systemIntake.annualSpending?.currentAnnualSpending ? (
           <ReviewRow>
             <div>
               <DescriptionTerm term={t('review.currentAnnualSpending')} />
@@ -248,12 +249,12 @@ export const SystemIntakeReview = ({
               <DescriptionTerm term={t('review.costs')} />
               <DescriptionDefinition
                 definition={
-                  systemIntake.costs.isExpectingIncrease &&
+                  systemIntake.costs?.isExpectingIncrease &&
                   yesNoMap[systemIntake.costs.isExpectingIncrease]
                 }
               />
             </div>
-            {systemIntake.costs.isExpectingIncrease === 'YES' && (
+            {systemIntake.costs?.isExpectingIncrease === 'YES' && (
               <div>
                 <DescriptionTerm term={t('review.increase')} />
                 <DescriptionDefinition

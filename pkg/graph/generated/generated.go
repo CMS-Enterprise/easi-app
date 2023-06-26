@@ -7775,8 +7775,8 @@ type SystemIntake {
   businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
   contract: SystemIntakeContract!
-  costs: SystemIntakeCosts!
-  annualSpending: SystemIntakeAnnualSpending!
+  costs: SystemIntakeCosts
+  annualSpending: SystemIntakeAnnualSpending
   createdAt: Time!
   currentStage: String
   decisionNextSteps: String
@@ -33510,14 +33510,11 @@ func (ec *executionContext) _SystemIntake_costs(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeCosts)
 	fc.Result = res
-	return ec.marshalNSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_costs(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -33560,14 +33557,11 @@ func (ec *executionContext) _SystemIntake_annualSpending(ctx context.Context, fi
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.SystemIntakeAnnualSpending)
 	fc.Result = res
-	return ec.marshalNSystemIntakeAnnualSpending2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeAnnualSpending(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeAnnualSpending2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeAnnualSpending(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_annualSpending(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -55373,9 +55367,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_costs(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -55393,9 +55384,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_annualSpending(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -60381,20 +60369,6 @@ func (ec *executionContext) marshalNSystemIntakeActionType2githubᚗcomᚋcmsgov
 	return v
 }
 
-func (ec *executionContext) marshalNSystemIntakeAnnualSpending2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeAnnualSpending(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeAnnualSpending) graphql.Marshaler {
-	return ec._SystemIntakeAnnualSpending(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeAnnualSpending2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeAnnualSpending(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeAnnualSpending) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemIntakeAnnualSpending(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalNSystemIntakeBusinessOwner2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeBusinessOwner) graphql.Marshaler {
 	return ec._SystemIntakeBusinessOwner(ctx, sel, &v)
 }
@@ -60450,20 +60424,6 @@ func (ec *executionContext) marshalNSystemIntakeContract2ᚖgithubᚗcomᚋcmsgo
 		return graphql.Null
 	}
 	return ec._SystemIntakeContract(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeCosts2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeCosts) graphql.Marshaler {
-	return ec._SystemIntakeCosts(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCosts) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemIntakeCosts(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSystemIntakeDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeDocument) graphql.Marshaler {
@@ -62672,6 +62632,13 @@ func (ec *executionContext) marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasi
 	return ec._SystemIntake(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOSystemIntakeAnnualSpending2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeAnnualSpending(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeAnnualSpending) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeAnnualSpending(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOSystemIntakeAnnualSpendingInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeAnnualSpendingInput(ctx context.Context, v interface{}) (*model.SystemIntakeAnnualSpendingInput, error) {
 	if v == nil {
 		return nil, nil
@@ -62768,6 +62735,13 @@ func (ec *executionContext) unmarshalOSystemIntakeContractInput2ᚖgithubᚗcom�
 	}
 	res, err := ec.unmarshalInputSystemIntakeContractInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCosts) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeCosts(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeCostsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCostsInput(ctx context.Context, v interface{}) (*model.SystemIntakeCostsInput, error) {

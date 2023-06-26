@@ -54,8 +54,8 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
   id: UUID;
   currentStage: string | null;
   fundingSources: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_fundingSources[];
-  costs: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_costs;
-  annualSpending: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_annualSpending;
+  costs: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_costs | null;
+  annualSpending: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_annualSpending | null;
   contract: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract;
 }
 

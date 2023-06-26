@@ -112,8 +112,8 @@ export interface GetSystemIntake_systemIntake {
   businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner;
   contract: GetSystemIntake_systemIntake_contract;
-  costs: GetSystemIntake_systemIntake_costs;
-  annualSpending: GetSystemIntake_systemIntake_annualSpending;
+  costs: GetSystemIntake_systemIntake_costs | null;
+  annualSpending: GetSystemIntake_systemIntake_annualSpending | null;
   currentStage: string | null;
   decisionNextSteps: string | null;
   grbDate: Time | null;
