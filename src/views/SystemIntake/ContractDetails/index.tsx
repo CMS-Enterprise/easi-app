@@ -254,7 +254,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       error={
                         !!flatErrors['annualSpending.plannedYearOneSpending']
                       }
-                      id="IntakeForm-YearOneAnnualSpending"
+                      id="IntakeForm-PlannedYearOneAnnualSpending"
                       name="annualSpending.plannedYearOneSpending"
                       maxLength={100}
                     />

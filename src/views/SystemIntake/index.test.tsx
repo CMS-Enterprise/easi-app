@@ -68,9 +68,9 @@ describe('The System Intake page', () => {
             vehicle: null,
             number: '123456-7890'
           },
-          costs: {
-            isExpectingIncrease: null,
-            expectedIncreaseAmount: null
+          annualSpending: {
+            currentAnnualSpending: null,
+            plannedYearOneSpending: null
           },
           currentStage: null,
           decisionNextSteps: null,
