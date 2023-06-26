@@ -2732,6 +2732,11 @@ func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.
 	return obj.ExistingFunding.Ptr(), nil
 }
 
+// GovernanceRequestFeedbacks is the resolver for the governanceRequestFeedbacks field.
+func (r *systemIntakeResolver) GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error) {
+	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, r.store, obj.ID)
+}
+
 // GovernanceTeams is the resolver for the governanceTeams field.
 func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error) {
 	var teams []*model.SystemIntakeCollaborator
