@@ -104,11 +104,9 @@ function RequestNameCell({
   value,
   row
 }: CellProps<TrbAdminTeamHomeRequest, TrbAdminTeamHomeRequest['name']>) {
-  const { t } = useTranslation('technicalAssistance');
-
   return (
     <UswdsReactLink to={`/trb/${row.original.id}/request`}>
-      {value || t('taskList.defaultName')}
+      {value || i18next.t<string>('technicalAssistance:taskList.defaultName')}
     </UswdsReactLink>
   );
 }
