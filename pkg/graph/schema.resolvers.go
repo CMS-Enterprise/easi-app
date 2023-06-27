@@ -714,7 +714,7 @@ func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models
 }
 
 // IntakeFormStatus is the resolver for the intakeFormStatus field.
-func (r *iTGovTaskStatusesResolver) IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeStatus, error) {
+func (r *iTGovTaskStatusesResolver) IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeFormStatus, error) {
 	return resolvers.IntakeFormStatus(obj.ParentSystemIntake), nil
 }
 

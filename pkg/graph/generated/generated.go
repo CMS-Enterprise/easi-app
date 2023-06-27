@@ -1196,7 +1196,7 @@ type CedarThreatResolver interface {
 	WeaknessRiskLevel(ctx context.Context, obj *models.CedarThreat) (*string, error)
 }
 type ITGovTaskStatusesResolver interface {
-	IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeStatus, error)
+	IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeFormStatus, error)
 	FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFeedbackStatus, error)
 	BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBuisnessCaseStatus, error)
 	GrtMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRTStatus, error)
@@ -7945,7 +7945,7 @@ type SystemIntake {
   itGovTaskStatuses:  ITGovTaskStatuses!
 }
 type ITGovTaskStatuses {
-  intakeFormStatus: ITGovIntakeStatus!
+  intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
   bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus!
   grtMeetingStatus: ITGovGRTStatus!
@@ -9372,7 +9372,7 @@ enum Role {
 """
 The requester view of the IT gov intake step status
 """
-enum ITGovIntakeStatus {
+enum ITGovIntakeFormStatus {
   """
   Ready to begin filling out
   """
@@ -9543,6 +9543,10 @@ enum ITGovGRBStatus {
   The GRB meeting has been scheduled
   """
   SCHEDULED
+  """
+  The GRT meeting has already happened, and an outcome hasn't been noted yet
+  """
+  AWAITING_DECISION
   """
   The step is completed
   """    
@@ -24606,9 +24610,9 @@ func (ec *executionContext) _ITGovTaskStatuses_intakeFormStatus(ctx context.Cont
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.ITGovIntakeStatus)
+	res := resTmp.(models.ITGovIntakeFormStatus)
 	fc.Result = res
-	return ec.marshalNITGovIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovIntakeStatus(ctx, field.Selections, res)
+	return ec.marshalNITGovIntakeFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovIntakeFormStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ITGovTaskStatuses_intakeFormStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -24618,7 +24622,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatuses_intakeFormStatus(ctx 
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ITGovIntakeStatus does not have child fields")
+			return nil, errors.New("field of type ITGovIntakeFormStatus does not have child fields")
 		},
 	}
 	return fc, nil
@@ -61351,13 +61355,13 @@ func (ec *executionContext) marshalNITGovGRTStatus2githubᚗcomᚋcmsgovᚋeasi�
 	return res
 }
 
-func (ec *executionContext) unmarshalNITGovIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovIntakeStatus(ctx context.Context, v interface{}) (models.ITGovIntakeStatus, error) {
+func (ec *executionContext) unmarshalNITGovIntakeFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovIntakeFormStatus(ctx context.Context, v interface{}) (models.ITGovIntakeFormStatus, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.ITGovIntakeStatus(tmp)
+	res := models.ITGovIntakeFormStatus(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNITGovIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovIntakeStatus(ctx context.Context, sel ast.SelectionSet, v models.ITGovIntakeStatus) graphql.Marshaler {
+func (ec *executionContext) marshalNITGovIntakeFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovIntakeFormStatus(ctx context.Context, sel ast.SelectionSet, v models.ITGovIntakeFormStatus) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {

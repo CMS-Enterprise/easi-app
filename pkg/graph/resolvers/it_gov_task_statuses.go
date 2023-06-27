@@ -5,7 +5,7 @@ import "github.com/cmsgov/easi-app/pkg/models"
 //NOTE these functions are deterministic. Ideally when implementing we should separate the logic which obtains any database information from the methods that calculate the status
 
 // IntakeFormStatus calculates the ITGovTaskListStatus of a system intake for the requester view
-func IntakeFormStatus(intake *models.SystemIntake) models.ITGovIntakeStatus {
+func IntakeFormStatus(intake *models.SystemIntake) models.ITGovIntakeFormStatus {
 	return models.ITGISReady
 }
 

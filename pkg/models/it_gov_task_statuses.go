@@ -5,15 +5,15 @@ type ITGovTaskStatuses struct {
 	ParentSystemIntake *SystemIntake
 }
 
-// ITGovIntakeStatus represents the types of ITGovIntakeStatus types. This is what the requester sees for the first task
-type ITGovIntakeStatus string
+// ITGovIntakeFormStatus represents the types of ITGovIntakeFormStatus types. This is what the requester sees for the first task
+type ITGovIntakeFormStatus string
 
 // These are the options for ITGovIntakeStatus
 const (
-	ITGISReady          ITGovIntakeStatus = "READY"
-	ITGISInProgress     ITGovIntakeStatus = "IN_PROGRESS"
-	ITGISEditsRequested ITGovIntakeStatus = "EDITS_REQUESTED"
-	ITGISCompleted      ITGovIntakeStatus = "COMPLETED"
+	ITGISReady          ITGovIntakeFormStatus = "READY"
+	ITGISInProgress     ITGovIntakeFormStatus = "IN_PROGRESS"
+	ITGISEditsRequested ITGovIntakeFormStatus = "EDITS_REQUESTED"
+	ITGISCompleted      ITGovIntakeFormStatus = "COMPLETED"
 )
 
 // ITGovFeedbackStatus represents the types of ITGovFeedbackStatus types. This is what the requestor sees for the second task.
@@ -80,9 +80,10 @@ type ITGovGRBStatus string
 
 // These are the options for ITGovGRBStatus
 const (
-	ITGGRBSCantStart       ITGovGRBStatus = "CANT_START"
-	ITGGRBSNotNeeded       ITGovGRBStatus = "NOT_NEEDED"
-	ITGGRBSReadyToSchedule ITGovGRBStatus = "READY_TO_SCHEDULE"
-	ITGGRBSScheduled       ITGovGRBStatus = "SCHEDULED"
-	ITGGRBSCompleted       ITGovGRBStatus = "COMPLETED"
+	ITGGRBSCantStart        ITGovGRBStatus = "CANT_START"
+	ITGGRBSNotNeeded        ITGovGRBStatus = "NOT_NEEDED"
+	ITGGRBSReadyToSchedule  ITGovGRBStatus = "READY_TO_SCHEDULE"
+	ITGGRBSScheduled        ITGovGRBStatus = "SCHEDULED"
+	ITGGRBSAwaitingDecision ITGovGRBStatus = "AWAITING_DECISION"
+	ITGGRBSCompleted        ITGovGRBStatus = "COMPLETED"
 )

@@ -1019,7 +1019,7 @@ type SystemIntake {
   itGovTaskStatuses:  ITGovTaskStatuses!
 }
 type ITGovTaskStatuses {
-  intakeFormStatus: ITGovIntakeStatus!
+  intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
   bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus!
   grtMeetingStatus: ITGovGRTStatus!
@@ -2446,7 +2446,7 @@ enum Role {
 """
 The requester view of the IT gov intake step status
 """
-enum ITGovIntakeStatus {
+enum ITGovIntakeFormStatus {
   """
   Ready to begin filling out
   """
@@ -2617,6 +2617,10 @@ enum ITGovGRBStatus {
   The GRB meeting has been scheduled
   """
   SCHEDULED
+  """
+  The GRT meeting has already happened, and an outcome hasn't been noted yet
+  """
+  AWAITING_DECISION
   """
   The step is completed
   """    
