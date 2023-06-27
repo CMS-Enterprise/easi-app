@@ -9,7 +9,9 @@ import { useLocation } from 'react-router-dom';
 
 import Alert, { AlertProps } from 'components/shared/Alert';
 
-type MessageProps = Omit<AlertProps, 'children'> & { message: string };
+type MessageProps = Omit<AlertProps, 'children'> & {
+  message: string | React.ReactElement;
+};
 
 const MessageContext = createContext<
   | {
