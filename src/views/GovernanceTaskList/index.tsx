@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 
+import PageHeading from 'components/PageHeading';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
@@ -10,6 +12,7 @@ import {
 
 function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
+  const { t } = useTranslation('itGov');
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data } = useQuery<
@@ -21,7 +24,11 @@ function GovernanceTaskList() {
     }
   });
 
-  return <div>GovernanceTaskList V2</div>;
+  return (
+    <div>
+      <PageHeading>{t('taskList.heading')}</PageHeading>
+    </div>
+  );
 }
 
 export default GovernanceTaskList;
