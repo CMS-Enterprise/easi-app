@@ -7,11 +7,20 @@ import React, {
 } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import Alert, { AlertProps } from 'components/shared/Alert';
+
+type MessageProps = Omit<AlertProps, 'children'> & { message: string };
+
 const MessageContext = createContext<
   | {
-      message: string | React.ReactNode | undefined;
-      showMessage: (message: string | React.ReactNode) => void;
-      showMessageOnNextPage: (message: string | React.ReactNode) => void;
+      Message: ({
+        className
+      }: {
+        /** Used to overwrite individual messages className prop on Alert component */
+        className?: string;
+      }) => React.ReactElement<MessageProps, typeof Alert> | null;
+      showMessage: (message: MessageProps | undefined) => void;
+      showMessageOnNextPage: (message: MessageProps | undefined) => void;
     }
   | undefined
 >(undefined);
@@ -20,9 +29,9 @@ const MessageContext = createContext<
 // use the useMessage hook.
 const MessageProvider = ({ children }: { children: ReactNode }) => {
   const [queuedMessage, setQueuedMessage] = useState<
-    string | React.ReactNode
+    MessageProps | undefined
   >();
-  const [message, setMessage] = useState<string | React.ReactNode>();
+  const [message, setMessage] = useState<MessageProps | undefined>();
   const location = useLocation();
 
   const [lastPathname, setLastPathname] = useState(location.pathname);
@@ -30,7 +39,7 @@ const MessageProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (lastPathname !== location.pathname) {
       setMessage(queuedMessage);
-      setQueuedMessage('');
+      setQueuedMessage(undefined);
       setLastPathname(location.pathname);
     }
   }, [message, queuedMessage, lastPathname, location.pathname]);
@@ -38,7 +47,10 @@ const MessageProvider = ({ children }: { children: ReactNode }) => {
   return (
     <MessageContext.Provider
       value={{
-        message,
+        Message: props => {
+          if (!message) return null;
+          return <Alert {...message} {...props} />;
+        },
         showMessage: setMessage,
         showMessageOnNextPage: setQueuedMessage
       }}
