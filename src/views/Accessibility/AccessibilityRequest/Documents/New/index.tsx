@@ -144,9 +144,10 @@ const New = () => {
         })
           .then(response => {
             if (!response.errors) {
-              showMessageOnNextPage(
-                `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
-              );
+              showMessageOnNextPage({
+                message: `${file.name} uploaded to ${data?.accessibilityRequest?.name}`,
+                type: 'success'
+              });
               history.push(`/508/requests/${accessibilityRequestId}/documents`);
             }
           })

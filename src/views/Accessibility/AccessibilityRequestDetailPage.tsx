@@ -89,7 +89,7 @@ const AccessibilityRequestDetailPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [formikErrors, setFormikErrors] = useState<FormikErrors<any>>({});
   const [returnedUserErrors, setReturnedUserErrors] = useState<any>(null);
-  const { message, showMessage, showMessageOnNextPage } = useMessage();
+  const { Message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
   const existingNotesHeading = useRef<HTMLHeadingElement>(null);
@@ -140,11 +140,12 @@ const AccessibilityRequestDetailPage = () => {
       }
     }).then(response => {
       if (!response.errors) {
-        showMessageOnNextPage(
-          t('requestDetails.removeConfirmationText', {
+        showMessageOnNextPage({
+          message: t('requestDetails.removeConfirmationText', {
             requestName
-          })
-        );
+          }),
+          type: 'success'
+        });
         history.push('/');
       }
     });
@@ -179,7 +180,10 @@ const AccessibilityRequestDetailPage = () => {
         if (!userErrors) {
           refetch();
           resetAlerts();
-          showMessage(t('requestDetails.notes.confirmation', { requestName }));
+          showMessage({
+            type: 'success',
+            message: t('requestDetails.notes.confirmation', { requestName })
+          });
           resetForm({});
         }
       })
@@ -202,12 +206,13 @@ const AccessibilityRequestDetailPage = () => {
       }
     }).then(() => {
       refetch();
-      showMessage(
-        t('removeTestDate.confirmation', {
+      showMessage({
+        message: t('removeTestDate.confirmation', {
           date: formatDateUtc(testDate.date, 'MMMM d, yyyy'),
           requestName
-        })
-      );
+        }),
+        type: 'success'
+      });
     });
   };
 
@@ -230,7 +235,10 @@ const AccessibilityRequestDetailPage = () => {
     }).then(() => {
       refetch();
       if (document) {
-        showMessage(`${documentTypeAsString} removed from ${requestName}`);
+        showMessage({
+          message: `${documentTypeAsString} removed from ${requestName}`,
+          type: 'success'
+        });
       }
       callback();
     });
@@ -471,16 +479,7 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {message && (
-            <Alert
-              className="margin-top-4"
-              type="success"
-              role="alert"
-              heading="Success"
-            >
-              {message}
-            </Alert>
-          )}
+          <Message className="margin-top-4" />
           {noteMutationError && (
             <Alert
               className="margin-top-4"

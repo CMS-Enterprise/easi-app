@@ -7,7 +7,6 @@ import axios from 'axios';
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
 import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
@@ -15,7 +14,7 @@ import { downloadBlob } from 'utils/downloadFile';
 
 const List = () => {
   const { t } = useTranslation('home');
-  const { message } = useMessage();
+  const { Message } = useMessage();
 
   const { loading, error, data } = useQuery<GetAccessibilityRequests>(
     GetAccessibilityRequestsQuery,
@@ -65,11 +64,7 @@ const List = () => {
         className="grid-container"
         data-testid="accessibility-request-list-page"
       >
-        {message && (
-          <Alert className="margin-top-4" type="success" role="alert">
-            {message}
-          </Alert>
-        )}
+        <Message className="margin-top-4" />
         <div className="display-flex flex-justify flex-wrap">
           <PageHeading>{t('accessibility.heading')}</PageHeading>
           <div className="flex-align-self-center">

@@ -51,15 +51,16 @@ const ChangeRequestStatus = () => {
       }
     }).then(response => {
       if (!response.errors) {
-        showMessageOnNextPage(
-          t('updateRequestStatus.confirmation', {
+        showMessageOnNextPage({
+          message: t('updateRequestStatus.confirmation', {
             status:
               accessibilityRequestStatusMap[
                 response.data.updateAccessibilityRequestStatus.status
               ],
             requestName: data.accessibilityRequest?.name
-          })
-        );
+          }),
+          type: 'success'
+        });
         history.push(`/508/requests/${accessibilityRequestId}`);
       }
     });

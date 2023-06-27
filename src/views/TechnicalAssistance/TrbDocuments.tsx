@@ -16,7 +16,7 @@ export type DocumentStatusType = 'success' | 'error';
 const DocumentsTaskList = () => {
   const { t } = useTranslation('technicalAssistance');
 
-  const { message } = useMessage();
+  const { Message } = useMessage();
 
   const { id: requestID } = useParams<{
     id: string;
@@ -45,7 +45,7 @@ const DocumentsTaskList = () => {
         />
 
         {/* Displays success message on this view from the document upload page */}
-        {message && message}
+        <Message />
 
         {/* Displays document success/fail messages when removing a document on this view */}
         {documentMessage && (

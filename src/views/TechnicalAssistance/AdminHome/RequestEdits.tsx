@@ -6,7 +6,6 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
-import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -85,19 +84,19 @@ function RequestEdits() {
       }
     })
       .then(result => {
-        showMessageOnNextPage(
-          <Alert type="success" className="margin-top-3">
-            {t(`${actionText}.success`)}
-          </Alert>
-        );
+        showMessageOnNextPage({
+          message: t(`${actionText}.success`),
+          type: 'success',
+          className: 'margin-top-3'
+        });
         history.push(requestUrl);
       })
       .catch(err => {
-        showMessage(
-          <Alert type="error" className="margin-top-3">
-            {t(`${actionText}.error`)}
-          </Alert>
-        );
+        showMessage({
+          message: t(`${actionText}.error`),
+          type: 'error',
+          className: 'margin-top-3'
+        });
       });
   };
 

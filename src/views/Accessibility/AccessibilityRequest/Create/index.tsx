@@ -51,11 +51,10 @@ const Create = () => {
       if (!response.errors) {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
-        showMessageOnNextPage(
-          <span className="margin-bottom-2">
-            {t('newRequestForm.confirmation')}
-          </span>
-        );
+        showMessageOnNextPage({
+          message: t('newRequestForm.confirmation'),
+          type: 'success'
+        });
         history.push(`/508/requests/${uuid}/documents`);
       }
     });

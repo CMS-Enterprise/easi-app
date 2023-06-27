@@ -73,7 +73,7 @@ const ActionForm = ({
     id: string;
   }>();
 
-  const { message } = useMessage();
+  const { Message } = useMessage();
 
   const {
     formState: { isSubmitting, errors }
@@ -122,7 +122,7 @@ const ActionForm = ({
         ]}
       />
 
-      {message}
+      <Message />
 
       <PageHeading className="margin-bottom-0">{title}</PageHeading>
       <p className="line-height-body-5 font-body-lg text-light margin-0">
