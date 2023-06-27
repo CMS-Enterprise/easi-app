@@ -49,7 +49,11 @@ const MessageProvider = ({ children }: { children: ReactNode }) => {
       value={{
         Message: props => {
           if (!message) return null;
-          return <Alert {...message} {...props} />;
+          return (
+            <Alert {...message} {...props}>
+              {message.message}
+            </Alert>
+          );
         },
         showMessage: setMessage,
         showMessageOnNextPage: setQueuedMessage
