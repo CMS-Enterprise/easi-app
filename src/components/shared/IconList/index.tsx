@@ -18,8 +18,12 @@ export const IconListItem = ({
   className
 }: IconListItemProps) => {
   return (
-    <li className={classNames('usa-icon-list__item', className)}>
-      <div className="usa-icon-list__icon">{icon}</div>
+    <li
+      className={classNames('usa-icon-list__item flex-align-start', className)}
+    >
+      <div className="usa-icon-list__icon display-flex flex-align-center">
+        {icon}
+      </div>
       <div className="usa-icon-list__content">{children}</div>
     </li>
   );
