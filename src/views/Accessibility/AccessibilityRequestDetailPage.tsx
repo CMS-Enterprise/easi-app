@@ -144,7 +144,8 @@ const AccessibilityRequestDetailPage = () => {
           message: t('requestDetails.removeConfirmationText', {
             requestName
           }),
-          type: 'success'
+          type: 'success',
+          heading: t('Success')
         });
         history.push('/');
       }
@@ -182,7 +183,9 @@ const AccessibilityRequestDetailPage = () => {
           resetAlerts();
           showMessage({
             type: 'success',
-            message: t('requestDetails.notes.confirmation', { requestName })
+            message: t('requestDetails.notes.confirmation', { requestName }),
+            role: 'alert',
+            heading: t('Success')
           });
           resetForm({});
         }
@@ -211,7 +214,8 @@ const AccessibilityRequestDetailPage = () => {
           date: formatDateUtc(testDate.date, 'MMMM d, yyyy'),
           requestName
         }),
-        type: 'success'
+        type: 'success',
+        heading: t('Success')
       });
     });
   };
