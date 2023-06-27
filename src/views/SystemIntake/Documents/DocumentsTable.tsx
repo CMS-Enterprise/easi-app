@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useMutation } from '@apollo/client';
-import { Button, Table } from '@trussworks/react-uswds';
+import { Button, Link, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import Alert from 'components/shared/Alert';
@@ -107,7 +106,7 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
             return (
               <>
                 {/* View document */}
-                <Link target="_blank" to={row.original.url}>
+                <Link target="_blank" href={row.original.url}>
                   {t('technicalAssistance:documents.table.view')}
                 </Link>
 
@@ -129,11 +128,7 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
         }
       }
     ];
-  }, [
-    // canEdit,
-    setFileToDelete,
-    t
-  ]);
+  }, [setFileToDelete, t]);
 
   const {
     getTableBodyProps,
@@ -219,33 +214,6 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
 
   return (
     <div id="systemIntakeDocuments">
-      {/* {message}
-
-      <PageHeading className="margin-top-4 margin-bottom-1">
-        {t('intake:documents.title')}
-      </PageHeading>
-      <p className="margin-top-1 font-body-md line-height-body-5 tablet:grid-col-12 desktop:grid-col-8">
-        {t('intake:documents.tableDescription')}
-      </p>
-
-      <h4 className="margin-bottom-1 margin-top-5">
-        {t('intake:documents.tableTitle')}
-      </h4>
-
-      <Button
-        className="margin-bottom-1"
-        type="button"
-        onClick={() =>
-          history.push(`/system/${systemIntake.id}/documents/upload`)
-        }
-      >
-        {t(
-          `technicalAssistance:documents.${
-            documents.length ? 'addAnotherDocument' : 'addDocument'
-          }`
-        )}
-      </Button> */}
-
       <ConfirmDeleteModal />
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
@@ -294,25 +262,6 @@ const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
       </Table>
 
       {!documents.length && <p>{t('intake:documents.noDocuments')}</p>}
-
-      {/* <Pager
-        className="margin-top-6"
-        next={{
-          text: t(
-            documents.length > 0
-              ? 'Next'
-              : 'intake:documents.continueWithoutDocuments'
-          ),
-          outline: documents.length === 0,
-          onClick: () => history.push(`/system/${systemIntake.id}/review`)
-        }}
-        back={{
-          onClick: () =>
-            history.push(`/system/${systemIntake.id}/contract-details`)
-        }}
-        taskListUrl={`/governance-task-list/${systemIntake.id}`}
-        border={false}
-      /> */}
     </div>
   );
 };
