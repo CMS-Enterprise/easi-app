@@ -118,7 +118,9 @@ const taskList = {
     EDITS_REQUESTED: 'Edits requested',
     IN_REVIEW: 'In review',
     READY_TO_SCHEDULE: 'Ready to schedule',
-    SCHEDULED: 'Scheduled'
+    SCHEDULED: 'Scheduled',
+    // IT Gov
+    READY: 'Ready to start'
   }
 };
 

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { TagEnum } from 'data/taskList';
 import {
+  ITGovIntakeStatus,
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
@@ -22,6 +23,7 @@ export type TaskStatus =
   | keyof typeof TRBFeedbackStatus
   | keyof typeof TRBConsultPrepStatus
   | keyof typeof TRBAttendConsultStatus
+  | keyof typeof ITGovIntakeStatus
   | TagEnum;
 
 export const taskStatusClassName: Record<TaskStatus, string> = {
@@ -34,6 +36,7 @@ export const taskStatusClassName: Record<TaskStatus, string> = {
   READY_TO_SCHEDULE: 'bg-info-light',
   SCHEDULED: 'bg-info-light',
   // Error: 'bg-error-dark text-white'
+  READY: 'bg-info-light',
   READY_TO_START: 'bg-info-light',
   // No action needed: 'bg-base-lighter text-base-darker',
   READY_FOR_REVIEW: 'bg-info-light'
