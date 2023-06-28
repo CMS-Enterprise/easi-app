@@ -47,6 +47,7 @@ const TaskListItem = ({
   const taskListItemClasses = classnames(
     'task-list__item',
     'padding-bottom-4',
+    // Dim the task list item as N/A with certain statuses
     {
       'task-list__item--na': ['NOT_NEEDED', 'CANNOT_START_YET'].includes(
         status || ''

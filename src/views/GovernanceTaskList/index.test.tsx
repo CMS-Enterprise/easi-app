@@ -35,5 +35,11 @@ describe('Governance Task List', () => {
         name: i18next.t<string>('itGov:button.saveAndExit')
       })
     ).toHaveAttribute('href', '/system/making-a-request');
+
+    // First task list item
+    getByRole('heading', {
+      level: 3,
+      name: i18next.t<string>('itGov:taskList.steps.0.title')
+    });
   });
 });
