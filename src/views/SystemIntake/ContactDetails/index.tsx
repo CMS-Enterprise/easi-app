@@ -772,7 +772,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               }}
               debounceDelay={3000}
             />
-            <PageNumber currentPage={1} totalPages={3} />
+            <PageNumber currentPage={1} totalPages={5} />
           </>
         );
       }}
