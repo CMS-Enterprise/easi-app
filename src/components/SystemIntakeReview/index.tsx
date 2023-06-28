@@ -15,6 +15,9 @@ import { SystemIntakeStatus } from 'types/graphql-global-types';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
+import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
+
+import './index.scss';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntake;
@@ -305,6 +308,10 @@ export const SystemIntakeReview = ({
           </>
         )}
       </DescriptionList>
+
+      <hr className="system-intake__hr" />
+      <h2 className="font-heading-xl">{t('review.documents')}</h2>
+      <DocumentsTable systemIntake={systemIntake} />
     </div>
   );
 };

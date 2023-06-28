@@ -716,53 +716,39 @@ func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models
 	return obj.WeaknessRiskLevel.Ptr(), nil
 }
 
-// RequesterStatuses is the resolver for the requesterStatuses field.
-func (r *iTGovTaskStatusesResolver) RequesterStatuses(ctx context.Context, obj *models.ITGovTaskStatuses) (*models.ITGovTaskStatusesRequester, error) {
-	return &models.ITGovTaskStatusesRequester{
-		ParentStatus: obj,
-	}, nil
-}
-
-// AdminStatuses is the resolver for the adminStatuses field.
-func (r *iTGovTaskStatusesResolver) AdminStatuses(ctx context.Context, obj *models.ITGovTaskStatuses) (*models.ITGovTaskStatusesAdmin, error) {
-	return &models.ITGovTaskStatusesAdmin{
-		ParentStatus: obj,
-	}, nil
-}
-
 // IntakeFormStatus is the resolver for the intakeFormStatus field.
-func (r *iTGovTaskStatusesRequesterResolver) IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovIntakeStatusReq, error) {
-	return resolvers.IntakeFormStatusReq(obj.ParentStatus.ParentSystemIntake), nil
+func (r *iTGovTaskStatusesResolver) IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeFormStatus, error) {
+	return resolvers.IntakeFormStatus(obj.ParentSystemIntake), nil
 }
 
 // FeedbackFromInitialReviewStatus is the resolver for the feedbackFromInitialReviewStatus field.
-func (r *iTGovTaskStatusesRequesterResolver) FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovFeedbackStatusReq, error) {
-	return resolvers.FeedbackFromInitialReviewStatusReq(obj.ParentStatus.ParentSystemIntake), nil
+func (r *iTGovTaskStatusesResolver) FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFeedbackStatus, error) {
+	return resolvers.FeedbackFromInitialReviewStatus(obj.ParentSystemIntake), nil
 }
 
 // BizCaseDraftStatus is the resolver for the bizCaseDraftStatus field.
-func (r *iTGovTaskStatusesRequesterResolver) BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovDraftBuisnessCaseStatusReq, error) {
-	return resolvers.BizCaseDraftStatusReq(obj.ParentStatus.ParentSystemIntake), nil
+func (r *iTGovTaskStatusesResolver) BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBuisnessCaseStatus, error) {
+	return resolvers.BizCaseDraftStatus(obj.ParentSystemIntake), nil
 }
 
 // GrtMeetingStatus is the resolver for the grtMeetingStatus field.
-func (r *iTGovTaskStatusesRequesterResolver) GrtMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovGRTStatusReq, error) {
-	return resolvers.GrtMeetingStatusReq(obj.ParentStatus.ParentSystemIntake), nil
+func (r *iTGovTaskStatusesResolver) GrtMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRTStatus, error) {
+	return resolvers.GrtMeetingStatus(obj.ParentSystemIntake), nil
 }
 
 // BizCaseFinalStatus is the resolver for the bizCaseFinalStatus field.
-func (r *iTGovTaskStatusesRequesterResolver) BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovFinalBuisnessCaseStatusReq, error) {
-	return resolvers.BizCaseFinalStatusReq(obj.ParentStatus.ParentSystemIntake), nil
+func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFinalBuisnessCaseStatus, error) {
+	return resolvers.BizCaseFinalStatus(obj.ParentSystemIntake), nil
 }
 
 // GrbMeetingStatus is the resolver for the grbMeetingStatus field.
-func (r *iTGovTaskStatusesRequesterResolver) GrbMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovGRBStatusReq, error) {
-	return resolvers.GrbMeetingStatusReq(obj.ParentStatus.ParentSystemIntake), nil
+func (r *iTGovTaskStatusesResolver) GrbMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRBStatus, error) {
+	return resolvers.GrbMeetingStatus(obj.ParentSystemIntake), nil
 }
 
 // DecisionAndNextStepsStatus is the resolver for the decisionAndNextStepsStatus field.
-func (r *iTGovTaskStatusesRequesterResolver) DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatusesRequester) (models.ITGovDecisionStatusReq, error) {
-	return resolvers.DecisionAndNextStepsStatusReq(obj.ParentStatus.ParentSystemIntake), nil
+func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDecisionStatus, error) {
+	return resolvers.DecisionAndNextStepsStatus(obj.ParentSystemIntake), nil
 }
 
 // AddGRTFeedbackAndKeepBusinessCaseInDraft is the resolver for the addGRTFeedbackAndKeepBusinessCaseInDraft field.
@@ -2771,6 +2757,11 @@ func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.
 	return obj.ExistingFunding.Ptr(), nil
 }
 
+// GovernanceRequestFeedbacks is the resolver for the governanceRequestFeedbacks field.
+func (r *systemIntakeResolver) GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error) {
+	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, r.store, obj.ID)
+}
+
 // GovernanceTeams is the resolver for the governanceTeams field.
 func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error) {
 	var teams []*model.SystemIntakeCollaborator
@@ -3267,11 +3258,6 @@ func (r *Resolver) ITGovTaskStatuses() generated.ITGovTaskStatusesResolver {
 	return &iTGovTaskStatusesResolver{r}
 }
 
-// ITGovTaskStatusesRequester returns generated.ITGovTaskStatusesRequesterResolver implementation.
-func (r *Resolver) ITGovTaskStatusesRequester() generated.ITGovTaskStatusesRequesterResolver {
-	return &iTGovTaskStatusesRequesterResolver{r}
-}
-
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -3345,7 +3331,6 @@ type cedarRoleTypeResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
-type iTGovTaskStatusesRequesterResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
