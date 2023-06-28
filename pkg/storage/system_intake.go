@@ -29,6 +29,12 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	if intake.UpdatedAt == nil {
 		intake.UpdatedAt = &createAt
 	}
+	if intake.Step == "" {
+		intake.Step = models.SystemIntakeStepINITIALFORM
+	}
+	if intake.State == "" {
+		intake.State = models.SystemIntakeStateOPEN
+	}
 	const createIntakeSQL = `
 		INSERT INTO system_intakes (
 			id,
