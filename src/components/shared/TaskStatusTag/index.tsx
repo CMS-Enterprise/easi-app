@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { TagEnum } from 'data/taskList';
 import {
-  ITGovIntakeStatus,
+  ITGovIntakeFormStatus,
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
   TRBConsultPrepStatus,
@@ -23,7 +23,7 @@ export type TaskStatus =
   | keyof typeof TRBFeedbackStatus
   | keyof typeof TRBConsultPrepStatus
   | keyof typeof TRBAttendConsultStatus
-  | keyof typeof ITGovIntakeStatus
+  | keyof typeof ITGovIntakeFormStatus
   | TagEnum;
 
 export const taskStatusClassName: Record<TaskStatus, string> = {

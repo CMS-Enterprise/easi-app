@@ -16,7 +16,7 @@ import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
-import { ITGovIntakeStatus } from 'types/graphql-global-types';
+import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 function GovernanceTaskList() {
@@ -59,7 +59,7 @@ function GovernanceTaskList() {
               {/* Fill out the initial request form */}
               <TaskListItem
                 heading="Fill"
-                status={ITGovIntakeStatus.READY}
+                status={ITGovIntakeFormStatus.READY}
                 testId={kebabCase('Fill')}
               >
                 <TaskListDescription>

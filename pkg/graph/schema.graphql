@@ -1019,7 +1019,7 @@ type SystemIntake {
   itGovTaskStatuses:  ITGovTaskStatuses!
 }
 type ITGovTaskStatuses {
-  intakeFormStatus: ITGovIntakeStatus!
+  intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
   bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus!
   grtMeetingStatus: ITGovGRTStatus!
@@ -2446,7 +2446,7 @@ enum Role {
 """
 The requester view of the IT gov intake step status
 """
-enum ITGovIntakeStatus {
+enum ITGovIntakeFormStatus {
   """
   Ready to begin filling out
   """
@@ -2543,7 +2543,7 @@ The requester view of the IT Gov GRT step status
 enum ITGovGRTStatus {
   """
   This step can't be started yet
-  """  
+  """
   CANT_START
   """
   This step is not needed and has been skipped
@@ -2563,7 +2563,7 @@ enum ITGovGRTStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """  
+  """
   COMPLETED
 }
 
@@ -2577,11 +2577,11 @@ enum ITGovFinalBuisnessCaseStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   Ready to begin filling out
-  """  
+  """
   READY
   """
   The form has started to be filled out
@@ -2589,11 +2589,11 @@ enum ITGovFinalBuisnessCaseStatus {
   IN_PROGRESS
   """
   This buisness case has edits requested
-  """  
+  """
   EDITS_REQUESTED
   """
   This buisness case has been completed
-  """  
+  """
   COMPLETED
 }
 
@@ -2607,7 +2607,7 @@ enum ITGovGRBStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   The GRB meeting is waiting to be scheduled
@@ -2618,7 +2618,11 @@ enum ITGovGRBStatus {
   """
   SCHEDULED
   """
+  The GRT meeting has already happened, and an outcome hasn't been noted yet
+  """
+  AWAITING_DECISION
+  """
   The step is completed
-  """    
+  """
   COMPLETED
 }

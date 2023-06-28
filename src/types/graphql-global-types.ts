@@ -111,6 +111,7 @@ export enum ITGovFinalBuisnessCaseStatus {
  * The requester view of the IT Gov GRB step status
  */
 export enum ITGovGRBStatus {
+  AWAITING_DECISION = "AWAITING_DECISION",
   CANT_START = "CANT_START",
   COMPLETED = "COMPLETED",
   NOT_NEEDED = "NOT_NEEDED",
@@ -133,7 +134,7 @@ export enum ITGovGRTStatus {
 /**
  * The requester view of the IT gov intake step status
  */
-export enum ITGovIntakeStatus {
+export enum ITGovIntakeFormStatus {
   COMPLETED = "COMPLETED",
   EDITS_REQUESTED = "EDITS_REQUESTED",
   IN_PROGRESS = "IN_PROGRESS",
