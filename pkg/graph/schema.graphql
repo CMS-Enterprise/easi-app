@@ -1017,6 +1017,10 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
+  requestFormState: SystemIntakeRequestFormState!
+  draftBusinessCaseState: SystemIntakeDraftBusinessCaseState!
+  finalBusinessCaseState: SystemIntakeFinalBusinessCaseState!
+  decisionState: SystemIntakeDecisionState!
 }
 type ITGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus!
@@ -2625,4 +2629,32 @@ enum ITGovGRBStatus {
   The step is completed
   """    
   COMPLETED
+}
+
+enum SystemIntakeRequestFormState {
+  NOT_STARTED
+  IN_PROGRESS
+  EDITS_REQUESTED
+  SUBMITTED
+}
+
+enum SystemIntakeDraftBusinessCaseState {
+  NOT_STARTED
+  IN_PROGRESS
+  EDITS_REQUESTED
+  SUBMITTED
+}
+
+enum SystemIntakeFinalBusinessCaseState {
+  NOT_STARTED
+  IN_PROGRESS
+  EDITS_REQUESTED
+  SUBMITTED
+}
+
+enum SystemIntakeDecisionState {
+  NO_DECISION
+  LCID_ISSUED
+  NOT_APPROVED
+  NO_GOVERNANCE
 }
