@@ -1,6 +1,9 @@
 import { gql } from '@apollo/client';
 
+import { SystemIntakeDocument } from './SystemIntakeDocumentQueries';
+
 export default gql`
+  ${SystemIntakeDocument}
   query GetSystemIntake($id: UUID!) {
     systemIntake(id: $id) {
       id
@@ -90,6 +93,9 @@ export default gql`
         createdAt
       }
       hasUiChanges
+      documents {
+        ...SystemIntakeDocument
+      }
     }
   }
 `;
