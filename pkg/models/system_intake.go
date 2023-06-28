@@ -229,3 +229,29 @@ const (
 	SIDSNotApproved  SystemIntakeDecisionState = "NOT_APPROVED"
 	SIDSNoGovernance SystemIntakeDecisionState = "NO_GOVERNANCE"
 )
+
+// SystemIntakeMeetingState is the state for any meeting for a system intake
+type SystemIntakeMeetingState string
+
+// These are the options for SystemIntakeMeetingState
+const (
+	SIMSScheduled    SystemIntakeMeetingState = "SCHEDULED"
+	SIMSNotScheduled SystemIntakeMeetingState = "NOT_SCHEDULED"
+)
+
+// GRTMeetingState returns if a GRTMeeting has been scheduled or not
+func (si *SystemIntake) GRTMeetingState() SystemIntakeMeetingState {
+	return isMeetingScheduled(si.GRTDate)
+}
+
+// GRBMeetingState returns if a GRBMeeting has been scheduled or not
+func (si *SystemIntake) GRBMeetingState() SystemIntakeMeetingState {
+	return isMeetingScheduled(si.GRBDate)
+}
+
+func isMeetingScheduled(date *time.Time) SystemIntakeMeetingState {
+	if date == nil {
+		return SIMSNotScheduled
+	}
+	return SIMSScheduled
+}

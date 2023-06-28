@@ -704,7 +704,9 @@ type ComplexityRoot struct {
 		FinalBusinessCaseState      func(childComplexity int) int
 		FundingSources              func(childComplexity int) int
 		GRBDate                     func(childComplexity int) int
+		GRBMeetingState             func(childComplexity int) int
 		GRTDate                     func(childComplexity int) int
+		GRTMeetingState             func(childComplexity int) int
 		GovernanceRequestFeedbacks  func(childComplexity int) int
 		GovernanceTeams             func(childComplexity int) int
 		GrtFeedbacks                func(childComplexity int) int
@@ -5091,12 +5093,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.GRBDate(childComplexity), true
 
+	case "SystemIntake.grbMeetingState":
+		if e.complexity.SystemIntake.GRBMeetingState == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GRBMeetingState(childComplexity), true
+
 	case "SystemIntake.grtDate":
 		if e.complexity.SystemIntake.GRTDate == nil {
 			break
 		}
 
 		return e.complexity.SystemIntake.GRTDate(childComplexity), true
+
+	case "SystemIntake.grtMeetingState":
+		if e.complexity.SystemIntake.GRTMeetingState == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GRTMeetingState(childComplexity), true
 
 	case "SystemIntake.governanceRequestFeedbacks":
 		if e.complexity.SystemIntake.GovernanceRequestFeedbacks == nil {
@@ -7977,7 +7993,9 @@ type SystemIntake {
   itGovTaskStatuses:  ITGovTaskStatuses!
   requestFormState: SystemIntakeRequestFormState!
   draftBusinessCaseState: SystemIntakeDraftBusinessCaseState!
+  grtMeetingState: SystemIntakeMeetingState!
   finalBusinessCaseState: SystemIntakeFinalBusinessCaseState!
+  grbMeetingState: SystemIntakeMeetingState!
   decisionState: SystemIntakeDecisionState!
 }
 type ITGovTaskStatuses {
@@ -9615,6 +9633,10 @@ enum SystemIntakeDecisionState {
   LCID_ISSUED
   NOT_APPROVED
   NO_GOVERNANCE
+}
+enum SystemIntakeMeetingState{
+  SCHEDULED
+  NOT_SCHEDULED
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -14102,8 +14124,12 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -22964,8 +22990,12 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -26913,8 +26943,12 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -31491,8 +31525,12 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -31712,8 +31750,12 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -32877,8 +32919,12 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -36677,6 +36723,50 @@ func (ec *executionContext) fieldContext_SystemIntake_draftBusinessCaseState(ctx
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_grtMeetingState(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GRTMeetingState(), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeMeetingState)
+	fc.Result = res
+	return ec.marshalNSystemIntakeMeetingState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeMeetingState(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grtMeetingState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeMeetingState does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_finalBusinessCaseState(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
 	if err != nil {
@@ -36716,6 +36806,50 @@ func (ec *executionContext) fieldContext_SystemIntake_finalBusinessCaseState(ctx
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeFinalBusinessCaseState does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbMeetingState(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GRBMeetingState(), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeMeetingState)
+	fc.Result = res
+	return ec.marshalNSystemIntakeMeetingState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeMeetingState(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbMeetingState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeMeetingState does not have child fields")
 		},
 	}
 	return fc, nil
@@ -36954,8 +37088,12 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -45290,8 +45428,12 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -46505,8 +46647,12 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
 			case "draftBusinessCaseState":
 				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
 			case "finalBusinessCaseState":
 				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
 			}
@@ -57558,9 +57704,23 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "grtMeetingState":
+
+			out.Values[i] = ec._SystemIntake_grtMeetingState(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "finalBusinessCaseState":
 
 			out.Values[i] = ec._SystemIntake_finalBusinessCaseState(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "grbMeetingState":
+
+			out.Values[i] = ec._SystemIntake_grbMeetingState(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -62498,6 +62658,22 @@ func (ec *executionContext) marshalNSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋ
 func (ec *executionContext) unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeISSOInput(ctx context.Context, v interface{}) (*model.SystemIntakeISSOInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeISSOInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeMeetingState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeMeetingState(ctx context.Context, v interface{}) (models.SystemIntakeMeetingState, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeMeetingState(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeMeetingState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeMeetingState(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeMeetingState) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNSystemIntakeNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeNote(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeNote) graphql.Marshaler {

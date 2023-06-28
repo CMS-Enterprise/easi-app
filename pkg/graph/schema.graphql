@@ -1019,7 +1019,9 @@ type SystemIntake {
   itGovTaskStatuses:  ITGovTaskStatuses!
   requestFormState: SystemIntakeRequestFormState!
   draftBusinessCaseState: SystemIntakeDraftBusinessCaseState!
+  grtMeetingState: SystemIntakeMeetingState!
   finalBusinessCaseState: SystemIntakeFinalBusinessCaseState!
+  grbMeetingState: SystemIntakeMeetingState!
   decisionState: SystemIntakeDecisionState!
 }
 type ITGovTaskStatuses {
@@ -2657,4 +2659,8 @@ enum SystemIntakeDecisionState {
   LCID_ISSUED
   NOT_APPROVED
   NO_GOVERNANCE
+}
+enum SystemIntakeMeetingState{
+  SCHEDULED
+  NOT_SCHEDULED
 }
