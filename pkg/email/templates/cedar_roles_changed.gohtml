@@ -14,8 +14,8 @@
 	</li>
 	<li>Change:
 		<ul>
-			<li>Before: {{.UserFullName}}; {{.RoleTypeNamesBefore}}</li>
-			<li>After: {{.UserFullName}}; {{.RoleTypeNamesAfter}}</li>
+			<li>Before: {{.UserFullName}}; {{if .RoleTypeNamesBefore}}{{.RoleTypeNamesBefore}}{{else}}(No Roles){{end}}</li>
+			<li>After: {{.UserFullName}}; {{if .RoleTypeNamesAfter}}{{.RoleTypeNamesAfter}}{{else}}(No Roles){{end}}</li>
 		</ul>
 	</li>
 </ul>

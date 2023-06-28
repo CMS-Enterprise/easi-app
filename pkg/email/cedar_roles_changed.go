@@ -27,8 +27,8 @@ func (c Client) cedarRolesChangedEmailBody(userFullName string, didAdd bool, did
 		UserFullName:        userFullName,
 		DidAdd:              didAdd,
 		DidDelete:           didDelete,
-		RoleTypeNamesBefore: strings.Join(roleTypeNamesBefore, ","),
-		RoleTypeNamesAfter:  strings.Join(roleTypeNamesAfter, ","),
+		RoleTypeNamesBefore: strings.Join(roleTypeNamesBefore, ", "),
+		RoleTypeNamesAfter:  strings.Join(roleTypeNamesAfter, ", "),
 		SystemName:          systemName,
 		Timestamp:           timestamp.Format(time.RFC822),
 	}

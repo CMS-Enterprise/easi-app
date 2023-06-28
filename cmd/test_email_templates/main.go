@@ -138,6 +138,12 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		Recipients:     emailRecipients,
 	})
 	noErr(err)
+
+	err = client.SendCedarRolesChangedEmail(ctx, "cedar@cedar.gov", "Johnothan Roleadd", true, false, []string{}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
+	noErr(err)
+
+	err = client.SendCedarRolesChangedEmail(ctx, "cedar@cedar.gov", "Johnothan Roledelete", false, true, []string{"System API Contact", "System Manager"}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
+	noErr(err)
 }
 
 func main() {
