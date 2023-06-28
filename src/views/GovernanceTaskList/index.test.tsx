@@ -8,7 +8,7 @@ import GovernanceTaskList from '.';
 
 describe('Governance Task List', () => {
   it('renders a request task list', async () => {
-    const { getByText } = render(
+    const { getByRole } = render(
       <MemoryRouter>
         <MockedProvider>
           <GovernanceTaskList />
@@ -16,6 +16,24 @@ describe('Governance Task List', () => {
       </MemoryRouter>
     );
 
-    getByText(i18next.t<string>('itGov:taskList.heading'));
+    // Header
+    getByRole('heading', {
+      level: 1,
+      name: i18next.t<string>('itGov:taskList.heading')
+    });
+
+    // Crumb back to it gov home
+    expect(
+      getByRole('link', {
+        name: i18next.t<string>('itGov:itGovernance')
+      })
+    ).toHaveAttribute('href', '/system/making-a-request');
+
+    // Sidebar back to home
+    expect(
+      getByRole('link', {
+        name: i18next.t<string>('itGov:button.saveAndExit')
+      })
+    ).toHaveAttribute('href', '/system/making-a-request');
   });
 });
