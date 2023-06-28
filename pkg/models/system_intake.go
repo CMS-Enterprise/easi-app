@@ -72,11 +72,41 @@ const (
 	SystemIntakeStatusFilterCLOSED SystemIntakeStatusFilter = "CLOSED"
 )
 
+// SystemIntakeState represents whether the intake is open or closed
+type SystemIntakeState string
+
+const (
+	// SystemIntakeStateOPEN captures enum value "OPEN"
+	SystemIntakeStateOPEN SystemIntakeState = "OPEN"
+	// SystemIntakeStateCLOSED captures enum value "CLOSED"
+	SystemIntakeStateCLOSED SystemIntakeState = "CLOSED"
+)
+
+// SystemIntakeStep represents the current step in the intake process
+type SystemIntakeStep string
+
+const (
+	// SystemIntakeStepINITIALFORM captures enum value "INITIAL_REQUEST_FORM"
+	SystemIntakeStepINITIALFORM SystemIntakeStep = "INITIAL_REQUEST_FORM"
+	// SystemIntakeStepDRAFTBIZCASE captures enum value "DRAFT_BUSINESS_CASE"
+	SystemIntakeStepDRAFTBIZCASE SystemIntakeStep = "DRAFT_BUSINESS_CASE"
+	// SystemIntakeStepGRTMEETING captures enum value "GRT_MEETING"
+	SystemIntakeStepGRTMEETING SystemIntakeStep = "GRT_MEETING"
+	// SystemIntakeStepFINALBIZCASE captures enum value "FINAL_BUSINESS_CASE"
+	SystemIntakeStepFINALBIZCASE SystemIntakeStep = "FINAL_BUSINESS_CASE"
+	// SystemIntakeStepGRBMEETING captures enum value "GRB_MEETING"
+	SystemIntakeStepGRBMEETING SystemIntakeStep = "GRB_MEETING"
+	// SystemIntakeStepDECISION captures enum value "DECISION_AND_NEXT_STEPS"
+	SystemIntakeStepDECISION SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
+)
+
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
 	ID                          uuid.UUID                    `json:"id"`
 	EUAUserID                   null.String                  `json:"euaUserId" db:"eua_user_id"`
 	Status                      SystemIntakeStatus           `json:"status"`
+	State                       SystemIntakeState            `json:"state"`
+	Step                        SystemIntakeStep             `json:"step"`
 	RequestType                 SystemIntakeRequestType      `json:"requestType" db:"request_type"`
 	Requester                   string                       `json:"requester"`
 	Component                   null.String                  `json:"component"`

@@ -725,7 +725,9 @@ type ComplexityRoot struct {
 		RequestName                 func(childComplexity int) int
 		RequestType                 func(childComplexity int) int
 		Requester                   func(childComplexity int) int
+		State                       func(childComplexity int) int
 		Status                      func(childComplexity int) int
+		Step                        func(childComplexity int) int
 		SubmittedAt                 func(childComplexity int) int
 		TrbCollaborator             func(childComplexity int) int
 		TrbCollaboratorName         func(childComplexity int) int
@@ -5234,12 +5236,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Requester(childComplexity), true
 
+	case "SystemIntake.state":
+		if e.complexity.SystemIntake.State == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.State(childComplexity), true
+
 	case "SystemIntake.status":
 		if e.complexity.SystemIntake.Status == nil {
 			break
 		}
 
 		return e.complexity.SystemIntake.Status(childComplexity), true
+
+	case "SystemIntake.step":
+		if e.complexity.SystemIntake.Step == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.Step(childComplexity), true
 
 	case "SystemIntake.submittedAt":
 		if e.complexity.SystemIntake.SubmittedAt == nil {
@@ -7931,6 +7947,8 @@ type SystemIntake {
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
   status: SystemIntakeStatus!
+  state: SystemIntakeState!
+  step: SystemIntakeStep!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
@@ -7944,6 +7962,27 @@ type SystemIntake {
   hasUiChanges: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
 }
+
+"""
+SystemIntakeState represents whether the intake is open or closed
+"""
+enum SystemIntakeState {
+  OPEN
+  CLOSED
+}
+
+"""
+SystemIntakeStep represents the current step in the intake process
+"""
+enum SystemIntakeStep {
+  INITIAL_REQUEST_FORM
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+  DECISION_AND_NEXT_STEPS
+}
+
 type ITGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
@@ -9469,7 +9508,7 @@ The requester view of the IT Gov GRT step status
 enum ITGovGRTStatus {
   """
   This step can't be started yet
-  """  
+  """
   CANT_START
   """
   This step is not needed and has been skipped
@@ -9489,7 +9528,7 @@ enum ITGovGRTStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """  
+  """
   COMPLETED
 }
 
@@ -9503,11 +9542,11 @@ enum ITGovFinalBuisnessCaseStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   Ready to begin filling out
-  """  
+  """
   READY
   """
   The form has started to be filled out
@@ -9515,11 +9554,11 @@ enum ITGovFinalBuisnessCaseStatus {
   IN_PROGRESS
   """
   This buisness case has edits requested
-  """  
+  """
   EDITS_REQUESTED
   """
   This buisness case has been completed
-  """  
+  """
   COMPLETED
 }
 
@@ -9533,7 +9572,7 @@ enum ITGovGRBStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   The GRB meeting is waiting to be scheduled
@@ -9549,9 +9588,10 @@ enum ITGovGRBStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """    
+  """
   COMPLETED
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -14010,6 +14050,10 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -22864,6 +22908,10 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -26805,6 +26853,10 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -31375,6 +31427,10 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -31588,6 +31644,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -32745,6 +32805,10 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -35940,6 +36004,94 @@ func (ec *executionContext) fieldContext_SystemIntake_status(ctx context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_state(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_state(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.State, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeState)
+	fc.Result = res
+	return ec.marshalNSystemIntakeState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeState(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_state(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeState does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_step(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_step(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Step, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeStep)
+	fc.Result = res
+	return ec.marshalNSystemIntakeStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStep(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_step(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeStep does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 	if err != nil {
@@ -36638,6 +36790,10 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -44966,6 +45122,10 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -46173,6 +46333,10 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
 			case "status":
 				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
 			case "submittedAt":
 				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
 			case "trbCollaborator":
@@ -57071,6 +57235,20 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "state":
+
+			out.Values[i] = ec._SystemIntake_state(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "step":
+
+			out.Values[i] = ec._SystemIntake_step(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "submittedAt":
 
 			out.Values[i] = ec._SystemIntake_submittedAt(ctx, field, obj)
@@ -62243,6 +62421,22 @@ func (ec *executionContext) unmarshalNSystemIntakeRequesterWithComponentInput2�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeState(ctx context.Context, v interface{}) (models.SystemIntakeState, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeState(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeState(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeState) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, v interface{}) (models.SystemIntakeStatus, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.SystemIntakeStatus(tmp)
@@ -62250,6 +62444,22 @@ func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgov�
 }
 
 func (ec *executionContext) marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStep(ctx context.Context, v interface{}) (models.SystemIntakeStep, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeStep(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStep(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeStep) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {

@@ -1358,6 +1358,8 @@ func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input model.C
 		RequestType: models.SystemIntakeRequestType(input.RequestType),
 		Requester:   input.Requester.Name,
 		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		State:       models.SystemIntakeStateOPEN,
+		Step:        models.SystemIntakeStepINITIALFORM,
 	}
 	createdIntake, err := r.store.CreateSystemIntake(ctx, &systemIntake)
 	return createdIntake, err

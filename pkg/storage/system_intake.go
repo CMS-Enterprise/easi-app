@@ -34,6 +34,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			id,
 			eua_user_id,
 			status,
+			state,
+			step,
 			request_type,
 			requester,
 			component,
@@ -80,6 +82,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:id,
 			:eua_user_id,
 			:status,
+			:state,
+			:step,
 			:request_type,
 			:requester,
 			:component,
@@ -144,6 +148,8 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 		UPDATE system_intakes
 		SET
 			status = :status,
+			step = :step,
+			state = :state,
 			request_type = :request_type,
 			requester = :requester,
 			component = :component,

@@ -1005,6 +1005,8 @@ type SystemIntake {
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
   status: SystemIntakeStatus!
+  state: SystemIntakeState!
+  step: SystemIntakeStep!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
@@ -1018,6 +1020,27 @@ type SystemIntake {
   hasUiChanges: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
 }
+
+"""
+SystemIntakeState represents whether the intake is open or closed
+"""
+enum SystemIntakeState {
+  OPEN
+  CLOSED
+}
+
+"""
+SystemIntakeStep represents the current step in the intake process
+"""
+enum SystemIntakeStep {
+  INITIAL_REQUEST_FORM
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+  DECISION_AND_NEXT_STEPS
+}
+
 type ITGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
@@ -2543,7 +2566,7 @@ The requester view of the IT Gov GRT step status
 enum ITGovGRTStatus {
   """
   This step can't be started yet
-  """  
+  """
   CANT_START
   """
   This step is not needed and has been skipped
@@ -2563,7 +2586,7 @@ enum ITGovGRTStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """  
+  """
   COMPLETED
 }
 
@@ -2577,11 +2600,11 @@ enum ITGovFinalBuisnessCaseStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   Ready to begin filling out
-  """  
+  """
   READY
   """
   The form has started to be filled out
@@ -2589,11 +2612,11 @@ enum ITGovFinalBuisnessCaseStatus {
   IN_PROGRESS
   """
   This buisness case has edits requested
-  """  
+  """
   EDITS_REQUESTED
   """
   This buisness case has been completed
-  """  
+  """
   COMPLETED
 }
 
@@ -2607,7 +2630,7 @@ enum ITGovGRBStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   The GRB meeting is waiting to be scheduled
@@ -2623,6 +2646,6 @@ enum ITGovGRBStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """    
+  """
   COMPLETED
 }
