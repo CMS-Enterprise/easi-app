@@ -108,13 +108,23 @@ const AppRoutes = () => {
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}
       />
-      <SecureRoute
-        path="/governance-task-list/:systemId"
-        exact
-        component={
-          flags.itGovV2Enabled ? GovernanceTaskList : GovernanceTaskListV1
-        }
-      />
+
+      {flags.itGovV2Enabled ? (
+        // IT Gov V2
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          component={GovernanceTaskList}
+        />
+      ) : (
+        // IT Gov V1
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          component={GovernanceTaskListV1}
+        />
+      )}
+
       <SecureRoute
         path="/governance-task-list/:systemId/feedback"
         exact
