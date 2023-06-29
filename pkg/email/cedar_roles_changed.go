@@ -49,7 +49,6 @@ func (c Client) cedarRolesChangedEmailBody(userFullName string, didAdd bool, did
 // SendCedarRolesChangedEmail notifies someone that they've been added as an attendee on a TRB request
 func (c Client) SendCedarRolesChangedEmail(
 	ctx context.Context,
-	to models.EmailAddress,
 	userFullName string,
 	didAdd bool,
 	didDelete bool,
@@ -66,7 +65,7 @@ func (c Client) SendCedarRolesChangedEmail(
 
 	err = c.sender.Send(
 		ctx,
-		[]models.EmailAddress{to},
+		[]models.EmailAddress{c.config.CEDARTeamEmail},
 		[]models.EmailAddress{},
 		subject,
 		body,

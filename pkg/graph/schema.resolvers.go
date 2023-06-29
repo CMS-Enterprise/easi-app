@@ -8,7 +8,6 @@ import (
 	"context"
 	"errors"
 	"net/url"
-	"os"
 	"strconv"
 	"time"
 
@@ -18,7 +17,6 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
@@ -2041,8 +2039,7 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 			return
 		}
 
-		cedarEmailAddress := os.Getenv(appconfig.CEDAREmailAddress)
-		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, models.NewEmailAddress(cedarEmailAddress), userInfo.CommonName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
+		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, userInfo.CommonName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
 		if err != nil {
 			// don't fail the request if the email fails, just log and return from the go func
 			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))

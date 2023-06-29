@@ -18,6 +18,7 @@ type Config struct {
 	AccessibilityTeamEmail models.EmailAddress
 	EASIHelpEmail          models.EmailAddress
 	TRBEmail               models.EmailAddress
+	CEDARTeamEmail         models.EmailAddress
 	URLHost                string
 	URLScheme              string
 	TemplateDirectory      string
