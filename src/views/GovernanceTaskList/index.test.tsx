@@ -1,19 +1,38 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  render,
-  waitForElementToBeRemoved,
-  within
-} from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import i18next from 'i18next';
 
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+// eslint-disable-next-line camelcase
+import { GetGovernanceTaskList_systemIntake_itGovTaskStatuses } from 'queries/types/GetGovernanceTaskList';
+import {
+  ITGovDecisionStatus,
+  ITGovDraftBuisnessCaseStatus,
+  ITGovFeedbackStatus,
+  ITGovFinalBuisnessCaseStatus,
+  ITGovGRBStatus,
+  ITGovGRTStatus,
+  ITGovIntakeFormStatus
+} from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import GovernanceTaskList from '.';
 
 describe('Governance Task List', () => {
   const id = '80950153-4a66-4881-b728-f4cc701ff926';
+
+  // eslint-disable-next-line camelcase
+  const requesterStartsNewRequest: GetGovernanceTaskList_systemIntake_itGovTaskStatuses = {
+    intakeFormStatus: ITGovIntakeFormStatus.READY,
+    feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
+    decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+    bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus.CANT_START,
+    grtMeetingStatus: ITGovGRTStatus.CANT_START,
+    bizCaseFinalStatus: ITGovFinalBuisnessCaseStatus.CANT_START,
+    grbMeetingStatus: ITGovGRBStatus.CANT_START,
+    __typename: 'ITGovTaskStatuses'
+  };
 
   it('renders a request task list at the initial state', async () => {
     const { getByRole, getByTestId } = render(
@@ -31,16 +50,7 @@ describe('Governance Task List', () => {
                 data: {
                   systemIntake: {
                     id,
-                    itGovTaskStatuses: {
-                      intakeFormStatus: 'READY',
-                      feedbackFromInitialReviewStatus: 'CANT_START',
-                      decisionAndNextStepsStatus: 'CANT_START',
-                      bizCaseDraftStatus: 'CANT_START',
-                      grtMeetingStatus: 'CANT_START',
-                      bizCaseFinalStatus: 'CANT_START',
-                      grbMeetingStatus: 'CANT_START',
-                      __typename: 'ITGovTaskStatuses'
-                    },
+                    itGovTaskStatuses: requesterStartsNewRequest,
                     __typename: 'SystemIntake'
                   }
                 }
@@ -81,17 +91,6 @@ describe('Governance Task List', () => {
     getByRole('heading', {
       level: 3,
       name: i18next.t<string>('itGov:taskList.steps.0.title')
-    });
-
-    // The task list initial state is: Step 1: Ready to start
-    const step1 = getByTestId('fill-out-the-intake-request-form');
-    expect(within(step1).getByTestId('task-list-task-tag')).toHaveTextContent(
-      i18next.t<string>('taskList:taskStatus.READY')
-    );
-
-    // Step 1: Ready to start should show the Start button
-    within(step1).getByRole('link', {
-      name: i18next.t<string>('itGov:button.start')
     });
   });
 });

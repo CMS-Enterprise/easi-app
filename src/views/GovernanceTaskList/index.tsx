@@ -35,6 +35,8 @@ function GovernanceTaskList() {
     }
   });
 
+  const itGovTaskStatuses = data?.systemIntake?.itGovTaskStatuses;
+
   if (error) {
     return <NotFound />;
   }
@@ -53,7 +55,7 @@ function GovernanceTaskList() {
 
         {loading && <PageLoading />}
 
-        {!loading && !!data && (
+        {!loading && itGovTaskStatuses && (
           <Grid row gap className="margin-top-6">
             <Grid tablet={{ col: 9 }}>
               <PageHeading className="margin-y-0">
@@ -69,7 +71,7 @@ function GovernanceTaskList() {
                   {/* 1. Fill out the Intake Request form */}
                   <TaskListItem
                     heading={t('taskList.steps.0.title')}
-                    status={ITGovIntakeFormStatus.READY}
+                    status={itGovTaskStatuses.intakeFormStatus}
                     testId={kebabCase(t('taskList.steps.0.title'))}
                   >
                     <TaskListDescription>
@@ -91,7 +93,7 @@ function GovernanceTaskList() {
                   {/* 2. Feedback from initial review */}
                   <TaskListItem
                     heading={t('taskList.steps.1.title')}
-                    status="CANNOT_START_YET"
+                    status={itGovTaskStatuses.feedbackFromInitialReviewStatus}
                     testId={kebabCase(t('taskList.steps.1.title'))}
                   >
                     <TaskListDescription>
@@ -105,7 +107,7 @@ function GovernanceTaskList() {
                   {/* 3. Prepare a draft Business Case */}
                   <TaskListItem
                     heading={t('taskList.steps.2.title')}
-                    status="CANNOT_START_YET"
+                    status={itGovTaskStatuses.bizCaseDraftStatus}
                     testId={kebabCase(t('taskList.steps.2.title'))}
                   >
                     <TaskListDescription>
@@ -116,7 +118,7 @@ function GovernanceTaskList() {
                   {/* 4. Attend the GRT meeting */}
                   <TaskListItem
                     heading={t('taskList.steps.3.title')}
-                    status="CANNOT_START_YET"
+                    status={itGovTaskStatuses.grtMeetingStatus}
                     testId={kebabCase(t('taskList.steps.3.title'))}
                   >
                     <TaskListDescription>
@@ -132,7 +134,7 @@ function GovernanceTaskList() {
                   {/* 5. Submit your Business Case for final approval */}
                   <TaskListItem
                     heading={t('taskList.steps.4.title')}
-                    status="CANNOT_START_YET"
+                    status={itGovTaskStatuses.bizCaseFinalStatus}
                     testId={kebabCase(t('taskList.steps.4.title'))}
                   >
                     <TaskListDescription>
@@ -143,7 +145,7 @@ function GovernanceTaskList() {
                   {/* 6. Attend the GRB meeting */}
                   <TaskListItem
                     heading={t('taskList.steps.5.title')}
-                    status="CANNOT_START_YET"
+                    status={itGovTaskStatuses.grbMeetingStatus}
                     testId={kebabCase(t('taskList.steps.5.title'))}
                   >
                     <TaskListDescription>
@@ -159,7 +161,7 @@ function GovernanceTaskList() {
                   {/* 7. Decision and next steps */}
                   <TaskListItem
                     heading={t('taskList.steps.6.title')}
-                    status="CANNOT_START_YET"
+                    status={itGovTaskStatuses.decisionAndNextStepsStatus}
                     testId={kebabCase(t('taskList.steps.6.title'))}
                   >
                     <TaskListDescription>
