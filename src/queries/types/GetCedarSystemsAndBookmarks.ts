@@ -28,5 +28,5 @@ export interface GetCedarSystemsAndBookmarks_cedarSystems {
 
 export interface GetCedarSystemsAndBookmarks {
   cedarSystemBookmarks: GetCedarSystemsAndBookmarks_cedarSystemBookmarks[];
-  cedarSystems: (GetCedarSystemsAndBookmarks_cedarSystems | null)[] | null;
+  cedarSystems: GetCedarSystemsAndBookmarks_cedarSystems[];
 }
