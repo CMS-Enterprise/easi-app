@@ -17,9 +17,11 @@ import {
 } from 'queries/types/GetSystemIntake';
 import NotFound, { NotFoundPartial } from 'views/NotFound';
 
+import UploadForm from './Documents/UploadForm';
 import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
 import ContractDetails from './ContractDetails';
+import Documents from './Documents';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
 import SystemIntakeView from './ViewOnly';
@@ -28,9 +30,10 @@ import './index.scss';
 
 export const SystemIntake = () => {
   const { t } = useTranslation();
-  const { systemId } = useParams<{
+  const { systemId, subPage } = useParams<{
     systemId: string;
     formPage: string;
+    subPage: string;
   }>();
 
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
@@ -54,22 +57,24 @@ export const SystemIntake = () => {
       className="system-intake grid-container margin-bottom-5"
       data-testid="system-intake"
     >
-      <BreadcrumbBar variant="wrap">
-        <Breadcrumb>
-          <BreadcrumbLink asCustom={Link} to="/">
-            <span>{t('taskList:navigation.home')}</span>
-          </BreadcrumbLink>
-        </Breadcrumb>
-        <Breadcrumb>
-          <BreadcrumbLink
-            asCustom={Link}
-            to={`/governance-task-list/${systemId}`}
-          >
-            <span>{t('taskList:navigation.governanceTaskList')}</span>
-          </BreadcrumbLink>
-        </Breadcrumb>
-        <Breadcrumb current>Intake Request</Breadcrumb>
-      </BreadcrumbBar>
+      {subPage !== 'upload' && (
+        <BreadcrumbBar variant="wrap">
+          <Breadcrumb>
+            <BreadcrumbLink asCustom={Link} to="/">
+              <span>{t('taskList:navigation.home')}</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb>
+            <BreadcrumbLink
+              asCustom={Link}
+              to={`/governance-task-list/${systemId}`}
+            >
+              <span>{t('taskList:navigation.governanceTaskList')}</span>
+            </BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>Intake Request</Breadcrumb>
+        </BreadcrumbBar>
+      )}
       {loading && <PageLoading />}
       {!loading && !!systemIntake && (
         <Switch>
@@ -84,6 +89,14 @@ export const SystemIntake = () => {
           <Route
             path="/system/:systemId/contract-details"
             render={() => <ContractDetails systemIntake={systemIntake} />}
+          />
+          <Route
+            path="/system/:systemId/documents/upload"
+            render={() => <UploadForm />}
+          />
+          <Route
+            path="/system/:systemId/documents"
+            render={() => <Documents systemIntake={systemIntake} />}
           />
           <Route
             path="/system/:systemId/review"

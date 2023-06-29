@@ -113,6 +113,25 @@ export enum SystemIntakeActionType {
 }
 
 /**
+ * Represents the common options for document type that is attached to a
+ * System Intake document
+ */
+export enum SystemIntakeDocumentCommonType {
+  DRAFT_ICGE = "DRAFT_ICGE",
+  OTHER = "OTHER",
+  SOO_SOW = "SOO_SOW",
+}
+
+/**
+ * Enumeration of the possible statuses of documents uploaded in the System Intake
+ */
+export enum SystemIntakeDocumentStatus {
+  AVAILABLE = "AVAILABLE",
+  PENDING = "PENDING",
+  UNAVAILABLE = "UNAVAILABLE",
+}
+
+/**
  * The type of an IT governance (system) request
  */
 export enum SystemIntakeRequestType {
@@ -412,6 +431,16 @@ export interface CreateSystemIntakeContactInput {
   systemIntakeId: UUID;
   component: string;
   role: string;
+}
+
+/**
+ * The data needed to upload a System Intake document and attach it to a request with metadata
+ */
+export interface CreateSystemIntakeDocumentInput {
+  requestID: UUID;
+  fileData: Upload;
+  documentType: SystemIntakeDocumentCommonType;
+  otherTypeDescription?: string | null;
 }
 
 /**

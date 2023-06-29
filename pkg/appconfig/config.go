@@ -218,3 +218,12 @@ const (
 	// FlagSourceLaunchDarkly is LAUNCH_DARKLY
 	FlagSourceLaunchDarkly FlagSourceOption = "LAUNCH_DARKLY"
 )
+
+// OKTAAPIURL is the key for the Okta API url
+const OKTAAPIURL = "OKTA_API_URL"
+
+// OKTAAPIToken is the key for the Okta API token
+const OKTAAPIToken = "OKTA_API_TOKEN" // #nosec G101 false positive - not the actual API key itself
+
+// USEOKTAAPI is a flag to determine if we should use the okta API or the CEDAR core api for user search
+const USEOKTAAPI = "USE_OKTA_API"
