@@ -1017,10 +1017,16 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
-  requestFormState: SystemIntakeRequestFormState!
-  draftBusinessCaseState: SystemIntakeDraftBusinessCaseState!
+  requestFormState: SystemIntakeFormState!
+  draftBusinessCaseState: SystemIntakeFormState!
+  """
+  This is a calculated state based on if a date exists for the GRT Meeting date
+  """
   grtMeetingState: SystemIntakeMeetingState!
-  finalBusinessCaseState: SystemIntakeFinalBusinessCaseState!
+  finalBusinessCaseState: SystemIntakeFormState!
+  """
+  This is a calculated state based on if a date exists for the GRB Meeting date
+  """
   grbMeetingState: SystemIntakeMeetingState!
   decisionState: SystemIntakeDecisionState!
 }
@@ -2633,33 +2639,29 @@ enum ITGovGRBStatus {
   COMPLETED
 }
 
-enum SystemIntakeRequestFormState {
+"""
+This represents the possible state any system intake form can take
+"""
+enum SystemIntakeFormState {
   NOT_STARTED
   IN_PROGRESS
   EDITS_REQUESTED
   SUBMITTED
 }
 
-enum SystemIntakeDraftBusinessCaseState {
-  NOT_STARTED
-  IN_PROGRESS
-  EDITS_REQUESTED
-  SUBMITTED
-}
-
-enum SystemIntakeFinalBusinessCaseState {
-  NOT_STARTED
-  IN_PROGRESS
-  EDITS_REQUESTED
-  SUBMITTED
-}
-
+"""
+This represents the possible System Intake Decision States
+"""
 enum SystemIntakeDecisionState {
   NO_DECISION
   LCID_ISSUED
   NOT_APPROVED
   NO_GOVERNANCE
 }
+
+"""
+This represents the possible states any system intake meeting can take.
+"""
 enum SystemIntakeMeetingState{
   SCHEDULED
   NOT_SCHEDULED

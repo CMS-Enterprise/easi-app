@@ -7991,10 +7991,16 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
-  requestFormState: SystemIntakeRequestFormState!
-  draftBusinessCaseState: SystemIntakeDraftBusinessCaseState!
+  requestFormState: SystemIntakeFormState!
+  draftBusinessCaseState: SystemIntakeFormState!
+  """
+  This is a calculated state based on if a date exists for the GRT Meeting date
+  """
   grtMeetingState: SystemIntakeMeetingState!
-  finalBusinessCaseState: SystemIntakeFinalBusinessCaseState!
+  finalBusinessCaseState: SystemIntakeFormState!
+  """
+  This is a calculated state based on if a date exists for the GRB Meeting date
+  """
   grbMeetingState: SystemIntakeMeetingState!
   decisionState: SystemIntakeDecisionState!
 }
@@ -9607,33 +9613,29 @@ enum ITGovGRBStatus {
   COMPLETED
 }
 
-enum SystemIntakeRequestFormState {
+"""
+This represents the possible state any system intake form can take
+"""
+enum SystemIntakeFormState {
   NOT_STARTED
   IN_PROGRESS
   EDITS_REQUESTED
   SUBMITTED
 }
 
-enum SystemIntakeDraftBusinessCaseState {
-  NOT_STARTED
-  IN_PROGRESS
-  EDITS_REQUESTED
-  SUBMITTED
-}
-
-enum SystemIntakeFinalBusinessCaseState {
-  NOT_STARTED
-  IN_PROGRESS
-  EDITS_REQUESTED
-  SUBMITTED
-}
-
+"""
+This represents the possible System Intake Decision States
+"""
 enum SystemIntakeDecisionState {
   NO_DECISION
   LCID_ISSUED
   NOT_APPROVED
   NO_GOVERNANCE
 }
+
+"""
+This represents the possible states any system intake meeting can take.
+"""
 enum SystemIntakeMeetingState{
   SCHEDULED
   NOT_SCHEDULED
@@ -36661,9 +36663,9 @@ func (ec *executionContext) _SystemIntake_requestFormState(ctx context.Context, 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.SystemIntakeRequestFormState)
+	res := resTmp.(models.SystemIntakeFormState)
 	fc.Result = res
-	return ec.marshalNSystemIntakeRequestFormState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestFormState(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeFormState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFormState(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_requestFormState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -36673,7 +36675,7 @@ func (ec *executionContext) fieldContext_SystemIntake_requestFormState(ctx conte
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type SystemIntakeRequestFormState does not have child fields")
+			return nil, errors.New("field of type SystemIntakeFormState does not have child fields")
 		},
 	}
 	return fc, nil
@@ -36705,9 +36707,9 @@ func (ec *executionContext) _SystemIntake_draftBusinessCaseState(ctx context.Con
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.SystemIntakeDraftBusinessCaseState)
+	res := resTmp.(models.SystemIntakeFormState)
 	fc.Result = res
-	return ec.marshalNSystemIntakeDraftBusinessCaseState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDraftBusinessCaseState(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeFormState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFormState(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_draftBusinessCaseState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -36717,7 +36719,7 @@ func (ec *executionContext) fieldContext_SystemIntake_draftBusinessCaseState(ctx
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type SystemIntakeDraftBusinessCaseState does not have child fields")
+			return nil, errors.New("field of type SystemIntakeFormState does not have child fields")
 		},
 	}
 	return fc, nil
@@ -36793,9 +36795,9 @@ func (ec *executionContext) _SystemIntake_finalBusinessCaseState(ctx context.Con
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.SystemIntakeFinalBusinessCaseState)
+	res := resTmp.(models.SystemIntakeFormState)
 	fc.Result = res
-	return ec.marshalNSystemIntakeFinalBusinessCaseState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFinalBusinessCaseState(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeFormState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFormState(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_finalBusinessCaseState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -36805,7 +36807,7 @@ func (ec *executionContext) fieldContext_SystemIntake_finalBusinessCaseState(ctx
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type SystemIntakeFinalBusinessCaseState does not have child fields")
+			return nil, errors.New("field of type SystemIntakeFormState does not have child fields")
 		},
 	}
 	return fc, nil
@@ -62514,29 +62516,13 @@ func (ec *executionContext) marshalNSystemIntakeDocumentType2ᚖgithubᚗcomᚋc
 	return ec._SystemIntakeDocumentType(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNSystemIntakeDraftBusinessCaseState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDraftBusinessCaseState(ctx context.Context, v interface{}) (models.SystemIntakeDraftBusinessCaseState, error) {
+func (ec *executionContext) unmarshalNSystemIntakeFormState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFormState(ctx context.Context, v interface{}) (models.SystemIntakeFormState, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeDraftBusinessCaseState(tmp)
+	res := models.SystemIntakeFormState(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSystemIntakeDraftBusinessCaseState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDraftBusinessCaseState(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeDraftBusinessCaseState) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNSystemIntakeFinalBusinessCaseState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFinalBusinessCaseState(ctx context.Context, v interface{}) (models.SystemIntakeFinalBusinessCaseState, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeFinalBusinessCaseState(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNSystemIntakeFinalBusinessCaseState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFinalBusinessCaseState(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeFinalBusinessCaseState) graphql.Marshaler {
+func (ec *executionContext) marshalNSystemIntakeFormState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFormState(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeFormState) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -62765,22 +62751,6 @@ func (ec *executionContext) marshalNSystemIntakeProductManager2ᚖgithubᚗcom�
 func (ec *executionContext) unmarshalNSystemIntakeProductManagerInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManagerInput(ctx context.Context, v interface{}) (*model.SystemIntakeProductManagerInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeProductManagerInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNSystemIntakeRequestFormState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestFormState(ctx context.Context, v interface{}) (models.SystemIntakeRequestFormState, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeRequestFormState(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNSystemIntakeRequestFormState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestFormState(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeRequestFormState) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx context.Context, v interface{}) (models.SystemIntakeRequestType, error) {
