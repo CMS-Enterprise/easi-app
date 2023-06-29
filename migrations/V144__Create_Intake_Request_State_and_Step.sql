@@ -12,10 +12,6 @@ CREATE TYPE system_intake_state AS ENUM (
   'CLOSED'
 );
 
-ALTER TABLE system_intakes ADD COLUMN step system_intake_step;
-ALTER TABLE system_intakes ALTER COLUMN step SET DEFAULT 'INITIAL_REQUEST_FORM';
-ALTER TABLE system_intakes ALTER COLUMN step SET NOT NULL;
-
-ALTER TABLE system_intakes ADD COLUMN state system_intake_state;
-ALTER TABLE system_intakes ALTER COLUMN state SET DEFAULT 'OPEN';
-ALTER TABLE system_intakes ALTER COLUMN state SET NOT NULL;
+ALTER TABLE system_intakes
+ ADD COLUMN step system_intake_step NOT NULL DEFAULT 'INITIAL_REQUEST_FORM',
+ ADD COLUMN state system_intake_state NOT NULL DEFAULT 'OPEN';
