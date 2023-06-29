@@ -2031,9 +2031,8 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 
 	// Asyncronously send an email to the CEDAR team notifying them of the change
 	go func() {
-		// make a new context, or else the request will cancel when the parent context cancels
-		emailCtx := context.Background()
-		appcontext.WithLogger(emailCtx, appcontext.ZLogger(ctx)) // copy the logger over
+		// make a new context and copy the logger to it, or else the request will cancel when the parent context cancels
+		emailCtx := appcontext.WithLogger(context.Background(), appcontext.ZLogger(ctx))
 
 		userInfo, err := r.service.FetchUserInfo(emailCtx, input.EuaUserID)
 		if err != nil {
