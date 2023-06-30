@@ -28,6 +28,7 @@ services:
       - SERVER_CERT
       - SERVER_KEY
       - LOCAL_AUTH_ENABLED=true
+      - CEDAR_EMAIL_ADDRESS=fake@cedar.gov
       - FLAG_SOURCE=FILE
       - FLAGDATA_FILE=/cypress/fixtures/flagdata.json
       - MINIO_ADDRESS=http://minio:9000
