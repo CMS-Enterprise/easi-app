@@ -13,7 +13,6 @@ export default gql`
         }
         status
         uploadedAt
-        url
       }
     }
   }

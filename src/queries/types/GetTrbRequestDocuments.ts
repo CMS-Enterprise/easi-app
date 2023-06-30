@@ -22,7 +22,6 @@ export interface GetTrbRequestDocuments_trbRequest_documents {
   documentType: GetTrbRequestDocuments_trbRequest_documents_documentType;
   status: TRBRequestDocumentStatus;
   uploadedAt: Time;
-  url: string;
 }
 
 export interface GetTrbRequestDocuments_trbRequest {

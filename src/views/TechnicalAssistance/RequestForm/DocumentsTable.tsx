@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
-import { useMutation } from '@apollo/client';
-import { Alert, Button, Link, Table } from '@trussworks/react-uswds';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { Alert, Button, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -10,6 +11,7 @@ import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import GetTrbRequestDocumentUrlsQuery from 'queries/GetTrbRequestDocumentUrlsQuery';
 import {
   DeleteTrbRequestDocument,
   DeleteTrbRequestDocumentVariables
@@ -19,6 +21,7 @@ import {
   GetTrbRequestDocuments_trbRequest_documents as TrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
+import { GetTrbRequestDocumentUrls } from 'queries/types/GetTrbRequestDocumentUrls';
 import {
   TRBDocumentCommonType,
   TRBRequestDocumentStatus
@@ -62,6 +65,18 @@ function DocumentsTable({
   >(GetTrbRequestDocumentsQuery, {
     variables: { id: trbRequestId }
   });
+
+  const [
+    getDocumentUrls,
+    { data: urlData, loading: urlLoading, error: urlError, called: urlCalled }
+  ] = useLazyQuery<GetTrbRequestDocumentUrls, GetTrbRequestDocumentsVariables>(
+    GetTrbRequestDocumentUrlsQuery,
+    {
+      variables: {
+        id: trbRequestId
+      }
+    }
+  );
 
   const documents = data?.trbRequest.documents || [];
 
@@ -129,6 +144,37 @@ function DocumentsTable({
   ]);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
+    const getUrlForDocument = (documentId: string) => {
+      console.log('Calling getDocumentUrls() from useLazyQuery hook');
+      // use as promise instead of relying on urlLoading, urlError, urlData, etc.
+      // when using those, had an issue where the first click wouldn't log response data; urlLoading and urlError were false, but urlData was falsy
+      getDocumentUrls()
+        .then(response => {
+          console.log('Got response for getDocumentUrls()');
+          if (response.error) {
+            console.log('Error occurred');
+            console.log(response.error);
+          } else if (response.loading) {
+            console.log('getDocumentUrls() still loading');
+          } else if (!response.data) {
+            console.log("getDocumentUrls() didn't return data");
+          } else {
+            // "navigate to document"
+            // TODO - actually download or navigate
+
+            // non-null assertion should be safe, this should only be called with a documentId of a valid document
+            const requestedDocument = response.data.trbRequest.documents.find(
+              doc => doc.id === documentId
+            )!;
+            const requestedUrl = requestedDocument.url;
+            console.log(`Document URL: ${requestedUrl}`);
+          }
+        })
+        .catch(() => {
+          console.log('Catch callback from getDocumentUrls() invoked');
+        });
+    };
+
     return [
       {
         Header: t<string>('documents.table.header.fileName'),
@@ -161,20 +207,41 @@ function DocumentsTable({
           // Show the upload status
           // Virus scanning
           if (row.original.status === TRBRequestDocumentStatus.PENDING)
-            return (
-              <em data-testurl={row.original.url}>
-                {t('documents.table.virusScan')}
-              </em>
-            );
+            return <em>{t('documents.table.virusScan')}</em>;
           // View or Remove
-          if (row.original.status === TRBRequestDocumentStatus.AVAILABLE)
+          if (row.original.status === TRBRequestDocumentStatus.AVAILABLE) {
+            const documentId = row.original.id;
+            // return (
+            //   <Link
+            //     target="_blank"
+            //     href="#"
+
+            //   >
+            //     {t('documents.table.view')}
+            //   </Link>
+            // );
+
             // Show some file actions once it's available
+            let viewButtonText = t('documents.table.view');
+            if (urlCalled) {
+              if (urlLoading) {
+                viewButtonText = 'Loading...';
+              } else if (urlError) {
+                viewButtonText = 'Error!';
+              } else if (!urlData) {
+                viewButtonText = 'No URL data!';
+              }
+            }
+
             return (
               <>
                 {/* View document */}
-                <Link target="_blank" href={row.original.url}>
-                  {t('documents.table.view')}
-                </Link>
+                <button
+                  type="button"
+                  onClick={() => getUrlForDocument(documentId)}
+                >
+                  {viewButtonText}
+                </button>
                 {/* Delete document */}
                 {canEdit && (
                   <Button
@@ -191,6 +258,7 @@ function DocumentsTable({
                 )}
               </>
             );
+          }
           // Infected unavailable
           if (row.original.status === TRBRequestDocumentStatus.UNAVAILABLE)
             return t('documents.table.unavailable');
@@ -198,7 +266,7 @@ function DocumentsTable({
         }
       }
     ];
-  }, [canEdit, t]);
+  }, [t, getDocumentUrls, urlCalled, urlLoading, urlError, urlData, canEdit]);
 
   const {
     getTableBodyProps,
