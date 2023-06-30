@@ -18,10 +18,7 @@ import {
   GetCedarSystemBookmarks,
   GetCedarSystemBookmarks_cedarSystemBookmarks as CedarSystemBookmark
 } from 'queries/types/GetCedarSystemBookmarks';
-import {
-  GetCedarSystems,
-  GetCedarSystems_cedarSystems as CedarSystem
-} from 'queries/types/GetCedarSystems';
+import { GetCedarSystems } from 'queries/types/GetCedarSystems';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
@@ -57,7 +54,7 @@ const Home = () => {
     skip: !user.isBasicUser(groups, flags)
   });
 
-  const systemsTableData = (systems?.cedarSystems ?? []) as CedarSystem[];
+  const systemsTableData = systems?.cedarSystems ?? [];
   const bookmarks: CedarSystemBookmark[] =
     systemsBookmarks?.cedarSystemBookmarks ?? [];
 
