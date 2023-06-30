@@ -18,6 +18,7 @@ type Config struct {
 	AccessibilityTeamEmail models.EmailAddress
 	EASIHelpEmail          models.EmailAddress
 	TRBEmail               models.EmailAddress
+	CEDARTeamEmail         models.EmailAddress
 	URLHost                string
 	URLScheme              string
 	TemplateDirectory      string
@@ -61,6 +62,7 @@ type templates struct {
 	trbRequestReopened                         templateCaller
 	trbAdviceLetterSubmitted                   templateCaller
 	trbRequestClosed                           templateCaller
+	cedarRolesChanged                          templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -297,6 +299,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(trbRequestReopenedTemplateName)
 	}
 	appTemplates.trbRequestReopened = trbRequestReopenedTemplate
+
+	cedarRolesChangedTemplateName := "cedar_roles_changed.gohtml"
+	cedarRolesChanged := rawTemplates.Lookup(cedarRolesChangedTemplateName)
+	if cedarRolesChanged == nil {
+		return Client{}, templateError(cedarRolesChangedTemplateName)
+	}
+	appTemplates.cedarRolesChanged = cedarRolesChanged
 
 	client := Client{
 		config:    config,
