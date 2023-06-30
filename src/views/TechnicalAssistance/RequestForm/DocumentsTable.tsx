@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
@@ -146,34 +145,27 @@ function DocumentsTable({
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
     const getUrlForDocument = (documentId: string) => {
-      console.log('Calling getDocumentUrls() from useLazyQuery hook');
       // use as promise instead of relying on urlLoading, urlError, urlData, etc.
       // when using those, had an issue where the first click wouldn't log response data; urlLoading and urlError were false, but urlData was falsy
       getDocumentUrls()
         .then(response => {
-          console.log('Got response for getDocumentUrls()');
           if (response.error) {
-            console.log('Error occurred');
-            console.log(response.error);
+            // TODO - handle error
           } else if (response.loading) {
-            console.log('getDocumentUrls() still loading');
+            // TODO - handle case where it's still loading
           } else if (!response.data) {
-            console.log("getDocumentUrls() didn't return data");
+            // TODO - handle not returning any data
           } else {
-            // "navigate to document"
-            // TODO - actually download or navigate
+            // Download document
 
-            // non-null assertion should be safe, this should only be called with a documentId of a valid document
             const requestedDocument = response.data.trbRequest.documents.find(
               doc => doc.id === documentId
-            )!;
-            const requestedUrl = requestedDocument.url;
-            console.log(`Document URL: ${requestedUrl}`);
-            downloadFileFromURLOnly(requestedUrl);
+            )!; // non-null assertion should be safe, this function should only be called with a documentId of a valid document
+            downloadFileFromURLOnly(requestedDocument.url);
           }
         })
         .catch(() => {
-          console.log('Catch callback from getDocumentUrls() invoked');
+          // TODO - error handling
         });
     };
 
