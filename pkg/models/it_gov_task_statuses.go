@@ -36,17 +36,17 @@ const (
 	ITGDSCompleted ITGovDecisionStatus = "COMPLETED"
 )
 
-// ITGovDraftBuisnessCaseStatus represents the types of ITGovDraftBuisnessCaseStatus types. This is what the requestor sees for the  optional fourth task.
-type ITGovDraftBuisnessCaseStatus string
+// ITGovDraftBusinessCaseStatus represents the types of ITGovDraftBusinessCaseStatus types. This is what the requestor sees for the  optional fourth task.
+type ITGovDraftBusinessCaseStatus string
 
 // These are the options for ITGovDraftBuisnessCaseStatus
 const (
-	ITGDBCSCantStart      ITGovDraftBuisnessCaseStatus = "CANT_START"
-	ITGDBCSNotNeeded      ITGovDraftBuisnessCaseStatus = "NOT_NEEDED"
-	ITGDBCSReady          ITGovDraftBuisnessCaseStatus = "READY"
-	ITGDBCSInProgress     ITGovDraftBuisnessCaseStatus = "IN_PROGRESS"
-	ITGDBCSEditsRequested ITGovDraftBuisnessCaseStatus = "EDITS_REQUESTED"
-	ITGDBCSCompleted      ITGovDraftBuisnessCaseStatus = "COMPLETED"
+	ITGDBCSCantStart      ITGovDraftBusinessCaseStatus = "CANT_START"
+	ITGDBCSNotNeeded      ITGovDraftBusinessCaseStatus = "NOT_NEEDED"
+	ITGDBCSReady          ITGovDraftBusinessCaseStatus = "READY"
+	ITGDBCSInProgress     ITGovDraftBusinessCaseStatus = "IN_PROGRESS"
+	ITGDBCSEditsRequested ITGovDraftBusinessCaseStatus = "EDITS_REQUESTED"
+	ITGDBCSCompleted      ITGovDraftBusinessCaseStatus = "COMPLETED"
 )
 
 // ITGovGRTStatus represents the types of ITGovGRTStatus types. This is what the requestor sees for the  optional fifth task.
@@ -62,17 +62,17 @@ const (
 	ITGGRTSCompleted        ITGovGRTStatus = "COMPLETED"
 )
 
-// ITGovFinalBuisnessCaseStatus represents the types of ITGovFinalBuisnessCaseStatus types. This is what the requestor sees for the  optional sixth task.
-type ITGovFinalBuisnessCaseStatus string
+// ITGovFinalBusinessCaseStatus represents the types of ITGovFinalBusinessCaseStatus types. This is what the requestor sees for the  optional sixth task.
+type ITGovFinalBusinessCaseStatus string
 
 // These are the options for ITGovFinalBuisnessCaseStatus
 const (
-	ITGFBCSCantStart      ITGovFinalBuisnessCaseStatus = "CANT_START"
-	ITGFBCSNotNeeded      ITGovFinalBuisnessCaseStatus = "NOT_NEEDED"
-	ITGFBCSReady          ITGovFinalBuisnessCaseStatus = "READY"
-	ITGFBCSInProgress     ITGovFinalBuisnessCaseStatus = "IN_PROGRESS"
-	ITGFBCSEditsRequested ITGovFinalBuisnessCaseStatus = "EDITS_REQUESTED"
-	ITGFBCSCompleted      ITGovFinalBuisnessCaseStatus = "COMPLETED"
+	ITGFBCSCantStart      ITGovFinalBusinessCaseStatus = "CANT_START"
+	ITGFBCSNotNeeded      ITGovFinalBusinessCaseStatus = "NOT_NEEDED"
+	ITGFBCSReady          ITGovFinalBusinessCaseStatus = "READY"
+	ITGFBCSInProgress     ITGovFinalBusinessCaseStatus = "IN_PROGRESS"
+	ITGFBCSEditsRequested ITGovFinalBusinessCaseStatus = "EDITS_REQUESTED"
+	ITGFBCSCompleted      ITGovFinalBusinessCaseStatus = "COMPLETED"
 )
 
 // ITGovGRBStatus represents the types of ITGovGRBStatus types.  This is what the requestor sees for the  optional seventh task.

@@ -1033,9 +1033,9 @@ type SystemIntake {
 type ITGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
-  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus!
+  bizCaseDraftStatus: ITGovDraftBusinessCaseStatus!
   grtMeetingStatus: ITGovGRTStatus!
-  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatus!
+  bizCaseFinalStatus: ITGovFinalBusinessCaseStatus!
   grbMeetingStatus: ITGovGRBStatus!
   decisionAndNextStepsStatus: ITGovDecisionStatus!
 }
@@ -2517,9 +2517,9 @@ enum ITGovDecisionStatus {
 
 
 """
-The requester view of the IT gov draft buisness case step status
+The requester view of the IT gov draft business case step status
 """
-enum ITGovDraftBuisnessCaseStatus {
+enum ITGovDraftBusinessCaseStatus {
   """
   This step can't be started yet
   """
@@ -2538,12 +2538,12 @@ enum ITGovDraftBuisnessCaseStatus {
   IN_PROGRESS
 
   """
-  This draft buisness case has edits requested
+  This draft business case has edits requested
   """
   EDITS_REQUESTED
 
   """
-  The draft buisness case is completed
+  The draft business case is completed
   """
   COMPLETED
 }
@@ -2580,9 +2580,9 @@ enum ITGovGRTStatus {
 }
 
 """
-The requester view of the IT Gov Final Buisness Case step status
+The requester view of the IT Gov Final Business Case step status
 """
-enum ITGovFinalBuisnessCaseStatus {
+enum ITGovFinalBusinessCaseStatus {
   """
   This step can't be started yet
   """
@@ -2600,11 +2600,11 @@ enum ITGovFinalBuisnessCaseStatus {
   """
   IN_PROGRESS
   """
-  This buisness case has edits requested
+  This business case has edits requested
   """  
   EDITS_REQUESTED
   """
-  This buisness case has been completed
+  This business case has been completed
   """  
   COMPLETED
 }

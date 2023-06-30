@@ -1204,9 +1204,9 @@ type CedarThreatResolver interface {
 type ITGovTaskStatusesResolver interface {
 	IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeFormStatus, error)
 	FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFeedbackStatus, error)
-	BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBuisnessCaseStatus, error)
+	BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBusinessCaseStatus, error)
 	GrtMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRTStatus, error)
-	BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFinalBuisnessCaseStatus, error)
+	BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFinalBusinessCaseStatus, error)
 	GrbMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRBStatus, error)
 	DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDecisionStatus, error)
 }
@@ -8007,9 +8007,9 @@ type SystemIntake {
 type ITGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
-  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus!
+  bizCaseDraftStatus: ITGovDraftBusinessCaseStatus!
   grtMeetingStatus: ITGovGRTStatus!
-  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatus!
+  bizCaseFinalStatus: ITGovFinalBusinessCaseStatus!
   grbMeetingStatus: ITGovGRBStatus!
   decisionAndNextStepsStatus: ITGovDecisionStatus!
 }
@@ -9491,9 +9491,9 @@ enum ITGovDecisionStatus {
 
 
 """
-The requester view of the IT gov draft buisness case step status
+The requester view of the IT gov draft business case step status
 """
-enum ITGovDraftBuisnessCaseStatus {
+enum ITGovDraftBusinessCaseStatus {
   """
   This step can't be started yet
   """
@@ -9512,12 +9512,12 @@ enum ITGovDraftBuisnessCaseStatus {
   IN_PROGRESS
 
   """
-  This draft buisness case has edits requested
+  This draft business case has edits requested
   """
   EDITS_REQUESTED
 
   """
-  The draft buisness case is completed
+  The draft business case is completed
   """
   COMPLETED
 }
@@ -9554,9 +9554,9 @@ enum ITGovGRTStatus {
 }
 
 """
-The requester view of the IT Gov Final Buisness Case step status
+The requester view of the IT Gov Final Business Case step status
 """
-enum ITGovFinalBuisnessCaseStatus {
+enum ITGovFinalBusinessCaseStatus {
   """
   This step can't be started yet
   """
@@ -9574,11 +9574,11 @@ enum ITGovFinalBuisnessCaseStatus {
   """
   IN_PROGRESS
   """
-  This buisness case has edits requested
+  This business case has edits requested
   """  
   EDITS_REQUESTED
   """
-  This buisness case has been completed
+  This business case has been completed
   """  
   COMPLETED
 }
@@ -24810,9 +24810,9 @@ func (ec *executionContext) _ITGovTaskStatuses_bizCaseDraftStatus(ctx context.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.ITGovDraftBuisnessCaseStatus)
+	res := resTmp.(models.ITGovDraftBusinessCaseStatus)
 	fc.Result = res
-	return ec.marshalNITGovDraftBuisnessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovDraftBuisnessCaseStatus(ctx, field.Selections, res)
+	return ec.marshalNITGovDraftBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovDraftBusinessCaseStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ITGovTaskStatuses_bizCaseDraftStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -24822,7 +24822,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatuses_bizCaseDraftStatus(ct
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ITGovDraftBuisnessCaseStatus does not have child fields")
+			return nil, errors.New("field of type ITGovDraftBusinessCaseStatus does not have child fields")
 		},
 	}
 	return fc, nil
@@ -24898,9 +24898,9 @@ func (ec *executionContext) _ITGovTaskStatuses_bizCaseFinalStatus(ctx context.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.ITGovFinalBuisnessCaseStatus)
+	res := resTmp.(models.ITGovFinalBusinessCaseStatus)
 	fc.Result = res
-	return ec.marshalNITGovFinalBuisnessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFinalBuisnessCaseStatus(ctx, field.Selections, res)
+	return ec.marshalNITGovFinalBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFinalBusinessCaseStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ITGovTaskStatuses_bizCaseFinalStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -24910,7 +24910,7 @@ func (ec *executionContext) fieldContext_ITGovTaskStatuses_bizCaseFinalStatus(ct
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ITGovFinalBuisnessCaseStatus does not have child fields")
+			return nil, errors.New("field of type ITGovFinalBusinessCaseStatus does not have child fields")
 		},
 	}
 	return fc, nil
@@ -61777,13 +61777,13 @@ func (ec *executionContext) marshalNITGovDecisionStatus2githubᚗcomᚋcmsgovᚋ
 	return res
 }
 
-func (ec *executionContext) unmarshalNITGovDraftBuisnessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovDraftBuisnessCaseStatus(ctx context.Context, v interface{}) (models.ITGovDraftBuisnessCaseStatus, error) {
+func (ec *executionContext) unmarshalNITGovDraftBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovDraftBusinessCaseStatus(ctx context.Context, v interface{}) (models.ITGovDraftBusinessCaseStatus, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.ITGovDraftBuisnessCaseStatus(tmp)
+	res := models.ITGovDraftBusinessCaseStatus(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNITGovDraftBuisnessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovDraftBuisnessCaseStatus(ctx context.Context, sel ast.SelectionSet, v models.ITGovDraftBuisnessCaseStatus) graphql.Marshaler {
+func (ec *executionContext) marshalNITGovDraftBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovDraftBusinessCaseStatus(ctx context.Context, sel ast.SelectionSet, v models.ITGovDraftBusinessCaseStatus) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -61809,13 +61809,13 @@ func (ec *executionContext) marshalNITGovFeedbackStatus2githubᚗcomᚋcmsgovᚋ
 	return res
 }
 
-func (ec *executionContext) unmarshalNITGovFinalBuisnessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFinalBuisnessCaseStatus(ctx context.Context, v interface{}) (models.ITGovFinalBuisnessCaseStatus, error) {
+func (ec *executionContext) unmarshalNITGovFinalBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFinalBusinessCaseStatus(ctx context.Context, v interface{}) (models.ITGovFinalBusinessCaseStatus, error) {
 	tmp, err := graphql.UnmarshalString(v)
-	res := models.ITGovFinalBuisnessCaseStatus(tmp)
+	res := models.ITGovFinalBusinessCaseStatus(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNITGovFinalBuisnessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFinalBuisnessCaseStatus(ctx context.Context, sel ast.SelectionSet, v models.ITGovFinalBuisnessCaseStatus) graphql.Marshaler {
+func (ec *executionContext) marshalNITGovFinalBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFinalBusinessCaseStatus(ctx context.Context, sel ast.SelectionSet, v models.ITGovFinalBusinessCaseStatus) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {

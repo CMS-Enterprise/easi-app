@@ -724,7 +724,7 @@ func (r *iTGovTaskStatusesResolver) FeedbackFromInitialReviewStatus(ctx context.
 }
 
 // BizCaseDraftStatus is the resolver for the bizCaseDraftStatus field.
-func (r *iTGovTaskStatusesResolver) BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBuisnessCaseStatus, error) {
+func (r *iTGovTaskStatusesResolver) BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBusinessCaseStatus, error) {
 	return resolvers.BizCaseDraftStatus(obj.ParentSystemIntake), nil
 }
 
@@ -734,7 +734,7 @@ func (r *iTGovTaskStatusesResolver) GrtMeetingStatus(ctx context.Context, obj *m
 }
 
 // BizCaseFinalStatus is the resolver for the bizCaseFinalStatus field.
-func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFinalBuisnessCaseStatus, error) {
+func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFinalBusinessCaseStatus, error) {
 	return resolvers.BizCaseFinalStatus(obj.ParentSystemIntake), nil
 }
 
