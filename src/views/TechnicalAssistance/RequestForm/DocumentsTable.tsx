@@ -27,6 +27,7 @@ import {
   TRBRequestDocumentStatus
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
+import { downloadFileFromURLOnly } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import { DocumentStatusType } from '../TrbDocuments';
@@ -168,6 +169,7 @@ function DocumentsTable({
             )!;
             const requestedUrl = requestedDocument.url;
             console.log(`Document URL: ${requestedUrl}`);
+            downloadFileFromURLOnly(requestedUrl);
           }
         })
         .catch(() => {
