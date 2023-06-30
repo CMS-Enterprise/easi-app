@@ -5,7 +5,6 @@ import { useMutation } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
-import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { DeleteSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
@@ -184,25 +183,23 @@ const DocumentsTable = ({
           onClick={() => {
             deleteDocument({ variables: { id: fileToDelete.id } })
               .then(() => {
-                showMessage(
-                  <Alert type="success">
-                    {t(
-                      'technicalAssistance:documents.supportingDocuments.removeSuccess',
-                      {
-                        documentName: fileToDelete.fileName
-                      }
-                    )}
-                  </Alert>
-                );
+                showMessage({
+                  message: t(
+                    'technicalAssistance:documents.supportingDocuments.removeSuccess',
+                    {
+                      documentName: fileToDelete.fileName
+                    }
+                  ),
+                  type: 'success'
+                });
               })
               .catch(() => {
-                showMessage(
-                  <Alert type="error">
-                    {t(
-                      'technicalAssistance:documents.supportingDocuments.removeFail'
-                    )}
-                  </Alert>
-                );
+                showMessage({
+                  message: t(
+                    'technicalAssistance:documents.supportingDocuments.removeFail'
+                  ),
+                  type: 'error'
+                });
               });
 
             setFileToDelete(null);

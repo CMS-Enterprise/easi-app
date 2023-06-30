@@ -25,13 +25,13 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
 
   const history = useHistory();
 
-  const { message } = useMessage();
+  const { Message } = useMessage();
 
   const { documents } = systemIntake;
 
   return (
     <>
-      {message}
+      <Message />
 
       <PageHeading className="margin-top-4 margin-bottom-1">
         {t('intake:documents.title')}
