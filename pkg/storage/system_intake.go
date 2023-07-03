@@ -376,7 +376,7 @@ func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuse
 			(	SELECT
 					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at
 				FROM system_intakes
-					LEFT JOIN notes on notes.system_intake = system_intakes.id
+					LEFT JOIN notes on notes.system_intake = system_intakes.id AND notes.is_archived = false
 				WHERE system_intakes.status IN (?)
 				ORDER BY system_intakes.id, notes.created_at DESC
 			) AS intakes_and_notes
