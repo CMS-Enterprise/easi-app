@@ -26,21 +26,12 @@ import './index.scss';
 
 type DocumentsTableProps = {
   systemIntake: SystemIntake;
-  /**
-   * Whether to show remove document button in table
-   *
-   * Defaults to true
-   */
-  canEdit?: boolean;
 };
 
 /**
  * System intake document upload form step
  */
-const DocumentsTable = ({
-  systemIntake,
-  canEdit = true
-}: DocumentsTableProps) => {
+const DocumentsTable = ({ systemIntake }: DocumentsTableProps) => {
   const { t } = useTranslation();
 
   const { showMessage } = useMessage();
@@ -119,19 +110,15 @@ const DocumentsTable = ({
                   {t('technicalAssistance:documents.table.view')}
                 </Link>
 
-                {
-                  /* Delete document */
-                  canEdit && (
-                    <Button
-                      unstyled
-                      type="button"
-                      className="margin-left-2 text-error"
-                      onClick={() => setFileToDelete(row.original)}
-                    >
-                      {t('technicalAssistance:documents.table.remove')}
-                    </Button>
-                  )
-                }
+                {/* Delete document */}
+                <Button
+                  unstyled
+                  type="button"
+                  className="margin-left-2 text-error"
+                  onClick={() => setFileToDelete(row.original)}
+                >
+                  {t('technicalAssistance:documents.table.remove')}
+                </Button>
               </>
             );
           // Infected unavailable
@@ -141,7 +128,7 @@ const DocumentsTable = ({
         }
       }
     ];
-  }, [canEdit, setFileToDelete, t]);
+  }, [setFileToDelete, t]);
 
   const {
     getTableBodyProps,

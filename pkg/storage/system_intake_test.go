@@ -108,12 +108,19 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
-		createdIntake, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
 		s.NoError(err)
 		originalEUA := originalIntake.EUAUserID
-		createdIntake.EUAUserID = null.StringFrom("NEWS")
+		partialIntake := models.SystemIntake{
+			ID:          originalIntake.ID,
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
+		}
+		partialIntake.EUAUserID = null.StringFrom("NEWS")
 
-		_, err = s.store.UpdateSystemIntake(ctx, createdIntake)
+		_, err = s.store.UpdateSystemIntake(ctx, &partialIntake)
 		s.NoError(err, "failed to update system intake")
 
 		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)

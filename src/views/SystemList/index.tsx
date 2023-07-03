@@ -27,7 +27,10 @@ import {
   GetCedarSystemBookmarks,
   GetCedarSystemBookmarks_cedarSystemBookmarks as CedarSystemBookmark
 } from 'queries/types/GetCedarSystemBookmarks';
-import { GetCedarSystems } from 'queries/types/GetCedarSystems';
+import {
+  GetCedarSystems,
+  GetCedarSystems_cedarSystems as CedarSystem
+} from 'queries/types/GetCedarSystems';
 
 import Table from './Table';
 import filterBookmarks from './util';
@@ -51,7 +54,7 @@ export const SystemList = () => {
     refetch: refetchBookmarks
   } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
 
-  const systemsTableData = data1?.cedarSystems ?? [];
+  const systemsTableData = (data1?.cedarSystems ?? []) as CedarSystem[];
   const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
 
   return (

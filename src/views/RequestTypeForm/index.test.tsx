@@ -125,7 +125,6 @@ const intakeQuery = (intakeData: any) => {
             createdAt: null
           },
           hasUiChanges: null,
-          documents: [],
           ...intakeData
         }
       }
