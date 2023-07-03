@@ -195,22 +195,60 @@ type newRole struct {
 	roleTypeID string
 }
 
+// SetRoleResponseMetadata contains metadata about the role assignment operation
+type SetRoleResponseMetadata struct {
+	DidAdd              bool
+	DidDelete           bool
+	RoleTypeNamesBefore []string
+	RoleTypeNamesAfter  []string
+	SystemName          string
+}
+
 // SetRolesForUser sets the desired roles for a user on a given system to *exactly* the requested role types, adding and deleting role assignments in CEDAR as necessary
-func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) error {
+func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) (*SetRoleResponseMetadata, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return nil
+		return nil, nil
 	}
+
+	roleTypesBefore := []models.CedarRoleType{}
+	roleTypesAfter := []models.CedarRoleType{}
+
+	allRoleTypes, err := c.GetRoleTypes(ctx)
+	if err != nil {
+		return nil, err
+	}
+	roleTypesByID := lo.SliceToMap(allRoleTypes, func(roleType *models.CedarRoleType) (string, *models.CedarRoleType) {
+		return roleType.ID, roleType
+	})
 
 	allRolesForSystem, err := c.GetRolesBySystem(ctx, cedarSystemID, null.String{})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	currentRolesForUser := lo.Filter(allRolesForSystem, func(role *models.CedarRole, _ int) bool {
 		// the check for !currentRole.RoleID.IsZero() shouldn't be necessary - all roles should have IDs assigned - but check's there just in case CEDAR has bad data
 		return role.AssigneeUsername.ValueOrZero() == euaUserID && !role.RoleID.IsZero()
 	})
+
+	for _, role := range currentRolesForUser {
+		roleType, ok := roleTypesByID[role.RoleTypeID]
+		if !ok || roleType == nil {
+			appcontext.ZLogger(ctx).Warn("error decoding role; role type ID not found in role types map")
+			continue
+		}
+		roleTypesBefore = append(roleTypesBefore, *roleType)
+	}
+
+	for _, roleTypeID := range desiredRoleTypeIDs {
+		roleType, ok := roleTypesByID[roleTypeID]
+		if !ok || roleType == nil {
+			appcontext.ZLogger(ctx).Warn("error decoding role; role type ID not found in role types map")
+			continue
+		}
+		roleTypesAfter = append(roleTypesAfter, *roleType)
+	}
 
 	currentRolesForUserByRoleTypes := lo.SliceToMap(currentRolesForUser, func(role *models.CedarRole) (string, *models.CedarRole) {
 		return role.RoleTypeID, role
@@ -263,10 +301,29 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	})
 
 	if err := g.Wait(); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	roleResponse := &SetRoleResponseMetadata{
+		DidAdd:    len(newRoles) > 0,
+		DidDelete: len(roleIDsToDelete) > 0,
+	}
+
+	roleResponse.RoleTypeNamesBefore = lo.Map(roleTypesBefore, func(roleType models.CedarRoleType, _ int) string {
+		return roleType.Name
+	})
+	roleResponse.RoleTypeNamesAfter = lo.Map(roleTypesAfter, func(roleType models.CedarRoleType, _ int) string {
+		return roleType.Name
+	})
+
+	// fetch the system name (likely from cache) and add it to the response
+	system, getSystemErr := c.GetSystem(ctx, cedarSystemID)
+	if getSystemErr != nil {
+		return nil, getSystemErr
+	}
+	roleResponse.SystemName = system.Name
+
+	return roleResponse, nil
 }
 
 // private utility method for creating roles for a given system in CEDAR

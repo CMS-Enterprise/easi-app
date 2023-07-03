@@ -39,12 +39,9 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	id := createdIntake.ID
 
 	s.Run("PUT will succeed first time with token", func() {
-		body, err := json.Marshal(map[string]string{
-			"id":          id.String(),
-			"requester":   "TEST REQUESTER",
-			"status":      string(models.SystemIntakeStatusINTAKEDRAFT),
-			"requestType": string(models.SystemIntakeRequestTypeNEW),
-		})
+		intakeToUpdate, err := s.store.FetchSystemIntakeByID(context.Background(), id)
+		s.NoError(err)
+		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
@@ -78,12 +75,10 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	})
 
 	s.Run("PUT will succeed second time with with new data", func() {
-		body, err := json.Marshal(map[string]string{
-			"id":          id.String(),
-			"status":      string(models.SystemIntakeStatusINTAKEDRAFT),
-			"requestType": string(models.SystemIntakeRequestTypeNEW),
-			"requester":   "Test Requester",
-		})
+		intakeToUpdate, err := s.store.FetchSystemIntakeByID(context.Background(), id)
+		s.NoError(err)
+		intakeToUpdate.Requester = "Test Requester"
+		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
@@ -105,28 +100,27 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 			fmt.Println("Skipped 'PUT will succeed if status is 'SUBMITTED' and it passes validation'")
 			return
 		}
-		updatedAt := time.Now().UTC()
-		intake := models.SystemIntake{
-			ID:                      id,
-			EUAUserID:               null.StringFrom("FAKE"),
-			Requester:               "Test Requester",
-			Component:               null.StringFrom("Test Requester"),
-			BusinessOwner:           null.StringFrom("Test Requester"),
-			BusinessOwnerComponent:  null.StringFrom("Test Requester"),
-			ProductManager:          null.StringFrom("Test Requester"),
-			ProductManagerComponent: null.StringFrom("Test Requester"),
-			ProjectName:             null.StringFrom("Test Requester"),
-			ExistingFunding:         null.BoolFrom(false),
-			BusinessNeed:            null.StringFrom("test business need"),
-			Solution:                null.StringFrom("Test Requester"),
-			ProcessStatus:           null.StringFrom("Test Requester"),
-			EASupportRequest:        null.BoolFrom(true),
-			ExistingContract:        null.StringFrom("Test Requester"),
-			UpdatedAt:               &updatedAt,
-			Status:                  models.SystemIntakeStatusINTAKESUBMITTED,
-			HasUIChanges:            null.BoolFrom(false),
-		}
-		body, err := json.Marshal(intake)
+		intakeToUpdate, err := s.store.FetchSystemIntakeByID(context.Background(), id)
+		s.NoError(err)
+		intakeToUpdate.ID = id
+		intakeToUpdate.EUAUserID = null.StringFrom("FAKE")
+		intakeToUpdate.Requester = "Test Requester"
+		intakeToUpdate.Component = null.StringFrom("Test Requester")
+		intakeToUpdate.BusinessOwner = null.StringFrom("Test Requester")
+		intakeToUpdate.BusinessOwnerComponent = null.StringFrom("Test Requester")
+		intakeToUpdate.ProductManager = null.StringFrom("Test Requester")
+		intakeToUpdate.ProductManagerComponent = null.StringFrom("Test Requester")
+		intakeToUpdate.ProjectName = null.StringFrom("Test Requester")
+		intakeToUpdate.ExistingFunding = null.BoolFrom(false)
+		intakeToUpdate.BusinessNeed = null.StringFrom("test business need")
+		intakeToUpdate.Solution = null.StringFrom("Test Requester")
+		intakeToUpdate.ProcessStatus = null.StringFrom("Test Requester")
+		intakeToUpdate.EASupportRequest = null.BoolFrom(true)
+		intakeToUpdate.ExistingContract = null.StringFrom("Test Requester")
+		*intakeToUpdate.UpdatedAt = time.Now().UTC()
+		intakeToUpdate.Status = models.SystemIntakeStatusINTAKESUBMITTED
+		intakeToUpdate.HasUIChanges = null.BoolFrom(false)
+		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
@@ -140,14 +134,20 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	s.Run("PUT will fail if status is 'SUBMITTED', but it doesn't pass validation", func() {
 		if !s.environment.Local() {
-			fmt.Println("Skipped 'PUT will fail if status is 'SUBMITTED' and it doesn't pass validation'")
+			fmt.Println("Skipped 'PUT will fail if status is 'SUBMITTED', but it doesn't pass validation'")
 			return
 		}
-		body, err := json.Marshal(map[string]string{
-			"id":        id.String(),
-			"status":    string(models.SystemIntakeStatusINTAKESUBMITTED),
-			"requester": "Test Requester",
-		})
+		intakeToUpdate, err := s.store.FetchSystemIntakeByID(context.Background(), id)
+		s.NoError(err)
+		intakeToUpdate.Requester = "Test Requester"
+		intakeToUpdate.Status = models.SystemIntakeStatusINTAKESUBMITTED
+		body, err := json.Marshal(intakeToUpdate)
+		s.NoError(err)
+		var intakeWithWrongInfo map[string]interface{}
+		err = json.Unmarshal(body, &intakeWithWrongInfo)
+		s.NoError(err)
+		intakeWithWrongInfo["component"] = false
+		body, err = json.Marshal(intakeWithWrongInfo)
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)

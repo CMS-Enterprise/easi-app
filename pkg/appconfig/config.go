@@ -168,6 +168,9 @@ const CEDARAPIURL = "CEDAR_API_URL"
 // CEDARAPIKey is the key for accessing CEDAR
 const CEDARAPIKey = "CEDAR_API_KEY" // #nosec
 
+// CEDAREmailAddress is the key for the env var that holds the email address that we use when notifying CEDAR of changes
+const CEDAREmailAddress = "CEDAR_EMAIL_ADDRESS"
+
 // CEDARCoreAPIVersion is the version of the CEDAR core API to use
 const CEDARCoreAPIVersion = "CEDAR_CORE_API_VERSION"
 

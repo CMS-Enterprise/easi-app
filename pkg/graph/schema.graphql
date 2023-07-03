@@ -1014,6 +1014,8 @@ type SystemIntake {
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
   status: SystemIntakeStatus!
+  state: SystemIntakeState!
+  step: SystemIntakeStep!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
@@ -1026,13 +1028,46 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
+  requestFormState: SystemIntakeFormState!
+  draftBusinessCaseState: SystemIntakeFormState!
+  """
+  This is a calculated state based on if a date exists for the GRT Meeting date
+  """
+  grtMeetingState: SystemIntakeMeetingState!
+  finalBusinessCaseState: SystemIntakeFormState!
+  """
+  This is a calculated state based on if a date exists for the GRB Meeting date
+  """
+  grbMeetingState: SystemIntakeMeetingState!
+  decisionState: SystemIntakeDecisionState!
 }
+
+"""
+SystemIntakeState represents whether the intake is open or closed
+"""
+enum SystemIntakeState {
+  OPEN
+  CLOSED
+}
+
+"""
+SystemIntakeStep represents the current step in the intake process
+"""
+enum SystemIntakeStep {
+  INITIAL_REQUEST_FORM
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+  DECISION_AND_NEXT_STEPS
+}
+
 type ITGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
-  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus!
+  bizCaseDraftStatus: ITGovDraftBusinessCaseStatus!
   grtMeetingStatus: ITGovGRTStatus!
-  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatus!
+  bizCaseFinalStatus: ITGovFinalBusinessCaseStatus!
   grbMeetingStatus: ITGovGRBStatus!
   decisionAndNextStepsStatus: ITGovDecisionStatus!
 }
@@ -2354,7 +2389,7 @@ type Query {
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
-  cedarSystems: [CedarSystem]
+  cedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
@@ -2526,9 +2561,9 @@ enum ITGovDecisionStatus {
 
 
 """
-The requester view of the IT gov draft buisness case step status
+The requester view of the IT gov draft business case step status
 """
-enum ITGovDraftBuisnessCaseStatus {
+enum ITGovDraftBusinessCaseStatus {
   """
   This step can't be started yet
   """
@@ -2547,12 +2582,12 @@ enum ITGovDraftBuisnessCaseStatus {
   IN_PROGRESS
 
   """
-  This draft buisness case has edits requested
+  This draft business case has edits requested
   """
   EDITS_REQUESTED
 
   """
-  The draft buisness case is completed
+  The draft business case is completed
   """
   COMPLETED
 }
@@ -2564,7 +2599,7 @@ The requester view of the IT Gov GRT step status
 enum ITGovGRTStatus {
   """
   This step can't be started yet
-  """  
+  """
   CANT_START
   """
   This step is not needed and has been skipped
@@ -2584,37 +2619,37 @@ enum ITGovGRTStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """  
+  """
   COMPLETED
 }
 
 """
-The requester view of the IT Gov Final Buisness Case step status
+The requester view of the IT Gov Final Business Case step status
 """
-enum ITGovFinalBuisnessCaseStatus {
+enum ITGovFinalBusinessCaseStatus {
   """
   This step can't be started yet
   """
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   Ready to begin filling out
-  """  
+  """
   READY
   """
   The form has started to be filled out
   """
   IN_PROGRESS
   """
-  This buisness case has edits requested
-  """  
+  This business case has edits requested
+  """
   EDITS_REQUESTED
   """
-  This buisness case has been completed
-  """  
+  This business case has been completed
+  """
   COMPLETED
 }
 
@@ -2628,7 +2663,7 @@ enum ITGovGRBStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   The GRB meeting is waiting to be scheduled
@@ -2644,6 +2679,34 @@ enum ITGovGRBStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """    
+  """
   COMPLETED
+}
+
+"""
+This represents the possible state any system intake form can take
+"""
+enum SystemIntakeFormState {
+  NOT_STARTED
+  IN_PROGRESS
+  EDITS_REQUESTED
+  SUBMITTED
+}
+
+"""
+This represents the possible System Intake Decision States
+"""
+enum SystemIntakeDecisionState {
+  NO_DECISION
+  LCID_ISSUED
+  NOT_APPROVED
+  NO_GOVERNANCE
+}
+
+"""
+This represents the possible states any system intake meeting can take.
+"""
+enum SystemIntakeMeetingState{
+  SCHEDULED
+  NOT_SCHEDULED
 }
