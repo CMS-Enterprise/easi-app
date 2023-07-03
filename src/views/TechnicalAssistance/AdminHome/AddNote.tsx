@@ -142,8 +142,7 @@ const AddNote = ({
           })
             .then(result => {
               if (!setModalView) {
-                showMessageOnNextPage({
-                  message: t('notes.status.success'),
+                showMessageOnNextPage(t('notes.status.success'), {
                   type: 'success',
                   className: 'margin-top-3'
                 });
@@ -154,8 +153,7 @@ const AddNote = ({
               }
             })
             .catch(err => {
-              showMessage({
-                message: t('notes.status.error'),
+              showMessage(t('notes.status.error'), {
                 type: 'error',
                 className: 'margin-top-3'
               });

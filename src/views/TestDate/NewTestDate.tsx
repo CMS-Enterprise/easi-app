@@ -84,7 +84,7 @@ const NewTestDate = () => {
       }
     }).then(result => {
       if (!result.errors) {
-        showMessageOnNextPage({ message: submitConfirmation, type: 'success' });
+        showMessageOnNextPage(submitConfirmation, { type: 'success' });
         history.push(`/508/requests/${accessibilityRequestId}/documents`);
       }
     });

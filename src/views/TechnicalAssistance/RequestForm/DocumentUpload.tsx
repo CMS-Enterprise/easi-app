@@ -113,8 +113,7 @@ const DocumentUpload = ({
               message: t('documents.upload.success')
             });
           } else {
-            showMessageOnNextPage({
-              message: t('documents.upload.success'),
+            showMessageOnNextPage(t('documents.upload.success'), {
               className: 'margin-y-4',
               type: 'success'
             });

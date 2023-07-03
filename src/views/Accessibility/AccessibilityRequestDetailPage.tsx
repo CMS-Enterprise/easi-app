@@ -140,13 +140,15 @@ const AccessibilityRequestDetailPage = () => {
       }
     }).then(response => {
       if (!response.errors) {
-        showMessageOnNextPage({
-          message: t('requestDetails.removeConfirmationText', {
+        showMessageOnNextPage(
+          t('requestDetails.removeConfirmationText', {
             requestName
           }),
-          type: 'success',
-          heading: t('Success')
-        });
+          {
+            type: 'success',
+            heading: t('Success')
+          }
+        );
         history.push('/');
       }
     });
@@ -181,9 +183,8 @@ const AccessibilityRequestDetailPage = () => {
         if (!userErrors) {
           refetch();
           resetAlerts();
-          showMessage({
+          showMessage(t('requestDetails.notes.confirmation', { requestName }), {
             type: 'success',
-            message: t('requestDetails.notes.confirmation', { requestName }),
             role: 'alert',
             heading: t('Success')
           });
@@ -209,14 +210,16 @@ const AccessibilityRequestDetailPage = () => {
       }
     }).then(() => {
       refetch();
-      showMessage({
-        message: t('removeTestDate.confirmation', {
+      showMessage(
+        t('removeTestDate.confirmation', {
           date: formatDateUtc(testDate.date, 'MMMM d, yyyy'),
           requestName
         }),
-        type: 'success',
-        heading: t('Success')
-      });
+        {
+          type: 'success',
+          heading: t('Success')
+        }
+      );
     });
   };
 
@@ -239,8 +242,7 @@ const AccessibilityRequestDetailPage = () => {
     }).then(() => {
       refetch();
       if (document) {
-        showMessage({
-          message: `${documentTypeAsString} removed from ${requestName}`,
+        showMessage(`${documentTypeAsString} removed from ${requestName}`, {
           type: 'success'
         });
       }

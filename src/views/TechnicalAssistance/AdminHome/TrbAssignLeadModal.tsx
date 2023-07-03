@@ -120,19 +120,20 @@ function TrbAssignLeadModal({
       }
     })
       .then(result => {
-        showMessage({
-          message: t(`assignTrbLeadModal.success`, {
+        showMessage(
+          t(`assignTrbLeadModal.success`, {
             name: data?.trbLeadOptions.find(
               e => e.euaUserId === formData.trbLead
             )!.commonName
           }),
-          type: 'success',
-          className: 'margin-top-3'
-        });
+          {
+            type: 'success',
+            className: 'margin-top-3'
+          }
+        );
       })
       .catch(err => {
-        showMessage({
-          message: t(`assignTrbLeadModal.error`),
+        showMessage(t(`assignTrbLeadModal.error`), {
           type: 'error',
           className: 'margin-top-3'
         });

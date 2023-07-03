@@ -101,7 +101,7 @@ const GovernanceTaskList = () => {
         context: requestName ? 'name' : 'noName',
         requestName
       });
-      showMessageOnNextPage({ message, type: 'success' });
+      showMessageOnNextPage(message, { type: 'success' });
       history.push('/');
     };
     dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));

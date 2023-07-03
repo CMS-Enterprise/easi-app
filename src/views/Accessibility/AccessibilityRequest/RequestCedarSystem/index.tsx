@@ -72,8 +72,7 @@ const CreateRequestWrapper = (props: RequestWrapperProps) => {
       if (!response.errors) {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
-        showMessageOnNextPage({
-          message: t('newRequestForm.confirmation'),
+        showMessageOnNextPage(t('newRequestForm.confirmation'), {
           type: 'success'
         });
         history.push(`/508/requests/${uuid}/documents`);
@@ -121,8 +120,7 @@ const UpdateRequestWrapper = (
       } = response.data.updateAccessibilityRequestCedarSystem.accessibilityRequest;
       // todo return values
 
-      showMessageOnNextPage({
-        message: `${values.cedarId} has been tied to ${name}.`,
+      showMessageOnNextPage(`${values.cedarId} has been tied to ${name}.`, {
         type: 'success'
       });
       history.push(`/508/requests/${uuid}/documents`);

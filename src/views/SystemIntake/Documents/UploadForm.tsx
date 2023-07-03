@@ -82,15 +82,16 @@ const UploadForm = () => {
       }
     })
       .then(() => {
-        showMessageOnNextPage({
-          message: t('technicalAssistance:documents.upload.success'),
-          type: 'success'
-        });
+        showMessageOnNextPage(
+          t('technicalAssistance:documents.upload.success'),
+          {
+            type: 'success'
+          }
+        );
         history.push(`/system/${systemId}/documents`);
       })
       .catch(() => {
-        showMessage({
-          message: t('technicalAssistance:documents.upload.error'),
+        showMessage(t('technicalAssistance:documents.upload.error'), {
           type: 'error',
           className: 'margin-top-4'
         });

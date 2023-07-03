@@ -97,16 +97,17 @@ const EditTeam = ({
     })
       .then(() => {
         setMemberToDelete(null);
-        showMessage({
-          message: t('singleSystem.editTeam.form.successRemoveContact', {
+        showMessage(
+          t('singleSystem.editTeam.form.successRemoveContact', {
             commonName: user.commonName
           }),
-          type: 'success'
-        });
+          {
+            type: 'success'
+          }
+        );
       })
       .catch(() =>
-        showMessage({
-          message: t('singleSystem.editTeam.form.errorRemoveContact'),
+        showMessage(t('singleSystem.editTeam.form.errorRemoveContact'), {
           type: 'error'
         })
       );

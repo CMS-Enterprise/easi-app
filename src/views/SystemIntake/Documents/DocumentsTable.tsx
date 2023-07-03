@@ -183,23 +183,27 @@ const DocumentsTable = ({
           onClick={() => {
             deleteDocument({ variables: { id: fileToDelete.id } })
               .then(() => {
-                showMessage({
-                  message: t(
+                showMessage(
+                  t(
                     'technicalAssistance:documents.supportingDocuments.removeSuccess',
                     {
                       documentName: fileToDelete.fileName
                     }
                   ),
-                  type: 'success'
-                });
+                  {
+                    type: 'success'
+                  }
+                );
               })
               .catch(() => {
-                showMessage({
-                  message: t(
+                showMessage(
+                  t(
                     'technicalAssistance:documents.supportingDocuments.removeFail'
                   ),
-                  type: 'error'
-                });
+                  {
+                    type: 'error'
+                  }
+                );
               });
 
             setFileToDelete(null);

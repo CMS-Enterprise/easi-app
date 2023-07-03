@@ -107,16 +107,14 @@ function CloseRequest() {
         }
       })
         .then(result => {
-          showMessageOnNextPage({
-            message: t(`${actionText}.success`),
+          showMessageOnNextPage(t(`${actionText}.success`), {
             type: 'success',
             className: 'margin-top-3'
           });
           history.push(`/trb/${id}/request`);
         })
         .catch(err => {
-          showMessage({
-            message: t(`${actionText}.error`),
+          showMessage(t(`${actionText}.error`), {
             type: 'error',
             className: 'margin-top-3'
           });
@@ -137,16 +135,14 @@ function CloseRequest() {
         }
       })
         .then(result => {
-          showMessageOnNextPage({
-            message: t(`${actionText}.success`),
+          showMessageOnNextPage(t(`${actionText}.success`), {
             type: 'success',
             className: 'margin-top-3'
           });
           history.push(`/trb/${id}/request`);
         })
         .catch(err => {
-          showMessage({
-            message: t(`${actionText}.error`),
+          showMessage(t(`${actionText}.error`), {
             type: 'error',
             className: 'margin-top-3'
           });

@@ -9,20 +9,21 @@ import { useLocation } from 'react-router-dom';
 
 import Alert, { AlertProps } from 'components/shared/Alert';
 
-type MessageProps = Omit<AlertProps, 'children'> & {
-  message: string | React.ReactElement;
+type MessageProps = {
+  message?: string | React.ReactElement;
+  alertProps?: Omit<AlertProps, 'children'>;
 };
+
+type SetMessage = (
+  message?: string | React.ReactElement,
+  alertProps?: Omit<AlertProps, 'children'>
+) => void;
 
 const MessageContext = createContext<
   | {
-      Message: ({
-        className
-      }: {
-        /** Used to overwrite individual messages className prop on Alert component */
-        className?: string;
-      }) => React.ReactElement<MessageProps, typeof Alert> | null;
-      showMessage: (message: MessageProps | undefined) => void;
-      showMessageOnNextPage: (message: MessageProps | undefined) => void;
+      Message: ({ className }: { className?: string }) => JSX.Element | null;
+      showMessage: SetMessage;
+      showMessageOnNextPage: SetMessage;
     }
   | undefined
 >(undefined);
@@ -30,18 +31,34 @@ const MessageContext = createContext<
 // MessageProvider manages the state necessary for child components to
 // use the useMessage hook.
 const MessageProvider = ({ children }: { children: ReactNode }) => {
-  const [queuedMessage, setQueuedMessage] = useState<
-    MessageProps | undefined
-  >();
-  const [message, setMessage] = useState<MessageProps | undefined>();
+  const [queuedMessage, setQueuedMessage] = useState<MessageProps>({});
+  const [message, setMessage] = useState<MessageProps>({});
+
   const location = useLocation();
 
   const [lastPathname, setLastPathname] = useState(location.pathname);
 
+  const Message = (props: { className?: string }) => {
+    // If no message, return null
+    if (!message.message) return null;
+
+    // If message has alert props, wrap in component
+    if (message.alertProps) {
+      return (
+        <Alert {...message.alertProps} {...props}>
+          {message.message}
+        </Alert>
+      );
+    }
+
+    // Return plain message
+    return <>{message.message}</>;
+  };
+
   useEffect(() => {
     if (lastPathname !== location.pathname) {
       setMessage(queuedMessage);
-      setQueuedMessage(undefined);
+      setQueuedMessage({});
       setLastPathname(location.pathname);
     }
   }, [message, queuedMessage, lastPathname, location.pathname]);
@@ -49,16 +66,17 @@ const MessageProvider = ({ children }: { children: ReactNode }) => {
   return (
     <MessageContext.Provider
       value={{
-        Message: props => {
-          if (!message) return null;
-          return (
-            <Alert {...message} {...props}>
-              {message.message}
-            </Alert>
-          );
-        },
-        showMessage: setMessage,
-        showMessageOnNextPage: setQueuedMessage
+        Message,
+        showMessage: (value, alertProps) =>
+          setMessage({
+            message: value,
+            alertProps
+          }),
+        showMessageOnNextPage: (value, alertProps) =>
+          setQueuedMessage({
+            message: value,
+            alertProps
+          })
       }}
     >
       {children}

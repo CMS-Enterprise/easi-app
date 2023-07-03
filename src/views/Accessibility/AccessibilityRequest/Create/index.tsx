@@ -51,8 +51,7 @@ const Create = () => {
       if (!response.errors) {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
-        showMessageOnNextPage({
-          message: t('newRequestForm.confirmation'),
+        showMessageOnNextPage(t('newRequestForm.confirmation'), {
           type: 'success'
         });
         history.push(`/508/requests/${uuid}/documents`);

@@ -113,8 +113,8 @@ function Consult() {
       }
     })
       .then(result => {
-        showMessageOnNextPage({
-          message: t('actionScheduleConsult.success', {
+        showMessageOnNextPage(
+          t('actionScheduleConsult.success', {
             date: formData.meetingDate,
             time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
               .toFormat('t')
@@ -123,14 +123,15 @@ function Consult() {
               escapeValue: false
             }
           }),
-          type: 'success',
-          className: 'margin-top-3'
-        });
+          {
+            type: 'success',
+            className: 'margin-top-3'
+          }
+        );
         history.push(requestUrl);
       })
       .catch(err => {
-        showMessage({
-          message: t('actionScheduleConsult.error'),
+        showMessage(t('actionScheduleConsult.error'), {
           type: 'error',
           className: 'margin-top-3'
         });

@@ -104,8 +104,8 @@ const TeamMemberForm = ({
         }
       })
         .then(() => {
-          showMessageOnNextPage({
-            message: t(
+          showMessageOnNextPage(
+            t(
               `singleSystem.editTeam.form.${
                 user ? 'successUpdateRoles' : 'successAddContact'
               }`,
@@ -113,19 +113,23 @@ const TeamMemberForm = ({
                 commonName
               }
             ),
-            type: 'success'
-          });
+            {
+              type: 'success'
+            }
+          );
           history.push(`/systems/${cedarSystemId}/team/edit`);
         })
         .catch(() => {
-          showMessage({
-            message: t(
+          showMessage(
+            t(
               `singleSystem.editTeam.form.${
                 user ? 'errorUpdateRoles' : 'errorAddContact'
               }`
             ),
-            type: 'error'
-          });
+            {
+              type: 'error'
+            }
+          );
         });
     }
   });
