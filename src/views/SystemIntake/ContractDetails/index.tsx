@@ -133,6 +133,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         existingFunding: !!(values.fundingSources.length > 0),
         fundingSources: values.fundingSources
       },
+      // costs: values.costs,
       annualSpending: values.annualSpending,
       contract: {
         ...values.contract,
