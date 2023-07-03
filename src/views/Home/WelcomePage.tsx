@@ -2,11 +2,15 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   Card,
+  CardBody,
   CardGroup,
+  CardHeader,
   Grid,
-  GridContainer,
   IconCheck,
-  IconClose
+  IconClose,
+  IconEdit,
+  IconGroups,
+  IconNotificationsActive
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -21,9 +25,12 @@ const WelcomeText = () => {
   return (
     <div id="easiWelcomePage">
       {/* Intro */}
-      <GridContainer className="bg-primary-dark text-white">
+      <section
+        id="easi-welcome-header"
+        className="grid-container bg-primary-dark text-white padding-bottom-8"
+      >
         <Grid row>
-          <PageHeading className="margin-bottom-1 text-normal easi-header-title">
+          <PageHeading className="margin-bottom-1 text-normal">
             <Trans
               i18nKey="home:welcome.title"
               components={{
@@ -31,80 +38,121 @@ const WelcomeText = () => {
               }}
             />
           </PageHeading>
-          <p className="margin-top-1 margin-bottom-5 font-body-lg text-light line-height-body-5">
+          <p className="margin-top-2 margin-bottom-8 font-body-2xl text-primary-lighter text-light">
             {t('welcome.intro')}
           </p>
         </Grid>
-      </GridContainer>
+      </section>
 
       {/* Cards */}
-      <GridContainer className="bg-base-lightest">
+      <section
+        id="easi-intro-cards"
+        className="grid-container bg-base-lightest padding-bottom-8"
+      >
         <Grid row>
-          <Grid col={6}>
-            <h3>{t('welcome.toolsToHelp.title')}</h3>
-            <IconList className="font-body-lg">
-              {t<string[]>('welcome.toolsToHelp.list', {
-                returnObjects: true
-              }).map(item => {
-                return (
-                  <IconListItem
-                    key={item}
-                    icon={<IconCheck className="text-green" />}
-                  >
-                    {item}
-                  </IconListItem>
-                );
-              })}
-            </IconList>
-          </Grid>
-          <Grid col={6}>
-            <h3>{t('welcome.noMore.title')}</h3>
-            <IconList className="font-body-lg">
-              {t<string[]>('welcome.noMore.list', {
-                returnObjects: true
-              }).map(item => {
-                return (
-                  <IconListItem
-                    key={item}
-                    icon={
-                      <IconClose className="text-red margin-right-1" size={3} />
-                    }
-                  >
-                    {item}
-                  </IconListItem>
-                );
-              })}
-            </IconList>
-          </Grid>
+          <CardGroup className="margin-bottom-1 margin-top-neg-8">
+            <Card className="grid-col-6">
+              <CardHeader>
+                <h3>{t('welcome.toolsToHelp.title')}</h3>
+              </CardHeader>
+              <CardBody className="padding-bottom-4">
+                <IconList className="font-body-lg">
+                  {t<string[]>('welcome.toolsToHelp.list', {
+                    returnObjects: true
+                  }).map(item => {
+                    return (
+                      <IconListItem
+                        key={item}
+                        icon={<IconCheck className="text-green" />}
+                      >
+                        {item}
+                      </IconListItem>
+                    );
+                  })}
+                </IconList>
+              </CardBody>
+            </Card>
+            <Card className="grid-col-6">
+              <CardHeader>
+                <h3>{t('welcome.noMore.title')}</h3>
+              </CardHeader>
+              <CardBody className="padding-bottom-4">
+                <IconList className="font-body-lg">
+                  {t<string[]>('welcome.noMore.list', {
+                    returnObjects: true
+                  }).map(item => {
+                    return (
+                      <IconListItem
+                        key={item}
+                        icon={
+                          <IconClose
+                            className="text-red margin-right-1"
+                            size={3}
+                          />
+                        }
+                      >
+                        {item}
+                      </IconListItem>
+                    );
+                  })}
+                </IconList>
+              </CardBody>
+            </Card>
+          </CardGroup>
           <UswdsReactLink className="usa-button" to="/signin">
             {t('signIn')}
           </UswdsReactLink>
         </Grid>
-      </GridContainer>
+      </section>
 
       {/* Future features */}
-      <GridContainer className="bg-primary-lighter">
+      <section
+        id="easi-future-features"
+        className="grid-container bg-primary-lighter padding-top-3 padding-bottom-6"
+      >
         <Grid row>
           <h2>{t('welcome.futureFeatures')}</h2>
           <CardGroup>
             <Card className="grid-col-4">
-              <h3>{t('welcome.automation')}</h3>
-              <p>{t('welcome.automationDescription')}</p>
+              <CardHeader className="padding-bottom-0">
+                <IconNotificationsActive
+                  size={5}
+                  className="text-primary-vivid"
+                />
+                <h3 className="line-height-body-2">
+                  {t('welcome.automation')}
+                </h3>
+              </CardHeader>
+              <CardBody>
+                <p>{t('welcome.automationDescription')}</p>
+              </CardBody>
             </Card>
             <Card className="grid-col-4">
-              <h3>{t('welcome.collaboration')}</h3>
-              <p>{t('welcome.collaborationDescription')}</p>
+              <CardHeader className="padding-bottom-0">
+                <IconGroups size={5} className="text-primary-vivid" />
+                <h3 className="line-height-body-2">
+                  {t('welcome.collaboration')}
+                </h3>
+              </CardHeader>
+              <CardBody>
+                <p>{t('welcome.collaborationDescription')}</p>
+              </CardBody>
             </Card>
             <Card className="grid-col-4">
-              <h3>{t('welcome.editing')}</h3>
-              <p>{t('welcome.editingDescription')}</p>
+              <CardHeader className="padding-bottom-0">
+                <IconEdit size={5} className="text-primary-vivid" />
+                <h3 className="line-height-body-2">{t('welcome.editing')}</h3>
+              </CardHeader>
+              <CardBody>
+                <p>{t('welcome.editingDescription')}</p>
+              </CardBody>
             </Card>
           </CardGroup>
         </Grid>
-      </GridContainer>
+      </section>
 
       {/* Capabilities */}
-      <GridContainer>
+      <section className="grid-container">
         <Grid row>
           <h2 className="grid-col-12">{t('welcome.capabilities')}</h2>
           <Grid col>
@@ -120,7 +168,7 @@ const WelcomeText = () => {
             <p>{t('welcome.trbDescription')}</p>
           </Grid>
         </Grid>
-      </GridContainer>
+      </section>
     </div>
   );
 };
