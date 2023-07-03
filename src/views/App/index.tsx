@@ -144,7 +144,7 @@ const AppRoutes = () => {
         to="/system/:systemId/contact-details"
       />
       <SecureRoute
-        path="/system/:systemId/:formPage/:subPage?"
+        path="/system/:systemId/:formPage"
         component={SystemIntake}
       />
       {flags.systemProfile && (

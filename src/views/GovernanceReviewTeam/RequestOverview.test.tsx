@@ -8,7 +8,6 @@ import configureMockStore from 'redux-mock-store';
 import { businessCaseInitialData } from 'data/businessCase';
 import { grtActions } from 'data/mock/grtActions';
 import { initialSystemIntakeForm } from 'data/systemIntake';
-import { MessageProvider } from 'hooks/useMessage';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
@@ -152,8 +151,7 @@ describe('Governance Review Team', () => {
             createdAt: null
           },
           grtReviewEmailBody: null,
-          hasUiChanges: true,
-          documents: []
+          hasUiChanges: true
         }
       }
     }
@@ -240,11 +238,9 @@ describe('Governance Review Team', () => {
       >
         <MockedProvider mocks={[intakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
-            <MessageProvider>
-              <Route path="/governance-review-team/:systemId/intake-request">
-                <RequestOverview />
-              </Route>
-            </MessageProvider>
+            <Route path="/governance-review-team/:systemId/intake-request">
+              <RequestOverview />
+            </Route>
           </Provider>
         </MockedProvider>
       </MemoryRouter>
@@ -264,11 +260,9 @@ describe('Governance Review Team', () => {
       >
         <MockedProvider mocks={[intakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
-            <MessageProvider>
-              <Route path="/governance-review-team/:systemId/business-case">
-                <RequestOverview />
-              </Route>
-            </MessageProvider>
+            <Route path="/governance-review-team/:systemId/business-case">
+              <RequestOverview />
+            </Route>
           </Provider>
         </MockedProvider>
       </MemoryRouter>
@@ -289,11 +283,9 @@ describe('Governance Review Team', () => {
           addTypename={false}
         >
           <Provider store={defaultStore}>
-            <MessageProvider>
-              <Route path="/governance-review-team/:systemId/notes">
-                <RequestOverview />
-              </Route>
-            </MessageProvider>
+            <Route path="/governance-review-team/:systemId/notes">
+              <RequestOverview />
+            </Route>
           </Provider>
         </MockedProvider>
       </MemoryRouter>
@@ -310,11 +302,9 @@ describe('Governance Review Team', () => {
       >
         <MockedProvider mocks={[intakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
-            <MessageProvider>
-              <Route path="/governance-review-team/:systemId/dates">
-                <RequestOverview />
-              </Route>
-            </MessageProvider>
+            <Route path="/governance-review-team/:systemId/dates">
+              <RequestOverview />
+            </Route>
           </Provider>
         </MockedProvider>
       </MemoryRouter>
@@ -331,11 +321,9 @@ describe('Governance Review Team', () => {
       >
         <MockedProvider mocks={[intakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
-            <MessageProvider>
-              <Route path="/governance-review-team/:systemId/decision">
-                <RequestOverview />
-              </Route>
-            </MessageProvider>
+            <Route path="/governance-review-team/:systemId/decision">
+              <RequestOverview />
+            </Route>
           </Provider>
         </MockedProvider>
       </MemoryRouter>
@@ -352,11 +340,9 @@ describe('Governance Review Team', () => {
       >
         <MockedProvider mocks={[intakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
-            <MessageProvider>
-              <Route path="/governance-review-team/:systemId/actions">
-                <RequestOverview />
-              </Route>
-            </MessageProvider>
+            <Route path="/governance-review-team/:systemId/actions">
+              <RequestOverview />
+            </Route>
           </Provider>
         </MockedProvider>
       </MemoryRouter>
@@ -374,11 +360,9 @@ describe('Governance Review Team', () => {
         >
           <MockedProvider mocks={[intakeQuery]} addTypename={false}>
             <Provider store={defaultStore}>
-              <MessageProvider>
-                <Route path="/governance-review-team/:systemId/actions/:activePage">
-                  <RequestOverview />
-                </Route>
-              </MessageProvider>
+              <Route path="/governance-review-team/:systemId/actions/:activePage">
+                <RequestOverview />
+              </Route>
             </Provider>
           </MockedProvider>
         </MemoryRouter>
