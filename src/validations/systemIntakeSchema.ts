@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
+import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
 
 const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
 const SystemIntakeValidationSchema: any = {
@@ -306,3 +307,14 @@ export const DateValidationSchema: any = Yup.object().shape(
     ['grbDateMonth', 'grbDateYear']
   ]
 );
+
+export const documentSchema = Yup.object({
+  fileData: Yup.mixed().required(),
+  documentType: Yup.mixed<SystemIntakeDocumentCommonType>()
+    .oneOf(Object.values(SystemIntakeDocumentCommonType))
+    .required(),
+  otherTypeDescription: Yup.string().when('documentType', {
+    is: 'OTHER',
+    then: schema => schema.required()
+  })
+});

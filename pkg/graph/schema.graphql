@@ -1028,24 +1028,15 @@ type SystemIntake {
   itGovTaskStatuses:  ITGovTaskStatuses!
 }
 type ITGovTaskStatuses {
-  requesterStatuses: ITGovTaskStatusesRequester!
-  adminStatuses: ITGovTaskStatusesAdmin!
-
-}
-type ITGovTaskStatusesRequester {
-  intakeFormStatus: ITGovIntakeStatusReq!
-  feedbackFromInitialReviewStatus: ITGovFeedbackStatusReq!
-  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatusReq!
-  grtMeetingStatus: ITGovGRTStatusReq!
-  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatusReq!
-  grbMeetingStatus: ITGovGRBStatusReq!
-  decisionAndNextStepsStatus: ITGovDecisionStatusReq!
+  intakeFormStatus: ITGovIntakeFormStatus!
+  feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
+  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus!
+  grtMeetingStatus: ITGovGRTStatus!
+  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatus!
+  grbMeetingStatus: ITGovGRBStatus!
+  decisionAndNextStepsStatus: ITGovDecisionStatus!
 }
 
-# TODO: to be implemented in a future ticket
-type ITGovTaskStatusesAdmin { 
-    grtMeetingStatus: String! #TBD, this is a placeholder for valid GQL
-}
 """
 The input data used to set the requester of a system request
 """
@@ -2476,7 +2467,7 @@ enum Role {
 """
 The requester view of the IT gov intake step status
 """
-enum ITGovIntakeStatusReq {
+enum ITGovIntakeFormStatus {
   """
   Ready to begin filling out
   """
@@ -2499,7 +2490,7 @@ enum ITGovIntakeStatusReq {
 """
 The requester view of the IT gov feedback step status
 """
-enum ITGovFeedbackStatusReq {
+enum ITGovFeedbackStatus {
   """
   This step can't be started yet
   """
@@ -2518,7 +2509,7 @@ enum ITGovFeedbackStatusReq {
 """
 The requester view of the IT gov Decision step status
 """
-enum ITGovDecisionStatusReq {
+enum ITGovDecisionStatus {
   """
   This step can't be started yet
   """
@@ -2537,7 +2528,7 @@ enum ITGovDecisionStatusReq {
 """
 The requester view of the IT gov draft buisness case step status
 """
-enum ITGovDraftBuisnessCaseStatusReq {
+enum ITGovDraftBuisnessCaseStatus {
   """
   This step can't be started yet
   """
@@ -2570,7 +2561,7 @@ enum ITGovDraftBuisnessCaseStatusReq {
 """
 The requester view of the IT Gov GRT step status
 """
-enum ITGovGRTStatusReq {
+enum ITGovGRTStatus {
   """
   This step can't be started yet
   """  
@@ -2600,7 +2591,7 @@ enum ITGovGRTStatusReq {
 """
 The requester view of the IT Gov Final Buisness Case step status
 """
-enum ITGovFinalBuisnessCaseStatusReq {
+enum ITGovFinalBuisnessCaseStatus {
   """
   This step can't be started yet
   """
@@ -2630,7 +2621,7 @@ enum ITGovFinalBuisnessCaseStatusReq {
 """
 The requester view of the IT Gov GRB step status
 """
-enum ITGovGRBStatusReq {
+enum ITGovGRBStatus {
   """
   This step can't be started yet
   """
@@ -2647,6 +2638,10 @@ enum ITGovGRBStatusReq {
   The GRB meeting has been scheduled
   """
   SCHEDULED
+  """
+  The GRT meeting has already happened, and an outcome hasn't been noted yet
+  """
+  AWAITING_DECISION
   """
   The step is completed
   """    

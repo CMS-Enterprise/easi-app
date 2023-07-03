@@ -3,6 +3,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 
+import { MessageProvider } from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -157,7 +158,8 @@ describe('The GRT intake review view', () => {
       content: null,
       createdAt: null
     },
-    hasUiChanges: false
+    hasUiChanges: false,
+    documents: []
   };
 
   const getSystemIntakeContactsQuery = {
@@ -196,7 +198,9 @@ describe('The GRT intake review view', () => {
         <MockedProvider
           mocks={[systemIntakeQuery, getSystemIntakeContactsQuery]}
         >
-          <IntakeReview systemIntake={systemIntake} />
+          <MessageProvider>
+            <IntakeReview systemIntake={systemIntake} />
+          </MessageProvider>
         </MockedProvider>
       </MemoryRouter>
     );
@@ -215,7 +219,9 @@ describe('The GRT intake review view', () => {
           addTypename={false}
         >
           <Route path={['/governance-review-team/:systemId/intake-request']}>
-            <IntakeReview systemIntake={systemIntake} />
+            <MessageProvider>
+              <IntakeReview systemIntake={systemIntake} />
+            </MessageProvider>
           </Route>
         </MockedProvider>
       </MemoryRouter>
@@ -240,7 +246,9 @@ describe('The GRT intake review view', () => {
     render(
       <MemoryRouter>
         <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
-          <IntakeReview systemIntake={mockIntake} />
+          <MessageProvider>
+            <IntakeReview systemIntake={mockIntake} />
+          </MessageProvider>
         </MockedProvider>
       </MemoryRouter>
     );
@@ -261,7 +269,9 @@ describe('The GRT intake review view', () => {
     render(
       <MemoryRouter>
         <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
-          <IntakeReview systemIntake={mockIntake} />
+          <MessageProvider>
+            <IntakeReview systemIntake={mockIntake} />
+          </MessageProvider>
         </MockedProvider>
       </MemoryRouter>
     );
