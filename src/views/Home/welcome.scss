@@ -4,14 +4,13 @@
 
 #easiWelcomePage {
   .grid-container {
+    display: flex;
+    justify-content: center;
     max-width: 100%;
     padding: 0;
     > .grid-row {
       max-width: 75rem;
-      margin: 0 auto;
       padding: 0 2rem;
-
-      
     }
   }
 
@@ -96,4 +95,8 @@
       }
     }
   }
+
+   section#easi-capabilities .grid-row {
+    column-gap: 1rem;
+   }
 }

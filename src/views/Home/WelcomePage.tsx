@@ -152,20 +152,35 @@ const WelcomeText = () => {
       </section>
 
       {/* Capabilities */}
-      <section className="grid-container">
+      <section
+        id="easi-capabilities"
+        className="grid-container padding-top-3 padding-bottom-5"
+      >
         <Grid row>
           <h2 className="grid-col-12">{t('welcome.capabilities')}</h2>
           <Grid col>
-            <h3>{t('welcome.lifecycleIds')}</h3>
-            <p>{t('welcome.lifecycleIdsDescription')}</p>
+            <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
+              {t('welcome.lifecycleIds')}
+            </h3>
+            <p className="line-height-body-5 margin-top-1">
+              {t('welcome.lifecycleIdsDescription')}
+            </p>
           </Grid>
           <Grid col>
-            <h3>{t('welcome.systemInformation')}</h3>
-            <p>{t('welcome.systemInformationDescription')}</p>
+            <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
+              {t('welcome.systemInformation')}
+            </h3>
+            <p className="line-height-body-5 margin-top-1">
+              {t('welcome.systemInformationDescription')}
+            </p>
           </Grid>
           <Grid col>
-            <h3>{t('welcome.trb')}</h3>
-            <p>{t('welcome.trbDescription')}</p>
+            <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
+              {t('welcome.trb')}
+            </h3>
+            <p className="line-height-body-5 margin-top-1">
+              {t('welcome.trbDescription')}
+            </p>
           </Grid>
         </Grid>
       </section>
