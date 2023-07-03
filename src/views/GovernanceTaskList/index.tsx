@@ -175,19 +175,16 @@ function GovernanceTaskList() {
             {/* Sidebar */}
             <Grid tablet={{ col: 3 }}>
               <div className="line-height-body-4 padding-top-3 border-top border-top-width-05 border-primary-lighter">
-                <UswdsReactLink
-                  to="/system/making-a-request"
-                  className="display-block"
-                >
-                  {t('button.saveAndExit')}
-                </UswdsReactLink>
-                <Button
-                  type="button"
-                  unstyled
-                  className="text-error inline-block margin-top-1"
-                >
-                  {t('button.removeYourRequest')}
-                </Button>
+                <div>
+                  <UswdsReactLink to="/system/making-a-request">
+                    {t('button.saveAndExit')}
+                  </UswdsReactLink>
+                </div>
+                <div className="margin-top-1">
+                  <Button type="button" unstyled className="text-error">
+                    {t('button.removeYourRequest')}
+                  </Button>
+                </div>
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                   {t('taskList.help')}
