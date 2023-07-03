@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -2023,10 +2024,30 @@ func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, i
 
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
 func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
-	err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
+	rs, err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
 	if err != nil {
 		return nil, err
 	}
+
+	// Asyncronously send an email to the CEDAR team notifying them of the change
+	go func() {
+		// make a new context and copy the logger to it, or else the request will cancel when the parent context cancels
+		emailCtx := appcontext.WithLogger(context.Background(), appcontext.ZLogger(ctx))
+
+		userInfo, err := r.service.FetchUserInfo(emailCtx, input.EuaUserID)
+		if err != nil {
+			// don't fail the request if the lookup fails, just log and return from the go func
+			appcontext.ZLogger(emailCtx).Error("failed to lookup user info for CEDAR notification email", zap.Error(err))
+			return
+		}
+
+		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, userInfo.CommonName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
+		if err != nil {
+			// don't fail the request if the email fails, just log and return from the go func
+			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))
+			return
+		}
+	}()
 
 	resp := "Roles changed successfully"
 	return &resp, nil
