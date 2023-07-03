@@ -63,9 +63,9 @@ function GovernanceTaskList() {
               </PageHeading>
 
               <div className="line-height-body-4">
-                <div className="font-body-lg line-height-body-5 text-light">
+                <p className="font-body-lg line-height-body-5 text-light margin-y-0">
                   {t('taskList.description')}
-                </div>
+                </p>
 
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
@@ -175,16 +175,19 @@ function GovernanceTaskList() {
             {/* Sidebar */}
             <Grid tablet={{ col: 3 }}>
               <div className="line-height-body-4 padding-top-3 border-top border-top-width-05 border-primary-lighter">
-                <div>
-                  <UswdsReactLink to="/system/making-a-request">
-                    {t('button.saveAndExit')}
-                  </UswdsReactLink>
-                </div>
-                <div className="margin-top-1">
-                  <Button type="button" unstyled className="text-error">
-                    {t('button.removeYourRequest')}
-                  </Button>
-                </div>
+                <UswdsReactLink
+                  to="/system/making-a-request"
+                  className="display-block"
+                >
+                  {t('button.saveAndExit')}
+                </UswdsReactLink>
+                <Button
+                  type="button"
+                  unstyled
+                  className="text-error inline-block margin-top-1"
+                >
+                  {t('button.removeYourRequest')}
+                </Button>
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                   {t('taskList.help')}
