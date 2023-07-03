@@ -1,0 +1,59 @@
+@use 'viewports' as *;
+@use 'uswds-core' as *;
+@use 'colors' as *;
+
+#easiWelcomePage {
+  .grid-container {
+    max-width: 100%;
+    padding: 0;
+    > .grid-row {
+      max-width: 75rem;
+      margin: 0 auto;
+      padding: 0 2rem;
+
+      h1.easi-header-title {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        margin-left: -.5rem;
+
+        > span {
+          padding: 0 .5rem;
+
+          &:not(:first-child) {
+            background-color: color('primary-vivid');
+          }
+
+          &:last-child {
+            grid-column: 1 / span 2;
+            
+          }
+        }
+
+        @media screen and (min-width: 1050px) {
+          font-size: 5rem;
+          margin-left: -1rem;
+
+          > span {
+            padding: 0 1rem;
+          }
+        }
+
+        @media screen and (max-width: 580px) {
+          display: block;
+          max-width: $mobile;
+
+          > span:last-child {
+            background-color: transparent;
+            display: block;
+
+            span {
+              background-color: color('primary-vivid');
+              padding: 0 .5rem;
+              margin-left: -.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

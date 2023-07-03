@@ -4,7 +4,8 @@ const home = {
     'The place to find CMS IT Governance, assistance with technical issues, Section 508 services, as well as comprehensive information about CMS systems.',
   startNow: 'Start now',
   welcome: {
-    title: 'Say hello to collaborative information management',
+    title:
+      '<span>Say hello to</span> <span>collaborative</span> <span><span>information</span> <span>management.</span></span></1>',
     intro:
       'Stay informed about your system’s TLC profile with situational governance and continuous compliance, using facilitated IT Governance processes powered by EASi.',
     toolsToHelp: {
