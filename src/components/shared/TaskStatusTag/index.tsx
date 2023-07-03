@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { TagEnum } from 'data/taskList';
 import {
   ITGovDecisionStatus,
-  ITGovDraftBuisnessCaseStatus,
+  ITGovDraftBusinessCaseStatus,
   ITGovFeedbackStatus,
-  ITGovFinalBuisnessCaseStatus,
+  ITGovFinalBusinessCaseStatus,
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
@@ -33,9 +33,9 @@ export type TaskStatus =
   | keyof typeof ITGovIntakeFormStatus
   | keyof typeof ITGovFeedbackStatus
   | keyof typeof ITGovDecisionStatus
-  | keyof typeof ITGovDraftBuisnessCaseStatus
+  | keyof typeof ITGovDraftBusinessCaseStatus
   | keyof typeof ITGovGRTStatus
-  | keyof typeof ITGovFinalBuisnessCaseStatus
+  | keyof typeof ITGovFinalBusinessCaseStatus
   | keyof typeof ITGovGRBStatus
   // IT Gov v1
   | TagEnum;

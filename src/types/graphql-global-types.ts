@@ -75,9 +75,9 @@ export enum ITGovDecisionStatus {
 }
 
 /**
- * The requester view of the IT gov draft buisness case step status
+ * The requester view of the IT gov draft business case step status
  */
-export enum ITGovDraftBuisnessCaseStatus {
+export enum ITGovDraftBusinessCaseStatus {
   CANT_START = "CANT_START",
   COMPLETED = "COMPLETED",
   EDITS_REQUESTED = "EDITS_REQUESTED",
@@ -96,9 +96,9 @@ export enum ITGovFeedbackStatus {
 }
 
 /**
- * The requester view of the IT Gov Final Buisness Case step status
+ * The requester view of the IT Gov Final Business Case step status
  */
-export enum ITGovFinalBuisnessCaseStatus {
+export enum ITGovFinalBusinessCaseStatus {
   CANT_START = "CANT_START",
   COMPLETED = "COMPLETED",
   EDITS_REQUESTED = "EDITS_REQUESTED",

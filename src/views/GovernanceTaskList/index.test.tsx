@@ -8,9 +8,9 @@ import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import { GetGovernanceTaskList_systemIntake_itGovTaskStatuses } from 'queries/types/GetGovernanceTaskList';
 import {
   ITGovDecisionStatus,
-  ITGovDraftBuisnessCaseStatus,
+  ITGovDraftBusinessCaseStatus,
   ITGovFeedbackStatus,
-  ITGovFinalBuisnessCaseStatus,
+  ITGovFinalBusinessCaseStatus,
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus
@@ -27,9 +27,9 @@ describe('Governance Task List', () => {
     intakeFormStatus: ITGovIntakeFormStatus.READY,
     feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
     decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
-    bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus.CANT_START,
+    bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
     grtMeetingStatus: ITGovGRTStatus.CANT_START,
-    bizCaseFinalStatus: ITGovFinalBuisnessCaseStatus.CANT_START,
+    bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
     grbMeetingStatus: ITGovGRBStatus.CANT_START,
     __typename: 'ITGovTaskStatuses'
   };

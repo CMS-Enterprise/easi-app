@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ITGovIntakeFormStatus, ITGovFeedbackStatus, ITGovDecisionStatus, ITGovDraftBuisnessCaseStatus, ITGovGRTStatus, ITGovFinalBuisnessCaseStatus, ITGovGRBStatus } from "./../../types/graphql-global-types";
+import { ITGovIntakeFormStatus, ITGovFeedbackStatus, ITGovDecisionStatus, ITGovDraftBusinessCaseStatus, ITGovGRTStatus, ITGovFinalBusinessCaseStatus, ITGovGRBStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetGovernanceTaskList
@@ -14,9 +14,9 @@ export interface GetGovernanceTaskList_systemIntake_itGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus;
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus;
   decisionAndNextStepsStatus: ITGovDecisionStatus;
-  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatus;
+  bizCaseDraftStatus: ITGovDraftBusinessCaseStatus;
   grtMeetingStatus: ITGovGRTStatus;
-  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatus;
+  bizCaseFinalStatus: ITGovFinalBusinessCaseStatus;
   grbMeetingStatus: ITGovGRBStatus;
 }
 
