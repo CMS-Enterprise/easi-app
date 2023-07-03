@@ -105,8 +105,8 @@ type SystemIntake struct {
 	ID                          uuid.UUID                    `json:"id"`
 	EUAUserID                   null.String                  `json:"euaUserId" db:"eua_user_id"`
 	Status                      SystemIntakeStatus           `json:"status"`
-	State                       SystemIntakeState            `json:"state"`
-	Step                        SystemIntakeStep             `json:"step"`
+	State                       SystemIntakeState            `json:"state" db:"state"`
+	Step                        SystemIntakeStep             `json:"step" db:"step"`
 	RequestType                 SystemIntakeRequestType      `json:"requestType" db:"request_type"`
 	Requester                   string                       `json:"requester"`
 	Component                   null.String                  `json:"component"`
