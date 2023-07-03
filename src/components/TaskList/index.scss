@@ -61,6 +61,9 @@
     @media screen and (max-width: $tablet) {
       margin-top: 1rem;
     }
+    @media screen and (min-width: $desktop) {
+      padding-right: 1rem;
+    }
 
     &:last-child {
       margin-bottom: 0;
