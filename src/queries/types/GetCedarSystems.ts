@@ -21,5 +21,5 @@ export interface GetCedarSystems_cedarSystems {
 }
 
 export interface GetCedarSystems {
-  cedarSystems: (GetCedarSystems_cedarSystems | null)[] | null;
+  cedarSystems: GetCedarSystems_cedarSystems[];
 }

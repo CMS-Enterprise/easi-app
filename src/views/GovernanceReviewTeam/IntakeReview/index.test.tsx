@@ -3,6 +3,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 
+import { MessageProvider } from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -108,6 +109,11 @@ describe('The GRT intake review view', () => {
       expectedIncreaseAmount: '',
       isExpectingIncrease: 'NO'
     },
+    annualSpending: {
+      __typename: 'SystemIntakeAnnualSpending',
+      currentAnnualSpending: '',
+      plannedYearOneSpending: ''
+    },
     contract: {
       __typename: 'SystemIntakeContract',
       hasContract: 'IN_PROGRESS',
@@ -152,7 +158,8 @@ describe('The GRT intake review view', () => {
       content: null,
       createdAt: null
     },
-    hasUiChanges: false
+    hasUiChanges: false,
+    documents: []
   };
 
   const getSystemIntakeContactsQuery = {
@@ -191,7 +198,9 @@ describe('The GRT intake review view', () => {
         <MockedProvider
           mocks={[systemIntakeQuery, getSystemIntakeContactsQuery]}
         >
-          <IntakeReview systemIntake={systemIntake} />
+          <MessageProvider>
+            <IntakeReview systemIntake={systemIntake} />
+          </MessageProvider>
         </MockedProvider>
       </MemoryRouter>
     );
@@ -210,7 +219,9 @@ describe('The GRT intake review view', () => {
           addTypename={false}
         >
           <Route path={['/governance-review-team/:systemId/intake-request']}>
-            <IntakeReview systemIntake={systemIntake} />
+            <MessageProvider>
+              <IntakeReview systemIntake={systemIntake} />
+            </MessageProvider>
           </Route>
         </MockedProvider>
       </MemoryRouter>
@@ -235,11 +246,37 @@ describe('The GRT intake review view', () => {
     render(
       <MemoryRouter>
         <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
-          <IntakeReview systemIntake={mockIntake} />
+          <MessageProvider>
+            <IntakeReview systemIntake={mockIntake} />
+          </MessageProvider>
         </MockedProvider>
       </MemoryRouter>
     );
 
     expect(screen.getByText(/less than \$1 million/i)).toBeInTheDocument();
+  });
+
+  it('renders annual spending data', () => {
+    const mockIntake: SystemIntake = {
+      ...systemIntake,
+      annualSpending: {
+        __typename: 'SystemIntakeAnnualSpending',
+        currentAnnualSpending: 'about $3.50',
+        plannedYearOneSpending: 'more than $1 million'
+      }
+    };
+
+    render(
+      <MemoryRouter>
+        <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
+          <MessageProvider>
+            <IntakeReview systemIntake={mockIntake} />
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText(/about \$3.50/i)).toBeInTheDocument();
+    expect(screen.getByText(/more than \$1 million/i)).toBeInTheDocument();
   });
 });

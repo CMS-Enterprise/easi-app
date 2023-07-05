@@ -21,6 +21,7 @@ services:
       - CEDAR_API_URL
       - CEDAR_CORE_API_VERSION
       - CEDAR_CACHE_INTERVAL
+      - CEDAR_EMAIL_ADDRESS
       - HTTP_PROXY
       - HTTPS_PROXY
       - APP_ENV

@@ -508,6 +508,18 @@ type SystemIntakeActionActor struct {
 	Email string `json:"email"`
 }
 
+// Represents current and planned annual costs for a system
+type SystemIntakeAnnualSpending struct {
+	CurrentAnnualSpending  *string `json:"currentAnnualSpending"`
+	PlannedYearOneSpending *string `json:"plannedYearOneSpending"`
+}
+
+// Input data for current and planned year one annual costs associated with a system request
+type SystemIntakeAnnualSpendingInput struct {
+	CurrentAnnualSpending  *string `json:"currentAnnualSpending"`
+	PlannedYearOneSpending *string `json:"plannedYearOneSpending"`
+}
+
 // Represents the OIT business owner of a system
 type SystemIntakeBusinessOwner struct {
 	Component *string `json:"component"`
@@ -569,6 +581,8 @@ type SystemIntakeCosts struct {
 }
 
 // Input data for estimated system cost increases associated with a system request
+//
+// NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
 type SystemIntakeCostsInput struct {
 	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
 	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
@@ -734,6 +748,7 @@ type UpdateSystemIntakeContractDetailsInput struct {
 	ID             uuid.UUID                        `json:"id"`
 	FundingSources *SystemIntakeFundingSourcesInput `json:"fundingSources"`
 	Costs          *SystemIntakeCostsInput          `json:"costs"`
+	AnnualSpending *SystemIntakeAnnualSpendingInput `json:"annualSpending"`
 	Contract       *SystemIntakeContractInput       `json:"contract"`
 }
 

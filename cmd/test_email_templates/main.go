@@ -35,6 +35,7 @@ func createEmailClient() email.Client {
 		AccessibilityTeamEmail: models.NewEmailAddress("508_team@cms.gov"),
 		TRBEmail:               models.NewEmailAddress("trb@cms.gov"),
 		EASIHelpEmail:          models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
+		CEDARTeamEmail:         models.NewEmailAddress("cedar@cedar.gov"),
 		URLHost:                os.Getenv("CLIENT_HOSTNAME"),
 		URLScheme:              os.Getenv("CLIENT_PROTOCOL"),
 		TemplateDirectory:      os.Getenv("EMAIL_TEMPLATE_DIR"),
@@ -137,6 +138,12 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		ReasonReopened: "",
 		Recipients:     emailRecipients,
 	})
+	noErr(err)
+
+	err = client.SendCedarRolesChangedEmail(ctx, "Johnothan Roleadd", true, false, []string{}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
+	noErr(err)
+
+	err = client.SendCedarRolesChangedEmail(ctx, "Johnothan Roledelete", false, true, []string{"System API Contact", "System Manager"}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
 	noErr(err)
 }
 

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GRTFeedbackType, SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graphql-global-types";
+import { GRTFeedbackType, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntake
@@ -43,6 +43,12 @@ export interface GetSystemIntake_systemIntake_costs {
   __typename: "SystemIntakeCosts";
   isExpectingIncrease: string | null;
   expectedIncreaseAmount: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_annualSpending {
+  __typename: "SystemIntakeAnnualSpending";
+  currentAnnualSpending: string | null;
+  plannedYearOneSpending: string | null;
 }
 
 export interface GetSystemIntake_systemIntake_grtFeedbacks {
@@ -98,6 +104,22 @@ export interface GetSystemIntake_systemIntake_lastAdminNote {
   createdAt: Time | null;
 }
 
+export interface GetSystemIntake_systemIntake_documents_documentType {
+  __typename: "SystemIntakeDocumentType";
+  commonType: SystemIntakeDocumentCommonType;
+  otherTypeDescription: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_documents {
+  __typename: "SystemIntakeDocument";
+  documentType: GetSystemIntake_systemIntake_documents_documentType;
+  id: UUID;
+  fileName: string;
+  status: SystemIntakeDocumentStatus;
+  uploadedAt: Time;
+  url: string;
+}
+
 export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -106,7 +128,8 @@ export interface GetSystemIntake_systemIntake {
   businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner;
   contract: GetSystemIntake_systemIntake_contract;
-  costs: GetSystemIntake_systemIntake_costs;
+  costs: GetSystemIntake_systemIntake_costs | null;
+  annualSpending: GetSystemIntake_systemIntake_annualSpending | null;
   currentStage: string | null;
   decisionNextSteps: string | null;
   grbDate: Time | null;
@@ -137,6 +160,7 @@ export interface GetSystemIntake_systemIntake {
   euaUserId: string;
   lastAdminNote: GetSystemIntake_systemIntake_lastAdminNote;
   hasUiChanges: boolean | null;
+  documents: GetSystemIntake_systemIntake_documents[];
 }
 
 export interface GetSystemIntake {

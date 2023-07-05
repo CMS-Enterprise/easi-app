@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
+import PageNumber from 'components/PageNumber';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import { SubmitIntake as SubmitIntakeQuery } from 'queries/SystemIntakeQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -38,12 +39,14 @@ const Review = ({ systemIntake }: ReviewProps) => {
         <li>direct you to go through the Governance Review process</li>
         <li>or decide there is no further governance needed</li>
       </ul>
-      <p>They will get back to you in two business days.</p>
+      <p className="margin-bottom-6">
+        They will get back to you in two business days.
+      </p>
       <Button
         type="button"
         outline
         onClick={() => {
-          const newUrl = 'contract-details';
+          const newUrl = 'documents';
           history.push(newUrl);
         }}
       >
@@ -66,6 +69,7 @@ const Review = ({ systemIntake }: ReviewProps) => {
       >
         Send my intake request
       </Button>
+      <PageNumber className="margin-top-8" currentPage={5} totalPages={5} />
     </div>
   );
 };

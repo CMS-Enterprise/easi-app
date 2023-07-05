@@ -189,6 +189,7 @@ const governanceReviewTeam = {
   },
   aria: {
     openIntake: 'Open intake request',
+    openDocuments: 'Open documents',
     openBusiness: 'Open business case',
     openNotes: 'Open admin team notes',
     openDecision: 'Open decision',

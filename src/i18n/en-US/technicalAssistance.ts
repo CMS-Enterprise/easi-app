@@ -683,6 +683,7 @@ const technicalAssistance = {
   },
   documents: {
     addDocument: 'Add a document',
+    addAnotherDocument: 'Add another document',
     table: {
       header: {
         fileName: 'File name',

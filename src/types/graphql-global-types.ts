@@ -113,6 +113,25 @@ export enum SystemIntakeActionType {
 }
 
 /**
+ * Represents the common options for document type that is attached to a
+ * System Intake document
+ */
+export enum SystemIntakeDocumentCommonType {
+  DRAFT_ICGE = "DRAFT_ICGE",
+  OTHER = "OTHER",
+  SOO_SOW = "SOO_SOW",
+}
+
+/**
+ * Enumeration of the possible statuses of documents uploaded in the System Intake
+ */
+export enum SystemIntakeDocumentStatus {
+  AVAILABLE = "AVAILABLE",
+  PENDING = "PENDING",
+  UNAVAILABLE = "UNAVAILABLE",
+}
+
+/**
  * The type of an IT governance (system) request
  */
 export enum SystemIntakeRequestType {
@@ -415,6 +434,16 @@ export interface CreateSystemIntakeContactInput {
 }
 
 /**
+ * The data needed to upload a System Intake document and attach it to a request with metadata
+ */
+export interface CreateSystemIntakeDocumentInput {
+  requestID: UUID;
+  fileData: Upload;
+  documentType: SystemIntakeDocumentCommonType;
+  otherTypeDescription?: string | null;
+}
+
+/**
  * The input data used to initialize an IT governance request for a system
  */
 export interface CreateSystemIntakeInput {
@@ -624,6 +653,14 @@ export interface SubmitIntakeInput {
 }
 
 /**
+ * Input data for current and planned year one annual costs associated with a system request
+ */
+export interface SystemIntakeAnnualSpendingInput {
+  currentAnnualSpending?: string | null;
+  plannedYearOneSpending?: string | null;
+}
+
+/**
  * The input data used to set the CMS business owner of a system
  */
 export interface SystemIntakeBusinessOwnerInput {
@@ -653,6 +690,8 @@ export interface SystemIntakeContractInput {
 
 /**
  * Input data for estimated system cost increases associated with a system request
+ * 
+ * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
  */
 export interface SystemIntakeCostsInput {
   expectedIncreaseAmount?: string | null;
@@ -782,6 +821,7 @@ export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
   fundingSources?: SystemIntakeFundingSourcesInput | null;
   costs?: SystemIntakeCostsInput | null;
+  annualSpending?: SystemIntakeAnnualSpendingInput | null;
   contract?: SystemIntakeContractInput | null;
 }
 

@@ -73,6 +73,10 @@ const systemIntake = {
     isExpectingIncrease: 'YES',
     expectedIncreaseAmount: '10 million dollars'
   },
+  annualSpending: {
+    currentAnnualSpending: 'Test Current Annual Spending',
+    plannedYearOneSpending: 'Test Planned Year One Spending'
+  },
   currentStage: 'I have done some initial research',
   decisionNextSteps: '',
   grbDate: null,
@@ -115,7 +119,8 @@ const systemIntake = {
   businessCaseId: null,
   lastAdminNote: null,
   grtReviewEmailBody: '',
-  hasUiChanges: true
+  hasUiChanges: true,
+  documents: []
 };
 
 export const mockData = {
