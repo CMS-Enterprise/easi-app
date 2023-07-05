@@ -10,7 +10,7 @@ import { MessageProvider } from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import GovernanceOverview from 'views/GovernanceOverview';
-import GovernanceTaskList from 'views/GovernanceTaskList';
+import GovernanceTaskList from 'views/GovernanceTaskListV1';
 import SystemIntake from 'views/SystemIntake';
 
 import RequestTypeForm from './index';
