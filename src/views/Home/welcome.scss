@@ -96,7 +96,13 @@
     }
   }
 
-   section#easi-capabilities .grid-row {
-    column-gap: 1rem;
-   }
+    @media screen and (min-width: $tablet) {
+      section#easi-capabilities .grid-row {
+        column-gap: 1rem;
+        
+        .grid-col {
+          flex: 1 1;
+        }
+      }
+    }
 }

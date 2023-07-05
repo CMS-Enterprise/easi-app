@@ -51,7 +51,7 @@ const WelcomeText = () => {
       >
         <Grid row>
           <CardGroup className="margin-bottom-1 margin-top-neg-8">
-            <Card className="grid-col-6">
+            <Card className="desktop:grid-col-6">
               <CardHeader>
                 <h3>{t('welcome.toolsToHelp.title')}</h3>
               </CardHeader>
@@ -72,7 +72,7 @@ const WelcomeText = () => {
                 </IconList>
               </CardBody>
             </Card>
-            <Card className="grid-col-6">
+            <Card className="desktop:grid-col-6">
               <CardHeader>
                 <h3>{t('welcome.noMore.title')}</h3>
               </CardHeader>
@@ -113,7 +113,7 @@ const WelcomeText = () => {
         <Grid row>
           <h2>{t('welcome.futureFeatures')}</h2>
           <CardGroup>
-            <Card className="grid-col-4">
+            <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
                 <IconNotificationsActive
                   size={5}
@@ -127,7 +127,7 @@ const WelcomeText = () => {
                 <p>{t('welcome.automationDescription')}</p>
               </CardBody>
             </Card>
-            <Card className="grid-col-4">
+            <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
                 <IconGroups size={5} className="text-primary-vivid" />
                 <h3 className="line-height-body-2">
@@ -138,7 +138,7 @@ const WelcomeText = () => {
                 <p>{t('welcome.collaborationDescription')}</p>
               </CardBody>
             </Card>
-            <Card className="grid-col-4">
+            <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
                 <IconEdit size={5} className="text-primary-vivid" />
                 <h3 className="line-height-body-2">{t('welcome.editing')}</h3>
@@ -158,7 +158,7 @@ const WelcomeText = () => {
       >
         <Grid row>
           <h2 className="grid-col-12">{t('welcome.capabilities')}</h2>
-          <Grid col>
+          <Grid col className="grid-col-12 tablet:grid-col-4">
             <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
               {t('welcome.lifecycleIds')}
             </h3>
@@ -166,7 +166,7 @@ const WelcomeText = () => {
               {t('welcome.lifecycleIdsDescription')}
             </p>
           </Grid>
-          <Grid col>
+          <Grid col className="grid-col-12 tablet:grid-col-4">
             <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
               {t('welcome.systemInformation')}
             </h3>
@@ -174,7 +174,7 @@ const WelcomeText = () => {
               {t('welcome.systemInformationDescription')}
             </p>
           </Grid>
-          <Grid col>
+          <Grid col className="grid-col-12 tablet:grid-col-4">
             <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
               {t('welcome.trb')}
             </h3>
