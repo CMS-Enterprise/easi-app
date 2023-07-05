@@ -75,6 +75,10 @@ const intakeQuery = (intakeData: any) => {
             isExpectingIncrease: null,
             expectedIncreaseAmount: null
           },
+          annualSpending: {
+            currentAnnualSpending: 'Test Current Annual Spending',
+            plannedYearOneSpending: 'Test Planned Year One Spending'
+          },
           currentStage: null,
           decisionNextSteps: null,
           grbDate: null,

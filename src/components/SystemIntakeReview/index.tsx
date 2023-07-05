@@ -230,25 +230,43 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.costs')} />
-            <DescriptionDefinition
-              definition={
-                systemIntake.costs.isExpectingIncrease &&
-                yesNoMap[systemIntake.costs.isExpectingIncrease]
-              }
-            />
-          </div>
-          {systemIntake.costs.isExpectingIncrease === 'YES' && (
+        {/* Conditionally render annual spending (current) or cost (legacy) questions and answers */}
+        {systemIntake.annualSpending?.currentAnnualSpending ? (
+          <ReviewRow>
             <div>
-              <DescriptionTerm term={t('review.increase')} />
+              <DescriptionTerm term={t('review.currentAnnualSpending')} />
               <DescriptionDefinition
-                definition={systemIntake.costs.expectedIncreaseAmount}
+                definition={systemIntake.annualSpending.currentAnnualSpending}
               />
             </div>
-          )}
-        </ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.plannedYearOneSpending')} />
+              <DescriptionDefinition
+                definition={systemIntake.annualSpending.plannedYearOneSpending}
+              />
+            </div>
+          </ReviewRow>
+        ) : (
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.costs')} />
+              <DescriptionDefinition
+                definition={
+                  systemIntake.costs?.isExpectingIncrease &&
+                  yesNoMap[systemIntake.costs.isExpectingIncrease]
+                }
+              />
+            </div>
+            {systemIntake.costs?.isExpectingIncrease === 'YES' && (
+              <div>
+                <DescriptionTerm term={t('review.increase')} />
+                <DescriptionDefinition
+                  definition={systemIntake.costs.expectedIncreaseAmount}
+                />
+              </div>
+            )}
+          </ReviewRow>
+        )}
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('review.contract')} />
