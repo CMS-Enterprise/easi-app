@@ -230,12 +230,13 @@ function DocumentsTable({
             return (
               <>
                 {/* View document */}
-                <button
+                <Button
                   type="button"
+                  unstyled
                   onClick={() => getUrlForDocument(documentId)}
                 >
                   {viewButtonText}
-                </button>
+                </Button>
                 {/* Delete document */}
                 {canEdit && (
                   <Button
