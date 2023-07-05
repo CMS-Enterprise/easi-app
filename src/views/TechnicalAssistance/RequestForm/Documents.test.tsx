@@ -236,7 +236,7 @@ describe('Trb Request form: Supporting documents', () => {
     await findByRole('button', { name: 'Next' });
 
     // Available file
-    getByRole('link', { name: 'View' });
+    getByRole('button', { name: 'View' });
     getByRole('button', { name: 'Remove' });
 
     getByText('Virus scan in progress...'); // Pending
