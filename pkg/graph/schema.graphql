@@ -1014,6 +1014,8 @@ type SystemIntake {
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
   status: SystemIntakeStatus!
+  state: SystemIntakeState!
+  step: SystemIntakeStep!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
@@ -1026,26 +1028,50 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   itGovTaskStatuses:  ITGovTaskStatuses!
+  requestFormState: SystemIntakeFormState!
+  draftBusinessCaseState: SystemIntakeFormState!
+  """
+  This is a calculated state based on if a date exists for the GRT Meeting date
+  """
+  grtMeetingState: SystemIntakeMeetingState!
+  finalBusinessCaseState: SystemIntakeFormState!
+  """
+  This is a calculated state based on if a date exists for the GRB Meeting date
+  """
+  grbMeetingState: SystemIntakeMeetingState!
+  decisionState: SystemIntakeDecisionState!
 }
+
+"""
+SystemIntakeState represents whether the intake is open or closed
+"""
+enum SystemIntakeState {
+  OPEN
+  CLOSED
+}
+
+"""
+SystemIntakeStep represents the current step in the intake process
+"""
+enum SystemIntakeStep {
+  INITIAL_REQUEST_FORM
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+  DECISION_AND_NEXT_STEPS
+}
+
 type ITGovTaskStatuses {
-  requesterStatuses: ITGovTaskStatusesRequester!
-  adminStatuses: ITGovTaskStatusesAdmin!
-
-}
-type ITGovTaskStatusesRequester {
-  intakeFormStatus: ITGovIntakeStatusReq!
-  feedbackFromInitialReviewStatus: ITGovFeedbackStatusReq!
-  bizCaseDraftStatus: ITGovDraftBuisnessCaseStatusReq!
-  grtMeetingStatus: ITGovGRTStatusReq!
-  bizCaseFinalStatus: ITGovFinalBuisnessCaseStatusReq!
-  grbMeetingStatus: ITGovGRBStatusReq!
-  decisionAndNextStepsStatus: ITGovDecisionStatusReq!
+  intakeFormStatus: ITGovIntakeFormStatus!
+  feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
+  bizCaseDraftStatus: ITGovDraftBusinessCaseStatus!
+  grtMeetingStatus: ITGovGRTStatus!
+  bizCaseFinalStatus: ITGovFinalBusinessCaseStatus!
+  grbMeetingStatus: ITGovGRBStatus!
+  decisionAndNextStepsStatus: ITGovDecisionStatus!
 }
 
-# TODO: to be implemented in a future ticket
-type ITGovTaskStatusesAdmin { 
-    grtMeetingStatus: String! #TBD, this is a placeholder for valid GQL
-}
 """
 The input data used to set the requester of a system request
 """
@@ -2363,7 +2389,7 @@ type Query {
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
-  cedarSystems: [CedarSystem]
+  cedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
@@ -2476,7 +2502,7 @@ enum Role {
 """
 The requester view of the IT gov intake step status
 """
-enum ITGovIntakeStatusReq {
+enum ITGovIntakeFormStatus {
   """
   Ready to begin filling out
   """
@@ -2499,7 +2525,7 @@ enum ITGovIntakeStatusReq {
 """
 The requester view of the IT gov feedback step status
 """
-enum ITGovFeedbackStatusReq {
+enum ITGovFeedbackStatus {
   """
   This step can't be started yet
   """
@@ -2518,7 +2544,7 @@ enum ITGovFeedbackStatusReq {
 """
 The requester view of the IT gov Decision step status
 """
-enum ITGovDecisionStatusReq {
+enum ITGovDecisionStatus {
   """
   This step can't be started yet
   """
@@ -2535,9 +2561,9 @@ enum ITGovDecisionStatusReq {
 
 
 """
-The requester view of the IT gov draft buisness case step status
+The requester view of the IT gov draft business case step status
 """
-enum ITGovDraftBuisnessCaseStatusReq {
+enum ITGovDraftBusinessCaseStatus {
   """
   This step can't be started yet
   """
@@ -2556,12 +2582,12 @@ enum ITGovDraftBuisnessCaseStatusReq {
   IN_PROGRESS
 
   """
-  This draft buisness case has edits requested
+  This draft business case has edits requested
   """
   EDITS_REQUESTED
 
   """
-  The draft buisness case is completed
+  The draft business case is completed
   """
   COMPLETED
 }
@@ -2570,10 +2596,10 @@ enum ITGovDraftBuisnessCaseStatusReq {
 """
 The requester view of the IT Gov GRT step status
 """
-enum ITGovGRTStatusReq {
+enum ITGovGRTStatus {
   """
   This step can't be started yet
-  """  
+  """
   CANT_START
   """
   This step is not needed and has been skipped
@@ -2593,51 +2619,51 @@ enum ITGovGRTStatusReq {
   AWAITING_DECISION
   """
   The step is completed
-  """  
+  """
   COMPLETED
 }
 
 """
-The requester view of the IT Gov Final Buisness Case step status
+The requester view of the IT Gov Final Business Case step status
 """
-enum ITGovFinalBuisnessCaseStatusReq {
+enum ITGovFinalBusinessCaseStatus {
   """
   This step can't be started yet
   """
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   Ready to begin filling out
-  """  
+  """
   READY
   """
   The form has started to be filled out
   """
   IN_PROGRESS
   """
-  This buisness case has edits requested
-  """  
+  This business case has edits requested
+  """
   EDITS_REQUESTED
   """
-  This buisness case has been completed
-  """  
+  This business case has been completed
+  """
   COMPLETED
 }
 
 """
 The requester view of the IT Gov GRB step status
 """
-enum ITGovGRBStatusReq {
+enum ITGovGRBStatus {
   """
   This step can't be started yet
   """
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   The GRB meeting is waiting to be scheduled
@@ -2648,7 +2674,39 @@ enum ITGovGRBStatusReq {
   """
   SCHEDULED
   """
+  The GRT meeting has already happened, and an outcome hasn't been noted yet
+  """
+  AWAITING_DECISION
+  """
   The step is completed
-  """    
+  """
   COMPLETED
+}
+
+"""
+This represents the possible state any system intake form can take
+"""
+enum SystemIntakeFormState {
+  NOT_STARTED
+  IN_PROGRESS
+  EDITS_REQUESTED
+  SUBMITTED
+}
+
+"""
+This represents the possible System Intake Decision States
+"""
+enum SystemIntakeDecisionState {
+  NO_DECISION
+  LCID_ISSUED
+  NOT_APPROVED
+  NO_GOVERNANCE
+}
+
+"""
+This represents the possible states any system intake meeting can take.
+"""
+enum SystemIntakeMeetingState{
+  SCHEDULED
+  NOT_SCHEDULED
 }

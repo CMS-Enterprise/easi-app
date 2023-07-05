@@ -145,6 +145,7 @@ describe('The Goveranance Task List', () => {
               createdAt: null
             },
             hasUiChanges: null,
+            documents: [],
             ...intakeData
           }
         }

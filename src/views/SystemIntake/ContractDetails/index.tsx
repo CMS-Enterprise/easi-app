@@ -802,7 +802,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           }
                         }).then(res => {
                           if (!res.errors) {
-                            history.push('review');
+                            history.push('documents');
                           }
                         });
                       } else {
@@ -843,7 +843,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               }}
               debounceDelay={3000}
             />
-            <PageNumber currentPage={3} totalPages={3} />
+            <PageNumber currentPage={3} totalPages={5} />
           </>
         );
       }}
