@@ -895,6 +895,14 @@ type SystemIntakeCosts {
 }
 
 """
+Represents current and planned annual costs for a system
+"""
+type SystemIntakeAnnualSpending {
+  currentAnnualSpending: String
+  plannedYearOneSpending: String
+}
+
+"""
 Represents a contact in OIT who is collaborating with the user
 creating a system IT governance request
 """
@@ -974,7 +982,8 @@ type SystemIntake {
   businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
   contract: SystemIntakeContract!
-  costs: SystemIntakeCosts!
+  costs: SystemIntakeCosts
+  annualSpending: SystemIntakeAnnualSpending
   createdAt: Time!
   currentStage: String
   decisionNextSteps: String
@@ -1005,6 +1014,8 @@ type SystemIntake {
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
   status: SystemIntakeStatus!
+  state: SystemIntakeState!
+  step: SystemIntakeStep!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
@@ -1030,6 +1041,27 @@ type SystemIntake {
   grbMeetingState: SystemIntakeMeetingState!
   decisionState: SystemIntakeDecisionState!
 }
+
+"""
+SystemIntakeState represents whether the intake is open or closed
+"""
+enum SystemIntakeState {
+  OPEN
+  CLOSED
+}
+
+"""
+SystemIntakeStep represents the current step in the intake process
+"""
+enum SystemIntakeStep {
+  INITIAL_REQUEST_FORM
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+  DECISION_AND_NEXT_STEPS
+}
+
 type ITGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
@@ -1159,10 +1191,21 @@ input SystemIntakeFundingSourcesInput {
 
 """
 Input data for estimated system cost increases associated with a system request
+
+NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
 """
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
   isExpectingIncrease: String
+
+}
+
+"""
+Input data for current and planned year one annual costs associated with a system request
+"""
+input SystemIntakeAnnualSpendingInput {
+  currentAnnualSpending: String
+  plannedYearOneSpending: String
 }
 
 """
@@ -1183,6 +1226,7 @@ input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
   fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
+  annualSpending: SystemIntakeAnnualSpendingInput
   contract: SystemIntakeContractInput
 }
 
@@ -2555,7 +2599,7 @@ The requester view of the IT Gov GRT step status
 enum ITGovGRTStatus {
   """
   This step can't be started yet
-  """  
+  """
   CANT_START
   """
   This step is not needed and has been skipped
@@ -2575,7 +2619,7 @@ enum ITGovGRTStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """  
+  """
   COMPLETED
 }
 
@@ -2589,11 +2633,11 @@ enum ITGovFinalBusinessCaseStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   Ready to begin filling out
-  """  
+  """
   READY
   """
   The form has started to be filled out
@@ -2601,11 +2645,11 @@ enum ITGovFinalBusinessCaseStatus {
   IN_PROGRESS
   """
   This business case has edits requested
-  """  
+  """
   EDITS_REQUESTED
   """
   This business case has been completed
-  """  
+  """
   COMPLETED
 }
 
@@ -2619,7 +2663,7 @@ enum ITGovGRBStatus {
   CANT_START
   """
   This step is not needed and has been skipped
-  """  
+  """
   NOT_NEEDED
   """
   The GRB meeting is waiting to be scheduled
@@ -2635,7 +2679,7 @@ enum ITGovGRBStatus {
   AWAITING_DECISION
   """
   The step is completed
-  """    
+  """
   COMPLETED
 }
 

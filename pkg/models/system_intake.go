@@ -72,11 +72,41 @@ const (
 	SystemIntakeStatusFilterCLOSED SystemIntakeStatusFilter = "CLOSED"
 )
 
+// SystemIntakeState represents whether the intake is open or closed
+type SystemIntakeState string
+
+const (
+	// SystemIntakeStateOPEN captures enum value "OPEN"
+	SystemIntakeStateOPEN SystemIntakeState = "OPEN"
+	// SystemIntakeStateCLOSED captures enum value "CLOSED"
+	SystemIntakeStateCLOSED SystemIntakeState = "CLOSED"
+)
+
+// SystemIntakeStep represents the current step in the intake process
+type SystemIntakeStep string
+
+const (
+	// SystemIntakeStepINITIALFORM captures enum value "INITIAL_REQUEST_FORM"
+	SystemIntakeStepINITIALFORM SystemIntakeStep = "INITIAL_REQUEST_FORM"
+	// SystemIntakeStepDRAFTBIZCASE captures enum value "DRAFT_BUSINESS_CASE"
+	SystemIntakeStepDRAFTBIZCASE SystemIntakeStep = "DRAFT_BUSINESS_CASE"
+	// SystemIntakeStepGRTMEETING captures enum value "GRT_MEETING"
+	SystemIntakeStepGRTMEETING SystemIntakeStep = "GRT_MEETING"
+	// SystemIntakeStepFINALBIZCASE captures enum value "FINAL_BUSINESS_CASE"
+	SystemIntakeStepFINALBIZCASE SystemIntakeStep = "FINAL_BUSINESS_CASE"
+	// SystemIntakeStepGRBMEETING captures enum value "GRB_MEETING"
+	SystemIntakeStepGRBMEETING SystemIntakeStep = "GRB_MEETING"
+	// SystemIntakeStepDECISION captures enum value "DECISION_AND_NEXT_STEPS"
+	SystemIntakeStepDECISION SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
+)
+
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
 	ID                          uuid.UUID                    `json:"id"`
 	EUAUserID                   null.String                  `json:"euaUserId" db:"eua_user_id"`
 	Status                      SystemIntakeStatus           `json:"status"`
+	State                       SystemIntakeState            `json:"state" db:"state"`
+	Step                        SystemIntakeStep             `json:"step" db:"step"`
 	RequestType                 SystemIntakeRequestType      `json:"requestType" db:"request_type"`
 	Requester                   string                       `json:"requester"`
 	Component                   null.String                  `json:"component"`
@@ -101,6 +131,8 @@ type SystemIntake struct {
 	ExistingContract            null.String                  `json:"existingContract" db:"existing_contract"`
 	CostIncrease                null.String                  `json:"costIncrease" db:"cost_increase"`
 	CostIncreaseAmount          null.String                  `json:"costIncreaseAmount" db:"cost_increase_amount"`
+	CurrentAnnualSpending       null.String                  `json:"currentAnnualSpending" db:"current_annual_spending"`
+	PlannedYearOneSpending      null.String                  `json:"plannedYearOneSpending" db:"planned_year_one_spending"`
 	Contractor                  null.String                  `json:"contractor" db:"contractor"`
 	ContractVehicle             null.String                  `json:"contractVehicle" db:"contract_vehicle"`
 	ContractNumber              null.String                  `json:"contractNumber" db:"contract_number"` // replaces contract vehicle - see EASI-1977
@@ -129,8 +161,8 @@ type SystemIntake struct {
 	DecisionNextSteps           null.String                  `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason             null.String                  `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String                  `json:"adminLead" db:"admin_lead"`
-	LastAdminNoteContent        null.String                  `json:"lastAdminNoteContent" db:"last_admin_note_content"`
-	LastAdminNoteCreatedAt      *time.Time                   `json:"lastAdminNoteCreatedAt" db:"last_admin_note_created_at"`
+	LastAdminNoteContent        null.String                  `json:"lastAdminNoteContent" db:"last_admin_note_content"`      // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
+	LastAdminNoteCreatedAt      *time.Time                   `json:"lastAdminNoteCreatedAt" db:"last_admin_note_created_at"` // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
 	CedarSystemID               null.String                  `json:"cedarSystemId" db:"cedar_system_id"`
 	ExistingFunding             null.Bool                    `json:"existingFunding" db:"existing_funding"`
 	FundingSource               null.String                  `json:"fundingSource" db:"funding_source"`

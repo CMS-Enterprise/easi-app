@@ -24,6 +24,12 @@
     display: none;
   }
 
+  // Hide svg elements so that Prince doesn't try to print SVGs
+  // (which commonly have issues unless they're specifically handled for accessibility)
+  svg {
+    display: none !important;
+  }
+
   .easi-only-print {
     display: block;
   }
