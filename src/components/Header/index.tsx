@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { IconMenu } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -19,7 +19,6 @@ type HeaderProps = {
 
 export const Header = ({ children }: HeaderProps) => {
   const { authState, oktaAuth } = useOktaAuth();
-  const { pathname } = useLocation();
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
   const { isMobileSideNavExpanded, setIsMobileSideNavExpanded } = useContext(
@@ -98,9 +97,7 @@ export const Header = ({ children }: HeaderProps) => {
   return (
     <header
       className={classnames('usa-header easi-header', {
-        'sticky sticky-nav-header display-block navigation__content': isMobile,
-        'easi-header__unauthenticated':
-          !authState?.isAuthenticated && pathname === '/'
+        'sticky sticky-nav-header display-block navigation__content': isMobile
       })}
       role="banner"
       ref={navbarRef}

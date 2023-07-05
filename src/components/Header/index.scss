@@ -89,22 +89,6 @@
     padding-right: 0;
   }
 
-  &.easi-header__unauthenticated {
-    background-color: color('primary-dark');
-    // Fix for .navigation element top border
-    margin-bottom: -1px;
-
-    .usa-logo a {
-      color: white;
-    }
-    .easi-header__nav-link {
-      color: white;
-      border: 2px solid white;
-      border-radius: 4px;
-      padding: .75rem 1rem;
-    }
-  }
-
   @media (max-width: $desktop) {
     .usa-nav__primary .usa-current {
       &:after {

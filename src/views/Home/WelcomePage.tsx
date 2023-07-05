@@ -23,7 +23,7 @@ const WelcomeText = () => {
   const { t } = useTranslation('home');
 
   return (
-    <div id="easiWelcomePage">
+    <>
       {/* Intro */}
       <section
         id="easi-welcome-header"
@@ -184,7 +184,7 @@ const WelcomeText = () => {
           </Grid>
         </Grid>
       </section>
-    </div>
+    </>
   );
 };
 
