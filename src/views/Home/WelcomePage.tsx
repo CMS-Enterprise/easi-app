@@ -154,7 +154,7 @@ const WelcomeText = () => {
       {/* Capabilities */}
       <section
         id="easi-capabilities"
-        className="grid-container padding-top-3 padding-bottom-5"
+        className="grid-container padding-top-3 tablet:padding-bottom-5"
       >
         <Grid row>
           <h2 className="grid-col-12">{t('welcome.capabilities')}</h2>
