@@ -66,17 +66,14 @@ function DocumentsTable({
     variables: { id: trbRequestId }
   });
 
-  const [
-    getDocumentUrls,
-    { data: urlData, loading: urlLoading, error: urlError, called: urlCalled }
-  ] = useLazyQuery<GetTrbRequestDocumentUrls, GetTrbRequestDocumentsVariables>(
-    GetTrbRequestDocumentUrlsQuery,
-    {
-      variables: {
-        id: trbRequestId
-      }
+  const [getDocumentUrls] = useLazyQuery<
+    GetTrbRequestDocumentUrls,
+    GetTrbRequestDocumentsVariables
+  >(GetTrbRequestDocumentUrlsQuery, {
+    variables: {
+      id: trbRequestId
     }
-  );
+  });
 
   const documents = data?.trbRequest.documents || [];
 
@@ -204,29 +201,8 @@ function DocumentsTable({
             return <em>{t('documents.table.virusScan')}</em>;
           // View or Remove
           if (row.original.status === TRBRequestDocumentStatus.AVAILABLE) {
-            const documentId = row.original.id;
-            // return (
-            //   <Link
-            //     target="_blank"
-            //     href="#"
-
-            //   >
-            //     {t('documents.table.view')}
-            //   </Link>
-            // );
-
             // Show some file actions once it's available
-            let viewButtonText = t('documents.table.view');
-            if (urlCalled) {
-              if (urlLoading) {
-                viewButtonText = 'Loading...';
-              } else if (urlError) {
-                viewButtonText = 'Error!';
-              } else if (!urlData) {
-                viewButtonText = 'No URL data!';
-              }
-            }
-
+            const documentId = row.original.id;
             return (
               <>
                 {/* View document */}
@@ -235,7 +211,7 @@ function DocumentsTable({
                   unstyled
                   onClick={() => getUrlForDocument(documentId)}
                 >
-                  {viewButtonText}
+                  {t('documents.table.view')}
                 </Button>
                 {/* Delete document */}
                 {canEdit && (
@@ -261,7 +237,7 @@ function DocumentsTable({
         }
       }
     ];
-  }, [t, getDocumentUrls, urlCalled, urlLoading, urlError, urlData, canEdit]);
+  }, [t, getDocumentUrls, canEdit]);
 
   const {
     getTableBodyProps,
