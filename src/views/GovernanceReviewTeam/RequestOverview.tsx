@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-default */
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -5,6 +6,7 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, IconArrowBack } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
@@ -26,15 +28,16 @@ import {
 } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
-import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
-import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
+import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/ActionsV1/ProvideGRTFeedbackToBusinessOwner';
+import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/ActionsV1/ProvideGRTRecommendationsToGRB';
 import NotFound from 'views/NotFound';
 
 import ChooseAction from './Actions/ChooseAction';
-import ExtendLifecycleId from './Actions/ExtendLifecycleId';
-import IssueLifecycleId from './Actions/IssueLifecycleId';
-import RejectIntake from './Actions/RejectIntake';
-import SubmitAction from './Actions/SubmitAction';
+import { default as ChooseActionV1 } from './ActionsV1/ChooseAction';
+import ExtendLifecycleId from './ActionsV1/ExtendLifecycleId';
+import IssueLifecycleId from './ActionsV1/IssueLifecycleId';
+import RejectIntake from './ActionsV1/RejectIntake';
+import SubmitAction from './ActionsV1/SubmitAction';
 import AccordionNavigation from './AccordionNavigation';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
@@ -56,6 +59,8 @@ const RequestOverview = () => {
     systemId: string;
     activePage: string;
   }>();
+
+  const flags = useFlags();
 
   const { loading, data, refetch } = useQuery<
     GetSystemIntake,
@@ -198,12 +203,22 @@ const RequestOverview = () => {
               <Route
                 path="/governance-review-team/:systemId/actions"
                 exact
-                render={() => (
-                  <ChooseAction
-                    systemIntake={systemIntake}
-                    businessCase={businessCase}
-                  />
-                )}
+                render={() => {
+                  if (!flags.itGovV2Enabled) {
+                    return (
+                      <ChooseActionV1
+                        systemIntake={systemIntake}
+                        businessCase={businessCase}
+                      />
+                    );
+                  }
+                  return (
+                    <ChooseAction
+                      systemIntake={systemIntake}
+                      businessCase={businessCase}
+                    />
+                  );
+                }}
               />
               <Route
                 path="/governance-review-team/:systemId/actions/not-it-request"
