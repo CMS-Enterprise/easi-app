@@ -142,8 +142,8 @@ function DocumentsTable({
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
     const getUrlForDocument = (documentId: string) => {
-      // use as promise instead of relying on urlLoading, urlError, urlData, etc.
-      // when using those, had an issue where the first click wouldn't log response data; urlLoading and urlError were false, but urlData was falsy
+      // use as promise so it's easier to download the file when getDocumentUrls() returns;
+      // this is a simpler approach instead of trying to do something fancy with the result status from useLazyQuery() (the called, loading, error, data booleans)
       getDocumentUrls()
         .then(response => {
           if (response.error) {
@@ -154,7 +154,6 @@ function DocumentsTable({
             // TODO - handle not returning any data
           } else {
             // Download document
-
             const requestedDocument = response.data.trbRequest.documents.find(
               doc => doc.id === documentId
             )!; // non-null assertion should be safe, this function should only be called with a documentId of a valid document
