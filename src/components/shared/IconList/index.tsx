@@ -6,7 +6,7 @@ import { IconProps } from '../IconLink';
 import './index.scss';
 
 type IconListItemProps = {
-  children: string | React.ReactElement;
+  children: React.ReactNode;
   icon: React.ReactElement<IconProps>;
   className?: string;
 };
@@ -30,7 +30,7 @@ export const IconListItem = ({
 };
 
 type IconListProps = {
-  children: React.ReactElement | React.ReactElement[];
+  children: React.ReactNode;
   className?: string;
 };
 
