@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Button, Radio } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
-import { RadioField, RadioGroup } from 'components/shared/RadioField';
+import { RadioGroup } from 'components/shared/RadioField';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeStatus } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
+
+import './chooseAction.scss';
 
 type ActionContextType = {
   name: string;
@@ -29,7 +31,7 @@ type ActionRadioOptionProps = {
 };
 
 const ActionRadioOption = ({ label, route }: ActionRadioOptionProps) => {
-  const radioFieldClassName = 'margin-y-3';
+  const { t } = useTranslation();
 
   const actionContext = useContext(ActionContext);
   if (!actionContext) {
@@ -41,14 +43,24 @@ const ActionRadioOption = ({ label, route }: ActionRadioOptionProps) => {
   const { name, onChange, value } = actionContext;
 
   return (
-    <RadioField
+    <Radio
+      className="grt-action-radio"
       id={route}
-      label={label}
+      label={t('Select this action')}
       name={name}
       value={route}
       onChange={onChange}
       checked={value === route}
-      className={radioFieldClassName}
+      title={label}
+      labelDescription={
+        <>
+          <h3 className="margin-top-2 margin-bottom-0">{label}</h3>
+          <p className="margin-0 text-base font-body-sm line-height-body-5">
+            Description text here
+          </p>
+        </>
+      }
+      tile
     />
   );
 };
@@ -269,7 +281,7 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
             value: actionRoute
           }}
         >
-          <RadioGroup>
+          <RadioGroup className="grt-actions-radio-group">
             {[availableActions]}
             {availableHiddenActions && (
               <CollapsableLink
