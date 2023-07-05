@@ -30,7 +30,7 @@ const WelcomeText = () => {
         className="grid-container bg-primary-dark text-white padding-bottom-8"
       >
         <Grid row>
-          <PageHeading className="margin-bottom-1 margin-top-7 text-normal">
+          <PageHeading className="margin-bottom-1 text-normal">
             <Trans
               i18nKey="home:welcome.title"
               components={{

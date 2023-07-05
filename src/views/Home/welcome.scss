@@ -81,12 +81,14 @@
 
     section#easi-welcome-header {
       h1 {
+        font-size: 5rem;
         display: grid;
         grid-template-columns: max-content 1fr;
-        margin-left: -.5rem;
+        margin-left: -1rem;
+        margin-top: 3.5rem;
 
         > span {
-          padding: 0 .5rem;
+          padding: 0 1rem;
 
           &:not(:first-child) {
             background-color: color('primary-vivid');
@@ -98,16 +100,7 @@
           }
         }
 
-        @media screen and (min-width: 1050px) {
-          font-size: 5rem;
-          margin-left: -1rem;
-
-          > span {
-            padding: 0 1rem;
-          }
-        }
-
-        @media screen and (max-width: 580px) {
+        @media screen and (max-width: 1050px) {
           display: block;
           max-width: $mobile;
 
@@ -117,9 +110,24 @@
 
             span {
               background-color: color('primary-vivid');
-              padding: 0 .5rem;
-              margin-left: -.5rem;
+              padding: 0 1rem;
+              margin-left: -1rem;
             }
+          }
+        }
+
+        @media screen and (max-width: $tablet) {
+          font-size: 3rem;
+          margin-top: 2rem;
+          margin-left: -.5rem;
+
+          span {
+            padding: 0 .5rem;
+          }
+
+          > span:last-child span {
+            padding: 0 .5rem;
+            margin-left: -.5rem;
           }
         }
       }
