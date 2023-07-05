@@ -29,11 +29,19 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	if intake.UpdatedAt == nil {
 		intake.UpdatedAt = &createAt
 	}
+	if intake.Step == "" {
+		intake.Step = models.SystemIntakeStepINITIALFORM
+	}
+	if intake.State == "" {
+		intake.State = models.SystemIntakeStateOPEN
+	}
 	const createIntakeSQL = `
 		INSERT INTO system_intakes (
 			id,
 			eua_user_id,
 			status,
+			state,
+			step,
 			request_type,
 			requester,
 			component,
@@ -61,6 +69,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			existing_contract,
 			cost_increase,
 			cost_increase_amount,
+			current_annual_spending,
+			planned_year_one_spending,
 			contractor,
 			contract_vehicle,
 			contract_number,
@@ -80,6 +90,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:id,
 			:eua_user_id,
 			:status,
+			:state,
+			:step,
 			:request_type,
 			:requester,
 			:component,
@@ -107,6 +119,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:existing_contract,
 			:cost_increase,
 			:cost_increase_amount,
+			:current_annual_spending,
+			:planned_year_one_spending,
 			:contractor,
 			:contract_vehicle,
 			:contract_number,
@@ -144,6 +158,8 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 		UPDATE system_intakes
 		SET
 			status = :status,
+			step = :step,
+			state = :state,
 			request_type = :request_type,
 			requester = :requester,
 			component = :component,
@@ -173,6 +189,8 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			requester_email_address = :requester_email_address,
 			cost_increase = :cost_increase,
 			cost_increase_amount = :cost_increase_amount,
+			current_annual_spending = :current_annual_spending,
+			planned_year_one_spending = :planned_year_one_spending,
 			contractor = :contractor,
 			contract_vehicle = :contract_vehicle,
 			contract_number = :contract_number,
@@ -364,7 +382,7 @@ func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuse
 			(	SELECT
 					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at
 				FROM system_intakes
-					LEFT JOIN notes on notes.system_intake = system_intakes.id
+					LEFT JOIN notes on notes.system_intake = system_intakes.id AND notes.is_archived = false
 				WHERE system_intakes.status IN (?)
 				ORDER BY system_intakes.id, notes.created_at DESC
 			) AS intakes_and_notes

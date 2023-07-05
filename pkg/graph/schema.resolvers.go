@@ -725,7 +725,7 @@ func (r *iTGovTaskStatusesResolver) FeedbackFromInitialReviewStatus(ctx context.
 }
 
 // BizCaseDraftStatus is the resolver for the bizCaseDraftStatus field.
-func (r *iTGovTaskStatusesResolver) BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBuisnessCaseStatus, error) {
+func (r *iTGovTaskStatusesResolver) BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBusinessCaseStatus, error) {
 	return resolvers.BizCaseDraftStatus(obj.ParentSystemIntake), nil
 }
 
@@ -735,7 +735,7 @@ func (r *iTGovTaskStatusesResolver) GrtMeetingStatus(ctx context.Context, obj *m
 }
 
 // BizCaseFinalStatus is the resolver for the bizCaseFinalStatus field.
-func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFinalBuisnessCaseStatus, error) {
+func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFinalBusinessCaseStatus, error) {
 	return resolvers.BizCaseFinalStatus(obj.ParentSystemIntake), nil
 }
 
@@ -1359,6 +1359,8 @@ func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input model.C
 		RequestType: models.SystemIntakeRequestType(input.RequestType),
 		Requester:   input.Requester.Name,
 		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		State:       models.SystemIntakeStateOPEN,
+		Step:        models.SystemIntakeStepINITIALFORM,
 	}
 	createdIntake, err := r.store.CreateSystemIntake(ctx, &systemIntake)
 	return createdIntake, err
@@ -1670,6 +1672,11 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
 			}
 		}
+	}
+
+	if input.AnnualSpending != nil {
+		intake.CurrentAnnualSpending = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpending)
+		intake.PlannedYearOneSpending = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpending)
 	}
 
 	if input.Contract != nil {
@@ -2720,6 +2727,14 @@ func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemInta
 	return &model.SystemIntakeCosts{
 		ExpectedIncreaseAmount: obj.CostIncreaseAmount.Ptr(),
 		IsExpectingIncrease:    obj.CostIncrease.Ptr(),
+	}, nil
+}
+
+// AnnualSpending is the resolver for the annualSpending field.
+func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeAnnualSpending, error) {
+	return &model.SystemIntakeAnnualSpending{
+		CurrentAnnualSpending:  obj.CurrentAnnualSpending.Ptr(),
+		PlannedYearOneSpending: obj.PlannedYearOneSpending.Ptr(),
 	}, nil
 }
 

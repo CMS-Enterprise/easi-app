@@ -91,6 +91,10 @@ describe('The Goveranance Task List', () => {
               vehicle: null,
               number: null
             },
+            annualSpending: {
+              currentAnnualSpending: null,
+              plannedYearOneSpending: null
+            },
             costs: {
               isExpectingIncrease: null,
               expectedIncreaseAmount: null
