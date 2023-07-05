@@ -37,7 +37,7 @@
   }
 
   header.easi-header {
-    padding-top: 2rem;
+    padding-top: 1.5rem;
     background-color: color('primary-dark');
     box-shadow: none !important;
   
@@ -55,6 +55,10 @@
       @media screen and (max-width: $desktop) {
         margin-right: 1rem;
       }
+    }
+
+    &.sticky {
+      padding: .5rem 0;
     }
   }
 
