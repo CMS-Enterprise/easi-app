@@ -34,6 +34,10 @@ export default gql`
         isExpectingIncrease
         expectedIncreaseAmount
       }
+      annualSpending {
+        currentAnnualSpending
+        plannedYearOneSpending
+      }
       currentStage
       decisionNextSteps
       grbDate

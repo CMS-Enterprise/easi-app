@@ -90,7 +90,7 @@ const documents: SystemIntakeDocument[] = [
   }
 ];
 
-const systemIntake: GetSystemIntake['systemIntake'] = {
+const systemIntake: NonNullable<GetSystemIntake['systemIntake']> = {
   __typename: 'SystemIntake',
   id: 'ccdfdcf5-5085-4521-9f77-fa1ea324502b',
   euaUserId: 'SF13',
@@ -120,6 +120,11 @@ const systemIntake: GetSystemIntake['systemIntake'] = {
     },
     vehicle: null,
     number: '123456-7890'
+  },
+  annualSpending: {
+    __typename: 'SystemIntakeAnnualSpending',
+    currentAnnualSpending: null,
+    plannedYearOneSpending: null
   },
   costs: {
     __typename: 'SystemIntakeCosts',

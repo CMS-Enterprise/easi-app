@@ -45,6 +45,12 @@ export interface GetSystemIntake_systemIntake_costs {
   expectedIncreaseAmount: string | null;
 }
 
+export interface GetSystemIntake_systemIntake_annualSpending {
+  __typename: "SystemIntakeAnnualSpending";
+  currentAnnualSpending: string | null;
+  plannedYearOneSpending: string | null;
+}
+
 export interface GetSystemIntake_systemIntake_grtFeedbacks {
   __typename: "GRTFeedback";
   feedback: string | null;
@@ -122,7 +128,8 @@ export interface GetSystemIntake_systemIntake {
   businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner;
   contract: GetSystemIntake_systemIntake_contract;
-  costs: GetSystemIntake_systemIntake_costs;
+  costs: GetSystemIntake_systemIntake_costs | null;
+  annualSpending: GetSystemIntake_systemIntake_annualSpending | null;
   currentStage: string | null;
   decisionNextSteps: string | null;
   grbDate: Time | null;

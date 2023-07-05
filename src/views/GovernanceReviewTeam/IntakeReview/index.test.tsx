@@ -109,6 +109,11 @@ describe('The GRT intake review view', () => {
       expectedIncreaseAmount: '',
       isExpectingIncrease: 'NO'
     },
+    annualSpending: {
+      __typename: 'SystemIntakeAnnualSpending',
+      currentAnnualSpending: '',
+      plannedYearOneSpending: ''
+    },
     contract: {
       __typename: 'SystemIntakeContract',
       hasContract: 'IN_PROGRESS',
@@ -249,5 +254,29 @@ describe('The GRT intake review view', () => {
     );
 
     expect(screen.getByText(/less than \$1 million/i)).toBeInTheDocument();
+  });
+
+  it('renders annual spending data', () => {
+    const mockIntake: SystemIntake = {
+      ...systemIntake,
+      annualSpending: {
+        __typename: 'SystemIntakeAnnualSpending',
+        currentAnnualSpending: 'about $3.50',
+        plannedYearOneSpending: 'more than $1 million'
+      }
+    };
+
+    render(
+      <MemoryRouter>
+        <MockedProvider mocks={[getSystemIntakeContactsQuery]}>
+          <MessageProvider>
+            <IntakeReview systemIntake={mockIntake} />
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText(/about \$3.50/i)).toBeInTheDocument();
+    expect(screen.getByText(/more than \$1 million/i)).toBeInTheDocument();
   });
 });

@@ -1674,6 +1674,11 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 		}
 	}
 
+	if input.AnnualSpending != nil {
+		intake.CurrentAnnualSpending = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpending)
+		intake.PlannedYearOneSpending = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpending)
+	}
+
 	if input.Contract != nil {
 		// set the fields to the values we receive
 		intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
@@ -2722,6 +2727,14 @@ func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemInta
 	return &model.SystemIntakeCosts{
 		ExpectedIncreaseAmount: obj.CostIncreaseAmount.Ptr(),
 		IsExpectingIncrease:    obj.CostIncrease.Ptr(),
+	}, nil
+}
+
+// AnnualSpending is the resolver for the annualSpending field.
+func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeAnnualSpending, error) {
+	return &model.SystemIntakeAnnualSpending{
+		CurrentAnnualSpending:  obj.CurrentAnnualSpending.Ptr(),
+		PlannedYearOneSpending: obj.PlannedYearOneSpending.Ptr(),
 	}, nil
 }
 

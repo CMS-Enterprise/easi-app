@@ -82,6 +82,10 @@ describe('Governance Review Team', () => {
             isExpectingIncrease: 'YES',
             expectedIncreaseAmount: '10 million dollars'
           },
+          annualSpending: {
+            currentAnnualSpending: 'Test Current Annual Spending',
+            plannedYearOneSpending: 'Test Planned Year One Spending'
+          },
           currentStage: 'I have done some initial research',
           decisionNextSteps: null,
           grbDate: null,

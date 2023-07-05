@@ -131,6 +131,8 @@ type SystemIntake struct {
 	ExistingContract            null.String                  `json:"existingContract" db:"existing_contract"`
 	CostIncrease                null.String                  `json:"costIncrease" db:"cost_increase"`
 	CostIncreaseAmount          null.String                  `json:"costIncreaseAmount" db:"cost_increase_amount"`
+	CurrentAnnualSpending       null.String                  `json:"currentAnnualSpending" db:"current_annual_spending"`
+	PlannedYearOneSpending      null.String                  `json:"plannedYearOneSpending" db:"planned_year_one_spending"`
 	Contractor                  null.String                  `json:"contractor" db:"contractor"`
 	ContractVehicle             null.String                  `json:"contractVehicle" db:"contract_vehicle"`
 	ContractNumber              null.String                  `json:"contractNumber" db:"contract_number"` // replaces contract vehicle - see EASI-1977

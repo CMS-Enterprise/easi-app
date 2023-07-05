@@ -39,9 +39,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   existingFunding: null,
   fundingSources: [],
-  costs: {
-    isExpectingIncrease: '',
-    expectedIncreaseAmount: ''
+  annualSpending: {
+    currentAnnualSpending: '',
+    plannedYearOneSpending: ''
   },
   contract: {
     hasContract: '',
@@ -119,8 +119,6 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     eaSupportRequest: systemIntake.needsEaSupport,
     existingContract: systemIntake.contract.hasContract,
     grtReviewEmailBody: systemIntake.grtReviewEmailBody,
-    costIncrease: systemIntake.costs.isExpectingIncrease,
-    costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
     contractor: systemIntake.contract.contractor,
     contractNumber: systemIntake.contract.number,
     contractStartDate: DateTime.fromObject({
@@ -190,9 +188,9 @@ export const prepareSystemIntakeForApp = (
     },
     existingFunding: systemIntake.existingFunding,
     fundingSources: systemIntake.fundingSources || [],
-    costs: {
-      isExpectingIncrease: systemIntake.costIncrease || '',
-      expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
+    annualSpending: {
+      currentAnnualSpending: systemIntake.currentAnnualSpending || '',
+      plannedYearOneSpending: systemIntake.plannedYearOneSpending || ''
     },
     contract: {
       hasContract: systemIntake.existingContract || '',
@@ -322,8 +320,8 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.governanceTeams.isPresent ||
     (intake.governanceTeams.teams && intake.governanceTeams.teams.length > 0) ||
     intake.fundingSources.length > 0 ||
-    intake.costs.isExpectingIncrease ||
-    intake.costs.expectedIncreaseAmount ||
+    intake.annualSpending?.currentAnnualSpending ||
+    intake.annualSpending?.plannedYearOneSpending ||
     intake.contract.hasContract ||
     intake.contract.contractor ||
     intake.contract.number ||
