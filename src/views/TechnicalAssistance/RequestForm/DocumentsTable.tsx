@@ -144,38 +144,30 @@ function DocumentsTable({
   ]);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
-    const showViewError = () => {
-      showMessage(
-        <Alert type="error" className="margin-top-3">
-          {t('documents.viewFail')}
-        </Alert>
-      );
-    };
-
     const getUrlForDocument = (documentId: string) => {
-      // use as promise so it's easier to download the file when getDocumentUrls() returns;
-      // this is a simpler approach instead of trying to do something fancy with the result status from useLazyQuery() (the called, loading, error, data booleans)
-      getDocumentUrls()
-        .then(response => {
-          if (response.error) {
-            showViewError();
-          } else if (response.loading) {
-            // TODO - handle case where it's still loading
-            // TODO - probably don't need to do anything?
-          } else if (!response.data) {
-            // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
-            showViewError();
-          } else {
-            // Download document
-            const requestedDocument = response.data.trbRequest.documents.find(
-              doc => doc.id === documentId
-            )!; // non-null assertion should be safe, this function should only be called with a documentId of a valid document
-            downloadFileFromURLOnly(requestedDocument.url);
-          }
-        })
-        .catch(() => {
-          showViewError();
-        });
+      // download file/handle errors based off the Promise returned from running the getDocumentUrls() query;
+      // this is simpler than trying to customize what's rendered based on the result status from useLazyQuery() (the called, loading, error, data booleans)
+      getDocumentUrls().then(response => {
+        if (response.error || !response.data) {
+          // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
+          showMessage(
+            <Alert type="error" className="margin-top-3">
+              {t('documents.viewFail')}
+            </Alert>
+          );
+        } else if (response.loading) {
+          // TODO - handle case where it's still loading
+          // TODO - probably don't need to do anything?
+        } else {
+          // Download document
+          const requestedDocument = response.data.trbRequest.documents.find(
+            doc => doc.id === documentId
+          )!; // non-null assertion should be safe, this function should only be called with a documentId of a valid document
+          downloadFileFromURLOnly(requestedDocument.url);
+        }
+      });
+      // don't need to call .catch(); apollo-client will always fulfill the promise, even if there's a network error
+      // both network errors and GraphQL errors will set response.error - see https://www.apollographql.com/docs/react/data/error-handling/
     };
 
     return [
