@@ -8,6 +8,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
+import useMessage from 'hooks/useMessage';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestDocumentUrlsQuery from 'queries/GetTrbRequestDocumentUrlsQuery';
@@ -53,6 +54,8 @@ function DocumentsTable({
   canEdit = true
 }: Props) {
   const { t } = useTranslation('technicalAssistance');
+
+  const { showMessage } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [fileToRemove, setFileToRemove] = useState<TrbRequestDocuments>(
@@ -141,17 +144,27 @@ function DocumentsTable({
   ]);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
+    const showViewError = () => {
+      showMessage(
+        <Alert type="error" className="margin-top-3">
+          {t('documents.viewFail')}
+        </Alert>
+      );
+    };
+
     const getUrlForDocument = (documentId: string) => {
       // use as promise so it's easier to download the file when getDocumentUrls() returns;
       // this is a simpler approach instead of trying to do something fancy with the result status from useLazyQuery() (the called, loading, error, data booleans)
       getDocumentUrls()
         .then(response => {
           if (response.error) {
-            // TODO - handle error
+            showViewError();
           } else if (response.loading) {
             // TODO - handle case where it's still loading
+            // TODO - probably don't need to do anything?
           } else if (!response.data) {
-            // TODO - handle not returning any data
+            // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
+            showViewError();
           } else {
             // Download document
             const requestedDocument = response.data.trbRequest.documents.find(
@@ -161,7 +174,7 @@ function DocumentsTable({
           }
         })
         .catch(() => {
-          // TODO - error handling
+          showViewError();
         });
     };
 
@@ -236,7 +249,7 @@ function DocumentsTable({
         }
       }
     ];
-  }, [t, getDocumentUrls, canEdit]);
+  }, [t, showMessage, getDocumentUrls, canEdit]);
 
   const {
     getTableBodyProps,
