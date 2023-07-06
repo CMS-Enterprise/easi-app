@@ -155,9 +155,6 @@ function DocumentsTable({
               {t('documents.viewFail')}
             </Alert>
           );
-        } else if (response.loading) {
-          // TODO - handle case where it's still loading
-          // TODO - probably don't need to do anything?
         } else {
           // Download document
           const requestedDocument = response.data.trbRequest.documents.find(
