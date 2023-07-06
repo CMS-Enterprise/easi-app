@@ -895,6 +895,14 @@ type SystemIntakeCosts {
 }
 
 """
+Represents current and planned annual costs for a system
+"""
+type SystemIntakeAnnualSpending {
+  currentAnnualSpending: String
+  plannedYearOneSpending: String
+}
+
+"""
 Represents a contact in OIT who is collaborating with the user
 creating a system IT governance request
 """
@@ -974,7 +982,8 @@ type SystemIntake {
   businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
   contract: SystemIntakeContract!
-  costs: SystemIntakeCosts!
+  costs: SystemIntakeCosts
+  annualSpending: SystemIntakeAnnualSpending
   createdAt: Time!
   currentStage: String
   decisionNextSteps: String
@@ -1183,10 +1192,21 @@ input SystemIntakeFundingSourcesInput {
 
 """
 Input data for estimated system cost increases associated with a system request
+
+NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
 """
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
   isExpectingIncrease: String
+
+}
+
+"""
+Input data for current and planned year one annual costs associated with a system request
+"""
+input SystemIntakeAnnualSpendingInput {
+  currentAnnualSpending: String
+  plannedYearOneSpending: String
 }
 
 """
@@ -1207,6 +1227,7 @@ input UpdateSystemIntakeContractDetailsInput {
   id: UUID!
   fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
+  annualSpending: SystemIntakeAnnualSpendingInput
   contract: SystemIntakeContractInput
 }
 

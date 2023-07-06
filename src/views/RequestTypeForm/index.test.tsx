@@ -10,7 +10,7 @@ import { MessageProvider } from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import GovernanceOverview from 'views/GovernanceOverview';
-import GovernanceTaskList from 'views/GovernanceTaskList';
+import GovernanceTaskList from 'views/GovernanceTaskListV1';
 import SystemIntake from 'views/SystemIntake';
 
 import RequestTypeForm from './index';
@@ -74,6 +74,10 @@ const intakeQuery = (intakeData: any) => {
           costs: {
             isExpectingIncrease: null,
             expectedIncreaseAmount: null
+          },
+          annualSpending: {
+            currentAnnualSpending: 'Test Current Annual Spending',
+            plannedYearOneSpending: 'Test Planned Year One Spending'
           },
           currentStage: null,
           decisionNextSteps: null,
