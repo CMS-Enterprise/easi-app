@@ -1031,6 +1031,7 @@ type SystemIntake {
   """
   grbMeetingState: SystemIntakeMeetingState!
   decisionState: SystemIntakeDecisionState!
+  statusAdmin: SystemIntakeStatusAdmin!
 }
 
 """
@@ -2688,4 +2689,24 @@ This represents the possible states any system intake meeting can take.
 enum SystemIntakeMeetingState{
   SCHEDULED
   NOT_SCHEDULED
+}
+
+"""
+This represents the statuses that and admin would see as a representation of a system intake
+"""
+enum SystemIntakeStatusAdmin {
+  INITIAL_REQUEST_FORM_IN_PROGRESS
+  INITIAL_REQUEST_FORM_SUBMITTED
+  DRAFT_BUSINESS_CASE_IN_PROGRESS
+  DRAFT_BUSINESS_CASE_COMPLETE
+  GRT_MEETING_READY
+  GRT_MEETING_COMPLETE
+  GRB_MEETING_READY
+  GRB_MEETING_COMPLETE
+  FINAL_BUSINESS_CASE_IN_PROGRESS
+  FINAL_BUSINESS_CASE_COMPLETE
+  LCID_ISSUED
+  NO_GOVERNANCE
+  NOT_APPROVED
+  CLOSED
 }
