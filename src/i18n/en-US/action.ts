@@ -1,4 +1,56 @@
 const action = {
+  actionsV2: {
+    requestEdits: {
+      title: 'Request edits to a form',
+      description:
+        'Unlock the Intake Request or Business Case form and give feedback about what edits are needed.',
+      accordion:
+        'Choose this action when you need a requester to update content in the Intake Request, draft Business Case, or final Business Case. You will be able to select which form should  be updated. '
+    },
+    progressToNewStep: {
+      title: 'Progress to a new step',
+      description:
+        'Select which steps are required for this request, and move the request to another step in the Governance process.',
+      accordion:
+        'Choose this action when this request is ready for a draft Business Case, GRT meeting, final Business Case, or GRB meeting. You will be able to select the step to move the request to. '
+    },
+    issueDecisionOrClose: {
+      title: 'Issue a decision or close this request',
+      description:
+        'Issue a Life Cycle ID, mark this project as  not approved, or close this request for another reason.',
+      accordion:
+        'Use this action when you are ready to issue a decision or if you would like to close this request. You will be able to select the resolution for this request.'
+    },
+    changeDecisionOrClose: {
+      title: 'Change decision or close this request',
+      description_lcid:
+        'Mark this project as not approved, or close this request for another reason.',
+      description_notApproved:
+        'Issue a Life Cycle ID, or close this request for another reason.',
+      description_notItGov:
+        'Issue a Life Cycle ID, mark this project as not approved, or close this request for another reason.',
+      accordion:
+        'Use this action if you want to change the decision for this request or if you would like to close it. You will be able to select the new resolution for this request.'
+    },
+    issueDecisionOrReopen: {
+      title: 'Issue a decision or re-open this request',
+      description:
+        'Issue a Life Cycle ID, mark this project as not approved, or re-open this closed request.',
+      accordion:
+        'Use this action when you are ready to issue a decision or if you would like to re-open this request. You will be able to select the resolution for this request.'
+    },
+    changeDecisionOrReopen: {
+      title: 'Change decision or re-open this request',
+      description_lcid:
+        'Mark this project as not approved, or re-open this closed request.',
+      description_notApproved:
+        'Issue a Life Cycle ID, or re-open this closed request.',
+      description_notItGov:
+        'Issue a Life Cycle ID, mark this project as not approved, or re-open this closed request.',
+      accordion:
+        'Use this action if you want to change the decision for this request or if you would like to re-open it. You will be able to select the new resolution for this request.'
+    }
+  },
   actions: {
     notItRequest: 'Not an IT governance request',
     needBizCase: 'Request a draft business case',
