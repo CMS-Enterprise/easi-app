@@ -74,7 +74,7 @@ describe('Governance Task List', () => {
     // First task list item
     getByRole('heading', {
       level: 3,
-      name: i18next.t<string>('itGov:taskList.steps.0.title')
+      name: i18next.t<string>('itGov:taskList.step.intakeForm.title')
     });
   });
 });
