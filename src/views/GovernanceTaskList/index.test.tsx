@@ -3,36 +3,20 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import i18next from 'i18next';
 
-import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-// eslint-disable-next-line camelcase
-import { GetGovernanceTaskList_systemIntake_itGovTaskStatuses } from 'queries/types/GetGovernanceTaskList';
 import {
-  ITGovDecisionStatus,
-  ITGovDraftBusinessCaseStatus,
-  ITGovFeedbackStatus,
-  ITGovFinalBusinessCaseStatus,
-  ITGovGRBStatus,
-  ITGovGRTStatus,
-  ITGovIntakeFormStatus
-} from 'types/graphql-global-types';
+  intakeFormEditsRequested,
+  intakeFormInProgress,
+  intakeFormNotStarted,
+  intakeFormResubmittedAfterEdits,
+  intakeFormSubmitted
+} from 'data/mock/govTaskList';
+import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-import GovernanceTaskList from '.';
+import GovernanceTaskList, { GovTaskIntakeForm } from '.';
 
 describe('Governance Task List', () => {
   const id = '80950153-4a66-4881-b728-f4cc701ff926';
-
-  // eslint-disable-next-line camelcase
-  const requesterStartsNewRequest: GetGovernanceTaskList_systemIntake_itGovTaskStatuses = {
-    intakeFormStatus: ITGovIntakeFormStatus.READY,
-    feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
-    decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
-    bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
-    grtMeetingStatus: ITGovGRTStatus.CANT_START,
-    bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
-    grbMeetingStatus: ITGovGRBStatus.CANT_START,
-    __typename: 'ITGovTaskStatuses'
-  };
 
   it('renders a request task list at the initial state', async () => {
     const { getByRole, getByTestId } = render(
@@ -50,7 +34,7 @@ describe('Governance Task List', () => {
                 data: {
                   systemIntake: {
                     id,
-                    itGovTaskStatuses: requesterStartsNewRequest,
+                    itGovTaskStatuses: intakeFormNotStarted,
                     __typename: 'SystemIntake'
                   }
                 }
@@ -91,6 +75,95 @@ describe('Governance Task List', () => {
     getByRole('heading', {
       level: 3,
       name: i18next.t<string>('itGov:taskList.steps.0.title')
+    });
+  });
+});
+
+describe('Gov Task Statuses', () => {
+  describe('Fill out the Intake Request form', () => {
+    it('not started', () => {
+      const { getByRole, getByTestId } = render(
+        <MemoryRouter>
+          <GovTaskIntakeForm itGovTaskStatuses={intakeFormNotStarted} />
+        </MemoryRouter>
+      );
+
+      // Ready to start
+      expect(getByTestId('task-list-task-tag')).toHaveTextContent(
+        i18next.t<string>('taskList:taskStatus.READY')
+      );
+
+      // Start button
+      getByRole('link', {
+        name: i18next.t<string>('itGov:button.start')
+      });
+    });
+
+    it('in progress', () => {
+      const { getByRole, getByTestId } = render(
+        <MemoryRouter>
+          <GovTaskIntakeForm itGovTaskStatuses={intakeFormInProgress} />
+        </MemoryRouter>
+      );
+
+      // In progress
+      expect(getByTestId('task-list-task-tag')).toHaveTextContent(
+        i18next.t<string>('taskList:taskStatus.IN_PROGRESS')
+      );
+
+      // - % complete
+
+      // Continue button
+      getByRole('link', {
+        name: i18next.t<string>('itGov:button.continue')
+      });
+    });
+
+    it('submitted', () => {
+      const { getByTestId } = render(
+        <GovTaskIntakeForm itGovTaskStatuses={intakeFormSubmitted} />
+      );
+
+      // Completed
+      expect(getByTestId('task-list-task-tag')).toHaveTextContent(
+        i18next.t<string>('taskList:taskStatus.COMPLETED')
+      );
+
+      // - link: View submitted request form
+      // - Submitted MM/DD/YYYY
+    });
+
+    it('edits requested', () => {
+      const { getByRole, getByTestId } = render(
+        <MemoryRouter>
+          <GovTaskIntakeForm itGovTaskStatuses={intakeFormEditsRequested} />
+        </MemoryRouter>
+      );
+
+      // Edits requested
+      expect(getByTestId('task-list-task-tag')).toHaveTextContent(
+        i18next.t<string>('taskList:taskStatus.EDITS_REQUESTED')
+      );
+
+      // Edit form button
+      getByRole('link', {
+        name: i18next.t<string>('itGov:button.editForm')
+      });
+
+      // - alert warn
+      // - link: View feedback
+      // - Last updated MM/DD/YYYY
+    });
+
+    it('resubmitted after edits', () => {
+      render(
+        <GovTaskIntakeForm
+          itGovTaskStatuses={intakeFormResubmittedAfterEdits}
+        />
+      );
+
+      // - View feedback + View submitted request form
+      // - meta: Submitted MM/DD/YYYY
     });
   });
 });
