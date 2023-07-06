@@ -31,7 +31,7 @@ func SystemIntakeStatusAdminGet(intake *models.SystemIntake) (models.SystemIntak
 	case models.SystemIntakeStepDECISION:
 		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState)
 	default:
-		return retStatus, fmt.Errorf("issue calculating the admin state status, no valid step") //TODO: we really don't ever have an error, I'm not sure this signature makes any sense, maybe make this more deterministic
+		return retStatus, fmt.Errorf("issue calculating the admin state status, no valid step")
 
 	}
 	return retStatus, err
@@ -57,7 +57,7 @@ func calcSystemIntakeGRTMeetingStatusAdmin(grtDate *time.Time) models.SystemInta
 		return models.SISAGrtMeetingReady
 	}
 
-	if grtDate.Before(time.Now()) { // TODO do we need to handle any time zone issues? This library should handle it
+	if grtDate.After(time.Now()) {
 		return models.SISAGrtMeetingReady
 	}
 	return models.SISAGrtMeetingComplete
@@ -76,7 +76,7 @@ func calcSystemIntakeGRBMeetingStatusAdmin(grbDate *time.Time) models.SystemInta
 		return models.SISAGrbMeetingReady
 	}
 
-	if grbDate.Before(time.Now()) { // TODO do we need to handle any time zone issues? This library should handle it
+	if grbDate.After(time.Now()) {
 		return models.SISAGrbMeetingReady
 	}
 	return models.SISAGrbMeetingComplete
@@ -93,7 +93,5 @@ func calcSystemIntakeDecisionStatusAdmin(decisionStatus models.SystemIntakeDecis
 		return models.SISANotApproved, nil
 	}
 
-	return models.SISAInitialRequestFormInProgress, fmt.Errorf("invalid state") //TODO should we just make a generic no decision issued status for this?
-
-	// TODO WHAT TO DO IF THE STATUS IS ACTUALLY IN in NO_DECISION???? WE should handle this case, though it isn't displayed in FIGMA
+	return models.SISAInitialRequestFormInProgress, fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
 }
