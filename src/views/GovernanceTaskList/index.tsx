@@ -20,8 +20,45 @@ import {
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
 import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
+import { ItGovTaskStatuses } from 'types/itGov';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+
+type GovTaskListItemProps = {
+  itGovTaskStatuses: ItGovTaskStatuses;
+};
+
+export const GovTaskIntakeForm = ({
+  itGovTaskStatuses
+}: GovTaskListItemProps) => {
+  const { t } = useTranslation('itGov');
+
+  const statusButtonText = new Map<ITGovIntakeFormStatus, string>([
+    [ITGovIntakeFormStatus.READY, 'start'],
+    [ITGovIntakeFormStatus.IN_PROGRESS, 'continue'],
+    [ITGovIntakeFormStatus.EDITS_REQUESTED, 'editForm']
+  ]);
+
+  return (
+    <TaskListItem
+      heading={t('taskList.steps.0.title')}
+      status={itGovTaskStatuses.intakeFormStatus}
+      testId={kebabCase(t('taskList.steps.0.title'))}
+    >
+      <TaskListDescription>
+        <p>{t('taskList.steps.0.description')}</p>
+      </TaskListDescription>
+
+      {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
+        <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+          {t(
+            `button.${statusButtonText.get(itGovTaskStatuses.intakeFormStatus)}`
+          )}
+        </UswdsReactLink>
+      )}
+    </TaskListItem>
+  );
+};
 
 function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
@@ -70,26 +107,7 @@ function GovernanceTaskList() {
 
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
-                  <TaskListItem
-                    heading={t('taskList.steps.0.title')}
-                    status={itGovTaskStatuses.intakeFormStatus}
-                    testId={kebabCase(t('taskList.steps.0.title'))}
-                  >
-                    <TaskListDescription>
-                      <p>{t('taskList.steps.0.description')}</p>
-                    </TaskListDescription>
-
-                    {data.systemIntake?.itGovTaskStatuses.intakeFormStatus ===
-                      ITGovIntakeFormStatus.READY && (
-                      <UswdsReactLink
-                        variant="unstyled"
-                        className="usa-button"
-                        to="./"
-                      >
-                        {t('button.start')}
-                      </UswdsReactLink>
-                    )}
-                  </TaskListItem>
+                  <GovTaskIntakeForm itGovTaskStatuses={itGovTaskStatuses} />
 
                   {/* 2. Feedback from initial review */}
                   <TaskListItem

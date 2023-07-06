@@ -2,6 +2,8 @@ export default {
   itGovernance: 'IT Governance',
   button: {
     start: 'Start',
+    continue: 'Continue',
+    editForm: 'Edit form',
     saveAndExit: 'Save and exit',
     removeYourRequest: 'Remove your request'
   },
