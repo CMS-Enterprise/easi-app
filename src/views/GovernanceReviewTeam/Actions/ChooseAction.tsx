@@ -2,10 +2,8 @@ import React, { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Radio } from '@trussworks/react-uswds';
-import { kebabCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
-import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioGroup } from 'components/shared/RadioField';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeStatus } from 'types/graphql-global-types';
@@ -28,18 +26,19 @@ const ActionContext = createContext<ActionContextType>({
 type ActionRadioOptionProps = {
   route: string;
   label: string;
+  description: string;
+  accordionText: string;
 };
 
-const ActionRadioOption = ({ label, route }: ActionRadioOptionProps) => {
+const ActionRadioOption = ({
+  label,
+  description,
+  accordionText,
+  route
+}: ActionRadioOptionProps) => {
   const { t } = useTranslation();
 
   const actionContext = useContext(ActionContext);
-  if (!actionContext) {
-    throw new Error(
-      'This component cannot be used outside of the Action Radio Group Context'
-    );
-  }
-
   const { name, onChange, value } = actionContext;
 
   return (
@@ -56,7 +55,7 @@ const ActionRadioOption = ({ label, route }: ActionRadioOptionProps) => {
         <>
           <h3 className="margin-top-2 margin-bottom-0">{label}</h3>
           <p className="margin-0 text-base font-body-sm line-height-body-5">
-            Description text here
+            {description}
           </p>
         </>
       }
@@ -78,189 +77,9 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
-  const businessCaseExists = !!businessCase.id;
   const [actionRoute, setActionRoute] = useState('');
 
   const onSubmit = () => history.push(`actions/${actionRoute}`);
-
-  const notITRequestRoute = 'not-it-request';
-  const NotITRequest = (
-    <ActionRadioOption
-      key={notITRequestRoute}
-      label={t('actions.notItRequest')}
-      route={notITRequestRoute}
-    />
-  );
-
-  const issueLifecycleIdRoute = 'issue-lcid';
-  const IssueLifecycleId = (
-    <ActionRadioOption
-      key={issueLifecycleIdRoute}
-      label="Issue Lifecycle Id"
-      route={issueLifecycleIdRoute}
-    />
-  );
-
-  const needBizCaseRoute = 'need-biz-case';
-  const NeedBizCase = (
-    <ActionRadioOption
-      key={needBizCaseRoute}
-      label={t('actions.needBizCase')}
-      route={needBizCaseRoute}
-    />
-  );
-
-  const readyForGrtRoute = 'ready-for-grt';
-  const ReadyForGRT = (
-    <ActionRadioOption
-      key={readyForGrtRoute}
-      label={t('actions.readyForGrt')}
-      route={readyForGrtRoute}
-    />
-  );
-
-  const readyForGrbRoute = 'ready-for-grb';
-  const ReadyForGRB = (
-    <ActionRadioOption
-      key={readyForGrbRoute}
-      label={t('actions.readyForGrb')}
-      route={readyForGrbRoute}
-    />
-  );
-
-  const provideFeedbackNeedBizCaseRoute = 'provide-feedback-need-biz-case';
-  const ProvideFeedbackNeedBizCase = (
-    <ActionRadioOption
-      key={provideFeedbackNeedBizCaseRoute}
-      label={t('actions.provideFeedbackNeedBizCase')}
-      route={provideFeedbackNeedBizCaseRoute}
-    />
-  );
-
-  const provideFeedbackKeepDraftRoute = 'provide-feedback-keep-draft';
-  const ProvideFeedbackKeepDraft = (
-    <ActionRadioOption
-      key={provideFeedbackKeepDraftRoute}
-      label={t('actions.provideGrtFeedbackKeepDraft')}
-      route={provideFeedbackKeepDraftRoute}
-    />
-  );
-
-  const provideFeedbackNeedFinalRoute = 'provide-feedback-need-final';
-  const ProvideFeedbackNeedFinal = (
-    <ActionRadioOption
-      key={provideFeedbackNeedFinalRoute}
-      label={t('actions.provideGrtFeedbackNeedFinal')}
-      route={provideFeedbackNeedFinalRoute}
-    />
-  );
-
-  const bizCaseNeedsChangesRoute = 'biz-case-needs-changes';
-  const BizCaseNeedsChanges = (
-    <ActionRadioOption
-      key={bizCaseNeedsChangesRoute}
-      label={t('actions.bizCaseNeedsChanges')}
-      route={bizCaseNeedsChangesRoute}
-    />
-  );
-
-  const noFurtherGovernanceRoute = 'no-governance';
-  const NoFurtherGovernance = (
-    <ActionRadioOption
-      key={noFurtherGovernanceRoute}
-      label={t('actions.noGovernance')}
-      route={noFurtherGovernanceRoute}
-    />
-  );
-
-  const rejectIntakeRoute = 'not-approved';
-  const RejectIntake = (
-    <ActionRadioOption
-      key={rejectIntakeRoute}
-      label={t('actions.rejectIntake')}
-      route={rejectIntakeRoute}
-    />
-  );
-
-  const sendEmailRoute = 'send-email';
-  const SendEmail = (
-    <ActionRadioOption
-      key={sendEmailRoute}
-      label={t('actions.sendEmail')}
-      route={sendEmailRoute}
-    />
-  );
-
-  const guideReceivedCloseRoute = 'guide-received-close';
-  const GuideReceivedClose = (
-    <ActionRadioOption
-      key={guideReceivedCloseRoute}
-      label={t('actions.guideReceivedClose')}
-      route={guideReceivedCloseRoute}
-    />
-  );
-
-  const notRespondingCloseRoute = 'not-responding-close';
-  const NotRespondingClose = (
-    <ActionRadioOption
-      key={notRespondingCloseRoute}
-      label={t('actions.notRespondingClose')}
-      route={notRespondingCloseRoute}
-    />
-  );
-
-  const extendLifecycleIDRoute = 'extend-lcid';
-  const ExtendLifecycleID = (
-    <ActionRadioOption
-      key={extendLifecycleIDRoute}
-      label={t('actions.extendLifecycleID')}
-      route={extendLifecycleIDRoute}
-    />
-  );
-
-  let availableActions: Array<any> = [];
-  let availableHiddenActions: Array<any> = [];
-
-  if (systemIntake.requestType === 'SHUTDOWN') {
-    availableActions = [
-      SendEmail,
-      GuideReceivedClose,
-      NotRespondingClose,
-      NotITRequest
-    ];
-    availableHiddenActions = [];
-  } else if (businessCaseExists) {
-    availableActions = [BizCaseNeedsChanges];
-    availableHiddenActions = [
-      ReadyForGRT,
-      ReadyForGRB,
-      ProvideFeedbackKeepDraft,
-      ProvideFeedbackNeedFinal,
-      NoFurtherGovernance,
-      RejectIntake
-    ];
-  } else {
-    availableActions = [NotITRequest, NeedBizCase];
-    availableHiddenActions = [
-      ReadyForGRT,
-      ProvideFeedbackNeedBizCase,
-      ReadyForGRB,
-      NoFurtherGovernance
-    ];
-  }
-
-  // Only display Issue LCID action if intake does not have associated LCID
-  if (systemIntake.lcid == null) {
-    availableHiddenActions.unshift(IssueLifecycleId);
-  }
-
-  // Only display extend LCID action if status is LCID_ISSUED or there has been an lcid issued in the past
-  if (
-    systemIntake.status === SystemIntakeStatus.LCID_ISSUED ||
-    systemIntake.lcid != null
-  ) {
-    availableActions.unshift(ExtendLifecycleID);
-  }
 
   return (
     <>
@@ -271,6 +90,7 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
         {t('submitAction.heading')}
       </PageHeading>
       <h3 className="margin-y-3">{t('submitAction.subheading')}</h3>
+
       <form onSubmit={onSubmit}>
         <ActionContext.Provider
           value={{
@@ -282,18 +102,21 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
           }}
         >
           <RadioGroup className="grt-actions-radio-group">
-            {[availableActions]}
-            {availableHiddenActions && (
-              <CollapsableLink
-                id={kebabCase(t('submitAction.otherOptions'))}
-                label={t('submitAction.otherOptions')}
-                styleLeftBar={false}
-              >
-                {[availableHiddenActions]}
-              </CollapsableLink>
-            )}
+            <ActionRadioOption
+              label={t('actionsV2.requestEdits.title')}
+              description={t('actionsV2.requestEdits.description')}
+              accordionText={t('actionsV2.requestEdits.accordion')}
+              route="request-edits"
+            />
+            <ActionRadioOption
+              label={t('actionsV2.progressToNewStep.title')}
+              description={t('actionsV2.progressToNewStep.description')}
+              accordionText={t('actionsV2.progressToNewStep.accordion')}
+              route="next-step"
+            />
           </RadioGroup>
         </ActionContext.Provider>
+
         <Button className="margin-top-5" type="submit" disabled={!actionRoute}>
           {t('submitAction.continue')}
         </Button>
