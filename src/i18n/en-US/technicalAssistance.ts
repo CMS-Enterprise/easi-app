@@ -741,7 +741,8 @@ const technicalAssistance = {
         'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
       removeSuccess: 'You have successfully removed {{-documentName}}.'
     },
-    viewFail: 'Error attempting to view document' // TODO - flesh out, possibly include document name
+    viewFail:
+      'There was an issue viewing {{-documentName}}. Please try again, and if the problem persists, try again later.'
   },
   check: {
     submit: 'Submit request',

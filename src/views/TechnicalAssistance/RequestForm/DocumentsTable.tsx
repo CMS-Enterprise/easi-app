@@ -144,7 +144,7 @@ function DocumentsTable({
   ]);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
-    const getUrlForDocument = (documentId: string) => {
+    const getUrlForDocument = (documentId: string, documentName: string) => {
       // download file/handle errors based off the Promise returned from running the getDocumentUrls() query;
       // this is simpler than trying to customize what's rendered based on the result status from useLazyQuery() (the called, loading, error, data booleans)
       getDocumentUrls().then(response => {
@@ -152,7 +152,9 @@ function DocumentsTable({
           // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
           showMessage(
             <Alert type="error" className="margin-top-3">
-              {t('documents.viewFail')}
+              {t('documents.viewFail', {
+                documentName
+              })}
             </Alert>
           );
         } else {
@@ -204,13 +206,14 @@ function DocumentsTable({
           if (row.original.status === TRBRequestDocumentStatus.AVAILABLE) {
             // Show some file actions once it's available
             const documentId = row.original.id;
+            const documentName = row.original.fileName;
             return (
               <>
                 {/* View document */}
                 <Button
                   type="button"
                   unstyled
-                  onClick={() => getUrlForDocument(documentId)}
+                  onClick={() => getUrlForDocument(documentId, documentName)}
                 >
                   {t('documents.table.view')}
                 </Button>
