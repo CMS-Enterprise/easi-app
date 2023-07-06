@@ -14,8 +14,8 @@ func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) models.ITGovFe
 	return models.ITGFBSCantStart
 }
 
-// BizCaseDraftStatus calculates the ITGovDraftBuisnessCaseStatus for the BizCaseDraft section for the system intake task list for the requester view
-func BizCaseDraftStatus(intake *models.SystemIntake) models.ITGovDraftBuisnessCaseStatus {
+// BizCaseDraftStatus calculates the ITGovDraftBusinessCaseStatus for the BizCaseDraft section for the system intake task list for the requester view
+func BizCaseDraftStatus(intake *models.SystemIntake) models.ITGovDraftBusinessCaseStatus {
 	return models.ITGDBCSCantStart
 }
 
@@ -24,8 +24,8 @@ func GrtMeetingStatus(intake *models.SystemIntake) models.ITGovGRTStatus {
 	return models.ITGGRTSCantStart
 }
 
-// BizCaseFinalStatus calculates the ITGovFinalBuisnessCaseStatus for the BizCaseFinal section for the system intake task list for the requester view
-func BizCaseFinalStatus(intake *models.SystemIntake) models.ITGovFinalBuisnessCaseStatus {
+// BizCaseFinalStatus calculates the ITGovFinalBusinessCaseStatus for the BizCaseFinal section for the system intake task list for the requester view
+func BizCaseFinalStatus(intake *models.SystemIntake) models.ITGovFinalBusinessCaseStatus {
 	return models.ITGFBCSCantStart
 }
 

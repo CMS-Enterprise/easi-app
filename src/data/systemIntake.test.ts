@@ -33,9 +33,9 @@ describe('The system intake data modifiers', () => {
         businessSolution: '',
         currentStage: '',
         needsEaSupport: null,
-        costs: {
-          isExpectingIncrease: '',
-          expectedIncreaseAmount: ''
+        annualSpending: {
+          currentAnnualSpending: '',
+          plannedYearOneSpending: ''
         },
         contract: {
           hasContract: '',
@@ -103,9 +103,9 @@ describe('The system intake data modifiers', () => {
         },
         existingFunding: true,
         fundingSources: [{ fundingNumber: '123456', source: 'CLIA' }],
-        costs: {
-          isExpectingIncrease: 'YES',
-          expectedIncreaseAmount: 'One million'
+        annualSpending: {
+          currentAnnualSpending: 'Test Current Annual Spending',
+          plannedYearOneSpending: 'Test Planned Year One Spending'
         },
         contract: {
           number: '',
@@ -177,9 +177,9 @@ describe('The system intake data modifiers', () => {
             fundingNumber: '123456'
           }
         ],
-        costs: {
-          isExpectingIncrease: 'YES',
-          expectedIncreaseAmount: 'One million'
+        annualSpending: {
+          currentAnnualSpending: 'Test Current Annual Spending',
+          plannedYearOneSpending: 'Test Planned Year One Spending'
         },
         contract: {
           hasContract: 'IN_PROGRESS',
