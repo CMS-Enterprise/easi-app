@@ -38,7 +38,7 @@ const WelcomeText = () => {
               }}
             />
           </PageHeading>
-          <p className="margin-top-2 margin-bottom-8 font-body-2xl text-primary-lighter text-light">
+          <p className="margin-top-2 margin-bottom-6 desktop:margin-bottom-8 font-body-xl tablet:font-body-2xl text-primary-lighter text-light">
             {t('welcome.intro')}
           </p>
         </Grid>
@@ -47,7 +47,7 @@ const WelcomeText = () => {
       {/* Cards */}
       <section
         id="easi-intro-cards"
-        className="grid-container bg-base-lightest padding-bottom-8"
+        className="grid-container bg-base-lightest padding-bottom-6 desktop:padding-bottom-8"
       >
         <Grid row>
           <CardGroup className="margin-bottom-1 margin-top-neg-8">
@@ -77,7 +77,7 @@ const WelcomeText = () => {
                 <h3>{t('welcome.noMore.title')}</h3>
               </CardHeader>
               <CardBody className="padding-bottom-4">
-                <IconList className="font-body-lg">
+                <IconList className="font-body-lg text-light">
                   {t<string[]>('welcome.noMore.list', {
                     returnObjects: true
                   }).map(item => {
@@ -99,7 +99,7 @@ const WelcomeText = () => {
               </CardBody>
             </Card>
           </CardGroup>
-          <UswdsReactLink className="usa-button" to="/signin">
+          <UswdsReactLink className="usa-button width-auto" to="/signin">
             {t('signIn')}
           </UswdsReactLink>
         </Grid>
@@ -108,7 +108,7 @@ const WelcomeText = () => {
       {/* Future features */}
       <section
         id="easi-future-features"
-        className="grid-container bg-primary-lighter padding-top-3 padding-bottom-6"
+        className="grid-container bg-primary-lighter padding-top-1 desktop:padding-top-3 padding-bottom-4 desktop:padding-bottom-6"
       >
         <Grid row>
           <h2>{t('welcome.futureFeatures')}</h2>
@@ -154,11 +154,11 @@ const WelcomeText = () => {
       {/* Capabilities */}
       <section
         id="easi-capabilities"
-        className="grid-container padding-top-3 tablet:padding-bottom-5"
+        className="grid-container padding-top-1 desktop:padding-top-3 desktop:padding-bottom-5"
       >
         <Grid row>
           <h2 className="grid-col-12">{t('welcome.capabilities')}</h2>
-          <Grid col className="grid-col-12 tablet:grid-col-4">
+          <Grid col className="grid-col-12 desktop:grid-col-4">
             <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
               {t('welcome.lifecycleIds')}
             </h3>
@@ -166,7 +166,7 @@ const WelcomeText = () => {
               {t('welcome.lifecycleIdsDescription')}
             </p>
           </Grid>
-          <Grid col className="grid-col-12 tablet:grid-col-4">
+          <Grid col className="grid-col-12 desktop:grid-col-4">
             <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
               {t('welcome.systemInformation')}
             </h3>
@@ -174,7 +174,7 @@ const WelcomeText = () => {
               {t('welcome.systemInformationDescription')}
             </p>
           </Grid>
-          <Grid col className="grid-col-12 tablet:grid-col-4">
+          <Grid col className="grid-col-12 desktop:grid-col-4">
             <h3 className="line-height-body-2 margin-bottom-0 margin-top-105">
               {t('welcome.trb')}
             </h3>
