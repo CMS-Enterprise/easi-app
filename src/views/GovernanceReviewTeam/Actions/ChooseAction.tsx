@@ -5,9 +5,8 @@ import { Button, Radio } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import { RadioGroup } from 'components/shared/RadioField';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
-import { SystemIntakeStatus } from 'types/graphql-global-types';
-import { RequestType } from 'types/systemIntake';
 
 import './chooseAction.scss';
 
@@ -65,17 +64,15 @@ const ActionRadioOption = ({
 };
 
 type ChooseActionProps = {
-  systemIntake: {
-    status: SystemIntakeStatus;
-    lcid: string | null;
-    requestType: RequestType;
-  };
+  systemIntake: SystemIntake;
   businessCase: BusinessCaseModel;
 };
 
 const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
+
+  const { state, decisionState } = systemIntake;
 
   const [actionRoute, setActionRoute] = useState('');
 
@@ -113,6 +110,18 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
               description={t('actionsV2.progressToNewStep.description')}
               accordionText={t('actionsV2.progressToNewStep.accordion')}
               route="next-step"
+            />
+            <ActionRadioOption
+              label={t(`actionsV2.decision${state}.title`, {
+                context: decisionState
+              })}
+              description={t(`actionsV2.decision${state}.description`, {
+                context: decisionState
+              })}
+              accordionText={t(`actionsV2.decision${state}.accordion`, {
+                context: decisionState
+              })}
+              route="decision"
             />
           </RadioGroup>
         </ActionContext.Provider>
