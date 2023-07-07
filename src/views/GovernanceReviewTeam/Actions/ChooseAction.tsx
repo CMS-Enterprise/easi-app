@@ -7,7 +7,6 @@ import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioGroup } from 'components/shared/RadioField';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import { BusinessCaseModel } from 'types/businessCase';
 
 import './chooseAction.scss';
 
@@ -75,10 +74,9 @@ const ActionRadioOption = ({
 
 type ChooseActionProps = {
   systemIntake: SystemIntake;
-  businessCase: BusinessCaseModel;
 };
 
-const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
+const ChooseAction = ({ systemIntake }: ChooseActionProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 

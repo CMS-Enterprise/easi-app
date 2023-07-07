@@ -216,10 +216,7 @@ const RequestOverview = () => {
                       path="/governance-review-team/:systemId/actions"
                       exact
                       render={() => (
-                        <ChooseAction
-                          systemIntake={systemIntake}
-                          businessCase={businessCase}
-                        />
+                        <ChooseAction systemIntake={systemIntake} />
                       )}
                     />
                     <Route
