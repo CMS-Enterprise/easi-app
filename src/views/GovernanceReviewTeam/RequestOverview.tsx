@@ -35,6 +35,7 @@ import NotFound from 'views/NotFound';
 import ChooseAction from './Actions/ChooseAction';
 import NextStep from './Actions/NextStep';
 import RequestEdits from './Actions/RequestEdits';
+import SubmitDecision from './Actions/SubmitDecision';
 import { default as ChooseActionV1 } from './ActionsV1/ChooseAction';
 import ExtendLifecycleId from './ActionsV1/ExtendLifecycleId';
 import IssueLifecycleId from './ActionsV1/IssueLifecycleId';
@@ -231,7 +232,7 @@ const RequestOverview = () => {
                     />
                     <Route
                       path="/governance-review-team/:systemId/actions/decision"
-                      render={() => <Decision />}
+                      render={() => <SubmitDecision />}
                     />
                   </>
                 ) : (

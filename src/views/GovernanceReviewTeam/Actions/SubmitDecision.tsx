@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const Decision = () => {
+const SubmitDecision = () => {
   const { t } = useTranslation('action');
 
   return (
@@ -11,4 +11,4 @@ const Decision = () => {
   );
 };
 
-export default Decision;
+export default SubmitDecision;
