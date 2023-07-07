@@ -233,9 +233,7 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
             <td
               role="cell"
             >
-              <em
-                data-testurl=""
-              >
+              <em>
                 Virus scan in progress...
               </em>
             </td>
@@ -261,13 +259,13 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
             <td
               role="cell"
             >
-              <a
-                class="usa-link"
-                href=""
-                target="_blank"
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
               >
                 View
-              </a>
+              </button>
               <button
                 class="usa-button usa-button--unstyled margin-left-2 text-error"
                 data-testid="button"
