@@ -33,6 +33,8 @@ import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/ActionsV1
 import NotFound from 'views/NotFound';
 
 import ChooseAction from './Actions/ChooseAction';
+import NextStep from './Actions/NextStep';
+import RequestEdits from './Actions/RequestEdits';
 import { default as ChooseActionV1 } from './ActionsV1/ChooseAction';
 import ExtendLifecycleId from './ActionsV1/ExtendLifecycleId';
 import IssueLifecycleId from './ActionsV1/IssueLifecycleId';
@@ -200,26 +202,53 @@ const RequestOverview = () => {
                 path="/governance-review-team/:systemId/lcid"
                 render={() => <LifecycleID systemIntake={systemIntake} />}
               />
-              <Route
-                path="/governance-review-team/:systemId/actions"
-                exact
-                render={() => {
-                  if (!flags.itGovV2Enabled) {
-                    return (
+
+              {
+                /**
+                 * IT Gov V2 action routes
+                 *
+                 * TODO: Clean up routes after flag is deprecated
+                 * */
+                flags.itGovV2Enabled ? (
+                  <>
+                    <Route
+                      path="/governance-review-team/:systemId/actions"
+                      exact
+                      render={() => (
+                        <ChooseAction
+                          systemIntake={systemIntake}
+                          businessCase={businessCase}
+                        />
+                      )}
+                    />
+                    <Route
+                      path="/governance-review-team/:systemId/actions/request-edits"
+                      render={() => <RequestEdits />}
+                    />
+                    <Route
+                      path="/governance-review-team/:systemId/actions/next-step"
+                      render={() => <NextStep />}
+                    />
+                    <Route
+                      path="/governance-review-team/:systemId/actions/decision"
+                      render={() => <Decision />}
+                    />
+                  </>
+                ) : (
+                  // Actions page - Version 1
+                  <Route
+                    path="/governance-review-team/:systemId/actions"
+                    exact
+                    render={() => (
                       <ChooseActionV1
                         systemIntake={systemIntake}
                         businessCase={businessCase}
                       />
-                    );
-                  }
-                  return (
-                    <ChooseAction
-                      systemIntake={systemIntake}
-                      businessCase={businessCase}
-                    />
-                  );
-                }}
-              />
+                    )}
+                  />
+                )
+              }
+
               <Route
                 path="/governance-review-team/:systemId/actions/not-it-request"
                 render={() => (

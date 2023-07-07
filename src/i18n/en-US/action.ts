@@ -50,6 +50,15 @@ const action = {
         'Use this action if you want to change the decision for this request or if you would like to re-open it. You will be able to select the new resolution for this request.'
     }
   },
+  requestEdits: {
+    title: 'Action: request edits'
+  },
+  nextStep: {
+    title: 'Action: next steps'
+  },
+  decision: {
+    title: 'Action: issue decision'
+  },
   actions: {
     notItRequest: 'Not an IT governance request',
     needBizCase: 'Request a draft business case',
