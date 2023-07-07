@@ -1,5 +1,6 @@
 const action = {
   actionsV2: {
+    accordionLabel: 'When should I use this action?',
     requestEdits: {
       title: 'Request edits to a form',
       description:

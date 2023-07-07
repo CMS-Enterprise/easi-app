@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Radio } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
+import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioGroup } from 'components/shared/RadioField';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -35,14 +36,14 @@ const ActionRadioOption = ({
   accordionText,
   route
 }: ActionRadioOptionProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('action');
 
   const actionContext = useContext(ActionContext);
   const { name, onChange, value } = actionContext;
 
   return (
     <Radio
-      className="grt-action-radio"
+      className="grt-action-radio__option"
       id={route}
       label={t('Select this action')}
       name={name}
@@ -56,6 +57,15 @@ const ActionRadioOption = ({
           <p className="margin-0 text-base font-body-sm line-height-body-5">
             {description}
           </p>
+          <CollapsableLink
+            className="margin-top-2"
+            id="grt-action-radio__accordion"
+            label={t('actionsV2.accordionLabel')}
+          >
+            <p className="line-height-body-4 font-body-md margin-0">
+              {accordionText}
+            </p>
+          </CollapsableLink>
         </>
       }
       tile
