@@ -84,8 +84,6 @@ const ChooseAction = ({ systemIntake }: ChooseActionProps) => {
 
   const [actionRoute, setActionRoute] = useState('');
 
-  const onSubmit = () => history.push(`actions/${actionRoute}`);
-
   return (
     <>
       <PageHeading
@@ -95,7 +93,13 @@ const ChooseAction = ({ systemIntake }: ChooseActionProps) => {
         {t('chooseAction.heading')}
       </PageHeading>
 
-      <form onSubmit={onSubmit} className="margin-bottom-4">
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          history.push(`actions/${actionRoute}`);
+        }}
+        className="margin-bottom-4"
+      >
         <ActionContext.Provider
           value={{
             name: 'Available Actions',
