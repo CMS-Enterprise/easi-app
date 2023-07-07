@@ -6,7 +6,6 @@ import userEvent from '@testing-library/user-event';
 import { systemIntake } from 'data/mock/systemIntake';
 
 import ChooseAction from './ChooseAction';
-import RequestEdits from './RequestEdits';
 
 describe('IT Gov Actions', () => {
   it('Renders options and selects action', async () => {
@@ -14,13 +13,8 @@ describe('IT Gov Actions', () => {
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/actions`]}
       >
-        <Route path={[`/governance-review-team/:systemId/actions`]}>
+        <Route path={[`/governance-review-team/:systemId/actions/:action?`]}>
           <ChooseAction systemIntake={systemIntake} />
-        </Route>
-        <Route
-          path={[`/governance-review-team/:systemId/actions/request-edits`]}
-        >
-          <RequestEdits />
         </Route>
       </MemoryRouter>
     );
