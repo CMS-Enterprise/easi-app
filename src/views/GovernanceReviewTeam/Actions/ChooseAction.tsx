@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Button, Radio } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioGroup } from 'components/shared/RadioField';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+
+import NextStep from './NextStep';
+import RequestEdits from './RequestEdits';
+import SubmitDecision from './SubmitDecision';
 
 import './chooseAction.scss';
 
@@ -80,9 +84,33 @@ const ChooseAction = ({ systemIntake }: ChooseActionProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
+  const { action } = useParams<{
+    action?: string;
+  }>();
+
   const { state, decisionState } = systemIntake;
 
   const [actionRoute, setActionRoute] = useState('');
+
+  // Action forms
+  if (action) {
+    return (
+      <Switch>
+        <Route
+          path="/governance-review-team/:systemId/actions/request-edits"
+          render={() => <RequestEdits />}
+        />
+        <Route
+          path="/governance-review-team/:systemId/actions/next-step"
+          render={() => <NextStep />}
+        />
+        <Route
+          path="/governance-review-team/:systemId/actions/decision"
+          render={() => <SubmitDecision />}
+        />
+      </Switch>
+    );
+  }
 
   return (
     <>
