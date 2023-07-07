@@ -14,39 +14,35 @@ const action = {
       accordion:
         'Choose this action when this request is ready for a draft Business Case, GRT meeting, final Business Case, or GRB meeting. You will be able to select the step to move the request to. '
     },
-    issueDecisionOrClose: {
-      title: 'Issue a decision or close this request',
-      description:
-        'Issue a Life Cycle ID, mark this project as  not approved, or close this request for another reason.',
-      accordion:
-        'Use this action when you are ready to issue a decision or if you would like to close this request. You will be able to select the resolution for this request.'
-    },
-    changeDecisionOrClose: {
+    decisionOPEN: {
+      title_NO_DECISION: 'Issue a decision or close this request',
       title: 'Change decision or close this request',
-      description_lcid:
+      description_NO_DECISION:
+        'Issue a Life Cycle ID, mark this project as  not approved, or close this request for another reason.',
+      description_LCID_ISSUED:
         'Mark this project as not approved, or close this request for another reason.',
-      description_notApproved:
+      description_NOT_APPROVED:
         'Issue a Life Cycle ID, or close this request for another reason.',
-      description_notItGov:
+      description_NO_GOVERNANCE:
         'Issue a Life Cycle ID, mark this project as not approved, or close this request for another reason.',
+      accordion_NO_DECISION:
+        'Use this action when you are ready to issue a decision or if you would like to close this request. You will be able to select the resolution for this request.',
       accordion:
         'Use this action if you want to change the decision for this request or if you would like to close it. You will be able to select the new resolution for this request.'
     },
-    issueDecisionOrReopen: {
-      title: 'Issue a decision or re-open this request',
-      description:
-        'Issue a Life Cycle ID, mark this project as not approved, or re-open this closed request.',
-      accordion:
-        'Use this action when you are ready to issue a decision or if you would like to re-open this request. You will be able to select the resolution for this request.'
-    },
-    changeDecisionOrReopen: {
+    decisionCLOSED: {
+      title_NO_DECISION: 'Issue a decision or re-open this request',
       title: 'Change decision or re-open this request',
-      description_lcid:
-        'Mark this project as not approved, or re-open this closed request.',
-      description_notApproved:
-        'Issue a Life Cycle ID, or re-open this closed request.',
-      description_notItGov:
+      description_NO_DECISION:
         'Issue a Life Cycle ID, mark this project as not approved, or re-open this closed request.',
+      description_LCID_ISSUED:
+        'Mark this project as not approved, or re-open this closed request.',
+      description_NOT_APPROVED:
+        'Issue a Life Cycle ID, or re-open this closed request.',
+      description_NO_GOVERNANCE:
+        'Issue a Life Cycle ID, mark this project as not approved, or re-open this closed request.',
+      accordion_NO_DECISION:
+        'Use this action when you are ready to issue a decision or if you would like to re-open this request. You will be able to select the resolution for this request.',
       accordion:
         'Use this action if you want to change the decision for this request or if you would like to re-open it. You will be able to select the new resolution for this request.'
     }
