@@ -92,13 +92,12 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
     <>
       <PageHeading
         data-testid="grt-actions-view"
-        className="margin-top-0 margin-bottom-3"
+        className="margin-top-0 margin-bottom-5"
       >
-        {t('submitAction.heading')}
+        {t('actionsV2.heading')}
       </PageHeading>
-      <h3 className="margin-y-3">{t('submitAction.subheading')}</h3>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="margin-bottom-4">
         <ActionContext.Provider
           value={{
             name: 'Available Actions',
@@ -136,7 +135,7 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
           </RadioGroup>
         </ActionContext.Provider>
 
-        <Button className="margin-top-5" type="submit" disabled={!actionRoute}>
+        <Button className="margin-top-3" type="submit" disabled={!actionRoute}>
           {t('submitAction.continue')}
         </Button>
       </form>
