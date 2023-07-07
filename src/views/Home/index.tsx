@@ -26,7 +26,7 @@ import Table from 'views/MyRequests/Table';
 import SystemsListTable from 'views/SystemList/Table';
 
 import AdminHome from './AdminHome';
-import WelcomeText from './WelcomeText';
+import WelcomePage from './WelcomePage';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -151,11 +151,7 @@ const Home = () => {
         );
       }
     }
-    return (
-      <div className="grid-container">
-        <WelcomeText />
-      </div>
-    );
+    return <WelcomePage />;
   };
 
   return <MainContent className="margin-bottom-5">{renderView()}</MainContent>;

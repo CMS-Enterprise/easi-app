@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 
-type IconProps = {
+export type IconProps = {
   focusable?: boolean;
   role?: string;
   size?: 3 | 4 | 5 | 6 | 7 | 8 | 9;

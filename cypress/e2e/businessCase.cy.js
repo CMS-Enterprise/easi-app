@@ -5,7 +5,9 @@ describe('The Business Case Form', () => {
 
   it('fills out all business case fields', () => {
     cy.visit('/');
-    cy.contains('a', 'Easy Access to System Information').click();
+    cy.get('.accessibility-requests-table')
+      .contains('a', 'Easy Access to System Information')
+      .click();
     cy.contains('h1', 'Get governance approval');
 
     cy.get('[data-testid="start-biz-case-btn"]').click();
