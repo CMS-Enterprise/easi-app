@@ -45,7 +45,7 @@ const ActionRadioOption = ({
     <Radio
       className="grt-action-radio__option"
       id={route}
-      label={t('Select this action')}
+      label={t('chooseAction.selectAction')}
       name={name}
       value={route}
       onChange={onChange}
@@ -60,7 +60,7 @@ const ActionRadioOption = ({
           <CollapsableLink
             className="margin-top-2"
             id="grt-action-radio__accordion"
-            label={t('actionsV2.accordionLabel')}
+            label={t('chooseAction.accordionLabel')}
           >
             <p className="line-height-body-4 font-body-md margin-0">
               {accordionText}
@@ -94,7 +94,7 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
         data-testid="grt-actions-view"
         className="margin-top-0 margin-bottom-5"
       >
-        {t('actionsV2.heading')}
+        {t('chooseAction.heading')}
       </PageHeading>
 
       <form onSubmit={onSubmit} className="margin-bottom-4">
@@ -109,25 +109,25 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
         >
           <RadioGroup className="grt-actions-radio-group">
             <ActionRadioOption
-              label={t('actionsV2.requestEdits.title')}
-              description={t('actionsV2.requestEdits.description')}
-              accordionText={t('actionsV2.requestEdits.accordion')}
+              label={t('chooseAction.requestEdits.title')}
+              description={t('chooseAction.requestEdits.description')}
+              accordionText={t('chooseAction.requestEdits.accordion')}
               route="request-edits"
             />
             <ActionRadioOption
-              label={t('actionsV2.progressToNewStep.title')}
-              description={t('actionsV2.progressToNewStep.description')}
-              accordionText={t('actionsV2.progressToNewStep.accordion')}
+              label={t('chooseAction.progressToNewStep.title')}
+              description={t('chooseAction.progressToNewStep.description')}
+              accordionText={t('chooseAction.progressToNewStep.accordion')}
               route="next-step"
             />
             <ActionRadioOption
-              label={t(`actionsV2.decision${state}.title`, {
+              label={t(`chooseAction.decision${state}.title`, {
                 context: decisionState
               })}
-              description={t(`actionsV2.decision${state}.description`, {
+              description={t(`chooseAction.decision${state}.description`, {
                 context: decisionState
               })}
-              accordionText={t(`actionsV2.decision${state}.accordion`, {
+              accordionText={t(`chooseAction.decision${state}.accordion`, {
                 context: decisionState
               })}
               route="decision"

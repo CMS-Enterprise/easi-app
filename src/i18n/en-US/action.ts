@@ -1,6 +1,7 @@
 const action = {
-  actionsV2: {
+  chooseAction: {
     heading: 'Actions',
+    selectAction: 'Select this action',
     accordionLabel: 'When should I use this action?',
     requestEdits: {
       title: 'Request edits to a form',
