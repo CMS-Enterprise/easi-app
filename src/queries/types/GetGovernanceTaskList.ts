@@ -24,6 +24,7 @@ export interface GetGovernanceTaskList_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
   itGovTaskStatuses: GetGovernanceTaskList_systemIntake_itGovTaskStatuses;
+  submittedAt: Time | null;
 }
 
 export interface GetGovernanceTaskList {

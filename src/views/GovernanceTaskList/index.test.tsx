@@ -3,13 +3,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import i18next from 'i18next';
 
-import {
-  intakeFormEditsRequested,
-  intakeFormInProgress,
-  intakeFormNotStarted,
-  intakeFormResubmittedAfterEdits,
-  intakeFormSubmitted
-} from 'data/mock/govTaskList';
+import { taskListState } from 'data/mock/govTaskList';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
@@ -33,9 +27,8 @@ describe('Governance Task List', () => {
               result: {
                 data: {
                   systemIntake: {
-                    id,
-                    itGovTaskStatuses: intakeFormNotStarted,
-                    __typename: 'SystemIntake'
+                    ...taskListState.intakeFormNotStarted.systemIntake,
+                    id
                   }
                 }
               }
@@ -84,7 +77,11 @@ describe('Gov Task Statuses', () => {
     it('not started', () => {
       const { getByRole, getByTestId } = render(
         <MemoryRouter>
-          <GovTaskIntakeForm itGovTaskStatuses={intakeFormNotStarted} />
+          <GovTaskIntakeForm
+            itGovTaskStatuses={
+              taskListState.intakeFormNotStarted.systemIntake!.itGovTaskStatuses
+            }
+          />
         </MemoryRouter>
       );
 
@@ -100,9 +97,13 @@ describe('Gov Task Statuses', () => {
     });
 
     it('in progress', () => {
+      const {
+        itGovTaskStatuses
+      } = taskListState.intakeFormInProgress.systemIntake!;
+
       const { getByRole, getByTestId } = render(
         <MemoryRouter>
-          <GovTaskIntakeForm itGovTaskStatuses={intakeFormInProgress} />
+          <GovTaskIntakeForm itGovTaskStatuses={itGovTaskStatuses} />
         </MemoryRouter>
       );
 
@@ -120,8 +121,18 @@ describe('Gov Task Statuses', () => {
     });
 
     it('submitted', () => {
-      const { getByTestId } = render(
-        <GovTaskIntakeForm itGovTaskStatuses={intakeFormSubmitted} />
+      const {
+        itGovTaskStatuses,
+        submittedAt
+      } = taskListState.intakeFormSubmitted.systemIntake!;
+
+      const { getByRole, getByText, getByTestId } = render(
+        <MemoryRouter>
+          <GovTaskIntakeForm
+            itGovTaskStatuses={itGovTaskStatuses}
+            submittedAt={submittedAt}
+          />
+        </MemoryRouter>
       );
 
       // Completed
@@ -129,14 +140,25 @@ describe('Gov Task Statuses', () => {
         i18next.t<string>('taskList:taskStatus.COMPLETED')
       );
 
-      // - link: View submitted request form
-      // - Submitted MM/DD/YYYY
+      // Submitted MM/DD/YYYY
+      getByText(RegExp(i18next.t<string>('taskList:taskStatusInfo.submitted')));
+
+      // View submitted request form
+      getByRole('link', {
+        name: i18next.t<string>(
+          'itGov:taskList.step.intakeForm.viewSubmittedRequestForm'
+        )
+      });
     });
 
     it('edits requested', () => {
+      const {
+        itGovTaskStatuses
+      } = taskListState.intakeFormEditsRequested.systemIntake!;
+
       const { getByRole, getByTestId } = render(
         <MemoryRouter>
-          <GovTaskIntakeForm itGovTaskStatuses={intakeFormEditsRequested} />
+          <GovTaskIntakeForm itGovTaskStatuses={itGovTaskStatuses} />
         </MemoryRouter>
       );
 
@@ -156,14 +178,14 @@ describe('Gov Task Statuses', () => {
     });
 
     it('resubmitted after edits', () => {
-      render(
-        <GovTaskIntakeForm
-          itGovTaskStatuses={intakeFormResubmittedAfterEdits}
-        />
-      );
+      const {
+        itGovTaskStatuses
+      } = taskListState.intakeFormResubmittedAfterEdits.systemIntake!;
+
+      render(<GovTaskIntakeForm itGovTaskStatuses={itGovTaskStatuses} />);
 
       // - View feedback + View submitted request form
-      // - meta: Submitted MM/DD/YYYY
+      // - Submitted MM/DD/YYYY
     });
   });
 });

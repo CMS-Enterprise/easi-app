@@ -14,6 +14,7 @@ import TaskListItem, {
   TaskListContainer,
   TaskListDescription
 } from 'components/TaskList';
+import { taskListState } from 'data/mock/govTaskList';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
@@ -29,8 +30,11 @@ type GovTaskListItemProps = {
 };
 
 export const GovTaskIntakeForm = ({
-  itGovTaskStatuses
-}: GovTaskListItemProps) => {
+  itGovTaskStatuses,
+  submittedAt
+}: GovTaskListItemProps & {
+  submittedAt?: string | null;
+}) => {
   const stepKey = 'intakeForm';
   const { t } = useTranslation('itGov');
 
@@ -45,9 +49,15 @@ export const GovTaskIntakeForm = ({
       heading={t(`taskList.step.${stepKey}.title`)}
       status={itGovTaskStatuses.intakeFormStatus}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
+      submittedAt={submittedAt}
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
+        {submittedAt && (
+          <UswdsReactLink to="./" className="display-inline-block margin-top-2">
+            {t(`taskList.step.${stepKey}.viewSubmittedRequestForm`)}
+          </UswdsReactLink>
+        )}
       </TaskListDescription>
 
       {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
@@ -74,7 +84,8 @@ function GovernanceTaskList() {
     }
   });
 
-  const itGovTaskStatuses = data?.systemIntake?.itGovTaskStatuses;
+  const systemIntake = data?.systemIntake;
+  const itGovTaskStatuses = systemIntake?.itGovTaskStatuses;
 
   if (error) {
     return <NotFound />;
@@ -94,7 +105,7 @@ function GovernanceTaskList() {
 
         {loading && <PageLoading />}
 
-        {!loading && itGovTaskStatuses && (
+        {!loading && systemIntake && itGovTaskStatuses && (
           <Grid row gap className="margin-top-6">
             <Grid tablet={{ col: 9 }}>
               <PageHeading className="margin-y-0">
@@ -108,7 +119,35 @@ function GovernanceTaskList() {
 
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
-                  <GovTaskIntakeForm itGovTaskStatuses={itGovTaskStatuses} />
+                  <GovTaskIntakeForm
+                    itGovTaskStatuses={itGovTaskStatuses}
+                    submittedAt={systemIntake.submittedAt}
+                  />
+                  {/* Not started */}
+                  <GovTaskIntakeForm
+                    itGovTaskStatuses={
+                      taskListState.intakeFormNotStarted.systemIntake!
+                        .itGovTaskStatuses
+                    }
+                  />
+                  {/* In progress */}
+                  <GovTaskIntakeForm
+                    itGovTaskStatuses={
+                      taskListState.intakeFormInProgress.systemIntake!
+                        .itGovTaskStatuses
+                    }
+                  />
+                  {/* Submitted */}
+                  <GovTaskIntakeForm
+                    itGovTaskStatuses={
+                      taskListState.intakeFormSubmitted.systemIntake!
+                        .itGovTaskStatuses
+                    }
+                    submittedAt={
+                      taskListState.intakeFormSubmitted.systemIntake!
+                        .submittedAt
+                    }
+                  />
 
                   {/* 2. Feedback from initial review */}
                   <TaskListItem

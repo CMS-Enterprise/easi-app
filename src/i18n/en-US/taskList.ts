@@ -121,6 +121,9 @@ const taskList = {
     READY_TO_SCHEDULE: 'Ready to schedule',
     READY_TO_START: 'Ready to start',
     SCHEDULED: 'Scheduled'
+  },
+  taskStatusInfo: {
+    submitted: 'Submitted'
   }
 };
 

@@ -5,6 +5,8 @@ import TaskStatusTag, {
   TaskStatus,
   taskStatusClassName
 } from 'components/shared/TaskStatusTag';
+import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
 
 import './index.scss';
 
@@ -36,13 +38,15 @@ type TaskListItemProps = {
   status: TaskStatus | undefined;
   children?: React.ReactNode;
   testId?: string;
+  submittedAt?: string | null;
 };
 
 const TaskListItem = ({
   heading,
   status,
   children,
-  testId
+  testId,
+  submittedAt
 }: TaskListItemProps) => {
   const taskListItemClasses = classnames(
     'task-list__item',
@@ -63,9 +67,18 @@ const TaskListItem = ({
           <h3 className="task-list__task-heading line-height-heading-2 margin-top-0 margin-bottom-1">
             {heading}
           </h3>
-          {!!status && status in taskStatusClassName && (
-            <TaskStatusTag status={status} />
-          )}
+          <div>
+            {!!status && status in taskStatusClassName && (
+              <TaskStatusTag status={status} />
+            )}
+            {status === ITGovIntakeFormStatus.COMPLETED && submittedAt && (
+              <p className="margin-top-05 margin-bottom-0">
+                Submitted
+                <br />
+                {formatDateLocal(submittedAt, 'MM/dd/yyyy')}
+              </p>
+            )}
+          </div>
         </div>
         {children}
       </div>
