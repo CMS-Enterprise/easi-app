@@ -29,7 +29,9 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      submittedAt: null
+      governanceRequestFeedbacks: [],
+      submittedAt: null,
+      updatedAt: null
     }
   },
   /** Event: Intake Request form: Requester starts Intake Request form */
@@ -47,7 +49,9 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      submittedAt: null
+      governanceRequestFeedbacks: [],
+      submittedAt: null,
+      updatedAt: null
     }
   },
   /** Event: Intake Request form: Requester submits Intake Request form */
@@ -65,7 +69,9 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      submittedAt: '2023-07-07T00:30:28Z'
+      governanceRequestFeedbacks: [],
+      submittedAt: '2023-07-07T00:30:28Z',
+      updatedAt: null
     }
   },
   /** Event: Intake Request form: Admin takes the action to request edits to the Intake Request form */
@@ -83,7 +89,14 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      submittedAt: null
+      governanceRequestFeedbacks: [
+        {
+          __typename: 'GovernanceRequestFeedback',
+          id
+        }
+      ],
+      submittedAt: '2023-07-07T00:30:28Z',
+      updatedAt: '2023-07-08T00:30:28Z'
     }
   },
   /** Event: Intake Request form: Requester re- submits Intake Request form */
@@ -101,7 +114,9 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      submittedAt: null
+      governanceRequestFeedbacks: [],
+      submittedAt: null,
+      updatedAt: null
     }
   }
 };

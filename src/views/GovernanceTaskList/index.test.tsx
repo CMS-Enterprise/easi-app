@@ -5,6 +5,7 @@ import i18next from 'i18next';
 
 import { taskListState } from 'data/mock/govTaskList';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+import { ItGovTaskSystemIntake } from 'types/itGov';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import GovernanceTaskList, { GovTaskIntakeForm } from '.';
@@ -65,6 +66,7 @@ describe('Governance Task List', () => {
     ).toHaveAttribute('href', '/system/making-a-request');
 
     // First task list item
+    // errors because of component mock preview setup
     getByRole('heading', {
       level: 3,
       name: i18next.t<string>('itGov:taskList.step.intakeForm.title')
@@ -74,15 +76,17 @@ describe('Governance Task List', () => {
 
 describe('Gov Task Statuses', () => {
   describe('Fill out the Intake Request form', () => {
-    it('not started', () => {
-      const { getByRole, getByTestId } = render(
+    function renderGovTaskIntakeForm(mockdata: ItGovTaskSystemIntake) {
+      return render(
         <MemoryRouter>
-          <GovTaskIntakeForm
-            itGovTaskStatuses={
-              taskListState.intakeFormNotStarted.systemIntake!.itGovTaskStatuses
-            }
-          />
+          <GovTaskIntakeForm {...mockdata} />
         </MemoryRouter>
+      );
+    }
+
+    it('not started', () => {
+      const { getByRole, getByTestId } = renderGovTaskIntakeForm(
+        taskListState.intakeFormNotStarted.systemIntake!
       );
 
       // Ready to start
@@ -97,14 +101,8 @@ describe('Gov Task Statuses', () => {
     });
 
     it('in progress', () => {
-      const {
-        itGovTaskStatuses
-      } = taskListState.intakeFormInProgress.systemIntake!;
-
-      const { getByRole, getByTestId } = render(
-        <MemoryRouter>
-          <GovTaskIntakeForm itGovTaskStatuses={itGovTaskStatuses} />
-        </MemoryRouter>
+      const { getByRole, getByTestId } = renderGovTaskIntakeForm(
+        taskListState.intakeFormInProgress.systemIntake!
       );
 
       // In progress
@@ -121,18 +119,8 @@ describe('Gov Task Statuses', () => {
     });
 
     it('submitted', () => {
-      const {
-        itGovTaskStatuses,
-        submittedAt
-      } = taskListState.intakeFormSubmitted.systemIntake!;
-
-      const { getByRole, getByText, getByTestId } = render(
-        <MemoryRouter>
-          <GovTaskIntakeForm
-            itGovTaskStatuses={itGovTaskStatuses}
-            submittedAt={submittedAt}
-          />
-        </MemoryRouter>
+      const { getByRole, getByText, getByTestId } = renderGovTaskIntakeForm(
+        taskListState.intakeFormSubmitted.systemIntake!
       );
 
       // Completed
@@ -153,13 +141,12 @@ describe('Gov Task Statuses', () => {
 
     it('edits requested', () => {
       const {
-        itGovTaskStatuses
-      } = taskListState.intakeFormEditsRequested.systemIntake!;
-
-      const { getByRole, getByTestId } = render(
-        <MemoryRouter>
-          <GovTaskIntakeForm itGovTaskStatuses={itGovTaskStatuses} />
-        </MemoryRouter>
+        getByRole,
+        getByTestId,
+        getByText,
+        queryByRole
+      } = renderGovTaskIntakeForm(
+        taskListState.intakeFormEditsRequested.systemIntake!
       );
 
       // Edits requested
@@ -173,16 +160,31 @@ describe('Gov Task Statuses', () => {
       });
 
       // - alert warn
-      // - link: View feedback
-      // - Last updated MM/DD/YYYY
+
+      // View feedback
+      getByRole('link', {
+        name: i18next.t<string>('itGov:button.viewFeedback')
+      });
+
+      // View submitted request form should not exist
+      expect(
+        queryByRole('link', {
+          name: i18next.t<string>(
+            'itGov:taskList.step.intakeForm.viewSubmittedRequestForm'
+          )
+        })
+      ).not.toBeInTheDocument();
+
+      // Last updated MM/DD/YYYY
+      getByText(
+        RegExp(i18next.t<string>('taskList:taskStatusInfo.lastUpdated'))
+      );
     });
 
     it('resubmitted after edits', () => {
-      const {
-        itGovTaskStatuses
-      } = taskListState.intakeFormResubmittedAfterEdits.systemIntake!;
-
-      render(<GovTaskIntakeForm itGovTaskStatuses={itGovTaskStatuses} />);
+      renderGovTaskIntakeForm(
+        taskListState.intakeFormResubmittedAfterEdits.systemIntake!
+      );
 
       // - View feedback + View submitted request form
       // - Submitted MM/DD/YYYY

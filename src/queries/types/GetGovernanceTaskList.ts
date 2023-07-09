@@ -20,11 +20,18 @@ export interface GetGovernanceTaskList_systemIntake_itGovTaskStatuses {
   grbMeetingStatus: ITGovGRBStatus;
 }
 
+export interface GetGovernanceTaskList_systemIntake_governanceRequestFeedbacks {
+  __typename: "GovernanceRequestFeedback";
+  id: UUID;
+}
+
 export interface GetGovernanceTaskList_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
   itGovTaskStatuses: GetGovernanceTaskList_systemIntake_itGovTaskStatuses;
+  governanceRequestFeedbacks: GetGovernanceTaskList_systemIntake_governanceRequestFeedbacks[];
   submittedAt: Time | null;
+  updatedAt: Time | null;
 }
 
 export interface GetGovernanceTaskList {

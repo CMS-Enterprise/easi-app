@@ -21,20 +21,16 @@ import {
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
 import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
-import { ItGovTaskStatuses } from 'types/itGov';
+import { ItGovTaskSystemIntake } from 'types/itGov';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
-type GovTaskListItemProps = {
-  itGovTaskStatuses: ItGovTaskStatuses;
-};
-
 export const GovTaskIntakeForm = ({
   itGovTaskStatuses,
-  submittedAt
-}: GovTaskListItemProps & {
-  submittedAt?: string | null;
-}) => {
+  governanceRequestFeedbacks,
+  submittedAt,
+  updatedAt
+}: ItGovTaskSystemIntake) => {
   const stepKey = 'intakeForm';
   const { t } = useTranslation('itGov');
 
@@ -43,6 +39,8 @@ export const GovTaskIntakeForm = ({
     [ITGovIntakeFormStatus.IN_PROGRESS, 'continue'],
     [ITGovIntakeFormStatus.EDITS_REQUESTED, 'editForm']
   ]);
+
+  const hasFeedback = governanceRequestFeedbacks.length > 0;
 
   return (
     <TaskListItem
@@ -53,20 +51,33 @@ export const GovTaskIntakeForm = ({
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
-        {submittedAt && (
-          <UswdsReactLink to="./" className="display-inline-block margin-top-2">
-            {t(`taskList.step.${stepKey}.viewSubmittedRequestForm`)}
+
+        {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
+          <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            {t(
+              `button.${statusButtonText.get(
+                itGovTaskStatuses.intakeFormStatus
+              )}`
+            )}
           </UswdsReactLink>
         )}
-      </TaskListDescription>
 
-      {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
-        <UswdsReactLink variant="unstyled" className="usa-button" to="./">
-          {t(
-            `button.${statusButtonText.get(itGovTaskStatuses.intakeFormStatus)}`
+        {itGovTaskStatuses.intakeFormStatus ===
+          ITGovIntakeFormStatus.COMPLETED &&
+          submittedAt && (
+            <div className="margin-top-2">
+              <UswdsReactLink to="./">
+                {t(`taskList.step.${stepKey}.viewSubmittedRequestForm`)}
+              </UswdsReactLink>
+            </div>
           )}
-        </UswdsReactLink>
-      )}
+
+        {hasFeedback && (
+          <div className="margin-top-2">
+            <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
+          </div>
+        )}
+      </TaskListDescription>
     </TaskListItem>
   );
 };
@@ -119,35 +130,16 @@ function GovernanceTaskList() {
 
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
-                  <GovTaskIntakeForm
-                    itGovTaskStatuses={itGovTaskStatuses}
-                    submittedAt={systemIntake.submittedAt}
-                  />
-                  {/* Not started */}
-                  <GovTaskIntakeForm
-                    itGovTaskStatuses={
-                      taskListState.intakeFormNotStarted.systemIntake!
-                        .itGovTaskStatuses
-                    }
-                  />
-                  {/* In progress */}
-                  <GovTaskIntakeForm
-                    itGovTaskStatuses={
-                      taskListState.intakeFormInProgress.systemIntake!
-                        .itGovTaskStatuses
-                    }
-                  />
-                  {/* Submitted */}
-                  <GovTaskIntakeForm
-                    itGovTaskStatuses={
-                      taskListState.intakeFormSubmitted.systemIntake!
-                        .itGovTaskStatuses
-                    }
-                    submittedAt={
-                      taskListState.intakeFormSubmitted.systemIntake!
-                        .submittedAt
-                    }
-                  />
+                  <GovTaskIntakeForm {...systemIntake} />
+                  {/* Ui state previews from mockdata */}
+                  {[
+                    taskListState.intakeFormNotStarted,
+                    taskListState.intakeFormInProgress,
+                    taskListState.intakeFormSubmitted,
+                    taskListState.intakeFormEditsRequested
+                  ].map(mockdata => (
+                    <GovTaskIntakeForm {...mockdata.systemIntake!} />
+                  ))}
 
                   {/* 2. Feedback from initial review */}
                   <TaskListItem

@@ -20,7 +20,6 @@ export default {
         title: 'Fill out the Intake Request form',
         description:
           'Tell the Governance Team about your project or idea and upload any existing documentation. This step lets CMS build up context about your project and start preparing for further discussions with your team.',
-        submitted: 'Submitted',
         viewSubmittedRequestForm: 'View submitted request form',
         editsRequestedWarn:
           'The Governance Team has requested edits to your initial request form. Please make the requested changes and resubmit your form.'
