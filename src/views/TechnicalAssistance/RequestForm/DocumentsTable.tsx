@@ -151,11 +151,13 @@ function DocumentsTable({
         if (response.error || !response.data) {
           // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
           showMessage(
-            <Alert type="error" className="margin-top-3">
-              {t('documents.viewFail', {
-                documentName
-              })}
-            </Alert>
+            t('documents.viewFail', {
+              documentName
+            }),
+            {
+              type: 'error',
+              className: 'margin-top-3'
+            }
           );
         } else {
           // Download document
