@@ -67,7 +67,7 @@ const businessOwner: MockSystemIntakeContact = {
   component: 'Center for Medicare'
 };
 
-const productManager: MockSystemIntakeContact = {
+export const productManager: MockSystemIntakeContact = {
   ...contacts[2],
   role: 'Product Manager',
   component: 'Office of Legislation'
@@ -195,8 +195,8 @@ export const systemIntake: SystemIntake = {
   currentStage: 'The quick brown fox jumps over the lazy dog.',
   needsEaSupport: false,
   grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
-  decidedAt: new Date().toISOString(),
-  submittedAt: new Date(2020, 8, 30).toISOString(),
+  decidedAt: null,
+  submittedAt: '2022-10-20T14:55:47.88283Z',
   grbDate: null,
   grtDate: null,
   grtFeedbacks: [],

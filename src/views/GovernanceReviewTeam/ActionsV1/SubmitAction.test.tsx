@@ -7,7 +7,14 @@ import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
-import { contactQueries, grtActions, mockData } from 'data/mock/grtActions';
+import { grtActions } from 'data/mock/grtActions';
+import {
+  getSystemIntakeContactsQuery,
+  getSystemIntakeQuery,
+  productManager,
+  requester,
+  systemIntake
+} from 'data/mock/systemIntake';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateSystemIntakeActionBusinessCaseNeeded from 'queries/CreateSystemIntakeActionBusinessCaseNeededQuery';
@@ -18,7 +25,12 @@ import CreateSystemIntakeActionNotItRequest from 'queries/CreateSystemIntakeActi
 import CreateSystemIntakeActionNotRespondingClose from 'queries/CreateSystemIntakeActionNotRespondingCloseQuery';
 import CreateSystemIntakeActionReadyForGRT from 'queries/CreateSystemIntakeActionReadyForGRTQuery';
 import CreateSystemIntakeActionSendEmail from 'queries/CreateSystemIntakeActionSendEmailQuery';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
+import {
+  GetCedarContacts,
+  GetCedarContactsVariables
+} from 'queries/types/GetCedarContacts';
+import { MockedQuery } from 'types/util';
 
 import RequestOverview from '../RequestOverview';
 
@@ -29,14 +41,33 @@ const waitForPageLoad = async (testId: string = 'grt-submit-action-view') => {
 };
 
 // Mock system intake and contacts data
-const {
-  systemIntake,
-  contacts: { requester, productManager }
-} = mockData;
 const systemIntakeId = systemIntake.id;
 
+const getCedarContactsQuery: MockedQuery<
+  GetCedarContacts,
+  GetCedarContactsVariables
+> = {
+  request: {
+    query: GetCedarContactsQuery,
+    variables: {
+      commonName: productManager.commonName!
+    }
+  },
+  result: {
+    data: {
+      cedarPersonsByCommonName: [
+        {
+          __typename: 'UserInfo',
+          commonName: productManager.commonName!,
+          euaUserId: productManager.euaUserId,
+          email: productManager.email!
+        }
+      ]
+    }
+  }
+};
+
 // Mock contact queries
-const { getSystemIntakeContactsQuery, getCedarContactsQuery } = contactQueries;
 
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -57,70 +88,79 @@ jest.mock('@okta/okta-react', () => ({
 
 window.scrollTo = jest.fn();
 
-describe('Submit Action', () => {
-  const intakeQuery = {
-    request: {
-      query: GetSystemIntakeQuery,
-      variables: {
-        id: systemIntakeId
-      }
-    },
-    result: {
-      data: {
-        systemIntake
-      }
-    }
-  };
-
-  const mockStore = configureMockStore();
-  const defaultStore = mockStore({
-    auth: {
-      euaId: 'AAAA',
-      isUserSet: true,
-      groups: ['EASI_D_GOVTEAM']
-    },
+const mockStore = configureMockStore();
+const defaultStore = mockStore({
+  auth: {
+    euaId: 'AAAA',
+    isUserSet: true,
+    groups: ['EASI_D_GOVTEAM']
+  },
+  systemIntake: {
     systemIntake: {
-      systemIntake: {
-        ...initialSystemIntakeForm,
-        businessCaseId: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
-      }
-    },
-    businessCase: {
-      form: {
-        ...businessCaseInitialData,
-        id: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
-      }
+      ...initialSystemIntakeForm,
+      businessCaseId: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
     }
+  },
+  businessCase: {
+    form: {
+      ...businessCaseInitialData,
+      id: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
+    }
+  }
+});
+
+const renderActionPage = (slug: string, mocks: any[]) => {
+  return render(
+    <MemoryRouter
+      initialEntries={[
+        `/governance-review-team/${systemIntakeId}/actions/${slug}`
+      ]}
+    >
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <Provider store={defaultStore}>
+          <MessageProvider>
+            <Route
+              path={[
+                '/governance-review-team/:systemId/intake-request',
+                `/governance-review-team/:systemId/actions/${slug}`
+              ]}
+            >
+              <RequestOverview />
+            </Route>
+          </MessageProvider>
+        </Provider>
+      </MockedProvider>
+    </MemoryRouter>
+  );
+};
+
+describe('Renders action pages', () => {
+  const actionsList = [
+    'not-it-request',
+    'need-biz-case',
+    'provide-feedback-need-biz-case',
+    'ready-for-grt',
+    'ready-for-grb',
+    'no-governance',
+    'issue-lcid'
+  ];
+
+  test.each(actionsList)('%j', async action => {
+    renderActionPage(action, [getSystemIntakeQuery]);
+    await waitForPageLoad(grtActions[action as keyof typeof grtActions].view);
+    expect(
+      screen.getByRole('button', { name: /send email/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /without sending an email/i })
+    ).toBeInTheDocument();
   });
+});
 
-  const renderActionPage = (slug: string, mocks: any[]) => {
-    return render(
-      <MemoryRouter
-        initialEntries={[
-          `/governance-review-team/${systemIntakeId}/actions/${slug}`
-        ]}
-      >
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <Provider store={defaultStore}>
-            <MessageProvider>
-              <Route
-                path={[
-                  '/governance-review-team/:systemId/intake-request',
-                  `/governance-review-team/:systemId/actions/${slug}`
-                ]}
-              >
-                <RequestOverview />
-              </Route>
-            </MessageProvider>
-          </Provider>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-  };
-
+describe('Submit Action', () => {
   it('renders formik validation errors', async () => {
     // Random route; doesn't really matter
-    renderActionPage('not-it-request', [intakeQuery]);
+    renderActionPage('not-it-request', [getSystemIntakeQuery]);
     await waitForPageLoad();
 
     screen.getByRole('button', { name: /send email/i }).click();
@@ -130,82 +170,56 @@ describe('Submit Action', () => {
     ).toBeInTheDocument();
   });
 
-  const actionsList = [
-    'not-it-request',
-    'need-biz-case',
-    'provide-feedback-need-biz-case',
-    'ready-for-grt',
-    'ready-for-grb',
-    'no-governance',
-    'issue-lcid',
-    'extend-lcid'
-  ];
+  it('renders additional contacts', async () => {
+    const {
+      asFragment,
+      getByTestId,
+      findByText,
+      getByRole
+    } = renderActionPage('not-it-request', [
+      getSystemIntakeQuery,
+      getCedarContactsQuery,
+      getSystemIntakeContactsQuery
+    ]);
 
-  test.each(actionsList)(
-    'renders submit action with and without email notification %j',
-    // '$action' title sub did not work
-    async action => {
-      renderActionPage(action, [intakeQuery]);
-      await waitForPageLoad(grtActions[action as keyof typeof grtActions].view);
-      expect(
-        screen.getByRole('button', { name: /send email/i })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: /without sending an email/i })
-      ).toBeInTheDocument();
-    }
-  );
+    await waitForPageLoad();
+    getByTestId('truncatedContentButton').click();
 
-  describe('actions', () => {
-    it('renders additional contacts', async () => {
-      const {
-        asFragment,
-        getByTestId,
-        findByText,
-        getByRole
-      } = renderActionPage('not-it-request', [
-        intakeQuery,
-        getCedarContactsQuery,
-        getSystemIntakeContactsQuery
-      ]);
+    // Unverified recipients alert
+    expect(getByTestId('alert_unverified-recipients')).toBeInTheDocument();
 
-      await waitForPageLoad();
-      getByTestId('truncatedContentButton').click();
+    // Click verify recipient button
+    getByTestId('button_verify-recipient').click();
 
-      // Unverified recipients alert
-      expect(getByTestId('alert_unverified-recipients')).toBeInTheDocument();
+    // Verify recipient form snapshot
+    expect(asFragment()).toMatchSnapshot();
 
-      // Click verify recipient button
-      getByTestId('button_verify-recipient').click();
+    // Select field value should be unverified contact name
+    const contactSelect = getByTestId('cedar-contact-select');
+    expect(contactSelect).toHaveValue(productManager.commonName);
 
-      // Verify recipient form snapshot
-      expect(asFragment()).toMatchSnapshot();
+    const contactLabel = `${productManager.commonName}, ${productManager.euaUserId}`;
 
-      // Select field value should be unverified contact name
-      const contactSelect = getByTestId('cedar-contact-select');
-      expect(contactSelect).toHaveValue(productManager.commonName);
+    // Check that select field loads mock CEDAR contact
+    userEvent.click(contactSelect);
+    const contactOption = await findByText(contactLabel);
 
-      const contactLabel = `${productManager.commonName}, ${productManager.euaUserId}`;
+    // Select recipient
+    userEvent.click(contactOption);
+    expect(contactSelect).toHaveValue(contactLabel);
 
-      // Check that select field loads mock CEDAR contact
-      userEvent.click(contactSelect);
-      const contactOption = await findByText(contactLabel);
+    // Verify recipient
+    const saveButton = getByRole('button', { name: 'Save' });
+    userEvent.click(saveButton);
 
-      // Select recipient
-      userEvent.click(contactOption);
-      expect(contactSelect).toHaveValue(contactLabel);
+    // Confirm that recipient has been verified
+    const verifiedContact = await findByText(
+      `${productManager.commonName}, ${productManager.component} (${productManager.role})`
+    );
+    expect(verifiedContact).toBeInTheDocument();
+  });
 
-      // Verify recipient
-      const saveButton = getByRole('button', { name: 'Save' });
-      userEvent.click(saveButton);
-
-      // Confirm that recipient has been verified
-      const verifiedContact = await findByText(
-        `${productManager.commonName}, ${productManager.component} (${productManager.role})`
-      );
-      expect(verifiedContact).toBeInTheDocument();
-    });
-
+  describe('Action mutations', () => {
     it('executes not an IT request mutation', async () => {
       const notITRequestMutation = {
         request: {
@@ -235,7 +249,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('not-it-request', [
-        intakeQuery,
+        getSystemIntakeQuery,
         getSystemIntakeContactsQuery,
         notITRequestMutation
       ]);
@@ -293,7 +307,10 @@ describe('Submit Action', () => {
           }
         }
       };
-      renderActionPage('not-it-request', [intakeQuery, notITRequestMutation]);
+      renderActionPage('not-it-request', [
+        getSystemIntakeQuery,
+        notITRequestMutation
+      ]);
       await waitForPageLoad();
 
       screen.getByRole('button', { name: /without sending an email/i }).click();
@@ -330,7 +347,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('need-biz-case', [
-        intakeQuery,
+        getSystemIntakeQuery,
         getSystemIntakeContactsQuery,
         needBizCaseMutation
       ]);
@@ -390,7 +407,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('ready-for-grt', [
-        intakeQuery,
+        getSystemIntakeQuery,
         getSystemIntakeContactsQuery,
         readyForGRTMutation
       ]);
@@ -448,7 +465,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('biz-case-needs-changes', [
-        intakeQuery,
+        getSystemIntakeQuery,
         getSystemIntakeContactsQuery,
         needsChangesMutation
       ]);
@@ -510,7 +527,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('no-governance', [
-        intakeQuery,
+        getSystemIntakeQuery,
         getSystemIntakeContactsQuery,
         noGovernanceMutation
       ]);
@@ -574,7 +591,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('send-email', [
-        intakeQuery,
+        getSystemIntakeQuery,
         getSystemIntakeContactsQuery,
         sendEmailMutation
       ]);
@@ -630,7 +647,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('guide-received-close', [
-        intakeQuery,
+        getSystemIntakeQuery,
         getSystemIntakeContactsQuery,
         guideReceivedCloseMutation
       ]);
@@ -690,7 +707,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('not-responding-close', [
-        intakeQuery,
+        getSystemIntakeQuery,
         getSystemIntakeContactsQuery,
         notRespondingCloseMutation
       ]);

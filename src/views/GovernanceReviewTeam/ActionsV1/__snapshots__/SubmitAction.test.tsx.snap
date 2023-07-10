@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Submit Action actions renders additional contacts 1`] = `
+exports[`Submit Action renders additional contacts 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content easi-grt"
@@ -40,7 +40,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
               aria-current="page"
               class="usa-breadcrumb__list-item usa-current"
             >
-              TACO
+              Mock System Intake Request
             </li>
           </ol>
         </nav>
@@ -52,7 +52,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
               Project name
             </dt>
             <dd>
-              TACO
+              Mock System Intake Request
             </dd>
           </div>
           <div
@@ -65,7 +65,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 Requester
               </dt>
               <dd>
-                Jerry Seinfeld, CMCS
+                Ally Anderson, CMS
               </dd>
             </div>
             <div
@@ -75,7 +75,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                 Submission date
               </dt>
               <dd>
-                N/A
+                October 20, 2022
               </dd>
             </div>
             <div
@@ -419,16 +419,16 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                     <input
                       checked=""
                       class="usa-checkbox__input"
-                      id="SF13-requester"
-                      name="SF13-requester"
+                      id="A11Y-requester"
+                      name="A11Y-requester"
                       type="checkbox"
-                      value="sf13@local.fake"
+                      value="ally.anderson@local.fake"
                     />
                     <label
                       class="usa-checkbox__label"
-                      for="SF13-requester"
+                      for="A11Y-requester"
                     >
-                      Jerry Seinfeld, Center for Medicaid and CHIP Services (Requester)
+                      Ally Anderson, CMS Wide (Requester)
                     </label>
                   </div>
                   <div
@@ -486,7 +486,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                         class="usa-checkbox__label"
                         for="contact-ProductManager"
                       >
-                        Cosmo Kramer, Center for Program Integrity (Product Manager)
+                        Audrey Abrams, Office of Legislation (Product Manager)
                       </label>
                     </div>
                     <div
@@ -531,7 +531,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                           >
                             <div
                               class="cedar-contact-select__input-container css-1pndypt-Input"
-                              data-value="Cosmo Kramer"
+                              data-value="Audrey Abrams"
                             >
                               <input
                                 aria-autocomplete="list"
@@ -549,7 +549,7 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                                 style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
                                 tabindex="0"
                                 type="text"
-                                value="Cosmo Kramer"
+                                value="Audrey Abrams"
                               />
                             </div>
                           </div>
@@ -667,18 +667,17 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                       class="easi-checkbox usa-checkbox"
                     >
                       <input
-                        checked=""
                         class="usa-checkbox__input"
-                        id="b25bd13b-72a0-4d0e-b5be-7852a1a8259d"
-                        name="SF13-Business Owner"
+                        id="systemIntakeContact-ABCD"
+                        name="ABCD-Business Owner"
                         type="checkbox"
-                        value="sf13@local.fake"
+                        value="adeline.aarons@local.fake"
                       />
                       <label
                         class="usa-checkbox__label"
-                        for="b25bd13b-72a0-4d0e-b5be-7852a1a8259d"
+                        for="systemIntakeContact-ABCD"
                       >
-                        Jerry Seinfeld, Center for Medicaid and CHIP Services (Business Owner)
+                        Adeline Aarons, Center for Medicare (Business Owner)
                       </label>
                     </div>
                     <div
@@ -686,16 +685,16 @@ exports[`Submit Action actions renders additional contacts 1`] = `
                     >
                       <input
                         class="usa-checkbox__input"
-                        id="346eefa9-c635-4c0b-bc29-26f272c33d0c"
-                        name="WXYZ-ISSO"
+                        id="systemIntakeContact-ADMN"
+                        name="ADMN-ISSO"
                         type="checkbox"
-                        value="wxyz@local.fake"
+                        value="aaron.adams@local.fake"
                       />
                       <label
                         class="usa-checkbox__label"
-                        for="346eefa9-c635-4c0b-bc29-26f272c33d0c"
+                        for="systemIntakeContact-ADMN"
                       >
-                        John Smith, CMS Wide (ISSO)
+                        Aaron Adams, Office of Communications (ISSO)
                       </label>
                     </div>
                     <div
