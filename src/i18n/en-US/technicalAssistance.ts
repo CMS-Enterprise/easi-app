@@ -740,7 +740,9 @@ const technicalAssistance = {
       removeFail:
         'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
       removeSuccess: 'You have successfully removed {{-documentName}}.'
-    }
+    },
+    viewFail:
+      'There was an issue viewing {{-documentName}}. Please try again, and if the problem persists, try again later.'
   },
   check: {
     submit: 'Submit request',

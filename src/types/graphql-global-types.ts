@@ -66,6 +66,82 @@ export enum GRTFeedbackType {
 }
 
 /**
+ * The requester view of the IT gov Decision step status
+ */
+export enum ITGovDecisionStatus {
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  IN_REVIEW = "IN_REVIEW",
+}
+
+/**
+ * The requester view of the IT gov draft business case step status
+ */
+export enum ITGovDraftBusinessCaseStatus {
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_NEEDED = "NOT_NEEDED",
+  READY = "READY",
+}
+
+/**
+ * The requester view of the IT gov feedback step status
+ */
+export enum ITGovFeedbackStatus {
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  IN_REVIEW = "IN_REVIEW",
+}
+
+/**
+ * The requester view of the IT Gov Final Business Case step status
+ */
+export enum ITGovFinalBusinessCaseStatus {
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_NEEDED = "NOT_NEEDED",
+  READY = "READY",
+}
+
+/**
+ * The requester view of the IT Gov GRB step status
+ */
+export enum ITGovGRBStatus {
+  AWAITING_DECISION = "AWAITING_DECISION",
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  NOT_NEEDED = "NOT_NEEDED",
+  READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
+  SCHEDULED = "SCHEDULED",
+}
+
+/**
+ * The requester view of the IT Gov GRT step status
+ */
+export enum ITGovGRTStatus {
+  AWAITING_DECISION = "AWAITING_DECISION",
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  NOT_NEEDED = "NOT_NEEDED",
+  READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
+  SCHEDULED = "SCHEDULED",
+}
+
+/**
+ * The requester view of the IT gov intake step status
+ */
+export enum ITGovIntakeFormStatus {
+  COMPLETED = "COMPLETED",
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  READY = "READY",
+}
+
+/**
  * PersonRole is an enumeration of values for a person's role
  */
 export enum PersonRole {
@@ -653,6 +729,14 @@ export interface SubmitIntakeInput {
 }
 
 /**
+ * Input data for current and planned year one annual costs associated with a system request
+ */
+export interface SystemIntakeAnnualSpendingInput {
+  currentAnnualSpending?: string | null;
+  plannedYearOneSpending?: string | null;
+}
+
+/**
  * The input data used to set the CMS business owner of a system
  */
 export interface SystemIntakeBusinessOwnerInput {
@@ -682,6 +766,8 @@ export interface SystemIntakeContractInput {
 
 /**
  * Input data for estimated system cost increases associated with a system request
+ * 
+ * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
  */
 export interface SystemIntakeCostsInput {
   expectedIncreaseAmount?: string | null;
@@ -811,6 +897,7 @@ export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
   fundingSources?: SystemIntakeFundingSourcesInput | null;
   costs?: SystemIntakeCostsInput | null;
+  annualSpending?: SystemIntakeAnnualSpendingInput | null;
   contract?: SystemIntakeContractInput | null;
 }
 

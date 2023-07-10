@@ -93,10 +93,13 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract Details
+    cy.get('#IntakeForm-CurrentAnnualSpending')
+      .type('Mock Current Annual Spend')
+      .should('have.value', 'Mock Current Annual Spend');
 
-    cy.get('#IntakeForm-CostsExpectingIncreaseNo')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
+      .type('Mock Planned First Year Annual Spend')
+      .should('have.value', 'Mock Planned First Year Annual Spend');
 
     cy.get('#IntakeForm-ContractNotNeeded')
       .check({ force: true })
@@ -196,13 +199,13 @@ describe('The System Intake Form', () => {
     });
     cy.get(`#fundingNumber-${fundingNumber}`);
 
-    cy.get('#IntakeForm-CostsExpectingIncreaseYes')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#IntakeForm-CurrentAnnualSpending')
+      .type('Mock Current Annual Spend')
+      .should('have.value', 'Mock Current Annual Spend');
 
-    cy.get('#IntakeForm-CostsExpectedIncrease')
-      .type('99999')
-      .should('have.value', '99999');
+    cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
+      .type('Mock Planned First Year Annual Spend')
+      .should('have.value', 'Mock Planned First Year Annual Spend');
 
     cy.get('#IntakeForm-ContractHaveContract')
       .check({ force: true })
