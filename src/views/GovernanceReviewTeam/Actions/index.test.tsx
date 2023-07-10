@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import { systemIntake } from 'data/mock/systemIntake';
 
-import ChooseAction from './ChooseAction';
+import ChooseAction from '.';
 
 describe('IT Gov Actions', () => {
   it('Renders options and selects action', async () => {

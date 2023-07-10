@@ -12,7 +12,7 @@ import NextStep from './NextStep';
 import RequestEdits from './RequestEdits';
 import SubmitDecision from './SubmitDecision';
 
-import './chooseAction.scss';
+import './index.scss';
 
 type ActionContextType = {
   name: string;
@@ -76,11 +76,11 @@ const ActionRadioOption = ({
   );
 };
 
-type ChooseActionProps = {
+type ActionsProps = {
   systemIntake: SystemIntake;
 };
 
-const ChooseAction = ({ systemIntake }: ChooseActionProps) => {
+const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
@@ -190,4 +190,4 @@ const ChooseAction = ({ systemIntake }: ChooseActionProps) => {
   );
 };
 
-export default ChooseAction;
+export default Actions;

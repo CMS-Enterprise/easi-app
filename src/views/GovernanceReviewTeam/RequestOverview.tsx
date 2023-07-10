@@ -32,13 +32,13 @@ import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Action
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/ActionsV1/ProvideGRTRecommendationsToGRB';
 import NotFound from 'views/NotFound';
 
-import ChooseAction from './Actions/ChooseAction';
-import { default as ChooseActionV1 } from './ActionsV1/ChooseAction';
+import ChooseAction from './ActionsV1/ChooseAction';
 import ExtendLifecycleId from './ActionsV1/ExtendLifecycleId';
 import IssueLifecycleId from './ActionsV1/IssueLifecycleId';
 import RejectIntake from './ActionsV1/RejectIntake';
 import SubmitAction from './ActionsV1/SubmitAction';
 import AccordionNavigation from './AccordionNavigation';
+import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
@@ -206,7 +206,7 @@ const RequestOverview = () => {
                 flags.itGovV2Enabled ? (
                   <Route
                     path="/governance-review-team/:systemId/actions/:action?"
-                    render={() => <ChooseAction systemIntake={systemIntake} />}
+                    render={() => <Actions systemIntake={systemIntake} />}
                   />
                 ) : (
                   // V1 action routes
@@ -215,7 +215,7 @@ const RequestOverview = () => {
                       path="/governance-review-team/:systemId/actions"
                       exact
                       render={() => (
-                        <ChooseActionV1
+                        <ChooseAction
                           systemIntake={systemIntake}
                           businessCase={businessCase}
                         />
