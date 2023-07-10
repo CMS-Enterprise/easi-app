@@ -7,6 +7,7 @@ import { render } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { requester } from 'data/mock/trbRequest';
+import { MessageProvider } from 'hooks/useMessage';
 import {
   GetTrbRequest,
   GetTrbRequest_trbRequest as TrbRequest,
@@ -101,22 +102,24 @@ describe('Trb Request form: Check and submit', () => {
       <MemoryRouter>
         <MockedProvider>
           <Provider store={store}>
-            <Check
-              request={mockTrbRequestData}
-              stepUrl={{
-                current:
-                  '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/basic',
-                next:
-                  '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/subject',
-                back:
-                  '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/undefined'
-              }}
-              refetchRequest={mockRefetch}
-              setIsStepSubmitting={() => {}}
-              setStepSubmit={() => {}}
-              setFormAlert={() => {}}
-              taskListUrl=""
-            />
+            <MessageProvider>
+              <Check
+                request={mockTrbRequestData}
+                stepUrl={{
+                  current:
+                    '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/basic',
+                  next:
+                    '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/subject',
+                  back:
+                    '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/undefined'
+                }}
+                refetchRequest={mockRefetch}
+                setIsStepSubmitting={() => {}}
+                setStepSubmit={() => {}}
+                setFormAlert={() => {}}
+                taskListUrl=""
+              />
+            </MessageProvider>
           </Provider>
         </MockedProvider>
       </MemoryRouter>
