@@ -5,10 +5,9 @@ import i18next from 'i18next';
 
 import { taskListState } from 'data/mock/govTaskList';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-import { ItGovTaskSystemIntake } from 'types/itGov';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-import GovernanceTaskList, { GovTaskIntakeForm } from '.';
+import GovernanceTaskList from '.';
 
 describe('Governance Task List', () => {
   const id = '80950153-4a66-4881-b728-f4cc701ff926';
@@ -70,143 +69,6 @@ describe('Governance Task List', () => {
     getByRole('heading', {
       level: 3,
       name: i18next.t<string>('itGov:taskList.step.intakeForm.title')
-    });
-  });
-});
-
-describe('Gov Task Statuses', () => {
-  describe('Fill out the Intake Request form', () => {
-    function renderGovTaskIntakeForm(mockdata: ItGovTaskSystemIntake) {
-      return render(
-        <MemoryRouter>
-          <GovTaskIntakeForm {...mockdata} />
-        </MemoryRouter>
-      );
-    }
-
-    it('not started', () => {
-      const { getByRole, getByTestId } = renderGovTaskIntakeForm(
-        taskListState.intakeFormNotStarted.systemIntake!
-      );
-
-      // Ready to start
-      expect(getByTestId('task-list-task-tag')).toHaveTextContent(
-        i18next.t<string>('taskList:taskStatus.READY')
-      );
-
-      // Start button
-      getByRole('link', {
-        name: i18next.t<string>('itGov:button.start')
-      });
-    });
-
-    it('in progress', () => {
-      const { getByRole, getByTestId } = renderGovTaskIntakeForm(
-        taskListState.intakeFormInProgress.systemIntake!
-      );
-
-      // In progress
-      expect(getByTestId('task-list-task-tag')).toHaveTextContent(
-        i18next.t<string>('taskList:taskStatus.IN_PROGRESS')
-      );
-
-      // Continue button
-      getByRole('link', {
-        name: i18next.t<string>('itGov:button.continue')
-      });
-    });
-
-    it('submitted', () => {
-      const { getByRole, getByText, getByTestId } = renderGovTaskIntakeForm(
-        taskListState.intakeFormSubmitted.systemIntake!
-      );
-
-      // Completed
-      expect(getByTestId('task-list-task-tag')).toHaveTextContent(
-        i18next.t<string>('taskList:taskStatus.COMPLETED')
-      );
-
-      // Submitted MM/DD/YYYY
-      getByText(RegExp(i18next.t<string>('taskList:taskStatusInfo.submitted')));
-      getByText(RegExp('07/07/2023'));
-
-      // View submitted request form
-      getByRole('link', {
-        name: i18next.t<string>(
-          'itGov:taskList.step.intakeForm.viewSubmittedRequestForm'
-        )
-      });
-    });
-
-    it('edits requested', () => {
-      const {
-        getByRole,
-        getByTestId,
-        getByText,
-        queryByRole
-      } = renderGovTaskIntakeForm(
-        taskListState.intakeFormEditsRequested.systemIntake!
-      );
-
-      // Edits requested
-      expect(getByTestId('task-list-task-tag')).toHaveTextContent(
-        i18next.t<string>('taskList:taskStatus.EDITS_REQUESTED')
-      );
-
-      // Edit form button
-      getByRole('link', {
-        name: i18next.t<string>('itGov:button.editForm')
-      });
-
-      // Edits requested warning
-      const alertWarning = getByTestId('alert');
-      expect(alertWarning).toHaveClass('usa-alert--warning');
-      expect(alertWarning).toHaveTextContent(
-        i18next.t<string>(
-          'itGov:taskList.step.intakeForm.editsRequestedWarning'
-        )
-      );
-
-      // View feedback
-      getByRole('link', {
-        name: i18next.t<string>('itGov:button.viewFeedback')
-      });
-
-      // View submitted request form should not exist
-      expect(
-        queryByRole('link', {
-          name: i18next.t<string>(
-            'itGov:taskList.step.intakeForm.viewSubmittedRequestForm'
-          )
-        })
-      ).not.toBeInTheDocument();
-
-      // Last updated MM/DD/YYYY
-      getByText(
-        RegExp(i18next.t<string>('taskList:taskStatusInfo.lastUpdated'))
-      );
-      getByText(RegExp('07/08/2023'));
-    });
-
-    it('resubmitted after edits', () => {
-      const { getByRole, getByText } = renderGovTaskIntakeForm(
-        taskListState.intakeFormResubmittedAfterEdits.systemIntake!
-      );
-
-      // View feedback + View submitted request form
-      getByRole('link', {
-        name: i18next.t<string>('itGov:button.viewFeedback')
-      });
-
-      getByRole('link', {
-        name: i18next.t<string>(
-          'itGov:taskList.step.intakeForm.viewSubmittedRequestForm'
-        )
-      });
-
-      // Submitted MM/DD/YYYY
-      getByText(RegExp(i18next.t<string>('taskList:taskStatusInfo.submitted')));
-      getByText(RegExp('07/09/2023'));
     });
   });
 });

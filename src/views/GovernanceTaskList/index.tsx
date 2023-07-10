@@ -20,92 +20,10 @@ import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
-import {
-  GovernanceRequestFeedbackSourceAction,
-  GovernanceRequestFeedbackTargetForm,
-  ITGovIntakeFormStatus
-} from 'types/graphql-global-types';
-import { ItGovTaskSystemIntake } from 'types/itGov';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
-export const GovTaskIntakeForm = ({
-  itGovTaskStatuses,
-  governanceRequestFeedbacks,
-  submittedAt,
-  updatedAt
-}: ItGovTaskSystemIntake) => {
-  const stepKey = 'intakeForm';
-  const { t } = useTranslation('itGov');
-
-  const statusButtonText = new Map<ITGovIntakeFormStatus, string>([
-    [ITGovIntakeFormStatus.READY, 'start'],
-    [ITGovIntakeFormStatus.IN_PROGRESS, 'continue'],
-    [ITGovIntakeFormStatus.EDITS_REQUESTED, 'editForm']
-  ]);
-
-  const hasFeedback =
-    governanceRequestFeedbacks.filter(
-      feedback =>
-        feedback.sourceAction ===
-          GovernanceRequestFeedbackSourceAction.REQUEST_EDITS &&
-        feedback.targetForm ===
-          GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
-    ).length > 0;
-
-  return (
-    <TaskListItem
-      heading={t(`taskList.step.${stepKey}.title`)}
-      status={itGovTaskStatuses.intakeFormStatus}
-      testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
-      completedIso={submittedAt}
-      lastUpdatedIso={updatedAt}
-    >
-      <TaskListDescription>
-        <p>{t(`taskList.step.${stepKey}.description`)}</p>
-
-        {/* Warning about edits requested */}
-        {itGovTaskStatuses.intakeFormStatus ===
-          ITGovIntakeFormStatus.EDITS_REQUESTED && (
-          <Alert slim type="warning">
-            {t(`taskList.step.${stepKey}.editsRequestedWarning`)}
-          </Alert>
-        )}
-
-        {/* Button to the intake form */}
-        {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
-          <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
-              {t(
-                `button.${statusButtonText.get(
-                  itGovTaskStatuses.intakeFormStatus
-                )}`
-              )}
-            </UswdsReactLink>
-          </div>
-        )}
-
-        {/* Link to the submitted request form */}
-        {itGovTaskStatuses.intakeFormStatus ===
-          ITGovIntakeFormStatus.COMPLETED &&
-          submittedAt && (
-            <div className="margin-top-2">
-              <UswdsReactLink to="./">
-                {t(`taskList.step.${stepKey}.viewSubmittedRequestForm`)}
-              </UswdsReactLink>
-            </div>
-          )}
-
-        {/* Link to view feedback */}
-        {hasFeedback && (
-          <div className="margin-top-2">
-            <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
-          </div>
-        )}
-      </TaskListDescription>
-    </TaskListItem>
-  );
-};
+import GovTaskIntakeForm from './GovTaskIntakeForm';
 
 function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
