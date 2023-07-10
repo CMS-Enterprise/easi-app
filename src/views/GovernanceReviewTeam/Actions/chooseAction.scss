@@ -1,41 +1,25 @@
 @use 'uswds-core' as *;
 @use 'viewports' as *;
 
-.grt-actions-radio-group {
-  .easi-collapsable-link {
-    grid-column: 1/ span 2;
-  }
+.grt-actions-radio-group .grt-action-radio__option {
+  .usa-radio__input--tile + [class*=__label] {
+    padding: 1.75rem 2rem 1.75rem 3.5rem;
+    border: 1px solid color('disabled-light');
+    margin: 0;
+    height: 100%;
 
-  .grt-action-radio__option {
-    margin-bottom: 1rem;
-
-    .usa-radio__input--tile + [class*=__label] {
-      padding: 1.75rem 2rem 1.75rem 3.5rem;
-      border: 1px solid color('disabled-light');
-      margin: 0;
-      height: 100%;
-
-      &::before {
-        left: 1.5rem;
-      }
-
-      .usa-checkbox__label-description {
-        margin-left: -2rem;
-      }
+    &::before {
+      left: 1.5rem;
     }
 
-    .usa-radio__input--tile:checked + [class*=__label] {
-      background-color: white;
-      border-color: color('primary-lighter');
-      box-shadow: 0px 4px 8px 0px #73B3E766;
+    .usa-checkbox__label-description {
+      margin-left: -2rem;
     }
   }
-}
 
-@media screen and (min-width: $tablet) {
-  .grt-actions-radio-group, div#show-other-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 1rem;
+  .usa-radio__input--tile:checked + [class*=__label] {
+    background-color: white;
+    border-color: color('primary-lighter');
+    box-shadow: 0px 4px 8px 0px #73B3E766;
   }
 }

@@ -5,9 +5,9 @@ const RequestEdits = () => {
   const { t } = useTranslation('action');
 
   return (
-    <div>
+    <>
       <h1>{t('requestEdits.title')}</h1>
-    </div>
+    </>
   );
 };
 

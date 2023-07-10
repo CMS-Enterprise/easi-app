@@ -5,9 +5,9 @@ const NextStep = () => {
   const { t } = useTranslation('action');
 
   return (
-    <div>
+    <>
       <h1>{t('nextStep.title')}</h1>
-    </div>
+    </>
   );
 };
 

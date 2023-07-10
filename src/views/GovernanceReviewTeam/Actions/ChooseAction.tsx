@@ -46,7 +46,7 @@ const ActionRadioOption = ({
 
   return (
     <Radio
-      className="grt-action-radio__option"
+      className="grt-action-radio__option margin-bottom-2 tablet:grid-col-6"
       id={route}
       label={t('chooseAction.selectAction')}
       name={name}
@@ -92,84 +92,101 @@ const ChooseAction = ({ systemIntake }: ChooseActionProps) => {
 
   const [actionRoute, setActionRoute] = useState('');
 
-  // Action forms
-  if (action) {
-    return (
-      <Switch>
-        <Route
-          path="/governance-review-team/:systemId/actions/request-edits"
-          render={() => <RequestEdits />}
-        />
-        <Route
-          path="/governance-review-team/:systemId/actions/next-step"
-          render={() => <NextStep />}
-        />
-        <Route
-          path="/governance-review-team/:systemId/actions/decision"
-          render={() => <SubmitDecision />}
-        />
-      </Switch>
-    );
-  }
-
   return (
-    <>
-      <PageHeading
-        data-testid="grt-actions-view"
-        className="margin-top-0 margin-bottom-5"
-      >
-        {t('chooseAction.heading')}
-      </PageHeading>
+    <div className="grt-admin-actions">
+      {
+        /* Show form if action is selected */
+        action ? (
+          <Switch>
+            <Route
+              path="/governance-review-team/:systemId/actions/request-edits"
+              render={() => <RequestEdits />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/next-step"
+              render={() => <NextStep />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/decision"
+              render={() => <SubmitDecision />}
+            />
+          </Switch>
+        ) : (
+          /* Select action page */
+          <>
+            <PageHeading
+              data-testid="grt-actions-view"
+              className="margin-top-0 margin-bottom-5"
+            >
+              {t('chooseAction.heading')}
+            </PageHeading>
 
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          history.push(`actions/${actionRoute}`);
-        }}
-        className="margin-bottom-4"
-      >
-        <ActionContext.Provider
-          value={{
-            name: 'Available Actions',
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-              setActionRoute(e.target.value);
-            },
-            value: actionRoute
-          }}
-        >
-          <RadioGroup className="grt-actions-radio-group">
-            <ActionRadioOption
-              label={t('chooseAction.requestEdits.title')}
-              description={t('chooseAction.requestEdits.description')}
-              accordionText={t('chooseAction.requestEdits.accordion')}
-              route="request-edits"
-            />
-            <ActionRadioOption
-              label={t('chooseAction.progressToNewStep.title')}
-              description={t('chooseAction.progressToNewStep.description')}
-              accordionText={t('chooseAction.progressToNewStep.accordion')}
-              route="next-step"
-            />
-            <ActionRadioOption
-              label={t(`chooseAction.decision${state}.title`, {
-                context: decisionState
-              })}
-              description={t(`chooseAction.decision${state}.description`, {
-                context: decisionState
-              })}
-              accordionText={t(`chooseAction.decision${state}.accordion`, {
-                context: decisionState
-              })}
-              route="decision"
-            />
-          </RadioGroup>
-        </ActionContext.Provider>
+            <form
+              onSubmit={e => {
+                e.preventDefault();
+                history.push(`actions/${actionRoute}`);
+              }}
+              className="margin-bottom-4"
+            >
+              <ActionContext.Provider
+                value={{
+                  name: 'Available Actions',
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                    setActionRoute(e.target.value);
+                  },
+                  value: actionRoute
+                }}
+              >
+                <RadioGroup className="grt-actions-radio-group grid-row grid-gap-md">
+                  <ActionRadioOption
+                    label={t('chooseAction.requestEdits.title')}
+                    description={t('chooseAction.requestEdits.description')}
+                    accordionText={t('chooseAction.requestEdits.accordion')}
+                    route="request-edits"
+                  />
+                  <ActionRadioOption
+                    label={t('chooseAction.progressToNewStep.title')}
+                    description={t(
+                      'chooseAction.progressToNewStep.description'
+                    )}
+                    accordionText={t(
+                      'chooseAction.progressToNewStep.accordion'
+                    )}
+                    route="next-step"
+                  />
+                  <ActionRadioOption
+                    label={t(`chooseAction.decision${state}.title`, {
+                      context: decisionState
+                    })}
+                    description={t(
+                      `chooseAction.decision${state}.description`,
+                      {
+                        context: decisionState
+                      }
+                    )}
+                    accordionText={t(
+                      `chooseAction.decision${state}.accordion`,
+                      {
+                        context: decisionState
+                      }
+                    )}
+                    route="decision"
+                  />
+                </RadioGroup>
+              </ActionContext.Provider>
 
-        <Button className="margin-top-3" type="submit" disabled={!actionRoute}>
-          {t('submitAction.continue')}
-        </Button>
-      </form>
-    </>
+              <Button
+                className="margin-top-3"
+                type="submit"
+                disabled={!actionRoute}
+              >
+                {t('submitAction.continue')}
+              </Button>
+            </form>
+          </>
+        )
+      }
+    </div>
   );
 };
 
