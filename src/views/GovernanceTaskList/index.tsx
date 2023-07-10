@@ -14,7 +14,6 @@ import TaskListItem, {
   TaskListContainer,
   TaskListDescription
 } from 'components/TaskList';
-import { taskListState } from 'data/mock/govTaskList';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
@@ -74,16 +73,6 @@ function GovernanceTaskList() {
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
                   <GovTaskIntakeForm {...systemIntake} />
-                  {/* Ui state previews from mockdata */}
-                  {[
-                    taskListState.intakeFormNotStarted,
-                    taskListState.intakeFormInProgress,
-                    taskListState.intakeFormSubmitted,
-                    taskListState.intakeFormEditsRequested,
-                    taskListState.intakeFormResubmittedAfterEdits
-                  ].map(mockdata => (
-                    <GovTaskIntakeForm {...mockdata.systemIntake!} />
-                  ))}
 
                   {/* 2. Feedback from initial review */}
                   <TaskListItem
