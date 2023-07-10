@@ -110,8 +110,6 @@ describe('Gov Task Statuses', () => {
         i18next.t<string>('taskList:taskStatus.IN_PROGRESS')
       );
 
-      // - % complete
-
       // Continue button
       getByRole('link', {
         name: i18next.t<string>('itGov:button.continue')
@@ -130,6 +128,7 @@ describe('Gov Task Statuses', () => {
 
       // Submitted MM/DD/YYYY
       getByText(RegExp(i18next.t<string>('taskList:taskStatusInfo.submitted')));
+      getByText(RegExp('07/07/2023'));
 
       // View submitted request form
       getByRole('link', {
@@ -159,7 +158,14 @@ describe('Gov Task Statuses', () => {
         name: i18next.t<string>('itGov:button.editForm')
       });
 
-      // - alert warn
+      // Edits requested warning
+      const alertWarning = getByTestId('alert');
+      expect(alertWarning).toHaveClass('usa-alert--warning');
+      expect(alertWarning).toHaveTextContent(
+        i18next.t<string>(
+          'itGov:taskList.step.intakeForm.editsRequestedWarning'
+        )
+      );
 
       // View feedback
       getByRole('link', {
@@ -179,6 +185,7 @@ describe('Gov Task Statuses', () => {
       getByText(
         RegExp(i18next.t<string>('taskList:taskStatusInfo.lastUpdated'))
       );
+      getByText(RegExp('07/08/2023'));
     });
 
     it('resubmitted after edits', () => {

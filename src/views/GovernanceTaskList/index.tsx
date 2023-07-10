@@ -47,11 +47,21 @@ export const GovTaskIntakeForm = ({
       heading={t(`taskList.step.${stepKey}.title`)}
       status={itGovTaskStatuses.intakeFormStatus}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
-      submittedAt={submittedAt}
+      completedIso={submittedAt}
+      lastUpdatedIso={updatedAt}
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
 
+        {/* Warning about edits requested */}
+        {itGovTaskStatuses.intakeFormStatus ===
+          ITGovIntakeFormStatus.EDITS_REQUESTED && (
+          <Alert slim type="warning">
+            {t(`taskList.step.${stepKey}.editsRequestedWarning`)}
+          </Alert>
+        )}
+
+        {/* Button to the intake form */}
         {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
           <UswdsReactLink variant="unstyled" className="usa-button" to="./">
             {t(
@@ -62,6 +72,7 @@ export const GovTaskIntakeForm = ({
           </UswdsReactLink>
         )}
 
+        {/* Link to the submitted request form */}
         {itGovTaskStatuses.intakeFormStatus ===
           ITGovIntakeFormStatus.COMPLETED &&
           submittedAt && (
@@ -72,6 +83,7 @@ export const GovTaskIntakeForm = ({
             </div>
           )}
 
+        {/* Link to view feedback */}
         {hasFeedback && (
           <div className="margin-top-2">
             <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>

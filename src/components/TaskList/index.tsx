@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 
 import TaskStatusTag, {
@@ -38,7 +39,8 @@ type TaskListItemProps = {
   status: TaskStatus | undefined;
   children?: React.ReactNode;
   testId?: string;
-  submittedAt?: string | null;
+  completedIso?: string | null;
+  lastUpdatedIso?: string | null;
 };
 
 const TaskListItem = ({
@@ -46,8 +48,11 @@ const TaskListItem = ({
   status,
   children,
   testId,
-  submittedAt
+  completedIso,
+  lastUpdatedIso
 }: TaskListItemProps) => {
+  const { t } = useTranslation('taskList');
+
   const taskListItemClasses = classnames(
     'task-list__item',
     'padding-bottom-4',
@@ -60,6 +65,17 @@ const TaskListItem = ({
       ].includes(status || '')
     }
   );
+
+  const completedDate =
+    status === ITGovIntakeFormStatus.COMPLETED &&
+    completedIso &&
+    formatDateLocal(completedIso, 'MM/dd/yyyy');
+
+  const lastUpdatedDate =
+    status === ITGovIntakeFormStatus.EDITS_REQUESTED &&
+    lastUpdatedIso &&
+    formatDateLocal(lastUpdatedIso, 'MM/dd/yyyy');
+
   return (
     <li className={taskListItemClasses} data-testid={testId}>
       <div className="task-list__task-content">
@@ -71,11 +87,22 @@ const TaskListItem = ({
             {!!status && status in taskStatusClassName && (
               <TaskStatusTag status={status} />
             )}
-            {status === ITGovIntakeFormStatus.COMPLETED && submittedAt && (
+            {(completedDate || lastUpdatedDate) && (
               <p className="margin-top-05 margin-bottom-0">
-                Submitted
-                <br />
-                {formatDateLocal(submittedAt, 'MM/dd/yyyy')}
+                {completedDate && (
+                  <>
+                    {t('taskStatusInfo.submitted')}
+                    <br />
+                    {completedDate}
+                  </>
+                )}
+                {lastUpdatedDate && (
+                  <>
+                    {t('taskStatusInfo.lastUpdated')}
+                    <br />
+                    {lastUpdatedDate}
+                  </>
+                )}
               </p>
             )}
           </div>
