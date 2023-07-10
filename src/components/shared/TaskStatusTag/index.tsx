@@ -65,7 +65,7 @@ const TaskStatusTag = ({ status }: TaskStatusTagProps) => {
 
   return (
     <Tag
-      className={taskStatusClassName[status]}
+      className={`easi-task-status-tag ${taskStatusClassName[status]}`}
       data-testid="task-list-task-tag"
     >
       {t(`taskStatus.${status}`)}

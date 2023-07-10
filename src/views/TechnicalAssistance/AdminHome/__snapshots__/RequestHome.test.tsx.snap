@@ -153,7 +153,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
               class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
             >
               <span
-                class="easi-tag bg-info-light"
+                class="easi-tag easi-task-status-tag bg-info-light"
                 data-testid="task-list-task-tag"
               >
                 Ready to start
@@ -214,7 +214,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
               class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
             >
               <span
-                class="easi-tag border-2px text-base"
+                class="easi-tag easi-task-status-tag border-2px text-base"
                 data-testid="task-list-task-tag"
               >
                 Cannot start yet

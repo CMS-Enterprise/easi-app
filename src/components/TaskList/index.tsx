@@ -83,24 +83,22 @@ const TaskListItem = ({
           <h3 className="task-list__task-heading line-height-heading-2 margin-top-0 margin-bottom-1">
             {heading}
           </h3>
-          <div>
+          <div className="task-list__task-heading-row__status">
             {!!status && status in taskStatusClassName && (
               <TaskStatusTag status={status} />
             )}
             {(completedDate || lastUpdatedDate) && (
-              <p className="margin-top-05 margin-bottom-0">
+              <p className="margin-top-05 margin-bottom-0 text-base">
                 {completedDate && (
                   <>
                     {t('taskStatusInfo.submitted')}
-                    <br />
-                    {completedDate}
+                    <br /> {completedDate}
                   </>
                 )}
                 {lastUpdatedDate && (
                   <>
                     {t('taskStatusInfo.lastUpdated')}
-                    <br />
-                    {lastUpdatedDate}
+                    <br /> {lastUpdatedDate}
                   </>
                 )}
               </p>

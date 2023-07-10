@@ -74,13 +74,15 @@ export const GovTaskIntakeForm = ({
 
         {/* Button to the intake form */}
         {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
-          <UswdsReactLink variant="unstyled" className="usa-button" to="./">
-            {t(
-              `button.${statusButtonText.get(
-                itGovTaskStatuses.intakeFormStatus
-              )}`
-            )}
-          </UswdsReactLink>
+          <div className="margin-top-2">
+            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+              {t(
+                `button.${statusButtonText.get(
+                  itGovTaskStatuses.intakeFormStatus
+                )}`
+              )}
+            </UswdsReactLink>
+          </div>
         )}
 
         {/* Link to the submitted request form */}
