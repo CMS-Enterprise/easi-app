@@ -1,5 +1,7 @@
 import { GetGovernanceTaskList } from 'queries/types/GetGovernanceTaskList';
 import {
+  GovernanceRequestFeedbackSourceAction,
+  GovernanceRequestFeedbackTargetForm,
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
   ITGovFeedbackStatus,
@@ -92,7 +94,9 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
-          id
+          id,
+          sourceAction: GovernanceRequestFeedbackSourceAction.REQUEST_EDITS,
+          targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
         }
       ],
       submittedAt: '2023-07-07T00:30:28Z',
@@ -114,9 +118,16 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      governanceRequestFeedbacks: [],
-      submittedAt: null,
-      updatedAt: null
+      governanceRequestFeedbacks: [
+        {
+          __typename: 'GovernanceRequestFeedback',
+          id,
+          sourceAction: GovernanceRequestFeedbackSourceAction.REQUEST_EDITS,
+          targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
+        }
+      ],
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z'
     }
   }
 };

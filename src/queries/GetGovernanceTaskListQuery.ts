@@ -15,6 +15,8 @@ export default gql`
       }
       governanceRequestFeedbacks {
         id
+        sourceAction
+        targetForm
       }
       submittedAt
       updatedAt

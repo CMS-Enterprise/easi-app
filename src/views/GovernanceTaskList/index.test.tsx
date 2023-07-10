@@ -189,12 +189,24 @@ describe('Gov Task Statuses', () => {
     });
 
     it('resubmitted after edits', () => {
-      renderGovTaskIntakeForm(
+      const { getByRole, getByText } = renderGovTaskIntakeForm(
         taskListState.intakeFormResubmittedAfterEdits.systemIntake!
       );
 
-      // - View feedback + View submitted request form
-      // - Submitted MM/DD/YYYY
+      // View feedback + View submitted request form
+      getByRole('link', {
+        name: i18next.t<string>('itGov:button.viewFeedback')
+      });
+
+      getByRole('link', {
+        name: i18next.t<string>(
+          'itGov:taskList.step.intakeForm.viewSubmittedRequestForm'
+        )
+      });
+
+      // Submitted MM/DD/YYYY
+      getByText(RegExp(i18next.t<string>('taskList:taskStatusInfo.submitted')));
+      getByText(RegExp('07/09/2023'));
     });
   });
 });

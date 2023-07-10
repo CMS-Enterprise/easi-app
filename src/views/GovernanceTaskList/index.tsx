@@ -20,7 +20,11 @@ import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
-import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
+import {
+  GovernanceRequestFeedbackSourceAction,
+  GovernanceRequestFeedbackTargetForm,
+  ITGovIntakeFormStatus
+} from 'types/graphql-global-types';
 import { ItGovTaskSystemIntake } from 'types/itGov';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
@@ -40,7 +44,14 @@ export const GovTaskIntakeForm = ({
     [ITGovIntakeFormStatus.EDITS_REQUESTED, 'editForm']
   ]);
 
-  const hasFeedback = governanceRequestFeedbacks.length > 0;
+  const hasFeedback =
+    governanceRequestFeedbacks.filter(
+      feedback =>
+        feedback.sourceAction ===
+          GovernanceRequestFeedbackSourceAction.REQUEST_EDITS &&
+        feedback.targetForm ===
+          GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
+    ).length > 0;
 
   return (
     <TaskListItem
@@ -148,7 +159,8 @@ function GovernanceTaskList() {
                     taskListState.intakeFormNotStarted,
                     taskListState.intakeFormInProgress,
                     taskListState.intakeFormSubmitted,
-                    taskListState.intakeFormEditsRequested
+                    taskListState.intakeFormEditsRequested,
+                    taskListState.intakeFormResubmittedAfterEdits
                   ].map(mockdata => (
                     <GovTaskIntakeForm {...mockdata.systemIntake!} />
                   ))}
