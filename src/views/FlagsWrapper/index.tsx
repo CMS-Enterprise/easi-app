@@ -45,10 +45,10 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
           }
         });
 
-        setLDProvider(() => provider);
+        setLDProvider(() => () => provider({ children }));
       })();
     }
-  }, [data]);
+  }, [data, children]);
 
   return <LDProvider>{children}</LDProvider>;
 };
