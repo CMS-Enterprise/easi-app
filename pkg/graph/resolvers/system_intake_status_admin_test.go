@@ -355,9 +355,9 @@ func TestSystemIntakeStatusAdminGet(t *testing.T) {
 		},
 	}
 	systemIntakeAdminStatusRunTestCollection(t, intakeFormTests, "Testing all system intake form Statuses")
-	systemIntakeAdminStatusRunTestCollection(t, draftBizCaseTests, "Testing all draft Buisness Case Statuses")
+	systemIntakeAdminStatusRunTestCollection(t, draftBizCaseTests, "Testing all draft Business Case Statuses")
 	systemIntakeAdminStatusRunTestCollection(t, grtMeetingTests, "Testing all GRT Meeting Statuses")
-	systemIntakeAdminStatusRunTestCollection(t, finalBizCaseTests, "Testing all final Buisness Case Statuses")
+	systemIntakeAdminStatusRunTestCollection(t, finalBizCaseTests, "Testing all final Business Case Statuses")
 	systemIntakeAdminStatusRunTestCollection(t, grbMeetingTests, "Testing all GRB Meeting Statuses")
 	systemIntakeAdminStatusRunTestCollection(t, decisionTests, "Testing all Decision and Next Steps Statuses")
 
