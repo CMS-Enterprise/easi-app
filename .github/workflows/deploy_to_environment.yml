@@ -9,25 +9,6 @@ on:
       lambda_version:
         required: true
         type: string
-    # secrets:
-    #   AWS_ACCESS_KEY_ID:
-    #     required: true
-    #   AWS_SECRET_ACCESS_KEY:
-    #     required: true
-    #   LD_CLIENT_ID:
-    #     required: true
-    #   OKTA_CLIENT_ID:
-    #     required: true
-    #   OKTA_SERVER_ID:
-    #     required: true
-    #   STATIC_S3_BUCKET:
-    #     required: true
-    #   AWS_ROLE_TO_ASSUME:
-    #     required: true
-    #   ECR_REGISTRY:
-    #     required: true
-    #   SLACK_WEBHOOK_URL:
-    #     required: true
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
@@ -81,16 +62,7 @@ jobs:
         run: |
           ./scripts/deploy_service "easi-app-db-migrate" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-db-migrate" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
           ./scripts/db_lambda_invoke "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-app-db-migrate"
-      # - name: Deploy ECS service
-      #   env:
-      #     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      #     ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-      #     ECR_REPOSITORY: easi-backend
-      #     LAMBDA_VERSION: ${{ inputs.lambda_version }}
-      #     ENV: ${{ inputs.env }}
-      #   run: |
-      #     ./scripts/deploy_service "easi-app" "$ENV-ecs-manager-docker" "$LAMBDA_VERSION" "easi-backend" "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
-      #     ./scripts/healthcheck "$GIT_HASH"
+
       - name: Deploy EASI ECS service
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
