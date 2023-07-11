@@ -129,5 +129,115 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z'
     }
+  },
+
+  feedbackFromInitialReviewCantStart: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.IN_PROGRESS,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+        grtMeetingStatus: ITGovGRTStatus.CANT_START,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+        grbMeetingStatus: ITGovGRBStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [],
+      submittedAt: null,
+      updatedAt: null
+    }
+  },
+  feedbackFromInitialReviewInProgress: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.IN_REVIEW,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+        grtMeetingStatus: ITGovGRTStatus.CANT_START,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+        grbMeetingStatus: ITGovGRBStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [],
+      submittedAt: null,
+      updatedAt: null
+    }
+  },
+  feedbackFromInitialReviewDoneNoFeedback: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+        grtMeetingStatus: ITGovGRTStatus.CANT_START,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+        grbMeetingStatus: ITGovGRBStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [],
+      submittedAt: null,
+      updatedAt: null
+    }
+  },
+  feedbackFromInitialReviewDoneWithFeedback: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+        grtMeetingStatus: ITGovGRTStatus.CANT_START,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+        grbMeetingStatus: ITGovGRBStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [
+        {
+          __typename: 'GovernanceRequestFeedback',
+          id,
+          sourceAction: GovernanceRequestFeedbackSourceAction.REQUEST_EDITS,
+          targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
+        }
+      ],
+      submittedAt: null,
+      updatedAt: null
+    }
+  },
+  feedbackFromInitialReviewResubmittedWithFeedback: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.IN_REVIEW,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+        grtMeetingStatus: ITGovGRTStatus.CANT_START,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+        grbMeetingStatus: ITGovGRBStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [
+        {
+          __typename: 'GovernanceRequestFeedback',
+          id,
+          sourceAction: GovernanceRequestFeedbackSourceAction.REQUEST_EDITS,
+          targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
+        }
+      ],
+      submittedAt: null,
+      updatedAt: null
+    }
   }
 };
