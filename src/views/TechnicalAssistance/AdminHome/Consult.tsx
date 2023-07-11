@@ -14,7 +14,6 @@ import {
 import { DateTime } from 'luxon';
 
 import PageLoading from 'components/PageLoading';
-import Alert from 'components/shared/Alert';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import GetTrbRequestConsultMeetingQuery from 'queries/GetTrbRequestConsultMeetingQuery';
@@ -115,26 +114,27 @@ function Consult() {
     })
       .then(result => {
         showMessageOnNextPage(
-          <Alert type="success" className="margin-top-3">
-            {t('actionScheduleConsult.success', {
-              date: formData.meetingDate,
-              time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
-                .toFormat('t')
-                .toLowerCase(),
-              interpolation: {
-                escapeValue: false
-              }
-            })}
-          </Alert>
+          t('actionScheduleConsult.success', {
+            date: formData.meetingDate,
+            time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
+              .toFormat('t')
+              .toLowerCase(),
+            interpolation: {
+              escapeValue: false
+            }
+          }),
+          {
+            type: 'success',
+            className: 'margin-top-3'
+          }
         );
         history.push(requestUrl);
       })
       .catch(err => {
-        showMessage(
-          <Alert type="error" className="margin-top-3">
-            {t('actionScheduleConsult.error')}
-          </Alert>
-        );
+        showMessage(t('actionScheduleConsult.error'), {
+          type: 'error',
+          className: 'margin-top-3'
+        });
       });
   };
 

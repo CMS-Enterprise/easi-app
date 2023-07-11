@@ -93,7 +93,7 @@ export default function AdminHome() {
   const trbRequest = data?.trbRequest;
 
   // Alert feedback from children
-  const { message } = useMessage();
+  const { Message } = useMessage();
 
   // Get requester object from request attendees
   const {
@@ -168,7 +168,7 @@ export default function AdminHome() {
       />
 
       <GridContainer>
-        {message}
+        <Message />
         <Grid row className="margin-top-5 grid-gap">
           {/* Side navigation */}
           <Grid

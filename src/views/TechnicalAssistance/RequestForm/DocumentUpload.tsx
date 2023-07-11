@@ -113,11 +113,10 @@ const DocumentUpload = ({
               message: t('documents.upload.success')
             });
           } else {
-            showMessageOnNextPage(
-              <Alert type="success" className="margin-y-4">
-                {t('documents.upload.success')}
-              </Alert>
-            );
+            showMessageOnNextPage(t('documents.upload.success'), {
+              className: 'margin-y-4',
+              type: 'success'
+            });
           }
           // Go back to the prev page
           history.push(`/trb/${prevRoute}/${requestID}/documents`);
