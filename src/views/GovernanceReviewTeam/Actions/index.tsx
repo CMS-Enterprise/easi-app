@@ -46,7 +46,7 @@ const ActionRadioOption = ({
 
   return (
     <Radio
-      className="grt-action-radio__option margin-bottom-2 tablet:grid-col-6"
+      className="grt-action-radio__option margin-bottom-2 tablet:grid-col-5"
       id={route}
       label={t('chooseAction.selectAction')}
       name={name}
