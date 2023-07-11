@@ -66,6 +66,24 @@ export enum GRTFeedbackType {
 }
 
 /**
+ * Represents the possible actions that can provide feedback on a governance request
+ */
+export enum GovernanceRequestFeedbackSourceAction {
+  PROGRESS_TO_NEW_STEP = "PROGRESS_TO_NEW_STEP",
+  REQUEST_EDITS = "REQUEST_EDITS",
+}
+
+/**
+ * Represents the possible forms on a governance request that can receive feedback
+ */
+export enum GovernanceRequestFeedbackTargetForm {
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  INTAKE_REQUEST = "INTAKE_REQUEST",
+  NO_TARGET_PROVIDED = "NO_TARGET_PROVIDED",
+}
+
+/**
  * The requester view of the IT gov Decision step status
  */
 export enum ITGovDecisionStatus {

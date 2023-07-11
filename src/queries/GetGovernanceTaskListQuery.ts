@@ -13,6 +13,13 @@ export default gql`
         bizCaseFinalStatus
         grbMeetingStatus
       }
+      governanceRequestFeedbacks {
+        id
+        sourceAction
+        targetForm
+      }
+      submittedAt
+      updatedAt
     }
   }
 `;
