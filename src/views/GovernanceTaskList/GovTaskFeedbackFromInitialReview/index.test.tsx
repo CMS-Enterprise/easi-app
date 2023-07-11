@@ -32,11 +32,11 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     // Feedback info
     const reviewInfo = getByTestId('alert');
     expect(reviewInfo).toHaveClass('usa-alert--info');
-    // expect(reviewInfo).toHaveTextContent(
-    //   i18next.t<string>(
-    //     'itGov:taskList.step.feedbackFromInitialReview.reviewInfo'
-    //   )
-    // );
+    expect(reviewInfo).toContainHTML(
+      i18next.t<string>(
+        'itGov:taskList.step.feedbackFromInitialReview.reviewInfo'
+      )
+    );
   });
 
   it('In progress', () => {
@@ -52,11 +52,11 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     // Feedback info
     const reviewInfo = getByTestId('alert');
     expect(reviewInfo).toHaveClass('usa-alert--info');
-    // expect(reviewInfo).toHaveTextContent(
-    //   i18next.t<string>(
-    //     'itGov:taskList.step.feedbackFromInitialReview.reviewInfo'
-    //   )
-    // );
+    expect(reviewInfo).toContainHTML(
+      i18next.t<string>(
+        'itGov:taskList.step.feedbackFromInitialReview.reviewInfo'
+      )
+    );
   });
 
   it('Done - no feedback', () => {
@@ -72,11 +72,11 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     // No feedback info
     const reviewInfo = getByTestId('alert');
     expect(reviewInfo).toHaveClass('usa-alert--info');
-    // expect(reviewInfo).toHaveTextContent(
-    //   i18next.t<string>(
-    //     'itGov:taskList.step.feedbackFromInitialReview.noFeedbackInfo'
-    //   )
-    // );
+    expect(reviewInfo).toHaveTextContent(
+      i18next.t<string>(
+        'itGov:taskList.step.feedbackFromInitialReview.noFeedbackInfo'
+      )
+    );
 
     // - completed date
   });
