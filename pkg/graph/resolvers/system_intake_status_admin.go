@@ -83,14 +83,14 @@ func calcSystemIntakeGRBMeetingStatusAdmin(grbDate *time.Time) models.SystemInta
 	return models.SISAGrbMeetingComplete
 }
 
-func calcSystemIntakeDecisionStatusAdmin(decisionStatus models.SystemIntakeDecisionState) (models.SystemIntakeStatusAdmin, error) {
-	if decisionStatus == models.SIDSLcidIssued {
+func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisionState) (models.SystemIntakeStatusAdmin, error) {
+	if decisionState == models.SIDSLcidIssued {
 		return models.SISALcidIssued, nil
 	}
-	if decisionStatus == models.SIDSNoGovernance {
+	if decisionState == models.SIDSNoGovernance {
 		return models.SISANoGovernance, nil
 	}
-	if decisionStatus == models.SIDSNotApproved {
+	if decisionState == models.SIDSNotApproved {
 		return models.SISANotApproved, nil
 	}
 
