@@ -237,6 +237,7 @@ export enum SystemIntakeRequestType {
 
 /**
  * The status of a system's IT governence request
+ * Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeRequesterStatus/SystemIntakeAdminStatus
  */
 export enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
