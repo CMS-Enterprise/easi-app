@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2982,7 +2981,7 @@ func (r *systemIntakeResolver) ItGovTaskStatuses(ctx context.Context, obj *model
 
 // StatusRequester is the resolver for the statusRequester field.
 func (r *systemIntakeResolver) StatusRequester(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusRequester, error) {
-	panic(fmt.Errorf("not implemented: StatusRequester - statusRequester"))
+	return resolvers.SystemIntakeStatusRequesterGet(obj)
 }
 
 // DocumentType is the resolver for the documentType field.
