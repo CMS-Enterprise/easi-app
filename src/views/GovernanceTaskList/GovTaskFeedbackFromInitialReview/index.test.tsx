@@ -1,8 +1,12 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { renderToStringWithData } from '@apollo/client/react/ssr';
+import { render, within } from '@testing-library/react';
+import { Link } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import { taskListState } from 'data/mock/govTaskList';
 import { ItGovTaskSystemIntake } from 'types/itGov';
 
@@ -59,7 +63,7 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     );
   });
 
-  it('Done - no feedback', () => {
+  it('Done - no feedback', async () => {
     const { getByTestId } = renderGovTaskFeedbackFromInitialReview(
       taskListState.feedbackFromInitialReviewDoneNoFeedback.systemIntake!
     );
@@ -70,13 +74,25 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     );
 
     // No feedback info
-    const reviewInfo = getByTestId('alert');
-    expect(reviewInfo).toHaveClass('usa-alert--info');
-    expect(reviewInfo).toHaveTextContent(
-      i18next.t<string>(
-        'itGov:taskList.step.feedbackFromInitialReview.noFeedbackInfo'
+    const noFeedbackInfo = getByTestId('alert');
+    const mailtoItGov = `mailto:${IT_GOV_EMAIL}`;
+    expect(noFeedbackInfo).toHaveClass('usa-alert--info');
+    expect(noFeedbackInfo).toContainHTML(
+      await renderToStringWithData(
+        <Trans
+          i18nKey="itGov:taskList.step.feedbackFromInitialReview.noFeedbackInfo"
+          components={{
+            a: <Link href={mailtoItGov}> </Link>,
+            email: IT_GOV_EMAIL
+          }}
+        />
       )
     );
+
+    // Email within info
+    expect(
+      within(noFeedbackInfo).getByRole('link', { name: IT_GOV_EMAIL })
+    ).toHaveAttribute('href', mailtoItGov);
 
     // - completed date
   });

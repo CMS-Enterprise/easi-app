@@ -1,10 +1,12 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { Link } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import { ITGovFeedbackStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntake } from 'types/itGov';
 
@@ -43,6 +45,10 @@ const GovTaskFeedbackFromInitialReview = ({
               i18nKey={`itGov:taskList.step.${stepKey}.${
                 showReviewInfo ? 'reviewInfo' : 'noFeedbackInfo'
               }`}
+              components={{
+                a: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>,
+                email: IT_GOV_EMAIL
+              }}
             />
           </Alert>
         )}

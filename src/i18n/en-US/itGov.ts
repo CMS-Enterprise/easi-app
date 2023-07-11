@@ -31,7 +31,7 @@ export default {
         reviewInfo:
           'To help with this review, someone from the Governance Team may schedule a phone call with you and Enterprise Architecture (EA).<br/><br/> After that phone call, the Governance Team will decide if you need to go through any additional steps in the governance process.',
         noFeedbackInfo:
-          'The Governance Team had no feedback for your initial Intake Request form. If you have any questions, you may contact them at IT_Governance@cms.hhs.gov.'
+          'The Governance Team had no feedback for your initial Intake Request form. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       bizCaseDraft: {
         title: 'Prepare a draft Business Case',
