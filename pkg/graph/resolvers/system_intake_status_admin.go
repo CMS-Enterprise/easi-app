@@ -92,5 +92,5 @@ func calcSystemIntakeDecisionStatusAdmin(decisionStatus models.SystemIntakeDecis
 		return models.SISANotApproved, nil
 	}
 
-	return models.SISAInitialRequestFormInProgress, fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
+	return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
 }

@@ -9742,7 +9742,7 @@ enum SystemIntakeMeetingState{
 }
 
 """
-This represents the statuses that and admin would see as a representation of a system intake
+This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
 """
 enum SystemIntakeStatusAdmin {
   INITIAL_REQUEST_FORM_IN_PROGRESS
@@ -9759,7 +9759,8 @@ enum SystemIntakeStatusAdmin {
   NO_GOVERNANCE
   NOT_APPROVED
   CLOSED
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 

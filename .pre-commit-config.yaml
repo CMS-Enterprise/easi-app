@@ -14,7 +14,7 @@ repos:
       - id: detect-private-key
         name: Check for private keys
       - id: end-of-file-fixer
-        files: \.(sql|scss|md|js|ts|tsx|go|yml|yaml)$
+        files: \.(sql|scss|md|js|ts|tsx|go|yml|yaml|graphql)$
         name: Add newlines to ends of files
 
   - repo: https://github.com/detailyang/pre-commit-shell

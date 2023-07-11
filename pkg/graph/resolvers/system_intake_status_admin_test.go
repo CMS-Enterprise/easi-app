@@ -350,7 +350,7 @@ func TestSystemIntakeStatusAdminGet(t *testing.T) {
 				DecisionState: models.SIDSNoDecision,
 				State:         models.SystemIntakeStateOPEN,
 			},
-			expectedStatus: models.SISAInitialRequestFormInProgress,
+			expectedStatus: "",
 			expectError:    true,
 		},
 	}
@@ -368,20 +368,15 @@ func systemIntakeAdminStatusRunTestCollection(t *testing.T, tests []testSystemIn
 	t.Run(testType, func(t *testing.T) {
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				verifySystemIntakeAdminStatusView(t, test)
+				status, err := SystemIntakeStatusAdminGet(&test.intake)
+				assert.EqualValues(t, test.expectedStatus, status)
+
+				if test.expectError {
+					assert.Error(t, err)
+				} else {
+					assert.NoError(t, err)
+				}
 			})
 		}
 	})
-}
-
-// verifySystemIntakeAdminStatusView is a helper function to validate the logic for a specific test case
-func verifySystemIntakeAdminStatusView(t *testing.T, test testSystemIntakeAdminStatusType) {
-	status, err := SystemIntakeStatusAdminGet(&test.intake)
-	assert.EqualValues(t, test.expectedStatus, status)
-
-	if test.expectError {
-		assert.Error(t, err)
-	} else {
-		assert.NoError(t, err)
-	}
 }
