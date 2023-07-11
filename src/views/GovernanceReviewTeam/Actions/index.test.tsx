@@ -9,7 +9,7 @@ import ChooseAction from '.';
 
 describe('IT Gov Actions', () => {
   it('Renders options and selects action', async () => {
-    const { getByRole, getByText, getByTitle } = render(
+    const { getByRole, getByText, getByTitle, findByRole } = render(
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/actions`]}
       >
@@ -41,7 +41,9 @@ describe('IT Gov Actions', () => {
     userEvent.click(getByRole('button', { name: 'Continue' }));
 
     expect(
-      getByRole('heading', { name: 'Action: request edits' })
+      await findByRole('heading', {
+        name: 'Action: request edits'
+      })
     ).toBeInTheDocument();
   });
 });

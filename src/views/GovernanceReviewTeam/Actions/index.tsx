@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React from 'react';
+import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Button, Radio } from '@trussworks/react-uswds';
@@ -14,45 +15,26 @@ import SubmitDecision from './SubmitDecision';
 
 import './index.scss';
 
-type ActionContextType = {
-  name: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
-};
-
-const ActionContext = createContext<ActionContextType>({
-  name: '',
-  onChange: () => {},
-  value: ''
-});
-
 type ActionRadioOptionProps = {
-  route: string;
   label: string;
   description: string;
   accordionText: string;
-};
+} & Omit<ControllerRenderProps, 'ref'>;
 
 const ActionRadioOption = ({
   label,
   description,
   accordionText,
-  route
+  ...field
 }: ActionRadioOptionProps) => {
   const { t } = useTranslation('action');
 
-  const actionContext = useContext(ActionContext);
-  const { name, onChange, value } = actionContext;
-
   return (
     <Radio
+      {...field}
       className="grt-action-radio__option margin-bottom-2 tablet:grid-col-5"
-      id={route}
+      id={`grt-action__${field.value}`}
       label={t('chooseAction.selectAction')}
-      name={name}
-      value={route}
-      onChange={onChange}
-      checked={value === route}
       title={label}
       labelDescription={
         <>
@@ -90,7 +72,8 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
   const { state, decisionState } = systemIntake;
 
-  const [actionRoute, setActionRoute] = useState('');
+  const { control, watch, handleSubmit } = useForm<{ actionRoute: string }>();
+  const actionRoute = watch('actionRoute');
 
   return (
     <div className="grt-admin-actions">
@@ -122,58 +105,61 @@ const Actions = ({ systemIntake }: ActionsProps) => {
             </PageHeading>
 
             <form
-              onSubmit={e => {
-                e.preventDefault();
-                history.push(`actions/${actionRoute}`);
-              }}
+              onSubmit={handleSubmit(formData =>
+                history.push(`actions/${formData.actionRoute}`)
+              )}
               className="margin-bottom-4"
             >
-              <ActionContext.Provider
-                value={{
-                  name: 'Available Actions',
-                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    setActionRoute(e.target.value);
-                  },
-                  value: actionRoute
+              <Controller
+                name="actionRoute"
+                control={control}
+                render={({ field: { ref, ...fieldProps } }) => {
+                  return (
+                    <RadioGroup className="grt-actions-radio-group grid-row grid-gap-md">
+                      {/* Request Edits */}
+                      <ActionRadioOption
+                        {...fieldProps}
+                        value="request-edits"
+                        label={t('chooseAction.requestEdits.title')}
+                        description={t('chooseAction.requestEdits.description')}
+                        accordionText={t('chooseAction.requestEdits.accordion')}
+                      />
+                      {/* Progress to new step */}
+                      <ActionRadioOption
+                        {...fieldProps}
+                        value="next-step"
+                        label={t('chooseAction.progressToNewStep.title')}
+                        description={t(
+                          'chooseAction.progressToNewStep.description'
+                        )}
+                        accordionText={t(
+                          'chooseAction.progressToNewStep.accordion'
+                        )}
+                      />
+                      {/* Decision action */}
+                      <ActionRadioOption
+                        {...fieldProps}
+                        value="decision"
+                        label={t(`chooseAction.decision${state}.title`, {
+                          context: decisionState
+                        })}
+                        description={t(
+                          `chooseAction.decision${state}.description`,
+                          {
+                            context: decisionState
+                          }
+                        )}
+                        accordionText={t(
+                          `chooseAction.decision${state}.accordion`,
+                          {
+                            context: decisionState
+                          }
+                        )}
+                      />
+                    </RadioGroup>
+                  );
                 }}
-              >
-                <RadioGroup className="grt-actions-radio-group grid-row grid-gap-md">
-                  <ActionRadioOption
-                    label={t('chooseAction.requestEdits.title')}
-                    description={t('chooseAction.requestEdits.description')}
-                    accordionText={t('chooseAction.requestEdits.accordion')}
-                    route="request-edits"
-                  />
-                  <ActionRadioOption
-                    label={t('chooseAction.progressToNewStep.title')}
-                    description={t(
-                      'chooseAction.progressToNewStep.description'
-                    )}
-                    accordionText={t(
-                      'chooseAction.progressToNewStep.accordion'
-                    )}
-                    route="next-step"
-                  />
-                  <ActionRadioOption
-                    label={t(`chooseAction.decision${state}.title`, {
-                      context: decisionState
-                    })}
-                    description={t(
-                      `chooseAction.decision${state}.description`,
-                      {
-                        context: decisionState
-                      }
-                    )}
-                    accordionText={t(
-                      `chooseAction.decision${state}.accordion`,
-                      {
-                        context: decisionState
-                      }
-                    )}
-                    route="decision"
-                  />
-                </RadioGroup>
-              </ActionContext.Provider>
+              />
 
               <Button
                 className="margin-top-3"
