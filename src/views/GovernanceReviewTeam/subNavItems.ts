@@ -5,6 +5,11 @@ const subNavItems = (systemId: string) => [
     aria: 'aria.openIntake'
   },
   {
+    route: `/governance-review-team/${systemId}/documents`,
+    text: 'intake:documents.uploadedDocuments',
+    aria: 'aria.openDocuments'
+  },
+  {
     route: `/governance-review-team/${systemId}/business-case`,
     text: 'general:businessCase',
     aria: 'aria.openBusiness'

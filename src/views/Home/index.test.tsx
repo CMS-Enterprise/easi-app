@@ -3,18 +3,25 @@ import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import { mockFlags, resetLDMocks } from 'jest-launchdarkly-mock';
 import configureMockStore from 'redux-mock-store';
 
-import { getRequestsQuery } from 'data/mock/trbRequest';
+import {
+  getRequestsQuery,
+  getTrbAdminTeamHomeQuery
+} from 'data/mock/trbRequest';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import { Flags } from 'types/flags';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import Table from 'views/MyRequests/Table';
 
+import AdminHome from './AdminHome';
 import Home from './index';
 
 jest.mock('@okta/okta-react', () => ({
@@ -63,6 +70,28 @@ const mocks = [
         cedarSystemBookmarks: []
       }
     }
+  }
+];
+
+const mockOpenIntakes = [
+  {
+    ...initialSystemIntakeForm,
+    id: '2',
+    status: 'INTAKE_SUBMITTED'
+  },
+  {
+    ...initialSystemIntakeForm,
+    id: '4',
+    status: 'INTAKE_SUBMITTED',
+    businessCaseId: '1'
+  }
+];
+
+const mockClosedIntakes = [
+  {
+    ...initialSystemIntakeForm,
+    id: '4',
+    status: 'WITHDRAWN'
   }
 ];
 
@@ -146,28 +175,6 @@ describe('The home page', () => {
       groups: ['EASI_D_GOVTEAM']
     };
 
-    const mockOpenIntakes = [
-      {
-        ...initialSystemIntakeForm,
-        id: '2',
-        status: 'INTAKE_SUBMITTED'
-      },
-      {
-        ...initialSystemIntakeForm,
-        id: '4',
-        status: 'INTAKE_SUBMITTED',
-        businessCaseId: '1'
-      }
-    ];
-
-    const mockClosedIntakes = [
-      {
-        ...initialSystemIntakeForm,
-        id: '4',
-        status: 'WITHDRAWN'
-      }
-    ];
-
     const mountComponent = (mockedStore: any): ReactWrapper => {
       const mockStore = configureMockStore();
       const store = mockStore(mockedStore);
@@ -240,6 +247,43 @@ describe('The home page', () => {
         homePage.update();
         expect(homePage.text()).toContain('There is 1 closed request');
       });
+    });
+  });
+
+  describe('Admin home view', () => {
+    it('renders the select admin view dropdown', async () => {
+      window.localStorage.clear();
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        auth: {
+          isUserSet: true,
+          groups: ['EASI_D_GOVTEAM']
+        },
+        systemIntakes: mockOpenIntakes
+      });
+
+      const { getByTestId, getByRole, findByRole } = render(
+        <MemoryRouter>
+          <Provider store={store}>
+            <VerboseMockedProvider mocks={[...mocks, getTrbAdminTeamHomeQuery]}>
+              <MessageProvider>
+                <AdminHome isGrtReviewer isTrbAdmin />
+              </MessageProvider>
+            </VerboseMockedProvider>
+          </Provider>
+        </MemoryRouter>
+      );
+
+      // check that select field defaults to TRB
+      const selectField = getByTestId('select-admin-view');
+      expect(selectField).toHaveValue('TRB');
+      expect(
+        getByRole('heading', { name: 'Technical assistance requests' })
+      ).toBeInTheDocument();
+
+      // Switch to GRT view
+      userEvent.selectOptions(selectField, ['GRT']);
+      await findByRole('heading', { name: 'IT Governance requests' });
     });
   });
 });

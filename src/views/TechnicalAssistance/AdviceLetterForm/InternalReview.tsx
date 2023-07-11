@@ -30,7 +30,9 @@ const InternalReview = ({
   adviceLetter,
   adviceLetterStatus,
   setFormAlert,
-  setIsStepSubmitting
+  setIsStepSubmitting,
+  stepsCompleted,
+  setStepsCompleted
 }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
@@ -143,7 +145,16 @@ const InternalReview = ({
             <Button
               type="button"
               unstyled
-              onClick={() => history.push(`/trb/${trbRequestId}/advice/review`)}
+              onClick={() => {
+                if (
+                  setStepsCompleted &&
+                  stepsCompleted &&
+                  !stepsCompleted?.includes('internal-review')
+                ) {
+                  setStepsCompleted([...stepsCompleted, 'internal-review']);
+                }
+                history.push(`/trb/${trbRequestId}/advice/review`);
+              }}
             >
               button
             </Button>

@@ -1,6 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`TaskStatusTag renders task status tag {"status":"AWAITING_DECISION","className":"bg-info-light"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-info-light"
+    data-testid="task-list-task-tag"
+  >
+    Awaiting decision
+  </span>
+</DocumentFragment>
+`;
+
 exports[`TaskStatusTag renders task status tag {"status":"CANNOT_START_YET","className":"border-2px text-base"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag border-2px text-base"
+    data-testid="task-list-task-tag"
+  >
+    Cannot start yet
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag renders task status tag {"status":"CANT_START","className":"border-2px text-base"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag border-2px text-base"
@@ -39,7 +61,7 @@ exports[`TaskStatusTag renders task status tag {"status":"IN_PROGRESS","classNam
     class="easi-tag bg-warning"
     data-testid="task-list-task-tag"
   >
-    In Progress
+    In progress
   </span>
 </DocumentFragment>
 `;
@@ -66,10 +88,21 @@ exports[`TaskStatusTag renders task status tag {"status":"NOT_NEEDED","className
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","className":"bg-info-light-light"} 1`] = `
+exports[`TaskStatusTag renders task status tag {"status":"READY","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
-    class="easi-tag bg-info-light-light"
+    class="easi-tag bg-info-light"
+    data-testid="task-list-task-tag"
+  >
+    Ready to start
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","className":"bg-info-light"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag bg-info-light"
     data-testid="task-list-task-tag"
   >
     Ready for review

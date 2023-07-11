@@ -43,6 +43,7 @@ const InitialRequestForm = ({
       trbRequestId={id}
       title={t('adminHome.initialRequestForm')}
       noteCount={trbRequest.adminNotes.length}
+      renderBottom
       disableStep={
         trbRequest.status === TRBRequestStatus.READY_FOR_CONSULT ||
         trbRequest.status === TRBRequestStatus.CONSULT_COMPLETE ||

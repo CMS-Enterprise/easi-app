@@ -105,9 +105,7 @@ describe('Trb Admin: Action: Request Edits', () => {
       </Provider>
     );
 
-    await waitForElementToBeRemoved(() =>
-      getByTestId('emailRecipients-spinner')
-    );
+    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
 
     await findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')

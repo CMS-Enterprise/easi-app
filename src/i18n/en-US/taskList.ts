@@ -108,16 +108,18 @@ const taskList = {
     readDecision: 'Read decision from board'
   },
   taskStatus: {
-    COMPLETED: 'Completed',
-    IN_PROGRESS: 'In Progress',
-    READY_TO_START: 'Ready to start',
-    NOT_NEEDED: 'Not needed',
-    // Additional statuses for trb admin tasks
+    AWAITING_DECISION: 'Awaiting decision',
+    CANT_START: 'Cannot start yet',
     CANNOT_START_YET: 'Cannot start yet',
-    READY_FOR_REVIEW: 'Ready for review',
+    COMPLETED: 'Completed',
     EDITS_REQUESTED: 'Edits requested',
+    IN_PROGRESS: 'In progress',
     IN_REVIEW: 'In review',
+    NOT_NEEDED: 'Not needed',
+    READY: 'Ready to start',
+    READY_FOR_REVIEW: 'Ready for review',
     READY_TO_SCHEDULE: 'Ready to schedule',
+    READY_TO_START: 'Ready to start',
     SCHEDULED: 'Scheduled'
   }
 };

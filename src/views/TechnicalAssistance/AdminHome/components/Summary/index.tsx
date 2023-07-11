@@ -10,6 +10,7 @@ import {
   IconError,
   ModalRef
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
@@ -23,7 +24,7 @@ import { TrbAssignLeadModalOpener } from '../../TrbAssignLeadModal';
 
 type SummaryProps = {
   trbRequestId: string;
-  name: string;
+  name: string | null;
   requestType: TRBRequestType;
   state: TRBRequestState;
   taskStatus?: TRBRequestStatus;
@@ -62,12 +63,10 @@ export default function Summary({
           <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
             <Breadcrumb>
               <BreadcrumbLink asCustom={Link} to="/">
-                <span className="text-white">{t('Home')}</span>
+                <span className="text-white">{t('adminHome.home')}</span>
               </BreadcrumbLink>
             </Breadcrumb>
-            <Breadcrumb current>
-              {t('adminHome.breadcrumb', { trbRequestId })}
-            </Breadcrumb>
+            <Breadcrumb current>{t('adminHome.breadcrumb')}</Breadcrumb>
           </BreadcrumbBar>
 
           {/* Request name */}
@@ -130,7 +129,15 @@ export default function Summary({
               className="display-flex flex-align-center margin-y-05"
             >
               <h4 className="margin-y-0">{t('adminHome.status')}</h4>
-              <span className="bg-info-dark text-white text-bold padding-y-05 padding-x-105 margin-x-1">
+              <span
+                className={classNames(
+                  'text-white text-bold padding-y-05 padding-x-105 margin-x-1',
+                  {
+                    'bg-base': state === TRBRequestState.CLOSED,
+                    'bg-info-dark': state === TRBRequestState.OPEN
+                  }
+                )}
+              >
                 {t(`adminHome.${state.toLowerCase()}`)}
               </span>
               <p className="margin-y-0 text-base">{taskStatusText}</p>

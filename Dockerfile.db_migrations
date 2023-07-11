@@ -1,4 +1,5 @@
-FROM flyway/flyway:7.8.2-alpine
+ARG TAG=
+FROM flyway/flyway:${TAG}
 
 COPY migrations/ /flyway/sql
 

@@ -12,6 +12,7 @@ import {
   getTrbRequestSummaryQuery,
   trbRequestSummary
 } from 'data/mock/trbRequest';
+import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import {
   GetTrbRequestDocuments,
@@ -71,14 +72,16 @@ describe('Trb Admin Initial Request Form', () => {
             initialEntries={[`/trb/${mockTrbRequestId}/initial-request-form`]}
           >
             <TRBRequestInfoWrapper>
-              <Route exact path="/trb/:id/:activePage">
-                <InitialRequestForm
-                  trbRequestId={trbRequestSummary.id}
-                  trbRequest={trbRequestSummary}
-                  assignLeadModalRef={modalRef}
-                  assignLeadModalTrbRequestIdRef={trbRequestIdRef}
-                />
-              </Route>
+              <MessageProvider>
+                <Route exact path="/trb/:id/:activePage">
+                  <InitialRequestForm
+                    trbRequestId={trbRequestSummary.id}
+                    trbRequest={trbRequestSummary}
+                    assignLeadModalRef={modalRef}
+                    assignLeadModalTrbRequestIdRef={trbRequestIdRef}
+                  />
+                </Route>
+              </MessageProvider>
             </TRBRequestInfoWrapper>
           </MemoryRouter>
         </Provider>
@@ -119,7 +122,7 @@ describe('Trb Admin Initial Request Form', () => {
 
     // Empty documents table loaded
     await findByText(
-      i18next.t<string>('technicalAssistance:documents.table.noDocument')
+      i18next.t<string>('technicalAssistance:documents.table.noDocuments')
     );
   });
 });

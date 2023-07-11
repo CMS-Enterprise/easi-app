@@ -40,7 +40,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Request d8ebedca-0031-4ccd-9690-37390726c50e
+                Request details
               </li>
             </ol>
           </nav>
@@ -132,7 +132,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                 Status
               </h4>
               <span
-                class="bg-info-dark text-white text-bold padding-y-05 padding-x-105 margin-x-1"
+                class="text-white text-bold padding-y-05 padding-x-105 margin-x-1 bg-info-dark"
               >
                 Open
               </span>
@@ -413,7 +413,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
               Date and time
             </p>
             <div
-              class="usa-alert usa-alert--info usa-alert--slim flex margin-y-1 margin-top-2"
+              class="usa-alert usa-alert--info usa-alert--slim margin-y-1 margin-top-2"
               data-testid="alert"
             >
               <div
@@ -487,7 +487,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                         class="easi-tag bg-warning"
                         data-testid="task-list-task-tag"
                       >
-                        In Progress
+                        In progress
                       </span>
                     </div>
                     <dt

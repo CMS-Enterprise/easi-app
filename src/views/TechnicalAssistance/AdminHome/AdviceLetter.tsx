@@ -80,6 +80,7 @@ const AdviceLetter = ({
               <ReviewAdviceLetter
                 adviceLetter={adviceLetter}
                 trbRequestId={trbRequest.id}
+                publicForm
               />
             )}
           </>

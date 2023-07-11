@@ -24,11 +24,11 @@ export const sendFeedbackOptions = {
   no: 'No',
   other: 'Other',
   satisfied: 'Satisfied',
-  section508: 'Section 508',
   systems: 'Systems',
   veryDissatisfied: 'Very dissatisfied',
   verySatisfied: 'Very satisfied',
   yes: 'Yes',
+  technicalAssistance: 'Technical Assistance',
 
   // Additional options for "Report A Problem"
   itPreventedMe: 'It prevented me from completing my task',
@@ -40,7 +40,7 @@ export type SendFeedbackOptionKey = keyof typeof sendFeedbackOptions;
 
 export const easiServiceOptionKeys: Readonly<SendFeedbackOptionKey[]> = [
   'itGovernance',
-  'section508',
+  'technicalAssistance',
   'systems',
   'help',
   'other'

@@ -4,6 +4,7 @@ import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
@@ -146,7 +147,9 @@ describe('Trb Request form: Supporting documents', () => {
       </MemoryRouter>
     );
 
-    await findByText('No documents uploaded');
+    await findByText(
+      i18next.t<string>('technicalAssistance:documents.table.noDocuments')
+    );
 
     expect(asFragment()).toMatchSnapshot();
 
@@ -233,7 +236,7 @@ describe('Trb Request form: Supporting documents', () => {
     await findByRole('button', { name: 'Next' });
 
     // Available file
-    getByRole('link', { name: 'View' });
+    getByRole('button', { name: 'View' });
     getByRole('button', { name: 'Remove' });
 
     getByText('Virus scan in progress...'); // Pending
@@ -366,7 +369,11 @@ describe('Trb Request form: Supporting documents', () => {
       </MemoryRouter>
     );
 
-    expect(await findByText('No documents uploaded')).toBeInTheDocument();
+    expect(
+      await findByText(
+        i18next.t<string>('technicalAssistance:documents.table.noDocuments')
+      )
+    ).toBeInTheDocument();
 
     // Add document button opens upload document form
     userEvent.click(getByRole('link', { name: 'Add a document' }));
@@ -579,6 +586,10 @@ describe('Trb Request form: Supporting documents', () => {
 
     expect(uploadButton).toBeDisabled();
 
+    // Add a document
+    const documentUploadLabel = getByLabelText('Document upload');
+    userEvent.upload(documentUploadLabel, testFile);
+
     // Select the "Other" document type so that the form submit button is enabled
     // The file input and the other text field will be left empty to catch errors
     userEvent.click(getByTestId('documentType-OTHER'));
@@ -586,18 +597,8 @@ describe('Trb Request form: Supporting documents', () => {
     // Submit attempt
     userEvent.click(uploadButton);
 
-    // File input error
-    const fileError = await findByText('Please select a file');
     // Other document input error
     const otherDocError = await findByText('Please fill in the blank');
-
-    // Add a document
-    const documentUploadLabel = getByLabelText('Document upload');
-    userEvent.upload(documentUploadLabel, testFile);
-    // Document error gone
-    await waitFor(() => {
-      expect(fileError).not.toBeInTheDocument();
-    });
 
     // Text field error is still there
     expect(otherDocError).toBeInTheDocument();
@@ -606,7 +607,7 @@ describe('Trb Request form: Supporting documents', () => {
     userEvent.type(getByLabelText('What kind of document is this?'), 'test');
     // Text error gone
     await waitFor(() => {
-      expect(fileError).not.toBeInTheDocument();
+      expect(otherDocError).not.toBeInTheDocument();
     });
   });
 });

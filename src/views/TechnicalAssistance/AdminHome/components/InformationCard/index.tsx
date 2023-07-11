@@ -53,6 +53,24 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
     disabled: false
   };
 
+  const returnAdviceText = () => {
+    if (
+      trbRequest.taskStatuses.adviceLetterStatus ===
+        TRBAdviceLetterStatus.CANNOT_START_YET ||
+      trbRequest.taskStatuses.adviceLetterStatus ===
+        TRBAdviceLetterStatus.READY_TO_START
+    ) {
+      return t('adminHome.startAdvice');
+    }
+    if (
+      trbRequest.taskStatuses.adviceLetterStatus ===
+      TRBAdviceLetterStatus.COMPLETED
+    ) {
+      return t('adminHome.view');
+    }
+    return t('adminHome.viewAdvice');
+  };
+
   switch (type) {
     case 'initialRequestForm':
       cardDetails = {
@@ -73,14 +91,12 @@ const InformationCard = ({ trbRequest, type }: InformationCardProps) => {
         header: t('adminHome.adviceLetter'),
         description: t('adminHome.toBeCompleted'),
         status: trbRequest.taskStatuses.adviceLetterStatus,
-        buttonText:
+        buttonText: returnAdviceText(),
+        buttonClass:
           trbRequest.taskStatuses.adviceLetterStatus ===
-            TRBAdviceLetterStatus.CANNOT_START_YET ||
-          trbRequest.taskStatuses.adviceLetterStatus ===
-            TRBAdviceLetterStatus.READY_TO_START
-            ? t('adminHome.startAdvice')
-            : t('adminHome.viewAdvice'),
-        buttonClass: '',
+          TRBAdviceLetterStatus.COMPLETED
+            ? 'usa-button--outline'
+            : '',
         buttonLink: 'advice',
         modified: trbRequest.adviceLetter?.modifiedAt
           ? formatDateLocal(trbRequest.adviceLetter.modifiedAt, 'MMMM d, yyyy')

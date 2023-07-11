@@ -55,7 +55,6 @@ export const Alert = ({
       'easi-inline-alert': inline,
       'easi-alert-text': isClosable
     },
-    'flex',
     className
   );
 
@@ -82,10 +81,11 @@ export const Alert = ({
             <Button
               type="button"
               role="button"
-              className="usa-button usa-button--unstyled text-no-underline text-black flex-align-end"
+              className="easi-alert__close-button text-black text-no-underline margin-top-0"
               tabIndex={0}
               aria-label="Close Button"
               onClick={() => setClosed(true)}
+              unstyled
             >
               &#10005;
             </Button>

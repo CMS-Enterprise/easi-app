@@ -461,7 +461,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               }}
               debounceDelay={3000}
             />
-            <PageNumber currentPage={2} totalPages={3} />
+            <PageNumber currentPage={2} totalPages={5} />
           </>
         );
       }}

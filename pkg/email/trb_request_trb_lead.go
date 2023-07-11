@@ -64,7 +64,7 @@ func (c Client) sendTRBRequestTRBLeadAdminEmail(ctx context.Context, input SendT
 	templateParams := trbLeadAdminEmailTemplateParams{
 		TRBLeadName:    input.TRBLeadName,
 		TRBRequestName: input.TRBRequestName,
-		TRBRequestLink: c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
+		TRBRequestLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "request")),
 		RequesterName:  input.RequesterName,
 	}
 
@@ -91,7 +91,7 @@ func (c Client) sendTRBRequestTRBLeadAssigneeEmail(ctx context.Context, input Se
 	templateParams := trbLeadAssigneeEmailTemplateParams{
 		TRBLeadName:    input.TRBLeadName,
 		TRBRequestName: input.TRBRequestName,
-		TRBRequestLink: c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
+		TRBRequestLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "request")),
 		RequesterName:  input.RequesterName,
 		Component:      input.Component,
 	}

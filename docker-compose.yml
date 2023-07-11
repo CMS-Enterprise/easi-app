@@ -21,6 +21,7 @@ services:
       - CEDAR_API_URL
       - CEDAR_CORE_API_VERSION
       - CEDAR_CACHE_INTERVAL
+      - CEDAR_EMAIL_ADDRESS
       - HTTP_PROXY
       - HTTPS_PROXY
       - APP_ENV
@@ -68,6 +69,9 @@ services:
       - SERVER_KEY
       - USE_TLS
       - ALT_JOB_CODES
+      - OKTA_API_URL
+      - OKTA_API_TOKEN
+      - USE_OKTA_API
     depends_on:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully
@@ -92,4 +96,4 @@ services:
       /usr/bin/mc policy set public local/easi-app-file-uploads;
       "
   email:
-    image: dockage/mailcatcher:0.7.1
+    image: dockage/mailcatcher:0.8.2

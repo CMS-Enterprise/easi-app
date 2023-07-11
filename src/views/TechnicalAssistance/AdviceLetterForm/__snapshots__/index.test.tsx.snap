@@ -48,7 +48,7 @@ exports[`TRB Advice Letter Form matches the snapshot 1`] = `
                     href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/advice"
                   >
                     <span>
-                      Request d8ebedca-0031-4ccd-9690-37390726c50e
+                      Request details
                     </span>
                   </a>
                 </li>
@@ -125,7 +125,7 @@ exports[`TRB Advice Letter Form matches the snapshot 1`] = `
         >
           <li
             aria-current="true"
-            class="usa-step-indicator__segment usa-step-indicator__segment--current usa-step-indicator__segment--clickable"
+            class="usa-step-indicator__segment usa-step-indicator__segment--current usa-step-indicator__segment--disabled"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -216,7 +216,7 @@ exports[`TRB Advice Letter Form matches the snapshot 1`] = `
             </span>
           </li>
           <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--clickable"
+            class="usa-step-indicator__segment usa-step-indicator__segment--disabled"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -355,24 +355,32 @@ exports[`TRB Advice Letter Form matches the snapshot 1`] = `
             <li
               class="usa-button-group__item"
             >
-              <button
-                class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-                data-testid="button"
-                type="button"
+              <div
+                class="display-flex flex-align-center"
               >
-                Cancel
-              </button>
+                <button
+                  class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+                  data-testid="button"
+                  type="button"
+                >
+                  Cancel
+                </button>
+              </div>
             </li>
             <li
               class="usa-button-group__item"
             >
-              <button
-                class="usa-button margin-top-0"
-                data-testid="button"
-                type="submit"
+              <div
+                class="display-flex flex-align-center"
               >
-                Next
-              </button>
+                <button
+                  class="usa-button margin-top-0"
+                  data-testid="button"
+                  type="submit"
+                >
+                  Next
+                </button>
+              </div>
             </li>
           </ul>
           <button

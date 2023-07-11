@@ -168,6 +168,9 @@ const CEDARAPIURL = "CEDAR_API_URL"
 // CEDARAPIKey is the key for accessing CEDAR
 const CEDARAPIKey = "CEDAR_API_KEY" // #nosec
 
+// CEDAREmailAddress is the key for the env var that holds the email address that we use when notifying CEDAR of changes
+const CEDAREmailAddress = "CEDAR_EMAIL_ADDRESS"
+
 // CEDARCoreAPIVersion is the version of the CEDAR core API to use
 const CEDARCoreAPIVersion = "CEDAR_CORE_API_VERSION"
 
@@ -218,3 +221,12 @@ const (
 	// FlagSourceLaunchDarkly is LAUNCH_DARKLY
 	FlagSourceLaunchDarkly FlagSourceOption = "LAUNCH_DARKLY"
 )
+
+// OKTAAPIURL is the key for the Okta API url
+const OKTAAPIURL = "OKTA_API_URL"
+
+// OKTAAPIToken is the key for the Okta API token
+const OKTAAPIToken = "OKTA_API_TOKEN" // #nosec G101 false positive - not the actual API key itself
+
+// USEOKTAAPI is a flag to determine if we should use the okta API or the CEDAR core api for user search
+const USEOKTAAPI = "USE_OKTA_API"

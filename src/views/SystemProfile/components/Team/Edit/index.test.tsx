@@ -1,9 +1,11 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { MockedProvider } from '@apollo/react-testing';
 import { render, within } from '@testing-library/react';
 import i18next from 'i18next';
 
 import { usernamesWithRoles } from 'data/mock/systemProfile';
+import { MessageProvider } from 'hooks/useMessage';
 
 import EditTeam from '.';
 
@@ -13,14 +15,18 @@ describe('Edit team page', () => {
   it('Renders the edit team page', async () => {
     const { findByRole, getByRole, getByTestId } = render(
       <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/team/edit`]}>
-        <Route path="/systems/:systemId/team/edit">
-          <EditTeam
-            name="Easy Access to System Information"
-            team={usernamesWithRoles}
-            numberOfFederalFte={6}
-            numberOfContractorFte={4}
-          />
-        </Route>
+        <MessageProvider>
+          <MockedProvider>
+            <Route path="/systems/:systemId/team/edit">
+              <EditTeam
+                name="Easy Access to System Information"
+                team={usernamesWithRoles}
+                numberOfFederalFte={6}
+                numberOfContractorFte={4}
+              />
+            </Route>
+          </MockedProvider>
+        </MessageProvider>
       </MemoryRouter>
     );
 

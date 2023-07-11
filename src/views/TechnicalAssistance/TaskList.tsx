@@ -121,7 +121,7 @@ function TaskList() {
               {data && (
                 <div>
                   <div className="trb-request-type font-body-lg line-height-body-5 text-light">
-                    {data.trbRequest.name}
+                    {data.trbRequest.name || t('taskList.defaultName')}
                   </div>
                   <div>
                     <span className="font-body-md line-height-body-4 text-base margin-right-1">
@@ -230,7 +230,7 @@ function TaskList() {
                         <UswdsReactLink
                           variant="unstyled"
                           className="usa-button"
-                          to="/help/trb/prepare-consult-meeting"
+                          to="/help/trb/prepare-consult-meeting#download-presentation-templates"
                           target="_blank"
                         >
                           {t('taskList.downloadTemplates')}

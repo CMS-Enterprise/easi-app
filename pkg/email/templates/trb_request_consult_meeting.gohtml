@@ -2,7 +2,7 @@
 
 <p>The Technical Review Board (TRB) has scheduled a consult session for {{.TRBRequestName}} on {{.ConsultMeetingTimeFormatted}}. You should receive a calendar invite shortly if you have not already.
 
-<p>Additional notes about this consult session: {{.Notes}}</p>
+{{if .Notes}}<p>Additional notes about this consult session: {{.Notes}}</p>{{end}}
 
 <p>Next steps:</p>
 <ul>

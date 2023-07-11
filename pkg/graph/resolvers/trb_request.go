@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
@@ -123,15 +122,13 @@ func UpdateTRBRequestConsultMeetingTime(
 	notes string,
 ) (*models.TRBRequest, error) {
 	notifyEmails := []models.EmailAddress{}
-	if len(notifyEUAIDs) > 0 {
-		notifyInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
-		if err != nil {
-			return nil, err
-		}
-		for _, info := range notifyInfos {
-			if info != nil {
-				notifyEmails = append(notifyEmails, models.NewEmailAddress(info.Email.String()))
-			}
+	notifyInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
+	if err != nil {
+		return nil, err
+	}
+	for _, info := range notifyInfos {
+		if info != nil {
+			notifyEmails = append(notifyEmails, models.NewEmailAddress(info.Email.String()))
 		}
 	}
 
@@ -160,7 +157,7 @@ func UpdateTRBRequestConsultMeetingTime(
 
 	emailInput := email.SendTRBRequestConsultMeetingEmailInput{
 		TRBRequestID:       trb.ID,
-		TRBRequestName:     trb.Name,
+		TRBRequestName:     trb.GetName(),
 		ConsultMeetingTime: meetingTime,
 		CopyTRBMailbox:     copyTRBMailbox,
 		NotifyEmails:       notifyEmails,
@@ -230,7 +227,7 @@ func UpdateTRBRequestTRBLead(
 
 	emailInput := email.SendTRBRequestTRBLeadEmailInput{
 		TRBRequestID:   trb.ID,
-		TRBRequestName: trb.Name,
+		TRBRequestName: trb.GetName(),
 		TRBLeadName:    leadInfo.CommonName,
 		RequesterName:  requesterInfo.CommonName,
 		Component:      component,
@@ -258,6 +255,7 @@ func CloseTRBRequest(
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 	id uuid.UUID,
 	reasonClosed string,
+	copyTRBMailbox bool,
 	notifyEUAIDs []string,
 ) (*models.TRBRequest, error) {
 	trb, err := store.GetTRBRequestByID(ctx, id)
@@ -294,17 +292,17 @@ func CloseTRBRequest(
 		return nil, err
 	}
 
-	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos)+1)
+	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos))
 	for _, recipientInfo := range notifyUserInfos {
 		recipientEmails = append(recipientEmails, recipientInfo.Email)
 	}
-	recipientEmails = append(recipientEmails, requester.Email)
 
 	emailInput := email.SendTRBRequestClosedEmailInput{
 		TRBRequestID:   trb.ID,
-		TRBRequestName: trb.Name,
+		TRBRequestName: trb.GetName(),
 		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
+		CopyTRBMailbox: copyTRBMailbox,
 		ReasonClosed:   reasonClosed,
 	}
 
@@ -326,31 +324,16 @@ func ReopenTRBRequest(
 	store *storage.Store,
 	id uuid.UUID,
 	reasonReopened string,
+	copyTRBMailbox bool,
+	notifyEUAIDs []string,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 ) (*models.TRBRequest, error) {
-	// Query the TRB request, attendees in parallel
-	errGroup := new(errgroup.Group)
-
 	// Query the TRB request
-	var trb *models.TRBRequest
-	var errTRB error
-	errGroup.Go(func() error {
-		trb, errTRB = store.GetTRBRequestByID(ctx, id)
-		return errTRB
-	})
-
-	// Query the TRB request attendees
-	var attendees []*models.TRBRequestAttendee
-	var errAttendees error
-	errGroup.Go(func() error {
-		attendees, errAttendees = store.GetTRBRequestAttendeesByTRBRequestID(ctx, id)
-		return errAttendees
-	})
-
-	if errG := errGroup.Wait(); errG != nil {
-		return nil, errG
+	trb, err := store.GetTRBRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
 	}
 
 	// Check if request is already open so an unnecesary email won't be sent
@@ -362,7 +345,7 @@ func ReopenTRBRequest(
 		"state": models.TRBRequestStateOpen,
 	}
 
-	err := ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -377,28 +360,23 @@ func ReopenTRBRequest(
 		return nil, err
 	}
 
-	recipientEuas := make([]string, 0, len(attendees))
-	for _, attendee := range attendees {
-		recipientEuas = append(recipientEuas, attendee.EUAUserID)
-	}
-
-	attendeeInfos, err := fetchUserInfos(ctx, recipientEuas)
+	notifyUserInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	recipientEmails := make([]models.EmailAddress, 0, len(attendees)+1)
-	for _, attendeeInfo := range attendeeInfos {
-		recipientEmails = append(recipientEmails, attendeeInfo.Email)
+	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos))
+	for _, recipientInfo := range notifyUserInfos {
+		recipientEmails = append(recipientEmails, recipientInfo.Email)
 	}
-	recipientEmails = append(recipientEmails, requester.Email)
 
 	emailInput := email.SendTRBRequestReopenedEmailInput{
 		TRBRequestID:   trb.ID,
-		TRBRequestName: trb.Name,
+		TRBRequestName: trb.GetName(),
 		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
 		ReasonReopened: reasonReopened,
+		CopyTRBMailbox: copyTRBMailbox,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this

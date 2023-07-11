@@ -1,7 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
@@ -15,6 +19,7 @@ import {
   updateTrbRequestConsultMeetingQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
+import GetTrbRequestConsultMeetingQuery from 'queries/GetTrbRequestConsultMeetingQuery';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
@@ -32,6 +37,24 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   const modalRef = React.createRef<ModalRef>();
   const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
+  const emptyConsultMeetingTime = {
+    request: {
+      query: GetTrbRequestConsultMeetingQuery,
+      variables: {
+        id: mockTrbRequestId
+      }
+    },
+    result: {
+      data: {
+        trbRequest: {
+          id: mockTrbRequestId,
+          consultMeetingTime: null,
+          __typename: 'TRBRequest'
+        }
+      }
+    }
+  };
+
   it('submits successfully ', async () => {
     const { findByText, getByLabelText, getByRole, findByRole } = render(
       <Provider store={store}>
@@ -46,7 +69,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             getTrbRequestSummaryQuery,
             getTRBRequestAttendeesQuery,
             getTrbAdminNotesQuery,
-            getTrbRequestSummaryQuery
+            getTrbRequestSummaryQuery,
+            emptyConsultMeetingTime
           ]}
         >
           <MemoryRouter
@@ -83,8 +107,6 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     const submitButton = getByRole('button', {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
     });
-
-    expect(submitButton).toBeDisabled();
 
     userEvent.type(
       getByLabelText(
@@ -130,7 +152,11 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   it('shows the error summary on missing required fields', async () => {
     const { getByLabelText, getByRole, findByText } = render(
       <VerboseMockedProvider
-        mocks={[getTrbRequestSummaryQuery, getTRBRequestAttendeesQuery]}
+        mocks={[
+          getTrbRequestSummaryQuery,
+          getTRBRequestAttendeesQuery,
+          emptyConsultMeetingTime
+        ]}
       >
         <MemoryRouter
           initialEntries={[
@@ -147,6 +173,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
         </MemoryRouter>
       </VerboseMockedProvider>
     );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     userEvent.type(
       getByLabelText(
@@ -189,7 +217,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   });
 
   it('shows an error notice when submission fails', async () => {
-    const { getByTestId, getByLabelText, getByRole, findByText } = render(
+    const { getByLabelText, getByRole, findByText } = render(
       <VerboseMockedProvider
         mocks={[
           getTRBRequestAttendeesQuery,
@@ -197,7 +225,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
           {
             ...updateTrbRequestConsultMeetingQuery,
             error: new Error()
-          }
+          },
+          emptyConsultMeetingTime
         ]}
       >
         <MemoryRouter
@@ -216,9 +245,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       </VerboseMockedProvider>
     );
 
-    await waitForElementToBeRemoved(() =>
-      getByTestId('emailRecipients-spinner')
-    );
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     userEvent.type(
       getByLabelText(

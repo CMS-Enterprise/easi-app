@@ -204,20 +204,25 @@ exports[`Trb Public Advice Letter renders from email link 1`] = `
           What we recommend
         </h2>
         <ul
-          class="usa-list usa-list--unstyled grid-row grid-gap-lg"
+          class="usa-list usa-list--unstyled"
         >
           <li
-            class="desktop:grid-col-6"
+            class="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
           >
-            <h4
+            <h3
               class="margin-bottom-1"
             >
               Restart your computer
-            </h4>
+            </h3>
             <p
               class="margin-y-1"
             >
               I recommend you restart your computer
+            </p>
+            <p
+              class="text-bold margin-bottom-0 margin-top-3"
+            >
+              Resources
             </p>
             <ul
               class="usa-list usa-list--unstyled"
@@ -275,7 +280,7 @@ exports[`Trb Public Advice Letter renders from email link 1`] = `
         <p
           class="margin-top-1 line-height-body-5"
         >
-          Not specified yet
+          Not necessary
         </p>
       </div>
     </div>
@@ -437,20 +442,25 @@ exports[`Trb Public Advice Letter renders from task list link 1`] = `
           What we recommend
         </h2>
         <ul
-          class="usa-list usa-list--unstyled grid-row grid-gap-lg"
+          class="usa-list usa-list--unstyled"
         >
           <li
-            class="desktop:grid-col-6"
+            class="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
           >
-            <h4
+            <h3
               class="margin-bottom-1"
             >
               Restart your computer
-            </h4>
+            </h3>
             <p
               class="margin-y-1"
             >
               I recommend you restart your computer
+            </p>
+            <p
+              class="text-bold margin-bottom-0 margin-top-3"
+            >
+              Resources
             </p>
             <ul
               class="usa-list usa-list--unstyled"
@@ -508,7 +518,7 @@ exports[`Trb Public Advice Letter renders from task list link 1`] = `
         <p
           class="margin-top-1 line-height-body-5"
         >
-          Not specified yet
+          Not necessary
         </p>
       </div>
     </div>

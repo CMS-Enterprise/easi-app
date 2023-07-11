@@ -2,7 +2,7 @@
 
 <p>The Technical Review Board (TRB) has closed {{.TRBRequestName}}.</p>
 
-<p>Reason for closing: {{.ReasonClosed}}</p>
+{{if .ReasonClosed}}<p>Reason for closing: {{.ReasonClosed}}</p>{{end}}
 
 <p>View this request in EASi:</p>
 <ul>

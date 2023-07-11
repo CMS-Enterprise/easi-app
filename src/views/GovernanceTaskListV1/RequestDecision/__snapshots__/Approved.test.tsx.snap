@@ -40,7 +40,7 @@ Array [
     Next steps
   </h3>,
   <div
-    className="usa-alert usa-alert--info flex"
+    className="usa-alert usa-alert--info"
     data-testid="alert"
   >
     <div

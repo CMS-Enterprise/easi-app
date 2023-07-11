@@ -1,15 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
-import { useMutation } from '@apollo/client';
-import { Button, Link, Table } from '@trussworks/react-uswds';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { Alert, Button, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
+import useMessage from 'hooks/useMessage';
 import DeleteTrbRequestDocumentQuery from 'queries/DeleteTrbRequestDocumentQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import GetTrbRequestDocumentUrlsQuery from 'queries/GetTrbRequestDocumentUrlsQuery';
 import {
   DeleteTrbRequestDocument,
   DeleteTrbRequestDocumentVariables
@@ -19,11 +21,13 @@ import {
   GetTrbRequestDocuments_trbRequest_documents as TrbRequestDocuments,
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
+import { GetTrbRequestDocumentUrls } from 'queries/types/GetTrbRequestDocumentUrls';
 import {
   TRBDocumentCommonType,
   TRBRequestDocumentStatus
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
+import { downloadFileFromURLOnly } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import { DocumentStatusType } from '../TrbDocuments';
@@ -51,6 +55,8 @@ function DocumentsTable({
 }: Props) {
   const { t } = useTranslation('technicalAssistance');
 
+  const { showMessage } = useMessage();
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [fileToRemove, setFileToRemove] = useState<TrbRequestDocuments>(
     {} as TrbRequestDocuments
@@ -61,6 +67,15 @@ function DocumentsTable({
     GetTrbRequestDocumentsVariables
   >(GetTrbRequestDocumentsQuery, {
     variables: { id: trbRequestId }
+  });
+
+  const [getDocumentUrls] = useLazyQuery<
+    GetTrbRequestDocumentUrls,
+    GetTrbRequestDocumentsVariables
+  >(GetTrbRequestDocumentUrlsQuery, {
+    variables: {
+      id: trbRequestId
+    }
   });
 
   const documents = data?.trbRequest.documents || [];
@@ -129,6 +144,31 @@ function DocumentsTable({
   ]);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
+    const getUrlForDocument = (documentId: string, documentName: string) => {
+      // download file/handle errors based off the Promise returned from running the getDocumentUrls() query;
+      // this is simpler than trying to customize what's rendered based on the result status from useLazyQuery() (the called, loading, error, data booleans)
+      getDocumentUrls().then(response => {
+        if (response.error || !response.data) {
+          // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
+          showMessage(
+            <Alert type="error" className="margin-top-3">
+              {t('documents.viewFail', {
+                documentName
+              })}
+            </Alert>
+          );
+        } else {
+          // Download document
+          const requestedDocument = response.data.trbRequest.documents.find(
+            doc => doc.id === documentId
+          )!; // non-null assertion should be safe, this function should only be called with a documentId of a valid document
+          downloadFileFromURLOnly(requestedDocument.url);
+        }
+      });
+      // don't need to call .catch(); apollo-client will always fulfill the promise, even if there's a network error
+      // both network errors and GraphQL errors will set response.error - see https://www.apollographql.com/docs/react/data/error-handling/
+    };
+
     return [
       {
         Header: t<string>('documents.table.header.fileName'),
@@ -161,20 +201,22 @@ function DocumentsTable({
           // Show the upload status
           // Virus scanning
           if (row.original.status === TRBRequestDocumentStatus.PENDING)
-            return (
-              <em data-testurl={row.original.url}>
-                {t('documents.table.virusScan')}
-              </em>
-            );
+            return <em>{t('documents.table.virusScan')}</em>;
           // View or Remove
-          if (row.original.status === TRBRequestDocumentStatus.AVAILABLE)
+          if (row.original.status === TRBRequestDocumentStatus.AVAILABLE) {
             // Show some file actions once it's available
+            const documentId = row.original.id;
+            const documentName = row.original.fileName;
             return (
               <>
                 {/* View document */}
-                <Link target="_blank" href={row.original.url}>
+                <Button
+                  type="button"
+                  unstyled
+                  onClick={() => getUrlForDocument(documentId, documentName)}
+                >
                   {t('documents.table.view')}
-                </Link>
+                </Button>
                 {/* Delete document */}
                 {canEdit && (
                   <Button
@@ -191,6 +233,7 @@ function DocumentsTable({
                 )}
               </>
             );
+          }
           // Infected unavailable
           if (row.original.status === TRBRequestDocumentStatus.UNAVAILABLE)
             return t('documents.table.unavailable');
@@ -198,7 +241,7 @@ function DocumentsTable({
         }
       }
     ];
-  }, [canEdit, t]);
+  }, [t, showMessage, getDocumentUrls, canEdit]);
 
   const {
     getTableBodyProps,
@@ -263,52 +306,55 @@ function DocumentsTable({
   return (
     <div className="easi-table--bleed-x easi-table--bottomless">
       {renderModal()}
-      <Table bordered={false} fullWidth scrollable {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  aria-sort={getColumnSortStatus(column)}
-                  scope="col"
-                  className="border-bottom-2px"
-                >
-                  <Button
-                    type="button"
-                    unstyled
-                    className="width-full display-flex"
-                    {...column.getSortByToggleProps()}
+      {data && documents.length ? (
+        <Table bordered={false} fullWidth scrollable {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, index) => (
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    aria-sort={getColumnSortStatus(column)}
+                    scope="col"
+                    className="border-bottom-2px"
                   >
-                    <div className="flex-fill text-no-wrap">
-                      {column.render('Header')}
-                    </div>
-                    <div className="position-relative width-205 margin-left-05">
-                      {getHeaderSortIcon(column)}
-                    </div>
-                  </Button>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell, index) => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                  );
-                })}
+                    <Button
+                      type="button"
+                      unstyled
+                      className="width-full display-flex"
+                      {...column.getSortByToggleProps()}
+                    >
+                      <div className="flex-fill text-no-wrap">
+                        {column.render('Header')}
+                      </div>
+                      <div className="position-relative width-205 margin-left-05">
+                        {getHeaderSortIcon(column)}
+                      </div>
+                    </Button>
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </Table>
-      {data && documents.length === 0 && (
-        <div className="font-body-2xs">{t('documents.table.noDocument')}</div>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell, index) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      ) : (
+        <Alert type="info" slim>
+          {t('documents.table.noDocuments')}
+        </Alert>
       )}
     </div>
   );

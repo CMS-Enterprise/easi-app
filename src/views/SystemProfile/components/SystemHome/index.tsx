@@ -127,7 +127,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                   'bg-success-dark': system.atoStatus === 'Active',
                   'bg-warning':
                     system.atoStatus === 'Due Soon' ||
-                    system.atoStatus === 'In Progress',
+                    system.atoStatus === 'In progress',
                   'bg-error-dark': system.atoStatus === 'Expired',
                   'bg-base-lighter': system.atoStatus === 'No ATO',
                   'text-white':

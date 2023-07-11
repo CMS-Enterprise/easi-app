@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -13,6 +13,8 @@ import {
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
+import { TRBRequestContext } from '../../RequestContext';
+
 type ActionButtonsProps = {
   trbRequestId: string;
   activePage: TrbAdminPath;
@@ -22,6 +24,7 @@ type ActionButtonsProps = {
   assignLeadModalTrbRequestIdRef:
     | React.MutableRefObject<TrbRequestIdRef>
     | undefined;
+  openNotes: Dispatch<SetStateAction<boolean>>;
 };
 
 type ActionButtonKey =
@@ -46,10 +49,16 @@ const useTrbAdminActionButtons = ({
   status,
   state,
   assignLeadModalRef,
-  assignLeadModalTrbRequestIdRef
+  assignLeadModalTrbRequestIdRef,
+  openNotes
 }: ActionButtonsProps): AdminActionButton[] => {
   const { t } = useTranslation('technicalAssistance');
   const history = useHistory();
+
+  const trbContextData = useContext(TRBRequestContext);
+
+  const leadAssigned = !!trbContextData.data?.trbRequest?.trbLeadInfo
+    ?.commonName;
 
   const [createAdviceLetter] = useMutation<
     CreateTrbAdviceLetter,
@@ -127,7 +136,12 @@ const useTrbAdminActionButtons = ({
       },
       continueAdviceLetter: {
         label: t('adminAction.buttons.continueAdviceLetter'),
-        link: `/trb/${trbRequestId}/advice/summary`
+        link: {
+          pathname: `/trb/${trbRequestId}/advice/summary`,
+          state: {
+            fromAdmin: true
+          }
+        }
       },
       editAdviceLetter: {
         label: t('adminAction.buttons.editAdviceLetter'),
@@ -135,7 +149,7 @@ const useTrbAdminActionButtons = ({
       },
       addNote: {
         label: t('adminAction.buttons.addNote'),
-        link: `/trb/${trbRequestId}/notes/add-note`
+        onClick: () => openNotes(true)
       }
     };
 
@@ -158,7 +172,7 @@ const useTrbAdminActionButtons = ({
       case TRBRequestStatus.READY_FOR_CONSULT:
         return [
           buttons.addDateTime,
-          buttons.assignTrbLead,
+          ...(!leadAssigned ? [buttons.assignTrbLead] : []),
           buttons.orCloseRequest
         ];
       case TRBRequestStatus.CONSULT_SCHEDULED:
@@ -166,20 +180,24 @@ const useTrbAdminActionButtons = ({
           case 'initial-request-form':
             return [
               { ...buttons.viewSupportingDocuments, outline: true },
-              { ...buttons.assignTrbLead, outline: true },
+              ...(!leadAssigned
+                ? [{ ...buttons.assignTrbLead, outline: true }]
+                : []),
               buttons.orCloseRequest
             ];
           case 'documents':
             return [
               { ...buttons.viewRequestForm, outline: true },
-              { ...buttons.assignTrbLead, outline: true },
+              ...(!leadAssigned
+                ? [{ ...buttons.assignTrbLead, outline: true }]
+                : []),
               buttons.orCloseRequest
             ];
           default:
             return [
               buttons.viewRequestForm,
               buttons.viewSupportingDocuments,
-              buttons.assignTrbLead,
+              ...(!leadAssigned ? [buttons.assignTrbLead] : []),
               buttons.orCloseRequest
             ];
         }
@@ -223,7 +241,9 @@ const useTrbAdminActionButtons = ({
     history,
     createAdviceLetter,
     assignLeadModalRef,
-    assignLeadModalTrbRequestIdRef
+    assignLeadModalTrbRequestIdRef,
+    leadAssigned,
+    openNotes
   ]);
 
   return actionButtons;

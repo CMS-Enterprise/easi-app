@@ -290,7 +290,8 @@ const Attendee = ({
       {/* Attendee details */}
       <div>
         <p className="margin-y-05 text-bold">
-          {commonName}, {component}
+          {commonName}
+          {component && ','} {component}
         </p>
         <p className="margin-y-05">{email}</p>
         <p className="margin-top-05 margin-bottom-0">{role}</p>

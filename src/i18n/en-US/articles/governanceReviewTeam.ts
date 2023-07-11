@@ -189,6 +189,7 @@ const governanceReviewTeam = {
   },
   aria: {
     openIntake: 'Open intake request',
+    openDocuments: 'Open documents',
     openBusiness: 'Open business case',
     openNotes: 'Open admin team notes',
     openDecision: 'Open decision',
@@ -236,13 +237,13 @@ const governanceReviewTeam = {
     changeLead: 'Change',
     notAssigned: 'Not Assigned',
     members: [
-      'Valerie Hartz',
       'Jaime Cadwell',
       'Alex Smith',
       'Leilani Fields',
       'Ashley Marks',
       'Leah Nguyen',
-      'Emily Hill'
+      'Emily Hill',
+      'Savannah Huttenberger'
     ]
   }
 };

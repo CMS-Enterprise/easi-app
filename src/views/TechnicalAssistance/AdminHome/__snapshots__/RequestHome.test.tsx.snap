@@ -82,7 +82,7 @@ exports[`Trb Admin Request Home renders successfully with empty data 1`] = `
       Date and time
     </p>
     <div
-      class="usa-alert usa-alert--info usa-alert--slim flex margin-y-1 margin-top-2"
+      class="usa-alert usa-alert--info usa-alert--slim margin-y-1 margin-top-2"
       data-testid="alert"
     >
       <div

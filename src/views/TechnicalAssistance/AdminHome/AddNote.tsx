@@ -40,11 +40,13 @@ import { TRBRequestContext } from './RequestContext';
 const AddNote = ({
   trbRequestId,
   setModalView, // prop used to conditionall render text/links/etc specifically for modal
-  setModalMessage
+  setModalMessage,
+  defaultSelect
 }: {
   trbRequestId?: string;
   setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
   setModalMessage?: React.Dispatch<React.SetStateAction<string>>;
+  defaultSelect?: TRBAdminNoteCategory;
 }) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -82,14 +84,15 @@ const AddNote = ({
   });
 
   const defaultValues: Omit<CreateTRBAdminNoteInput, 'trbRequestId'> = {
-    category: '' as TRBAdminNoteCategory,
+    category: defaultSelect || ('' as TRBAdminNoteCategory),
     noteText: ''
   };
 
   const {
     control,
     handleSubmit,
-    formState: { errors, dirtyFields, isSubmitting }
+    watch,
+    formState: { errors, isSubmitting }
   } = useForm({
     defaultValues
   });
@@ -181,7 +184,7 @@ const AddNote = ({
               />
             </div>
 
-            {message}
+            {!setModalView && message}
 
             {hasErrors && (
               <Alert
@@ -292,10 +295,7 @@ const AddNote = ({
           <Button
             type="submit"
             name={t('notes.saveNote')}
-            disabled={
-              Object.keys(dirtyFields).length !==
-                Object.keys(defaultValues).length || isSubmitting
-            }
+            disabled={isSubmitting || !watch('category') || !watch('noteText')}
           >
             {t('notes.saveNote')}
           </Button>

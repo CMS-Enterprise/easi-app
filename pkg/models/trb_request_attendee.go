@@ -25,8 +25,6 @@ const (
 	PersonRoleCRA PersonRole = "CRA"
 	// PersonRoleOther is a person with the "Other" role
 	PersonRoleOther PersonRole = "OTHER"
-	// PersonRoleUnknown is a person with an "Unknown" role
-	PersonRoleUnknown PersonRole = "UNKNOWN"
 )
 
 // TRBRequestAttendee represents an EUA user who is included as an attendee for a TRB request

@@ -20,6 +20,24 @@ const intake = {
     lastAdminNote: 'Last Admin Note',
     contractNumber: 'Contract number'
   },
+  documents: {
+    title: 'Additional documentation',
+    tableTitle: 'Documents',
+    tableDescription:
+      'Upload any documents relevant to your Intake Request. This could include documents such as draft IGCEs, contracting documents such as a SOO or SOW, presentation slide decks, or other informational documents.',
+    continueWithoutDocuments: 'Continue without documents',
+    noDocuments: 'No documents uploaded',
+    formDescription:
+      'Choose a document to upload, such as a draft IGCE, contracting document, or another document related to your Intake Request.',
+    returnToIntake: "Don't upload and return to Intake Request",
+    selectDocument: 'Select your document',
+    uploadedDocuments: 'Uploaded documents',
+    type: {
+      SOO_SOW: 'SOO or SOW',
+      DRAFT_ICGE: 'Draft ICGE',
+      OTHER: 'Other'
+    }
+  },
   submission: {
     confirmation: {
       heading: 'Your Intake Request has been submitted',
@@ -253,12 +271,16 @@ const intake = {
     costs:
       'Do the costs for this request exceed what you are currently spending to meet your business need?',
     increase: 'Approximately how much do you expect the cost to increase?',
+    currentAnnualSpending: 'What is the current annual spending?',
+    plannedYearOneSpending:
+      'What is the planned annual spending of the first year of the new contract?',
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractors',
     contractVehicle: 'Contract vehicle',
     contractNumber: 'Contract number',
     performance: 'Period of performance',
-    notEntered: 'Not Entered'
+    notEntered: 'Not Entered',
+    documents: 'Documents'
   }
 };
 

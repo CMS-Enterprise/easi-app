@@ -58,24 +58,15 @@ jobs:
           cache: 'yarn'
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v1-node16
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-west-2
-      #     role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
-      #     role-duration-seconds: 1800
-      #     role-skip-session-tagging: true
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2.1.0
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
       - name: Clean the database
         if: ${{ contains(inputs.env, 'dev') && vars.ENABLE_DEV_DB_CLEAN == '1' }}
         run: |
-          ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
+          ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "" "easi-app-db-clean"
       - name: Backup the database
         if: contains(inputs.env, 'impl') || contains(inputs.env, 'prod')
         run: |

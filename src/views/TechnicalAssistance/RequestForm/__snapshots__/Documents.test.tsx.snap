@@ -233,9 +233,7 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
             <td
               role="cell"
             >
-              <em
-                data-testurl=""
-              >
+              <em>
                 Virus scan in progress...
               </em>
             </td>
@@ -261,13 +259,13 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
             <td
               role="cell"
             >
-              <a
-                class="usa-link"
-                href=""
-                target="_blank"
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
               >
                 View
-              </a>
+              </button>
               <button
                 class="usa-button usa-button--unstyled margin-left-2 text-error"
                 data-testid="button"
@@ -314,24 +312,32 @@ exports[`Trb Request form: Supporting documents renders states with documents lo
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-          data-testid="button"
-          type="button"
+        <div
+          class="display-flex flex-align-center"
         >
-          Back
-        </button>
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
       </li>
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button margin-top-0"
-          data-testid="button"
-          type="submit"
+        <div
+          class="display-flex flex-align-center"
         >
-          Next
-        </button>
+          <button
+            class="usa-button margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Next
+          </button>
+        </div>
       </li>
     </ul>
     <button
@@ -378,208 +384,18 @@ exports[`Trb Request form: Supporting documents renders states without documents
     class="easi-table--bleed-x easi-table--bottomless"
   >
     <div
-      class="usa-table-container--scrollable"
-      data-testid="scrollable-table-container"
+      class="usa-alert usa-alert--info usa-alert--slim"
+      data-testid="alert"
     >
-      <table
-        class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
-        data-testid="table"
+      <div
+        class="usa-alert__body"
       >
-        <thead>
-          <tr
-            role="row"
-          >
-            <th
-              aria-sort="none"
-              class="border-bottom-2px"
-              colspan="1"
-              role="columnheader"
-              scope="col"
-              style="cursor: pointer;"
-              title="Toggle SortBy"
-            >
-              <button
-                class="usa-button usa-button--unstyled width-full display-flex"
-                data-testid="button"
-                style="cursor: pointer;"
-                title="Toggle SortBy"
-                type="button"
-              >
-                <div
-                  class="flex-fill text-no-wrap"
-                >
-                  File name
-                </div>
-                <div
-                  class="position-relative width-205 margin-left-05"
-                >
-                  <svg
-                    class="usa-icon margin-left-05 position-absolute"
-                    data-testid="caret--sort"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                    />
-                  </svg>
-                </div>
-              </button>
-            </th>
-            <th
-              aria-sort="none"
-              class="border-bottom-2px"
-              colspan="1"
-              role="columnheader"
-              scope="col"
-              style="cursor: pointer;"
-              title="Toggle SortBy"
-            >
-              <button
-                class="usa-button usa-button--unstyled width-full display-flex"
-                data-testid="button"
-                style="cursor: pointer;"
-                title="Toggle SortBy"
-                type="button"
-              >
-                <div
-                  class="flex-fill text-no-wrap"
-                >
-                  Document type
-                </div>
-                <div
-                  class="position-relative width-205 margin-left-05"
-                >
-                  <svg
-                    class="usa-icon margin-left-05 position-absolute"
-                    data-testid="caret--sort"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                    />
-                  </svg>
-                </div>
-              </button>
-            </th>
-            <th
-              aria-sort="descending"
-              class="border-bottom-2px"
-              colspan="1"
-              role="columnheader"
-              scope="col"
-              style="cursor: pointer;"
-              title="Toggle SortBy"
-            >
-              <button
-                class="usa-button usa-button--unstyled width-full display-flex"
-                data-testid="button"
-                style="cursor: pointer;"
-                title="Toggle SortBy"
-                type="button"
-              >
-                <div
-                  class="flex-fill text-no-wrap"
-                >
-                  Upload date
-                </div>
-                <div
-                  class="position-relative width-205 margin-left-05"
-                >
-                  <svg
-                    class="usa-icon margin-left-05 position-absolute"
-                    data-testid="caret--down"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-                    />
-                  </svg>
-                </div>
-              </button>
-            </th>
-            <th
-              aria-sort="none"
-              class="border-bottom-2px"
-              colspan="1"
-              role="columnheader"
-              scope="col"
-              style="cursor: pointer;"
-              title="Toggle SortBy"
-            >
-              <button
-                class="usa-button usa-button--unstyled width-full display-flex"
-                data-testid="button"
-                style="cursor: pointer;"
-                title="Toggle SortBy"
-                type="button"
-              >
-                <div
-                  class="flex-fill text-no-wrap"
-                >
-                  Actions
-                </div>
-                <div
-                  class="position-relative width-205 margin-left-05"
-                >
-                  <svg
-                    class="usa-icon margin-left-05 position-absolute"
-                    data-testid="caret--sort"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
-                    />
-                  </svg>
-                </div>
-              </button>
-            </th>
-          </tr>
-        </thead>
-        <tbody
-          role="rowgroup"
-        />
-      </table>
-    </div>
-    <div
-      class="font-body-2xs"
-    >
-      No documents uploaded
+        <p
+          class="usa-alert__text"
+        >
+          You have not uploaded any supporting documents for this request.
+        </p>
+      </div>
     </div>
   </div>
   <div
@@ -591,24 +407,32 @@ exports[`Trb Request form: Supporting documents renders states without documents
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-          data-testid="button"
-          type="button"
+        <div
+          class="display-flex flex-align-center"
         >
-          Back
-        </button>
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
       </li>
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button usa-button--outline margin-top-0"
-          data-testid="button"
-          type="submit"
+        <div
+          class="display-flex flex-align-center"
         >
-          Continue without adding documents
-        </button>
+          <button
+            class="usa-button usa-button--outline margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Continue without adding documents
+          </button>
+        </div>
       </li>
     </ul>
     <button

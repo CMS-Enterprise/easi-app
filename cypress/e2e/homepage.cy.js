@@ -28,6 +28,6 @@ describe('Homepage', () => {
 
   it('shows the governance table to GRT folks', () => {
     cy.localLogin({ name: 'USR5', role: GOVTEAM_DEV });
-    cy.contains('button', 'Open Requests');
+    cy.contains('button', 'Open requests');
   });
 });

@@ -66,6 +66,82 @@ export enum GRTFeedbackType {
 }
 
 /**
+ * The requester view of the IT gov Decision step status
+ */
+export enum ITGovDecisionStatus {
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  IN_REVIEW = "IN_REVIEW",
+}
+
+/**
+ * The requester view of the IT gov draft business case step status
+ */
+export enum ITGovDraftBusinessCaseStatus {
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_NEEDED = "NOT_NEEDED",
+  READY = "READY",
+}
+
+/**
+ * The requester view of the IT gov feedback step status
+ */
+export enum ITGovFeedbackStatus {
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  IN_REVIEW = "IN_REVIEW",
+}
+
+/**
+ * The requester view of the IT Gov Final Business Case step status
+ */
+export enum ITGovFinalBusinessCaseStatus {
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_NEEDED = "NOT_NEEDED",
+  READY = "READY",
+}
+
+/**
+ * The requester view of the IT Gov GRB step status
+ */
+export enum ITGovGRBStatus {
+  AWAITING_DECISION = "AWAITING_DECISION",
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  NOT_NEEDED = "NOT_NEEDED",
+  READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
+  SCHEDULED = "SCHEDULED",
+}
+
+/**
+ * The requester view of the IT Gov GRT step status
+ */
+export enum ITGovGRTStatus {
+  AWAITING_DECISION = "AWAITING_DECISION",
+  CANT_START = "CANT_START",
+  COMPLETED = "COMPLETED",
+  NOT_NEEDED = "NOT_NEEDED",
+  READY_TO_SCHEDULE = "READY_TO_SCHEDULE",
+  SCHEDULED = "SCHEDULED",
+}
+
+/**
+ * The requester view of the IT gov intake step status
+ */
+export enum ITGovIntakeFormStatus {
+  COMPLETED = "COMPLETED",
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  READY = "READY",
+}
+
+/**
  * PersonRole is an enumeration of values for a person's role
  */
 export enum PersonRole {
@@ -77,7 +153,6 @@ export enum PersonRole {
   PRODUCT_OWNER = "PRODUCT_OWNER",
   SYSTEM_MAINTAINER = "SYSTEM_MAINTAINER",
   SYSTEM_OWNER = "SYSTEM_OWNER",
-  UNKNOWN = "UNKNOWN",
 }
 
 /**
@@ -111,6 +186,25 @@ export enum SystemIntakeActionType {
   SUBMIT_BIZ_CASE = "SUBMIT_BIZ_CASE",
   SUBMIT_FINAL_BIZ_CASE = "SUBMIT_FINAL_BIZ_CASE",
   SUBMIT_INTAKE = "SUBMIT_INTAKE",
+}
+
+/**
+ * Represents the common options for document type that is attached to a
+ * System Intake document
+ */
+export enum SystemIntakeDocumentCommonType {
+  DRAFT_ICGE = "DRAFT_ICGE",
+  OTHER = "OTHER",
+  SOO_SOW = "SOO_SOW",
+}
+
+/**
+ * Enumeration of the possible statuses of documents uploaded in the System Intake
+ */
+export enum SystemIntakeDocumentStatus {
+  AVAILABLE = "AVAILABLE",
+  PENDING = "PENDING",
+  UNAVAILABLE = "UNAVAILABLE",
 }
 
 /**
@@ -416,6 +510,16 @@ export interface CreateSystemIntakeContactInput {
 }
 
 /**
+ * The data needed to upload a System Intake document and attach it to a request with metadata
+ */
+export interface CreateSystemIntakeDocumentInput {
+  requestID: UUID;
+  fileData: Upload;
+  documentType: SystemIntakeDocumentCommonType;
+  otherTypeDescription?: string | null;
+}
+
+/**
  * The input data used to initialize an IT governance request for a system
  */
 export interface CreateSystemIntakeInput {
@@ -611,11 +715,25 @@ export interface SendTRBAdviceLetterInput {
   notifyEuaIds: string[];
 }
 
+export interface SetRolesForUserOnSystemInput {
+  cedarSystemID: string;
+  euaUserId: string;
+  desiredRoleTypeIDs: string[];
+}
+
 /**
  * Input to submit an intake for review
  */
 export interface SubmitIntakeInput {
   id: UUID;
+}
+
+/**
+ * Input data for current and planned year one annual costs associated with a system request
+ */
+export interface SystemIntakeAnnualSpendingInput {
+  currentAnnualSpending?: string | null;
+  plannedYearOneSpending?: string | null;
 }
 
 /**
@@ -648,6 +766,8 @@ export interface SystemIntakeContractInput {
 
 /**
  * Input data for estimated system cost increases associated with a system request
+ * 
+ * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
  */
 export interface SystemIntakeCostsInput {
   expectedIncreaseAmount?: string | null;
@@ -777,6 +897,7 @@ export interface UpdateSystemIntakeContractDetailsInput {
   id: UUID;
   fundingSources?: SystemIntakeFundingSourcesInput | null;
   costs?: SystemIntakeCostsInput | null;
+  annualSpending?: SystemIntakeAnnualSpendingInput | null;
   contract?: SystemIntakeContractInput | null;
 }
 

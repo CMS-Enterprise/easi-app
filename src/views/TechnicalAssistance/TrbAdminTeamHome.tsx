@@ -21,7 +21,6 @@ import classnames from 'classnames';
 import i18next from 'i18next';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import CsvDownloadLink from 'components/shared/CsvDownloadLink';
 import GlobalClientFilter from 'components/TableFilter';
@@ -29,6 +28,7 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import { GetTrbAdminTeamHome } from 'queries/types/GetTrbAdminTeamHome';
+import { TRBRequestState } from 'types/graphql-global-types';
 import {
   TrbAdminTeamHomeRequest,
   TrbRequestIdRef
@@ -106,7 +106,7 @@ function RequestNameCell({
 }: CellProps<TrbAdminTeamHomeRequest, TrbAdminTeamHomeRequest['name']>) {
   return (
     <UswdsReactLink to={`/trb/${row.original.id}/request`}>
-      {value}
+      {value || i18next.t<string>('technicalAssistance:taskList.defaultName')}
     </UswdsReactLink>
   );
 }
@@ -127,9 +127,10 @@ function TrbLeadCell({ row }: CellProps<TrbAdminTeamHomeRequest>) {
 
 type TrbRequestsTableProps = {
   requests: TrbAdminTeamHomeRequest[];
+  className?: string;
 };
 
-function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
+function TrbNewRequestsTable({ requests, className }: TrbRequestsTableProps) {
   const { t } = useTranslation('technicalAssistance');
 
   // Assign trb lead modal refs
@@ -159,20 +160,24 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
         accessor: ({ type }) => t(`table.requestTypes.${type}`)
       },
       {
-        Header: t<string>('documents.table.header.actions'),
-        Cell: ({ row }: CellProps<TrbAdminTeamHomeRequest>) =>
-          row.original.trbLeadInfo.commonName === '' ? (
+        Header: t<string>('documents.table.header.trbLead'),
+        Cell: ({ row }: CellProps<TrbAdminTeamHomeRequest>) => (
+          <>
+            {row.original.trbLeadInfo.commonName && (
+              <p>{row.original.trbLeadInfo.commonName}</p>
+            )}
             <TrbAssignLeadModalOpener
               trbRequestId={row.original.id}
               modalRef={assignLeadModalRef}
               trbRequestIdRef={assignLeadModalTrbRequestIdRef}
               className="usa-button--unstyled"
             >
-              {t('adminTeamHome.actions.assignLead')}
+              {row.original.trbLeadInfo.commonName === ''
+                ? t('adminTeamHome.actions.assignLead')
+                : t('adminTeamHome.actions.changeLead')}
             </TrbAssignLeadModalOpener>
-          ) : (
-            ''
-          ),
+          </>
+        ),
         disableSortBy: true
       }
     ];
@@ -216,19 +221,19 @@ function TrbNewRequestsTable({ requests }: TrbRequestsTableProps) {
   rows.map(row => prepareRow(row));
 
   return (
-    <div className="bg-accent-cool-lighter padding-4">
+    <div className={classnames('bg-accent-cool-lighter padding-4', className)}>
       <h3 className="margin-top-0 margin-bottom-1">
         {t('adminTeamHome.newRequests.heading')}
       </h3>
-      <div className="margin-bottom-1 line-height-body-5">
+      <p className="margin-y-1 line-height-body-5">
         {t('adminTeamHome.newRequests.description')}
-      </div>
+      </p>
 
       {/* Download new requests csv */}
       <CsvDownloadLink
         data={getTrbRequestDataAsCsv(requests)}
         filename="new-trb-requests.csv"
-        className="display-inline-block margin-bottom-4 line-height-body-5"
+        className="display-inline-block margin-bottom-1 line-height-body-5"
       >
         {t('adminTeamHome.newRequests.downloadCsv')}
       </CsvDownloadLink>
@@ -362,7 +367,10 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       },
       {
         Header: t<string>('adminHome.status'),
-        accessor: ({ status }) => t(`table.requestStatus.${status}`)
+        accessor: ({ status, state }) =>
+          state === TRBRequestState.CLOSED
+            ? t(`table.requestState.${state}`)
+            : t(`table.requestStatus.${status}`)
       },
       {
         Header: t<string>('table.header.trbConsultDate'),
@@ -435,15 +443,15 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       <h3 className="margin-top-0 margin-bottom-1">
         {t('adminTeamHome.existingRequests.heading')}
       </h3>
-      <div className="margin-bottom-1 line-height-body-5">
+      <p className="margin-y-1 line-height-body-5">
         {t('adminTeamHome.existingRequests.description')}
-      </div>
+      </p>
 
       {/* Download existing requests csv */}
       <CsvDownloadLink
         data={getTrbRequestDataAsCsv(requests)}
         filename="existing-trb-requests.csv"
-        className="display-inline-block margin-bottom-4 line-height-body-5"
+        className="display-inline-block margin-bottom-2 line-height-body-5"
       >
         {t('adminTeamHome.existingRequests.downloadCsv')}
       </CsvDownloadLink>
@@ -458,12 +466,9 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
           >
             <button
               type="button"
-              className={classnames(
-                'easi-request-repo__tab-btn line-height-body-3',
-                {
-                  'text-primary': activeTable === 'open'
-                }
-              )}
+              className={`easi-request-repo__tab-btn line-height-body-3 text-${
+                activeTable === 'open' ? 'primary' : 'base-dark'
+              }`}
               onClick={() => setActiveTable('open')}
             >
               {t('adminTeamHome.existingRequests.tabs.open.name')}
@@ -476,12 +481,9 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
           >
             <button
               type="button"
-              className={classnames(
-                'easi-request-repo__tab-btn line-height-body-3',
-                {
-                  'text-primary': activeTable === 'closed'
-                }
-              )}
+              className={`easi-request-repo__tab-btn line-height-body-3 text-${
+                activeTable === 'closed' ? 'primary' : 'base-dark'
+              }`}
               onClick={() => setActiveTable('closed')}
             >
               {t('adminTeamHome.existingRequests.tabs.closed.name')}
@@ -605,15 +607,11 @@ function TrbAdminTeamHome() {
   );
 
   return (
-    <GridContainer className="width-full">
-      <PageHeading className="margin-bottom-1">{t('heading')}</PageHeading>
-      <div className="font-body-lg line-height-body-5 text-light">
-        {t('adminTeamHome.description')}
-      </div>
+    <GridContainer className="width-full margin-bottom-5 desktop:margin-bottom-10">
       {loading && <PageLoading />}
       {Array.isArray(trbRequests) && (
         <>
-          <ButtonGroup className="trb-admin-team-home-actions margin-top-1 line-height-body-5">
+          <ButtonGroup className="trb-admin-team-home-actions margin-y-2 line-height-body-5">
             <Button
               type="button"
               unstyled
@@ -637,16 +635,11 @@ function TrbAdminTeamHome() {
               {t('adminTeamHome.submitYourOwnRequest')}
             </UswdsReactLink>
           </ButtonGroup>
-          <div className="margin-top-6">
-            <TrbNewRequestsTable
-              requests={trbRequests.filter(d => d.isRecent)}
-            />
-          </div>
-          <div className="margin-top-6 trb-existing-requests-table">
-            <TrbExistingRequestsTable
-              requests={trbRequests.filter(d => !d.isRecent)}
-            />
-          </div>
+          <TrbNewRequestsTable
+            requests={trbRequests.filter(d => d.isRecent)}
+            className="margin-bottom-2"
+          />
+          <TrbExistingRequestsTable requests={trbRequests} />
         </>
       )}
     </GridContainer>

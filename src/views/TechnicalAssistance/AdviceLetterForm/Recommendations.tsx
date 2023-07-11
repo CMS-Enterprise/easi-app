@@ -37,7 +37,9 @@ const Recommendations = ({
   trbRequestId,
   adviceLetter,
   setIsStepSubmitting,
-  setFormAlert
+  setFormAlert,
+  stepsCompleted,
+  setStepsCompleted
 }: StepComponentProps) => {
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
@@ -168,8 +170,16 @@ const Recommendations = ({
               text: hasRecommendations
                 ? t('button.next')
                 : t('adviceLetterForm.continueWithoutAdding'),
-              onClick: () =>
-                history.push(`/trb/${trbRequestId}/advice/next-steps`),
+              onClick: () => {
+                if (
+                  setStepsCompleted &&
+                  stepsCompleted &&
+                  !stepsCompleted?.includes('recommendations')
+                ) {
+                  setStepsCompleted([...stepsCompleted, 'recommendations']);
+                }
+                history.push(`/trb/${trbRequestId}/advice/next-steps`);
+              },
               outline: !hasRecommendations
             }}
             taskListUrl={`/trb/${trbRequestId}/advice`}

@@ -18,6 +18,8 @@ export const JOB_CODES = [
   ACCESSIBILITY_ADMIN_PROD,
   TRB_ADMIN_DEV,
   TRB_ADMIN_PROD
-];
+] as const;
+
+export type JobCode = typeof JOB_CODES[number];
 
 export default JOB_CODES;

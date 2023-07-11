@@ -35,7 +35,7 @@ const systemProfile = {
       less: 'Read less'
     },
     summary: {
-      back: 'Back to All Systems',
+      back: 'Back to All systems',
       expand: 'Expand system summary',
       hide: 'Hide system summary',
       label: 'Open system external link',
@@ -147,12 +147,45 @@ const systemProfile = {
       addNewTeamMember: 'Add a new team member',
       currentTeamMembers: 'Current team members',
       editRoles: 'Edit roles',
-      editTeamMemberRoles: 'Edit team member roles',
       removeTeamMember: 'Remove team member',
+      removeModalTitle: 'Are you sure you want to remove  this team member?',
+      removeModalDescription:
+        'Removing {{commonName}} will also remove any roles they have for this system.',
+      keepTeamMember: 'Keep team member',
       form: {
-        addTeamMember: 'Add a team member',
-        addDescription:
-          'Look up your team member and then add their role(s) on this team.'
+        add: {
+          title: 'Add a team member',
+          description:
+            'Look up your team member and then add their role(s) on this team.',
+          buttonLabel: 'Add this team member',
+          returnButtonLabel:
+            'Don’t add a team member and return to previous page'
+        },
+        edit: {
+          title: 'Edit team member roles',
+          description: 'Add or remove roles for this team member.',
+          buttonLabel: 'Save changes',
+          returnButtonLabel: 'Don’t edit roles and return to previous page'
+        },
+        name: 'Team member name',
+        nameDescription:
+          'Search by name. Looking up your team member will provide their name and email address.',
+        nameError: 'Team member name is a required field',
+        roles: 'Team member role(s)',
+        rolesDescription:
+          'Add or remove roles by clicking in the box below. You must select at least one role for this team member.',
+        rolesError: 'You must select at least one role for this team member',
+        selectedRoles: 'Selected roles',
+        successUpdateRoles: 'Roles for {{commonName}} have been updated.',
+        errorUpdateRoles:
+          'There was a problem saving your changes. Please try again. If the error persists, please try again at a later date.',
+        successAddContact: '{{commonName}} has been added as a team member.',
+        errorAddContact:
+          'There was a problem adding a team member. Please try again. If the error persists, please try again at a later date.',
+        successRemoveContact:
+          '{{commonName}} has been removed as a team member.',
+        errorRemoveContact:
+          'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.'
       }
     },
     editPage: {
@@ -260,7 +293,7 @@ const systemProfile = {
     }
   },
   systemTable: {
-    title: 'All Systems',
+    title: 'All systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
     noResults: 'No systems found.',
     id: 'system-list',
@@ -273,7 +306,7 @@ const systemProfile = {
     }
   },
   bookmark: {
-    header: 'Bookmarked Systems',
+    header: 'Bookmarked systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
     subHeader1: 'CMS Component',
     subHeader2: 'ATO Status'

@@ -100,7 +100,7 @@ func CreateTRBRequestFeedback(
 				recipientEmails,
 				feedback.CopyTRBMailbox,
 				feedback.TRBRequestID,
-				request.Name,
+				request.GetName(),
 				requester.CommonName,
 				feedback.FeedbackMessage,
 			)
@@ -113,7 +113,7 @@ func CreateTRBRequestFeedback(
 				recipientEmails,
 				feedback.CopyTRBMailbox,
 				feedback.TRBRequestID,
-				request.Name,
+				request.GetName(),
 				requester.CommonName,
 				feedback.FeedbackMessage,
 			)

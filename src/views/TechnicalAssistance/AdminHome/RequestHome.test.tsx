@@ -8,7 +8,8 @@ import { trbRequestSummary } from 'data/mock/trbRequest';
 import GetTrbRequestHomeQuery from 'queries/GetTrbRequestHomeQuery';
 import {
   TRBAdviceLetterStatus,
-  TRBFormStatus
+  TRBFormStatus,
+  TRBRequestStatus
 } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -173,7 +174,10 @@ describe('Trb Admin Request Home', () => {
           <Route exact path="/trb/:id/:activePage">
             <RequestHome
               trbRequestId={trbRequestId}
-              trbRequest={trbRequestSummary}
+              trbRequest={{
+                ...trbRequestSummary,
+                status: TRBRequestStatus.CONSULT_SCHEDULED
+              }}
               assignLeadModalRef={modalRef}
               assignLeadModalTrbRequestIdRef={trbRequestIdRef}
             />

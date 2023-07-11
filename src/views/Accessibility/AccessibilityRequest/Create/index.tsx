@@ -8,7 +8,6 @@ import { Form as FormikForm, Formik, FormikProps } from 'formik';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PlainInfo from 'components/PlainInfo';
-import { AlertText } from 'components/shared/Alert';
 import CollapsibleLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -53,9 +52,9 @@ const Create = () => {
         const uuid =
           response.data.createAccessibilityRequest.accessibilityRequest.id;
         showMessageOnNextPage(
-          <AlertText className="margin-bottom-2">
+          <span className="margin-bottom-2">
             {t('newRequestForm.confirmation')}
-          </AlertText>
+          </span>
         );
         history.push(`/508/requests/${uuid}/documents`);
       }

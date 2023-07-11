@@ -3,7 +3,7 @@
 exports[`The Alert component matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="usa-alert usa-alert--info easi-alert-text flex"
+    class="usa-alert usa-alert--info easi-alert-text"
     data-testid="alert"
   >
     <div
@@ -20,7 +20,7 @@ exports[`The Alert component matches snapshot 1`] = `
         This is information
         <button
           aria-label="Close Button"
-          class="usa-button usa-button usa-button--unstyled text-no-underline text-black flex-align-end"
+          class="usa-button usa-button--unstyled easi-alert__close-button text-black text-no-underline margin-top-0"
           data-testid="button"
           role="button"
           tabindex="0"

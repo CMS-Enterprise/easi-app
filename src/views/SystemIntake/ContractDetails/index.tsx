@@ -29,7 +29,6 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
-import { yesNoMap } from 'data/common';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
@@ -54,13 +53,19 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const formikRef = useRef<FormikProps<ContractDetailsForm>>(null);
   const { t } = useTranslation('intake');
 
-  const { id, fundingSources, costs, contract, existingFunding } = systemIntake;
+  const {
+    id,
+    fundingSources,
+    annualSpending,
+    contract,
+    existingFunding
+  } = systemIntake;
   const initialValues: ContractDetailsForm = {
     existingFunding,
     fundingSources,
-    costs: {
-      expectedIncreaseAmount: costs.expectedIncreaseAmount || '',
-      isExpectingIncrease: costs.isExpectingIncrease || ''
+    annualSpending: {
+      currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
+      plannedYearOneSpending: annualSpending?.plannedYearOneSpending || ''
     },
     contract: {
       contractor: contract.contractor || '',
@@ -128,7 +133,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         existingFunding: !!(values.fundingSources.length > 0),
         fundingSources: values.fundingSources
       },
-      costs: values.costs,
+      // costs: values.costs,
+      annualSpending: values.annualSpending,
       contract: {
         ...values.contract,
         startDate,
@@ -204,105 +210,63 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     fundingSourceOptions={intakeFundingSources}
                   />
                 </FieldGroup>
-
                 <FieldGroup
-                  scrollElement="conts.isExpectingIncrease"
-                  error={!!flatErrors['costs.isExpectingIncrease']}
+                  scrollElement="annualSpending.currentAnnualSpending"
+                  error={!!flatErrors['annualSpending.currentAnnualSpending']}
                 >
                   <fieldset
                     className="usa-fieldset margin-top-4"
-                    data-testid="exceed-cost-fieldset"
+                    data-testid="annual-spend-fieldset"
                   >
                     <legend className="usa-label margin-bottom-1">
-                      Do the costs for this request exceed what you are
-                      currently spending to meet your business need?
+                      What is the current annual spending?
                     </legend>
-                    <HelpText id="IntakeForm-IncreasedCostsHelp">
-                      Compare the first year of new contract spending to current
-                      annual spending
-                    </HelpText>
                     <FieldErrorMsg>
-                      {flatErrors['costs.isExpectingIncrease']}
+                      {flatErrors['annualSpending.currentAnnualSpending']}
                     </FieldErrorMsg>
                     <Field
-                      as={Radio}
-                      checked={values.costs.isExpectingIncrease === 'YES'}
-                      id="IntakeForm-CostsExpectingIncreaseYes"
-                      name="costs.isExpectingIncrease"
-                      label={yesNoMap.YES}
-                      value="YES"
-                      aria-describedby="IntakeForm-IncreasedCostsHelp"
-                      aria-expanded={values.costs.isExpectingIncrease === 'YES'}
-                      aria-controls="expected-increase-container"
+                      as={Textarea}
+                      className="system-intake__current-annual-spending"
+                      error={
+                        !!flatErrors['annualSpending.currentAnnualSpending']
+                      }
+                      id="IntakeForm-CurrentAnnualSpending"
+                      name="annualSpending.currentAnnualSpending"
+                      maxLength={100}
                     />
-                    {values.costs.isExpectingIncrease === 'YES' && (
-                      <div
-                        id="expected-increase-container"
-                        className="width-mobile-lg margin-top-neg-2 margin-left-4 margin-bottom-1"
-                      >
-                        <FieldGroup
-                          scrollElement="costs.expectedIncreaseAmount"
-                          error={!!flatErrors['costs.expectedIncreaseAmount']}
-                        >
-                          <Label
-                            htmlFor="IntakeForm-CostsExpectedIncrease"
-                            className="margin-bottom-1"
-                          >
-                            Approximately how much do you expect the cost to
-                            increase?
-                          </Label>
-                          <HelpText id="IntakeForm-ExpectedIncreaseHelp">
-                            This information helps the team decide on the right
-                            approval process for this request
-                          </HelpText>
-                          <FieldErrorMsg>
-                            {flatErrors['costs.expectedIncreaseAmount']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={Textarea}
-                            className="system-intake__cost-amount"
-                            error={!!flatErrors['costs.expectedIncreaseAmount']}
-                            id="IntakeForm-CostsExpectedIncrease"
-                            name="costs.expectedIncreaseAmount"
-                            aria-describedby="IntakeForm-ExpectedIncreaseHelp"
-                            maxLength={100}
-                          />
-                          <CharacterCounter
-                            id="expectedIncreaseAmount-counter"
-                            characterCount={
-                              2000 - values.costs.expectedIncreaseAmount.length
-                            }
-                          />
-                        </FieldGroup>
-                      </div>
-                    )}
-                    <Field
-                      as={Radio}
-                      checked={values.costs.isExpectingIncrease === 'NO'}
-                      id="IntakeForm-CostsExpectingIncreaseNo"
-                      name="costs.isExpectingIncrease"
-                      label={yesNoMap.NO}
-                      value="NO"
-                      onChange={() => {
-                        setFieldValue('costs.isExpectingIncrease', 'NO');
-                        setFieldValue('costs.expectedIncreaseAmount', '');
-                      }}
+                    <CharacterCounter
+                      id="currentAnnualSpending-counter"
+                      characterCount={
+                        2000 -
+                        values.annualSpending.currentAnnualSpending.length
+                      }
                     />
+                    <legend className="usa-label margin-bottom-1">
+                      What is the planned annual spending of the first year of
+                      the new contract?
+                    </legend>
+                    <FieldErrorMsg>
+                      {flatErrors['annualSpending.plannedYearOneSpending']}
+                    </FieldErrorMsg>
                     <Field
-                      as={Radio}
-                      checked={values.costs.isExpectingIncrease === 'NOT_SURE'}
-                      id="IntakeForm-CostsExpectingIncreaseNotSure"
-                      name="costs.isExpectingIncrease"
-                      label={yesNoMap.NOT_SURE}
-                      value="NOT_SURE"
-                      onChange={() => {
-                        setFieldValue('costs.isExpectingIncrease', 'NOT_SURE');
-                        setFieldValue('costs.expectedIncreaseAmount', '');
-                      }}
+                      as={Textarea}
+                      className="system-intake__year-one-annual-spending"
+                      error={
+                        !!flatErrors['annualSpending.plannedYearOneSpending']
+                      }
+                      id="IntakeForm-PlannedYearOneAnnualSpending"
+                      name="annualSpending.plannedYearOneSpending"
+                      maxLength={100}
+                    />
+                    <CharacterCounter
+                      id="plannedYearOneAnnualSpending-counter"
+                      characterCount={
+                        2000 -
+                        values.annualSpending.plannedYearOneSpending.length
+                      }
                     />
                   </fieldset>
                 </FieldGroup>
-
                 <FieldGroup
                   scrollElement="contract.hasContract"
                   error={!!flatErrors['contract.hasContract']}
@@ -838,7 +802,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           }
                         }).then(res => {
                           if (!res.errors) {
-                            history.push('review');
+                            history.push('documents');
                           }
                         });
                       } else {
@@ -879,7 +843,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               }}
               debounceDelay={3000}
             />
-            <PageNumber currentPage={3} totalPages={3} />
+            <PageNumber currentPage={3} totalPages={5} />
           </>
         );
       }}

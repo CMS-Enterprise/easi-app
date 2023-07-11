@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, useMutation } from '@apollo/client';
@@ -16,6 +16,7 @@ import {
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import useEasiForm from 'hooks/useEasiForm';
 import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   UpdateTrbAdviceLetter,
@@ -48,54 +49,82 @@ const NextSteps = ({
   >(UpdateTrbAdviceLetterQuery);
 
   const {
+    partialSubmit,
     handleSubmit,
     control,
     watch,
     formState: { isSubmitting, isDirty }
-  } = useForm<AdviceLetterNextSteps>({
+  } = useEasiForm<AdviceLetterNextSteps>({
     resolver: yupResolver(nextStepsSchema),
     defaultValues: {
-      nextSteps,
-      isFollowupRecommended,
-      followupPoint
+      nextSteps: nextSteps || '',
+      isFollowupRecommended: !!isFollowupRecommended,
+      followupPoint: followupPoint || ''
     }
   });
 
   /** Submit next steps fields and update advice letter */
   const submit = useCallback<StepSubmit>(
-    callback =>
-      handleSubmit(async formData => {
-        try {
-          if (isDirty) {
-            // UpdateTrbAdviceLetter mutation
-            await update({
-              variables: {
-                input: {
-                  trbRequestId,
-                  ...formData,
-                  // If isFollowUpRecommended is set to false, clear followupPoint value
-                  followupPoint: formData.isFollowupRecommended
-                    ? formData.followupPoint
-                    : null
+    (callback, shouldValidate = true) =>
+      handleSubmit(
+        async formData => {
+          try {
+            if (isDirty) {
+              // UpdateTrbAdviceLetter mutation
+              await update({
+                variables: {
+                  input: {
+                    trbRequestId,
+                    ...formData,
+                    // If isFollowUpRecommended is set to false, clear followupPoint value
+                    followupPoint: formData.isFollowupRecommended
+                      ? formData.followupPoint
+                      : null
+                  }
                 }
-              }
-            });
+              });
+            }
+            setFormAlert(null);
+            callback?.();
+          } catch (e) {
+            if (e instanceof ApolloError) {
+              setFormAlert({
+                type: 'error',
+                message: t('adviceLetterForm.error', {
+                  action: 'saving',
+                  type: 'advice letter'
+                })
+              });
+            }
           }
-          setFormAlert(null);
-          callback?.();
-        } catch (e) {
-          if (e instanceof ApolloError) {
-            setFormAlert({
-              type: 'error',
-              message: t('adviceLetterForm.error', {
-                action: 'saving',
-                type: 'advice letter'
-              })
+        },
+        async () => {
+          // Save valid dirty fields on save and exit
+          if (!shouldValidate) {
+            await partialSubmit({
+              update: formData =>
+                update({
+                  variables: {
+                    input: {
+                      trbRequestId,
+                      ...formData
+                    }
+                  }
+                }),
+              callback
             });
           }
         }
-      })(),
-    [handleSubmit, isDirty, trbRequestId, update, setFormAlert, t]
+      )(),
+    [
+      t,
+      handleSubmit,
+      isDirty,
+      trbRequestId,
+      update,
+      setFormAlert,
+      partialSubmit
+    ]
   );
 
   useEffect(() => {
@@ -228,9 +257,7 @@ const NextSteps = ({
         back={{
           outline: true,
           onClick: () =>
-            submit(() =>
-              history.push(`/trb/${trbRequestId}/advice/recommendations`)
-            )
+            history.push(`/trb/${trbRequestId}/advice/recommendations`)
         }}
         next={{
           disabled:

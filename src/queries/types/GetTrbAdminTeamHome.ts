@@ -36,7 +36,7 @@ export interface GetTrbAdminTeamHome_trbRequests_form {
 export interface GetTrbAdminTeamHome_trbRequests {
   __typename: "TRBRequest";
   id: UUID;
-  name: string;
+  name: string | null;
   type: TRBRequestType;
   isRecent: boolean;
   status: TRBRequestStatus;

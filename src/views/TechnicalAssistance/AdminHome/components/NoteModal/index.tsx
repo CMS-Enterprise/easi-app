@@ -10,6 +10,8 @@ import {
 } from '@trussworks/react-uswds';
 import noScroll from 'no-scroll';
 
+import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+
 import AddNote from '../../AddNote';
 import Notes from '../../Notes';
 
@@ -22,13 +24,15 @@ type NotesModalWrapperProps = {
   trbRequestId: string;
   addNote?: boolean;
   openModal: React.Dispatch<React.SetStateAction<boolean>>;
+  defaultSelect?: TRBAdminNoteCategory;
 };
 
 const NotesModal = ({
   isOpen,
   trbRequestId,
   addNote,
-  openModal
+  openModal,
+  defaultSelect
 }: NotesModalWrapperProps) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -63,7 +67,7 @@ const NotesModal = ({
       appElement={document.getElementById('root')! as HTMLElement}
     >
       <div data-testid="discussion-modal">
-        <div className="easi-notes__x-button-container display-flex text-base flex-align-center">
+        <div className="easi-notes__x-button-container display-flex text-base flex-align-center padding-y-0 padding-x-3">
           <Button
             type="button"
             data-testid="close-discussions"
@@ -101,6 +105,7 @@ const NotesModal = ({
                 trbRequestId={trbRequestId}
                 setModalView={setViewType}
                 setModalMessage={setModalMessage}
+                defaultSelect={defaultSelect}
               />
             )}
           </Grid>

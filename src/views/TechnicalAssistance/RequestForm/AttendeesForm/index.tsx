@@ -242,11 +242,7 @@ function AttendeesForm({
                 text: t(
                   fieldLabels[formType as keyof typeof fieldLabels].submit || ''
                 ),
-                disabled:
-                  isSubmitting ||
-                  !values.component ||
-                  !values.euaUserId ||
-                  !values.role
+                disabled: isSubmitting || !values.euaUserId || !values.role
               }}
               back={{
                 text: t('Cancel'),

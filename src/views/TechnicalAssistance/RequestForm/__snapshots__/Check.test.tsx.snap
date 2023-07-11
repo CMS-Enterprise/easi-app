@@ -191,31 +191,33 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
     </a>
   </div>
   <div
-    class="margin-top-3"
+    class="margin-top-3 margin-bottom-6"
   >
-    <span
-      class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
-      data-testid="tag"
-    >
-      Access Control and Identity Management
-    </span>
-    <span
-      class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
-      data-testid="tag"
-    >
-      Cloud Migration
-    </span>
+    <div>
+      <span
+        class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
+        data-testid="tag"
+      >
+        Access Control and Identity Management
+      </span>
+      <span
+        class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
+        data-testid="tag"
+      >
+        Cloud Migration
+      </span>
+      <dl
+        class="easi-dl margin-top-3"
+      >
+        <dt>
+          Other subject areas
+        </dt>
+        <dd>
+          A few other subjects
+        </dd>
+      </dl>
+    </div>
   </div>
-  <dl
-    class="easi-dl margin-y-3"
-  >
-    <dt>
-      Other subject areas
-    </dt>
-    <dd>
-      A few other subjects
-    </dd>
-  </dl>
   <div
     class="easi-divider"
   />
@@ -235,11 +237,20 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
   <div
     class="margin-top-3 margin-bottom-6"
   >
-    <span
-      class="font-body-2xs"
+    <div
+      class="usa-alert usa-alert--info usa-alert--slim"
+      data-testid="alert"
     >
-      There are no attendees
-    </span>
+      <div
+        class="usa-alert__body"
+      >
+        <p
+          class="usa-alert__text"
+        >
+          You have not specified any additional attendees for this request.
+        </p>
+      </div>
+    </div>
   </div>
   <div
     class="easi-divider"
@@ -271,6 +282,9 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
       />
     </div>
   </div>
+  <div
+    class="easi-divider"
+  />
   <div
     class="grid-row grid-gap"
     data-testid="grid"
@@ -327,24 +341,32 @@ exports[`Trb Request form: Check and submit renders request form field values 1`
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-          data-testid="button"
-          type="button"
+        <div
+          class="display-flex flex-align-center"
         >
-          Back
-        </button>
+          <button
+            class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+            data-testid="button"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
       </li>
       <li
         class="usa-button-group__item"
       >
-        <button
-          class="usa-button margin-top-0"
-          data-testid="button"
-          type="submit"
+        <div
+          class="display-flex flex-align-center"
         >
-          Submit request
-        </button>
+          <button
+            class="usa-button margin-top-0"
+            data-testid="button"
+            type="submit"
+          >
+            Submit request
+          </button>
+        </div>
       </li>
     </ul>
     <button

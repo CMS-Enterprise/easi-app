@@ -77,7 +77,7 @@ export interface CreateTrbRequest_createTRBRequest_feedback {
 export interface CreateTrbRequest_createTRBRequest {
   __typename: "TRBRequest";
   id: UUID;
-  name: string;
+  name: string | null;
   type: TRBRequestType;
   state: TRBRequestState;
   taskStatuses: CreateTrbRequest_createTRBRequest_taskStatuses;

@@ -30,6 +30,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import useCacheQuery from 'hooks/useCacheQuery';
+import useEasiForm from 'hooks/useEasiForm';
 import DeleteTRBRequestFundingSource from 'queries/DeleteTRBRequestFundingSource';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import {
@@ -140,12 +141,13 @@ function Basic({
 
   const {
     control,
+    partialSubmit,
     handleSubmit,
     formState: { errors, isSubmitting, isDirty, dirtyFields }
-  } = useForm<FormFieldProps<TrbRequestFormBasic>>({
+  } = useEasiForm<FormFieldProps<TrbRequestFormBasic>>({
     resolver: yupResolver(basicSchema),
     defaultValues: {
-      name: request.name,
+      name: request.name || '',
       ...initialValues,
       // Mapping over intakes as mutation input only takes UUID
       systemIntakes: request.form.systemIntakes.map(intake => intake.id)
@@ -184,8 +186,68 @@ function Basic({
     [setFormAlert, t]
   );
 
+  const updateFields = useCallback(
+    async (formData: Partial<FormFieldProps<TrbRequestFormBasic>>) => {
+      const { id } = request;
+      const { name } = formData;
+
+      // Only send changed fields for a partial update to the input object
+      const input: any = pick(formData, Object.keys(dirtyFields));
+
+      // Convert '' back to null for the backend
+      // so that cleared inputs on the client are actually removed
+      Object.entries(input).forEach(([key, value]) => {
+        if (value === '') input[key] = null;
+      });
+
+      // Handle the clearing out of toggled off fields.
+      // Unmounted fields are removed from the form data and do not get marked
+      // as dirty, so they need to be set to null to be cleared.
+      if (input.hasSolutionInMind === false) {
+        input.proposedSolution = null;
+      }
+      if (input.whereInProcess !== 'OTHER') {
+        input.whereInProcessOther = null;
+      }
+      if (input.hasExpectedStartEndDates === false) {
+        input.expectedStartDate = null;
+        input.expectedEndDate = null;
+      }
+
+      Object.values(TRBCollabGroupOption).forEach(option => {
+        if (!input.collabGroups?.includes(option)) {
+          input[`collabDate${upperFirst(camelCase(option))}`] = null;
+          if (option === 'OTHER') {
+            input.collabGroupOther = null;
+          }
+        }
+      });
+
+      // Some object adjustments
+      const variables: any = {};
+
+      input.trbRequestId = id; // Use the id from the request object
+      variables.id = id;
+
+      // Move the name from the form fields object to changes
+      if ('name' in input) {
+        delete input.name;
+        variables.changes = { name };
+      }
+
+      variables.input = input;
+
+      await updateForm({ variables });
+
+      // Refresh the RequestForm parent request query
+      // to update things like `stepsCompleted`
+      await refetchRequest();
+    },
+    [dirtyFields, refetchRequest, request, updateForm]
+  );
+
   const submit = useCallback<StepSubmit>(
-    callback =>
+    (callback, shouldValidate = true) =>
       // Start the submit promise
       handleSubmit(
         // Validation passed
@@ -193,77 +255,24 @@ function Basic({
           try {
             // Submit the input only if there are changes
             if (isDirty) {
-              const { id } = request;
-              const { name } = formData;
-
-              // Only send changed fields for a partial update to the input object
-              const input: any = pick(formData, Object.keys(dirtyFields));
-
-              // Convert '' back to null for the backend
-              // so that cleared inputs on the client are actually removed
-              Object.entries(input).forEach(([key, value]) => {
-                if (value === '') input[key] = null;
-              });
-
-              // Handle the clearing out of toggled off fields.
-              // Unmounted fields are removed from the form data and do not get marked
-              // as dirty, so they need to be set to null to be cleared.
-              if (input.hasSolutionInMind === false) {
-                input.proposedSolution = null;
-              }
-              if (input.whereInProcess !== 'OTHER') {
-                input.whereInProcessOther = null;
-              }
-              if (input.hasExpectedStartEndDates === false) {
-                input.expectedStartDate = null;
-                input.expectedEndDate = null;
-              }
-
-              Object.values(TRBCollabGroupOption).forEach(option => {
-                if (!input.collabGroups?.includes(option)) {
-                  input[`collabDate${upperFirst(camelCase(option))}`] = null;
-                  if (option === 'OTHER') {
-                    input.collabGroupOther = null;
-                  }
-                }
-              });
-
-              // Some object adjustments
-              const variables: any = {};
-
-              input.trbRequestId = id; // Use the id from the request object
-              variables.id = id;
-
-              // Move the name from the form fields object to changes
-              if ('name' in input) {
-                delete input.name;
-                variables.changes = { name };
-              }
-
-              variables.input = input;
-
-              await updateForm({ variables });
-
-              // Refresh the RequestForm parent request query
-              // to update things like `stepsCompleted`
-              await refetchRequest();
+              await updateFields(formData);
             }
 
             callback?.();
           } catch (e) {
             handleApolloError(e);
           }
+        },
+        async () => {
+          if (!shouldValidate) {
+            await partialSubmit({
+              update: formData => updateFields(formData),
+              callback
+            });
+          }
         }
       )(),
-    [
-      dirtyFields,
-      handleSubmit,
-      isDirty,
-      refetchRequest,
-      request,
-      handleApolloError,
-      updateForm
-    ]
+    [handleSubmit, isDirty, handleApolloError, updateFields, partialSubmit]
   );
 
   // Handling the funding sources update/delete sumbission outside the scope of RHF handler
@@ -344,6 +353,13 @@ function Basic({
             } else {
               msg = t(`basic.labels.${fieldName}`);
             }
+
+            if (errors[fieldName as keyof typeof errors]?.message) {
+              msg += `: ${errors[
+                fieldName as keyof typeof errors
+              ]?.message?.replace(fieldName, ' This')}`;
+            }
+
             return (
               <ErrorAlertMessage
                 key={fieldName}
@@ -623,53 +639,61 @@ function Basic({
                     {field.value === true && (
                       <div className="margin-left-4">
                         {/* Expected start date */}
-                        <Controller
-                          name="expectedStartDate"
-                          control={control}
-                          shouldUnregister
-                          // eslint-disable-next-line no-shadow
-                          render={({ field, fieldState: { error } }) => (
-                            <FormGroup error={!!(error || startOrEndError)}>
-                              <Label
-                                htmlFor="expectedStartDate"
-                                hint="mm/dd/yyyy"
-                                error={!!error}
-                              >
-                                {t('basic.labels.expectedStartDate')}
-                              </Label>
-                              <DatePickerFormatted
-                                id="expectedStartDate"
-                                {...field}
-                                defaultValue={field.value}
-                                ref={null}
-                              />
-                            </FormGroup>
-                          )}
-                        />
-                        {/* Expected end date */}
-                        <Controller
-                          name="expectedEndDate"
-                          control={control}
-                          shouldUnregister
-                          // eslint-disable-next-line no-shadow
-                          render={({ field, fieldState: { error } }) => (
-                            <FormGroup error={!!(error || startOrEndError)}>
-                              <Label
-                                htmlFor="expectedEndDate"
-                                hint="mm/dd/yyyy"
-                                error={!!error}
-                              >
-                                {t('basic.labels.expectedEndDate')}
-                              </Label>
-                              <DatePickerFormatted
-                                id="expectedEndDate"
-                                {...field}
-                                defaultValue={field.value}
-                                ref={null}
-                              />
-                            </FormGroup>
-                          )}
-                        />
+                        <Grid row gap>
+                          <Grid tablet={{ col: 6 }}>
+                            <Controller
+                              name="expectedStartDate"
+                              control={control}
+                              shouldUnregister
+                              // eslint-disable-next-line no-shadow
+                              render={({ field, fieldState: { error } }) => (
+                                <FormGroup error={!!(error || startOrEndError)}>
+                                  <Label
+                                    htmlFor="expectedStartDate"
+                                    hint="mm/dd/yyyy"
+                                    error={!!error}
+                                  >
+                                    {t('basic.labels.expectedStartDate')}
+                                    <RequiredAsterisk />
+                                  </Label>
+                                  <DatePickerFormatted
+                                    id="expectedStartDate"
+                                    {...field}
+                                    defaultValue={field.value}
+                                    ref={null}
+                                  />
+                                </FormGroup>
+                              )}
+                            />
+                          </Grid>
+                          {/* Expected end date */}
+                          <Grid tablet={{ col: 6 }}>
+                            <Controller
+                              name="expectedEndDate"
+                              control={control}
+                              shouldUnregister
+                              // eslint-disable-next-line no-shadow
+                              render={({ field, fieldState: { error } }) => (
+                                <FormGroup error={!!(error || startOrEndError)}>
+                                  <Label
+                                    htmlFor="expectedEndDate"
+                                    hint="mm/dd/yyyy"
+                                    error={!!error}
+                                  >
+                                    {t('basic.labels.expectedEndDate')}
+                                    <RequiredAsterisk />
+                                  </Label>
+                                  <DatePickerFormatted
+                                    id="expectedEndDate"
+                                    {...field}
+                                    defaultValue={field.value}
+                                    ref={null}
+                                  />
+                                </FormGroup>
+                              )}
+                            />
+                          </Grid>
+                        </Grid>
                       </div>
                     )}
 
@@ -847,6 +871,7 @@ function Basic({
                                       {t('errors.fillBlank')}
                                     </ErrorMessage>
                                   )}
+
                                   <TextInput
                                     {...field}
                                     ref={null}
@@ -887,13 +912,18 @@ function Basic({
                                           {t('errors.fillBlank')}
                                         </ErrorMessage>
                                       )}
-                                      <TextInput
-                                        {...field}
-                                        ref={null}
-                                        id={collabDateKey}
-                                        type="text"
-                                        validationStatus={error && 'error'}
-                                      />
+
+                                      <Grid row>
+                                        <Grid tablet={{ col: 6 }}>
+                                          <DatePickerFormatted
+                                            id={collabDateKey}
+                                            {...field}
+                                            defaultValue={field.value}
+                                            ref={null}
+                                          />{' '}
+                                        </Grid>
+                                      </Grid>
+
                                       {val === 'GOVERNANCE_REVIEW_BOARD' && (
                                         <Controller
                                           name="collabGRBConsultRequested"
@@ -971,11 +1001,10 @@ function Basic({
         className="margin-top-5"
         next={{
           disabled: isSubmitting || fundingSourcesFormActive,
-          onClick: () => {
+          onClick: () =>
             submit(() => {
               history.push(stepUrl.next);
-            });
-          }
+            })
         }}
         saveExitDisabled={isSubmitting}
         submit={submit}

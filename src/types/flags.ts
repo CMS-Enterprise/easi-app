@@ -4,6 +4,7 @@ export type Flags = {
   downgrade508User: boolean;
   downgrade508Tester: boolean;
   downgradeTrbAdmin: boolean;
+  itGovV2Enabled: boolean;
   systemProfile: boolean;
   systemProfileHiddenFields: boolean;
   cedar508Requests: boolean;

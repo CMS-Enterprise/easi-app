@@ -22,6 +22,7 @@ type ReviewAdviceLetterProps = {
   };
   showDateSent?: boolean;
   showSectionBorders?: boolean;
+  publicForm?: boolean;
   className?: string;
 };
 
@@ -35,6 +36,7 @@ const ReviewAdviceLetter = ({
   recommendationActions,
   showDateSent = true,
   showSectionBorders = true,
+  publicForm = false,
   className
 }: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -106,7 +108,7 @@ const ReviewAdviceLetter = ({
             <p className="margin-top-4">{t('adviceLetter.notSpecified')}</p>
           ) : (
             <RecommendationsList
-              type="form"
+              type={!publicForm ? 'form' : 'admin'}
               recommendations={recommendations}
               {...recommendationActions}
             />
@@ -146,7 +148,7 @@ const ReviewAdviceLetter = ({
         <p className="margin-top-1 line-height-body-5">
           {adviceLetter.isFollowupRecommended
             ? t(`Yes, ${adviceLetter.followupPoint}`)
-            : t('adviceLetter.notSpecified')}
+            : t('adviceLetterForm.notNecessary')}
         </p>
       </SectionWrapper>
     </div>

@@ -81,7 +81,7 @@ exports[`The prepare for GRB info page matches the snapshot 1`] = `
           During the session, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS programs. You’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. Next, the GRB will review your proposed alternatives and their pros and cons.
         </p>
         <div
-          className="usa-alert usa-alert--info usa-alert--slim flex"
+          className="usa-alert usa-alert--info usa-alert--slim"
           data-testid="alert"
         >
           <div

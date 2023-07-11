@@ -3,6 +3,7 @@ import { ModalRef } from '@trussworks/react-uswds';
 
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { GetTrbRequestSummary_trbRequest as TrbRequestSummary } from 'queries/types/GetTrbRequestSummary';
+import { FormStepKey } from 'views/TechnicalAssistance/AdviceLetterForm';
 import { StepSubmit } from 'views/TechnicalAssistance/RequestForm';
 
 import { PersonRole, TRBAdviceLetterStatus } from './graphql-global-types';
@@ -135,6 +136,10 @@ export type StepComponentProps = {
   setIsStepSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
   /** Set a form level alert message from within step components */
   setFormAlert: React.Dispatch<React.SetStateAction<FormAlertObject | null>>;
+  stepsCompleted?: FormStepKey[] | undefined;
+  setStepsCompleted?: React.Dispatch<
+    React.SetStateAction<FormStepKey[] | undefined>
+  >;
 };
 
 export interface TrbRecipientFields {

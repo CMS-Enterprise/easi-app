@@ -49,3 +49,10 @@ export const getFiscalYear = (date: DateTime): number => {
   }
   return year;
 };
+
+export const isDateInPast = (date: string | null): boolean => {
+  if (date && new Date() > new Date(date)) {
+    return true;
+  }
+  return false;
+};

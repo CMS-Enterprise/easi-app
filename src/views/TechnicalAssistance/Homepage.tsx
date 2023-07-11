@@ -40,6 +40,7 @@ import {
   GetTrbRequests_myTrbRequests
 } from 'queries/types/GetTrbRequests';
 import { AppState } from 'reducers/rootReducer';
+import { TRBRequestState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -85,14 +86,18 @@ function Homepage() {
               to={`/trb/task-list/${row.original.id}`}
               data-testid={`trbRequest-${row.original.id}`}
             >
-              {value}
+              {value || t('taskList.defaultName')}
             </UswdsReactLink>
           );
         }
       },
+
       {
         Header: t<string>('table.header.status'),
-        accessor: ({ status }) => t(`table.requestStatus.${status}`)
+        accessor: ({ status, state }) =>
+          state === TRBRequestState.CLOSED
+            ? t(`table.requestState.${state}`)
+            : t(`table.requestStatus.${status}`)
       },
       {
         Header: t<string>('table.header.submissionDate'),
@@ -266,6 +271,12 @@ function Homepage() {
               })}
             </tbody>
           </Table>
+
+          {rows.length === 0 && (
+            <div className="padding-bottom-2 border-bottom-1px margin-top-neg-05">
+              {t('table.noRequests')}
+            </div>
+          )}
 
           <div className="grid-row grid-gap grid-gap-lg">
             <TablePagination

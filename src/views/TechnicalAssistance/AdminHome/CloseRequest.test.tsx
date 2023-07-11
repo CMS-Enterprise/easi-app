@@ -5,7 +5,6 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
 import CloseTrbRequestQuery from 'queries/CloseTrbRequestQuery';
@@ -13,23 +12,52 @@ import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import ReopenTrbRequestQuery from 'queries/ReopenTrbRequestQuery';
 import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import { PersonRole } from 'types/graphql-global-types';
+import easiMockStore from 'utils/testing/easiMockStore';
 
 import CloseRequest from './CloseRequest';
 import TRBRequestInfoWrapper from './RequestContext';
 import AdminHome from '.';
 
 describe('Trb Admin: Action: Close & Re-open Request', () => {
-  const mockStore = configureMockStore();
-  const store = mockStore({
-    auth: {
-      euaId: 'SF13',
-      name: 'Jerry Seinfeld',
-      isUserSet: true,
-      groups: ['EASI_TRB_ADMIN_D']
-    }
+  const store = easiMockStore({
+    euaUserId: 'SF13',
+    groups: ['EASI_TRB_ADMIN_D']
   });
+
   const id = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
   const text = 'test message';
+
+  const getAttendeesQuery = {
+    request: {
+      query: GetTRBRequestAttendeesQuery,
+      variables: {
+        id
+      }
+    },
+    result: {
+      data: {
+        trbRequest: {
+          id,
+          attendees: [
+            {
+              __typename: 'TRBRequestAttendee',
+              id: '91a14322-34a8-4838-bde3-17b1d483fb63',
+              trbRequestId: id,
+              userInfo: {
+                __typename: 'UserInfo',
+                commonName: 'Jerry Seinfeld',
+                email: 'jerry.seinfeld@local.fake',
+                euaUserId: 'SF13'
+              },
+              component: 'Office of Equal Opportunity and Civil Rights',
+              role: PersonRole.PRODUCT_OWNER,
+              createdAt: '2023-01-05T07:26:16.036618Z'
+            }
+          ]
+        }
+      }
+    }
+  };
 
   it('closes a request with a reason', async () => {
     const { getByLabelText, getByRole, findByText, findByRole } = render(
@@ -98,38 +126,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 }
               }
             },
-            {
-              request: {
-                query: GetTRBRequestAttendeesQuery,
-                variables: {
-                  id
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id,
-                    attendees: [
-                      {
-                        __typename: 'TRBRequestAttendee',
-                        id: '91a14322-34a8-4838-bde3-17b1d483fb63',
-                        trbRequestId: id,
-                        userInfo: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Seinfeld',
-                          email: 'jerry.seinfeld@local.fake',
-                          euaUserId: 'SF13'
-                        },
-                        component:
-                          'Office of Equal Opportunity and Civil Rights',
-                        role: PersonRole.PRODUCT_OWNER,
-                        createdAt: '2023-01-05T07:26:16.036618Z'
-                      }
-                    ]
-                  }
-                }
-              }
-            }
+            getAttendeesQuery
           ]}
         >
           <MemoryRouter
@@ -155,8 +152,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     );
 
     const requester = await findByRole('checkbox', {
-      name:
-        'Jerry Seinfeld, Office of Equal Opportunity and Civil Rights (Requester)'
+      name: 'Jerry Seinfeld, OEOCR (Requester)'
     });
     expect(requester).toBeChecked();
 
@@ -193,6 +189,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     const { getByLabelText, getByRole, findByText, findByRole } = render(
       <MockedProvider
         mocks={[
+          getAttendeesQuery,
           {
             request: {
               query: CloseTrbRequestQuery,
@@ -320,38 +317,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 }
               }
             },
-            {
-              request: {
-                query: GetTRBRequestAttendeesQuery,
-                variables: {
-                  id
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id,
-                    attendees: [
-                      {
-                        __typename: 'TRBRequestAttendee',
-                        id: '91a14322-34a8-4838-bde3-17b1d483fb63',
-                        trbRequestId: id,
-                        userInfo: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Seinfeld',
-                          email: 'jerry.seinfeld@local.fake',
-                          euaUserId: 'SF13'
-                        },
-                        component:
-                          'Office of Equal Opportunity and Civil Rights',
-                        role: PersonRole.PRODUCT_OWNER,
-                        createdAt: '2023-01-05T07:26:16.036618Z'
-                      }
-                    ]
-                  }
-                }
-              }
-            }
+            getAttendeesQuery
           ]}
         >
           <MemoryRouter
@@ -377,8 +343,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     );
 
     const requester = await findByRole('checkbox', {
-      name:
-        'Jerry Seinfeld, Office of Equal Opportunity and Civil Rights (Requester)'
+      name: 'Jerry Seinfeld, OEOCR (Requester)'
     });
     expect(requester).toBeChecked();
 
@@ -408,6 +373,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     const { getByLabelText, getByRole, findByText } = render(
       <MockedProvider
         mocks={[
+          getAttendeesQuery,
           {
             request: {
               query: ReopenTrbRequestQuery,

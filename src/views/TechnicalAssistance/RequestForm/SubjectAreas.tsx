@@ -13,7 +13,6 @@ import {
 import { isEqual, pick } from 'lodash';
 
 import Alert from 'components/shared/Alert';
-import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import TextAreaField from 'components/shared/TextAreaField';
 import {
@@ -186,12 +185,13 @@ function SubjectAreas({
                     {error && (
                       <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
                     )}
-                    <div className="trb-checkbox-container">
-                      <CheckboxField
+                    <div className="usa-checkbox">
+                      <input
+                        type="checkbox"
+                        className="usa-checkbox__input usa-checkbox__input--tile"
                         id={key}
-                        name="subjectAreaOptions"
-                        label={t(`subject.labels.${key}`)}
                         value={key}
+                        name="subjectAreaOptions"
                         onChange={e => {
                           const returnValues = [...field?.value];
                           if (e.target.checked) {
@@ -210,6 +210,9 @@ function SubjectAreas({
                         checked={field.value?.includes(key)}
                         onBlur={() => null}
                       />
+                      <label className="usa-checkbox__label" htmlFor={key}>
+                        {t(`subject.labels.${key}`)}
+                      </label>
                     </div>
                   </Grid>
                 ))}

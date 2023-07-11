@@ -1,16 +1,24 @@
 .usa-alert__body {
     padding-right: 2rem !important;
     max-width: 100%;
+    word-break: break-word;
+}
+
+.easi-alert-text .usa-alert__body {
+    padding-right: 3.5rem !important;
+
+    .easi-alert__close-button {
+        position: absolute;
+        top: .25rem;
+        right: .75rem;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .usa-alert__heading {
     line-height: 1.6rem !important;
-}
-
-
-.easi-alert-text {
-    .usa-alert__text {
-        justify-content: space-between !important;
-        display: flex !important;
-    }
 }

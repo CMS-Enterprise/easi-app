@@ -93,16 +93,23 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract Details
+    cy.get('#IntakeForm-CurrentAnnualSpending')
+      .type('Mock Current Annual Spend')
+      .should('have.value', 'Mock Current Annual Spend');
 
-    cy.get('#IntakeForm-CostsExpectingIncreaseNo')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
+      .type('Mock Planned First Year Annual Spend')
+      .should('have.value', 'Mock Planned First Year Annual Spend');
 
     cy.get('#IntakeForm-ContractNotNeeded')
       .check({ force: true })
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
+
+    // Skip documents step
+
+    cy.contains('button', 'Continue without documents').click();
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
@@ -192,13 +199,13 @@ describe('The System Intake Form', () => {
     });
     cy.get(`#fundingNumber-${fundingNumber}`);
 
-    cy.get('#IntakeForm-CostsExpectingIncreaseYes')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#IntakeForm-CurrentAnnualSpending')
+      .type('Mock Current Annual Spend')
+      .should('have.value', 'Mock Current Annual Spend');
 
-    cy.get('#IntakeForm-CostsExpectedIncrease')
-      .type('99999')
-      .should('have.value', '99999');
+    cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
+      .type('Mock Planned First Year Annual Spend')
+      .should('have.value', 'Mock Planned First Year Annual Spend');
 
     cy.get('#IntakeForm-ContractHaveContract')
       .check({ force: true })
@@ -235,6 +242,63 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     cy.wait('@updateContractDetails');
+
+    // Document Upload
+
+    cy.contains('h1', 'Additional documentation');
+
+    cy.contains('button', 'Add a document').click();
+
+    cy.contains('h1', 'Upload a document');
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
+    cy.get('#documentType-SOO_SOW').check({ force: true });
+    cy.contains('button', 'Upload document').click();
+
+    cy.contains(
+      '.usa-alert__text',
+      'Your document has been uploaded and is being scanned.'
+    ).should('be.visible');
+    cy.contains('td', 'test.pdf').should('be.visible');
+    cy.contains('td', 'Virus scan in progress...').should('be.visible');
+
+    // Upload second document using other type fields
+    cy.contains('button', 'Add another document').click();
+
+    cy.contains('h1', 'Upload a document');
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
+    cy.get('#documentType-OTHER').check({ force: true });
+    cy.get('#otherTypeDescription')
+      .type('Test document')
+      .should('have.value', 'Test document');
+    cy.contains('button', 'Upload document').click();
+
+    cy.contains('td', 'Test document').should('be.visible');
+
+    // Mark first document as passing virus scan
+    cy.get('[data-testurl]')
+      .first()
+      .within(el => {
+        const url = el.attr('data-testurl');
+        const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
+        cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+      });
+
+    cy.reload();
+
+    // Delete first document
+    cy.contains('button', 'Remove').click();
+    cy.contains('h3', 'Confirm you want to remove test.pdf.');
+    cy.contains('button', 'Remove document').click();
+
+    cy.contains(
+      '.usa-alert__text',
+      'You have successfully removed test.pdf'
+    ).should('be.visible');
+    cy.get('#systemIntakeDocuments')
+      .contains('td', 'test.pdf')
+      .should('have.length', 1);
+
+    cy.contains('button', 'Next').click();
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
@@ -330,6 +394,8 @@ describe('The System Intake Form', () => {
     )
       .siblings('dd')
       .get(`li#fundingNumber-${fundingNumber}`);
+
+    cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
 
   /**

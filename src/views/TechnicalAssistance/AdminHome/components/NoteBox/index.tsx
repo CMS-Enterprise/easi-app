@@ -7,14 +7,25 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid } from '@trussworks/react-uswds';
 
+import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import { TrbAdminPath } from 'types/technicalAssistance';
+
 import NotesModal from '../NoteModal';
+
+export const noteCategoryPageMap: Record<string, TRBAdminNoteCategory> = {
+  advice: TRBAdminNoteCategory.ADVICE_LETTER,
+  request: TRBAdminNoteCategory.GENERAL_REQUEST,
+  'initial-request-form': TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
+  documents: TRBAdminNoteCategory.SUPPORTING_DOCUMENTS
+};
 
 type NoteBoxProps = {
   trbRequestId: string;
   noteCount: number;
+  activePage: TrbAdminPath;
 };
 
-const NoteBox = ({ trbRequestId, noteCount }: NoteBoxProps) => {
+const NoteBox = ({ trbRequestId, noteCount, activePage }: NoteBoxProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
@@ -30,6 +41,7 @@ const NoteBox = ({ trbRequestId, noteCount }: NoteBoxProps) => {
           trbRequestId={trbRequestId}
           addNote={addNote}
           openModal={setIsNotesOpen}
+          defaultSelect={noteCategoryPageMap[activePage]}
         />
       )}
       <div

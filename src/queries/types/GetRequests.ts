@@ -34,7 +34,7 @@ export interface GetRequests_requests {
 export interface GetRequests_myTrbRequests {
   __typename: "TRBRequest";
   id: UUID;
-  name: string;
+  name: string | null;
   submittedAt: Time;
   status: TRBRequestStatus;
   nextMeetingDate: Time | null;

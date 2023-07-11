@@ -62,7 +62,7 @@ import {
   systemData as mockSystemData
 } from 'views/Sandbox/mockSystemData';
 
-// import EditPageCallout from './components/EditPageCallout';
+import EditPageCallout from './components/EditPageCallout';
 // components/index contains all the sideNavItems components, routes, labels and translations
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
@@ -91,7 +91,7 @@ export function getAtoStatus(
   // No ato if it doesn't exist
   if (!cedarAuthorityToOperate) return 'No ATO';
 
-  // return 'In Progress'; // tbd
+  // return 'In progress'; // tbd
 
   const { dateAuthorizationMemoExpires } = cedarAuthorityToOperate;
 
@@ -624,16 +624,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                   {/* Side navigation for single system */}
                   <SideNav items={subNavigationLinks} />
 
-                  {
-                    /* TODO: Make callout visible in EASI-2447 */
-                    // subinfo === 'team' && (
-                    //   <EditPageCallout
-                    //     className="margin-top-3"
-                    //     // TODO: Get system modifiedAt value and add to props
-                    //     // modifiedAt={}
-                    //   />
-                    // )
-                  }
+                  {subinfo === 'team' && (
+                    <EditPageCallout
+                      className="margin-top-3"
+                      // TODO: Get system modifiedAt value and add to props
+                      // modifiedAt={}
+                    />
+                  )}
 
                   {/* Setting a ref here to reference the grid width for the fixed side nav */}
                   {modal && (
@@ -679,16 +676,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                               systemId={systemId}
                             />
                           </div>
-                          {
-                            /* TODO: Make callout visible in EASI-2447 */
-                            // subinfo === 'team' && isMobile && (
-                            //   <EditPageCallout
-                            //     className="margin-top-4"
-                            //     // TODO: Get system modifiedAt value and add to props
-                            //     // modifiedAt={}
-                            //   />
-                            // )
-                          }
+                          {subinfo === 'team' && isMobile && (
+                            <EditPageCallout
+                              className="margin-top-4"
+                              // TODO: Get system modifiedAt value and add to props
+                              // modifiedAt={}
+                            />
+                          )}
                         </Grid>
                       )}
                     </Grid>

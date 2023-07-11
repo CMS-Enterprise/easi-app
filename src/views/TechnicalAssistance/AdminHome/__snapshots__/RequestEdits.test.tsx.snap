@@ -34,7 +34,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
             href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/initial-request-form"
           >
             <span>
-              Request d8ebedca-0031-4ccd-9690-37390726c50e
+              Request details
             </span>
           </a>
         </li>
@@ -60,21 +60,21 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
     >
       Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.
     </p>
+    <p
+      class="margin-top-1 text-base"
+    >
+      Fields marked with an asterisk ( 
+      <span
+        class="text-red"
+      >
+        *
+      </span>
+       ) are required.
+    </p>
     <form
-      class="usa-form maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
+      class="usa-form maxw-none tablet:grid-col-12 desktop:grid-col-6"
       data-testid="form"
     >
-      <p
-        class="margin-top-1 text-base"
-      >
-        Fields marked with an asterisk ( 
-        <span
-          class="text-red"
-        >
-          *
-        </span>
-         ) are required.
-      </p>
       <div
         class="usa-form-group"
         data-testid="formGroup"
@@ -122,67 +122,64 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
         A notification email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.
       </p>
       <div
-        class="usa-form-group"
-        data-testid="formGroup"
+        class="usa-form-group margin-top-4"
       >
-        <fieldset
-          class="usa-fieldset margin-top-4 margin-bottom-3"
+        <legend>
+          Choose recipients
+        </legend>
+        <p
+          class="margin-bottom-0 margin-top-05"
         >
-          <legend
-            class="usa-label"
+          <span
+            class="text-bold"
           >
-            Choose recipients 
-            <span
-              class="text-error"
+            2
+          </span>
+           recipients selected
+        </p>
+        <ul
+          class="usa-list usa-list--unstyled"
+        >
+          <li>
+            <div
+              class="easi-checkbox usa-checkbox"
             >
-              *
-            </span>
-          </legend>
-          <p
-            class="margin-bottom-0 margin-top-05"
-          >
-            <span
-              class="text-bold"
+              <input
+                checked=""
+                class="usa-checkbox__input"
+                id="notifyEuaIds.0"
+                name="notifyEuaIds"
+                type="checkbox"
+                value="ABCD"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="notifyEuaIds.0"
+              >
+                Adeline Aarons, CMS (Requester)
+              </label>
+            </div>
+          </li>
+          <li>
+            <div
+              class="easi-checkbox usa-checkbox"
             >
-              2
-            </span>
-             recipients selected
-          </p>
-          <div
-            class="easi-checkbox usa-checkbox"
-          >
-            <input
-              class="usa-checkbox__input"
-              id="notifyEuaIds.0"
-              name="notifyEuaIds"
-              type="checkbox"
-              value="ABCD"
-            />
-            <label
-              class="usa-checkbox__label"
-              for="notifyEuaIds.0"
-            >
-              Adeline Aarons, CMS Wide (Requester)
-            </label>
-          </div>
-          <div
-            class="easi-checkbox usa-checkbox"
-          >
-            <input
-              checked=""
-              class="usa-checkbox__input"
-              id="copyTrbMailbox"
-              name="copyTrbMailbox"
-              type="checkbox"
-              value="true"
-            />
-            <label
-              class="usa-checkbox__label"
-              for="copyTrbMailbox"
-            >
-              Copy TRB Mailbox
-            </label>
-          </div>
+              <input
+                checked=""
+                class="usa-checkbox__input"
+                id="copyTrbMailbox"
+                name="copyTrbMailbox"
+                type="checkbox"
+                value="true"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="copyTrbMailbox"
+              >
+                Copy TRB Mailbox
+              </label>
+            </div>
+          </li>
           <button
             class="usa-button usa-button--unstyled truncated-content-button display-flex flex-align-center margin-top-2"
             data-testid="truncatedContentButton"
@@ -207,43 +204,57 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
             </svg>
              Show 3 more recipients
           </button>
-        </fieldset>
+        </ul>
       </div>
       <div
-        class="display-flex flex-align-center margin-top-5"
+        class="margin-top-5"
       >
-        <button
-          class="usa-button margin-top-0 margin-right-105"
-          data-testid="button"
-          type="submit"
+        <ul
+          class="usa-button-group"
         >
-          Complete action
+          <li
+            class="usa-button-group__item"
+          >
+            <div
+              class="display-flex flex-align-center"
+            >
+              <button
+                class="usa-button margin-top-0"
+                data-testid="button"
+                disabled=""
+                type="submit"
+              >
+                Complete action
+              </button>
+            </div>
+          </li>
+        </ul>
+        <button
+          class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
+          data-testid="button"
+          type="button"
+        >
+          <svg
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+          Cancel action and return to request
         </button>
       </div>
     </form>
-    <a
-      class="usa-link display-flex flex-align-center"
-      href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/initial-request-form"
-    >
-      <svg
-        class="usa-icon margin-right-05"
-        focusable="false"
-        height="1em"
-        role="img"
-        viewBox="0 0 24 24"
-        width="1em"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
-        <path
-          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-        />
-      </svg>
-      Cancel action and return to request
-    </a>
   </div>
 </DocumentFragment>
 `;
