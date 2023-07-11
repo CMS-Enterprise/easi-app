@@ -1,0 +1,188 @@
+@use 'viewports' as *;
+@use 'uswds-core' as *;
+@use 'colors' as *;
+
+.easi-page-wrapper__pre-auth-home {
+
+  section.usa-banner {
+    background-color: color('primary-darker');
+    
+    * {
+      color: white;
+    }
+    
+    .usa-banner__inner, .usa-banner__content {
+      max-width: 75rem;
+    }
+
+    .icon-lock img {
+      filter: invert(1);
+    }
+
+    // Fix icon colors - desktop
+    .usa-banner__button {
+      &::before {
+        background-color: transparent;
+      }
+
+      &::after {
+        background-color: white;
+      }
+    }
+
+    // Fix icon colors - mobile
+    .usa-banner__header-action::after {
+      background-color: white;
+    }
+  }
+
+  header.easi-header {
+    padding-top: 1.5rem;
+    background-color: color('primary-dark');
+    box-shadow: none !important;
+  
+    .usa-logo a {
+      color: white;
+      font-size: 1.2rem;
+      line-height: 1.2;
+
+      @media screen and (min-width: $tablet) {
+        font-size: 1.4rem;
+      }
+    }
+
+    .easi-header__nav-link {
+      color: white;
+      border: 2px solid white;
+      border-radius: 4px;
+      padding: 0.5rem 1.15rem;
+      line-height: 1.25;
+      margin-left: 1rem;
+  
+      @media screen and (max-width: $desktop) {
+        margin-right: 1rem;
+      }
+    }
+
+    &.sticky {
+      padding: .5rem 0;
+    }
+  }
+
+  .navigation {
+    border-top: none;
+    margin-bottom: 0;
+  }
+
+  main {
+    .grid-container {
+      display: flex;
+      justify-content: center;
+      max-width: 100%;
+      padding: 0;
+      > .grid-row {
+        max-width: 75rem;
+        padding: 0 1rem;
+
+        @media screen and (min-width: $desktop) {
+          padding: 0 2rem;
+        }
+      }
+    }
+
+    section#easi-welcome-header {
+      h1 {
+        font-size: 5rem;
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        margin-left: -1rem;
+        margin-top: 3.5rem;
+
+        > span {
+          padding: 0 1rem;
+
+          &:not(:first-child) {
+            background-color: color('primary-vivid');
+          }
+
+          &:last-child {
+            grid-column: 1 / span 2;
+          }
+        }
+
+        @media screen and (max-width: 1050px) {
+          grid-template-columns: 1fr;
+          max-width: $mobile;
+          margin-left: -.5rem;
+
+          span {
+            padding: 0 .5rem;
+          }
+
+          > span:last-child {
+            background-color: transparent;
+            grid-column: 1 / span 1;
+            padding: 0;
+
+            span {
+              display: block;
+              background-color: color('primary-vivid');
+              width: 100%;
+            }
+          }
+        }
+
+        @media screen and (max-width: $tablet) {
+          font-size: 3rem;
+          margin-top: 2rem;
+        }
+      }
+
+      p {
+        line-height: 1.25;
+      }
+    }
+
+    section#easi-intro-cards {
+      .usa-card__container {
+        border: none;
+        box-shadow: 0 8px 16px rgb(0, 0, 0, .1);
+      }
+    }
+
+    section#easi-future-features {
+      .usa-card__container {
+        border: none;
+        border-radius: 0px;
+        
+        .usa-card__header {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.75rem;
+
+          .usa-icon {
+            flex-shrink: 0;
+          }
+
+          h3 {
+            margin-top: 0;
+          }
+        }
+
+        .usa-card__body {
+          margin-left: 3.25rem;
+        }
+      }
+    }
+
+      @media screen and (min-width: $desktop) {
+        section#easi-capabilities .grid-row {
+          column-gap: 1rem;
+          
+          .grid-col {
+            flex: 1 1;
+          }
+        }
+      }
+  }
+}

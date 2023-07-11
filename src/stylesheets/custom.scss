@@ -124,7 +124,7 @@
   align-self: start;
   position: sticky;
   position: -webkit-sticky;
-  top: 0;
+  top: -1px;
 }
 
 // Fixes button group item margins when nested inside .usa-list
