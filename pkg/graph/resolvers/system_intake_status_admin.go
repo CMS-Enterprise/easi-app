@@ -47,7 +47,7 @@ func calcSystemIntakeInitialFormStatusAdmin(intakeFormState models.SystemIntakeF
 
 func calcSystemIntakeDraftBusinessCaseStatusAdmin(draftBuisnessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
 	if draftBuisnessCaseState == models.SIRFSSubmitted {
-		return models.SISADraftBusinessCaseComplete
+		return models.SISADraftBusinessCaseSubmitted
 	}
 	return models.SISADraftBusinessCaseInProgress
 }
@@ -66,7 +66,7 @@ func calcSystemIntakeGRTMeetingStatusAdmin(grtDate *time.Time) models.SystemInta
 
 func calcSystemIntakeFinalBusinessCaseStatusAdmin(finalBuisnessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
 	if finalBuisnessCaseState == models.SIRFSSubmitted {
-		return models.SISAFinalBusinessCaseComplete
+		return models.SISAFinalBusinessCaseSubmitted
 	}
 	return models.SISAFinalBusinessCaseInProgress
 }

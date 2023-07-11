@@ -113,7 +113,7 @@ func TestSystemIntakeStatusAdminGet(t *testing.T) {
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 				State:                  models.SystemIntakeStateOPEN,
 			},
-			expectedStatus: models.SISADraftBusinessCaseComplete,
+			expectedStatus: models.SISADraftBusinessCaseSubmitted,
 			expectError:    false,
 		},
 		{
@@ -211,7 +211,7 @@ func TestSystemIntakeStatusAdminGet(t *testing.T) {
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 				State:                  models.SystemIntakeStateOPEN,
 			},
-			expectedStatus: models.SISAFinalBusinessCaseComplete,
+			expectedStatus: models.SISAFinalBusinessCaseSubmitted,
 			expectError:    false,
 		},
 		{
