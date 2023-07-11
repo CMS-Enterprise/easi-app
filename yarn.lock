@@ -13147,13 +13147,14 @@ jest-jasmine2@^27.5.1:
     pretty-format "^27.5.1"
     throat "^6.0.1"
 
-jest-launchdarkly-mock@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.npmjs.org/jest-launchdarkly-mock/-/jest-launchdarkly-mock-0.1.1.tgz"
-  integrity sha512-Von9Pk0JYw2ek0Q3/Shb4OFdRp3/UhBO6ssS4uG+R2iL1+vRwl+6k5g+OOn9CdqfHlDwdtrux5MWOTPPoXoTCw==
+jest-launchdarkly-mock@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/jest-launchdarkly-mock/-/jest-launchdarkly-mock-2.1.0.tgz#1766b1a5c3d8501c8a2572adc8e8ce5f025d050d"
+  integrity sha512-gCLp72emdWqdC27/hwkD2Y6lb7zgculY4EZ5xKQEC7X1z54qwUBTWu8uKCK+8cJPEeqO+kddicwgsJbJflMMYQ==
   dependencies:
     lodash.camelcase "^4.3.0"
     lodash.kebabcase "^4.1.1"
+    lodash.snakecase "^4.1.1"
 
 jest-leak-detector@^27.5.1:
   version "27.5.1"
@@ -13771,31 +13772,31 @@ language-tags@=1.0.5:
   dependencies:
     language-subtag-registry "~0.3.2"
 
-launchdarkly-js-client-sdk@2.19.1:
-  version "2.19.1"
-  resolved "https://registry.npmjs.org/launchdarkly-js-client-sdk/-/launchdarkly-js-client-sdk-2.19.1.tgz"
-  integrity sha512-75KSckqH0OSVQbjzgTJk5B/a5XT5Z5nruAPqFn2wj38rF/9hxwWH2XcVc7R+6q0m88RuLUZ1AV9tr5TMKVBd/A==
+launchdarkly-js-client-sdk@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/launchdarkly-js-client-sdk/-/launchdarkly-js-client-sdk-3.1.3.tgz#e046439f0e4f0bfd6d38b9eaa4420a6e40ffc0c7"
+  integrity sha512-/JR/ri8z3bEj9RFTTKDjd+con4F1MsWUea1MmBDtFj4gDA0l9NDm1KzhMKiIeoBdmB2rSaeFYe4CaYOEp8IryA==
   dependencies:
-    escape-string-regexp "^1.0.5"
-    launchdarkly-js-sdk-common "3.3.1"
+    escape-string-regexp "^4.0.0"
+    launchdarkly-js-sdk-common "5.0.3"
 
-launchdarkly-js-sdk-common@3.3.1:
-  version "3.3.1"
-  resolved "https://registry.npmjs.org/launchdarkly-js-sdk-common/-/launchdarkly-js-sdk-common-3.3.1.tgz"
-  integrity sha512-8YZcMtn7mf/e62iBopNcG9k6FLrFBHaAbUzRMOTeouOyVx8/M967I5E7zKbqlfMIsPSE6yjxik2yvpO1+oAz8w==
+launchdarkly-js-sdk-common@5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/launchdarkly-js-sdk-common/-/launchdarkly-js-sdk-common-5.0.3.tgz#345f899f5779be8b03d6599978c855eb838d8b7f"
+  integrity sha512-wKG8UsVbPVq8+7eavgAm5CVmulQWN6Ddod2ZoA3euZ1zPvJPwIQ2GrOYaCJr3cFrrMIX+nQyBJHBHYxUAPcM+Q==
   dependencies:
     base64-js "^1.3.0"
     fast-deep-equal "^2.0.1"
-    uuid "^3.3.2"
+    uuid "^8.0.0"
 
-launchdarkly-react-client-sdk@^2.21.0:
-  version "2.22.2"
-  resolved "https://registry.npmjs.org/launchdarkly-react-client-sdk/-/launchdarkly-react-client-sdk-2.22.2.tgz"
-  integrity sha512-tnv4GCZdq+Os46HnzxVxA0el0rRBNZO4fJ3WdQazJbuQCO9qutcCs74uGSi9NcDy3OqRYMfGZUPVlUQUS/CiEQ==
+launchdarkly-react-client-sdk@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/launchdarkly-react-client-sdk/-/launchdarkly-react-client-sdk-3.0.6.tgz#5c694a4a013757d2afb5213efd28d9c16af1595e"
+  integrity sha512-r7gSshScugjnJB4lJ6mAOMKpV4Pj/wUks3tsRHdfeXgER9jPdxmZOAkm0besMjK0S7lfQdjxJ2KIXrh+Mn1sQA==
   dependencies:
-    launchdarkly-js-client-sdk "2.19.1"
+    hoist-non-react-statics "^3.3.2"
+    launchdarkly-js-client-sdk "^3.1.3"
     lodash.camelcase "^4.3.0"
-    uuid "^3.3.2"
 
 lazy-ass@1.6.0, lazy-ass@^1.6.0:
   version "1.6.0"
@@ -14055,6 +14056,11 @@ lodash.pickby@4.6.0:
   version "4.6.0"
   resolved "https://registry.npmjs.org/lodash.pickby/-/lodash.pickby-4.6.0.tgz"
   integrity sha1-feoh2MGNdwOifHBMFdO4SmfjOv8=
+
+lodash.snakecase@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.snakecase/-/lodash.snakecase-4.1.1.tgz#39d714a35357147837aefd64b5dcbb16becd8f8d"
+  integrity sha512-QZ1d4xoBHYUeuouhEq3lk3Uq7ldgyFXGBhg04+oRLnIz8o9T65Eh+8YdroUwn846zchkA9yDsDl5CVVaV2nqYw==
 
 lodash.sortby@^4.7.0:
   version "4.7.0"
@@ -20268,7 +20274,7 @@ uuid@^3.3.2, uuid@^3.3.3:
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-uuid@^8.3.2:
+uuid@^8.0.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==

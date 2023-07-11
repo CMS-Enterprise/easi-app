@@ -101,6 +101,11 @@ func checkForLCIDExpiration(
 			continue
 		}
 
+		// skip intake if it doesn't have an EUA User ID set (and thus we can't find recipients to send to)
+		if currIntake.EUAUserID.IsZero() {
+			continue
+		}
+
 		hoursUntilLCIDExpiration := currIntake.LifecycleExpiresAt.Sub(currentDate).Hours()
 
 		var hoursSinceFirstAlert float64
