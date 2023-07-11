@@ -1,5 +1,5 @@
 const general = {
-  appName: 'EASi',
+  appName: 'Easy Access to System Information (EASi)',
   intake: 'Intake Request',
   businessCase: 'Business Case',
   date: {

@@ -3,36 +3,14 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import i18next from 'i18next';
 
+import { taskListState } from 'data/mock/govTaskList';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-// eslint-disable-next-line camelcase
-import { GetGovernanceTaskList_systemIntake_itGovTaskStatuses } from 'queries/types/GetGovernanceTaskList';
-import {
-  ITGovDecisionStatus,
-  ITGovDraftBusinessCaseStatus,
-  ITGovFeedbackStatus,
-  ITGovFinalBusinessCaseStatus,
-  ITGovGRBStatus,
-  ITGovGRTStatus,
-  ITGovIntakeFormStatus
-} from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import GovernanceTaskList from '.';
 
 describe('Governance Task List', () => {
   const id = '80950153-4a66-4881-b728-f4cc701ff926';
-
-  // eslint-disable-next-line camelcase
-  const requesterStartsNewRequest: GetGovernanceTaskList_systemIntake_itGovTaskStatuses = {
-    intakeFormStatus: ITGovIntakeFormStatus.READY,
-    feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
-    decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
-    bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
-    grtMeetingStatus: ITGovGRTStatus.CANT_START,
-    bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
-    grbMeetingStatus: ITGovGRBStatus.CANT_START,
-    __typename: 'ITGovTaskStatuses'
-  };
 
   it('renders a request task list at the initial state', async () => {
     const { getByRole, getByTestId } = render(
@@ -49,9 +27,8 @@ describe('Governance Task List', () => {
               result: {
                 data: {
                   systemIntake: {
-                    id,
-                    itGovTaskStatuses: requesterStartsNewRequest,
-                    __typename: 'SystemIntake'
+                    ...taskListState.intakeFormNotStarted.systemIntake,
+                    id
                   }
                 }
               }
@@ -88,9 +65,10 @@ describe('Governance Task List', () => {
     ).toHaveAttribute('href', '/system/making-a-request');
 
     // First task list item
+    // errors because of component mock preview setup
     getByRole('heading', {
       level: 3,
-      name: i18next.t<string>('itGov:taskList.steps.0.title')
+      name: i18next.t<string>('itGov:taskList.step.intakeForm.title')
     });
   });
 });
