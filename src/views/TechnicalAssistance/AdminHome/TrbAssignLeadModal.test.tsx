@@ -24,8 +24,8 @@ import TrbAssignLeadModal, {
 } from './TrbAssignLeadModal';
 
 function MockMessage() {
-  const { message } = useMessage();
-  return <>{message}</>;
+  const { Message } = useMessage();
+  return <Message />;
 }
 
 const trbLeadInfo = trbLeadOptions[0];

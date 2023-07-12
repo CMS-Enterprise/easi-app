@@ -16,7 +16,6 @@ import {
   ModalToggleButton
 } from '@trussworks/react-uswds';
 
-import Alert from 'components/shared/Alert';
 import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
@@ -108,19 +107,17 @@ function CloseRequest() {
         }
       })
         .then(result => {
-          showMessageOnNextPage(
-            <Alert type="success" className="margin-top-3">
-              {t(`${actionText}.success`)}
-            </Alert>
-          );
+          showMessageOnNextPage(t(`${actionText}.success`), {
+            type: 'success',
+            className: 'margin-top-3'
+          });
           history.push(`/trb/${id}/request`);
         })
         .catch(err => {
-          showMessage(
-            <Alert type="error" className="margin-top-3">
-              {t(`${actionText}.error`)}
-            </Alert>
-          );
+          showMessage(t(`${actionText}.error`), {
+            type: 'error',
+            className: 'margin-top-3'
+          });
         });
     }
   );
@@ -138,19 +135,17 @@ function CloseRequest() {
         }
       })
         .then(result => {
-          showMessageOnNextPage(
-            <Alert type="success" className="margin-top-3">
-              {t(`${actionText}.success`)}
-            </Alert>
-          );
+          showMessageOnNextPage(t(`${actionText}.success`), {
+            type: 'success',
+            className: 'margin-top-3'
+          });
           history.push(`/trb/${id}/request`);
         })
         .catch(err => {
-          showMessage(
-            <Alert type="error" className="margin-top-3">
-              {t(`${actionText}.error`)}
-            </Alert>
-          );
+          showMessage(t(`${actionText}.error`), {
+            type: 'error',
+            className: 'margin-top-3'
+          });
         });
     }
   );

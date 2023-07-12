@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
-  Alert,
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
@@ -59,7 +58,7 @@ const EditTeam = ({
 }: EditTeamProps) => {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
-  const { message, showMessage } = useMessage();
+  const { Message, showMessage } = useMessage();
 
   const [memberToDelete, setMemberToDelete] = useState<{
     euaUserId: string;
@@ -99,19 +98,18 @@ const EditTeam = ({
       .then(() => {
         setMemberToDelete(null);
         showMessage(
-          <Alert type="success">
-            {t('singleSystem.editTeam.form.successRemoveContact', {
-              commonName: user.commonName
-            })}
-          </Alert>
+          t('singleSystem.editTeam.form.successRemoveContact', {
+            commonName: user.commonName
+          }),
+          {
+            type: 'success'
+          }
         );
       })
       .catch(() =>
-        showMessage(
-          <Alert type="error">
-            {t('singleSystem.editTeam.form.errorRemoveContact')}
-          </Alert>
-        )
+        showMessage(t('singleSystem.editTeam.form.errorRemoveContact'), {
+          type: 'error'
+        })
       );
   };
 
@@ -176,7 +174,7 @@ const EditTeam = ({
         )}
       </BreadcrumbBar>
 
-      {message}
+      <Message />
 
       {action ? (
         /* Add/edit team member form */

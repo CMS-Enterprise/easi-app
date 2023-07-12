@@ -58,7 +58,10 @@ const ChangeRequestStatus = () => {
                 response.data.updateAccessibilityRequestStatus.status
               ],
             requestName: data.accessibilityRequest?.name
-          })
+          }),
+          {
+            type: 'success'
+          }
         );
         history.push(`/508/requests/${accessibilityRequestId}`);
       }

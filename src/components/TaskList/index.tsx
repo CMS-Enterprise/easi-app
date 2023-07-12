@@ -1,10 +1,16 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 
 import TaskStatusTag, {
   TaskStatus,
   taskStatusClassName
 } from 'components/shared/TaskStatusTag';
+import {
+  ITGovFeedbackStatus,
+  ITGovIntakeFormStatus
+} from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
 
 import './index.scss';
 
@@ -36,14 +42,22 @@ type TaskListItemProps = {
   status: TaskStatus | undefined;
   children?: React.ReactNode;
   testId?: string;
+  completedIso?: string | null;
+  lastUpdatedIso?: string | null;
+  governanceRequestFeedbackCompletedIso?: string | null;
 };
 
 const TaskListItem = ({
   heading,
   status,
   children,
-  testId
+  testId,
+  completedIso,
+  lastUpdatedIso,
+  governanceRequestFeedbackCompletedIso
 }: TaskListItemProps) => {
+  const { t } = useTranslation('taskList');
+
   const taskListItemClasses = classnames(
     'task-list__item',
     'padding-bottom-4',
@@ -56,6 +70,22 @@ const TaskListItem = ({
       ].includes(status || '')
     }
   );
+
+  const completedDate =
+    status === ITGovIntakeFormStatus.COMPLETED &&
+    completedIso &&
+    formatDateLocal(completedIso, 'MM/dd/yyyy');
+
+  const lastUpdatedDate =
+    status === ITGovIntakeFormStatus.EDITS_REQUESTED &&
+    lastUpdatedIso &&
+    formatDateLocal(lastUpdatedIso, 'MM/dd/yyyy');
+
+  const governanceRequestFeedbackCompletedDate =
+    status === ITGovFeedbackStatus.COMPLETED &&
+    governanceRequestFeedbackCompletedIso &&
+    formatDateLocal(governanceRequestFeedbackCompletedIso, 'MM/dd/yyyy');
+
   return (
     <li className={taskListItemClasses} data-testid={testId}>
       <div className="task-list__task-content">
@@ -63,9 +93,35 @@ const TaskListItem = ({
           <h3 className="task-list__task-heading line-height-heading-2 margin-top-0 margin-bottom-1">
             {heading}
           </h3>
-          {!!status && status in taskStatusClassName && (
-            <TaskStatusTag status={status} />
-          )}
+          <div className="task-list__task-heading-row__status">
+            {!!status && status in taskStatusClassName && (
+              <TaskStatusTag status={status} />
+            )}
+            {(completedDate ||
+              lastUpdatedDate ||
+              governanceRequestFeedbackCompletedDate) && (
+              <p className="margin-top-05 margin-bottom-0 text-base">
+                {completedDate && (
+                  <>
+                    {t('taskStatusInfo.submitted')}
+                    <br /> {completedDate}
+                  </>
+                )}
+                {lastUpdatedDate && (
+                  <>
+                    {t('taskStatusInfo.lastUpdated')}
+                    <br /> {lastUpdatedDate}
+                  </>
+                )}
+                {governanceRequestFeedbackCompletedDate && (
+                  <>
+                    {t('taskStatusInfo.completed')}
+                    <br /> {governanceRequestFeedbackCompletedDate}
+                  </>
+                )}
+              </p>
+            )}
+          </div>
         </div>
         {children}
       </div>
