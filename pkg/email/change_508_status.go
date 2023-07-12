@@ -29,6 +29,8 @@ func convertStatusToReadableString(status models.AccessibilityRequestStatus) str
 		return "Closed"
 	case models.AccessibilityRequestStatusInRemediation:
 		return "In remediation"
+	case models.AccessibilityRequestStatusDeleted:
+		return ""
 	default:
 		return ""
 	}

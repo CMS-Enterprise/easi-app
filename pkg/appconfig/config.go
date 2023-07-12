@@ -91,6 +91,8 @@ func (e Environment) Deployed() bool {
 		return true
 	case prodEnv:
 		return true
+	case localEnv, testEnv:
+		return false
 	default:
 		return false
 	}
