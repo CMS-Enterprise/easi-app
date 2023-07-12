@@ -18,7 +18,6 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
 import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
@@ -122,21 +121,22 @@ function TrbAssignLeadModal({
     })
       .then(result => {
         showMessage(
-          <Alert type="success" className="margin-top-3">
-            {t(`assignTrbLeadModal.success`, {
-              name: data?.trbLeadOptions.find(
-                e => e.euaUserId === formData.trbLead
-              )!.commonName
-            })}
-          </Alert>
+          t(`assignTrbLeadModal.success`, {
+            name: data?.trbLeadOptions.find(
+              e => e.euaUserId === formData.trbLead
+            )!.commonName
+          }),
+          {
+            type: 'success',
+            className: 'margin-top-3'
+          }
         );
       })
       .catch(err => {
-        showMessage(
-          <Alert type="error" className="margin-top-3">
-            {t(`assignTrbLeadModal.error`)}
-          </Alert>
-        );
+        showMessage(t(`assignTrbLeadModal.error`), {
+          type: 'error',
+          className: 'margin-top-3'
+        });
       });
 
     reset();

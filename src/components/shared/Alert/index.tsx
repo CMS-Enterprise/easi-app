@@ -25,7 +25,7 @@ export const AlertText = ({
   );
 };
 
-type AlertProps = {
+export type AlertProps = {
   type: 'success' | 'warning' | 'error' | 'info';
   heading?: React.ReactNode;
   children?: React.ReactNode;

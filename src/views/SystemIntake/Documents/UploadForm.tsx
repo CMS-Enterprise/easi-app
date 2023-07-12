@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -43,7 +43,7 @@ const UploadForm = () => {
     systemId: string;
   }>();
 
-  const { message, showMessageOnNextPage, showMessage } = useMessage();
+  const { Message, showMessageOnNextPage, showMessage } = useMessage();
 
   const [createDocument] = useMutation<
     CreateSystemIntakeDocument,
@@ -83,32 +83,24 @@ const UploadForm = () => {
     })
       .then(() => {
         showMessageOnNextPage(
-          <Alert type="success">
-            {t('technicalAssistance:documents.upload.success')}
-          </Alert>
+          t('technicalAssistance:documents.upload.success'),
+          {
+            type: 'success'
+          }
         );
         history.push(`/system/${systemId}/documents`);
       })
       .catch(() => {
-        showMessage(
-          <Alert type="error" className="margin-top-4">
-            {t('technicalAssistance:documents.upload.error')}
-          </Alert>
-        );
+        showMessage(t('technicalAssistance:documents.upload.error'), {
+          type: 'error',
+          className: 'margin-top-4'
+        });
       });
   });
 
-  // Scroll to the upload error if there's a problem
-  useEffect(() => {
-    if (message) {
-      const err = document.querySelector('.usa-alert--error');
-      err?.scrollIntoView();
-    }
-  }, [message]);
-
   return (
     <>
-      {message}
+      <Message />
 
       <div className="tablet:grid-col-12 desktop:grid-col-8 margin-top-6 margin-bottom-8 padding-bottom-4">
         <h1 className="margin-bottom-1">

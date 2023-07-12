@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, Grid, GridContainer } from '@trussworks/react-uswds';
@@ -9,7 +9,6 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import Alert from 'components/shared/Alert';
 import TaskListItem, {
   TaskListContainer,
   TaskListDescription
@@ -22,6 +21,7 @@ import {
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
+import GovTaskFeedbackFromInitialReview from './GovTaskFeedbackFromInitialReview';
 import GovTaskIntakeForm from './GovTaskIntakeForm';
 
 function GovernanceTaskList() {
@@ -75,24 +75,7 @@ function GovernanceTaskList() {
                   <GovTaskIntakeForm {...systemIntake} />
 
                   {/* 2. Feedback from initial review */}
-                  <TaskListItem
-                    heading={t('taskList.step.feedbackFromInitialReview.title')}
-                    status={itGovTaskStatuses.feedbackFromInitialReviewStatus}
-                    testId={kebabCase(
-                      t('taskList.step.feedbackFromInitialReview.title')
-                    )}
-                  >
-                    <TaskListDescription>
-                      <p>
-                        {t(
-                          'taskList.step.feedbackFromInitialReview.description'
-                        )}
-                      </p>
-                      <Alert type="info" slim className="margin-bottom-0">
-                        <Trans i18nKey="itGov:taskList.step.feedbackFromInitialReview.info" />
-                      </Alert>
-                    </TaskListDescription>
-                  </TaskListItem>
+                  <GovTaskFeedbackFromInitialReview {...systemIntake} />
 
                   {/* 3. Prepare a draft Business Case */}
                   <TaskListItem
