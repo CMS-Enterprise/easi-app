@@ -103,7 +103,7 @@ const technicalAssistance = {
       ADVICE_LETTER_IN_REVIEW: {
         title: 'Review advice letter',
         description:
-          'Review this draft advice letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the advice letter to incorporate your comments and feedback before sending it to the requester and project team.'
+          'Review this draft advice letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the advice letter to incorporate your comments and feedback before finalizing the letter and sending it to the requester and project team.'
       },
       ADVICE_LETTER_SENT: {
         title: 'Close request',
@@ -123,6 +123,7 @@ const technicalAssistance = {
     },
     buttons: {
       orCloseRequest: 'or, close this request',
+      orCloseRequestWithoutSending: 'or, close this request without sending',
       closeRequest: 'Close this request',
       reopenRequest: 'Re-open this request',
       viewRequestForm: 'View request form',
@@ -134,7 +135,7 @@ const technicalAssistance = {
       viewAdviceLetter: 'View advice letter',
       startAdviceLetter: 'Start advice letter',
       continueAdviceLetter: 'Continue advice letter',
-      editAdviceLetter: 'Edit advice letter',
+      finalizeAdviceLetter: 'Finalize and send advice letter',
       addNote: 'Add a note'
     }
   },
