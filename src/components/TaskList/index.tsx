@@ -6,7 +6,10 @@ import TaskStatusTag, {
   TaskStatus,
   taskStatusClassName
 } from 'components/shared/TaskStatusTag';
-import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
+import {
+  ITGovFeedbackStatus,
+  ITGovIntakeFormStatus
+} from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 import './index.scss';
@@ -41,6 +44,7 @@ type TaskListItemProps = {
   testId?: string;
   completedIso?: string | null;
   lastUpdatedIso?: string | null;
+  governanceRequestFeedbackCompletedIso?: string | null;
 };
 
 const TaskListItem = ({
@@ -49,7 +53,8 @@ const TaskListItem = ({
   children,
   testId,
   completedIso,
-  lastUpdatedIso
+  lastUpdatedIso,
+  governanceRequestFeedbackCompletedIso
 }: TaskListItemProps) => {
   const { t } = useTranslation('taskList');
 
@@ -76,6 +81,11 @@ const TaskListItem = ({
     lastUpdatedIso &&
     formatDateLocal(lastUpdatedIso, 'MM/dd/yyyy');
 
+  const governanceRequestFeedbackCompletedDate =
+    status === ITGovFeedbackStatus.COMPLETED &&
+    governanceRequestFeedbackCompletedIso &&
+    formatDateLocal(governanceRequestFeedbackCompletedIso, 'MM/dd/yyyy');
+
   return (
     <li className={taskListItemClasses} data-testid={testId}>
       <div className="task-list__task-content">
@@ -87,7 +97,9 @@ const TaskListItem = ({
             {!!status && status in taskStatusClassName && (
               <TaskStatusTag status={status} />
             )}
-            {(completedDate || lastUpdatedDate) && (
+            {(completedDate ||
+              lastUpdatedDate ||
+              governanceRequestFeedbackCompletedDate) && (
               <p className="margin-top-05 margin-bottom-0 text-base">
                 {completedDate && (
                   <>
@@ -99,6 +111,12 @@ const TaskListItem = ({
                   <>
                     {t('taskStatusInfo.lastUpdated')}
                     <br /> {lastUpdatedDate}
+                  </>
+                )}
+                {governanceRequestFeedbackCompletedDate && (
+                  <>
+                    {t('taskStatusInfo.completed')}
+                    <br /> {governanceRequestFeedbackCompletedDate}
                   </>
                 )}
               </p>
