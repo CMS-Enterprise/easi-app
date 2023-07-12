@@ -24,7 +24,8 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
       (async () => {
         const provider = await asyncWithLDProvider({
           clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string,
-          user: {
+          context: {
+            kind: 'user',
             key: data?.currentUser?.launchDarkly.userKey
           },
           options: {
@@ -45,10 +46,10 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
           }
         });
 
-        setLDProvider(() => provider);
+        setLDProvider(() => () => provider({ children }));
       })();
     }
-  }, [data]);
+  }, [data, children]);
 
   return <LDProvider>{children}</LDProvider>;
 };

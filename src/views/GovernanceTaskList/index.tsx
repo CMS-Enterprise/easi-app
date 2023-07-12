@@ -19,9 +19,10 @@ import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
-import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+
+import GovTaskIntakeForm from './GovTaskIntakeForm';
 
 function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
@@ -36,7 +37,8 @@ function GovernanceTaskList() {
     }
   });
 
-  const itGovTaskStatuses = data?.systemIntake?.itGovTaskStatuses;
+  const systemIntake = data?.systemIntake;
+  const itGovTaskStatuses = systemIntake?.itGovTaskStatuses;
 
   if (error) {
     return <NotFound />;
@@ -56,7 +58,7 @@ function GovernanceTaskList() {
 
         {loading && <PageLoading />}
 
-        {!loading && itGovTaskStatuses && (
+        {!loading && systemIntake && itGovTaskStatuses && (
           <Grid row gap className="margin-top-6">
             <Grid tablet={{ col: 9 }}>
               <PageHeading className="margin-y-0">
@@ -70,63 +72,50 @@ function GovernanceTaskList() {
 
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
-                  <TaskListItem
-                    heading={t('taskList.steps.0.title')}
-                    status={itGovTaskStatuses.intakeFormStatus}
-                    testId={kebabCase(t('taskList.steps.0.title'))}
-                  >
-                    <TaskListDescription>
-                      <p>{t('taskList.steps.0.description')}</p>
-                    </TaskListDescription>
-
-                    {data.systemIntake?.itGovTaskStatuses.intakeFormStatus ===
-                      ITGovIntakeFormStatus.READY && (
-                      <UswdsReactLink
-                        variant="unstyled"
-                        className="usa-button"
-                        to="./"
-                      >
-                        {t('button.start')}
-                      </UswdsReactLink>
-                    )}
-                  </TaskListItem>
+                  <GovTaskIntakeForm {...systemIntake} />
 
                   {/* 2. Feedback from initial review */}
                   <TaskListItem
-                    heading={t('taskList.steps.1.title')}
+                    heading={t('taskList.step.feedbackFromInitialReview.title')}
                     status={itGovTaskStatuses.feedbackFromInitialReviewStatus}
-                    testId={kebabCase(t('taskList.steps.1.title'))}
+                    testId={kebabCase(
+                      t('taskList.step.feedbackFromInitialReview.title')
+                    )}
                   >
                     <TaskListDescription>
-                      <p>{t('taskList.steps.1.description')}</p>
+                      <p>
+                        {t(
+                          'taskList.step.feedbackFromInitialReview.description'
+                        )}
+                      </p>
                       <Alert type="info" slim className="margin-bottom-0">
-                        <Trans i18nKey="itGov:taskList.steps.1.info" />
+                        <Trans i18nKey="itGov:taskList.step.feedbackFromInitialReview.info" />
                       </Alert>
                     </TaskListDescription>
                   </TaskListItem>
 
                   {/* 3. Prepare a draft Business Case */}
                   <TaskListItem
-                    heading={t('taskList.steps.2.title')}
+                    heading={t('taskList.step.bizCaseDraft.title')}
                     status={itGovTaskStatuses.bizCaseDraftStatus}
-                    testId={kebabCase(t('taskList.steps.2.title'))}
+                    testId={kebabCase(t('taskList.step.bizCaseDraft.title'))}
                   >
                     <TaskListDescription>
-                      <p>{t('taskList.steps.2.description')}</p>
+                      <p>{t('taskList.step.bizCaseDraft.description')}</p>
                     </TaskListDescription>
                   </TaskListItem>
 
                   {/* 4. Attend the GRT meeting */}
                   <TaskListItem
-                    heading={t('taskList.steps.3.title')}
+                    heading={t('taskList.step.grtMeeting.title')}
                     status={itGovTaskStatuses.grtMeetingStatus}
-                    testId={kebabCase(t('taskList.steps.3.title'))}
+                    testId={kebabCase(t('taskList.step.grtMeeting.title'))}
                   >
                     <TaskListDescription>
-                      <p>{t('taskList.steps.3.description')}</p>
+                      <p>{t('taskList.step.grtMeeting.description')}</p>
                       <div className="margin-top-2">
                         <UswdsReactLink to="./">
-                          {t('taskList.steps.3.link')}
+                          {t('taskList.step.grtMeeting.link')}
                         </UswdsReactLink>
                       </div>
                     </TaskListDescription>
@@ -134,26 +123,26 @@ function GovernanceTaskList() {
 
                   {/* 5. Submit your Business Case for final approval */}
                   <TaskListItem
-                    heading={t('taskList.steps.4.title')}
+                    heading={t('taskList.step.bizCaseFinal.title')}
                     status={itGovTaskStatuses.bizCaseFinalStatus}
-                    testId={kebabCase(t('taskList.steps.4.title'))}
+                    testId={kebabCase(t('taskList.step.bizCaseFinal.title'))}
                   >
                     <TaskListDescription>
-                      <p>{t('taskList.steps.4.description')}</p>
+                      <p>{t('taskList.step.bizCaseFinal.description')}</p>
                     </TaskListDescription>
                   </TaskListItem>
 
                   {/* 6. Attend the GRB meeting */}
                   <TaskListItem
-                    heading={t('taskList.steps.5.title')}
+                    heading={t('taskList.step.grbMeeting.title')}
                     status={itGovTaskStatuses.grbMeetingStatus}
-                    testId={kebabCase(t('taskList.steps.5.title'))}
+                    testId={kebabCase(t('taskList.step.grbMeeting.title'))}
                   >
                     <TaskListDescription>
-                      <p>{t('taskList.steps.5.description')}</p>
+                      <p>{t('taskList.step.grbMeeting.description')}</p>
                       <div className="margin-top-2">
                         <UswdsReactLink to="./">
-                          {t('taskList.steps.5.link')}
+                          {t('taskList.step.grbMeeting.link')}
                         </UswdsReactLink>
                       </div>
                     </TaskListDescription>
@@ -161,12 +150,16 @@ function GovernanceTaskList() {
 
                   {/* 7. Decision and next steps */}
                   <TaskListItem
-                    heading={t('taskList.steps.6.title')}
+                    heading={t('taskList.step.decisionAndNextSteps.title')}
                     status={itGovTaskStatuses.decisionAndNextStepsStatus}
-                    testId={kebabCase(t('taskList.steps.6.title'))}
+                    testId={kebabCase(
+                      t('taskList.step.decisionAndNextSteps.title')
+                    )}
                   >
                     <TaskListDescription>
-                      <p>{t('taskList.steps.6.description')}</p>
+                      <p>
+                        {t('taskList.step.decisionAndNextSteps.description')}
+                      </p>
                     </TaskListDescription>
                   </TaskListItem>
                 </TaskListContainer>

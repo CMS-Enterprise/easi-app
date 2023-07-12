@@ -4,7 +4,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { DateTime } from 'luxon';
 
-import Alert from 'components/shared/Alert';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import { useMessage } from 'hooks/useMessage';
 import CreateTestDateQuery from 'queries/CreateTestDateQuery';
@@ -23,7 +22,7 @@ import './styles.scss';
 
 const NewTestDate = () => {
   const { t } = useTranslation('accessibility');
-  const { message, showMessageOnNextPage } = useMessage();
+  const { Message, showMessageOnNextPage } = useMessage();
 
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -85,7 +84,7 @@ const NewTestDate = () => {
       }
     }).then(result => {
       if (!result.errors) {
-        showMessageOnNextPage(submitConfirmation);
+        showMessageOnNextPage(submitConfirmation, { type: 'success' });
         history.push(`/508/requests/${accessibilityRequestId}/documents`);
       }
     });
@@ -105,11 +104,7 @@ const NewTestDate = () => {
         <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
       </SecondaryNav>
       <div className="grid-container">
-        {message && (
-          <Alert className="margin-top-4" type="success" role="alert">
-            {message}
-          </Alert>
-        )}
+        <Message className="margin-top-4" />
         <Form
           initialValues={initialValues}
           onSubmit={onSubmit}

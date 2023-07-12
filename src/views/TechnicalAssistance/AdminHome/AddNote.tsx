@@ -59,7 +59,7 @@ const AddNote = ({
   // TRB request information to render name in breadcrumbs
   const { data } = useContext(TRBRequestContext);
 
-  const { message, showMessage, showMessageOnNextPage } = useMessage();
+  const { Message, showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl: string = `/trb/${id}/notes`;
 
@@ -142,11 +142,10 @@ const AddNote = ({
           })
             .then(result => {
               if (!setModalView) {
-                showMessageOnNextPage(
-                  <Alert type="success" className="margin-top-3">
-                    {t('notes.status.success')}
-                  </Alert>
-                );
+                showMessageOnNextPage(t('notes.status.success'), {
+                  type: 'success',
+                  className: 'margin-top-3'
+                });
                 history.push(requestUrl);
               } else if (setModalView && setModalMessage) {
                 setModalView('viewNotes');
@@ -154,11 +153,10 @@ const AddNote = ({
               }
             })
             .catch(err => {
-              showMessage(
-                <Alert type="error" className="margin-top-3">
-                  {t('notes.status.error')}
-                </Alert>
-              );
+              showMessage(t('notes.status.error'), {
+                type: 'error',
+                className: 'margin-top-3'
+              });
             });
         })}
         className={classNames('maxw-full', {
@@ -184,7 +182,7 @@ const AddNote = ({
               />
             </div>
 
-            {!setModalView && message}
+            {!setModalView && <Message />}
 
             {hasErrors && (
               <Alert
