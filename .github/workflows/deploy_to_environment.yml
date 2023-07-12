@@ -49,7 +49,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-db-clean
-          NEW_IMAGE_TAG: ${{ env.GIT_HASH }}
+          NEW_IMAGE_TAG: latest
           TASK_FAMILY: "easi-app-db-clean-${{ inputs.env }}"
           ECS_CLUSTER: "${{ inputs.env }}-easi-app"
           SECURITY_GROUP_NAME: "ecs-easi-app-db-clean-${{ inputs.env }}"
