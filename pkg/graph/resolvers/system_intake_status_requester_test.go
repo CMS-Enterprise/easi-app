@@ -344,7 +344,46 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				expectedStatus: models.SISRLcidIssued,
 				errorExpected:  false,
 			},
-			// TODO - more test cases
+			{
+				testName: "Decision made, Not Governance, closed",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepDECISION,
+					DecisionState: models.SIDSNoGovernance,
+					State:         models.SystemIntakeStateCLOSED,
+				},
+				expectedStatus: models.SISRNoGovernance,
+				errorExpected:  false,
+			},
+			{
+				testName: "Decision made, Not Governance, re-opened",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepDECISION,
+					DecisionState: models.SIDSNoGovernance,
+					State:         models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRNoGovernance,
+				errorExpected:  false,
+			},
+			{
+				testName: "Decision made, Not Approved, closed",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepDECISION,
+					DecisionState: models.SIDSNotApproved,
+					State:         models.SystemIntakeStateCLOSED,
+				},
+				expectedStatus: models.SISRNotApproved,
+				errorExpected:  false,
+			},
+			{
+				testName: "Decision made, Not Approved, re-opened",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepDECISION,
+					DecisionState: models.SIDSNotApproved,
+					State:         models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRNotApproved,
+				errorExpected:  false,
+			},
 		},
 	}
 
