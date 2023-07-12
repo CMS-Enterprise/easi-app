@@ -28,8 +28,10 @@ export default {
         title: 'Feedback from initial review',
         description:
           'The Governance Team will review your Intake Request form and decide if it needs further governance. If it does, they’ll direct you to go through some or all of the remaining steps.',
-        info:
-          'To help with this review, someone from the Governance Team may schedule a phone call with you and Enterprise Architecture (EA).<br/><br/> After that phone call, the Governance Team will decide if you need to go through any additional steps in the governance process.'
+        reviewInfo:
+          'To help with this review, someone from the Governance Team may schedule a phone call with you and Enterprise Architecture (EA).<br/><br/> After that phone call, the Governance Team will decide if you need to go through any additional steps in the governance process.',
+        noFeedbackInfo:
+          'The Governance Team had no feedback for your initial Intake Request form. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       bizCaseDraft: {
         title: 'Prepare a draft Business Case',
