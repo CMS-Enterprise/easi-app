@@ -64,7 +64,7 @@ describe('Gov Task: Feedback from initial review statuses', () => {
   });
 
   it('Done - no feedback', async () => {
-    const { getByTestId } = renderGovTaskFeedbackFromInitialReview(
+    const { getByTestId, getByText } = renderGovTaskFeedbackFromInitialReview(
       taskListState.feedbackFromInitialReviewDoneNoFeedback.systemIntake!
     );
 
@@ -94,13 +94,19 @@ describe('Gov Task: Feedback from initial review statuses', () => {
       within(noFeedbackInfo).getByRole('link', { name: IT_GOV_EMAIL })
     ).toHaveAttribute('href', mailtoItGov);
 
-    // - completed date
+    // Completed date
+    getByText(
+      RegExp(
+        `${i18next.t<string>('taskList:taskStatusInfo.completed')}.*07/10/2023`
+      )
+    );
   });
 
   it('Done - with feedback', () => {
     const {
       getByTestId,
       getByRole,
+      getByText,
       queryByTestId
     } = renderGovTaskFeedbackFromInitialReview(
       taskListState.feedbackFromInitialReviewDoneWithFeedback.systemIntake!
@@ -119,7 +125,12 @@ describe('Gov Task: Feedback from initial review statuses', () => {
       name: i18next.t<string>('itGov:button.viewFeedback')
     });
 
-    // - completed date
+    // Completed date
+    getByText(
+      RegExp(
+        `${i18next.t<string>('taskList:taskStatusInfo.completed')}.*07/10/2023`
+      )
+    );
   });
 
   it('Re-submitted with feedback', () => {

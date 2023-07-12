@@ -1,4 +1,3 @@
-import { GetGovernanceTaskList } from 'queries/types/GetGovernanceTaskList';
 import {
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
@@ -8,12 +7,15 @@ import {
   ITGovGRTStatus,
   ITGovIntakeFormStatus
 } from 'types/graphql-global-types';
+import { GetGovernanceTaskListWithMockData } from 'types/itGov';
 
 const id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 
 /** IT Gov Task List status states */
 // eslint-disable-next-line import/prefer-default-export
-export const taskListState: { [k: string]: GetGovernanceTaskList } = {
+export const taskListState: {
+  [k: string]: GetGovernanceTaskListWithMockData;
+} = {
   /** Event: Intake Request form: Requester starts a new request */
   intakeFormNotStarted: {
     systemIntake: {
@@ -178,6 +180,7 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
       governanceRequestFeedbacks: [],
+      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z',
       submittedAt: null,
       updatedAt: null
     }
@@ -202,6 +205,7 @@ export const taskListState: { [k: string]: GetGovernanceTaskList } = {
           id
         }
       ],
+      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z',
       submittedAt: null,
       updatedAt: null
     }

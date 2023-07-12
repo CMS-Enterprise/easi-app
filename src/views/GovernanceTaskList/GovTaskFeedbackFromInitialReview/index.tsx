@@ -8,12 +8,13 @@ import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import { ITGovFeedbackStatus } from 'types/graphql-global-types';
-import { ItGovTaskSystemIntake } from 'types/itGov';
+import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 
 const GovTaskFeedbackFromInitialReview = ({
   itGovTaskStatuses,
-  governanceRequestFeedbacks
-}: ItGovTaskSystemIntake) => {
+  governanceRequestFeedbacks,
+  governanceRequestFeedbackCompletedAt
+}: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'feedbackFromInitialReview';
   const { t } = useTranslation('itGov');
 
@@ -34,6 +35,9 @@ const GovTaskFeedbackFromInitialReview = ({
       heading={t(`taskList.step.${stepKey}.title`)}
       status={itGovTaskStatuses.feedbackFromInitialReviewStatus}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
+      governanceRequestFeedbackCompletedIso={
+        governanceRequestFeedbackCompletedAt
+      }
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
