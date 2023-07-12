@@ -484,7 +484,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                       class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
                     >
                       <span
-                        class="easi-tag bg-warning"
+                        class="easi-tag easi-task-status-tag bg-warning"
                         data-testid="task-list-task-tag"
                       >
                         In progress
@@ -545,7 +545,7 @@ exports[`TRB admin home matches the snapshot 1`] = `
                       class="display-flex flex-align-center line-height-body-5 margin-bottom-2"
                     >
                       <span
-                        class="easi-tag border-2px text-base"
+                        class="easi-tag easi-task-status-tag border-2px text-base"
                         data-testid="task-list-task-tag"
                       >
                         Cannot start yet

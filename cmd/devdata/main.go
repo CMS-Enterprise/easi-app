@@ -197,6 +197,16 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
+	makeSystemIntake("Intake with expiring LCID and no EUA User ID - test case for EASI-3083", logger, store, func(i *models.SystemIntake) {
+		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour)
+		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
+		i.LifecycleID = null.StringFrom("300001")
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.SubmittedAt = &submittedAt
+		i.EUAUserID = null.StringFromPtr(nil)
+	})
+
 	// TODO - EASI-2888 - remove mention of this ticket in comments below; remove whole comment block if EASI-3019 also implemented
 	// TODO - EASI-3019 - remove mention of this ticket in comments below; remove whole comment block if EASI-2888 also implemented
 

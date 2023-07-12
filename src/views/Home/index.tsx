@@ -10,7 +10,6 @@ import LinkCard, { LinkRequestType } from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import Alert from 'components/shared/Alert';
 import useMessage from 'hooks/useMessage';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
@@ -26,14 +25,14 @@ import Table from 'views/MyRequests/Table';
 import SystemsListTable from 'views/SystemList/Table';
 
 import AdminHome from './AdminHome';
-import WelcomeText from './WelcomeText';
+import WelcomePage from './WelcomePage';
 
 const Home = () => {
   const { t } = useTranslation();
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
   const flags = useFlags();
 
-  const { message } = useMessage();
+  const { Message } = useMessage();
 
   const requestTypes: Record<LinkRequestType, any> = t('home:actions', {
     returnObjects: true
@@ -76,13 +75,9 @@ const Home = () => {
       if (user.isBasicUser(groups, flags)) {
         return (
           <div className="grid-container">
-            {message && (
-              <div className="grid-container margin-top-6">
-                <Alert type="success" role="alert">
-                  {message}
-                </Alert>
-              </div>
-            )}
+            <div className="grid-container margin-top-6">
+              <Message />
+            </div>
             <Grid tablet={{ col: 12 }}>
               <PageHeading className="margin-bottom-0">
                 {t('home:title')}
@@ -151,11 +146,7 @@ const Home = () => {
         );
       }
     }
-    return (
-      <div className="grid-container">
-        <WelcomeText />
-      </div>
-    );
+    return <WelcomePage />;
   };
 
   return <MainContent className="margin-bottom-5">{renderView()}</MainContent>;

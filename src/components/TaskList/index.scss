@@ -47,19 +47,53 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    position: relative;
 
     @media screen and (max-width: $tablet) {
       flex-direction: column;
     }
+
+    > h3 {
+      @media screen and (min-width: $tablet) {
+        margin-right: 160px;
+      }
+    }
+
+    &__status {
+      .easi-task-status-tag {
+        margin: 0;
+      }
+
+      @media screen and (max-width: calc($tablet - 1px)) {
+        .easi-task-status-tag {
+          margin-right: 0.5rem;
+        }
+
+        > p:first-of-type {
+          display: inline-block;
+
+          > br {
+            display: none;
+          }
+        }
+      }
+
+      @media screen and (min-width: $tablet) {
+        position: absolute;
+        right: 0;
+        text-align: right;
+      }
+    }
   }
 
-
   &__task-description {
-    max-width: 664px;
-    margin-right: auto;
     margin-bottom: 1rem;
-    @media screen and (max-width: $tablet) {
+
+    @media screen and (max-width: calc($tablet - 1px)) {
       margin-top: 1rem;
+    }
+    @media screen and (min-width: $tablet) {
+      margin-right: 160px;
     }
     @media screen and (min-width: $desktop) {
       padding-right: 1rem;
