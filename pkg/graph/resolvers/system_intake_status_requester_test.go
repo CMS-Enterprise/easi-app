@@ -26,7 +26,7 @@ func TestCalculateSystemIntakeRequesterStatus(t *testing.T) {
 	t.Parallel()
 
 	mockCurrentTime := time.Unix(0, 0)
-	allTestCases := systemIntakeStatusRequesterTestCases()
+	allTestCases := systemIntakeStatusRequesterTestCases(mockCurrentTime)
 
 	for _, singleStepTestCases := range allTestCases {
 		singleStepTestCases := singleStepTestCases // copy to local variable, instead of having callback close over loop variable
@@ -53,12 +53,14 @@ func TestCalculateSystemIntakeRequesterStatus(t *testing.T) {
 	}
 }
 
-func systemIntakeStatusRequesterTestCases() []testCasesForStep {
+func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCasesForStep {
+	yesterday := mockCurrentTime.Add(time.Hour * -24)
+	tomorrow := mockCurrentTime.Add(time.Hour * 24)
 	initialFormTests := testCasesForStep{
 		stepName: "Initial Request form",
 		testCases: []calculateSystemIntakeRequesterStatusTestCase{
 			{
-				testName: "Request not started",
+				testName: "Request form not started",
 				intake: models.SystemIntake{
 					Step:             models.SystemIntakeStepINITIALFORM,
 					RequestFormState: models.SIRFSNotStarted,
@@ -67,7 +69,47 @@ func systemIntakeStatusRequesterTestCases() []testCasesForStep {
 				expectedStatus: models.SISRInitialRequestFormNew,
 				errorExpected:  false,
 			},
-			// TODO - more initial form tests (include closing from this step)
+			{
+				testName: "Request form in progress",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepINITIALFORM,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRInitialRequestFormInProgress,
+				errorExpected:  false,
+			},
+			{
+				testName: "Request form edits requested",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepINITIALFORM,
+					RequestFormState: models.SIRFSEditsRequested,
+					State:            models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRInitialRequestFormEditsRequested,
+				errorExpected:  false,
+			},
+			{
+				testName: "Request form submitted",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepINITIALFORM,
+					RequestFormState: models.SIRFSSubmitted,
+					State:            models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRInitialRequestFormSubmitted,
+				errorExpected:  false,
+			},
+			{
+				testName: "Closed while in request form",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepINITIALFORM,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateCLOSED,
+					DecisionState:    models.SIDSNoDecision,
+				},
+				expectedStatus: models.SISRClosed,
+				errorExpected:  false,
+			},
 		},
 	}
 
@@ -84,17 +126,234 @@ func systemIntakeStatusRequesterTestCases() []testCasesForStep {
 				expectedStatus: models.SISRDraftBusinessCaseInProgress,
 				errorExpected:  false,
 			},
-			// TODO - more draft biz case tests (include closing from this step)
+			{
+				testName: "Draft Biz Case form in progress",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					DraftBusinessCaseState: models.SIRFSInProgress,
+					State:                  models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRDraftBusinessCaseInProgress,
+				errorExpected:  false,
+			},
+			{
+				testName: "Draft Biz Case form edits requested",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					DraftBusinessCaseState: models.SIRFSEditsRequested,
+					State:                  models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRDraftBusinessCaseEditsRequested,
+				errorExpected:  false,
+			},
+			{
+				testName: "Draft Biz Case form submitted",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					DraftBusinessCaseState: models.SIRFSSubmitted,
+					State:                  models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRDraftBusinessCaseSubmitted,
+				errorExpected:  false,
+			},
+			{
+				testName: "Closed while in Draft Biz Case form",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					DraftBusinessCaseState: models.SIRFSInProgress,
+					State:                  models.SystemIntakeStateCLOSED,
+					DecisionState:          models.SIDSNoDecision,
+				},
+				expectedStatus: models.SISRClosed,
+				errorExpected:  false,
+			},
 		},
 	}
-	// TODO - GRT meeting (include closing from this step)
-	// TODO - final biz case (include closing from this step)
-	// TODO - GRB meeting (include closing from this step)
-	// TODO - decisions
+
+	grtMeetingTests := testCasesForStep{
+		stepName: "GRT meeting",
+		testCases: []calculateSystemIntakeRequesterStatusTestCase{
+			{
+				testName: "GRT meeting not scheduled yet",
+				intake: models.SystemIntake{
+					Step:    models.SystemIntakeStepGRTMEETING,
+					GRTDate: nil,
+					State:   models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRGrtMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "GRT meeting scheduled for tomorrow",
+				intake: models.SystemIntake{
+					Step:    models.SystemIntakeStepGRTMEETING,
+					GRTDate: &tomorrow,
+					State:   models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRGrtMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "GRT meeting happened yesterday",
+				intake: models.SystemIntake{
+					Step:    models.SystemIntakeStepGRTMEETING,
+					GRTDate: &yesterday,
+					State:   models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRGrtMeetingAwaitingDecision,
+				errorExpected:  false,
+			},
+			{
+				testName: "Closed while GRT meeting scheduled",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepGRTMEETING,
+					GRTDate:       &tomorrow,
+					State:         models.SystemIntakeStateCLOSED,
+					DecisionState: models.SIDSNoDecision,
+				},
+				expectedStatus: models.SISRClosed,
+				errorExpected:  false,
+			},
+		},
+	}
+
+	finalBizCaseTests := testCasesForStep{
+		stepName: "Final business case",
+		testCases: []calculateSystemIntakeRequesterStatusTestCase{
+			{
+				testName: "Final Biz Case form not started",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					FinalBusinessCaseState: models.SIRFSNotStarted,
+					State:                  models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRFinalBusinessCaseInProgress,
+				errorExpected:  false,
+			},
+			{
+				testName: "Final Biz Case form in progress",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					FinalBusinessCaseState: models.SIRFSInProgress,
+					State:                  models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRFinalBusinessCaseInProgress,
+				errorExpected:  false,
+			},
+			{
+				testName: "Final Biz Case form edits requested",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					FinalBusinessCaseState: models.SIRFSEditsRequested,
+					State:                  models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRFinalBusinessCaseEditsRequested,
+				errorExpected:  false,
+			},
+			{
+				testName: "Final Biz Case form submitted",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					FinalBusinessCaseState: models.SIRFSSubmitted,
+					State:                  models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRFinalBusinessCaseSubmitted,
+				errorExpected:  false,
+			},
+			{
+				testName: "Closed while in Final Biz Case form",
+				intake: models.SystemIntake{
+					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					FinalBusinessCaseState: models.SIRFSInProgress,
+					State:                  models.SystemIntakeStateCLOSED,
+					DecisionState:          models.SIDSNoDecision,
+				},
+				expectedStatus: models.SISRClosed,
+				errorExpected:  false,
+			},
+		},
+	}
+
+	grbMeetingTests := testCasesForStep{
+		stepName: "GRB meeting",
+		testCases: []calculateSystemIntakeRequesterStatusTestCase{
+			{
+				testName: "GRB meeting not scheduled yet",
+				intake: models.SystemIntake{
+					Step:    models.SystemIntakeStepGRBMEETING,
+					GRBDate: nil,
+					State:   models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "GRB meeting scheduled for tomorrow",
+				intake: models.SystemIntake{
+					Step:    models.SystemIntakeStepGRBMEETING,
+					GRBDate: &tomorrow,
+					State:   models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "GRB meeting happened yesterday",
+				intake: models.SystemIntake{
+					Step:    models.SystemIntakeStepGRBMEETING,
+					GRBDate: &yesterday,
+					State:   models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
+				errorExpected:  false,
+			},
+			{
+				testName: "Closed while GRB meeting scheduled",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepGRBMEETING,
+					GRBDate:       &tomorrow,
+					State:         models.SystemIntakeStateCLOSED,
+					DecisionState: models.SIDSNoDecision,
+				},
+				expectedStatus: models.SISRClosed,
+				errorExpected:  false,
+			},
+		},
+	}
+
+	decisionTests := testCasesForStep{
+		stepName: "Decision",
+		testCases: []calculateSystemIntakeRequesterStatusTestCase{
+			{
+				testName: "Decision made, LCID issued, closed",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepDECISION,
+					DecisionState: models.SIDSLcidIssued,
+					State:         models.SystemIntakeStateCLOSED,
+				},
+				expectedStatus: models.SISRLcidIssued,
+				errorExpected:  false,
+			},
+			{
+				testName: "Decision made, LCID issued, re-opened",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepDECISION,
+					DecisionState: models.SIDSLcidIssued,
+					State:         models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: models.SISRLcidIssued,
+				errorExpected:  false,
+			},
+			// TODO - more test cases
+		},
+	}
 
 	return []testCasesForStep{
 		initialFormTests,
 		draftBizCaseTests,
-		// TODO - other steps
+		grtMeetingTests,
+		finalBizCaseTests,
+		grbMeetingTests,
+		decisionTests,
 	}
 }
