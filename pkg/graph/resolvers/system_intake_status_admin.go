@@ -7,8 +7,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// SystemIntakeStatusAdminGet calculates the status to display in the admin view for a System Intake request, based on the current step, and the state of that step and the overall state
-func SystemIntakeStatusAdminGet(intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
+// CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake request, based on the current step, and the state of that step and the overall state
+func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
 
 	if intake.State == models.SystemIntakeStateCLOSED && intake.DecisionState == models.SIDSNoDecision {
 		// If the decision is closed and a decision wasn't issued, show closed

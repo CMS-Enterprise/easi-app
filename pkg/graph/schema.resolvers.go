@@ -2981,7 +2981,7 @@ func (r *systemIntakeResolver) ItGovTaskStatuses(ctx context.Context, obj *model
 
 // StatusAdmin is the resolver for the statusAdmin field.
 func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
-	return resolvers.SystemIntakeStatusAdminGet(obj)
+	return resolvers.CalculateSystemIntakeAdminStatus(obj)
 }
 
 // DocumentType is the resolver for the documentType field.

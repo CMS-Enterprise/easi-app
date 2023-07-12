@@ -368,7 +368,7 @@ func systemIntakeAdminStatusRunTestCollection(t *testing.T, tests []testSystemIn
 	t.Run(testType, func(t *testing.T) {
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				status, err := SystemIntakeStatusAdminGet(&test.intake)
+				status, err := CalculateSystemIntakeAdminStatus(&test.intake)
 				assert.EqualValues(t, test.expectedStatus, status)
 
 				if test.expectError {
