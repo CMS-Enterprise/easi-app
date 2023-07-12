@@ -3,12 +3,6 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
     hooks:
-      - id: no-commit-to-branch
-        args: [
-          '--pattern', '^(?!((feature\/EASI-\d{1,5})|((EASI-\d{1,5}|NOREF|dependabot)\/[a-zA-Z0-9\-\._/]+))$).*',
-        ]
-        name: Enforce branch naming pattern
-        description: Enforces branch naming policy. Allowed branch patterns are 'EASI-#', 'EASI-#/*', 'feature/EASI-#', 'NOREF/*', and 'dependabot/*'. A feature branch like feature/EASI-2020 would have branches like EASI-2020/frontend and EASI-2020/backend merge into it.
       - id: check-yaml
         name: Check YAML formatting
       - id: detect-private-key
