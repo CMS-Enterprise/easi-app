@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  Dropdown,
-  FormGroup,
-  GridContainer
-} from '@trussworks/react-uswds';
+import { Dropdown, FormGroup, GridContainer } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import RequestRepository from 'components/RequestRepository';
@@ -22,7 +17,7 @@ type AdminHomeProps = { isTrbAdmin: boolean; isGrtReviewer: boolean };
  */
 const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
   const { t } = useTranslation('home');
-  const { message } = useMessage();
+  const { Message } = useMessage();
 
   /**
    * Which admin view to display
@@ -52,13 +47,9 @@ const AdminHome = ({ isTrbAdmin, isGrtReviewer }: AdminHomeProps) => {
 
   return (
     <div>
-      {message && (
-        <div className="grid-container margin-top-6">
-          <Alert type="success" role="alert">
-            {message}
-          </Alert>
-        </div>
-      )}
+      <div className="grid-container margin-top-6">
+        <Message />
+      </div>
       <GridContainer>
         <PageHeading className="margin-bottom-1">
           {t(`adminHome.${adminView}.title`)}

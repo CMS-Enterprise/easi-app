@@ -101,7 +101,7 @@ const TestDate = () => {
         }
       }
     }).then(() => {
-      showMessageOnNextPage(confirmationText);
+      showMessageOnNextPage(confirmationText, { type: 'success' });
       history.push(`/508/requests/${accessibilityRequestId}/documents`);
     });
   };

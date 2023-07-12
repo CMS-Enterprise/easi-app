@@ -123,8 +123,9 @@ const taskList = {
     SCHEDULED: 'Scheduled'
   },
   taskStatusInfo: {
-    submitted: 'Submitted',
-    lastUpdated: 'Last updated'
+    completed: 'Completed',
+    lastUpdated: 'Last updated',
+    submitted: 'Submitted'
   }
 };
 
