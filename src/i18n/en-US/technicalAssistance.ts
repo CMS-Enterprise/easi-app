@@ -101,7 +101,7 @@ const technicalAssistance = {
         }
       },
       ADVICE_LETTER_IN_REVIEW: {
-        title: 'Review advice letter',
+        title: 'Review advice letter before sending',
         description:
           'Review this draft advice letter and leave a note with any comments or corrections. The TRB lead for this request will then edit the advice letter to incorporate your comments and feedback before finalizing the letter and sending it to the requester and project team.'
       },
