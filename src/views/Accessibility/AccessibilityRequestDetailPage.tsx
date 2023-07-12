@@ -89,7 +89,7 @@ const AccessibilityRequestDetailPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [formikErrors, setFormikErrors] = useState<FormikErrors<any>>({});
   const [returnedUserErrors, setReturnedUserErrors] = useState<any>(null);
-  const { message, showMessage, showMessageOnNextPage } = useMessage();
+  const { Message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
   const existingNotesHeading = useRef<HTMLHeadingElement>(null);
@@ -143,7 +143,11 @@ const AccessibilityRequestDetailPage = () => {
         showMessageOnNextPage(
           t('requestDetails.removeConfirmationText', {
             requestName
-          })
+          }),
+          {
+            type: 'success',
+            heading: t('Success')
+          }
         );
         history.push('/');
       }
@@ -179,7 +183,11 @@ const AccessibilityRequestDetailPage = () => {
         if (!userErrors) {
           refetch();
           resetAlerts();
-          showMessage(t('requestDetails.notes.confirmation', { requestName }));
+          showMessage(t('requestDetails.notes.confirmation', { requestName }), {
+            type: 'success',
+            role: 'alert',
+            heading: t('Success')
+          });
           resetForm({});
         }
       })
@@ -206,7 +214,11 @@ const AccessibilityRequestDetailPage = () => {
         t('removeTestDate.confirmation', {
           date: formatDateUtc(testDate.date, 'MMMM d, yyyy'),
           requestName
-        })
+        }),
+        {
+          type: 'success',
+          heading: t('Success')
+        }
       );
     });
   };
@@ -230,7 +242,9 @@ const AccessibilityRequestDetailPage = () => {
     }).then(() => {
       refetch();
       if (document) {
-        showMessage(`${documentTypeAsString} removed from ${requestName}`);
+        showMessage(`${documentTypeAsString} removed from ${requestName}`, {
+          type: 'success'
+        });
       }
       callback();
     });
@@ -471,16 +485,7 @@ const AccessibilityRequestDetailPage = () => {
             </Breadcrumb>
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
-          {message && (
-            <Alert
-              className="margin-top-4"
-              type="success"
-              role="alert"
-              heading="Success"
-            >
-              {message}
-            </Alert>
-          )}
+          <Message className="margin-top-4" />
           {noteMutationError && (
             <Alert
               className="margin-top-4"

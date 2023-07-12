@@ -17,7 +17,6 @@ import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import PageLoading from 'components/PageLoading';
-import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
@@ -106,28 +105,30 @@ const TeamMemberForm = ({
       })
         .then(() => {
           showMessageOnNextPage(
-            <Alert type="success">
-              {t(
-                `singleSystem.editTeam.form.${
-                  user ? 'successUpdateRoles' : 'successAddContact'
-                }`,
-                {
-                  commonName
-                }
-              )}
-            </Alert>
+            t(
+              `singleSystem.editTeam.form.${
+                user ? 'successUpdateRoles' : 'successAddContact'
+              }`,
+              {
+                commonName
+              }
+            ),
+            {
+              type: 'success'
+            }
           );
           history.push(`/systems/${cedarSystemId}/team/edit`);
         })
         .catch(() => {
           showMessage(
-            <Alert type="error">
-              {t(
-                `singleSystem.editTeam.form.${
-                  user ? 'errorUpdateRoles' : 'errorAddContact'
-                }`
-              )}
-            </Alert>
+            t(
+              `singleSystem.editTeam.form.${
+                user ? 'errorUpdateRoles' : 'errorAddContact'
+              }`
+            ),
+            {
+              type: 'error'
+            }
           );
         });
     }
