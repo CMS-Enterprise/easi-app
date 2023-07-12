@@ -16,7 +16,7 @@ const (
 	SISAFinalBusinessCaseInProgress  SystemIntakeStatusAdmin = "FINAL_BUSINESS_CASE_IN_PROGRESS"
 	SISAFinalBusinessCaseSubmitted   SystemIntakeStatusAdmin = "FINAL_BUSINESS_CASE_SUBMITTED"
 	SISALcidIssued                   SystemIntakeStatusAdmin = "LCID_ISSUED"
-	SISANoGovernance                 SystemIntakeStatusAdmin = "NO_GOVERNANCE"
+	SISANotGovernance                SystemIntakeStatusAdmin = "NOT_GOVERNANCE"
 	SISANotApproved                  SystemIntakeStatusAdmin = "NOT_APPROVED"
 	SISAClosed                       SystemIntakeStatusAdmin = "CLOSED"
 )

@@ -87,8 +87,8 @@ func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisi
 	if decisionState == models.SIDSLcidIssued {
 		return models.SISALcidIssued, nil
 	}
-	if decisionState == models.SIDSNoGovernance {
-		return models.SISANoGovernance, nil
+	if decisionState == models.SIDSNotGovernance {
+		return models.SISANotGovernance, nil
 	}
 	if decisionState == models.SIDSNotApproved {
 		return models.SISANotApproved, nil

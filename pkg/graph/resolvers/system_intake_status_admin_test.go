@@ -295,20 +295,20 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			testCase: "Decision No Governance, open",
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
-				DecisionState: models.SIDSNoGovernance,
+				DecisionState: models.SIDSNotGovernance,
 				State:         models.SystemIntakeStateOPEN,
 			},
-			expectedStatus: models.SISANoGovernance,
+			expectedStatus: models.SISANotGovernance,
 			expectError:    false,
 		},
 		{
 			testCase: "Decision No Governance, closed",
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
-				DecisionState: models.SIDSNoGovernance,
+				DecisionState: models.SIDSNotGovernance,
 				State:         models.SystemIntakeStateCLOSED,
 			},
-			expectedStatus: models.SISANoGovernance,
+			expectedStatus: models.SISANotGovernance,
 			expectError:    false,
 		},
 		{

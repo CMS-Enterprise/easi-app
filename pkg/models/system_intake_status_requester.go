@@ -20,7 +20,7 @@ const (
 	SISRGrbMeetingReady                  SystemIntakeStatusRequester = "GRB_MEETING_READY"
 	SISRGrbMeetingAwaitingDecision       SystemIntakeStatusRequester = "GRB_MEETING_AWAITING_DECISION"
 	SISRLcidIssued                       SystemIntakeStatusRequester = "LCID_ISSUED"
-	SISRNoGovernance                     SystemIntakeStatusRequester = "NO_GOVERNANCE"
+	SISRNotGovernance                    SystemIntakeStatusRequester = "NOT_GOVERNANCE"
 	SISRNotApproved                      SystemIntakeStatusRequester = "NOT_APPROVED"
 	SISRClosed                           SystemIntakeStatusRequester = "CLOSED"
 )

@@ -348,20 +348,20 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				testName: "Decision made, Not Governance, closed",
 				intake: models.SystemIntake{
 					Step:          models.SystemIntakeStepDECISION,
-					DecisionState: models.SIDSNoGovernance,
+					DecisionState: models.SIDSNotGovernance,
 					State:         models.SystemIntakeStateCLOSED,
 				},
-				expectedStatus: models.SISRNoGovernance,
+				expectedStatus: models.SISRNotGovernance,
 				errorExpected:  false,
 			},
 			{
 				testName: "Decision made, Not Governance, re-opened",
 				intake: models.SystemIntake{
 					Step:          models.SystemIntakeStepDECISION,
-					DecisionState: models.SIDSNoGovernance,
+					DecisionState: models.SIDSNotGovernance,
 					State:         models.SystemIntakeStateOPEN,
 				},
-				expectedStatus: models.SISRNoGovernance,
+				expectedStatus: models.SISRNotGovernance,
 				errorExpected:  false,
 			},
 			{
