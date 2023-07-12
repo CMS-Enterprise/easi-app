@@ -57,9 +57,9 @@ jobs:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-db-migrate
           NEW_IMAGE_TAG: ${{ env.GIT_HASH }}
-          TASK_FAMILY: "db-migrate-${{ inputs.env }}"
+          TASK_FAMILY: "easi-app-db-migrate-${{ inputs.env }}"
           ECS_CLUSTER: "${{ inputs.env }}-easi-app"
-          SECURITY_GROUP_NAME: "ecs-db-migrate-${{ inputs.env }}"
+          SECURITY_GROUP_NAME: "ecs-easi-app-db-migrate-${{ inputs.env }}"
         run: |
           export TASK_REVISION=$(./scripts/update_ecs_task_definition.sh)
           ./scripts/run_ecs_task.sh
