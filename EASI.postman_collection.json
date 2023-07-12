@@ -1,0 +1,955 @@
+{
+	"info": {
+		"_postman_id": "83e9274f-6ccb-4d84-a2c6-07f16a001877",
+		"name": "EASI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20320964"
+	},
+	"item": [
+		{
+			"name": "System Intake",
+			"item": [
+				{
+					"name": "Admin Actions (Old)",
+					"item": [
+						{
+							"name": "CreateSystemIntakeActionBusinessCaseNeeded ( Action #1)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Correct status returned\", function() {",
+											"    pm.response.to.have.status(200);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation CreateSystemIntakeActionBusinessCaseNeeded($input: BasicActionInput!) {\n  createSystemIntakeActionBusinessCaseNeeded(input: $input) {\n    systemIntake {\n      status\n      id\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"intakeId\": \"{{systemIntakeID}}\",\n    \"feedback\": \"Hooray!\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"aaron.adams@local.fake\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Inital Request",
+					"item": [
+						{
+							"name": "SystemIntake Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseData = pm.response.json().data.createSystemIntake",
+											"",
+											"systemIntakeID = responseData.id",
+											"",
+											"",
+											"pm.collectionVariables.set(\"systemIntakeID\", systemIntakeID);",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createSystemIntake{\n  \n  createSystemIntake(input:{\n      requestType :MAJOR_CHANGES\n      requester: {\n          name: \"Mr. Fun Person\"\n      }\n    } )\n  \n  {\n    id\n    # step\n    # state\n#   actions\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n#   contract\n#   costs\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n#   fundingSources\n#   governanceTeams\n  grbDate\n  grtDate\n#   grtFeedbacks\n  id\n#   isso\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n  status\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n    \n  }\n  \n  \n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateSystemIntakeContact (FORM1)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseData = pm.response.json().data.createSystemIntakeContact",
+											"",
+											"systemIntakeContactID = responseData.systemIntakeContact.id",
+											"",
+											"",
+											"pm.collectionVariables.set(\"systemIntakeContactID\", systemIntakeContactID);",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation CreateSystemIntakeContact($input: CreateSystemIntakeContactInput!) {\n  createSystemIntakeContact(input: $input) {\n    systemIntakeContact {\n      id\n      euaUserId\n      systemIntakeId\n      component\n      role\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"euaUserId\": \"ABCD\",\n    \"component\": \"Center for Clinical Standards and Quality\",\n    \"role\": \"Requester\",\n    \"systemIntakeId\": \"{{systemIntakeID}}\"\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateSystemIntakeContact (FORM1)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UpdateSystemIntakeContact($input: UpdateSystemIntakeContactInput!) {\n  updateSystemIntakeContact(input: $input) {\n    #   \"{{$guid}}\" #use this to make a guid\n      #this gets submitted 3 times to provide all the contacts we need\n    systemIntakeContact {\n      id # NOTE, this is provided by the front end!\n      euaUserId\n      systemIntakeId\n      component\n      role\n      __typename\n    }\n    __typename\n  }\n}\n",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeContactID}}\",\n    \"euaUserId\": \"ADMN\",\n    \"component\": \"Center for Clinical Standards and Quality\",\n    \"role\": \"Business Owner\",\n    \"systemIntakeId\": \"{{systemIntakeID}}\"\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateSystemIntakeContactDetails (FORM 1)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UpdateSystemIntakeContactDetails($input: UpdateSystemIntakeContactDetailsInput!) {\n  updateSystemIntakeContactDetails(input: $input) {\n    systemIntake {\n      id\n      businessOwner {\n        component\n        name\n        __typename\n      }\n      governanceTeams {\n        isPresent\n        teams {\n          acronym\n          collaborator\n          key\n          label\n          name\n          __typename\n        }\n        __typename\n      }\n      isso {\n        isPresent\n        name\n        __typename\n      }\n      productManager {\n        component\n        name\n        __typename\n      }\n      requester {\n        component\n        name\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"requester\": {\n      \"name\": \"User ABCD\",\n      \"component\": \"Center for Clinical Standards and Quality\"\n    },\n    \"businessOwner\": {\n      \"name\": \"Caden Schmeler\",\n      \"component\": \"Center for Program Integrity\"\n    },\n    \"productManager\": {\n      \"name\": \"Zechariah Wyman\",\n      \"component\": \"Center for Consumer Information and Insurance Oversight\"\n    },\n    \"isso\": {\n      \"isPresent\": true,\n      \"name\": \"Alyce Haag\"\n    },\n    \"governanceTeams\": {\n      \"isPresent\": true,\n      \"teams\": [\n        {\n          \"name\": \"Technical Review Board\",\n          \"key\": \"technicalReviewBoard\",\n          \"collaborator\": \"Billy Bob\"\n        }\n      ]\n    }\n  }\n}\n\n"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateSystemIntakeRequestDetails(FORM 2)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UpdateSystemIntakeRequestDetails($input: UpdateSystemIntakeRequestDetailsInput!) {\n  updateSystemIntakeRequestDetails(input: $input) {\n    systemIntake {\n      id\n      status\n      requestName\n      businessNeed\n      businessSolution\n      needsEaSupport\n      hasUiChanges\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"requestName\": \"Happy Happy Fun TIme\",\n    \"businessNeed\": \"This will make sure everyone has a good day. Believe me\",\n    \"businessSolution\": \"Pizza parties every 3 hours.\",\n    \"currentStage\": \"I have done some initial research\",\n    \"needsEaSupport\": false,\n    \"hasUiChanges\": true\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateSystemIntakeContractDetails (FORM 3)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UpdateSystemIntakeContractDetails($input: UpdateSystemIntakeContractDetailsInput!) {\n  updateSystemIntakeContractDetails(input: $input) {\n    systemIntake {\n      id\n      status\n      currentStage\n      fundingSources {\n        source\n        fundingNumber\n        __typename\n      }\n      costs {\n        expectedIncreaseAmount\n        isExpectingIncrease\n        __typename\n      }\n      contract {\n        contractor\n        endDate {\n          day\n          month\n          year\n          __typename\n        }\n        hasContract\n        startDate {\n          day\n          month\n          year\n          __typename\n        }\n        number\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"fundingSources\": {\n      \"existingFunding\": true,\n      \"fundingSources\": [\n        {\n          \"fundingNumber\": \"656909\",\n          \"source\": \"Other\"\n        },\n        {\n          \"fundingNumber\": \"867530\",\n          \"source\": \"Recovery Audit Contractors\"\n        }\n      ]\n    },\n    \"costs\": {\n      \"expectedIncreaseAmount\": \"$10 every 3 hours\",\n      \"isExpectingIncrease\": \"YES\"\n    },\n    \"contract\": {\n      \"contractor\": \"\",\n      \"endDate\": null,\n      \"hasContract\": \"NOT_STARTED\",\n      \"startDate\": null,\n      \"number\": \"\"\n    }\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SUBMIT INTAKE (Form 4)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation SubmitIntake($input: SubmitIntakeInput!) {\n  submitIntake(input: $input) {\n    systemIntake {\n    status\n      id\n      __typename\n            id\n#   actions\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n#   contract\n#   costs\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n#   fundingSources\n#   governanceTeams\n  grbDate\n  grtDate\n#   grtFeedbacks\n  id\n#   isso\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n  status\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\"\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Draft BuisnessCase",
+					"item": []
+				},
+				{
+					"name": "SystemIntake Get",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntake{\n  \n  systemIntake(id:\"{{systemIntakeID}}\")\n  {\n    requestFormState\n    draftBusinessCaseState\n    grtMeetingState\n    finalBusinessCaseState\n    grbMeetingState\n    decisionState\n\n\n      itGovTaskStatuses {      \n        intakeFormStatus\n        feedbackFromInitialReviewStatus\n        decisionAndNextStepsStatus\n        bizCaseDraftStatus\n        grtMeetingStatus\n        bizCaseFinalStatus\n        grbMeetingStatus\n\n      }\n#     id\n# #   actions\n#   adminLead\n#   archivedAt\n# #   businessCase\n#   businessNeed\n# #   businessOwner\n#   businessSolution\n# #   contract\n# #   costs\n#   createdAt\n#   currentStage\n#   decisionNextSteps\n#   eaCollaborator\n#   eaCollaboratorName\n#   euaUserId\n#   existingFunding\n# #   fundingSources\n# #   governanceTeams\n#   grbDate\n#   grtDate\n# #   grtFeedbacks\n#   id\n# #   isso\n#   lcid\n#   lcidExpiresAt\n#   lcidScope\n#   lcidCostBaseline\n#   needsEaSupport\n# #   notes\n#   oitSecurityCollaborator\n#   oitSecurityCollaboratorName\n# #   productManager\n#   projectAcronym\n#   rejectionReason\n#   requestName\n#   requestType\n# #   requester\n#   status\n#   submittedAt\n#   trbCollaborator\n#   trbCollaboratorName\n#   updatedAt\n#   grtReviewEmailBody\n#   decidedAt\n#   businessCaseId\n# #   lastAdminNote\n#   cedarSystemId\n# #   documents\n#   hasUiChanges\n    \n    \n  }\n  \n  \n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get (Feedback)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  systemIntake(id:\"29486f85-1aba-4eaf-a7dd-6137b9873adc\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      createdBy\n      createdAt\n      modifiedBy\n      modifiedAt\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get (WITH LCIDS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntakesWithLcids{\n  \n  systemIntakesWithLcids()\n  \n  {\n    id\n#   actions\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n#   contract\n#   costs\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n#   fundingSources\n#   governanceTeams\n  grbDate\n  grtDate\n#   grtFeedbacks\n  id\n#   isso\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n  status\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n    \n  }\n  \n  \n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get (RELATED)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query relatedSystemIntakes{\n  \n  relatedSystemIntakes(id:\"{{systemIntakeID}}\")\n  \n  {\n    id\n#   actions\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n#   contract\n#   costs\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n#   fundingSources\n#   governanceTeams\n  grbDate\n  grtDate\n#   grtFeedbacks\n  id\n#   isso\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n  status\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n    \n  }\n  \n  \n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TRB",
+			"item": [
+				{
+					"name": "TRB Requests",
+					"item": [
+						{
+							"name": "TRBRequestCreate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseData = pm.response.json().data.createTRBRequest",
+											"",
+											"trbRequestID = responseData.id",
+											"trbRequestFormID = responseData.form.id",
+											"",
+											"pm.collectionVariables.set(\"trbRequestFormID\", trbRequestFormID);",
+											"",
+											"",
+											"pm.collectionVariables.set(\"trbRequestID\", trbRequestID);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation createTRBRequest{\n  \n  createTRBRequest(requestType: FOLLOWUP ){\n    id\n    name\n    archived\n    type\n    status\n    taskStatuses {\n        formStatus\n        feedbackStatus\n        consultPrepStatus\n    }\n    form {\n        id\n        trbRequestId\n        component\n        needsAssistanceWith\n        hasSolutionInMind\n        whereInProcess\n        hasExpectedStartEndDates\n        collabGroups\n\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n    }\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n    \n    \n  }\n  \n  \n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/graph/query",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"graph",
+										"query"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TRBRequestUpdate",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation updateTRBRequest{\n  \n  updateTRBRequest(id: \"{{trbRequestID}}\", changes: {\n      name: \"My newly archived request\"\n      archived: true\n  } ){\n    id\n    name\n    archived\n    type\n    status\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n    \n    \n  }\n  \n  \n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/graph/query",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"graph",
+										"query"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TRBRequestGetByID",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query TRBRequestGetByID{\n  \n  trbRequest(id: \"{{trbRequestID}}\"){\n    id\n    name\n    archived\n    type\n    status\n    taskStatuses {\n        formStatus\n        feedbackStatus\n        consultPrepStatus\n    }\n    feedback {\n        id\n        trbRequestId\n        feedbackMessage\n        copyTrbMailbox\n        notifyEuaIds\n        action\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n    }\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n    # form {\n    #     status\n    #     id\n    #     trbRequestId\n    #     component\n    #     needsAssistanceWith\n    #     hasSolutionInMind\n    #     whereInProcess\n    #     hasExpectedStartEndDates\n    #     collabGroups\n\n    #     createdBy\n    #     createdAt\n    #     modifiedBy\n    #     modifiedAt\n    # }\n    attendees{\n        id\n        euaUserId\n        # userInfo {\n        #     euaUserId\n        #     commonName\n        #     email\n        # }\n        trbRequestId\n        component\n        role\n    }\n    \n    \n  }\n  \n  \n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TRBRequestCollection",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query trbRequests{\n  \n  trbRequests(archived: true){\n    id\n    name\n    archived\n    type\n    status\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n    \n    \n  }\n  \n  \n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/graph/query",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"graph",
+										"query"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TRB Form",
+					"item": [
+						{
+							"name": "TRBRequestFormUpdate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n  updateTRBRequestForm(input: {\n    trbRequestId: \"{{trbRequestID}}\",\n    isSubmitted: true\n    component: \"Drive Through\",\n    needsAssistanceWith: \"Stuff\",\n    hasSolutionInMind: true,\n    proposedSolution: \"Instead of coming in the restaurant, drive through it!\",\n    whereInProcess: OTHER,\n    hasExpectedStartEndDates: true,\n    expectedStartDate: \"2022-10-13T15:15:20.358346Z\",\n    expectedEndDate: \"2022-10-13T15:15:20.358346Z\",\n    collabGroups: [SECURITY, CLOUD, OTHER]\n    collabDateSecurity: \"2022-12-13T15:15:20.358346Z\",\n    collabDateEnterpriseArchitecture: \"2022-12-13T15:15:20.358346Z\",\n    collabDateCloud: \"2022-12-13T15:15:20.358346Z\",\n    collabDatePrivacyAdvisor: \"2022-12-13T15:15:20.358346Z\",\n    collabDateGovernanceReviewBoard: \"2022-12-13T15:15:20.358346Z\"\n    collabDateOther: \"2022-12-13T15:15:20.358346Z\",\n    # collabGroupOther: \"The restaurant advisory board\",\n  }) {\n        trbRequestId\n        \n        component\n        needsAssistanceWith\n        hasSolutionInMind\n        proposedSolution\n        whereInProcess\n        hasExpectedStartEndDates\n        expectedStartDate\n        expectedEndDate\n        collabGroups\n        collabDateSecurity\n        collabDateEnterpriseArchitecture\n        collabDateCloud\n        collabDatePrivacyAdvisor\n        collabDateGovernanceReviewBoard\n        collabDateOther\n        collabGroupOther\n        status\n\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TRB Feedback",
+					"item": [
+						{
+							"name": "TRBRequestFeedbackCreate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n  createTRBRequestFeedback(input: {\n    trbRequestId: \"{{trbRequestID}}\",\n    feedbackMessage: \"This is TRB request is NICE!\",\n    copyTrbMailbox: true,\n    notifyEuaIds: [\"FAKE\", \"REAL\", \"LOLZ\"],\n    action: READY_FOR_CONSULT,\n  }) {\n    id\n    trbRequestId\n    feedbackMessage\n    copyTrbMailbox\n    notifyEuaIds\n    action\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TRB Attendees",
+					"item": [
+						{
+							"name": "TRBRequestAttendeesCREATE",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseData = pm.response.json().data.createTRBRequestAttendee",
+											"",
+											"trbAttendeeID = responseData.id",
+											"",
+											"pm.collectionVariables.set(\"trbAttendeeID\", trbAttendeeID);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n  createTRBRequestAttendee(input: { euaUserId: \"ADMN\", trbRequestId: \"{{trbRequestID}}\", component: \"Awesome component\", role: PRODUCT_OWNER}) {\n    id\n    euaUserId\n    userInfo {\n        euaUserId\n        commonName\n        email\n    }\n    \n    trbRequestId\n    component\n    role\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/graph/query",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"graph",
+										"query"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TRBRequestAttendeesUPDATE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n  updateTRBRequestAttendee(input: { \n      id: \"{{trbAttendeeID}}\"\n      , component: \"Services\", role: PRIVACY_ADVISOR}) {\n    id\n    euaUserId\n    trbRequestId\n    component\n    role\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/graph/query",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"graph",
+										"query"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TRBRequestAttendeesDelete",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n  deleteTRBRequestAttendee(id:\"{{trbAttendeeID}}\") {\n    id\n    euaUserId\n    trbRequestId\n    component\n    role\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/graph/query",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"graph",
+										"query"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "CEDAR",
+			"item": [
+				{
+					"name": "Roles",
+					"item": [
+						{
+							"name": "RolesGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Roles{\n  roleTypes {\n    id\n    application\n    name\n    description\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EASiCedarSystemRolesGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query {\n  cedarSystemDetails(cedarSystemId:\"408-4104-0\") {\n    cedarSystem {\n      name\n    }\n    roles {\n      roleID\n      assigneeUsername\n      roleTypeID\n      roleTypeName\n    }\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EASiCedarSystemSetRoles",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n  setRolesForUserOnSystem(input:{\n    cedarSystemID:\"408-4104-0\"\n    euaUserId:\"ADMN\"\n    desiredRoleTypeIDs:[\n       \"238-2-0\",\"238-29-0\"\n    ]\n  })\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CedarPersons",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  cedarPersonsByCommonName(commonName: \"Aaron\") {\n   commonName\n   email\n   euaUserId\n  \n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "Local {\"EUAID\":\"{{EUAID}}\",\"jobCodes\":{{jobCodes}},\"favorLocalAuth\":true}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "EUAID",
+			"value": "EASI",
+			"type": "string"
+		},
+		{
+			"key": "jobCodes",
+			"value": "[\"EASI_USER\", \"EASI_D_GOVTEAM\",\"EASI_TRB_ADMIN_D\"]",
+			"type": "string"
+		},
+		{
+			"key": "trbAttendeeID",
+			"value": ""
+		},
+		{
+			"key": "trbRequestID",
+			"value": ""
+		},
+		{
+			"key": "trbRequestFormID",
+			"value": ""
+		},
+		{
+			"key": "url",
+			"value": "http://localhost:8080/api/graph/query",
+			"type": "string"
+		},
+		{
+			"key": "systemIntakeID",
+			"value": ""
+		},
+		{
+			"key": "systemIntakeContactID",
+			"value": ""
+		}
+	]
+}

@@ -2,23 +2,16 @@ name: Build and Push Application Images
 
 on:
   workflow_call:
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: true
-      DOCKERHUB_TOKEN:
-        required: true
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      SLACK_WEBHOOK_URL:
-        required: true
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
   EASI_APP_GO_VERSION: "1.18.3"
   GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   pre_deps:
