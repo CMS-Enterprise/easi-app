@@ -40,7 +40,7 @@ func TestSystemIntakeStatusRequesterGet(t *testing.T) {
 				t.Run(testCase.testName, func(t *testing.T) {
 					t.Parallel()
 
-					actualStatus, err := SystemIntakeStatusRequesterGet(&testCase.intake, mockCurrentTime)
+					actualStatus, err := CalculateSystemIntakeRequesterStatus(&testCase.intake, mockCurrentTime)
 					assert.EqualValues(t, testCase.expectedStatus, actualStatus)
 					if testCase.errorExpected {
 						assert.Error(t, err)
