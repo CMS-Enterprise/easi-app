@@ -16,9 +16,9 @@ type testSystemIntakeAdminStatusType struct {
 	expectError    bool
 }
 
-// TestSystemIntakeStatusAdminGet tests the possible permutations for the systemIntakeStatusAdminGet method.
-// It doesn't use the testify suit, as this is not dependant on anything besides the resolver.
-func TestSystemIntakeStatusAdminGet(t *testing.T) {
+// TestCalculateSystemIntakeAdminStatus tests the possible permutations for the CalculateSystemIntakeAdminStatus function.
+// It doesn't use the testify suite, as this is not dependant on anything besides the resolver.
+func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
 	intakeFormTests := []testSystemIntakeAdminStatusType{

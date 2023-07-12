@@ -14,9 +14,9 @@ go test -race "github.com/cmsgov/easi-app/pkg/services" -testify.m TestUpdateRej
 This will run the `TestUpdateRejectionFields` method in [`pkg/services/system_intakes_test.go`](/pkg/services/system_intakes_test.go), which is part of the test suite for the entire `services` package.
 - A single test method using the standard go testing package can be run from the command line with `go test -race <package name> -run <test name>`.  Example:
 ```
-go test -race "github.com/cmsgov/easi-app/pkg/graph/resolvers" -run TestSystemIntakeStatusAdminGet
+go test -race "github.com/cmsgov/easi-app/pkg/graph/resolvers" -run TestCalculateSystemIntakeAdminStatus
 ```
-This will run the `TestSystemIntakeStatusAdminGet` method in [`pkg/graph/resolvers/system_intake_status_admin_test.go`](pkg/graph/resolvers/system_intake_status_admin_test.go), which is part of the test suite for the entire `resolvers` package.
+This will run the `TestCalculateSystemIntakeAdminStatus` method in [`pkg/graph/resolvers/system_intake_status_admin_test.go`](/pkg/graph/resolvers/system_intake_status_admin_test.go), which is part of the test suite for the entire `resolvers` package.
 
 
 ## JS Tests

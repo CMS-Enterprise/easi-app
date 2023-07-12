@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type systemIntakeStatusRequesterGetTestCase struct {
+type calculateSystemIntakeRequesterStatusTestCase struct {
 	testName       string
 	intake         models.SystemIntake
 	expectedStatus models.SystemIntakeStatusRequester
@@ -19,10 +19,10 @@ type systemIntakeStatusRequesterGetTestCase struct {
 
 type testCasesForStep struct {
 	stepName  string
-	testCases []systemIntakeStatusRequesterGetTestCase
+	testCases []calculateSystemIntakeRequesterStatusTestCase
 }
 
-func TestSystemIntakeStatusRequesterGet(t *testing.T) {
+func TestCalculateSystemIntakeRequesterStatus(t *testing.T) {
 	t.Parallel()
 
 	mockCurrentTime := time.Unix(0, 0)
@@ -56,7 +56,7 @@ func TestSystemIntakeStatusRequesterGet(t *testing.T) {
 func systemIntakeStatusRequesterTestCases() []testCasesForStep {
 	initialFormTests := testCasesForStep{
 		stepName: "Initial Request form",
-		testCases: []systemIntakeStatusRequesterGetTestCase{
+		testCases: []calculateSystemIntakeRequesterStatusTestCase{
 			{
 				testName: "Request not started",
 				intake: models.SystemIntake{
@@ -73,7 +73,7 @@ func systemIntakeStatusRequesterTestCases() []testCasesForStep {
 
 	draftBizCaseTests := testCasesForStep{
 		stepName: "Draft business case",
-		testCases: []systemIntakeStatusRequesterGetTestCase{
+		testCases: []calculateSystemIntakeRequesterStatusTestCase{
 			{
 				testName: "Draft Biz Case form not started",
 				intake: models.SystemIntake{
