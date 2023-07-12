@@ -734,6 +734,7 @@ type ComplexityRoot struct {
 		Requester                   func(childComplexity int) int
 		State                       func(childComplexity int) int
 		Status                      func(childComplexity int) int
+		StatusAdmin                 func(childComplexity int) int
 		Step                        func(childComplexity int) int
 		SubmittedAt                 func(childComplexity int) int
 		TrbCollaborator             func(childComplexity int) int
@@ -1373,6 +1374,8 @@ type SystemIntakeResolver interface {
 	Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error)
 	HasUIChanges(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	ItGovTaskStatuses(ctx context.Context, obj *models.SystemIntake) (*models.ITGovTaskStatuses, error)
+
+	StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error)
@@ -5312,6 +5315,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Status(childComplexity), true
 
+	case "SystemIntake.statusAdmin":
+		if e.complexity.SystemIntake.StatusAdmin == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.StatusAdmin(childComplexity), true
+
 	case "SystemIntake.step":
 		if e.complexity.SystemIntake.Step == nil {
 			break
@@ -8059,6 +8069,7 @@ type SystemIntake {
   """
   grbMeetingState: SystemIntakeMeetingState!
   decisionState: SystemIntakeDecisionState!
+  statusAdmin: SystemIntakeStatusAdmin!
 }
 
 """
@@ -9728,6 +9739,26 @@ This represents the possible states any system intake meeting can take.
 enum SystemIntakeMeetingState{
   SCHEDULED
   NOT_SCHEDULED
+}
+
+"""
+This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+"""
+enum SystemIntakeStatusAdmin {
+  INITIAL_REQUEST_FORM_IN_PROGRESS
+  INITIAL_REQUEST_FORM_SUBMITTED
+  DRAFT_BUSINESS_CASE_IN_PROGRESS
+  DRAFT_BUSINESS_CASE_SUBMITTED
+  GRT_MEETING_READY
+  GRT_MEETING_COMPLETE
+  GRB_MEETING_READY
+  GRB_MEETING_COMPLETE
+  FINAL_BUSINESS_CASE_IN_PROGRESS
+  FINAL_BUSINESS_CASE_SUBMITTED
+  LCID_ISSUED
+  NO_GOVERNANCE
+  NOT_APPROVED
+  CLOSED
 }
 `, BuiltIn: false},
 }
@@ -14230,6 +14261,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -23102,6 +23135,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -27061,6 +27096,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -31649,6 +31686,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -31880,6 +31919,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -33058,6 +33099,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -37162,6 +37205,50 @@ func (ec *executionContext) fieldContext_SystemIntake_decisionState(ctx context.
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_statusAdmin(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().StatusAdmin(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeStatusAdmin)
+	fc.Result = res
+	return ec.marshalNSystemIntakeStatusAdmin2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusAdmin(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_statusAdmin(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeStatusAdmin does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAction_id(ctx, field)
 	if err != nil {
@@ -37365,6 +37452,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -45793,6 +45882,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -47018,6 +47109,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
 			case "decisionState":
 				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -58167,6 +58260,26 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "statusAdmin":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_statusAdmin(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -63308,6 +63421,22 @@ func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgov�
 }
 
 func (ec *executionContext) marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeStatusAdmin2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusAdmin(ctx context.Context, v interface{}) (models.SystemIntakeStatusAdmin, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeStatusAdmin(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeStatusAdmin2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusAdmin(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeStatusAdmin) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
