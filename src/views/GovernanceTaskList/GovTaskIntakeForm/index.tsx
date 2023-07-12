@@ -5,11 +5,7 @@ import { kebabCase } from 'lodash';
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import {
-  GovernanceRequestFeedbackSourceAction,
-  GovernanceRequestFeedbackTargetForm,
-  ITGovIntakeFormStatus
-} from 'types/graphql-global-types';
+import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntake } from 'types/itGov';
 
 const GovTaskIntakeForm = ({
@@ -27,14 +23,7 @@ const GovTaskIntakeForm = ({
     [ITGovIntakeFormStatus.EDITS_REQUESTED, 'editForm']
   ]);
 
-  const hasFeedback =
-    governanceRequestFeedbacks.filter(
-      feedback =>
-        feedback.sourceAction ===
-          GovernanceRequestFeedbackSourceAction.REQUEST_EDITS &&
-        feedback.targetForm ===
-          GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
-    ).length > 0;
+  const hasFeedback = governanceRequestFeedbacks.length > 0;
 
   return (
     <TaskListItem
