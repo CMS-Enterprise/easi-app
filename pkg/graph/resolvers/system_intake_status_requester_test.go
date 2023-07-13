@@ -23,23 +23,13 @@ type testCasesForStep struct {
 }
 
 func TestCalculateSystemIntakeRequesterStatus(t *testing.T) {
-	t.Parallel()
-
 	mockCurrentTime := time.Unix(0, 0)
 	allTestCases := systemIntakeStatusRequesterTestCases(mockCurrentTime)
 
 	for _, singleStepTestCases := range allTestCases {
-		singleStepTestCases := singleStepTestCases // copy to local variable, instead of having callback close over loop variable
-
 		t.Run(fmt.Sprintf("Testing statuses for the %v step", singleStepTestCases.stepName), func(t *testing.T) {
-			t.Parallel()
-
 			for _, testCase := range singleStepTestCases.testCases {
-				testCase := testCase // copy to local variable, instead of having callback close over loop variable
-
 				t.Run(testCase.testName, func(t *testing.T) {
-					t.Parallel()
-
 					actualStatus, err := CalculateSystemIntakeRequesterStatus(&testCase.intake, mockCurrentTime)
 					assert.EqualValues(t, testCase.expectedStatus, actualStatus)
 					if testCase.errorExpected {
