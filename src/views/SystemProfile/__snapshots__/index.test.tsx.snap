@@ -157,7 +157,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                       <button
                         aria-controls="single-system-profile"
                         aria-expanded="true"
-                        class="usa-button usa-button--unstyled text-bold margin-top-3"
+                        class="usa-button usa-button--unstyled display-flex flex-align-center text-bold margin-top-3"
                         data-testid="collapsable-link"
                         type="button"
                       >

@@ -333,12 +333,12 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
               <button
                 aria-controls="NEED_HELP"
                 aria-expanded="false"
-                class="usa-button usa-button--unstyled margin-top-2"
+                class="usa-button usa-button--unstyled display-flex flex-align-center margin-top-2"
                 data-testid="collapsable-link"
                 type="button"
               >
                 <svg
-                  class="usa-icon"
+                  class="usa-icon margin-right-05"
                   focusable="false"
                   height="1em"
                   role="img"
@@ -402,12 +402,12 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
               <button
                 aria-controls="BRAINSTORM"
                 aria-expanded="false"
-                class="usa-button usa-button--unstyled margin-top-2"
+                class="usa-button usa-button--unstyled display-flex flex-align-center margin-top-2"
                 data-testid="collapsable-link"
                 type="button"
               >
                 <svg
-                  class="usa-icon"
+                  class="usa-icon margin-right-05"
                   focusable="false"
                   height="1em"
                   role="img"

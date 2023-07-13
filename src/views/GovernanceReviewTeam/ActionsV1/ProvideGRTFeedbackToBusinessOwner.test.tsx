@@ -7,13 +7,21 @@ import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
-import { contactQueries, mockData } from 'data/mock/grtActions';
-import { initialSystemIntakeForm } from 'data/systemIntake';
+import {
+  getSystemIntakeContactsQuery,
+  requester,
+  systemIntake
+} from 'data/mock/systemIntake';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import {
+  GetAdminNotesAndActions,
+  GetAdminNotesAndActionsVariables
+} from 'queries/types/GetAdminNotesAndActions';
+import { MockedQuery } from 'types/util';
 import Notes from 'views/GovernanceReviewTeam/Notes';
 
 import RequestOverview from '../RequestOverview';
@@ -23,15 +31,6 @@ const waitForPageLoad = async () => {
     expect(screen.getByTestId('provide-feedback-biz-case')).toBeInTheDocument();
   });
 };
-// Mock system intake and contacts data
-const {
-  systemIntake,
-  contacts: { requester }
-} = mockData;
-const systemIntakeId = systemIntake.id;
-
-// Mock contact queries
-const { getSystemIntakeContactsQuery } = contactQueries;
 
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -57,7 +56,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
     request: {
       query: GetSystemIntakeQuery,
       variables: {
-        id: systemIntakeId
+        id: systemIntake.id
       }
     },
     result: {
@@ -67,16 +66,21 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
     }
   };
 
-  const noteActionQuery = {
+  const noteActionQuery: MockedQuery<
+    GetAdminNotesAndActions,
+    GetAdminNotesAndActionsVariables
+  > = {
     request: {
       query: GetAdminNotesAndActionsQuery,
       variables: {
-        id: systemIntakeId
+        id: systemIntake.id
       }
     },
     result: {
       data: {
         systemIntake: {
+          __typename: 'SystemIntake',
+          id: systemIntake.id,
           lcid: null,
           notes: [],
           actions: []
@@ -94,7 +98,7 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
     },
     systemIntake: {
       systemIntake: {
-        ...initialSystemIntakeForm,
+        ...systemIntake,
         businessCaseId: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
       }
     },
@@ -165,14 +169,14 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: systemIntakeId
+              intakeID: systemIntake.id
             }
           }
         },
         result: {
           data: {
             addGRTFeedbackAndRequestBusinessCase: {
-              id: systemIntakeId
+              id: systemIntake.id
             }
           }
         }
@@ -215,14 +219,14 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: systemIntakeId
+              intakeID: systemIntake.id
             }
           }
         },
         result: {
           data: {
             addGRTFeedbackAndKeepBusinessCaseInDraft: {
-              id: systemIntakeId
+              id: systemIntake.id
             }
           }
         }
@@ -268,14 +272,14 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
               },
               emailBody: 'Test email',
               feedback: 'Test feedback',
-              intakeID: systemIntakeId
+              intakeID: systemIntake.id
             }
           }
         },
         result: {
           data: {
             addGRTFeedbackAndProgressToFinalBusinessCase: {
-              id: systemIntakeId
+              id: systemIntake.id
             }
           }
         }

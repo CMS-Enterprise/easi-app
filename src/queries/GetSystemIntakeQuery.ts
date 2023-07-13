@@ -100,6 +100,8 @@ export default gql`
       documents {
         ...SystemIntakeDocument
       }
+      state
+      decisionState
     }
   }
 `;

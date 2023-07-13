@@ -73,12 +73,12 @@ exports[`Section 508 Steps Involved matches the snapshot 1`] = `
         <button
           aria-controls="easi-508-testing-exception"
           aria-expanded="false"
-          class="usa-button usa-button--unstyled display-flex flex-align-center margin-bottom-4"
+          class="usa-button usa-button--unstyled display-flex flex-align-center display-flex flex-align-center margin-bottom-4"
           data-testid="collapsable-link"
           type="button"
         >
           <svg
-            class="usa-icon"
+            class="usa-icon margin-right-05"
             focusable="false"
             height="1em"
             role="img"

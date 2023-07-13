@@ -47,7 +47,11 @@ const CollapsableLink = ({
   };
 
   const renderCaret = () => {
-    return isOpen ? <IconExpandMore /> : <IconNavigateNext />;
+    return isOpen ? (
+      <IconExpandMore className="margin-right-05" />
+    ) : (
+      <IconNavigateNext className="margin-right-05" />
+    );
   };
 
   const collapseButton: React.ReactNode = (
@@ -56,7 +60,11 @@ const CollapsableLink = ({
       onClick={() => setOpen(!isOpen)}
       aria-expanded={isOpen}
       aria-controls={id}
-      className={classnames({ 'text-bold': isOpen }, className)}
+      className={classnames(
+        'display-flex flex-align-center',
+        { 'text-bold': isOpen },
+        className
+      )}
       unstyled
       data-testid="collapsable-link"
     >
