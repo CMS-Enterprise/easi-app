@@ -194,8 +194,8 @@ export enum SystemIntakeActionType {
 export enum SystemIntakeDecisionState {
   LCID_ISSUED = "LCID_ISSUED",
   NOT_APPROVED = "NOT_APPROVED",
+  NOT_GOVERNANCE = "NOT_GOVERNANCE",
   NO_DECISION = "NO_DECISION",
-  NO_GOVERNANCE = "NO_GOVERNANCE",
 }
 
 /**
