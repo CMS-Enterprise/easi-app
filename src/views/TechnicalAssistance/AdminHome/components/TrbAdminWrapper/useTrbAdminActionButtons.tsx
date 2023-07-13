@@ -29,6 +29,7 @@ type ActionButtonsProps = {
 
 type ActionButtonKey =
   | 'orCloseRequest'
+  | 'orCloseRequestWithoutSending'
   | 'closeRequest'
   | 'reopenRequest'
   | 'viewRequestForm'
@@ -40,7 +41,7 @@ type ActionButtonKey =
   | 'viewAdviceLetter'
   | 'startAdviceLetter'
   | 'continueAdviceLetter'
-  | 'editAdviceLetter'
+  | 'finalizeAdviceLetter'
   | 'addNote';
 
 const useTrbAdminActionButtons = ({
@@ -73,6 +74,11 @@ const useTrbAdminActionButtons = ({
     const buttons: Record<ActionButtonKey, AdminActionButton> = {
       orCloseRequest: {
         label: t('adminAction.buttons.orCloseRequest'),
+        link: `/trb/${trbRequestId}/request/close-request`,
+        unstyled: true
+      },
+      orCloseRequestWithoutSending: {
+        label: t('adminAction.buttons.orCloseRequestWithoutSending'),
         link: `/trb/${trbRequestId}/request/close-request`,
         unstyled: true
       },
@@ -143,8 +149,8 @@ const useTrbAdminActionButtons = ({
           }
         }
       },
-      editAdviceLetter: {
-        label: t('adminAction.buttons.editAdviceLetter'),
+      finalizeAdviceLetter: {
+        label: t('adminAction.buttons.finalizeAdviceLetter'),
         link: `/trb/${trbRequestId}/advice/review`
       },
       addNote: {
@@ -220,8 +226,8 @@ const useTrbAdminActionButtons = ({
           case 'advice':
             return [
               buttons.addNote,
-              { ...buttons.editAdviceLetter, outline: true },
-              buttons.orCloseRequest
+              { ...buttons.finalizeAdviceLetter, outline: true },
+              buttons.orCloseRequestWithoutSending
             ];
           default:
             return [buttons.viewAdviceLetter, buttons.orCloseRequest];
