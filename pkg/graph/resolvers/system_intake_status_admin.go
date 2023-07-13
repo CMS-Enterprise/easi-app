@@ -45,15 +45,14 @@ func calcSystemIntakeInitialFormStatusAdmin(intakeFormState models.SystemIntakeF
 	return models.SISAInitialRequestFormInProgress
 }
 
-func calcSystemIntakeDraftBusinessCaseStatusAdmin(draftBuisnessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
-	if draftBuisnessCaseState == models.SIRFSSubmitted {
+func calcSystemIntakeDraftBusinessCaseStatusAdmin(draftBusinessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
+	if draftBusinessCaseState == models.SIRFSSubmitted {
 		return models.SISADraftBusinessCaseSubmitted
 	}
 	return models.SISADraftBusinessCaseInProgress
 }
 
 func calcSystemIntakeGRTMeetingStatusAdmin(grtDate *time.Time) models.SystemIntakeStatusAdmin {
-
 	if grtDate == nil {
 		return models.SISAGrtMeetingReady
 	}
@@ -61,11 +60,12 @@ func calcSystemIntakeGRTMeetingStatusAdmin(grtDate *time.Time) models.SystemInta
 	if grtDate.After(time.Now()) {
 		return models.SISAGrtMeetingReady
 	}
+
 	return models.SISAGrtMeetingComplete
 }
 
-func calcSystemIntakeFinalBusinessCaseStatusAdmin(finalBuisnessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
-	if finalBuisnessCaseState == models.SIRFSSubmitted {
+func calcSystemIntakeFinalBusinessCaseStatusAdmin(finalBusinessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
+	if finalBusinessCaseState == models.SIRFSSubmitted {
 		return models.SISAFinalBusinessCaseSubmitted
 	}
 	return models.SISAFinalBusinessCaseInProgress
