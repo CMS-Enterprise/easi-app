@@ -455,7 +455,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
       <div id="system-profile">
         <SummaryBox
           heading=""
-          className="padding-0 border-0 bg-primary-lighter"
+          className="padding-0 border-0 radius-0 bg-primary-lighter"
         >
           <div className="padding-top-3 padding-bottom-3 margin-top-neg-1 height-full">
             <Grid

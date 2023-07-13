@@ -189,6 +189,16 @@ export enum SystemIntakeActionType {
 }
 
 /**
+ * This represents the possible System Intake Decision States
+ */
+export enum SystemIntakeDecisionState {
+  LCID_ISSUED = "LCID_ISSUED",
+  NOT_APPROVED = "NOT_APPROVED",
+  NO_DECISION = "NO_DECISION",
+  NO_GOVERNANCE = "NO_GOVERNANCE",
+}
+
+/**
  * Represents the common options for document type that is attached to a
  * System Intake document
  */
@@ -215,6 +225,14 @@ export enum SystemIntakeRequestType {
   NEW = "NEW",
   RECOMPETE = "RECOMPETE",
   SHUTDOWN = "SHUTDOWN",
+}
+
+/**
+ * SystemIntakeState represents whether the intake is open or closed
+ */
+export enum SystemIntakeState {
+  CLOSED = "CLOSED",
+  OPEN = "OPEN",
 }
 
 /**

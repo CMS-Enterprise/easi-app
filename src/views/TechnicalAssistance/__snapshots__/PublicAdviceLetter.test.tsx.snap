@@ -143,7 +143,7 @@ exports[`Trb Public Advice Letter renders from email link 1`] = `
         <button
           aria-controls="trb-advice-letter-request-summary"
           aria-expanded="true"
-          class="usa-button usa-button--unstyled text-bold"
+          class="usa-button usa-button--unstyled display-flex flex-align-center text-bold"
           data-testid="collapsable-link"
           type="button"
         >

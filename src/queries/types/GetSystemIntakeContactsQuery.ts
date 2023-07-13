@@ -9,9 +9,9 @@
 
 export interface GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts {
   __typename: "AugmentedSystemIntakeContact";
+  systemIntakeId: UUID;
   id: UUID;
   euaUserId: string;
-  systemIntakeId: UUID;
   component: string;
   role: string;
   commonName: string | null;

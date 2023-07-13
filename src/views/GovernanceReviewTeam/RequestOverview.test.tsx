@@ -7,10 +7,9 @@ import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
 import { grtActions } from 'data/mock/grtActions';
-import { initialSystemIntakeForm } from 'data/systemIntake';
+import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
 import RequestOverview from './RequestOverview';
 
@@ -43,132 +42,17 @@ const waitForPageLoad = async (testId: string = 'grt-submit-action-view') => {
 };
 
 describe('Governance Review Team', () => {
-  const intakeQuery = {
-    request: {
-      query: GetSystemIntakeQuery,
-      variables: {
-        id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
-      }
-    },
-    result: {
-      data: {
-        systemIntake: {
-          id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
-          euaUserId: 'ABCD',
-          adminLead: null,
-          businessNeed: 'Test business need',
-          businessSolution: 'Test business solution',
-          businessOwner: {
-            component: 'Center for Medicaid and CHIP Services',
-            name: 'ABCD'
-          },
-          contract: {
-            contractor: 'Contractor Name',
-            endDate: {
-              day: '31',
-              month: '12',
-              year: '2023'
-            },
-            hasContract: 'HAVE_CONTRACT',
-            startDate: {
-              day: '1',
-              month: '1',
-              year: '2021'
-            },
-            vehicle: 'Sole source',
-            number: '123456-7890'
-          },
-          costs: {
-            isExpectingIncrease: 'YES',
-            expectedIncreaseAmount: '10 million dollars'
-          },
-          annualSpending: {
-            currentAnnualSpending: 'Test Current Annual Spending',
-            plannedYearOneSpending: 'Test Planned Year One Spending'
-          },
-          currentStage: 'I have done some initial research',
-          decisionNextSteps: null,
-          grbDate: null,
-          grtDate: null,
-          grtFeedbacks: [],
-          governanceTeams: {
-            isPresent: true,
-            teams: [
-              {
-                acronym: 'EA',
-                collaborator: 'EA Collaborator Name',
-                key: 'enterpriseArchitecture',
-                label: 'Enterprise Architecture (EA)',
-                name: 'Enterprise Architecture'
-              },
-              {
-                acronym: 'ISPG',
-                collaborator: 'OIT Collaborator Name',
-                key: 'securityPrivacy',
-                label: "OIT's Security and Privacy Group (ISPG)",
-                name: "OIT's Security and Privacy Group"
-              },
-              {
-                acronym: 'TRB',
-                collaborator: 'TRB Collaborator Name',
-                key: 'technicalReviewBoard',
-                label: 'Technical Review Board (TRB)',
-                name: 'Technical Review Board'
-              }
-            ]
-          },
-          isso: {
-            isPresent: true,
-            name: 'ISSO Name'
-          },
-          existingFunding: true,
-          fundingSources: [{ fundingNumber: '123456', source: 'Research' }],
-          lcid: null,
-          lcidExpiresAt: null,
-          lcidScope: null,
-          lcidCostBaseline: null,
-          needsEaSupport: true,
-          productManager: {
-            component: 'Center for Program Integrity',
-            name: 'Project Manager'
-          },
-          rejectionReason: null,
-          requester: {
-            component: 'Center for Medicaid and CHIP Services',
-            email: null,
-            name: 'User ABCD'
-          },
-          requestName: 'TACO',
-          requestType: 'NEW',
-          status: 'INTAKE_SUBMITTED',
-          createdAt: null,
-          submittedAt: null,
-          updatedAt: null,
-          archivedAt: null,
-          decidedAt: null,
-          businessCaseId: null,
-          lastAdminNote: {
-            content: null,
-            createdAt: null
-          },
-          grtReviewEmailBody: null,
-          hasUiChanges: true,
-          documents: []
-        }
-      }
-    }
-  };
-
   const adminNotesAndActionsQuery = {
     request: {
       query: GetAdminNotesAndActionsQuery,
       variables: {
-        id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
+        id: systemIntake.id
       }
     },
     result: {
       data: {
         systemIntake: {
+          id: systemIntake.id,
           lcid: null,
           notes: [
             {
@@ -178,7 +62,13 @@ describe('Governance Review Team', () => {
               author: {
                 name: 'Author Name',
                 eua: 'QQQQ'
-              }
+              },
+              editor: {
+                commonName: 'Jerry Seinfeld'
+              },
+              modifiedBy: 'SF13',
+              modifiedAt: '',
+              isArchived: false
             }
           ],
           actions: [
@@ -219,7 +109,7 @@ describe('Governance Review Team', () => {
     },
     systemIntake: {
       systemIntake: {
-        ...initialSystemIntakeForm,
+        ...systemIntake,
         businessCaseId: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
       }
     },
@@ -235,10 +125,10 @@ describe('Governance Review Team', () => {
     render(
       <MemoryRouter
         initialEntries={[
-          '/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/intake-request'
+          `/governance-review-team/${systemIntake.id}/intake-request`
         ]}
       >
-        <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/intake-request">
@@ -259,10 +149,10 @@ describe('Governance Review Team', () => {
     render(
       <MemoryRouter
         initialEntries={[
-          '/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/business-case'
+          `/governance-review-team/${systemIntake.id}/business-case`
         ]}
       >
-        <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/business-case">
@@ -279,13 +169,15 @@ describe('Governance Review Team', () => {
   it('renders GRT notes view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          '/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/notes'
-        ]}
+        initialEntries={[`/governance-review-team/${systemIntake.id}/notes`]}
       >
         {/* TODO: There shouldn't need to be three mocked queries; only 2 */}
         <MockedProvider
-          mocks={[intakeQuery, adminNotesAndActionsQuery, intakeQuery]}
+          mocks={[
+            getSystemIntakeQuery,
+            adminNotesAndActionsQuery,
+            getSystemIntakeQuery
+          ]}
           addTypename={false}
         >
           <Provider store={defaultStore}>
@@ -304,11 +196,9 @@ describe('Governance Review Team', () => {
   it('renders GRT dates view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          '/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/dates'
-        ]}
+        initialEntries={[`/governance-review-team/${systemIntake.id}/dates`]}
       >
-        <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/dates">
@@ -325,11 +215,9 @@ describe('Governance Review Team', () => {
   it('renders GRT dates view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          '/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/decision'
-        ]}
+        initialEntries={[`/governance-review-team/${systemIntake.id}/decision`]}
       >
-        <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/decision">
@@ -346,11 +234,9 @@ describe('Governance Review Team', () => {
   it('renders GRT actions view', async () => {
     render(
       <MemoryRouter
-        initialEntries={[
-          '/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions'
-        ]}
+        initialEntries={[`/governance-review-team/${systemIntake.id}/actions`]}
       >
-        <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/actions">
@@ -369,10 +255,10 @@ describe('Governance Review Team', () => {
       render(
         <MemoryRouter
           initialEntries={[
-            `/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions/${slug}`
+            `/governance-review-team/${systemIntake.id}/actions/${slug}`
           ]}
         >
-          <MockedProvider mocks={[intakeQuery]} addTypename={false}>
+          <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
             <Provider store={defaultStore}>
               <MessageProvider>
                 <Route path="/governance-review-team/:systemId/actions/:activePage">

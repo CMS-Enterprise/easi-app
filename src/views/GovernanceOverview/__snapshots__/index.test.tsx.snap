@@ -277,13 +277,13 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
         <button
           aria-controls="GovernanceOverview-WhyGovernanceExists"
           aria-expanded={false}
-          className="usa-button usa-button--unstyled"
+          className="usa-button usa-button--unstyled display-flex flex-align-center"
           data-testid="collapsable-link"
           onClick={[Function]}
           type="button"
         >
           <svg
-            className="usa-icon"
+            className="usa-icon margin-right-05"
             focusable={false}
             height="1em"
             role="img"
@@ -591,13 +591,13 @@ exports[`The governance overview page matches the snapshot (w/o id param) 1`] = 
         <button
           aria-controls="GovernanceOverview-WhyGovernanceExists"
           aria-expanded={false}
-          className="usa-button usa-button--unstyled"
+          className="usa-button usa-button--unstyled display-flex flex-align-center"
           data-testid="collapsable-link"
           onClick={[Function]}
           type="button"
         >
           <svg
-            className="usa-icon"
+            className="usa-icon margin-right-05"
             focusable={false}
             height="1em"
             role="img"

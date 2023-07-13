@@ -9,6 +9,10 @@ import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
+import {
+  SystemIntakeDecisionState,
+  SystemIntakeState
+} from 'types/graphql-global-types';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskListV1';
 import SystemIntake from 'views/SystemIntake';
@@ -126,6 +130,8 @@ const intakeQuery = (intakeData: any) => {
           },
           hasUiChanges: null,
           documents: [],
+          state: SystemIntakeState.OPEN,
+          decisionState: SystemIntakeDecisionState.NO_DECISION,
           ...intakeData
         }
       }

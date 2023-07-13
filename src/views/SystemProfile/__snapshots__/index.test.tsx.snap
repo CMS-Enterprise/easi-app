@@ -12,7 +12,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
       id="system-profile"
     >
       <div
-        class="usa-summary-box padding-0 border-0 bg-primary-lighter"
+        class="usa-summary-box padding-0 border-0 radius-0 bg-primary-lighter"
         data-testid="summary-box"
       >
         <div
@@ -157,7 +157,7 @@ exports[`System Profile parent request matches snapshot 1`] = `
                       <button
                         aria-controls="single-system-profile"
                         aria-expanded="true"
-                        class="usa-button usa-button--unstyled text-bold margin-top-3"
+                        class="usa-button usa-button--unstyled display-flex flex-align-center text-bold margin-top-3"
                         data-testid="collapsable-link"
                         type="button"
                       >

@@ -146,6 +146,8 @@ describe('The Goveranance Task List', () => {
             },
             hasUiChanges: null,
             documents: [],
+            state: 'OPEN',
+            decisionState: 'NO_DECISION',
             ...intakeData
           }
         }

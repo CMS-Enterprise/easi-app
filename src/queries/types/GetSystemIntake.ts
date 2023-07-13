@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GRTFeedbackType, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus } from "./../../types/graphql-global-types";
+import { GRTFeedbackType, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntake
@@ -161,6 +161,8 @@ export interface GetSystemIntake_systemIntake {
   lastAdminNote: GetSystemIntake_systemIntake_lastAdminNote;
   hasUiChanges: boolean | null;
   documents: GetSystemIntake_systemIntake_documents[];
+  state: SystemIntakeState;
+  decisionState: SystemIntakeDecisionState;
 }
 
 export interface GetSystemIntake {

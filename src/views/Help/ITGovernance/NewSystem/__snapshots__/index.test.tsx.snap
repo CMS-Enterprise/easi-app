@@ -102,12 +102,12 @@ exports[`New System matches the snapshot 1`] = `
           <button
             aria-controls="GovernanceOverview-WhyGovernanceExists"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled margin-bottom-1"
+            class="usa-button usa-button--unstyled display-flex flex-align-center margin-bottom-1"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"

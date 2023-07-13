@@ -75,12 +75,12 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
           <button
             aria-controls="capital-planning-and-investment-control-cpic"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled display-flex flex-align-center"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"
@@ -109,12 +109,12 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
           <button
             aria-controls="enterprise-architecture-and-data"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled display-flex flex-align-center"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"
@@ -143,12 +143,12 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
           <button
             aria-controls="shared-services-and-data-hosting"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled display-flex flex-align-center"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"
@@ -177,12 +177,12 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
           <button
             aria-controls="it-security-privacy"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled display-flex flex-align-center"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"
@@ -316,12 +316,12 @@ exports[`Prepare for GRT renders without crashing 1`] = `
           <button
             aria-controls="capital-planning-and-investment-control-cpic"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled display-flex flex-align-center"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"
@@ -350,12 +350,12 @@ exports[`Prepare for GRT renders without crashing 1`] = `
           <button
             aria-controls="enterprise-architecture-and-data"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled display-flex flex-align-center"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"
@@ -384,12 +384,12 @@ exports[`Prepare for GRT renders without crashing 1`] = `
           <button
             aria-controls="shared-services-and-data-hosting"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled display-flex flex-align-center"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"
@@ -418,12 +418,12 @@ exports[`Prepare for GRT renders without crashing 1`] = `
           <button
             aria-controls="it-security-privacy"
             aria-expanded="false"
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled display-flex flex-align-center"
             data-testid="collapsable-link"
             type="button"
           >
             <svg
-              class="usa-icon"
+              class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
               role="img"

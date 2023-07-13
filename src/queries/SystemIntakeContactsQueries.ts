@@ -1,16 +1,23 @@
 import { gql } from '@apollo/client';
 
+export const SystemIntakeContact = gql`
+  fragment SystemIntakeContact on AugmentedSystemIntakeContact {
+    systemIntakeId
+    id
+    euaUserId
+    component
+    role
+    commonName
+    email
+  }
+`;
+
 export const GetSystemIntakeContactsQuery = gql`
+  ${SystemIntakeContact}
   query GetSystemIntakeContactsQuery($id: UUID!) {
     systemIntakeContacts(id: $id) {
       systemIntakeContacts {
-        id
-        euaUserId
-        systemIntakeId
-        component
-        role
-        commonName
-        email
+        ...SystemIntakeContact
       }
     }
   }
