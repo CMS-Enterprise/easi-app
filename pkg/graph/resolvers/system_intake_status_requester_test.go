@@ -384,6 +384,29 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				expectedStatus: models.SISRNotApproved,
 				errorExpected:  false,
 			},
+			{
+				// this state should not be reached in practice (intake can only be closed with no decision *before* reaching the decision step)
+				// but check that it's handled reasonably anyways, just to be sure
+				testName: "Closed with no decision while in the decision step",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepDECISION,
+					DecisionState: models.SIDSNoDecision,
+					State:         models.SystemIntakeStateCLOSED,
+				},
+				expectedStatus: models.SISRClosed,
+				errorExpected:  false,
+			},
+			{
+				// this state is definitely invalid - if an intake has been closed with no decision, it should not be re-opened and remain in the decision step
+				testName: "Open with decisionState set to No Decision while in the decision step",
+				intake: models.SystemIntake{
+					Step:          models.SystemIntakeStepDECISION,
+					DecisionState: models.SIDSNoDecision,
+					State:         models.SystemIntakeStateOPEN,
+				},
+				expectedStatus: "",
+				errorExpected:  true,
+			},
 		},
 	}
 
