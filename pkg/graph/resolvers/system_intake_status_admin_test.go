@@ -339,8 +339,8 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				DecisionState: models.SIDSNoDecision,
 				State:         models.SystemIntakeStateCLOSED,
 			},
-			expectedStatus: models.SISAClosed,
-			expectError:    false,
+			expectedStatus: "",
+			expectError:    true,
 		},
 		// This case will be handled in application code to ensure this doesn't occur. If needed, further logic can be created to enforce it, such as a check constraint in the DB
 		{

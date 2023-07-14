@@ -9,13 +9,16 @@ import (
 
 // CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake request, based on the current step, and the state of that step and the overall state
 func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
+	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
+		return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
+	}
 
 	if intake.State == models.SystemIntakeStateCLOSED && intake.DecisionState == models.SIDSNoDecision {
 		// If the decision is closed and a decision wasn't issued, show closed
 		// An intake that is closed without a decision doesn't progress to the SystemIntakeStepDECISION step, but remains on it's current step. This allows it to stay on that step if re-opened.
 		return models.SISAClosed, nil
-
 	}
+
 	var retStatus models.SystemIntakeStatusAdmin
 	var err error
 	switch intake.Step {
