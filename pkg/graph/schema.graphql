@@ -808,6 +808,7 @@ type BusinessCase {
 
 """
 The status of a system's IT governence request
+Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
 """
 enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED
@@ -1040,6 +1041,7 @@ type SystemIntake {
   """
   grbMeetingState: SystemIntakeMeetingState!
   decisionState: SystemIntakeDecisionState!
+  statusRequester: SystemIntakeStatusRequester!
   statusAdmin: SystemIntakeStatusAdmin!
 }
 
@@ -2701,13 +2703,13 @@ enum SystemIntakeDecisionState {
   NO_DECISION
   LCID_ISSUED
   NOT_APPROVED
-  NO_GOVERNANCE
+  NOT_GOVERNANCE
 }
 
 """
 This represents the possible states any system intake meeting can take.
 """
-enum SystemIntakeMeetingState{
+enum SystemIntakeMeetingState {
   SCHEDULED
   NOT_SCHEDULED
 }
@@ -2727,7 +2729,31 @@ enum SystemIntakeStatusAdmin {
   FINAL_BUSINESS_CASE_IN_PROGRESS
   FINAL_BUSINESS_CASE_SUBMITTED
   LCID_ISSUED
-  NO_GOVERNANCE
+  NOT_GOVERNANCE
+  NOT_APPROVED
+  CLOSED
+}
+
+"""
+This represents the (calculated) statuses that a requester view of a system intake request can show as part of the IT Gov v2 workflow
+"""
+enum SystemIntakeStatusRequester {
+  INITIAL_REQUEST_FORM_NEW
+  INITIAL_REQUEST_FORM_IN_PROGRESS
+  INITIAL_REQUEST_FORM_SUBMITTED
+  INITIAL_REQUEST_FORM_EDITS_REQUESTED
+  DRAFT_BUSINESS_CASE_IN_PROGRESS
+  DRAFT_BUSINESS_CASE_SUBMITTED
+  DRAFT_BUSINESS_CASE_EDITS_REQUESTED
+  GRT_MEETING_READY
+  GRT_MEETING_AWAITING_DECISION
+  FINAL_BUSINESS_CASE_IN_PROGRESS
+  FINAL_BUSINESS_CASE_SUBMITTED
+  FINAL_BUSINESS_CASE_EDITS_REQUESTED
+  GRB_MEETING_READY
+  GRB_MEETING_AWAITING_DECISION
+  LCID_ISSUED
+  NOT_GOVERNANCE
   NOT_APPROVED
   CLOSED
 }

@@ -234,10 +234,10 @@ type SystemIntakeDecisionState string
 
 // These are the options for SystemIntakeDecisionState
 const (
-	SIDSNoDecision   SystemIntakeDecisionState = "NO_DECISION"
-	SIDSLcidIssued   SystemIntakeDecisionState = "LCID_ISSUED"
-	SIDSNotApproved  SystemIntakeDecisionState = "NOT_APPROVED"
-	SIDSNoGovernance SystemIntakeDecisionState = "NO_GOVERNANCE"
+	SIDSNoDecision    SystemIntakeDecisionState = "NO_DECISION"
+	SIDSLcidIssued    SystemIntakeDecisionState = "LCID_ISSUED"
+	SIDSNotApproved   SystemIntakeDecisionState = "NOT_APPROVED"
+	SIDSNotGovernance SystemIntakeDecisionState = "NOT_GOVERNANCE"
 )
 
 // SystemIntakeMeetingState is the state for any meeting for a system intake

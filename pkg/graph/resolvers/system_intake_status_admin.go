@@ -9,13 +9,16 @@ import (
 
 // CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake request, based on the current step, and the state of that step and the overall state
 func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
+	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
+		return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
+	}
 
 	if intake.State == models.SystemIntakeStateCLOSED && intake.DecisionState == models.SIDSNoDecision {
 		// If the decision is closed and a decision wasn't issued, show closed
 		// An intake that is closed without a decision doesn't progress to the SystemIntakeStepDECISION step, but remains on it's current step. This allows it to stay on that step if re-opened.
 		return models.SISAClosed, nil
-
 	}
+
 	var retStatus models.SystemIntakeStatusAdmin
 	var err error
 	switch intake.Step {
@@ -45,15 +48,14 @@ func calcSystemIntakeInitialFormStatusAdmin(intakeFormState models.SystemIntakeF
 	return models.SISAInitialRequestFormInProgress
 }
 
-func calcSystemIntakeDraftBusinessCaseStatusAdmin(draftBuisnessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
-	if draftBuisnessCaseState == models.SIRFSSubmitted {
+func calcSystemIntakeDraftBusinessCaseStatusAdmin(draftBusinessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
+	if draftBusinessCaseState == models.SIRFSSubmitted {
 		return models.SISADraftBusinessCaseSubmitted
 	}
 	return models.SISADraftBusinessCaseInProgress
 }
 
 func calcSystemIntakeGRTMeetingStatusAdmin(grtDate *time.Time) models.SystemIntakeStatusAdmin {
-
 	if grtDate == nil {
 		return models.SISAGrtMeetingReady
 	}
@@ -61,11 +63,12 @@ func calcSystemIntakeGRTMeetingStatusAdmin(grtDate *time.Time) models.SystemInta
 	if grtDate.After(time.Now()) {
 		return models.SISAGrtMeetingReady
 	}
+
 	return models.SISAGrtMeetingComplete
 }
 
-func calcSystemIntakeFinalBusinessCaseStatusAdmin(finalBuisnessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
-	if finalBuisnessCaseState == models.SIRFSSubmitted {
+func calcSystemIntakeFinalBusinessCaseStatusAdmin(finalBusinessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
+	if finalBusinessCaseState == models.SIRFSSubmitted {
 		return models.SISAFinalBusinessCaseSubmitted
 	}
 	return models.SISAFinalBusinessCaseInProgress
@@ -87,8 +90,8 @@ func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisi
 	if decisionState == models.SIDSLcidIssued {
 		return models.SISALcidIssued, nil
 	}
-	if decisionState == models.SIDSNoGovernance {
-		return models.SISANoGovernance, nil
+	if decisionState == models.SIDSNotGovernance {
+		return models.SISANotGovernance, nil
 	}
 	if decisionState == models.SIDSNotApproved {
 		return models.SISANotApproved, nil
