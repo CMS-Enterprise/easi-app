@@ -331,7 +331,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			expectedStatus: models.SISANotApproved,
 			expectError:    false,
 		},
-		// These cases should not be present in the actual app, but they are possible edge cases
+		// This case will be handled in application code to ensure this doesn't occur.
 		{
 			testCase: "Decision No Decision, closed",
 			intake: models.SystemIntake{
