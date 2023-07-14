@@ -7846,7 +7846,7 @@ type BusinessCase {
 
 """
 The status of a system's IT governence request
-Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeRequesterStatus/SystemIntakeAdminStatus
+Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
 """
 enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED
