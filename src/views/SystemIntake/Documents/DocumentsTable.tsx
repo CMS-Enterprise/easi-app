@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { Button, Table } from '@trussworks/react-uswds';
+import { Alert, Button, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
@@ -82,20 +82,18 @@ const DocumentsTable = ({
   });
 
   const columns = useMemo<Column<SystemIntakeDocument>[]>(() => {
-    const getUrlForDocument = (documentId: string) => {
+    const getUrlForDocument = (documentId: string, documentName: string) => {
       getDocumentUrls().then(response => {
         if (response.error || !response.data || !response.data.systemIntake) {
           // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
-          // TODO - error handling
-          /*
+          // similarly, if no systemIntake is returned, there's no URL info to use
           showMessage(
             <Alert type="error" className="margin-top-3">
-              {t('documents.viewFail', {
+              {t('technicalAssistance:documents.viewFail', {
                 documentName
               })}
             </Alert>
           );
-          */
         } else {
           // Download document
           const requestedDocument = response.data.systemIntake.documents.find(
@@ -155,13 +153,14 @@ const DocumentsTable = ({
           if (row.original.status === SystemIntakeDocumentStatus.AVAILABLE) {
             // Show some file actions once it's available
             const documentId = row.original.id;
+            const documentName = row.original.fileName;
             return (
               <>
                 {/* View document */}
                 <Button
                   type="button"
                   unstyled
-                  onClick={() => getUrlForDocument(documentId)}
+                  onClick={() => getUrlForDocument(documentId, documentName)}
                 >
                   {t('technicalAssistance:documents.table.view')}
                 </Button>
@@ -189,7 +188,7 @@ const DocumentsTable = ({
         }
       }
     ];
-  }, [canEdit, setFileToDelete, getDocumentUrls, t]);
+  }, [canEdit, setFileToDelete, getDocumentUrls, showMessage, t]);
 
   const {
     getTableBodyProps,
