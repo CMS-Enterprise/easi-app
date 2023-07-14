@@ -39,7 +39,7 @@ const (
 // ITGovDraftBusinessCaseStatus represents the types of ITGovDraftBusinessCaseStatus types. This is what the requestor sees for the  optional fourth task.
 type ITGovDraftBusinessCaseStatus string
 
-// These are the options for ITGovDraftBuisnessCaseStatus
+// These are the options for ITGovDraftBusinessCaseStatus
 const (
 	ITGDBCSCantStart      ITGovDraftBusinessCaseStatus = "CANT_START"
 	ITGDBCSNotNeeded      ITGovDraftBusinessCaseStatus = "NOT_NEEDED"
@@ -65,7 +65,7 @@ const (
 // ITGovFinalBusinessCaseStatus represents the types of ITGovFinalBusinessCaseStatus types. This is what the requestor sees for the  optional sixth task.
 type ITGovFinalBusinessCaseStatus string
 
-// These are the options for ITGovFinalBuisnessCaseStatus
+// These are the options for ITGovFinalBusinessCaseStatus
 const (
 	ITGFBCSCantStart      ITGovFinalBusinessCaseStatus = "CANT_START"
 	ITGFBCSNotNeeded      ITGovFinalBusinessCaseStatus = "NOT_NEEDED"

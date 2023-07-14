@@ -16,9 +16,9 @@ type testSystemIntakeAdminStatusType struct {
 	expectError    bool
 }
 
-// TestSystemIntakeStatusAdminGet tests the possible permutations for the systemIntakeStatusAdminGet method.
-// It doesn't use the testify suit, as this is not dependant on anything besides the resolver.
-func TestSystemIntakeStatusAdminGet(t *testing.T) {
+// TestCalculateSystemIntakeAdminStatus tests the possible permutations for the CalculateSystemIntakeAdminStatus function.
+// It doesn't use the testify suite, as this is not dependant on anything besides the resolver.
+func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
 	intakeFormTests := []testSystemIntakeAdminStatusType{
@@ -295,20 +295,20 @@ func TestSystemIntakeStatusAdminGet(t *testing.T) {
 			testCase: "Decision No Governance, open",
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
-				DecisionState: models.SIDSNoGovernance,
+				DecisionState: models.SIDSNotGovernance,
 				State:         models.SystemIntakeStateOPEN,
 			},
-			expectedStatus: models.SISANoGovernance,
+			expectedStatus: models.SISANotGovernance,
 			expectError:    false,
 		},
 		{
 			testCase: "Decision No Governance, closed",
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
-				DecisionState: models.SIDSNoGovernance,
+				DecisionState: models.SIDSNotGovernance,
 				State:         models.SystemIntakeStateCLOSED,
 			},
-			expectedStatus: models.SISANoGovernance,
+			expectedStatus: models.SISANotGovernance,
 			expectError:    false,
 		},
 		{
@@ -331,7 +331,7 @@ func TestSystemIntakeStatusAdminGet(t *testing.T) {
 			expectedStatus: models.SISANotApproved,
 			expectError:    false,
 		},
-		// These cases should not be present in the actual app, but they are possible edge cases
+		// This case will be handled in application code to ensure this doesn't occur.
 		{
 			testCase: "Decision No Decision, closed",
 			intake: models.SystemIntake{
@@ -339,8 +339,8 @@ func TestSystemIntakeStatusAdminGet(t *testing.T) {
 				DecisionState: models.SIDSNoDecision,
 				State:         models.SystemIntakeStateCLOSED,
 			},
-			expectedStatus: models.SISAClosed,
-			expectError:    false,
+			expectedStatus: "",
+			expectError:    true,
 		},
 		// This case will be handled in application code to ensure this doesn't occur. If needed, further logic can be created to enforce it, such as a check constraint in the DB
 		{
