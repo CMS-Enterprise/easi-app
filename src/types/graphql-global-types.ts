@@ -194,8 +194,8 @@ export enum SystemIntakeActionType {
 export enum SystemIntakeDecisionState {
   LCID_ISSUED = "LCID_ISSUED",
   NOT_APPROVED = "NOT_APPROVED",
+  NOT_GOVERNANCE = "NOT_GOVERNANCE",
   NO_DECISION = "NO_DECISION",
-  NO_GOVERNANCE = "NO_GOVERNANCE",
 }
 
 /**
@@ -237,6 +237,7 @@ export enum SystemIntakeState {
 
 /**
  * The status of a system's IT governence request
+ * Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
  */
 export enum SystemIntakeStatus {
   BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
