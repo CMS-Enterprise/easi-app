@@ -11,6 +11,8 @@ export interface ItGovTaskSystemIntakeWithMockData
   // eslint-disable-next-line camelcase
   extends GetGovernanceTaskList_systemIntake {
   governanceRequestFeedbackCompletedAt?: string | null;
+  bizCaseDraftUpdatedAt?: string | null;
+  bizCaseDraftSubmittedAt?: string | null;
 }
 
 export interface GetGovernanceTaskListWithMockData {
