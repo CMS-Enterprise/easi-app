@@ -21,6 +21,7 @@ import {
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
+import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
 import GovTaskFeedbackFromInitialReview from './GovTaskFeedbackFromInitialReview';
 import GovTaskIntakeForm from './GovTaskIntakeForm';
 
@@ -78,15 +79,7 @@ function GovernanceTaskList() {
                   <GovTaskFeedbackFromInitialReview {...systemIntake} />
 
                   {/* 3. Prepare a draft Business Case */}
-                  <TaskListItem
-                    heading={t('taskList.step.bizCaseDraft.title')}
-                    status={itGovTaskStatuses.bizCaseDraftStatus}
-                    testId={kebabCase(t('taskList.step.bizCaseDraft.title'))}
-                  >
-                    <TaskListDescription>
-                      <p>{t('taskList.step.bizCaseDraft.description')}</p>
-                    </TaskListDescription>
-                  </TaskListItem>
+                  <GovTaskBizCaseDraft {...systemIntake} />
 
                   {/* 4. Attend the GRT meeting */}
                   <TaskListItem
