@@ -43,7 +43,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     expectTaskStatusTagToHaveStatusText('CANT_START');
   });
 
-  it.skip('Skipped', () => {
+  it('Skipped', () => {
     renderGovTaskBizCaseDraft(taskListState.bizCaseDraftSkipped.systemIntake!);
     // Not needed
     expectTaskStatusTagToHaveStatusText('NOT_NEEDED');
@@ -162,8 +162,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // View feedback + Submitted draft biz case
-    // todo complete conditions
-    // getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
     getByRoleWithNameTextKey(
       'link',
       'itGov:taskList.step.bizCaseDraft.viewSubmittedDraftBusinessCase'

@@ -244,12 +244,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
-      governanceRequestFeedbacks: [
-        {
-          __typename: 'GovernanceRequestFeedback',
-          id
-        }
-      ],
+      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z'
     }
@@ -268,12 +263,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
-      governanceRequestFeedbacks: [
-        {
-          __typename: 'GovernanceRequestFeedback',
-          id
-        }
-      ],
+      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z'
     }
@@ -292,12 +282,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
-      governanceRequestFeedbacks: [
-        {
-          __typename: 'GovernanceRequestFeedback',
-          id
-        }
-      ],
+      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z'
     }
@@ -316,12 +301,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
-      governanceRequestFeedbacks: [
-        {
-          __typename: 'GovernanceRequestFeedback',
-          id
-        }
-      ],
+      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-12T00:30:28Z'
@@ -341,12 +321,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
-      governanceRequestFeedbacks: [
-        {
-          __typename: 'GovernanceRequestFeedback',
-          id
-        }
-      ],
+      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-13T00:30:28Z',

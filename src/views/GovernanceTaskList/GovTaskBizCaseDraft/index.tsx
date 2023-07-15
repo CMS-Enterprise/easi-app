@@ -14,7 +14,8 @@ import { formatDateLocal } from 'utils/date';
 const GovTaskBizCaseDraft = ({
   itGovTaskStatuses: { bizCaseDraftStatus },
   bizCaseDraftSubmittedAt,
-  bizCaseDraftUpdatedAt
+  bizCaseDraftUpdatedAt,
+  governanceRequestFeedbacks
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseDraft';
   const { t } = useTranslation('itGov');
@@ -49,6 +50,8 @@ const GovTaskBizCaseDraft = ({
       value: submittedDate
     };
 
+  const hasFeedback = governanceRequestFeedbacks.length > 0;
+
   return (
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
@@ -82,8 +85,7 @@ const GovTaskBizCaseDraft = ({
         )}
 
         {/* Link to view feedback */}
-        {bizCaseDraftStatus ===
-          ITGovDraftBusinessCaseStatus.EDITS_REQUESTED && (
+        {hasFeedback && (
           <div className="margin-top-2">
             <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
           </div>
