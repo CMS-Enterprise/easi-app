@@ -10,6 +10,7 @@ import {
   ITGovFeedbackStatus,
   ITGovIntakeFormStatus
 } from 'types/graphql-global-types';
+import { TaskListItemDateInfo } from 'types/taskList';
 import { formatDateLocal } from 'utils/date';
 
 import './index.scss';
@@ -40,6 +41,7 @@ export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
 type TaskListItemProps = {
   heading: string;
   status: TaskStatus | undefined;
+  statusDateInfo?: TaskListItemDateInfo;
   children?: React.ReactNode;
   testId?: string;
   completedIso?: string | null;
@@ -50,6 +52,7 @@ type TaskListItemProps = {
 const TaskListItem = ({
   heading,
   status,
+  statusDateInfo,
   children,
   testId,
   completedIso,
@@ -97,6 +100,14 @@ const TaskListItem = ({
             {!!status && status in taskStatusClassName && (
               <TaskStatusTag status={status} />
             )}
+
+            {statusDateInfo && (
+              <p className="margin-top-05 margin-bottom-0 text-base">
+                {t(`taskStatusInfo.${statusDateInfo.label}`)}
+                <br /> {statusDateInfo.value}
+              </p>
+            )}
+
             {(completedDate ||
               lastUpdatedDate ||
               governanceRequestFeedbackCompletedDate) && (

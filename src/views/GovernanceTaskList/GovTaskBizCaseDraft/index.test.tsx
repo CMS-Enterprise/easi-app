@@ -65,7 +65,14 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
     // In progress
     expectTaskStatusTagToHaveStatusText('IN_PROGRESS');
-    // - Last updated date
+    // Last updated date
+    screen.getByText(
+      RegExp(
+        `${i18next.t<string>(
+          'taskList:taskStatusInfo.lastUpdated'
+        )}.*07/12/2023`
+      )
+    );
     // Continue button
     getByRoleWithNameTextKey('link', 'itGov:button.continue');
   });
@@ -78,7 +85,12 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     // Completed
     expectTaskStatusTagToHaveStatusText('COMPLETED');
 
-    // - Submitted date
+    // Submitted date
+    screen.getByText(
+      RegExp(
+        `${i18next.t<string>('taskList:taskStatusInfo.submitted')}.*07/13/2023`
+      )
+    );
 
     // Submitted & waiting for feedback info
     const submittedInfo = screen.getByTestId('alert');
@@ -92,8 +104,6 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
       'link',
       'itGov:taskList.step.bizCaseDraft.viewSubmittedDraftBusinessCase'
     );
-
-    // - Submitted date
   });
 
   it('Edits requested - from admins', () => {
@@ -104,7 +114,14 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     // Edits Requested
     expectTaskStatusTagToHaveStatusText('EDITS_REQUESTED');
 
-    // - Last updated date
+    // Last updated date
+    screen.getByText(
+      RegExp(
+        `${i18next.t<string>(
+          'taskList:taskStatusInfo.lastUpdated'
+        )}.*07/14/2023`
+      )
+    );
 
     // Edits requested warning
     const submittedInfo = screen.getByTestId('alert');
@@ -130,7 +147,12 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     // Completed
     expectTaskStatusTagToHaveStatusText('COMPLETED');
 
-    // - Submitted date
+    // Submitted date
+    screen.getByText(
+      RegExp(
+        `${i18next.t<string>('taskList:taskStatusInfo.submitted')}.*07/15/2023`
+      )
+    );
 
     // Submitted & waiting for feedback info
     const submittedInfo = screen.getByTestId('alert');

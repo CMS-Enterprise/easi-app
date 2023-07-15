@@ -8,11 +8,13 @@ import TaskListItem, { TaskListDescription } from 'components/TaskList';
 // import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import { ITGovDraftBusinessCaseStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
+import { TaskListItemDateInfo } from 'types/taskList';
+import { formatDateLocal } from 'utils/date';
 
 const GovTaskBizCaseDraft = ({
-  itGovTaskStatuses,
-  governanceRequestFeedbacks,
-  governanceRequestFeedbackCompletedAt
+  itGovTaskStatuses: { bizCaseDraftStatus },
+  bizCaseDraftSubmittedAt,
+  bizCaseDraftUpdatedAt
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseDraft';
   const { t } = useTranslation('itGov');
@@ -23,47 +25,64 @@ const GovTaskBizCaseDraft = ({
     [ITGovDraftBusinessCaseStatus.EDITS_REQUESTED, 'editForm']
   ]);
 
+  // Updated and completed at date status info
+  let dateInfo: TaskListItemDateInfo;
+
+  const lastUpdatedDate =
+    (bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.IN_PROGRESS ||
+      bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.EDITS_REQUESTED) &&
+    bizCaseDraftUpdatedAt &&
+    formatDateLocal(bizCaseDraftUpdatedAt, 'MM/dd/yyyy');
+  if (lastUpdatedDate)
+    dateInfo = {
+      label: 'lastUpdated',
+      value: lastUpdatedDate
+    };
+
+  const submittedDate =
+    bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.COMPLETED &&
+    bizCaseDraftSubmittedAt &&
+    formatDateLocal(bizCaseDraftSubmittedAt, 'MM/dd/yyyy');
+  if (!lastUpdatedDate && submittedDate)
+    dateInfo = {
+      label: 'submitted',
+      value: submittedDate
+    };
+
   return (
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
-      status={itGovTaskStatuses.bizCaseDraftStatus}
+      status={bizCaseDraftStatus}
+      statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
-      governanceRequestFeedbackCompletedIso={
-        governanceRequestFeedbackCompletedAt
-      }
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
 
         {/* Draft biz case submitted & waiting for feedback */}
-        {itGovTaskStatuses.bizCaseDraftStatus ===
-          ITGovDraftBusinessCaseStatus.COMPLETED && (
+        {bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.COMPLETED && (
           <Alert slim type="info">
             {t(`taskList.step.${stepKey}.submittedInfo`)}
           </Alert>
         )}
 
-        {itGovTaskStatuses.bizCaseDraftStatus ===
+        {bizCaseDraftStatus ===
           ITGovDraftBusinessCaseStatus.EDITS_REQUESTED && (
           <Alert slim type="warning">
             {t(`taskList.step.${stepKey}.editsRequestedWarning`)}
           </Alert>
         )}
 
-        {statusButtonText.has(itGovTaskStatuses.bizCaseDraftStatus) && (
+        {statusButtonText.has(bizCaseDraftStatus) && (
           <div className="margin-top-2">
             <UswdsReactLink variant="unstyled" className="usa-button" to="./">
-              {t(
-                `button.${statusButtonText.get(
-                  itGovTaskStatuses.bizCaseDraftStatus
-                )}`
-              )}
+              {t(`button.${statusButtonText.get(bizCaseDraftStatus)}`)}
             </UswdsReactLink>
           </div>
         )}
 
         {/* Link to view feedback */}
-        {itGovTaskStatuses.bizCaseDraftStatus ===
+        {bizCaseDraftStatus ===
           ITGovDraftBusinessCaseStatus.EDITS_REQUESTED && (
           <div className="margin-top-2">
             <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
@@ -71,8 +90,7 @@ const GovTaskBizCaseDraft = ({
         )}
 
         {/* Link to view submitted draft biz case */}
-        {itGovTaskStatuses.bizCaseDraftStatus ===
-          ITGovDraftBusinessCaseStatus.COMPLETED && (
+        {bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.COMPLETED && (
           <div className="margin-top-2">
             <UswdsReactLink to="./">
               {t(`taskList.step.${stepKey}.viewSubmittedDraftBusinessCase`)}
