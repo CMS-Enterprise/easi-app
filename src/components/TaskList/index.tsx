@@ -6,10 +6,6 @@ import TaskStatusTag, {
   TaskStatus,
   taskStatusClassName
 } from 'components/shared/TaskStatusTag';
-import {
-  ITGovFeedbackStatus,
-  ITGovIntakeFormStatus
-} from 'types/graphql-global-types';
 import { TaskListItemDateInfo } from 'types/taskList';
 import { formatDateLocal } from 'utils/date';
 
@@ -44,9 +40,6 @@ type TaskListItemProps = {
   statusDateInfo?: TaskListItemDateInfo;
   children?: React.ReactNode;
   testId?: string;
-  completedIso?: string | null;
-  lastUpdatedIso?: string | null;
-  governanceRequestFeedbackCompletedIso?: string | null;
 };
 
 const TaskListItem = ({
@@ -54,10 +47,7 @@ const TaskListItem = ({
   status,
   statusDateInfo,
   children,
-  testId,
-  completedIso,
-  lastUpdatedIso,
-  governanceRequestFeedbackCompletedIso
+  testId
 }: TaskListItemProps) => {
   const { t } = useTranslation('taskList');
 
@@ -74,21 +64,6 @@ const TaskListItem = ({
     }
   );
 
-  const completedDate =
-    status === ITGovIntakeFormStatus.COMPLETED &&
-    completedIso &&
-    formatDateLocal(completedIso, 'MM/dd/yyyy');
-
-  const lastUpdatedDate =
-    status === ITGovIntakeFormStatus.EDITS_REQUESTED &&
-    lastUpdatedIso &&
-    formatDateLocal(lastUpdatedIso, 'MM/dd/yyyy');
-
-  const governanceRequestFeedbackCompletedDate =
-    status === ITGovFeedbackStatus.COMPLETED &&
-    governanceRequestFeedbackCompletedIso &&
-    formatDateLocal(governanceRequestFeedbackCompletedIso, 'MM/dd/yyyy');
-
   return (
     <li className={taskListItemClasses} data-testid={testId}>
       <div className="task-list__task-content">
@@ -104,32 +79,7 @@ const TaskListItem = ({
             {statusDateInfo && (
               <p className="margin-top-05 margin-bottom-0 text-base">
                 {t(`taskStatusInfo.${statusDateInfo.label}`)}
-                <br /> {statusDateInfo.value}
-              </p>
-            )}
-
-            {(completedDate ||
-              lastUpdatedDate ||
-              governanceRequestFeedbackCompletedDate) && (
-              <p className="margin-top-05 margin-bottom-0 text-base">
-                {completedDate && (
-                  <>
-                    {t('taskStatusInfo.submitted')}
-                    <br /> {completedDate}
-                  </>
-                )}
-                {lastUpdatedDate && (
-                  <>
-                    {t('taskStatusInfo.lastUpdated')}
-                    <br /> {lastUpdatedDate}
-                  </>
-                )}
-                {governanceRequestFeedbackCompletedDate && (
-                  <>
-                    {t('taskStatusInfo.completed')}
-                    <br /> {governanceRequestFeedbackCompletedDate}
-                  </>
-                )}
+                <br /> {formatDateLocal(statusDateInfo.value, 'MM/dd/yyyy')}
               </p>
             )}
           </div>

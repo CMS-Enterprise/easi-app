@@ -7,6 +7,7 @@ import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntake } from 'types/itGov';
+import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskIntakeForm = ({
   itGovTaskStatuses,
@@ -23,15 +24,38 @@ const GovTaskIntakeForm = ({
     [ITGovIntakeFormStatus.EDITS_REQUESTED, 'editForm']
   ]);
 
+  let dateInfo: TaskListItemDateInfo;
+
+  // Updated date
+  if (
+    itGovTaskStatuses.intakeFormStatus ===
+      ITGovIntakeFormStatus.EDITS_REQUESTED &&
+    updatedAt
+  )
+    dateInfo = {
+      label: 'lastUpdated',
+      value: updatedAt
+    };
+
+  // Submitted date
+  if (
+    !dateInfo &&
+    itGovTaskStatuses.intakeFormStatus === ITGovIntakeFormStatus.COMPLETED &&
+    submittedAt
+  )
+    dateInfo = {
+      label: 'submitted',
+      value: submittedAt
+    };
+
   const hasFeedback = governanceRequestFeedbacks.length > 0;
 
   return (
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={itGovTaskStatuses.intakeFormStatus}
+      statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
-      completedIso={submittedAt}
-      lastUpdatedIso={updatedAt}
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>

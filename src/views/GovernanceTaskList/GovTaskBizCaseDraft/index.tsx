@@ -9,7 +9,6 @@ import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { ITGovDraftBusinessCaseStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
-import { formatDateLocal } from 'utils/date';
 
 const GovTaskBizCaseDraft = ({
   itGovTaskStatuses: { bizCaseDraftStatus },
@@ -26,28 +25,28 @@ const GovTaskBizCaseDraft = ({
     [ITGovDraftBusinessCaseStatus.EDITS_REQUESTED, 'editForm']
   ]);
 
-  // Updated and completed at date status info
   let dateInfo: TaskListItemDateInfo;
 
-  const lastUpdatedDate =
+  // Updated date
+  if (
     (bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.IN_PROGRESS ||
       bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.EDITS_REQUESTED) &&
-    bizCaseDraftUpdatedAt &&
-    formatDateLocal(bizCaseDraftUpdatedAt, 'MM/dd/yyyy');
-  if (lastUpdatedDate)
+    bizCaseDraftUpdatedAt
+  )
     dateInfo = {
       label: 'lastUpdated',
-      value: lastUpdatedDate
+      value: bizCaseDraftUpdatedAt
     };
 
-  const submittedDate =
+  // Submitted date
+  if (
+    !dateInfo &&
     bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.COMPLETED &&
-    bizCaseDraftSubmittedAt &&
-    formatDateLocal(bizCaseDraftSubmittedAt, 'MM/dd/yyyy');
-  if (!lastUpdatedDate && submittedDate)
+    bizCaseDraftSubmittedAt
+  )
     dateInfo = {
       label: 'submitted',
-      value: submittedDate
+      value: bizCaseDraftSubmittedAt
     };
 
   const hasFeedback = governanceRequestFeedbacks.length > 0;
