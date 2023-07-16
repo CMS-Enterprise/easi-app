@@ -37,6 +37,7 @@ export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
 type TaskListItemProps = {
   heading: string;
   status: TaskStatus | undefined;
+  statusPercentComplete?: number | false | null | undefined;
   statusDateInfo?: TaskListItemDateInfo;
   children?: React.ReactNode;
   testId?: string;
@@ -45,6 +46,7 @@ type TaskListItemProps = {
 const TaskListItem = ({
   heading,
   status,
+  statusPercentComplete,
   statusDateInfo,
   children,
   testId
@@ -76,10 +78,22 @@ const TaskListItem = ({
               <TaskStatusTag status={status} />
             )}
 
-            {statusDateInfo && (
+            {/* Task status info */}
+            {(Number.isInteger(statusPercentComplete) || statusDateInfo) && (
               <p className="margin-top-05 margin-bottom-0 text-base">
-                {t(`taskStatusInfo.${statusDateInfo.label}`)}
-                <br /> {formatDateLocal(statusDateInfo.value, 'MM/dd/yyyy')}
+                {/* Percent complete */}
+                {Number.isInteger(statusPercentComplete) &&
+                  t('taskStatusInfo.percentComplete', {
+                    percent: statusPercentComplete
+                  })}
+
+                {/* Status dates */}
+                {statusDateInfo && (
+                  <>
+                    {t(`taskStatusInfo.${statusDateInfo.label}`)}
+                    <br /> {formatDateLocal(statusDateInfo.value, 'MM/dd/yyyy')}
+                  </>
+                )}
               </p>
             )}
           </div>

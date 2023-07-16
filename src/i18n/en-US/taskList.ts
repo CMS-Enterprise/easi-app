@@ -123,6 +123,7 @@ const taskList = {
     SCHEDULED: 'Scheduled'
   },
   taskStatusInfo: {
+    percentComplete: '{{percent}}% complete',
     completed: 'Completed',
     lastUpdated: 'Last updated',
     submitted: 'Submitted'

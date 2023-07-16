@@ -6,15 +6,16 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
-import { ItGovTaskSystemIntake } from 'types/itGov';
+import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskIntakeForm = ({
   itGovTaskStatuses,
+  intakeFormPctComplete,
   governanceRequestFeedbacks,
   submittedAt,
   updatedAt
-}: ItGovTaskSystemIntake) => {
+}: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'intakeForm';
   const { t } = useTranslation('itGov');
 
@@ -54,6 +55,10 @@ const GovTaskIntakeForm = ({
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={itGovTaskStatuses.intakeFormStatus}
+      statusPercentComplete={
+        itGovTaskStatuses.intakeFormStatus ===
+          ITGovIntakeFormStatus.IN_PROGRESS && intakeFormPctComplete
+      }
       statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >

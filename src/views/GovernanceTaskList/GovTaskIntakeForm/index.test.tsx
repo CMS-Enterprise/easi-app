@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
 import { taskListState } from 'data/mock/govTaskList';
@@ -41,6 +41,13 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     // In progress
     expect(getByTestId('task-list-task-tag')).toHaveTextContent(
       i18next.t<string>('taskList:taskStatus.IN_PROGRESS')
+    );
+
+    // % complete
+    screen.getByText(
+      i18next.t<string>('taskList:taskStatusInfo.percentComplete', {
+        percent: 22
+      })
     );
 
     // Continue button

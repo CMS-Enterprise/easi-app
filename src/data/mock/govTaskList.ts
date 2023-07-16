@@ -49,6 +49,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      intakeFormPctComplete: 22,
       governanceRequestFeedbacks: [],
       submittedAt: null,
       updatedAt: null

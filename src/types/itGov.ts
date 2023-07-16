@@ -10,6 +10,7 @@ export type { GetGovernanceTaskList_systemIntake as ItGovTaskSystemIntake } from
 export interface ItGovTaskSystemIntakeWithMockData
   // eslint-disable-next-line camelcase
   extends GetGovernanceTaskList_systemIntake {
+  intakeFormPctComplete?: number;
   governanceRequestFeedbackCompletedAt?: string | null;
   bizCaseDraftUpdatedAt?: string | null;
   bizCaseDraftSubmittedAt?: string | null;
