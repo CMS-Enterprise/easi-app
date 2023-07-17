@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1132,6 +1133,11 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 		ID:                   updatedRequest.ID,
 		AccessibilityRequest: updatedRequest,
 	}, err
+}
+
+// CreateSystemIntakeActionRequestEdits is the resolver for the createSystemIntakeActionRequestEdits field.
+func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionRequestEdits - createSystemIntakeActionRequestEdits"))
 }
 
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.

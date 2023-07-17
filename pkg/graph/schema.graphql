@@ -1195,7 +1195,7 @@ input SystemIntakeFundingSourcesInput {
 """
 Input data for estimated system cost increases associated with a system request
 
-NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
+NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
 """
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
@@ -1443,6 +1443,24 @@ The payload for updating a system's IT governance request
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
+}
+
+"""
+Input for creating a Request Edits Action in Admin Actions v2
+"""
+input SystemIntakeRequestEditsInput {
+  systemIntakeID: UUID!
+  intakeFormStep: SystemIntakeRequestEditsFormOptions!
+  notificationRecipients: EmailNotificationRecipients
+}
+
+"""
+SystemIntakeRequestEditsOptions represents the current step in the intake process
+"""
+enum SystemIntakeRequestEditsFormOptions {
+  INITIAL_REQUEST_FORM
+  DRAFT_BUSINESS_CASE
+  FINAL_BUSINESS_CASE
 }
 
 """
@@ -2253,6 +2271,9 @@ type Mutation {
   updateAccessibilityRequestCedarSystem(
     input: UpdateAccessibilityRequestCedarSystemInput
   ): UpdateAccessibilityRequestCedarSystemPayload
+  createSystemIntakeActionRequestEdits(
+    input: SystemIntakeRequestEditsInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
