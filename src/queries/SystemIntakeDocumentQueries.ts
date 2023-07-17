@@ -37,3 +37,15 @@ export const DeleteSystemIntakeDocumentQuery = gql`
     }
   }
 `;
+
+export const GetSystemIntakeDocumentUrlsQuery = gql`
+  query GetSystemIntakeDocumentUrls($id: UUID!) {
+    systemIntake(id: $id) {
+      id
+      documents {
+        id
+        url
+      }
+    }
+  }
+`;
