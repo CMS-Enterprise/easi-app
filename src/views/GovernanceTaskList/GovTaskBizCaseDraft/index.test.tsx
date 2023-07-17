@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { ByRoleMatcher, render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
+import { AlertProps } from 'components/shared/Alert';
 import { TaskStatus } from 'components/shared/TaskStatusTag';
 import { taskListState } from 'data/mock/govTaskList';
 import { ItGovTaskSystemIntake } from 'types/itGov';
@@ -25,6 +26,12 @@ const getByRoleWithNameTextKey = fnErrorCapture(
     });
   }
 );
+
+const getExpectedAlertType = fnErrorCapture((alertType: AlertProps['type']) => {
+  const alert = screen.getByTestId('alert');
+  expect(alert).toHaveClass(`usa-alert--${alertType}`);
+  return alert;
+});
 
 describe('Gov Task: Prepare a draft Business Case statuses', () => {
   function renderGovTaskBizCaseDraft(mockdata: ItGovTaskSystemIntake) {
@@ -93,9 +100,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // Submitted & waiting for feedback info
-    const submittedInfo = screen.getByTestId('alert');
-    expect(submittedInfo).toHaveClass('usa-alert--info');
-    expect(submittedInfo).toHaveTextContent(
+    expect(getExpectedAlertType('info')).toHaveTextContent(
       i18next.t<string>('itGov:taskList.step.bizCaseDraft.submittedInfo')
     );
 
@@ -124,9 +129,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // Edits requested warning
-    const submittedInfo = screen.getByTestId('alert');
-    expect(submittedInfo).toHaveClass('usa-alert--warning');
-    expect(submittedInfo).toHaveTextContent(
+    expect(getExpectedAlertType('warning')).toHaveTextContent(
       i18next.t<string>(
         'itGov:taskList.step.bizCaseDraft.editsRequestedWarning'
       )
@@ -155,9 +158,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // Submitted & waiting for feedback info
-    const submittedInfo = screen.getByTestId('alert');
-    expect(submittedInfo).toHaveClass('usa-alert--info');
-    expect(submittedInfo).toHaveTextContent(
+    expect(getExpectedAlertType('info')).toHaveTextContent(
       i18next.t<string>('itGov:taskList.step.bizCaseDraft.submittedInfo')
     );
 
