@@ -1,37 +1,17 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { ByRoleMatcher, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
-import { AlertProps } from 'components/shared/Alert';
-import { TaskStatus } from 'components/shared/TaskStatusTag';
 import { taskListState } from 'data/mock/govTaskList';
 import { ItGovTaskSystemIntake } from 'types/itGov';
-import fnErrorCapture from 'utils/fnErrorCapture';
+import {
+  expectTaskStatusTagToHaveTextKey,
+  getByRoleWithNameTextKey,
+  getExpectedAlertType
+} from 'utils/testing/helpers';
 
 import GovTaskBizCaseDraft from '.';
-
-const expectTaskStatusTagToHaveStatusText = fnErrorCapture(
-  (taskStatus: TaskStatus) => {
-    expect(screen.getByTestId('task-list-task-tag')).toHaveTextContent(
-      i18next.t<string>(`taskList:taskStatus.${taskStatus}`)
-    );
-  }
-);
-
-const getByRoleWithNameTextKey = fnErrorCapture(
-  (role: ByRoleMatcher, nameTextKey: string) => {
-    return screen.getByRole(role, {
-      name: i18next.t<string>(nameTextKey)
-    });
-  }
-);
-
-const getExpectedAlertType = fnErrorCapture((alertType: AlertProps['type']) => {
-  const alert = screen.getByTestId('alert');
-  expect(alert).toHaveClass(`usa-alert--${alertType}`);
-  return alert;
-});
 
 describe('Gov Task: Prepare a draft Business Case statuses', () => {
   function renderGovTaskBizCaseDraft(mockdata: ItGovTaskSystemIntake) {
@@ -47,13 +27,13 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
       taskListState.bizCaseDraftCantStart.systemIntake!
     );
     // Cannot yet start
-    expectTaskStatusTagToHaveStatusText('CANT_START');
+    expectTaskStatusTagToHaveTextKey('CANT_START');
   });
 
   it('Skipped', () => {
     renderGovTaskBizCaseDraft(taskListState.bizCaseDraftSkipped.systemIntake!);
     // Not needed
-    expectTaskStatusTagToHaveStatusText('NOT_NEEDED');
+    expectTaskStatusTagToHaveTextKey('NOT_NEEDED');
   });
 
   it('Not started', () => {
@@ -61,7 +41,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
       taskListState.bizCaseDraftNotStarted.systemIntake!
     );
     // Ready to start
-    expectTaskStatusTagToHaveStatusText('READY_TO_START');
+    expectTaskStatusTagToHaveTextKey('READY_TO_START');
     // Start button
     getByRoleWithNameTextKey('link', 'itGov:button.start');
   });
@@ -71,7 +51,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
       taskListState.bizCaseDraftInProgress.systemIntake!
     );
     // In progress
-    expectTaskStatusTagToHaveStatusText('IN_PROGRESS');
+    expectTaskStatusTagToHaveTextKey('IN_PROGRESS');
     // Last updated date
     screen.getByText(
       RegExp(
@@ -90,7 +70,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // Completed
-    expectTaskStatusTagToHaveStatusText('COMPLETED');
+    expectTaskStatusTagToHaveTextKey('COMPLETED');
 
     // Submitted date
     screen.getByText(
@@ -117,7 +97,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // Edits Requested
-    expectTaskStatusTagToHaveStatusText('EDITS_REQUESTED');
+    expectTaskStatusTagToHaveTextKey('EDITS_REQUESTED');
 
     // Last updated date
     screen.getByText(
@@ -148,7 +128,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // Completed
-    expectTaskStatusTagToHaveStatusText('COMPLETED');
+    expectTaskStatusTagToHaveTextKey('COMPLETED');
 
     // Submitted date
     screen.getByText(
