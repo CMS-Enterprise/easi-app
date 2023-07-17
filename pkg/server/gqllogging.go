@@ -25,10 +25,9 @@ func NewGQLResponseMiddleware() graphql.ResponseMiddleware {
 		duration := time.Since(requestContext.Stats.OperationStart)
 		complexityStats := extension.GetComplexityStats(ctx)
 
-		// Flag the request as an error if there are any errors in the list that aren't ignored
 		numTotalErrors := len(errorList)
 		numIgnoredErrors := countIgnoredErrors(errorList)
-		errored := (numTotalErrors > 0) && (numTotalErrors != numIgnoredErrors)
+		errored := (numTotalErrors > 0) && (numTotalErrors != numIgnoredErrors) // Flag the request as an error if there are any errors in the list that aren't ignored
 		fields := []zap.Field{
 			zap.String("operation", requestContext.OperationName),
 			zap.Duration("duration", duration),
