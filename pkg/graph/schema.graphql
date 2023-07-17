@@ -1445,6 +1445,30 @@ type UpdateSystemIntakePayload {
   userErrors: [UserError!]
 }
 
+
+"""
+Steps in the system intake process that a Progress to New Step action can progress to
+"""
+enum StepToProgressTo {
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+}
+
+"""
+Input for submitting a Progress to New Step action in IT Gov v2
+"""
+input SystemIntakeProgressToNewStepsInput {
+  systemIntakeID: UUID!
+  newStep: StepToProgressTo!
+  meetingDate: Time # used when progressing to GRT or GRB meeting
+  grbRecommendations: String
+  emailAdditionalInformation: String
+  adminNoteText: String
+  notificationRecipients: EmailNotificationRecipients
+}
+
 """
 Input to add feedback to a system request
 """
@@ -2253,6 +2277,9 @@ type Mutation {
   updateAccessibilityRequestCedarSystem(
     input: UpdateAccessibilityRequestCedarSystemInput
   ): UpdateAccessibilityRequestCedarSystemPayload
+  createSystemIntakeActionProgressToNewStep(
+    input: SystemIntakeProgressToNewStepsInput
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)

@@ -663,6 +663,17 @@ type SystemIntakeProductManagerInput struct {
 	Component string `json:"component"`
 }
 
+// Input for submitting a Progress to New Step action in IT Gov v2
+type SystemIntakeProgressToNewStepsInput struct {
+	SystemIntakeID             uuid.UUID                           `json:"systemIntakeID"`
+	NewStep                    StepToProgressTo                    `json:"newStep"`
+	MeetingDate                *time.Time                          `json:"meetingDate"`
+	GrbRecommendations         *string                             `json:"grbRecommendations"`
+	EmailAdditionalInformation *string                             `json:"emailAdditionalInformation"`
+	AdminNoteText              *string                             `json:"adminNoteText"`
+	NotificationRecipients     *models.EmailNotificationRecipients `json:"notificationRecipients"`
+}
+
 // The contact who made an IT governance request for a system
 type SystemIntakeRequester struct {
 	Component *string `json:"component"`
@@ -940,6 +951,52 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Steps in the system intake process that a Progress to New Step action can progress to
+type StepToProgressTo string
+
+const (
+	StepToProgressToDraftBusinessCase StepToProgressTo = "DRAFT_BUSINESS_CASE"
+	StepToProgressToGrtMeeting        StepToProgressTo = "GRT_MEETING"
+	StepToProgressToGrbMeeting        StepToProgressTo = "GRB_MEETING"
+	StepToProgressToFinalBusinessCase StepToProgressTo = "FINAL_BUSINESS_CASE"
+)
+
+var AllStepToProgressTo = []StepToProgressTo{
+	StepToProgressToDraftBusinessCase,
+	StepToProgressToGrtMeeting,
+	StepToProgressToGrbMeeting,
+	StepToProgressToFinalBusinessCase,
+}
+
+func (e StepToProgressTo) IsValid() bool {
+	switch e {
+	case StepToProgressToDraftBusinessCase, StepToProgressToGrtMeeting, StepToProgressToGrbMeeting, StepToProgressToFinalBusinessCase:
+		return true
+	}
+	return false
+}
+
+func (e StepToProgressTo) String() string {
+	return string(e)
+}
+
+func (e *StepToProgressTo) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = StepToProgressTo(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid StepToProgressTo", str)
+	}
+	return nil
+}
+
+func (e StepToProgressTo) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
