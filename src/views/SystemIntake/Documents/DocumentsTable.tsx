@@ -161,12 +161,9 @@ const DocumentsTable = ({
                   type="button"
                   unstyled
                   onClick={() => getUrlForDocument(documentId, documentName)}
-                  // disabled={loading}
+                  disabled={loading}
                 >
-                  {loading
-                    ? 'Loading...'
-                    : t('technicalAssistance:documents.table.view')}
-                  {/* {t('technicalAssistance:documents.table.view')} */}
+                  {t('technicalAssistance:documents.table.view')}
                 </Button>
 
                 {

@@ -3009,8 +3009,6 @@ func (r *systemIntakeDocumentResolver) UploadedAt(ctx context.Context, obj *mode
 
 // URL is the resolver for the url field.
 func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error) {
-	time.Sleep(300 * time.Millisecond) // simulate delay in Prod
-
 	return resolvers.GetURLForSystemIntakeDocument(r.s3Client, obj.S3Key)
 }
 
