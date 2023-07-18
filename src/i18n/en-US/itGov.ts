@@ -46,7 +46,10 @@ export default {
         title: 'Attend the GRT meeting',
         description:
           'Meet with the Governance Review Team to discuss your draft Business Case and receive feedback. This will help you refine your Business Case further.',
-        link: 'Prepare for the GRT meeting (opens in a new tab)'
+        link: 'Prepare for the GRT meeting (opens in a new tab)',
+        button: 'Prepare for the GRT meeting',
+        scheduledInfo: 'GRT meeting scheduled for {{date}}.',
+        attendedInfo: 'You attended the GRT meeting on {{date}}.'
       },
       bizCaseFinal: {
         title: 'Submit your Business Case for final approval',
