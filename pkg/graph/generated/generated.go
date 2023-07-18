@@ -8502,7 +8502,7 @@ type UpdateSystemIntakePayload {
 """
 Steps in the system intake process that a Progress to New Step action can progress to
 """
-enum StepToProgressTo {
+enum SystemIntakeStepToProgressTo {
   DRAFT_BUSINESS_CASE
   GRT_MEETING
   GRB_MEETING
@@ -8514,12 +8514,13 @@ Input for submitting a Progress to New Step action in IT Gov v2
 """
 input SystemIntakeProgressToNewStepsInput {
   systemIntakeID: UUID!
-  newStep: StepToProgressTo!
-  meetingDate: Time # used when progressing to GRT or GRB meeting
-  grbRecommendations: String
-  emailAdditionalInformation: String
-  adminNoteText: String
+  newStep: SystemIntakeStepToProgressTo!
+  meetingDate: Time # optionally used when progressing to GRT or GRB meeting; ignored when progressing to other steps
   notificationRecipients: EmailNotificationRecipients
+  feedback: String
+  grbRecommendations: String
+  additionalNote: String
+  adminNote: String
 }
 
 """
@@ -51546,7 +51547,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ct
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "newStep", "meetingDate", "grbRecommendations", "emailAdditionalInformation", "adminNoteText", "notificationRecipients"}
+	fieldsInOrder := [...]string{"systemIntakeID", "newStep", "meetingDate", "notificationRecipients", "feedback", "grbRecommendations", "additionalNote", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -51565,7 +51566,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ct
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newStep"))
-			it.NewStep, err = ec.unmarshalNStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐStepToProgressTo(ctx, v)
+			it.NewStep, err = ec.unmarshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -51577,6 +51578,22 @@ func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ct
 			if err != nil {
 				return it, err
 			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "feedback":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedback"))
+			it.Feedback, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "grbRecommendations":
 			var err error
 
@@ -51585,27 +51602,19 @@ func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ct
 			if err != nil {
 				return it, err
 			}
-		case "emailAdditionalInformation":
+		case "additionalNote":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("emailAdditionalInformation"))
-			it.EmailAdditionalInformation, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalNote"))
+			it.AdditionalNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "adminNoteText":
+		case "adminNote":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNoteText"))
-			it.AdminNoteText, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "notificationRecipients":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
-			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
+			it.AdminNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63022,16 +63031,6 @@ func (ec *executionContext) unmarshalNSetRolesForUserOnSystemInput2githubᚗcom�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐStepToProgressTo(ctx context.Context, v interface{}) (model.StepToProgressTo, error) {
-	var res model.StepToProgressTo
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐStepToProgressTo(ctx context.Context, sel ast.SelectionSet, v model.StepToProgressTo) graphql.Marshaler {
-	return v
-}
-
 func (ec *executionContext) unmarshalNString2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, v interface{}) (models.EmailAddress, error) {
 	res, err := graphql.UnmarshalString(v)
 	return models.EmailAddress(res), graphql.ErrorOnPath(ctx, err)
@@ -63823,6 +63822,16 @@ func (ec *executionContext) marshalNSystemIntakeStep2githubᚗcomᚋcmsgovᚋeas
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx context.Context, v interface{}) (model.SystemIntakeStepToProgressTo, error) {
+	var res model.SystemIntakeStepToProgressTo
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeStepToProgressTo) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNTRBAdminNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNote) graphql.Marshaler {

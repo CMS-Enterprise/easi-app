@@ -10,6 +10,13 @@ import (
 // ActionType represents type of action
 type ActionType string
 
+// IT Gov v2 actions
+const (
+	// ActionTypePROGRESSTONEWSTEP captures enum value PROGRESS_TO_NEW_STEP
+	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
+)
+
+// v1 actions (before v2 revamp)
 const (
 	// ActionTypeSUBMITINTAKE captures enum value SUBMIT_INTAKE
 	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"

@@ -1449,7 +1449,7 @@ type UpdateSystemIntakePayload {
 """
 Steps in the system intake process that a Progress to New Step action can progress to
 """
-enum StepToProgressTo {
+enum SystemIntakeStepToProgressTo {
   DRAFT_BUSINESS_CASE
   GRT_MEETING
   GRB_MEETING
@@ -1461,12 +1461,13 @@ Input for submitting a Progress to New Step action in IT Gov v2
 """
 input SystemIntakeProgressToNewStepsInput {
   systemIntakeID: UUID!
-  newStep: StepToProgressTo!
-  meetingDate: Time # used when progressing to GRT or GRB meeting
-  grbRecommendations: String
-  emailAdditionalInformation: String
-  adminNoteText: String
+  newStep: SystemIntakeStepToProgressTo!
+  meetingDate: Time # optionally used when progressing to GRT or GRB meeting; ignored when progressing to other steps
   notificationRecipients: EmailNotificationRecipients
+  feedback: String
+  grbRecommendations: String
+  additionalNote: String
+  adminNote: String
 }
 
 """

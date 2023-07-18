@@ -665,13 +665,14 @@ type SystemIntakeProductManagerInput struct {
 
 // Input for submitting a Progress to New Step action in IT Gov v2
 type SystemIntakeProgressToNewStepsInput struct {
-	SystemIntakeID             uuid.UUID                           `json:"systemIntakeID"`
-	NewStep                    StepToProgressTo                    `json:"newStep"`
-	MeetingDate                *time.Time                          `json:"meetingDate"`
-	GrbRecommendations         *string                             `json:"grbRecommendations"`
-	EmailAdditionalInformation *string                             `json:"emailAdditionalInformation"`
-	AdminNoteText              *string                             `json:"adminNoteText"`
-	NotificationRecipients     *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	NewStep                SystemIntakeStepToProgressTo        `json:"newStep"`
+	MeetingDate            *time.Time                          `json:"meetingDate"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	Feedback               *string                             `json:"feedback"`
+	GrbRecommendations     *string                             `json:"grbRecommendations"`
+	AdditionalNote         *string                             `json:"additionalNote"`
+	AdminNote              *string                             `json:"adminNote"`
 }
 
 // The contact who made an IT governance request for a system
@@ -954,52 +955,6 @@ func (e Role) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Steps in the system intake process that a Progress to New Step action can progress to
-type StepToProgressTo string
-
-const (
-	StepToProgressToDraftBusinessCase StepToProgressTo = "DRAFT_BUSINESS_CASE"
-	StepToProgressToGrtMeeting        StepToProgressTo = "GRT_MEETING"
-	StepToProgressToGrbMeeting        StepToProgressTo = "GRB_MEETING"
-	StepToProgressToFinalBusinessCase StepToProgressTo = "FINAL_BUSINESS_CASE"
-)
-
-var AllStepToProgressTo = []StepToProgressTo{
-	StepToProgressToDraftBusinessCase,
-	StepToProgressToGrtMeeting,
-	StepToProgressToGrbMeeting,
-	StepToProgressToFinalBusinessCase,
-}
-
-func (e StepToProgressTo) IsValid() bool {
-	switch e {
-	case StepToProgressToDraftBusinessCase, StepToProgressToGrtMeeting, StepToProgressToGrbMeeting, StepToProgressToFinalBusinessCase:
-		return true
-	}
-	return false
-}
-
-func (e StepToProgressTo) String() string {
-	return string(e)
-}
-
-func (e *StepToProgressTo) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = StepToProgressTo(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid StepToProgressTo", str)
-	}
-	return nil
-}
-
-func (e StepToProgressTo) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 // Represents the type of an action that is being done to a system request
 type SystemIntakeActionType string
 
@@ -1073,5 +1028,51 @@ func (e *SystemIntakeActionType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Steps in the system intake process that a Progress to New Step action can progress to
+type SystemIntakeStepToProgressTo string
+
+const (
+	SystemIntakeStepToProgressToDraftBusinessCase SystemIntakeStepToProgressTo = "DRAFT_BUSINESS_CASE"
+	SystemIntakeStepToProgressToGrtMeeting        SystemIntakeStepToProgressTo = "GRT_MEETING"
+	SystemIntakeStepToProgressToGrbMeeting        SystemIntakeStepToProgressTo = "GRB_MEETING"
+	SystemIntakeStepToProgressToFinalBusinessCase SystemIntakeStepToProgressTo = "FINAL_BUSINESS_CASE"
+)
+
+var AllSystemIntakeStepToProgressTo = []SystemIntakeStepToProgressTo{
+	SystemIntakeStepToProgressToDraftBusinessCase,
+	SystemIntakeStepToProgressToGrtMeeting,
+	SystemIntakeStepToProgressToGrbMeeting,
+	SystemIntakeStepToProgressToFinalBusinessCase,
+}
+
+func (e SystemIntakeStepToProgressTo) IsValid() bool {
+	switch e {
+	case SystemIntakeStepToProgressToDraftBusinessCase, SystemIntakeStepToProgressToGrtMeeting, SystemIntakeStepToProgressToGrbMeeting, SystemIntakeStepToProgressToFinalBusinessCase:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeStepToProgressTo) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeStepToProgressTo(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeStepToProgressTo", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
