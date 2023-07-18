@@ -9,6 +9,7 @@ import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import { ITGovFeedbackStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
+import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskFeedbackFromInitialReview = ({
   itGovTaskStatuses,
@@ -17,6 +18,18 @@ const GovTaskFeedbackFromInitialReview = ({
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'feedbackFromInitialReview';
   const { t } = useTranslation('itGov');
+
+  // Completed date
+  let dateInfo: TaskListItemDateInfo;
+  if (
+    itGovTaskStatuses.feedbackFromInitialReviewStatus ===
+      ITGovFeedbackStatus.COMPLETED &&
+    governanceRequestFeedbackCompletedAt
+  )
+    dateInfo = {
+      label: 'completed',
+      value: governanceRequestFeedbackCompletedAt
+    };
 
   const hasFeedback = governanceRequestFeedbacks.length > 0;
 
@@ -34,10 +47,8 @@ const GovTaskFeedbackFromInitialReview = ({
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={itGovTaskStatuses.feedbackFromInitialReviewStatus}
+      statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
-      governanceRequestFeedbackCompletedIso={
-        governanceRequestFeedbackCompletedAt
-      }
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
