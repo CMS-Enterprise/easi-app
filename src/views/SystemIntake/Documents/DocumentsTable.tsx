@@ -1,24 +1,32 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
-import { useMutation } from '@apollo/client';
-import { Button, Link, Table } from '@trussworks/react-uswds';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { Alert, Button, Table } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import { DeleteSystemIntakeDocumentQuery } from 'queries/SystemIntakeDocumentQueries';
+import {
+  DeleteSystemIntakeDocumentQuery,
+  GetSystemIntakeDocumentUrlsQuery
+} from 'queries/SystemIntakeDocumentQueries';
 import {
   DeleteSystemIntakeDocument,
   DeleteSystemIntakeDocumentVariables
 } from 'queries/types/DeleteSystemIntakeDocument';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import {
+  GetSystemIntakeDocumentUrls,
+  GetSystemIntakeDocumentUrlsVariables
+} from 'queries/types/GetSystemIntakeDocumentUrls';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import {
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
+import { downloadFileFromURLOnly } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import './index.scss';
@@ -48,7 +56,16 @@ const DocumentsTable = ({
     null
   );
 
-  const { documents } = systemIntake;
+  const { id: systemIntakeID, documents } = systemIntake;
+
+  const [getDocumentUrls] = useLazyQuery<
+    GetSystemIntakeDocumentUrls,
+    GetSystemIntakeDocumentUrlsVariables
+  >(GetSystemIntakeDocumentUrlsQuery, {
+    variables: {
+      id: systemIntakeID
+    }
+  });
 
   const [deleteDocument] = useMutation<
     DeleteSystemIntakeDocument,
@@ -65,6 +82,30 @@ const DocumentsTable = ({
   });
 
   const columns = useMemo<Column<SystemIntakeDocument>[]>(() => {
+    const getUrlForDocument = (documentId: string, documentName: string) => {
+      getDocumentUrls().then(response => {
+        if (response.error || !response.data || !response.data.systemIntake) {
+          // if response.data is falsy, that's effectively an error; there's no URL to use to download the file
+          // similarly, if no systemIntake is returned, there's no URL info to use
+          showMessage(
+            <Alert type="error" className="margin-top-3">
+              {t('technicalAssistance:documents.viewFail', {
+                documentName
+              })}
+            </Alert>
+          );
+        } else {
+          // Download document
+          const requestedDocument = response.data.systemIntake.documents.find(
+            doc => doc.id === documentId
+          )!; // non-null assertion should be safe, this function should only be called with a documentId of a valid document
+          downloadFileFromURLOnly(requestedDocument.url);
+        }
+      });
+      // don't need to call .catch(); apollo-client will always fulfill the promise, even if there's a network error
+      // both network errors and GraphQL errors will set response.error - see https://www.apollographql.com/docs/react/data/error-handling/
+    };
+
     return [
       {
         Header: t<string>(
@@ -109,14 +150,20 @@ const DocumentsTable = ({
               </em>
             );
           // View or Remove
-          if (row.original.status === SystemIntakeDocumentStatus.AVAILABLE)
+          if (row.original.status === SystemIntakeDocumentStatus.AVAILABLE) {
             // Show some file actions once it's available
+            const documentId = row.original.id;
+            const documentName = row.original.fileName;
             return (
               <>
                 {/* View document */}
-                <Link target="_blank" href={row.original.url}>
+                <Button
+                  type="button"
+                  unstyled
+                  onClick={() => getUrlForDocument(documentId, documentName)}
+                >
                   {t('technicalAssistance:documents.table.view')}
-                </Link>
+                </Button>
 
                 {
                   /* Delete document */
@@ -133,6 +180,7 @@ const DocumentsTable = ({
                 }
               </>
             );
+          }
           // Infected unavailable
           if (row.original.status === SystemIntakeDocumentStatus.UNAVAILABLE)
             return t('technicalAssistance:documents.table.unavailable');
@@ -140,7 +188,7 @@ const DocumentsTable = ({
         }
       }
     ];
-  }, [canEdit, setFileToDelete, t]);
+  }, [canEdit, setFileToDelete, getDocumentUrls, showMessage, t]);
 
   const {
     getTableBodyProps,
