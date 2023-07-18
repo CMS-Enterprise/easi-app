@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1137,7 +1136,14 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
 func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error) {
-	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionProgressToNewStep - createSystemIntakeActionProgressToNewStep"))
+	updatedIntake, err := resolvers.ProgressIntakeToNewStep(ctx, r.store, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, err
 }
 
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.
