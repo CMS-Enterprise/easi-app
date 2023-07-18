@@ -69,7 +69,7 @@ function DocumentsTable({
     variables: { id: trbRequestId }
   });
 
-  const [getDocumentUrls] = useLazyQuery<
+  const [getDocumentUrls, { loading: documentUrlsLoading }] = useLazyQuery<
     GetTrbRequestDocumentUrls,
     GetTrbRequestDocumentsVariables
   >(GetTrbRequestDocumentUrlsQuery, {
@@ -215,6 +215,7 @@ function DocumentsTable({
                 <Button
                   type="button"
                   unstyled
+                  disabled={documentUrlsLoading}
                   onClick={() => getUrlForDocument(documentId, documentName)}
                 >
                   {t('documents.table.view')}
@@ -243,7 +244,7 @@ function DocumentsTable({
         }
       }
     ];
-  }, [t, showMessage, getDocumentUrls, canEdit]);
+  }, [t, getDocumentUrls, showMessage, documentUrlsLoading, canEdit]);
 
   const {
     getTableBodyProps,
