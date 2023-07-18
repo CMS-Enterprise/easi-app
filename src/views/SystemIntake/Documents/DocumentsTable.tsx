@@ -58,7 +58,7 @@ const DocumentsTable = ({
 
   const { id: systemIntakeID, documents } = systemIntake;
 
-  const [getDocumentUrls] = useLazyQuery<
+  const [getDocumentUrls, { loading }] = useLazyQuery<
     GetSystemIntakeDocumentUrls,
     GetSystemIntakeDocumentUrlsVariables
   >(GetSystemIntakeDocumentUrlsQuery, {
@@ -161,8 +161,12 @@ const DocumentsTable = ({
                   type="button"
                   unstyled
                   onClick={() => getUrlForDocument(documentId, documentName)}
+                  // disabled={loading}
                 >
-                  {t('technicalAssistance:documents.table.view')}
+                  {loading
+                    ? 'Loading...'
+                    : t('technicalAssistance:documents.table.view')}
+                  {/* {t('technicalAssistance:documents.table.view')} */}
                 </Button>
 
                 {
@@ -188,7 +192,7 @@ const DocumentsTable = ({
         }
       }
     ];
-  }, [canEdit, setFileToDelete, getDocumentUrls, showMessage, t]);
+  }, [t, getDocumentUrls, showMessage, loading, canEdit]);
 
   const {
     getTableBodyProps,
