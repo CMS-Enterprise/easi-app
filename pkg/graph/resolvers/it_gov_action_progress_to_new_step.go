@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/guregu/null"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -35,62 +36,88 @@ func ProgressIntakeToNewStep(
 
 	modifyIntakeToNewStep(intake, input.NewStep)
 
-	// TODO - parallelize DB calls with errgroup?
+	// TODO - potential issue - some data from the action might be saved, but not all
+	// this would be possible even if we called everything sequentially
+	// doesn't appear to be a way to wrap everything in a transaction
 
-	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
-	if err != nil {
-		return nil, err
-	}
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
 
 	// TODO - save action
 
 	if input.Feedback != nil {
-		feedbackForRequester := &models.GovernanceRequestFeedback{
-			IntakeID:     updatedIntake.ID,
-			Feedback:     *input.Feedback,
-			SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
-			TargetForm:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
-		}
-		feedbackForRequester.CreatedBy = adminEUAID
+		errGroup.Go(func() error {
+			feedbackForRequester := &models.GovernanceRequestFeedback{
+				IntakeID:     updatedIntake.ID,
+				Feedback:     *input.Feedback,
+				SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
+				TargetForm:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
+			}
+			feedbackForRequester.CreatedBy = adminEUAID
 
-		_, err = store.CreateGovernanceRequestFeedback(ctx, feedbackForRequester)
-		if err != nil {
-			return nil, err
-		}
+			_, errRequesterFeedback := store.CreateGovernanceRequestFeedback(ctx, feedbackForRequester)
+			if errRequesterFeedback != nil {
+				return errRequesterFeedback
+			}
+
+			return nil
+		})
 	}
 
 	if input.GrbRecommendations != nil {
-		feedbackForGRB := &models.GovernanceRequestFeedback{
-			IntakeID:     updatedIntake.ID,
-			Feedback:     *input.GrbRecommendations,
-			SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
-			TargetForm:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
-		}
-		feedbackForGRB.CreatedBy = adminEUAID
+		errGroup.Go(func() error {
+			feedbackForGRB := &models.GovernanceRequestFeedback{
+				IntakeID:     updatedIntake.ID,
+				Feedback:     *input.GrbRecommendations,
+				SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
+				TargetForm:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
+			}
+			feedbackForGRB.CreatedBy = adminEUAID
 
-		_, err = store.CreateGovernanceRequestFeedback(ctx, feedbackForGRB)
-		if err != nil {
-			return nil, err
-		}
+			_, errGRBFeedback := store.CreateGovernanceRequestFeedback(ctx, feedbackForGRB)
+			if errGRBFeedback != nil {
+				return errGRBFeedback
+			}
+
+			return nil
+		})
 	}
 
 	if input.AdminNote != nil {
-		adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
-		if err != nil {
-			return nil, err
-		}
+		errGroup.Go(func() error {
+			adminUserInfo, errAdminUserInfo := fetchUserInfo(ctx, adminEUAID)
+			if errAdminUserInfo != nil {
+				return errAdminUserInfo
+			}
 
-		adminNote := &models.SystemIntakeNote{
-			SystemIntakeID: input.SystemIntakeID,
-			AuthorEUAID:    adminEUAID,
-			AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-			Content:        null.StringFrom(*input.AdminNote),
-		}
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        null.StringFrom(*input.AdminNote),
+			}
 
-		_, err = store.CreateSystemIntakeNote(ctx, adminNote)
-		if err != nil {
-			return nil, err
-		}
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
 	}
 
 	return updatedIntake, nil
