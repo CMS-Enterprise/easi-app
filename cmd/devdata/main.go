@@ -14,6 +14,8 @@ import (
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -208,13 +210,22 @@ func main() {
 	})
 
 	// TODO - EASI-2888 - remove mention of this ticket in comments below; remove whole comment block if EASI-3019 also implemented
-	// TODO - EASI-3019 - remove mention of this ticket in comments below; remove whole comment block if EASI-2888 also implemented
 
-	// Currently, these create system intakes along with feedback, but with no action(s) associated with the feedback.
-	// The actions will be added later in EASI-2888 and EASI-3019.
 	intakeID := uuid.MustParse("4d3f9821-e043-42bf-9cd0-faa5f053ed32")
-	makeSystemIntakeWithProgressToNextStep("Intake with feedback on progression to next step", logger, store, "USR1", intakeID, "progression feedback")
+	makeSystemIntakeWithProgressToNextStep(
+		"Intake with feedback on progression to next step",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"Feedback to requester",
+		"Recommendations for GRB",
+		"additional notes",
+		"admin note",
+	)
 
+	// Currently, these create system intakes along with feedback, but with no action associated with the feedback.
+	// The action will be added later in EASI-2888
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
 	makeSystemIntakeWithEditsRequested("Edits requested on intake request", logger, store, "USR1", intakeID, "intake request feedback", models.GRFTFIntakeRequest)
 
@@ -317,8 +328,6 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	return &intake
 }
 
-// TODO - EASI-3019 - call functions/methods to take "progress to new step" action;
-// also, remove direct call to store.CreateGovernanceRequestFeedback(), action should save feedback
 func makeSystemIntakeWithProgressToNextStep(
 	name string,
 	logger *zap.Logger,
@@ -326,25 +335,27 @@ func makeSystemIntakeWithProgressToNextStep(
 	creatingUser string,
 	intakeID uuid.UUID,
 	feedbackText string,
+	grbRecommendations string,
+	additionalNotes string,
+	adminNote string,
 ) {
-	ctx := appcontext.WithLogger(context.Background(), logger)
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
 
 	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
 		i.ID = intakeID
 	})
 
-	feedback := models.GovernanceRequestFeedback{
-		BaseStruct: models.BaseStruct{
-			CreatedBy: creatingUser,
-		},
-		IntakeID:     intakeID,
-		Feedback:     feedbackText,
-		SourceAction: models.GRFSAProgressToNewStep,
-		TargetForm:   models.GRFTFNoTargetProvided,
-		Type:         models.GRFTRequester,
+	input := &model.SystemIntakeProgressToNewStepsInput{
+		SystemIntakeID:     intakeID,
+		NewStep:            model.SystemIntakeStepToProgressToDraftBusinessCase, // arbitrary choice
+		Feedback:           &feedbackText,
+		GrbRecommendations: &grbRecommendations,
+		AdditionalNote:     &additionalNotes,
+		AdminNote:          &adminNote,
 	}
 
-	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
+	// this will move the intake to the new step and save it to the database, save the feedback, and save a record of the action
+	must(resolvers.ProgressIntakeToNewStep(ctx, store, mock.FetchUserInfoMock, input))
 }
 
 // TODO - EASI-2888 - call functions/methods to take "request edits" action;

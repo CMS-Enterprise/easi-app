@@ -60,12 +60,14 @@ func ProgressIntakeToNewStep(
 			return errCreatingAction
 		}
 
+		stepForAction := models.SystemIntakeStep(input.NewStep)
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypePROGRESSTONEWSTEP,
 			ActorName:      adminUserInfo.CommonName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
+			Step:           &stepForAction,
 		}
 		if input.AdditionalNote != nil {
 			action.Feedback = null.StringFromPtr(input.AdditionalNote)
@@ -83,7 +85,7 @@ func ProgressIntakeToNewStep(
 	if input.Feedback != nil {
 		errGroup.Go(func() error {
 			feedbackForRequester := &models.GovernanceRequestFeedback{
-				IntakeID:     updatedIntake.ID,
+				IntakeID:     intake.ID,
 				Feedback:     *input.Feedback,
 				SourceAction: models.GRFSAProgressToNewStep,
 				TargetForm:   models.GRFTFNoTargetProvided,
@@ -104,7 +106,7 @@ func ProgressIntakeToNewStep(
 	if input.GrbRecommendations != nil {
 		errGroup.Go(func() error {
 			feedbackForGRB := &models.GovernanceRequestFeedback{
-				IntakeID:     updatedIntake.ID,
+				IntakeID:     intake.ID,
 				Feedback:     *input.GrbRecommendations,
 				SourceAction: models.GRFSAProgressToNewStep,
 				TargetForm:   models.GRFTFNoTargetProvided,

@@ -37,7 +37,8 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 			lcid_expiration_change_new_next_steps,
 			lcid_expiration_change_previous_next_steps,
 			lcid_expiration_change_new_cost_baseline,
-			lcid_expiration_change_previous_cost_baseline
+			lcid_expiration_change_previous_cost_baseline,
+			step
 		)
 		VALUES (
 			:id,
@@ -55,7 +56,8 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 			:lcid_expiration_change_new_next_steps,
 			:lcid_expiration_change_previous_next_steps,
 			:lcid_expiration_change_new_cost_baseline,
-			:lcid_expiration_change_previous_cost_baseline
+			:lcid_expiration_change_previous_cost_baseline,
+			:step
 		)`
 	_, err := s.db.NamedExec(
 		createActionSQL,
