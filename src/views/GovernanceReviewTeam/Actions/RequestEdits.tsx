@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { Grid, GridContainer } from '@trussworks/react-uswds';
@@ -7,6 +7,9 @@ import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
+import { SystemIntakeContactProps } from 'types/systemIntake';
+
+import EmailRecipientsFields from '../ActionsV1/EmailRecipientsFields';
 
 interface SytemIntakeActionFields {
   recipients?: EmailNotificationRecipients;
@@ -22,10 +25,17 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
     contacts: { data: contacts, loading }
   } = useSystemIntakeContacts(systemIntakeId);
 
+  // Active contact for adding/verifying recipients
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
+
   const form = useForm<SytemIntakeActionFields>();
   const {
     reset,
     watch,
+    setValue,
     formState: { defaultValues }
   } = form;
 
@@ -79,6 +89,18 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
         <Trans
           i18nKey="action:notification.description"
           components={{ p: <p className="line-height-body-5" /> }}
+        />
+
+        {/* Notification recipients */}
+        <EmailRecipientsFields
+          className="margin-top-3"
+          systemIntakeId={systemIntakeId}
+          activeContact={activeContact}
+          setActiveContact={setActiveContact}
+          contacts={contacts}
+          recipients={recipients}
+          setRecipients={values => setValue('recipients', values)}
+          error=""
         />
       </Grid>
     </GridContainer>
