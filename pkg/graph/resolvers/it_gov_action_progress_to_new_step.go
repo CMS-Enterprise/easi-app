@@ -62,6 +62,7 @@ func ProgressIntakeToNewStep(
 				Feedback:     *input.Feedback,
 				SourceAction: models.GRFSAProgressToNewStep,
 				TargetForm:   models.GRFTFNoTargetProvided,
+				Type:         models.GRFTRequester,
 			}
 			feedbackForRequester.CreatedBy = adminEUAID
 
@@ -81,6 +82,7 @@ func ProgressIntakeToNewStep(
 				Feedback:     *input.GrbRecommendations,
 				SourceAction: models.GRFSAProgressToNewStep,
 				TargetForm:   models.GRFTFNoTargetProvided,
+				Type:         models.GRFTGRB,
 			}
 			feedbackForGRB.CreatedBy = adminEUAID
 
