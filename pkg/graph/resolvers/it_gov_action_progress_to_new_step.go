@@ -20,7 +20,6 @@ func ProgressIntakeToNewStep(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input *model.SystemIntakeProgressToNewStepsInput,
 ) (*models.SystemIntake, error) {
-	// EUA ID of the admin taking this action
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
@@ -43,6 +42,7 @@ func ProgressIntakeToNewStep(
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
 
+	// save intake
 	errGroup.Go(func() error {
 		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
 		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
@@ -53,8 +53,33 @@ func ProgressIntakeToNewStep(
 		return nil
 	})
 
-	// TODO - save action
+	// save action (including additional notes for email, if any)
+	errGroup.Go(func() error {
+		adminUserInfo, errCreatingAction := fetchUserInfo(ctx, adminEUAID)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
 
+		action := models.Action{
+			IntakeID:       &input.SystemIntakeID,
+			ActionType:     models.ActionTypePROGRESSTONEWSTEP,
+			ActorName:      adminUserInfo.CommonName,
+			ActorEmail:     adminUserInfo.Email,
+			ActorEUAUserID: adminEUAID,
+		}
+		if input.AdditionalNote != nil {
+			action.Feedback = null.StringFromPtr(input.AdditionalNote)
+		}
+
+		_, errCreatingAction = store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save feedback for requester
 	if input.Feedback != nil {
 		errGroup.Go(func() error {
 			feedbackForRequester := &models.GovernanceRequestFeedback{
@@ -75,6 +100,7 @@ func ProgressIntakeToNewStep(
 		})
 	}
 
+	// save feedback/recommendations for GRB
 	if input.GrbRecommendations != nil {
 		errGroup.Go(func() error {
 			feedbackForGRB := &models.GovernanceRequestFeedback{
@@ -95,6 +121,7 @@ func ProgressIntakeToNewStep(
 		})
 	}
 
+	// save admin note
 	if input.AdminNote != nil {
 		errGroup.Go(func() error {
 			adminUserInfo, errAdminUserInfo := fetchUserInfo(ctx, adminEUAID)
@@ -106,7 +133,7 @@ func ProgressIntakeToNewStep(
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				Content:        null.StringFrom(*input.AdminNote),
+				Content:        null.StringFromPtr(input.AdminNote),
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
