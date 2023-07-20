@@ -16,10 +16,19 @@ type GovernanceRequestFeedbackTargetForm string
 
 // These are the possible forms that can have governance request feedback
 const (
-	GRFTNoTargetProvided  GovernanceRequestFeedbackTargetForm = "NO_TARGET_PROVIDED"
-	GRFTIntakeRequest     GovernanceRequestFeedbackTargetForm = "INTAKE_REQUEST"
-	GRFTDraftBusinessCase GovernanceRequestFeedbackTargetForm = "DRAFT_BUSINESS_CASE"
-	GRFTFinalBusinessCase GovernanceRequestFeedbackTargetForm = "FINAL_BUSINESS_CASE"
+	GRFTFNoTargetProvided  GovernanceRequestFeedbackTargetForm = "NO_TARGET_PROVIDED"
+	GRFTFIntakeRequest     GovernanceRequestFeedbackTargetForm = "INTAKE_REQUEST"
+	GRFTFDraftBusinessCase GovernanceRequestFeedbackTargetForm = "DRAFT_BUSINESS_CASE"
+	GRFTFinalBusinessCase  GovernanceRequestFeedbackTargetForm = "FINAL_BUSINESS_CASE"
+)
+
+// GovernanceRequestFeedbackType is an enumeration of the possible types of feedback on governance requests, based on who it's directed to
+type GovernanceRequestFeedbackType string
+
+// These are the possible types of recipients of feedback on governanance requests
+const (
+	GRFTRequester GovernanceRequestFeedbackType = "REQUESTER"
+	GRFTGRB       GovernanceRequestFeedbackType = "GRB"
 )
 
 // GovernanceRequestFeedback represents feedback given to the requester on a governance request
@@ -29,4 +38,5 @@ type GovernanceRequestFeedback struct {
 	Feedback     string                                `json:"feedback" db:"feedback"`
 	SourceAction GovernanceRequestFeedbackSourceAction `json:"sourceAction" db:"source_action"`
 	TargetForm   GovernanceRequestFeedbackTargetForm   `json:"targetForm" db:"target_form"`
+	Type         GovernanceRequestFeedbackType         `json:"type" db:"type"`
 }

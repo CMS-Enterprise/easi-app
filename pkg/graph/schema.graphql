@@ -1839,6 +1839,14 @@ enum GovernanceRequestFeedbackTargetForm {
 }
 
 """
+Represents the possible types of feedback on governance requests, based on who it's directed to
+"""
+enum GovernanceRequestFeedbackType {
+  REQUESTER
+  GRB
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
@@ -1847,6 +1855,7 @@ type GovernanceRequestFeedback {
   feedback: String!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
+  type: GovernanceRequestFeedbackType!
   author: UserInfo!
   createdBy: String!
   createdAt: Time!

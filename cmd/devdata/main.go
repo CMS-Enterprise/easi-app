@@ -216,10 +216,10 @@ func main() {
 	makeSystemIntakeWithProgressToNextStep("Intake with feedback on progression to next step", logger, store, "USR1", intakeID, "progression feedback")
 
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeWithEditsRequested("Edits requested on intake request", logger, store, "USR1", intakeID, "intake request feedback", models.GRFTIntakeRequest)
+	makeSystemIntakeWithEditsRequested("Edits requested on intake request", logger, store, "USR1", intakeID, "intake request feedback", models.GRFTFIntakeRequest)
 
 	intakeID = uuid.MustParse("ce874e71-de26-46da-bbfe-a8e3af960108")
-	makeSystemIntakeWithEditsRequested("Edits requested on draft business case", logger, store, "USR1", intakeID, "draft biz case feedback", models.GRFTDraftBusinessCase)
+	makeSystemIntakeWithEditsRequested("Edits requested on draft business case", logger, store, "USR1", intakeID, "draft biz case feedback", models.GRFTFDraftBusinessCase)
 
 	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
 	makeSystemIntakeWithEditsRequested("Edits requested on final business case", logger, store, "USR1", intakeID, "final biz case feedback", models.GRFTFinalBusinessCase)
@@ -340,7 +340,8 @@ func makeSystemIntakeWithProgressToNextStep(
 		IntakeID:     intakeID,
 		Feedback:     feedbackText,
 		SourceAction: models.GRFSAProgressToNewStep,
-		TargetForm:   models.GRFTNoTargetProvided,
+		TargetForm:   models.GRFTFNoTargetProvided,
+		Type:         models.GRFTRequester,
 	}
 
 	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
@@ -371,6 +372,7 @@ func makeSystemIntakeWithEditsRequested(
 		Feedback:     feedbackText,
 		SourceAction: models.GRFSARequestEdits,
 		TargetForm:   targetedForm,
+		Type:         models.GRFTRequester,
 	}
 
 	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
