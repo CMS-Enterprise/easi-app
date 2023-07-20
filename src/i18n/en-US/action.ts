@@ -50,8 +50,26 @@ const action = {
         'Use this action if you want to change the decision for this request or if you would like to re-open it. You will be able to select the new resolution for this request.'
     }
   },
+  notification: {
+    breadcrumb: 'Request {{intakeId}}',
+    heading: 'Notification email (optional)',
+    alert:
+      'If you choose not to send a notification email, the requester will still see the information in the above fields in their view of EASi.',
+    description:
+      '<p>You may choose to send a notification email to the requester when you complete this action. If you would like, you may also send a copy to the IT Governance Mailbox and/or to any additional recipients.</p><p>The fields above will be included as a part of the notification email. You may include additional information you wish to communicate to the project team in the field below.</p>',
+    additionalInformation: 'Additional information'
+  },
+  adminNote: {
+    title: 'Admin note (optional)',
+    description:
+      'You may add an admin note as a part of completing this action. This note will not be sent to recipients, but will be visible to Governance Team members and other EASi admin teams.',
+    label: 'Note'
+  },
   requestEdits: {
-    title: 'Action: request edits'
+    breadcrumb: 'Request edits',
+    title: 'Action: request edits',
+    description:
+      'Use this action if there are changes that need to be made to the Intake Request or Business Case form in order to proceed with the governance process. Specify the edits or additional information needed from the requester.'
   },
   nextStep: {
     title: 'Action: next steps'
