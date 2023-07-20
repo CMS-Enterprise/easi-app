@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Grid, GridContainer } from '@trussworks/react-uswds';
+import { FormGroup, Grid, GridContainer } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
@@ -12,9 +15,9 @@ import { SystemIntakeContactProps } from 'types/systemIntake';
 import EmailRecipientsFields from '../ActionsV1/EmailRecipientsFields';
 
 interface SytemIntakeActionFields {
+  feedback: string;
+  note: string;
   recipients?: EmailNotificationRecipients;
-  feedback?: string;
-  note?: string;
 }
 
 const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
@@ -33,6 +36,7 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   const form = useForm<SytemIntakeActionFields>();
   const {
+    control,
     reset,
     watch,
     setValue,
@@ -59,6 +63,7 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
     }
   }, [contacts, loading, defaultValues, reset]);
 
+  // If loading or recipients have not been set, return null
   if (loading || !recipients) return null;
 
   return (
@@ -89,6 +94,26 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
         <Trans
           i18nKey="action:notification.description"
           components={{ p: <p className="line-height-body-5" /> }}
+        />
+
+        <Controller
+          name="feedback"
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('notification.additionalInformation')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              <TextAreaField
+                {...field}
+                ref={null}
+                id={field.name}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
         />
 
         {/* Notification recipients */}
