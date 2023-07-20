@@ -118,7 +118,7 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
         {/* Notification recipients */}
         <EmailRecipientsFields
-          className="margin-top-3"
+          className="margin-top-6"
           systemIntakeId={systemIntakeId}
           activeContact={activeContact}
           setActiveContact={setActiveContact}
@@ -126,6 +126,30 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
           recipients={recipients}
           setRecipients={values => setValue('recipients', values)}
           error=""
+        />
+
+        <Controller
+          name="note"
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <FormGroup error={!!error} className="bg-base-lightest padding-2">
+              <h3 className="margin-y-0">{t('adminNote.title')}</h3>
+              <p className="line-height-body-5 margin-y-1">
+                {t('adminNote.description')}
+              </p>
+              <Label htmlFor={field.name} className="text-normal margin-top-2">
+                {t('adminNote.label')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              <TextAreaField
+                {...field}
+                ref={null}
+                id={field.name}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
         />
       </Grid>
     </GridContainer>

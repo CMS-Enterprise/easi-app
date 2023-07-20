@@ -335,9 +335,9 @@ export default ({
 
   return (
     <div className={classnames(className)} id="grtActionEmailRecipientFields">
-      <h3 className={classnames('margin-y-2', headerClassName)}>
+      {/* <h3 className={classnames('margin-y-2', headerClassName)}>
         {t('emailRecipients.email')} {optional && t('emailRecipients.optional')}
-      </h3>
+      </h3> */}
 
       {/* Email required alert */}
       {!optional && (
