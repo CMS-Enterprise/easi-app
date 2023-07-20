@@ -216,13 +216,13 @@ func main() {
 	makeSystemIntakeWithProgressToNextStep("Intake with feedback on progression to next step", logger, store, "USR1", intakeID, "progression feedback")
 
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeWithEditsRequested("Edits requested on intake request", logger, store, "USR1", intakeID, "intake request feedback", models.GovernanceRequestFeedbackTargetIntakeRequest)
+	makeSystemIntakeWithEditsRequested("Edits requested on intake request", logger, store, "USR1", intakeID, "intake request feedback", models.GRFTIntakeRequest)
 
 	intakeID = uuid.MustParse("ce874e71-de26-46da-bbfe-a8e3af960108")
-	makeSystemIntakeWithEditsRequested("Edits requested on draft business case", logger, store, "USR1", intakeID, "draft biz case feedback", models.GovernanceRequestFeedbackTargetDraftBusinessCase)
+	makeSystemIntakeWithEditsRequested("Edits requested on draft business case", logger, store, "USR1", intakeID, "draft biz case feedback", models.GRFTDraftBusinessCase)
 
 	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
-	makeSystemIntakeWithEditsRequested("Edits requested on final business case", logger, store, "USR1", intakeID, "final biz case feedback", models.GovernanceRequestFeedbackTargetFinalBusinessCase)
+	makeSystemIntakeWithEditsRequested("Edits requested on final business case", logger, store, "USR1", intakeID, "final biz case feedback", models.GRFTFinalBusinessCase)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 }
@@ -339,8 +339,8 @@ func makeSystemIntakeWithProgressToNextStep(
 		},
 		IntakeID:     intakeID,
 		Feedback:     feedbackText,
-		SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
-		TargetForm:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
+		SourceAction: models.GRFSAProgressToNewStep,
+		TargetForm:   models.GRFTNoTargetProvided,
 	}
 
 	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
@@ -369,7 +369,7 @@ func makeSystemIntakeWithEditsRequested(
 		},
 		IntakeID:     intakeID,
 		Feedback:     feedbackText,
-		SourceAction: models.GovernanceRequestFeedbackSourceActionRequestEdits,
+		SourceAction: models.GRFSARequestEdits,
 		TargetForm:   targetedForm,
 	}
 

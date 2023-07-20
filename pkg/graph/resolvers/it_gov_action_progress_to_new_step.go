@@ -60,8 +60,8 @@ func ProgressIntakeToNewStep(
 			feedbackForRequester := &models.GovernanceRequestFeedback{
 				IntakeID:     updatedIntake.ID,
 				Feedback:     *input.Feedback,
-				SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
-				TargetForm:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
+				SourceAction: models.GRFSAProgressToNewStep,
+				TargetForm:   models.GRFTNoTargetProvided,
 			}
 			feedbackForRequester.CreatedBy = adminEUAID
 
@@ -79,8 +79,8 @@ func ProgressIntakeToNewStep(
 			feedbackForGRB := &models.GovernanceRequestFeedback{
 				IntakeID:     updatedIntake.ID,
 				Feedback:     *input.GrbRecommendations,
-				SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
-				TargetForm:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
+				SourceAction: models.GRFSAProgressToNewStep,
+				TargetForm:   models.GRFTNoTargetProvided,
 			}
 			feedbackForGRB.CreatedBy = adminEUAID
 

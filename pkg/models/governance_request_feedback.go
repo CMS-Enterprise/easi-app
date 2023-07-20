@@ -7,8 +7,8 @@ type GovernanceRequestFeedbackSourceAction string
 
 // These are the possible forms that can provide feedback
 const (
-	GovernanceRequestFeedbackSourceActionRequestEdits      GovernanceRequestFeedbackSourceAction = "REQUEST_EDITS"
-	GovernanceRequestFeedbackSourceActionProgressToNewStep GovernanceRequestFeedbackSourceAction = "PROGRESS_TO_NEW_STEP"
+	GRFSARequestEdits      GovernanceRequestFeedbackSourceAction = "REQUEST_EDITS"
+	GRFSAProgressToNewStep GovernanceRequestFeedbackSourceAction = "PROGRESS_TO_NEW_STEP"
 )
 
 // GovernanceRequestFeedbackTargetForm is an enumeration of the possible forms on a governance intake request that can receive feedback
@@ -16,10 +16,10 @@ type GovernanceRequestFeedbackTargetForm string
 
 // These are the possible forms that can have governance request feedback
 const (
-	GovernanceRequestFeedbackTargetNoTargetProvided  GovernanceRequestFeedbackTargetForm = "NO_TARGET_PROVIDED"
-	GovernanceRequestFeedbackTargetIntakeRequest     GovernanceRequestFeedbackTargetForm = "INTAKE_REQUEST"
-	GovernanceRequestFeedbackTargetDraftBusinessCase GovernanceRequestFeedbackTargetForm = "DRAFT_BUSINESS_CASE"
-	GovernanceRequestFeedbackTargetFinalBusinessCase GovernanceRequestFeedbackTargetForm = "FINAL_BUSINESS_CASE"
+	GRFTNoTargetProvided  GovernanceRequestFeedbackTargetForm = "NO_TARGET_PROVIDED"
+	GRFTIntakeRequest     GovernanceRequestFeedbackTargetForm = "INTAKE_REQUEST"
+	GRFTDraftBusinessCase GovernanceRequestFeedbackTargetForm = "DRAFT_BUSINESS_CASE"
+	GRFTFinalBusinessCase GovernanceRequestFeedbackTargetForm = "FINAL_BUSINESS_CASE"
 )
 
 // GovernanceRequestFeedback represents feedback given to the requester on a governance request
