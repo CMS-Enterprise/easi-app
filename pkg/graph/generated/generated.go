@@ -51,6 +51,7 @@ type ResolverRoot interface {
 	CedarRoleType() CedarRoleTypeResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
 	CedarThreat() CedarThreatResolver
+	GovernanceRequestFeedback() GovernanceRequestFeedbackResolver
 	ITGovTaskStatuses() ITGovTaskStatusesResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
@@ -506,6 +507,7 @@ type ComplexityRoot struct {
 	}
 
 	GovernanceRequestFeedback struct {
+		Author       func(childComplexity int) int
 		CreatedAt    func(childComplexity int) int
 		CreatedBy    func(childComplexity int) int
 		Feedback     func(childComplexity int) int
@@ -1211,6 +1213,9 @@ type CedarThreatResolver interface {
 	ParentID(ctx context.Context, obj *models.CedarThreat) (*string, error)
 	Type(ctx context.Context, obj *models.CedarThreat) (*string, error)
 	WeaknessRiskLevel(ctx context.Context, obj *models.CedarThreat) (*string, error)
+}
+type GovernanceRequestFeedbackResolver interface {
+	Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error)
 }
 type ITGovTaskStatusesResolver interface {
 	IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeFormStatus, error)
@@ -3499,6 +3504,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
+
+	case "GovernanceRequestFeedback.author":
+		if e.complexity.GovernanceRequestFeedback.Author == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.Author(childComplexity), true
 
 	case "GovernanceRequestFeedback.createdAt":
 		if e.complexity.GovernanceRequestFeedback.CreatedAt == nil {
@@ -8900,6 +8912,7 @@ type GovernanceRequestFeedback {
   feedback: String!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -24760,6 +24773,58 @@ func (ec *executionContext) fieldContext_GovernanceRequestFeedback_targetForm(ct
 	return fc, nil
 }
 
+func (ec *executionContext) _GovernanceRequestFeedback_author(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_author(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.GovernanceRequestFeedback().Author(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GovernanceRequestFeedback_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GovernanceRequestFeedback_createdBy(ctx, field)
 	if err != nil {
@@ -35545,6 +35610,8 @@ func (ec *executionContext) fieldContext_SystemIntake_governanceRequestFeedbacks
 				return ec.fieldContext_GovernanceRequestFeedback_sourceAction(ctx, field)
 			case "targetForm":
 				return ec.fieldContext_GovernanceRequestFeedback_targetForm(ctx, field)
+			case "author":
+				return ec.fieldContext_GovernanceRequestFeedback_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_GovernanceRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -56197,49 +56264,69 @@ func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel 
 			out.Values[i] = ec._GovernanceRequestFeedback_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "intakeId":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_intakeId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "feedback":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_feedback(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "sourceAction":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_sourceAction(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "targetForm":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_targetForm(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "author":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GovernanceRequestFeedback_author(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "createdBy":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_createdBy(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdAt":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "modifiedBy":
 

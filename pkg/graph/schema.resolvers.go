@@ -714,6 +714,11 @@ func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models
 	return obj.WeaknessRiskLevel.Ptr(), nil
 }
 
+// Author is the resolver for the author field.
+func (r *governanceRequestFeedbackResolver) Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error) {
+	return resolvers.GetGovernanceRequestFeedbackAuthor(ctx, r.service.FetchUserInfo, obj.CreatedBy)
+}
+
 // IntakeFormStatus is the resolver for the intakeFormStatus field.
 func (r *iTGovTaskStatusesResolver) IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeFormStatus, error) {
 	return resolvers.IntakeFormStatus(obj.ParentSystemIntake), nil
@@ -3286,6 +3291,11 @@ func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 // CedarThreat returns generated.CedarThreatResolver implementation.
 func (r *Resolver) CedarThreat() generated.CedarThreatResolver { return &cedarThreatResolver{r} }
 
+// GovernanceRequestFeedback returns generated.GovernanceRequestFeedbackResolver implementation.
+func (r *Resolver) GovernanceRequestFeedback() generated.GovernanceRequestFeedbackResolver {
+	return &governanceRequestFeedbackResolver{r}
+}
+
 // ITGovTaskStatuses returns generated.ITGovTaskStatusesResolver implementation.
 func (r *Resolver) ITGovTaskStatuses() generated.ITGovTaskStatusesResolver {
 	return &iTGovTaskStatusesResolver{r}
@@ -3363,6 +3373,7 @@ type cedarRoleResolver struct{ *Resolver }
 type cedarRoleTypeResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
+type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

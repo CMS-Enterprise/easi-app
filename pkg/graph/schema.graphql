@@ -1847,6 +1847,7 @@ type GovernanceRequestFeedback {
   feedback: String!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
