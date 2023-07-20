@@ -1,9 +1,0 @@
-ALTER TYPE action_type ADD VALUE 'REQUEST_EDITS' BEFORE 'SUBMIT_INTAKE';
-
-CREATE TYPE system_intake_action_step AS ENUM (
-  'INITIAL_REQUEST_FORM',
-  'DRAFT_BUSINESS_CASE',
-  'FINAL_BUSINESS_CASE'
-);
-
-ALTER TABLE actions ADD COLUMN step system_intake_action_step;

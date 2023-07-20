@@ -1450,14 +1450,17 @@ Input for creating a Request Edits Action in Admin Actions v2
 """
 input SystemIntakeRequestEditsInput {
   systemIntakeID: UUID!
-  intakeFormStep: SystemIntakeRequestEditsFormOptions!
+  intakeFormStep: SystemIntakeFormStep!
   notificationRecipients: EmailNotificationRecipients
+  emailFeedback: String!
+  additionalNotes: String
+  adminNotes: String
 }
 
 """
 SystemIntakeRequestEditsOptions represents the current step in the intake process
 """
-enum SystemIntakeRequestEditsFormOptions {
+enum SystemIntakeFormStep {
   INITIAL_REQUEST_FORM
   DRAFT_BUSINESS_CASE
   FINAL_BUSINESS_CASE

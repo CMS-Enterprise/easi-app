@@ -666,8 +666,11 @@ type SystemIntakeProductManagerInput struct {
 // Input for creating a Request Edits Action in Admin Actions v2
 type SystemIntakeRequestEditsInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	IntakeFormStep         SystemIntakeRequestEditsFormOptions `json:"intakeFormStep"`
+	IntakeFormStep         SystemIntakeFormStep                `json:"intakeFormStep"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	EmailFeedback          string                              `json:"emailFeedback"`
+	AdditionalNotes        *string                             `json:"additionalNotes"`
+	AdminNotes             *string                             `json:"adminNotes"`
 }
 
 // The contact who made an IT governance request for a system
@@ -1027,45 +1030,45 @@ func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
 }
 
 // SystemIntakeRequestEditsOptions represents the current step in the intake process
-type SystemIntakeRequestEditsFormOptions string
+type SystemIntakeFormStep string
 
 const (
-	SystemIntakeRequestEditsFormOptionsInitialRequestForm SystemIntakeRequestEditsFormOptions = "INITIAL_REQUEST_FORM"
-	SystemIntakeRequestEditsFormOptionsDraftBusinessCase  SystemIntakeRequestEditsFormOptions = "DRAFT_BUSINESS_CASE"
-	SystemIntakeRequestEditsFormOptionsFinalBusinessCase  SystemIntakeRequestEditsFormOptions = "FINAL_BUSINESS_CASE"
+	SystemIntakeFormStepInitialRequestForm SystemIntakeFormStep = "INITIAL_REQUEST_FORM"
+	SystemIntakeFormStepDraftBusinessCase  SystemIntakeFormStep = "DRAFT_BUSINESS_CASE"
+	SystemIntakeFormStepFinalBusinessCase  SystemIntakeFormStep = "FINAL_BUSINESS_CASE"
 )
 
-var AllSystemIntakeRequestEditsFormOptions = []SystemIntakeRequestEditsFormOptions{
-	SystemIntakeRequestEditsFormOptionsInitialRequestForm,
-	SystemIntakeRequestEditsFormOptionsDraftBusinessCase,
-	SystemIntakeRequestEditsFormOptionsFinalBusinessCase,
+var AllSystemIntakeFormStep = []SystemIntakeFormStep{
+	SystemIntakeFormStepInitialRequestForm,
+	SystemIntakeFormStepDraftBusinessCase,
+	SystemIntakeFormStepFinalBusinessCase,
 }
 
-func (e SystemIntakeRequestEditsFormOptions) IsValid() bool {
+func (e SystemIntakeFormStep) IsValid() bool {
 	switch e {
-	case SystemIntakeRequestEditsFormOptionsInitialRequestForm, SystemIntakeRequestEditsFormOptionsDraftBusinessCase, SystemIntakeRequestEditsFormOptionsFinalBusinessCase:
+	case SystemIntakeFormStepInitialRequestForm, SystemIntakeFormStepDraftBusinessCase, SystemIntakeFormStepFinalBusinessCase:
 		return true
 	}
 	return false
 }
 
-func (e SystemIntakeRequestEditsFormOptions) String() string {
+func (e SystemIntakeFormStep) String() string {
 	return string(e)
 }
 
-func (e *SystemIntakeRequestEditsFormOptions) UnmarshalGQL(v interface{}) error {
+func (e *SystemIntakeFormStep) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = SystemIntakeRequestEditsFormOptions(str)
+	*e = SystemIntakeFormStep(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeRequestEditsFormOptions", str)
+		return fmt.Errorf("%s is not a valid SystemIntakeFormStep", str)
 	}
 	return nil
 }
 
-func (e SystemIntakeRequestEditsFormOptions) MarshalGQL(w io.Writer) {
+func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

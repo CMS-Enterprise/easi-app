@@ -8503,14 +8503,17 @@ Input for creating a Request Edits Action in Admin Actions v2
 """
 input SystemIntakeRequestEditsInput {
   systemIntakeID: UUID!
-  intakeFormStep: SystemIntakeRequestEditsFormOptions!
+  intakeFormStep: SystemIntakeFormStep!
   notificationRecipients: EmailNotificationRecipients
+  emailFeedback: String!
+  additionalNotes: String
+  adminNotes: String
 }
 
 """
 SystemIntakeRequestEditsOptions represents the current step in the intake process
 """
-enum SystemIntakeRequestEditsFormOptions {
+enum SystemIntakeFormStep {
   INITIAL_REQUEST_FORM
   DRAFT_BUSINESS_CASE
   FINAL_BUSINESS_CASE
@@ -51540,7 +51543,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients"}
+	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients", "emailFeedback", "additionalNotes", "adminNotes"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -51559,7 +51562,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeFormStep"))
-			it.IntakeFormStep, err = ec.unmarshalNSystemIntakeRequestEditsFormOptions2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequestEditsFormOptions(ctx, v)
+			it.IntakeFormStep, err = ec.unmarshalNSystemIntakeFormStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFormStep(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -51568,6 +51571,30 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
 			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "emailFeedback":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("emailFeedback"))
+			it.EmailFeedback, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "additionalNotes":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalNotes"))
+			it.AdditionalNotes, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "adminNotes":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNotes"))
+			it.AdminNotes, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63436,6 +63463,16 @@ func (ec *executionContext) marshalNSystemIntakeFormState2githubᚗcomᚋcmsgov�
 	return res
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeFormStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFormStep(ctx context.Context, v interface{}) (model.SystemIntakeFormStep, error) {
+	var res model.SystemIntakeFormStep
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeFormStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFormStep(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeFormStep) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeFundingSource) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -63655,16 +63692,6 @@ func (ec *executionContext) marshalNSystemIntakeProductManager2ᚖgithubᚗcom�
 func (ec *executionContext) unmarshalNSystemIntakeProductManagerInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManagerInput(ctx context.Context, v interface{}) (*model.SystemIntakeProductManagerInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeProductManagerInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNSystemIntakeRequestEditsFormOptions2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequestEditsFormOptions(ctx context.Context, v interface{}) (model.SystemIntakeRequestEditsFormOptions, error) {
-	var res model.SystemIntakeRequestEditsFormOptions
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNSystemIntakeRequestEditsFormOptions2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequestEditsFormOptions(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeRequestEditsFormOptions) graphql.Marshaler {
-	return v
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeRequestEditsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequestEditsInput(ctx context.Context, v interface{}) (model.SystemIntakeRequestEditsInput, error) {
