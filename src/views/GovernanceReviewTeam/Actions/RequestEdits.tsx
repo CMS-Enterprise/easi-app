@@ -1,12 +1,55 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { Grid, GridContainer } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
+import { EmailNotificationRecipients } from 'types/graphql-global-types';
 
-const RequestEdits = () => {
+interface SytemIntakeActionFields {
+  recipients?: EmailNotificationRecipients;
+  feedback?: string;
+  note?: string;
+}
+
+const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
+
+  // System intake contacts
+  const {
+    contacts: { data: contacts, loading }
+  } = useSystemIntakeContacts(systemIntakeId);
+
+  const form = useForm<SytemIntakeActionFields>();
+  const {
+    reset,
+    watch,
+    formState: { defaultValues }
+  } = form;
+
+  const recipients = watch('recipients');
+
+  // Set default values when contacts load
+  useEffect(() => {
+    if (!loading && !defaultValues) {
+      reset(
+        {
+          recipients: {
+            regularRecipientEmails: [contacts.requester.email],
+            shouldNotifyITGovernance: true,
+            shouldNotifyITInvestment: false
+          },
+          note: '',
+          feedback: ''
+        },
+        { keepDefaultValues: false }
+      );
+    }
+  }, [contacts, loading, defaultValues, reset]);
+
+  if (loading || !recipients) return null;
 
   return (
     <GridContainer className="margin-bottom-10">

@@ -83,7 +83,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
           <Switch>
             <Route
               path="/governance-review-team/:systemId/actions/request-edits"
-              render={() => <RequestEdits />}
+              render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions/next-step"
