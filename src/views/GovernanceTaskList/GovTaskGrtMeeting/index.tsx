@@ -7,7 +7,6 @@ import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { ITGovGRTStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
-import { TaskListItemDateInfo } from 'types/taskList';
 import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrtMeeting = ({
@@ -20,21 +19,10 @@ const GovTaskGrtMeeting = ({
 
   const hasFeedback = governanceRequestFeedbacks.length > 0;
 
-  let dateInfo: TaskListItemDateInfo;
-
-  // Attended date
-  if (grtMeetingStatus === ITGovGRTStatus.COMPLETED && hasFeedback && grtDate)
-    dateInfo = {
-      label: 'attended',
-      value: grtDate,
-      isUtc: true
-    };
-
   return (
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={grtMeetingStatus}
-      statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >
       <TaskListDescription>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import i18next from 'i18next';
 
 import { taskListState } from 'data/mock/govTaskList';
@@ -84,12 +84,6 @@ describe('Gov Task: Attend the GRT meeting statuses', () => {
     );
     // Completed
     expectTaskStatusTagToHaveTextKey('COMPLETED');
-    // Attended date
-    screen.getByText(
-      RegExp(
-        `${i18next.t<string>('taskList:taskStatusInfo.attended')}.*07/17/2023`
-      )
-    );
     // Meeting attended info
     expect(getExpectedAlertType('info')).toHaveTextContent(
       i18next.t<string>('itGov:taskList.step.grtMeeting.attendedInfo', {
