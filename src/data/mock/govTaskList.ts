@@ -932,4 +932,59 @@ export const taskListState: {
       grbDate: '2023-07-20T00:30:28Z'
     }
   }
+  /*
+  bizCaseFinalDoneWithFeedback: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED, // DONE
+        grbMeetingStatus: ITGovGRBStatus.CANT_START,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [
+        {
+          __typename: 'GovernanceRequestFeedback',
+          id
+        }
+      ],
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
+      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
+      bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z'
+    }
+  },
+  bizCaseFinalDoneNoFeedback: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED, // DONE
+        grbMeetingStatus: ITGovGRBStatus.CANT_START,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [],
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
+      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
+      bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z'
+    }
+  }
+  */
 };
