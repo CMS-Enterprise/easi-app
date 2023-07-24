@@ -12,6 +12,7 @@ import { systemIntake } from 'data/mock/systemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
+import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import EmailRecipientsFields from '../ActionsV1/EmailRecipientsFields';
@@ -92,6 +93,17 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   return (
     <GridContainer className="margin-bottom-10 padding-bottom-2">
+      <Breadcrumbs
+        items={[
+          { text: t('Home'), url: '/' },
+          {
+            text: t('breadcrumb', { systemIntakeId }),
+            url: `/governance-review-team/${systemIntakeId}/intake-request`
+          },
+          { text: t('requestEdits.breadcrumb') }
+        ]}
+      />
+
       <PageHeading className="margin-bottom-0">
         {t('requestEdits.title')}
       </PageHeading>

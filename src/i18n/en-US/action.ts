@@ -50,8 +50,8 @@ const action = {
         'Use this action if you want to change the decision for this request or if you would like to re-open it. You will be able to select the new resolution for this request.'
     }
   },
+  breadcrumb: 'Request {{systemIntakeId}}',
   notification: {
-    breadcrumb: 'Request {{intakeId}}',
     heading: 'Notification email (optional)',
     alert:
       'If you choose not to send a notification email, the requester will still see the information in the above fields in their view of EASi.',
