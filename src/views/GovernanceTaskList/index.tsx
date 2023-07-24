@@ -3,16 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, Grid, GridContainer } from '@trussworks/react-uswds';
-import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import TaskListItem, {
-  TaskListContainer,
-  TaskListDescription
-} from 'components/TaskList';
+import { TaskListContainer } from 'components/TaskList';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
@@ -23,6 +19,7 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
 import GovTaskBizCaseFinal from './GovTaskBizCaseFinal';
+import GovTaskDecisionAndNextSteps from './GovTaskDecisionAndNextSteps';
 import GovTaskFeedbackFromInitialReview from './GovTaskFeedbackFromInitialReview';
 import GovTaskGrbMeeting from './GovTaskGrbMeeting';
 import GovTaskGrtMeeting from './GovTaskGrtMeeting';
@@ -42,7 +39,6 @@ function GovernanceTaskList() {
   });
 
   const systemIntake = data?.systemIntake;
-  const itGovTaskStatuses = systemIntake?.itGovTaskStatuses;
 
   if (error) {
     return <NotFound />;
@@ -62,7 +58,7 @@ function GovernanceTaskList() {
 
         {loading && <PageLoading />}
 
-        {!loading && systemIntake && itGovTaskStatuses && (
+        {!loading && systemIntake && (
           <Grid row gap className="margin-top-6">
             <Grid tablet={{ col: 9 }}>
               <PageHeading className="margin-y-0">
@@ -87,21 +83,8 @@ function GovernanceTaskList() {
                   <GovTaskBizCaseFinal {...systemIntake} />
                   {/* 6. Attend the GRB meeting */}
                   <GovTaskGrbMeeting {...systemIntake} />
-
                   {/* 7. Decision and next steps */}
-                  <TaskListItem
-                    heading={t('taskList.step.decisionAndNextSteps.title')}
-                    status={itGovTaskStatuses.decisionAndNextStepsStatus}
-                    testId={kebabCase(
-                      t('taskList.step.decisionAndNextSteps.title')
-                    )}
-                  >
-                    <TaskListDescription>
-                      <p>
-                        {t('taskList.step.decisionAndNextSteps.description')}
-                      </p>
-                    </TaskListDescription>
-                  </TaskListItem>
+                  <GovTaskDecisionAndNextSteps {...systemIntake} />
                 </TaskListContainer>
               </div>
             </Grid>

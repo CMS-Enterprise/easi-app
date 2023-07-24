@@ -931,38 +931,9 @@ export const taskListState: {
       grtDate: '2023-07-17T00:30:28Z',
       grbDate: '2023-07-20T00:30:28Z'
     }
-  }
-  /*
-  bizCaseFinalDoneWithFeedback: {
-    systemIntake: {
-      __typename: 'SystemIntake',
-      id,
-      itGovTaskStatuses: {
-        __typename: 'ITGovTaskStatuses',
-        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
-        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
-        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED, // DONE
-        grbMeetingStatus: ITGovGRBStatus.CANT_START,
-        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
-      },
-      governanceRequestFeedbacks: [
-        {
-          __typename: 'GovernanceRequestFeedback',
-          id
-        }
-      ],
-      submittedAt: '2023-07-09T00:30:28Z',
-      updatedAt: '2023-07-09T00:30:28Z',
-      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
-      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
-      grtDate: '2023-07-17T00:30:28Z',
-      bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z'
-    }
   },
-  bizCaseFinalDoneNoFeedback: {
+
+  decisionAndNextStepsCantStart: {
     systemIntake: {
       __typename: 'SystemIntake',
       id,
@@ -972,8 +943,8 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED, // DONE
-        grbMeetingStatus: ITGovGRBStatus.CANT_START,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       governanceRequestFeedbacks: [],
@@ -982,9 +953,54 @@ export const taskListState: {
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z'
+      grbDate: '2023-07-20T00:30:28Z'
+    }
+  },
+  decisionAndNextStepsInProgress: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        grbMeetingStatus: ITGovGRBStatus.COMPLETED,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.IN_REVIEW
+      },
+      governanceRequestFeedbacks: [],
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
+      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      grbDate: '2023-07-20T00:30:28Z'
+    }
+  },
+  decisionAndNextStepsDone: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        grbMeetingStatus: ITGovGRBStatus.COMPLETED,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.COMPLETED
+      },
+      governanceRequestFeedbacks: [],
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
+      bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      grbDate: '2023-07-20T00:30:28Z',
+      decisionAndNextStepsSubmittedAt: '2023-07-21T00:30:28Z'
     }
   }
-  */
 };
