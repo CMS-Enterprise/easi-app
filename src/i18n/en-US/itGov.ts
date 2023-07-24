@@ -64,7 +64,10 @@ export default {
         title: 'Attend the GRB meeting',
         description:
           'The Governance Review Board will discuss and make decisions based on your Business Case and recommendations from the Governance Review Team.',
-        link: 'Prepare for the GRB meeting (opens in a new tab)'
+        link: 'Prepare for the GRB meeting (opens in a new tab)',
+        button: 'Prepare for the GRB meeting',
+        scheduledInfo: 'GRB meeting scheduled for {{date}}.',
+        attendedInfo: 'You attended the GRB meeting on {{date}}.'
       },
       decisionAndNextSteps: {
         title: 'Decision and next steps',

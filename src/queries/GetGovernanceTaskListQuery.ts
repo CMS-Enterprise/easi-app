@@ -19,6 +19,7 @@ export default gql`
       submittedAt
       updatedAt
       grtDate
+      grbDate
     }
   }
 `;
