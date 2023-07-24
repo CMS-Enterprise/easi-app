@@ -33,6 +33,7 @@ export interface GetGovernanceTaskList_systemIntake {
   submittedAt: Time | null;
   updatedAt: Time | null;
   grtDate: Time | null;
+  grbDate: Time | null;
 }
 
 export interface GetGovernanceTaskList {
