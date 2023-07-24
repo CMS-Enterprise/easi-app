@@ -53,6 +53,8 @@ import './index.scss';
 
 const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
+
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage, subPage } = useParams<{
@@ -62,9 +64,8 @@ const RequestOverview = () => {
   }>();
 
   /** If true, hides summary and side navigation for full width layout */
-  const fullPageLayout: boolean = activePage === 'actions' && !!subPage;
-
-  const flags = useFlags();
+  const fullPageLayout: boolean =
+    flags.itGovV2Enabled && activePage === 'actions' && !!subPage;
 
   const { loading, data, refetch } = useQuery<
     GetSystemIntake,
