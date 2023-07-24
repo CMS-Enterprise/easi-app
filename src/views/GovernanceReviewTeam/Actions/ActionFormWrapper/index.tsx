@@ -8,18 +8,18 @@ import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import {
-  FormattedContacts,
-  SystemIntakeContactProps
-} from 'types/systemIntake';
+import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
+import { EmailNotificationRecipients } from 'types/graphql-global-types';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 import EmailRecipientsFields from 'views/GovernanceReviewTeam/ActionsV1/EmailRecipientsFields';
-import Breadcrumbs, {
-  BreadcrumbsProps
-} from 'views/TechnicalAssistance/Breadcrumbs';
-import Pager, {
-  PageButtonProps,
-  PagerProps
-} from 'views/TechnicalAssistance/RequestForm/Pager';
+import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+export interface SystemIntakeActionFields {
+  feedback: string;
+  note: string;
+  recipients: EmailNotificationRecipients;
+}
 
 type FormProps = {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -28,38 +28,19 @@ type FormProps = {
   search?: boolean;
 } & JSX.IntrinsicElements['form'];
 
-type ButtonProps = Omit<
-  PagerProps,
-  'border' | 'submitDisabled' | 'next' | 'buttons'
-> & {
-  next?: PageButtonProps;
-  buttons?: React.ReactElement[];
-};
-
 export type ActionFormProps = {
   /** Action title */
   title: string;
   /** Action description */
   description: string;
-  /**
-   * Breadcrumb items specific to current action
-   *
-   * Home and request ID breadcrumbs are displayed as default
-   */
-  breadcrumbItems: BreadcrumbsProps['items'];
+  /** Text for current page breadcrumb */
+  breadcrumb: string;
   children?: React.ReactNode;
-  /** Pager button props */
-  buttonProps?: ButtonProps;
-  /** Whether to show alert at top of form with summary of errors */
-  showErrorSummary?: boolean;
-  /** Warning message above submit button */
-  submitWarning?: string;
 } & FormProps;
 
 /** Includes props set from useActionForm hook */
 type ActionFormWrapperProps = {
   systemIntakeId: string;
-  contacts: FormattedContacts;
 } & ActionFormProps;
 
 /**
@@ -67,17 +48,21 @@ type ActionFormWrapperProps = {
  */
 const ActionForm = ({
   systemIntakeId,
-  contacts,
   title,
   description,
   children,
-  buttonProps,
-  breadcrumbItems,
-  submitWarning,
-  showErrorSummary = true,
+  breadcrumb,
   ...formProps
 }: ActionFormWrapperProps) => {
   const { t } = useTranslation('action');
+
+  const {
+    contacts: { data: contacts }
+  } = useSystemIntakeContacts(systemIntakeId);
+  const { requester } = contacts;
+
+  // Set form loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   // Active contact for adding/verifying recipients
   const [
@@ -88,29 +73,44 @@ const ActionForm = ({
   const {
     setValue,
     watch,
-    formState: { isSubmitting, errors }
-  } = useFormContext();
+    reset,
+    formState: { isSubmitting, errors, defaultValues }
+  } = useFormContext<SystemIntakeActionFields>();
+
+  // Auto scroll to errors
+  useEffect(() => {
+    if (errors) {
+      const err = document.querySelector('.trb-basic-fields-error');
+      err?.scrollIntoView();
+    }
+  }, [errors]);
+
+  // Set default form values
+  useEffect(() => {
+    if (!!requester.euaUserId && isLoading) {
+      reset(
+        {
+          ...defaultValues,
+          recipients: {
+            shouldNotifyITGovernance: true,
+            ...defaultValues?.recipients,
+            regularRecipientEmails: requester.email ? [requester.email] : []
+          }
+        },
+        { keepDefaultValues: false }
+      );
+      setIsLoading(false);
+    }
+  }, [requester, defaultValues, isLoading, reset]);
+
+  // If form is loading, return null
+  if (isLoading) return null;
 
   const recipients = watch('recipients');
-
   const recipientsSelected: boolean =
     recipients.regularRecipientEmails.length > 0 ||
     recipients.shouldNotifyITGovernance ||
     recipients.shouldNotifyITInvestment;
-
-  /** Error keys not including recipients */
-  const errorKeys: string[] = Object.keys(errors).filter(
-    key => key !== 'recipients'
-  );
-
-  const hasErrors = errorKeys.length > 0;
-
-  useEffect(() => {
-    if (hasErrors) {
-      const err = document.querySelector('.trb-basic-fields-error');
-      err?.scrollIntoView();
-    }
-  }, [hasErrors]);
 
   return (
     <GridContainer className="margin-bottom-10 padding-bottom-2">
@@ -121,7 +121,7 @@ const ActionForm = ({
             text: t('breadcrumb', { systemIntakeId }),
             url: `/governance-review-team/${systemIntakeId}/intake-request`
           },
-          ...breadcrumbItems
+          { text: breadcrumb }
         ]}
       />
 
