@@ -15,10 +15,11 @@ import EmailRecipientsFields from 'views/GovernanceReviewTeam/ActionsV1/EmailRec
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
+// TODO: update fields to match schema when backend work is completed
 export interface SystemIntakeActionFields {
-  feedback: string;
-  note: string;
-  recipients: EmailNotificationRecipients;
+  additionalNotes: string;
+  adminNotes: string;
+  notificationRecipients: EmailNotificationRecipients;
 }
 
 type FormProps = {
@@ -90,10 +91,12 @@ const ActionForm = ({
     if (!!requester.euaUserId && isLoading) {
       reset(
         {
+          adminNotes: '',
+          additionalNotes: '',
           ...defaultValues,
-          recipients: {
+          notificationRecipients: {
             shouldNotifyITGovernance: true,
-            ...defaultValues?.recipients,
+            ...defaultValues?.notificationRecipients,
             regularRecipientEmails: requester.email ? [requester.email] : []
           }
         },
@@ -106,7 +109,7 @@ const ActionForm = ({
   // If form is loading, return null
   if (isLoading) return null;
 
-  const recipients = watch('recipients');
+  const recipients = watch('notificationRecipients');
   const recipientsSelected: boolean =
     recipients.regularRecipientEmails.length > 0 ||
     recipients.shouldNotifyITGovernance ||
@@ -155,7 +158,7 @@ const ActionForm = ({
 
         {/* Additional information */}
         <Controller
-          name="feedback"
+          name="additionalNotes"
           render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label htmlFor={field.name} className="text-normal">
@@ -181,13 +184,13 @@ const ActionForm = ({
           setActiveContact={setActiveContact}
           contacts={contacts}
           recipients={recipients}
-          setRecipients={values => setValue('recipients', values)}
+          setRecipients={values => setValue('notificationRecipients', values)}
           error=""
         />
 
         {/* Admin note */}
         <Controller
-          name="note"
+          name="adminNotes"
           render={({ field, fieldState: { error } }) => (
             <FormGroup
               error={!!error}
@@ -226,7 +229,7 @@ const ActionForm = ({
             disabled: isSubmitting,
             // Reset email recipients to prevent sending email
             onClick: () =>
-              setValue('recipients', {
+              setValue('notificationRecipients', {
                 regularRecipientEmails: [],
                 shouldNotifyITGovernance: false,
                 shouldNotifyITInvestment: false
