@@ -126,7 +126,8 @@ const taskList = {
     percentComplete: '{{percent}}% complete',
     completed: 'Completed',
     lastUpdated: 'Last updated',
-    submitted: 'Submitted'
+    submitted: 'Submitted',
+    attended: 'Attended'
   }
 };
 

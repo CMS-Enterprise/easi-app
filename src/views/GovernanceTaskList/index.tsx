@@ -23,6 +23,7 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
 import GovTaskFeedbackFromInitialReview from './GovTaskFeedbackFromInitialReview';
+import GovTaskGrtMeeting from './GovTaskGrtMeeting';
 import GovTaskIntakeForm from './GovTaskIntakeForm';
 
 function GovernanceTaskList() {
@@ -82,20 +83,7 @@ function GovernanceTaskList() {
                   <GovTaskBizCaseDraft {...systemIntake} />
 
                   {/* 4. Attend the GRT meeting */}
-                  <TaskListItem
-                    heading={t('taskList.step.grtMeeting.title')}
-                    status={itGovTaskStatuses.grtMeetingStatus}
-                    testId={kebabCase(t('taskList.step.grtMeeting.title'))}
-                  >
-                    <TaskListDescription>
-                      <p>{t('taskList.step.grtMeeting.description')}</p>
-                      <div className="margin-top-2">
-                        <UswdsReactLink to="./">
-                          {t('taskList.step.grtMeeting.link')}
-                        </UswdsReactLink>
-                      </div>
-                    </TaskListDescription>
-                  </TaskListItem>
+                  <GovTaskGrtMeeting {...systemIntake} />
 
                   {/* 5. Submit your Business Case for final approval */}
                   <TaskListItem
