@@ -81,6 +81,7 @@ const Recipient = ({
           {/* Button to open form to verify recipient */}
           <Button
             type="button"
+            className="margin-top-0"
             data-testid="button_verify-recipient"
             unstyled
             onClick={() => {
