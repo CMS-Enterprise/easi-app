@@ -87,11 +87,11 @@ const Actions = ({ systemIntake }: ActionsProps) => {
             />
             <Route
               path="/governance-review-team/:systemId/actions/next-step"
-              render={() => <NextStep />}
+              render={() => <NextStep systemIntakeId={systemIntake.id} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions/decision"
-              render={() => <SubmitDecision />}
+              render={() => <SubmitDecision systemIntakeId={systemIntake.id} />}
             />
           </Switch>
         ) : (

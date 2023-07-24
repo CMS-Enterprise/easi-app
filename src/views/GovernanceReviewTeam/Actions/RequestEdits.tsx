@@ -2,7 +2,7 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionFormWrapper';
+import ActionForm, { SystemIntakeActionFields } from './ActionForm';
 
 const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
@@ -21,7 +21,9 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
         description={t('requestEdits.description')}
         breadcrumb={t('requestEdits.breadcrumb')}
         onSubmit={submit}
-      />
+      >
+        {/* Action fields here */}
+      </ActionForm>
     </FormProvider>
   );
 };
