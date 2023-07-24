@@ -7,6 +7,7 @@ import {
   Label
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -186,6 +187,7 @@ export default ({
   error
 }: EmailRecipientsFieldsProps) => {
   const { t } = useTranslation('action');
+  const flags = useFlags();
 
   // Create contact mutation
   const { createContact } = useSystemIntakeContacts(systemIntakeId);
@@ -336,9 +338,12 @@ export default ({
 
   return (
     <div className={classnames(className)} id="grtActionEmailRecipientFields">
-      {/* <h3 className={classnames('margin-y-2', headerClassName)}>
-        {t('emailRecipients.email')} {optional && t('emailRecipients.optional')}
-      </h3> */}
+      {!flags.itGovV2Enabled && (
+        <h3 className={classnames('margin-y-2', headerClassName)}>
+          {t('emailRecipients.email')}{' '}
+          {optional && t('emailRecipients.optional')}
+        </h3>
+      )}
 
       {/* Email required alert */}
       {!optional && (

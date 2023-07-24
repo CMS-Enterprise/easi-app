@@ -701,7 +701,7 @@ exports[`Submit Action renders additional contacts 1`] = `
                       class="system-intake-contacts margin-top-3"
                     >
                       <button
-                        class="usa-button usa-button--outline"
+                        class="usa-button usa-button--outline margin-top-0"
                         data-testid="button"
                         type="button"
                       >
@@ -722,7 +722,7 @@ exports[`Submit Action renders additional contacts 1`] = `
                   This email will be sent to recipients
                 </label>
                 <textarea
-                  class="usa-textarea"
+                  class="usa-textarea usa-textarea__size-md"
                   id="SubmitActionForm-Feedback"
                   maxlength="3000"
                   name="feedback"
