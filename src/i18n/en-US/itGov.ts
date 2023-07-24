@@ -54,7 +54,11 @@ export default {
       bizCaseFinal: {
         title: 'Submit your Business Case for final approval',
         description:
-          'Update your Business Case based on any feedback from the review meeting or Governance Team and submit it to the Governance Review Board.'
+          'Update your Business Case based on any feedback from the review meeting or Governance Team and submit it to the Governance Review Board.',
+        viewSubmittedFinalBusinessCase: 'View submitted final Business Case',
+        submittedInfo: 'Final Business Case submitted. Waiting for feedback.',
+        editsRequestedWarning:
+          'The Governance Team has requested edits to your final Business Case. Please make the requested changes and resubmit your form.'
       },
       grbMeeting: {
         title: 'Attend the GRB meeting',

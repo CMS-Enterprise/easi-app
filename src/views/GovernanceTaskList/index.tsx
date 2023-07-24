@@ -22,6 +22,7 @@ import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
+import GovTaskBizCaseFinal from './GovTaskBizCaseFinal';
 import GovTaskFeedbackFromInitialReview from './GovTaskFeedbackFromInitialReview';
 import GovTaskGrtMeeting from './GovTaskGrtMeeting';
 import GovTaskIntakeForm from './GovTaskIntakeForm';
@@ -86,15 +87,7 @@ function GovernanceTaskList() {
                   <GovTaskGrtMeeting {...systemIntake} />
 
                   {/* 5. Submit your Business Case for final approval */}
-                  <TaskListItem
-                    heading={t('taskList.step.bizCaseFinal.title')}
-                    status={itGovTaskStatuses.bizCaseFinalStatus}
-                    testId={kebabCase(t('taskList.step.bizCaseFinal.title'))}
-                  >
-                    <TaskListDescription>
-                      <p>{t('taskList.step.bizCaseFinal.description')}</p>
-                    </TaskListDescription>
-                  </TaskListItem>
+                  <GovTaskBizCaseFinal {...systemIntake} />
 
                   {/* 6. Attend the GRB meeting */}
                   <TaskListItem
