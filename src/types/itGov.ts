@@ -17,6 +17,7 @@ export interface ItGovTaskSystemIntakeWithMockData
   bizCaseFinalPctComplete?: number;
   bizCaseFinalUpdatedAt?: string | null;
   bizCaseFinalSubmittedAt?: string | null;
+  decisionAndNextStepsSubmittedAt?: string | null;
 }
 
 export interface GetGovernanceTaskListWithMockData {
