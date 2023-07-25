@@ -6,11 +6,8 @@ import TaskStatusTag, {
   TaskStatus,
   taskStatusClassName
 } from 'components/shared/TaskStatusTag';
-import {
-  ITGovFeedbackStatus,
-  ITGovIntakeFormStatus
-} from 'types/graphql-global-types';
-import { formatDateLocal } from 'utils/date';
+import { TaskListItemDateInfo } from 'types/taskList';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
 
 import './index.scss';
 
@@ -40,21 +37,19 @@ export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
 type TaskListItemProps = {
   heading: string;
   status: TaskStatus | undefined;
+  statusPercentComplete?: number | false | null | undefined;
+  statusDateInfo?: TaskListItemDateInfo;
   children?: React.ReactNode;
   testId?: string;
-  completedIso?: string | null;
-  lastUpdatedIso?: string | null;
-  governanceRequestFeedbackCompletedIso?: string | null;
 };
 
 const TaskListItem = ({
   heading,
   status,
+  statusPercentComplete,
+  statusDateInfo,
   children,
-  testId,
-  completedIso,
-  lastUpdatedIso,
-  governanceRequestFeedbackCompletedIso
+  testId
 }: TaskListItemProps) => {
   const { t } = useTranslation('taskList');
 
@@ -71,21 +66,6 @@ const TaskListItem = ({
     }
   );
 
-  const completedDate =
-    status === ITGovIntakeFormStatus.COMPLETED &&
-    completedIso &&
-    formatDateLocal(completedIso, 'MM/dd/yyyy');
-
-  const lastUpdatedDate =
-    status === ITGovIntakeFormStatus.EDITS_REQUESTED &&
-    lastUpdatedIso &&
-    formatDateLocal(lastUpdatedIso, 'MM/dd/yyyy');
-
-  const governanceRequestFeedbackCompletedDate =
-    status === ITGovFeedbackStatus.COMPLETED &&
-    governanceRequestFeedbackCompletedIso &&
-    formatDateLocal(governanceRequestFeedbackCompletedIso, 'MM/dd/yyyy');
-
   return (
     <li className={taskListItemClasses} data-testid={testId}>
       <div className="task-list__task-content">
@@ -97,26 +77,25 @@ const TaskListItem = ({
             {!!status && status in taskStatusClassName && (
               <TaskStatusTag status={status} />
             )}
-            {(completedDate ||
-              lastUpdatedDate ||
-              governanceRequestFeedbackCompletedDate) && (
+
+            {/* Task status info */}
+            {(Number.isInteger(statusPercentComplete) || statusDateInfo) && (
               <p className="margin-top-05 margin-bottom-0 text-base">
-                {completedDate && (
+                {/* Percent complete */}
+                {Number.isInteger(statusPercentComplete) &&
+                  t('taskStatusInfo.percentComplete', {
+                    percent: statusPercentComplete
+                  })}
+
+                {/* Status dates */}
+                {statusDateInfo && (
                   <>
-                    {t('taskStatusInfo.submitted')}
-                    <br /> {completedDate}
-                  </>
-                )}
-                {lastUpdatedDate && (
-                  <>
-                    {t('taskStatusInfo.lastUpdated')}
-                    <br /> {lastUpdatedDate}
-                  </>
-                )}
-                {governanceRequestFeedbackCompletedDate && (
-                  <>
-                    {t('taskStatusInfo.completed')}
-                    <br /> {governanceRequestFeedbackCompletedDate}
+                    {t(`taskStatusInfo.${statusDateInfo.label}`)}
+                    <br />{' '}
+                    {(statusDateInfo.isUtc ? formatDateUtc : formatDateLocal)(
+                      statusDateInfo.value,
+                      'MM/dd/yyyy'
+                    )}
                   </>
                 )}
               </p>

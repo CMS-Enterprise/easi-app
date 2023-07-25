@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ITGovIntakeFormStatus, ITGovFeedbackStatus, ITGovDecisionStatus, ITGovDraftBusinessCaseStatus, ITGovGRTStatus, ITGovFinalBusinessCaseStatus, ITGovGRBStatus } from "./../../types/graphql-global-types";
+import { ITGovIntakeFormStatus, ITGovFeedbackStatus, ITGovDraftBusinessCaseStatus, ITGovGRTStatus, ITGovFinalBusinessCaseStatus, ITGovGRBStatus, ITGovDecisionStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetGovernanceTaskList
@@ -13,11 +13,11 @@ export interface GetGovernanceTaskList_systemIntake_itGovTaskStatuses {
   __typename: "ITGovTaskStatuses";
   intakeFormStatus: ITGovIntakeFormStatus;
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus;
-  decisionAndNextStepsStatus: ITGovDecisionStatus;
   bizCaseDraftStatus: ITGovDraftBusinessCaseStatus;
   grtMeetingStatus: ITGovGRTStatus;
   bizCaseFinalStatus: ITGovFinalBusinessCaseStatus;
   grbMeetingStatus: ITGovGRBStatus;
+  decisionAndNextStepsStatus: ITGovDecisionStatus;
 }
 
 export interface GetGovernanceTaskList_systemIntake_governanceRequestFeedbacks {
@@ -32,6 +32,8 @@ export interface GetGovernanceTaskList_systemIntake {
   governanceRequestFeedbacks: GetGovernanceTaskList_systemIntake_governanceRequestFeedbacks[];
   submittedAt: Time | null;
   updatedAt: Time | null;
+  grtDate: Time | null;
+  grbDate: Time | null;
 }
 
 export interface GetGovernanceTaskList {

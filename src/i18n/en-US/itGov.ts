@@ -36,29 +36,44 @@ export default {
       bizCaseDraft: {
         title: 'Prepare a draft Business Case',
         description:
-          'Draft a business case to communicate your business need, possible solutions and their associated costs. The Governance Team will review it with you and determine whether you are ready for a GRT or GRB meeting.'
+          'Draft a business case to communicate your business need, possible solutions and their associated costs. The Governance Team will review it with you and determine whether you are ready for a GRT or GRB meeting.',
+        viewSubmittedDraftBusinessCase: 'View submitted draft Business Case',
+        submittedInfo: 'Draft Business Case submitted. Waiting for feedback.',
+        editsRequestedWarning:
+          'The Governance Team has requested edits to your draft Business Case. Please make the requested changes and resubmit your form.'
       },
       grtMeeting: {
         title: 'Attend the GRT meeting',
         description:
           'Meet with the Governance Review Team to discuss your draft Business Case and receive feedback. This will help you refine your Business Case further.',
-        link: 'Prepare for the GRT meeting (opens in a new tab)'
+        link: 'Prepare for the GRT meeting (opens in a new tab)',
+        button: 'Prepare for the GRT meeting',
+        scheduledInfo: 'GRT meeting scheduled for {{date}}.',
+        attendedInfo: 'You attended the GRT meeting on {{date}}.'
       },
       bizCaseFinal: {
         title: 'Submit your Business Case for final approval',
         description:
-          'Update your Business Case based on any feedback from the review meeting or Governance Team and submit it to the Governance Review Board.'
+          'Update your Business Case based on any feedback from the review meeting or Governance Team and submit it to the Governance Review Board.',
+        viewSubmittedFinalBusinessCase: 'View submitted final Business Case',
+        submittedInfo: 'Final Business Case submitted. Waiting for feedback.',
+        editsRequestedWarning:
+          'The Governance Team has requested edits to your final Business Case. Please make the requested changes and resubmit your form.'
       },
       grbMeeting: {
         title: 'Attend the GRB meeting',
         description:
           'The Governance Review Board will discuss and make decisions based on your Business Case and recommendations from the Governance Review Team.',
-        link: 'Prepare for the GRB meeting (opens in a new tab)'
+        link: 'Prepare for the GRB meeting (opens in a new tab)',
+        button: 'Prepare for the GRB meeting',
+        scheduledInfo: 'GRB meeting scheduled for {{date}}.',
+        attendedInfo: 'You attended the GRB meeting on {{date}}.'
       },
       decisionAndNextSteps: {
         title: 'Decision and next steps',
         description:
-          'If your request is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.'
+          'If your request is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.',
+        button: 'Read the decision'
       }
     }
   }

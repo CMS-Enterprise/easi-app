@@ -7,17 +7,19 @@ export default gql`
       itGovTaskStatuses {
         intakeFormStatus
         feedbackFromInitialReviewStatus
-        decisionAndNextStepsStatus
         bizCaseDraftStatus
         grtMeetingStatus
         bizCaseFinalStatus
         grbMeetingStatus
+        decisionAndNextStepsStatus
       }
       governanceRequestFeedbacks {
         id
       }
       submittedAt
       updatedAt
+      grtDate
+      grbDate
     }
   }
 `;
