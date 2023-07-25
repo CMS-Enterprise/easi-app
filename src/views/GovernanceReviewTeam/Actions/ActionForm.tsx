@@ -22,27 +22,15 @@ export interface SystemIntakeActionFields {
   notificationRecipients: EmailNotificationRecipients;
 }
 
-type FormProps = {
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  className?: string;
-  large?: boolean;
-  search?: boolean;
-} & JSX.IntrinsicElements['form'];
-
-export type ActionFormProps = {
-  /** Action title */
+type ActionFormProps = {
+  systemIntakeId: string;
   title: string;
-  /** Action description */
   description: string;
-  /** Text for current page breadcrumb */
   breadcrumb: string;
   children?: React.ReactNode;
-} & FormProps;
-
-/** Includes props set from useActionForm hook */
-type ActionFormWrapperProps = {
-  systemIntakeId: string;
-} & ActionFormProps;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  className?: string;
+} & JSX.IntrinsicElements['form'];
 
 /**
  * Wrapper for TRB action forms
@@ -53,8 +41,10 @@ const ActionForm = ({
   description,
   children,
   breadcrumb,
+  onSubmit,
+  className,
   ...formProps
-}: ActionFormWrapperProps) => {
+}: ActionFormProps) => {
   const { t } = useTranslation('action');
 
   const {
@@ -62,7 +52,6 @@ const ActionForm = ({
   } = useSystemIntakeContacts(systemIntakeId);
   const { requester } = contacts;
 
-  // Set form loading state
   const [isLoading, setIsLoading] = useState(true);
 
   // Active contact for adding/verifying recipients
@@ -75,16 +64,8 @@ const ActionForm = ({
     setValue,
     watch,
     reset,
-    formState: { isSubmitting, errors, defaultValues }
+    formState: { isSubmitting, defaultValues }
   } = useFormContext<SystemIntakeActionFields>();
-
-  // Auto scroll to errors
-  useEffect(() => {
-    if (errors) {
-      const err = document.querySelector('.trb-basic-fields-error');
-      err?.scrollIntoView();
-    }
-  }, [errors]);
 
   // Set default form values
   useEffect(() => {
@@ -106,7 +87,6 @@ const ActionForm = ({
     }
   }, [requester, defaultValues, isLoading, reset]);
 
-  // If form is loading, return null
   if (isLoading) return null;
 
   const recipients = watch('notificationRecipients');
@@ -141,7 +121,8 @@ const ActionForm = ({
       </p>
 
       <Form
-        onSubmit={formProps.onSubmit}
+        {...formProps}
+        onSubmit={onSubmit}
         className="maxw-none margin-top-6 tablet:grid-col-6"
       >
         {children}
