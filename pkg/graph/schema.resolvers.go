@@ -2039,14 +2039,32 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 		// make a new context and copy the logger to it, or else the request will cancel when the parent context cancels
 		emailCtx := appcontext.WithLogger(context.Background(), appcontext.ZLogger(ctx))
 
-		userInfo, err := r.service.FetchUserInfo(emailCtx, input.EuaUserID)
+		// Fetch user info for _both_ the requester _and_ the user whose roles were changed
+		// We're using 2 calls to `FetchUserInfo` rather than 1 call to `FetchUserInfos` since we don't know what order they'll come back in with the latter function
+		g := new(errgroup.Group)
+		var requesterUserInfo *models.UserInfo
+		var errRequester error
+		g.Go(func() error {
+			requesterUserInfo, errRequester = r.service.FetchUserInfo(emailCtx, appcontext.Principal(ctx).ID())
+			return errRequester
+		})
+
+		var targetUserInfo *models.UserInfo
+		var errTarget error
+		g.Go(func() error {
+			targetUserInfo, errTarget = r.service.FetchUserInfo(emailCtx, input.EuaUserID)
+			return errTarget
+		})
+
+		// wait for both calls to complete
+		err := g.Wait()
 		if err != nil {
 			// don't fail the request if the lookup fails, just log and return from the go func
-			appcontext.ZLogger(emailCtx).Error("failed to lookup user info for CEDAR notification email", zap.Error(err))
+			appcontext.ZLogger(emailCtx).Error("failed to lookup user infos for CEDAR notification email", zap.Error(err))
 			return
 		}
 
-		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, userInfo.CommonName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
+		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, requesterUserInfo.CommonName, targetUserInfo.CommonName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
 		if err != nil {
 			// don't fail the request if the email fails, just log and return from the go func
 			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))

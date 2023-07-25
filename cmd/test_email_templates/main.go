@@ -140,10 +140,10 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	})
 	noErr(err)
 
-	err = client.SendCedarRolesChangedEmail(ctx, "Johnothan Roleadd", true, false, []string{}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
+	err = client.SendCedarRolesChangedEmail(ctx, "Requester Jones", "Johnothan Roleadd", true, false, []string{}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
 	noErr(err)
 
-	err = client.SendCedarRolesChangedEmail(ctx, "Johnothan Roledelete", false, true, []string{"System API Contact", "System Manager"}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
+	err = client.SendCedarRolesChangedEmail(ctx, "Requester Jones", "Johnothan Roledelete", false, true, []string{"System API Contact", "System Manager"}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
 	noErr(err)
 }
 
