@@ -13,7 +13,8 @@ import (
 )
 
 type cedarRolesChangedEmailParameters struct {
-	UserFullName        string
+	RequesterFullName   string
+	TargetFullName      string
 	DidAdd              bool
 	DidDelete           bool
 	RoleTypeNamesBefore string
@@ -22,9 +23,10 @@ type cedarRolesChangedEmailParameters struct {
 	Timestamp           string
 }
 
-func (c Client) cedarRolesChangedEmailBody(userFullName string, didAdd bool, didDelete bool, roleTypeNamesBefore []string, roleTypeNamesAfter []string, systemName string, timestamp time.Time) (string, error) {
+func (c Client) cedarRolesChangedEmailBody(requesterFullName string, targetFullName string, didAdd bool, didDelete bool, roleTypeNamesBefore []string, roleTypeNamesAfter []string, systemName string, timestamp time.Time) (string, error) {
 	data := cedarRolesChangedEmailParameters{
-		UserFullName:        userFullName,
+		RequesterFullName:   requesterFullName,
+		TargetFullName:      targetFullName,
 		DidAdd:              didAdd,
 		DidDelete:           didDelete,
 		RoleTypeNamesBefore: strings.Join(roleTypeNamesBefore, ", "),
@@ -49,7 +51,8 @@ func (c Client) cedarRolesChangedEmailBody(userFullName string, didAdd bool, did
 // SendCedarRolesChangedEmail notifies someone that they've been added as an attendee on a TRB request
 func (c Client) SendCedarRolesChangedEmail(
 	ctx context.Context,
-	userFullName string,
+	requesterFullName string,
+	targetFullName string,
 	didAdd bool,
 	didDelete bool,
 	roleTypeNamesBefore []string,
@@ -57,8 +60,8 @@ func (c Client) SendCedarRolesChangedEmail(
 	systemName string,
 	timestamp time.Time,
 ) error {
-	subject := fmt.Sprintf("CEDAR Roles modified for (%v)", userFullName)
-	body, err := c.cedarRolesChangedEmailBody(userFullName, didAdd, didDelete, roleTypeNamesBefore, roleTypeNamesAfter, systemName, timestamp)
+	subject := fmt.Sprintf("CEDAR Roles modified for (%v)", targetFullName)
+	body, err := c.cedarRolesChangedEmailBody(requesterFullName, targetFullName, didAdd, didDelete, roleTypeNamesBefore, roleTypeNamesAfter, systemName, timestamp)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
