@@ -51,6 +51,8 @@ const action = {
     }
   },
   breadcrumb: 'Request {{systemIntakeId}}',
+  fieldsMarkedRequired:
+    'Fields marked with an asterisk (<asterisk />) are required.',
   notification: {
     heading: 'Notification email (optional)',
     alert:

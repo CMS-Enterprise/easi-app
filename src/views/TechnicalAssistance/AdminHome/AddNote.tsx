@@ -19,6 +19,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
@@ -177,8 +178,8 @@ const AddNote = ({
             </div>
             <div className="margin-top-1 margin-bottom-2 text-base">
               <Trans
-                i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
-                components={{ red: <span className="text-red" /> }}
+                i18nKey="action:fieldsMarkedRequired"
+                components={{ asterisk: <RequiredAsterisk /> }}
               />
             </div>
 

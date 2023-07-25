@@ -7,6 +7,7 @@ import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
@@ -115,8 +116,8 @@ const ActionForm = ({
 
       <p className="margin-top-1 text-base">
         <Trans
-          i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
-          components={{ red: <span className="text-red" /> }}
+          i18nKey="action:fieldsMarkedRequired"
+          components={{ asterisk: <RequiredAsterisk /> }}
         />
       </p>
 
