@@ -34,7 +34,12 @@ type ActionFormProps = {
 } & JSX.IntrinsicElements['form'];
 
 /**
- * Wrapper for TRB action forms
+ * Form wrapper for IT Gov admin actions
+ *
+ * Displays breadcrumbs, action title, description, common fields, and pager buttons
+ *
+ * Common fields: additional information, notification recipients, and admin note
+ *
  */
 const ActionForm = ({
   systemIntakeId,
