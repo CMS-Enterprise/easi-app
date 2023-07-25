@@ -3,6 +3,8 @@ import classnames from 'classnames';
 
 import CharacterCounter from 'components/CharacterCounter';
 
+import './index.scss';
+
 type TextAreaFieldProps = {
   id: string;
   className?: string;
@@ -13,6 +15,8 @@ type TextAreaFieldProps = {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onBlur: () => void;
   value: string;
+  size?: 'auto' | 'sm' | 'md';
+  characterCounter?: boolean;
 } & JSX.IntrinsicElements['textarea'];
 
 const TextAreaField = ({
@@ -25,10 +29,13 @@ const TextAreaField = ({
   onChange,
   onBlur,
   value,
+  size = 'md',
+  characterCounter = true,
   ...props
 }: TextAreaFieldProps) => {
   const textAreaClasses = classnames(
     'usa-textarea',
+    `usa-textarea__size-${size}`,
     {
       'usa-input--error': error
     },
@@ -51,10 +58,12 @@ const TextAreaField = ({
         maxLength={maxLength}
         {...props}
       />
-      <CharacterCounter
-        id={`${id}-counter`}
-        characterCount={2000 - (value?.length || 0)}
-      />
+      {characterCounter && (
+        <CharacterCounter
+          id={`${id}-counter`}
+          characterCount={2000 - (value?.length || 0)}
+        />
+      )}
     </>
   );
 };
