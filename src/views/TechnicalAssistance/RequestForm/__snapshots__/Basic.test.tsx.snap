@@ -247,7 +247,7 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
           </label>
           <textarea
             aria-describedby="needsAssistanceWith-info needsAssistanceWith-hint"
-            class="usa-textarea"
+            class="usa-textarea usa-textarea__size-md"
             id="needsAssistanceWith"
             name="needsAssistanceWith"
           />

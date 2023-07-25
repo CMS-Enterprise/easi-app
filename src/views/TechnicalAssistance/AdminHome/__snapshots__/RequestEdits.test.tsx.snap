@@ -98,7 +98,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
         </div>
         <textarea
           aria-describedby="feedbackMessage-info feedbackMessage-hint"
-          class="usa-textarea"
+          class="usa-textarea usa-textarea__size-md"
           id="feedbackMessage"
           name="feedbackMessage"
         />
