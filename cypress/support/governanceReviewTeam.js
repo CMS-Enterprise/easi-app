@@ -21,7 +21,9 @@ cy.governanceReviewTeam = {
       cy.get('button[data-testid="collapsable-link"]').click();
 
       // Select action type
-      cy.get(`#${actionId}`).check({ force: true }).should('be.checked');
+      cy.get(`#${actionId}`).as('option').check({ force: true });
+      cy.get('@option').should('be.checked');
+
       cy.get('button[type="submit"]').click();
 
       // Wait for contacts query to complete
