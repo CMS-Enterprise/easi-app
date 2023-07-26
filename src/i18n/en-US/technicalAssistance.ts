@@ -976,6 +976,8 @@ const technicalAssistance = {
       'Action completed. This request is now ready to schedule a consult session.'
   },
   actionScheduleConsult: {
+    formDisabled:
+      'A consult cannot be scheduled until this request has been marked as ready for consult.',
     heading: 'Action: schedule a TRB consult session',
     description:
       'Once you have confirmed availability with the requester and project team, set a date and time for the consult session for this request.',
