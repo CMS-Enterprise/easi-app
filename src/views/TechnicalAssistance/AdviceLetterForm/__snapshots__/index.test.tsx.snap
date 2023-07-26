@@ -331,7 +331,7 @@ exports[`TRB Advice Letter Form matches the snapshot 1`] = `
             </span>
           </label>
           <textarea
-            class="usa-textarea"
+            class="usa-textarea usa-textarea__size-md"
             id="meetingSummary"
             name="meetingSummary"
           >

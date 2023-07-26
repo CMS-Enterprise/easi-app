@@ -350,14 +350,14 @@ exports[`Additional contacts component displays form when editing contact 1`] = 
             class="margin-top-2"
           >
             <button
-              class="usa-button usa-button--outline"
+              class="usa-button usa-button--outline margin-top-0"
               data-testid="button"
               type="button"
             >
               Cancel
             </button>
             <button
-              class="usa-button"
+              class="usa-button margin-top-0"
               data-testid="button"
               type="button"
             >
@@ -409,7 +409,7 @@ exports[`Additional contacts component displays form when editing contact 1`] = 
       </div>
     </div>
     <button
-      class="usa-button usa-button--outline"
+      class="usa-button usa-button--outline margin-top-0"
       data-testid="button"
       disabled=""
       type="button"
@@ -502,7 +502,7 @@ exports[`Additional contacts component renders without crashing 1`] = `
       </div>
     </div>
     <button
-      class="usa-button usa-button--outline"
+      class="usa-button usa-button--outline margin-top-0"
       data-testid="button"
       type="button"
     >

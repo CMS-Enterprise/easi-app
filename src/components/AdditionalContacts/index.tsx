@@ -226,10 +226,19 @@ const ContactForm = ({
 
       {/* Action Buttons */}
       <div className="margin-top-2">
-        <Button type="button" outline onClick={() => setActiveContact(null)}>
+        <Button
+          className="margin-top-0"
+          type="button"
+          outline
+          onClick={() => setActiveContact(null)}
+        >
           {t('Cancel')}
         </Button>
-        <Button type="button" onClick={() => handleSubmit()}>
+        <Button
+          className="margin-top-0"
+          type="button"
+          onClick={() => handleSubmit()}
+        >
           {t(
             activeContact?.id
               ? 'contactDetails.additionalContacts.save'
@@ -450,6 +459,7 @@ export default function AdditionalContacts({
             onClick={() => {
               setActiveContact(initialContactDetails);
             }}
+            className="margin-top-0"
             // Disable button if editing or loading
             disabled={!!activeContact?.id || loading}
           >

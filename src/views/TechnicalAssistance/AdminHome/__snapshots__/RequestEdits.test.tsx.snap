@@ -63,13 +63,13 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
     <p
       class="margin-top-1 text-base"
     >
-      Fields marked with an asterisk ( 
+      Fields marked with an asterisk (
       <span
-        class="text-red"
+        class="text-red margin-x-05"
       >
         *
       </span>
-       ) are required.
+      ) are required.
     </p>
     <form
       class="usa-form maxw-none tablet:grid-col-12 desktop:grid-col-6"
@@ -98,7 +98,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
         </div>
         <textarea
           aria-describedby="feedbackMessage-info feedbackMessage-hint"
-          class="usa-textarea"
+          class="usa-textarea usa-textarea__size-md"
           id="feedbackMessage"
           name="feedbackMessage"
         />
