@@ -6,7 +6,24 @@ import "github.com/cmsgov/easi-app/pkg/models"
 
 // IntakeFormStatus calculates the ITGovTaskListStatus of a system intake for the requester view
 func IntakeFormStatus(intake *models.SystemIntake) models.ITGovIntakeFormStatus {
-	return models.ITGISReady
+	if intake.Step != models.SystemIntakeStepINITIALFORM {
+		return models.ITGISCompleted
+	}
+	switch intake.RequestFormState {
+	case models.SIRFSNotStarted:
+		return models.ITGISReady
+
+	case models.SIRFSInProgress:
+		return models.ITGISInProgress
+
+	case models.SIRFSEditsRequested:
+		return models.ITGISEditsRequested
+
+	case models.SIRFSSubmitted:
+		return models.ITGISCompleted
+	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
+		return models.ITGISCompleted
+	}
 }
 
 // FeedbackFromInitialReviewStatus calculates the ITGovTaskListStatus for the feedback section of a system intake task list  for the requester view
