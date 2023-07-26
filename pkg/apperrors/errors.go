@@ -3,6 +3,8 @@ package apperrors
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // UnauthorizedError is a typed error for when authorization fails
@@ -270,3 +272,17 @@ type InvalidEUAIDError struct {
 func (e *InvalidEUAIDError) Error() string {
 	return fmt.Sprint("EUAID ", e.EUAID, " does not correspond to a valid EUA user")
 }
+
+// InvalidActionError indicates that an admin attempted to perform an invalid action on an intake,
+// such as trying to use Progress to New Step on a closed intake (instead of the proper Reopen action)
+type InvalidActionError struct {
+	ActionType models.ActionType
+	Message    string // TODO - make more strongly typed?
+}
+
+func (e *InvalidActionError) Error() string {
+	// TODO - revise error message?
+	return fmt.Sprintf("Action type %s is invalid and can't be performed: %s", e.ActionType, e.Message)
+}
+
+// TODO - InvalidActionError .Is implementation?

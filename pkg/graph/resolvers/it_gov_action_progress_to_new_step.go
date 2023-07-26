@@ -2,12 +2,13 @@ package resolvers
 
 import (
 	"context"
-	"errors"
+	"time"
 
 	"github.com/guregu/null"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -27,17 +28,18 @@ func ProgressIntakeToNewStep(
 		return nil, err
 	}
 
-	if !intakeIsValidForProgressToNewStep(intake, input.NewStep) {
+	errInvalidAction := intakeIsValidForProgressToNewStep(intake, input.NewStep)
+	if errInvalidAction != nil {
 		// TODO - log?
-		// TODO - more precise error type, error message
-		return nil, errors.New("invalid state")
+		return nil, errInvalidAction
 	}
 
-	modifyIntakeToNewStep(intake, input.NewStep)
+	modifyIntakeToNewStep(intake, input.NewStep, input.MeetingDate, time.Now())
 
-	// TODO - potential issue - some data from the action might be saved, but not all
-	// this would be possible even if we called everything sequentially
-	// doesn't appear to be a way to wrap everything in a transaction
+	// All the different data base calls aren't in a single atomic transaction;
+	// in the case of a system failure, some data from the action might be saved, but not all.
+	// As of this function's initial implementation, we're accepting that risk.
+	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
 
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -156,13 +158,52 @@ func ProgressIntakeToNewStep(
 
 // TODO - potentially inline if logic is simple enough
 // TODO - if not inlined - better name
-func intakeIsValidForProgressToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) bool {
-	// TODO - implement
-	return true
+func intakeIsValidForProgressToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) error {
+	if intake.State == models.SystemIntakeStateCLOSED {
+		// TODO - log?
+		return &apperrors.InvalidActionError{
+			ActionType: models.ActionTypePROGRESSTONEWSTEP,
+			Message:    "Can't take Progress to New Step action on closed intakes",
+		}
+	}
+
+	if string(intake.Step) == string(newStep) {
+		// TODO - log?
+		return &apperrors.InvalidActionError{
+			ActionType: models.ActionTypePROGRESSTONEWSTEP,
+			Message:    "Progress to New Step needs to change intake to a different step",
+		}
+	}
+
+	return nil
 }
 
 // TODO - potentially inline if logic is simple enough
 // TODO - if not inlined - better name
-func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) {
-	// TODO - implement
+func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) {
+	switch newStep {
+	case model.SystemIntakeStepToProgressToDraftBusinessCase:
+		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
+
+	case model.SystemIntakeStepToProgressToGrtMeeting:
+		intake.Step = models.SystemIntakeStepGRTMEETING
+
+		if newMeetingDate != nil {
+			intake.GRTDate = newMeetingDate
+		} else if intake.GRTDate != nil && intake.GRTDate.Before(currentTime) {
+			intake.GRTDate = nil // if previously scheduled date has happened, and we don't have a new meeting date, clear the previous date
+		}
+
+	case model.SystemIntakeStepToProgressToFinalBusinessCase:
+		intake.Step = models.SystemIntakeStepFINALBIZCASE
+
+	case model.SystemIntakeStepToProgressToGrbMeeting:
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		if newMeetingDate != nil {
+			intake.GRBDate = newMeetingDate
+		} else if intake.GRBDate != nil && intake.GRBDate.Before(currentTime) {
+			intake.GRBDate = nil // if previously scheduled date has happened, and we don't have a new meeting date, clear the previous date
+		}
+	}
 }
