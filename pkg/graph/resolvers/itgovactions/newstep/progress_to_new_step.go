@@ -29,12 +29,12 @@ func ProgressIntake(
 		return nil, err
 	}
 
-	err = intakeIsValidForProgressToNewStep(intake, input.NewStep)
+	err = isIntakeValid(intake, input.NewStep)
 	if err != nil {
 		return nil, err
 	}
 
-	err = modifyIntakeToNewStep(intake, input.NewStep, input.MeetingDate, time.Now())
+	err = updateIntake(intake, input.NewStep, input.MeetingDate, time.Now())
 	if err != nil {
 		return nil, err
 	}
@@ -159,8 +159,7 @@ func ProgressIntake(
 	return updatedIntake, nil
 }
 
-// TODO - if not inlined - better name
-func intakeIsValidForProgressToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) error {
+func isIntakeValid(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) error {
 	if intake.State == models.SystemIntakeStateCLOSED {
 		return &apperrors.InvalidActionError{
 			ActionType: models.ActionTypePROGRESSTONEWSTEP,
@@ -178,8 +177,7 @@ func intakeIsValidForProgressToNewStep(intake *models.SystemIntake, newStep mode
 	return nil
 }
 
-// TODO - better name
-func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) error {
+func updateIntake(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) error {
 	switch newStep {
 	case model.SystemIntakeStepToProgressToDraftBusinessCase:
 		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
