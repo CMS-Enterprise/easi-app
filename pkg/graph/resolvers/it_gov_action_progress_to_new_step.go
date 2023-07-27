@@ -178,8 +178,7 @@ func intakeIsValidForProgressToNewStep(intake *models.SystemIntake, newStep mode
 	return nil
 }
 
-// TODO - potentially inline if logic is simple enough
-// TODO - if not inlined - better name
+// TODO - better name
 func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) {
 	switch newStep {
 	case model.SystemIntakeStepToProgressToDraftBusinessCase:
@@ -205,5 +204,8 @@ func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemInta
 		} else if intake.GRBDate != nil && intake.GRBDate.Before(currentTime) {
 			intake.GRBDate = nil // if previously scheduled date has happened, and we don't have a new meeting date, clear the previous date
 		}
+
+	default:
+		// TODO - return error if newStep is an invalid value? use error type from Steven's PR?
 	}
 }
