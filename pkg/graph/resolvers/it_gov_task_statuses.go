@@ -1,28 +1,33 @@
 package resolvers
 
-import "github.com/cmsgov/easi-app/pkg/models"
+import (
+	"fmt"
+
+	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
+)
 
 //NOTE these functions are deterministic. Ideally when implementing we should separate the logic which obtains any database information from the methods that calculate the status
 
 // IntakeFormStatus calculates the ITGovTaskListStatus of a system intake for the requester view
-func IntakeFormStatus(intake *models.SystemIntake) models.ITGovIntakeFormStatus {
+func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus, error) {
 	if intake.Step != models.SystemIntakeStepINITIALFORM {
-		return models.ITGISCompleted
+		return models.ITGISCompleted, nil
 	}
 	switch intake.RequestFormState {
 	case models.SIRFSNotStarted:
-		return models.ITGISReady
+		return models.ITGISReady, nil
 
 	case models.SIRFSInProgress:
-		return models.ITGISInProgress
+		return models.ITGISInProgress, nil
 
 	case models.SIRFSEditsRequested:
-		return models.ITGISEditsRequested
+		return models.ITGISEditsRequested, nil
 
 	case models.SIRFSSubmitted:
-		return models.ITGISCompleted
+		return models.ITGISCompleted, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
-		return models.ITGISCompleted
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("invalid state provided for the Intake form state"), intake.RequestFormState, "SystemIntakeFormState")
 	}
 }
 

@@ -12,6 +12,7 @@ type testSystemIntakeFormStatusType struct {
 	testCase       string
 	intake         models.SystemIntake
 	expectedStatus models.ITGovIntakeFormStatus
+	expectError    bool
 }
 
 func TestIntakeFormStatus(t *testing.T) {
@@ -27,6 +28,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				RequestFormState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGISReady,
+			expectError:    false,
 		},
 		{
 			testCase: "Request form started",
@@ -35,6 +37,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				RequestFormState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGISInProgress,
+			expectError:    false,
 		},
 		{
 			testCase: "Request form edits requested",
@@ -43,6 +46,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				RequestFormState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGISEditsRequested,
+			expectError:    false,
 		},
 		{
 			testCase: "Request form submitted",
@@ -51,6 +55,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				RequestFormState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGISCompleted,
+			expectError:    false,
 		},
 		{
 			testCase: "Request form default case",
@@ -58,7 +63,8 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: defaultTestState,
 			},
-			expectedStatus: models.ITGISCompleted,
+			expectedStatus: "",
+			expectError:    true,
 		},
 
 		//Tests when the step is not the Intake form
@@ -69,6 +75,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				RequestFormState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGISCompleted,
+			expectError:    false,
 		},
 		{
 			testCase: "Request form started: not at intake form step",
@@ -77,6 +84,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				RequestFormState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGISCompleted,
+			expectError:    false,
 		},
 		{
 			testCase: "Request form edits requested: not at intake form step",
@@ -85,6 +93,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				RequestFormState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGISCompleted,
+			expectError:    false,
 		},
 		{
 			testCase: "Request form submitted: not at intake form step",
@@ -93,21 +102,29 @@ func TestIntakeFormStatus(t *testing.T) {
 				RequestFormState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGISCompleted,
+			expectError:    false,
 		},
 		{
-			testCase: "Request form default case: not at intake form step",
+			testCase: "Request form default state: not at intake form step, expect complete",
 			intake: models.SystemIntake{
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: defaultTestState,
 			},
 			expectedStatus: models.ITGISCompleted,
+			expectError:    false,
 		},
 	}
 
 	for _, test := range intakeFormTests {
 		t.Run(test.testCase, func(t *testing.T) {
-			status := IntakeFormStatus(&test.intake)
+			status, err := IntakeFormStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)
+			if test.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+
 		})
 	}
 
