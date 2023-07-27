@@ -1,4 +1,4 @@
-package resolvers
+package newstep
 
 import (
 	"context"
@@ -15,8 +15,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-// ProgressIntakeToNewStep handles a Progress to New Step action on an intake
-func ProgressIntakeToNewStep(
+// ProgressIntake handles a Progress to New Step action on an intake
+func ProgressIntake(
 	ctx context.Context,
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),

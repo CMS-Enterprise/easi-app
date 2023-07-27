@@ -1,4 +1,4 @@
-package resolvers
+package newstep
 
 import (
 	"fmt"
