@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import useMessage from 'hooks/useMessage';
 import Breadcrumbs, {
   BreadcrumbsProps
@@ -131,8 +132,8 @@ const ActionForm = ({
 
       <p className="margin-top-1 text-base">
         <Trans
-          i18nKey="technicalAssistance:actionRequestEdits.fieldsMarkedRequired"
-          components={{ red: <span className="text-red" /> }}
+          i18nKey="action:fieldsMarkedRequired"
+          components={{ asterisk: <RequiredAsterisk /> }}
         />
       </p>
 

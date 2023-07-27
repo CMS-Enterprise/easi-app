@@ -950,8 +950,6 @@ const technicalAssistance = {
     heading: 'Action: request edits',
     description:
       'Use this action if the TRB needs additional information about the request in order to proceed with scheduling a consult session. Specify the edits or additional information needed from the requester.',
-    fieldsMarkedRequired:
-      'Fields marked with an asterisk ( <red>*</red> ) are required.',
     hint:
       'Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.',
     label:

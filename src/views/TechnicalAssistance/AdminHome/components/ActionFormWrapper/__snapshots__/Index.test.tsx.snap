@@ -63,13 +63,13 @@ exports[`Email recipient fields component renders recipients 1`] = `
     <p
       class="margin-top-1 text-base"
     >
-      Fields marked with an asterisk ( 
+      Fields marked with an asterisk (
       <span
-        class="text-red"
+        class="text-red margin-x-05"
       >
         *
       </span>
-       ) are required.
+      ) are required.
     </p>
     <form
       class="usa-form maxw-none tablet:grid-col-12 desktop:grid-col-6"

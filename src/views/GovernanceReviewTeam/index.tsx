@@ -31,7 +31,7 @@ const GovernanceReviewTeam = () => {
             )}
           />
           <Route
-            path="/governance-review-team/:systemId/:activePage"
+            path="/governance-review-team/:systemId/:activePage/:subPage?"
             component={RequestOverview}
           />
           <Route path="*" component={NotFound} />
