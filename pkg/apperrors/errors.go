@@ -284,5 +284,3 @@ func (e *InvalidActionError) Error() string {
 	// TODO - revise error message?
 	return fmt.Sprintf("Action type %s is invalid and can't be performed: %s", e.ActionType, e.Message)
 }
-
-// TODO - InvalidActionError .Is implementation?
