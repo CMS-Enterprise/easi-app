@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/guregu/null"
@@ -28,13 +29,17 @@ func ProgressIntakeToNewStep(
 		return nil, err
 	}
 
-	errInvalidAction := intakeIsValidForProgressToNewStep(intake, input.NewStep)
-	if errInvalidAction != nil {
+	err = intakeIsValidForProgressToNewStep(intake, input.NewStep)
+	if err != nil {
 		// TODO - log?
-		return nil, errInvalidAction
+		return nil, err
 	}
 
-	modifyIntakeToNewStep(intake, input.NewStep, input.MeetingDate, time.Now())
+	err = modifyIntakeToNewStep(intake, input.NewStep, input.MeetingDate, time.Now())
+	if err != nil {
+		// TODO - log?
+		return nil, err
+	}
 
 	// All the different data base calls aren't in a single atomic transaction;
 	// in the case of a system failure, some data from the action might be saved, but not all.
@@ -179,10 +184,11 @@ func intakeIsValidForProgressToNewStep(intake *models.SystemIntake, newStep mode
 }
 
 // TODO - better name
-func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) {
+func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) error {
 	switch newStep {
 	case model.SystemIntakeStepToProgressToDraftBusinessCase:
 		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
+		return nil
 
 	case model.SystemIntakeStepToProgressToGrtMeeting:
 		intake.Step = models.SystemIntakeStepGRTMEETING
@@ -193,8 +199,11 @@ func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemInta
 			intake.GRTDate = nil // if previously scheduled date has happened, and we don't have a new meeting date, clear the previous date
 		}
 
+		return nil
+
 	case model.SystemIntakeStepToProgressToFinalBusinessCase:
 		intake.Step = models.SystemIntakeStepFINALBIZCASE
+		return nil
 
 	case model.SystemIntakeStepToProgressToGrbMeeting:
 		intake.Step = models.SystemIntakeStepGRBMEETING
@@ -205,7 +214,9 @@ func modifyIntakeToNewStep(intake *models.SystemIntake, newStep model.SystemInta
 			intake.GRBDate = nil // if previously scheduled date has happened, and we don't have a new meeting date, clear the previous date
 		}
 
+		return nil
+
 	default:
-		// TODO - return error if newStep is an invalid value? use error type from Steven's PR?
+		return apperrors.NewInvalidEnumError(fmt.Errorf("newStep is an invalid value of SystemIntakeStepToProgressTo"), newStep, "SystemIntakeStepToProgressTo")
 	}
 }
