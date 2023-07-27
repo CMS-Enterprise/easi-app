@@ -271,27 +271,27 @@ func (e *InvalidEUAIDError) Error() string {
 	return fmt.Sprint("EUAID ", e.EUAID, " does not correspond to a valid EUA user")
 }
 
-// InvalidStateError indicates that a provided enumerated state is not valid. Perhaps it is a string that has been cast as the enum type
-type InvalidStateError struct {
+// InvalidEnumError indicates that a provided enumerated state is not valid. Perhaps it is a string that has been cast as the enum type
+type InvalidEnumError struct {
 	Err   error
 	Value string
 	Type  string
 }
 
 // NewInvalidEnumError creates an invalid state error and wraps it as apprpriate
-func NewInvalidEnumError[EnumType ~string](err error, value EnumType, enumType string) InvalidStateError {
-	return InvalidStateError{
+func NewInvalidEnumError[EnumType ~string](err error, value EnumType, enumType string) InvalidEnumError {
+	return InvalidEnumError{
 		Err:   err,
 		Value: string(value),
 		Type:  enumType,
 	}
 }
 
-func (e InvalidStateError) Error() string {
+func (e InvalidEnumError) Error() string {
 	return fmt.Sprint("Value ", e.Value, " does not correspond to a valid enumeration for type ", e.Type)
 }
 
 // Unwrap returns the underlying error
-func (e InvalidStateError) Unwrap() error {
+func (e InvalidEnumError) Unwrap() error {
 	return e.Err
 }

@@ -27,7 +27,7 @@ func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus
 	case models.SIRFSSubmitted:
 		return models.ITGISCompleted, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("invalid state provided for the Intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("invalid has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
 	}
 }
 
