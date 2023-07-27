@@ -171,11 +171,128 @@ func TestModifyIntakeToNewStep(t *testing.T) {
 					assert.EqualValues(t, newDate, intake.GRTDate)
 				})
 			})
-
 		})
 
 		t.Run("Progressing to GRB meeting", func(t *testing.T) {
+			t.Run("No date was scheduled for the meeting before this action", func(t *testing.T) {
+				t.Run("Should *not* update GRB date if no date was previously scheduled and no new date is provided", func(t *testing.T) {
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: nil,
+					}
 
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
+
+					assert.Nil(t, intake.GRBDate)
+				})
+
+				// frontend will warn in this situation, but it's valid; see item 3 in https://cmsgov.slack.com/archives/CNU2B59UH/p1690383278796169?thread_ts=1690292116.615049&cid=CNU2B59UH
+				t.Run("*Should* update GRB date if no date was previously scheduled and a new date in the past is provided", func(t *testing.T) {
+					newDate := &yesterday
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: nil,
+					}
+
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+
+					assert.EqualValues(t, newDate, intake.GRBDate)
+				})
+
+				t.Run("*Should* update GRB date if no date was previously scheduled and a new date in the future is provided", func(t *testing.T) {
+					newDate := &tomorrow
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: nil,
+					}
+
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+
+					assert.EqualValues(t, newDate, intake.GRBDate)
+				})
+			})
+
+			t.Run("Meeting was scheduled before this action for a date in the past", func(t *testing.T) {
+				t.Run("Should *clear* GRB date if the previously scheduled date is in the past and no new date is provided", func(t *testing.T) {
+					previousDate := &twoDaysAgo
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: previousDate,
+					}
+
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
+
+					assert.Nil(t, intake.GRBDate)
+				})
+
+				// frontend will warn in this situation, but it's valid; see item 3 in https://cmsgov.slack.com/archives/CNU2B59UH/p1690383278796169?thread_ts=1690292116.615049&cid=CNU2B59UH
+				t.Run("*Should* update GRB date if the previously scheduled date is in the past and a new date in the past is provided", func(t *testing.T) {
+					previousDate := &twoDaysAgo
+					newDate := &yesterday
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: previousDate,
+					}
+
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+
+					assert.EqualValues(t, newDate, intake.GRBDate)
+				})
+
+				t.Run("*Should* update GRB date if the previously scheduled date is in the past and a new date in the future is provided", func(t *testing.T) {
+					previousDate := &twoDaysAgo
+					newDate := &tomorrow
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: previousDate,
+					}
+
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+
+					assert.EqualValues(t, newDate, intake.GRBDate)
+				})
+			})
+
+			t.Run("Meeting was scheduled before this action for a date in the future", func(t *testing.T) {
+				t.Run("Should *not* update GRB date if the previously scheduled date is in the future and no new date is provided", func(t *testing.T) {
+					previousDate := &tomorrow
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: previousDate,
+					}
+
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, nil, mockCurrentTime)
+
+					assert.EqualValues(t, previousDate, intake.GRBDate)
+				})
+
+				// frontend will warn in this situation, but it's valid; see item 3 in https://cmsgov.slack.com/archives/CNU2B59UH/p1690383278796169?thread_ts=1690292116.615049&cid=CNU2B59UH
+				t.Run("*Should* update GRB date if the previously scheduled date is in the future and a new date in the past is provided", func(t *testing.T) {
+					previousDate := &tomorrow
+					newDate := &yesterday
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: previousDate,
+					}
+
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+
+					assert.EqualValues(t, newDate, intake.GRBDate)
+				})
+
+				t.Run("*Should* update GRB date if the previously scheduled date is in the future and a new date in the future is provided", func(t *testing.T) {
+					previousDate := &tomorrow
+					newDate := &inTwoDays
+					intake := &models.SystemIntake{
+						Step:    models.SystemIntakeStepINITIALFORM,
+						GRBDate: previousDate,
+					}
+
+					modifyIntakeToNewStep(intake, model.SystemIntakeStepToProgressToGrbMeeting, newDate, mockCurrentTime)
+
+					assert.EqualValues(t, newDate, intake.GRBDate)
+				})
+			})
 		})
 	})
 }
