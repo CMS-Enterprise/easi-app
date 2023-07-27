@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Form, FormGroup, GridContainer } from '@trussworks/react-uswds';
+import { Form, FormGroup } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
@@ -103,7 +103,7 @@ const ActionForm = ({
     recipients.shouldNotifyITInvestment;
 
   return (
-    <GridContainer className="margin-bottom-10 padding-bottom-2">
+    <div className="margin-bottom-10 padding-bottom-2">
       <Breadcrumbs
         items={[
           { text: t('Home'), url: '/' },
@@ -230,7 +230,7 @@ const ActionForm = ({
           submitDisabled
         />
       </Form>
-    </GridContainer>
+    </div>
   );
 };
 
