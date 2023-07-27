@@ -31,13 +31,11 @@ func ProgressIntakeToNewStep(
 
 	err = intakeIsValidForProgressToNewStep(intake, input.NewStep)
 	if err != nil {
-		// TODO - log?
 		return nil, err
 	}
 
 	err = modifyIntakeToNewStep(intake, input.NewStep, input.MeetingDate, time.Now())
 	if err != nil {
-		// TODO - log?
 		return nil, err
 	}
 
@@ -161,11 +159,9 @@ func ProgressIntakeToNewStep(
 	return updatedIntake, nil
 }
 
-// TODO - potentially inline if logic is simple enough
 // TODO - if not inlined - better name
 func intakeIsValidForProgressToNewStep(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) error {
 	if intake.State == models.SystemIntakeStateCLOSED {
-		// TODO - log?
 		return &apperrors.InvalidActionError{
 			ActionType: models.ActionTypePROGRESSTONEWSTEP,
 			Message:    "Can't take Progress to New Step action on closed intakes",
@@ -173,7 +169,6 @@ func intakeIsValidForProgressToNewStep(intake *models.SystemIntake, newStep mode
 	}
 
 	if string(intake.Step) == string(newStep) {
-		// TODO - log?
 		return &apperrors.InvalidActionError{
 			ActionType: models.ActionTypePROGRESSTONEWSTEP,
 			Message:    "Progress to New Step needs to change intake to a different step",
