@@ -66,8 +66,8 @@ const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
-  const { action } = useParams<{
-    action?: string;
+  const { subPage } = useParams<{
+    subPage?: string;
   }>();
 
   const { state, decisionState } = systemIntake;
@@ -79,19 +79,19 @@ const Actions = ({ systemIntake }: ActionsProps) => {
     <div className="grt-admin-actions">
       {
         /* Show form if action is selected */
-        action ? (
+        subPage ? (
           <Switch>
             <Route
               path="/governance-review-team/:systemId/actions/request-edits"
-              render={() => <RequestEdits />}
+              render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions/next-step"
-              render={() => <NextStep />}
+              render={() => <NextStep systemIntakeId={systemIntake.id} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions/decision"
-              render={() => <SubmitDecision />}
+              render={() => <SubmitDecision systemIntakeId={systemIntake.id} />}
             />
           </Switch>
         ) : (

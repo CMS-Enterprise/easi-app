@@ -418,7 +418,7 @@ exports[`Trb Request form: Subject areas checks subject area form elements 1`] =
           </span>
         </label>
         <textarea
-          class="usa-textarea"
+          class="usa-textarea usa-textarea__size-md"
           data-testid="subjectAreaOptionOther"
           id="subjectAreaOptionOther"
           name="subjectAreaOptionOther"

@@ -53,14 +53,19 @@ import './index.scss';
 
 const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
+
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
-  const { systemId, activePage } = useParams<{
+  const { systemId, activePage, subPage } = useParams<{
     systemId: string;
     activePage: string;
+    subPage?: string;
   }>();
 
-  const flags = useFlags();
+  /** If true, hides summary and side navigation for full width layout */
+  const fullPageLayout: boolean =
+    flags.itGovV2Enabled && activePage === 'actions' && !!subPage;
 
   const { loading, data, refetch } = useQuery<
     GetSystemIntake,
@@ -96,7 +101,7 @@ const RequestOverview = () => {
 
   return (
     <MainContent className="easi-grt" data-testid="grt-request-overview">
-      {systemIntake && (
+      {systemIntake && !fullPageLayout && (
         <Summary
           id={systemIntake.id}
           requester={systemIntake.requester}
@@ -108,59 +113,73 @@ const RequestOverview = () => {
           lcid={systemIntake.lcid}
         />
       )}
-      <AccordionNavigation
-        activePage={activePage}
-        subNavItems={subNavItems(systemId)}
-      />
-      <section className="grid-container margin-bottom-5 margin-top-7">
+      {!fullPageLayout && (
+        <AccordionNavigation
+          activePage={activePage}
+          subNavItems={subNavItems(systemId)}
+        />
+      )}
+      <section
+        className={classnames('grid-container', {
+          'margin-bottom-5 margin-top-7': !fullPageLayout
+        })}
+      >
         <Grid row gap>
-          <nav className="desktop:grid-col-3 desktop:display-block display-none">
-            <ul className="easi-grt__nav-list margin-top-0">
-              <li className="margin-bottom-6 margin-top-0">
-                <Link
-                  to="/"
-                  className="display-flex flex-align-center hover:text-primary-dark"
-                >
-                  <IconArrowBack className="margin-right-1" aria-hidden />
-                  {t('back.allRequests')}
-                </Link>
-              </li>
-              {subNavItems(systemId).map(({ aria, groupEnd, route, text }) => (
-                <li
-                  key={`desktop-sidenav-${text}`}
-                  className={classnames({
-                    'easi-grt__nav-link--border': groupEnd
-                  })}
-                >
-                  {aria ? (
-                    <Link
-                      to={route}
-                      aria-label={t(aria)}
-                      className={getNavLinkClasses(route)}
-                      data-testid={`grt-nav-${text}-link`}
-                    >
-                      {t(text)}
-                    </Link>
-                  ) : (
-                    <Link
-                      to={route}
-                      className={getNavLinkClasses(route)}
-                      data-testid={`grt-nav-${text}-link`}
-                    >
-                      {t(text)}
-                    </Link>
-                  )}
+          {!fullPageLayout && (
+            <nav className="desktop:grid-col-3 desktop:display-block display-none">
+              <ul className="easi-grt__nav-list margin-top-0">
+                <li className="margin-bottom-6 margin-top-0">
+                  <Link
+                    to="/"
+                    className="display-flex flex-align-center hover:text-primary-dark"
+                  >
+                    <IconArrowBack className="margin-right-1" aria-hidden />
+                    {t('back.allRequests')}
+                  </Link>
                 </li>
-              ))}
-            </ul>
-          </nav>
+                {subNavItems(systemId).map(
+                  ({ aria, groupEnd, route, text }) => (
+                    <li
+                      key={`desktop-sidenav-${text}`}
+                      className={classnames({
+                        'easi-grt__nav-link--border': groupEnd
+                      })}
+                    >
+                      {aria ? (
+                        <Link
+                          to={route}
+                          aria-label={t(aria)}
+                          className={getNavLinkClasses(route)}
+                          data-testid={`grt-nav-${text}-link`}
+                        >
+                          {t(text)}
+                        </Link>
+                      ) : (
+                        <Link
+                          to={route}
+                          className={getNavLinkClasses(route)}
+                          data-testid={`grt-nav-${text}-link`}
+                        >
+                          {t(text)}
+                        </Link>
+                      )}
+                    </li>
+                  )
+                )}
+              </ul>
+            </nav>
+          )}
+
           {loading && (
             <div className="margin-x-auto">
               <PageLoading />
             </div>
           )}
+
           {!loading && !!systemIntake && (
-            <section className="desktop:grid-col-9">
+            <section
+              className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}
+            >
               <Route
                 path="/governance-review-team/:systemId/intake-request"
                 render={() => {
@@ -205,7 +224,7 @@ const RequestOverview = () => {
                 // TODO: remove conditional statement and v1 action routes after flag is deprecated
                 flags.itGovV2Enabled ? (
                   <Route
-                    path="/governance-review-team/:systemId/actions/:action?"
+                    path="/governance-review-team/:systemId/actions/:subPage?"
                     render={() => <Actions systemIntake={systemIntake} />}
                   />
                 ) : (

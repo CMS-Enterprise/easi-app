@@ -7,7 +7,7 @@ import TaskStatusTag, {
   taskStatusClassName
 } from 'components/shared/TaskStatusTag';
 import { TaskListItemDateInfo } from 'types/taskList';
-import { formatDateLocal } from 'utils/date';
+import { formatDateLocal, formatDateUtc } from 'utils/date';
 
 import './index.scss';
 
@@ -91,7 +91,11 @@ const TaskListItem = ({
                 {statusDateInfo && (
                   <>
                     {t(`taskStatusInfo.${statusDateInfo.label}`)}
-                    <br /> {formatDateLocal(statusDateInfo.value, 'MM/dd/yyyy')}
+                    <br />{' '}
+                    {(statusDateInfo.isUtc ? formatDateUtc : formatDateLocal)(
+                      statusDateInfo.value,
+                      'MM/dd/yyyy'
+                    )}
                   </>
                 )}
               </p>
