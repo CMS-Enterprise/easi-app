@@ -136,7 +136,6 @@ func TestIntakeFormStatus(t *testing.T) {
 
 }
 
-// TODO: fullly implement the unit tests when the status calculations have been developed. Store methods should ideally happen on a parent resolver, so the child requests can utilize the same object
 func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 
