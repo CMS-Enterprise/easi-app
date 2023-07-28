@@ -33,23 +33,22 @@ func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus
 
 // FeedbackFromInitialReviewStatus calculates the ITGovTaskListStatus for the feedback section of a system intake task list  for the requester view
 func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovFeedbackStatus, error) {
-	if intake.Step != models.SystemIntakeStepINITIALFORM || intake.RequestFormState == models.SIRFSEditsRequested { // If it isn't at the initial form state, or it has
+	if intake.Step != models.SystemIntakeStepINITIALFORM {
 		return models.ITGFBSCompleted, nil
 	}
-
-	// Step == initial form
-
-	// Form is in progress or not stated
-	if intake.RequestFormState == models.SIRFSInProgress || intake.RequestFormState == models.SIRFSNotStarted {
+	switch intake.RequestFormState {
+	case models.SIRFSNotStarted, models.SIRFSInProgress:
 		return models.ITGFBSCantStart, nil
-	}
 
-	// Form was been submitted
-	if intake.RequestFormState == models.SIRFSSubmitted {
+	case models.SIRFSSubmitted:
 		return models.ITGFBSInReview, nil
-	}
 
-	return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+	case models.SIRFSEditsRequested: // Note, if the state changes back to in_progress, this status will be CANT_START
+		return models.ITGFBSCompleted, nil
+
+	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+	}
 
 }
 
