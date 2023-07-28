@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -313,5 +314,22 @@ func TestUpdateIntake(t *testing.T) {
 				})
 			})
 		})
+	})
+
+	t.Run("invalid new step should return InvalidEnumError", func(t *testing.T) {
+		mockCurrentTime := time.Unix(0, 0)
+		intake := &models.SystemIntake{
+			Step: models.SystemIntakeStepINITIALFORM,
+		}
+		invalidNewStep := model.SystemIntakeStepToProgressTo("")
+
+		err := updateIntake(intake, invalidNewStep, nil, mockCurrentTime)
+
+		assert.Error(t, err)
+
+		// check that err is the right type
+		invalidEnumErr := &apperrors.InvalidEnumError{}
+		assert.ErrorAs(t, err, &invalidEnumErr)
+		assert.EqualValues(t, "SystemIntakeStepToProgressTo", invalidEnumErr.Type)
 	})
 }

@@ -293,15 +293,15 @@ type InvalidEnumError struct {
 }
 
 // NewInvalidEnumError creates an invalid state error and wraps it as apprpriate
-func NewInvalidEnumError[EnumType ~string](err error, value EnumType, enumType string) InvalidEnumError {
-	return InvalidEnumError{
+func NewInvalidEnumError[EnumType ~string](err error, value EnumType, enumType string) *InvalidEnumError {
+	return &InvalidEnumError{
 		Err:   err,
 		Value: string(value),
 		Type:  enumType,
 	}
 }
 
-func (e InvalidEnumError) Error() string {
+func (e *InvalidEnumError) Error() string {
 	return fmt.Sprint("Value ", e.Value, " does not correspond to a valid enumeration for type ", e.Type)
 }
 
