@@ -1,0 +1,46 @@
+.easi-toastui-editor {
+  .toastui-editor-defaultUI {
+    border-color: #5c5c5c;
+    border-radius: 0;
+  }
+
+  .toastui-editor-toolbar {
+    height: auto;
+  }
+  .toastui-editor-defaultUI-toolbar {
+    height: auto;
+    background: transparent;
+    padding: 4px 2px 2px;
+  }
+
+  .toastui-editor-toolbar-icons {
+    border-color: white;
+    border-radius: 4px;
+    margin: 0 4px 0 0;
+    // &.active {
+    //   // outline: none;
+    //   // background: #f0f0f0;
+    // }
+  }
+
+  .toastui-editor-toolbar-divider {
+    margin: 8px 8px 0 4px;
+    height: 16px;
+  }
+
+  .ProseMirror.toastui-editor-contents {
+    padding: 6px 9px 9px;
+    font-family: 'Public Sans';
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .toastui-editor-contents ol > li::before {
+    color: #1b1b1b;
+  }
+
+  .toastui-editor-contents ul > li::before {
+    margin-top: 10px;
+    background-color: #1b1b1b;
+  }
+}
