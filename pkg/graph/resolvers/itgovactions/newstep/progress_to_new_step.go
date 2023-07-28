@@ -159,11 +159,19 @@ func ProgressIntake(
 	return updatedIntake, nil
 }
 
+// the frontend shouldn't allow users to take any invalid actions, but validate server-side to make sure
 func isIntakeValid(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) error {
 	if intake.State == models.SystemIntakeStateCLOSED {
 		return &apperrors.InvalidActionError{
 			ActionType: models.ActionTypePROGRESSTONEWSTEP,
 			Message:    "Can't take Progress to New Step action on closed intakes",
+		}
+	}
+
+	if intake.Step == models.SystemIntakeStepINITIALFORM && intake.RequestFormState == models.SIRFSNotStarted {
+		return &apperrors.InvalidActionError{
+			ActionType: models.ActionTypePROGRESSTONEWSTEP,
+			Message:    "Can't take Progress to New Step action on intakes that haven't started the Request Form",
 		}
 	}
 
