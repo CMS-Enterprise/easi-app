@@ -136,9 +136,10 @@ func (suite *ResolverSuite) TestFeedbackFromInitialReviewStatus() {
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := FeedbackFromInitialReviewStatus(&intake)
+	status, err := FeedbackFromInitialReviewStatus(&intake)
 
 	suite.EqualValues(models.ITGFBSCantStart, status)
+	suite.NoError(err)
 
 }
 func (suite *ResolverSuite) TestDecisionAndNextStepsStatus() {

@@ -27,13 +27,30 @@ func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus
 	case models.SIRFSSubmitted:
 		return models.ITGISCompleted, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("invalid has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
 	}
 }
 
 // FeedbackFromInitialReviewStatus calculates the ITGovTaskListStatus for the feedback section of a system intake task list  for the requester view
-func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) models.ITGovFeedbackStatus {
-	return models.ITGFBSCantStart
+func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovFeedbackStatus, error) {
+	if intake.Step != models.SystemIntakeStepINITIALFORM || intake.RequestFormState == models.SIRFSEditsRequested { // If it isn't at the initial form state, or it has
+		return models.ITGFBSCompleted, nil
+	}
+
+	// Step == initial form
+
+	// Form is in progress or not stated
+	if intake.RequestFormState == models.SIRFSInProgress || intake.RequestFormState == models.SIRFSNotStarted {
+		return models.ITGFBSCantStart, nil
+	}
+
+	// Form was been submitted
+	if intake.RequestFormState == models.SIRFSSubmitted {
+		return models.ITGFBSInReview, nil
+	}
+
+	return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+
 }
 
 // BizCaseDraftStatus calculates the ITGovDraftBusinessCaseStatus for the BizCaseDraft section for the system intake task list for the requester view
