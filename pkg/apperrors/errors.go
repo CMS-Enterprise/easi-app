@@ -277,11 +277,10 @@ func (e *InvalidEUAIDError) Error() string {
 // such as trying to use Progress to New Step on a closed intake (instead of the proper Reopen action)
 type InvalidActionError struct {
 	ActionType models.ActionType
-	Message    string // TODO - make more strongly typed?
+	Message    string
 }
 
 func (e *InvalidActionError) Error() string {
-	// TODO - revise error message?
 	return fmt.Sprintf("Action type %s is invalid and can't be performed: %s", e.ActionType, e.Message)
 }
 
