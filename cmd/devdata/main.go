@@ -71,13 +71,13 @@ func main() {
 		s3Client: &s3Client,
 	}
 
-	makeAccessibilityRequest("TACO", store)
-	makeAccessibilityRequest("Big Project", store)
+	makeAccessibilityRequest("TACO", logger, store)
+	makeAccessibilityRequest("Big Project", logger, store)
 
 	now := time.Now()
 	yyyy, mm, dd := now.Date()
 
-	makeAccessibilityRequest("Seeded 508 Request", store, func(i *models.AccessibilityRequest) {
+	makeAccessibilityRequest("Seeded 508 Request", logger, store, func(i *models.AccessibilityRequest) {
 		i.ID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
 	})
 
@@ -235,7 +235,7 @@ func main() {
 	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
 	makeSystemIntakeWithEditsRequested("Edits requested on final business case", logger, store, "USR1", intakeID, "final biz case feedback", models.GRFTFinalBusinessCase)
 
-	must(nil, seederConfig.seedTRBRequests(ctx))
+	must[any](nil, seederConfig.seedTRBRequests(ctx))
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -292,8 +292,9 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		cb(&intake)
 	}
 
-	must(store.CreateSystemIntake(ctx, &intake))
-	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
+	// get return value from CreateSystemIntake, so we get field values set by database defaults
+	createdIntake := must(store.CreateSystemIntake(ctx, &intake))
+	updatedIntake := must(store.UpdateSystemIntake(ctx, createdIntake)) // required to set lifecycle id, which isn't set in CreateSystemIntake()
 
 	tenMinutesAgo := time.Now().Add(-10 * time.Minute)
 	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
@@ -325,7 +326,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 
 	must(store.UpdateSystemIntakeFundingSources(ctx, intake.ID, fundingSources))
 
-	return &intake
+	return updatedIntake
 }
 
 func makeSystemIntakeWithProgressToNextStep(
@@ -343,6 +344,8 @@ func makeSystemIntakeWithProgressToNextStep(
 
 	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
 		i.ID = intakeID
+		i.Step = models.SystemIntakeStepINITIALFORM
+		i.RequestFormState = models.SIRFSSubmitted
 	})
 
 	input := &model.SystemIntakeProgressToNewStepsInput{
@@ -450,22 +453,19 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 
 var lcid = 0
 
-func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...func(*models.AccessibilityRequest)) *models.AccessibilityRequest {
+func makeAccessibilityRequest(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.AccessibilityRequest)) *models.AccessibilityRequest {
 	ctx := context.Background()
 
 	lifecycleID := fmt.Sprintf("%06d", lcid)
 	lcid = lcid + 1
 
-	intake := models.SystemIntake{
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
-		RequestType:            models.SystemIntakeRequestTypeNEW,
-		ProjectName:            null.StringFrom(name),
-		BusinessOwner:          null.StringFrom("Shane Clark"),
-		BusinessOwnerComponent: null.StringFrom("OIT"),
-		LifecycleID:            null.StringFrom(lifecycleID),
-	}
-	must(store.CreateSystemIntake(ctx, &intake))
-	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
+	intake := makeSystemIntake(name, nil, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.RequestType = models.SystemIntakeRequestTypeNEW
+		i.BusinessOwner = null.StringFrom("Shane Clark")
+		i.BusinessOwnerComponent = null.StringFrom("OIT")
+		i.LifecycleID = null.StringFrom(lifecycleID)
+	})
 
 	accessibilityRequest := models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
@@ -490,10 +490,12 @@ func makeTestDate(logger *zap.Logger, store *storage.Store, callbacks ...func(*m
 	must(store.CreateTestDate(ctx, &testDate))
 }
 
-func must(_ interface{}, err error) {
+func must[T any](returnData T, err error) T {
 	if err != nil {
 		panic(err)
 	}
+
+	return returnData
 }
 
 func date(year, month, day int) *time.Time {
