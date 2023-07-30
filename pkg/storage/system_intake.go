@@ -136,7 +136,11 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:created_at,
 			:updated_at
 		)`
-	_, err := s.db.NamedExec(
+
+	tx := s.db.MustBegin()
+	defer tx.Rollback()
+
+	_, err := tx.NamedExec(
 		createIntakeSQL,
 		intake,
 	)
@@ -147,6 +151,102 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		)
 		return nil, err
 	}
+
+	// if any of the step states have been initialized to proper values, update the database record with those values
+
+	if intake.RequestFormState != "" {
+		updateRequestFormStateSQL := `
+			UPDATE system_intakes
+			SET
+				request_form_state = :request_form_state
+			WHERE system_intakes.id = :id
+		`
+
+		_, err = tx.NamedExec(
+			updateRequestFormStateSQL,
+			intake,
+		)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to create system intake with error %s", err),
+				zap.String("user", intake.EUAUserID.ValueOrZero()),
+			)
+			return nil, err
+		}
+	}
+
+	if intake.DraftBusinessCaseState != "" {
+		updateDraftBusinessCaseStateSQL := `
+			UPDATE system_intakes
+			SET
+				draft_business_case_state = :draft_business_case_state
+			WHERE system_intakes.id = :id
+		`
+
+		_, err = tx.NamedExec(
+			updateDraftBusinessCaseStateSQL,
+			intake,
+		)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to create system intake with error %s", err),
+				zap.String("user", intake.EUAUserID.ValueOrZero()),
+			)
+			return nil, err
+		}
+	}
+
+	if intake.FinalBusinessCaseState != "" {
+		updateFinalBusinessCaseStateSQL := `
+			UPDATE system_intakes
+			SET
+				final_business_case_state = :final_business_case_state
+			WHERE system_intakes.id = :id
+		`
+
+		_, err = tx.NamedExec(
+			updateFinalBusinessCaseStateSQL,
+			intake,
+		)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to create system intake with error %s", err),
+				zap.String("user", intake.EUAUserID.ValueOrZero()),
+			)
+			return nil, err
+		}
+	}
+
+	if intake.DecisionState != "" {
+		updateDecisionStateSQL := `
+			UPDATE system_intakes
+			SET
+				decision_state = :decision_state
+			WHERE system_intakes.id = :id
+		`
+
+		_, err = tx.NamedExec(
+			updateDecisionStateSQL,
+			intake,
+		)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to create system intake with error %s", err),
+				zap.String("user", intake.EUAUserID.ValueOrZero()),
+			)
+			return nil, err
+		}
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to create system intake with error %s", err),
+			zap.String("user", intake.EUAUserID.ValueOrZero()),
+		)
+		return nil, err
+	}
+
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
@@ -212,7 +312,11 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			rejection_reason = :rejection_reason,
 			admin_lead = :admin_lead,
 			cedar_system_id = :cedar_system_id,
-			has_ui_changes = :has_ui_changes
+			has_ui_changes = :has_ui_changes,
+			request_form_state = :request_form_state,
+			draft_business_case_state = :draft_business_case_state,
+			final_business_case_state = :final_business_case_state,
+			decision_state = :decision_state
 		WHERE system_intakes.id = :id
 	`
 	_, err := s.db.NamedExec(
