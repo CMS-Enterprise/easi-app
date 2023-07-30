@@ -13,10 +13,13 @@ func (s *StoreTestSuite) TestFetchAccessibilityMetrics() {
 
 	ctx := context.Background()
 	intake := testhelpers.NewSystemIntake()
-	_, err := s.store.CreateSystemIntake(ctx, &intake)
+	createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
 	s.NoError(err)
 
-	_, err = s.store.UpdateSystemIntake(ctx, &intake)
+	// update intake's LCID, because it's not set by CreateSystemIntake
+	createdIntakeWithLCID := *createdIntake
+	createdIntakeWithLCID.LifecycleID = intake.LifecycleID
+	_, err = s.store.UpdateSystemIntake(ctx, &createdIntakeWithLCID)
 	s.NoError(err)
 
 	s.Run("returns correct metrics", func() {
