@@ -178,7 +178,7 @@ func isIntakeValid(intake *models.SystemIntake, newStep model.SystemIntakeStepTo
 	if string(intake.Step) == string(newStep) {
 		return &apperrors.InvalidActionError{
 			ActionType: models.ActionTypePROGRESSTONEWSTEP,
-			Message:    "Progress to New Step needs to change intake to a different step",
+			Message:    fmt.Sprintf("Progress to New Step needs to change intake to a different step, intake is already at %v", newStep),
 		}
 	}
 
