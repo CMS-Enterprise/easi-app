@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -57,6 +58,24 @@ func GrbMeetingStatus(intake *models.SystemIntake) models.ITGovGRBStatus {
 }
 
 // DecisionAndNextStepsStatus calculates the ITGovDecisionStatus for the Decisions section for the system intake task list for the requester view
-func DecisionAndNextStepsStatus(intake *models.SystemIntake) models.ITGovDecisionStatus {
-	return models.ITGDSCantStart
+func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisionStatus, error) {
+	if !(intake.Step == models.SystemIntakeStepGRBMEETING || intake.Step == models.SystemIntakeStepDECISION) { // If not in either of these steps, we can't issue a decision yet. Note, this does not check that the step is a valid enum
+		return models.ITGDSCantStart, nil
+	}
+	if intake.Step == models.SystemIntakeStepGRBMEETING {
+		if intake.GRBDate == nil {
+			return models.ITGDSCantStart, nil
+		}
+		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
+			return models.ITGDSCantStart, nil
+		}
+		// Meeting has  happened, intake is waiting on a decision
+		return models.ITGDSInReview, nil
+	}
+	// if the step is decision state, the step has to be completed, and a decision has to have been made
+	if intake.DecisionState == models.SIDSNoDecision {
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its decision state. a decision must be made in order to be in the decision state"), intake.RequestFormState, "SystemIntakeDecisionState")
+	}
+
+	return models.ITGDSCompleted, nil
 }
