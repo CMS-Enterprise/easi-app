@@ -70,7 +70,7 @@ each time changes are made to `.envrc` or `.envrc.local`.
 Debugging is accomplished locally with a headless delve dap server running in docker. 
 - Withing the project directory run `scripts/dev up:backend:debug` or `scripts/dev up:debug` to run without waiting for the debugger to attach
 - Run `scripts/dev up:backend:debug:wait ` or `scripts/dev up:debug:wait` to start the application and wait for the debugger before the application runs.
-- Connect visual studio code by selecting the start debugging option.
+- Connect VS Code by selecting the start debugging option, using the "Attach to Docker" configuration.
 
 
   
