@@ -459,13 +459,16 @@ func makeAccessibilityRequest(name string, logger *zap.Logger, store *storage.St
 	lifecycleID := fmt.Sprintf("%06d", lcid)
 	lcid = lcid + 1
 
-	intake := makeSystemIntake(name, nil, store, func(i *models.SystemIntake) {
-		i.Status = models.SystemIntakeStatusLCIDISSUED
-		i.RequestType = models.SystemIntakeRequestTypeNEW
-		i.BusinessOwner = null.StringFrom("Shane Clark")
-		i.BusinessOwnerComponent = null.StringFrom("OIT")
-		i.LifecycleID = null.StringFrom(lifecycleID)
-	})
+	intake := models.SystemIntake{
+		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		ProjectName:            null.StringFrom(name),
+		BusinessOwner:          null.StringFrom("Shane Clark"),
+		BusinessOwnerComponent: null.StringFrom("OIT"),
+	}
+	createdIntake := must(store.CreateSystemIntake(ctx, &intake))
+	createdIntake.LifecycleID = null.StringFrom(lifecycleID)
+	must(store.UpdateSystemIntake(ctx, createdIntake)) // required to set lifecycle id
 
 	accessibilityRequest := models.AccessibilityRequest{
 		Name:      fmt.Sprintf("%s v2", name),
