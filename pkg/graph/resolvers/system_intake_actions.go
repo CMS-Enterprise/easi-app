@@ -24,26 +24,28 @@ func CreateSystemIntakeActionRequestEdits(
 	if err != nil {
 		return nil, err
 	}
+	// Set the intake current step to the requested edits step
+	formStepMap := map[model.SystemIntakeFormStep]models.SystemIntakeStep{
+		model.SystemIntakeFormStepInitialRequestForm: models.SystemIntakeStepINITIALFORM,
+		model.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDRAFTBIZCASE,
+		model.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFINALBIZCASE,
+	}
+	intake.Step = formStepMap[input.IntakeFormStep]
 	var targetForm models.GovernanceRequestFeedbackTargetForm
-	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM:
+	// Set the state of the requested form step and set the targeted feedback step
+	switch input.IntakeFormStep {
+	case model.SystemIntakeFormStepInitialRequestForm:
 		intake.RequestFormState = models.SIRFSEditsRequested
 		targetForm = models.GovernanceRequestFeedbackTargetIntakeRequest
-	case models.SystemIntakeStepDRAFTBIZCASE:
+	case model.SystemIntakeFormStepDraftBusinessCase:
 		intake.DraftBusinessCaseState = models.SIRFSEditsRequested
 		targetForm = models.GovernanceRequestFeedbackTargetDraftBusinessCase
-	case models.SystemIntakeStepFINALBIZCASE:
+	case model.SystemIntakeFormStepFinalBusinessCase:
 		intake.FinalBusinessCaseState = models.SIRFSEditsRequested
 		targetForm = models.GovernanceRequestFeedbackTargetFinalBusinessCase
-	case models.SystemIntakeStepGRBMEETING:
-		fallthrough
-	case models.SystemIntakeStepGRTMEETING:
-		fallthrough
-	case models.SystemIntakeStepDECISION:
-		fallthrough
 	default:
 		return nil, &apperrors.BadRequestError{
-			Err: fmt.Errorf("Cannot request edits on %s", intake.Step),
+			Err: fmt.Errorf("Cannot request edits on %s", input.IntakeFormStep),
 		}
 	}
 	intake, err = store.UpdateSystemIntake(ctx, intake)
