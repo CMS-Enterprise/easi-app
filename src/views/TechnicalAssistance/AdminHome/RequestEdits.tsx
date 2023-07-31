@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -16,7 +16,11 @@ import {
   CreateTrbRequestFeedback,
   CreateTrbRequestFeedbackVariables
 } from 'queries/types/CreateTrbRequestFeedback';
-import { TRBFeedbackAction, TRBFormStatus } from 'types/graphql-global-types';
+import {
+  TRBFeedbackAction,
+  TRBFeedbackStatus,
+  TRBFormStatus
+} from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 
@@ -45,8 +49,8 @@ function RequestEdits() {
   const formContext = useContext(TRBRequestContext);
   const { loading: contextLoading } = formContext;
 
-  const formStatus: TRBFormStatus | undefined =
-    formContext?.data?.trbRequest?.taskStatuses?.formStatus;
+  const { formStatus, feedbackStatus } =
+    formContext?.data?.trbRequest?.taskStatuses || {};
 
   let actionText: 'actionRequestEdits' | 'actionReadyForConsult';
   let feedbackAction: TRBFeedbackAction;
@@ -106,6 +110,18 @@ function RequestEdits() {
       });
   };
 
+  const disableFormText = useMemo(() => {
+    // Form is still in draft
+    if (formStatus !== TRBFormStatus.COMPLETED)
+      return t('adminHome.requestInDraftAlt');
+
+    // Form has already been marked as ready for consult
+    if (feedbackStatus === TRBFeedbackStatus.COMPLETED)
+      return t('actionRequestEdits.formDisabled');
+
+    return undefined;
+  }, [feedbackStatus, formStatus, t]);
+
   if (contextLoading) return <PageLoading />;
 
   return (
@@ -129,11 +145,7 @@ function RequestEdits() {
           text: t(`${actionText}.breadcrumb`)
         }
       ]}
-      disableFormText={
-        formStatus !== TRBFormStatus.COMPLETED
-          ? t('adminHome.requestInDraftAlt')
-          : undefined
-      }
+      disableFormText={disableFormText}
     >
       <Controller
         name="feedbackMessage"

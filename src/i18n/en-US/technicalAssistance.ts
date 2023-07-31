@@ -946,6 +946,7 @@ const technicalAssistance = {
     feedbackMessage: 'Edits requested'
   },
   actionRequestEdits: {
+    formDisabled: 'Feedback can no longer be submitted for this request.',
     breadcrumb: 'Request edits',
     heading: 'Action: request edits',
     description:
