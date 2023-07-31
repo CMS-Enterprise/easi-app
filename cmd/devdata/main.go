@@ -342,11 +342,13 @@ func makeSystemIntakeWithProgressToNextStep(
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
 
-	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
+	createdIntake := makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
 		i.ID = intakeID
 		i.Step = models.SystemIntakeStepINITIALFORM
-		i.RequestFormState = models.SIRFSSubmitted
+		// i.RequestFormState = models.SIRFSSubmitted
 	})
+	createdIntake.RequestFormState = models.SIRFSSubmitted
+	must(store.UpdateSystemIntake(ctx, createdIntake)) // update intake with non-default RequestFormState
 
 	input := &model.SystemIntakeProgressToNewStepsInput{
 		SystemIntakeID:     intakeID,
