@@ -1,4 +1,10 @@
 .easi-toastui-editor {
+  .toastui-editor-contents {
+    font-family: 'Public Sans';
+    font-size: 16px;
+    line-height: 22px;
+  }
+
   .toastui-editor-defaultUI {
     border-color: #5c5c5c;
     border-radius: 0;
@@ -30,9 +36,6 @@
 
   .ProseMirror.toastui-editor-contents {
     padding: 6px 9px 9px;
-    font-family: 'Public Sans';
-    font-size: 16px;
-    line-height: 22px;
   }
 
   .toastui-editor-contents ol > li::before {
@@ -43,4 +46,5 @@
     margin-top: 10px;
     background-color: #1b1b1b;
   }
+
 }
