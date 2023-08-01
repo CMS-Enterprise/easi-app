@@ -76,7 +76,6 @@ In publishing and graphic design, Lorem ipsum is a placeholder text commonly use
               hideModeSwitch
               toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
               usageStatistics={false}
-              useCommandShortcut={false}
               theme="white"
             />
           </div>
