@@ -59,10 +59,11 @@ func GrbMeetingStatus(intake *models.SystemIntake) models.ITGovGRBStatus {
 
 // DecisionAndNextStepsStatus calculates the ITGovDecisionStatus for the Decisions section for the system intake task list for the requester view
 func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisionStatus, error) {
-	if !(intake.Step == models.SystemIntakeStepGRBMEETING || intake.Step == models.SystemIntakeStepDECISION) { // If not in either of these steps, we can't issue a decision yet. Note, this does not check that the step is a valid enum
+
+	switch intake.Step {
+	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE:
 		return models.ITGDSCantStart, nil
-	}
-	if intake.Step == models.SystemIntakeStepGRBMEETING {
+	case models.SystemIntakeStepGRBMEETING:
 		if intake.GRBDate == nil {
 			return models.ITGDSCantStart, nil
 		}
@@ -71,11 +72,15 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 		}
 		// Meeting has  happened, intake is waiting on a decision
 		return models.ITGDSInReview, nil
-	}
-	// if the step is decision state, the step has to be completed, and a decision has to have been made
-	if intake.DecisionState == models.SIDSNoDecision {
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its decision state. a decision must be made in order to be in the decision state"), intake.RequestFormState, "SystemIntakeDecisionState")
-	}
 
-	return models.ITGDSCompleted, nil
+	case models.SystemIntakeStepDECISION:
+
+		if intake.DecisionState == models.SIDSNoDecision { // if the step is decision state, the step has to be completed, and a decision has to have been made
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its decision state. a decision must be made in order to be in the decision state"), intake.RequestFormState, "SystemIntakeDecisionState")
+		}
+
+		return models.ITGDSCompleted, nil
+	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.RequestFormState, "SystemIntakeStep")
+	}
 }
