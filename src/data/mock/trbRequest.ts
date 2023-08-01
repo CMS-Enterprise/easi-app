@@ -182,6 +182,22 @@ export const trbRequestSummary: Summary = {
   adminNotes
 };
 
+export const getTrbRequestSummary = (
+  fields:
+    | {
+        taskStatuses?: Partial<TaskStatuses>;
+        status?: TRBRequestStatus;
+      }
+    | undefined
+): Summary => ({
+  ...trbRequestSummary,
+  status: fields?.status || TRBRequestStatus.DRAFT_REQUEST_FORM,
+  taskStatuses: {
+    ...taskStatuses,
+    ...fields?.taskStatuses
+  }
+});
+
 export const getTrbRequestSummaryQuery: MockedQuery<
   GetTrbRequestSummary,
   GetTrbRequestSummaryVariables
