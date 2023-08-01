@@ -721,7 +721,7 @@ func (r *iTGovTaskStatusesResolver) IntakeFormStatus(ctx context.Context, obj *m
 
 // FeedbackFromInitialReviewStatus is the resolver for the feedbackFromInitialReviewStatus field.
 func (r *iTGovTaskStatusesResolver) FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFeedbackStatus, error) {
-	return resolvers.FeedbackFromInitialReviewStatus(obj.ParentSystemIntake), nil
+	return resolvers.FeedbackFromInitialReviewStatus(obj.ParentSystemIntake)
 }
 
 // BizCaseDraftStatus is the resolver for the bizCaseDraftStatus field.

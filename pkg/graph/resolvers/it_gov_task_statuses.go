@@ -27,13 +27,29 @@ func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus
 	case models.SIRFSSubmitted:
 		return models.ITGISCompleted, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("invalid has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
 	}
 }
 
 // FeedbackFromInitialReviewStatus calculates the ITGovTaskListStatus for the feedback section of a system intake task list  for the requester view
-func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) models.ITGovFeedbackStatus {
-	return models.ITGFBSCantStart
+func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovFeedbackStatus, error) {
+	if intake.Step != models.SystemIntakeStepINITIALFORM { // If the step is past the initial form, the review is complete
+		return models.ITGFBSCompleted, nil
+	}
+	switch intake.RequestFormState {
+	case models.SIRFSNotStarted, models.SIRFSInProgress: // If the form is just in progress, or not started, the review can't start yet
+		return models.ITGFBSCantStart, nil
+
+	case models.SIRFSSubmitted: //If the request form has been submitted, it show now show in_review for the feedback step
+		return models.ITGFBSInReview, nil
+
+	case models.SIRFSEditsRequested: // If the form has edits requested, review has happened and is complete.
+		return models.ITGFBSCompleted, nil
+
+	default: // The enum is invalid. This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+	}
+
 }
 
 // BizCaseDraftStatus calculates the ITGovDraftBusinessCaseStatus for the BizCaseDraft section for the system intake task list for the requester view
