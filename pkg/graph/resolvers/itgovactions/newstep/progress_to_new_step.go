@@ -13,23 +13,29 @@ import (
 // the frontend shouldn't allow users to take any invalid actions, but we validate server-side to make sure
 func IsIntakeValid(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) error {
 	if intake.State == models.SystemIntakeStateCLOSED {
-		return &apperrors.InvalidActionError{
-			ActionType: models.ActionTypePROGRESSTONEWSTEP,
-			Message:    "Can't take Progress to New Step action on closed intakes",
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypePROGRESSTONEWSTEP,
+				Message:    "Can't take Progress to New Step action on closed intakes",
+			},
 		}
 	}
 
 	if intake.Step == models.SystemIntakeStepINITIALFORM && intake.RequestFormState == models.SIRFSNotStarted {
-		return &apperrors.InvalidActionError{
-			ActionType: models.ActionTypePROGRESSTONEWSTEP,
-			Message:    "Can't take Progress to New Step action on intakes that haven't started the Request Form",
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypePROGRESSTONEWSTEP,
+				Message:    "Can't take Progress to New Step action on intakes that haven't started the Request Form",
+			},
 		}
 	}
 
 	if string(intake.Step) == string(newStep) {
-		return &apperrors.InvalidActionError{
-			ActionType: models.ActionTypePROGRESSTONEWSTEP,
-			Message:    fmt.Sprintf("Progress to New Step needs to change intake to a different step, intake is already at %v", newStep),
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypePROGRESSTONEWSTEP,
+				Message:    fmt.Sprintf("Progress to New Step needs to change intake to a different step, intake is already at %v", newStep),
+			},
 		}
 	}
 
@@ -70,6 +76,8 @@ func UpdateIntake(intake *models.SystemIntake, newStep model.SystemIntakeStepToP
 		return nil
 
 	default:
-		return apperrors.NewInvalidEnumError(fmt.Errorf("newStep is an invalid value of SystemIntakeStepToProgressTo"), newStep, "SystemIntakeStepToProgressTo")
+		return &apperrors.BadRequestError{
+			Err: apperrors.NewInvalidEnumError(fmt.Errorf("newStep is an invalid value of SystemIntakeStepToProgressTo"), newStep, "SystemIntakeStepToProgressTo"),
+		}
 	}
 }

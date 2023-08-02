@@ -305,6 +305,6 @@ func (e *InvalidEnumError) Error() string {
 }
 
 // Unwrap returns the underlying error
-func (e InvalidEnumError) Unwrap() error {
+func (e *InvalidEnumError) Unwrap() error {
 	return e.Err
 }
