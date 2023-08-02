@@ -13,7 +13,6 @@ RUN yarn install --frozen-lockfile
 
 FROM modules AS src
 
-COPY craco.config.js ./
 COPY tsconfig.json ./
 COPY .eslintrc ./
 COPY public ./public
