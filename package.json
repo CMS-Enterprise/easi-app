@@ -78,12 +78,12 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "CI=true craco build",
+    "start": "vite",
+    "build": "CI=true vite build",
     "build:ts": "tsc",
+    "serve": "vite preview",
     "test": "craco test",
     "test:coverage": "craco test --coverage --watchAll=false",
-    "eject": "react-scripts eject",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
