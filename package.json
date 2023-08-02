@@ -32,7 +32,7 @@
     "@types/text-encoding": "^0.0.35",
     "@types/yup": "^0.29.11",
     "@uswds/uswds": "^3.3.0",
-    "apollo": "^2.33.7",
+    "apollo": "^2.34",
     "apollo-upload-client": "^17.0.0",
     "axios": "^0.21.3",
     "classnames": "^2.3.1",
