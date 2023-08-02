@@ -78,7 +78,7 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "CI=true vite build",
+    "build": "vite build",
     "build:ts": "tsc",
     "serve": "vite preview",
     "test": "craco test",
