@@ -20,20 +20,20 @@ const OktaSignInWidget = ({ onSuccess, onError }: OktaSignInWidgetProps) => {
     if (widgetRef.current) {
       signIn = new OktaSignIn({
         el: widgetRef.current,
-        baseUrl: process.env.REACT_APP_OKTA_DOMAIN,
-        clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
+        baseUrl: import.meta.env.VITE_OKTA_DOMAIN,
+        clientId: import.meta.env.VITE_OKTA_CLIENT_ID,
         authParams: {
           pkce: true,
-          issuer: process.env.REACT_APP_OKTA_ISSUER,
+          issuer: import.meta.env.VITE_OKTA_ISSUER,
           responseMode: 'query'
         }
       });
 
       signIn
         .showSignInToGetTokens({
-          authorizationServerId: process.env.REACT_APP_OKTA_SERVER_ID,
-          clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
-          redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
+          authorizationServerId: import.meta.env.VITE_OKTA_SERVER_ID,
+          clientId: import.meta.env.VITE_OKTA_CLIENT_ID,
+          redirectUri: import.meta.env.VITE_OKTA_REDIRECT_URI,
           scopes: ['openid', 'profile', 'email']
         })
         .then(onSuccess)

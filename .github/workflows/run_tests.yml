@@ -107,15 +107,15 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build frontend code
         env:
-          REACT_APP_API_ADDRESS: http://easi:8080/api/v1
-          REACT_APP_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
-          REACT_APP_APP_ENV: test
-          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
-          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
-          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
-          REACT_APP_LOCAL_AUTH_ENABLED: true
+          VITE_API_ADDRESS: http://easi:8080/api/v1
+          VITE_GRAPHQL_ADDRESS: http://easi:8080/api/graph/query
+          VITE_APP_ENV: test
+          VITE_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          VITE_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+          VITE_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+          VITE_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          VITE_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+          VITE_LOCAL_AUTH_ENABLED: true
         run: yarn run build
       - name: Login to Docker Hub
         uses: docker/login-action@v2
