@@ -15,7 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -360,7 +360,7 @@ func makeSystemIntakeWithProgressToNextStep(
 	}
 
 	// this will move the intake to the new step and save it to the database, save the feedback, and save a record of the action
-	must(newstep.ProgressIntake(ctx, store, mock.FetchUserInfoMock, input))
+	must(resolvers.ProgressIntake(ctx, store, mock.FetchUserInfoMock, input))
 }
 
 // TODO - EASI-2888 - call functions/methods to take "request edits" action;
