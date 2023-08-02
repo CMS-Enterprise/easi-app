@@ -49,6 +49,8 @@ export type ActionFormProps = {
   children?: React.ReactNode;
   /** Pager button props */
   buttonProps?: ButtonProps;
+  /** Alert text if form is disabled */
+  disableFormText?: string;
   /** Whether to show alert at top of form with summary of errors */
   showErrorSummary?: boolean;
   /** Warning message above submit button */
@@ -64,6 +66,7 @@ const ActionForm = ({
   children,
   buttonProps,
   breadcrumbItems,
+  disableFormText,
   submitWarning,
   showErrorSummary = true,
   ...formProps
@@ -130,75 +133,83 @@ const ActionForm = ({
         {t(description)}
       </p>
 
-      <p className="margin-top-1 text-base">
-        <Trans
-          i18nKey="action:fieldsMarkedRequired"
-          components={{ asterisk: <RequiredAsterisk /> }}
-        />
-      </p>
-
-      {showErrorSummary && errorKeys.length > 0 && (
-        <Alert
-          heading={t('errors.checkFix')}
-          type="error"
-          className="trb-basic-fields-error"
-          slim={false}
-        >
-          {errorKeys.map(fieldName => {
-            const msg: string = t(`actionErrorLabels.${fieldName}`);
-            return (
-              <ErrorAlertMessage
-                key={fieldName}
-                errorKey={fieldName}
-                message={msg}
-              />
-            );
-          })}
+      {disableFormText ? (
+        <Alert type="info" slim>
+          {disableFormText}
         </Alert>
+      ) : (
+        <>
+          <p className="margin-top-1 text-base">
+            <Trans
+              i18nKey="action:fieldsMarkedRequired"
+              components={{ asterisk: <RequiredAsterisk /> }}
+            />
+          </p>
+
+          {showErrorSummary && errorKeys.length > 0 && (
+            <Alert
+              heading={t('errors.checkFix')}
+              type="error"
+              className="trb-basic-fields-error"
+              slim={false}
+            >
+              {errorKeys.map(fieldName => {
+                const msg: string = t(`actionErrorLabels.${fieldName}`);
+                return (
+                  <ErrorAlertMessage
+                    key={fieldName}
+                    errorKey={fieldName}
+                    message={msg}
+                  />
+                );
+              })}
+            </Alert>
+          )}
+
+          <Form
+            {...formProps}
+            className={classNames(
+              'maxw-none tablet:grid-col-12 desktop:grid-col-6',
+              formProps.className
+            )}
+          >
+            {children}
+
+            <h3 className="margin-top-6 margin-bottom-0">
+              {t('actionRequestEdits.notificationTitle')}
+            </h3>
+            <p className="margin-0 line-height-body-5">
+              {t('actionRequestEdits.notificationDescription')}
+            </p>
+
+            <Recipients setRecipientFormOpen={setRecipientFormOpen} />
+
+            {submitWarning && (
+              <Alert type="warning" className="margin-top-4">
+                {t(submitWarning)}
+              </Alert>
+            )}
+
+            {buttonProps && (
+              <Pager
+                {...buttonProps}
+                next={
+                  buttonProps?.next
+                    ? {
+                        ...buttonProps?.next,
+                        disabled: disableSubmit
+                      }
+                    : false
+                }
+                buttons={buttons}
+                border={false}
+                className={classNames('margin-top-5', buttonProps.className)}
+                submitDisabled
+              />
+            )}
+          </Form>
+        </>
       )}
-
-      <Form
-        {...formProps}
-        className={classNames(
-          'maxw-none tablet:grid-col-12 desktop:grid-col-6',
-          formProps.className
-        )}
-      >
-        {children}
-
-        <h3 className="margin-top-6 margin-bottom-0">
-          {t('actionRequestEdits.notificationTitle')}
-        </h3>
-        <p className="margin-0 line-height-body-5">
-          {t('actionRequestEdits.notificationDescription')}
-        </p>
-
-        <Recipients setRecipientFormOpen={setRecipientFormOpen} />
-
-        {submitWarning && (
-          <Alert type="warning" className="margin-top-4">
-            {t(submitWarning)}
-          </Alert>
-        )}
-
-        {buttonProps && (
-          <Pager
-            {...buttonProps}
-            next={
-              buttonProps?.next
-                ? {
-                    ...buttonProps?.next,
-                    disabled: disableSubmit
-                  }
-                : false
-            }
-            buttons={buttons}
-            border={false}
-            className={classNames('margin-top-5', buttonProps.className)}
-            submitDisabled
-          />
-        )}
-      </Form>
     </GridContainer>
   );
 };
