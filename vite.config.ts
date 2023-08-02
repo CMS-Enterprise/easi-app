@@ -26,5 +26,10 @@ export default defineConfig({
         ]
       }
     }
+  },
+  resolve: {
+    alias: {
+      '@okta/okta-auth-js': '@okta/okta-auth-js/dist/okta-auth-js.umd.js'
+    }
   }
 });
