@@ -53,8 +53,38 @@ func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovF
 }
 
 // BizCaseDraftStatus calculates the ITGovDraftBusinessCaseStatus for the BizCaseDraft section for the system intake task list for the requester view
-func BizCaseDraftStatus(intake *models.SystemIntake) models.ITGovDraftBusinessCaseStatus {
-	return models.ITGDBCSCantStart
+func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessCaseStatus, error) {
+	switch intake.Step {
+	case models.SystemIntakeStepINITIALFORM: //This is before the draft business case, always show can't start for clarity
+		return models.ITGDBCSCantStart, nil
+	case models.SystemIntakeStepDRAFTBIZCASE:
+		switch intake.DraftBusinessCaseState { // The business case status depends on the state if in the draft business case step.
+		case models.SIRFSSubmitted:
+			return models.ITGDBCSSubmitted, nil
+		case models.SIRFSNotStarted:
+			return models.ITGDBCSReady, nil
+		case models.SIRFSInProgress:
+			return models.ITGDBCSInProgress, nil
+		case models.SIRFSEditsRequested:
+			return models.ITGDBCSEditsRequested, nil
+		default:
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft business case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
+		}
+
+	case models.SystemIntakeStepDECISION, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING:
+
+		switch intake.DraftBusinessCaseState {
+		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the draft business case had any progress made on it, and then the step advances, the case is considered complete.
+			return models.ITGDBCSDone, nil
+		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the draft business case is not needed.
+			return models.ITGDBCSNotNeeded, nil
+		default:
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft business case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
+		}
+	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.RequestFormState, "SystemIntakeStep")
+	}
+
 }
 
 // GrtMeetingStatus calculates the ITGovGRTStatus for the GrtMeeting section for the system intake task list for the requester view

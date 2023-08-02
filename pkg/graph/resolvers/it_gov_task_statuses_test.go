@@ -260,14 +260,16 @@ func (suite *ResolverSuite) TestDecisionAndNextStepsStatus() {
 	suite.EqualValues(models.ITGDSCantStart, status)
 
 }
-func (suite *ResolverSuite) TestBizCaseDraftStatus() {
+func TestBizCaseDraftStatus(t *testing.T) {
 	intake := models.SystemIntake{
-		Status: models.SystemIntakeStatusCLOSED,
+		DraftBusinessCaseState: models.SIRFSNotStarted,
+		Step:                   models.SystemIntakeStepGRBMEETING,
 	}
 
-	status := BizCaseDraftStatus(&intake)
+	status, err := BizCaseDraftStatus(&intake)
 
-	suite.EqualValues(models.ITGDBCSCantStart, status)
+	assert.EqualValues(t, models.ITGDBCSNotNeeded, status)
+	assert.NoError(t, err)
 
 }
 func (suite *ResolverSuite) TestGrtMeetingStatus() {

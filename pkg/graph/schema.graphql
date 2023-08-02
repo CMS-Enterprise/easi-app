@@ -2590,9 +2590,14 @@ enum ITGovDraftBusinessCaseStatus {
   EDITS_REQUESTED
 
   """
-  The draft business case is completed
+  The draft business case has been submitted and it is waiting for feedback from the governance team
   """
-  COMPLETED
+  SUBMITTED
+
+  """
+  The draft business case has been completed and the intake is on a further step
+  """
+  DONE
 }
 
 
