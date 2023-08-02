@@ -17,7 +17,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// CreateSystemIntake creates a system intake, though without saving values for LCID-related fields or workflow step state fields
+// CreateSystemIntake creates a system intake, though without saving values for LCID-related fields
 func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	if intake.ID == uuid.Nil {
 		intake.ID = uuid.New()
@@ -35,6 +35,18 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	if intake.State == "" {
 		intake.State = models.SystemIntakeStateOPEN
 	}
+	if intake.RequestFormState == "" {
+		intake.RequestFormState = models.SIRFSNotStarted
+	}
+	if intake.DraftBusinessCaseState == "" {
+		intake.DraftBusinessCaseState = models.SIRFSNotStarted
+	}
+	if intake.FinalBusinessCaseState == "" {
+		intake.FinalBusinessCaseState = models.SIRFSNotStarted
+	}
+	if intake.DecisionState == "" {
+		intake.DecisionState = models.SIDSNoDecision
+	}
 	const createIntakeSQL = `
 		INSERT INTO system_intakes (
 			id,
@@ -42,6 +54,10 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			status,
 			state,
 			step,
+			request_form_state,
+			draft_business_case_state,
+			final_business_case_state,
+			decision_state,
 			request_type,
 			requester,
 			component,
@@ -92,6 +108,10 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:status,
 			:state,
 			:step,
+			:request_form_state,
+			:draft_business_case_state,
+			:final_business_case_state,
+			:decision_state,
 			:request_type,
 			:requester,
 			:component,
@@ -160,6 +180,10 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			status = :status,
 			step = :step,
 			state = :state,
+			request_form_state = :request_form_state,
+			draft_business_case_state = :draft_business_case_state,
+			final_business_case_state = :final_business_case_state,
+			decision_state = :decision_state,
 			request_type = :request_type,
 			requester = :requester,
 			component = :component,
@@ -212,11 +236,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			rejection_reason = :rejection_reason,
 			admin_lead = :admin_lead,
 			cedar_system_id = :cedar_system_id,
-			has_ui_changes = :has_ui_changes,
-			request_form_state = :request_form_state,
-			draft_business_case_state = :draft_business_case_state,
-			final_business_case_state = :final_business_case_state,
-			decision_state = :decision_state
+			has_ui_changes = :has_ui_changes
 		WHERE system_intakes.id = :id
 	`
 	_, err := s.db.NamedExec(
