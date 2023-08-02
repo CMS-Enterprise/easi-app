@@ -746,7 +746,7 @@ func (r *iTGovTaskStatusesResolver) GrbMeetingStatus(ctx context.Context, obj *m
 
 // DecisionAndNextStepsStatus is the resolver for the decisionAndNextStepsStatus field.
 func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDecisionStatus, error) {
-	return resolvers.DecisionAndNextStepsStatus(obj.ParentSystemIntake), nil
+	return resolvers.DecisionAndNextStepsStatus(obj.ParentSystemIntake)
 }
 
 // AddGRTFeedbackAndKeepBusinessCaseInDraft is the resolver for the addGRTFeedbackAndKeepBusinessCaseInDraft field.

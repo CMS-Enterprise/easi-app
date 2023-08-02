@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -18,6 +19,13 @@ type testSystemIntakeFormFeedbackStatusType struct {
 	testCase       string
 	intake         models.SystemIntake
 	expectedStatus models.ITGovFeedbackStatus
+	expectError    bool
+}
+
+type testSystemIntakeDecisionStateStatusType struct {
+	testCase       string
+	intake         models.SystemIntake
+	expectedStatus models.ITGovDecisionStatus
 	expectError    bool
 }
 
@@ -250,14 +258,121 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 	}
 
 }
-func (suite *ResolverSuite) TestDecisionAndNextStepsStatus() {
-	intake := models.SystemIntake{
-		Status: models.SystemIntakeStatusCLOSED,
+func TestDecisionAndNextStepsStatus(t *testing.T) {
+	yesterday := time.Now().Add(time.Hour * -24)
+	tomorrow := time.Now().Add(time.Hour * 24)
+
+	decisionStateTests := []testSystemIntakeDecisionStateStatusType{
+		{
+			testCase: "Request form not started",
+			intake: models.SystemIntake{
+				Step: models.SystemIntakeStepINITIALFORM,
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case",
+			intake: models.SystemIntake{
+				Step: models.SystemIntakeStepDRAFTBIZCASE,
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Meeting",
+			intake: models.SystemIntake{
+				Step: models.SystemIntakeStepGRTMEETING,
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case",
+			intake: models.SystemIntake{
+				Step: models.SystemIntakeStepFINALBIZCASE,
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		//Testing GRB Meeting States
+		{
+			testCase: "GRB Meeting: no meeting scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRBDate: nil,
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Meeting: meeting scheduled, but hasn't happened",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRBDate: &tomorrow,
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Meeting: meeting scheduled, it already happened",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRBDate: &yesterday,
+			},
+			expectedStatus: models.ITGDSInReview,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision issued step: LCID Issued",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepDECISION,
+				DecisionState: models.SIDSLcidIssued,
+			},
+			expectedStatus: models.ITGDSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision issued step: Not Approved",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepDECISION,
+				DecisionState: models.SIDSNotApproved,
+			},
+			expectedStatus: models.ITGDSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision issued step: Not an IT Governance Request",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepDECISION,
+				DecisionState: models.SIDSNotGovernance,
+			},
+			expectedStatus: models.ITGDSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision issued step: No decision issued",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepDECISION,
+				DecisionState: models.SIDSNoDecision,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
 	}
 
-	status := DecisionAndNextStepsStatus(&intake)
+	for _, test := range decisionStateTests {
+		t.Run(test.testCase, func(t *testing.T) {
+			status, err := DecisionAndNextStepsStatus(&test.intake)
+			assert.EqualValues(t, test.expectedStatus, status)
+			if test.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 
-	suite.EqualValues(models.ITGDSCantStart, status)
+		})
+	}
 
 }
 func TestBizCaseDraftStatus(t *testing.T) {
