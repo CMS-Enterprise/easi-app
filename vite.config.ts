@@ -8,5 +8,13 @@ export default defineConfig({
   build: {
     outDir: 'build'
   },
-  plugins: [react(), viteTsconfigPaths(), svgrPlugin()]
+  plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
+  server: {
+    watch: {
+      usePolling: true
+    },
+    host: true,
+    strictPort: true,
+    port: 3000
+  }
 });
