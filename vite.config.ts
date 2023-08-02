@@ -16,5 +16,15 @@ export default defineConfig({
     host: true,
     strictPort: true,
     port: 3000
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        includePaths: [
+          './src/stylesheets',
+          './node_modules/@uswds/uswds/packages'
+        ]
+      }
+    }
   }
 });
