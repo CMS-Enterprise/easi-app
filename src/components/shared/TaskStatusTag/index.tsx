@@ -45,6 +45,7 @@ export const taskStatusClassName: Record<TaskStatus, string> = {
   CANNOT_START_YET: 'border-2px text-base',
   CANT_START: 'border-2px text-base',
   COMPLETED: 'bg-success-dark text-white',
+  DONE: 'bg-success-dark text-white',
   EDITS_REQUESTED: 'bg-warning',
   IN_PROGRESS: 'bg-warning',
   IN_REVIEW: 'bg-info-light',
@@ -53,7 +54,8 @@ export const taskStatusClassName: Record<TaskStatus, string> = {
   READY_FOR_REVIEW: 'bg-info-light',
   READY_TO_SCHEDULE: 'bg-info-light',
   READY_TO_START: 'bg-info-light',
-  SCHEDULED: 'bg-info-light'
+  SCHEDULED: 'bg-info-light',
+  SUBMITTED: 'bg-success-dark text-white'
 };
 
 type TaskStatusTagProps = {

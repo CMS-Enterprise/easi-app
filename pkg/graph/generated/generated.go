@@ -9688,10 +9688,16 @@ enum ITGovFinalBusinessCaseStatus {
   This business case has edits requested
   """
   EDITS_REQUESTED
+
   """
-  This business case has been completed
+  The business case has been submitted and it is waiting for feedback from the governance team
   """
-  COMPLETED
+  SUBMITTED
+
+  """
+  The business case has been completed and the intake is on a further step
+  """
+  DONE
 }
 
 """

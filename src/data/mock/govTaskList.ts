@@ -685,7 +685,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -739,7 +739,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -770,7 +770,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED, // DONE
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE, // DONE
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -800,7 +800,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED, // DONE
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE, // DONE
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -827,7 +827,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -850,7 +850,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.NOT_NEEDED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -873,7 +873,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.READY_TO_SCHEDULE,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -896,7 +896,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.SCHEDULED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -919,7 +919,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -943,7 +943,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -966,7 +966,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.IN_REVIEW
       },
@@ -989,7 +989,7 @@ export const taskListState: {
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
         bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.COMPLETED
       },

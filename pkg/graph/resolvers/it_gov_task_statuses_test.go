@@ -28,6 +28,12 @@ type testSystemIntakeDecisionStateStatusType struct {
 	expectedStatus models.ITGovDecisionStatus
 	expectError    bool
 }
+type testSystemIntakeBusinessCaseFinalStatusType struct {
+	testCase       string
+	intake         models.SystemIntake
+	expectedStatus models.ITGovFinalBusinessCaseStatus
+	expectError    bool
+}
 
 func TestIntakeFormStatus(t *testing.T) {
 
@@ -395,14 +401,30 @@ func (suite *ResolverSuite) TestGrtMeetingStatus() {
 	suite.EqualValues(models.ITGGRTSCantStart, status)
 
 }
-func (suite *ResolverSuite) TestBizCaseFinalStatus() {
-	intake := models.SystemIntake{
-		Status: models.SystemIntakeStatusCLOSED,
+func TestBizCaseFinalStatus(t *testing.T) {
+	decisionStateTests := []testSystemIntakeBusinessCaseFinalStatusType{
+		{
+			testCase: "Request form not started",
+			intake: models.SystemIntake{
+				Step: models.SystemIntakeStepINITIALFORM,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
 	}
 
-	status := BizCaseFinalStatus(&intake)
+	for _, test := range decisionStateTests {
+		t.Run(test.testCase, func(t *testing.T) {
+			status, err := BizCaseFinalStatus(&test.intake)
+			assert.EqualValues(t, test.expectedStatus, status)
+			if test.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 
-	suite.EqualValues(models.ITGFBCSCantStart, status)
+		})
+	}
 
 }
 func (suite *ResolverSuite) TestGrbMeetingStatus() {
