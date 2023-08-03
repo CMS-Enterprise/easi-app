@@ -25,11 +25,6 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		model.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDRAFTBIZCASE,
 		model.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFINALBIZCASE,
 	}
-	formSteps := []model.SystemIntakeFormStep{
-		model.SystemIntakeFormStepInitialRequestForm,
-		model.SystemIntakeFormStepDraftBusinessCase,
-		model.SystemIntakeFormStepFinalBusinessCase,
-	}
 	invalidFormSteps := []model.SystemIntakeFormStep{
 		"GRT_MEETING",
 		"GRB_MEETING",
@@ -67,7 +62,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 	}
 	for _, initialStep := range initialSteps {
-		for _, step := range formSteps {
+		for _, step := range model.AllSystemIntakeFormStep {
 			s.Run(fmt.Sprintf("Should set state and %s step as active when in %s step", step, initialStep), func() {
 				intakeToCreate := &models.SystemIntake{
 					Status:      models.SystemIntakeStatusINTAKEDRAFT,

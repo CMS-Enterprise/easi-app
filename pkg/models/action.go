@@ -10,9 +10,13 @@ import (
 // ActionType represents type of action
 type ActionType string
 
+// These actions are specifically for admin actions v2 work
 const (
-	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS (for admin actions v2)
+	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS (admin actions v2)
 	ActionTypeREQUESTEDITS ActionType = "REQUEST_EDITS"
+)
+
+const (
 	// ActionTypeSUBMITINTAKE captures enum value SUBMIT_INTAKE
 	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"
 	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST

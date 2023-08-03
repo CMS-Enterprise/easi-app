@@ -20,28 +20,28 @@ func CreateSystemIntakeActionRequestEdits(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeRequestEditsInput,
 ) (*models.SystemIntake, error) {
+	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+	if err != nil {
+		return nil, err
+	}
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
-	// Set the intake current step to the requested edits step
-	formStepMap := map[model.SystemIntakeFormStep]models.SystemIntakeStep{
-		model.SystemIntakeFormStepInitialRequestForm: models.SystemIntakeStepINITIALFORM,
-		model.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDRAFTBIZCASE,
-		model.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFINALBIZCASE,
-	}
-	intake.Step = formStepMap[input.IntakeFormStep]
 	var targetForm models.GovernanceRequestFeedbackTargetForm
 	// Set the state of the requested form step and set the targeted feedback step
 	switch input.IntakeFormStep {
 	case model.SystemIntakeFormStepInitialRequestForm:
 		intake.RequestFormState = models.SIRFSEditsRequested
+		intake.Step = models.SystemIntakeStepINITIALFORM
 		targetForm = models.GovernanceRequestFeedbackTargetIntakeRequest
 	case model.SystemIntakeFormStepDraftBusinessCase:
 		intake.DraftBusinessCaseState = models.SIRFSEditsRequested
+		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
 		targetForm = models.GovernanceRequestFeedbackTargetDraftBusinessCase
 	case model.SystemIntakeFormStepFinalBusinessCase:
 		intake.FinalBusinessCaseState = models.SIRFSEditsRequested
+		intake.Step = models.SystemIntakeStepFINALBIZCASE
 		targetForm = models.GovernanceRequestFeedbackTargetFinalBusinessCase
 	default:
 		return nil, &apperrors.BadRequestError{
@@ -49,10 +49,6 @@ func CreateSystemIntakeActionRequestEdits(
 		}
 	}
 	intake, err = store.UpdateSystemIntake(ctx, intake)
-	if err != nil {
-		return nil, err
-	}
-	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +64,7 @@ func CreateSystemIntakeActionRequestEdits(
 	if err != nil {
 		return nil, err
 	}
-	govReqFeedback := new(models.GovernanceRequestFeedback)
+	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
 	govReqFeedback.CreatedBy = adminTakingAction.EuaUserID
 	govReqFeedback.SourceAction = models.GovernanceRequestFeedbackSourceActionRequestEdits
@@ -83,7 +79,7 @@ func CreateSystemIntakeActionRequestEdits(
 			SystemIntakeID: intake.ID,
 			AuthorEUAID:    adminTakingAction.EuaUserID,
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
-			Content:        null.StringFrom(*input.AdminNotes),
+			Content:        null.StringFromPtr(input.AdminNotes),
 		})
 		if err != nil {
 			return nil, err
