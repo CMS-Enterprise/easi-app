@@ -22,6 +22,13 @@ type testSystemIntakeFormFeedbackStatusType struct {
 	expectError    bool
 }
 
+type testSystemIntakeGRTStatusType struct {
+	testCase       string
+	intake         models.SystemIntake
+	expectedStatus models.ITGovGRTStatus
+	expectError    bool
+}
+
 type testSystemIntakeDecisionStateStatusType struct {
 	testCase       string
 	intake         models.SystemIntake
@@ -386,14 +393,51 @@ func (suite *ResolverSuite) TestBizCaseDraftStatus() {
 
 }
 func TestGrtMeetingStatus(t *testing.T) {
-	intake := models.SystemIntake{
-		Status: models.SystemIntakeStatusCLOSED,
+	yesterday := time.Now().Add(time.Hour * -24)
+	tomorrow := time.Now().Add(time.Hour * 24)
+
+	decisionStateTests := []testSystemIntakeGRTStatusType{
+		{
+			testCase: "Request form: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepINITIALFORM,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Request form: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepINITIALFORM,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Request form: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepINITIALFORM,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
 	}
 
-	status, err := GrtMeetingStatus(&intake)
+	for _, test := range decisionStateTests {
+		t.Run(test.testCase, func(t *testing.T) {
+			status, err := GrtMeetingStatus(&test.intake)
+			assert.EqualValues(t, test.expectedStatus, status)
+			if test.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 
-	assert.EqualValues(t, models.ITGGRTSCantStart, status)
-	assert.NoError(t, err)
+		})
+	}
 
 }
 func (suite *ResolverSuite) TestBizCaseFinalStatus() {
