@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Editor } from '@toast-ui/react-editor';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
+// import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {
@@ -50,6 +51,39 @@ function RequestEdits() {
     actionText = 'actionReadyForConsult';
     feedbackAction = TRBFeedbackAction.READY_FOR_CONSULT;
   }
+
+  const editorRef = React.createRef<Editor>();
+
+  // Hack to edit existing links
+  // https://github.com/nhn/tui.editor/issues/1256
+  useEffect(() => {
+    if (editorRef.current) {
+      const editor = editorRef.current.getInstance();
+      editor.eventEmitter.removeEventHandler('query');
+      editor.eventEmitter.listen('query', (query, payload = {}) => {
+        if (query === 'getPopupInitialValues' && payload.popupName === 'link') {
+          const range = editor.getSelection() as [number, number];
+          const info = editor.getRangeInfoOfNode(
+            Math.floor((range[0] + range[1]) / 2)
+          );
+          if (info.type === 'link') {
+            editor.setSelection(info.range[0], info.range[1]);
+            let link = window.getSelection()?.getRangeAt(0)
+              .commonAncestorContainer.parentElement as HTMLAnchorElement;
+            link = link?.closest('a') || link?.querySelector('a') || link;
+            return {
+              linkUrl: link?.href,
+              linkText: link?.innerText
+            };
+          }
+          return {
+            linkText: editor.getSelectedText()
+          };
+        }
+        return null;
+      });
+    }
+  }, [editorRef]);
 
   const {
     control,
@@ -137,12 +171,27 @@ function RequestEdits() {
                 {t('actionRequestEdits.hint')}
               </HelpText>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+              {/*
               <TextAreaField
                 id="feedbackMessage"
                 {...field}
                 ref={null}
                 aria-describedby="feedbackMessage-info feedbackMessage-hint"
               />
+              */}
+              <div className="easi-toastui-editor margin-top-1">
+                <Editor
+                  ref={editorRef}
+                  // initialValue="hello react editor world!"
+                  initialValue=""
+                  height="155px"
+                  initialEditType="wysiwyg"
+                  hideModeSwitch
+                  toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
+                  usageStatistics={false}
+                  theme="white"
+                />
+              </div>
             </FormGroup>
           );
         }}
