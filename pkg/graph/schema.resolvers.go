@@ -721,7 +721,7 @@ func (r *iTGovTaskStatusesResolver) IntakeFormStatus(ctx context.Context, obj *m
 
 // FeedbackFromInitialReviewStatus is the resolver for the feedbackFromInitialReviewStatus field.
 func (r *iTGovTaskStatusesResolver) FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFeedbackStatus, error) {
-	return resolvers.FeedbackFromInitialReviewStatus(obj.ParentSystemIntake), nil
+	return resolvers.FeedbackFromInitialReviewStatus(obj.ParentSystemIntake)
 }
 
 // BizCaseDraftStatus is the resolver for the bizCaseDraftStatus field.
@@ -746,7 +746,7 @@ func (r *iTGovTaskStatusesResolver) GrbMeetingStatus(ctx context.Context, obj *m
 
 // DecisionAndNextStepsStatus is the resolver for the decisionAndNextStepsStatus field.
 func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDecisionStatus, error) {
-	return resolvers.DecisionAndNextStepsStatus(obj.ParentSystemIntake), nil
+	return resolvers.DecisionAndNextStepsStatus(obj.ParentSystemIntake)
 }
 
 // AddGRTFeedbackAndKeepBusinessCaseInDraft is the resolver for the addGRTFeedbackAndKeepBusinessCaseInDraft field.
