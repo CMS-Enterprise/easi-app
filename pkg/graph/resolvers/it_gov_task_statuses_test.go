@@ -385,14 +385,15 @@ func (suite *ResolverSuite) TestBizCaseDraftStatus() {
 	suite.EqualValues(models.ITGDBCSCantStart, status)
 
 }
-func (suite *ResolverSuite) TestGrtMeetingStatus() {
+func TestGrtMeetingStatus(t *testing.T) {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := GrtMeetingStatus(&intake)
+	status, err := GrtMeetingStatus(&intake)
 
-	suite.EqualValues(models.ITGGRTSCantStart, status)
+	assert.EqualValues(t, models.ITGGRTSCantStart, status)
+	assert.NoError(t, err)
 
 }
 func (suite *ResolverSuite) TestBizCaseFinalStatus() {

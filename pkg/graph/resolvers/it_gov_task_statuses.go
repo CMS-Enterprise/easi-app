@@ -59,8 +59,8 @@ func BizCaseDraftStatus(intake *models.SystemIntake) models.ITGovDraftBusinessCa
 }
 
 // GrtMeetingStatus calculates the ITGovGRTStatus for the GrtMeeting section for the system intake task list for the requester view
-func GrtMeetingStatus(intake *models.SystemIntake) models.ITGovGRTStatus {
-	return models.ITGGRTSCantStart
+func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error) {
+	return models.ITGGRTSCantStart, nil
 }
 
 // BizCaseFinalStatus calculates the ITGovFinalBusinessCaseStatus for the BizCaseFinal section for the system intake task list for the requester view
