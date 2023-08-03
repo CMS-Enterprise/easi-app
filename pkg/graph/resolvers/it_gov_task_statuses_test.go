@@ -395,6 +395,7 @@ func (suite *ResolverSuite) TestBizCaseDraftStatus() {
 func TestGrtMeetingStatus(t *testing.T) {
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
+	defaultTestStep := models.SystemIntakeStep("Testing Default State")
 
 	decisionStateTests := []testSystemIntakeGRTStatusType{
 		{
@@ -419,6 +420,168 @@ func TestGrtMeetingStatus(t *testing.T) {
 			testCase: "Request form: GRT Date Tommorrow",
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepINITIALFORM,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRTMEETING,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSReadyToSchedule,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRTMEETING,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSAwaitingDecision,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRTMEETING,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepFINALBIZCASE,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepFINALBIZCASE,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepFINALBIZCASE,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDECISION,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDECISION,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDECISION,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    defaultTestStep,
+				GRTDate: nil,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Decision Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    defaultTestStep,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    defaultTestStep,
 				GRTDate: &tomorrow,
 			},
 			expectedStatus: models.ITGGRTSScheduled,
