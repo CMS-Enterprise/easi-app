@@ -12,11 +12,11 @@ on:
           - dev
           - impl
           - prod
-      run_tests:
+      skip_tests:
         required: true
-        default: true
+        default: false
         type: boolean
-        description: Run tests
+        description: Skip tests
       confirm_production_deploy:
         required: true
         default: false
@@ -33,10 +33,11 @@ jobs:
     secrets: inherit
 
   Run_Tests:
-    if: ${{ github.event.inputs.run_tests == 'true' }}
     uses: ./.github/workflows/run_tests.yml
     needs: Build_Application_Images
     secrets: inherit
+    with:
+      skip_tests: ${{ github.event.inputs.skip_tests }}
 
   deploy_dev:
     needs: Run_Tests
