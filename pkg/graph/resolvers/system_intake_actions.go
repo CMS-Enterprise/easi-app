@@ -60,6 +60,7 @@ func CreateSystemIntakeActionRequestEdits(
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
 		Feedback:       null.StringFrom(input.EmailFeedback),
+		Step:           &intake.Step,
 	})
 	if err != nil {
 		return nil, err

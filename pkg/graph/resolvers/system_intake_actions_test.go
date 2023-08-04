@@ -180,6 +180,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(null.StringFrom("meatloaf"), createdAction.Feedback)
+		s.Equal(models.SystemIntakeStepINITIALFORM, *createdAction.Step)
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
