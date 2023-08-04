@@ -56,6 +56,15 @@ jobs:
     env:
       APP_ENV: ${{ inputs.env }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+          cache: 'yarn'
       - name: Build Frontend Assets
         env:
           LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
@@ -64,6 +73,12 @@ jobs:
           STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
         run: |
           ./scripts/build_static.sh
+      - name: Upload Frontend assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.env }}-frontend-assets
+          path: build/
+          retention-days: 3
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -75,7 +90,16 @@ jobs:
     environment: ${{ inputs.env }}
     env:
       APP_ENV: ${{ inputs.env }}
-    steps:    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2.1.0
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: us-west-2   
       - name: Clean the database
         if: ${{ contains(inputs.env, 'dev') && vars.ENABLE_DEV_DB_CLEAN == '1' }}
         env:
@@ -115,6 +139,15 @@ jobs:
     env:
       APP_ENV: ${{ inputs.env }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2.1.0
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: us-west-2
       - name: Deploy EASI ECS service
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
@@ -144,6 +177,20 @@ jobs:
     env:
       APP_ENV: ${{ inputs.env }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2.1.0
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: us-west-2
+      - name: Download Frontend assets
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.env }}-frontend-assets
+          path: build/
       - name: Release assets to S3
         env:
           STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
