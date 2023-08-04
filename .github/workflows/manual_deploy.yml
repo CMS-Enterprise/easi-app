@@ -12,6 +12,11 @@ on:
           - dev
           - impl
           - prod
+      run_tests:
+        required: true
+        default: true
+        type: boolean
+        description: Run tests
       confirm_production_deploy:
         required: true
         default: false
@@ -28,6 +33,7 @@ jobs:
     secrets: inherit
 
   Run_Tests:
+    if: ${{ github.event.inputs.run_tests == 'true' }}
     uses: ./.github/workflows/run_tests.yml
     needs: Build_Application_Images
     secrets: inherit
