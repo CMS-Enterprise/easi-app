@@ -148,7 +148,7 @@ jobs:
         env:
           STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
         run: |
-          ./scripts/release_static
+          ./scripts/release_static.sh
       - name: Announce failure
         if: ${{ failure() }}
         run: |
