@@ -22,7 +22,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  prepare_deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:
@@ -44,6 +44,38 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+  
+  build_frontend_assets:
+    needs: prepare_deploy
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
+    env:
+      APP_ENV: ${{ inputs.env }}
+    steps:
+      - name: Build Frontend Assets
+        env:
+          LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
+          OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
+          OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
+          STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
+        run: |
+          ./scripts/build_static.sh
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  database_actions:
+    needs: prepare_deploy
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
+    env:
+      APP_ENV: ${{ inputs.env }}
+    steps:    
       - name: Clean the database
         if: ${{ contains(inputs.env, 'dev') && vars.ENABLE_DEV_DB_CLEAN == '1' }}
         env:
@@ -71,6 +103,18 @@ jobs:
         run: |
           export TASK_REVISION=$(./scripts/update_ecs_task_definition.sh)
           ./scripts/run_ecs_task.sh
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
+  deploy_backend:
+    needs: [prepare_deploy, database_actions]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
+    env:
+      APP_ENV: ${{ inputs.env }}
+    steps:
       - name: Deploy EASI ECS service
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
@@ -88,11 +132,20 @@ jobs:
           NEW_IMAGE_TAG: ${{ env.GIT_HASH }}
         run: |
           ./scripts/healthcheck "$NEW_IMAGE_TAG"
-      - name: Build static assets and release to S3
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+  
+  deploy_frontend:
+    needs: [prepare_deploy, build_frontend_assets]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
+    env:
+      APP_ENV: ${{ inputs.env }}
+    steps:
+      - name: Release assets to S3
         env:
-          LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
-          OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
-          OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
           STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
         run: |
           ./scripts/release_static
