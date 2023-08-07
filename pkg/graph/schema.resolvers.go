@@ -1134,6 +1134,19 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 	}, err
 }
 
+// CreateSystemIntakeActionRequestEdits is the resolver for the createSystemIntakeActionRequestEdits field.
+func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.CreateSystemIntakeActionRequestEdits(
+		ctx,
+		r.store,
+		r.service.FetchUserInfo,
+		input,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.service.CreateActionUpdateStatus(

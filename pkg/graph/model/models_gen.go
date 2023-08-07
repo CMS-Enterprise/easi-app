@@ -663,6 +663,16 @@ type SystemIntakeProductManagerInput struct {
 	Component string `json:"component"`
 }
 
+// Input for creating a Request Edits Action in Admin Actions v2
+type SystemIntakeRequestEditsInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	IntakeFormStep         SystemIntakeFormStep                `json:"intakeFormStep"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	EmailFeedback          string                              `json:"emailFeedback"`
+	AdditionalNotes        *string                             `json:"additionalNotes"`
+	AdminNotes             *string                             `json:"adminNotes"`
+}
+
 // The contact who made an IT governance request for a system
 type SystemIntakeRequester struct {
 	Component *string `json:"component"`
@@ -1016,5 +1026,49 @@ func (e *SystemIntakeActionType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// SystemIntakeRequestEditsOptions represents the current step in the intake process
+type SystemIntakeFormStep string
+
+const (
+	SystemIntakeFormStepInitialRequestForm SystemIntakeFormStep = "INITIAL_REQUEST_FORM"
+	SystemIntakeFormStepDraftBusinessCase  SystemIntakeFormStep = "DRAFT_BUSINESS_CASE"
+	SystemIntakeFormStepFinalBusinessCase  SystemIntakeFormStep = "FINAL_BUSINESS_CASE"
+)
+
+var AllSystemIntakeFormStep = []SystemIntakeFormStep{
+	SystemIntakeFormStepInitialRequestForm,
+	SystemIntakeFormStepDraftBusinessCase,
+	SystemIntakeFormStepFinalBusinessCase,
+}
+
+func (e SystemIntakeFormStep) IsValid() bool {
+	switch e {
+	case SystemIntakeFormStepInitialRequestForm, SystemIntakeFormStepDraftBusinessCase, SystemIntakeFormStepFinalBusinessCase:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeFormStep) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeFormStep) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeFormStep(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeFormStep", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
