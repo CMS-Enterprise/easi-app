@@ -50,7 +50,7 @@ jobs:
         with:
           name: ${{ inputs.env }}-frontend-assets
           path: build/
-          retention-days: 3
+          retention-days: 10
       - name: Announce failure
         if: ${{ failure() }}
         run: |
