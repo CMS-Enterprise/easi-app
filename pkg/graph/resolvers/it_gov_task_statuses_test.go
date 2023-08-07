@@ -29,7 +29,14 @@ type testSystemIntakeGRTStatusType struct {
 	expectError    bool
 }
 
-type testSystemIntakeDecisionStateStatusType struct {
+type testSystemIntakeDraftBusinessCaseStatusType struct {
+	testCase       string
+	intake         models.SystemIntake
+	expectedStatus models.ITGovDraftBusinessCaseStatus
+	expectError    bool
+}
+
+type testSystemIntakeDecisionStatusType struct {
 	testCase       string
 	intake         models.SystemIntake
 	expectedStatus models.ITGovDecisionStatus
@@ -269,7 +276,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
 
-	decisionStateTests := []testSystemIntakeDecisionStateStatusType{
+	decisionStateTests := []testSystemIntakeDecisionStatusType{
 		{
 			testCase: "Request form not started",
 			intake: models.SystemIntake{
@@ -382,14 +389,268 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 	}
 
 }
-func (suite *ResolverSuite) TestBizCaseDraftStatus() {
-	intake := models.SystemIntake{
-		Status: models.SystemIntakeStatusCLOSED,
+func TestBizCaseDraftStatus(t *testing.T) {
+	defaultTestStep := models.SystemIntakeStep("Testing Default State")
+	defaultTestState := models.SystemIntakeFormState("Testing Default State")
+
+	draftBusinessCaseTests := []testSystemIntakeDraftBusinessCaseStatusType{
+		//Test cases when the step is the Intake Form
+		{
+			testCase: "Request form not started",
+			intake: models.SystemIntake{
+				Step:             models.SystemIntakeStepINITIALFORM,
+				RequestFormState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGDBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Invalid Step",
+			intake: models.SystemIntake{
+				Step: defaultTestStep,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Draft Business Case Step: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				DraftBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Draft Business Case Step: Not Started",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				DraftBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGDBCSReady,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case Step: In Progress",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				DraftBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGDBCSInProgress,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case Step: Submitted",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				DraftBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGDBCSSubmitted,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case Step: Edits Requested",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				DraftBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGDBCSEditsRequested,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				DraftBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "GRT Step: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				DraftBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "GRB Step: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				DraftBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Final Business Case: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				DraftBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Decision Step: Draft Business Case Not Needed",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				DraftBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGDBCSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: Draft Business Case Not Needed",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				DraftBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGDBCSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Draft Business Case Not Needed",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				DraftBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGDBCSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case: Draft Business Case Not Needed",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				DraftBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGDBCSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Draft Business Case Edits Requested --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				DraftBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: Draft Business Case Edits Requested --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				DraftBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Draft Business Case Edits Requested --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				DraftBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case: Draft Business Case Edits Requested --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				DraftBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Draft Business Case In Progress --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				DraftBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: Draft Business Case In Progress --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				DraftBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Draft Business Case In Progress --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				DraftBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case: Draft Business Case In Progress --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				DraftBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Draft Business Case Submitted --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				DraftBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: Draft Business Case Submitted --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				DraftBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Draft Business Case Submitted --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				DraftBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case: Draft Business Case Submitted --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				DraftBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGDBCSDone,
+			expectError:    false,
+		},
 	}
 
-	status := BizCaseDraftStatus(&intake)
+	for _, test := range draftBusinessCaseTests {
+		t.Run(test.testCase, func(t *testing.T) {
+			status, err := BizCaseDraftStatus(&test.intake)
+			assert.EqualValues(t, test.expectedStatus, status)
+			if test.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 
-	suite.EqualValues(models.ITGDBCSCantStart, status)
+		})
+	}
 
 }
 func TestGrtMeetingStatus(t *testing.T) {

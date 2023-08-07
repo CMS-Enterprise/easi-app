@@ -41,7 +41,8 @@ const GovTaskBizCaseDraft = ({
   // Submitted date
   if (
     !dateInfo &&
-    bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.COMPLETED &&
+    bizCaseDraftStatus ===
+      ITGovDraftBusinessCaseStatus.DONE /* TODO:  EASI-3110 verify this new status */ &&
     bizCaseDraftSubmittedAt
   )
     dateInfo = {
@@ -62,7 +63,7 @@ const GovTaskBizCaseDraft = ({
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
 
         {/* Draft biz case submitted & waiting for feedback */}
-        {bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.COMPLETED && (
+        {bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.SUBMITTED && (
           <Alert slim type="info">
             {t(`taskList.step.${stepKey}.submittedInfo`)}
           </Alert>
@@ -91,7 +92,8 @@ const GovTaskBizCaseDraft = ({
         )}
 
         {/* Link to view submitted draft biz case */}
-        {bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.COMPLETED && (
+        {bizCaseDraftStatus ===
+          ITGovDraftBusinessCaseStatus.DONE /* TODO: EASI-3110 verify this is the correct status as COMPLETED was replaced with submitted and DONE */ && (
           <div className="margin-top-2">
             <UswdsReactLink to="./">
               {t(`taskList.step.${stepKey}.viewSubmittedDraftBusinessCase`)}
