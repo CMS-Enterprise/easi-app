@@ -402,18 +402,255 @@ func (suite *ResolverSuite) TestGrtMeetingStatus() {
 
 }
 func TestBizCaseFinalStatus(t *testing.T) {
-	decisionStateTests := []testSystemIntakeBusinessCaseFinalStatusType{
+	defaultTestStep := models.SystemIntakeStep("Testing Default State")
+	defaultTestState := models.SystemIntakeFormState("Testing Default State")
+	finalBusinessCaseTests := []testSystemIntakeBusinessCaseFinalStatusType{
+		//Test cases when the step is the Intake Form
 		{
 			testCase: "Request form not started",
 			intake: models.SystemIntake{
-				Step: models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepINITIALFORM,
+				RequestFormState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Invalid Step",
+			intake: models.SystemIntake{
+				Step: defaultTestStep,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Final Business Case Step: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				FinalBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Final Business Case Step: Not Started",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				FinalBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGFBCSReady,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: In Progress",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				FinalBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGFBCSInProgress,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: Submitted",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				FinalBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGFBCSSubmitted,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: Edits Requested",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				FinalBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGFBCSEditsRequested,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				FinalBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "GRT Step: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				FinalBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: models.ITGFBCSCantStart, // because it isn't there yet, we don't care about the invalid state
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				FinalBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Draft Business Case: Invalid State",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				FinalBusinessCaseState: defaultTestState,
+			},
+			expectedStatus: models.ITGFBCSCantStart, // because it isn't there yet, we don't care about the invalid state
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Final Business Case Not Needed",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				FinalBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGFBCSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: Final Business Case Cant Start",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				FinalBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Final Business Case Not Needed",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				FinalBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGFBCSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: Final Business Case Cant Start",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				FinalBusinessCaseState: models.SIRFSNotStarted,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Final Business Case Edits Requested --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				FinalBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGFBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: Final Business Case Edits Requested --> Cant start",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				FinalBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Final Business Case Edits Requested --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				FinalBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGFBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: Final Business Case Edits Requested --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				FinalBusinessCaseState: models.SIRFSEditsRequested,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Final Business Case In Progress --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				FinalBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGFBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: Final Business Case In Progress --> Can't Start",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				FinalBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Final Business Case In Progress --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				FinalBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGFBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: Final Business Case In Progress --> Cant Start",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				FinalBusinessCaseState: models.SIRFSInProgress,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: Final Business Case Submitted --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDECISION,
+				FinalBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGFBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: Final Business Case Submitted --> Cant Start",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRTMEETING,
+				FinalBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGFBCSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: Final Business Case Submitted --> Done",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepGRBMEETING,
+				FinalBusinessCaseState: models.SIRFSSubmitted,
+			},
+			expectedStatus: models.ITGFBCSDone,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: Final Business Case Submitted --> Cant Start",
+			intake: models.SystemIntake{
+				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGFBCSCantStart,
 			expectError:    false,
 		},
 	}
 
-	for _, test := range decisionStateTests {
+	for _, test := range finalBusinessCaseTests {
 		t.Run(test.testCase, func(t *testing.T) {
 			status, err := BizCaseFinalStatus(&test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)

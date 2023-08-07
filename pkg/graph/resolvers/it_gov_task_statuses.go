@@ -69,7 +69,7 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepDRAFTBIZCASE: //Any task before final business case, always show can't start for clarity
 		return models.ITGFBCSCantStart, nil
 	case models.SystemIntakeStepFINALBIZCASE:
-		switch intake.FinalBusinessCaseState { // The business case status depends on the state if in the draft business case step.
+		switch intake.FinalBusinessCaseState { // The business case status depends on the state if in the final business case step.
 		case models.SIRFSSubmitted:
 			return models.ITGFBCSSubmitted, nil
 		case models.SIRFSNotStarted:
@@ -87,7 +87,7 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 		switch intake.FinalBusinessCaseState {
 		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the final business case had any progress made on it, and then the step advances, the case is considered complete.
 			return models.ITGFBCSDone, nil
-		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the draft business case is not needed.
+		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the final business case is not needed.
 			return models.ITGFBCSNotNeeded, nil
 		default:
 			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final business case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
