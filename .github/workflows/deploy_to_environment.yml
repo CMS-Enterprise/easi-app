@@ -22,35 +22,7 @@ permissions:
   contents: read
 
 jobs:
-  prepare_deploy:
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.env }}
-    env:
-      APP_ENV: ${{ inputs.env }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ env.GIT_HASH }}
-      - name: Set up node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.EASI_APP_NODE_VERSION }}
-          cache: 'yarn'
-      - name: Install yarn dependencies
-        run: yarn install --frozen-lockfile
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2.1.0
-        with:
-          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
-          aws-region: us-west-2
-      - name: Announce failure
-        if: ${{ failure() }}
-        run: |
-          ./scripts/github-action-announce-broken-branch
-  
   build_frontend_assets:
-    needs: prepare_deploy
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:
@@ -85,7 +57,6 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   database_actions:
-    needs: prepare_deploy
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:
@@ -133,7 +104,7 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   deploy_backend:
-    needs: [prepare_deploy, database_actions]
+    needs: [build_frontend_assets,database_actions]
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:
@@ -171,7 +142,7 @@ jobs:
           ./scripts/github-action-announce-broken-branch
   
   deploy_frontend:
-    needs: [prepare_deploy, build_frontend_assets]
+    needs: [build_frontend_assets, database_actions]
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     env:
