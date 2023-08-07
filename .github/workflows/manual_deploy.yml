@@ -16,7 +16,7 @@ on:
         required: true
         default: false
         type: boolean
-        description: Skip tests
+        description: Skip tests?
       confirm_production_deploy:
         required: true
         default: false
@@ -37,7 +37,7 @@ jobs:
     needs: Build_Application_Images
     secrets: inherit
     with:
-      skip_tests: ${{ github.event.inputs.skip_tests }}
+      skip_tests: ${{ inputs.skip_tests }}
 
   deploy_dev:
     needs: Run_Tests
