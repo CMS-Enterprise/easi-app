@@ -18,8 +18,10 @@ export default defineConfig({
     port: 3000
   },
   css: {
+    devSourcemap: true,
     preprocessorOptions: {
       scss: {
+        sourceMap: true,
         includePaths: [
           './src/stylesheets',
           './node_modules/@uswds/uswds/packages'
