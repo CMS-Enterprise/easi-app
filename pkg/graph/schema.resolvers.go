@@ -726,7 +726,7 @@ func (r *iTGovTaskStatusesResolver) FeedbackFromInitialReviewStatus(ctx context.
 
 // BizCaseDraftStatus is the resolver for the bizCaseDraftStatus field.
 func (r *iTGovTaskStatusesResolver) BizCaseDraftStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDraftBusinessCaseStatus, error) {
-	return resolvers.BizCaseDraftStatus(obj.ParentSystemIntake), nil
+	return resolvers.BizCaseDraftStatus(obj.ParentSystemIntake)
 }
 
 // GrtMeetingStatus is the resolver for the grtMeetingStatus field.
@@ -1131,6 +1131,19 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 	return &model.UpdateAccessibilityRequestCedarSystemPayload{
 		ID:                   updatedRequest.ID,
 		AccessibilityRequest: updatedRequest,
+	}, err
+}
+
+// CreateSystemIntakeActionRequestEdits is the resolver for the createSystemIntakeActionRequestEdits field.
+func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.CreateSystemIntakeActionRequestEdits(
+		ctx,
+		r.store,
+		r.service.FetchUserInfo,
+		input,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
 	}, err
 }
 

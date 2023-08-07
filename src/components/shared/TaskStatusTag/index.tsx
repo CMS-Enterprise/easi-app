@@ -41,6 +41,7 @@ export type TaskStatus =
   | TagEnum;
 
 export const taskStatusClassName: Record<TaskStatus, string> = {
+  /* TODO: EASI-3110 verify this new status */
   AWAITING_DECISION: 'bg-info-light',
   CANNOT_START_YET: 'border-2px text-base',
   CANT_START: 'border-2px text-base',
