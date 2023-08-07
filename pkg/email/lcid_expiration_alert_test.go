@@ -14,11 +14,9 @@ import (
 func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
-	// TODO: revert this when fix for filtering out retired request is done
-	// recipient := models.NewEmailAddress("fake@fake.com")
+	recipient := models.NewEmailAddress("fake@fake.com")
 	recipients := models.EmailNotificationRecipients{
-		// TODO: revert this when fix for filtering out retired request is done
-		RegularRecipientEmails:   []models.EmailAddress{s.config.GRTEmail}, // []models.EmailAddress{recipient},
+		RegularRecipientEmails:   []models.EmailAddress{recipient},
 		ShouldNotifyITGovernance: true,
 		ShouldNotifyITInvestment: false,
 	}
@@ -111,9 +109,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		)
 
 		s.NoError(err)
-		// TODO: revert this when fix for filtering out retired request is done
-		// s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
-		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.GRTEmail})
+		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
@@ -177,9 +173,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		)
 
 		s.NoError(err)
-		// TODO: revert this when fix for filtering out retired request is done
-		// s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
-		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.GRTEmail})
+		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
