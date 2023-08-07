@@ -41,7 +41,7 @@ jobs:
 
   deploy_dev:
     needs: Run_Tests
-    if: ${{ github.event.inputs.env == 'dev' }}
+    if: ${{ inputs.env == 'dev' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: dev
@@ -50,7 +50,7 @@ jobs:
 
   deploy_impl:
     needs: Run_Tests
-    if: ${{ github.event.inputs.env == 'impl' }}
+    if: ${{ inputs.env == 'impl' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: impl
@@ -59,7 +59,7 @@ jobs:
 
   deploy_prod:
     needs: Run_Tests
-    if: ${{ github.event.inputs.env == 'prod' && github.event.inputs.confirm_production_deploy == true }}
+    if: ${{ inputs.env == 'prod' && inputs.confirm_production_deploy == true }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod
