@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "83e9274f-6ccb-4d84-a2c6-07f16a001877",
+		"_postman_id": "9fff6ba8-a150-4606-9a69-358eb0f24df6",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20320964"
+		"_exporter_id": "11253221"
 	},
 	"item": [
 		{
@@ -35,6 +35,32 @@
 									"graphql": {
 										"query": "mutation CreateSystemIntakeActionBusinessCaseNeeded($input: BasicActionInput!) {\n  createSystemIntakeActionBusinessCaseNeeded(input: $input) {\n    systemIntake {\n      status\n      id\n      __typename\n    }\n    __typename\n  }\n}",
 										"variables": "{\n  \"input\": {\n    \"intakeId\": \"{{systemIntakeID}}\",\n    \"feedback\": \"Hooray!\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"aaron.adams@local.fake\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin Actions (v2)",
+					"item": [
+						{
+							"name": "Create Request Edits Action",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"DRAFT_BUSINESS_CASE\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalNotes\": \"additional notes\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
 									}
 								},
 								"url": {
