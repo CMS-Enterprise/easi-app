@@ -16,6 +16,13 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
+  skip_tests:
+    if: ${{ inputs.skip_tests == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skipping tests
+        run: |
+            echo "Skipping tests!"
   server_test:
     if: ${{ inputs.skip_tests == false }}
     runs-on: ubuntu-latest
