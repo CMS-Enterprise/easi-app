@@ -8,7 +8,8 @@ import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
+// import TextAreaField from 'components/shared/TextAreaField';
+import ToastEditor from 'components/ToastEditor';
 import useMessage from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {
@@ -137,11 +138,19 @@ function RequestEdits() {
                 {t('actionRequestEdits.hint')}
               </HelpText>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+              {/*
               <TextAreaField
                 id="feedbackMessage"
                 {...field}
                 ref={null}
                 aria-describedby="feedbackMessage-info feedbackMessage-hint"
+              />
+              */}
+              <ToastEditor
+                className="margin-top-1"
+                id="feedbackMessage"
+                data-testid="feedbackMessage"
+                field={field}
               />
             </FormGroup>
           );
