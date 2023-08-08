@@ -1,105 +1,90 @@
-import React, { useEffect, useState } from 'react';
-import { Editor, Viewer } from '@toast-ui/react-editor';
-import { Grid, GridContainer } from '@trussworks/react-uswds';
+import React, { useEffect } from 'react';
+import { ControllerRenderProps } from 'react-hook-form';
+import { Editor, EditorProps } from '@toast-ui/react-editor';
+import classNames from 'classnames';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import '@toast-ui/editor/dist/toastui-editor.css';
 import './index.scss';
 
-function ToastEditor() {
+interface ToastEditorProps extends EditorProps {
+  className?: string;
+  id?: string;
+  'data-testid'?: string;
+  /** RHF field */
+  field?: ControllerRenderProps<any, any>;
+}
+
+/** Toast rich text editor as a RHF field. Set to WYSIWYG mode only. Outputs HTML. */
+function ToastEditor({ className, field, ...editorProps }: ToastEditorProps) {
   const editorRef = React.createRef<Editor>();
 
-  const [mdContent, setMdContent] = useState('');
-
-  const initialValue = `
-In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.
-
-**In publishing and graphic design,**
-*Lorem ipsum is a placeholder text commonly*
-
-* used to demonstrate
-* the visual form of a
-* document or a typeface without
-
-1. relying on meaningful content.
-2. Lorem ipsum may be used as a
-3. placeholder before [final copy is available](https://google.com).
-  `;
-
-  const save = () => {
-    setMdContent(editorRef.current?.getInstance().getMarkdown() || '');
-  };
-
-  // Hack to edit existing links
+  // Hack to show the current link in the pop up when editing
   // https://github.com/nhn/tui.editor/issues/1256
   useEffect(() => {
-    if (editorRef.current) {
-      const editor = editorRef.current.getInstance();
-      editor.eventEmitter.removeEventHandler('query');
-      editor.eventEmitter.listen('query', (query, payload = {}) => {
-        if (query === 'getPopupInitialValues' && payload.popupName === 'link') {
-          const range = editor.getSelection() as [number, number];
-          const info = editor.getRangeInfoOfNode(
-            Math.floor((range[0] + range[1]) / 2)
-          );
-          if (info.type === 'link') {
-            editor.setSelection(info.range[0], info.range[1]);
-            let link = window.getSelection()?.getRangeAt(0)
-              .commonAncestorContainer.parentElement as HTMLAnchorElement;
-            link = link?.closest('a') || link?.querySelector('a') || link;
-            return {
-              linkUrl: link?.href,
-              linkText: link?.innerText
-            };
-          }
+    if (editorRef.current === null) return;
+    const editor = editorRef.current.getInstance();
+
+    editor.eventEmitter.removeEventHandler('query');
+    editor.eventEmitter.listen('query', (query, payload = {}) => {
+      if (query === 'getPopupInitialValues' && payload.popupName === 'link') {
+        const range = editor.getSelection() as [number, number];
+        const info = editor.getRangeInfoOfNode(
+          Math.floor((range[0] + range[1]) / 2)
+        );
+        if (info.type === 'link') {
+          editor.setSelection(info.range[0], info.range[1]);
+          let link = window.getSelection()?.getRangeAt(0)
+            .commonAncestorContainer.parentElement as HTMLAnchorElement;
+          link = link?.closest('a') || link?.querySelector('a') || link;
           return {
-            linkText: editor.getSelectedText()
+            linkUrl: link?.href,
+            linkText: link?.innerText
           };
         }
-        return null;
-      });
-    }
+        return {
+          linkText: editor.getSelectedText()
+        };
+      }
+      return null;
+    });
   }, [editorRef]);
 
+  // Forward certain properties to toast's text field
+  useEffect(() => {
+    const el = editorRef.current
+      ?.getRootElement()
+      // We are only using the editor's wysiwyg mode,
+      // so scope the selector on toast's ww container
+      .querySelector('.toastui-editor-ww-container .toastui-editor-contents');
+    if (!el) return;
+    if (editorProps.id) {
+      el.id = editorProps.id;
+    }
+    if (editorProps['data-testid']) {
+      el.setAttribute('data-testid', editorProps['data-testid']);
+    }
+  }, [editorRef, editorProps]);
+
   return (
-    <GridContainer>
-      <Grid row gap>
-        <Grid col={6}>
-          <h6>Editor</h6>
-          <div className="easi-toastui-editor">
-            <Editor
-              ref={editorRef}
-              // initialValue="hello react editor world!"
-              initialValue={initialValue}
-              height="300px"
-              initialEditType="wysiwyg"
-              hideModeSwitch
-              toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
-              usageStatistics={false}
-              theme="white"
-            />
-          </div>
-          <button type="button" onClick={save}>
-            Save
-          </button>
-          <h6>Saved text</h6>
-          <pre style={{ whiteSpace: 'pre-wrap' }}>{mdContent}</pre>
-        </Grid>
-        <Grid col={6}>
-          <h6>Viewer</h6>
-          <div className="easi-toastui-editor">
-            <Viewer
-              initialValue={initialValue}
-              usageStatistics={false}
-              theme="white"
-              linkAttributes={{
-                target: '_blank'
-              }}
-            />
-          </div>
-        </Grid>
-      </Grid>
-    </GridContainer>
+    <div className={classNames('easi-toast-editor', className)}>
+      <Editor
+        ref={editorRef}
+        usageStatistics={false}
+        initialEditType="wysiwyg"
+        hideModeSwitch
+        toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
+        initialValue={field?.value}
+        height={editorProps.height || '100%'}
+        onBlur={() => {
+          field?.onBlur();
+        }}
+        onChange={() => {
+          const val = editorRef.current?.getInstance().getHTML() || '';
+          field?.onChange(val);
+        }}
+      />
+    </div>
   );
 }
 
