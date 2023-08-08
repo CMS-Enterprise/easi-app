@@ -79,11 +79,12 @@ export enum ITGovDecisionStatus {
  */
 export enum ITGovDraftBusinessCaseStatus {
   CANT_START = "CANT_START",
-  COMPLETED = "COMPLETED",
+  DONE = "DONE",
   EDITS_REQUESTED = "EDITS_REQUESTED",
   IN_PROGRESS = "IN_PROGRESS",
   NOT_NEEDED = "NOT_NEEDED",
   READY = "READY",
+  SUBMITTED = "SUBMITTED",
 }
 
 /**
