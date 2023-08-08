@@ -103,13 +103,15 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 
 	switch {
 	case intake.GRBDate != nil: // status depends on if there is a date scheduled or not
-		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
+		switch {
+		case intake.GRBDate.After(time.Now()): // Meeting has not happened
 			return models.ITGGRBSScheduled, nil
-		}
-		if intake.Step == models.SystemIntakeStepGRBMEETING { //if the step is GRB meeting, status is awaiting decision
+		case intake.Step == models.SystemIntakeStepGRBMEETING: //if the step is GRB meeting, status is awaiting decision
 			return models.ITGGRBSAwaitingDecision, nil
+		default:
+			return models.ITGGRBSCompleted, nil // if the step is not GRB meeting, the status is completed
 		}
-		return models.ITGGRBSCompleted, nil // if the step is not GRB meeting, the status is completed
+
 	default: // the grb date is not nil.
 		switch intake.Step {
 		case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE: // Any step before GRB should show can't start
