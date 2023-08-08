@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';
 import { Editor, EditorProps } from '@toast-ui/react-editor';
 import classNames from 'classnames';
+import DOMPurify from 'dompurify';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -19,12 +20,22 @@ interface ToastEditorProps extends EditorProps {
 function ToastEditor({ className, field, ...editorProps }: ToastEditorProps) {
   const editorRef = React.createRef<Editor>();
 
-  // Hack to show the current link in the pop up when editing
-  // https://github.com/nhn/tui.editor/issues/1256
   useEffect(() => {
     if (editorRef.current === null) return;
     const editor = editorRef.current.getInstance();
 
+    // Sanitize the html on the editor change event
+    // Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items
+    editor.eventEmitter.listen('change', () => {
+      const html = editor.getHTML();
+      const sanitized = DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
+      });
+      editor.setHTML(sanitized);
+    });
+
+    // Hack to show the current link in the pop up when editing
+    // https://github.com/nhn/tui.editor/issues/1256
     editor.eventEmitter.removeEventHandler('query');
     editor.eventEmitter.listen('query', (query, payload = {}) => {
       if (query === 'getPopupInitialValues' && payload.popupName === 'link') {
