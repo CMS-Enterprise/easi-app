@@ -15,6 +15,7 @@ import {
   getTrbLeadOptionsQuery,
   getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
+  getTrbRequestSummary,
   getTrbRequestSummaryQuery,
   requester,
   trbRequestSummary
@@ -25,7 +26,11 @@ import {
   CreateTrbRequestFeedback,
   CreateTrbRequestFeedbackVariables
 } from 'queries/types/CreateTrbRequestFeedback';
-import { TRBFeedbackAction } from 'types/graphql-global-types';
+import {
+  GetTrbRequestSummary,
+  GetTrbRequestSummaryVariables
+} from 'queries/types/GetTrbRequestSummary';
+import { TRBFeedbackAction, TRBFormStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -33,6 +38,22 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import TRBRequestInfoWrapper from './RequestContext';
 import RequestEdits from './RequestEdits';
 import AdminHome from '.';
+
+const summaryQuery: MockedQuery<
+  GetTrbRequestSummary,
+  GetTrbRequestSummaryVariables
+> = {
+  ...getTrbRequestSummaryQuery,
+  result: {
+    data: {
+      trbRequest: getTrbRequestSummary({
+        taskStatuses: {
+          formStatus: TRBFormStatus.COMPLETED
+        }
+      })
+    }
+  }
+};
 
 describe('Trb Admin: Action: Request Edits', () => {
   const store = easiMockStore({ groups: ['EASI_TRB_ADMIN_D'] });
@@ -80,8 +101,8 @@ describe('Trb Admin: Action: Request Edits', () => {
             getTrbLeadOptionsQuery,
             getTRBRequestAttendeesQuery,
             getTRBRequestAttendeesQuery,
-            getTrbRequestSummaryQuery,
-            getTrbRequestSummaryQuery
+            summaryQuery,
+            summaryQuery
           ]}
         >
           <MemoryRouter
@@ -144,6 +165,7 @@ describe('Trb Admin: Action: Request Edits', () => {
     const { getByLabelText, getByRole, findByText } = render(
       <MockedProvider
         mocks={[
+          summaryQuery,
           getTRBRequestAttendeesQuery,
           {
             ...createTrbRequestFeedbackQuery,

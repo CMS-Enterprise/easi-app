@@ -14,13 +14,20 @@ import {
   getTrbAdminNotesQuery,
   getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
+  getTrbRequestSummary,
   getTrbRequestSummaryQuery,
   trbRequestSummary,
   updateTrbRequestConsultMeetingQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbRequestConsultMeetingQuery from 'queries/GetTrbRequestConsultMeetingQuery';
+import {
+  GetTrbRequestSummary,
+  GetTrbRequestSummaryVariables
+} from 'queries/types/GetTrbRequestSummary';
+import { TRBFeedbackStatus } from 'types/graphql-global-types';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
+import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -28,6 +35,22 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import Consult from './Consult';
 import InitialRequestForm from './InitialRequestForm';
 import TRBRequestInfoWrapper from './RequestContext';
+
+const summaryQuery: MockedQuery<
+  GetTrbRequestSummary,
+  GetTrbRequestSummaryVariables
+> = {
+  ...getTrbRequestSummaryQuery,
+  result: {
+    data: {
+      trbRequest: getTrbRequestSummary({
+        taskStatuses: {
+          feedbackStatus: TRBFeedbackStatus.COMPLETED
+        }
+      })
+    }
+  }
+};
 
 describe('Trb Admin: Action: Schedule a TRB consult session', () => {
   Element.prototype.scrollIntoView = jest.fn();
@@ -66,10 +89,10 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
           mocks={[
             updateTrbRequestConsultMeetingQuery,
             getTrbRequestQuery,
-            getTrbRequestSummaryQuery,
             getTRBRequestAttendeesQuery,
             getTrbAdminNotesQuery,
-            getTrbRequestSummaryQuery,
+            summaryQuery,
+            summaryQuery,
             emptyConsultMeetingTime
           ]}
         >
@@ -153,7 +176,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     const { getByLabelText, getByRole, findByText } = render(
       <VerboseMockedProvider
         mocks={[
-          getTrbRequestSummaryQuery,
+          summaryQuery,
           getTRBRequestAttendeesQuery,
           emptyConsultMeetingTime
         ]}
@@ -221,7 +244,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       <VerboseMockedProvider
         mocks={[
           getTRBRequestAttendeesQuery,
-          getTrbRequestSummaryQuery,
+          summaryQuery,
           {
             ...updateTrbRequestConsultMeetingQuery,
             error: new Error()

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -26,11 +26,13 @@ import {
   UpdateTrbRequestConsultMeetingVariables
 } from 'queries/types/UpdateTrbRequestConsultMeeting';
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
+import { TRBFeedbackStatus } from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { consultSchema } from 'validations/trbRequestSchema';
 import NotFound from 'views/NotFound';
 
 import useActionForm from './components/ActionFormWrapper/useActionForm';
+import { TRBRequestContext } from './RequestContext';
 
 interface ConsultFields extends TrbRecipientFields {
   notes: string;
@@ -50,6 +52,12 @@ function Consult() {
   const { showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl = `/trb/${id}/request`;
+
+  const formContext = useContext(TRBRequestContext);
+  const { loading: contextLoading } = formContext;
+
+  const feedbackStatus: TRBFeedbackStatus | undefined =
+    formContext?.data?.trbRequest?.taskStatuses?.feedbackStatus;
 
   const { loading, data, error: pageError } = useQuery<
     GetTrbRequestConsultMeeting,
@@ -138,7 +146,7 @@ function Consult() {
       });
   };
 
-  if (loading) {
+  if (loading || contextLoading) {
     return <PageLoading />;
   }
 
@@ -166,6 +174,11 @@ function Consult() {
         saveExitText: t('actionRequestEdits.cancelAndReturn')
       }}
       submitWarning={t('actionScheduleConsult.alert')}
+      disableFormText={
+        feedbackStatus !== TRBFeedbackStatus.COMPLETED
+          ? t('actionScheduleConsult.formDisabled')
+          : undefined
+      }
     >
       {/* Meeting date */}
       <div className="date-time-wrapper">

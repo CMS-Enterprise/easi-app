@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Form, FormGroup, GridContainer } from '@trussworks/react-uswds';
+import { Form, FormGroup } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
@@ -12,9 +12,10 @@ import TextAreaField from 'components/shared/TextAreaField';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
-import EmailRecipientsFields from 'views/GovernanceReviewTeam/ActionsV1/EmailRecipientsFields';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+import EmailRecipientsFields from './EmailRecipientsFields';
 
 // TODO: update fields to match schema when backend work is completed
 export interface SystemIntakeActionFields {
@@ -102,7 +103,7 @@ const ActionForm = ({
     recipients.shouldNotifyITInvestment;
 
   return (
-    <GridContainer className="margin-bottom-10 padding-bottom-2">
+    <div className="margin-bottom-10 padding-bottom-2">
       <Breadcrumbs
         items={[
           { text: t('Home'), url: '/' },
@@ -229,7 +230,7 @@ const ActionForm = ({
           submitDisabled
         />
       </Form>
-    </GridContainer>
+    </div>
   );
 };
 

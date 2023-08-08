@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
+import PageLoading from 'components/PageLoading';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 // import TextAreaField from 'components/shared/TextAreaField';
@@ -16,12 +17,17 @@ import {
   CreateTrbRequestFeedback,
   CreateTrbRequestFeedbackVariables
 } from 'queries/types/CreateTrbRequestFeedback';
-import { TRBFeedbackAction } from 'types/graphql-global-types';
+import {
+  TRBFeedbackAction,
+  TRBFeedbackStatus,
+  TRBFormStatus
+} from 'types/graphql-global-types';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 
 // import Breadcrumbs from '../Breadcrumbs';
 import useActionForm from './components/ActionFormWrapper/useActionForm';
+import { TRBRequestContext } from './RequestContext';
 
 interface RequestEditsFields extends TrbRecipientFields {
   feedbackMessage: string;
@@ -40,6 +46,12 @@ function RequestEdits() {
   const { showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl = `/trb/${id}/${activePage}`;
+
+  const formContext = useContext(TRBRequestContext);
+  const { loading: contextLoading } = formContext;
+
+  const { formStatus, feedbackStatus } =
+    formContext?.data?.trbRequest?.taskStatuses || {};
 
   let actionText: 'actionRequestEdits' | 'actionReadyForConsult';
   let feedbackAction: TRBFeedbackAction;
@@ -99,6 +111,20 @@ function RequestEdits() {
       });
   };
 
+  const disableFormText = useMemo(() => {
+    // Form is still in draft
+    if (formStatus !== TRBFormStatus.COMPLETED)
+      return t('adminHome.requestInDraftAlt');
+
+    // Form has already been marked as ready for consult
+    if (feedbackStatus === TRBFeedbackStatus.COMPLETED)
+      return t('actionRequestEdits.formDisabled');
+
+    return undefined;
+  }, [feedbackStatus, formStatus, t]);
+
+  if (contextLoading) return <PageLoading />;
+
   return (
     <ActionForm
       title={t(`${actionText}.heading`)}
@@ -120,6 +146,7 @@ function RequestEdits() {
           text: t(`${actionText}.breadcrumb`)
         }
       ]}
+      disableFormText={disableFormText}
     >
       <Controller
         name="feedbackMessage"

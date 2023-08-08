@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -53,6 +54,11 @@ func countIgnoredErrors(errorList gqlerror.List) int {
 		if err != nil {
 			// Ignore errors of type apperrors.UnauthorizedError
 			if _, ok := err.Unwrap().(*apperrors.UnauthorizedError); ok {
+				numIgnored++
+			}
+
+			// Ignore errors of type context.Canceled
+			if errors.Is(err, context.Canceled) {
 				numIgnored++
 			}
 		}
