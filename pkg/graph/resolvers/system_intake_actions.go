@@ -45,7 +45,7 @@ func CreateSystemIntakeActionRequestEdits(
 		targetForm = models.GovernanceRequestFeedbackTargetFinalBusinessCase
 	default:
 		return nil, &apperrors.BadRequestError{
-			Err: fmt.Errorf("Cannot request edits on %s", input.IntakeFormStep),
+			Err: fmt.Errorf("cannot request edits on %s", input.IntakeFormStep),
 		}
 	}
 	intake, err = store.UpdateSystemIntake(ctx, intake)

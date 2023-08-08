@@ -741,7 +741,7 @@ func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj 
 
 // GrbMeetingStatus is the resolver for the grbMeetingStatus field.
 func (r *iTGovTaskStatusesResolver) GrbMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRBStatus, error) {
-	return resolvers.GrbMeetingStatus(obj.ParentSystemIntake), nil
+	return resolvers.GrbMeetingStatus(obj.ParentSystemIntake)
 }
 
 // DecisionAndNextStepsStatus is the resolver for the decisionAndNextStepsStatus field.

@@ -666,13 +666,14 @@ func (suite *ResolverSuite) TestBizCaseFinalStatus() {
 	suite.EqualValues(models.ITGFBCSCantStart, status)
 
 }
-func (suite *ResolverSuite) TestGrbMeetingStatus() {
+func TestGrbMeetingStatus(t *testing.T) {
 	intake := models.SystemIntake{
 		Status: models.SystemIntakeStatusCLOSED,
 	}
 
-	status := GrbMeetingStatus(&intake)
+	status, err := GrbMeetingStatus(&intake)
 
-	suite.EqualValues(models.ITGGRBSCantStart, status)
+	assert.EqualValues(t, models.ITGGRBSCantStart, status)
+	assert.NoError(t, err)
 
 }
