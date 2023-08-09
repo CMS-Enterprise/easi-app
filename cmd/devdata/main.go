@@ -209,8 +209,6 @@ func main() {
 		i.EUAUserID = null.StringFromPtr(nil)
 	})
 
-	// TODO - EASI-2888 - remove mention of this ticket in comments below; remove whole comment block if EASI-3019 also implemented
-
 	intakeID := uuid.MustParse("4d3f9821-e043-42bf-9cd0-faa5f053ed32")
 	makeSystemIntakeWithProgressToNextStep(
 		"Intake with feedback on progression to next step",
@@ -227,13 +225,43 @@ func main() {
 	// Currently, these create system intakes along with feedback, but with no action associated with the feedback.
 	// The action will be added later in EASI-2888
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeWithEditsRequested("Edits requested on intake request", logger, store, "USR1", intakeID, "intake request feedback", models.GRFTFIntakeRequest)
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on intake request",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"intake request feedback",
+		"additional notes on request form",
+		"administrative note about request form",
+		model.SystemIntakeFormStepInitialRequestForm,
+	)
 
 	intakeID = uuid.MustParse("ce874e71-de26-46da-bbfe-a8e3af960108")
-	makeSystemIntakeWithEditsRequested("Edits requested on draft business case", logger, store, "USR1", intakeID, "draft biz case feedback", models.GRFTFDraftBusinessCase)
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on draft biz case",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"draft biz case feedback",
+		"additional notes on draft biz case",
+		"administrative note about draft biz case",
+		model.SystemIntakeFormStepDraftBusinessCase,
+	)
 
 	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
-	makeSystemIntakeWithEditsRequested("Edits requested on final business case", logger, store, "USR1", intakeID, "final biz case feedback", models.GRFTFinalBusinessCase)
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on final biz case",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"final biz case feedback",
+		"additional notes on final biz case",
+		"administrative note about final biz case",
+		model.SystemIntakeFormStepFinalBusinessCase,
+	)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 }
@@ -360,8 +388,6 @@ func makeSystemIntakeWithProgressToNextStep(
 	must(resolvers.ProgressIntake(ctx, store, mock.FetchUserInfoMock, input))
 }
 
-// TODO - EASI-2888 - call functions/methods to take "request edits" action;
-// also, remove direct call to store.CreateGovernanceRequestFeedback(), action should save feedback
 func makeSystemIntakeWithEditsRequested(
 	name string,
 	logger *zap.Logger,
@@ -369,26 +395,31 @@ func makeSystemIntakeWithEditsRequested(
 	creatingUser string,
 	intakeID uuid.UUID,
 	feedbackText string,
-	targetedForm models.GovernanceRequestFeedbackTargetForm,
+	additionalNotes string,
+	adminNote string,
+	targetedForm model.SystemIntakeFormStep,
 ) {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 
 	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
 		i.ID = intakeID
+		i.Step = models.SystemIntakeStepINITIALFORM
+		i.RequestFormState = models.SIRFSSubmitted
 	})
 
-	feedback := models.GovernanceRequestFeedback{
-		BaseStruct: models.BaseStruct{
-			CreatedBy: creatingUser,
+	input := &model.SystemIntakeRequestEditsInput{
+		SystemIntakeID: intakeID,
+		IntakeFormStep: targetedForm,
+		NotificationRecipients: &models.EmailNotificationRecipients{
+			RegularRecipientEmails:   []models.EmailAddress{},
+			ShouldNotifyITGovernance: false,
+			ShouldNotifyITInvestment: false,
 		},
-		IntakeID:     intakeID,
-		Feedback:     feedbackText,
-		SourceAction: models.GRFSARequestEdits,
-		TargetForm:   targetedForm,
-		Type:         models.GRFTRequester,
+		EmailFeedback:   feedbackText,
+		AdditionalNotes: &additionalNotes,
+		AdminNotes:      &adminNote,
 	}
-
-	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
+	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, mock.FetchUserInfoMock, *input))
 }
 
 func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {

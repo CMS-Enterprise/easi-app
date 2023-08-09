@@ -46,7 +46,8 @@ const (
 	ITGDBCSReady          ITGovDraftBusinessCaseStatus = "READY"
 	ITGDBCSInProgress     ITGovDraftBusinessCaseStatus = "IN_PROGRESS"
 	ITGDBCSEditsRequested ITGovDraftBusinessCaseStatus = "EDITS_REQUESTED"
-	ITGDBCSCompleted      ITGovDraftBusinessCaseStatus = "COMPLETED"
+	ITGDBCSSubmitted      ITGovDraftBusinessCaseStatus = "SUBMITTED"
+	ITGDBCSDone           ITGovDraftBusinessCaseStatus = "DONE"
 )
 
 // ITGovGRTStatus represents the types of ITGovGRTStatus types. This is what the requestor sees for the  optional fifth task.

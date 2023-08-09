@@ -2,6 +2,11 @@ name: Run Tests
 
 on:
   workflow_call:
+    inputs:
+      skip_tests:
+        required: false
+        type: boolean
+        default: false
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
@@ -11,7 +16,15 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
+  skip_tests:
+    if: ${{ inputs.skip_tests == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skipping tests
+        run: |
+            echo "Skipping tests!"
   server_test:
+    if: ${{ inputs.skip_tests == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -92,6 +105,7 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   e2e_tests:
+    if: ${{ inputs.skip_tests == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -162,6 +176,7 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   lint:
+    if: ${{ inputs.skip_tests == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -196,6 +211,7 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   client_test:
+    if: ${{ inputs.skip_tests == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -216,6 +232,7 @@ jobs:
           ./scripts/github-action-announce-broken-branch
 
   client_typecheck:
+    if: ${{ inputs.skip_tests == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out code

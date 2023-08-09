@@ -79,11 +79,12 @@ export enum ITGovDecisionStatus {
  */
 export enum ITGovDraftBusinessCaseStatus {
   CANT_START = "CANT_START",
-  COMPLETED = "COMPLETED",
+  DONE = "DONE",
   EDITS_REQUESTED = "EDITS_REQUESTED",
   IN_PROGRESS = "IN_PROGRESS",
   NOT_NEEDED = "NOT_NEEDED",
   READY = "READY",
+  SUBMITTED = "SUBMITTED",
 }
 
 /**
@@ -786,7 +787,7 @@ export interface SystemIntakeContractInput {
 /**
  * Input data for estimated system cost increases associated with a system request
  * 
- * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
+ * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
  */
 export interface SystemIntakeCostsInput {
   expectedIncreaseAmount?: string | null;

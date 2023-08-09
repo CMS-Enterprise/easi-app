@@ -14,6 +14,8 @@ type ActionType string
 const (
 	// ActionTypePROGRESSTONEWSTEP captures enum value PROGRESS_TO_NEW_STEP
 	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
+	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS
+	ActionTypeREQUESTEDITS ActionType = "REQUEST_EDITS"
 )
 
 // v1 actions (before v2 revamp)

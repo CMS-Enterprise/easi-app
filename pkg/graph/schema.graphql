@@ -1195,7 +1195,7 @@ input SystemIntakeFundingSourcesInput {
 """
 Input data for estimated system cost increases associated with a system request
 
-NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
+NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
 """
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
@@ -1468,6 +1468,27 @@ input SystemIntakeProgressToNewStepsInput {
   grbRecommendations: String
   additionalNote: String
   adminNote: String
+}
+
+"""
+Input for creating a Request Edits Action in Admin Actions v2
+"""
+input SystemIntakeRequestEditsInput {
+  systemIntakeID: UUID!
+  intakeFormStep: SystemIntakeFormStep!
+  notificationRecipients: EmailNotificationRecipients
+  emailFeedback: String!
+  additionalNotes: String
+  adminNotes: String
+}
+
+"""
+SystemIntakeRequestEditsOptions represents the current step in the intake process
+"""
+enum SystemIntakeFormStep {
+  INITIAL_REQUEST_FORM
+  DRAFT_BUSINESS_CASE
+  FINAL_BUSINESS_CASE
 }
 
 """
@@ -2291,6 +2312,9 @@ type Mutation {
   createSystemIntakeActionProgressToNewStep(
     input: SystemIntakeProgressToNewStepsInput
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionRequestEdits(
+    input: SystemIntakeRequestEditsInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -2628,9 +2652,14 @@ enum ITGovDraftBusinessCaseStatus {
   EDITS_REQUESTED
 
   """
-  The draft business case is completed
+  The draft business case has been submitted and it is waiting for feedback from the governance team
   """
-  COMPLETED
+  SUBMITTED
+
+  """
+  The draft business case has been completed and the intake is on a further step
+  """
+  DONE
 }
 
 
