@@ -31,7 +31,12 @@ function ToastEditor({ className, field, ...editorProps }: ToastEditorProps) {
       const sanitized = DOMPurify.sanitize(html, {
         ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
       });
-      editor.setHTML(sanitized);
+      // Only set again if something if sanitized value was different,
+      // which should just be on copy and paste.
+      // Setting it on every change will jump the text cursor to the end of content.
+      if (html !== sanitized) {
+        editor.setHTML(sanitized);
+      }
     });
 
     // Hack to show the current link in the pop up when editing
