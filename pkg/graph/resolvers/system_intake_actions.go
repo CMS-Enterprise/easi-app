@@ -221,6 +221,7 @@ func CreateSystemIntakeActionRequestEdits(
 	govReqFeedback.SourceAction = models.GRFSARequestEdits
 	govReqFeedback.TargetForm = targetForm
 	govReqFeedback.Feedback = input.EmailFeedback
+	govReqFeedback.Type = models.GRFTRequester
 	_, err = store.CreateGovernanceRequestFeedback(ctx, govReqFeedback)
 	if err != nil {
 		return nil, err
