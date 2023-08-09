@@ -1,4 +1,4 @@
-import React, { /* lazy, Suspense, */ useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import ReactGA from 'react-ga4';
 import {
   BrowserRouter,
@@ -14,7 +14,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import PageWrapper from 'components/PageWrapper';
-import ToastEditor from 'components/ToastEditor';
+import ToastStage from 'components/ToastEditor/ToastStage';
 import { MessageProvider } from 'hooks/useMessage';
 import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
@@ -57,8 +57,6 @@ import shouldScroll from './scrollConfig';
 
 import './index.scss';
 
-// const ToastEditor = lazy(() => import('components/ToastEditor'));
-
 const AppRoutes = () => {
   const location = useLocation();
   const flags = useFlags();
@@ -79,8 +77,7 @@ const AppRoutes = () => {
 
   return (
     <Switch>
-      <Route path="/toast" exact component={ToastEditor} />
-      {/* <Route path="/toast" exact component={<ToastEditor />} /> */}
+      <Route path="/toast" exact component={ToastStage} />
 
       {/* General Routes */}
       <Route path="/" exact component={Home} />
