@@ -13,6 +13,7 @@ jobs:
   # ALL envs assets, but right now building the frontend takes far less time than run tests, so this is not a bottleneck.
   Build_Frontend_Assets:
     uses: ./.github/workflows/build_frontend_assets.yml
+    secrets: inherit
     strategy:
       matrix:
         env: [dev, impl, prod]
