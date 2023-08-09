@@ -656,7 +656,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 func TestGrtMeetingStatus(t *testing.T) {
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
-	defaultTestStep := models.SystemIntakeStep("Testing Default State")
+	invalidTestStep := models.SystemIntakeStep("Testing Invalid Step")
 
 	decisionStateTests := []testSystemIntakeGRTStatusType{
 		{
@@ -822,27 +822,27 @@ func TestGrtMeetingStatus(t *testing.T) {
 			expectError:    false,
 		},
 		{
-			testCase: "Decision Step: No GRT Date Scheduled",
+			testCase: "Invalid Step: No GRT Date Scheduled, expect error",
 			intake: models.SystemIntake{
-				Step:    defaultTestStep,
+				Step:    invalidTestStep,
 				GRTDate: nil,
 			},
 			expectedStatus: "",
 			expectError:    true,
 		},
 		{
-			testCase: "Decision Step: GRT Date Yesterday",
+			testCase: "Invalid Step: GRT Date Yesterday, no error",
 			intake: models.SystemIntake{
-				Step:    defaultTestStep,
+				Step:    invalidTestStep,
 				GRTDate: &yesterday,
 			},
 			expectedStatus: models.ITGGRTSCompleted,
 			expectError:    false,
 		},
 		{
-			testCase: "Decision Step: GRT Date Tommorrow",
+			testCase: "Invalid Step: GRT Date Tommorrow, no error",
 			intake: models.SystemIntake{
-				Step:    defaultTestStep,
+				Step:    invalidTestStep,
 				GRTDate: &tomorrow,
 			},
 			expectedStatus: models.ITGGRTSScheduled,
