@@ -91,29 +91,28 @@ func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessC
 // GrtMeetingStatus calculates the ITGovGRTStatus for the GrtMeeting section for the system intake task list for the requester view
 func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error) {
 
-	switch {
-	case intake.GRTDate != nil: // status depends on if there is a date scheduled or not
-		switch {
-		case intake.GRTDate.After(time.Now()): // Meeting has not happened
+	if intake.GRTDate != nil { // status depends on if there is a date scheduled or not
+		if intake.GRTDate.After(time.Now()) { // Meeting has not happened
 			return models.ITGGRTSScheduled, nil
-		case intake.Step == models.SystemIntakeStepGRTMEETING: //if the step is GRT meeting, status is awaiting decision
+		}
+		if intake.Step == models.SystemIntakeStepGRTMEETING { //if the step is GRT meeting, status is awaiting decision
 			return models.ITGGRTSAwaitingDecision, nil
-		default:
-			return models.ITGGRTSCompleted, nil // if the step is not GRT meeting, the status is completed
 		}
-	default: //GRT date is nil.
-		switch intake.Step {
-		case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE: // Any step before GRT should show can't start
-			return models.ITGGRTSCantStart, nil
+		return models.ITGGRTSCompleted, nil // if the step is not GRT meeting, the status is completed
+	}
 
-		case models.SystemIntakeStepGRTMEETING: // If at the GRT step, show ready to schedule
-			return models.ITGGRTSReadyToSchedule, nil
+	//intake.GRTDate is nil
+	switch intake.Step {
+	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE: // Any step before GRT should show can't start
+		return models.ITGGRTSCantStart, nil
 
-		case models.SystemIntakeStepDECISION, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING: // If after GRT step, show that it was not needed (skipped)
-			return models.ITGGRTSNotNeeded, nil
-		default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
-		}
+	case models.SystemIntakeStepGRTMEETING: // If at the GRT step, show ready to schedule
+		return models.ITGGRTSReadyToSchedule, nil
+
+	case models.SystemIntakeStepDECISION, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING: // If after GRT step, show that it was not needed (skipped)
+		return models.ITGGRTSNotNeeded, nil
+	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
 	}
 
 }
