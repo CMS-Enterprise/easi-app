@@ -2,19 +2,16 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
-	"golang.org/x/sync/errgroup"
-
-	"fmt"
-
-	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
-
 	"github.com/guregu/null"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -43,7 +40,7 @@ func ProgressIntake(
 		return nil, err
 	}
 
-	// All the different data base calls aren't in a single atomic transaction;
+	// All the different database calls aren't in a single atomic transaction;
 	// in the case of a system failure, some data from the action might be saved, but not all.
 	// As of this function's initial implementation, we're accepting that risk.
 	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
