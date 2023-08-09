@@ -677,7 +677,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
-	defaultTestStep := models.SystemIntakeStep("Testing Default State")
+	invalidTestStep := models.SystemIntakeStep("Testing Invalid Step")
 
 	grbTests := []testSystemIntakeGRBStatusType{
 		{
@@ -843,27 +843,27 @@ func TestGrbMeetingStatus(t *testing.T) {
 			expectError:    false,
 		},
 		{
-			testCase: "Decision Step: No GRB Date Scheduled",
+			testCase: "Invalid Step: No GRB Date Scheduled, expect error",
 			intake: models.SystemIntake{
-				Step:    defaultTestStep,
+				Step:    invalidTestStep,
 				GRBDate: nil,
 			},
 			expectedStatus: "",
 			expectError:    true,
 		},
 		{
-			testCase: "Decision Step: GRB Date Yesterday",
+			testCase: "Invalid Step: GRB Date Yesterday, no error",
 			intake: models.SystemIntake{
-				Step:    defaultTestStep,
+				Step:    invalidTestStep,
 				GRBDate: &yesterday,
 			},
 			expectedStatus: models.ITGGRBSCompleted,
 			expectError:    false,
 		},
 		{
-			testCase: "Decision Step: GRB Date Tommorrow",
+			testCase: "Invalid Step: GRB Date Tommorrow, no error",
 			intake: models.SystemIntake{
-				Step:    defaultTestStep,
+				Step:    invalidTestStep,
 				GRBDate: &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
