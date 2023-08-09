@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import {
-  fireEvent,
   render,
   screen,
   waitForElementToBeRemoved
@@ -33,6 +32,7 @@ import {
 import { TRBFeedbackAction, TRBFormStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
+import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TRBRequestInfoWrapper from './RequestContext';
@@ -70,7 +70,7 @@ describe('Trb Admin: Action: Request Edits', () => {
       variables: {
         input: {
           trbRequestId,
-          feedbackMessage,
+          feedbackMessage: `<p>${feedbackMessage}</p>`,
           copyTrbMailbox: true,
           notifyEuaIds: [requester.userInfo.euaUserId],
           action: TRBFeedbackAction.REQUEST_EDITS
@@ -87,8 +87,8 @@ describe('Trb Admin: Action: Request Edits', () => {
     }
   };
 
-  it.only('submits a feedback message', async () => {
-    render(
+  it('submits a feedback message', async () => {
+    const { asFragment } = render(
       <Provider store={store}>
         <VerboseMockedProvider
           defaultOptions={{
@@ -131,28 +131,13 @@ describe('Trb Admin: Action: Request Edits', () => {
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
 
-    // expect(asFragment()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 
     const submitButton = screen.getByRole('button', {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
     });
 
-    /*
-    userEvent.type(
-      getByLabelText(
-        RegExp(
-          i18next.t<string>('technicalAssistance:actionRequestEdits.label')
-        )
-      ),
-      feedbackMessage
-    );
-    */
-
-    // field typing attempt from
-    // https://github.com/testing-library/dom-testing-library/pull/235
-
-    const richtextfield = screen.getByTestId('feedbackMessage');
-    fireEvent.blur(richtextfield, { target: { textContent: feedbackMessage } });
+    await typeRichText(screen.getByTestId('feedbackMessage'), feedbackMessage);
 
     userEvent.click(submitButton);
 
@@ -162,7 +147,7 @@ describe('Trb Admin: Action: Request Edits', () => {
   });
 
   it('shows error notice when submission fails', async () => {
-    const { getByLabelText, getByRole, findByText } = render(
+    render(
       <MockedProvider
         mocks={[
           summaryQuery,
@@ -189,26 +174,19 @@ describe('Trb Admin: Action: Request Edits', () => {
       </MockedProvider>
     );
 
-    await findByText(
+    await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
 
-    userEvent.type(
-      getByLabelText(
-        RegExp(
-          i18next.t<string>('technicalAssistance:actionRequestEdits.label')
-        )
-      ),
-      feedbackMessage
-    );
+    await typeRichText(screen.getByTestId('feedbackMessage'), feedbackMessage);
 
     userEvent.click(
-      getByRole('button', {
+      screen.getByRole('button', {
         name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
       })
     );
 
-    await findByText(
+    await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.error')
     );
   });
