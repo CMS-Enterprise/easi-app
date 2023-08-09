@@ -327,9 +327,73 @@ func TestUpdateIntake(t *testing.T) {
 
 		assert.Error(t, err)
 
-		// check that err is the right type
+		// check that err has the right type of error in its error chain
 		invalidEnumErr := &apperrors.InvalidEnumError{}
 		assert.ErrorAs(t, err, &invalidEnumErr)
 		assert.EqualValues(t, "SystemIntakeStepToProgressTo", invalidEnumErr.Type)
+	})
+}
+
+func TestIsIntakeValid(t *testing.T) {
+	t.Run("Closed intakes are invalid to progress", func(t *testing.T) {
+		intake := &models.SystemIntake{
+			Step:  models.SystemIntakeStepINITIALFORM,
+			State: models.SystemIntakeStateCLOSED,
+		}
+		newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
+
+		err := IsIntakeValid(intake, newStep)
+		assert.Error(t, err)
+
+		// check that err has the right type of error in its error chain
+		invalidActionErr := &apperrors.InvalidActionError{}
+		assert.ErrorAs(t, err, &invalidActionErr)
+		assert.EqualValues(t, models.ActionTypePROGRESSTONEWSTEP, invalidActionErr.ActionType)
+	})
+
+	t.Run("Intakes that haven't started the request form can't be progressed", func(t *testing.T) {
+		intake := &models.SystemIntake{
+			Step:             models.SystemIntakeStepINITIALFORM,
+			RequestFormState: models.SIRFSNotStarted,
+		}
+		newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
+
+		err := IsIntakeValid(intake, newStep)
+		assert.Error(t, err)
+
+		// check that err has the right type of error in its error chain
+		invalidActionErr := &apperrors.InvalidActionError{}
+		assert.ErrorAs(t, err, &invalidActionErr)
+		assert.EqualValues(t, models.ActionTypePROGRESSTONEWSTEP, invalidActionErr.ActionType)
+	})
+
+	t.Run("Trying to progress to the intake's current step is invalid", func(t *testing.T) {
+		for _, step := range model.AllSystemIntakeStepToProgressTo {
+			t.Run(fmt.Sprintf("Checking step %v", step), func(t *testing.T) {
+				intake := &models.SystemIntake{
+					Step: models.SystemIntakeStep(step),
+				}
+
+				err := IsIntakeValid(intake, step)
+				assert.Error(t, err)
+
+				// check that err has the right type of error in its error chain
+				invalidActionErr := &apperrors.InvalidActionError{}
+				assert.ErrorAs(t, err, &invalidActionErr)
+				assert.EqualValues(t, models.ActionTypePROGRESSTONEWSTEP, invalidActionErr.ActionType)
+			})
+		}
+	})
+
+	t.Run("Valid intake should not return an error", func(t *testing.T) {
+		intake := &models.SystemIntake{
+			Step:             models.SystemIntakeStepINITIALFORM,
+			RequestFormState: models.SIRFSSubmitted,
+			State:            models.SystemIntakeStateOPEN,
+		}
+		newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
+
+		err := IsIntakeValid(intake, newStep)
+		assert.NoError(t, err)
 	})
 }
