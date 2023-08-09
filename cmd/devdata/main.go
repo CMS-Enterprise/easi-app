@@ -222,8 +222,6 @@ func main() {
 		"admin note",
 	)
 
-	// Currently, these create system intakes along with feedback, but with no action associated with the feedback.
-	// The action will be added later in EASI-2888
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
 	makeSystemIntakeWithEditsRequested(
 		"Edits requested on intake request",
