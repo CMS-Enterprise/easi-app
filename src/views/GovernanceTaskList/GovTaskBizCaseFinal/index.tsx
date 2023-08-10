@@ -42,7 +42,7 @@ const GovTaskBizCaseFinal = ({
   // Submitted date
   if (
     !dateInfo &&
-    bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.COMPLETED &&
+    bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE &&
     bizCaseFinalSubmittedAt
   )
     dateInfo = {
@@ -67,7 +67,7 @@ const GovTaskBizCaseFinal = ({
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
 
         {/* Final biz case submitted & waiting for feedback */}
-        {bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.COMPLETED && (
+        {bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE && (
           <Alert slim type="info">
             {t(`taskList.step.${stepKey}.submittedInfo`)}
           </Alert>
@@ -96,7 +96,7 @@ const GovTaskBizCaseFinal = ({
         )}
 
         {/* Link to view submitted final biz case */}
-        {bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.COMPLETED && (
+        {bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE && (
           <div className="margin-top-2">
             <UswdsReactLink to="./">
               {t(`taskList.step.${stepKey}.viewSubmittedFinalBusinessCase`)}
