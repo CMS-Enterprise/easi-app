@@ -17,7 +17,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// CreateSystemIntake creates a system intake
+// CreateSystemIntake creates a system intake, though without saving values for LCID-related fields
 func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	if intake.ID == uuid.Nil {
 		intake.ID = uuid.New()

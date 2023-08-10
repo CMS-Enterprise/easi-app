@@ -11,6 +11,30 @@
             "substitutePath": [
                 { "from": "${workspaceFolder}", "to": "/easi" },
             ]
+        },
+        {
+            "name": "Debug seed data program",
+            "debugAdapter": "dlv-dap",
+            "type": "go",
+            "request": "launch",
+            "program": "${workspaceFolder}/cmd/devdata",
+            "cwd": "${workspaceFolder}", // necessary to load sample PDF file correctly; seed script in cmd/devdata/trb_request.go expects working directory to be project root
+            "mode": "debug",
+            // can't use envFile config parameter; that expects .env format of just key=value pairs, not bash script like .envrc/.envrc.local
+            "env": {
+                "PGHOST": "localhost",
+                "PGPORT": "5432",
+                "PGDATABASE": "postgres",
+                "PGUSER": "postgres",
+                "PGPASS": "mysecretpassword",
+                "PGSSLMODE": "disable",
+                "DB_MAX_CONNECTIONS": "20",
+                "AWS_S3_FILE_UPLOAD_BUCKET": "easi-app-file-uploads",
+                "AWS_REGION": "us-west-2",
+                "MINIO_ADDRESS": "http://host.docker.internal:9000",
+                "MINIO_ACCESS_KEY": "minioadmin",
+                "MINIO_SECRET_KEY": "minioadmin",
+            }
         }
     ]
 }
