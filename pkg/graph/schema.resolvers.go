@@ -731,7 +731,7 @@ func (r *iTGovTaskStatusesResolver) BizCaseDraftStatus(ctx context.Context, obj 
 
 // GrtMeetingStatus is the resolver for the grtMeetingStatus field.
 func (r *iTGovTaskStatusesResolver) GrtMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRTStatus, error) {
-	return resolvers.GrtMeetingStatus(obj.ParentSystemIntake), nil
+	return resolvers.GrtMeetingStatus(obj.ParentSystemIntake)
 }
 
 // BizCaseFinalStatus is the resolver for the bizCaseFinalStatus field.
