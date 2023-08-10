@@ -22,6 +22,13 @@ type testSystemIntakeFormFeedbackStatusType struct {
 	expectError    bool
 }
 
+type testSystemIntakeGRTStatusType struct {
+	testCase       string
+	intake         models.SystemIntake
+	expectedStatus models.ITGovGRTStatus
+	expectError    bool
+}
+
 type testSystemIntakeDraftBusinessCaseStatusType struct {
 	testCase       string
 	intake         models.SystemIntake
@@ -646,14 +653,215 @@ func TestBizCaseDraftStatus(t *testing.T) {
 	}
 
 }
-func (suite *ResolverSuite) TestGrtMeetingStatus() {
-	intake := models.SystemIntake{
-		Status: models.SystemIntakeStatusCLOSED,
+func TestGrtMeetingStatus(t *testing.T) {
+	yesterday := time.Now().Add(time.Hour * -24)
+	tomorrow := time.Now().Add(time.Hour * 24)
+	invalidTestStep := models.SystemIntakeStep("Testing Invalid Step")
+
+	decisionStateTests := []testSystemIntakeGRTStatusType{
+		{
+			testCase: "Request form: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepINITIALFORM,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Request form: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepINITIALFORM,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Request form: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepINITIALFORM,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Draft Business Case: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRTMEETING,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSReadyToSchedule,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRTMEETING,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSAwaitingDecision,
+			expectError:    false,
+		},
+		{
+			testCase: "GRT Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRTMEETING,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepFINALBIZCASE,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepFINALBIZCASE,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Final Business Case Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepFINALBIZCASE,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepGRBMEETING,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: No GRT Date Scheduled",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDECISION,
+				GRTDate: nil,
+			},
+			expectedStatus: models.ITGGRTSNotNeeded,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: GRT Date Yesterday",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDECISION,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision Step: GRT Date Tommorrow",
+			intake: models.SystemIntake{
+				Step:    models.SystemIntakeStepDECISION,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
+		{
+			testCase: "Invalid Step: No GRT Date Scheduled, expect error",
+			intake: models.SystemIntake{
+				Step:    invalidTestStep,
+				GRTDate: nil,
+			},
+			expectedStatus: "",
+			expectError:    true,
+		},
+		{
+			testCase: "Invalid Step: GRT Date Yesterday, no error",
+			intake: models.SystemIntake{
+				Step:    invalidTestStep,
+				GRTDate: &yesterday,
+			},
+			expectedStatus: models.ITGGRTSCompleted,
+			expectError:    false,
+		},
+		{
+			testCase: "Invalid Step: GRT Date Tommorrow, no error",
+			intake: models.SystemIntake{
+				Step:    invalidTestStep,
+				GRTDate: &tomorrow,
+			},
+			expectedStatus: models.ITGGRTSScheduled,
+			expectError:    false,
+		},
 	}
 
-	status := GrtMeetingStatus(&intake)
+	for _, test := range decisionStateTests {
+		t.Run(test.testCase, func(t *testing.T) {
+			status, err := GrtMeetingStatus(&test.intake)
+			assert.EqualValues(t, test.expectedStatus, status)
+			if test.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 
-	suite.EqualValues(models.ITGGRTSCantStart, status)
+		})
+	}
 
 }
 func (suite *ResolverSuite) TestBizCaseFinalStatus() {
