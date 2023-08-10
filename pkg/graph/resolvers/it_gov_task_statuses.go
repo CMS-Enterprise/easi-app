@@ -109,7 +109,7 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 		}
 		return models.ITGGRBSCompleted, nil // if the step is not GRB meeting, the status is completed
 	}
-	// the grb date is not nil.
+	// the grb date is nil.
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE: // Any step before GRB should show can't start
 		return models.ITGGRBSCantStart, nil
