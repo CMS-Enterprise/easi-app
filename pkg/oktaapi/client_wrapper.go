@@ -45,6 +45,7 @@ type oktaUserResponse struct {
 }
 
 // Converts the generic JSON type of okta.UserProfile into oktaUserResponse
+// This also will auto-capitalize the EUA
 func (cw *ClientWrapper) parseOktaProfileResponse(ctx context.Context, profile *okta.UserProfile) (*oktaUserResponse, error) {
 	logger := appcontext.ZLogger(ctx)
 
@@ -64,6 +65,9 @@ func (cw *ClientWrapper) parseOktaProfileResponse(ctx context.Context, profile *
 		logger.Error("error unmarshalling okta response", zap.Error(err))
 		return nil, err
 	}
+
+	// This only works because we know that ALL logins are EUAs. If we ever support non-EUA login, we need to conditional this
+	parsedProfile.Login = strings.ToUpper(parsedProfile.Login)
 
 	return parsedProfile, nil
 }
