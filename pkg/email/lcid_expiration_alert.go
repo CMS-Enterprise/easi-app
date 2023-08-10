@@ -88,12 +88,8 @@ func (c Client) SendLCIDExpirationAlertEmail(
 
 	err = c.sender.Send(
 		ctx,
-		// NOTE: this is a stopgap solution of only sending to GRT mailbox rather than GRT mailbox and requesters.
-		// This is to stop some requesters from getting unnecessary alerts of LCID expirations for retired requests
-		// This will be changed back to c.listAllRecipients(recipients) once we come up with a way of filtering out these retired requests
-		// TODO: revert this when fix for filtering out retired request is done
-		[]models.EmailAddress{c.config.GRTEmail}, // c.listAllRecipients(recipients),
-		nil,                                      // TODO: This is nil b/c we set the ShouldNotifyITGovernance bool as true in recipients.
+		c.listAllRecipients(recipients),
+		nil, // TODO: This is nil b/c we set the ShouldNotifyITGovernance bool as true in recipients.
 		//       This however doesn't cc the governance mailbox but sends directly to it, we should maybe allow for specification between cc'ing and sending directly?
 		subject,
 		body,
