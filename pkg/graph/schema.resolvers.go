@@ -746,7 +746,7 @@ func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj 
 
 // GrbMeetingStatus is the resolver for the grbMeetingStatus field.
 func (r *iTGovTaskStatusesResolver) GrbMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRBStatus, error) {
-	return resolvers.GrbMeetingStatus(obj.ParentSystemIntake), nil
+	return resolvers.GrbMeetingStatus(obj.ParentSystemIntake)
 }
 
 // DecisionAndNextStepsStatus is the resolver for the decisionAndNextStepsStatus field.
@@ -1944,7 +1944,7 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 
 // CreateTRBRequest is the resolver for the createTRBRequest field.
 func (r *mutationResolver) CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType) (*models.TRBRequest, error) {
-	return resolvers.CreateTRBRequest(ctx, requestType, r.service.FetchUserInfo, r.store)
+	return resolvers.CreateTRBRequest(ctx, requestType, r.store)
 }
 
 // UpdateTRBRequest is the resolver for the updateTRBRequest field.

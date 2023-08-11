@@ -373,7 +373,7 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 }
 
 func (s *seederConfig) addTRBRequest(ctx context.Context, rType models.TRBRequestType, name *string) (*models.TRBRequest, error) {
-	trb, err := resolvers.CreateTRBRequest(ctx, rType, mock.FetchUserInfoMock, s.store)
+	trb, err := resolvers.CreateTRBRequest(ctx, rType, s.store)
 	if err != nil {
 		return nil, err
 	}

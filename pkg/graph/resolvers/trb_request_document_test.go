@@ -12,7 +12,7 @@ import (
 
 func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
 	// general setup
-	trbRequest, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTFormalReview, suite.fetchUserInfoStub, suite.testConfigs.Store)
+	trbRequest, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTFormalReview, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trbRequest)
 	trbRequestID := trbRequest.ID
