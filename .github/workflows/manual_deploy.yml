@@ -37,10 +37,18 @@ jobs:
     secrets: inherit
     with:
       env: ${{ inputs.env }}
+  
+  Build_Test_Frontend_Assets:
+    if: ${{ inputs.skip_tests == false }}
+    uses: ./.github/workflows/build_frontend_assets.yml
+    secrets: inherit
+    with:
+      env: test
+
 
   Run_Tests:
     uses: ./.github/workflows/run_tests.yml
-    needs: Build_Application_Images
+    needs: [Build_Application_Images, Build_Test_Frontend_Assets]
     secrets: inherit
     with:
       skip_tests: ${{ inputs.skip_tests }}
