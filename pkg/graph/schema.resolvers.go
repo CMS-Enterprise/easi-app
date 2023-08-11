@@ -1569,57 +1569,7 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 
 // UpdateSystemIntakeContactDetails is the resolver for the updateSystemIntakeContactDetails field.
 func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystemIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-	intake.Requester = input.Requester.Name
-	intake.Component = null.StringFrom(input.Requester.Component)
-	intake.BusinessOwner = null.StringFrom(input.BusinessOwner.Name)
-	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
-	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
-	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
-
-	if input.Isso.IsPresent != nil && *input.Isso.IsPresent {
-		intake.ISSOName = null.StringFromPtr(input.Isso.Name)
-	} else {
-		intake.ISSOName = null.StringFromPtr(nil)
-	}
-
-	if input.GovernanceTeams.IsPresent != nil {
-		trbCollaboratorName := null.StringFromPtr(nil)
-		for _, team := range input.GovernanceTeams.Teams {
-			if team.Key == "technicalReviewBoard" {
-				trbCollaboratorName = null.StringFrom(team.Collaborator)
-			}
-		}
-		intake.TRBCollaboratorName = trbCollaboratorName
-
-		oitCollaboratorName := null.StringFromPtr(nil)
-		for _, team := range input.GovernanceTeams.Teams {
-			if team.Key == "securityPrivacy" {
-				oitCollaboratorName = null.StringFrom(team.Collaborator)
-			}
-		}
-		intake.OITSecurityCollaboratorName = oitCollaboratorName
-
-		eaCollaboratorName := null.StringFromPtr(nil)
-		for _, team := range input.GovernanceTeams.Teams {
-			if team.Key == "enterpriseArchitecture" {
-				eaCollaboratorName = null.StringFrom(team.Collaborator)
-			}
-		}
-		intake.EACollaboratorName = eaCollaboratorName
-	} else {
-		intake.TRBCollaboratorName = null.StringFromPtr(nil)
-		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
-		intake.EACollaboratorName = null.StringFromPtr(nil)
-	}
-
-	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
-	return &model.UpdateSystemIntakePayload{
-		SystemIntake: savedIntake,
-	}, err
+	return resolvers.SystemIntakeUpdateContactDetails(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeRequestDetails is the resolver for the updateSystemIntakeRequestDetails field.
