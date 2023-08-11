@@ -51,6 +51,7 @@ type ResolverRoot interface {
 	CedarRoleType() CedarRoleTypeResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
 	CedarThreat() CedarThreatResolver
+	GovernanceRequestFeedback() GovernanceRequestFeedbackResolver
 	ITGovTaskStatuses() ITGovTaskStatusesResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
@@ -506,6 +507,7 @@ type ComplexityRoot struct {
 	}
 
 	GovernanceRequestFeedback struct {
+		Author       func(childComplexity int) int
 		CreatedAt    func(childComplexity int) int
 		CreatedBy    func(childComplexity int) int
 		Feedback     func(childComplexity int) int
@@ -515,6 +517,7 @@ type ComplexityRoot struct {
 		ModifiedBy   func(childComplexity int) int
 		SourceAction func(childComplexity int) int
 		TargetForm   func(childComplexity int) int
+		Type         func(childComplexity int) int
 	}
 
 	ITGovTaskStatuses struct {
@@ -554,6 +557,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionNoGovernanceNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNotItRequest             func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNotRespondingClose       func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionProgressToNewStep        func(childComplexity int, input *model.SystemIntakeProgressToNewStepsInput) int
 		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionRequestEdits             func(childComplexity int, input model.SystemIntakeRequestEditsInput) int
 		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
@@ -1212,6 +1216,9 @@ type CedarThreatResolver interface {
 	Type(ctx context.Context, obj *models.CedarThreat) (*string, error)
 	WeaknessRiskLevel(ctx context.Context, obj *models.CedarThreat) (*string, error)
 }
+type GovernanceRequestFeedbackResolver interface {
+	Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error)
+}
 type ITGovTaskStatusesResolver interface {
 	IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeFormStatus, error)
 	FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFeedbackStatus, error)
@@ -1232,6 +1239,7 @@ type MutationResolver interface {
 	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
 	UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error)
 	UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error)
+	CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -3500,6 +3508,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
 
+	case "GovernanceRequestFeedback.author":
+		if e.complexity.GovernanceRequestFeedback.Author == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.Author(childComplexity), true
+
 	case "GovernanceRequestFeedback.createdAt":
 		if e.complexity.GovernanceRequestFeedback.CreatedAt == nil {
 			break
@@ -3562,6 +3577,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GovernanceRequestFeedback.TargetForm(childComplexity), true
+
+	case "GovernanceRequestFeedback.type":
+		if e.complexity.GovernanceRequestFeedback.Type == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.Type(childComplexity), true
 
 	case "ITGovTaskStatuses.bizCaseDraftStatus":
 		if e.complexity.ITGovTaskStatuses.BizCaseDraftStatus == nil {
@@ -3831,6 +3853,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateSystemIntakeActionNotRespondingClose(childComplexity, args["input"].(model.BasicActionInput)), true
+
+	case "Mutation.createSystemIntakeActionProgressToNewStep":
+		if e.complexity.Mutation.CreateSystemIntakeActionProgressToNewStep == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntakeActionProgressToNewStep_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntakeActionProgressToNewStep(childComplexity, args["input"].(*model.SystemIntakeProgressToNewStepsInput)), true
 
 	case "Mutation.createSystemIntakeActionReadyForGRT":
 		if e.complexity.Mutation.CreateSystemIntakeActionReadyForGrt == nil {
@@ -6972,6 +7006,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeGovernanceTeamInput,
 		ec.unmarshalInputSystemIntakeISSOInput,
 		ec.unmarshalInputSystemIntakeProductManagerInput,
+		ec.unmarshalInputSystemIntakeProgressToNewStepsInput,
 		ec.unmarshalInputSystemIntakeRequestEditsInput,
 		ec.unmarshalInputSystemIntakeRequesterInput,
 		ec.unmarshalInputSystemIntakeRequesterWithComponentInput,
@@ -8498,6 +8533,31 @@ type UpdateSystemIntakePayload {
   userErrors: [UserError!]
 }
 
+
+"""
+Steps in the system intake process that a Progress to New Step action can progress to
+"""
+enum SystemIntakeStepToProgressTo {
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+}
+
+"""
+Input for submitting a Progress to New Step action in IT Gov v2
+"""
+input SystemIntakeProgressToNewStepsInput {
+  systemIntakeID: UUID!
+  newStep: SystemIntakeStepToProgressTo!
+  meetingDate: Time # optionally used when progressing to GRT or GRB meeting; ignored when progressing to other steps
+  notificationRecipients: EmailNotificationRecipients
+  feedback: String
+  grbRecommendations: String
+  additionalNote: String
+  adminNote: String
+}
+
 """
 Input for creating a Request Edits Action in Admin Actions v2
 """
@@ -8888,6 +8948,14 @@ enum GovernanceRequestFeedbackTargetForm {
 }
 
 """
+Represents the possible types of feedback on governance requests, based on who it's directed to
+"""
+enum GovernanceRequestFeedbackType {
+  REQUESTER
+  GRB
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
@@ -8896,6 +8964,8 @@ type GovernanceRequestFeedback {
   feedback: String!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
+  type: GovernanceRequestFeedbackType!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -9327,6 +9397,9 @@ type Mutation {
   updateAccessibilityRequestCedarSystem(
     input: UpdateAccessibilityRequestCedarSystemInput
   ): UpdateAccessibilityRequestCedarSystemPayload
+  createSystemIntakeActionProgressToNewStep(
+    input: SystemIntakeProgressToNewStepsInput
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -9732,10 +9805,16 @@ enum ITGovFinalBusinessCaseStatus {
   This business case has edits requested
   """
   EDITS_REQUESTED
+
   """
-  This business case has been completed
+  The business case has been submitted and it is waiting for feedback from the governance team
   """
-  COMPLETED
+  SUBMITTED
+
+  """
+  The business case has been completed and the intake is on a further step
+  """
+  DONE
 }
 
 """
@@ -10079,6 +10158,21 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionNotResponding
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createSystemIntakeActionProgressToNewStep_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.SystemIntakeProgressToNewStepsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProgressToNewStepsInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -24761,6 +24855,102 @@ func (ec *executionContext) fieldContext_GovernanceRequestFeedback_targetForm(ct
 	return fc, nil
 }
 
+func (ec *executionContext) _GovernanceRequestFeedback_type(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_type(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.GovernanceRequestFeedbackType)
+	fc.Result = res
+	return ec.marshalNGovernanceRequestFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type GovernanceRequestFeedbackType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_author(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_author(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.GovernanceRequestFeedback().Author(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GovernanceRequestFeedback_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GovernanceRequestFeedback_createdBy(ctx, field)
 	if err != nil {
@@ -26091,6 +26281,87 @@ func (ec *executionContext) fieldContext_Mutation_updateAccessibilityRequestCeda
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateAccessibilityRequestCedarSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createSystemIntakeActionProgressToNewStep(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSystemIntakeActionProgressToNewStep(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateSystemIntakeActionProgressToNewStep(rctx, fc.Args["input"].(*model.SystemIntakeProgressToNewStepsInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionProgressToNewStep(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSystemIntakeActionProgressToNewStep_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -35546,6 +35817,10 @@ func (ec *executionContext) fieldContext_SystemIntake_governanceRequestFeedbacks
 				return ec.fieldContext_GovernanceRequestFeedback_sourceAction(ctx, field)
 			case "targetForm":
 				return ec.fieldContext_GovernanceRequestFeedback_targetForm(ctx, field)
+			case "type":
+				return ec.fieldContext_GovernanceRequestFeedback_type(ctx, field)
+			case "author":
+				return ec.fieldContext_GovernanceRequestFeedback_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_GovernanceRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -51541,6 +51816,90 @@ func (ec *executionContext) unmarshalInputSystemIntakeProductManagerInput(ctx co
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ctx context.Context, obj interface{}) (model.SystemIntakeProgressToNewStepsInput, error) {
+	var it model.SystemIntakeProgressToNewStepsInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "newStep", "meetingDate", "notificationRecipients", "feedback", "grbRecommendations", "additionalNote", "adminNote"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			it.SystemIntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "newStep":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newStep"))
+			it.NewStep, err = ec.unmarshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "meetingDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("meetingDate"))
+			it.MeetingDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "feedback":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedback"))
+			it.Feedback, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "grbRecommendations":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbRecommendations"))
+			it.GrbRecommendations, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "additionalNote":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalNote"))
+			it.AdditionalNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "adminNote":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
+			it.AdminNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequestEditsInput, error) {
 	var it model.SystemIntakeRequestEditsInput
 	asMap := map[string]interface{}{}
@@ -56182,49 +56541,76 @@ func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel 
 			out.Values[i] = ec._GovernanceRequestFeedback_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "intakeId":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_intakeId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "feedback":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_feedback(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "sourceAction":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_sourceAction(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "targetForm":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_targetForm(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "type":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_type(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "author":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GovernanceRequestFeedback_author(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "createdBy":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_createdBy(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdAt":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "modifiedBy":
 
@@ -56546,6 +56932,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateAccessibilityRequestCedarSystem(ctx, field)
+			})
+
+		case "createSystemIntakeActionProgressToNewStep":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSystemIntakeActionProgressToNewStep(ctx, field)
 			})
 
 		case "createSystemIntakeActionRequestEdits":
@@ -62711,6 +63103,22 @@ func (ec *executionContext) marshalNGovernanceRequestFeedbackTargetForm2github�
 	return res
 }
 
+func (ec *executionContext) unmarshalNGovernanceRequestFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackType(ctx context.Context, v interface{}) (models.GovernanceRequestFeedbackType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.GovernanceRequestFeedbackType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGovernanceRequestFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackType(ctx context.Context, sel ast.SelectionSet, v models.GovernanceRequestFeedbackType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNITGovDecisionStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovDecisionStatus(ctx context.Context, v interface{}) (models.ITGovDecisionStatus, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.ITGovDecisionStatus(tmp)
@@ -63822,6 +64230,16 @@ func (ec *executionContext) marshalNSystemIntakeStep2githubᚗcomᚋcmsgovᚋeas
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx context.Context, v interface{}) (model.SystemIntakeStepToProgressTo, error) {
+	var res model.SystemIntakeStepToProgressTo
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeStepToProgressTo) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNTRBAdminNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNote) graphql.Marshaler {
@@ -65775,6 +66193,14 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProgressToNewStepsInput(ctx context.Context, v interface{}) (*model.SystemIntakeProgressToNewStepsInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeProgressToNewStepsInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, v interface{}) (*models.TRBAdminNoteCategory, error) {
