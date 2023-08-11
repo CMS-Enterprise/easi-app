@@ -10,12 +10,15 @@ import (
 // ActionType represents type of action
 type ActionType string
 
-// These actions are specifically for admin actions v2 work
+// IT Gov v2 actions
 const (
-	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS (admin actions v2)
+	// ActionTypePROGRESSTONEWSTEP captures enum value PROGRESS_TO_NEW_STEP
+	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
+	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS
 	ActionTypeREQUESTEDITS ActionType = "REQUEST_EDITS"
 )
 
+// v1 actions (before v2 revamp)
 const (
 	// ActionTypeSUBMITINTAKE captures enum value SUBMIT_INTAKE
 	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"
@@ -66,8 +69,8 @@ type Action struct {
 	ActorName                                string            `json:"actorName" db:"actor_name"`
 	ActorEmail                               EmailAddress      `json:"actorEmail" db:"actor_email"`
 	ActorEUAUserID                           string            `json:"actorEuaUserId" db:"actor_eua_user_id"`
-	Feedback                                 null.String       `json:"feedback"` // Feedback to requestor sent via email
-	Step                                     *SystemIntakeStep `json:"step" db:"step"`
+	Feedback                                 null.String       `json:"feedback"`       // Feedback to requestor sent via email
+	Step                                     *SystemIntakeStep `json:"step" db:"step"` // optional to account for previous actions that didn't save Step information
 	CreatedAt                                *time.Time        `json:"createdAt" db:"created_at"`
 	LCIDExpirationChangeNewDate              *time.Time        `db:"lcid_expiration_change_new_date"`
 	LCIDExpirationChangePreviousDate         *time.Time        `db:"lcid_expiration_change_previous_date"`
