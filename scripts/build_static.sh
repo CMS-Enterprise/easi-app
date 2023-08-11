@@ -24,7 +24,7 @@ case "$APP_ENV" in
     ;;
   *)
     echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
-    echo "Allowed values: 'dev','test','impl','prod'"
+    echo "Allowed values: 'test','dev','impl','prod'"
     exit 1
     ;;
 esac
