@@ -1624,31 +1624,7 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 
 // UpdateSystemIntakeRequestDetails is the resolver for the updateSystemIntakeRequestDetails field.
 func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context, input model.UpdateSystemIntakeRequestDetailsInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
-	intake.ProjectName = null.StringFromPtr(input.RequestName)
-	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
-	intake.Solution = null.StringFromPtr(input.BusinessSolution)
-	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
-	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
-
-	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
-	cedarSystemIDStr := cedarSystemID.ValueOrZero()
-	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-		_, err = r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
-		if err != nil {
-			return nil, err
-		}
-		intake.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
-	}
-
-	savedIntake, err := r.store.UpdateSystemIntake(ctx, intake)
-	return &model.UpdateSystemIntakePayload{
-		SystemIntake: savedIntake,
-	}, err
+	return resolvers.SystemIntakeUpdate(ctx, r.store, r.cedarCoreClient.GetSystem, input)
 }
 
 // UpdateSystemIntakeContractDetails is the resolver for the updateSystemIntakeContractDetails field.
