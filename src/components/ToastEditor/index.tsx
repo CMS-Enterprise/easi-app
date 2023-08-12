@@ -17,15 +17,18 @@ import DOMPurify from 'dompurify';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import './index.scss';
 
-interface EditableAttrFromProps {
+interface EditableProps {
+  id?: string;
   'aria-describedby'?: string;
   'aria-labelledby'?: string;
   'data-testid'?: string;
 }
 
-interface ToastEditorProps extends EditableAttrFromProps, EditorProps {
-  id?: string;
+interface ToastEditorProps extends EditorProps {
+  /** Wrapper div classname */
   className?: string;
+  /** Editable element div props */
+  editableProps?: EditableProps;
   /** RHF controlled input field */
   field?: ControllerRenderProps<any, any>;
   required?: boolean;
@@ -114,10 +117,7 @@ function repositionLinkPopup(popupEl: HTMLElement) {
  */
 function setEditableElementProps(
   el: HTMLElement,
-  editorProps: Pick<
-    ToastEditorProps,
-    keyof EditableAttrFromProps | 'id' | 'required'
-  >
+  editorProps: ToastEditorProps
 ) {
   // We are only using the editor's wysiwyg mode,
   // so scope the selector on toast's ww container
@@ -126,10 +126,6 @@ function setEditableElementProps(
   );
 
   if (elEditable) {
-    if (editorProps.id) {
-      elEditable.id = editorProps.id;
-    }
-
     elEditable.setAttribute('role', 'textbox');
     elEditable.setAttribute('aria-multiline', 'true');
     elEditable.setAttribute(
@@ -137,9 +133,13 @@ function setEditableElementProps(
       editorProps.required ? 'true' : 'false'
     );
 
+    if (editorProps.editableProps?.id) {
+      elEditable.id = editorProps.editableProps.id;
+    }
+
     ['aria-describedby', 'aria-labelledby', 'data-testid'].forEach(attr => {
-      const editableAttr = attr as keyof EditableAttrFromProps;
-      const val = editorProps[editableAttr];
+      const editableAttr = attr as keyof EditableProps;
+      const val = editorProps.editableProps?.[editableAttr];
       if (val) elEditable.setAttribute(attr, val);
     });
   }
@@ -197,11 +197,11 @@ function showLinkUnderSelection(toastEditor: ToastuiEditor) {
 }
 
 /**
- * Toast rich text editor as a RHF constrolled input field.
+ * Toast rich text editor as a RHF controlled input field.
  * Set to WYSIWYG mode only.
- * Outputs HTML.
+ * The input value is HTML.
  */
-function ToastEditor({ className, field, ...editorProps }: ToastEditorProps) {
+function ToastEditor({ className, field, ...props }: ToastEditorProps) {
   const editorRef = React.createRef<Editor>();
 
   // Make sure to apply mods only once
@@ -212,7 +212,7 @@ function ToastEditor({ className, field, ...editorProps }: ToastEditorProps) {
     const el = editor.getRootElement();
     const toast = editor.getInstance();
 
-    setEditableElementProps(el, editorProps);
+    setEditableElementProps(el, props);
     initLinkPopup(el);
     sanitizeHtmlOnContentChange(toast);
     showLinkUnderSelection(toast);
@@ -229,7 +229,7 @@ function ToastEditor({ className, field, ...editorProps }: ToastEditorProps) {
         hideModeSwitch
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
-        height={editorProps.height || '100%'}
+        height={props.height || '100%'}
         onBlur={() => {
           field?.onBlur();
         }}

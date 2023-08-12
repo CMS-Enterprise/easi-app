@@ -25,13 +25,7 @@ function ToastStage() {
             <Controller
               name="htmlField"
               control={control}
-              render={({ field }) => (
-                <ToastEditor
-                  id="htmlField"
-                  data-testid="htmlField"
-                  field={field}
-                />
-              )}
+              render={({ field }) => <ToastEditor field={field} />}
             />
             <button type="submit">submit</button>
           </form>

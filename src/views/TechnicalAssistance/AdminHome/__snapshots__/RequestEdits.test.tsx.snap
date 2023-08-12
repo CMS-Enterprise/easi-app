@@ -82,6 +82,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
         <label
           class="usa-label text-normal margin-top-6"
           for="feedbackMessage"
+          id="feedbackMessage-label"
         >
           What type of edits are needed prior to scheduling the consult session?
           <span
@@ -276,10 +277,15 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
                       style="min-height: 25px;"
                     >
                       <div
+                        aria-describedby="feedbackMessage-hint"
+                        aria-labelledby="feedbackMessage-label"
+                        aria-multiline="true"
+                        aria-required="true"
                         class="ProseMirror toastui-editor-contents ProseMirror-focused"
                         contenteditable="true"
                         data-testid="feedbackMessage"
                         id="feedbackMessage"
+                        role="textbox"
                         translate="no"
                       >
                         <p>

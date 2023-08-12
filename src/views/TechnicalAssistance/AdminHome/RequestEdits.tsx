@@ -176,10 +176,12 @@ function RequestEdits() {
               */}
               <ToastEditor
                 className="margin-top-1"
-                id="feedbackMessage"
-                aria-describedby="feedbackMessage-hint"
-                aria-labelledby="feedbackMessage-label"
-                data-testid="feedbackMessage"
+                editableProps={{
+                  id: 'feedbackMessage',
+                  'data-testid': 'feedbackMessage',
+                  'aria-describedby': 'feedbackMessage-hint',
+                  'aria-labelledby': 'feedbackMessage-label'
+                }}
                 field={field}
                 required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
               />
