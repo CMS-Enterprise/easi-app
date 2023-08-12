@@ -1,3 +1,6 @@
+// @forward "usa-button";
+@use 'uswds-core' as *;
+
 .easi-toast-editor {
   height: 155px; /* put in a field specific rule */
 
@@ -18,6 +21,7 @@
   .toastui-editor-defaultUI-toolbar {
     height: auto;
     background: transparent;
+    border-bottom: 1px solid #e6e6e6;
     padding: 4px 2px 2px;
   }
 
@@ -25,31 +29,100 @@
     border-color: white;
     border-radius: 4px;
     margin: 0 4px 0 0;
-    // &.active {
-    //   // outline: none;
-    //   // background: #f0f0f0;
-    // }
   }
 
   .toastui-editor-toolbar-divider {
     margin: 8px 8px 0 4px;
     height: 16px;
+    background-color: #e6e6e6;
   }
-
-  // .toastui-editor-contents {
-  // }
 
   .toastui-editor-contents {
     padding: 6px 9px 9px;
   }
 
+  .toastui-editor-contents *:not(table) {
+    line-height: inherit;
+  }
+
+  .toastui-editor-contents a {
+    color: #005ea2;
+    &:focus {
+      outline: 0.25rem solid #2491ff;
+      outline-offset: 0;
+    }
+    &:active {
+      color: #162e51;
+    }
+    &:hover {
+      color: #1a4480;
+    }
+  }
+
   .toastui-editor-contents ol > li::before {
-    color: #1b1b1b;
+    color: color('base-darkest');
   }
 
   .toastui-editor-contents ul > li::before {
     margin-top: 10px;
-    background-color: #1b1b1b;
+    background-color: color('base-darkest');
   }
 
+  .toastui-editor-popup {
+    box-shadow: 0px 8px 16px 0px #0000001A;
+
+    @media only screen and (max-width: 480px) {
+      margin-left: 0;
+    }
+  }
+
+  .toastui-editor-popup-body {
+    padding: 32px;
+    font-family: 'Public Sans';
+    color: color('base-darkest');
+
+    label,
+    input {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 22px;
+    }
+
+    label {
+      margin: 1rem 0 0.5rem;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    input {
+      border: 1px solid #5c5c5c;
+      border-radius: 0;
+      padding: 9px 8px;
+      width: 100%;
+      height: auto;
+
+      &:focus {
+        outline: none;
+        border-color: inherit;
+      }
+    }
+  }
+
+  .toastui-editor-button-container {
+    margin-top: 1.5rem;
+    text-align: left;
+
+    button {
+      all: unset;
+      &:hover {
+        all: unset;
+      }
+
+      .usa-button {
+        width: auto;
+      }
+    }
+  }
 }
