@@ -155,6 +155,7 @@ function RequestEdits() {
           return (
             <FormGroup error={!!error}>
               <Label
+                id="feedbackMessage-label"
                 htmlFor="feedbackMessage"
                 className="text-normal margin-top-6"
                 required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
@@ -176,8 +177,11 @@ function RequestEdits() {
               <ToastEditor
                 className="margin-top-1"
                 id="feedbackMessage"
+                aria-describedby="feedbackMessage-hint"
+                aria-labelledby="feedbackMessage-label"
                 data-testid="feedbackMessage"
                 field={field}
+                required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
               />
             </FormGroup>
           );

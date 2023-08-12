@@ -17,12 +17,18 @@ import DOMPurify from 'dompurify';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import './index.scss';
 
-interface ToastEditorProps extends EditorProps {
-  className?: string;
-  id?: string;
+interface EditableAttrFromProps {
+  'aria-describedby'?: string;
+  'aria-labelledby'?: string;
   'data-testid'?: string;
+}
+
+interface ToastEditorProps extends EditableAttrFromProps, EditorProps {
+  id?: string;
+  className?: string;
   /** RHF controlled input field */
   field?: ControllerRenderProps<any, any>;
+  required?: boolean;
 }
 
 /**
@@ -106,12 +112,12 @@ function repositionLinkPopup(popupEl: HTMLElement) {
 /**
  * Apply certain properties to toast's text field
  */
-function setEditorElementProps(
+function setEditableElementProps(
   el: HTMLElement,
-  editorProps: {
-    id?: ToastEditorProps['id'];
-    'data-testid'?: ToastEditorProps['data-testid'];
-  }
+  editorProps: Pick<
+    ToastEditorProps,
+    keyof EditableAttrFromProps | 'id' | 'required'
+  >
 ) {
   // We are only using the editor's wysiwyg mode,
   // so scope the selector on toast's ww container
@@ -123,9 +129,19 @@ function setEditorElementProps(
     if (editorProps.id) {
       elEditable.id = editorProps.id;
     }
-    if (editorProps['data-testid']) {
-      elEditable.setAttribute('data-testid', editorProps['data-testid']);
-    }
+
+    elEditable.setAttribute('role', 'textbox');
+    elEditable.setAttribute('aria-multiline', 'true');
+    elEditable.setAttribute(
+      'aria-required',
+      editorProps.required ? 'true' : 'false'
+    );
+
+    ['aria-describedby', 'aria-labelledby', 'data-testid'].forEach(attr => {
+      const editableAttr = attr as keyof EditableAttrFromProps;
+      const val = editorProps[editableAttr];
+      if (val) elEditable.setAttribute(attr, val);
+    });
   }
 }
 
@@ -196,7 +212,7 @@ function ToastEditor({ className, field, ...editorProps }: ToastEditorProps) {
     const el = toast.getRootElement();
     const editor = toast.getInstance();
 
-    setEditorElementProps(el, editorProps);
+    setEditableElementProps(el, editorProps);
     initLinkPopup(el);
     sanitizeHtmlOnContentChange(editor);
     showLinkUnderSelection(editor);
