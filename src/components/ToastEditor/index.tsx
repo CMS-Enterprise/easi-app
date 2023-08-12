@@ -149,9 +149,9 @@ function setEditableElementProps(
  * Sanitize the html on the editor change event.
  * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
  */
-function sanitizeHtmlOnContentChange(editor: ToastuiEditor) {
-  editor.eventEmitter.listen('change', () => {
-    const html = editor.getHTML();
+function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor) {
+  toastEditor.eventEmitter.listen('change', () => {
+    const html = toastEditor.getHTML();
     const sanitized = DOMPurify.sanitize(html, {
       ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
     });
@@ -159,7 +159,7 @@ function sanitizeHtmlOnContentChange(editor: ToastuiEditor) {
     // which should just be on copy and paste.
     // Setting it on every change will jump the text cursor to the end of content.
     if (html !== sanitized) {
-      editor.setHTML(sanitized);
+      toastEditor.setHTML(sanitized);
     }
   });
 }
@@ -168,17 +168,17 @@ function sanitizeHtmlOnContentChange(editor: ToastuiEditor) {
  * Show the current link in the pop up when editing
  * https://github.com/nhn/tui.editor/issues/1256
  */
-function showLinkUnderSelection(editor: ToastuiEditor) {
-  editor.eventEmitter.removeEventHandler('query');
-  editor.eventEmitter.listen('query', (query, payload = {}) => {
+function showLinkUnderSelection(toastEditor: ToastuiEditor) {
+  toastEditor.eventEmitter.removeEventHandler('query');
+  toastEditor.eventEmitter.listen('query', (query, payload = {}) => {
     // console.log('query', query, payload);
     if (query === 'getPopupInitialValues' && payload.popupName === 'link') {
-      const range = editor.getSelection() as [number, number];
-      const info = editor.getRangeInfoOfNode(
+      const range = toastEditor.getSelection() as [number, number];
+      const info = toastEditor.getRangeInfoOfNode(
         Math.floor((range[0] + range[1]) / 2)
       );
       if (info.type === 'link') {
-        editor.setSelection(info.range[0], info.range[1]);
+        toastEditor.setSelection(info.range[0], info.range[1]);
         let link = window.getSelection()?.getRangeAt(0).commonAncestorContainer
           .parentElement as HTMLAnchorElement;
         link = link?.closest('a') || link?.querySelector('a') || link;
@@ -188,7 +188,7 @@ function showLinkUnderSelection(editor: ToastuiEditor) {
         };
       }
       return {
-        linkText: editor.getSelectedText()
+        linkText: toastEditor.getSelectedText()
       };
     }
 
@@ -206,16 +206,16 @@ function ToastEditor({ className, field, ...editorProps }: ToastEditorProps) {
 
   // Make sure to apply mods only once
   useEffect(() => {
-    const toast = editorRef.current;
-    if (!toast) return;
+    const editor = editorRef.current;
+    if (!editor) return;
 
-    const el = toast.getRootElement();
-    const editor = toast.getInstance();
+    const el = editor.getRootElement();
+    const toast = editor.getInstance();
 
     setEditableElementProps(el, editorProps);
     initLinkPopup(el);
-    sanitizeHtmlOnContentChange(editor);
-    showLinkUnderSelection(editor);
+    sanitizeHtmlOnContentChange(toast);
+    showLinkUnderSelection(toast);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
