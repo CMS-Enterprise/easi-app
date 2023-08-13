@@ -25,6 +25,11 @@ func ProgressIntake(
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
@@ -61,11 +66,6 @@ func ProgressIntake(
 
 	// save action (including additional notes for email, if any)
 	errGroup.Go(func() error {
-		adminUserInfo, errCreatingAction := fetchUserInfo(ctx, adminEUAID)
-		if errCreatingAction != nil {
-			return errCreatingAction
-		}
-
 		stepForAction := models.SystemIntakeStep(input.NewStep)
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
@@ -79,7 +79,7 @@ func ProgressIntake(
 			action.Feedback = null.StringFromPtr(input.AdditionalNote)
 		}
 
-		_, errCreatingAction = store.CreateAction(ctx, &action)
+		_, errCreatingAction := store.CreateAction(ctx, &action)
 		if errCreatingAction != nil {
 			return errCreatingAction
 		}
@@ -132,11 +132,6 @@ func ProgressIntake(
 	// save admin note
 	if input.AdminNote != nil {
 		errGroup.Go(func() error {
-			adminUserInfo, errAdminUserInfo := fetchUserInfo(ctx, adminEUAID)
-			if errAdminUserInfo != nil {
-				return errAdminUserInfo
-			}
-
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
