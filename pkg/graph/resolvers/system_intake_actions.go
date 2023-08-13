@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/closedintake"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -230,4 +232,142 @@ func CreateSystemIntakeActionRequestEdits(
 		}
 	}
 	return intake, nil
+}
+
+// rough draft of input type
+// TODO - replace with proper type from GQL input
+type reopenInput struct {
+	SystemIntakeID          uuid.UUID
+	NotificationReceipients *models.EmailNotificationRecipients
+	AdditionalNote          *string
+	AdminNote               *string
+	// TODO - field for new resolution - options are re-opening, not a governance request, not approved by GRB, or issue LCID
+}
+
+// ReopenOrChangeDecisionOnClosedIntake does a thing
+// TODO - change comment
+// potential overlap with EASI-3111 (issue decision or close request) - https://jiraent.cms.gov/browse/EASI-3111, though not for reopening
+func ReopenOrChangeDecisionOnClosedIntake(ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input reopenInput) (*models.SystemIntake, error) {
+	// input:
+	// 3. fields depending on which new resolution is selected (i.e. some require new steps, some don't)
+	// 3.a. reopening
+	// 3.a.i. "why are you reopening?" - optional (TODO - where does this get saved, if anywhere? it gets included in email)
+	// 3.a.ii. additional notes in email - saved in actions.feedback
+	// 3.a.iii. admin note
+	// 3.b. not a governance request
+	// 3.b.i. "why is this not an IT gov request?" - optional (TODO - where does this get saved, if anywhere? .RejectionReason field? (probably not, that's probably for not approved by GRB))
+	// 3.b.ii. additional notes in email - saved in actions.feedback
+	// 3.b.iii. admin note
+	// 3.c. not approved by GRB
+	// 3.c.i. reason - required (is this what .RejectionReason field is for?)
+	// 3.c.ii. next steps - required
+	// 3.c.iii. should this team consult with TRB? (strongly recommended, yes but not critical, no)	- required (TODO - doesn't seem like there's a field for this)
+	// 3.c.iv. additional notes in email - saved in actions.feedback
+	// 3.c.v. admin note
+	// 3.d. issue LCID - (various fields we know how to handle) https://www.figma.com/file/ChzAP34A2DVvQUNQwD7lCt/IT-Governance-Next?type=design&node-id=1-24557&mode=design&t=aTBbPkFXgQbIZj4i-0
+
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// branch on whether reopening vs. changing decision
+
+	// check intake validity
+	// 1. Intake must have .State == Closed
+	// 2. if changing decision (don't check this if reopening), new resolution must not == current resolution (.DecisionState)
+	// 3. if changing decision, can't go to closed with no reason (represented by .State == Closed && .DecisionState == NO_DECISION)
+	err = closedintake.IsIntakeValid(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	// modifying intake
+	// if reopening, set intake.State = Open
+	// if changing decision, set intake.DecisionState = new resolution
+	err = closedintake.UpdateIntakeDecision(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	// All the different database calls aren't in a single atomic transaction;
+	// in the case of a system failure, some data from the action might be saved, but not all.
+	// As of this function's initial implementation, we're accepting that risk.
+	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional notes for email, if any)
+	errGroup.Go(func() error {
+		// have to declare this as a separate variable because we can't directly use &models.SystemIntakeStepDECISION;
+		// not allowed to create a pointer to a constant
+		stepForAction := models.SystemIntakeStepDECISION
+
+		action := models.Action{
+			IntakeID:       &input.SystemIntakeID,
+			ActionType:     models.ActionTypeREOPENORCHANGEDECISION,
+			ActorName:      adminUserInfo.CommonName,
+			ActorEmail:     adminUserInfo.Email,
+			ActorEUAUserID: adminEUAID,
+			Step:           &stepForAction,
+		}
+		if input.AdditionalNote != nil {
+			action.Feedback = null.StringFromPtr(input.AdditionalNote)
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        null.StringFromPtr(input.AdminNote),
+			}
+
+			_, errCreatingAdminNote := store.CreateSystemIntakeNote(ctx, &adminNote)
+			if errCreatingAdminNote != nil {
+				return errCreatingAdminNote
+			}
+
+			return nil
+		})
+	}
+
+	// TODO - save other stuff, if any?
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
 }
