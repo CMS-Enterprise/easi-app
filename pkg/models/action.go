@@ -12,10 +12,9 @@ type ActionType string
 
 // IT Gov v2 actions
 const (
-	// ActionTypePROGRESSTONEWSTEP captures enum value PROGRESS_TO_NEW_STEP
-	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
-	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS
-	ActionTypeREQUESTEDITS ActionType = "REQUEST_EDITS"
+	ActionTypePROGRESSTONEWSTEP      ActionType = "PROGRESS_TO_NEW_STEP"
+	ActionTypeREQUESTEDITS           ActionType = "REQUEST_EDITS"
+	ActionTypeREOPENORCHANGEDECISION ActionType = "REOPEN_OR_CHANGE_DECISION"
 )
 
 // v1 actions (before v2 revamp)
