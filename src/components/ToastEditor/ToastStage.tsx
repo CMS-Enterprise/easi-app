@@ -7,10 +7,8 @@ import ToastEditor, { ToastViewer } from '.';
 function ToastStage() {
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      // htmlField: ''
-      // htmlField: '<p>start</p>'
       htmlField:
-        '<p><em>Rich</em> <strong>text</strong> <a href="http://localhost:3000/toast">link</a>.</p><ul><li><p>Bullet</p></li></ul><ol><li><p>Numbered</p></li></ol>'
+        '<p><em>Rich</em> <strong>text</strong> <a href="http://localhost:3000/toast" target="_blank">link</a>.</p><ul><li><p>Bullet</p></li></ul><ol><li><p>Numbered</p></li></ol>'
     }
   });
 
