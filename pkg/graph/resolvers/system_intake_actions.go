@@ -12,7 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/closedintake"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/decision"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -244,10 +244,10 @@ type reopenInput struct {
 	// TODO - field for new resolution - options are re-opening, not a governance request, not approved by GRB, or issue LCID
 }
 
-// ReopenOrChangeDecisionOnClosedIntake does a thing
+// ReopenOrChangeDecisionOnIntake does a thing
 // TODO - change comment
 // potential overlap with EASI-3111 (issue decision or close request) - https://jiraent.cms.gov/browse/EASI-3111, though not for reopening
-func ReopenOrChangeDecisionOnClosedIntake(ctx context.Context,
+func ReopenOrChangeDecisionOnIntake(ctx context.Context,
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input reopenInput) (*models.SystemIntake, error) {
@@ -281,13 +281,7 @@ func ReopenOrChangeDecisionOnClosedIntake(ctx context.Context,
 		return nil, err
 	}
 
-	// branch on whether reopening vs. changing decision
-
-	// check intake validity
-	// 1. Intake must have .State == Closed
-	// 2. if changing decision (don't check this if reopening), new resolution must not == current resolution (.DecisionState)
-	// 3. if changing decision, can't go to closed with no reason (represented by .State == Closed && .DecisionState == NO_DECISION)
-	err = closedintake.IsIntakeValid(intake)
+	err = decision.IsIntakeValid(intake)
 	if err != nil {
 		return nil, err
 	}
@@ -295,7 +289,7 @@ func ReopenOrChangeDecisionOnClosedIntake(ctx context.Context,
 	// modifying intake
 	// if reopening, set intake.State = Open
 	// if changing decision, set intake.DecisionState = new resolution
-	err = closedintake.UpdateIntakeDecision(intake)
+	err = decision.UpdateIntakeDecision(intake)
 	if err != nil {
 		return nil, err
 	}
