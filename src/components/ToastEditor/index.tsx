@@ -9,7 +9,7 @@ import React, { useEffect } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ToastuiEditor from '@toast-ui/editor';
-import { Editor, EditorProps } from '@toast-ui/react-editor';
+import { Editor, EditorProps, Viewer } from '@toast-ui/react-editor';
 import classNames from 'classnames';
 import DOMPurify from 'dompurify';
 
@@ -221,7 +221,7 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
   }, []);
 
   return (
-    <div className={classNames('easi-toast-editor', className)}>
+    <div className={classNames('easi-toast easi-toast-editor', className)}>
       <Editor
         ref={editorRef}
         usageStatistics={false}
@@ -230,6 +230,9 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
         height={props.height || '100%'}
+        linkAttributes={{
+          target: '_blank'
+        }}
         onBlur={() => {
           field?.onBlur();
         }}
@@ -237,9 +240,30 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
           const val = editorRef.current?.getInstance().getHTML() || '';
           field?.onChange(val);
         }}
+        {...props}
       />
     </div>
   );
 }
 
 export default ToastEditor;
+
+interface ToastViewerProps extends EditorProps {
+  /** Wrapper div classname */
+  className?: string;
+}
+
+export function ToastViewer({ className, ...props }: ToastViewerProps) {
+  return (
+    <div className={classNames('easi-toast easi-toast-viewer', className)}>
+      <Viewer
+        usageStatistics={false}
+        theme="white"
+        linkAttributes={{
+          target: '_blank'
+        }}
+        {...props}
+      />
+    </div>
+  );
+}

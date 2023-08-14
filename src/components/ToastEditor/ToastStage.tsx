@@ -1,14 +1,16 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Viewer } from '@toast-ui/react-editor';
 import { Grid, GridContainer } from '@trussworks/react-uswds';
 
-import ToastEditor from '.';
+import ToastEditor, { ToastViewer } from '.';
 
 function ToastStage() {
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      htmlField: '<p>start</p>'
+      // htmlField: ''
+      // htmlField: '<p>start</p>'
+      htmlField:
+        '<p><em>Rich</em> <strong>text</strong> <a href="http://localhost:3000/toast">link</a>.</p><ul><li><p>Bullet</p></li></ul><ol><li><p>Numbered</p></li></ol>'
     }
   });
 
@@ -36,16 +38,7 @@ function ToastStage() {
         </Grid>
         <Grid col={6}>
           <h6>Viewer</h6>
-          <div className="easi-toastui-editor">
-            <Viewer
-              initialValue={watch('htmlField')}
-              usageStatistics={false}
-              theme="white"
-              linkAttributes={{
-                target: '_blank'
-              }}
-            />
-          </div>
+          <ToastViewer initialValue={watch('htmlField')} />
         </Grid>
       </Grid>
     </GridContainer>

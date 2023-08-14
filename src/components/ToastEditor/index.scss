@@ -1,14 +1,44 @@
 // @forward "usa-button";
 @use 'uswds-core' as *;
 
-.easi-toast-editor {
-  height: 155px; /* put in a field specific rule */
-
+.easi-toast {
+  // .toastui-editor-white .toastui-editor-contents
   .toastui-editor-contents {
     font-family: 'Public Sans';
     font-size: 16px;
     line-height: 22px;
   }
+
+  .toastui-editor-contents *:not(table) {
+    line-height: inherit;
+  }
+
+  .toastui-editor-contents a {
+    color: #005ea2;
+    &:focus {
+      outline: 0.25rem solid #2491ff;
+      outline-offset: 0;
+    }
+    &:active {
+      color: #162e51;
+    }
+    &:hover {
+      color: #1a4480;
+    }
+  }
+
+  .toastui-editor-contents ol > li::before {
+    color: color('base-darkest');
+  }
+
+  .toastui-editor-contents ul > li::before {
+    margin-top: 10px;
+    background-color: color('base-darkest');
+  }
+}
+
+.easi-toast-editor {
+  height: 155px;
 
   .toastui-editor-defaultUI {
     border-color: #5c5c5c;
@@ -39,33 +69,6 @@
 
   .toastui-editor-contents {
     padding: 6px 9px 9px;
-  }
-
-  .toastui-editor-contents *:not(table) {
-    line-height: inherit;
-  }
-
-  .toastui-editor-contents a {
-    color: #005ea2;
-    &:focus {
-      outline: 0.25rem solid #2491ff;
-      outline-offset: 0;
-    }
-    &:active {
-      color: #162e51;
-    }
-    &:hover {
-      color: #1a4480;
-    }
-  }
-
-  .toastui-editor-contents ol > li::before {
-    color: color('base-darkest');
-  }
-
-  .toastui-editor-contents ul > li::before {
-    margin-top: 10px;
-    background-color: color('base-darkest');
   }
 
   .toastui-editor-popup {
