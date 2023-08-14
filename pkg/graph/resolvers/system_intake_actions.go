@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"golang.org/x/sync/errgroup"
 
@@ -234,23 +233,15 @@ func CreateSystemIntakeActionRequestEdits(
 	return intake, nil
 }
 
-// rough draft of input type
-// TODO - replace with proper type from GQL input
-type reopenInput struct {
-	SystemIntakeID          uuid.UUID
-	NotificationReceipients *models.EmailNotificationRecipients
-	AdditionalNote          *string
-	AdminNote               *string
-	// TODO - field for new resolution - options are re-opening, not a governance request, not approved by GRB, or issue LCID
-}
-
 // ReopenOrChangeDecisionOnIntake does a thing
 // TODO - change comment
 // potential overlap with EASI-3111 (issue decision or close request) - https://jiraent.cms.gov/browse/EASI-3111, though not for reopening
-func ReopenOrChangeDecisionOnIntake(ctx context.Context,
+func ReopenOrChangeDecisionOnIntake(
+	ctx context.Context,
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input reopenInput) (*models.SystemIntake, error) {
+	input model.SystemIntakeReopenOrChangeDecisionInput,
+) (*models.SystemIntake, error) {
 	// input:
 	// 3. fields depending on which new resolution is selected (i.e. some require new steps, some don't)
 	// 3.a. reopening

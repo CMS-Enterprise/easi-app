@@ -1482,6 +1482,27 @@ input SystemIntakeRequestEditsInput {
   adminNotes: String
 }
 
+# TODO - close overlap with SystemIntakeDecisionState - should they be combined?
+enum SystemIntakeNewResolution {
+  REOPENED
+  LCID_ISSUED
+  NOT_APPROVED
+  NOT_GOVERNANCE
+}
+
+"""
+Input for submitting a Reopen/Change Decision action in IT Gov v2
+"""
+input SystemIntakeReopenOrChangeDecisionInput {
+  systemIntakeID: UUID!
+  newResolution: SystemIntakeNewResolution!
+  # TODO - other necessary fields
+  notificationRecipients: EmailNotificationRecipients
+  additionalNote: String
+  adminNote: String
+  # TODO - any other notification fields
+}
+
 """
 SystemIntakeRequestEditsOptions represents the current step in the intake process
 """
@@ -2314,6 +2335,9 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionReopenOrChangeDecision(
+    input: SystemIntakeReopenOrChangeDecisionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!

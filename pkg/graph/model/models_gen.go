@@ -675,6 +675,15 @@ type SystemIntakeProgressToNewStepsInput struct {
 	AdminNote              *string                             `json:"adminNote"`
 }
 
+// Input for submitting a Reopen/Change Decision action in IT Gov v2
+type SystemIntakeReopenOrChangeDecisionInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	NewResolution          SystemIntakeNewResolution           `json:"newResolution"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdditionalNote         *string                             `json:"additionalNote"`
+	AdminNote              *string                             `json:"adminNote"`
+}
+
 // Input for creating a Request Edits Action in Admin Actions v2
 type SystemIntakeRequestEditsInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
@@ -1082,6 +1091,51 @@ func (e *SystemIntakeFormStep) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SystemIntakeNewResolution string
+
+const (
+	SystemIntakeNewResolutionReopened      SystemIntakeNewResolution = "REOPENED"
+	SystemIntakeNewResolutionLcidIssued    SystemIntakeNewResolution = "LCID_ISSUED"
+	SystemIntakeNewResolutionNotApproved   SystemIntakeNewResolution = "NOT_APPROVED"
+	SystemIntakeNewResolutionNotGovernance SystemIntakeNewResolution = "NOT_GOVERNANCE"
+)
+
+var AllSystemIntakeNewResolution = []SystemIntakeNewResolution{
+	SystemIntakeNewResolutionReopened,
+	SystemIntakeNewResolutionLcidIssued,
+	SystemIntakeNewResolutionNotApproved,
+	SystemIntakeNewResolutionNotGovernance,
+}
+
+func (e SystemIntakeNewResolution) IsValid() bool {
+	switch e {
+	case SystemIntakeNewResolutionReopened, SystemIntakeNewResolutionLcidIssued, SystemIntakeNewResolutionNotApproved, SystemIntakeNewResolutionNotGovernance:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeNewResolution) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeNewResolution) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeNewResolution(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeNewResolution", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeNewResolution) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
