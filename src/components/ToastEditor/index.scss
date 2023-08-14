@@ -2,11 +2,10 @@
 @use 'uswds-core' as *;
 
 .easi-toast {
-  // .toastui-editor-white .toastui-editor-contents
   .toastui-editor-contents {
     font-family: 'Public Sans';
-    font-size: 16px;
-    line-height: 22px;
+    font-size: size('body', 4);
+    line-height: line-height('body', 4);
   }
 
   .toastui-editor-contents *:not(table) {
@@ -14,16 +13,16 @@
   }
 
   .toastui-editor-contents a {
-    color: #005ea2;
+    color: color('primary');
     &:focus {
-      outline: 0.25rem solid #2491ff;
+      outline: 0.25rem solid color('blue-40v');
       outline-offset: 0;
     }
     &:active {
-      color: #162e51;
+      color: color('primary-darker');
     }
     &:hover {
-      color: #1a4480;
+      color: color('primary-dark');
     }
   }
 
@@ -41,7 +40,7 @@
   height: 155px;
 
   .toastui-editor-defaultUI {
-    border-color: #5c5c5c;
+    border-color: color('gray-60');
     border-radius: 0;
   }
 
@@ -51,7 +50,7 @@
   .toastui-editor-defaultUI-toolbar {
     height: auto;
     background: transparent;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid color('gray-10');
     padding: 4px 2px 2px;
   }
 
@@ -59,12 +58,15 @@
     border-color: white;
     border-radius: 4px;
     margin: 0 4px 0 0;
+    &:hover {
+      border-color: white !important;
+    }
   }
 
   .toastui-editor-toolbar-divider {
     margin: 8px 8px 0 4px;
     height: 16px;
-    background-color: #e6e6e6;
+    background-color: color('gray-10');
   }
 
   .toastui-editor-contents {
@@ -80,19 +82,20 @@
   }
 
   .toastui-editor-popup-body {
-    padding: 32px;
+    padding: 2rem;
     font-family: 'Public Sans';
     color: color('base-darkest');
 
     label,
     input {
       font-weight: 400;
-      font-size: 16px;
-      line-height: 22px;
+      font-size: size('body', 4);
+      line-height: line-height('body', 4);
     }
 
     label {
       margin: 1rem 0 0.5rem;
+      color: color('base-darkest');
 
       &:first-child {
         margin-top: 0;
@@ -100,7 +103,7 @@
     }
 
     input {
-      border: 1px solid #5c5c5c;
+      border: 1px solid color('gray-60');
       border-radius: 0;
       padding: 9px 8px;
       width: 100%;
@@ -125,6 +128,7 @@
 
       .usa-button {
         width: auto;
+        margin-top: 0;
       }
     }
   }

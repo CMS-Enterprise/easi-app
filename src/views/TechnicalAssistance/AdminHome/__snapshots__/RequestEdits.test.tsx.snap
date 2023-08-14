@@ -98,7 +98,7 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
           Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.
         </div>
         <div
-          class="easi-toast-editor margin-top-1"
+          class="easi-toast easi-toast-editor margin-top-1"
         >
           <div
             style="height: 100%;"
