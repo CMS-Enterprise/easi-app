@@ -12,6 +12,10 @@
     line-height: inherit;
   }
 
+  .toastui-editor-contents p {
+    margin: 0;
+  }
+
   .toastui-editor-contents a {
     color: color('primary');
     &:focus {
@@ -26,13 +30,21 @@
     }
   }
 
-  .toastui-editor-contents ol > li::before {
-    color: color('base-darkest');
+  .toastui-editor-contents ol,
+  .toastui-editor-contents ul {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    & > li::before {
+      all: unset;
+    }
   }
 
-  .toastui-editor-contents ul > li::before {
-    margin-top: 10px;
-    background-color: color('base-darkest');
+  .toastui-editor-contents ul  {
+    list-style-type: disc;
+  }
+  .toastui-editor-contents ol  {
+    list-style-type: decimal;
   }
 }
 

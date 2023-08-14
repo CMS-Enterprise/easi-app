@@ -8,7 +8,7 @@ function ToastStage() {
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       htmlField:
-        '<p><em>Rich</em> <strong>text</strong> <a href="http://localhost:3000/toast" target="_blank">link</a>.</p><ul><li><p>Bullet</p></li></ul><ol><li><p>Numbered</p></li></ol>'
+        '<p><em>Rich</em> <strong>text</strong> <a href="http://localhost:3000/toast" target="_blank">link</a>.</p><p><br></p><p>double break</p><ul><li><p>Bullet</p></li><li><p>list</p></li></ul><ol><li><p>Numbered</p></li><li><p>list</p></li></ol>'
     }
   });
 
@@ -37,6 +37,18 @@ function ToastStage() {
         <Grid col={6}>
           <h6>Viewer</h6>
           <ToastViewer initialValue={watch('htmlField')} />
+          <div style={{ borderTop: '1px solid black' }}>
+            <p>paragraph</p>
+            <p>break</p>
+            <ul>
+              <li>bullet</li>
+              <li>list</li>
+            </ul>
+            <ol>
+              <li>numbered</li>
+              <li>list</li>
+            </ol>
+          </div>
         </Grid>
       </Grid>
     </GridContainer>
