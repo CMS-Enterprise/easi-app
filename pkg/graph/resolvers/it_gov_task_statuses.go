@@ -89,18 +89,94 @@ func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessC
 }
 
 // GrtMeetingStatus calculates the ITGovGRTStatus for the GrtMeeting section for the system intake task list for the requester view
-func GrtMeetingStatus(intake *models.SystemIntake) models.ITGovGRTStatus {
-	return models.ITGGRTSCantStart
+func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error) {
+
+	if intake.GRTDate != nil { // status depends on if there is a date scheduled or not
+		if intake.GRTDate.After(time.Now()) { // Meeting has not happened
+			return models.ITGGRTSScheduled, nil
+		}
+		if intake.Step == models.SystemIntakeStepGRTMEETING { //if the step is GRT meeting, status is awaiting decision
+			return models.ITGGRTSAwaitingDecision, nil
+		}
+		return models.ITGGRTSCompleted, nil // if the step is not GRT meeting, the status is completed
+	}
+
+	//intake.GRTDate is nil
+	switch intake.Step {
+	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE: // Any step before GRT should show can't start
+		return models.ITGGRTSCantStart, nil
+
+	case models.SystemIntakeStepGRTMEETING: // If at the GRT step, show ready to schedule
+		return models.ITGGRTSReadyToSchedule, nil
+
+	case models.SystemIntakeStepDECISION, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING: // If after GRT step, show that it was not needed (skipped)
+		return models.ITGGRTSNotNeeded, nil
+	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
+	}
+
 }
 
 // BizCaseFinalStatus calculates the ITGovFinalBusinessCaseStatus for the BizCaseFinal section for the system intake task list for the requester view
-func BizCaseFinalStatus(intake *models.SystemIntake) models.ITGovFinalBusinessCaseStatus {
-	return models.ITGFBCSCantStart
+func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessCaseStatus, error) {
+	switch intake.Step {
+	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepDRAFTBIZCASE: //Any task before final business case, always show can't start for clarity
+		return models.ITGFBCSCantStart, nil
+	case models.SystemIntakeStepFINALBIZCASE:
+		switch intake.FinalBusinessCaseState { // The business case status depends on the state if in the final business case step.
+		case models.SIRFSSubmitted:
+			return models.ITGFBCSSubmitted, nil
+		case models.SIRFSNotStarted:
+			return models.ITGFBCSReady, nil
+		case models.SIRFSInProgress:
+			return models.ITGFBCSInProgress, nil
+		case models.SIRFSEditsRequested:
+			return models.ITGFBCSEditsRequested, nil
+		default:
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final business case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
+		}
+
+	case models.SystemIntakeStepDECISION, models.SystemIntakeStepGRBMEETING:
+
+		switch intake.FinalBusinessCaseState {
+		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the final business case had any progress made on it, and then the step advances, the case is considered complete.
+			return models.ITGFBCSDone, nil
+		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the final business case is not needed.
+			return models.ITGFBCSNotNeeded, nil
+		default:
+			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final business case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
+		}
+	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
+	}
+
 }
 
 // GrbMeetingStatus calculates the ITGovGRBStatus for the GrbMeeting section for the system intake task list for the requester view
-func GrbMeetingStatus(intake *models.SystemIntake) models.ITGovGRBStatus {
-	return models.ITGGRBSCantStart
+func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
+	if intake.GRBDate != nil { // status depends on if there is a date scheduled or not
+		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
+			return models.ITGGRBSScheduled, nil
+		}
+		if intake.Step == models.SystemIntakeStepGRBMEETING { //if the step is GRB meeting, status is awaiting decision
+			return models.ITGGRBSAwaitingDecision, nil
+		}
+		return models.ITGGRBSCompleted, nil // if the step is not GRB meeting, the status is completed
+	}
+	// the grb date is nil.
+	switch intake.Step {
+	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE: // Any step before GRB should show can't start
+		return models.ITGGRBSCantStart, nil
+
+	case models.SystemIntakeStepGRBMEETING: // If at the GRB step, show ready to schedule
+		return models.ITGGRBSReadyToSchedule, nil
+
+	case models.SystemIntakeStepDECISION: // If after GRB step, show that it was not needed (skipped)
+		return models.ITGGRBSNotNeeded, nil
+	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
+	}
+
 }
 
 // DecisionAndNextStepsStatus calculates the ITGovDecisionStatus for the Decisions section for the system intake task list for the requester view

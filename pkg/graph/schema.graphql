@@ -1445,6 +1445,31 @@ type UpdateSystemIntakePayload {
   userErrors: [UserError!]
 }
 
+
+"""
+Steps in the system intake process that a Progress to New Step action can progress to
+"""
+enum SystemIntakeStepToProgressTo {
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+}
+
+"""
+Input for submitting a Progress to New Step action in IT Gov v2
+"""
+input SystemIntakeProgressToNewStepsInput {
+  systemIntakeID: UUID!
+  newStep: SystemIntakeStepToProgressTo!
+  meetingDate: Time # optionally used when progressing to GRT or GRB meeting; ignored when progressing to other steps
+  notificationRecipients: EmailNotificationRecipients
+  feedback: String
+  grbRecommendations: String
+  additionalNote: String
+  adminNote: String
+}
+
 """
 Input for creating a Request Edits Action in Admin Actions v2
 """
@@ -1835,6 +1860,14 @@ enum GovernanceRequestFeedbackTargetForm {
 }
 
 """
+Represents the possible types of feedback on governance requests, based on who it's directed to
+"""
+enum GovernanceRequestFeedbackType {
+  REQUESTER
+  GRB
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
@@ -1843,6 +1876,8 @@ type GovernanceRequestFeedback {
   feedback: String!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
+  type: GovernanceRequestFeedbackType!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2274,6 +2309,9 @@ type Mutation {
   updateAccessibilityRequestCedarSystem(
     input: UpdateAccessibilityRequestCedarSystemInput
   ): UpdateAccessibilityRequestCedarSystemPayload
+  createSystemIntakeActionProgressToNewStep(
+    input: SystemIntakeProgressToNewStepsInput
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -2679,10 +2717,16 @@ enum ITGovFinalBusinessCaseStatus {
   This business case has edits requested
   """
   EDITS_REQUESTED
+
   """
-  This business case has been completed
+  The business case has been submitted and it is waiting for feedback from the governance team
   """
-  COMPLETED
+  SUBMITTED
+
+  """
+  The business case has been completed and the intake is on a further step
+  """
+  DONE
 }
 
 """

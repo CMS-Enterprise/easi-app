@@ -9,6 +9,17 @@ concurrency:
   group: deploy-pipeline
 
 jobs:
+  # This could be broken out into 3 distinct jobs to make it so each deploy only needs it's own assets to be built, rather than
+  # ALL envs assets, but right now building the frontend takes far less time than run tests, so this is not a bottleneck.
+  Build_Frontend_Assets:
+    uses: ./.github/workflows/build_frontend_assets.yml
+    secrets: inherit
+    strategy:
+      matrix:
+        env: [dev, impl, prod]
+    with:
+      env: ${{ matrix.env }}
+
   Build_Application_Images:
     uses: ./.github/workflows/build_application_images.yml
     secrets: inherit
@@ -19,7 +30,7 @@ jobs:
     secrets: inherit
 
   deploy_dev:
-    needs: Run_Tests
+    needs: [Run_Tests, Build_Frontend_Assets]
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: dev
@@ -27,7 +38,7 @@ jobs:
     secrets: inherit
 
   deploy_impl:
-    needs: deploy_dev
+    needs: [deploy_dev, Build_Frontend_Assets]
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: impl
@@ -35,7 +46,7 @@ jobs:
     secrets: inherit
 
   deploy_prod:
-    needs: deploy_impl
+    needs: [deploy_impl, Build_Frontend_Assets]
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod

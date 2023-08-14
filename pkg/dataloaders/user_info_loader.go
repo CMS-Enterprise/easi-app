@@ -40,7 +40,7 @@ func (u *UserInfoLoader) BatchUserInfos(
 		if userInfo, ok := euaUserInfoMap[key.String()]; ok {
 			results[i] = &dataloader.Result{Data: userInfo, Error: nil}
 		} else {
-			err := fmt.Errorf("No user info found for EUA ID %s", key.String())
+			err := fmt.Errorf("no user info found for EUA ID %s", key.String())
 			results[i] = &dataloader.Result{Data: nil, Error: err}
 		}
 	}
@@ -48,6 +48,7 @@ func (u *UserInfoLoader) BatchUserInfos(
 }
 
 // GetUserInfo pulls the user info from the map that was loaded
+// the UserInfoLoader will batch up all requests for user info over a window of 16ms, then make a single request containing all of the EUA IDs
 func GetUserInfo(ctx context.Context, euaID string) (*models.UserInfo, error) {
 	loaders := For(ctx)
 	thunk := loaders.UserInfoLoader.Load(ctx, dataloader.StringKey(euaID))

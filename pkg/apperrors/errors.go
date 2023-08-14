@@ -3,6 +3,8 @@ package apperrors
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // UnauthorizedError is a typed error for when authorization fails
@@ -271,6 +273,17 @@ func (e *InvalidEUAIDError) Error() string {
 	return fmt.Sprint("EUAID ", e.EUAID, " does not correspond to a valid EUA user")
 }
 
+// InvalidActionError indicates that an admin attempted to perform an invalid action on an intake,
+// such as trying to use Progress to New Step on a closed intake (instead of the proper Reopen action)
+type InvalidActionError struct {
+	ActionType models.ActionType
+	Message    string
+}
+
+func (e *InvalidActionError) Error() string {
+	return fmt.Sprintf("Action type %s is invalid and can't be performed: %s", e.ActionType, e.Message)
+}
+
 // InvalidEnumError indicates that a provided enumerated state is not valid. Perhaps it is a string that has been cast as the enum type
 type InvalidEnumError struct {
 	Err   error
@@ -279,19 +292,19 @@ type InvalidEnumError struct {
 }
 
 // NewInvalidEnumError creates an invalid state error and wraps it as apprpriate
-func NewInvalidEnumError[EnumType ~string](err error, value EnumType, enumType string) InvalidEnumError {
-	return InvalidEnumError{
+func NewInvalidEnumError[EnumType ~string](err error, value EnumType, enumType string) *InvalidEnumError {
+	return &InvalidEnumError{
 		Err:   err,
 		Value: string(value),
 		Type:  enumType,
 	}
 }
 
-func (e InvalidEnumError) Error() string {
+func (e *InvalidEnumError) Error() string {
 	return fmt.Sprint("Value ", e.Value, " does not correspond to a valid enumeration for type ", e.Type)
 }
 
 // Unwrap returns the underlying error
-func (e InvalidEnumError) Unwrap() error {
+func (e *InvalidEnumError) Unwrap() error {
 	return e.Err
 }

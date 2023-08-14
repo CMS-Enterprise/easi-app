@@ -73,7 +73,8 @@ const (
 	ITGFBCSReady          ITGovFinalBusinessCaseStatus = "READY"
 	ITGFBCSInProgress     ITGovFinalBusinessCaseStatus = "IN_PROGRESS"
 	ITGFBCSEditsRequested ITGovFinalBusinessCaseStatus = "EDITS_REQUESTED"
-	ITGFBCSCompleted      ITGovFinalBusinessCaseStatus = "COMPLETED"
+	ITGFBCSSubmitted      ITGovFinalBusinessCaseStatus = "SUBMITTED"
+	ITGFBCSDone           ITGovFinalBusinessCaseStatus = "DONE"
 )
 
 // ITGovGRBStatus represents the types of ITGovGRBStatus types.  This is what the requestor sees for the  optional seventh task.

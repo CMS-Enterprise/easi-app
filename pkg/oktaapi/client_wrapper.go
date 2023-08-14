@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/okta/okta-sdk-golang/v2/okta"
@@ -45,6 +46,7 @@ type oktaUserResponse struct {
 }
 
 // Converts the generic JSON type of okta.UserProfile into oktaUserResponse
+// This also will auto-capitalize the EUA
 func (cw *ClientWrapper) parseOktaProfileResponse(ctx context.Context, profile *okta.UserProfile) (*oktaUserResponse, error) {
 	logger := appcontext.ZLogger(ctx)
 
@@ -64,6 +66,9 @@ func (cw *ClientWrapper) parseOktaProfileResponse(ctx context.Context, profile *
 		logger.Error("error unmarshalling okta response", zap.Error(err))
 		return nil, err
 	}
+
+	// This only works because we know that ALL logins are EUAs. If we ever support non-EUA login, we need to conditional this
+	parsedProfile.Login = strings.ToUpper(parsedProfile.Login)
 
 	return parsedProfile, nil
 }
@@ -135,6 +140,10 @@ const euaADSourceType = "EUA-AD"
 // SearchCommonNameContains searches for a user by their First/Last name in Okta
 func (cw *ClientWrapper) SearchCommonNameContains(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
 	logger := appcontext.ZLogger(ctx)
+
+	// Sanitize searchTerm for \ and ". These characters cause Okta to error.
+	filterRegex := regexp.MustCompile(`[\\"]`)
+	searchTerm = filterRegex.ReplaceAllString(searchTerm, "")
 
 	// profile.SourceType can be EUA, EUA-AD, or cmsidm
 	// the first 2 represent EUA users, the latter represents users created directly in IDM
