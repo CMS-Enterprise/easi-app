@@ -166,14 +166,6 @@ function RequestEdits() {
                 {t('actionRequestEdits.hint')}
               </HelpText>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-              {/*
-              <TextAreaField
-                id="feedbackMessage"
-                {...field}
-                ref={null}
-                aria-describedby="feedbackMessage-info feedbackMessage-hint"
-              />
-              */}
               <ToastEditor
                 className="margin-top-1"
                 editableProps={{
