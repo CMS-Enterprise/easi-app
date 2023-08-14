@@ -1273,6 +1273,11 @@ type CreateSystemIntakeActionExtendLifecycleIdPayload {
 Represents the type of an action that is being done to a system request
 """
 enum SystemIntakeActionType {
+  # v2 actions
+  PROGRESS_TO_NEW_STEP
+  REQUEST_EDITS
+
+  # v1 actions (before v2 revamp)
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
   GUIDE_RECEIVED_CLOSE
