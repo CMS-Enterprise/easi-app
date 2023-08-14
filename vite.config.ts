@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import react from '@vitejs/plugin-react';
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
@@ -37,5 +38,10 @@ export default defineConfig({
     alias: {
       '@okta/okta-auth-js': '@okta/okta-auth-js/dist/okta-auth-js.umd.js'
     }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.ts'
   }
 });
