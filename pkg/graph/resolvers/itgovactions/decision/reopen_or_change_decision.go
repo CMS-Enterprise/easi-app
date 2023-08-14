@@ -38,7 +38,25 @@ func IsIntakeValid(intake *models.SystemIntake, newResolution model.SystemIntake
 
 // UpdateIntakeDecision does a thing
 // TODO - change comment
-func UpdateIntakeDecision(intake *models.SystemIntake) error {
-	// TODO - implement
+func UpdateIntakeDecision(intake *models.SystemIntake, newResolution model.SystemIntakeNewResolution) error {
+	switch newResolution {
+	// if reopening, just set State = Open, preserve existing DecisionState
+	case model.SystemIntakeNewResolutionReopened:
+		intake.State = models.SystemIntakeStateOPEN
+
+	// if changing decision, set DecisionState = new resolution
+	case model.SystemIntakeNewResolutionLcidIssued:
+		intake.DecisionState = models.SIDSLcidIssued
+	case model.SystemIntakeNewResolutionNotApproved:
+		intake.DecisionState = models.SIDSNotApproved
+	case model.SystemIntakeNewResolutionNotGovernance:
+		intake.DecisionState = models.SIDSNotGovernance
+
+	default:
+		return &apperrors.BadRequestError{
+			Err: apperrors.NewInvalidEnumError(fmt.Errorf("newResolution is an invalid value of SystemIntakeNewResolution"), newResolution, "SystemIntakeNewResolution"),
+		}
+	}
+
 	return nil
 }

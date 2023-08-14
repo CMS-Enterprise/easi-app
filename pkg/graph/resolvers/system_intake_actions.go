@@ -277,10 +277,7 @@ func ReopenOrChangeDecisionOnIntake(
 		return nil, err
 	}
 
-	// modifying intake
-	// if reopening, set intake.State = Open
-	// if changing decision, set intake.DecisionState = new resolution
-	err = decision.UpdateIntakeDecision(intake)
+	err = decision.UpdateIntakeDecision(intake, input.NewResolution)
 	if err != nil {
 		return nil, err
 	}
