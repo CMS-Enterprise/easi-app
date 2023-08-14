@@ -272,7 +272,7 @@ func ReopenOrChangeDecisionOnIntake(
 		return nil, err
 	}
 
-	err = decision.IsIntakeValid(intake)
+	err = decision.IsIntakeValid(intake, input.NewResolution)
 	if err != nil {
 		return nil, err
 	}

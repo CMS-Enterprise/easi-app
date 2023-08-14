@@ -1,13 +1,16 @@
 package decision
 
 import (
+	"fmt"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // IsIntakeValid does a thing
 // TODO - change comment
-func IsIntakeValid(intake *models.SystemIntake) error {
+func IsIntakeValid(intake *models.SystemIntake, newResolution model.SystemIntakeNewResolution) error {
 	if intake.State != models.SystemIntakeStateCLOSED {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
@@ -17,8 +20,18 @@ func IsIntakeValid(intake *models.SystemIntake) error {
 		}
 	}
 
-	// 2. if changing decision (don't check this if reopening), new resolution must not == current resolution (.DecisionState)
-	// 3. if changing decision, can't go to closed with no reason (represented by .State == Closed && .DecisionState == NO_DECISION)
+	// specific checks for changing decision (not reopening)
+	if newResolution != model.SystemIntakeNewResolutionReopened {
+		// TODO - if there aren't any other specific checks for changing decision (or specifically for reopening), combine if checks?
+		if string(newResolution) == string(intake.DecisionState) {
+			return &apperrors.BadRequestError{
+				Err: &apperrors.InvalidActionError{
+					ActionType: models.ActionTypeREOPENORCHANGEDECISION,
+					Message:    fmt.Sprintf("Changing decision on an intake needs to change intake to a different decision, intake already has decision %v", newResolution),
+				},
+			}
+		}
+	}
 
 	return nil
 }
