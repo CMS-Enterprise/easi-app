@@ -1161,9 +1161,9 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 	}, err
 }
 
-// CreateSystemIntakeActionReopenOrChangeDecision is the resolver for the createSystemIntakeActionReopenOrChangeDecision field.
-func (r *mutationResolver) CreateSystemIntakeActionReopenOrChangeDecision(ctx context.Context, input model.SystemIntakeReopenOrChangeDecisionInput) (*model.UpdateSystemIntakePayload, error) {
-	updatedIntake, err := resolvers.ReopenOrChangeDecisionOnIntake(ctx, r.store, r.service.FetchUserInfo, input)
+// CreateSystemIntakeActionChangeDecisionOrReopen is the resolver for the createSystemIntakeActionChangeDecisionOrReopen field.
+func (r *mutationResolver) CreateSystemIntakeActionChangeDecisionOrReopen(ctx context.Context, input model.SystemIntakeChangeDecisionOrReopenInput) (*model.UpdateSystemIntakePayload, error) {
+	updatedIntake, err := resolvers.ChangeDecisionOrReopenIntake(ctx, r.store, r.service.FetchUserInfo, input)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, err

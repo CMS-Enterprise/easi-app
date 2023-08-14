@@ -532,6 +532,15 @@ type SystemIntakeBusinessOwnerInput struct {
 	Component string `json:"component"`
 }
 
+// Input for submitting a Change Decision/Reopen Request action in IT Gov v2
+type SystemIntakeChangeDecisionOrReopenInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	NewResolution          SystemIntakeNewResolution           `json:"newResolution"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdditionalNote         *string                             `json:"additionalNote"`
+	AdminNote              *string                             `json:"adminNote"`
+}
+
 // Represents a contact in OIT who is collaborating with the user
 // creating a system IT governance request
 type SystemIntakeCollaborator struct {
@@ -671,15 +680,6 @@ type SystemIntakeProgressToNewStepsInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	Feedback               *string                             `json:"feedback"`
 	GrbRecommendations     *string                             `json:"grbRecommendations"`
-	AdditionalNote         *string                             `json:"additionalNote"`
-	AdminNote              *string                             `json:"adminNote"`
-}
-
-// Input for submitting a Reopen/Change Decision action in IT Gov v2
-type SystemIntakeReopenOrChangeDecisionInput struct {
-	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	NewResolution          SystemIntakeNewResolution           `json:"newResolution"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	AdditionalNote         *string                             `json:"additionalNote"`
 	AdminNote              *string                             `json:"adminNote"`
 }

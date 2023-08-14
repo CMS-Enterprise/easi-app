@@ -1491,9 +1491,9 @@ enum SystemIntakeNewResolution {
 }
 
 """
-Input for submitting a Reopen/Change Decision action in IT Gov v2
+Input for submitting a Change Decision/Reopen Request action in IT Gov v2
 """
-input SystemIntakeReopenOrChangeDecisionInput {
+input SystemIntakeChangeDecisionOrReopenInput {
   systemIntakeID: UUID!
   newResolution: SystemIntakeNewResolution!
   # TODO - other necessary fields
@@ -2336,8 +2336,8 @@ type Mutation {
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionReopenOrChangeDecision(
-    input: SystemIntakeReopenOrChangeDecisionInput!
+  createSystemIntakeActionChangeDecisionOrReopen(
+    input: SystemIntakeChangeDecisionOrReopenInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!

@@ -233,13 +233,13 @@ func CreateSystemIntakeActionRequestEdits(
 	return intake, nil
 }
 
-// ReopenOrChangeDecisionOnIntake handles a Change Decision/Reopen Request action on an intake as part of Admin Actions v2
+// ChangeDecisionOrReopenIntake handles a Change Decision/Reopen Request action on an intake as part of Admin Actions v2
 // TODO - potential overlap with EASI-3111 (issue decision or close request) - https://jiraent.cms.gov/browse/EASI-3111, though not for reopening
-func ReopenOrChangeDecisionOnIntake(
+func ChangeDecisionOrReopenIntake(
 	ctx context.Context,
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.SystemIntakeReopenOrChangeDecisionInput,
+	input model.SystemIntakeChangeDecisionOrReopenInput,
 ) (*models.SystemIntake, error) {
 	// input:
 	// 3. fields depending on which new resolution is selected (i.e. some require new steps, some don't)
