@@ -10,10 +10,6 @@ The required editor features are
 - URL links
 - Pasting in clipboard contents from another editor such as Word
 
-We prefer to store the text data as Markdown. Compared to HTML, it is more human readable, and might have less security exploits to consider.
-
-Email notifications from the app will use the same text data.
-
 ## Considered Alternatives
 
 * [TinyMCE](https://github.com/tinymce/tinymce)
@@ -31,12 +27,15 @@ Though it's easy to start with, modification options can be limited and plugins 
 
 The editor's baseline appearance is set through its own theme which needs style overrides to match ours.
 
+Keep an eye out on Lexical for when there's more time and resources.
+
 ## Pros and Cons of the Alternatives
 
 ### TOAST UI Editor
 * `+` Quick setup; React wrapper readily available
 * `+` All feature requirements supported
 * `-` Bigger bundle
+* `-` Interfaces the Editor object via legacy ref
 * `-` Extending a behavior might need to be done as a plugin
 
 ### TinyMCE
