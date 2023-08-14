@@ -301,7 +301,7 @@ func ChangeDecisionOrReopenIntake(
 
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
-			ActionType:     models.ActionTypeREOPENORCHANGEDECISION,
+			ActionType:     models.ActionTypeCHANGEDECISIONORREOPEN,
 			ActorName:      adminUserInfo.CommonName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,

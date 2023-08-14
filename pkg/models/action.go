@@ -14,7 +14,7 @@ type ActionType string
 const (
 	ActionTypePROGRESSTONEWSTEP      ActionType = "PROGRESS_TO_NEW_STEP"
 	ActionTypeREQUESTEDITS           ActionType = "REQUEST_EDITS"
-	ActionTypeREOPENORCHANGEDECISION ActionType = "REOPEN_OR_CHANGE_DECISION"
+	ActionTypeCHANGEDECISIONORREOPEN ActionType = "CHANGE_DECISION_OR_REOPEN"
 )
 
 // v1 actions (before v2 revamp)

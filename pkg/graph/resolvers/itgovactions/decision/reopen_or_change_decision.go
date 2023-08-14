@@ -15,7 +15,7 @@ func IsIntakeValid(intake *models.SystemIntake, newResolution model.SystemIntake
 	if intake.State != models.SystemIntakeStateCLOSED {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
-				ActionType: models.ActionTypeREOPENORCHANGEDECISION,
+				ActionType: models.ActionTypeCHANGEDECISIONORREOPEN,
 				Message:    "Can't take Reopen or Change Decision action on intakes that aren't closed",
 			},
 		}
@@ -27,7 +27,7 @@ func IsIntakeValid(intake *models.SystemIntake, newResolution model.SystemIntake
 		if string(newResolution) == string(intake.DecisionState) {
 			return &apperrors.BadRequestError{
 				Err: &apperrors.InvalidActionError{
-					ActionType: models.ActionTypeREOPENORCHANGEDECISION,
+					ActionType: models.ActionTypeCHANGEDECISIONORREOPEN,
 					Message:    fmt.Sprintf("Changing decision on an intake needs to change intake to a different decision, intake already has decision %v", newResolution),
 				},
 			}
