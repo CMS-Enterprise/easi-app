@@ -17,7 +17,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-// ProgressIntake handles a Progress to New Step action on an intake
+// ProgressIntake handles a Progress to New Step action on an intake as part of Admin Actions v2
 func ProgressIntake(
 	ctx context.Context,
 	store *storage.Store,
@@ -233,9 +233,8 @@ func CreateSystemIntakeActionRequestEdits(
 	return intake, nil
 }
 
-// ReopenOrChangeDecisionOnIntake does a thing
-// TODO - change comment
-// potential overlap with EASI-3111 (issue decision or close request) - https://jiraent.cms.gov/browse/EASI-3111, though not for reopening
+// ReopenOrChangeDecisionOnIntake handles a Change Decision/Reopen Request action on an intake as part of Admin Actions v2
+// TODO - potential overlap with EASI-3111 (issue decision or close request) - https://jiraent.cms.gov/browse/EASI-3111, though not for reopening
 func ReopenOrChangeDecisionOnIntake(
 	ctx context.Context,
 	store *storage.Store,
@@ -246,18 +245,12 @@ func ReopenOrChangeDecisionOnIntake(
 	// 3. fields depending on which new resolution is selected (i.e. some require new steps, some don't)
 	// 3.a. reopening
 	// 3.a.i. "why are you reopening?" - optional (TODO - where does this get saved, if anywhere? it gets included in email)
-	// 3.a.ii. additional notes in email - saved in actions.feedback
-	// 3.a.iii. admin note
 	// 3.b. not a governance request
 	// 3.b.i. "why is this not an IT gov request?" - optional (TODO - where does this get saved, if anywhere? .RejectionReason field? (probably not, that's probably for not approved by GRB))
-	// 3.b.ii. additional notes in email - saved in actions.feedback
-	// 3.b.iii. admin note
 	// 3.c. not approved by GRB
 	// 3.c.i. reason - required (is this what .RejectionReason field is for?)
 	// 3.c.ii. next steps - required
 	// 3.c.iii. should this team consult with TRB? (strongly recommended, yes but not critical, no)	- required (TODO - doesn't seem like there's a field for this)
-	// 3.c.iv. additional notes in email - saved in actions.feedback
-	// 3.c.v. admin note
 	// 3.d. issue LCID - (various fields we know how to handle) https://www.figma.com/file/ChzAP34A2DVvQUNQwD7lCt/IT-Governance-Next?type=design&node-id=1-24557&mode=design&t=aTBbPkFXgQbIZj4i-0
 
 	adminEUAID := appcontext.Principal(ctx).ID()
@@ -277,7 +270,7 @@ func ReopenOrChangeDecisionOnIntake(
 		return nil, err
 	}
 
-	err = decision.UpdateIntakeDecision(intake, input.NewResolution)
+	err = decision.UpdateIntake(intake, input.NewResolution)
 	if err != nil {
 		return nil, err
 	}

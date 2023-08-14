@@ -8,8 +8,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// IsIntakeValid does a thing
-// TODO - change comment
+// IsIntakeValid checks in an intake and a new resolution from a Change Decision/Reopen Request action are valid
+// the frontend shouldn't allow users to take any invalid actions, but we validate server-side to make sure
+// TODO - will there be any other fields from input that're checked, that should be referenced here?
 func IsIntakeValid(intake *models.SystemIntake, newResolution model.SystemIntakeNewResolution) error {
 	if intake.State != models.SystemIntakeStateCLOSED {
 		return &apperrors.BadRequestError{
@@ -36,20 +37,27 @@ func IsIntakeValid(intake *models.SystemIntake, newResolution model.SystemIntake
 	return nil
 }
 
-// UpdateIntakeDecision does a thing
-// TODO - change comment
-func UpdateIntakeDecision(intake *models.SystemIntake, newResolution model.SystemIntakeNewResolution) error {
+// UpdateIntake updates an intake based on a previously validated Change Decision/Reopen Request action
+func UpdateIntake(intake *models.SystemIntake, newResolution model.SystemIntakeNewResolution) error {
+	// TODO - depending on how complex/verbose logic gets, potentially extract code from switch cases into private functions
+
 	switch newResolution {
 	// if reopening, just set State = Open, preserve existing DecisionState
 	case model.SystemIntakeNewResolutionReopened:
+		// TODO - any other fields to update?
 		intake.State = models.SystemIntakeStateOPEN
 
 	// if changing decision, set DecisionState = new resolution
 	case model.SystemIntakeNewResolutionLcidIssued:
+		// TODO - update LCID fields
+		// TODO - may need to reference logic in pkg/services/system_intake.go, in NewUpdateLifecycleFields()
 		intake.DecisionState = models.SIDSLcidIssued
 	case model.SystemIntakeNewResolutionNotApproved:
+		// TODO - update .RejectionReason, .DecisionNextSteps
+		// TODO - any other fields to update?
 		intake.DecisionState = models.SIDSNotApproved
 	case model.SystemIntakeNewResolutionNotGovernance:
+		// TODO - any other fields to update?
 		intake.DecisionState = models.SIDSNotGovernance
 
 	default:
