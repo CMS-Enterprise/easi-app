@@ -9,7 +9,12 @@ import React, { useEffect } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ToastuiEditor from '@toast-ui/editor';
-import { Editor, EditorProps, Viewer } from '@toast-ui/react-editor';
+import {
+  Editor,
+  EditorProps,
+  Viewer,
+  ViewerProps
+} from '@toast-ui/react-editor';
 import classNames from 'classnames';
 import DOMPurify from 'dompurify';
 
@@ -210,7 +215,6 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
     initLinkPopup(el);
     sanitizeHtmlOnContentChange(toast);
     showLinkUnderSelection(toast);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -243,7 +247,7 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
 
 export default ToastEditor;
 
-interface ToastViewerProps extends EditorProps {
+interface ToastViewerProps extends ViewerProps {
   /** Wrapper div classname */
   className?: string;
 }
