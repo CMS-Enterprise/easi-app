@@ -12,9 +12,8 @@ type ActionType string
 
 // IT Gov v2 actions
 const (
-	ActionTypePROGRESSTONEWSTEP      ActionType = "PROGRESS_TO_NEW_STEP"
-	ActionTypeREQUESTEDITS           ActionType = "REQUEST_EDITS"
-	ActionTypeCHANGEDECISIONORREOPEN ActionType = "CHANGE_DECISION_OR_REOPEN"
+	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
+	ActionTypeREQUESTEDITS      ActionType = "REQUEST_EDITS"
 )
 
 // v1 actions (before v2 revamp)
