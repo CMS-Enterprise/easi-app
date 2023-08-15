@@ -8365,12 +8365,14 @@ enum SystemIntakeActionType {
   PROGRESS_TO_NEW_STEP
   REQUEST_EDITS
 
-  # v1 actions (before v2 revamp)
+  # v1/v2 actions - originally from v1, still used in v2
+  ISSUE_LCID
+
+  # v1 actions - no longer used in IT Gov v2 workflow
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
   GUIDE_RECEIVED_CLOSE
   EXTEND_LCID
-  ISSUE_LCID
   NEED_BIZ_CASE
   NO_GOVERNANCE_NEEDED
   NOT_IT_REQUEST
