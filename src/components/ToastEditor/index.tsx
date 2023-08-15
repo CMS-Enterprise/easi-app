@@ -51,10 +51,8 @@ function initLinkPopup(editorEl: HTMLElement) {
         const popupEl = editorEl.querySelector(
           '.toastui-editor-popup-add-link'
         ) as HTMLElement;
-        // console.log('click link', popupEl);
         if (popupEl) {
           // Only run popup element mods once
-          // console.log('el.dataset.hasModifications', el.dataset.hasModifications);
           if (!('hasModifications' in editorEl.dataset)) {
             modifyLinkPopup(popupEl);
             // eslint-disable-next-line no-param-reassign
@@ -72,8 +70,6 @@ function initLinkPopup(editorEl: HTMLElement) {
  * Apply element-related modifications to the link tool's popup
  */
 function modifyLinkPopup(popupEl: HTMLElement) {
-  // console.log('modifyLinkPopup');
-
   const textLabel = popupEl.querySelector('label[for=toastuiLinkTextInput]');
   if (textLabel) {
     textLabel.textContent = 'Display text';
@@ -105,7 +101,6 @@ function modifyLinkPopup(popupEl: HTMLElement) {
  * See `popupEl`'s style class `.toastui-editor-popup` for related mods.
  */
 function repositionLinkPopup(popupEl: HTMLElement) {
-  // console.log('modifyLinkPopupPosition', popupEl.offsetLeft);
   if (popupEl.offsetLeft < 0) {
     // eslint-disable-next-line no-param-reassign
     popupEl.style.left = '0';
@@ -171,7 +166,6 @@ function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor) {
 function showLinkUnderSelection(toastEditor: ToastuiEditor) {
   toastEditor.eventEmitter.removeEventHandler('query');
   toastEditor.eventEmitter.listen('query', (query, payload = {}) => {
-    // console.log('query', query, payload);
     if (query === 'getPopupInitialValues' && payload.popupName === 'link') {
       const range = toastEditor.getSelection() as [number, number];
       const info = toastEditor.getRangeInfoOfNode(
@@ -227,6 +221,7 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
         usageStatistics={false}
         initialEditType="wysiwyg"
         hideModeSwitch
+        // Match these against tags in `sanitizeHtmlOnContentChange()`
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
         height={props.height || '100%'}
