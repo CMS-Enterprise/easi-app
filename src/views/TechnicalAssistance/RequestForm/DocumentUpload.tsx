@@ -29,6 +29,7 @@ import {
   CreateTrbRequestDocument,
   CreateTrbRequestDocumentVariables
 } from 'queries/types/CreateTrbRequestDocument';
+import { blobToBase64 } from 'utils/downloadFile';
 import {
   documentSchema,
   TrbRequestInputDocument
@@ -89,6 +90,8 @@ const DocumentUpload = ({
 
   const submit = handleSubmit(async formData => {
     const input: any = clone(formData);
+
+    console.debug(input.fileData, await blobToBase64(input.fileData));
 
     // Clear out otherTypeDescription if documentType isn't OTHER
     if (input.documentType !== 'OTHER') {

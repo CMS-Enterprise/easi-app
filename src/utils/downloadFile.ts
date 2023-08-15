@@ -27,3 +27,11 @@ export function downloadFileFromURLOnly(downloadURL: string) {
   link.click();
   document.body.removeChild(link);
 }
+
+export function blobToBase64(fileBlob: File) {
+  return new Promise((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(fileBlob);
+  });
+}
