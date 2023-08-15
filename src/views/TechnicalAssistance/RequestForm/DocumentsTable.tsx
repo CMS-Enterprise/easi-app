@@ -27,7 +27,7 @@ import {
   TRBRequestDocumentStatus
 } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
-import { downloadFileFromURLOnly } from 'utils/downloadFile';
+import { downloadFileFromURL } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import { DocumentStatusType } from '../TrbDocuments';
@@ -164,7 +164,10 @@ function DocumentsTable({
           const requestedDocument = response.data.trbRequest.documents.find(
             doc => doc.id === documentId
           )!; // non-null assertion should be safe, this function should only be called with a documentId of a valid document
-          downloadFileFromURLOnly(requestedDocument.url);
+          downloadFileFromURL(
+            requestedDocument.url,
+            requestedDocument.fileName
+          );
         }
       });
       // don't need to call .catch(); apollo-client will always fulfill the promise, even if there's a network error
