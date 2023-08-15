@@ -1482,25 +1482,30 @@ input SystemIntakeRequestEditsInput {
   adminNotes: String
 }
 
-# TODO - close overlap with SystemIntakeDecisionState - should they be combined?
-enum SystemIntakeNewResolution {
-  REOPENED
-  LCID_ISSUED
-  NOT_APPROVED
-  NOT_GOVERNANCE
+
+"""
+Different options for whether the Governance team believes a requester's team should consult with the TRB
+"""
+enum SystemIntakeTRBFollowUp {
+  STRONGLY_RECOMMENDED
+  RECOMMENDED_BUT_NOT_CRITICAL
+  NOT_REQUIRED
 }
 
 """
-Input for submitting a Change Decision/Reopen Request action in IT Gov v2
+Input for setting an intake's decision to issuing an LCID in IT Gov v2
 """
-input SystemIntakeChangeDecisionOrReopenInput {
+input SystemIntakeSetDecisionToLCIDIssuedInput {
   systemIntakeID: UUID!
-  newResolution: SystemIntakeNewResolution!
-  # TODO - other necessary fields
-  notificationRecipients: EmailNotificationRecipients
+  lcid: String
+  expiresAt: Time!
+  scope: String!
+  nextSteps: String!
+  trbFollowUp: SystemIntakeTRBFollowUp!
+  costBaseline: String
   additionalNote: String
+  notificationRecipients: EmailNotificationRecipients
   adminNote: String
-  # TODO - any other notification fields
 }
 
 """
@@ -2336,8 +2341,8 @@ type Mutation {
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionChangeDecisionOrReopen(
-    input: SystemIntakeChangeDecisionOrReopenInput!
+  createSystemIntakeActionSetDecisionToLCIDIssuedInput(
+    input: SystemIntakeSetDecisionToLCIDIssuedInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!

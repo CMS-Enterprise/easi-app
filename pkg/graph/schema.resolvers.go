@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1161,12 +1162,9 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 	}, err
 }
 
-// CreateSystemIntakeActionChangeDecisionOrReopen is the resolver for the createSystemIntakeActionChangeDecisionOrReopen field.
-func (r *mutationResolver) CreateSystemIntakeActionChangeDecisionOrReopen(ctx context.Context, input model.SystemIntakeChangeDecisionOrReopenInput) (*model.UpdateSystemIntakePayload, error) {
-	updatedIntake, err := resolvers.ChangeDecisionOrReopenIntake(ctx, r.store, r.service.FetchUserInfo, input)
-	return &model.UpdateSystemIntakePayload{
-		SystemIntake: updatedIntake,
-	}, err
+// CreateSystemIntakeActionSetDecisionToLCIDIssuedInput is the resolver for the createSystemIntakeActionSetDecisionToLCIDIssuedInput field.
+func (r *mutationResolver) CreateSystemIntakeActionSetDecisionToLCIDIssuedInput(ctx context.Context, input model.SystemIntakeSetDecisionToLCIDIssuedInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionSetDecisionToLCIDIssuedInput - createSystemIntakeActionSetDecisionToLCIDIssuedInput"))
 }
 
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.

@@ -532,15 +532,6 @@ type SystemIntakeBusinessOwnerInput struct {
 	Component string `json:"component"`
 }
 
-// Input for submitting a Change Decision/Reopen Request action in IT Gov v2
-type SystemIntakeChangeDecisionOrReopenInput struct {
-	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	NewResolution          SystemIntakeNewResolution           `json:"newResolution"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdditionalNote         *string                             `json:"additionalNote"`
-	AdminNote              *string                             `json:"adminNote"`
-}
-
 // Represents a contact in OIT who is collaborating with the user
 // creating a system IT governance request
 type SystemIntakeCollaborator struct {
@@ -711,6 +702,20 @@ type SystemIntakeRequesterInput struct {
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Input for setting an intake's decision to issuing an LCID in IT Gov v2
+type SystemIntakeSetDecisionToLCIDIssuedInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	Lcid                   *string                             `json:"lcid"`
+	ExpiresAt              time.Time                           `json:"expiresAt"`
+	Scope                  string                              `json:"scope"`
+	NextSteps              string                              `json:"nextSteps"`
+	TrbFollowUp            SystemIntakeTRBFollowUp             `json:"trbFollowUp"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	AdditionalNote         *string                             `json:"additionalNote"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *string                             `json:"adminNote"`
 }
 
 // Denotes the type of a document attached to a TRB request,
@@ -1094,51 +1099,6 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type SystemIntakeNewResolution string
-
-const (
-	SystemIntakeNewResolutionReopened      SystemIntakeNewResolution = "REOPENED"
-	SystemIntakeNewResolutionLcidIssued    SystemIntakeNewResolution = "LCID_ISSUED"
-	SystemIntakeNewResolutionNotApproved   SystemIntakeNewResolution = "NOT_APPROVED"
-	SystemIntakeNewResolutionNotGovernance SystemIntakeNewResolution = "NOT_GOVERNANCE"
-)
-
-var AllSystemIntakeNewResolution = []SystemIntakeNewResolution{
-	SystemIntakeNewResolutionReopened,
-	SystemIntakeNewResolutionLcidIssued,
-	SystemIntakeNewResolutionNotApproved,
-	SystemIntakeNewResolutionNotGovernance,
-}
-
-func (e SystemIntakeNewResolution) IsValid() bool {
-	switch e {
-	case SystemIntakeNewResolutionReopened, SystemIntakeNewResolutionLcidIssued, SystemIntakeNewResolutionNotApproved, SystemIntakeNewResolutionNotGovernance:
-		return true
-	}
-	return false
-}
-
-func (e SystemIntakeNewResolution) String() string {
-	return string(e)
-}
-
-func (e *SystemIntakeNewResolution) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = SystemIntakeNewResolution(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeNewResolution", str)
-	}
-	return nil
-}
-
-func (e SystemIntakeNewResolution) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 
@@ -1182,5 +1142,49 @@ func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Different options for whether the Governance team believes a requester's team should consult with the TRB
+type SystemIntakeTRBFollowUp string
+
+const (
+	SystemIntakeTRBFollowUpStronglyRecommended       SystemIntakeTRBFollowUp = "STRONGLY_RECOMMENDED"
+	SystemIntakeTRBFollowUpRecommendedButNotCritical SystemIntakeTRBFollowUp = "RECOMMENDED_BUT_NOT_CRITICAL"
+	SystemIntakeTRBFollowUpNotRequired               SystemIntakeTRBFollowUp = "NOT_REQUIRED"
+)
+
+var AllSystemIntakeTRBFollowUp = []SystemIntakeTRBFollowUp{
+	SystemIntakeTRBFollowUpStronglyRecommended,
+	SystemIntakeTRBFollowUpRecommendedButNotCritical,
+	SystemIntakeTRBFollowUpNotRequired,
+}
+
+func (e SystemIntakeTRBFollowUp) IsValid() bool {
+	switch e {
+	case SystemIntakeTRBFollowUpStronglyRecommended, SystemIntakeTRBFollowUpRecommendedButNotCritical, SystemIntakeTRBFollowUpNotRequired:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeTRBFollowUp) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeTRBFollowUp) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeTRBFollowUp(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeTRBFollowUp", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeTRBFollowUp) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
