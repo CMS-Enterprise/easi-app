@@ -2,11 +2,13 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/easiencryption"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -50,6 +52,7 @@ func GetStatusForSystemIntakeDocument(s3Client *upload.S3Client, s3Key string) (
 func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input model.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
 	s3Key := uuid.New().String()
 
+	//TODO decode from base 64
 	existingExtension := filepath.Ext(input.FileData.Filename)
 	if existingExtension != "" {
 		s3Key += existingExtension
@@ -57,7 +60,12 @@ func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Cli
 		s3Key += fallbackExtension
 	}
 
-	err := s3Client.UploadFile(s3Key, input.FileData.File)
+	decodedReadSeeker, err := easiencryption.DecodeBase64File(&input.FileData.File)
+	if err != nil {
+		return nil, fmt.Errorf("...%w...FileName: %s", err, input.FileData.Filename) //Wrap error and provide filename
+	}
+
+	err = s3Client.UploadFile(s3Key, decodedReadSeeker)
 	if err != nil {
 		return nil, err
 	}
