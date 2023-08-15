@@ -535,7 +535,7 @@ export interface CreateSystemIntakeContactInput {
  */
 export interface CreateSystemIntakeDocumentInput {
   requestID: UUID;
-  fileData: Upload;
+  fileData: EncodedDocumentUpload;
   documentType: SystemIntakeDocumentCommonType;
   otherTypeDescription?: string | null;
 }
@@ -591,7 +591,7 @@ export interface CreateTRBRequestAttendeeInput {
  */
 export interface CreateTRBRequestDocumentInput {
   requestID: UUID;
-  fileData: Upload;
+  fileData: EncodedDocumentUpload;
   documentType: TRBDocumentCommonType;
   otherTypeDescription?: string | null;
 }
@@ -655,6 +655,13 @@ export interface EmailNotificationRecipients {
   regularRecipientEmails: EmailAddress[];
   shouldNotifyITGovernance: boolean;
   shouldNotifyITInvestment: boolean;
+}
+
+export interface EncodedDocumentUpload {
+  file: string;
+  filename: string;
+  size: number;
+  contentType: string;
 }
 
 /**

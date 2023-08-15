@@ -1,17 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
+	"github.com/cmsgov/easi-app/pkg/easiencryption"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -524,20 +525,29 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	if err != nil {
 		return nil, err
 	}
-	fileStats, err := file.Stat()
+
+	var buf bytes.Buffer
+	_, err = buf.ReadFrom(file)
 	if err != nil {
 		return nil, err
 	}
+	encoded := easiencryption.EncodeBase64String(buf.String())
 
 	otherDesc := "Some other type of doc"
 	input := model.CreateTRBRequestDocumentInput{
 		RequestID: trb.ID,
-		FileData: graphql.Upload{
-			File:        file,
+		FileData: &model.EncodedDocumentUpload{
+			File:        encoded,
 			Filename:    "sample.pdf",
-			Size:        fileStats.Size(),
+			Size:        25, //arbitrary
 			ContentType: "application/pdf",
 		},
+		// FileData: graphql.Upload{
+		// 	File:        file,
+		// 	Filename:    "sample.pdf",
+		// 	Size:        fileStats.Size(),
+		// 	ContentType: "application/pdf",
+		// },
 		DocumentType:         models.TRBRequestDocumentCommonTypeOther,
 		OtherTypeDescription: &otherDesc,
 	}

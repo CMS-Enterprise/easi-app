@@ -31,7 +31,13 @@ export function downloadFileFromURLOnly(downloadURL: string) {
 export function blobToBase64(fileBlob: File) {
   return new Promise((resolve, _) => {
     const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
+    reader.onloadend = () => resolve((reader.result as string).split(',')[1]);
     reader.readAsDataURL(fileBlob);
+  });
+}
+
+export function stringToBase64(stringToEncode: string) {
+  return new Promise((resolve, _) => {
+    return btoa(stringToEncode) as string;
   });
 }

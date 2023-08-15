@@ -92,6 +92,10 @@ const DocumentUpload = ({
     const input: any = clone(formData);
 
     console.debug(input.fileData, await blobToBase64(input.fileData));
+    // TODO get the correct input encoded and submit to mutation
+    const base64 = await blobToBase64(input.fileData);
+    console.log(base64);
+    input.fileData.file = base64;
 
     // Clear out otherTypeDescription if documentType isn't OTHER
     if (input.documentType !== 'OTHER') {

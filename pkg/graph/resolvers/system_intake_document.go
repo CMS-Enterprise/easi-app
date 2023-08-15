@@ -60,7 +60,7 @@ func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Cli
 		s3Key += fallbackExtension
 	}
 
-	decodedReadSeeker, err := easiencryption.DecodeBase64File(&input.FileData.File)
+	decodedReadSeeker, err := easiencryption.DecodeBase64String(input.FileData.File)
 	if err != nil {
 		return nil, fmt.Errorf("...%w...FileName: %s", err, input.FileData.Filename) //Wrap error and provide filename
 	}
