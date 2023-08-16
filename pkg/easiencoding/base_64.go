@@ -1,4 +1,4 @@
-package easiencryption
+package easiencoding
 
 import (
 	"bytes"

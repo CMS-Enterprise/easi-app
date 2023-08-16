@@ -13,7 +13,7 @@ import (
 	"github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/easiencryption"
+	"github.com/cmsgov/easi-app/pkg/easiencoding"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -536,7 +536,7 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	if err != nil {
 		return nil, err
 	}
-	encodedContents := easiencryption.EncodeBase64String(buf.String())
+	encodedContents := easiencoding.EncodeBase64String(buf.String())
 	fileToUpload := bytes.NewReader([]byte(encodedContents))
 
 	otherDesc := "Some other type of doc"
