@@ -133,6 +133,8 @@ func NewUpdateBusinessCase(
 	fetchBusinessCase func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	authorize func(c context.Context, b *models.BusinessCase) (bool, error),
 	update func(c context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error),
+	fetchIntake func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 ) func(c context.Context, b *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		logger := appcontext.ZLogger(ctx)
@@ -168,6 +170,43 @@ func NewUpdateBusinessCase(
 				Operation: apperrors.QuerySave,
 			}
 		}
+		// TODO: what is the best way to detect the step that this request is in? Current step? Or should we depend on what the current step is?
+		intake, err := fetchIntake(ctx, businessCase.SystemIntakeID)
+		if err != nil {
+			logger.Error("failed to update business case state")
+			return businessCase, &apperrors.QueryError{ //return the error
+				Err:       err,
+				Model:     businessCase,
+				Operation: apperrors.QuerySave,
+			}
+		}
+		/*
+			if newIntakeStatus == models.SystemIntakeStatusBIZCASEFINALSUBMITTED {
+				intake.FinalBusinessCaseState = models.SIRFSSubmitted
+			} else if newIntakeStatus == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
+				intake.DraftBusinessCaseState = models.SIRFSSubmitted
+			}
+		*/
+		// TODO: is there a better way to detect if this is a draft business case or a final business case?
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+			if intake.DraftBusinessCaseState != models.SIRFSEditsRequested {
+				intake.DraftBusinessCaseState = models.SIRFSInProgress
+			}
+
+		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+			if intake.FinalBusinessCaseState != models.SIRFSEditsRequested {
+				intake.FinalBusinessCaseState = models.SIRFSInProgress
+			}
+		}
+		_, err = updateIntake(ctx, intake)
+		if err != nil {
+			logger.Error("failed to update business case state")
+			return businessCase, &apperrors.QueryError{ //return the error
+				Err:       err,
+				Model:     businessCase,
+				Operation: apperrors.QuerySave,
+			}
+		}
 
 		return businessCase, nil
 	}
@@ -179,6 +218,7 @@ func NewCloseBusinessCase(
 	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	update func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
 ) func(context.Context, uuid.UUID) error {
+	//TODO: does this need to be updated?
 	return func(ctx context.Context, id uuid.UUID) error {
 		businessCase, fetchErr := fetch(ctx, id)
 		if fetchErr != nil {

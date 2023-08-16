@@ -27,10 +27,11 @@ func checkUniqLifecycleCosts(costs models.EstimatedLifecycleCosts) (string, stri
 
 // check the system intake status is submitted
 func checkSystemIntakeSubmitted(intake *models.SystemIntake) (string, string) {
-	if intake.Status == models.SystemIntakeStatusINTAKEDRAFT {
-		return "SystemIntake", "must have already been submitted"
+	//TODO, do we need to check intake.RequestFormState instead? Maybe check both for now to support legacy?
+	if intake.RequestFormState == models.SIRFSSubmitted || intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
+		return "", ""
 	}
-	return "", ""
+	return "SystemIntake", "must have already been submitted"
 }
 
 // BusinessCaseForCreation checks if it's a valid business case to create

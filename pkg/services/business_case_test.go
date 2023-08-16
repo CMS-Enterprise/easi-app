@@ -209,7 +209,7 @@ func (s *ServicesTestSuite) TestBusinessCaseUpdater() {
 	}
 
 	s.Run("successfully updates a Business Case without an error", func() {
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update)
+		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update, s.store.FetchSystemIntakeByID, s.store.UpdateSystemIntake)
 
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
@@ -221,7 +221,7 @@ func (s *ServicesTestSuite) TestBusinessCaseUpdater() {
 		failUpdate := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, failUpdate)
+		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, failUpdate, s.store.FetchSystemIntakeByID, s.store.UpdateSystemIntake)
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
 		s.IsType(&apperrors.QueryError{}, err)

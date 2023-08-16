@@ -101,27 +101,22 @@ func NewSubmitSystemIntake(
 		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		intake.RequestFormState = models.SIRFSSubmitted
 
-		if intake.AlfabetID.Valid {
-			err := &apperrors.ResourceConflictError{
-				Err:        errors.New("intake has already been submitted to CEDAR"),
-				ResourceID: intake.ID.String(),
-				Resource:   intake,
-			}
-			return err
-		}
+		intakeSubmittedToCedar := intake.AlfabetID.Valid // When submitted to CEDAR, the AlfabetID gets set. If set, we currently don't re-submit it
 
-		// Send SystemIntake to CEDAR Intake API
-		intake.SubmittedAt = &updatedTime
-		alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
-		if submitToCEDARErr != nil {
-			appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
-		} else {
-			// If submission to CEDAR was successful, update the intake with the alfabetID
-			// AlfabetID can be null if:
-			// - The intake was not submitted to CEDAR (due to the feature flag being off
-			// or the Intake being imported from SharePoint)
-			// - An error is encountered when sending the data to CEDAR.
-			intake.AlfabetID = null.StringFrom(alfabetID)
+		if !intakeSubmittedToCedar {
+			// Send SystemIntake to CEDAR Intake API
+			intake.SubmittedAt = &updatedTime
+			alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
+			if submitToCEDARErr != nil {
+				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
+			} else {
+				// If submission to CEDAR was successful, update the intake with the alfabetID
+				// AlfabetID can be null if:
+				// - The intake was not submitted to CEDAR (due to the feature flag being off
+				// or the Intake being imported from SharePoint)
+				// - An error is encountered when sending the data to CEDAR.
+				intake.AlfabetID = null.StringFrom(alfabetID)
+			}
 		}
 
 		// Store in the `actions` table
@@ -168,6 +163,7 @@ func NewSubmitBusinessCase(
 	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
 	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
+	//TODO: look at the newIntakeStatus to see if Draft or Final eg SystemIntakeStatusBIZCASEDRAFTSUBMITTED or SystemIntakeStatusBIZCASEFINALSUBMITTED
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
 		if err != nil {
@@ -219,6 +215,11 @@ func NewSubmitBusinessCase(
 		}
 
 		intake.Status = newIntakeStatus
+		if newIntakeStatus == models.SystemIntakeStatusBIZCASEFINALSUBMITTED {
+			intake.FinalBusinessCaseState = models.SIRFSSubmitted
+		} else if newIntakeStatus == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
+			intake.DraftBusinessCaseState = models.SIRFSSubmitted
+		}
 		intake.UpdatedAt = &updatedAt
 		intake, err = updateIntake(ctx, intake)
 		if err != nil {
