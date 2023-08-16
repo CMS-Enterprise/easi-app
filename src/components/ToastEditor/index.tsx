@@ -123,9 +123,15 @@ function setEditableElementProps(
   // so scope the selector on toast's ww container
   const elEditable = el?.querySelector(
     '.toastui-editor-ww-container .toastui-editor-contents'
-  );
+  ) as HTMLElement;
 
   if (elEditable) {
+    // Relay the height property to the editable since it's modified to be resizable.
+    // The original parent with dimensions will not reflow accordingly when editable is resizable.
+    if (editorProps.height) {
+      elEditable.style.height = editorProps.height;
+    }
+
     elEditable.setAttribute('role', 'textbox');
     elEditable.setAttribute('aria-multiline', 'true');
     elEditable.setAttribute(
@@ -235,7 +241,6 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
         // Match these against tags in `sanitizeHtmlOnContentChange()`
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
-        height={props.height || '100%'}
         linkAttributes={{
           target: '_blank'
         }}
@@ -247,6 +252,9 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
           field?.onChange(val);
         }}
         {...props}
+        // Ensure the height prop is overridden after argument assignments
+        // See `setEditableElementProps()` for height details
+        height="100%"
       />
     </div>
   );

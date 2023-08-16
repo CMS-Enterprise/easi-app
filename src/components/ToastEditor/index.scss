@@ -48,8 +48,6 @@
 }
 
 .easi-toast-editor {
-  display: inline-block;
-
   .toastui-editor {
     min-height: 0 !important;
   }
@@ -94,7 +92,8 @@
 
   .toastui-editor-contents {
     padding: 6px 9px 9px;
-    resize: both;
+    resize: vertical;
+    height: 155px;
   }
 
   .toastui-editor-popup {
