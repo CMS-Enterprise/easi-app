@@ -8865,12 +8865,6 @@ type TRBRequestDocument {
   uploadedAt: Time!
   url: String!
 }
-# input EncodedDocumentUpload {
-#   file:      String!
-# 	filename:    String!
-# 	size:        Int!
-# 	contentType: String!
-# }
 
 """
 The data needed to upload a TRB document and attach it to a request with metadata

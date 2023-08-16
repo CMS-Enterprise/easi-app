@@ -52,9 +52,3 @@ export async function fileToBase64File(fileBlob: File): Promise<File> {
     resolve(newFile);
   });
 }
-
-export function stringToBase64(stringToEncode: string) {
-  return new Promise((resolve, _) => {
-    return btoa(stringToEncode) as string;
-  });
-}

@@ -52,7 +52,6 @@ func GetStatusForSystemIntakeDocument(s3Client *upload.S3Client, s3Key string) (
 func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input model.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
 	s3Key := uuid.New().String()
 
-	//TODO decode from base 64
 	existingExtension := filepath.Ext(input.FileData.Filename)
 	if existingExtension != "" {
 		s3Key += existingExtension
