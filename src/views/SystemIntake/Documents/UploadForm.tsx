@@ -28,7 +28,7 @@ import {
 } from 'queries/types/CreateSystemIntakeDocument';
 import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
 // import { blobToBase64, stringToBase64 } from 'utils/downloadFile';
-import { stringToBase64 } from 'utils/downloadFile';
+// import { stringToBase64 } from 'utils/downloadFile';
 import { documentSchema } from 'validations/systemIntakeSchema';
 
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
@@ -71,8 +71,8 @@ const UploadForm = () => {
   });
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
-    const f64 = await stringToBase64(formData.fileData.file);
-    console.debug(formData.fileData, f64);
+    // const f64 = await stringToBase64(formData.fileData.file);
+    // console.debug(formData.fileData, f64);
     // TODO: assign the base64 encoded string to the mutation
     // formData.fileData.file = f64 as string;
 

@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
 )
@@ -211,7 +212,7 @@ type CreateSystemIntakeContactPayload struct {
 // The data needed to upload a System Intake document and attach it to a request with metadata
 type CreateSystemIntakeDocumentInput struct {
 	RequestID            uuid.UUID                             `json:"requestID"`
-	FileData             *EncodedDocumentUpload                `json:"fileData"`
+	FileData             graphql.Upload                        `json:"fileData"`
 	DocumentType         models.SystemIntakeDocumentCommonType `json:"documentType"`
 	OtherTypeDescription *string                               `json:"otherTypeDescription"`
 }
@@ -260,7 +261,7 @@ type CreateTRBRequestAttendeeInput struct {
 // The data needed to upload a TRB document and attach it to a request with metadata
 type CreateTRBRequestDocumentInput struct {
 	RequestID            uuid.UUID                    `json:"requestID"`
-	FileData             *EncodedDocumentUpload       `json:"fileData"`
+	FileData             graphql.Upload               `json:"fileData"`
 	DocumentType         models.TRBDocumentCommonType `json:"documentType"`
 	OtherTypeDescription *string                      `json:"otherTypeDescription"`
 }
@@ -360,13 +361,6 @@ type DeleteTestDateInput struct {
 type DeleteTestDatePayload struct {
 	TestDate   *models.TestDate `json:"testDate"`
 	UserErrors []*UserError     `json:"userErrors"`
-}
-
-type EncodedDocumentUpload struct {
-	File        string `json:"file"`
-	Filename    string `json:"filename"`
-	Size        int    `json:"size"`
-	ContentType string `json:"contentType"`
 }
 
 // Input associated with a document to be uploaded to a 508/accessibility request

@@ -28,7 +28,7 @@ export function downloadFileFromURLOnly(downloadURL: string) {
   document.body.removeChild(link);
 }
 
-export function blobToBase64(fileBlob: File) {
+export function blobToBase64(fileBlob: File): Promise<string> {
   return new Promise((resolve, _) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve((reader.result as string).split(',')[1]);

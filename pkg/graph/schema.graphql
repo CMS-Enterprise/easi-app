@@ -1777,19 +1777,19 @@ type TRBRequestDocument {
   uploadedAt: Time!
   url: String!
 }
-input EncodedDocumentUpload {
-  file:      String!
-	filename:    String!
-	size:        Int!
-	contentType: String!
-}
+# input EncodedDocumentUpload {
+#   file:      String!
+# 	filename:    String!
+# 	size:        Int!
+# 	contentType: String!
+# }
 
 """
 The data needed to upload a TRB document and attach it to a request with metadata
 """
 input CreateTRBRequestDocumentInput {
   requestID: UUID!
-  fileData: EncodedDocumentUpload!
+  fileData: Upload!
   documentType: TRBDocumentCommonType!
   otherTypeDescription: String  # Needed if documentType == OTHER
 }
@@ -1799,7 +1799,7 @@ The data needed to upload a System Intake document and attach it to a request wi
 """
 input CreateSystemIntakeDocumentInput {
   requestID: UUID!
-  fileData: EncodedDocumentUpload!
+  fileData: Upload!
   documentType: SystemIntakeDocumentCommonType!
   otherTypeDescription: String
 }
@@ -2520,6 +2520,11 @@ Email addresses are represented as strings
 """
 scalar EmailAddress
 
+"""
+https://gqlgen.com/reference/file-upload/
+Represents a multipart file upload
+"""
+scalar Upload
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 

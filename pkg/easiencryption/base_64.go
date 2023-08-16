@@ -9,7 +9,6 @@ import (
 
 // DecodeBase64File returns a ReadSeeker after decoding a from base 64
 func DecodeBase64File(encodedSeeker *io.ReadSeeker) (io.ReadSeeker, error) {
-	decodedFile := []byte{}
 	buf := new(bytes.Buffer)
 	_, err := buf.ReadFrom(*encodedSeeker)
 
@@ -17,6 +16,7 @@ func DecodeBase64File(encodedSeeker *io.ReadSeeker) (io.ReadSeeker, error) {
 		return nil, fmt.Errorf("unable to read file data for ")
 	}
 	inputFile := buf.Bytes()
+	decodedFile := make([]byte, base64.StdEncoding.DecodedLen(len(inputFile)))
 	_, err = base64.StdEncoding.Decode(decodedFile, inputFile)
 	if err != nil {
 		return nil, fmt.Errorf("unable to decode file data for ")

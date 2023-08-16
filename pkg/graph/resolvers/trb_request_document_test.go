@@ -1,9 +1,11 @@
 package resolvers
 
 import (
+	"bytes"
+
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/easiencryption"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -33,24 +35,25 @@ func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
 
 func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUID, documentToCreate *models.TRBRequestDocument) *models.TRBRequestDocument {
 	// fileToUpload := bytes.NewReader([]byte("Test file content"))
-	testContents := "Test file content"
-	encodedFileContent := easiencryption.EncodeBase64String(testContents)
+	// testContents := "Test file content"
+	// encodedFileContent := easiencryption.EncodeBase64String(testContents)
+	fileToUpload := bytes.NewReader([]byte("Test file content"))
 	gqlInput := model.CreateTRBRequestDocumentInput{
 		RequestID:            documentToCreate.TRBRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
 		OtherTypeDescription: &documentToCreate.OtherType,
-		FileData: &model.EncodedDocumentUpload{
-			File:        encodedFileContent,
-			Filename:    documentToCreate.FileName,
-			Size:        25, //arbitrary
-			ContentType: "application/pdf",
-		},
-		// FileData: graphql.Upload{
-		// 	File:        fileToUpload,
+		// FileData: &model.EncodedDocumentUpload{
+		// 	File:        encodedFileContent,
 		// 	Filename:    documentToCreate.FileName,
-		// 	Size:        fileToUpload.Size(),
+		// 	Size:        25, //arbitrary
 		// 	ContentType: "application/pdf",
 		// },
+		FileData: graphql.Upload{
+			File:        fileToUpload,
+			Filename:    documentToCreate.FileName,
+			Size:        fileToUpload.Size(),
+			ContentType: "application/pdf",
+		},
 	}
 
 	createdDocument, err := CreateTRBRequestDocument(

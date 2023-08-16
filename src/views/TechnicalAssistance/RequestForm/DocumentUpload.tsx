@@ -89,13 +89,11 @@ const DocumentUpload = ({
   });
 
   const submit = handleSubmit(async formData => {
-    const input: any = clone(formData);
+    const input: TrbRequestInputDocument = clone(formData);
 
-    console.debug(input.fileData, await blobToBase64(input.fileData));
-    // TODO get the correct input encoded and submit to mutation
-    const base64 = await blobToBase64(input.fileData);
-    console.log(base64);
-    input.fileData.file = base64;
+    const originalFile = input.fileData;
+    const b64String = await blobToBase64(originalFile);
+    const newFile = new File([b64String], originalFile.name);
 
     // Clear out otherTypeDescription if documentType isn't OTHER
     if (input.documentType !== 'OTHER') {
@@ -106,7 +104,9 @@ const DocumentUpload = ({
       variables: {
         input: {
           requestID,
-          ...input
+          documentType: input.documentType,
+          otherTypeDescription: input.otherTypeDescription,
+          fileData: newFile
         }
       }
     })

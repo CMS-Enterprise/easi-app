@@ -6986,7 +6986,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
 		ec.unmarshalInputDeleteTestDateInput,
 		ec.unmarshalInputEmailNotificationRecipients,
-		ec.unmarshalInputEncodedDocumentUpload,
 		ec.unmarshalInputGeneratePresignedUploadURLInput,
 		ec.unmarshalInputIssueLifecycleIdInput,
 		ec.unmarshalInputRejectIntakeInput,
@@ -8866,19 +8865,19 @@ type TRBRequestDocument {
   uploadedAt: Time!
   url: String!
 }
-input EncodedDocumentUpload {
-  file:      String!
-	filename:    String!
-	size:        Int!
-	contentType: String!
-}
+# input EncodedDocumentUpload {
+#   file:      String!
+# 	filename:    String!
+# 	size:        Int!
+# 	contentType: String!
+# }
 
 """
 The data needed to upload a TRB document and attach it to a request with metadata
 """
 input CreateTRBRequestDocumentInput {
   requestID: UUID!
-  fileData: EncodedDocumentUpload!
+  fileData: Upload!
   documentType: TRBDocumentCommonType!
   otherTypeDescription: String  # Needed if documentType == OTHER
 }
@@ -8888,7 +8887,7 @@ The data needed to upload a System Intake document and attach it to a request wi
 """
 input CreateSystemIntakeDocumentInput {
   requestID: UUID!
-  fileData: EncodedDocumentUpload!
+  fileData: Upload!
   documentType: SystemIntakeDocumentCommonType!
   otherTypeDescription: String
 }
@@ -9609,6 +9608,11 @@ Email addresses are represented as strings
 """
 scalar EmailAddress
 
+"""
+https://gqlgen.com/reference/file-upload/
+Represents a multipart file upload
+"""
+scalar Upload
 
 directive @hasRole(role: Role!) on FIELD_DEFINITION
 
@@ -50256,7 +50260,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileData"))
-			it.FileData, err = ec.unmarshalNEncodedDocumentUpload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEncodedDocumentUpload(ctx, v)
+			it.FileData, err = ec.unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50536,7 +50540,7 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestDocumentInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileData"))
-			it.FileData, err = ec.unmarshalNEncodedDocumentUpload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEncodedDocumentUpload(ctx, v)
+			it.FileData, err = ec.unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50865,58 +50869,6 @@ func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx contex
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldNotifyITInvestment"))
 			it.ShouldNotifyITInvestment, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputEncodedDocumentUpload(ctx context.Context, obj interface{}) (model.EncodedDocumentUpload, error) {
-	var it model.EncodedDocumentUpload
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"file", "filename", "size", "contentType"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "file":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("file"))
-			it.File, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "filename":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filename"))
-			it.Filename, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "size":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-			it.Size, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "contentType":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentType"))
-			it.ContentType, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63002,11 +62954,6 @@ func (ec *executionContext) marshalNEmailAddress2ᚕgithubᚗcomᚋcmsgovᚋeasi
 	return ret
 }
 
-func (ec *executionContext) unmarshalNEncodedDocumentUpload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEncodedDocumentUpload(ctx context.Context, v interface{}) (*model.EncodedDocumentUpload, error) {
-	res, err := ec.unmarshalInputEncodedDocumentUpload(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -65261,6 +65208,21 @@ func (ec *executionContext) unmarshalNUpdateTRBRequestTRBLeadInput2githubᚗcom�
 func (ec *executionContext) unmarshalNUpdateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDateInput(ctx context.Context, v interface{}) (model.UpdateTestDateInput, error) {
 	res, err := ec.unmarshalInputUpdateTestDateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, v interface{}) (graphql.Upload, error) {
+	res, err := graphql.UnmarshalUpload(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, sel ast.SelectionSet, v graphql.Upload) graphql.Marshaler {
+	res := graphql.MarshalUpload(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserError(ctx context.Context, sel ast.SelectionSet, v *model.UserError) graphql.Marshaler {
