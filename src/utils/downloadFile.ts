@@ -45,6 +45,14 @@ export function blobToBase64(fileBlob: File): Promise<string> {
   });
 }
 
+export async function fileToBase64File(fileBlob: File): Promise<File> {
+  const b64String = await blobToBase64(fileBlob);
+  return new Promise((resolve, _) => {
+    const newFile = new File([b64String], fileBlob.name);
+    resolve(newFile);
+  });
+}
+
 export function stringToBase64(stringToEncode: string) {
   return new Promise((resolve, _) => {
     return btoa(stringToEncode) as string;
