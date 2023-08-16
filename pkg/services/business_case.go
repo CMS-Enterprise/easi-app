@@ -170,7 +170,7 @@ func NewUpdateBusinessCase(
 				Operation: apperrors.QuerySave,
 			}
 		}
-		// TODO: what is the best way to detect the step that this request is in? Current step? Or should we depend on what the current step is?
+
 		intake, err := fetchIntake(ctx, businessCase.SystemIntakeID)
 		if err != nil {
 			logger.Error("failed to update business case state")
@@ -180,19 +180,11 @@ func NewUpdateBusinessCase(
 				Operation: apperrors.QuerySave,
 			}
 		}
-		/*
-			if newIntakeStatus == models.SystemIntakeStatusBIZCASEFINALSUBMITTED {
-				intake.FinalBusinessCaseState = models.SIRFSSubmitted
-			} else if newIntakeStatus == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
-				intake.DraftBusinessCaseState = models.SIRFSSubmitted
-			}
-		*/
-		// TODO: is there a better way to detect if this is a draft business case or a final business case?
+
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			if intake.DraftBusinessCaseState != models.SIRFSEditsRequested {
 				intake.DraftBusinessCaseState = models.SIRFSInProgress
 			}
-
 		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
 			if intake.FinalBusinessCaseState != models.SIRFSEditsRequested {
 				intake.FinalBusinessCaseState = models.SIRFSInProgress
@@ -218,7 +210,6 @@ func NewCloseBusinessCase(
 	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	update func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
 ) func(context.Context, uuid.UUID) error {
-	//TODO: does this need to be updated?
 	return func(ctx context.Context, id uuid.UUID) error {
 		businessCase, fetchErr := fetch(ctx, id)
 		if fetchErr != nil {

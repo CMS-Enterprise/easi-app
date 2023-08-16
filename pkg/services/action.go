@@ -163,7 +163,6 @@ func NewSubmitBusinessCase(
 	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
 	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
-	//TODO: look at the newIntakeStatus to see if Draft or Final eg SystemIntakeStatusBIZCASEDRAFTSUBMITTED or SystemIntakeStatusBIZCASEFINALSUBMITTED
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
 		if err != nil {
@@ -214,7 +213,7 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		intake.Status = newIntakeStatus
+		intake.Status = newIntakeStatus // newIntakeStatus determines what state we update.
 		if newIntakeStatus == models.SystemIntakeStatusBIZCASEFINALSUBMITTED {
 			intake.FinalBusinessCaseState = models.SIRFSSubmitted
 		} else if newIntakeStatus == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {

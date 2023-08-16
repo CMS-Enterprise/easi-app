@@ -134,7 +134,6 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 
 	// from the Swagger (cedar_intake.json, definitions/IntakeInput/properties/version):
 	// "The version associated with the object in the body. This value can be incremented in the event a transaction needs to be resubmitted."
-	// TODO: this needs to be updated in case of re-submitting
 	const objectVersion = 1
 
 	// from the Swagger (cedar_intake.json, paths/"/intake"/post/parameters/validatePayload):
