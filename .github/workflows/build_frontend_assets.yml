@@ -38,7 +38,6 @@ jobs:
           LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
           OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
           OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
-          STATIC_S3_BUCKET: ${{ secrets.STATIC_S3_BUCKET }}
         run: |
           ./scripts/build_static.sh
       - name: Upload Frontend assets
