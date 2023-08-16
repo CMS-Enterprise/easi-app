@@ -42,12 +42,6 @@ func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUI
 		RequestID:            documentToCreate.TRBRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
 		OtherTypeDescription: &documentToCreate.OtherType,
-		// FileData: &model.EncodedDocumentUpload{
-		// 	File:        encodedFileContent,
-		// 	Filename:    documentToCreate.FileName,
-		// 	Size:        25, //arbitrary
-		// 	ContentType: "application/pdf",
-		// },
 		FileData: graphql.Upload{
 			File:        fileToUpload,
 			Filename:    documentToCreate.FileName,

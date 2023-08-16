@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"os"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 	"github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
+	"github.com/cmsgov/easi-app/pkg/easiencryption"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -526,24 +528,22 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	}
 
 	fileStats, err := file.Stat()
-	// var buf bytes.Buffer
-	// _, err = buf.ReadFrom(file)
 	if err != nil {
 		return nil, err
 	}
-	// encoded := easiencryption.EncodeBase64String(buf.String())
+	var buf bytes.Buffer
+	_, err = buf.ReadFrom(file)
+	if err != nil {
+		return nil, err
+	}
+	encodedContents := easiencryption.EncodeBase64String(buf.String())
+	fileToUpload := bytes.NewReader([]byte(encodedContents))
 
 	otherDesc := "Some other type of doc"
 	input := model.CreateTRBRequestDocumentInput{
 		RequestID: trb.ID,
-		// FileData: &model.EncodedDocumentUpload{
-		// 	File:        encoded,
-		// 	Filename:    "sample.pdf",
-		// 	Size:        25, //arbitrary
-		// 	ContentType: "application/pdf",
-		// },
 		FileData: graphql.Upload{
-			File:        file,
+			File:        fileToUpload,
 			Filename:    "sample.pdf",
 			Size:        fileStats.Size(),
 			ContentType: "application/pdf",
