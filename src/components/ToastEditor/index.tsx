@@ -213,10 +213,17 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
 
     setEditableElementProps(el, props);
     initLinkPopup(el);
-    sanitizeHtmlOnContentChange(toast);
     showLinkUnderSelection(toast);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // This component re-renders on content changes and loses the on change callback
+  // Bind it again each time
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor) return;
+    sanitizeHtmlOnContentChange(editor.getInstance());
+  }, [editorRef]);
 
   return (
     <div className={classNames('easi-toast easi-toast-editor', className)}>
