@@ -45,6 +45,7 @@ export const GetSystemIntakeDocumentUrlsQuery = gql`
       documents {
         id
         url
+        fileName
       }
     }
   }
