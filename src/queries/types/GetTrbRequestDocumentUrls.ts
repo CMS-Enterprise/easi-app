@@ -11,6 +11,7 @@ export interface GetTrbRequestDocumentUrls_trbRequest_documents {
   __typename: "TRBRequestDocument";
   id: UUID;
   url: string;
+  fileName: string;
 }
 
 export interface GetTrbRequestDocumentUrls_trbRequest {
