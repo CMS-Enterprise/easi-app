@@ -48,7 +48,11 @@
 }
 
 .easi-toast-editor {
-  height: 155px;
+  display: inline-block;
+
+  .toastui-editor {
+    min-height: 0 !important;
+  }
 
   .toastui-editor-defaultUI {
     border-color: color('gray-60');
@@ -84,8 +88,13 @@
     background-color: color('gray-10');
   }
 
+  .toastui-editor-main-container {
+    position: static;
+  }
+
   .toastui-editor-contents {
     padding: 6px 9px 9px;
+    resize: both;
   }
 
   .toastui-editor-popup {
