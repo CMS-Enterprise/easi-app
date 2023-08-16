@@ -6,6 +6,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
+	"github.com/cmsgov/easi-app/pkg/easiencryption"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -45,9 +46,9 @@ func (suite *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
 func createSystemIntakeDocumentSubtest(suite *ResolverSuite, systemIntakeID uuid.UUID, documentToCreate *models.SystemIntakeDocument) *models.SystemIntakeDocument {
-	fileToUpload := bytes.NewReader([]byte("Test file content"))
-	// testContents := "Test file content"
-	// encodedFileContent := easiencryption.EncodeBase64String(testContents)
+	testContents := "Test file content"
+	encodedFileContent := easiencryption.EncodeBase64String(testContents)
+	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
 	gqlInput := model.CreateSystemIntakeDocumentInput{
 		RequestID:            documentToCreate.SystemIntakeRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
