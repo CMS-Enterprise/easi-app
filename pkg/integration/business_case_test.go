@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"path"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -32,7 +33,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	s.NoError(err)
 	intakeID := createdIntake.ID
 
-	bizCase := testhelpers.NewBusinessCase()
+	bizCase := testhelpers.NewBusinessCase(uuid.New())
 	bizCase.SystemIntakeID = intakeID
 	bizCase.EUAUserID = s.user.euaID
 	createdBizCase, err := s.store.CreateBusinessCase(context.Background(), &bizCase)
