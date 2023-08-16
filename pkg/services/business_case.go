@@ -10,6 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -182,13 +183,9 @@ func NewUpdateBusinessCase(
 		}
 
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
-			if intake.DraftBusinessCaseState != models.SIRFSEditsRequested {
-				intake.DraftBusinessCaseState = models.SIRFSInProgress
-			}
+			intake.DraftBusinessCaseState = formstate.SetInProgress(intake.DraftBusinessCaseState)
 		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
-			if intake.FinalBusinessCaseState != models.SIRFSEditsRequested {
-				intake.FinalBusinessCaseState = models.SIRFSInProgress
-			}
+			intake.FinalBusinessCaseState = formstate.SetInProgress(intake.FinalBusinessCaseState)
 		}
 		_, err = updateIntake(ctx, intake)
 		if err != nil {

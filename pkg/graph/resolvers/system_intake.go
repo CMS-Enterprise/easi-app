@@ -6,6 +6,7 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -19,12 +20,8 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	if err != nil {
 		return nil, err
 	}
-	//TODO: move to helper function? Maybe in it's own package?
-	if intake.RequestFormState != models.SIRFSEditsRequested {
-		// If the request is in request edits, it should stay that way until submitted.
-		//If submitted and edited again, it should change to in progress.
-		intake.RequestFormState = models.SIRFSInProgress
-	}
+	intake.RequestFormState = formstate.SetInProgress(intake.RequestFormState)
+
 	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
 	intake.ProjectName = null.StringFromPtr(input.RequestName)
 	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
@@ -55,12 +52,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	if err != nil {
 		return nil, err
 	}
-	//TODO: move to helper function? Maybe in it's own package?
-	if intake.RequestFormState != models.SIRFSEditsRequested {
-		// If the request is in request edits, it should stay that way until submitted.
-		//If submitted and edited again, it should change to in progress.
-		intake.RequestFormState = models.SIRFSInProgress
-	}
+	intake.RequestFormState = formstate.SetInProgress(intake.RequestFormState)
 
 	intake.Requester = input.Requester.Name
 	intake.Component = null.StringFrom(input.Requester.Component)
@@ -118,12 +110,7 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 	if err != nil {
 		return nil, err
 	}
-	//TODO: move to helper function? Maybe in it's own package?
-	if intake.RequestFormState != models.SIRFSEditsRequested {
-		// If the request is in request edits, it should stay that way until submitted.
-		//If submitted and edited again, it should change to in progress.
-		intake.RequestFormState = models.SIRFSInProgress
-	}
+	intake.RequestFormState = formstate.SetInProgress(intake.RequestFormState)
 
 	if input.FundingSources != nil && input.FundingSources.FundingSources != nil {
 		intake.ExistingFunding = null.BoolFromPtr(input.FundingSources.ExistingFunding)
