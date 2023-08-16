@@ -14,6 +14,7 @@ import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
+import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
@@ -97,11 +98,17 @@ function GovernanceTaskList() {
                     {t('button.saveAndExit')}
                   </UswdsReactLink>
                 </div>
-                <div className="margin-top-1">
-                  <Button type="button" unstyled className="text-error">
-                    {t('button.removeYourRequest')}
-                  </Button>
-                </div>
+                {/* Only allow removal if the intake form has not yet been submitted */}
+                {[
+                  ITGovIntakeFormStatus.READY,
+                  ITGovIntakeFormStatus.IN_PROGRESS
+                ].includes(systemIntake.itGovTaskStatuses.intakeFormStatus) && (
+                  <div className="margin-top-1">
+                    <Button type="button" unstyled className="text-error">
+                      {t('button.removeYourRequest')}
+                    </Button>
+                  </div>
+                )}
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                   {t('taskList.help')}
