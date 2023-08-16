@@ -15,7 +15,13 @@ jobs:
     uses: ./.github/workflows/build_application_images.yml
     secrets: inherit
 
+  Build_Test_Frontend_Assets:
+    uses: ./.github/workflows/build_frontend_assets.yml
+    secrets: inherit
+    with:
+      env: test
+
   Run_Tests:
     uses: ./.github/workflows/run_tests.yml
-    needs: Build_Application_Images
+    needs: [Build_Application_Images,Build_Test_Frontend_Assets]
     secrets: inherit
