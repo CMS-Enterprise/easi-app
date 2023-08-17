@@ -143,9 +143,13 @@ function setEditableElementProps(
       elEditable.id = editorProps.editableProps.id;
     }
 
-    ['aria-describedby', 'aria-labelledby', 'data-testid'].forEach(attr => {
-      const editableAttr = attr as keyof EditableProps;
-      const val = editorProps.editableProps?.[editableAttr];
+    const editableAttrs: Array<keyof EditableProps> = [
+      'aria-describedby',
+      'aria-labelledby',
+      'data-testid'
+    ];
+    editableAttrs.forEach(attr => {
+      const val = editorProps.editableProps?.[attr];
       if (val) elEditable.setAttribute(attr, val);
     });
   }
