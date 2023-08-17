@@ -37,18 +37,19 @@ export function downloadFileFromURL(downloadURL: string, fileName: string) {
     });
 }
 
-export function blobToBase64(fileBlob: File): Promise<string> {
+export function fileBlobToBase64(file: File): Promise<string> {
   return new Promise((resolve, _) => {
     const reader = new FileReader();
-    reader.onloadend = () => resolve((reader.result as string).split(',')[1]);
-    reader.readAsDataURL(fileBlob);
+    reader.onloadend = () => resolve((reader.result as string).split(',')[1]); // Split removes the data URL prefix
+    reader.readAsDataURL(file); // This returns the results data as a base 64 encoded string.
   });
 }
 
-export async function fileToBase64File(fileBlob: File): Promise<File> {
-  const b64String = await blobToBase64(fileBlob);
+// We are sending files encoded in base 64 to avoid false positive alerts from the WAF (see EASI-3075)
+export async function fileToBase64File(file: File): Promise<File> {
+  const b64String = await fileBlobToBase64(file);
   return new Promise((resolve, _) => {
-    const newFile = new File([b64String], fileBlob.name);
+    const newFile = new File([b64String], file.name);
     resolve(newFile);
   });
 }
