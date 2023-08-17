@@ -7,10 +7,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+// import TextAreaField from 'components/shared/TextAreaField';
+import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-// import TextAreaField from 'components/shared/TextAreaField';
-import RichTextEditor from 'components/ToastEditor';
 import useMessage from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {

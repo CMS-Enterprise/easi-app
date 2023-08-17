@@ -14,7 +14,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import PageWrapper from 'components/PageWrapper';
-import ToastStage from 'components/ToastEditor/ToastStage';
+import ToastStage from 'components/RichTextEditor/ToastStage';
 import { MessageProvider } from 'hooks/useMessage';
 import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
