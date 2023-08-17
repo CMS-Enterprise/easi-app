@@ -711,7 +711,7 @@ type SystemIntakeSetDecisionToLCIDIssuedInput struct {
 	ExpiresAt              time.Time                           `json:"expiresAt"`
 	Scope                  string                              `json:"scope"`
 	NextSteps              string                              `json:"nextSteps"`
-	TrbFollowUp            SystemIntakeTRBFollowUp             `json:"trbFollowUp"`
+	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
 	CostBaseline           *string                             `json:"costBaseline"`
 	AdditionalNote         *string                             `json:"additionalNote"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
@@ -1146,49 +1146,5 @@ func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// Different options for whether the Governance team believes a requester's team should consult with the TRB
-type SystemIntakeTRBFollowUp string
-
-const (
-	SystemIntakeTRBFollowUpStronglyRecommended       SystemIntakeTRBFollowUp = "STRONGLY_RECOMMENDED"
-	SystemIntakeTRBFollowUpRecommendedButNotCritical SystemIntakeTRBFollowUp = "RECOMMENDED_BUT_NOT_CRITICAL"
-	SystemIntakeTRBFollowUpNotRequired               SystemIntakeTRBFollowUp = "NOT_REQUIRED"
-)
-
-var AllSystemIntakeTRBFollowUp = []SystemIntakeTRBFollowUp{
-	SystemIntakeTRBFollowUpStronglyRecommended,
-	SystemIntakeTRBFollowUpRecommendedButNotCritical,
-	SystemIntakeTRBFollowUpNotRequired,
-}
-
-func (e SystemIntakeTRBFollowUp) IsValid() bool {
-	switch e {
-	case SystemIntakeTRBFollowUpStronglyRecommended, SystemIntakeTRBFollowUpRecommendedButNotCritical, SystemIntakeTRBFollowUpNotRequired:
-		return true
-	}
-	return false
-}
-
-func (e SystemIntakeTRBFollowUp) String() string {
-	return string(e)
-}
-
-func (e *SystemIntakeTRBFollowUp) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = SystemIntakeTRBFollowUp(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeTRBFollowUp", str)
-	}
-	return nil
-}
-
-func (e SystemIntakeTRBFollowUp) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

@@ -744,6 +744,7 @@ type ComplexityRoot struct {
 		StatusRequester             func(childComplexity int) int
 		Step                        func(childComplexity int) int
 		SubmittedAt                 func(childComplexity int) int
+		TRBFollowUpRecommendation   func(childComplexity int) int
 		TrbCollaborator             func(childComplexity int) int
 		TrbCollaboratorName         func(childComplexity int) int
 		UpdatedAt                   func(childComplexity int) int
@@ -5407,6 +5408,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.SubmittedAt(childComplexity), true
 
+	case "SystemIntake.trbFollowUpRecommendation":
+		if e.complexity.SystemIntake.TRBFollowUpRecommendation == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.TRBFollowUpRecommendation(childComplexity), true
+
 	case "SystemIntake.trbCollaborator":
 		if e.complexity.SystemIntake.TrbCollaborator == nil {
 			break
@@ -8146,6 +8154,7 @@ type SystemIntake {
   decisionState: SystemIntakeDecisionState!
   statusRequester: SystemIntakeStatusRequester!
   statusAdmin: SystemIntakeStatusAdmin!
+  trbFollowUpRecommendation: SystemIntakeTRBFollowUp
 }
 
 """
@@ -8599,7 +8608,7 @@ Different options for whether the Governance team believes a requester's team sh
 enum SystemIntakeTRBFollowUp {
   STRONGLY_RECOMMENDED
   RECOMMENDED_BUT_NOT_CRITICAL
-  NOT_REQUIRED
+  NOT_RECOMMENDED
 }
 
 """
@@ -14519,6 +14528,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -23395,6 +23406,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -27697,6 +27710,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -32289,6 +32304,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -32524,6 +32541,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -33706,6 +33725,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -37902,6 +37923,47 @@ func (ec *executionContext) fieldContext_SystemIntake_statusAdmin(ctx context.Co
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_trbFollowUpRecommendation(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TRBFollowUpRecommendation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeTRBFollowUp)
+	fc.Result = res
+	return ec.marshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_trbFollowUpRecommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeTRBFollowUp does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAction_id(ctx, field)
 	if err != nil {
@@ -38109,6 +38171,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -46541,6 +46605,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -47770,6 +47836,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -52237,7 +52305,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeSetDecisionToLCIDIssuedInp
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbFollowUp"))
-			it.TrbFollowUp, err = ec.unmarshalNSystemIntakeTRBFollowUp2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeTRBFollowUp(ctx, v)
+			it.TrbFollowUp, err = ec.unmarshalNSystemIntakeTRBFollowUp2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -59256,6 +59324,10 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
+		case "trbFollowUpRecommendation":
+
+			out.Values[i] = ec._SystemIntake_trbFollowUpRecommendation(ctx, field, obj)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -64500,14 +64572,20 @@ func (ec *executionContext) marshalNSystemIntakeStepToProgressTo2githubᚗcomᚋ
 	return v
 }
 
-func (ec *executionContext) unmarshalNSystemIntakeTRBFollowUp2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeTRBFollowUp(ctx context.Context, v interface{}) (model.SystemIntakeTRBFollowUp, error) {
-	var res model.SystemIntakeTRBFollowUp
-	err := res.UnmarshalGQL(v)
+func (ec *executionContext) unmarshalNSystemIntakeTRBFollowUp2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, v interface{}) (models.SystemIntakeTRBFollowUp, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeTRBFollowUp(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSystemIntakeTRBFollowUp2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeTRBFollowUp(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeTRBFollowUp) graphql.Marshaler {
-	return v
+func (ec *executionContext) marshalNSystemIntakeTRBFollowUp2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeTRBFollowUp) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNTRBAdminNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNote) graphql.Marshaler {
@@ -66469,6 +66547,23 @@ func (ec *executionContext) unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgit
 	}
 	res, err := ec.unmarshalInputSystemIntakeProgressToNewStepsInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, v interface{}) (*models.SystemIntakeTRBFollowUp, error) {
+	if v == nil {
+		return nil, nil
+	}
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeTRBFollowUp(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeTRBFollowUp) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalString(string(*v))
+	return res
 }
 
 func (ec *executionContext) unmarshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, v interface{}) (*models.TRBAdminNoteCategory, error) {

@@ -1043,6 +1043,7 @@ type SystemIntake {
   decisionState: SystemIntakeDecisionState!
   statusRequester: SystemIntakeStatusRequester!
   statusAdmin: SystemIntakeStatusAdmin!
+  trbFollowUpRecommendation: SystemIntakeTRBFollowUp
 }
 
 """
@@ -1496,7 +1497,7 @@ Different options for whether the Governance team believes a requester's team sh
 enum SystemIntakeTRBFollowUp {
   STRONGLY_RECOMMENDED
   RECOMMENDED_BUT_NOT_CRITICAL
-  NOT_REQUIRED
+  NOT_RECOMMENDED
 }
 
 """
