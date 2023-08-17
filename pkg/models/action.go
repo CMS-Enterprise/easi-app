@@ -19,6 +19,7 @@ const (
 // v1/v2 actions - originally from v1, still used in IT Gov v2
 const (
 	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
+	ActionTypeREJECT    ActionType = "REJECT"
 )
 
 // v1 actions - no longer used in IT Gov v2 workflow
@@ -51,8 +52,6 @@ const (
 	ActionTypePROVIDEFEEDBACKBIZCASEFINAL ActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
 	// ActionTypeNOGOVERNANCENEEDED captures enum value NO_GOVERNANCE_NEEDED
 	ActionTypeNOGOVERNANCENEEDED ActionType = "NO_GOVERNANCE_NEEDED"
-	// ActionTypeREJECT captures enum value REJECTED
-	ActionTypeREJECT ActionType = "REJECT"
 	// ActionTypeSENDEMAIL captures enum value SEND_EMAIL
 	ActionTypeSENDEMAIL ActionType = "SEND_EMAIL"
 	// ActionTypeGUIDERECEIVEDCLOSE captures enum value GUIDE_RECEIVED_CLOSE
