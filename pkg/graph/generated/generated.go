@@ -541,84 +541,84 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddGRTFeedbackAndKeepBusinessCaseInDraft             func(childComplexity int, input model.AddGRTFeedbackInput) int
-		AddGRTFeedbackAndProgressToFinalBusinessCase         func(childComplexity int, input model.AddGRTFeedbackInput) int
-		AddGRTFeedbackAndRequestBusinessCase                 func(childComplexity int, input model.AddGRTFeedbackInput) int
-		CloseTRBRequest                                      func(childComplexity int, input model.CloseTRBRequestInput) int
-		CreateAccessibilityRequest                           func(childComplexity int, input model.CreateAccessibilityRequestInput) int
-		CreateAccessibilityRequestDocument                   func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
-		CreateAccessibilityRequestNote                       func(childComplexity int, input model.CreateAccessibilityRequestNoteInput) int
-		CreateCedarSystemBookmark                            func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
-		CreateSystemIntake                                   func(childComplexity int, input model.CreateSystemIntakeInput) int
-		CreateSystemIntakeActionBusinessCaseNeeded           func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionBusinessCaseNeedsChanges     func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionExtendLifecycleID            func(childComplexity int, input model.CreateSystemIntakeActionExtendLifecycleIDInput) int
-		CreateSystemIntakeActionGuideReceievedClose          func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionNoGovernanceNeeded           func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionNotItRequest                 func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionNotRespondingClose           func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionProgressToNewStep            func(childComplexity int, input *model.SystemIntakeProgressToNewStepsInput) int
-		CreateSystemIntakeActionReadyForGrt                  func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionRequestEdits                 func(childComplexity int, input model.SystemIntakeRequestEditsInput) int
-		CreateSystemIntakeActionSendEmail                    func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionSetDecisionToLCIDIssuedInput func(childComplexity int, input model.SystemIntakeSetDecisionToLCIDIssuedInput) int
-		CreateSystemIntakeContact                            func(childComplexity int, input model.CreateSystemIntakeContactInput) int
-		CreateSystemIntakeDocument                           func(childComplexity int, input model.CreateSystemIntakeDocumentInput) int
-		CreateSystemIntakeNote                               func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
-		CreateTRBAdminNote                                   func(childComplexity int, input model.CreateTRBAdminNoteInput) int
-		CreateTRBAdviceLetter                                func(childComplexity int, trbRequestID uuid.UUID) int
-		CreateTRBAdviceLetterRecommendation                  func(childComplexity int, input model.CreateTRBAdviceLetterRecommendationInput) int
-		CreateTRBRequest                                     func(childComplexity int, requestType models.TRBRequestType) int
-		CreateTRBRequestAttendee                             func(childComplexity int, input model.CreateTRBRequestAttendeeInput) int
-		CreateTRBRequestDocument                             func(childComplexity int, input model.CreateTRBRequestDocumentInput) int
-		CreateTRBRequestFeedback                             func(childComplexity int, input model.CreateTRBRequestFeedbackInput) int
-		CreateTestDate                                       func(childComplexity int, input model.CreateTestDateInput) int
-		CreateTrbLeadOption                                  func(childComplexity int, eua string) int
-		DeleteAccessibilityRequest                           func(childComplexity int, input model.DeleteAccessibilityRequestInput) int
-		DeleteAccessibilityRequestDocument                   func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
-		DeleteCedarSystemBookmark                            func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
-		DeleteSystemIntakeContact                            func(childComplexity int, input model.DeleteSystemIntakeContactInput) int
-		DeleteSystemIntakeDocument                           func(childComplexity int, id uuid.UUID) int
-		DeleteTRBAdviceLetterRecommendation                  func(childComplexity int, id uuid.UUID) int
-		DeleteTRBRequestAttendee                             func(childComplexity int, id uuid.UUID) int
-		DeleteTRBRequestDocument                             func(childComplexity int, id uuid.UUID) int
-		DeleteTRBRequestFundingSources                       func(childComplexity int, input model.DeleteTRBRequestFundingSourcesInput) int
-		DeleteTestDate                                       func(childComplexity int, input model.DeleteTestDateInput) int
-		DeleteTrbLeadOption                                  func(childComplexity int, eua string) int
-		GeneratePresignedUploadURL                           func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
-		IssueLifecycleID                                     func(childComplexity int, input model.IssueLifecycleIDInput) int
-		MarkSystemIntakeReadyForGrb                          func(childComplexity int, input model.AddGRTFeedbackInput) int
-		RejectIntake                                         func(childComplexity int, input model.RejectIntakeInput) int
-		ReopenTrbRequest                                     func(childComplexity int, input model.ReopenTRBRequestInput) int
-		RequestReviewForTRBAdviceLetter                      func(childComplexity int, id uuid.UUID) int
-		SendCantFindSomethingEmail                           func(childComplexity int, input model.SendCantFindSomethingEmailInput) int
-		SendFeedbackEmail                                    func(childComplexity int, input model.SendFeedbackEmailInput) int
-		SendReportAProblemEmail                              func(childComplexity int, input model.SendReportAProblemEmailInput) int
-		SendTRBAdviceLetter                                  func(childComplexity int, input model.SendTRBAdviceLetterInput) int
-		SetRolesForUserOnSystem                              func(childComplexity int, input model.SetRolesForUserOnSystemInput) int
-		SetTRBAdminNoteArchived                              func(childComplexity int, id uuid.UUID, isArchived bool) int
-		SubmitIntake                                         func(childComplexity int, input model.SubmitIntakeInput) int
-		UpdateAccessibilityRequestCedarSystem                func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
-		UpdateAccessibilityRequestStatus                     func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
-		UpdateSystemIntakeAdminLead                          func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
-		UpdateSystemIntakeContact                            func(childComplexity int, input model.UpdateSystemIntakeContactInput) int
-		UpdateSystemIntakeContactDetails                     func(childComplexity int, input model.UpdateSystemIntakeContactDetailsInput) int
-		UpdateSystemIntakeContractDetails                    func(childComplexity int, input model.UpdateSystemIntakeContractDetailsInput) int
-		UpdateSystemIntakeLinkedCedarSystem                  func(childComplexity int, input model.UpdateSystemIntakeLinkedCedarSystemInput) int
-		UpdateSystemIntakeLinkedContract                     func(childComplexity int, input model.UpdateSystemIntakeLinkedContractInput) int
-		UpdateSystemIntakeNote                               func(childComplexity int, input model.UpdateSystemIntakeNoteInput) int
-		UpdateSystemIntakeRequestDetails                     func(childComplexity int, input model.UpdateSystemIntakeRequestDetailsInput) int
-		UpdateSystemIntakeReviewDates                        func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
-		UpdateTRBAdminNote                                   func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBAdviceLetter                                func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBAdviceLetterRecommendation                  func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBRequest                                     func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
-		UpdateTRBRequestAttendee                             func(childComplexity int, input model.UpdateTRBRequestAttendeeInput) int
-		UpdateTRBRequestConsultMeetingTime                   func(childComplexity int, input model.UpdateTRBRequestConsultMeetingTimeInput) int
-		UpdateTRBRequestForm                                 func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBRequestFundingSources                       func(childComplexity int, input model.UpdateTRBRequestFundingSourcesInput) int
-		UpdateTRBRequestTRBLead                              func(childComplexity int, input model.UpdateTRBRequestTRBLeadInput) int
-		UpdateTestDate                                       func(childComplexity int, input model.UpdateTestDateInput) int
+		AddGRTFeedbackAndKeepBusinessCaseInDraft         func(childComplexity int, input model.AddGRTFeedbackInput) int
+		AddGRTFeedbackAndProgressToFinalBusinessCase     func(childComplexity int, input model.AddGRTFeedbackInput) int
+		AddGRTFeedbackAndRequestBusinessCase             func(childComplexity int, input model.AddGRTFeedbackInput) int
+		CloseTRBRequest                                  func(childComplexity int, input model.CloseTRBRequestInput) int
+		CreateAccessibilityRequest                       func(childComplexity int, input model.CreateAccessibilityRequestInput) int
+		CreateAccessibilityRequestDocument               func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
+		CreateAccessibilityRequestNote                   func(childComplexity int, input model.CreateAccessibilityRequestNoteInput) int
+		CreateCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
+		CreateSystemIntake                               func(childComplexity int, input model.CreateSystemIntakeInput) int
+		CreateSystemIntakeActionBusinessCaseNeeded       func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionBusinessCaseNeedsChanges func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionExtendLifecycleID        func(childComplexity int, input model.CreateSystemIntakeActionExtendLifecycleIDInput) int
+		CreateSystemIntakeActionGuideReceievedClose      func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionNoGovernanceNeeded       func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionNotItRequest             func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionNotRespondingClose       func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionProgressToNewStep        func(childComplexity int, input *model.SystemIntakeProgressToNewStepsInput) int
+		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionRequestEdits             func(childComplexity int, input model.SystemIntakeRequestEditsInput) int
+		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionSetDecisionToLCIDIssued  func(childComplexity int, input model.SystemIntakeSetDecisionToLCIDIssuedInput) int
+		CreateSystemIntakeContact                        func(childComplexity int, input model.CreateSystemIntakeContactInput) int
+		CreateSystemIntakeDocument                       func(childComplexity int, input model.CreateSystemIntakeDocumentInput) int
+		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
+		CreateTRBAdminNote                               func(childComplexity int, input model.CreateTRBAdminNoteInput) int
+		CreateTRBAdviceLetter                            func(childComplexity int, trbRequestID uuid.UUID) int
+		CreateTRBAdviceLetterRecommendation              func(childComplexity int, input model.CreateTRBAdviceLetterRecommendationInput) int
+		CreateTRBRequest                                 func(childComplexity int, requestType models.TRBRequestType) int
+		CreateTRBRequestAttendee                         func(childComplexity int, input model.CreateTRBRequestAttendeeInput) int
+		CreateTRBRequestDocument                         func(childComplexity int, input model.CreateTRBRequestDocumentInput) int
+		CreateTRBRequestFeedback                         func(childComplexity int, input model.CreateTRBRequestFeedbackInput) int
+		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
+		CreateTrbLeadOption                              func(childComplexity int, eua string) int
+		DeleteAccessibilityRequest                       func(childComplexity int, input model.DeleteAccessibilityRequestInput) int
+		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
+		DeleteCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
+		DeleteSystemIntakeContact                        func(childComplexity int, input model.DeleteSystemIntakeContactInput) int
+		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
+		DeleteTRBAdviceLetterRecommendation              func(childComplexity int, id uuid.UUID) int
+		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
+		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
+		DeleteTRBRequestFundingSources                   func(childComplexity int, input model.DeleteTRBRequestFundingSourcesInput) int
+		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
+		DeleteTrbLeadOption                              func(childComplexity int, eua string) int
+		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
+		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
+		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
+		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
+		ReopenTrbRequest                                 func(childComplexity int, input model.ReopenTRBRequestInput) int
+		RequestReviewForTRBAdviceLetter                  func(childComplexity int, id uuid.UUID) int
+		SendCantFindSomethingEmail                       func(childComplexity int, input model.SendCantFindSomethingEmailInput) int
+		SendFeedbackEmail                                func(childComplexity int, input model.SendFeedbackEmailInput) int
+		SendReportAProblemEmail                          func(childComplexity int, input model.SendReportAProblemEmailInput) int
+		SendTRBAdviceLetter                              func(childComplexity int, input model.SendTRBAdviceLetterInput) int
+		SetRolesForUserOnSystem                          func(childComplexity int, input model.SetRolesForUserOnSystemInput) int
+		SetTRBAdminNoteArchived                          func(childComplexity int, id uuid.UUID, isArchived bool) int
+		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
+		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
+		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
+		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
+		UpdateSystemIntakeContact                        func(childComplexity int, input model.UpdateSystemIntakeContactInput) int
+		UpdateSystemIntakeContactDetails                 func(childComplexity int, input model.UpdateSystemIntakeContactDetailsInput) int
+		UpdateSystemIntakeContractDetails                func(childComplexity int, input model.UpdateSystemIntakeContractDetailsInput) int
+		UpdateSystemIntakeLinkedCedarSystem              func(childComplexity int, input model.UpdateSystemIntakeLinkedCedarSystemInput) int
+		UpdateSystemIntakeLinkedContract                 func(childComplexity int, input model.UpdateSystemIntakeLinkedContractInput) int
+		UpdateSystemIntakeNote                           func(childComplexity int, input model.UpdateSystemIntakeNoteInput) int
+		UpdateSystemIntakeRequestDetails                 func(childComplexity int, input model.UpdateSystemIntakeRequestDetailsInput) int
+		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
+		UpdateTRBAdminNote                               func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBAdviceLetter                            func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBAdviceLetterRecommendation              func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBRequest                                 func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
+		UpdateTRBRequestAttendee                         func(childComplexity int, input model.UpdateTRBRequestAttendeeInput) int
+		UpdateTRBRequestConsultMeetingTime               func(childComplexity int, input model.UpdateTRBRequestConsultMeetingTimeInput) int
+		UpdateTRBRequestForm                             func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBRequestFundingSources                   func(childComplexity int, input model.UpdateTRBRequestFundingSourcesInput) int
+		UpdateTRBRequestTRBLead                          func(childComplexity int, input model.UpdateTRBRequestTRBLeadInput) int
+		UpdateTestDate                                   func(childComplexity int, input model.UpdateTestDateInput) int
 	}
 
 	Query struct {
@@ -1243,7 +1243,7 @@ type MutationResolver interface {
 	UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error)
 	CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionSetDecisionToLCIDIssuedInput(ctx context.Context, input model.SystemIntakeSetDecisionToLCIDIssuedInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionSetDecisionToLCIDIssued(ctx context.Context, input model.SystemIntakeSetDecisionToLCIDIssuedInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -3905,17 +3905,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeActionSendEmail(childComplexity, args["input"].(model.BasicActionInput)), true
 
-	case "Mutation.createSystemIntakeActionSetDecisionToLCIDIssuedInput":
-		if e.complexity.Mutation.CreateSystemIntakeActionSetDecisionToLCIDIssuedInput == nil {
+	case "Mutation.createSystemIntakeActionSetDecisionToLCIDIssued":
+		if e.complexity.Mutation.CreateSystemIntakeActionSetDecisionToLCIDIssued == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_createSystemIntakeActionSetDecisionToLCIDIssuedInput_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_createSystemIntakeActionSetDecisionToLCIDIssued_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionSetDecisionToLCIDIssuedInput(childComplexity, args["input"].(model.SystemIntakeSetDecisionToLCIDIssuedInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionSetDecisionToLCIDIssued(childComplexity, args["input"].(model.SystemIntakeSetDecisionToLCIDIssuedInput)), true
 
 	case "Mutation.createSystemIntakeContact":
 		if e.complexity.Mutation.CreateSystemIntakeContact == nil {
@@ -9460,7 +9460,7 @@ type Mutation {
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionSetDecisionToLCIDIssuedInput(
+  createSystemIntakeActionSetDecisionToLCIDIssued(
     input: SystemIntakeSetDecisionToLCIDIssuedInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
@@ -10286,7 +10286,7 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionSendEmail_arg
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_createSystemIntakeActionSetDecisionToLCIDIssuedInput_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_createSystemIntakeActionSetDecisionToLCIDIssued_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 model.SystemIntakeSetDecisionToLCIDIssuedInput
@@ -26528,8 +26528,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionReques
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createSystemIntakeActionSetDecisionToLCIDIssuedInput(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createSystemIntakeActionSetDecisionToLCIDIssuedInput(ctx, field)
+func (ec *executionContext) _Mutation_createSystemIntakeActionSetDecisionToLCIDIssued(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSystemIntakeActionSetDecisionToLCIDIssued(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -26543,7 +26543,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionSetDecisionToLCIDI
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionSetDecisionToLCIDIssuedInput(rctx, fc.Args["input"].(model.SystemIntakeSetDecisionToLCIDIssuedInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionSetDecisionToLCIDIssued(rctx, fc.Args["input"].(model.SystemIntakeSetDecisionToLCIDIssuedInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -26579,7 +26579,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionSetDecisionToLCIDI
 	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionSetDecisionToLCIDIssuedInput(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionSetDecisionToLCIDIssued(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -26602,7 +26602,7 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionSetDec
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createSystemIntakeActionSetDecisionToLCIDIssuedInput_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_createSystemIntakeActionSetDecisionToLCIDIssued_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -57261,10 +57261,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_createSystemIntakeActionRequestEdits(ctx, field)
 			})
 
-		case "createSystemIntakeActionSetDecisionToLCIDIssuedInput":
+		case "createSystemIntakeActionSetDecisionToLCIDIssued":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createSystemIntakeActionSetDecisionToLCIDIssuedInput(ctx, field)
+				return ec._Mutation_createSystemIntakeActionSetDecisionToLCIDIssued(ctx, field)
 			})
 
 		case "createSystemIntakeActionBusinessCaseNeeded":

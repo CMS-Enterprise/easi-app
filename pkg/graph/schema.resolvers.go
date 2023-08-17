@@ -1162,9 +1162,9 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 	}, err
 }
 
-// CreateSystemIntakeActionSetDecisionToLCIDIssuedInput is the resolver for the createSystemIntakeActionSetDecisionToLCIDIssuedInput field.
-func (r *mutationResolver) CreateSystemIntakeActionSetDecisionToLCIDIssuedInput(ctx context.Context, input model.SystemIntakeSetDecisionToLCIDIssuedInput) (*model.UpdateSystemIntakePayload, error) {
-	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionSetDecisionToLCIDIssuedInput - createSystemIntakeActionSetDecisionToLCIDIssuedInput"))
+// CreateSystemIntakeActionSetDecisionToLCIDIssued is the resolver for the createSystemIntakeActionSetDecisionToLCIDIssued field.
+func (r *mutationResolver) CreateSystemIntakeActionSetDecisionToLCIDIssued(ctx context.Context, input model.SystemIntakeSetDecisionToLCIDIssuedInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionSetDecisionToLCIDIssued - createSystemIntakeActionSetDecisionToLCIDIssued"))
 }
 
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.
