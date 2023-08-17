@@ -2,11 +2,13 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/easiencoding"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -57,7 +59,12 @@ func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Cli
 		s3Key += fallbackExtension
 	}
 
-	err := s3Client.UploadFile(s3Key, input.FileData.File)
+	decodedReadSeeker, err := easiencoding.DecodeBase64File(&input.FileData.File)
+	if err != nil {
+		return nil, fmt.Errorf("...%w...FileName: %s", err, input.FileData.Filename) //Wrap error and provide filename
+	}
+
+	err = s3Client.UploadFile(s3Key, decodedReadSeeker)
 	if err != nil {
 		return nil, err
 	}
