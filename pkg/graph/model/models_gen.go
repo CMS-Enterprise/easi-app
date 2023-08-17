@@ -681,7 +681,7 @@ type SystemIntakeRequestEditsInput struct {
 	IntakeFormStep         SystemIntakeFormStep                `json:"intakeFormStep"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	EmailFeedback          string                              `json:"emailFeedback"`
-	AdditionalNotes        *string                             `json:"additionalNotes"`
+	AdditionalInfo         *string                             `json:"additionalInfo"`
 	AdminNotes             *string                             `json:"adminNotes"`
 }
 

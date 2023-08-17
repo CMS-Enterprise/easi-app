@@ -8566,7 +8566,7 @@ input SystemIntakeRequestEditsInput {
   intakeFormStep: SystemIntakeFormStep!
   notificationRecipients: EmailNotificationRecipients
   emailFeedback: String!
-  additionalNotes: String
+  additionalInfo: String
   adminNotes: String
 }
 
@@ -51907,7 +51907,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients", "emailFeedback", "additionalNotes", "adminNotes"}
+	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients", "emailFeedback", "additionalInfo", "adminNotes"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -51946,11 +51946,11 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 			if err != nil {
 				return it, err
 			}
-		case "additionalNotes":
+		case "additionalInfo":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalNotes"))
-			it.AdditionalNotes, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
+			it.AdditionalInfo, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
