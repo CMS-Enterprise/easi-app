@@ -29,7 +29,7 @@ interface EditableProps {
   'data-testid'?: string;
 }
 
-interface ToastEditorProps extends EditorProps {
+interface RichTextEditorProps extends EditorProps {
   /** Wrapper div classname */
   className?: string;
   /** Editable element div props */
@@ -117,7 +117,7 @@ function repositionLinkPopup(popupEl: HTMLElement) {
  */
 function setEditableElementProps(
   el: HTMLElement,
-  editorProps: ToastEditorProps
+  editorProps: RichTextEditorProps
 ) {
   // We are only using the editor's wysiwyg mode,
   // so scope the selector on toast's ww container
@@ -210,7 +210,7 @@ function showLinkUnderSelection(toastEditor: ToastuiEditor) {
  * Set to WYSIWYG mode only.
  * The input value is HTML.
  */
-function ToastEditor({ className, field, ...props }: ToastEditorProps) {
+function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
   const editorRef = React.createRef<Editor>();
 
   // Make sure to apply mods only once
@@ -264,14 +264,14 @@ function ToastEditor({ className, field, ...props }: ToastEditorProps) {
   );
 }
 
-export default ToastEditor;
+export default RichTextEditor;
 
-interface ToastViewerProps extends ViewerProps {
+interface RichTextViewerProps extends ViewerProps {
   /** Wrapper div classname */
   className?: string;
 }
 
-export function ToastViewer({ className, ...props }: ToastViewerProps) {
+export function RichTextViewer({ className, ...props }: RichTextViewerProps) {
   return (
     <div className={classNames('easi-toast easi-toast-viewer', className)}>
       <Viewer

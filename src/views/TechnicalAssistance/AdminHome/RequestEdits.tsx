@@ -10,7 +10,7 @@ import PageLoading from 'components/PageLoading';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 // import TextAreaField from 'components/shared/TextAreaField';
-import ToastEditor from 'components/ToastEditor';
+import RichTextEditor from 'components/ToastEditor';
 import useMessage from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {
@@ -166,7 +166,7 @@ function RequestEdits() {
                 {t('actionRequestEdits.hint')}
               </HelpText>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-              <ToastEditor
+              <RichTextEditor
                 className="margin-top-1"
                 editableProps={{
                   id: 'feedbackMessage',

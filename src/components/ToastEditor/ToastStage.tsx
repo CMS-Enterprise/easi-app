@@ -2,7 +2,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Grid, GridContainer } from '@trussworks/react-uswds';
 
-import ToastEditor, { ToastViewer } from '.';
+import RichTextEditor, { RichTextViewer } from '.';
 
 function ToastStage() {
   const { control, handleSubmit, watch } = useForm({
@@ -29,7 +29,7 @@ function ToastStage() {
               name="htmlField"
               control={control}
               render={({ field }) => (
-                <ToastEditor height="300px" field={field} />
+                <RichTextEditor height="300px" field={field} />
               )}
             />
             <button type="submit">submit</button>
@@ -41,7 +41,7 @@ function ToastStage() {
         </Grid>
         <Grid col={6}>
           <h6>Viewer</h6>
-          <ToastViewer initialValue={watch('htmlField')} />
+          <RichTextViewer initialValue={watch('htmlField')} />
           <div style={{ borderTop: '1px solid black' }}>
             <p>paragraph</p>
             <p>break</p>
