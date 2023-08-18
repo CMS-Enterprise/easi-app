@@ -1485,7 +1485,7 @@ input SystemIntakeRequestEditsInput {
   intakeFormStep: SystemIntakeFormStep!
   notificationRecipients: EmailNotificationRecipients
   emailFeedback: String!
-  additionalNotes: String
+  additionalInfo: String
   adminNotes: String
 }
 
