@@ -11,6 +11,7 @@ import (
 	"path"
 
 	"github.com/guregu/null"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -26,6 +27,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 	intake := testhelpers.NewSystemIntake()
 	intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
+	intake.RequestFormState = models.SIRFSSubmitted
 	intake.EUAUserID = null.StringFrom(s.user.euaID)
 
 	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)
@@ -57,7 +59,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	})
 
 	// This needs to be run after the successful post test to ensure we have a business case to fetch
-	s.Run("GET will fetch the updated intake just saved", func() {
+	s.Run("GET will fetch the updated business case just saved", func() {
 		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
@@ -96,7 +98,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	})
 
 	// This needs to be run after the successful post test to ensure we have a business case to fetch
-	s.Run("UPDATE will fetch the updated intake just saved", func() {
+	s.Run("UPDATE will fetch the updated business case just saved", func() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
@@ -110,12 +112,15 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
 
 		resp, err := client.Do(req)
+		s.logger.Info("Request URL", zap.String("URL", putURL.String()))
 
 		s.NoError(err)
 		defer resp.Body.Close()
 
+		//TODO this is a 404
 		s.Equal(http.StatusOK, resp.StatusCode)
 		actualBody, err := ioutil.ReadAll(resp.Body)
+		s.logger.Info("Response recieved", zap.String("Response Body", string(actualBody)))
 		s.NoError(err)
 		var actualBusinessCase models.BusinessCase
 		err = json.Unmarshal(actualBody, &actualBusinessCase)
