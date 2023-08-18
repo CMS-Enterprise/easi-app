@@ -172,9 +172,9 @@ func NewUpdateBusinessCase(
 			}
 		}
 
-		intake, err := fetchIntake(ctx, businessCase.SystemIntakeID)
+		intake, err := fetchIntake(ctx, existingBusinessCase.SystemIntakeID)
 		if err != nil {
-			logger.Error("failed to update business case state")
+			logger.Error("failed to fetch system intake after updating business case")
 			return businessCase, &apperrors.QueryError{ //return the error
 				Err:       err,
 				Model:     businessCase,
@@ -189,7 +189,7 @@ func NewUpdateBusinessCase(
 		}
 		_, err = updateIntake(ctx, intake)
 		if err != nil {
-			logger.Error("failed to update business case state")
+			logger.Error("failed to update system intake businessCaseState after updating business case state")
 			return businessCase, &apperrors.QueryError{ //return the error
 				Err:       err,
 				Model:     businessCase,
