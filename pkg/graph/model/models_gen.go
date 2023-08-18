@@ -671,7 +671,7 @@ type SystemIntakeProgressToNewStepsInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	Feedback               *string                             `json:"feedback"`
 	GrbRecommendations     *string                             `json:"grbRecommendations"`
-	AdditionalNote         *string                             `json:"additionalNote"`
+	AdditionalInfo         *string                             `json:"additionalInfo"`
 	AdminNote              *string                             `json:"adminNote"`
 }
 

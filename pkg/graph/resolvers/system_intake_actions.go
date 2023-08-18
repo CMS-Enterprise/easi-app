@@ -75,8 +75,8 @@ func ProgressIntake(
 			ActorEUAUserID: adminEUAID,
 			Step:           &stepForAction,
 		}
-		if input.AdditionalNote != nil {
-			action.Feedback = null.StringFromPtr(input.AdditionalNote)
+		if input.AdditionalInfo != nil {
+			action.Feedback = null.StringFromPtr(input.AdditionalInfo)
 		}
 
 		_, errCreatingAction := store.CreateAction(ctx, &action)
