@@ -11,7 +11,6 @@ import (
 	"path"
 
 	"github.com/guregu/null"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -112,15 +111,12 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
 
 		resp, err := client.Do(req)
-		s.logger.Info("Request URL", zap.String("URL", putURL.String()))
 
 		s.NoError(err)
 		defer resp.Body.Close()
 
-		//TODO this is a 404
 		s.Equal(http.StatusOK, resp.StatusCode)
 		actualBody, err := ioutil.ReadAll(resp.Body)
-		s.logger.Info("Response recieved", zap.String("Response Body", string(actualBody)))
 		s.NoError(err)
 		var actualBusinessCase models.BusinessCase
 		err = json.Unmarshal(actualBody, &actualBusinessCase)
