@@ -7,6 +7,7 @@ export default gql`
       documents {
         id
         url
+        fileName
       }
     }
   }

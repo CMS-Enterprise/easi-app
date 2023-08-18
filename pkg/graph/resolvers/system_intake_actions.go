@@ -202,7 +202,7 @@ func CreateSystemIntakeActionRequestEdits(
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
-		Feedback:       null.StringFrom(input.EmailFeedback),
+		Feedback:       null.StringFrom(*input.AdditionalInfo),
 		Step:           &intake.Step,
 	})
 	if err != nil {
