@@ -8975,6 +8975,11 @@ defined@^1.0.0:
   resolved "https://registry.yarnpkg.com/defined/-/defined-1.0.1.tgz#c0b9db27bfaffd95d6f61399419b893df0f91ebf"
   integrity sha512-hsBd2qSVCRE+5PmNdHt1uzyrFu5d3RwmFDKzyNZMFq/EwDNJF7Ee5+D5oEKF0hU6LhtoUF1macFvOe4AskQC1Q==
 
+delay@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/delay/-/delay-5.0.0.tgz#137045ef1b96e5071060dd5be60bf9334436bd1d"
+  integrity sha512-ReEBKkIfe4ya47wlPYf/gu5ib6yUG0/Aez0JQZQz94kiWtRQvZIQbTiehsnwHvLSWJnQdhVeqYue7Id1dKr0qw==
+
 delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz"
@@ -20803,6 +20808,14 @@ widest-line@^3.1.0:
   integrity sha512-NsmoXalsWVDMGupxZ5R08ka9flZjjiLvHVAWYOKtiKM8ujtZWr9cRffak+uSE48+Ob8ObalXpwyeUiyDD6QFgg==
   dependencies:
     string-width "^4.0.0"
+
+wildcard-mock-link@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/wildcard-mock-link/-/wildcard-mock-link-2.0.3.tgz#955bf9a3e02fc4c618b470e6ffd03008b2d7c67a"
+  integrity sha512-gWwxQl1FhSONBp8z1lbSItNkYqFJn18nBI28R4uTBCZT+T29uH/9xFtTz9lBX1xBj02I0ArB1tlLu6Bi9e0Vfw==
+  dependencies:
+    delay "^5.0.0"
+    fast-json-stable-stringify "^2.1.0"
 
 wildcard@^2.0.0:
   version "2.0.0"
