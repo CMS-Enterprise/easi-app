@@ -558,7 +558,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionNoGovernanceNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNotItRequest             func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNotRespondingClose       func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionProgressToNewStep        func(childComplexity int, input *model.SystemIntakeProgressToNewStepsInput) int
+		CreateSystemIntakeActionProgressToNewStep        func(childComplexity int, input model.SystemIntakeProgressToNewStepsInput) int
 		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionRejectIntake             func(childComplexity int, input model.SystemIntakeRejectIntakeInput) int
 		CreateSystemIntakeActionRequestEdits             func(childComplexity int, input model.SystemIntakeRequestEditsInput) int
@@ -1242,7 +1242,7 @@ type MutationResolver interface {
 	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
 	UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error)
 	UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error)
-	CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionIssueLcid(ctx context.Context, input model.SystemIntakeIssueLCIDInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionRejectIntake(ctx context.Context, input model.SystemIntakeRejectIntakeInput) (*model.UpdateSystemIntakePayload, error)
@@ -3881,7 +3881,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionProgressToNewStep(childComplexity, args["input"].(*model.SystemIntakeProgressToNewStepsInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionProgressToNewStep(childComplexity, args["input"].(model.SystemIntakeProgressToNewStepsInput)), true
 
 	case "Mutation.createSystemIntakeActionReadyForGRT":
 		if e.complexity.Mutation.CreateSystemIntakeActionReadyForGrt == nil {
@@ -9491,7 +9491,7 @@ type Mutation {
 
   # Mutations for IT Gov v2 workflow
   createSystemIntakeActionProgressToNewStep(
-    input: SystemIntakeProgressToNewStepsInput
+    input: SystemIntakeProgressToNewStepsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
@@ -10296,10 +10296,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionNotResponding
 func (ec *executionContext) field_Mutation_createSystemIntakeActionProgressToNewStep_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.SystemIntakeProgressToNewStepsInput
+	var arg0 model.SystemIntakeProgressToNewStepsInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProgressToNewStepsInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSystemIntakeProgressToNewStepsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProgressToNewStepsInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -26448,7 +26448,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionProgressToNewStep(
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionProgressToNewStep(rctx, fc.Args["input"].(*model.SystemIntakeProgressToNewStepsInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionProgressToNewStep(rctx, fc.Args["input"].(model.SystemIntakeProgressToNewStepsInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -64667,6 +64667,11 @@ func (ec *executionContext) unmarshalNSystemIntakeProductManagerInput2ᚖgithub�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeProgressToNewStepsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProgressToNewStepsInput(ctx context.Context, v interface{}) (model.SystemIntakeProgressToNewStepsInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeProgressToNewStepsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRejectIntakeInput(ctx context.Context, v interface{}) (model.SystemIntakeRejectIntakeInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeRejectIntakeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -66774,14 +66779,6 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProgressToNewStepsInput(ctx context.Context, v interface{}) (*model.SystemIntakeProgressToNewStepsInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputSystemIntakeProgressToNewStepsInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, v interface{}) (*models.SystemIntakeTRBFollowUp, error) {

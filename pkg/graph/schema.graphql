@@ -2365,7 +2365,7 @@ type Mutation {
 
   # Mutations for IT Gov v2 workflow
   createSystemIntakeActionProgressToNewStep(
-    input: SystemIntakeProgressToNewStepsInput
+    input: SystemIntakeProgressToNewStepsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!

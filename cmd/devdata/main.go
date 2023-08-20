@@ -373,7 +373,7 @@ func makeSystemIntakeWithProgressToNextStep(
 		i.RequestFormState = models.SIRFSSubmitted
 	})
 
-	input := &model.SystemIntakeProgressToNewStepsInput{
+	input := model.SystemIntakeProgressToNewStepsInput{
 		SystemIntakeID:     intakeID,
 		NewStep:            model.SystemIntakeStepToProgressToDraftBusinessCase, // arbitrary choice
 		Feedback:           &feedbackText,

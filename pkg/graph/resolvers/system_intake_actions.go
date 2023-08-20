@@ -21,7 +21,7 @@ func ProgressIntake(
 	ctx context.Context,
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input *model.SystemIntakeProgressToNewStepsInput,
+	input model.SystemIntakeProgressToNewStepsInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
 

@@ -1141,7 +1141,7 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 }
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
-func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error) {
 	updatedIntake, err := resolvers.ProgressIntake(ctx, r.store, r.service.FetchUserInfo, input)
 
 	return &model.UpdateSystemIntakePayload{
