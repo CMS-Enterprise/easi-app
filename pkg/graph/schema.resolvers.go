@@ -1167,6 +1167,11 @@ func (r *mutationResolver) CreateSystemIntakeActionSetDecisionToLCIDIssued(ctx c
 	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionSetDecisionToLCIDIssued - createSystemIntakeActionSetDecisionToLCIDIssued"))
 }
 
+// CreateSystemIntakeActionSetDecisionToNotApproved is the resolver for the createSystemIntakeActionSetDecisionToNotApproved field.
+func (r *mutationResolver) CreateSystemIntakeActionSetDecisionToNotApproved(ctx context.Context, input model.SystemIntakeSetDecisionToNotApprovedInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionSetDecisionToNotApproved - createSystemIntakeActionSetDecisionToNotApproved"))
+}
+
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.service.CreateActionUpdateStatus(

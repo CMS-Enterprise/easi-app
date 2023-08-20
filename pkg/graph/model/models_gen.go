@@ -713,7 +713,18 @@ type SystemIntakeSetDecisionToLCIDIssuedInput struct {
 	NextSteps              string                              `json:"nextSteps"`
 	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
 	CostBaseline           *string                             `json:"costBaseline"`
-	AdditionalNote         *string                             `json:"additionalNote"`
+	AdditionalInfo         *string                             `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *string                             `json:"adminNote"`
+}
+
+// Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
+type SystemIntakeSetDecisionToNotApprovedInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	Reason                 string                              `json:"reason"`
+	NextSteps              string                              `json:"nextSteps"`
+	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
+	AdditionalInfo         *string                             `json:"additionalInfo"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	AdminNote              *string                             `json:"adminNote"`
 }

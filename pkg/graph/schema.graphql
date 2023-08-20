@@ -1511,7 +1511,20 @@ input SystemIntakeSetDecisionToLCIDIssuedInput {
   nextSteps: String!
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
-  additionalNote: String
+  additionalInfo: String
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: String
+}
+
+"""
+Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
+"""
+input SystemIntakeSetDecisionToNotApprovedInput {
+  systemIntakeID: UUID!
+  reason: String!
+  nextSteps: String!
+  trbFollowUp: SystemIntakeTRBFollowUp!
+  additionalInfo: String
   notificationRecipients: EmailNotificationRecipients
   adminNote: String
 }
@@ -2351,6 +2364,9 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionSetDecisionToLCIDIssued(
     input: SystemIntakeSetDecisionToLCIDIssuedInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionSetDecisionToNotApproved(
+    input: SystemIntakeSetDecisionToNotApprovedInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
