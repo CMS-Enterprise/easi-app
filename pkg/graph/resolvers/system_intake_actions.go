@@ -256,7 +256,15 @@ func RejectIntake(
 	// * Issuing this decision is valid both when an intake is open and when it's closed (in the latter case, it's changing the decision)
 	// * Even if a rejection decision has already been issued, an admin can confirm that decision on a reopened intake through this action
 
-	// TODO - update intake
+	// update workflow state
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.DecisionState = models.SIDSNotApproved
+
+	// update other fields
+	intake.RejectionReason = null.StringFrom(input.Reason)
+	intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
+	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 
 	// All the different database calls aren't in a single atomic transaction;
 	// in the case of a system failure, some data from the action might be saved, but not all.
