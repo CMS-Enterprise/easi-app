@@ -251,7 +251,10 @@ func RejectIntake(
 		return nil, err
 	}
 
-	// TODO - check validity, if necessary?
+	// No validity check needed:
+	// * Issuing this decision is valid in all steps
+	// * Issuing this decision is valid both when an intake is open and when it's closed (in the latter case, it's changing the decision)
+	// * Even if a rejection decision has already been issued, an admin can confirm that decision on a reopened intake through this action
 
 	// TODO - update intake
 
