@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1164,7 +1163,11 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 
 // CreateSystemIntakeActionIssueLcid is the resolver for the createSystemIntakeActionIssueLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context, input model.SystemIntakeIssueLCIDInput) (*model.UpdateSystemIntakePayload, error) {
-	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionIssueLcid - createSystemIntakeActionIssueLCID"))
+	updatedIntake, err := resolvers.IssueLCID(ctx, r.store, r.service.FetchUserInfo, input)
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, err
 }
 
 // CreateSystemIntakeActionRejectIntake is the resolver for the createSystemIntakeActionRejectIntake field.
