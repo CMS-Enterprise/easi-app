@@ -231,3 +231,13 @@ func CreateSystemIntakeActionRequestEdits(
 	}
 	return intake, nil
 }
+
+// RejectIntake handles a Not Approved by GRB action on an intake as part of Admin Actions v2
+func RejectIntake(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input *model.SystemIntakeRejectIntakeInput,
+) (*models.SystemIntake, error) {
+	panic("Not yet implemented")
+}

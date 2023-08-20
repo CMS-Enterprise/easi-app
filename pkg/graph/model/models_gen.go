@@ -632,6 +632,20 @@ type SystemIntakeISSOInput struct {
 	Name      *string `json:"name"`
 }
 
+// Input for setting an intake's decision to issuing an LCID in IT Gov v2
+type SystemIntakeIssueLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	Lcid                   *string                             `json:"lcid"`
+	ExpiresAt              time.Time                           `json:"expiresAt"`
+	Scope                  string                              `json:"scope"`
+	NextSteps              string                              `json:"nextSteps"`
+	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	AdditionalInfo         *string                             `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *string                             `json:"adminNote"`
+}
+
 // Contains the data needed to change the expiration date of a system request's
 // lifecycle ID
 type SystemIntakeLCIDExpirationChange struct {
@@ -675,6 +689,17 @@ type SystemIntakeProgressToNewStepsInput struct {
 	AdminNote              *string                             `json:"adminNote"`
 }
 
+// Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
+type SystemIntakeRejectIntakeInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	Reason                 string                              `json:"reason"`
+	NextSteps              string                              `json:"nextSteps"`
+	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
+	AdditionalInfo         *string                             `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *string                             `json:"adminNote"`
+}
+
 // Input for creating a Request Edits Action in Admin Actions v2
 type SystemIntakeRequestEditsInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
@@ -702,31 +727,6 @@ type SystemIntakeRequesterInput struct {
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
-}
-
-// Input for setting an intake's decision to issuing an LCID in IT Gov v2
-type SystemIntakeSetDecisionToLCIDIssuedInput struct {
-	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	Lcid                   *string                             `json:"lcid"`
-	ExpiresAt              time.Time                           `json:"expiresAt"`
-	Scope                  string                              `json:"scope"`
-	NextSteps              string                              `json:"nextSteps"`
-	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
-	CostBaseline           *string                             `json:"costBaseline"`
-	AdditionalInfo         *string                             `json:"additionalInfo"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdminNote              *string                             `json:"adminNote"`
-}
-
-// Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
-type SystemIntakeSetDecisionToNotApprovedInput struct {
-	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	Reason                 string                              `json:"reason"`
-	NextSteps              string                              `json:"nextSteps"`
-	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
-	AdditionalInfo         *string                             `json:"additionalInfo"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdminNote              *string                             `json:"adminNote"`
 }
 
 // Denotes the type of a document attached to a TRB request,

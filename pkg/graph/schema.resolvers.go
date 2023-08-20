@@ -1162,14 +1162,14 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 	}, err
 }
 
-// CreateSystemIntakeActionSetDecisionToLCIDIssued is the resolver for the createSystemIntakeActionSetDecisionToLCIDIssued field.
-func (r *mutationResolver) CreateSystemIntakeActionSetDecisionToLCIDIssued(ctx context.Context, input model.SystemIntakeSetDecisionToLCIDIssuedInput) (*model.UpdateSystemIntakePayload, error) {
-	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionSetDecisionToLCIDIssued - createSystemIntakeActionSetDecisionToLCIDIssued"))
+// CreateSystemIntakeActionIssueLcid is the resolver for the createSystemIntakeActionIssueLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context, input model.SystemIntakeIssueLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionIssueLcid - createSystemIntakeActionIssueLCID"))
 }
 
-// CreateSystemIntakeActionSetDecisionToNotApproved is the resolver for the createSystemIntakeActionSetDecisionToNotApproved field.
-func (r *mutationResolver) CreateSystemIntakeActionSetDecisionToNotApproved(ctx context.Context, input model.SystemIntakeSetDecisionToNotApprovedInput) (*model.UpdateSystemIntakePayload, error) {
-	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionSetDecisionToNotApproved - createSystemIntakeActionSetDecisionToNotApproved"))
+// CreateSystemIntakeActionRejectIntake is the resolver for the createSystemIntakeActionRejectIntake field.
+func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Context, input model.SystemIntakeRejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionRejectIntake - createSystemIntakeActionRejectIntake"))
 }
 
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.
