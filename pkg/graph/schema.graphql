@@ -2099,7 +2099,7 @@ Represents feedback added to a TRB request
 type TRBRequestFeedback {
   id: UUID!
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -2115,7 +2115,7 @@ The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -2510,6 +2510,12 @@ enum TRBRequestStatus {
 UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
 """
 scalar UUID
+
+"""
+HTML are represented using as strings,  <p><strong>Notification email</strong></p>
+"""
+scalar HTML
+
 
 """
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z

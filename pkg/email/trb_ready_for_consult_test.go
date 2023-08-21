@@ -67,7 +67,7 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 			"<hr>\n\n" +
 			"<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>\n"
 
-		err = client.SendTRBReadyForConsultNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBReadyForConsultNotification(ctx, recipients, false, requestID, requestName, requesterName, models.HTML(feedback))
 		s.NoError(err)
 		s.Equal(fmt.Sprintf("%v is ready for a consult session", requestName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
@@ -126,7 +126,7 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 			"<hr>\n\n" +
 			"<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>\n"
 
-		err = client.SendTRBReadyForConsultNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBReadyForConsultNotification(ctx, recipients, false, requestID, requestName, requesterName, models.HTML(feedback))
 		s.NoError(err)
 		s.Equal(fmt.Sprintf("%v is ready for a consult session", requestName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
@@ -146,7 +146,7 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 		}
 		allRecipients := append(recipients, s.config.TRBEmail)
 
-		err = client.SendTRBReadyForConsultNotification(ctx, recipients, true, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBReadyForConsultNotification(ctx, recipients, true, requestID, requestName, requesterName, models.HTML(feedback))
 		s.NoError(err)
 
 		s.ElementsMatch(sender.toAddresses, allRecipients)
@@ -165,7 +165,7 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 			models.NewEmailAddress("efgh@local.fake"),
 		}
 
-		err = client.SendTRBReadyForConsultNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBReadyForConsultNotification(ctx, recipients, false, requestID, requestName, requesterName, models.HTML(feedback))
 		s.NoError(err)
 
 		s.ElementsMatch(sender.toAddresses, recipients)
@@ -186,7 +186,7 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 			models.NewEmailAddress("efgh@local.fake"),
 		}
 
-		err = client.SendTRBReadyForConsultNotification(ctx, recipients, true, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBReadyForConsultNotification(ctx, recipients, true, requestID, requestName, requesterName, models.HTML(feedback))
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -209,7 +209,7 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 			models.NewEmailAddress("efgh@local.fake"),
 		}
 
-		err = client.SendTRBReadyForConsultNotification(ctx, recipients, true, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBReadyForConsultNotification(ctx, recipients, true, requestID, requestName, requesterName, models.HTML(feedback))
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -233,7 +233,7 @@ func (s *EmailTestSuite) TestSendTRBReadyForConsultNotification() {
 			models.NewEmailAddress("efgh@local.fake"),
 		}
 
-		err = client.SendTRBReadyForConsultNotification(ctx, recipients, true, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBReadyForConsultNotification(ctx, recipients, true, requestID, requestName, requesterName, models.HTML(feedback))
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

@@ -9187,7 +9187,7 @@ Represents feedback added to a TRB request
 type TRBRequestFeedback {
   id: UUID!
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -9203,7 +9203,7 @@ The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -9598,6 +9598,12 @@ enum TRBRequestStatus {
 UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
 """
 scalar UUID
+
+"""
+HTML are represented using as strings,  <p><strong>Notification email</strong></p>
+"""
+scalar HTML
+
 
 """
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
@@ -44934,9 +44940,9 @@ func (ec *executionContext) _TRBRequestFeedback_feedbackMessage(ctx context.Cont
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.HTML)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestFeedback_feedbackMessage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -44946,7 +44952,7 @@ func (ec *executionContext) fieldContext_TRBRequestFeedback_feedbackMessage(ctx 
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -50593,7 +50599,7 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestFeedbackInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedbackMessage"))
-			it.FeedbackMessage, err = ec.unmarshalNString2string(ctx, v)
+			it.FeedbackMessage, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -63118,6 +63124,21 @@ func (ec *executionContext) unmarshalNGovernanceRequestFeedbackType2githubᚗcom
 
 func (ec *executionContext) marshalNGovernanceRequestFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackType(ctx context.Context, sel ast.SelectionSet, v models.GovernanceRequestFeedbackType) graphql.Marshaler {
 	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, v interface{}) (models.HTML, error) {
+	res, err := models.UnmarshalHTML(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, sel ast.SelectionSet, v models.HTML) graphql.Marshaler {
+	res := models.MarshalHTML(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

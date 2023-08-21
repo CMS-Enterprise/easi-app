@@ -22,7 +22,7 @@ type editsOnFormRequestedEmailParameters struct {
 	TRBInboxAddress     string
 }
 
-func (c Client) trbEditsOnFormRequestedEmailBody(requestID uuid.UUID, requestName string, requesterName string, feedback string) (string, error) {
+func (c Client) trbEditsOnFormRequestedEmailBody(requestID uuid.UUID, requestName string, requesterName string, feedback models.HTML) (string, error) {
 	requestTaskListPath := path.Join("trb", "task-list", requestID.String())
 
 	requestAdminViewPath := path.Join("trb", requestID.String(), "request")
@@ -30,7 +30,7 @@ func (c Client) trbEditsOnFormRequestedEmailBody(requestID uuid.UUID, requestNam
 	data := editsOnFormRequestedEmailParameters{
 		RequestName:         requestName,
 		RequesterName:       requesterName,
-		Feedback:            feedback,
+		Feedback:            string(feedback), // TODO update to take a template
 		TRBRequestLink:      c.urlFromPath(requestTaskListPath),
 		TRBAdminRequestLink: c.urlFromPath(requestAdminViewPath),
 		TRBInboxAddress:     c.config.TRBEmail.String(),
@@ -57,7 +57,7 @@ func (c Client) SendTRBEditsNeededOnFormNotification(
 	requestID uuid.UUID,
 	requestName string,
 	requesterName string,
-	feedback string,
+	feedback models.HTML,
 ) error {
 	subject := fmt.Sprintf("The TRB has requested edits for %v", requestName)
 	body, err := c.trbEditsOnFormRequestedEmailBody(requestID, requestName, requesterName, feedback)

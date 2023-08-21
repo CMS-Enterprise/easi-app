@@ -270,7 +270,7 @@ func NewClient(config Config, sender sender) (Client, error) {
 	if trbReadyForConsultTemplate == nil {
 		return Client{}, templateError(trbReadyForConsultTemplateName)
 	}
-	appTemplates.trbReadyForConsult = trbReadyForConsultTemplate
+	appTemplates.trbReadyForConsult = trbReadyForConsultTemplate // TODO: set here
 
 	trbAdviceLetterSubmittedTemplateName := "trb_advice_letter_submitted.gohtml"
 	trbAdviceLetterSubmittedTemplate := rawTemplates.Lookup(trbAdviceLetterSubmittedTemplateName)

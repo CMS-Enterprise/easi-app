@@ -603,7 +603,7 @@ export interface CreateTRBRequestDocumentInput {
  */
 export interface CreateTRBRequestFeedbackInput {
   trbRequestId: UUID;
-  feedbackMessage: string;
+  feedbackMessage: HTML;
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
   action: TRBFeedbackAction;

@@ -2114,7 +2114,7 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		r.service.FetchUserInfos,
 		&models.TRBRequestFeedback{
 			TRBRequestID:    input.TrbRequestID,
-			FeedbackMessage: input.FeedbackMessage,
+			FeedbackMessage: models.HTML(input.FeedbackMessage),
 			CopyTRBMailbox:  input.CopyTrbMailbox,
 			NotifyEUAIDs:    notifyEuas,
 			Action:          input.Action,

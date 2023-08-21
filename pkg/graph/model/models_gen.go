@@ -274,7 +274,7 @@ type CreateTRBRequestDocumentPayload struct {
 // The data needed to add feedback to a TRB request
 type CreateTRBRequestFeedbackInput struct {
 	TrbRequestID    uuid.UUID                `json:"trbRequestId"`
-	FeedbackMessage string                   `json:"feedbackMessage"`
+	FeedbackMessage models.HTML              `json:"feedbackMessage"`
 	CopyTrbMailbox  bool                     `json:"copyTrbMailbox"`
 	NotifyEuaIds    []string                 `json:"notifyEuaIds"`
 	Action          models.TRBFeedbackAction `json:"action"`
