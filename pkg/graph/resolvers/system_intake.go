@@ -20,7 +20,7 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	if err != nil {
 		return nil, err
 	}
-	intake.RequestFormState = formstate.SetInProgress(intake.RequestFormState)
+	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
 	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
 	intake.ProjectName = null.StringFromPtr(input.RequestName)
@@ -52,7 +52,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	if err != nil {
 		return nil, err
 	}
-	intake.RequestFormState = formstate.SetInProgress(intake.RequestFormState)
+	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
 	intake.Requester = input.Requester.Name
 	intake.Component = null.StringFrom(input.Requester.Component)
@@ -110,7 +110,7 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 	if err != nil {
 		return nil, err
 	}
-	intake.RequestFormState = formstate.SetInProgress(intake.RequestFormState)
+	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
 	if input.FundingSources != nil && input.FundingSources.FundingSources != nil {
 		intake.ExistingFunding = null.BoolFromPtr(input.FundingSources.ExistingFunding)

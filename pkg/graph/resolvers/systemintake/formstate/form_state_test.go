@@ -8,25 +8,25 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func TestSetInProgress(t *testing.T) {
+func TestGetNewStateForUpdatedForm(t *testing.T) {
 
 	// Not Started --> In Progress
-	retState := SetInProgress(models.SIRFSNotStarted)
+	retState := GetNewStateForUpdatedForm(models.SIRFSNotStarted)
 	assert.EqualValues(t, models.SIRFSInProgress, retState)
 
 	// In Progress --> In Progress
-	retState = SetInProgress(models.SIRFSInProgress)
+	retState = GetNewStateForUpdatedForm(models.SIRFSInProgress)
 	assert.EqualValues(t, models.SIRFSInProgress, retState)
 
 	// Submitted --> In Progress
-	retState = SetInProgress(models.SIRFSSubmitted)
+	retState = GetNewStateForUpdatedForm(models.SIRFSSubmitted)
 	assert.EqualValues(t, models.SIRFSInProgress, retState)
 
 	// Any Unknown state --> In Progress
-	retState = SetInProgress("")
+	retState = GetNewStateForUpdatedForm("")
 	assert.EqualValues(t, models.SIRFSInProgress, retState)
 
 	// Edits Requested --> Edits Requested
-	retState = SetInProgress(models.SIRFSEditsRequested)
+	retState = GetNewStateForUpdatedForm(models.SIRFSEditsRequested)
 	assert.EqualValues(t, models.SIRFSEditsRequested, retState)
 }
