@@ -10,6 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -133,6 +134,8 @@ func NewUpdateBusinessCase(
 	fetchBusinessCase func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	authorize func(c context.Context, b *models.BusinessCase) (bool, error),
 	update func(c context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error),
+	fetchIntake func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 ) func(c context.Context, b *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		logger := appcontext.ZLogger(ctx)
@@ -163,6 +166,32 @@ func NewUpdateBusinessCase(
 		if err != nil {
 			logger.Error("failed to update business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     businessCase,
+				Operation: apperrors.QuerySave,
+			}
+		}
+
+		intake, err := fetchIntake(ctx, existingBusinessCase.SystemIntakeID)
+		if err != nil {
+			logger.Error("failed to fetch system intake after updating business case")
+			return businessCase, &apperrors.QueryError{ //return the error
+				Err:       err,
+				Model:     businessCase,
+				Operation: apperrors.QuerySave,
+			}
+		}
+
+		// Since the db doesn't differentiate between draft or final, we need to rely on the step the intake is in. If the intake isn't in that state, the business case state won't update.
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+			intake.DraftBusinessCaseState = formstate.GetNewStateForUpdatedForm(intake.DraftBusinessCaseState)
+		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+			intake.FinalBusinessCaseState = formstate.GetNewStateForUpdatedForm(intake.FinalBusinessCaseState)
+		}
+		_, err = updateIntake(ctx, intake)
+		if err != nil {
+			logger.Error("failed to update system intake businessCaseState after updating business case state")
+			return businessCase, &apperrors.QueryError{ //return the error
 				Err:       err,
 				Model:     businessCase,
 				Operation: apperrors.QuerySave,

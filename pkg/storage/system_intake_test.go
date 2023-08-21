@@ -445,8 +445,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 	s.Run("fetches biz case id if exists", func() {
 		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
-		bizCase := testhelpers.NewBusinessCase()
-		bizCase.SystemIntakeID = id
+		bizCase := testhelpers.NewBusinessCase(id)
 
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
@@ -520,8 +519,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		id := intake.ID
 		intake2.EUAUserID = intake.EUAUserID
 
-		bizCase := testhelpers.NewBusinessCase()
-		bizCase.SystemIntakeID = id
+		bizCase := testhelpers.NewBusinessCase(id)
 
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)

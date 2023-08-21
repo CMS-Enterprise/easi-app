@@ -185,13 +185,13 @@ func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 }
 
 // NewBusinessCase allows us to generate a business case for tests
-func NewBusinessCase() models.BusinessCase {
+func NewBusinessCase(systemIntakeID uuid.UUID) models.BusinessCase {
 	now := time.Now().UTC()
 	year2 := models.LifecycleCostYear2
 	return models.BusinessCase{
 		ID:                              uuid.New(),
 		EUAUserID:                       RandomEUAID(),
-		SystemIntakeID:                  uuid.New(),
+		SystemIntakeID:                  systemIntakeID,
 		ProjectName:                     null.StringFrom("Test Project Name"),
 		Status:                          models.BusinessCaseStatusOPEN,
 		Requester:                       null.StringFrom("Test Requester"),
