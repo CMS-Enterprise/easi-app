@@ -360,17 +360,34 @@ func IssueLCID(
 		return nil, err
 	}
 
-	// TODO - update intake
+	// if a LCID wasn't passed in, we generate one
+	var newLCID string
+	if input.Lcid != nil {
+		newLCID = *input.Lcid
+	} else {
+		newLCID, err = store.GenerateLifecycleID(ctx)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	// input fields
-	/*
-		Lcid                   *string                             `json:"lcid"`
-		ExpiresAt              time.Time                           `json:"expiresAt"`
-		Scope                  string                              `json:"scope"`
-		NextSteps              string                              `json:"nextSteps"`
-		TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
-		CostBaseline           *string                             `json:"costBaseline"`
-	*/
+	// update workflow state
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.DecisionState = models.SIDSLcidIssued
+
+	// update LCID-related fields
+	intake.LifecycleID = null.StringFrom(newLCID)
+	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleScope = null.StringFrom(input.Scope)
+	intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
+	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+
+	// update other fields, including IT Gov v1 workflow status
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+	intake.Status = models.SystemIntakeStatusLCIDISSUED
 
 	// All the different database calls aren't in a single atomic transaction;
 	// in the case of a system failure, some data from the action might be saved, but not all.
