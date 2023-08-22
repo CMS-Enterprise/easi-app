@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-  EnumerationFindList retrieves a list of enumerations based on a list of enumeration names passed in
+EnumerationFindList retrieves a list of enumerations based on a list of enumeration names passed in
 
-  Retrieve a list of enumerations based on a list of enumeration names passed in.
+Retrieve a list of enumerations based on a list of enumeration names passed in.
 */
 func (a *Client) EnumerationFindList(params *EnumerationFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*EnumerationFindListOK, error) {
 	// TODO: Validate the params before sending

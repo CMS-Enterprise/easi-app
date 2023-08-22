@@ -283,6 +283,11 @@ func (m *SystemDetail) ContextValidate(ctx context.Context, formats strfmt.Regis
 func (m *SystemDetail) contextValidateBusinessOwnerInformation(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.BusinessOwnerInformation != nil {
+
+		if swag.IsZero(m.BusinessOwnerInformation) { // not required
+			return nil
+		}
+
 		if err := m.BusinessOwnerInformation.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("BusinessOwnerInformation")
@@ -299,6 +304,11 @@ func (m *SystemDetail) contextValidateBusinessOwnerInformation(ctx context.Conte
 func (m *SystemDetail) contextValidateDataCenterHosting(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DataCenterHosting != nil {
+
+		if swag.IsZero(m.DataCenterHosting) { // not required
+			return nil
+		}
+
 		if err := m.DataCenterHosting.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("DataCenterHosting")
@@ -315,6 +325,11 @@ func (m *SystemDetail) contextValidateDataCenterHosting(ctx context.Context, for
 func (m *SystemDetail) contextValidateSoftwareProductDetails(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.SoftwareProductDetails != nil {
+
+		if swag.IsZero(m.SoftwareProductDetails) { // not required
+			return nil
+		}
+
 		if err := m.SoftwareProductDetails.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("SoftwareProductDetails")
@@ -331,6 +346,11 @@ func (m *SystemDetail) contextValidateSoftwareProductDetails(ctx context.Context
 func (m *SystemDetail) contextValidateSystemMaintainerInformation(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.SystemMaintainerInformation != nil {
+
+		if swag.IsZero(m.SystemMaintainerInformation) { // not required
+			return nil
+		}
+
 		if err := m.SystemMaintainerInformation.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("SystemMaintainerInformation")

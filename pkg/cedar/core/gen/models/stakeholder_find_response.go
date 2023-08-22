@@ -100,6 +100,11 @@ func (m *StakeholderFindResponse) contextValidateStakeholders(ctx context.Contex
 	for i := 0; i < len(m.Stakeholders); i++ {
 
 		if m.Stakeholders[i] != nil {
+
+			if swag.IsZero(m.Stakeholders[i]) { // not required
+				return nil
+			}
+
 			if err := m.Stakeholders[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Stakeholders" + "." + strconv.Itoa(i))

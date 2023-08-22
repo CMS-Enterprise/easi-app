@@ -227,6 +227,11 @@ func (m *Contract) contextValidateBudgetIds(ctx context.Context, formats strfmt.
 	for i := 0; i < len(m.BudgetIds); i++ {
 
 		if m.BudgetIds[i] != nil {
+
+			if swag.IsZero(m.BudgetIds[i]) { // not required
+				return nil
+			}
+
 			if err := m.BudgetIds[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("budgetIds" + "." + strconv.Itoa(i))
@@ -247,6 +252,11 @@ func (m *Contract) contextValidateTbmCostPool(ctx context.Context, formats strfm
 	for i := 0; i < len(m.TbmCostPool); i++ {
 
 		if m.TbmCostPool[i] != nil {
+
+			if swag.IsZero(m.TbmCostPool[i]) { // not required
+				return nil
+			}
+
 			if err := m.TbmCostPool[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("tbmCostPool" + "." + strconv.Itoa(i))
@@ -267,6 +277,11 @@ func (m *Contract) contextValidateTbmItTowerCategory(ctx context.Context, format
 	for i := 0; i < len(m.TbmItTowerCategory); i++ {
 
 		if m.TbmItTowerCategory[i] != nil {
+
+			if swag.IsZero(m.TbmItTowerCategory[i]) { // not required
+				return nil
+			}
+
 			if err := m.TbmItTowerCategory[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("tbmItTowerCategory" + "." + strconv.Itoa(i))

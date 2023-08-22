@@ -54,7 +54,7 @@ func (o *DataCenterFindListReader) ReadResponse(response runtime.ClientResponse,
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /dataCenter] dataCenterFindList", response, response.Code())
 	}
 }
 
@@ -63,7 +63,8 @@ func NewDataCenterFindListOK() *DataCenterFindListOK {
 	return &DataCenterFindListOK{}
 }
 
-/* DataCenterFindListOK describes a response with status code 200, with default header values.
+/*
+DataCenterFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -71,9 +72,44 @@ type DataCenterFindListOK struct {
 	Payload *models.DataCenterFindResponse
 }
 
+// IsSuccess returns true when this data center find list o k response has a 2xx status code
+func (o *DataCenterFindListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this data center find list o k response has a 3xx status code
+func (o *DataCenterFindListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this data center find list o k response has a 4xx status code
+func (o *DataCenterFindListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this data center find list o k response has a 5xx status code
+func (o *DataCenterFindListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this data center find list o k response a status code equal to that given
+func (o *DataCenterFindListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the data center find list o k response
+func (o *DataCenterFindListOK) Code() int {
+	return 200
+}
+
 func (o *DataCenterFindListOK) Error() string {
 	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListOK  %+v", 200, o.Payload)
 }
+
+func (o *DataCenterFindListOK) String() string {
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListOK  %+v", 200, o.Payload)
+}
+
 func (o *DataCenterFindListOK) GetPayload() *models.DataCenterFindResponse {
 	return o.Payload
 }
@@ -95,7 +131,8 @@ func NewDataCenterFindListBadRequest() *DataCenterFindListBadRequest {
 	return &DataCenterFindListBadRequest{}
 }
 
-/* DataCenterFindListBadRequest describes a response with status code 400, with default header values.
+/*
+DataCenterFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -103,9 +140,44 @@ type DataCenterFindListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this data center find list bad request response has a 2xx status code
+func (o *DataCenterFindListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this data center find list bad request response has a 3xx status code
+func (o *DataCenterFindListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this data center find list bad request response has a 4xx status code
+func (o *DataCenterFindListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this data center find list bad request response has a 5xx status code
+func (o *DataCenterFindListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this data center find list bad request response a status code equal to that given
+func (o *DataCenterFindListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the data center find list bad request response
+func (o *DataCenterFindListBadRequest) Code() int {
+	return 400
+}
+
 func (o *DataCenterFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *DataCenterFindListBadRequest) String() string {
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *DataCenterFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -127,7 +199,8 @@ func NewDataCenterFindListUnauthorized() *DataCenterFindListUnauthorized {
 	return &DataCenterFindListUnauthorized{}
 }
 
-/* DataCenterFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+DataCenterFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -135,9 +208,44 @@ type DataCenterFindListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this data center find list unauthorized response has a 2xx status code
+func (o *DataCenterFindListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this data center find list unauthorized response has a 3xx status code
+func (o *DataCenterFindListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this data center find list unauthorized response has a 4xx status code
+func (o *DataCenterFindListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this data center find list unauthorized response has a 5xx status code
+func (o *DataCenterFindListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this data center find list unauthorized response a status code equal to that given
+func (o *DataCenterFindListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the data center find list unauthorized response
+func (o *DataCenterFindListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *DataCenterFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *DataCenterFindListUnauthorized) String() string {
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *DataCenterFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -159,7 +267,8 @@ func NewDataCenterFindListNotFound() *DataCenterFindListNotFound {
 	return &DataCenterFindListNotFound{}
 }
 
-/* DataCenterFindListNotFound describes a response with status code 404, with default header values.
+/*
+DataCenterFindListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -167,9 +276,44 @@ type DataCenterFindListNotFound struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this data center find list not found response has a 2xx status code
+func (o *DataCenterFindListNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this data center find list not found response has a 3xx status code
+func (o *DataCenterFindListNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this data center find list not found response has a 4xx status code
+func (o *DataCenterFindListNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this data center find list not found response has a 5xx status code
+func (o *DataCenterFindListNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this data center find list not found response a status code equal to that given
+func (o *DataCenterFindListNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
+// Code gets the status code for the data center find list not found response
+func (o *DataCenterFindListNotFound) Code() int {
+	return 404
+}
+
 func (o *DataCenterFindListNotFound) Error() string {
 	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListNotFound  %+v", 404, o.Payload)
 }
+
+func (o *DataCenterFindListNotFound) String() string {
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListNotFound  %+v", 404, o.Payload)
+}
+
 func (o *DataCenterFindListNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -191,7 +335,8 @@ func NewDataCenterFindListInternalServerError() *DataCenterFindListInternalServe
 	return &DataCenterFindListInternalServerError{}
 }
 
-/* DataCenterFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+DataCenterFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -199,9 +344,44 @@ type DataCenterFindListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this data center find list internal server error response has a 2xx status code
+func (o *DataCenterFindListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this data center find list internal server error response has a 3xx status code
+func (o *DataCenterFindListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this data center find list internal server error response has a 4xx status code
+func (o *DataCenterFindListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this data center find list internal server error response has a 5xx status code
+func (o *DataCenterFindListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this data center find list internal server error response a status code equal to that given
+func (o *DataCenterFindListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the data center find list internal server error response
+func (o *DataCenterFindListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *DataCenterFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *DataCenterFindListInternalServerError) String() string {
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *DataCenterFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

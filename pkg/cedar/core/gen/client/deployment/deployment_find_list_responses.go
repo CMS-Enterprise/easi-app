@@ -48,7 +48,7 @@ func (o *DeploymentFindListReader) ReadResponse(response runtime.ClientResponse,
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /deployment] deploymentFindList", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewDeploymentFindListOK() *DeploymentFindListOK {
 	return &DeploymentFindListOK{}
 }
 
-/* DeploymentFindListOK describes a response with status code 200, with default header values.
+/*
+DeploymentFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type DeploymentFindListOK struct {
 	Payload *models.DeploymentFindResponse
 }
 
+// IsSuccess returns true when this deployment find list o k response has a 2xx status code
+func (o *DeploymentFindListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this deployment find list o k response has a 3xx status code
+func (o *DeploymentFindListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this deployment find list o k response has a 4xx status code
+func (o *DeploymentFindListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this deployment find list o k response has a 5xx status code
+func (o *DeploymentFindListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this deployment find list o k response a status code equal to that given
+func (o *DeploymentFindListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the deployment find list o k response
+func (o *DeploymentFindListOK) Code() int {
+	return 200
+}
+
 func (o *DeploymentFindListOK) Error() string {
 	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListOK  %+v", 200, o.Payload)
 }
+
+func (o *DeploymentFindListOK) String() string {
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListOK  %+v", 200, o.Payload)
+}
+
 func (o *DeploymentFindListOK) GetPayload() *models.DeploymentFindResponse {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewDeploymentFindListBadRequest() *DeploymentFindListBadRequest {
 	return &DeploymentFindListBadRequest{}
 }
 
-/* DeploymentFindListBadRequest describes a response with status code 400, with default header values.
+/*
+DeploymentFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type DeploymentFindListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this deployment find list bad request response has a 2xx status code
+func (o *DeploymentFindListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this deployment find list bad request response has a 3xx status code
+func (o *DeploymentFindListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this deployment find list bad request response has a 4xx status code
+func (o *DeploymentFindListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this deployment find list bad request response has a 5xx status code
+func (o *DeploymentFindListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this deployment find list bad request response a status code equal to that given
+func (o *DeploymentFindListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the deployment find list bad request response
+func (o *DeploymentFindListBadRequest) Code() int {
+	return 400
+}
+
 func (o *DeploymentFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *DeploymentFindListBadRequest) String() string {
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *DeploymentFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewDeploymentFindListUnauthorized() *DeploymentFindListUnauthorized {
 	return &DeploymentFindListUnauthorized{}
 }
 
-/* DeploymentFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+DeploymentFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type DeploymentFindListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this deployment find list unauthorized response has a 2xx status code
+func (o *DeploymentFindListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this deployment find list unauthorized response has a 3xx status code
+func (o *DeploymentFindListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this deployment find list unauthorized response has a 4xx status code
+func (o *DeploymentFindListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this deployment find list unauthorized response has a 5xx status code
+func (o *DeploymentFindListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this deployment find list unauthorized response a status code equal to that given
+func (o *DeploymentFindListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the deployment find list unauthorized response
+func (o *DeploymentFindListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *DeploymentFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *DeploymentFindListUnauthorized) String() string {
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *DeploymentFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewDeploymentFindListInternalServerError() *DeploymentFindListInternalServe
 	return &DeploymentFindListInternalServerError{}
 }
 
-/* DeploymentFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+DeploymentFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type DeploymentFindListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this deployment find list internal server error response has a 2xx status code
+func (o *DeploymentFindListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this deployment find list internal server error response has a 3xx status code
+func (o *DeploymentFindListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this deployment find list internal server error response has a 4xx status code
+func (o *DeploymentFindListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this deployment find list internal server error response has a 5xx status code
+func (o *DeploymentFindListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this deployment find list internal server error response a status code equal to that given
+func (o *DeploymentFindListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the deployment find list internal server error response
+func (o *DeploymentFindListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *DeploymentFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *DeploymentFindListInternalServerError) String() string {
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *DeploymentFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

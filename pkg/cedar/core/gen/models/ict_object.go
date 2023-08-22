@@ -101,6 +101,11 @@ func (m *IctObject) contextValidateSystems(ctx context.Context, formats strfmt.R
 	for i := 0; i < len(m.Systems); i++ {
 
 		if m.Systems[i] != nil {
+
+			if swag.IsZero(m.Systems[i]) { // not required
+				return nil
+			}
+
 			if err := m.Systems[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Systems" + "." + strconv.Itoa(i))

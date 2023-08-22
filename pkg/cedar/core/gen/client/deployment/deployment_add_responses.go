@@ -48,7 +48,7 @@ func (o *DeploymentAddReader) ReadResponse(response runtime.ClientResponse, cons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /deployment] deploymentAdd", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewDeploymentAddOK() *DeploymentAddOK {
 	return &DeploymentAddOK{}
 }
 
-/* DeploymentAddOK describes a response with status code 200, with default header values.
+/*
+DeploymentAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type DeploymentAddOK struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this deployment add o k response has a 2xx status code
+func (o *DeploymentAddOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this deployment add o k response has a 3xx status code
+func (o *DeploymentAddOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this deployment add o k response has a 4xx status code
+func (o *DeploymentAddOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this deployment add o k response has a 5xx status code
+func (o *DeploymentAddOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this deployment add o k response a status code equal to that given
+func (o *DeploymentAddOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the deployment add o k response
+func (o *DeploymentAddOK) Code() int {
+	return 200
+}
+
 func (o *DeploymentAddOK) Error() string {
 	return fmt.Sprintf("[POST /deployment][%d] deploymentAddOK  %+v", 200, o.Payload)
 }
+
+func (o *DeploymentAddOK) String() string {
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddOK  %+v", 200, o.Payload)
+}
+
 func (o *DeploymentAddOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewDeploymentAddBadRequest() *DeploymentAddBadRequest {
 	return &DeploymentAddBadRequest{}
 }
 
-/* DeploymentAddBadRequest describes a response with status code 400, with default header values.
+/*
+DeploymentAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type DeploymentAddBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this deployment add bad request response has a 2xx status code
+func (o *DeploymentAddBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this deployment add bad request response has a 3xx status code
+func (o *DeploymentAddBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this deployment add bad request response has a 4xx status code
+func (o *DeploymentAddBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this deployment add bad request response has a 5xx status code
+func (o *DeploymentAddBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this deployment add bad request response a status code equal to that given
+func (o *DeploymentAddBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the deployment add bad request response
+func (o *DeploymentAddBadRequest) Code() int {
+	return 400
+}
+
 func (o *DeploymentAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /deployment][%d] deploymentAddBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *DeploymentAddBadRequest) String() string {
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *DeploymentAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewDeploymentAddUnauthorized() *DeploymentAddUnauthorized {
 	return &DeploymentAddUnauthorized{}
 }
 
-/* DeploymentAddUnauthorized describes a response with status code 401, with default header values.
+/*
+DeploymentAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type DeploymentAddUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this deployment add unauthorized response has a 2xx status code
+func (o *DeploymentAddUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this deployment add unauthorized response has a 3xx status code
+func (o *DeploymentAddUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this deployment add unauthorized response has a 4xx status code
+func (o *DeploymentAddUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this deployment add unauthorized response has a 5xx status code
+func (o *DeploymentAddUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this deployment add unauthorized response a status code equal to that given
+func (o *DeploymentAddUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the deployment add unauthorized response
+func (o *DeploymentAddUnauthorized) Code() int {
+	return 401
+}
+
 func (o *DeploymentAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /deployment][%d] deploymentAddUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *DeploymentAddUnauthorized) String() string {
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *DeploymentAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewDeploymentAddInternalServerError() *DeploymentAddInternalServerError {
 	return &DeploymentAddInternalServerError{}
 }
 
-/* DeploymentAddInternalServerError describes a response with status code 500, with default header values.
+/*
+DeploymentAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type DeploymentAddInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this deployment add internal server error response has a 2xx status code
+func (o *DeploymentAddInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this deployment add internal server error response has a 3xx status code
+func (o *DeploymentAddInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this deployment add internal server error response has a 4xx status code
+func (o *DeploymentAddInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this deployment add internal server error response has a 5xx status code
+func (o *DeploymentAddInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this deployment add internal server error response a status code equal to that given
+func (o *DeploymentAddInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the deployment add internal server error response
+func (o *DeploymentAddInternalServerError) Code() int {
+	return 500
+}
+
 func (o *DeploymentAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /deployment][%d] deploymentAddInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *DeploymentAddInternalServerError) String() string {
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *DeploymentAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

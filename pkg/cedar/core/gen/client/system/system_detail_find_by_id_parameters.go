@@ -52,10 +52,12 @@ func NewSystemDetailFindByIDParamsWithHTTPClient(client *http.Client) *SystemDet
 	}
 }
 
-/* SystemDetailFindByIDParams contains all the parameters to send to the API endpoint
-   for the system detail find by Id operation.
+/*
+SystemDetailFindByIDParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the system detail find by Id operation.
+
+	Typically these are written to a http.Request.
 */
 type SystemDetailFindByIDParams struct {
 

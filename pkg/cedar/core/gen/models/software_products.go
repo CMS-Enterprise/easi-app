@@ -88,6 +88,11 @@ func (m *SoftwareProducts) contextValidateProducts(ctx context.Context, formats 
 	for i := 0; i < len(m.Products); i++ {
 
 		if m.Products[i] != nil {
+
+			if swag.IsZero(m.Products[i]) { // not required
+				return nil
+			}
+
 			if err := m.Products[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Products" + "." + strconv.Itoa(i))
