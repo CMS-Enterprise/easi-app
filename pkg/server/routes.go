@@ -366,6 +366,8 @@ func (s *Server) routes(
 			store.FetchBusinessCaseByID,
 			services.AuthorizeUserIsBusinessCaseRequester,
 			store.UpdateBusinessCase,
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
 		),
 	)
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())

@@ -29,14 +29,17 @@ const SideNavActions = ({ intake, archiveIntake }: SideNavActionsProps) => {
       </div>
       {isIntakeOpen(intake.status) && (
         <div className="grid-col margin-top-2">
-          <Button
-            className="line-height-body-5 test-withdraw-request"
-            type="button"
-            unstyled
-            onClick={() => setModalOpen(true)}
-          >
-            Remove your request to add a new system or service
-          </Button>
+          {/* Only allow removal if the intake form has not yet been submitted */}
+          {intake.status === 'INTAKE_DRAFT' && (
+            <Button
+              className="line-height-body-5 test-withdraw-request"
+              type="button"
+              unstyled
+              onClick={() => setModalOpen(true)}
+            >
+              Remove your request to add a new system or service
+            </Button>
+          )}
           <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
             <PageHeading headingLevel="h2" className="margin-top-0">
               {t('taskList:withdraw_modal:header', {

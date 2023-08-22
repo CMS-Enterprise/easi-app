@@ -8361,11 +8361,18 @@ type CreateSystemIntakeActionExtendLifecycleIdPayload {
 Represents the type of an action that is being done to a system request
 """
 enum SystemIntakeActionType {
+  # v2 actions
+  PROGRESS_TO_NEW_STEP
+  REQUEST_EDITS
+
+  # v1/v2 actions - originally from v1, still used in v2
+  ISSUE_LCID
+
+  # v1 actions - no longer used in IT Gov v2 workflow
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
   GUIDE_RECEIVED_CLOSE
   EXTEND_LCID
-  ISSUE_LCID
   NEED_BIZ_CASE
   NO_GOVERNANCE_NEEDED
   NOT_IT_REQUEST
@@ -8566,7 +8573,7 @@ input SystemIntakeRequestEditsInput {
   intakeFormStep: SystemIntakeFormStep!
   notificationRecipients: EmailNotificationRecipients
   emailFeedback: String!
-  additionalNotes: String
+  additionalInfo: String
   adminNotes: String
 }
 
@@ -51907,7 +51914,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients", "emailFeedback", "additionalNotes", "adminNotes"}
+	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients", "emailFeedback", "additionalInfo", "adminNotes"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -51946,11 +51953,11 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 			if err != nil {
 				return it, err
 			}
-		case "additionalNotes":
+		case "additionalInfo":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalNotes"))
-			it.AdditionalNotes, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
+			it.AdditionalInfo, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
