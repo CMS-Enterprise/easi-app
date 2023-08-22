@@ -362,7 +362,7 @@ func makeSystemIntakeWithProgressToNextStep(
 	intakeID uuid.UUID,
 	feedbackText string,
 	grbRecommendations string,
-	additionalNotes string,
+	additionalInfo string,
 	adminNote string,
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
@@ -378,7 +378,7 @@ func makeSystemIntakeWithProgressToNextStep(
 		NewStep:            model.SystemIntakeStepToProgressToDraftBusinessCase, // arbitrary choice
 		Feedback:           &feedbackText,
 		GrbRecommendations: &grbRecommendations,
-		AdditionalNote:     &additionalNotes,
+		AdditionalNote:     &additionalInfo,
 		AdminNote:          &adminNote,
 	}
 
@@ -393,7 +393,7 @@ func makeSystemIntakeWithEditsRequested(
 	creatingUser string,
 	intakeID uuid.UUID,
 	feedbackText string,
-	additionalNotes string,
+	additionalInfo string,
 	adminNote string,
 	targetedForm model.SystemIntakeFormStep,
 ) {
@@ -413,9 +413,9 @@ func makeSystemIntakeWithEditsRequested(
 			ShouldNotifyITGovernance: false,
 			ShouldNotifyITInvestment: false,
 		},
-		EmailFeedback:   feedbackText,
-		AdditionalNotes: &additionalNotes,
-		AdminNotes:      &adminNote,
+		EmailFeedback:  feedbackText,
+		AdditionalInfo: &additionalInfo,
+		AdminNotes:     &adminNote,
 	}
 	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, mock.FetchUserInfoMock, *input))
 }

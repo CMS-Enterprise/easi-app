@@ -18,8 +18,7 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 		intake := testhelpers.NewSystemIntake()
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.SystemIntakeID = intake.ID
+		businessCase := testhelpers.NewBusinessCase(intake.ID)
 		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
 		s.NoError(err)
 		fetched, err := s.store.FetchBusinessCaseByID(ctx, created.ID)
@@ -33,11 +32,10 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 
 	s.Run("fetches an open business case", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		retIntake, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
-		businessCase := testhelpers.NewBusinessCase()
+		businessCase := testhelpers.NewBusinessCase(retIntake.ID)
 		businessCase.Status = models.BusinessCaseStatusOPEN
-		businessCase.SystemIntakeID = intake.ID
 		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
 		s.NoError(err)
 		fetched, err := s.store.FetchOpenBusinessCaseByIntakeID(ctx, intake.ID)
@@ -144,10 +142,10 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 	ctx := context.Background()
 
 	intake := testhelpers.NewSystemIntake()
-	_, err := s.store.CreateSystemIntake(ctx, &intake)
+	retIntake, err := s.store.CreateSystemIntake(ctx, &intake)
 	s.NoError(err)
 	euaID := intake.EUAUserID.ValueOrZero()
-	businessCaseOriginal := testhelpers.NewBusinessCase()
+	businessCaseOriginal := testhelpers.NewBusinessCase(retIntake.ID)
 	businessCaseOriginal.EUAUserID = euaID
 	businessCaseOriginal.SystemIntakeID = intake.ID
 	createdBusinessCase, err := s.store.CreateBusinessCase(ctx, &businessCaseOriginal)
