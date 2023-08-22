@@ -82,7 +82,6 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
         <label
           class="usa-label text-normal margin-top-6"
           for="feedbackMessage"
-          id="feedbackMessage-label"
         >
           What type of edits are needed prior to scheduling the consult session?
           <span
@@ -97,215 +96,20 @@ exports[`Trb Admin: Action: Request Edits submits a feedback message 1`] = `
         >
           Provide feedback to the requester about the content of their initial request form or supporting documents. The requester will see this feedback in their task list and in the email you send.
         </div>
-        <div
-          class="easi-toast easi-toast-editor margin-top-1"
+        <textarea
+          aria-describedby="feedbackMessage-info feedbackMessage-hint"
+          class="usa-textarea usa-textarea__size-md"
+          id="feedbackMessage"
+          name="feedbackMessage"
+        />
+        <span
+          aria-atomic="false"
+          aria-live="polite"
+          class="easi-character-counter margin-top-1"
+          id="feedbackMessage-counter"
         >
-          <div
-            style="height: 100%;"
-          >
-            <div
-              class="toastui-editor-defaultUI"
-            >
-              <div
-                class="toastui-editor-toolbar"
-              >
-                <div
-                  class="toastui-editor-md-tab-container"
-                  style="display: none"
-                >
-                  <div
-                    aria-role="tabpanel"
-                    class="toastui-editor-tabs"
-                  >
-                    <div
-                      aria-label="Write"
-                      aria-role="tab"
-                      aria-selected="true"
-                      class="tab-item active"
-                      tabindex="0"
-                    >
-                      Write
-                    </div>
-                    <div
-                      aria-label="Preview"
-                      aria-role="tab"
-                      aria-selected="false"
-                      class="tab-item"
-                      tabindex="-1"
-                    >
-                      Preview
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="toastui-editor-defaultUI-toolbar"
-                  style="border-top-left-radius: 0px;"
-                >
-                  <div
-                    class="toastui-editor-toolbar-group"
-                  >
-                    <button
-                      aria-label="Bold"
-                      class="bold toastui-editor-toolbar-icons"
-                      type="button"
-                    />
-                    <button
-                      aria-label="Italic"
-                      class="italic toastui-editor-toolbar-icons"
-                      type="button"
-                    />
-                    <div
-                      class="toastui-editor-toolbar-divider"
-                    />
-                  </div>
-                  <div
-                    class="toastui-editor-toolbar-group"
-                  >
-                    <button
-                      aria-label="Ordered list"
-                      class="ordered-list toastui-editor-toolbar-icons"
-                      type="button"
-                    />
-                    <button
-                      aria-label="Unordered list"
-                      class="bullet-list toastui-editor-toolbar-icons"
-                      type="button"
-                    />
-                    <div
-                      class="toastui-editor-toolbar-divider"
-                    />
-                  </div>
-                  <div
-                    class="toastui-editor-toolbar-group"
-                  >
-                    <button
-                      aria-label="Insert link"
-                      class="link toastui-editor-toolbar-icons"
-                      type="button"
-                    />
-                    <div
-                      class="toastui-editor-toolbar-divider"
-                      style="display: none;"
-                    />
-                  </div>
-                  <div
-                    class="toastui-editor-toolbar-group"
-                    style="display: none;"
-                  >
-                    <button
-                      class="more toastui-editor-toolbar-icons"
-                      type="button"
-                    />
-                    <div
-                      class="toastui-editor-dropdown-toolbar"
-                      style="display: none;"
-                    />
-                  </div>
-                  <div
-                    class="toastui-editor-tooltip"
-                    style="display:none"
-                  >
-                    
-        
-                    <div
-                      class="arrow"
-                    />
-                    
-        
-                    <span
-                      class="text"
-                    />
-                    
-      
-                  </div>
-                </div>
-                <div
-                  aria-role="dialog"
-                  class="toastui-editor-popup "
-                  style="display: none;"
-                >
-                  <div
-                    class="toastui-editor-popup-body"
-                  />
-                </div>
-              </div>
-              <div
-                class="toastui-editor-main toastui-editor-ww-mode"
-              >
-                <div
-                  class="toastui-editor-main-container"
-                >
-                  <div
-                    class="toastui-editor-md-container toastui-editor-md-tab-style"
-                  >
-                    <div
-                      class="toastui-editor md-mode active"
-                      style="min-height: 25px;"
-                    >
-                      <textarea
-                        class="toastui-editor-pseudo-clipboard"
-                      />
-                      <div
-                        class="ProseMirror"
-                        contenteditable="true"
-                        translate="no"
-                      >
-                        <div>
-                          <br
-                            class="ProseMirror-trailingBreak"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="toastui-editor-md-splitter"
-                    />
-                    <div
-                      class="toastui-editor-md-preview"
-                      style="min-height: 25px;"
-                    >
-                      <div
-                        class="toastui-editor-contents"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="toastui-editor-ww-container"
-                  >
-                    <div
-                      class="toastui-editor ww-mode"
-                      style="min-height: 25px;"
-                    >
-                      <div
-                        aria-describedby="feedbackMessage-hint"
-                        aria-labelledby="feedbackMessage-label"
-                        aria-multiline="true"
-                        aria-required="true"
-                        class="ProseMirror toastui-editor-contents ProseMirror-focused"
-                        contenteditable="true"
-                        data-testid="feedbackMessage"
-                        id="feedbackMessage"
-                        role="textbox"
-                        translate="no"
-                      >
-                        <p>
-                          <br
-                            class="ProseMirror-trailingBreak"
-                          />
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                aria-role="menu"
-                class="toastui-editor-context-menu"
-                style="display: none;"
-              />
-            </div>
-          </div>
-        </div>
+          2000 characters remaining
+        </span>
       </div>
       <h3
         class="margin-top-6 margin-bottom-0"

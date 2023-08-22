@@ -14,7 +14,6 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import PageWrapper from 'components/PageWrapper';
-import ToastStage from 'components/RichTextEditor/ToastStage';
 import { MessageProvider } from 'hooks/useMessage';
 import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
@@ -77,8 +76,6 @@ const AppRoutes = () => {
 
   return (
     <Switch>
-      <Route path="/toast" exact component={ToastStage} />
-
       {/* General Routes */}
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />

@@ -7,10 +7,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, FormGroup } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
-// import TextAreaField from 'components/shared/TextAreaField';
-import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import CreateTrbRequestFeedbackQuery from 'queries/CreateTrbRequestFeedbackQuery';
 import {
@@ -155,7 +154,6 @@ function RequestEdits() {
           return (
             <FormGroup error={!!error}>
               <Label
-                id="feedbackMessage-label"
                 htmlFor="feedbackMessage"
                 className="text-normal margin-top-6"
                 required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
@@ -166,16 +164,11 @@ function RequestEdits() {
                 {t('actionRequestEdits.hint')}
               </HelpText>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-              <RichTextEditor
-                className="margin-top-1"
-                editableProps={{
-                  id: 'feedbackMessage',
-                  'data-testid': 'feedbackMessage',
-                  'aria-describedby': 'feedbackMessage-hint',
-                  'aria-labelledby': 'feedbackMessage-label'
-                }}
-                field={field}
-                required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
+              <TextAreaField
+                id="feedbackMessage"
+                {...field}
+                ref={null}
+                aria-describedby="feedbackMessage-info feedbackMessage-hint"
               />
             </FormGroup>
           );

@@ -32,7 +32,6 @@ import {
 import { TRBFeedbackAction, TRBFormStatus } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
-import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TRBRequestInfoWrapper from './RequestContext';
@@ -70,7 +69,7 @@ describe('Trb Admin: Action: Request Edits', () => {
       variables: {
         input: {
           trbRequestId,
-          feedbackMessage: `<p>${feedbackMessage}</p>`,
+          feedbackMessage,
           copyTrbMailbox: true,
           notifyEuaIds: [requester.userInfo.euaUserId],
           action: TRBFeedbackAction.REQUEST_EDITS
@@ -137,7 +136,14 @@ describe('Trb Admin: Action: Request Edits', () => {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
     });
 
-    await typeRichText(screen.getByTestId('feedbackMessage'), feedbackMessage);
+    userEvent.type(
+      screen.getByLabelText(
+        RegExp(
+          i18next.t<string>('technicalAssistance:actionRequestEdits.label')
+        )
+      ),
+      feedbackMessage
+    );
 
     userEvent.click(submitButton);
 
@@ -178,7 +184,14 @@ describe('Trb Admin: Action: Request Edits', () => {
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
 
-    await typeRichText(screen.getByTestId('feedbackMessage'), feedbackMessage);
+    userEvent.type(
+      screen.getByLabelText(
+        RegExp(
+          i18next.t<string>('technicalAssistance:actionRequestEdits.label')
+        )
+      ),
+      feedbackMessage
+    );
 
     userEvent.click(
       screen.getByRole('button', {
