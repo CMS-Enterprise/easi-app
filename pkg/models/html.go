@@ -28,10 +28,7 @@ func (html *HTML) UnmarshalGQLContext(ctx context.Context, v interface{}) error 
 	}
 
 	// Sanitize the HTML string
-	sanitizedHTMLString, err := sanitization.SanitizeHTML(htmlString)
-	if err != nil {
-		return fmt.Errorf("issue sanitizing HTML: %w", err)
-	}
+	sanitizedHTMLString := sanitization.SanitizeHTML(htmlString)
 
 	// Set the sanitized HTML value to the receiver
 	*html = HTML(sanitizedHTMLString)

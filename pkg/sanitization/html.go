@@ -11,12 +11,12 @@ var once sync.Once
 var htmlSanitizerPolicy *bluemonday.Policy
 
 // SanitizeHTML takes a string representation of HTML and sanitizes it
-func SanitizeHTML(input string) (string, error) {
+func SanitizeHTML(input string) string {
 	policy := getHTMLSanitizerPolicy()
 
 	output := policy.Sanitize(input)
 
-	return output, nil
+	return output
 }
 
 // getHTMLSanitizerPolicy returns the sanitization policy for HTML
