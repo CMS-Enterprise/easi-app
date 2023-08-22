@@ -266,7 +266,8 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
         linkAttributes={{
-          target: '_blank'
+          target: '_blank',
+          rel: 'noopener'
         }}
         onBlur={() => {
           field?.onBlur();
@@ -296,9 +297,10 @@ export function RichTextViewer({ className, ...props }: RichTextViewerProps) {
     <div className={classNames('easi-toast easi-toast-viewer', className)}>
       <Viewer
         usageStatistics={false}
-        theme="white"
+        // Setting link attributes here just to match Editor options, but it doesn't actually have an effect
         linkAttributes={{
-          target: '_blank'
+          target: '_blank',
+          rel: 'noopener'
         }}
         {...props}
       />
