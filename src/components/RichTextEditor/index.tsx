@@ -205,6 +205,26 @@ function showLinkUnderSelection(toastEditor: ToastuiEditor) {
   });
 }
 
+const mailtoRe = /^mailto:/;
+const httpsRe = /^https?:\/\//;
+
+// Do some field validation on the link popup's url field.
+// Another approach is to re-use toast's exec command to add a link but instead
+// we are going to use dompurify's hook that gets called after content change.
+DOMPurify.addHook('afterSanitizeAttributes', node => {
+  // check all href attributes for validity
+  if (node.hasAttribute('href')) {
+    const href = node.getAttribute('href');
+    if (href === null) return;
+    // Allow `mailto:` urls
+    if (href.match(mailtoRe)) return;
+    // Ensure url has a `https://` prefix
+    if (!href.match(httpsRe)) {
+      node.setAttribute('href', `https://${href}`);
+    }
+  }
+});
+
 /**
  * Toast rich text editor as a RHF controlled input field.
  * Set to WYSIWYG mode only.
