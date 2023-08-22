@@ -26,13 +26,14 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 	intake := testhelpers.NewSystemIntake()
 	intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
+	intake.RequestFormState = models.SIRFSSubmitted
 	intake.EUAUserID = null.StringFrom(s.user.euaID)
 
 	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)
 	s.NoError(err)
 	intakeID := createdIntake.ID
 
-	bizCase := testhelpers.NewBusinessCase()
+	bizCase := testhelpers.NewBusinessCase(intake.ID)
 	bizCase.SystemIntakeID = intakeID
 	bizCase.EUAUserID = s.user.euaID
 	createdBizCase, err := s.store.CreateBusinessCase(context.Background(), &bizCase)
@@ -57,7 +58,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	})
 
 	// This needs to be run after the successful post test to ensure we have a business case to fetch
-	s.Run("GET will fetch the updated intake just saved", func() {
+	s.Run("GET will fetch the updated business case just saved", func() {
 		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
@@ -96,7 +97,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	})
 
 	// This needs to be run after the successful post test to ensure we have a business case to fetch
-	s.Run("UPDATE will fetch the updated intake just saved", func() {
+	s.Run("UPDATE will fetch the updated business case just saved", func() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
