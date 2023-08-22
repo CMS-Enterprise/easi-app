@@ -287,12 +287,18 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
 
 export default RichTextEditor;
 
-interface RichTextViewerProps extends ViewerProps {
+interface RichTextViewerProps extends Omit<ViewerProps, 'initialValue'> {
   /** Wrapper div classname */
   className?: string;
+  /** Content value that is updatable. Use this instead of `initialValue`. */
+  value?: string;
 }
 
-export function RichTextViewer({ className, ...props }: RichTextViewerProps) {
+export function RichTextViewer({
+  className,
+  value,
+  ...props
+}: RichTextViewerProps) {
   return (
     <div className={classNames('easi-toast easi-toast-viewer', className)}>
       <Viewer
@@ -302,6 +308,9 @@ export function RichTextViewer({ className, ...props }: RichTextViewerProps) {
           target: '_blank',
           rel: 'noopener'
         }}
+        // `initialValue` does not update. Change the `key` prop so that this re-renders with `value`.
+        key={value}
+        initialValue={value}
         {...props}
       />
     </div>

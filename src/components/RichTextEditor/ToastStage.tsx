@@ -9,7 +9,8 @@ function ToastStage() {
     defaultValues: {
       htmlField:
         // ''
-        '<ol><li><p>list</p></li></ol><p>&lt;span&gt;paragraph</p><p>break</p>'
+        '<ol><li><p>list</p></li></ol><p>&lt;span&gt;par<a href="https://google.com" rel="noopener" target="_blank">agraph</a></p><p>break</p>'
+      // '<ol><li><p>list</p></li></ol><p>&lt;span&gt;paragraph</p><p>break</p>'
       // '<p><em>Rich</em> <strong>text</strong> <a href="http://localhost:3000/toast" target="_blank">link</a>.</p><p><br></p><p>double break</p><p><br></p><ul><li><p>Bullet</p></li><li><p>list</p></li></ul><ol><li><p>asdfsdfNumbered</p></li><li><p>list</p></li></ol>'
       // '<p><em>Rich</em> <strong>text</strong> <a href="http://localhost:3000/toast" target="_blank">link</a>.</p><p><br></p><p>double break</p><ul><li><p>Bullet</p></li><li><p>list</p></li></ul><ol><li><p>Numbered</p></li><li><p>list</p></li></ol>'
     }
@@ -41,7 +42,7 @@ function ToastStage() {
         </Grid>
         <Grid col={6}>
           <h6>Viewer</h6>
-          <RichTextViewer initialValue={watch('htmlField')} />
+          <RichTextViewer value={watch('htmlField')} />
           <div style={{ borderTop: '1px solid black' }}>
             <p>paragraph</p>
             <p>break</p>
