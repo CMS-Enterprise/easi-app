@@ -11,6 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -353,7 +354,11 @@ func IssueLCID(
 		return nil, err
 	}
 
-	// TODO - check intake validity
+	// TODO - potentially inline?
+	err = lcidactions.IsIntakeValidToIssueLCID(intake)
+	if err != nil {
+		return nil, err
+	}
 
 	// TODO - update intake
 
