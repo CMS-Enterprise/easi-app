@@ -2,7 +2,11 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
@@ -83,13 +87,7 @@ describe('Trb Admin: Action: Request Edits', () => {
   };
 
   it('submits a feedback message', async () => {
-    const {
-      getByLabelText,
-      getByRole,
-      findByText,
-      asFragment,
-      getByTestId
-    } = render(
+    const { asFragment } = render(
       <Provider store={store}>
         <VerboseMockedProvider
           defaultOptions={{
@@ -126,20 +124,20 @@ describe('Trb Admin: Action: Request Edits', () => {
       </Provider>
     );
 
-    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
-    await findByText(
+    await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
 
     expect(asFragment()).toMatchSnapshot();
 
-    const submitButton = getByRole('button', {
+    const submitButton = screen.getByRole('button', {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
     });
 
     userEvent.type(
-      getByLabelText(
+      screen.getByLabelText(
         RegExp(
           i18next.t<string>('technicalAssistance:actionRequestEdits.label')
         )
@@ -149,13 +147,13 @@ describe('Trb Admin: Action: Request Edits', () => {
 
     userEvent.click(submitButton);
 
-    await findByText(
+    await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.success')
     );
   });
 
   it('shows error notice when submission fails', async () => {
-    const { getByLabelText, getByRole, findByText } = render(
+    render(
       <MockedProvider
         mocks={[
           summaryQuery,
@@ -182,12 +180,12 @@ describe('Trb Admin: Action: Request Edits', () => {
       </MockedProvider>
     );
 
-    await findByText(
+    await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
     );
 
     userEvent.type(
-      getByLabelText(
+      screen.getByLabelText(
         RegExp(
           i18next.t<string>('technicalAssistance:actionRequestEdits.label')
         )
@@ -196,12 +194,12 @@ describe('Trb Admin: Action: Request Edits', () => {
     );
 
     userEvent.click(
-      getByRole('button', {
+      screen.getByRole('button', {
         name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
       })
     );
 
-    await findByText(
+    await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.error')
     );
   });
