@@ -17,11 +17,10 @@ describe('HelpContacts', () => {
   it('renders correct contacts when array is passed', () => {
     const { getByText } = render(
       <MemoryRouter>
-        <HelpContacts type={['IT Governance', 'Section 508']} />
+        <HelpContacts type={['IT Governance']} />
       </MemoryRouter>
     );
 
     expect(getByText('Governance Review Admin')).toBeInTheDocument();
-    expect(getByText('Section 508')).toBeInTheDocument();
   });
 });

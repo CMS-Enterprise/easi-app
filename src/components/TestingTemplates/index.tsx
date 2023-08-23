@@ -10,7 +10,6 @@ import classNames from 'classnames';
 
 import RemediationPlanDoc from 'assets/files/CMS508RemediationPlanTemplate.pdf';
 import TestPlanDoc from 'assets/files/Section508TestPlanTemplate.pdf';
-import HelpPageIntro from 'components/HelpPageIntro';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Divider from 'components/shared/Divider';
@@ -43,16 +42,10 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
 
   return (
     <div className={classNames('templates-for-508-testing', className)}>
-      {!helpArticle ? (
+      {!helpArticle && (
         <PageHeading className="line-height-heading-2">
           {t('testingTemplates.heading')}
         </PageHeading>
-      ) : (
-        <HelpPageIntro
-          type="Section 508"
-          heading={t('testingTemplates.heading')}
-          subheading={t('templatesFor508Testing:description')}
-        />
       )}
       <div className="margin-bottom-6 padding-2 bg-base-lightest">
         <h3 className="margin-top-0 margin-bottom-2">
