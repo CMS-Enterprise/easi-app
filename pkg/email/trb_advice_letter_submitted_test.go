@@ -110,7 +110,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 			Component:      "Center for Clinical Standards and Quality",
 			SubmissionDate: &submissionDate,
 			ConsultDate:    &consultDate,
-			CopyTRBMailbox: true,
+			CopyTRBMailbox: false,
 			Recipients:     recipients,
 		}
 
