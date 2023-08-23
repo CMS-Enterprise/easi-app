@@ -366,14 +366,9 @@ func IssueLCID(
 	}
 
 	// if a LCID wasn't passed in, we generate one
-	var newLCID string
-	if input.Lcid != nil {
-		newLCID = *input.Lcid
-	} else {
-		newLCID, err = store.GenerateLifecycleID(ctx)
-		if err != nil {
-			return nil, err
-		}
+	newLCID, err := lcidactions.GenerateNewLCID(ctx, store, input.Lcid)
+	if err != nil {
+		return nil, err
 	}
 
 	// update workflow state
