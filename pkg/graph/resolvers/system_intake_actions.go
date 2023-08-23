@@ -256,17 +256,9 @@ func RejectIntakeAsNotApproved(
 		return nil, err
 	}
 
-	// This is the only validity check needed:
-	// * Issuing this decision is valid in all steps
-	// * Issuing this decision is valid both when an intake is open and when it's closed (in the latter case, it's changing the decision)
-	// * Even if a rejection decision has already been issued, an admin can confirm that decision on a reopened intake through this action
-	if intake.State == models.SystemIntakeStateCLOSED && intake.DecisionState == models.SIDSNotApproved {
-		return nil, &apperrors.BadRequestError{
-			Err: &apperrors.InvalidActionError{
-				ActionType: models.ActionTypeISSUELCID,
-				Message:    "Intake already closed as Not Approved",
-			},
-		}
+	err = lcidactions.IsRejectIntakeValid(intake)
+	if err != nil {
+		return nil, err
 	}
 
 	// update workflow state
@@ -368,8 +360,7 @@ func IssueLCID(
 		return nil, err
 	}
 
-	// TODO - potentially inline?
-	err = lcidactions.IsIntakeValidToIssueLCID(intake)
+	err = lcidactions.IsIssueLCIDValid(intake)
 	if err != nil {
 		return nil, err
 	}
