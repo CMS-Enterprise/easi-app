@@ -256,12 +256,18 @@ func RejectIntakeAsNotApproved(
 		return nil, err
 	}
 
-	// No validity check needed:
+	// This is the only validity check needed:
 	// * Issuing this decision is valid in all steps
 	// * Issuing this decision is valid both when an intake is open and when it's closed (in the latter case, it's changing the decision)
 	// * Even if a rejection decision has already been issued, an admin can confirm that decision on a reopened intake through this action
-	// only case where it might be invalid is if the intake is closed and already NotApproved, but this is a corner case
-	// (TODO - should we still test for this?)
+	if intake.State == models.SystemIntakeStateCLOSED && intake.DecisionState == models.SIDSNotApproved {
+		return nil, &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeISSUELCID,
+				Message:    "Intake already closed as Not Approved",
+			},
+		}
+	}
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
