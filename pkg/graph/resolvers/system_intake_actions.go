@@ -290,14 +290,13 @@ func RejectIntake(
 
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
-		stepForAction := models.SystemIntakeStepDECISION // need to declare this separately because we can't create pointer directly from constant
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypeREJECT,
 			ActorName:      adminUserInfo.CommonName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
-			Step:           &stepForAction,
+			Step:           &intake.Step,
 		}
 		if input.AdditionalInfo != nil {
 			action.Feedback = null.StringFromPtr(input.AdditionalInfo)
@@ -412,14 +411,13 @@ func IssueLCID(
 
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
-		stepForAction := models.SystemIntakeStepDECISION // need to declare this separately because we can't create pointer directly from constant
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypeISSUELCID,
 			ActorName:      adminUserInfo.CommonName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
-			Step:           &stepForAction,
+			Step:           &intake.Step,
 		}
 		if input.AdditionalInfo != nil {
 			action.Feedback = null.StringFromPtr(input.AdditionalInfo)
