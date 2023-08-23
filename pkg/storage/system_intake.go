@@ -173,6 +173,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 }
 
 // UpdateSystemIntake does an upsert for a system intake
+// caller is responsible for setting intake.UpdatedAt if they want to update that field
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 

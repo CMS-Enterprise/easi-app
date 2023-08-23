@@ -191,6 +191,10 @@ func CreateSystemIntakeActionRequestEdits(
 			Err: fmt.Errorf("cannot request edits on %s", input.IntakeFormStep),
 		}
 	}
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -268,6 +272,9 @@ func RejectIntake(
 	intake.RejectionReason = null.StringFrom(input.Reason)
 	intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
 
 	// All the different database calls aren't in a single atomic transaction;
 	// in the case of a system failure, some data from the action might be saved, but not all.
