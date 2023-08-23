@@ -7,6 +7,7 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -245,5 +246,36 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		allNotes, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		s.Len(allNotes, 0)
+	})
+}
+
+// this is a ResolverSuite method in this file instead of issue_lcid_test.go because it's not a pure unit test;
+// it requires a store to call store.GenerateLifecycleID()
+func (s *ResolverSuite) TestGenerateNewLCID() {
+	s.Run("Should return existing LCID if one is provided", func() {
+		providedLCID := "220181"
+
+		generatedLCID, err := lcidactions.GenerateNewLCID(s.testConfigs.Context, s.testConfigs.Store, &providedLCID)
+
+		s.NoError(err)
+		s.Equal(providedLCID, generatedLCID)
+	})
+
+	s.Run("Should generate new LCID if nil is passed", func() {
+		providedLCID := (*string)(nil)
+
+		generatedLCID, err := lcidactions.GenerateNewLCID(s.testConfigs.Context, s.testConfigs.Store, providedLCID)
+
+		s.NoError(err)
+		s.NotEmpty(generatedLCID)
+	})
+
+	s.Run("Should generate new LCID if empty string is passed", func() {
+		providedLCID := ""
+
+		generatedLCID, err := lcidactions.GenerateNewLCID(s.testConfigs.Context, s.testConfigs.Store, &providedLCID)
+
+		s.NoError(err)
+		s.NotEmpty(generatedLCID)
 	})
 }
