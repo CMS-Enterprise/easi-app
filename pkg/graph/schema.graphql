@@ -2174,8 +2174,8 @@ type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
   author: UserInfo!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
@@ -2201,7 +2201,7 @@ The data needed for updating a TRB admin note
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   category: TRBAdminNoteCategory
-  noteText: String
+  noteText: HTML
 }
 
 """
@@ -2209,8 +2209,8 @@ The data needed to update a TRB advice letter
 """
 input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   followupPoint: String
 }
@@ -2231,7 +2231,7 @@ type TRBAdviceLetterRecommendation {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!
@@ -2246,7 +2246,7 @@ The input required to add a recommendation & links to a TRB advice letter
 input CreateTRBAdviceLetterRecommendationInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
 }
 
@@ -2256,7 +2256,7 @@ The input required to update a recommendation to a TRB advice letter
 input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: String
+  recommendation: HTML
   links: [String!]
 }
 

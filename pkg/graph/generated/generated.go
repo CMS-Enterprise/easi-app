@@ -9262,8 +9262,8 @@ type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
   author: UserInfo!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
@@ -9289,7 +9289,7 @@ The data needed for updating a TRB admin note
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   category: TRBAdminNoteCategory
-  noteText: String
+  noteText: HTML
 }
 
 """
@@ -9297,8 +9297,8 @@ The data needed to update a TRB advice letter
 """
 input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   followupPoint: String
 }
@@ -9319,7 +9319,7 @@ type TRBAdviceLetterRecommendation {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!
@@ -9334,7 +9334,7 @@ The input required to add a recommendation & links to a TRB advice letter
 input CreateTRBAdviceLetterRecommendationInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
 }
 
@@ -9344,7 +9344,7 @@ The input required to update a recommendation to a TRB advice letter
 input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: String
+  recommendation: HTML
   links: [String!]
 }
 
@@ -41615,9 +41615,9 @@ func (ec *executionContext) _TRBAdviceLetter_meetingSummary(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdviceLetter_meetingSummary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -41627,7 +41627,7 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_meetingSummary(ctx cont
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -41656,9 +41656,9 @@ func (ec *executionContext) _TRBAdviceLetter_nextSteps(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdviceLetter_nextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -41668,7 +41668,7 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_nextSteps(ctx context.C
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -42191,9 +42191,9 @@ func (ec *executionContext) _TRBAdviceLetterRecommendation_recommendation(ctx co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.HTML)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -42203,7 +42203,7 @@ func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_recommend
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -50451,7 +50451,7 @@ func (ec *executionContext) unmarshalInputCreateTRBAdviceLetterRecommendationInp
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
-			it.Recommendation, err = ec.unmarshalNString2string(ctx, v)
+			it.Recommendation, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -65893,6 +65893,22 @@ func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._GeneratePresignedUploadURLPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, v interface{}) (*models.HTML, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.HTML)
+	err := res.UnmarshalGQLContext(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, sel ast.SelectionSet, v *models.HTML) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.WrapContextMarshaler(ctx, v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

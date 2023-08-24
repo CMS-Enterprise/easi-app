@@ -574,7 +574,7 @@ export interface CreateTRBAdminNoteInput {
 export interface CreateTRBAdviceLetterRecommendationInput {
   trbRequestId: UUID;
   title: string;
-  recommendation: string;
+  recommendation: HTML;
   links: string[];
 }
 
@@ -961,8 +961,8 @@ export interface UpdateSystemIntakeReviewDatesInput {
  */
 export interface UpdateTRBAdviceLetterInput {
   trbRequestId: UUID;
-  meetingSummary?: string | null;
-  nextSteps?: string | null;
+  meetingSummary?: HTML | null;
+  nextSteps?: HTML | null;
   isFollowupRecommended?: boolean | null;
   followupPoint?: string | null;
 }
@@ -973,7 +973,7 @@ export interface UpdateTRBAdviceLetterInput {
 export interface UpdateTRBAdviceLetterRecommendationInput {
   id: UUID;
   title?: string | null;
-  recommendation?: string | null;
+  recommendation?: HTML | null;
   links?: string[] | null;
 }
 
