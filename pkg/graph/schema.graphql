@@ -945,7 +945,7 @@ A note added to a system request
 """
 type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
-  content: String!
+  content: HTML!
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
@@ -1430,7 +1430,7 @@ input UpdateSystemIntakeReviewDatesInput {
 Input data for adding a note to a system request
 """
 input CreateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   authorName: String!
   intakeId: UUID!
 }
@@ -1439,7 +1439,7 @@ input CreateSystemIntakeNoteInput {
 Input data for updating an IT governance admin note
 """
 input UpdateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   isArchived: Boolean!
   id: UUID!
 }
@@ -1474,7 +1474,7 @@ input SystemIntakeProgressToNewStepsInput {
   feedback: String
   grbRecommendations: String
   additionalNote: String
-  adminNote: String
+  adminNote: HTML
 }
 
 """
@@ -1486,7 +1486,7 @@ input SystemIntakeRequestEditsInput {
   notificationRecipients: EmailNotificationRecipients
   emailFeedback: String!
   additionalInfo: String
-  adminNotes: String
+  adminNotes: HTML
 }
 
 """

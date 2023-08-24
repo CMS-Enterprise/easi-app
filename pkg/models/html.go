@@ -22,6 +22,14 @@ func (html HTML) ToTemplate() template.HTML {
 	return template.HTML(html) //nolint //the html is sanitized when it is Unmarshaled
 }
 
+// ValueOrEmptyString returns either the value of the html or an empty string if nil
+func (html *HTML) ValueOrEmptyString() string {
+	if html != nil {
+		return string(*html)
+	}
+	return ""
+}
+
 // UnmarshalGQLContext unmarshals the data from graphql to the HTML type
 func (html *HTML) UnmarshalGQLContext(ctx context.Context, v interface{}) error {
 

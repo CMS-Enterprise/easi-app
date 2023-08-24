@@ -649,7 +649,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 
 		_, err := s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithOneCommentID,
-			Content:        null.StringFrom("the only comment"),
+			Content:        models.HTMLPointer("the only comment"),
 			CreatedAt:      mustParseTime("2021-01-01"),
 			AuthorEUAID:    "ABCD",
 		})
@@ -657,21 +657,21 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 
 		_, err = s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
-			Content:        null.StringFrom("the first comment"),
+			Content:        models.HTMLPointer("the first comment"),
 			CreatedAt:      mustParseTime("2021-01-01"),
 			AuthorEUAID:    "ABCD",
 		})
 		s.NoError(err)
 		_, err = s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
-			Content:        null.StringFrom("the third comment"),
+			Content:        models.HTMLPointer("the third comment"),
 			CreatedAt:      mustParseTime("2021-01-03"),
 			AuthorEUAID:    "ABCD",
 		})
 		s.NoError(err)
 		_, err = s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
-			Content:        null.StringFrom("the second comment"),
+			Content:        models.HTMLPointer("the second comment"),
 			CreatedAt:      mustParseTime("2021-01-02"),
 			AuthorEUAID:    "ABCD",
 		})

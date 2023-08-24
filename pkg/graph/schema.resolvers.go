@@ -1355,7 +1355,7 @@ func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input mod
 	systemIntakeNote := models.SystemIntakeNote{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),
 		AuthorName:     null.StringFrom(input.AuthorName),
-		Content:        null.StringFrom(input.Content),
+		Content:        &input.Content,
 		SystemIntakeID: input.IntakeID,
 	}
 
@@ -1371,7 +1371,7 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 	}
 
 	systemIntakeNote, err := r.store.UpdateSystemIntakeNote(ctx, &models.SystemIntakeNote{
-		Content:    null.StringFrom(input.Content),
+		Content:    &input.Content,
 		IsArchived: input.IsArchived,
 		ID:         input.ID,
 		ModifiedBy: &userInfo.EuaUserID,
@@ -3073,11 +3073,6 @@ func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.Syste
 		Eua:  obj.AuthorEUAID,
 		Name: obj.AuthorName.ValueOrZero(),
 	}, nil
-}
-
-// Content is the resolver for the content field.
-func (r *systemIntakeNoteResolver) Content(ctx context.Context, obj *models.SystemIntakeNote) (string, error) {
-	return obj.Content.ValueOrZero(), nil
 }
 
 // Editor is the resolver for the editor field.

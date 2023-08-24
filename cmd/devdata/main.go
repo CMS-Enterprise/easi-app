@@ -345,7 +345,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "QQQQ",
 		AuthorName:     null.StringFrom("Author Name"),
-		Content:        null.StringFrom("a clever remark"),
+		Content:        models.HTMLPointer("a clever remark"),
 		CreatedAt:      &fiveMinutesAgo,
 	}))
 
@@ -363,7 +363,7 @@ func makeSystemIntakeWithProgressToNextStep(
 	feedbackText string,
 	grbRecommendations string,
 	additionalInfo string,
-	adminNote string,
+	adminNote models.HTML,
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
 
@@ -394,7 +394,7 @@ func makeSystemIntakeWithEditsRequested(
 	intakeID uuid.UUID,
 	feedbackText string,
 	additionalInfo string,
-	adminNote string,
+	adminNote models.HTML,
 	targetedForm model.SystemIntakeFormStep,
 ) {
 	ctx := appcontext.WithLogger(context.Background(), logger)

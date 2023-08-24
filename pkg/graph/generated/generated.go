@@ -1402,7 +1402,6 @@ type SystemIntakeFundingSourceResolver interface {
 }
 type SystemIntakeNoteResolver interface {
 	Author(ctx context.Context, obj *models.SystemIntakeNote) (*model.SystemIntakeNoteAuthor, error)
-	Content(ctx context.Context, obj *models.SystemIntakeNote) (string, error)
 
 	Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error)
 }
@@ -8033,7 +8032,7 @@ A note added to a system request
 """
 type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
-  content: String!
+  content: HTML!
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
@@ -8518,7 +8517,7 @@ input UpdateSystemIntakeReviewDatesInput {
 Input data for adding a note to a system request
 """
 input CreateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   authorName: String!
   intakeId: UUID!
 }
@@ -8527,7 +8526,7 @@ input CreateSystemIntakeNoteInput {
 Input data for updating an IT governance admin note
 """
 input UpdateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   isArchived: Boolean!
   id: UUID!
 }
@@ -8562,7 +8561,7 @@ input SystemIntakeProgressToNewStepsInput {
   feedback: String
   grbRecommendations: String
   additionalNote: String
-  adminNote: String
+  adminNote: HTML
 }
 
 """
@@ -8574,7 +8573,7 @@ input SystemIntakeRequestEditsInput {
   notificationRecipients: EmailNotificationRecipients
   emailFeedback: String!
   additionalInfo: String
-  adminNotes: String
+  adminNotes: HTML
 }
 
 """
@@ -40421,7 +40420,7 @@ func (ec *executionContext) _SystemIntakeNote_content(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeNote().Content(rctx, obj)
+		return obj.Content, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -40433,19 +40432,19 @@ func (ec *executionContext) _SystemIntakeNote_content(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeNote_content(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeNote",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -50347,7 +50346,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeNoteInput(ctx contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			it.Content, err = ec.unmarshalNString2string(ctx, v)
+			it.Content, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -51903,7 +51902,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ct
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
-			it.AdminNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.AdminNote, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -51971,7 +51970,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNotes"))
-			it.AdminNotes, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.AdminNotes, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52431,7 +52430,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeNoteInput(ctx contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			it.Content, err = ec.unmarshalNString2string(ctx, v)
+			it.Content, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -59768,25 +59767,12 @@ func (ec *executionContext) _SystemIntakeNote(ctx context.Context, sel ast.Selec
 
 			})
 		case "content":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeNote_content(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._SystemIntakeNote_content(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "createdAt":
 
 			out.Values[i] = ec._SystemIntakeNote_createdAt(ctx, field, obj)
@@ -63139,6 +63125,22 @@ func (ec *executionContext) unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋ
 }
 
 func (ec *executionContext) marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, sel ast.SelectionSet, v models.HTML) graphql.Marshaler {
+	return graphql.WrapContextMarshaler(ctx, v)
+}
+
+func (ec *executionContext) unmarshalNHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, v interface{}) (*models.HTML, error) {
+	var res = new(models.HTML)
+	err := res.UnmarshalGQLContext(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, sel ast.SelectionSet, v *models.HTML) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
 	return graphql.WrapContextMarshaler(ctx, v)
 }
 

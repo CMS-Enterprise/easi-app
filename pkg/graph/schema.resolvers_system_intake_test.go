@@ -133,7 +133,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "QQQQ",
 		AuthorName:     null.StringFrom("Author Name Q"),
-		Content:        null.StringFrom("a clever remark"),
+		Content:        models.HTMLPointer("a clever remark"),
 		CreatedAt:      date(2021, 5, 2),
 	})
 	s.NoError(noteErr)
@@ -142,7 +142,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "WWWW",
 		AuthorName:     null.StringFrom("Author Name W"),
-		Content:        null.StringFrom("a cleverer remark"),
+		Content:        models.HTMLPointer("a cleverer remark"),
 		CreatedAt:      date(2021, 5, 3),
 	})
 	s.NoError(noteErr)

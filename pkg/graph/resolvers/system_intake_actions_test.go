@@ -40,7 +40,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			})
 			s.NoError(err)
 			additionalInfo := "banana"
-			adminNotes := "apple"
+			adminNotes := models.HTML("apple")
 			_, err = CreateSystemIntakeActionRequestEdits(
 				ctx,
 				s.testConfigs.Store,
@@ -75,7 +75,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
 				s.NoError(err)
 				additionalInfo := "banana"
-				adminNotes := "apple"
+				adminNotes := models.HTML("apple")
 				actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 					ctx,
 					s.testConfigs.Store,
@@ -123,7 +123,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 		s.NoError(err)
 		additionalInfo := "banana"
-		adminNotes := "apple"
+		adminNotes := models.HTML("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -156,7 +156,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 		s.NoError(err)
 		additionalInfo := "banana"
-		adminNotes := "apple"
+		adminNotes := models.HTML("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -190,7 +190,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 		s.NoError(err)
 		additionalInfo := "banana"
-		adminNotes := "apple"
+		adminNotes := models.HTML("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -213,7 +213,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		allNotes, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdNote := allNotes[0]
-		s.Equal(null.StringFrom("apple"), createdNote.Content)
+		s.Equal(models.HTMLPointer("apple"), createdNote.Content)
 	})
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{

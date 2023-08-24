@@ -554,7 +554,7 @@ export interface CreateSystemIntakeInput {
  * Input data for adding a note to a system request
  */
 export interface CreateSystemIntakeNoteInput {
-  content: string;
+  content: HTML;
   authorName: string;
   intakeId: UUID;
 }
@@ -928,7 +928,7 @@ export interface UpdateSystemIntakeContractDetailsInput {
  * Input data for updating an IT governance admin note
  */
 export interface UpdateSystemIntakeNoteInput {
-  content: string;
+  content: HTML;
   isArchived: boolean;
   id: UUID;
 }

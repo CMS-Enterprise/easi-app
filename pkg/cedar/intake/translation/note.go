@@ -26,7 +26,7 @@ func (note *TranslatableNote) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := intakemodels.EASINote{
 		IntakeID:  note.SystemIntakeID.String(),
 		AuthorEUA: note.AuthorEUAID,
-		Content:   note.Content.ValueOrZero(),
+		Content:   note.Content.ValueOrEmptyString(),
 	}
 
 	blob, err := json.Marshal(&obj)

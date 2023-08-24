@@ -281,14 +281,14 @@ func convert(row []string) (*entry, error) {
 
 	if row[colGRTNotes] != "" {
 		data.Notes = append(data.Notes, models.SystemIntakeNote{
-			Content:    null.StringFrom(row[colGRTNotes]),
+			Content:    models.HTMLPointer(row[colGRTNotes]),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}
 
 	if row[colPeriod] != "" {
 		data.Notes = append(data.Notes, models.SystemIntakeNote{
-			Content:    null.StringFrom(fmt.Sprintf("Period of Performance - %s", row[colPeriod])),
+			Content:    models.HTMLPointer(fmt.Sprintf("Period of Performance - %s", row[colPeriod])),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}

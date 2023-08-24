@@ -24,7 +24,7 @@ export interface GetAdminNotesAndActions_systemIntake_notes {
   __typename: "SystemIntakeNote";
   id: UUID;
   createdAt: Time;
-  content: string;
+  content: HTML;
   editor: GetAdminNotesAndActions_systemIntake_notes_editor | null;
   modifiedBy: string | null;
   modifiedAt: Time | null;

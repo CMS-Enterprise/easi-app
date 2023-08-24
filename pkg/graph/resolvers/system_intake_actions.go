@@ -141,7 +141,7 @@ func ProgressIntake(
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				Content:        null.StringFromPtr(input.AdminNote),
+				Content:        input.AdminNote,
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
@@ -228,7 +228,7 @@ func CreateSystemIntakeActionRequestEdits(
 			SystemIntakeID: intake.ID,
 			AuthorEUAID:    adminTakingAction.EuaUserID,
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
-			Content:        null.StringFromPtr(input.AdminNotes),
+			Content:        input.AdminNotes,
 		})
 		if err != nil {
 			return nil, err

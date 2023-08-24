@@ -230,9 +230,9 @@ type CreateSystemIntakeInput struct {
 
 // Input data for adding a note to a system request
 type CreateSystemIntakeNoteInput struct {
-	Content    string    `json:"content"`
-	AuthorName string    `json:"authorName"`
-	IntakeID   uuid.UUID `json:"intakeId"`
+	Content    models.HTML `json:"content"`
+	AuthorName string      `json:"authorName"`
+	IntakeID   uuid.UUID   `json:"intakeId"`
 }
 
 // The data needed to create a TRB admin note
@@ -672,7 +672,7 @@ type SystemIntakeProgressToNewStepsInput struct {
 	Feedback               *string                             `json:"feedback"`
 	GrbRecommendations     *string                             `json:"grbRecommendations"`
 	AdditionalNote         *string                             `json:"additionalNote"`
-	AdminNote              *string                             `json:"adminNote"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
 // Input for creating a Request Edits Action in Admin Actions v2
@@ -682,7 +682,7 @@ type SystemIntakeRequestEditsInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	EmailFeedback          string                              `json:"emailFeedback"`
 	AdditionalInfo         *string                             `json:"additionalInfo"`
-	AdminNotes             *string                             `json:"adminNotes"`
+	AdminNotes             *models.HTML                        `json:"adminNotes"`
 }
 
 // The contact who made an IT governance request for a system
@@ -788,9 +788,9 @@ type UpdateSystemIntakeLinkedContractInput struct {
 
 // Input data for updating an IT governance admin note
 type UpdateSystemIntakeNoteInput struct {
-	Content    string    `json:"content"`
-	IsArchived bool      `json:"isArchived"`
-	ID         uuid.UUID `json:"id"`
+	Content    models.HTML `json:"content"`
+	IsArchived bool        `json:"isArchived"`
+	ID         uuid.UUID   `json:"id"`
 }
 
 // The payload for updating a system's IT governance request

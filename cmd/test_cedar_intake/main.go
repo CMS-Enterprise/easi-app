@@ -152,7 +152,7 @@ func makeTestNote(systemIntake models.SystemIntake) *models.SystemIntakeNote {
 		SystemIntakeID: systemIntake.ID,
 		AuthorEUAID:    "BC0V",
 		AuthorName:     null.StringFrom("Clay Benson"),
-		Content:        null.StringFrom("a clever remark"),
+		Content:        models.HTMLPointer("a clever remark"),
 		CreatedAt:      systemIntake.UpdatedAt,
 	}
 
