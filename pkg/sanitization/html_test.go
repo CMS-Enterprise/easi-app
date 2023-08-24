@@ -30,8 +30,8 @@ func TestSanitizeHTML(t *testing.T) {
 	sanitizeHTMLTests := []testSanitizeHTMLType{
 		{
 			testCase:       "Sanitize HTML will remove script tags",
-			input:          "<p><strong>Notification email</strong></p><script>This is a script that will be sanitized</script>",
-			expectedOutput: "<p><strong>Notification email</strong></p>",
+			input:          `<p><strong>Notification email</strong></p><script>This is a script that will be sanitized</script>`,
+			expectedOutput: `<p><strong>Notification email</strong></p>`,
 		},
 		{
 			testCase:       "Sanitize HTML will not modify plain text",
@@ -40,8 +40,8 @@ func TestSanitizeHTML(t *testing.T) {
 		},
 		{
 			testCase:       "Sanitize HTML will remove allow href except on A tags",
-			input:          "<a href=\"https://dev.easi.cms.gov/\" rel=\"nofollow\">Valid link</a> <p href=\"https://dev.easi.cms.gov/\" rel=\"nofollow\">InValid link</p>",
-			expectedOutput: "<a href=\"https://dev.easi.cms.gov/\" rel=\"nofollow noopener\" target=\"_blank\">Valid link</a> <p>InValid link</p>",
+			input:          `<a href="https://dev.easi.cms.gov/" rel="nofollow">Valid link</a> <p href="https://dev.easi.cms.gov/" rel="nofollow">InValid link</p>`,
+			expectedOutput: `<a href="https://dev.easi.cms.gov/" rel="nofollow noopener" target="_blank">Valid link</a> <p>InValid link</p>`,
 		},
 		{
 			testCase:       "Sanitize HTML will add security to rel attribute", //TODO, should we consider including a noreferrer value as well?
