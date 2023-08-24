@@ -565,7 +565,7 @@ export interface CreateSystemIntakeNoteInput {
 export interface CreateTRBAdminNoteInput {
   trbRequestId: UUID;
   category: TRBAdminNoteCategory;
-  noteText: string;
+  noteText: HTML;
 }
 
 /**

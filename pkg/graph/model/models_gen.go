@@ -239,7 +239,7 @@ type CreateSystemIntakeNoteInput struct {
 type CreateTRBAdminNoteInput struct {
 	TrbRequestID uuid.UUID                   `json:"trbRequestId"`
 	Category     models.TRBAdminNoteCategory `json:"category"`
-	NoteText     string                      `json:"noteText"`
+	NoteText     models.HTML                 `json:"noteText"`
 }
 
 // The input required to add a recommendation & links to a TRB advice letter

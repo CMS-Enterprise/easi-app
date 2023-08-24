@@ -19,7 +19,7 @@ export interface CreateTrbAdminNote_createTRBAdminNote {
   id: UUID;
   isArchived: boolean;
   category: TRBAdminNoteCategory;
-  noteText: string;
+  noteText: HTML;
   author: CreateTrbAdminNote_createTRBAdminNote_author;
   createdAt: Time;
 }
