@@ -32,7 +32,7 @@ func (c Client) trbReadyForConsultEmailBody(requestID uuid.UUID, requestName str
 	data := readyForConsultEmailParameters{
 		RequestName:         requestName,
 		RequesterName:       requesterName,
-		Feedback:            template.HTML(feedback), //nolint // the feedback html is sanitized earlier on.
+		Feedback:            feedback.ToTemplate(),
 		TRBRequestLink:      c.urlFromPath(requestTaskListPath),
 		TRBAdminRequestLink: c.urlFromPath(requestAdminViewPath),
 		TRBInboxAddress:     c.config.TRBEmail.String(),

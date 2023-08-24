@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"html/template"
 	"path"
 
 	"github.com/google/uuid"
@@ -16,7 +17,7 @@ import (
 type editsOnFormRequestedEmailParameters struct {
 	RequestName         string
 	RequesterName       string
-	Feedback            string
+	Feedback            template.HTML
 	TRBRequestLink      string
 	TRBAdminRequestLink string
 	TRBInboxAddress     string
@@ -30,7 +31,7 @@ func (c Client) trbEditsOnFormRequestedEmailBody(requestID uuid.UUID, requestNam
 	data := editsOnFormRequestedEmailParameters{
 		RequestName:         requestName,
 		RequesterName:       requesterName,
-		Feedback:            string(feedback), // TODO update to take a template
+		Feedback:            feedback.ToTemplate(),
 		TRBRequestLink:      c.urlFromPath(requestTaskListPath),
 		TRBAdminRequestLink: c.urlFromPath(requestAdminViewPath),
 		TRBInboxAddress:     c.config.TRBEmail.String(),

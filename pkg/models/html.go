@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html/template"
 	"io"
 
 	"github.com/cmsgov/easi-app/pkg/sanitization"
@@ -13,9 +14,12 @@ import (
 // HTML represents html code. It is sanitized to only allow specific tags
 type HTML string
 
-// HTMLMarshaler is a custom marshaller for HTML type
-type HTMLMarshaler struct {
-	HTML HTML
+// TODO: if we don't need to use context, we might consider using template.HTML, this method is more explicit though
+
+// ToTemplate converts the HTML type to a template.HTML struct
+func (html HTML) ToTemplate() template.HTML {
+	// TODO: should we do another sanitization pass at this point time to be safe?
+	return template.HTML(html) //nolint //the html is sanitized when it is Unmarshaled
 }
 
 // UnmarshalGQLContext unmarshals the data from graphql to the HTML type
