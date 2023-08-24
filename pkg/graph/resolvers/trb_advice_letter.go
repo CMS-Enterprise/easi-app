@@ -116,7 +116,15 @@ func SendTRBAdviceLetter(ctx context.Context,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+	copyTRBMailbox bool,
+	notifyEUAIDs []string,
 ) (*models.TRBAdviceLetter, error) {
+	// Fetch user info for each EUA ID we want to notify
+	notifyUserInfos, err := fetchUserInfos(ctx, notifyEUAIDs)
+	if err != nil {
+		return nil, err
+	}
+
 	letter, err := store.UpdateTRBAdviceLetterStatus(ctx, id, models.TRBAdviceLetterStatusCompleted)
 	if err != nil {
 		return nil, err
@@ -143,14 +151,6 @@ func SendTRBAdviceLetter(ctx context.Context,
 		return errForm
 	})
 
-	// Query the TRB request attendees
-	var attendees []*models.TRBRequestAttendee
-	var errAttendees error
-	errGroup.Go(func() error {
-		attendees, errAttendees = store.GetTRBRequestAttendeesByTRBRequestID(ctx, trbID)
-		return errAttendees
-	})
-
 	if errG := errGroup.Wait(); errG != nil {
 		return nil, errG
 	}
@@ -160,21 +160,10 @@ func SendTRBAdviceLetter(ctx context.Context,
 		return nil, err
 	}
 
-	recipientEuas := make([]string, 0, len(attendees))
-	for _, attendee := range attendees {
-		recipientEuas = append(recipientEuas, attendee.EUAUserID)
+	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos))
+	for _, recipientInfo := range notifyUserInfos {
+		recipientEmails = append(recipientEmails, recipientInfo.Email)
 	}
-
-	attendeeInfos, err := fetchUserInfos(ctx, recipientEuas)
-	if err != nil {
-		return nil, err
-	}
-
-	recipientEmails := make([]models.EmailAddress, 0, len(attendees)+1)
-	for _, attendeeInfo := range attendeeInfos {
-		recipientEmails = append(recipientEmails, attendeeInfo.Email)
-	}
-	recipientEmails = append(recipientEmails, requester.Email)
 
 	var component string
 	if form.Component != nil {
@@ -189,6 +178,7 @@ func SendTRBAdviceLetter(ctx context.Context,
 		Component:      component,
 		SubmissionDate: letter.ModifiedAt,
 		ConsultDate:    trb.ConsultMeetingTime,
+		CopyTRBMailbox: copyTRBMailbox,
 		Recipients:     recipientEmails,
 	}
 
