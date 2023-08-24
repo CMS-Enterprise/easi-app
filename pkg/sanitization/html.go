@@ -24,18 +24,25 @@ func getHTMLSanitizerPolicy() *bluemonday.Policy {
 
 	// once ensures that a policy is instantiated once. Otherwise, it is just retrieved.
 	once.Do(func() {
-		policy := bluemonday.NewPolicy()
-		// NOTE make sure to update the allowed policy on the frontend when it is updated here as well
-		// This is set up in src/components/RichTextEditor/index.tsx as ALLOWED_TAGS in function sanitizeHtmlOnContentChange()
-		policy.AllowElements("p", "br", "strong", "em", "ol", "ul", "li", "a")
-
-		// Rules for links
-		policy.AllowStandardURLs()
-		policy.AllowAttrs("href").OnElements("a")
-		policy.AddTargetBlankToFullyQualifiedLinks(true)
-
+		policy := createHTMLPolicy()
 		htmlSanitizerPolicy = policy
 	})
 
 	return htmlSanitizerPolicy
+}
+
+// createHTMLPolicy instantiates the standard HTML sanitization policy for the EASI application
+func createHTMLPolicy() *bluemonday.Policy {
+
+	policy := bluemonday.NewPolicy()
+	// NOTE make sure to update the allowed policy on the frontend when it is updated here as well
+	// This is set up in src/components/RichTextEditor/index.tsx as ALLOWED_TAGS in function sanitizeHtmlOnContentChange()
+	policy.AllowElements("p", "br", "strong", "em", "ol", "ul", "li", "a")
+
+	// Rules for links
+	policy.AllowStandardURLs()
+	policy.AllowAttrs("href").OnElements("a")
+	policy.AddTargetBlankToFullyQualifiedLinks(true)
+	return policy
+
 }
