@@ -7,15 +7,12 @@ import NewSystem from './ITGovernance/NewSystem';
 import PrepareForGRB from './ITGovernance/PrepareForGRB';
 import PrepareForGRT from './ITGovernance/PrepareForGRT';
 import SampleBusinessCase from './ITGovernance/SampleBusinessCase';
-import StepsInvolved from './Section508/StepsInvolved';
-import TestingTemplates from './Section508/TestingTemplate';
 import ReportAProblem from './SendFeedback/ReportAProblem';
 import PrepareTrbConsultMeeting from './TechnicalReviewBoard/PrepareTrbConsultMeeting';
 import StepsInProcess from './TechnicalReviewBoard/StepsInProcess';
 import AllHelp from './All';
 import HelpHome from './HelpHome';
 import ITGovernance from './ITGovernance';
-import Section508 from './Section508';
 import SendFeedback from './SendFeedback';
 import TechnicalReviewBoard from './TechnicalReviewBoard';
 
@@ -45,17 +42,6 @@ const Help = () => {
       <Route
         path="/help/it-governance/sample-business-case"
         render={() => <SampleBusinessCase />}
-      />
-
-      {/* Section 508 Help Routes */}
-      <Route path="/help/section-508" exact render={() => <Section508 />} />
-      <Route
-        path="/help/section-508/steps-involved"
-        render={() => <StepsInvolved />}
-      />
-      <Route
-        path="/help/section-508/templates-for-508-testing"
-        render={() => <TestingTemplates />}
       />
 
       {/* TRB */}
