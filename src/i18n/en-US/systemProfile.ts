@@ -264,12 +264,12 @@ const systemProfile = {
       viewInfo: 'View sub-system information'
     },
     section508: {
-      section508RequestName: '508 request name',
+      section508RequestName: '508 project title',
       viewMoreRequestInformation: 'View more 508 request information',
       openRequests: 'Open 508 testing requests',
       closedRequests: 'Closed testing requests',
       testingDocuments: '508 testing documents',
-      requestName: 'Request name',
+      requestName: 'Project title',
       currentStatus: 'Current status',
       statusChanged: 'Request status changed',
       test: 'test',

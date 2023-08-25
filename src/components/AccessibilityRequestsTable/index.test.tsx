@@ -66,7 +66,7 @@ describe('AccessibilityRequestsTable', () => {
   });
 
   it('contains all the expected columns', () => {
-    expect(wrapper.find('th').at(0).contains('Request Name')).toBe(true);
+    expect(wrapper.find('th').at(0).contains('Project Title')).toBe(true);
     expect(wrapper.find('th').at(1).contains('Submission Date')).toBe(true);
     expect(wrapper.find('th').at(2).contains('Business Owner')).toBe(true);
     expect(wrapper.find('th').at(3).contains('Test Date')).toBe(true);

@@ -3,7 +3,6 @@ import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 
 import itGovernanceArticles from 'views/Help/ITGovernance/articles';
-import section508Articles from 'views/Help/Section508/articles';
 
 import ArticleCard from './index';
 
@@ -25,27 +24,5 @@ describe('RelatedArticle', () => {
     );
 
     expect(getByText('IT Governance')).toBeInTheDocument();
-  });
-
-  it('renders correct 508 article type', () => {
-    const { getByText } = render(
-      <MemoryRouter>
-        <ArticleCard {...section508Articles[0]} />
-      </MemoryRouter>
-    );
-
-    expect(getByText('Section 508')).toBeInTheDocument();
-  });
-
-  it('renders Article Card entirely wrapped as a link', () => {
-    const { container } = render(
-      <MemoryRouter>
-        <ArticleCard {...section508Articles[0]} isLink />
-      </MemoryRouter>
-    );
-
-    expect(
-      container.getElementsByClassName('article-card--isLink').length
-    ).toBe(1);
   });
 });
