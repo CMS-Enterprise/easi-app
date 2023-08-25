@@ -306,8 +306,8 @@ func NewUpdateLifecycleFields(
 				updated.LifecycleExpiresAt,
 				updated.LifecycleScope.String,
 				updated.LifecycleCostBaseline.String,
-				updated.DecisionNextSteps.String,
-				action.Feedback.String,
+				updated.DecisionNextSteps.ValueOrEmptyString(), //TODO: EMAIL
+				action.Feedback.ValueOrEmptyString(),           //TODO: EMAIL
 			)
 			if err != nil {
 				return nil, err
@@ -367,9 +367,9 @@ func NewUpdateRejectionFields(
 				existing.ID,
 				existing.ProjectName.String,
 				existing.Requester,
-				existing.RejectionReason.String,
-				existing.DecisionNextSteps.String,
-				action.Feedback.String,
+				existing.RejectionReason.ValueOrEmptyString(), // TODO: EMAIL
+				existing.DecisionNextSteps.ValueOrEmptyString(),
+				action.Feedback.ValueOrEmptyString(),
 			)
 			if err != nil {
 				return nil, err
@@ -418,7 +418,7 @@ func NewProvideGRTFeedback(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
-				action.Feedback.String,
+				action.Feedback.ValueOrEmptyString(),
 			)
 			if err != nil {
 				return nil, err

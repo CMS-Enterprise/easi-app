@@ -315,7 +315,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	lifecycleID := null.StringFrom("010010")
 	today := time.Now()
 	expiresAt := &today
-	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
+	nextSteps := models.HTMLPointer(fmt.Sprintf("next %s", today))
 	scope := null.StringFrom(fmt.Sprintf("scope %s", today))
 
 	input := &models.SystemIntake{
@@ -327,7 +327,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 	action := &models.Action{
 		IntakeID: &input.ID,
-		Feedback: null.StringFrom("Feedback"),
+		Feedback: models.HTMLPointer("Feedback"),
 	}
 	euaID := testhelpers.RandomEUAID()
 
@@ -345,7 +345,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 		if !i.LifecycleExpiresAt.Equal(today) {
 			return nil, errors.New("incorrect date")
 		}
-		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
+		if i.DecisionNextSteps != input.DecisionNextSteps {
 			return nil, errors.New("incorrect next")
 		}
 		if !i.LifecycleScope.Equal(input.LifecycleScope) {
@@ -464,8 +464,8 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 
 func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	today := time.Now()
-	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
-	reason := null.StringFrom(fmt.Sprintf("reason %s", today))
+	nextSteps := models.HTMLPointer(fmt.Sprintf("next %s", today))
+	reason := models.HTMLPointer(fmt.Sprintf("reason %s", today))
 
 	input := &models.SystemIntake{
 		ID:                uuid.New(),
@@ -474,7 +474,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	}
 	action := &models.Action{
 		IntakeID: &input.ID,
-		Feedback: null.StringFrom("Feedback"),
+		Feedback: models.HTMLPointer("Feedback"),
 	}
 	euaID := testhelpers.RandomEUAID()
 
@@ -486,7 +486,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 		}, nil
 	}
 	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
-		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
+		if i.DecisionNextSteps != input.DecisionNextSteps {
 			return nil, errors.New("incorrect next")
 		}
 		if !i.LifecycleScope.Equal(input.LifecycleScope) {

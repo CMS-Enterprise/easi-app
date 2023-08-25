@@ -31,8 +31,8 @@ type AccessibilityRequestsConnection struct {
 // Feedback intended for a business owner before they proceed to writing a
 // business case for a system request
 type AddGRTFeedbackInput struct {
-	EmailBody              string                              `json:"emailBody"`
-	Feedback               string                              `json:"feedback"`
+	EmailBody              models.HTML                         `json:"emailBody"`
+	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeID"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
@@ -45,7 +45,7 @@ type AddGRTFeedbackPayload struct {
 
 // Input to add feedback to a system request
 type BasicActionInput struct {
-	Feedback               string                              `json:"feedback"`
+	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
@@ -184,7 +184,7 @@ type CreateCedarSystemBookmarkPayload struct {
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	ID                     uuid.UUID                           `json:"id"`
 	ExpirationDate         *time.Time                          `json:"expirationDate"`
-	NextSteps              *string                             `json:"nextSteps"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
 	Scope                  string                              `json:"scope"`
 	CostBaseline           *string                             `json:"costBaseline"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
@@ -380,10 +380,10 @@ type GeneratePresignedUploadURLPayload struct {
 // request
 type IssueLifecycleIDInput struct {
 	ExpiresAt              time.Time                           `json:"expiresAt"`
-	Feedback               string                              `json:"feedback"`
+	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
 	Lcid                   *string                             `json:"lcid"`
-	NextSteps              *string                             `json:"nextSteps"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
 	Scope                  string                              `json:"scope"`
 	CostBaseline           *string                             `json:"costBaseline"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
@@ -403,10 +403,10 @@ type LaunchDarklySettings struct {
 
 // Input data for rejection of a system's IT governance request
 type RejectIntakeInput struct {
-	Feedback               string                              `json:"feedback"`
+	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
-	NextSteps              *string                             `json:"nextSteps"`
-	Reason                 string                              `json:"reason"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
+	Reason                 models.HTML                         `json:"reason"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
@@ -497,7 +497,7 @@ type SystemIntakeAction struct {
 	SystemIntake         *models.SystemIntake              `json:"systemIntake"`
 	Type                 SystemIntakeActionType            `json:"type"`
 	Actor                *SystemIntakeActionActor          `json:"actor"`
-	Feedback             *string                           `json:"feedback"`
+	Feedback             *models.HTML                      `json:"feedback"`
 	LcidExpirationChange *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange"`
 	CreatedAt            time.Time                         `json:"createdAt"`
 }
@@ -669,9 +669,9 @@ type SystemIntakeProgressToNewStepsInput struct {
 	NewStep                SystemIntakeStepToProgressTo        `json:"newStep"`
 	MeetingDate            *time.Time                          `json:"meetingDate"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	Feedback               *string                             `json:"feedback"`
-	GrbRecommendations     *string                             `json:"grbRecommendations"`
-	AdditionalNote         *string                             `json:"additionalNote"`
+	Feedback               *models.HTML                        `json:"feedback"`
+	GrbRecommendations     *models.HTML                        `json:"grbRecommendations"`
+	AdditionalNote         *models.HTML                        `json:"additionalNote"`
 	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
@@ -680,8 +680,8 @@ type SystemIntakeRequestEditsInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
 	IntakeFormStep         SystemIntakeFormStep                `json:"intakeFormStep"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	EmailFeedback          string                              `json:"emailFeedback"`
-	AdditionalInfo         *string                             `json:"additionalInfo"`
+	EmailFeedback          models.HTML                         `json:"emailFeedback"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
 	AdminNotes             *models.HTML                        `json:"adminNotes"`
 }
 

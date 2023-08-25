@@ -64,8 +64,8 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		RequesterEmailAddress:       si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                 si.LifecycleID.Ptr(),
 		LifecycleScope:              si.LifecycleScope.Ptr(),
-		DecisionNextSteps:           si.DecisionNextSteps.Ptr(),
-		RejectionReason:             si.RejectionReason.Ptr(),
+		DecisionNextSteps:           si.DecisionNextSteps.StringPointer(),
+		RejectionReason:             si.RejectionReason.StringPointer(),
 		AdminLead:                   si.AdminLead.Ptr(),
 
 		ExistingFunding:       si.ExistingFunding.Ptr(),

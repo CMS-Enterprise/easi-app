@@ -230,7 +230,7 @@ func main() {
 		"USR1",
 		intakeID,
 		"intake request feedback",
-		"additional notes on request form",
+		models.HTMLPointer("additional notes on request form"),
 		"administrative note about request form",
 		model.SystemIntakeFormStepInitialRequestForm,
 	)
@@ -243,7 +243,7 @@ func main() {
 		"USR1",
 		intakeID,
 		"draft biz case feedback",
-		"additional notes on draft biz case",
+		models.HTMLPointer("additional notes on draft biz case"),
 		"administrative note about draft biz case",
 		model.SystemIntakeFormStepDraftBusinessCase,
 	)
@@ -256,7 +256,7 @@ func main() {
 		"USR1",
 		intakeID,
 		"final biz case feedback",
-		"additional notes on final biz case",
+		models.HTMLPointer("additional notes on final biz case"),
 		"administrative note about final biz case",
 		model.SystemIntakeFormStepFinalBusinessCase,
 	)
@@ -338,7 +338,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		ActorName:      "Actor Name",
 		ActorEmail:     "actor@example.com",
 		ActorEUAUserID: "ACT2",
-		Feedback:       null.StringFrom("This business case needs feedback"),
+		Feedback:       models.HTMLPointer("This business case needs feedback"),
 	}))
 
 	must(store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
@@ -360,9 +360,9 @@ func makeSystemIntakeWithProgressToNextStep(
 	store *storage.Store,
 	creatingUser string,
 	intakeID uuid.UUID,
-	feedbackText string,
-	grbRecommendations string,
-	additionalInfo string,
+	feedbackText models.HTML,
+	grbRecommendations models.HTML,
+	additionalInfo models.HTML,
 	adminNote models.HTML,
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
@@ -392,8 +392,8 @@ func makeSystemIntakeWithEditsRequested(
 	store *storage.Store,
 	creatingUser string,
 	intakeID uuid.UUID,
-	feedbackText string,
-	additionalInfo string,
+	feedbackText models.HTML,
+	additionalInfo *models.HTML,
 	adminNote models.HTML,
 	targetedForm model.SystemIntakeFormStep,
 ) {
@@ -414,7 +414,7 @@ func makeSystemIntakeWithEditsRequested(
 			ShouldNotifyITInvestment: false,
 		},
 		EmailFeedback:  feedbackText,
-		AdditionalInfo: &additionalInfo,
+		AdditionalInfo: additionalInfo,
 		AdminNotes:     &adminNote,
 	}
 	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, mock.FetchUserInfoMock, *input))

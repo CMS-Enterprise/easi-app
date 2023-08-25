@@ -306,7 +306,7 @@ func NewTakeActionUpdateStatus(
 			}
 		}
 
-		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+		err = sendReviewEmail(ctx, action.Feedback.ValueOrEmptyString(), requesterInfo.Email, intake.ID) //TODO: EMAIL
 		if err != nil {
 			return err
 		}
@@ -366,7 +366,7 @@ func NewCreateActionUpdateStatus(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
-				action.Feedback.String,
+				action.Feedback.ValueOrEmptyString(), //TODO: EMAIL
 			)
 			if err != nil {
 				return nil, err
@@ -385,13 +385,13 @@ func NewCreateActionExtendLifecycleID(
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	sendExtendLCIDEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
-) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
+) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *models.HTML, scope string, costBaseline *string, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
 		id uuid.UUID,
 		expirationDate *time.Time,
-		nextSteps *string,
+		nextSteps *models.HTML,
 		scope string,
 		costBaseline *string,
 		recipients *models.EmailNotificationRecipients,
@@ -407,8 +407,8 @@ func NewCreateActionExtendLifecycleID(
 		action.LCIDExpirationChangeNewScope = null.StringFrom(scope)
 		action.LCIDExpirationChangePreviousScope = null.StringFrom(intake.LifecycleScope.String)
 
-		action.LCIDExpirationChangeNewNextSteps = null.StringFromPtr(nextSteps)
-		action.LCIDExpirationChangePreviousNextSteps = null.StringFrom(intake.DecisionNextSteps.String)
+		action.LCIDExpirationChangeNewNextSteps = null.StringFromPtr(nextSteps.StringPointer())
+		action.LCIDExpirationChangePreviousNextSteps = null.StringFrom(intake.DecisionNextSteps.ValueOrEmptyString())
 
 		action.LCIDExpirationChangeNewCostBaseline = null.StringFromPtr(costBaseline)
 		action.LCIDExpirationChangePreviousCostBaseline = null.StringFrom(intake.LifecycleCostBaseline.String)
@@ -421,7 +421,7 @@ func NewCreateActionExtendLifecycleID(
 		intake.LifecycleExpiresAt = expirationDate
 		intake.Status = models.SystemIntakeStatusLCIDISSUED
 		intake.LifecycleScope = null.StringFrom(scope)
-		intake.DecisionNextSteps = null.StringFromPtr(nextSteps)
+		intake.DecisionNextSteps = nextSteps
 		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
 
 		_, updateErr := updateSystemIntake(ctx, intake)
@@ -438,7 +438,7 @@ func NewCreateActionExtendLifecycleID(
 				intake.Requester,
 				expirationDate,
 				intake.LifecycleScope.ValueOrZero(),
-				intake.DecisionNextSteps.ValueOrZero(),
+				intake.DecisionNextSteps.ValueOrEmptyString(),
 				intake.LifecycleCostBaseline.ValueOrZero(),
 			)
 			if err != nil {

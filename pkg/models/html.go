@@ -30,6 +30,11 @@ func (html *HTML) ValueOrEmptyString() string {
 	return ""
 }
 
+// StringPointer casts an HTML pointer to a string pointer
+func (html *HTML) StringPointer() *string {
+	return (*string)(html)
+}
+
 // UnmarshalGQLContext unmarshals the data from graphql to the HTML type
 func (html *HTML) UnmarshalGQLContext(ctx context.Context, v interface{}) error {
 

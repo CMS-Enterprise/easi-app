@@ -481,7 +481,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 		ActorName:      "Second Actor",
 		ActorEmail:     "second.actor@example.com",
 		ActorEUAUserID: "ACT2",
-		Feedback:       null.StringFrom("feedback for action two"),
+		Feedback:       models.HTMLPointer("feedback for action two"),
 		CreatedAt:      date(2021, 4, 2),
 	})
 	s.NoError(action2Err)
@@ -1846,7 +1846,7 @@ func (s *GraphQLTestSuite) TestExtendLifecycleId() {
 	intake.LifecycleID = null.StringFrom("123456")
 	intake.LifecycleExpiresAt = date(2021, 12, 1)
 	intake.LifecycleScope = null.StringFrom("Original Scope")
-	intake.DecisionNextSteps = null.StringFrom("Original Next Steps")
+	intake.DecisionNextSteps = models.HTMLPointer("Original Next Steps")
 	intake.LifecycleCostBaseline = null.StringFrom("Original Cost Baseline")
 
 	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)

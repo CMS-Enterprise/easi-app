@@ -447,8 +447,8 @@ export enum TestDateTestType {
  * business case for a system request
  */
 export interface AddGRTFeedbackInput {
-  emailBody: string;
-  feedback: string;
+  emailBody: HTML;
+  feedback: HTML;
   intakeID: UUID;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
@@ -457,7 +457,7 @@ export interface AddGRTFeedbackInput {
  * Input to add feedback to a system request
  */
 export interface BasicActionInput {
-  feedback: string;
+  feedback: HTML;
   intakeId: UUID;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
@@ -516,7 +516,7 @@ export interface CreateCedarSystemBookmarkInput {
 export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID;
   expirationDate?: Time | null;
-  nextSteps?: string | null;
+  nextSteps?: HTML | null;
   scope: string;
   costBaseline?: string | null;
   notificationRecipients?: EmailNotificationRecipients | null;
@@ -674,10 +674,10 @@ export interface GeneratePresignedUploadURLInput {
  */
 export interface IssueLifecycleIdInput {
   expiresAt: Time;
-  feedback: string;
+  feedback: HTML;
   intakeId: UUID;
   lcid?: string | null;
-  nextSteps?: string | null;
+  nextSteps?: HTML | null;
   scope: string;
   costBaseline?: string | null;
   notificationRecipients?: EmailNotificationRecipients | null;
@@ -687,10 +687,10 @@ export interface IssueLifecycleIdInput {
  * Input data for rejection of a system's IT governance request
  */
 export interface RejectIntakeInput {
-  feedback: string;
+  feedback: HTML;
   intakeId: UUID;
-  nextSteps?: string | null;
-  reason: string;
+  nextSteps?: HTML | null;
+  reason: HTML;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 

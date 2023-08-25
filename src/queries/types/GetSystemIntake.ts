@@ -53,7 +53,7 @@ export interface GetSystemIntake_systemIntake_annualSpending {
 
 export interface GetSystemIntake_systemIntake_grtFeedbacks {
   __typename: "GRTFeedback";
-  feedback: string | null;
+  feedback: HTML | null;
   feedbackType: GRTFeedbackType | null;
   createdAt: Time;
 }
@@ -131,7 +131,7 @@ export interface GetSystemIntake_systemIntake {
   costs: GetSystemIntake_systemIntake_costs | null;
   annualSpending: GetSystemIntake_systemIntake_annualSpending | null;
   currentStage: string | null;
-  decisionNextSteps: string | null;
+  decisionNextSteps: HTML | null;
   grbDate: Time | null;
   grtDate: Time | null;
   grtFeedbacks: GetSystemIntake_systemIntake_grtFeedbacks[];
@@ -145,7 +145,7 @@ export interface GetSystemIntake_systemIntake {
   lcidCostBaseline: string | null;
   needsEaSupport: boolean | null;
   productManager: GetSystemIntake_systemIntake_productManager;
-  rejectionReason: string | null;
+  rejectionReason: HTML | null;
   requester: GetSystemIntake_systemIntake_requester;
   requestName: string | null;
   requestType: SystemIntakeRequestType;

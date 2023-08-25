@@ -158,8 +158,8 @@ type SystemIntake struct {
 	LifecycleScope              null.String                  `json:"lcidScope" db:"lcid_scope"`
 	LifecycleCostBaseline       null.String                  `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
 	LifecycleExpirationAlertTS  *time.Time                   `json:"lcidExpirationAlertTS" db:"lcid_expiration_alert_ts"`
-	DecisionNextSteps           null.String                  `json:"decisionNextSteps" db:"decision_next_steps"`
-	RejectionReason             null.String                  `json:"rejectionReason" db:"rejection_reason"`
+	DecisionNextSteps           *HTML                        `json:"decisionNextSteps" db:"decision_next_steps"` //TODO: verify should this be HTML?
+	RejectionReason             *HTML                        `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String                  `json:"adminLead" db:"admin_lead"`
 	LastAdminNoteContent        null.String                  `json:"lastAdminNoteContent" db:"last_admin_note_content"`      // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
 	LastAdminNoteCreatedAt      *time.Time                   `json:"lastAdminNoteCreatedAt" db:"last_admin_note_created_at"` // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB

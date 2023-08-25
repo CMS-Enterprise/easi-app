@@ -76,7 +76,7 @@ func ProgressIntake(
 			Step:           &stepForAction,
 		}
 		if input.AdditionalNote != nil {
-			action.Feedback = null.StringFromPtr(input.AdditionalNote)
+			action.Feedback = input.AdditionalNote
 		}
 
 		_, errCreatingAction = store.CreateAction(ctx, &action)
@@ -206,7 +206,7 @@ func CreateSystemIntakeActionRequestEdits(
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
-		Feedback:       null.StringFrom(*input.AdditionalInfo),
+		Feedback:       input.AdditionalInfo,
 		Step:           &intake.Step,
 	})
 	if err != nil {

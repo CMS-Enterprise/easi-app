@@ -641,7 +641,7 @@ func (s *ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
-		action := &models.Action{Feedback: null.StringFrom("feedback")}
+		action := &models.Action{Feedback: models.HTMLPointer("feedback")}
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.NoError(err)
@@ -794,7 +794,7 @@ func (s *ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		)
 		bizCaseID := uuid.New()
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED, BusinessCaseID: &bizCaseID}
-		action := &models.Action{Feedback: null.StringFrom("feedback")}
+		action := &models.Action{Feedback: models.HTMLPointer("feedback")}
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.Error(err)
@@ -872,7 +872,7 @@ func (s *ServicesTestSuite) TestNewSaveAction() {
 			err := tc.fn(context.Background(), &models.Action{
 				IntakeID:   &intakeID,
 				ActionType: models.ActionTypeSUBMITINTAKE,
-				Feedback:   null.String{},
+				Feedback:   nil,
 			})
 			if tc.shouldError {
 				s.Error(err)

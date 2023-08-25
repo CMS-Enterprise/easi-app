@@ -35,7 +35,7 @@ type ResolverService struct {
 	CreateTestDate                func(context.Context, *models.TestDate) (*models.TestDate, error)
 	AddGRTFeedback                func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus, *models.EmailNotificationRecipients) (*models.GRTFeedback, error)
 	CreateActionUpdateStatus      func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
-	CreateActionExtendLifecycleID func(context.Context, *models.Action, uuid.UUID, *time.Time, *string, string, *string, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
+	CreateActionExtendLifecycleID func(context.Context, *models.Action, uuid.UUID, *time.Time, *models.HTML, string, *string, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	IssueLifecycleID              func(context.Context, *models.SystemIntake, *models.Action, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	RejectIntake                  func(context.Context, *models.SystemIntake, *models.Action, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
 	FetchUserInfo                 func(context.Context, string) (*models.UserInfo, error)

@@ -81,7 +81,7 @@ func checkForLCIDExpiration(
 		lcidExpirationDate *time.Time,
 		scope string,
 		lifecycleCostBaseline string,
-		nextSteps string,
+		nextSteps string, //TODO: EMAIL should these take HTML?
 	) error,
 ) error {
 
@@ -141,7 +141,7 @@ func checkForLCIDExpiration(
 					currIntake.LifecycleExpiresAt,
 					currIntake.LifecycleScope.String,
 					currIntake.LifecycleCostBaseline.String,
-					currIntake.DecisionNextSteps.String,
+					currIntake.DecisionNextSteps.ValueOrEmptyString(),
 				)
 
 				if err != nil {
@@ -196,7 +196,7 @@ func checkForLCIDExpiration(
 					currIntake.LifecycleExpiresAt,
 					currIntake.LifecycleScope.String,
 					currIntake.LifecycleCostBaseline.String,
-					currIntake.DecisionNextSteps.String,
+					currIntake.DecisionNextSteps.ValueOrEmptyString(),
 				)
 
 				if err != nil {

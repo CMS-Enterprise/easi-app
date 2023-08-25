@@ -13,7 +13,7 @@ export interface CreateSystemIntakeActionExtendLifecycleId_createSystemIntakeAct
   __typename: "SystemIntake";
   id: UUID;
   lcidScope: string | null;
-  decisionNextSteps: string | null;
+  decisionNextSteps: HTML | null;
   lcidExpiresAt: Time | null;
   lcidCostBaseline: string | null;
 }

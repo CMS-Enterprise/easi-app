@@ -54,7 +54,7 @@ export interface GetAdminNotesAndActions_systemIntake_actions {
   __typename: "SystemIntakeAction";
   id: UUID;
   createdAt: Time;
-  feedback: string | null;
+  feedback: HTML | null;
   type: SystemIntakeActionType;
   lcidExpirationChange: GetAdminNotesAndActions_systemIntake_actions_lcidExpirationChange | null;
   actor: GetAdminNotesAndActions_systemIntake_actions_actor;

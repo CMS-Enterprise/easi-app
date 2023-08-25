@@ -62,7 +62,7 @@ func (c Client) issueLCIDBody(
 }
 
 // SendIssueLCIDEmails sends an email to multiple recipients (possibly including the IT Governance and IT Investment teams) for issuing an LCID
-func (c Client) SendIssueLCIDEmails(
+func (c Client) SendIssueLCIDEmails( //TODO: Emails update to take html instead of string for rich text
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
