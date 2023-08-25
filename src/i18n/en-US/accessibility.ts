@@ -40,7 +40,7 @@ const accessibility = {
     id: 'request-table',
     title: 'Request Table',
     header: {
-      requestName: 'Request Name',
+      requestName: 'Project Title',
       submissionDate: 'Submission Date',
       businessOwner: 'Business Owner',
       testDate: 'Test Date',
