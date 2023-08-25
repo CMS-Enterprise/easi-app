@@ -490,7 +490,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 		}
 
 		if shouldSend {
-			_, err = resolvers.SendTRBAdviceLetter(ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock)
+			_, err = resolvers.SendTRBAdviceLetter(ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, false, nil)
 			if err != nil {
 				return nil, err
 			}
