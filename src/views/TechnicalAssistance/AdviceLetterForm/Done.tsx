@@ -85,7 +85,7 @@ const Done = () => {
       <GridContainer className="margin-top-4">
         <dl className="grid-row easi-dl">
           <Grid col={6}>
-            <dt>Request Name</dt>
+            <dt>Project title</dt>
             <dd>{id}</dd>
           </Grid>
           <Grid col={6}>

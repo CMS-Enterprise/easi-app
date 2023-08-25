@@ -94,7 +94,7 @@ const home = {
     },
     heading: 'My requests',
     headers: {
-      name: 'Request name',
+      name: 'Project title',
       type: 'Governance',
       submittedAt: 'Submission date',
       status: 'Status',
