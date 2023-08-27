@@ -1043,6 +1043,8 @@ type SystemIntake {
   decisionState: SystemIntakeDecisionState!
   statusRequester: SystemIntakeStatusRequester!
   statusAdmin: SystemIntakeStatusAdmin!
+  isLCIDRetired: Boolean!
+  lcidStatus: SystemIntakeLCIDStatus
 }
 
 """
@@ -1488,6 +1490,18 @@ input SystemIntakeRequestEditsInput {
   emailFeedback: String!
   additionalInfo: String
   adminNotes: String
+}
+
+"""
+Input for expiring an intake's LCID in IT Gov v2
+"""
+input SystemIntakeExpireLCIDInput {
+  systemIntakeID: UUID!
+  reason: String! # TODO - is this the right name for this field?
+  nextSteps: String # TODO - is this the right name for this field?
+  notificationRecipients: EmailNotificationRecipients
+  additionalNote: String
+  adminNote: String
 }
 
 """
@@ -2323,6 +2337,9 @@ type Mutation {
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionExpireLCID(
+    input: SystemIntakeExpireLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -2837,4 +2854,13 @@ enum SystemIntakeStatusRequester {
   NOT_GOVERNANCE
   NOT_APPROVED
   CLOSED
+}
+
+"""
+The possible statuses that an issued LCID can be in
+"""
+enum SystemIntakeLCIDStatus {
+  ISSUED
+  EXPIRED
+  RETIRED
 }
