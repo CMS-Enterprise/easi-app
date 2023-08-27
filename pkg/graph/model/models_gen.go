@@ -601,7 +601,7 @@ type SystemIntakeExpireLCIDInput struct {
 	Reason                 string                              `json:"reason"`
 	NextSteps              *string                             `json:"nextSteps"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdditionalNote         *string                             `json:"additionalNote"`
+	AdditionalInfo         *string                             `json:"additionalInfo"`
 	AdminNote              *string                             `json:"adminNote"`
 }
 

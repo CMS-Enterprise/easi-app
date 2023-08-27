@@ -8624,7 +8624,7 @@ input SystemIntakeExpireLCIDInput {
   reason: String! # TODO - is this the right name for this field?
   nextSteps: String # TODO - is this the right name for this field?
   notificationRecipients: EmailNotificationRecipients
-  additionalNote: String
+  additionalInfo: String
   adminNote: String
 }
 
@@ -51930,7 +51930,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeExpireLCIDInput(ctx contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "reason", "nextSteps", "notificationRecipients", "additionalNote", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "reason", "nextSteps", "notificationRecipients", "additionalInfo", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -51969,11 +51969,11 @@ func (ec *executionContext) unmarshalInputSystemIntakeExpireLCIDInput(ctx contex
 			if err != nil {
 				return it, err
 			}
-		case "additionalNote":
+		case "additionalInfo":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalNote"))
-			it.AdditionalNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
+			it.AdditionalInfo, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}

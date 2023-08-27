@@ -1503,7 +1503,7 @@ input SystemIntakeExpireLCIDInput {
   reason: String! # TODO - is this the right name for this field?
   nextSteps: String # TODO - is this the right name for this field?
   notificationRecipients: EmailNotificationRecipients
-  additionalNote: String
+  additionalInfo: String
   adminNote: String
 }
 

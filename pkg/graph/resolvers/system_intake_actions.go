@@ -236,3 +236,100 @@ func CreateSystemIntakeActionRequestEdits(
 	}
 	return intake, nil
 }
+
+// ExpireLCID handles an Expire LCID action on an intake as part of Admin Actions v2
+func ExpireLCID(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeExpireLCIDInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO - validation?
+
+	// TODO - update intake
+
+	// TODO - change expiration date on intake
+	// TODO - where to store Reason, if at all?
+	// TODO - where to store NextSteps, if at all?
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	// All the different database calls aren't in a single atomic transaction;
+	// in the case of a system failure, some data from the action might be saved, but not all.
+	// As of this function's initial implementation, we're accepting that risk.
+	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional info for email, if any)
+	errGroup.Go(func() error {
+		action := models.Action{
+			IntakeID:       &input.SystemIntakeID,
+			ActionType:     models.ActionTypeEXPIRELCID,
+			ActorName:      adminUserInfo.CommonName,
+			ActorEmail:     adminUserInfo.Email,
+			ActorEUAUserID: adminEUAID,
+			Step:           &intake.Step,
+		}
+		if input.AdditionalInfo != nil {
+			action.Feedback = null.StringFromPtr(input.AdditionalInfo)
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        null.StringFromPtr(input.AdminNote),
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
+}
