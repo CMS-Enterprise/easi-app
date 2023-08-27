@@ -2888,7 +2888,7 @@ func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.Syst
 
 // LcidStatus is the resolver for the lcidStatus field.
 func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeLCIDStatus, error) {
-	panic(fmt.Errorf("not implemented: LcidStatus - lcidStatus"))
+	return resolvers.CalculateSystemIntakeLCIDStatus(obj, time.Now()), nil
 }
 
 // DocumentType is the resolver for the documentType field.

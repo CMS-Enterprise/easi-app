@@ -8,7 +8,25 @@ import (
 )
 
 // CalculateSystemIntakeLCIDStatus calculates the current status of an intake's LCID, if present
-// TODO - is there actually a possibility that this can return an error?
-func CalculateSystemIntakeLCIDStatus(intake *models.SystemIntake, currentTime time.Time) (*model.SystemIntakeLCIDStatus, error) {
-	panic("not implemented")
+func CalculateSystemIntakeLCIDStatus(intake *models.SystemIntake, currentTime time.Time) *model.SystemIntakeLCIDStatus {
+	// copies of the constants, declared as local variables instead of constants so we can get pointers to them
+	// which we need to return the proper type
+	issuedStatus := model.SystemIntakeLCIDStatusIssued
+	expiredStatus := model.SystemIntakeLCIDStatusExpired
+	retiredStatus := model.SystemIntakeLCIDStatusRetired
+
+	if intake == nil || intake.LifecycleID.ValueOrZero() == "" {
+		return nil
+	}
+
+	if intake.IsLCIDRetired {
+		return &retiredStatus
+	}
+
+	// LifecycleExpiresAt should always be non-nil if an LCID has been issued; check just to avoid a panic if there's inconsistent data
+	if intake.LifecycleExpiresAt != nil && intake.LifecycleExpiresAt.Before(currentTime) {
+		return &expiredStatus
+	}
+
+	return &issuedStatus
 }

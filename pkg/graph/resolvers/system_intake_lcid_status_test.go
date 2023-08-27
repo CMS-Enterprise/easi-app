@@ -22,9 +22,8 @@ func TestCalculateSystemIntakeLCIDStatus(t *testing.T) {
 			LifecycleID: null.StringFromPtr(nil),
 		}
 
-		lcidStatus, err := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
+		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
 
-		assert.NoError(t, err)
 		assert.Nil(t, lcidStatus)
 	})
 
@@ -35,9 +34,8 @@ func TestCalculateSystemIntakeLCIDStatus(t *testing.T) {
 			IsLCIDRetired:      false,
 		}
 
-		lcidStatus, err := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
+		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
 
-		assert.NoError(t, err)
 		assert.NotNil(t, lcidStatus)
 		assert.EqualValues(t, model.SystemIntakeLCIDStatusIssued, *lcidStatus)
 	})
@@ -49,9 +47,8 @@ func TestCalculateSystemIntakeLCIDStatus(t *testing.T) {
 			IsLCIDRetired:      false,
 		}
 
-		lcidStatus, err := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
+		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
 
-		assert.NoError(t, err)
 		assert.NotNil(t, lcidStatus)
 		assert.EqualValues(t, model.SystemIntakeLCIDStatusExpired, *lcidStatus)
 	})
@@ -63,9 +60,8 @@ func TestCalculateSystemIntakeLCIDStatus(t *testing.T) {
 			IsLCIDRetired:      true,
 		}
 
-		lcidStatus, err := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
+		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
 
-		assert.NoError(t, err)
 		assert.NotNil(t, lcidStatus)
 		assert.EqualValues(t, model.SystemIntakeLCIDStatusRetired, *lcidStatus)
 	})
@@ -77,9 +73,8 @@ func TestCalculateSystemIntakeLCIDStatus(t *testing.T) {
 			IsLCIDRetired:      true,
 		}
 
-		lcidStatus, err := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
+		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
 
-		assert.NoError(t, err)
 		assert.NotNil(t, lcidStatus)
 		assert.EqualValues(t, model.SystemIntakeLCIDStatusRetired, *lcidStatus)
 	})
