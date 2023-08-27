@@ -1,0 +1,1 @@
+ALTER TABLE system_intakeS ADD COLUMN is_lcid_retired BOOLEAN NOT NULL DEFAULT FALSE;

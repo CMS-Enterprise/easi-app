@@ -173,6 +173,7 @@ type SystemIntake struct {
 	DraftBusinessCaseState      SystemIntakeFormState        `json:"draftBusinessCaseState" db:"draft_business_case_state"`
 	FinalBusinessCaseState      SystemIntakeFormState        `json:"finalBusinessCaseState" db:"final_business_case_state"`
 	DecisionState               SystemIntakeDecisionState    `json:"decisionState" db:"decision_state"`
+	IsLCIDRetired               bool                         `json:"isLCIDRetired" db:"is_lcid_retired"`
 }
 
 // SystemIntakes is a list of System Intakes
