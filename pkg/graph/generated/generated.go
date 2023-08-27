@@ -8188,6 +8188,9 @@ enum SystemIntakeStep {
   DECISION_AND_NEXT_STEPS
 }
 
+"""
+The statuses of the different steps in the IT Gov v2 workflow
+"""
 type ITGovTaskStatuses {
   intakeFormStatus: ITGovIntakeFormStatus!
   feedbackFromInitialReviewStatus: ITGovFeedbackStatus!
