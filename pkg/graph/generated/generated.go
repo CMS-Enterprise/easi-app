@@ -8364,6 +8364,7 @@ enum SystemIntakeActionType {
   # v2 actions
   PROGRESS_TO_NEW_STEP
   REQUEST_EDITS
+  EXPIRE_LCID
 
   # v1/v2 actions - originally from v1, still used in v2
   ISSUE_LCID
