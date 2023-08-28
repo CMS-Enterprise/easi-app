@@ -296,7 +296,7 @@ func CloseTRBRequest(
 		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
 		CopyTRBMailbox: copyTRBMailbox,
-		ReasonClosed:   reasonClosed, //TODO: Email???
+		ReasonClosed:   reasonClosed,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this

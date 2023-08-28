@@ -611,8 +611,8 @@ func (s *ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		}, nil
 	}
 	reviewEmailCount := 0
-	feedbackForEmailText := ""
-	sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+	var feedbackForEmailText models.HTML
+	sendReviewEmail := func(ctx context.Context, emailText models.HTML, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
 		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
@@ -648,7 +648,7 @@ func (s *ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		s.NoError(err)
 		s.Equal(1, reviewEmailCount)
 		s.Equal(1, closeBusinessCaseCount)
-		s.Equal("feedback", feedbackForEmailText)
+		s.Equal(models.HTML("feedback"), feedbackForEmailText)
 	})
 
 	s.Run("returns error when authorization errors", func() {
@@ -803,7 +803,7 @@ func (s *ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 
 	s.Run("returns notification error when review email fails", func() {
 		ctx := context.Background()
-		failSendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
+		failSendReviewEmail := func(ctx context.Context, emailText models.HTML, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
 			return &apperrors.NotificationError{
 				Err:             errors.New("failed to send Email"),
 				DestinationType: apperrors.DestinationTypeEmail,
