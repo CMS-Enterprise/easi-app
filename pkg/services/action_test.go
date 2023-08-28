@@ -155,7 +155,8 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.Equal(1, submitEmailCount)
 	})
 
-	s.Run("returns error when intake has already been submitted", func() {
+	s.Run("doesn't return error when intake has already been submitted", func() {
+		// This is updated for ITGov V2
 		alreadySubmittedIntake := models.SystemIntake{
 			Status:    models.SystemIntakeStatusINTAKEDRAFT,
 			AlfabetID: null.StringFrom("394-141-0"),
@@ -163,9 +164,9 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &alreadySubmittedIntake, &action)
+		s.NoError(err)
 
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(1, submitEmailCount)
+		s.Equal(2, submitEmailCount)
 	})
 
 	s.Run("returns query error if update fails", func() {
