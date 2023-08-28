@@ -385,7 +385,7 @@ func NewCreateActionExtendLifecycleID(
 	saveAction func(context.Context, *models.Action) error,
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	sendExtendLCIDEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
+	sendExtendLCIDEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope models.HTML, newNextSteps models.HTML, newCostBaseline string) error,
 ) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *models.HTML, scope models.HTML, costBaseline *string, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
@@ -438,8 +438,8 @@ func NewCreateActionExtendLifecycleID(
 				intake.ProjectName.ValueOrZero(),
 				intake.Requester,
 				expirationDate,
-				intake.LifecycleScope.ValueOrEmptyString(), //TODO: EMAIL
-				intake.DecisionNextSteps.ValueOrEmptyString(),
+				intake.LifecycleScope.ValueOrEmptyHTML(),
+				intake.DecisionNextSteps.ValueOrEmptyHTML(),
 				intake.LifecycleCostBaseline.ValueOrZero(),
 			)
 			if err != nil {
