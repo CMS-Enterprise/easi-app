@@ -7,7 +7,6 @@ import ArticleCard from 'components/ArticleCard';
 import MainContent from 'components/MainContent';
 import { ArticleProps, ArticleTypeProps } from 'types/articles';
 import itGovernanceArticles from 'views/Help/ITGovernance/articles';
-import section508Articles from 'views/Help/Section508/articles';
 import trbArticles from 'views/Help/TechnicalReviewBoard/articles';
 
 type RelatedArticlesProps = {
@@ -18,7 +17,6 @@ type RelatedArticlesProps = {
 
 const articleGroup: Record<ArticleTypeProps, ArticleProps[]> = {
   'IT Governance': itGovernanceArticles,
-  'Section 508': section508Articles,
   'Technical Review Board': trbArticles
 };
 

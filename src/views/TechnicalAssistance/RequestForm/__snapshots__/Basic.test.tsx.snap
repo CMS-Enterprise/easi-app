@@ -34,7 +34,7 @@ exports[`Trb Request form: Basic submits the form successfully after a failed at
             data-testid="label"
             for="name"
           >
-            Request name
+            Project title
             <span
               class="text-red margin-x-05"
             >
