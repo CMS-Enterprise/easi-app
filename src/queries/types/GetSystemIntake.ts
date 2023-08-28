@@ -141,7 +141,7 @@ export interface GetSystemIntake_systemIntake {
   fundingSources: GetSystemIntake_systemIntake_fundingSources[];
   lcid: string | null;
   lcidExpiresAt: Time | null;
-  lcidScope: string | null;
+  lcidScope: HTML | null;
   lcidCostBaseline: string | null;
   needsEaSupport: boolean | null;
   productManager: GetSystemIntake_systemIntake_productManager;

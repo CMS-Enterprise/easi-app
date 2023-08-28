@@ -155,7 +155,7 @@ type SystemIntake struct {
 	BusinessCaseID              *uuid.UUID                   `json:"businessCase" db:"business_case_id"`
 	LifecycleID                 null.String                  `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt          *time.Time                   `json:"lcidExpiresAt" db:"lcid_expires_at" gqlgen:"lcidExpiresAt"`
-	LifecycleScope              null.String                  `json:"lcidScope" db:"lcid_scope"`
+	LifecycleScope              *HTML                        `json:"lcidScope" db:"lcid_scope"`
 	LifecycleCostBaseline       null.String                  `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
 	LifecycleExpirationAlertTS  *time.Time                   `json:"lcidExpirationAlertTS" db:"lcid_expiration_alert_ts"`
 	DecisionNextSteps           *HTML                        `json:"decisionNextSteps" db:"decision_next_steps"` //TODO: verify should this be HTML?

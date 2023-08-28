@@ -1002,7 +1002,7 @@ type SystemIntake {
   isso: SystemIntakeISSO!
   lcid: String
   lcidExpiresAt: Time
-  lcidScope: String
+  lcidScope: HTML
   lcidCostBaseline: String
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
@@ -1256,7 +1256,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
   nextSteps: HTML
-  scope: String!
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1321,10 +1321,10 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
-  previousScope: String
-  newScope: String
-  previousNextSteps: String
-  newNextSteps: String
+  previousScope: HTML
+  newScope: HTML
+  previousNextSteps: HTML
+  newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
  }
@@ -1366,7 +1366,7 @@ input IssueLifecycleIdInput {
   intakeId: UUID!
   lcid: String
   nextSteps: HTML
-  scope: String!
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }

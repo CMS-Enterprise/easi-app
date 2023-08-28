@@ -316,7 +316,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	today := time.Now()
 	expiresAt := &today
 	nextSteps := models.HTMLPointer(fmt.Sprintf("next %s", today))
-	scope := null.StringFrom(fmt.Sprintf("scope %s", today))
+	scope := models.HTMLPointer(fmt.Sprintf("scope %s", today))
 
 	input := &models.SystemIntake{
 		ID:                 uuid.New(),
@@ -348,7 +348,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 		if i.DecisionNextSteps != input.DecisionNextSteps {
 			return nil, errors.New("incorrect next")
 		}
-		if !i.LifecycleScope.Equal(input.LifecycleScope) {
+		if i.LifecycleScope != input.LifecycleScope {
 			return nil, errors.New("incorrect scope")
 		}
 		return i, nil
@@ -489,7 +489,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 		if i.DecisionNextSteps != input.DecisionNextSteps {
 			return nil, errors.New("incorrect next")
 		}
-		if !i.LifecycleScope.Equal(input.LifecycleScope) {
+		if i.LifecycleScope != input.LifecycleScope {
 			return nil, errors.New("incorrect scope")
 		}
 		return i, nil

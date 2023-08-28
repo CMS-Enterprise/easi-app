@@ -185,7 +185,7 @@ type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	ID                     uuid.UUID                           `json:"id"`
 	ExpirationDate         *time.Time                          `json:"expirationDate"`
 	NextSteps              *models.HTML                        `json:"nextSteps"`
-	Scope                  string                              `json:"scope"`
+	Scope                  models.HTML                         `json:"scope"`
 	CostBaseline           *string                             `json:"costBaseline"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
@@ -384,7 +384,7 @@ type IssueLifecycleIDInput struct {
 	IntakeID               uuid.UUID                           `json:"intakeId"`
 	Lcid                   *string                             `json:"lcid"`
 	NextSteps              *models.HTML                        `json:"nextSteps"`
-	Scope                  string                              `json:"scope"`
+	Scope                  models.HTML                         `json:"scope"`
 	CostBaseline           *string                             `json:"costBaseline"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
@@ -635,14 +635,14 @@ type SystemIntakeISSOInput struct {
 // Contains the data needed to change the expiration date of a system request's
 // lifecycle ID
 type SystemIntakeLCIDExpirationChange struct {
-	PreviousDate         time.Time `json:"previousDate"`
-	NewDate              time.Time `json:"newDate"`
-	PreviousScope        *string   `json:"previousScope"`
-	NewScope             *string   `json:"newScope"`
-	PreviousNextSteps    *string   `json:"previousNextSteps"`
-	NewNextSteps         *string   `json:"newNextSteps"`
-	PreviousCostBaseline *string   `json:"previousCostBaseline"`
-	NewCostBaseline      *string   `json:"newCostBaseline"`
+	PreviousDate         time.Time    `json:"previousDate"`
+	NewDate              time.Time    `json:"newDate"`
+	PreviousScope        *models.HTML `json:"previousScope"`
+	NewScope             *models.HTML `json:"newScope"`
+	PreviousNextSteps    *models.HTML `json:"previousNextSteps"`
+	NewNextSteps         *models.HTML `json:"newNextSteps"`
+	PreviousCostBaseline *string      `json:"previousCostBaseline"`
+	NewCostBaseline      *string      `json:"newCostBaseline"`
 }
 
 // The author of a note added to a system request

@@ -517,7 +517,7 @@ export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID;
   expirationDate?: Time | null;
   nextSteps?: HTML | null;
-  scope: string;
+  scope: HTML;
   costBaseline?: string | null;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
@@ -678,7 +678,7 @@ export interface IssueLifecycleIdInput {
   intakeId: UUID;
   lcid?: string | null;
   nextSteps?: HTML | null;
-  scope: string;
+  scope: HTML;
   costBaseline?: string | null;
   notificationRecipients?: EmailNotificationRecipients | null;
 }

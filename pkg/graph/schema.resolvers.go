@@ -1450,7 +1450,7 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 		&models.SystemIntake{
 			ID:                    input.IntakeID,
 			LifecycleExpiresAt:    &input.ExpiresAt,
-			LifecycleScope:        null.StringFrom(input.Scope),
+			LifecycleScope:        &input.Scope,
 			DecisionNextSteps:     input.NextSteps,
 			LifecycleID:           null.StringFrom(*input.Lcid),
 			LifecycleCostBaseline: null.StringFromPtr(input.CostBaseline),
@@ -2513,10 +2513,10 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 			graphAction.LcidExpirationChange = &model.SystemIntakeLCIDExpirationChange{
 				NewDate:              *action.LCIDExpirationChangeNewDate,
 				PreviousDate:         *action.LCIDExpirationChangePreviousDate,
-				NewScope:             action.LCIDExpirationChangeNewScope.Ptr(),
-				PreviousScope:        action.LCIDExpirationChangePreviousScope.Ptr(),
-				NewNextSteps:         action.LCIDExpirationChangeNewNextSteps.Ptr(),
-				PreviousNextSteps:    action.LCIDExpirationChangePreviousNextSteps.Ptr(),
+				NewScope:             action.LCIDExpirationChangeNewScope,
+				PreviousScope:        action.LCIDExpirationChangePreviousScope,
+				NewNextSteps:         action.LCIDExpirationChangeNewNextSteps,
+				PreviousNextSteps:    action.LCIDExpirationChangePreviousNextSteps,
 				NewCostBaseline:      action.LCIDExpirationChangeNewCostBaseline.Ptr(),
 				PreviousCostBaseline: action.LCIDExpirationChangePreviousCostBaseline.Ptr(),
 			}
@@ -2736,8 +2736,8 @@ func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntak
 }
 
 // LcidScope is the resolver for the lcidScope field.
-func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.LifecycleScope.Ptr(), nil
+func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error) {
+	return obj.LifecycleScope, nil
 }
 
 // LcidCostBaseline is the resolver for the lcidCostBaseline field.

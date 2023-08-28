@@ -15,7 +15,7 @@ export interface IssueLifecycleId_issueLifecycleId_systemIntake {
   id: UUID;
   lcid: string | null;
   lcidExpiresAt: Time | null;
-  lcidScope: string | null;
+  lcidScope: HTML | null;
 }
 
 export interface IssueLifecycleId_issueLifecycleId {

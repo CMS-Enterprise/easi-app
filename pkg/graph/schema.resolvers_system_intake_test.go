@@ -1845,7 +1845,7 @@ func (s *GraphQLTestSuite) TestExtendLifecycleId() {
 
 	intake.LifecycleID = null.StringFrom("123456")
 	intake.LifecycleExpiresAt = date(2021, 12, 1)
-	intake.LifecycleScope = null.StringFrom("Original Scope")
+	intake.LifecycleScope = models.HTMLPointer("Original Scope")
 	intake.DecisionNextSteps = models.HTMLPointer("Original Next Steps")
 	intake.LifecycleCostBaseline = null.StringFrom("Original Cost Baseline")
 

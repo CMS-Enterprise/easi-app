@@ -234,7 +234,7 @@ func convert(row []string) (*entry, error) {
 	if match, matchErr := regexp.MatchString(`^\w?\d{6}$`, row[colLCID]); match && matchErr == nil {
 		// LCIDs in spreadsheet frequently have a 1 character ALPHA prefix
 		data.Intake.LifecycleID = null.StringFrom(row[colLCID])
-		data.Intake.LifecycleScope = null.StringFrom(row[colLCIDScope])
+		data.Intake.LifecycleScope = models.HTMLPointer(row[colLCIDScope])
 	} else {
 		return nil, errors.New("no lcid for intake")
 	}

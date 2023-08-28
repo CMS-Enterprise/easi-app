@@ -139,7 +139,7 @@ func checkForLCIDExpiration(
 					currIntake.Requester,
 					currIntake.LifecycleID.String,
 					currIntake.LifecycleExpiresAt,
-					currIntake.LifecycleScope.String,
+					currIntake.LifecycleScope.ValueOrEmptyString(), //TODO: EMAIL
 					currIntake.LifecycleCostBaseline.String,
 					currIntake.DecisionNextSteps.ValueOrEmptyString(),
 				)
@@ -194,7 +194,7 @@ func checkForLCIDExpiration(
 					currIntake.Requester,
 					currIntake.LifecycleID.String,
 					currIntake.LifecycleExpiresAt,
-					currIntake.LifecycleScope.String,
+					currIntake.LifecycleScope.ValueOrEmptyString(), //TODO: EMAIL
 					currIntake.LifecycleCostBaseline.String,
 					currIntake.DecisionNextSteps.ValueOrEmptyString(),
 				)

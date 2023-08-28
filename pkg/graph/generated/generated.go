@@ -1362,7 +1362,7 @@ type SystemIntakeResolver interface {
 	Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
-	LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error)
 	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error)
@@ -8089,7 +8089,7 @@ type SystemIntake {
   isso: SystemIntakeISSO!
   lcid: String
   lcidExpiresAt: Time
-  lcidScope: String
+  lcidScope: HTML
   lcidCostBaseline: String
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
@@ -8343,7 +8343,7 @@ input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
   nextSteps: HTML
-  scope: String!
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -8408,10 +8408,10 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
-  previousScope: String
-  newScope: String
-  previousNextSteps: String
-  newNextSteps: String
+  previousScope: HTML
+  newScope: HTML
+  previousNextSteps: HTML
+  newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
  }
@@ -8453,7 +8453,7 @@ input IssueLifecycleIdInput {
   intakeId: UUID!
   lcid: String
   nextSteps: HTML
-  scope: String!
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -36233,9 +36233,9 @@ func (ec *executionContext) _SystemIntake_lcidScope(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_lcidScope(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -36245,7 +36245,7 @@ func (ec *executionContext) fieldContext_SystemIntake_lcidScope(ctx context.Cont
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -40133,9 +40133,9 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousScope(ctx 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_previousScope(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -40145,7 +40145,7 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_previo
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -40174,9 +40174,9 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newScope(ctx conte
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newScope(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -40186,7 +40186,7 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newSco
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -40215,9 +40215,9 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousNextSteps(
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_previousNextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -40227,7 +40227,7 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_previo
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -40256,9 +40256,9 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newNextSteps(ctx c
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newNextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -40268,7 +40268,7 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newNex
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -50162,7 +50162,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scope"))
-			it.Scope, err = ec.unmarshalNString2string(ctx, v)
+			it.Scope, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50986,7 +50986,7 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scope"))
-			it.Scope, err = ec.unmarshalNString2string(ctx, v)
+			it.Scope, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}

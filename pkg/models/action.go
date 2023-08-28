@@ -74,10 +74,10 @@ type Action struct {
 	CreatedAt                                *time.Time        `json:"createdAt" db:"created_at"`
 	LCIDExpirationChangeNewDate              *time.Time        `db:"lcid_expiration_change_new_date"`
 	LCIDExpirationChangePreviousDate         *time.Time        `db:"lcid_expiration_change_previous_date"`
-	LCIDExpirationChangeNewScope             null.String       `db:"lcid_expiration_change_new_scope"`
-	LCIDExpirationChangePreviousScope        null.String       `db:"lcid_expiration_change_previous_scope"`
-	LCIDExpirationChangeNewNextSteps         null.String       `db:"lcid_expiration_change_new_next_steps"`
-	LCIDExpirationChangePreviousNextSteps    null.String       `db:"lcid_expiration_change_previous_next_steps"`
+	LCIDExpirationChangeNewScope             *HTML             `db:"lcid_expiration_change_new_scope"`
+	LCIDExpirationChangePreviousScope        *HTML             `db:"lcid_expiration_change_previous_scope"`
+	LCIDExpirationChangeNewNextSteps         *HTML             `db:"lcid_expiration_change_new_next_steps"`
+	LCIDExpirationChangePreviousNextSteps    *HTML             `db:"lcid_expiration_change_previous_next_steps"`
 	LCIDExpirationChangeNewCostBaseline      null.String       `db:"lcid_expiration_change_new_cost_baseline"`
 	LCIDExpirationChangePreviousCostBaseline null.String       `db:"lcid_expiration_change_previous_cost_baseline"`
 }

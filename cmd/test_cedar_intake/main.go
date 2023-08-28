@@ -124,7 +124,7 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		GRBDate:            &times.twoHoursInTheFuture,
 
 		LifecycleID:           null.StringFrom("221360"),
-		LifecycleScope:        null.StringFrom("This LCID covers stuff for 3 years"),
+		LifecycleScope:        models.HTMLPointer("This LCID covers stuff for 3 years"),
 		LifecycleCostBaseline: null.StringFrom("about 10,000,000"),
 		LifecycleExpiresAt:    &times.threeYearsInTheFuture,
 	}

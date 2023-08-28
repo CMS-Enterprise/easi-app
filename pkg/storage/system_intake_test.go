@@ -133,7 +133,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			// These fields should NOT be written during a create
 			LifecycleID:        null.StringFrom("ABCDEF"),
 			LifecycleExpiresAt: &now,
-			LifecycleScope:     null.StringFrom("ABCDEF"),
+			LifecycleScope:     models.HTMLPointer("ABCDEF"),
 			DecisionNextSteps:  models.HTMLPointer("ABCDEF"),
 		}
 		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
@@ -148,11 +148,11 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 
 		// Update
 		lcid := "H200110" // historical first LCID issued on 2020-01-11
-		content1 := "ABC"
+		content1 := models.HTMLPointer("ABC")
 		content2 := models.HTMLPointer("XYZ")
 		partial.LifecycleID = null.StringFrom(lcid)
 		partial.LifecycleExpiresAt = &now
-		partial.LifecycleScope = null.StringFrom(content1)
+		partial.LifecycleScope = content1
 		partial.DecisionNextSteps = content2
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
@@ -163,7 +163,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 
 		s.Equal(lcid, updated.LifecycleID.String)
 		s.NotEmpty(updated.LifecycleExpiresAt)
-		s.Equal(content1, updated.LifecycleScope.String)
+		s.Equal(content1, updated.LifecycleScope)
 		s.Equal(content2, updated.DecisionNextSteps)
 	})
 

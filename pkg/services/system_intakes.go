@@ -304,7 +304,7 @@ func NewUpdateLifecycleFields(
 				updated.Requester,
 				updated.LifecycleID.String,
 				updated.LifecycleExpiresAt,
-				updated.LifecycleScope.String,
+				updated.LifecycleScope.ValueOrEmptyString(), //TODO: EMAIL
 				updated.LifecycleCostBaseline.String,
 				updated.DecisionNextSteps.ValueOrEmptyString(), //TODO: EMAIL
 				action.Feedback.ValueOrEmptyString(),           //TODO: EMAIL
