@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"html/template"
 	"path"
 	"time"
 
@@ -19,10 +20,10 @@ type issueLCID struct {
 	Requester             string
 	LifecycleID           string
 	ExpiresAt             string
-	Scope                 string
+	Scope                 template.HTML
 	LifecycleCostBaseline string
-	NextSteps             string
-	Feedback              string
+	NextSteps             template.HTML
+	Feedback              template.HTML
 	DecisionLink          string
 }
 
@@ -32,10 +33,10 @@ func (c Client) issueLCIDBody(
 	requester string,
 	lcid string,
 	expiresAt *time.Time,
-	scope string,
+	scope models.HTML,
 	lifecycleCostBaseline string,
-	nextSteps string,
-	feedback string,
+	nextSteps models.HTML,
+	feedback models.HTML,
 ) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := issueLCID{
@@ -44,10 +45,10 @@ func (c Client) issueLCIDBody(
 		Requester:             requester,
 		LifecycleID:           lcid,
 		ExpiresAt:             expiresAt.Format("January 2, 2006"),
-		Scope:                 scope,
+		Scope:                 scope.ToTemplate(),
 		LifecycleCostBaseline: lifecycleCostBaseline,
-		NextSteps:             nextSteps,
-		Feedback:              feedback,
+		NextSteps:             nextSteps.ToTemplate(),
+		Feedback:              feedback.ToTemplate(),
 		DecisionLink:          c.urlFromPath(decisionPath),
 	}
 	var b bytes.Buffer
@@ -70,10 +71,10 @@ func (c Client) SendIssueLCIDEmails( //TODO: Emails update to take html instead 
 	requester string,
 	lcid string,
 	expirationDate *time.Time,
-	scope string,
+	scope models.HTML,
 	lifecycleCostBaseline string,
-	nextSteps string,
-	feedback string,
+	nextSteps models.HTML,
+	feedback models.HTML,
 ) error {
 	subject := "Lifecycle ID request approved"
 	body, err := c.issueLCIDBody(systemIntakeID, projectName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)

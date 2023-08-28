@@ -81,7 +81,7 @@ func checkForLCIDExpiration(
 		lcidExpirationDate *time.Time,
 		scope models.HTML,
 		lifecycleCostBaseline string,
-		nextSteps models.HTML, //TODO: EMAIL should these take HTML?
+		nextSteps models.HTML,
 	) error,
 ) error {
 

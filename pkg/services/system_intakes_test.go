@@ -357,10 +357,10 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 		return nil
 	}
 
-	feedbackForEmailText := ""
+	var feedbackForEmailText models.HTML
 
 	multipleReviewEmailsSent := false
-	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, emailText string) error {
+	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ models.HTML, _ string, _ models.HTML, emailText models.HTML) error {
 		feedbackForEmailText = emailText
 		multipleReviewEmailsSent = true
 		return nil
@@ -384,7 +384,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.LifecycleScope, scope)
 		s.True(multipleReviewEmailsSent)
-		s.Equal("Feedback", feedbackForEmailText)
+		s.Equal(models.HTML("Feedback"), feedbackForEmailText)
 	})
 
 	s.Run("happy path provided lcid without sending email (to multiple recipients)", func() {
@@ -422,7 +422,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnSaveActionErr := func(c context.Context, a *models.Action) error {
 		return errors.New("action error")
 	}
-	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ models.HTML, _ string, _ models.HTML, _ models.HTML) error {
 		return errors.New("error sending to multiple recipients")
 	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }

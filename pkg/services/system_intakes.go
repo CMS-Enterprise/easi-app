@@ -230,7 +230,7 @@ func NewUpdateLifecycleFields(
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
-	sendIssueLCIDEmails func(context.Context, models.EmailNotificationRecipients, uuid.UUID, string, string, string, *time.Time, string, string, string, string) error,
+	sendIssueLCIDEmails func(context.Context, models.EmailNotificationRecipients, uuid.UUID, string, string, string, *time.Time, models.HTML, string, models.HTML, models.HTML) error,
 	generateLCID func(context.Context) (string, error),
 ) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
@@ -304,10 +304,10 @@ func NewUpdateLifecycleFields(
 				updated.Requester,
 				updated.LifecycleID.String,
 				updated.LifecycleExpiresAt,
-				updated.LifecycleScope.ValueOrEmptyString(), //TODO: EMAIL
+				updated.LifecycleScope.ValueOrEmptyHTML(),
 				updated.LifecycleCostBaseline.String,
-				updated.DecisionNextSteps.ValueOrEmptyString(), //TODO: EMAIL
-				action.Feedback.ValueOrEmptyString(),           //TODO: EMAIL
+				updated.DecisionNextSteps.ValueOrEmptyHTML(),
+				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
 				return nil, err
