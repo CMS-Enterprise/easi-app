@@ -467,7 +467,7 @@ export interface BasicActionInput {
  */
 export interface CloseTRBRequestInput {
   id: UUID;
-  reasonClosed: string;
+  reasonClosed: HTML;
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
 }
@@ -699,7 +699,7 @@ export interface RejectIntakeInput {
  */
 export interface ReopenTRBRequestInput {
   trbRequestId: UUID;
-  reasonReopened: string;
+  reasonReopened: HTML;
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
 }

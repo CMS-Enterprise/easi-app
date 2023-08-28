@@ -19,14 +19,14 @@ type SendTRBRequestReopenedEmailInput struct {
 	RequesterName  string
 	Recipients     []models.EmailAddress
 	CopyTRBMailbox bool
-	ReasonReopened string
+	ReasonReopened models.HTML
 }
 
 // trbRequestReopenedEmailTemplateParams contains the data needed for interpolation in
 // the TRB request re-opened email
 type trbRequestReopenedEmailTemplateParams struct {
 	TRBRequestName      string
-	ReasonReopened      string
+	ReasonReopened      models.HTML
 	TRBRequestLink      string
 	TRBAdminRequestLink string
 	RequesterName       string

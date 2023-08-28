@@ -18,14 +18,14 @@ type SendTRBRequestClosedEmailInput struct {
 	RequesterName  string
 	Recipients     []models.EmailAddress
 	CopyTRBMailbox bool
-	ReasonClosed   string
+	ReasonClosed   models.HTML
 }
 
 // trbRequestClosedEmailTemplateParams contains the data needed for interpolation in
 // the TRB request closed email
 type trbRequestClosedEmailTemplateParams struct {
 	TRBRequestName      string
-	ReasonClosed        string
+	ReasonClosed        models.HTML //TODO: EMAIL
 	TRBRequestLink      string
 	TRBAdminRequestLink string
 	RequesterName       string
