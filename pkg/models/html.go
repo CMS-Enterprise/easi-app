@@ -14,11 +14,9 @@ import (
 // HTML represents html code. It is sanitized to only allow specific tags
 type HTML string
 
-// TODO: if we don't need to use context, we might consider using template.HTML, this method is more explicit though
-
 // ToTemplate converts the HTML type to a template.HTML struct
 func (html HTML) ToTemplate() template.HTML {
-	// TODO: should we do another sanitization pass at this point time to be safe?
+	// Note, we sanitize when the data is Unmarshaled. However, if desired it could be sanitized at this entrypoint as well
 	return template.HTML(html) //nolint //the html is sanitized when it is Unmarshaled
 }
 
