@@ -1,4 +1,226 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Trb Request form: Request Done > renders error 1`] = `
+<DocumentFragment>
+  <div
+    class="bg-error-lighter padding-bottom-6"
+  >
+    <div
+      class="grid-container"
+      data-testid="gridContainer"
+    >
+      <div
+        class="grid-row"
+        data-testid="grid"
+      >
+        <div
+          class="grid-col"
+          data-testid="grid"
+        >
+          <h1
+            aria-live="polite"
+            class="easi-h1 margin-bottom-0"
+            tabindex="-1"
+          >
+            Something went wrong.
+          </h1>
+          <div
+            class="font-body-lg line-height-body-5 text-light"
+          >
+            Your TRB Request was not submitted. Please either return to the previous page and try again or try again at a later date.
+          </div>
+          <div
+            class="margin-top-4"
+          >
+            <a
+              class="usa-button"
+              href="/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7"
+            >
+              Back to TRB Request
+            </a>
+            <a
+              class="usa-button usa-button--outline"
+              href="/trb/task-list/f3b4cff8-321d-4d2a-a9a2-4b05810756d7"
+            >
+              Return to task list
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="grid-container"
+    data-testid="gridContainer"
+  >
+    <dl
+      class="easi-dl margin-top-4 margin-bottom-6"
+    >
+      <dt>
+        Reference number
+      </dt>
+      <dd>
+        f3b4cff8-321d-4d2a-a9a2-4b05810756d7
+      </dd>
+    </dl>
+    <div
+      class="grid-row grid-gap"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <div
+          class="usa-summary-box"
+          data-testid="summary-box"
+        >
+          <div
+            class="usa-summary-box__body"
+          >
+            <h3
+              class="usa-summary-box__heading"
+            >
+              What happens next?
+            </h3>
+            <div
+              class="usa-summary-box__text"
+            >
+              <div>
+                The TRB will review and get back to you with one of these outcomes:
+              </div>
+              <ul
+                class="usa-list margin-y-05"
+              >
+                <li>
+                  schedule a consult session
+                </li>
+                <li>
+                  direct you to another governance process or team
+                </li>
+                <li>
+                  request additional information
+                </li>
+              </ul>
+              <div>
+                A TRB team member will get back to you within two business days.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Trb Request form: Request Done > renders success 1`] = `
+<DocumentFragment>
+  <div
+    class="bg-success-lighter padding-bottom-6"
+  >
+    <div
+      class="grid-container"
+      data-testid="gridContainer"
+    >
+      <div
+        class="grid-row"
+        data-testid="grid"
+      >
+        <div
+          class="grid-col"
+          data-testid="grid"
+        >
+          <h1
+            aria-live="polite"
+            class="easi-h1 margin-bottom-0"
+            tabindex="-1"
+          >
+            Success!
+          </h1>
+          <div
+            class="font-body-lg line-height-body-5 text-light"
+          >
+            Your TRB Request has been submitted. You will receive an automatic email, and a TRB team member will reach out shortly after regarding next steps.
+          </div>
+          <div
+            class="margin-top-4"
+          >
+            <a
+              class="usa-button"
+              href="/trb/task-list/f3b4cff8-321d-4d2a-a9a2-4b05810756d7"
+            >
+              Return to task list
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="grid-container"
+    data-testid="gridContainer"
+  >
+    <dl
+      class="easi-dl margin-top-4 margin-bottom-6"
+    >
+      <dt>
+        Reference number
+      </dt>
+      <dd>
+        f3b4cff8-321d-4d2a-a9a2-4b05810756d7
+      </dd>
+    </dl>
+    <div
+      class="grid-row grid-gap"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <div
+          class="usa-summary-box"
+          data-testid="summary-box"
+        >
+          <div
+            class="usa-summary-box__body"
+          >
+            <h3
+              class="usa-summary-box__heading"
+            >
+              What happens next?
+            </h3>
+            <div
+              class="usa-summary-box__text"
+            >
+              <div>
+                The TRB will review and get back to you with one of these outcomes:
+              </div>
+              <ul
+                class="usa-list margin-y-05"
+              >
+                <li>
+                  schedule a consult session
+                </li>
+                <li>
+                  direct you to another governance process or team
+                </li>
+                <li>
+                  request additional information
+                </li>
+              </ul>
+              <div>
+                A TRB team member will get back to you within two business days.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
 
 exports[`Trb Request form: Request Done renders error 1`] = `
 <DocumentFragment>

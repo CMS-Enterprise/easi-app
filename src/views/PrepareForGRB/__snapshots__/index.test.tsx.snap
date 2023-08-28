@@ -1,4 +1,215 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`The prepare for GRB info page > matches the snapshot 1`] = `
+<main
+  className="easi-main-content easi-prepare-for-grb margin-bottom-5"
+  id="main-content"
+  role="main"
+  tabIndex={-1}
+>
+  <div
+    className="grid-container"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      className="usa-breadcrumb usa-breadcrumb--wrap"
+    >
+      <ol
+        className="usa-breadcrumb__list"
+      >
+        <li
+          className="usa-breadcrumb__list-item"
+        >
+          <a
+            className="usa-breadcrumb__link"
+            href="/"
+            onClick={[Function]}
+          >
+            <span>
+              IT Governance
+            </span>
+          </a>
+        </li>
+        <li
+          className="usa-breadcrumb__list-item"
+        >
+          <a
+            className="usa-breadcrumb__link"
+            href="/governance-task-list/undefined"
+            onClick={[Function]}
+          >
+            <span>
+              Governance Task List
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          className="usa-breadcrumb__list-item usa-current"
+        >
+          Prepare for GRB meeting
+        </li>
+      </ol>
+    </nav>
+    <div
+      className="prepare-for-grb"
+    >
+      <div>
+        <h1
+          aria-live="polite"
+          className="easi-h1 line-height-heading-2"
+          tabIndex={-1}
+        >
+          Prepare for the Governance Review Board meeting
+        </h1>
+        <h2
+          className="font-heading-xl line-height-heading-2 margin-top-3 margin-bottom-2"
+        >
+          What is the Governance Review Board?
+        </h2>
+        <p
+          className="line-height-sans-5"
+        >
+          The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.
+        </p>
+        <h3>
+          What to expect at the meeting
+        </h3>
+        <p
+          className="line-height-sans-5"
+        >
+          During the session, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS programs. You’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. Next, the GRB will review your proposed alternatives and their pros and cons.
+        </p>
+        <div
+          className="usa-alert usa-alert--info usa-alert--slim"
+          data-testid="alert"
+        >
+          <div
+            className="usa-alert__body"
+          >
+            <p
+              className="usa-alert__text"
+            >
+              You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.
+            </p>
+          </div>
+        </div>
+        <div
+          className="margin-top-3 padding-2 bg-base-lightest"
+        >
+          <h3
+            className="margin-top-0 margin-bottom-1"
+          >
+            Tips for the meeting
+          </h3>
+          <ul
+            className="usa-list usa-list--unstyled line-height-body-5 padding-y-0"
+          >
+            <li>
+              When walking through your Business Case, highlight how this project would benefit CMS and further their current priorities.
+            </li>
+            <li>
+              Thoroughly review the costs included in your Business Case and identify the assumptions you made when you calculated them.
+            </li>
+            <li>
+              If you have been discussing your request with Subject Matter Expert (SME) groups, highlight it during the meeting. This helps the Review Board understand more about the project team’s circumstances and offers them additional reassurances.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h2
+          className="margin-top-6 margin-bottom-2"
+        >
+          What to bring
+        </h2>
+        <p
+          className="margin-y-0"
+        >
+          The following are important items to have with you at the GRB meeting:
+        </p>
+        <ul
+          className="usa-list usa-list--unstyled line-height-body-5 margin-top-1 padding-y-0"
+        >
+          <li>
+            a copy of your Business Case
+          </li>
+          <li>
+            any contracting materials that you might have in place, for example, a Statement of Work (SOW), a Performance Work Statement (PWS), or other contracting document
+          </li>
+          <li>
+            additional materials that you’d like to talk through, such as a concept diagram
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h2
+          className="margin-top-6 margin-bottom-2"
+        >
+          Possible outcomes
+        </h2>
+        <p
+          className="margin-y-0"
+        >
+          After this discussion, the Governance Review Board will decide whether to approve your request at this time.
+        </p>
+        <ul
+          className="usa-list usa-list--unstyled list-style-none line-height-body-5 margin-top-1 padding-y-0"
+        >
+          <li>
+            If the request is approved, the Board will issue you a Lifecycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
+          </li>
+          <li>
+            If two or more Board members voice concerns about the project, a Lifceycle ID won’t be issued. The request will not be approved until all concerns are addressed or withdrawn. 
+          </li>
+        </ul>
+      </div>
+      <div
+        className="usa-summary-box desktop:grid-col-6 margin-top-5"
+        data-testid="summary-box"
+      >
+        <div
+          className="usa-summary-box__body"
+        >
+          <h3
+            className="usa-summary-box__heading"
+          >
+            Need help?
+          </h3>
+          <div
+            className="usa-summary-box__text"
+          >
+            <div
+              className="margin-top-2 margin-bottom-05"
+            >
+              Contact the Governance team:
+            </div>
+            <div>
+              <a
+                className="usa-link"
+                href="mailto:IT_Governance@cms.hhs.gov"
+              >
+                IT_Governance@cms.hhs.gov
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="margin-top-4"
+    >
+      <a
+        className="usa-link text-ink"
+        href="/governance-task-list/undefined"
+        onClick={[Function]}
+      >
+        Back
+      </a>
+    </div>
+  </div>
+</main>
+`;
 
 exports[`The prepare for GRB info page matches the snapshot 1`] = `
 <main

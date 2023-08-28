@@ -1,4 +1,454 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Governance Overview Content > renders default version without crashing 1`] = `
+<DocumentFragment>
+  <div
+    class="governance-overview__content"
+  >
+    <div
+      class="overflow-hidden padding-y-1undefined"
+    >
+      <p>
+        Working through this step-by-step process will help you:
+      </p>
+      <ul
+        class="padding-left-205"
+      >
+        <li
+          class="margin-y-1"
+        >
+          work with Subject Matter Experts (SMEs) to refine your Business Case
+        </li>
+        <li
+          class="margin-y-1"
+        >
+          get a Lifecycle ID
+        </li>
+        <li
+          class="margin-y-1"
+        >
+          get approval for your request to then seek funding
+        </li>
+      </ul>
+      <p>
+        It can take 4 to 6 weeks to go through all the steps and get a decision.
+      </p>
+    </div>
+    <div
+      class="tablet:grid-col-6"
+    >
+      <h2
+        class="font-heading-xl margin-bottom-2"
+      >
+        Steps in the governance process
+      </h2>
+      <ol
+        class="usa-process-list margin-top-2"
+      >
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Fill the intake request form
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Tell the Governance Admin Team about your project or idea and upload any existing documentation.
+          </p>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Feedback from initial review
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
+          </p>
+        </li>
+      </ol>
+      <div
+        class="easi-divider margin-bottom-3"
+      />
+      <ol
+        class="usa-process-list easi-governance-overview__governance-steps"
+        start="3"
+      >
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Prepare your business case
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Draft different solutions and the corresponding costs involved.
+          </p>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Attend the Governance Review Team meeting
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Discuss your draft Business Case with the Governance Review Team (GRT). They will give you feedback and help you refine your Business Case before you present to the Governance Review Board (GRB).
+          </p>
+          <a
+            class="usa-link"
+            href="/help/it-governance/prepare-for-grt"
+            target="_blank"
+          >
+            Prepare for the GRT meeting (opens in new tab)
+          </a>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Feedback from the Governance Review Team
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            If the Governance Review Team has any additional comments or feedback, they may ask you to update your Business Case before submitting it to the Governance Review Board.
+          </p>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Submit the business case for final approval
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Update your Business Case based on feedback from the Governance Review Team and submit it to the Governance Review Board.
+          </p>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Attend the Governance Review Board Meeting
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
+          </p>
+          <a
+            class="usa-link"
+            href="/help/it-governance/prepare-for-grb"
+            target="_blank"
+          >
+            Prepare for the GRB meeting (opens in new tab)
+          </a>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Decision and next steps
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            If your Business Case is approved, you will receive a unique Lifecycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.
+          </p>
+        </li>
+      </ol>
+    </div>
+    <div
+      class="margin-bottom-7"
+    >
+      <div
+        class="easi-collapsable-link"
+      >
+        <button
+          aria-controls="GovernanceOverview-WhyGovernanceExists"
+          aria-expanded="false"
+          class="usa-button usa-button--unstyled display-flex flex-align-center"
+          data-testid="collapsable-link"
+          type="button"
+        >
+          <svg
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+            />
+          </svg>
+          Why does the governance process exist?
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Governance Overview Content > renders help section version without crashing 1`] = `
+<DocumentFragment>
+  <div
+    class="governance-overview__content"
+  >
+    <div
+      class="overflow-hidden padding-y-1 bg-base-lightest padding-x-2 margin-bottom-6"
+    >
+      <p>
+        Working through this step-by-step process will help you:
+      </p>
+      <ul
+        class="padding-left-205"
+      >
+        <li
+          class="margin-y-1"
+        >
+          work with Subject Matter Experts (SMEs) to refine your Business Case
+        </li>
+        <li
+          class="margin-y-1"
+        >
+          get a Lifecycle ID
+        </li>
+        <li
+          class="margin-y-1"
+        >
+          get approval for your request to then seek funding
+        </li>
+      </ul>
+      <p>
+        It can take 4 to 6 weeks to go through all the steps and get a decision.
+      </p>
+    </div>
+    <div
+      class="tablet:grid-col-6"
+    >
+      <h2
+        class="font-heading-xl margin-bottom-2"
+      >
+        Steps in the governance process
+      </h2>
+      <div
+        class="easi-collapsable-link"
+      >
+        <button
+          aria-controls="GovernanceOverview-WhyGovernanceExists"
+          aria-expanded="false"
+          class="usa-button usa-button--unstyled display-flex flex-align-center margin-bottom-1"
+          data-testid="collapsable-link"
+          type="button"
+        >
+          <svg
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+            />
+          </svg>
+          Why does the governance process exist?
+        </button>
+      </div>
+      <ol
+        class="usa-process-list margin-top-2"
+      >
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Fill the intake request form
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Tell the Governance Admin Team about your project or idea and upload any existing documentation.
+          </p>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Feedback from initial review
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            The Governance admin team will review your intake request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
+          </p>
+        </li>
+      </ol>
+      <div
+        class="easi-divider margin-bottom-3"
+      />
+      <ol
+        class="usa-process-list easi-governance-overview__governance-steps"
+        start="3"
+      >
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Prepare your business case
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Draft different solutions and the corresponding costs involved.
+          </p>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Attend the Governance Review Team meeting
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Discuss your draft Business Case with the Governance Review Team (GRT). They will give you feedback and help you refine your Business Case before you present to the Governance Review Board (GRB).
+          </p>
+          <a
+            class="usa-link"
+            href="/help/it-governance/prepare-for-grt"
+            target="_blank"
+          >
+            Prepare for the GRT meeting (opens in new tab)
+          </a>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Feedback from the Governance Review Team
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            If the Governance Review Team has any additional comments or feedback, they may ask you to update your Business Case before submitting it to the Governance Review Board.
+          </p>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Submit the business case for final approval
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Update your Business Case based on feedback from the Governance Review Team and submit it to the Governance Review Board.
+          </p>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Attend the Governance Review Board Meeting
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
+          </p>
+          <a
+            class="usa-link"
+            href="/help/it-governance/prepare-for-grb"
+            target="_blank"
+          >
+            Prepare for the GRB meeting (opens in new tab)
+          </a>
+        </li>
+        <li
+          class="usa-process-list__item"
+        >
+          <h3
+            class="usa-process-list__heading"
+            data-testid="processListHeading"
+          >
+            Decision and next steps
+          </h3>
+          <p
+            class="margin-bottom-1"
+          >
+            If your Business Case is approved, you will receive a unique Lifecycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</DocumentFragment>
+`;
 
 exports[`Governance Overview Content renders default version without crashing 1`] = `
 <DocumentFragment>

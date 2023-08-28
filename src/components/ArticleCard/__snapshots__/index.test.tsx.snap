@@ -1,4 +1,58 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RelatedArticle > matches the snapshot 1`] = `
+<DocumentFragment>
+  <li
+    class="usa-card desktop:grid-col-4 article"
+    data-testid="article-card"
+  >
+    <div
+      class="usa-card__container radius-md shadow-2 minh-mobile"
+    >
+      <header
+        class="usa-card__header padding-x-3 padding-top-3"
+        data-testid="CardHeader"
+      >
+        <h3
+          class="line-height-body-4 margin-bottom-1"
+        >
+          Prepare for the Governance Review Team meeting
+        </h3>
+        <a
+          class="usa-link display-inline-block margin-bottom-1"
+          href="/help/it-governance"
+        >
+          <span
+            class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
+            data-testid="tag"
+          >
+            IT Governance
+          </span>
+        </a>
+      </header>
+      <div
+        class="usa-card__body padding-top-0 article__body"
+        data-testid="CardBody"
+      >
+        <p>
+          Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.
+        </p>
+      </div>
+      <div
+        class="usa-card__footer padding-top-2 article__footer"
+        data-testid="CardFooter"
+      >
+        <a
+          class="usa-link easi-request__button-link padding-x-2"
+          href="/"
+        >
+          Read
+        </a>
+      </div>
+    </div>
+  </li>
+</DocumentFragment>
+`;
 
 exports[`RelatedArticle matches the snapshot 1`] = `
 <DocumentFragment>

@@ -1,4 +1,40 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Help Info Box > renders NeedHelpBox without crashing 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-summary-box"
+    data-testid="summary-box"
+  >
+    <div
+      class="usa-summary-box__body"
+    >
+      <h3
+        class="usa-summary-box__heading"
+      >
+        Need help?
+      </h3>
+      <div
+        class="usa-summary-box__text"
+      >
+        <div
+          class="margin-top-2 margin-bottom-05"
+        >
+          Contact the Governance team:
+        </div>
+        <div>
+          <a
+            class="usa-link"
+            href="mailto:IT_Governance@cms.hhs.gov"
+          >
+            IT_Governance@cms.hhs.gov
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
 
 exports[`Help Info Box renders NeedHelpBox without crashing 1`] = `
 <DocumentFragment>

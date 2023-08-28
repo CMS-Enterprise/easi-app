@@ -1,4 +1,89 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`admin action component > Matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-summary-box"
+  >
+    <h5
+      class="text-base-dark text-uppercase margin-top-0 margin-bottom-05 line-height-body-1 text-normal text-body-xs"
+    >
+      Admin Action
+    </h5>
+    <h3
+      class="margin-y-0"
+    >
+      Is this request ready for a consult?
+    </h3>
+    <p
+      class="margin-y-0 line-height-body-5"
+    >
+      Review the initial request form. If this request is ready to move on to a consult session, please mark it as ready. If the TRB needs further information in order to proceed, you may request edits or additional information from the project team.
+    </p>
+    What should I consider when reviewing the initial request form?
+    <ul>
+      <li>
+        Is the support requested clear, i.e. design review vs. problem-solving?
+      </li>
+      <li>
+        If the customer is asking for assistance in solving a problem, is the problem definition clear?
+      </li>
+      <li>
+        Is the stated scope of the changes to the project clear?
+      </li>
+      <li>
+        If the scope is clear, are the architecture changes minor (i..e. simple or straightforward)?
+      </li>
+      <li>
+        Is there enough information available to determine which SMEs are needed?
+      </li>
+      <li>
+        Has the project been to a TRB consult session before?
+      </li>
+      <li>
+        If the project has been to a TRB consult session before, are the stakeholders, and the contractor the same as those that attended before?
+      </li>
+    </ul>
+    <ul
+      class="usa-button-group margin-top-3"
+    >
+      <li
+        class="usa-button-group__item"
+      >
+        <button
+          class="usa-button usa-button--outline"
+          data-testid="button"
+          type="button"
+        >
+          Request edits
+        </button>
+      </li>
+      <li
+        class="usa-button-group__item"
+      >
+        <button
+          class="usa-button usa-button--outline"
+          data-testid="button"
+          type="button"
+        >
+          Ready for consult
+        </button>
+      </li>
+      <li
+        class="usa-button-group__item"
+      >
+        <button
+          class="usa-button usa-button--unstyled"
+          data-testid="button"
+          type="button"
+        >
+          or, close this request
+        </button>
+      </li>
+    </ul>
+  </div>
+</DocumentFragment>
+`;
 
 exports[`admin action component Matches the snapshot 1`] = `
 <DocumentFragment>
