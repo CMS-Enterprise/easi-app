@@ -322,7 +322,7 @@ func NewCreateActionUpdateStatus(
 	config Config,
 	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
-	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
+	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText models.HTML) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) func(
 	ctx context.Context,
@@ -367,7 +367,7 @@ func NewCreateActionUpdateStatus(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
-				action.Feedback.ValueOrEmptyString(), //TODO: EMAIL
+				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
 				return nil, err

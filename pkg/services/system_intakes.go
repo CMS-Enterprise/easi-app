@@ -387,7 +387,7 @@ func NewProvideGRTFeedback(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
-	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
+	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText models.HTML) error,
 ) func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
 	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
@@ -418,7 +418,7 @@ func NewProvideGRTFeedback(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
-				action.Feedback.ValueOrEmptyString(),
+				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
 				return nil, err
