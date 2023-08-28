@@ -30,6 +30,14 @@ func (html *HTML) ValueOrEmptyString() string {
 	return ""
 }
 
+// ValueOrEmptyHTML returns either the value of the html or an empty HTML type if nil
+func (html *HTML) ValueOrEmptyHTML() HTML {
+	if html != nil {
+		return *html
+	}
+	return ""
+}
+
 // StringPointer casts an HTML pointer to a string pointer
 func (html *HTML) StringPointer() *string {
 	return (*string)(html)
