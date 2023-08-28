@@ -680,15 +680,15 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 
 		for _, intake := range intakes {
 			if intake.ID == intakeWithNoCommentsID {
-				s.Nil(intake.LastAdminNoteContent.Ptr())
+				s.Nil(intake.LastAdminNoteContent)
 				s.Nil(intake.LastAdminNoteCreatedAt)
 			}
 			if intake.ID == intakeWithOneCommentID {
-				s.Equal("the only comment", intake.LastAdminNoteContent.String)
+				s.Equal("the only comment", intake.LastAdminNoteContent.ValueOrEmptyString())
 				s.Equal("2021-01-01", intake.LastAdminNoteCreatedAt.Format("2006-01-02"))
 			}
 			if intake.ID == intakeWithManyCommentsID {
-				s.Equal("the third comment", intake.LastAdminNoteContent.String)
+				s.Equal("the third comment", intake.LastAdminNoteContent.ValueOrEmptyString())
 				s.Equal("2021-01-03", intake.LastAdminNoteCreatedAt.Format("2006-01-02"))
 			}
 		}

@@ -2833,7 +2833,7 @@ func (r *systemIntakeResolver) GrtReviewEmailBody(ctx context.Context, obj *mode
 // LastAdminNote is the resolver for the lastAdminNote field.
 func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error) {
 	return &model.LastAdminNote{
-		Content:   obj.LastAdminNoteContent.Ptr(),
+		Content:   obj.LastAdminNoteContent,
 		CreatedAt: obj.LastAdminNoteCreatedAt,
 	}, nil
 }
