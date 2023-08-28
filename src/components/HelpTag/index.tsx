@@ -12,10 +12,6 @@ const articleTypes: ArticleRouteProps[] = [
     route: '/it-governance'
   },
   {
-    type: 'Section 508',
-    route: '/section-508'
-  },
-  {
     type: 'Technical Review Board',
     route: '/trb'
   }

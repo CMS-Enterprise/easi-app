@@ -2036,7 +2036,9 @@ func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input model.
 		input.ID,
 		r.emailClient,
 		r.service.FetchUserInfo,
-		r.service.FetchUserInfos)
+		r.service.FetchUserInfos,
+		input.CopyTrbMailbox,
+		input.NotifyEuaIds)
 }
 
 // CreateTRBAdviceLetterRecommendation is the resolver for the createTRBAdviceLetterRecommendation field.
