@@ -326,7 +326,7 @@ func NewUpdateRejectionFields(
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
-	sendRejectRequestEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, reason models.HTML, nextSteps models.HTML, feedback models.HTML) error,
 ) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
@@ -367,9 +367,9 @@ func NewUpdateRejectionFields(
 				existing.ID,
 				existing.ProjectName.String,
 				existing.Requester,
-				existing.RejectionReason.ValueOrEmptyString(), // TODO: EMAIL
-				existing.DecisionNextSteps.ValueOrEmptyString(),
-				action.Feedback.ValueOrEmptyString(),
+				existing.RejectionReason.ValueOrEmptyHTML(),
+				existing.DecisionNextSteps.ValueOrEmptyHTML(),
+				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
 				return nil, err

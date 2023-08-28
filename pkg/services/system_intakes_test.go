@@ -498,9 +498,9 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 		return nil
 	}
 
-	feedbackForEmailText := ""
+	var feedbackForEmailText models.HTML
 	multipleReviewEmailsSent := false
-	fnSendRejectRequestEmailToMulipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ string, feedback string) error {
+	fnSendRejectRequestEmailToMulipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ models.HTML, _ models.HTML, feedback models.HTML) error {
 		feedbackForEmailText = feedback
 		multipleReviewEmailsSent = true
 		return nil
@@ -528,7 +528,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
 		s.True(multipleReviewEmailsSent)
-		s.Equal("Feedback", feedbackForEmailText)
+		s.Equal(models.HTML("Feedback"), feedbackForEmailText)
 	})
 
 	s.Run("happy path without sending email (to multiple recipients)", func() {
@@ -556,7 +556,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	fnSaveActionErr := func(_ context.Context, _ *models.Action) error {
 		return errors.New("action error")
 	}
-	fnSendRejectRequestEmailToMulipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ string, _ string) error {
+	fnSendRejectRequestEmailToMulipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ models.HTML, _ models.HTML, _ models.HTML) error {
 		return errors.New("send email to multiple recipients error")
 	}
 
