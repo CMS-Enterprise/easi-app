@@ -3,6 +3,7 @@ package email
 import (
 	"bytes"
 	"context"
+	"html/template"
 	"path"
 
 	"github.com/google/uuid"
@@ -25,7 +26,7 @@ type SendTRBRequestClosedEmailInput struct {
 // the TRB request closed email
 type trbRequestClosedEmailTemplateParams struct {
 	TRBRequestName      string
-	ReasonClosed        models.HTML //TODO: EMAIL
+	ReasonClosed        template.HTML
 	TRBRequestLink      string
 	TRBAdminRequestLink string
 	RequesterName       string
@@ -45,7 +46,7 @@ func (c Client) SendTRBRequestClosedEmail(ctx context.Context, input SendTRBRequ
 	templateParams := trbRequestClosedEmailTemplateParams{
 		TRBRequestName:      input.TRBRequestName,
 		RequesterName:       input.RequesterName,
-		ReasonClosed:        input.ReasonClosed,
+		ReasonClosed:        input.ReasonClosed.ToTemplate(),
 		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
 		TRBAdminRequestLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "request")),
 		TRBEmail:            c.config.TRBEmail,
