@@ -31,7 +31,6 @@ func TestCalculateSystemIntakeLCIDStatus(t *testing.T) {
 		intake := &models.SystemIntake{
 			LifecycleID:        null.StringFrom("123456"),
 			LifecycleExpiresAt: &tomorrow,
-			IsLCIDRetired:      false,
 		}
 
 		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
@@ -44,38 +43,11 @@ func TestCalculateSystemIntakeLCIDStatus(t *testing.T) {
 		intake := &models.SystemIntake{
 			LifecycleID:        null.StringFrom("234567"),
 			LifecycleExpiresAt: &yesterday,
-			IsLCIDRetired:      false,
 		}
 
 		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
 
 		assert.NotNil(t, lcidStatus)
 		assert.EqualValues(t, model.SystemIntakeLCIDStatusExpired, *lcidStatus)
-	})
-
-	t.Run("LCID status is RETIRED if LCID exists and has been retired and the expiration date hasn't been reached", func(t *testing.T) {
-		intake := &models.SystemIntake{
-			LifecycleID:        null.StringFrom("345678"),
-			LifecycleExpiresAt: &tomorrow,
-			IsLCIDRetired:      true,
-		}
-
-		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
-
-		assert.NotNil(t, lcidStatus)
-		assert.EqualValues(t, model.SystemIntakeLCIDStatusRetired, *lcidStatus)
-	})
-
-	t.Run("LCID status is RETIRED if LCID exists and has been retired, even if expiration date has been reached", func(t *testing.T) {
-		intake := &models.SystemIntake{
-			LifecycleID:        null.StringFrom("456789"),
-			LifecycleExpiresAt: &yesterday,
-			IsLCIDRetired:      true,
-		}
-
-		lcidStatus := CalculateSystemIntakeLCIDStatus(intake, mockCurrentTime)
-
-		assert.NotNil(t, lcidStatus)
-		assert.EqualValues(t, model.SystemIntakeLCIDStatusRetired, *lcidStatus)
 	})
 }

@@ -1043,7 +1043,6 @@ type SystemIntake {
   decisionState: SystemIntakeDecisionState!
   statusRequester: SystemIntakeStatusRequester!
   statusAdmin: SystemIntakeStatusAdmin!
-  isLCIDRetired: Boolean!
   lcidStatus: SystemIntakeLCIDStatus
 }
 
@@ -2865,5 +2864,4 @@ The possible statuses that an issued LCID can be in
 enum SystemIntakeLCIDStatus {
   ISSUED
   EXPIRED
-  RETIRED
 }

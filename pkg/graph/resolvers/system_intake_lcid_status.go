@@ -13,14 +13,9 @@ func CalculateSystemIntakeLCIDStatus(intake *models.SystemIntake, currentTime ti
 	// which we need to return the proper type
 	issuedStatus := model.SystemIntakeLCIDStatusIssued
 	expiredStatus := model.SystemIntakeLCIDStatusExpired
-	retiredStatus := model.SystemIntakeLCIDStatusRetired
 
 	if intake == nil || intake.LifecycleID.ValueOrZero() == "" {
 		return nil
-	}
-
-	if intake.IsLCIDRetired {
-		return &retiredStatus
 	}
 
 	// LifecycleExpiresAt should always be non-nil if an LCID has been issued; check just to avoid a panic if there's inconsistent data

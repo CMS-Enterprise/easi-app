@@ -720,7 +720,6 @@ type ComplexityRoot struct {
 		GrtReviewEmailBody          func(childComplexity int) int
 		HasUIChanges                func(childComplexity int) int
 		ID                          func(childComplexity int) int
-		IsLCIDRetired               func(childComplexity int) int
 		Isso                        func(childComplexity int) int
 		ItGovTaskStatuses           func(childComplexity int) int
 		LastAdminNote               func(childComplexity int) int
@@ -1392,7 +1391,6 @@ type SystemIntakeResolver interface {
 
 	StatusRequester(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusRequester, error)
 	StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error)
-
 	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeLCIDStatus, error)
 }
 type SystemIntakeDocumentResolver interface {
@@ -5243,13 +5241,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.ID(childComplexity), true
 
-	case "SystemIntake.isLCIDRetired":
-		if e.complexity.SystemIntake.IsLCIDRetired == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.IsLCIDRetired(childComplexity), true
-
 	case "SystemIntake.isso":
 		if e.complexity.SystemIntake.Isso == nil {
 			break
@@ -8164,7 +8155,6 @@ type SystemIntake {
   decisionState: SystemIntakeDecisionState!
   statusRequester: SystemIntakeStatusRequester!
   statusAdmin: SystemIntakeStatusAdmin!
-  isLCIDRetired: Boolean!
   lcidStatus: SystemIntakeLCIDStatus
 }
 
@@ -9986,7 +9976,6 @@ The possible statuses that an issued LCID can be in
 enum SystemIntakeLCIDStatus {
   ISSUED
   EXPIRED
-  RETIRED
 }
 `, BuiltIn: false},
 }
@@ -14538,8 +14527,6 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -23418,8 +23405,6 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -27724,8 +27709,6 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -32320,8 +32303,6 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -32559,8 +32540,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -33745,8 +33724,6 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -37945,50 +37922,6 @@ func (ec *executionContext) fieldContext_SystemIntake_statusAdmin(ctx context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_isLCIDRetired(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.IsLCIDRetired, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntake_isLCIDRetired(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _SystemIntake_lcidStatus(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 	if err != nil {
@@ -38237,8 +38170,6 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -46673,8 +46604,6 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -47906,8 +47835,6 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
 			case "statusAdmin":
 				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
-			case "isLCIDRetired":
-				return ec.fieldContext_SystemIntake_isLCIDRetired(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			}
@@ -59364,13 +59291,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
-		case "isLCIDRetired":
-
-			out.Values[i] = ec._SystemIntake_isLCIDRetired(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "lcidStatus":
 			field := field
 

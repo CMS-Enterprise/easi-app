@@ -1107,18 +1107,16 @@ type SystemIntakeLCIDStatus string
 const (
 	SystemIntakeLCIDStatusIssued  SystemIntakeLCIDStatus = "ISSUED"
 	SystemIntakeLCIDStatusExpired SystemIntakeLCIDStatus = "EXPIRED"
-	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
 )
 
 var AllSystemIntakeLCIDStatus = []SystemIntakeLCIDStatus{
 	SystemIntakeLCIDStatusIssued,
 	SystemIntakeLCIDStatusExpired,
-	SystemIntakeLCIDStatusRetired,
 }
 
 func (e SystemIntakeLCIDStatus) IsValid() bool {
 	switch e {
-	case SystemIntakeLCIDStatusIssued, SystemIntakeLCIDStatusExpired, SystemIntakeLCIDStatusRetired:
+	case SystemIntakeLCIDStatusIssued, SystemIntakeLCIDStatusExpired:
 		return true
 	}
 	return false
