@@ -53,7 +53,7 @@ const summaryQuery: MockedQuery<
 };
 
 describe('Trb Admin: Action: Schedule a TRB consult session', () => {
-  Element.prototype.scrollIntoView = jest.fn();
+  Element.prototype.scrollIntoView = vi.fn();
 
   const store = easiMockStore({ groups: ['EASI_TRB_ADMIN_D'] });
 

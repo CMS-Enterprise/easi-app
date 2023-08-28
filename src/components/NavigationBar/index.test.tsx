@@ -8,7 +8,7 @@ import configureMockStore from 'redux-mock-store';
 
 import NavigationBar, { navLinks } from './index';
 
-jest.mock('react-i18next', () => ({
+vi.mock('react-i18next', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown
   useTranslation: () => {
     return {
@@ -20,7 +20,7 @@ jest.mock('react-i18next', () => ({
   }
 }));
 
-jest.mock('launchdarkly-react-client-sdk', () => ({
+vi.mock('launchdarkly-react-client-sdk', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown
   useFlags: () => {
     return {

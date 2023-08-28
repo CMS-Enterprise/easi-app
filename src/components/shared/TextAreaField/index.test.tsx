@@ -31,7 +31,7 @@ describe('The Text Area Field component', () => {
         value: 'Hello'
       }
     };
-    const mock = jest.fn();
+    const mock = vi.fn();
     const component = mount(
       <TextAreaField {...requiredProps} onChange={mock} />
     );

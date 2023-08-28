@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer';
 
 import Cookies from './index';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {

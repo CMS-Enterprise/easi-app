@@ -304,7 +304,7 @@ describe('Business case preferred solution form', () => {
     });
 
     it('runs validations and renders form errors', async () => {
-      window.scrollTo = jest.fn();
+      window.scrollTo = vi.fn;
 
       renderPage(storeWithFinalBizCase);
 
