@@ -15,8 +15,8 @@ type testSanitizeHTMLType struct {
 func TestDevelopmentHTML(t *testing.T) {
 	testCase := testSanitizeHTMLType{
 		testCase:       "Development",
-		input:          `<a href="https://dev.easi.cms.gov/">Valid link</a>`,
-		expectedOutput: `<a href="https://dev.easi.cms.gov/" rel="nofollow noreferrer noopener" target="_blank">Valid link</a>`,
+		input:          `<a href="mailto://dev.gsd.blahbla" rel="nofollow noreferrer noopener" target="_blank">Valid link</a>`,
+		expectedOutput: `<a href="mailto://dev.gsd.blahbla" rel="nofollow noreferrer noopener" target="_blank">Valid link</a>`,
 	}
 	actualOutput := SanitizeHTML(testCase.input)
 	assert.EqualValues(t, testCase.expectedOutput, actualOutput)
@@ -41,9 +41,14 @@ func TestSanitizeHTML(t *testing.T) {
 			expectedOutput: `<a href="https://dev.easi.cms.gov/" rel="nofollow noreferrer noopener" target="_blank">Valid link</a> <p>InValid link</p>`,
 		},
 		{
-			testCase:       "Sanitize HTML will not add no opener or target black to relative links",
-			input:          `<a href="nonsense" rel="nofollow noreferrer noopener" target="_blank">Valid link</a>`,
-			expectedOutput: `<a href="nonsense" rel="nofollow noreferrer">Valid link</a>`,
+			testCase:       "Sanitize HTML will not allow relative links",
+			input:          `<a href="nonsense" rel="nofollow noreferrer noopener" target="_blank">InValid link</a>`,
+			expectedOutput: `InValid link`,
+		},
+		{
+			testCase:       "Sanitize HTML will allow mailto links",
+			input:          `<a href="mailto://test@test.test" rel="nofollow noreferrer noopener" target="_blank">Valid link</a>`,
+			expectedOutput: `<a href="mailto://test@test.test" rel="nofollow noreferrer noopener" target="_blank">Valid link</a>`,
 		},
 		{
 			testCase:       "Sanitize HTML will add security to rel attribute",
@@ -57,8 +62,8 @@ func TestSanitizeHTML(t *testing.T) {
 		},
 		{
 			testCase:       "Sanitize HTML will allow tags p, br, strong, em, ol, ul, li, a",
-			input:          `<p><strong>Notification email</strong></p><p>A <a href="asdasd" rel="nofollow noreferrer noopener" target="_blank">notification</a> email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.</p><p>Choose recipients</p><ol><li><p>asd</p></li><li><p>asd</p></li><li><p>asdewg</p></li></ol><ul><li><p>Hello</p></li><li><p><em>;l;lk;kl;</em></p></li></ul>`,
-			expectedOutput: `<p><strong>Notification email</strong></p><p>A <a href="asdasd" rel="nofollow noreferrer">notification</a> email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.</p><p>Choose recipients</p><ol><li><p>asd</p></li><li><p>asd</p></li><li><p>asdewg</p></li></ol><ul><li><p>Hello</p></li><li><p><em>;l;lk;kl;</em></p></li></ul>`,
+			input:          `<p><strong>Notification email</strong></p><p>A <a href="https://asdasd" rel="nofollow noreferrer noopener" target="_blank">notification</a> email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.</p><p>Choose recipients</p><ol><li><p>asd</p></li><li><p>asd</p></li><li><p>asdewg</p></li></ol><ul><li><p>Hello</p></li><li><p><em>;l;lk;kl;</em></p></li></ul>`,
+			expectedOutput: `<p><strong>Notification email</strong></p><p>A <a href="https://asdasd" rel="nofollow noreferrer noopener" target="_blank">notification</a> email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.</p><p>Choose recipients</p><ol><li><p>asd</p></li><li><p>asd</p></li><li><p>asdewg</p></li></ol><ul><li><p>Hello</p></li><li><p><em>;l;lk;kl;</em></p></li></ul>`,
 		},
 	}
 

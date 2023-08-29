@@ -43,6 +43,7 @@ func createHTMLPolicy() *bluemonday.Policy {
 	// if not included, this will be added to all links rel="nofollow noreferrer noopener"
 	policy.AllowStandardURLs()
 	policy.AllowAttrs("href").OnElements("a")
+	policy.AllowRelativeURLs(false)
 	policy.AddTargetBlankToFullyQualifiedLinks(true)
 	policy.RequireNoReferrerOnLinks(true)
 	return policy
