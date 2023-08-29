@@ -1,11 +1,12 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-// import { IT_GOV_EMAIL } from 'constants/externalUrls';
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import { ITGovDraftBusinessCaseStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
@@ -41,8 +42,8 @@ const GovTaskBizCaseDraft = ({
   // Submitted date
   if (
     !dateInfo &&
-    bizCaseDraftStatus ===
-      ITGovDraftBusinessCaseStatus.DONE /* TODO:  EASI-3110 verify this new status */ &&
+    (bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.SUBMITTED ||
+      bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.DONE) &&
     bizCaseDraftSubmittedAt
   )
     dateInfo = {
@@ -76,6 +77,20 @@ const GovTaskBizCaseDraft = ({
           </Alert>
         )}
 
+        {/* No feedback info */}
+        {bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.DONE &&
+          !hasFeedback && (
+            <Alert slim type="info">
+              <Trans
+                i18nKey={`itGov:taskList.step.${stepKey}.noFeedbackInfo`}
+                components={{
+                  a: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>,
+                  email: IT_GOV_EMAIL
+                }}
+              />
+            </Alert>
+          )}
+
         {statusButtonText.has(bizCaseDraftStatus) && (
           <div className="margin-top-2">
             <UswdsReactLink variant="unstyled" className="usa-button" to="./">
@@ -92,8 +107,8 @@ const GovTaskBizCaseDraft = ({
         )}
 
         {/* Link to view submitted draft biz case */}
-        {bizCaseDraftStatus ===
-          ITGovDraftBusinessCaseStatus.DONE /* TODO: EASI-3110 verify this is the correct status as COMPLETED was replaced with submitted and DONE */ && (
+        {(bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.SUBMITTED ||
+          bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.DONE) && (
           <div className="margin-top-2">
             <UswdsReactLink to="./">
               {t(`taskList.step.${stepKey}.viewSubmittedDraftBusinessCase`)}
