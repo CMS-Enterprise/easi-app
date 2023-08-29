@@ -82,6 +82,7 @@
     "build:ts": "tsc",
     "serve": "vite preview",
     "test": "vitest",
+    "test:ui": "vitest --ui",
     "test:coverage": "craco test --coverage --watchAll=false",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
