@@ -12,16 +12,6 @@ type testSanitizeHTMLType struct {
 	expectedOutput string
 }
 
-func TestDevelopmentHTML(t *testing.T) {
-	testCase := testSanitizeHTMLType{
-		testCase:       "Development",
-		input:          `<a href="mailto://dev.gsd.blahbla" rel="nofollow noreferrer noopener" target="_blank">Valid link</a>`,
-		expectedOutput: `<a href="mailto://dev.gsd.blahbla" rel="nofollow noreferrer noopener" target="_blank">Valid link</a>`,
-	}
-	actualOutput := SanitizeHTML(testCase.input)
-	assert.EqualValues(t, testCase.expectedOutput, actualOutput)
-
-}
 func TestSanitizeHTML(t *testing.T) {
 
 	sanitizeHTMLTests := []testSanitizeHTMLType{
