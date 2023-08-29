@@ -7,3 +7,5 @@ import '@testing-library/jest-dom';
 import './i18n';
 
 configure({ adapter: new Adapter() });
+
+window.URL.createObjectURL = vi.fn();
