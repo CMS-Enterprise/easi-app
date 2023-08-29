@@ -8,43 +8,19 @@ import i18next from 'i18next';
 import {
   getTrbAdminNotesQuery,
   getTRBRequestAttendeesQuery,
+  getTrbRequestDocumentsQuery,
   getTrbRequestQuery,
   getTrbRequestSummaryQuery,
   trbRequestSummary
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import {
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
-} from 'queries/types/GetTrbRequestDocuments';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
-import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import InitialRequestForm from './InitialRequestForm';
 import TRBRequestInfoWrapper from './RequestContext';
-
-const getTrbRequestDocumentsQuery: MockedQuery<
-  GetTrbRequestDocuments,
-  GetTrbRequestDocumentsVariables
-> = {
-  request: {
-    query: GetTrbRequestDocumentsQuery,
-    variables: { id: mockTrbRequestId }
-  },
-  result: {
-    data: {
-      trbRequest: {
-        __typename: 'TRBRequest',
-        id: mockTrbRequestId,
-        documents: []
-      }
-    }
-  }
-};
 
 describe('Trb Admin Initial Request Form', () => {
   it('renders', async () => {

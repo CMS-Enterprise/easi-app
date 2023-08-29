@@ -13,6 +13,7 @@ import i18next from 'i18next';
 import {
   getTrbAdminNotesQuery,
   getTRBRequestAttendeesQuery,
+  getTrbRequestDocumentsQuery,
   getTrbRequestQuery,
   getTrbRequestSummary,
   getTrbRequestSummaryQuery,
@@ -93,7 +94,8 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             getTrbAdminNotesQuery,
             summaryQuery,
             summaryQuery,
-            emptyConsultMeetingTime
+            emptyConsultMeetingTime,
+            getTrbRequestDocumentsQuery
           ]}
         >
           <MemoryRouter
