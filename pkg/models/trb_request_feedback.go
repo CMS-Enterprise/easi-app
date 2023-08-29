@@ -19,7 +19,7 @@ const (
 type TRBRequestFeedback struct {
 	BaseStruct
 	TRBRequestID    uuid.UUID         `json:"trbRequestId" db:"trb_request_id"`
-	FeedbackMessage HTML              `json:"feedbackMessage" db:"feedback_message"` // TODO, should we leave this as a string? Or enforce the HTML type?
+	FeedbackMessage HTML              `json:"feedbackMessage" db:"feedback_message"`
 	CopyTRBMailbox  bool              `json:"copyTrbMailbox" db:"copy_trb_mailbox"`
 	NotifyEUAIDs    pq.StringArray    `json:"notifyEuaIds" db:"notify_eua_ids"`
 	Action          TRBFeedbackAction `json:"action" db:"action"`

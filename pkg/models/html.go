@@ -62,7 +62,7 @@ func (html *HTML) UnmarshalGQLContext(ctx context.Context, v interface{}) error 
 // MarshalGQLContext marshals the HTML type to JSON to return to graphQL
 func (html HTML) MarshalGQLContext(ctx context.Context, w io.Writer) error {
 
-	// Marshal the HTML value to JSON
+	// Marshal the HTML value to JSON so that it's properly escaped (wrapped in quotation marks)
 	jsonValue, err := json.Marshal(html)
 	if err != nil {
 		return fmt.Errorf("failed to marshal HTML to JSON: %w", err)
