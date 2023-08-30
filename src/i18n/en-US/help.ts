@@ -3,7 +3,7 @@ import { sendFeedbackOptions } from 'constants/helpFeedback';
 const help = {
   heading: "We're here to help.",
   subheading:
-    'Get assistance with your governance processes and requests, 508 testing, and system information.',
+    'Get assistance with your governance processes, technical assistance requests, and system information.',
   threeOfTotalArticles: '3 of <1>{{totalArticles}}</1> articles',
   articleLinks: {
     allHelp: {
@@ -13,10 +13,6 @@ const help = {
     itGovernance: {
       copy: 'View IT Governance articles',
       href: 'help/it-governance'
-    },
-    section508: {
-      copy: 'View Section 508 articles',
-      href: 'help/section-508'
     },
     technicalReviewBoard: {
       copy: 'View TRB articles',
@@ -39,12 +35,6 @@ const help = {
     subheading:
       'Get assistance with your governance processes and requests, such as adding a new system or service or completing a Business Case.'
   },
-  section508: {
-    heading: 'Section 508',
-    subheading:
-      'Get assistance with Section 508 processes and requirements, such as 508 testing. To learn more about Section 508, please visit ',
-    website: 'www.section508.gov'
-  },
   technicalReviewBoard: {
     heading: 'Technical Review Board',
     subheading:
@@ -62,13 +52,6 @@ const help = {
         content:
           'The Governance Review Admin team can help with questions related to your IT Governance requests.',
         email: 'IT_Governance@cms.hhs.gov'
-      },
-      section508: {
-        title: 'Section 508',
-        type: 'Section 508',
-        content:
-          'The Section 508 team can help with questions related to your 508 testing requests, including those about COTS and GOTS products.',
-        email: 'CMS_Section508@cms.hhs.gov'
       },
       enterprise: {
         title: 'Enterprise Architecture',

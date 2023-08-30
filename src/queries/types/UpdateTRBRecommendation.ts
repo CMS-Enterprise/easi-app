@@ -13,7 +13,7 @@ export interface UpdateTRBRecommendation_updateTRBAdviceLetterRecommendation {
   __typename: "TRBAdviceLetterRecommendation";
   id: UUID;
   title: string;
-  recommendation: string;
+  recommendation: HTML;
   links: string[];
 }
 

@@ -55,7 +55,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 				// CreatedAt:      &ts,
 				AuthorEUAID: euaID,
 				AuthorName:  null.StringFrom(ts.String()),
-				Content:     null.StringFrom(ts.String()),
+				Content:     models.HTMLPointer(ts.String()),
 			}
 
 			createdNote, err := s.store.CreateSystemIntakeNote(ctx, in)
@@ -110,7 +110,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 			CreatedAt:      &ts,
 			AuthorEUAID:    euaID,
 			AuthorName:     null.StringFrom(ts.String()),
-			Content:        null.StringFrom(ts.String()),
+			Content:        models.HTMLPointer(ts.String()),
 		}
 
 		createdNote, err := s.store.CreateSystemIntakeNote(ctx, &noteToUpdate)
@@ -140,7 +140,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 			CreatedAt:      &ts,
 			AuthorEUAID:    euaID,
 			AuthorName:     null.StringFrom(ts.String()),
-			Content:        null.StringFrom("Test content before update"),
+			Content:        models.HTMLPointer("Test content before update"),
 		}
 
 		createdNote, err := s.store.CreateSystemIntakeNote(ctx, &noteToUpdate)
@@ -149,7 +149,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 		s.False(createdNote.IsArchived)
 
 		archivingUser := "SF13"
-		noteToUpdate.Content = null.StringFrom("Test content after updates")
+		noteToUpdate.Content = models.HTMLPointer("Test content after updates")
 		noteToUpdate.ModifiedBy = &archivingUser
 		noteToUpdate.ModifiedAt = &ts
 

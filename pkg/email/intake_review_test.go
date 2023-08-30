@@ -13,7 +13,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmails() {
 	intakeID := uuid.MustParse("accf1f18-5680-4454-8b0e-2d6275339967")
 	projectName := "Reviewable Request"
 	requester := "Joe Schmoe"
-	emailText := "Test Text\n\nTest"
+	emailText := models.HTML("Test Text\n\nTest")
 
 	s.Run("successful call sends to the correct recipients", func() {
 		s.runMultipleRecipientsTestAgainstAllTestCases(func(client Client, recipients models.EmailNotificationRecipients) error {

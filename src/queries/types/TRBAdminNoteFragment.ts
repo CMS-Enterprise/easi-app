@@ -19,7 +19,7 @@ export interface TRBAdminNoteFragment {
   id: UUID;
   isArchived: boolean;
   category: TRBAdminNoteCategory;
-  noteText: string;
+  noteText: HTML;
   author: TRBAdminNoteFragment_author;
   createdAt: Time;
 }

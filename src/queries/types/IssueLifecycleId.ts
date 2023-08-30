@@ -11,11 +11,11 @@ import { IssueLifecycleIdInput } from "./../../types/graphql-global-types";
 
 export interface IssueLifecycleId_issueLifecycleId_systemIntake {
   __typename: "SystemIntake";
-  decisionNextSteps: string | null;
+  decisionNextSteps: HTML | null;
   id: UUID;
   lcid: string | null;
   lcidExpiresAt: Time | null;
-  lcidScope: string | null;
+  lcidScope: HTML | null;
 }
 
 export interface IssueLifecycleId_issueLifecycleId {

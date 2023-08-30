@@ -308,7 +308,7 @@ const technicalAssistance = {
   table: {
     heading: 'My TRB requests',
     header: {
-      requestName: 'Request Name',
+      requestName: 'Project title',
       submissionDate: 'Submission date',
       status: 'Request status',
       trbConsultDate: 'TRB consult date'
@@ -509,7 +509,7 @@ const technicalAssistance = {
   //
   basic: {
     labels: {
-      name: 'Request name',
+      name: 'Project title',
       component: 'Request component',
       projectInformation: 'Project Information',
       needsAssistanceWith: 'What do you need technical assistance with?',

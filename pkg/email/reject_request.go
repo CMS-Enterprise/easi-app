@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"html/template"
 	"path"
 
 	"github.com/google/uuid"
@@ -16,9 +17,9 @@ type rejectRequest struct {
 	ProjectName  string
 	GRTEmail     string
 	Requester    string
-	Reason       string
-	NextSteps    string
-	Feedback     string
+	Reason       template.HTML
+	NextSteps    template.HTML
+	Feedback     template.HTML
 	DecisionLink string
 }
 
@@ -26,18 +27,18 @@ func (c Client) rejectRequestBody(
 	systemIntakeID uuid.UUID,
 	projectName string,
 	requester string,
-	reason string,
-	nextSteps string,
-	feedback string,
+	reason models.HTML,
+	nextSteps models.HTML,
+	feedback models.HTML,
 ) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := rejectRequest{
 		ProjectName:  projectName,
 		GRTEmail:     string(c.config.GRTEmail),
 		Requester:    requester,
-		Reason:       reason,
-		NextSteps:    nextSteps,
-		Feedback:     feedback,
+		Reason:       reason.ToTemplate(),
+		NextSteps:    nextSteps.ToTemplate(),
+		Feedback:     feedback.ToTemplate(),
 		DecisionLink: c.urlFromPath(decisionPath),
 	}
 	var b bytes.Buffer
@@ -58,9 +59,9 @@ func (c Client) SendRejectRequestEmails(
 	systemIntakeID uuid.UUID,
 	projectName string,
 	requester string,
-	reason string,
-	nextSteps string,
-	feedback string,
+	reason models.HTML,
+	nextSteps models.HTML,
+	feedback models.HTML,
 ) error {
 	subject := "Request in EASi not approved"
 	body, err := c.rejectRequestBody(systemIntakeID, projectName, requester, reason, nextSteps, feedback)

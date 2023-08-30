@@ -40,7 +40,9 @@ export default {
         viewSubmittedDraftBusinessCase: 'View submitted draft Business Case',
         submittedInfo: 'Draft Business Case submitted. Waiting for feedback.',
         editsRequestedWarning:
-          'The Governance Team has requested edits to your draft Business Case. Please make the requested changes and resubmit your form.'
+          'The Governance Team has requested edits to your draft Business Case. Please make the requested changes and resubmit your form.',
+        noFeedbackInfo:
+          'The Governance Team had no feedback for your draft Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       grtMeeting: {
         title: 'Attend the GRT meeting',
@@ -58,7 +60,9 @@ export default {
         viewSubmittedFinalBusinessCase: 'View submitted final Business Case',
         submittedInfo: 'Final Business Case submitted. Waiting for feedback.',
         editsRequestedWarning:
-          'The Governance Team has requested edits to your final Business Case. Please make the requested changes and resubmit your form.'
+          'The Governance Team has requested edits to your final Business Case. Please make the requested changes and resubmit your form.',
+        noFeedbackInfo:
+          'The Governance Team had no feedback for your final Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       grbMeeting: {
         title: 'Attend the GRB meeting',

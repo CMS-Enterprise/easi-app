@@ -24,7 +24,7 @@ exports[`HelpHome matches the snapshot 1`] = `
         <div
           class="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5"
         >
-          Get assistance with your governance processes and requests, 508 testing, and system information.
+          Get assistance with your governance processes, technical assistance requests, and system information.
         </div>
       </div>
       <div
@@ -191,7 +191,7 @@ exports[`HelpHome matches the snapshot 1`] = `
             <p
               class="text-base"
             >
-              3 of 8 articles
+              3 of 6 articles
             </p>
             <a
               class="usa-link help-home__link--all"
@@ -208,12 +208,6 @@ exports[`HelpHome matches the snapshot 1`] = `
               href="/help/it-governance"
             >
               View IT Governance articles
-            </a>
-            <a
-              class="usa-link"
-              href="/help/section-508"
-            >
-              View Section 508 articles
             </a>
             <a
               class="usa-link"
@@ -266,31 +260,6 @@ exports[`HelpHome matches the snapshot 1`] = `
               href="mailto:IT_Governance@cms.hhs.gov"
             >
               IT_Governance@cms.hhs.gov
-            </a>
-          </div>
-          <div
-            class="desktop:grid-col-4 margin-bottom-2"
-          >
-            <h3
-              class="margin-bottom-1 margin-top-2"
-            >
-              Section 508
-            </h3>
-            <p
-              class="margin-top-1 line-height-body-4"
-            >
-              The Section 508 team can help with questions related to your 508 testing requests, including those about COTS and GOTS products.
-            </p>
-            <h4
-              class="margin-y-1"
-            >
-              Email addresses
-            </h4>
-            <a
-              class="usa-link"
-              href="mailto:CMS_Section508@cms.hhs.gov"
-            >
-              CMS_Section508@cms.hhs.gov
             </a>
           </div>
           <div

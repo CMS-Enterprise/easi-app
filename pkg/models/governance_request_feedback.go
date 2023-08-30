@@ -35,7 +35,7 @@ const (
 type GovernanceRequestFeedback struct {
 	BaseStruct
 	IntakeID     uuid.UUID                             `json:"intakeId" db:"intake_id"`
-	Feedback     string                                `json:"feedback" db:"feedback"`
+	Feedback     HTML                                  `json:"feedback" db:"feedback"`
 	SourceAction GovernanceRequestFeedbackSourceAction `json:"sourceAction" db:"source_action"`
 	TargetForm   GovernanceRequestFeedbackTargetForm   `json:"targetForm" db:"target_form"`
 	Type         GovernanceRequestFeedbackType         `json:"type" db:"type"`
