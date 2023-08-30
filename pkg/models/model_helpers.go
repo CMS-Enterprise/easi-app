@@ -10,3 +10,9 @@ func ConvertEnums[EnumType ~string](pqGroups pq.StringArray) []EnumType {
 	}
 	return enumValues
 }
+
+// HTMLPointer returns a pointer to an HTML type from a string input
+func HTMLPointer(input string) *HTML {
+	html := HTML(input)
+	return &html
+}

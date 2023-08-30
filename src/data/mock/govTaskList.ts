@@ -344,7 +344,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.SUBMITTED,
         grtMeetingStatus: ITGovGRTStatus.CANT_START,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -395,7 +395,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.SUBMITTED,
         grtMeetingStatus: ITGovGRTStatus.CANT_START,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -415,6 +415,57 @@ export const taskListState: {
       grbDate: null
     }
   },
+  bizCaseDraftDoneWithFeedback: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
+        grtMeetingStatus: ITGovGRTStatus.CANT_START,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+        grbMeetingStatus: ITGovGRBStatus.CANT_START,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [
+        {
+          __typename: 'GovernanceRequestFeedback',
+          id
+        }
+      ],
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
+      bizCaseDraftSubmittedAt: '2023-07-16T00:30:28Z',
+      grtDate: null,
+      grbDate: null
+    }
+  },
+  bizCaseDraftDoneNoFeedback: {
+    systemIntake: {
+      __typename: 'SystemIntake',
+      id,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
+        grtMeetingStatus: ITGovGRTStatus.CANT_START,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+        grbMeetingStatus: ITGovGRBStatus.CANT_START,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      governanceRequestFeedbacks: [],
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
+      bizCaseDraftSubmittedAt: '2023-07-16T00:30:28Z',
+      grtDate: null,
+      grbDate: null
+    }
+  },
 
   grtMeetingCantStart: {
     systemIntake: {
@@ -424,7 +475,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.CANT_START,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -447,7 +498,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.NOT_NEEDED,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -470,7 +521,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.READY_TO_SCHEDULE,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -493,7 +544,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.SCHEDULED,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -516,7 +567,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.AWAITING_DECISION,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -539,7 +590,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -567,7 +618,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -591,7 +642,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.AWAITING_DECISION,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -636,7 +687,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.READY,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -659,7 +710,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.IN_PROGRESS,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -683,9 +734,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.SUBMITTED,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -707,7 +758,7 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.EDITS_REQUESTED,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
@@ -737,9 +788,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.SUBMITTED,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -759,7 +810,6 @@ export const taskListState: {
       bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z'
     }
   },
-  /*
   bizCaseFinalDoneWithFeedback: {
     systemIntake: {
       __typename: 'SystemIntake',
@@ -768,9 +818,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED, // DONE
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -786,8 +836,8 @@ export const taskListState: {
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
       grbDate: null,
-      bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z'
+      bizCaseFinalUpdatedAt: '2023-07-2T00:30:28Z',
+      bizCaseFinalSubmittedAt: '2023-07-21T00:30:28Z'
     }
   },
   bizCaseFinalDoneNoFeedback: {
@@ -798,9 +848,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED, // DONE
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -812,10 +862,9 @@ export const taskListState: {
       grtDate: '2023-07-17T00:30:28Z',
       grbDate: null,
       bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
-      bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z'
+      bizCaseFinalSubmittedAt: '2023-07-21T00:30:28Z'
     }
-  }
-  */
+  },
 
   grbMeetingCantStart: {
     systemIntake: {
@@ -825,9 +874,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -848,9 +897,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.NOT_NEEDED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -871,9 +920,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.READY_TO_SCHEDULE,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -894,9 +943,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.SCHEDULED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -917,9 +966,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -941,9 +990,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
@@ -964,9 +1013,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.IN_REVIEW
       },
@@ -987,9 +1036,9 @@ export const taskListState: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
         feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
         grtMeetingStatus: ITGovGRTStatus.COMPLETED,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.COMPLETED
       },

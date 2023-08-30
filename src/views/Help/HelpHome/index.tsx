@@ -9,7 +9,6 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import Divider from 'components/shared/Divider';
 import itGovernanceArticles from 'views/Help/ITGovernance/articles';
-import section508Articles from 'views/Help/Section508/articles';
 
 import trbArticles from '../TechnicalReviewBoard/articles';
 
@@ -18,9 +17,7 @@ import './index.scss';
 const HelpHome = () => {
   const { t } = useTranslation('help');
 
-  const allArticles = itGovernanceArticles
-    .concat(section508Articles)
-    .concat(trbArticles);
+  const allArticles = itGovernanceArticles.concat(trbArticles);
   const totalArticles = allArticles.length;
 
   const showTopThreeArticles = allArticles.slice(0, 3);
@@ -61,12 +58,6 @@ const HelpHome = () => {
                 {t('articleLinks.itGovernance.copy')}
               </UswdsReactLink>
               <UswdsReactLink
-                to={t('articleLinks.section508.href')}
-                className=""
-              >
-                {t('articleLinks.section508.copy')}
-              </UswdsReactLink>
-              <UswdsReactLink
                 to={t('articleLinks.technicalReviewBoard.href')}
                 className=""
               >
@@ -76,9 +67,7 @@ const HelpHome = () => {
           </div>
         </div>
         <Divider />
-        <HelpContacts
-          type={['IT Governance', 'Section 508', 'Technical Review Board']}
-        />
+        <HelpContacts type={['IT Governance', 'Technical Review Board']} />
       </div>
     </MainContent>
   );

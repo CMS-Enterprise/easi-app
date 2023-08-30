@@ -27,6 +27,7 @@ import {
   CreateSystemIntakeDocumentVariables
 } from 'queries/types/CreateSystemIntakeDocument';
 import { CreateSystemIntakeDocumentInput } from 'types/graphql-global-types';
+import { fileToBase64File } from 'utils/downloadFile';
 import { documentSchema } from 'validations/systemIntakeSchema';
 
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
@@ -69,10 +70,12 @@ const UploadForm = () => {
   });
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
+    const newFile = await fileToBase64File(formData.fileData);
     createDocument({
       variables: {
         input: {
-          ...formData,
+          fileData: newFile,
+          documentType: formData.documentType,
           // If type is set to 'Other', include description field
           ...(formData.documentType === 'OTHER'
             ? { otherTypeDescription }

@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -24,6 +23,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/alerts"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
@@ -287,7 +287,10 @@ func (s *Server) routes(
 			return nil, err
 		}
 		if !hasRole {
-			return nil, errors.New("not authorized")
+			// don't need to log here - services.HasRole() handles logging
+			return nil, &apperrors.UnauthorizedError{
+				Err: fmt.Errorf("not authorized: user does not have role %v", role),
+			}
 		}
 		return next(ctx)
 	}}
@@ -366,6 +369,8 @@ func (s *Server) routes(
 			store.FetchBusinessCaseByID,
 			services.AuthorizeUserIsBusinessCaseRequester,
 			store.UpdateBusinessCase,
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
 		),
 	)
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())

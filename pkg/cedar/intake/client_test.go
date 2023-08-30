@@ -113,7 +113,7 @@ func (s *ClientTestSuite) TestTranslation() {
 	})
 
 	s.Run("biz case", func() {
-		bc := translation.TranslatableBusinessCase(testhelpers.NewBusinessCase())
+		bc := translation.TranslatableBusinessCase(testhelpers.NewBusinessCase(uuid.New()))
 
 		ii, err := bc.CreateIntakeModel()
 		s.NoError(err)

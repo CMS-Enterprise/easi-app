@@ -6,13 +6,14 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
+	"github.com/cmsgov/easi-app/pkg/easiencoding"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
 	// general setup
-	trbRequest, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTFormalReview, suite.fetchUserInfoStub, suite.testConfigs.Store)
+	trbRequest, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTFormalReview, suite.testConfigs.Store)
 	suite.NoError(err)
 	suite.NotNil(trbRequest)
 	trbRequestID := trbRequest.ID
@@ -34,7 +35,9 @@ func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
 
 func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUID, documentToCreate *models.TRBRequestDocument) *models.TRBRequestDocument {
-	fileToUpload := bytes.NewReader([]byte("Test file content"))
+	testContents := "Test file content"
+	encodedFileContent := easiencoding.EncodeBase64String(testContents)
+	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
 	gqlInput := model.CreateTRBRequestDocumentInput{
 		RequestID:            documentToCreate.TRBRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,

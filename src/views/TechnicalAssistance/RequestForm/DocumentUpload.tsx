@@ -29,6 +29,7 @@ import {
   CreateTrbRequestDocument,
   CreateTrbRequestDocumentVariables
 } from 'queries/types/CreateTrbRequestDocument';
+import { fileToBase64File } from 'utils/downloadFile';
 import {
   documentSchema,
   TrbRequestInputDocument
@@ -88,7 +89,9 @@ const DocumentUpload = ({
   });
 
   const submit = handleSubmit(async formData => {
-    const input: any = clone(formData);
+    const input: TrbRequestInputDocument = clone(formData);
+
+    const newFile = await fileToBase64File(input.fileData);
 
     // Clear out otherTypeDescription if documentType isn't OTHER
     if (input.documentType !== 'OTHER') {
@@ -99,7 +102,9 @@ const DocumentUpload = ({
       variables: {
         input: {
           requestID,
-          ...input
+          documentType: input.documentType,
+          otherTypeDescription: input.otherTypeDescription,
+          fileData: newFile
         }
       }
     })

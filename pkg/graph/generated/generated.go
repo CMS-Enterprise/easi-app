@@ -51,6 +51,7 @@ type ResolverRoot interface {
 	CedarRoleType() CedarRoleTypeResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
 	CedarThreat() CedarThreatResolver
+	GovernanceRequestFeedback() GovernanceRequestFeedbackResolver
 	ITGovTaskStatuses() ITGovTaskStatusesResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
@@ -506,6 +507,7 @@ type ComplexityRoot struct {
 	}
 
 	GovernanceRequestFeedback struct {
+		Author       func(childComplexity int) int
 		CreatedAt    func(childComplexity int) int
 		CreatedBy    func(childComplexity int) int
 		Feedback     func(childComplexity int) int
@@ -515,6 +517,7 @@ type ComplexityRoot struct {
 		ModifiedBy   func(childComplexity int) int
 		SourceAction func(childComplexity int) int
 		TargetForm   func(childComplexity int) int
+		Type         func(childComplexity int) int
 	}
 
 	ITGovTaskStatuses struct {
@@ -554,7 +557,9 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionNoGovernanceNeeded       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNotItRequest             func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionNotRespondingClose       func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionProgressToNewStep        func(childComplexity int, input *model.SystemIntakeProgressToNewStepsInput) int
 		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionRequestEdits             func(childComplexity int, input model.SystemIntakeRequestEditsInput) int
 		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeContact                        func(childComplexity int, input model.CreateSystemIntakeContactInput) int
 		CreateSystemIntakeDocument                       func(childComplexity int, input model.CreateSystemIntakeDocumentInput) int
@@ -1211,6 +1216,9 @@ type CedarThreatResolver interface {
 	Type(ctx context.Context, obj *models.CedarThreat) (*string, error)
 	WeaknessRiskLevel(ctx context.Context, obj *models.CedarThreat) (*string, error)
 }
+type GovernanceRequestFeedbackResolver interface {
+	Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error)
+}
 type ITGovTaskStatusesResolver interface {
 	IntakeFormStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovIntakeFormStatus, error)
 	FeedbackFromInitialReviewStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovFeedbackStatus, error)
@@ -1231,6 +1239,8 @@ type MutationResolver interface {
 	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
 	UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error)
 	UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error)
+	CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -1338,7 +1348,7 @@ type SystemIntakeResolver interface {
 	AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeAnnualSpending, error)
 
 	CurrentStage(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error)
+
 	EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error)
@@ -1352,7 +1362,7 @@ type SystemIntakeResolver interface {
 	Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
-	LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error)
 	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error)
@@ -1360,7 +1370,7 @@ type SystemIntakeResolver interface {
 	OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error)
 	ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error)
+
 	RequestName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error)
@@ -1392,7 +1402,6 @@ type SystemIntakeFundingSourceResolver interface {
 }
 type SystemIntakeNoteResolver interface {
 	Author(ctx context.Context, obj *models.SystemIntakeNote) (*model.SystemIntakeNoteAuthor, error)
-	Content(ctx context.Context, obj *models.SystemIntakeNote) (string, error)
 
 	Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error)
 }
@@ -3498,6 +3507,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
 
+	case "GovernanceRequestFeedback.author":
+		if e.complexity.GovernanceRequestFeedback.Author == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.Author(childComplexity), true
+
 	case "GovernanceRequestFeedback.createdAt":
 		if e.complexity.GovernanceRequestFeedback.CreatedAt == nil {
 			break
@@ -3560,6 +3576,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GovernanceRequestFeedback.TargetForm(childComplexity), true
+
+	case "GovernanceRequestFeedback.type":
+		if e.complexity.GovernanceRequestFeedback.Type == nil {
+			break
+		}
+
+		return e.complexity.GovernanceRequestFeedback.Type(childComplexity), true
 
 	case "ITGovTaskStatuses.bizCaseDraftStatus":
 		if e.complexity.ITGovTaskStatuses.BizCaseDraftStatus == nil {
@@ -3830,6 +3853,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeActionNotRespondingClose(childComplexity, args["input"].(model.BasicActionInput)), true
 
+	case "Mutation.createSystemIntakeActionProgressToNewStep":
+		if e.complexity.Mutation.CreateSystemIntakeActionProgressToNewStep == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntakeActionProgressToNewStep_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntakeActionProgressToNewStep(childComplexity, args["input"].(*model.SystemIntakeProgressToNewStepsInput)), true
+
 	case "Mutation.createSystemIntakeActionReadyForGRT":
 		if e.complexity.Mutation.CreateSystemIntakeActionReadyForGrt == nil {
 			break
@@ -3841,6 +3876,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateSystemIntakeActionReadyForGrt(childComplexity, args["input"].(model.BasicActionInput)), true
+
+	case "Mutation.createSystemIntakeActionRequestEdits":
+		if e.complexity.Mutation.CreateSystemIntakeActionRequestEdits == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntakeActionRequestEdits_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntakeActionRequestEdits(childComplexity, args["input"].(model.SystemIntakeRequestEditsInput)), true
 
 	case "Mutation.createSystemIntakeActionSendEmail":
 		if e.complexity.Mutation.CreateSystemIntakeActionSendEmail == nil {
@@ -6958,6 +7005,8 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeGovernanceTeamInput,
 		ec.unmarshalInputSystemIntakeISSOInput,
 		ec.unmarshalInputSystemIntakeProductManagerInput,
+		ec.unmarshalInputSystemIntakeProgressToNewStepsInput,
+		ec.unmarshalInputSystemIntakeRequestEditsInput,
 		ec.unmarshalInputSystemIntakeRequesterInput,
 		ec.unmarshalInputSystemIntakeRequesterWithComponentInput,
 		ec.unmarshalInputUpdateAccessibilityRequestCedarSystemInput,
@@ -7983,7 +8032,7 @@ A note added to a system request
 """
 type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
-  content: String!
+  content: HTML!
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
@@ -8025,7 +8074,7 @@ type SystemIntake {
   annualSpending: SystemIntakeAnnualSpending
   createdAt: Time!
   currentStage: String
-  decisionNextSteps: String
+  decisionNextSteps: HTML
   eaCollaborator: String
   eaCollaboratorName: String
   euaUserId: String!
@@ -8040,7 +8089,7 @@ type SystemIntake {
   isso: SystemIntakeISSO!
   lcid: String
   lcidExpiresAt: Time
-  lcidScope: String
+  lcidScope: HTML
   lcidCostBaseline: String
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
@@ -8048,7 +8097,7 @@ type SystemIntake {
   oitSecurityCollaboratorName: String
   productManager: SystemIntakeProductManager!
   projectAcronym: String
-  rejectionReason: String
+  rejectionReason: HTML
   requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
@@ -8233,7 +8282,7 @@ input SystemIntakeFundingSourcesInput {
 """
 Input data for estimated system cost increases associated with a system request
 
-NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076) 
+NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
 """
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
@@ -8293,8 +8342,8 @@ Input data for extending a system request's lifecycle ID
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
-  nextSteps: String
-  scope: String!
+  nextSteps: HTML
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -8311,11 +8360,18 @@ type CreateSystemIntakeActionExtendLifecycleIdPayload {
 Represents the type of an action that is being done to a system request
 """
 enum SystemIntakeActionType {
+  # v2 actions
+  PROGRESS_TO_NEW_STEP
+  REQUEST_EDITS
+
+  # v1/v2 actions - originally from v1, still used in v2
+  ISSUE_LCID
+
+  # v1 actions - no longer used in IT Gov v2 workflow
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
   GUIDE_RECEIVED_CLOSE
   EXTEND_LCID
-  ISSUE_LCID
   NEED_BIZ_CASE
   NO_GOVERNANCE_NEEDED
   NOT_IT_REQUEST
@@ -8340,7 +8396,7 @@ type SystemIntakeAction {
   systemIntake: SystemIntake!
   type: SystemIntakeActionType!
   actor: SystemIntakeActionActor!
-  feedback: String
+  feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
   createdAt: Time!
 }
@@ -8352,10 +8408,10 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
-  previousScope: String
-  newScope: String
-  previousNextSteps: String
-  newNextSteps: String
+  previousScope: HTML
+  newScope: HTML
+  previousNextSteps: HTML
+  newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
  }
@@ -8373,8 +8429,8 @@ Feedback intended for a business owner before they proceed to writing a
 business case for a system request
 """
 input AddGRTFeedbackInput {
-  emailBody: String!
-  feedback: String!
+  emailBody: HTML!
+  feedback: HTML!
   intakeID: UUID!
   notificationRecipients: EmailNotificationRecipients
 }
@@ -8393,11 +8449,11 @@ request
 """
 input IssueLifecycleIdInput {
   expiresAt: Time!
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
   lcid: String
-  nextSteps: String
-  scope: String!
+  nextSteps: HTML
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -8406,10 +8462,10 @@ input IssueLifecycleIdInput {
 Input data for rejection of a system's IT governance request
 """
 input RejectIntakeInput {
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
-  nextSteps: String
-  reason: String!
+  nextSteps: HTML
+  reason: HTML!
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -8426,7 +8482,7 @@ input UpdateSystemIntakeAdminLeadInput {
 The most recent note added by an admin to a system request
 """
 type LastAdminNote {
-  content: String
+  content: HTML
   createdAt: Time
 }
 
@@ -8444,7 +8500,7 @@ Feedback from the GRT to a business owner or GRB
 type GRTFeedback {
   id: UUID
   createdAt: Time!
-  feedback: String
+  feedback: HTML
   feedbackType: GRTFeedbackType
 }
 
@@ -8461,7 +8517,7 @@ input UpdateSystemIntakeReviewDatesInput {
 Input data for adding a note to a system request
 """
 input CreateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   authorName: String!
   intakeId: UUID!
 }
@@ -8470,7 +8526,7 @@ input CreateSystemIntakeNoteInput {
 Input data for updating an IT governance admin note
 """
 input UpdateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   isArchived: Boolean!
   id: UUID!
 }
@@ -8483,11 +8539,57 @@ type UpdateSystemIntakePayload {
   userErrors: [UserError!]
 }
 
+
+"""
+Steps in the system intake process that a Progress to New Step action can progress to
+"""
+enum SystemIntakeStepToProgressTo {
+  DRAFT_BUSINESS_CASE
+  GRT_MEETING
+  GRB_MEETING
+  FINAL_BUSINESS_CASE
+}
+
+"""
+Input for submitting a Progress to New Step action in IT Gov v2
+"""
+input SystemIntakeProgressToNewStepsInput {
+  systemIntakeID: UUID!
+  newStep: SystemIntakeStepToProgressTo!
+  meetingDate: Time # optionally used when progressing to GRT or GRB meeting; ignored when progressing to other steps
+  notificationRecipients: EmailNotificationRecipients
+  feedback: HTML
+  grbRecommendations: HTML
+  additionalNote: HTML
+  adminNote: HTML
+}
+
+"""
+Input for creating a Request Edits Action in Admin Actions v2
+"""
+input SystemIntakeRequestEditsInput {
+  systemIntakeID: UUID!
+  intakeFormStep: SystemIntakeFormStep!
+  notificationRecipients: EmailNotificationRecipients
+  emailFeedback: HTML!
+  additionalInfo: HTML
+  adminNotes: HTML
+}
+
+"""
+SystemIntakeRequestEditsOptions represents the current step in the intake process
+"""
+enum SystemIntakeFormStep {
+  INITIAL_REQUEST_FORM
+  DRAFT_BUSINESS_CASE
+  FINAL_BUSINESS_CASE
+}
+
 """
 Input to add feedback to a system request
 """
 input BasicActionInput {
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
   notificationRecipients: EmailNotificationRecipients
 }
@@ -8852,14 +8954,24 @@ enum GovernanceRequestFeedbackTargetForm {
 }
 
 """
+Represents the possible types of feedback on governance requests, based on who it's directed to
+"""
+enum GovernanceRequestFeedbackType {
+  REQUESTER
+  GRB
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
   id: UUID!
   intakeId: UUID!
-  feedback: String!
+  feedback: HTML!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
+  type: GovernanceRequestFeedbackType!
+  author: UserInfo!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -9074,7 +9186,7 @@ Represents feedback added to a TRB request
 type TRBRequestFeedback {
   id: UUID!
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -9090,7 +9202,7 @@ The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -9133,7 +9245,7 @@ type TRBAdminNote {
   id: UUID!
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
-  noteText: String!
+  noteText: HTML!
   author: UserInfo!
   isArchived: Boolean!
   createdBy: String!
@@ -9149,8 +9261,8 @@ type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
   author: UserInfo!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
@@ -9167,7 +9279,7 @@ The data needed to create a TRB admin note
 input CreateTRBAdminNoteInput {
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
-  noteText: String!
+  noteText: HTML!
 }
 
 """
@@ -9176,7 +9288,7 @@ The data needed for updating a TRB admin note
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   category: TRBAdminNoteCategory
-  noteText: String
+  noteText: HTML
 }
 
 """
@@ -9184,8 +9296,8 @@ The data needed to update a TRB advice letter
 """
 input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   followupPoint: String
 }
@@ -9206,7 +9318,7 @@ type TRBAdviceLetterRecommendation {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!
@@ -9221,7 +9333,7 @@ The input required to add a recommendation & links to a TRB advice letter
 input CreateTRBAdviceLetterRecommendationInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
 }
 
@@ -9231,7 +9343,7 @@ The input required to update a recommendation to a TRB advice letter
 input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: String
+  recommendation: HTML
   links: [String!]
 }
 
@@ -9240,7 +9352,7 @@ The input needed to close a TRB request
 """
 input CloseTRBRequestInput {
   id: UUID!
-  reasonClosed: String!
+  reasonClosed: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
@@ -9250,7 +9362,7 @@ The data needed to reopen a TRB request
 """
 input ReopenTRBRequestInput {
   trbRequestId: UUID!
-  reasonReopened: String!
+  reasonReopened: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
@@ -9291,6 +9403,12 @@ type Mutation {
   updateAccessibilityRequestCedarSystem(
     input: UpdateAccessibilityRequestCedarSystemInput
   ): UpdateAccessibilityRequestCedarSystemPayload
+  createSystemIntakeActionProgressToNewStep(
+    input: SystemIntakeProgressToNewStepsInput
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionRequestEdits(
+    input: SystemIntakeRequestEditsInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -9481,6 +9599,12 @@ UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-
 scalar UUID
 
 """
+HTML are represented using as strings,  <p><strong>Notification email</strong></p>
+"""
+scalar HTML
+
+
+"""
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
@@ -9628,9 +9752,14 @@ enum ITGovDraftBusinessCaseStatus {
   EDITS_REQUESTED
 
   """
-  The draft business case is completed
+  The draft business case has been submitted and it is waiting for feedback from the governance team
   """
-  COMPLETED
+  SUBMITTED
+
+  """
+  The draft business case has been completed and the intake is on a further step
+  """
+  DONE
 }
 
 
@@ -9688,10 +9817,16 @@ enum ITGovFinalBusinessCaseStatus {
   This business case has edits requested
   """
   EDITS_REQUESTED
+
   """
-  This business case has been completed
+  The business case has been submitted and it is waiting for feedback from the governance team
   """
-  COMPLETED
+  SUBMITTED
+
+  """
+  The business case has been completed and the intake is on a further step
+  """
+  DONE
 }
 
 """
@@ -10043,6 +10178,21 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionNotResponding
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createSystemIntakeActionProgressToNewStep_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.SystemIntakeProgressToNewStepsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProgressToNewStepsInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createSystemIntakeActionReadyForGRT_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -10050,6 +10200,21 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionReadyForGRT_a
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createSystemIntakeActionRequestEdits_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.SystemIntakeRequestEditsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSystemIntakeRequestEditsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequestEditsInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -24335,9 +24500,9 @@ func (ec *executionContext) _GRTFeedback_feedback(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.HTML)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GRTFeedback_feedback(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -24347,7 +24512,7 @@ func (ec *executionContext) fieldContext_GRTFeedback_feedback(ctx context.Contex
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -24596,9 +24761,9 @@ func (ec *executionContext) _GovernanceRequestFeedback_feedback(ctx context.Cont
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.HTML)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GovernanceRequestFeedback_feedback(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -24608,7 +24773,7 @@ func (ec *executionContext) fieldContext_GovernanceRequestFeedback_feedback(ctx 
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -24697,6 +24862,102 @@ func (ec *executionContext) fieldContext_GovernanceRequestFeedback_targetForm(ct
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type GovernanceRequestFeedbackTargetForm does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_type(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_type(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.GovernanceRequestFeedbackType)
+	fc.Result = res
+	return ec.marshalNGovernanceRequestFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type GovernanceRequestFeedbackType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GovernanceRequestFeedback_author(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GovernanceRequestFeedback_author(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.GovernanceRequestFeedback().Author(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserInfo)
+	fc.Result = res
+	return ec.marshalNUserInfo2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GovernanceRequestFeedback_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GovernanceRequestFeedback",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commonName":
+				return ec.fieldContext_UserInfo_commonName(ctx, field)
+			case "email":
+				return ec.fieldContext_UserInfo_email(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_UserInfo_euaUserId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserInfo", field.Name)
 		},
 	}
 	return fc, nil
@@ -25203,9 +25464,9 @@ func (ec *executionContext) _LastAdminNote_content(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_LastAdminNote_content(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -25215,7 +25476,7 @@ func (ec *executionContext) fieldContext_LastAdminNote_content(ctx context.Conte
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -26032,6 +26293,168 @@ func (ec *executionContext) fieldContext_Mutation_updateAccessibilityRequestCeda
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateAccessibilityRequestCedarSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createSystemIntakeActionProgressToNewStep(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSystemIntakeActionProgressToNewStep(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateSystemIntakeActionProgressToNewStep(rctx, fc.Args["input"].(*model.SystemIntakeProgressToNewStepsInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionProgressToNewStep(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSystemIntakeActionProgressToNewStep_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createSystemIntakeActionRequestEdits(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSystemIntakeActionRequestEdits(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateSystemIntakeActionRequestEdits(rctx, fc.Args["input"].(model.SystemIntakeRequestEditsInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionRequestEdits(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSystemIntakeActionRequestEdits_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -35111,7 +35534,7 @@ func (ec *executionContext) _SystemIntake_decisionNextSteps(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().DecisionNextSteps(rctx, obj)
+		return obj.DecisionNextSteps, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -35120,19 +35543,19 @@ func (ec *executionContext) _SystemIntake_decisionNextSteps(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_decisionNextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -35406,6 +35829,10 @@ func (ec *executionContext) fieldContext_SystemIntake_governanceRequestFeedbacks
 				return ec.fieldContext_GovernanceRequestFeedback_sourceAction(ctx, field)
 			case "targetForm":
 				return ec.fieldContext_GovernanceRequestFeedback_targetForm(ctx, field)
+			case "type":
+				return ec.fieldContext_GovernanceRequestFeedback_type(ctx, field)
+			case "author":
+				return ec.fieldContext_GovernanceRequestFeedback_author(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_GovernanceRequestFeedback_createdBy(ctx, field)
 			case "createdAt":
@@ -35806,9 +36233,9 @@ func (ec *executionContext) _SystemIntake_lcidScope(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_lcidScope(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -35818,7 +36245,7 @@ func (ec *executionContext) fieldContext_SystemIntake_lcidScope(ctx context.Cont
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -36155,7 +36582,7 @@ func (ec *executionContext) _SystemIntake_rejectionReason(ctx context.Context, f
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().RejectionReason(rctx, obj)
+		return obj.RejectionReason, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -36164,19 +36591,19 @@ func (ec *executionContext) _SystemIntake_rejectionReason(ctx context.Context, f
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_rejectionReason(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -37671,9 +38098,9 @@ func (ec *executionContext) _SystemIntakeAction_feedback(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeAction_feedback(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -37683,7 +38110,7 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_feedback(ctx context
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -39706,9 +40133,9 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousScope(ctx 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_previousScope(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -39718,7 +40145,7 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_previo
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -39747,9 +40174,9 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newScope(ctx conte
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newScope(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -39759,7 +40186,7 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newSco
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -39788,9 +40215,9 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_previousNextSteps(
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_previousNextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -39800,7 +40227,7 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_previo
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -39829,9 +40256,9 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange_newNextSteps(ctx c
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newNextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -39841,7 +40268,7 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newNex
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -39993,7 +40420,7 @@ func (ec *executionContext) _SystemIntakeNote_content(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeNote().Content(rctx, obj)
+		return obj.Content, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -40005,19 +40432,19 @@ func (ec *executionContext) _SystemIntakeNote_content(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeNote_content(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeNote",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -40740,9 +41167,9 @@ func (ec *executionContext) _TRBAdminNote_noteText(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.HTML)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdminNote_noteText(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -40752,7 +41179,7 @@ func (ec *executionContext) fieldContext_TRBAdminNote_noteText(ctx context.Conte
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -41187,9 +41614,9 @@ func (ec *executionContext) _TRBAdviceLetter_meetingSummary(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdviceLetter_meetingSummary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -41199,7 +41626,7 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_meetingSummary(ctx cont
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -41228,9 +41655,9 @@ func (ec *executionContext) _TRBAdviceLetter_nextSteps(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.HTML)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdviceLetter_nextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -41240,7 +41667,7 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_nextSteps(ctx context.C
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -41763,9 +42190,9 @@ func (ec *executionContext) _TRBAdviceLetterRecommendation_recommendation(ctx co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.HTML)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -41775,7 +42202,7 @@ func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_recommend
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -44512,9 +44939,9 @@ func (ec *executionContext) _TRBRequestFeedback_feedbackMessage(ctx context.Cont
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.HTML)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequestFeedback_feedbackMessage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -44524,7 +44951,7 @@ func (ec *executionContext) fieldContext_TRBRequestFeedback_feedbackMessage(ctx 
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type HTML does not have child fields")
 		},
 	}
 	return fc, nil
@@ -49371,7 +49798,7 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("emailBody"))
-			it.EmailBody, err = ec.unmarshalNString2string(ctx, v)
+			it.EmailBody, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -49379,7 +49806,7 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedback"))
-			it.Feedback, err = ec.unmarshalNString2string(ctx, v)
+			it.Feedback, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -49423,7 +49850,7 @@ func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedback"))
-			it.Feedback, err = ec.unmarshalNString2string(ctx, v)
+			it.Feedback, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -49475,7 +49902,7 @@ func (ec *executionContext) unmarshalInputCloseTRBRequestInput(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reasonClosed"))
-			it.ReasonClosed, err = ec.unmarshalNString2string(ctx, v)
+			it.ReasonClosed, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -49727,7 +50154,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
-			it.NextSteps, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.NextSteps, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -49735,7 +50162,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeActionExtendLifecycl
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scope"))
-			it.Scope, err = ec.unmarshalNString2string(ctx, v)
+			it.Scope, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -49919,7 +50346,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeNoteInput(ctx contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			it.Content, err = ec.unmarshalNString2string(ctx, v)
+			it.Content, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -49979,7 +50406,7 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("noteText"))
-			it.NoteText, err = ec.unmarshalNString2string(ctx, v)
+			it.NoteText, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50023,7 +50450,7 @@ func (ec *executionContext) unmarshalInputCreateTRBAdviceLetterRecommendationInp
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
-			it.Recommendation, err = ec.unmarshalNString2string(ctx, v)
+			it.Recommendation, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50171,7 +50598,7 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestFeedbackInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedbackMessage"))
-			it.FeedbackMessage, err = ec.unmarshalNString2string(ctx, v)
+			it.FeedbackMessage, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50527,7 +50954,7 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedback"))
-			it.Feedback, err = ec.unmarshalNString2string(ctx, v)
+			it.Feedback, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50551,7 +50978,7 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
-			it.NextSteps, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.NextSteps, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50559,7 +50986,7 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scope"))
-			it.Scope, err = ec.unmarshalNString2string(ctx, v)
+			it.Scope, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50603,7 +51030,7 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedback"))
-			it.Feedback, err = ec.unmarshalNString2string(ctx, v)
+			it.Feedback, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50619,7 +51046,7 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
-			it.NextSteps, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.NextSteps, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50627,7 +51054,7 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
-			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			it.Reason, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -50671,7 +51098,7 @@ func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reasonReopened"))
-			it.ReasonReopened, err = ec.unmarshalNString2string(ctx, v)
+			it.ReasonReopened, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -51401,6 +51828,158 @@ func (ec *executionContext) unmarshalInputSystemIntakeProductManagerInput(ctx co
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ctx context.Context, obj interface{}) (model.SystemIntakeProgressToNewStepsInput, error) {
+	var it model.SystemIntakeProgressToNewStepsInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "newStep", "meetingDate", "notificationRecipients", "feedback", "grbRecommendations", "additionalNote", "adminNote"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			it.SystemIntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "newStep":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newStep"))
+			it.NewStep, err = ec.unmarshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "meetingDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("meetingDate"))
+			it.MeetingDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "feedback":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedback"))
+			it.Feedback, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "grbRecommendations":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbRecommendations"))
+			it.GrbRecommendations, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "additionalNote":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalNote"))
+			it.AdditionalNote, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "adminNote":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
+			it.AdminNote, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequestEditsInput, error) {
+	var it model.SystemIntakeRequestEditsInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients", "emailFeedback", "additionalInfo", "adminNotes"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			it.SystemIntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "intakeFormStep":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeFormStep"))
+			it.IntakeFormStep, err = ec.unmarshalNSystemIntakeFormStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFormStep(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "emailFeedback":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("emailFeedback"))
+			it.EmailFeedback, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "additionalInfo":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
+			it.AdditionalInfo, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "adminNotes":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNotes"))
+			it.AdminNotes, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequesterInput, error) {
 	var it model.SystemIntakeRequesterInput
 	asMap := map[string]interface{}{}
@@ -51851,7 +52430,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeNoteInput(ctx contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			it.Content, err = ec.unmarshalNString2string(ctx, v)
+			it.Content, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -55974,49 +56553,76 @@ func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel 
 			out.Values[i] = ec._GovernanceRequestFeedback_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "intakeId":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_intakeId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "feedback":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_feedback(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "sourceAction":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_sourceAction(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "targetForm":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_targetForm(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "type":
+
+			out.Values[i] = ec._GovernanceRequestFeedback_type(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "author":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GovernanceRequestFeedback_author(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "createdBy":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_createdBy(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdAt":
 
 			out.Values[i] = ec._GovernanceRequestFeedback_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "modifiedBy":
 
@@ -56338,6 +56944,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateAccessibilityRequestCedarSystem(ctx, field)
+			})
+
+		case "createSystemIntakeActionProgressToNewStep":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSystemIntakeActionProgressToNewStep(ctx, field)
+			})
+
+		case "createSystemIntakeActionRequestEdits":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSystemIntakeActionRequestEdits(ctx, field)
 			})
 
 		case "createSystemIntakeActionBusinessCaseNeeded":
@@ -57720,22 +58338,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 
 			})
 		case "decisionNextSteps":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_decisionNextSteps(ctx, field, obj)
-				return res
-			}
+			out.Values[i] = ec._SystemIntake_decisionNextSteps(ctx, field, obj)
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "eaCollaborator":
 			field := field
 
@@ -58073,22 +58678,9 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 
 			})
 		case "rejectionReason":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_rejectionReason(ctx, field, obj)
-				return res
-			}
+			out.Values[i] = ec._SystemIntake_rejectionReason(ctx, field, obj)
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "requestName":
 			field := field
 
@@ -59149,25 +59741,12 @@ func (ec *executionContext) _SystemIntakeNote(ctx context.Context, sel ast.Selec
 
 			})
 		case "content":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeNote_content(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._SystemIntakeNote_content(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "createdAt":
 
 			out.Values[i] = ec._SystemIntakeNote_createdAt(ctx, field, obj)
@@ -62497,6 +63076,48 @@ func (ec *executionContext) marshalNGovernanceRequestFeedbackTargetForm2github�
 	return res
 }
 
+func (ec *executionContext) unmarshalNGovernanceRequestFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackType(ctx context.Context, v interface{}) (models.GovernanceRequestFeedbackType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.GovernanceRequestFeedbackType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGovernanceRequestFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackType(ctx context.Context, sel ast.SelectionSet, v models.GovernanceRequestFeedbackType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, v interface{}) (models.HTML, error) {
+	var res models.HTML
+	err := res.UnmarshalGQLContext(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, sel ast.SelectionSet, v models.HTML) graphql.Marshaler {
+	return graphql.WrapContextMarshaler(ctx, v)
+}
+
+func (ec *executionContext) unmarshalNHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, v interface{}) (*models.HTML, error) {
+	var res = new(models.HTML)
+	err := res.UnmarshalGQLContext(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, sel ast.SelectionSet, v *models.HTML) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return graphql.WrapContextMarshaler(ctx, v)
+}
+
 func (ec *executionContext) unmarshalNITGovDecisionStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovDecisionStatus(ctx context.Context, v interface{}) (models.ITGovDecisionStatus, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.ITGovDecisionStatus(tmp)
@@ -63254,6 +63875,16 @@ func (ec *executionContext) marshalNSystemIntakeFormState2githubᚗcomᚋcmsgov�
 	return res
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeFormStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFormStep(ctx context.Context, v interface{}) (model.SystemIntakeFormStep, error) {
+	var res model.SystemIntakeFormStep
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeFormStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFormStep(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeFormStep) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeFundingSource) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -63475,6 +64106,11 @@ func (ec *executionContext) unmarshalNSystemIntakeProductManagerInput2ᚖgithub�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeRequestEditsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequestEditsInput(ctx context.Context, v interface{}) (model.SystemIntakeRequestEditsInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeRequestEditsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx context.Context, v interface{}) (models.SystemIntakeRequestType, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.SystemIntakeRequestType(tmp)
@@ -63593,6 +64229,16 @@ func (ec *executionContext) marshalNSystemIntakeStep2githubᚗcomᚋcmsgovᚋeas
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx context.Context, v interface{}) (model.SystemIntakeStepToProgressTo, error) {
+	var res model.SystemIntakeStepToProgressTo
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStepToProgressTo(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeStepToProgressTo) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNTRBAdminNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNote) graphql.Marshaler {
@@ -65225,6 +65871,32 @@ func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithub�
 	return ec._GeneratePresignedUploadURLPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, v interface{}) (models.HTML, error) {
+	var res models.HTML
+	err := res.UnmarshalGQLContext(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, sel ast.SelectionSet, v models.HTML) graphql.Marshaler {
+	return graphql.WrapContextMarshaler(ctx, v)
+}
+
+func (ec *executionContext) unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, v interface{}) (*models.HTML, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.HTML)
+	err := res.UnmarshalGQLContext(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, sel ast.SelectionSet, v *models.HTML) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.WrapContextMarshaler(ctx, v)
+}
+
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
 	if v == nil {
 		return nil, nil
@@ -65546,6 +66218,14 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProgressToNewStepsInput(ctx context.Context, v interface{}) (*model.SystemIntakeProgressToNewStepsInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeProgressToNewStepsInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, v interface{}) (*models.TRBAdminNoteCategory, error) {

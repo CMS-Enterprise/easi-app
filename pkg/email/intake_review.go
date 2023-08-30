@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"html/template"
 	"path"
 
 	"github.com/google/uuid"
@@ -16,7 +17,7 @@ type intakeReview struct {
 	ProjectName  string
 	GRTEmail     string
 	Requester    string
-	EmailText    string
+	EmailText    template.HTML
 	TaskListPath string
 }
 
@@ -24,14 +25,14 @@ func (c Client) systemIntakeReviewBody(
 	systemIntakeID uuid.UUID,
 	projectName string,
 	requester string,
-	emailText string,
+	emailText models.HTML,
 ) (string, error) {
 	taskListPath := path.Join("governance-task-list", systemIntakeID.String())
 	data := intakeReview{
 		ProjectName:  projectName,
 		GRTEmail:     string(c.config.GRTEmail),
 		Requester:    requester,
-		EmailText:    emailText,
+		EmailText:    emailText.ToTemplate(),
 		TaskListPath: c.urlFromPath(taskListPath),
 	}
 	var b bytes.Buffer
@@ -52,7 +53,7 @@ func (c Client) SendSystemIntakeReviewEmails(
 	systemIntakeID uuid.UUID,
 	projectName string,
 	requester string,
-	emailText string,
+	emailText models.HTML,
 ) error {
 	subject := "Feedback for request in EASi"
 	body, err := c.systemIntakeReviewBody(systemIntakeID, projectName, requester, emailText)

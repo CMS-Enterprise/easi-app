@@ -19,16 +19,9 @@ import (
 func CreateTRBRequest(
 	ctx context.Context,
 	requestType models.TRBRequestType,
-	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	store *storage.Store,
 ) (*models.TRBRequest, error) {
 	princ := appcontext.Principal(ctx)
-
-	// Fetch user info for the "requester" attendee
-	requester, err := fetchUserInfo(ctx, princ.ID())
-	if err != nil {
-		return nil, err
-	}
 
 	trb := models.NewTRBRequest(princ.ID())
 	trb.Type = requestType
@@ -42,11 +35,11 @@ func CreateTRBRequest(
 	// This should probably be a part of a transaction...
 	initialAttendee := &models.TRBRequestAttendee{
 		TRBRequestID: createdTRB.ID,
-		EUAUserID:    requester.EuaUserID,
+		EUAUserID:    princ.ID(),
 		Component:    nil,
 		Role:         nil,
 	}
-	initialAttendee.CreatedBy = appcontext.Principal(ctx).ID()
+	initialAttendee.CreatedBy = princ.ID()
 	_, err = store.CreateTRBRequestAttendee(ctx, initialAttendee)
 	if err != nil {
 		return nil, err
@@ -254,7 +247,7 @@ func CloseTRBRequest(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 	id uuid.UUID,
-	reasonClosed string,
+	reasonClosed models.HTML,
 	copyTRBMailbox bool,
 	notifyEUAIDs []string,
 ) (*models.TRBRequest, error) {
@@ -323,7 +316,7 @@ func ReopenTRBRequest(
 	ctx context.Context,
 	store *storage.Store,
 	id uuid.UUID,
-	reasonReopened string,
+	reasonReopened models.HTML,
 	copyTRBMailbox bool,
 	notifyEUAIDs []string,
 	emailClient *email.Client,

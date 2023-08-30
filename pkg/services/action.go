@@ -99,28 +99,24 @@ func NewSubmitSystemIntake(
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
+		intake.RequestFormState = models.SIRFSSubmitted
 
-		if intake.AlfabetID.Valid {
-			err := &apperrors.ResourceConflictError{
-				Err:        errors.New("intake has already been submitted to CEDAR"),
-				ResourceID: intake.ID.String(),
-				Resource:   intake,
+		intakeSubmittedToCedar := intake.AlfabetID.Valid // When submitted to CEDAR, the AlfabetID gets set. If set, we currently don't re-submit it
+
+		if !intakeSubmittedToCedar {
+			// Send SystemIntake to CEDAR Intake API
+			intake.SubmittedAt = &updatedTime
+			alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
+			if submitToCEDARErr != nil {
+				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
+			} else {
+				// If submission to CEDAR was successful, update the intake with the alfabetID
+				// AlfabetID can be null if:
+				// - The intake was not submitted to CEDAR (due to the feature flag being off
+				// or the Intake being imported from SharePoint)
+				// - An error is encountered when sending the data to CEDAR.
+				intake.AlfabetID = null.StringFrom(alfabetID)
 			}
-			return err
-		}
-
-		// Send SystemIntake to CEDAR Intake API
-		intake.SubmittedAt = &updatedTime
-		alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
-		if submitToCEDARErr != nil {
-			appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
-		} else {
-			// If submission to CEDAR was successful, update the intake with the alfabetID
-			// AlfabetID can be null if:
-			// - The intake was not submitted to CEDAR (due to the feature flag being off
-			// or the Intake being imported from SharePoint)
-			// - An error is encountered when sending the data to CEDAR.
-			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
 
 		// Store in the `actions` table
@@ -217,7 +213,12 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		intake.Status = newIntakeStatus
+		intake.Status = newIntakeStatus // newIntakeStatus determines what state we update.
+		if newIntakeStatus == models.SystemIntakeStatusBIZCASEFINALSUBMITTED {
+			intake.FinalBusinessCaseState = models.SIRFSSubmitted
+		} else if newIntakeStatus == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
+			intake.DraftBusinessCaseState = models.SIRFSSubmitted
+		}
 		intake.UpdatedAt = &updatedAt
 		intake, err = updateIntake(ctx, intake)
 		if err != nil {
@@ -255,7 +256,7 @@ func NewTakeActionUpdateStatus(
 	authorize func(context.Context) (bool, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+	sendReviewEmail func(ctx context.Context, emailText models.HTML, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
 	shouldCloseBusinessCase bool,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) ActionExecuter {
@@ -306,7 +307,7 @@ func NewTakeActionUpdateStatus(
 			}
 		}
 
-		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+		err = sendReviewEmail(ctx, action.Feedback.ValueOrEmptyHTML(), requesterInfo.Email, intake.ID)
 		if err != nil {
 			return err
 		}
@@ -321,7 +322,7 @@ func NewCreateActionUpdateStatus(
 	config Config,
 	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
-	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
+	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText models.HTML) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) func(
 	ctx context.Context,
@@ -366,7 +367,7 @@ func NewCreateActionUpdateStatus(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
-				action.Feedback.String,
+				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
 				return nil, err
@@ -384,15 +385,15 @@ func NewCreateActionExtendLifecycleID(
 	saveAction func(context.Context, *models.Action) error,
 	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	sendExtendLCIDEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) error,
-) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *string, scope string, costBaseline *string, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
+	sendExtendLCIDEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope models.HTML, newNextSteps models.HTML, newCostBaseline string) error,
+) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *models.HTML, scope models.HTML, costBaseline *string, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(
 		ctx context.Context,
 		action *models.Action,
 		id uuid.UUID,
 		expirationDate *time.Time,
-		nextSteps *string,
-		scope string,
+		nextSteps *models.HTML,
+		scope models.HTML,
 		costBaseline *string,
 		recipients *models.EmailNotificationRecipients,
 	) (*models.SystemIntake, error) {
@@ -404,11 +405,11 @@ func NewCreateActionExtendLifecycleID(
 		action.LCIDExpirationChangeNewDate = expirationDate
 		action.LCIDExpirationChangePreviousDate = intake.LifecycleExpiresAt
 
-		action.LCIDExpirationChangeNewScope = null.StringFrom(scope)
-		action.LCIDExpirationChangePreviousScope = null.StringFrom(intake.LifecycleScope.String)
+		action.LCIDExpirationChangeNewScope = &scope
+		action.LCIDExpirationChangePreviousScope = intake.LifecycleScope
 
-		action.LCIDExpirationChangeNewNextSteps = null.StringFromPtr(nextSteps)
-		action.LCIDExpirationChangePreviousNextSteps = null.StringFrom(intake.DecisionNextSteps.String)
+		action.LCIDExpirationChangeNewNextSteps = nextSteps
+		action.LCIDExpirationChangePreviousNextSteps = intake.DecisionNextSteps
 
 		action.LCIDExpirationChangeNewCostBaseline = null.StringFromPtr(costBaseline)
 		action.LCIDExpirationChangePreviousCostBaseline = null.StringFrom(intake.LifecycleCostBaseline.String)
@@ -420,8 +421,8 @@ func NewCreateActionExtendLifecycleID(
 
 		intake.LifecycleExpiresAt = expirationDate
 		intake.Status = models.SystemIntakeStatusLCIDISSUED
-		intake.LifecycleScope = null.StringFrom(scope)
-		intake.DecisionNextSteps = null.StringFromPtr(nextSteps)
+		intake.LifecycleScope = &scope
+		intake.DecisionNextSteps = nextSteps
 		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
 
 		_, updateErr := updateSystemIntake(ctx, intake)
@@ -437,8 +438,8 @@ func NewCreateActionExtendLifecycleID(
 				intake.ProjectName.ValueOrZero(),
 				intake.Requester,
 				expirationDate,
-				intake.LifecycleScope.ValueOrZero(),
-				intake.DecisionNextSteps.ValueOrZero(),
+				intake.LifecycleScope.ValueOrEmptyHTML(),
+				intake.DecisionNextSteps.ValueOrEmptyHTML(),
 				intake.LifecycleCostBaseline.ValueOrZero(),
 			)
 			if err != nil {

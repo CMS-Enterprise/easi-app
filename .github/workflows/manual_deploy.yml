@@ -12,6 +12,11 @@ on:
           - dev
           - impl
           - prod
+      skip_tests:
+        required: true
+        default: false
+        type: boolean
+        description: Skip tests?
       confirm_production_deploy:
         required: true
         default: false
@@ -27,14 +32,30 @@ jobs:
     uses: ./.github/workflows/build_application_images.yml
     secrets: inherit
 
+  Build_Frontend_Assets:
+    uses: ./.github/workflows/build_frontend_assets.yml
+    secrets: inherit
+    with:
+      env: ${{ inputs.env }}
+  
+  Build_Test_Frontend_Assets:
+    if: ${{ inputs.skip_tests == false }}
+    uses: ./.github/workflows/build_frontend_assets.yml
+    secrets: inherit
+    with:
+      env: test
+
+
   Run_Tests:
     uses: ./.github/workflows/run_tests.yml
-    needs: Build_Application_Images
+    needs: [Build_Application_Images, Build_Test_Frontend_Assets]
     secrets: inherit
+    with:
+      skip_tests: ${{ inputs.skip_tests }}
 
   deploy_dev:
-    needs: Run_Tests
-    if: ${{ github.event.inputs.env == 'dev' }}
+    needs: [Run_Tests, Build_Frontend_Assets]
+    if: ${{ inputs.env == 'dev' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: dev
@@ -42,8 +63,8 @@ jobs:
     secrets: inherit
 
   deploy_impl:
-    needs: Run_Tests
-    if: ${{ github.event.inputs.env == 'impl' }}
+    needs: [Run_Tests, Build_Frontend_Assets]
+    if: ${{ inputs.env == 'impl' }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: impl
@@ -51,8 +72,8 @@ jobs:
     secrets: inherit
 
   deploy_prod:
-    needs: Run_Tests
-    if: ${{ github.event.inputs.env == 'prod' && github.event.inputs.confirm_production_deploy == true }}
+    needs: [Run_Tests, Build_Frontend_Assets]
+    if: ${{ inputs.env == 'prod' && inputs.confirm_production_deploy == true }}
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod

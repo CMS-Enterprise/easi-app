@@ -46,7 +46,8 @@ const (
 	ITGDBCSReady          ITGovDraftBusinessCaseStatus = "READY"
 	ITGDBCSInProgress     ITGovDraftBusinessCaseStatus = "IN_PROGRESS"
 	ITGDBCSEditsRequested ITGovDraftBusinessCaseStatus = "EDITS_REQUESTED"
-	ITGDBCSCompleted      ITGovDraftBusinessCaseStatus = "COMPLETED"
+	ITGDBCSSubmitted      ITGovDraftBusinessCaseStatus = "SUBMITTED"
+	ITGDBCSDone           ITGovDraftBusinessCaseStatus = "DONE"
 )
 
 // ITGovGRTStatus represents the types of ITGovGRTStatus types. This is what the requestor sees for the  optional fifth task.
@@ -72,7 +73,8 @@ const (
 	ITGFBCSReady          ITGovFinalBusinessCaseStatus = "READY"
 	ITGFBCSInProgress     ITGovFinalBusinessCaseStatus = "IN_PROGRESS"
 	ITGFBCSEditsRequested ITGovFinalBusinessCaseStatus = "EDITS_REQUESTED"
-	ITGFBCSCompleted      ITGovFinalBusinessCaseStatus = "COMPLETED"
+	ITGFBCSSubmitted      ITGovFinalBusinessCaseStatus = "SUBMITTED"
+	ITGFBCSDone           ITGovFinalBusinessCaseStatus = "DONE"
 )
 
 // ITGovGRBStatus represents the types of ITGovGRBStatus types.  This is what the requestor sees for the  optional seventh task.

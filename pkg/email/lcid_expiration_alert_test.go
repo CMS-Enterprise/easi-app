@@ -14,11 +14,9 @@ import (
 func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
-	// TODO: revert this when fix for filtering out retired request is done
-	// recipient := models.NewEmailAddress("fake@fake.com")
+	recipient := models.NewEmailAddress("fake@fake.com")
 	recipients := models.EmailNotificationRecipients{
-		// TODO: revert this when fix for filtering out retired request is done
-		RegularRecipientEmails:   []models.EmailAddress{s.config.GRTEmail}, // []models.EmailAddress{recipient},
+		RegularRecipientEmails:   []models.EmailAddress{recipient},
 		ShouldNotifyITGovernance: true,
 		ShouldNotifyITInvestment: false,
 	}
@@ -27,9 +25,9 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 	projectName := "Test Request"
 	requesterName := "Test Requester"
 	lcid := "123456"
-	scope := "scope"
+	scope := models.HTML("scope")
 	lifecycleCostBaseline := "lifecycleCostBaseline"
-	nextSteps := "nextSteps"
+	nextSteps := models.HTML("nextSteps")
 	lcidExpiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
 	requesterTaskListLink := fmt.Sprintf(
 		"<a href=\"%s://%s/governance-task-list/%s\" style=\"font-weight: bold\">click here</a>",
@@ -93,9 +91,9 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<u>Current Lifecycle ID Summary</u>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
-			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
+			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
-			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + nextSteps + "</pre></p>\n"
+			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(nextSteps) + "</pre></p>\n"
 
 		err = client.SendLCIDExpirationAlertEmail(
 			ctx,
@@ -111,9 +109,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		)
 
 		s.NoError(err)
-		// TODO: revert this when fix for filtering out retired request is done
-		// s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
-		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.GRTEmail})
+		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
@@ -161,7 +157,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<u>Current Lifecycle ID Summary</u>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
-			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n\n\n"
+			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n\n\n"
 
 		err = client.SendLCIDExpirationAlertEmail(
 			ctx,
@@ -177,9 +173,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		)
 
 		s.NoError(err)
-		// TODO: revert this when fix for filtering out retired request is done
-		// s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
-		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{s.config.GRTEmail})
+		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})

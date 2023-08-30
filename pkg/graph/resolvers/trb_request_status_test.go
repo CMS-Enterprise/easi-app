@@ -67,7 +67,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 	trb := models.NewTRBRequest(anonEua)
 	trb.Type = models.TRBTNeedHelp
 	trb.State = models.TRBRequestStateOpen
-	trb, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.fetchUserInfoStub, s.testConfigs.Store)
+	trb, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 
 	s.Run("status is correctly calculated as TRB tasks are performed", func() {
@@ -294,7 +294,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		}, *taskStatuses)
 
 		// Test the "ADVICE_LETTER_SENT" status by sending the advice letter
-		_, err = SendTRBAdviceLetter(ctx, store, adviceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos)
+		_, err = SendTRBAdviceLetter(ctx, store, adviceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
 		s.NoError(err)
 		// Fetch the updated request
 		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)

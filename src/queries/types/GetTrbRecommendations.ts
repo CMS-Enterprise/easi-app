@@ -11,7 +11,7 @@ export interface GetTrbRecommendations_trbRequest_adviceLetter_recommendations {
   __typename: "TRBAdviceLetterRecommendation";
   id: UUID;
   title: string;
-  recommendation: string;
+  recommendation: HTML;
   links: string[];
 }
 

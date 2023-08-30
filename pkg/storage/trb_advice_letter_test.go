@@ -52,8 +52,8 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, anonEua, trbRequestID)
 		s.NoError(err)
 
-		updatedMeetingSummary := "Meeting went well, no notes"
-		updatedNextSteps := "Move forward with development"
+		updatedMeetingSummary := models.HTML("Meeting went well, no notes")
+		updatedNextSteps := models.HTML("Move forward with development")
 		updatedIsFollowupRecommended := true
 		updatedFollowupPoint := "In 3 months, check that everything's going well"
 		updatedLetter := models.TRBAdviceLetter{

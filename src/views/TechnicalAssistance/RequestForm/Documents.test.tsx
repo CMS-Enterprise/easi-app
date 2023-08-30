@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
+import { MATCH_ANY_PARAMETERS, WildcardMockLink } from 'wildcard-mock-link';
 
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbRequestDocumentQuery from 'queries/CreateTrbRequestDocumentQuery';
@@ -291,77 +292,72 @@ describe('Trb Request form: Supporting documents', () => {
       >
         <Route exact path="/trb/requests/:id/:step?/:view?">
           <MockedProvider
-            mocks={[
-              // Initial get documents
-              {
-                request: {
-                  query: GetTrbRequestDocumentsQuery,
-                  variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
-                },
-                result: {
-                  data: {
-                    trbRequest: {
-                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
-                      documents: []
-                    }
-                  }
-                }
-              },
-              // Upload document file
-              {
-                request: {
-                  query: CreateTrbRequestDocumentQuery,
-                  variables: {
-                    input: {
-                      requestID: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
-                      documentType: 'ARCHITECTURE_DIAGRAM',
-                      fileData: testFile
-                    }
-                  }
-                },
-                result: {
-                  data: {
-                    createTRBRequestDocument: {
-                      document: {
-                        id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
-                        documentType: {
-                          commonType: 'ARCHITECTURE_DIAGRAM',
-                          otherTypeDescription: ''
-                        },
-                        fileName: 'test.pdf'
+            link={
+              new WildcardMockLink([
+                {
+                  request: {
+                    query: GetTrbRequestDocumentsQuery,
+                    variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
+                  },
+                  result: {
+                    data: {
+                      trbRequest: {
+                        id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
+                        documents: []
                       }
                     }
                   }
-                }
-              },
-              // Documents list with uploaded file
-              {
-                request: {
-                  query: GetTrbRequestDocumentsQuery,
-                  variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
                 },
-                result: {
-                  data: {
-                    trbRequest: {
-                      id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
-                      documents: [
-                        {
+                // Create document
+                {
+                  request: {
+                    query: CreateTrbRequestDocumentQuery,
+                    variables: MATCH_ANY_PARAMETERS // File operations don't match traditional `mocks` in MockedProvider, so use this to always match the Create mutation
+                  },
+                  result: {
+                    data: {
+                      createTRBRequestDocument: {
+                        document: {
                           id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
-                          fileName: 'test.pdf',
                           documentType: {
                             commonType: 'ARCHITECTURE_DIAGRAM',
                             otherTypeDescription: ''
                           },
-                          status: 'PENDING',
-                          uploadedAt: '2022-12-20T19:04:36.518916Z',
-                          url: ''
+                          fileName: 'test.pdf'
                         }
-                      ]
+                      }
+                    }
+                  }
+                },
+                // Documents list with uploaded file
+                {
+                  request: {
+                    query: GetTrbRequestDocumentsQuery,
+                    variables: { id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7' }
+                  },
+                  result: {
+                    data: {
+                      trbRequest: {
+                        id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
+                        documents: [
+                          {
+                            id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
+                            fileName: 'test.pdf',
+                            documentType: {
+                              commonType: 'ARCHITECTURE_DIAGRAM',
+                              otherTypeDescription: ''
+                            },
+                            status: 'PENDING',
+                            uploadedAt: '2022-12-20T19:04:36.518916Z',
+                            url: ''
+                          }
+                        ]
+                      }
                     }
                   }
                 }
-              }
-            ]}
+              ])
+            }
           >
             <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>

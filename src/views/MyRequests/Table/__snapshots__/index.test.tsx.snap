@@ -91,7 +91,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
                 title="Toggle SortBy"
                 type="button"
               >
-                Request name
+                Project title
                 <svg
                   class="usa-icon margin-left-05 position-absolute"
                   data-testid="caret--sort"

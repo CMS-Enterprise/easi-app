@@ -4,6 +4,12 @@
 set -eu -o pipefail
 
 case "$APP_ENV" in
+  "test")
+    EASI_URL="http://easi:8080"
+    export REACT_APP_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
+    export REACT_APP_OKTA_REDIRECT_URI="http://localhost:3000/implicit/callback"
+    export REACT_APP_LOCAL_AUTH_ENABLED=true
+    ;;
   "dev")
     EASI_URL="https://dev.easi.cms.gov"
     export VITE_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
@@ -18,7 +24,7 @@ case "$APP_ENV" in
     ;;
   *)
     echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
-    echo "Allowed values: 'dev', 'impl', 'prod'"
+    echo "Allowed values: 'test','dev','impl','prod'"
     exit 1
     ;;
 esac
@@ -32,20 +38,16 @@ export VITE_OKTA_REDIRECT_URI="${EASI_URL}/implicit/callback"
 export VITE_API_ADDRESS="${EASI_URL}/api/v1"
 export VITE_GRAPHQL_ADDRESS="${EASI_URL}/api/graph/query"
 
-# Check if we have any access to the s3 bucket
-# Since `s3 ls` returns zero even if the command failed, we assume failure if this command prints anything to stderr
-s3_err="$(aws s3 ls "$STATIC_S3_BUCKET" 1>/dev/null 2>&1)"
-if [[ -z "$s3_err" ]] ; then
-  ( set -x -u ;
-    yarn install --frozen-lockfile
-    yarn run build || exit
-    aws s3 sync --no-progress --delete build/ s3://"$STATIC_S3_BUCKET"/
-  )
-else
-  echo "+ aws s3 ls $STATIC_S3_BUCKET"
-  echo "$s3_err"
-  echo "--"
-  echo "Error reading the S3 bucket. Are you authenticated?" 1>&2
-  exit 1
+# Only set REACT_APP_OKTA_REDIRECT_URI if APP_ENV is not "test"
+if [ "$APP_ENV" != "test" ]; then
+    export REACT_APP_OKTA_REDIRECT_URI="${EASI_URL}/implicit/callback"
 fi
+
+# Build the application
+( 
+  set -x -u ;
+  yarn install --frozen-lockfile
+  yarn run build || exit
+)
+
 

@@ -1,0 +1,52 @@
+name: Build and Upload Frontend Assets
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        required: true
+        type: string
+        description: Environment to build frontend assets for
+
+env:
+  EASI_APP_NODE_VERSION: "16.14.0"
+  GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build_frontend_assets:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
+    env:
+      APP_ENV: ${{ inputs.env }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.EASI_APP_NODE_VERSION }}
+          cache: 'yarn'
+      - name: Build Frontend Assets
+        env:
+          LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
+          OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
+          OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
+        run: |
+          ./scripts/build_static.sh
+      - name: Upload Frontend assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.env }}-frontend-assets
+          path: build/
+          retention-days: 10
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch

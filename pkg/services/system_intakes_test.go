@@ -315,8 +315,8 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	lifecycleID := null.StringFrom("010010")
 	today := time.Now()
 	expiresAt := &today
-	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
-	scope := null.StringFrom(fmt.Sprintf("scope %s", today))
+	nextSteps := models.HTMLPointer(fmt.Sprintf("next %s", today))
+	scope := models.HTMLPointer(fmt.Sprintf("scope %s", today))
 
 	input := &models.SystemIntake{
 		ID:                 uuid.New(),
@@ -327,7 +327,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 	action := &models.Action{
 		IntakeID: &input.ID,
-		Feedback: null.StringFrom("Feedback"),
+		Feedback: models.HTMLPointer("Feedback"),
 	}
 	euaID := testhelpers.RandomEUAID()
 
@@ -345,10 +345,10 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 		if !i.LifecycleExpiresAt.Equal(today) {
 			return nil, errors.New("incorrect date")
 		}
-		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
+		if i.DecisionNextSteps != input.DecisionNextSteps {
 			return nil, errors.New("incorrect next")
 		}
-		if !i.LifecycleScope.Equal(input.LifecycleScope) {
+		if i.LifecycleScope != input.LifecycleScope {
 			return nil, errors.New("incorrect scope")
 		}
 		return i, nil
@@ -357,10 +357,10 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 		return nil
 	}
 
-	feedbackForEmailText := ""
+	var feedbackForEmailText models.HTML
 
 	multipleReviewEmailsSent := false
-	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, emailText string) error {
+	fnSendLCIDEmailToMultipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ models.HTML, _ string, _ models.HTML, emailText models.HTML) error {
 		feedbackForEmailText = emailText
 		multipleReviewEmailsSent = true
 		return nil
@@ -384,7 +384,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.LifecycleScope, scope)
 		s.True(multipleReviewEmailsSent)
-		s.Equal("Feedback", feedbackForEmailText)
+		s.Equal(models.HTML("Feedback"), feedbackForEmailText)
 	})
 
 	s.Run("happy path provided lcid without sending email (to multiple recipients)", func() {
@@ -422,7 +422,7 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnSaveActionErr := func(c context.Context, a *models.Action) error {
 		return errors.New("action error")
 	}
-	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ string, _ string, _ string, _ string) error {
+	fnSendLCIDEmailToMultipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ *time.Time, _ models.HTML, _ string, _ models.HTML, _ models.HTML) error {
 		return errors.New("error sending to multiple recipients")
 	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
@@ -464,8 +464,8 @@ func (s *ServicesTestSuite) TestUpdateLifecycleFields() {
 
 func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	today := time.Now()
-	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
-	reason := null.StringFrom(fmt.Sprintf("reason %s", today))
+	nextSteps := models.HTMLPointer(fmt.Sprintf("next %s", today))
+	reason := models.HTMLPointer(fmt.Sprintf("reason %s", today))
 
 	input := &models.SystemIntake{
 		ID:                uuid.New(),
@@ -474,7 +474,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	}
 	action := &models.Action{
 		IntakeID: &input.ID,
-		Feedback: null.StringFrom("Feedback"),
+		Feedback: models.HTMLPointer("Feedback"),
 	}
 	euaID := testhelpers.RandomEUAID()
 
@@ -486,10 +486,10 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 		}, nil
 	}
 	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
-		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
+		if i.DecisionNextSteps != input.DecisionNextSteps {
 			return nil, errors.New("incorrect next")
 		}
-		if !i.LifecycleScope.Equal(input.LifecycleScope) {
+		if i.LifecycleScope != input.LifecycleScope {
 			return nil, errors.New("incorrect scope")
 		}
 		return i, nil
@@ -498,9 +498,9 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 		return nil
 	}
 
-	feedbackForEmailText := ""
+	var feedbackForEmailText models.HTML
 	multipleReviewEmailsSent := false
-	fnSendRejectRequestEmailToMulipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ string, feedback string) error {
+	fnSendRejectRequestEmailToMulipleRecipients := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ models.HTML, _ models.HTML, feedback models.HTML) error {
 		feedbackForEmailText = feedback
 		multipleReviewEmailsSent = true
 		return nil
@@ -528,7 +528,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
 		s.True(multipleReviewEmailsSent)
-		s.Equal("Feedback", feedbackForEmailText)
+		s.Equal(models.HTML("Feedback"), feedbackForEmailText)
 	})
 
 	s.Run("happy path without sending email (to multiple recipients)", func() {
@@ -556,7 +556,7 @@ func (s *ServicesTestSuite) TestUpdateRejectionFields() {
 	fnSaveActionErr := func(_ context.Context, _ *models.Action) error {
 		return errors.New("action error")
 	}
-	fnSendRejectRequestEmailToMulipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ string, _ string, _ string) error {
+	fnSendRejectRequestEmailToMulipleRecipientsErr := func(_ context.Context, _ models.EmailNotificationRecipients, _ uuid.UUID, _ string, _ string, _ models.HTML, _ models.HTML, _ models.HTML) error {
 		return errors.New("send email to multiple recipients error")
 	}
 

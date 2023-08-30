@@ -1,8 +1,12 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
+import { renderToStringWithData } from '@apollo/client/react/ssr';
 import { render, screen } from '@testing-library/react';
+import { Link } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import { taskListState } from 'data/mock/govTaskList';
 import { ItGovTaskSystemIntake } from 'types/itGov';
 import {
@@ -144,6 +148,76 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
 
     // View feedback + Submitted draft biz case
     getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey(
+      'link',
+      'itGov:taskList.step.bizCaseDraft.viewSubmittedDraftBusinessCase'
+    );
+  });
+
+  it('Done - with feedback', () => {
+    renderGovTaskBizCaseDraft(
+      taskListState.bizCaseDraftDoneWithFeedback.systemIntake!
+    );
+
+    // Completed
+    expectTaskStatusTagToHaveTextKey('COMPLETED');
+
+    // Submitted date
+    screen.getByText(
+      RegExp(
+        `${i18next.t<string>('taskList:taskStatusInfo.submitted')}.*07/16/2023`
+      )
+    );
+
+    // No alert
+    expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
+
+    // View feedback + Submitted draft biz case
+    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey(
+      'link',
+      'itGov:taskList.step.bizCaseDraft.viewSubmittedDraftBusinessCase'
+    );
+  });
+
+  it('Done - no feedback', async () => {
+    renderGovTaskBizCaseDraft(
+      taskListState.bizCaseDraftDoneNoFeedback.systemIntake!
+    );
+
+    // Completed
+    expectTaskStatusTagToHaveTextKey('COMPLETED');
+
+    // Submitted date
+    screen.getByText(
+      RegExp(
+        `${i18next.t<string>('taskList:taskStatusInfo.submitted')}.*07/16/2023`
+      )
+    );
+
+    // No feedback info
+    const noFeedbackInfo = getExpectedAlertType('info');
+    const mailtoItGov = `mailto:${IT_GOV_EMAIL}`;
+    expect(noFeedbackInfo).toContainHTML(
+      await renderToStringWithData(
+        <Trans
+          i18nKey="itGov:taskList.step.bizCaseDraft.noFeedbackInfo"
+          components={{
+            a: <Link href={mailtoItGov}> </Link>,
+            email: IT_GOV_EMAIL
+          }}
+        />
+      )
+    );
+
+    // No View feedback link
+    expect(
+      screen.queryByRole('link', {
+        name: i18next.t<string>('itGov:button.viewFeedback')
+      })
+    ).not.toBeInTheDocument();
+
+    // Submitted draft biz case
     getByRoleWithNameTextKey(
       'link',
       'itGov:taskList.step.bizCaseDraft.viewSubmittedDraftBusinessCase'

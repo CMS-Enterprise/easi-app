@@ -19,7 +19,7 @@ export interface CreateSystemIntakeNote_createSystemIntakeNote {
   __typename: "SystemIntakeNote";
   id: UUID;
   createdAt: Time;
-  content: string;
+  content: HTML;
   author: CreateSystemIntakeNote_createSystemIntakeNote_author;
 }
 

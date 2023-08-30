@@ -6,33 +6,6 @@ exports[`Template for 508 Testing > renders help mode without crashing 1`] = `
     class="templates-for-508-testing"
   >
     <div
-      class="help-page-intro margin-bottom-4"
-    >
-      <h1
-        aria-live="polite"
-        class="easi-h1 margin-bottom-0 margin-top-3"
-        tabindex="-1"
-      >
-        Templates for 508 testing
-      </h1>
-      <a
-        class="usa-link display-inline-block margin-y-1"
-        href="/help/section-508"
-      >
-        <span
-          class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
-          data-testid="tag"
-        >
-          Section 508
-        </span>
-      </a>
-      <div
-        class="font-body-lg margin-top-1 margin-bottom-0 line-height-body-5"
-      >
-        Download and fill out these templates as needed to complete 508 testing for your system
-      </div>
-    </div>
-    <div
       class="margin-bottom-6 padding-2 bg-base-lightest"
     >
       <h3

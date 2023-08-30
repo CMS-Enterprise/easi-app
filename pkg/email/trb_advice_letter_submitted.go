@@ -23,6 +23,7 @@ type SendTRBAdviceLetterSubmittedEmailInput struct {
 	Component      string
 	SubmissionDate *time.Time
 	ConsultDate    *time.Time
+	CopyTRBMailbox bool
 	Recipients     []models.EmailAddress
 }
 
@@ -47,7 +48,10 @@ type trbAdviceLetterSubmittedEmailTemplateParams struct {
 func (c Client) SendTRBAdviceLetterSubmittedEmail(ctx context.Context, input SendTRBAdviceLetterSubmittedEmailInput) error {
 	subject := "Advice letter added for " + input.RequestName
 
-	allRecipients := append(input.Recipients, c.config.TRBEmail)
+	allRecipients := input.Recipients
+	if input.CopyTRBMailbox {
+		allRecipients = append(input.Recipients, c.config.TRBEmail)
+	}
 
 	submissionDate := ""
 	if input.SubmissionDate != nil {

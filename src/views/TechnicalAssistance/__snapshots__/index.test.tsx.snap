@@ -663,7 +663,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                     <div
                       class="flex-fill text-no-wrap"
                     >
-                      Request Name
+                      Project title
                     </div>
                     <div
                       class="position-relative width-205 margin-left-05"

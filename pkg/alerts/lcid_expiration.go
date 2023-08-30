@@ -79,9 +79,9 @@ func checkForLCIDExpiration(
 		requesterName string,
 		lcid string,
 		lcidExpirationDate *time.Time,
-		scope string,
+		scope models.HTML,
 		lifecycleCostBaseline string,
-		nextSteps string,
+		nextSteps models.HTML,
 	) error,
 ) error {
 
@@ -139,9 +139,9 @@ func checkForLCIDExpiration(
 					currIntake.Requester,
 					currIntake.LifecycleID.String,
 					currIntake.LifecycleExpiresAt,
-					currIntake.LifecycleScope.String,
+					currIntake.LifecycleScope.ValueOrEmptyHTML(),
 					currIntake.LifecycleCostBaseline.String,
-					currIntake.DecisionNextSteps.String,
+					currIntake.DecisionNextSteps.ValueOrEmptyHTML(),
 				)
 
 				if err != nil {
@@ -194,9 +194,9 @@ func checkForLCIDExpiration(
 					currIntake.Requester,
 					currIntake.LifecycleID.String,
 					currIntake.LifecycleExpiresAt,
-					currIntake.LifecycleScope.String,
+					currIntake.LifecycleScope.ValueOrEmptyHTML(),
 					currIntake.LifecycleCostBaseline.String,
-					currIntake.DecisionNextSteps.String,
+					currIntake.DecisionNextSteps.ValueOrEmptyHTML(),
 				)
 
 				if err != nil {
@@ -265,9 +265,9 @@ func StartLcidExpirationCheck(
 		requesterName string,
 		lcid string,
 		lcidExpirationDate *time.Time,
-		scope string,
+		scope models.HTML,
 		lifecycleCostBaseline string,
-		nextSteps string,
+		nextSteps models.HTML,
 	) error,
 	lcidExpirationCheckTime time.Duration,
 ) {

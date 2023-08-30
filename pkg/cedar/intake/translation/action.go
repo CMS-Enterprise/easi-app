@@ -27,7 +27,7 @@ func (action *TranslatableAction) CreateIntakeModel() (*wire.IntakeInput, error)
 		IntakeID:   action.IntakeID.String(),
 		ActionType: string(action.ActionType),
 		ActorEUA:   action.ActorEUAUserID,
-		Feedback:   action.Feedback.ValueOrZero(),
+		Feedback:   action.Feedback.ValueOrEmptyString(),
 	}
 
 	blob, err := json.Marshal(&obj)

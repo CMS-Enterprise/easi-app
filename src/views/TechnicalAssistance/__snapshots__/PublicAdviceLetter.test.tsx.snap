@@ -98,7 +98,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
                 data-testid="grid"
               >
                 <dt>
-                  Request name
+                  Project title
                 </dt>
                 <dd>
                   Case 7 - Advice letter in review

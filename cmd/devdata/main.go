@@ -14,6 +14,8 @@ import (
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -207,22 +209,57 @@ func main() {
 		i.EUAUserID = null.StringFromPtr(nil)
 	})
 
-	// TODO - EASI-2888 - remove mention of this ticket in comments below; remove whole comment block if EASI-3019 also implemented
-	// TODO - EASI-3019 - remove mention of this ticket in comments below; remove whole comment block if EASI-2888 also implemented
-
-	// Currently, these create system intakes along with feedback, but with no action(s) associated with the feedback.
-	// The actions will be added later in EASI-2888 and EASI-3019.
 	intakeID := uuid.MustParse("4d3f9821-e043-42bf-9cd0-faa5f053ed32")
-	makeSystemIntakeWithProgressToNextStep("Intake with feedback on progression to next step", logger, store, "USR1", intakeID, "progression feedback")
+	makeSystemIntakeWithProgressToNextStep(
+		"Intake with feedback on progression to next step",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"Feedback to requester",
+		"Recommendations for GRB",
+		"additional notes",
+		"admin note",
+	)
 
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeWithEditsRequested("Edits requested on intake request", logger, store, "USR1", intakeID, "intake request feedback", models.GovernanceRequestFeedbackTargetIntakeRequest)
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on intake request",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"intake request feedback",
+		models.HTMLPointer("additional notes on request form"),
+		"administrative note about request form",
+		model.SystemIntakeFormStepInitialRequestForm,
+	)
 
 	intakeID = uuid.MustParse("ce874e71-de26-46da-bbfe-a8e3af960108")
-	makeSystemIntakeWithEditsRequested("Edits requested on draft business case", logger, store, "USR1", intakeID, "draft biz case feedback", models.GovernanceRequestFeedbackTargetDraftBusinessCase)
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on draft biz case",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"draft biz case feedback",
+		models.HTMLPointer("additional notes on draft biz case"),
+		"administrative note about draft biz case",
+		model.SystemIntakeFormStepDraftBusinessCase,
+	)
 
 	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
-	makeSystemIntakeWithEditsRequested("Edits requested on final business case", logger, store, "USR1", intakeID, "final biz case feedback", models.GovernanceRequestFeedbackTargetFinalBusinessCase)
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on final biz case",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"final biz case feedback",
+		models.HTMLPointer("additional notes on final biz case"),
+		"administrative note about final biz case",
+		model.SystemIntakeFormStepFinalBusinessCase,
+	)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 }
@@ -301,14 +338,14 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		ActorName:      "Actor Name",
 		ActorEmail:     "actor@example.com",
 		ActorEUAUserID: "ACT2",
-		Feedback:       null.StringFrom("This business case needs feedback"),
+		Feedback:       models.HTMLPointer("This business case needs feedback"),
 	}))
 
 	must(store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "QQQQ",
 		AuthorName:     null.StringFrom("Author Name"),
-		Content:        null.StringFrom("a clever remark"),
+		Content:        models.HTMLPointer("a clever remark"),
 		CreatedAt:      &fiveMinutesAgo,
 	}))
 
@@ -317,63 +354,70 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	return &intake
 }
 
-// TODO - EASI-3019 - call functions/methods to take "progress to new step" action;
-// also, remove direct call to store.CreateGovernanceRequestFeedback(), action should save feedback
 func makeSystemIntakeWithProgressToNextStep(
 	name string,
 	logger *zap.Logger,
 	store *storage.Store,
 	creatingUser string,
 	intakeID uuid.UUID,
-	feedbackText string,
+	feedbackText models.HTML,
+	grbRecommendations models.HTML,
+	additionalInfo models.HTML,
+	adminNote models.HTML,
 ) {
-	ctx := appcontext.WithLogger(context.Background(), logger)
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
 
 	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
 		i.ID = intakeID
+		i.Step = models.SystemIntakeStepINITIALFORM
+		i.RequestFormState = models.SIRFSSubmitted
 	})
 
-	feedback := models.GovernanceRequestFeedback{
-		BaseStruct: models.BaseStruct{
-			CreatedBy: creatingUser,
-		},
-		IntakeID:     intakeID,
-		Feedback:     feedbackText,
-		SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
-		TargetForm:   models.GovernanceRequestFeedbackTargetNoTargetProvided,
+	input := &model.SystemIntakeProgressToNewStepsInput{
+		SystemIntakeID:     intakeID,
+		NewStep:            model.SystemIntakeStepToProgressToDraftBusinessCase, // arbitrary choice
+		Feedback:           &feedbackText,
+		GrbRecommendations: &grbRecommendations,
+		AdditionalNote:     &additionalInfo,
+		AdminNote:          &adminNote,
 	}
 
-	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
+	// this will move the intake to the new step and save it to the database, save the feedback, and save a record of the action
+	must(resolvers.ProgressIntake(ctx, store, mock.FetchUserInfoMock, input))
 }
 
-// TODO - EASI-2888 - call functions/methods to take "request edits" action;
-// also, remove direct call to store.CreateGovernanceRequestFeedback(), action should save feedback
 func makeSystemIntakeWithEditsRequested(
 	name string,
 	logger *zap.Logger,
 	store *storage.Store,
 	creatingUser string,
 	intakeID uuid.UUID,
-	feedbackText string,
-	targetedForm models.GovernanceRequestFeedbackTargetForm,
+	feedbackText models.HTML,
+	additionalInfo *models.HTML,
+	adminNote models.HTML,
+	targetedForm model.SystemIntakeFormStep,
 ) {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 
 	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
 		i.ID = intakeID
+		i.Step = models.SystemIntakeStepINITIALFORM
+		i.RequestFormState = models.SIRFSSubmitted
 	})
 
-	feedback := models.GovernanceRequestFeedback{
-		BaseStruct: models.BaseStruct{
-			CreatedBy: creatingUser,
+	input := &model.SystemIntakeRequestEditsInput{
+		SystemIntakeID: intakeID,
+		IntakeFormStep: targetedForm,
+		NotificationRecipients: &models.EmailNotificationRecipients{
+			RegularRecipientEmails:   []models.EmailAddress{},
+			ShouldNotifyITGovernance: false,
+			ShouldNotifyITInvestment: false,
 		},
-		IntakeID:     intakeID,
-		Feedback:     feedbackText,
-		SourceAction: models.GovernanceRequestFeedbackSourceActionRequestEdits,
-		TargetForm:   targetedForm,
+		EmailFeedback:  feedbackText,
+		AdditionalInfo: additionalInfo,
+		AdminNotes:     &adminNote,
 	}
-
-	must(store.CreateGovernanceRequestFeedback(ctx, &feedback))
+	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, mock.FetchUserInfoMock, *input))
 }
 
 func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {

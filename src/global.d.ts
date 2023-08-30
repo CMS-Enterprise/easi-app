@@ -17,6 +17,7 @@ declare global {
   // These types are defined in GQL generated types.
   // Defining globally here for FE to recognize generated types.
    type UUID = string;
+   type HTML = string;
    type Time = string;
    type EmailAddress = string;
    type Upload = File;
