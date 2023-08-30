@@ -41,7 +41,7 @@ describe('The NavigationBar component', () => {
     }
   });
 
-  it('renders without errors', done => {
+  it('renders without errors', async () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/']}>
@@ -56,10 +56,9 @@ describe('The NavigationBar component', () => {
     );
 
     expect(getByTestId('navigation-bar')).toBeInTheDocument();
-    done();
   });
 
-  it('displays every navigation element', done => {
+  it('displays every navigation element', async () => {
     const { getByText } = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/system/making-a-request']}>
@@ -82,6 +81,5 @@ describe('The NavigationBar component', () => {
         expect(getByText(linkTitle)).toBeInTheDocument();
       }
     });
-    done();
   });
 });
