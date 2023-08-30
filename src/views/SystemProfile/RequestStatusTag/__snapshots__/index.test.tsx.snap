@@ -21,25 +21,3 @@ exports[`RequestStatusTag > renders request status tag {"status":"Open","classNa
   </span>
 </DocumentFragment>
 `;
-
-exports[`RequestStatusTag renders request status tag {"status":"Closed","className":"border-2px"} 1`] = `
-<DocumentFragment>
-  <span
-    class="easi-tag border-2px display-inline-block"
-    data-testid="tag"
-  >
-    Closed
-  </span>
-</DocumentFragment>
-`;
-
-exports[`RequestStatusTag renders request status tag {"status":"Open","className":"bg-accent-cool"} 1`] = `
-<DocumentFragment>
-  <span
-    class="easi-tag bg-accent-cool display-inline-block"
-    data-testid="tag"
-  >
-    Open
-  </span>
-</DocumentFragment>
-`;

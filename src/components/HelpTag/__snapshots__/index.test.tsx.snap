@@ -15,19 +15,3 @@ exports[`HelpTag > matches the snapshot 1`] = `
   </a>
 </DocumentFragment>
 `;
-
-exports[`HelpTag matches the snapshot 1`] = `
-<DocumentFragment>
-  <a
-    class="usa-link display-inline-block"
-    href="/help/it-governance"
-  >
-    <span
-      class="easi-tag system-profile__tag text-primary-dark bg-primary-lighter padding-bottom-1"
-      data-testid="tag"
-    >
-      IT Governance
-    </span>
-  </a>
-</DocumentFragment>
-`;

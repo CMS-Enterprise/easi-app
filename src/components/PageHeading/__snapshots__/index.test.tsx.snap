@@ -9,13 +9,3 @@ exports[`Page heading component > matches the snapshot 1`] = `
   Test Heading
 </h1>
 `;
-
-exports[`Page heading component matches the snapshot 1`] = `
-<h1
-  aria-live="polite"
-  className="easi-h1"
-  tabIndex={-1}
->
-  Test Heading
-</h1>
-`;
