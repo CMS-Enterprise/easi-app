@@ -33,8 +33,8 @@ type TRBAdviceLetter struct {
 	BaseStruct
 	TRBRequestID          uuid.UUID             `json:"trbRequestId" db:"trb_request_id"`
 	Status                TRBAdviceLetterStatus `json:"status" db:"status"`
-	MeetingSummary        *string               `json:"meetingSummary" db:"meeting_summary"`
-	NextSteps             *string               `json:"nextSteps" db:"next_steps"`
+	MeetingSummary        *HTML                 `json:"meetingSummary" db:"meeting_summary"`
+	NextSteps             *HTML                 `json:"nextSteps" db:"next_steps"`
 	IsFollowupRecommended *bool                 `json:"isFollowupRecommended" db:"is_followup_recommended"`
 	DateSent              *time.Time            `json:"dateSent" db:"date_sent"`
 

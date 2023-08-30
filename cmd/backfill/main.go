@@ -234,7 +234,7 @@ func convert(row []string) (*entry, error) {
 	if match, matchErr := regexp.MatchString(`^\w?\d{6}$`, row[colLCID]); match && matchErr == nil {
 		// LCIDs in spreadsheet frequently have a 1 character ALPHA prefix
 		data.Intake.LifecycleID = null.StringFrom(row[colLCID])
-		data.Intake.LifecycleScope = null.StringFrom(row[colLCIDScope])
+		data.Intake.LifecycleScope = models.HTMLPointer(row[colLCIDScope])
 	} else {
 		return nil, errors.New("no lcid for intake")
 	}
@@ -281,14 +281,14 @@ func convert(row []string) (*entry, error) {
 
 	if row[colGRTNotes] != "" {
 		data.Notes = append(data.Notes, models.SystemIntakeNote{
-			Content:    null.StringFrom(row[colGRTNotes]),
+			Content:    models.HTMLPointer(row[colGRTNotes]),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}
 
 	if row[colPeriod] != "" {
 		data.Notes = append(data.Notes, models.SystemIntakeNote{
-			Content:    null.StringFrom(fmt.Sprintf("Period of Performance - %s", row[colPeriod])),
+			Content:    models.HTMLPointer(fmt.Sprintf("Period of Performance - %s", row[colPeriod])),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}

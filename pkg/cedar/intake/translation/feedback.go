@@ -26,7 +26,7 @@ func (fb *TranslatableFeedback) CreateIntakeModel() (*wire.IntakeInput, error) {
 	obj := intakemodels.EASIGrtFeedback{
 		FeedbackID:   fb.ID.String(),
 		IntakeID:     fb.IntakeID.String(),
-		Feedback:     fb.Feedback,
+		Feedback:     fb.Feedback.ValueOrEmptyString(),
 		FeedbackType: string(fb.FeedbackType),
 	}
 

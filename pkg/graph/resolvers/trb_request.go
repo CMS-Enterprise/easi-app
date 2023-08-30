@@ -247,7 +247,7 @@ func CloseTRBRequest(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 	id uuid.UUID,
-	reasonClosed string,
+	reasonClosed models.HTML,
 	copyTRBMailbox bool,
 	notifyEUAIDs []string,
 ) (*models.TRBRequest, error) {
@@ -316,7 +316,7 @@ func ReopenTRBRequest(
 	ctx context.Context,
 	store *storage.Store,
 	id uuid.UUID,
-	reasonReopened string,
+	reasonReopened models.HTML,
 	copyTRBMailbox bool,
 	notifyEUAIDs []string,
 	emailClient *email.Client,

@@ -15,9 +15,9 @@ func (s *EmailTestSuite) TestSendRejectRequestEmails() {
 	intakeID := uuid.MustParse("27883155-46ad-4c30-b3b0-30e8d093756e")
 	projectName := "Impractical Request"
 	requester := "Leeroy Jenkins"
-	reason := "reason"
-	nextSteps := "nextSteps"
-	feedback := "feedback"
+	reason := models.HTML("reason")
+	nextSteps := models.HTML("nextSteps")
+	feedback := models.HTML("feedback")
 
 	decisionPathOpeningTag := fmt.Sprintf(
 		"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",

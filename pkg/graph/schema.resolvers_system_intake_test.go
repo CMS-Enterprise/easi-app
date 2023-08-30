@@ -133,7 +133,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "QQQQ",
 		AuthorName:     null.StringFrom("Author Name Q"),
-		Content:        null.StringFrom("a clever remark"),
+		Content:        models.HTMLPointer("a clever remark"),
 		CreatedAt:      date(2021, 5, 2),
 	})
 	s.NoError(noteErr)
@@ -142,7 +142,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "WWWW",
 		AuthorName:     null.StringFrom("Author Name W"),
-		Content:        null.StringFrom("a cleverer remark"),
+		Content:        models.HTMLPointer("a cleverer remark"),
 		CreatedAt:      date(2021, 5, 3),
 	})
 	s.NoError(noteErr)
@@ -481,7 +481,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 		ActorName:      "Second Actor",
 		ActorEmail:     "second.actor@example.com",
 		ActorEUAUserID: "ACT2",
-		Feedback:       null.StringFrom("feedback for action two"),
+		Feedback:       models.HTMLPointer("feedback for action two"),
 		CreatedAt:      date(2021, 4, 2),
 	})
 	s.NoError(action2Err)
@@ -1845,8 +1845,8 @@ func (s *GraphQLTestSuite) TestExtendLifecycleId() {
 
 	intake.LifecycleID = null.StringFrom("123456")
 	intake.LifecycleExpiresAt = date(2021, 12, 1)
-	intake.LifecycleScope = null.StringFrom("Original Scope")
-	intake.DecisionNextSteps = null.StringFrom("Original Next Steps")
+	intake.LifecycleScope = models.HTMLPointer("Original Scope")
+	intake.DecisionNextSteps = models.HTMLPointer("Original Next Steps")
 	intake.LifecycleCostBaseline = null.StringFrom("Original Cost Baseline")
 
 	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)

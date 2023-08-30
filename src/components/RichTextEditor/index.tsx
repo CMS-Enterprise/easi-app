@@ -162,6 +162,8 @@ function setEditableElementProps(
 function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor) {
   toastEditor.eventEmitter.listen('change', () => {
     const html = toastEditor.getHTML();
+    // NOTE make sure to update the allowed policy on the backend when it is updated here as well
+    // It is created in pkg/sanitization/html.go in createHTMLPolicy
     const sanitized = DOMPurify.sanitize(html, {
       ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
     });

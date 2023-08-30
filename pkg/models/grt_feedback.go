@@ -24,5 +24,5 @@ type GRTFeedback struct {
 	FeedbackType GRTFeedbackType `db:"feedback_type" json:"feedbackType"`
 	CreatedAt    *time.Time      `db:"created_at"`
 	UpdatedAt    *time.Time      `db:"updated_at"`
-	Feedback     string
+	Feedback     HTML
 }

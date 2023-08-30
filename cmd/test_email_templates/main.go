@@ -70,7 +70,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	noErr(err)
 
 	editsRequestedFeedback := "Please provide a better form."
-	err = client.SendTRBEditsNeededOnFormNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, editsRequestedFeedback)
+	err = client.SendTRBEditsNeededOnFormNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, models.HTML(editsRequestedFeedback))
 	noErr(err)
 
 	attendeeEmail := models.NewEmailAddress("subject_matter_expert@local.fake")
