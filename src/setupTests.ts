@@ -14,9 +14,9 @@ window.URL.createObjectURL = vi.fn();
 
 // https://stackoverflow.com/questions/56079277/okta-sign-in-widget-breaks-jest-tests-typeerror-cannot-read-property-backing
 window.getComputedStyle = vi.fn(() => {
-  return {
+  return ({
     getPropertyValue: vi.fn()
-  };
+  } as unknown) as CSSStyleDeclaration;
 });
 
 // https://github.com/hustcc/jest-canvas-mock/issues/2
