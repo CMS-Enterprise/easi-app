@@ -163,7 +163,8 @@
     "vite": "^4.4.9",
     "vite-plugin-svgr": "^3.2.0",
     "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "^0.34.1"
+    "vitest": "^0.34.1",
+    "vitest-canvas-mock": "^0.3.3"
   },
   "resolutions": {
     "prismjs": "1.24.0",

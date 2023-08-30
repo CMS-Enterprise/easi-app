@@ -43,6 +43,20 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
-    globalSetup: './global-setup.js'
+    globalSetup: './src/global-setup.js',
+    deps: {
+      optimizer: {
+        web: {
+          include: ['vitest-canvas-mock']
+        }
+      }
+    },
+    // For this config, check https://github.com/vitest-dev/vitest/issues/740
+    threads: false,
+    environmentOptions: {
+      jsdom: {
+        resources: 'usable'
+      }
+    }
   }
 });
