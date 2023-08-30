@@ -25,27 +25,25 @@ This meets our current needs for logging action history on an intake, requires m
 ## Pros and Cons of the Alternatives
 
 ### Always store the new step
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+
+* `+` Informative for the Request Edits and Progress to New Step actions; understanding these actions is _much_ easier with the knowledge of what form had edits requested or what step the intake progressed to.
+* `+` This is what our current code does; it wouldn't require many changes to existing code.
+* `-` Not very informative for actions that issue a decision.
 
 ### Always store the previous step
 
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+* `+` Informative for actions that issue a decision; it's helpful to know what step the intake was in, and the new step isn't very interesting because issuing a decision always sets the intake's step to `DECISION_AND_NEXT_STEPS`. 
+* `-` Not very informative for the Request Edits and Progress to New Step actions.
+* `-` Would require changing some existing code.
 
 ### Store both the previous step and the new step
 
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+* `+` Stores the most information for all actions.
+* `-` Requires the most work out of any alternatives.
+* `-` Might still get obsoleted wheen we rework the `actions` table/event log/audit log.
+* `-` Potentially leads to data integrity issues if we don't ensure that all the actions for an intake have their new step equal to the previous step of the next action on that intake.
 
 ### Have the meaning of `Step` differ depending on the action type
 
-*
-*
-*
+* `+` Stores useful info for all actions in a single column.
+* `-` The meaning of `actions.step` becomes less clear in our code and database, because it requires understanding what it means in the context of each different action type. 
