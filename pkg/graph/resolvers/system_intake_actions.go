@@ -267,9 +267,8 @@ func RejectIntakeAsNotApproved(
 	intake.DecisionState = models.SIDSNotApproved
 
 	// update other fields
-	// TODO - update Reason and NextSteps in GQL input type to use HTML type (assuming that's applicable)
-	// intake.RejectionReason = null.StringFrom(input.Reason)
-	// intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
+	intake.RejectionReason = &input.Reason
+	intake.DecisionNextSteps = &input.NextSteps
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 
 	updatedTime := time.Now()
@@ -304,10 +303,9 @@ func RejectIntakeAsNotApproved(
 			ActorEUAUserID: adminEUAID,
 			Step:           &intake.Step,
 		}
-		// TODO - update Reason and NextSteps in GQL input type to use HTML type (assuming that's applicable)
-		// if input.AdditionalInfo != nil {
-		// 	action.Feedback = null.StringFromPtr(input.AdditionalInfo)
-		// }
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
 
 		_, errCreatingAction := store.CreateAction(ctx, &action)
 		if errCreatingAction != nil {
@@ -324,8 +322,7 @@ func RejectIntakeAsNotApproved(
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				// TODO - update AdminNote in GQL input type to use HTML type (assuming that's applicable)
-				// Content:        null.StringFromPtr(input.AdminNote),
+				Content:        input.AdminNote,
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
@@ -382,9 +379,8 @@ func IssueLCID(
 	// update LCID-related fields
 	intake.LifecycleID = null.StringFrom(newLCID)
 	intake.LifecycleExpiresAt = &input.ExpiresAt
-	// TODO - update Scope and NextSteps in GQL input type to use HTML type (assuming that's applicable)
-	// intake.LifecycleScope = null.StringFrom(input.Scope)
-	// intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
+	intake.LifecycleScope = &input.Scope
+	intake.DecisionNextSteps = &input.NextSteps
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 
@@ -422,10 +418,9 @@ func IssueLCID(
 			ActorEUAUserID: adminEUAID,
 			Step:           &intake.Step,
 		}
-		// TODO - update AdditionalInfo in GQL input type to use HTML type (assuming that's applicable)
-		// if input.AdditionalInfo != nil {
-		// 	action.Feedback = null.StringFromPtr(input.AdditionalInfo)
-		// }
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
 
 		_, errCreatingAction := store.CreateAction(ctx, &action)
 		if errCreatingAction != nil {
@@ -442,8 +437,7 @@ func IssueLCID(
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				// TODO - update AdminNote in GQL input type to use HTML type (assuming that's applicable)
-				// Content:        null.StringFromPtr(input.AdminNote),
+				Content:        input.AdminNote,
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)

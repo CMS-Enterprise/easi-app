@@ -1507,13 +1507,13 @@ input SystemIntakeIssueLCIDInput {
   systemIntakeID: UUID!
   lcid: String
   expiresAt: Time!
-  scope: String!
-  nextSteps: String!
+  scope: HTML!
+  nextSteps: HTML!
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
-  additionalInfo: String
+  additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
-  adminNote: String
+  adminNote: HTML
 }
 
 """
@@ -1521,12 +1521,12 @@ Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
 """
 input SystemIntakeRejectIntakeInput {
   systemIntakeID: UUID!
-  reason: String!
-  nextSteps: String!
+  reason: HTML!
+  nextSteps: HTML!
   trbFollowUp: SystemIntakeTRBFollowUp!
-  additionalInfo: String
+  additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
-  adminNote: String
+  adminNote: HTML
 }
 
 """

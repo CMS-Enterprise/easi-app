@@ -8632,13 +8632,13 @@ input SystemIntakeIssueLCIDInput {
   systemIntakeID: UUID!
   lcid: String
   expiresAt: Time!
-  scope: String!
-  nextSteps: String!
+  scope: HTML!
+  nextSteps: HTML!
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
-  additionalInfo: String
+  additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
-  adminNote: String
+  adminNote: HTML
 }
 
 """
@@ -8646,12 +8646,12 @@ Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
 """
 input SystemIntakeRejectIntakeInput {
   systemIntakeID: UUID!
-  reason: String!
-  nextSteps: String!
+  reason: HTML!
+  nextSteps: HTML!
   trbFollowUp: SystemIntakeTRBFollowUp!
-  additionalInfo: String
+  additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
-  adminNote: String
+  adminNote: HTML
 }
 
 """
@@ -52190,7 +52190,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scope"))
-			it.Scope, err = ec.unmarshalNString2string(ctx, v)
+			it.Scope, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52198,7 +52198,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
-			it.NextSteps, err = ec.unmarshalNString2string(ctx, v)
+			it.NextSteps, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52222,7 +52222,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
-			it.AdditionalInfo, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.AdditionalInfo, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52238,7 +52238,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
-			it.AdminNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.AdminNote, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52394,7 +52394,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRejectIntakeInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
-			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			it.Reason, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52402,7 +52402,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRejectIntakeInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
-			it.NextSteps, err = ec.unmarshalNString2string(ctx, v)
+			it.NextSteps, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52418,7 +52418,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRejectIntakeInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
-			it.AdditionalInfo, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.AdditionalInfo, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52434,7 +52434,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRejectIntakeInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
-			it.AdminNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.AdminNote, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}

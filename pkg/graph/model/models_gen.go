@@ -637,13 +637,13 @@ type SystemIntakeIssueLCIDInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
 	Lcid                   *string                             `json:"lcid"`
 	ExpiresAt              time.Time                           `json:"expiresAt"`
-	Scope                  string                              `json:"scope"`
-	NextSteps              string                              `json:"nextSteps"`
+	Scope                  models.HTML                         `json:"scope"`
+	NextSteps              models.HTML                         `json:"nextSteps"`
 	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
 	CostBaseline           *string                             `json:"costBaseline"`
-	AdditionalInfo         *string                             `json:"additionalInfo"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdminNote              *string                             `json:"adminNote"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
 // Contains the data needed to change the expiration date of a system request's
@@ -692,12 +692,12 @@ type SystemIntakeProgressToNewStepsInput struct {
 // Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
 type SystemIntakeRejectIntakeInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	Reason                 string                              `json:"reason"`
-	NextSteps              string                              `json:"nextSteps"`
+	Reason                 models.HTML                         `json:"reason"`
+	NextSteps              models.HTML                         `json:"nextSteps"`
 	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
-	AdditionalInfo         *string                             `json:"additionalInfo"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdminNote              *string                             `json:"adminNote"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
 // Input for creating a Request Edits Action in Admin Actions v2
