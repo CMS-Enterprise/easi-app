@@ -31,8 +31,8 @@ type AccessibilityRequestsConnection struct {
 // Feedback intended for a business owner before they proceed to writing a
 // business case for a system request
 type AddGRTFeedbackInput struct {
-	EmailBody              string                              `json:"emailBody"`
-	Feedback               string                              `json:"feedback"`
+	EmailBody              models.HTML                         `json:"emailBody"`
+	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeID"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
@@ -45,7 +45,7 @@ type AddGRTFeedbackPayload struct {
 
 // Input to add feedback to a system request
 type BasicActionInput struct {
-	Feedback               string                              `json:"feedback"`
+	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
@@ -113,10 +113,10 @@ type CedarSystemMaintainerInformation struct {
 
 // The input needed to close a TRB request
 type CloseTRBRequestInput struct {
-	ID             uuid.UUID `json:"id"`
-	ReasonClosed   string    `json:"reasonClosed"`
-	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
-	NotifyEuaIds   []string  `json:"notifyEuaIds"`
+	ID             uuid.UUID   `json:"id"`
+	ReasonClosed   models.HTML `json:"reasonClosed"`
+	CopyTrbMailbox bool        `json:"copyTrbMailbox"`
+	NotifyEuaIds   []string    `json:"notifyEuaIds"`
 }
 
 // Represents a date used for start and end dates on a contract
@@ -184,8 +184,8 @@ type CreateCedarSystemBookmarkPayload struct {
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	ID                     uuid.UUID                           `json:"id"`
 	ExpirationDate         *time.Time                          `json:"expirationDate"`
-	NextSteps              *string                             `json:"nextSteps"`
-	Scope                  string                              `json:"scope"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
+	Scope                  models.HTML                         `json:"scope"`
 	CostBaseline           *string                             `json:"costBaseline"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
@@ -230,24 +230,24 @@ type CreateSystemIntakeInput struct {
 
 // Input data for adding a note to a system request
 type CreateSystemIntakeNoteInput struct {
-	Content    string    `json:"content"`
-	AuthorName string    `json:"authorName"`
-	IntakeID   uuid.UUID `json:"intakeId"`
+	Content    models.HTML `json:"content"`
+	AuthorName string      `json:"authorName"`
+	IntakeID   uuid.UUID   `json:"intakeId"`
 }
 
 // The data needed to create a TRB admin note
 type CreateTRBAdminNoteInput struct {
 	TrbRequestID uuid.UUID                   `json:"trbRequestId"`
 	Category     models.TRBAdminNoteCategory `json:"category"`
-	NoteText     string                      `json:"noteText"`
+	NoteText     models.HTML                 `json:"noteText"`
 }
 
 // The input required to add a recommendation & links to a TRB advice letter
 type CreateTRBAdviceLetterRecommendationInput struct {
-	TrbRequestID   uuid.UUID `json:"trbRequestId"`
-	Title          string    `json:"title"`
-	Recommendation string    `json:"recommendation"`
-	Links          []string  `json:"links"`
+	TrbRequestID   uuid.UUID   `json:"trbRequestId"`
+	Title          string      `json:"title"`
+	Recommendation models.HTML `json:"recommendation"`
+	Links          []string    `json:"links"`
 }
 
 // The data needed add a TRB request attendee to a TRB request
@@ -274,7 +274,7 @@ type CreateTRBRequestDocumentPayload struct {
 // The data needed to add feedback to a TRB request
 type CreateTRBRequestFeedbackInput struct {
 	TrbRequestID    uuid.UUID                `json:"trbRequestId"`
-	FeedbackMessage string                   `json:"feedbackMessage"`
+	FeedbackMessage models.HTML              `json:"feedbackMessage"`
 	CopyTrbMailbox  bool                     `json:"copyTrbMailbox"`
 	NotifyEuaIds    []string                 `json:"notifyEuaIds"`
 	Action          models.TRBFeedbackAction `json:"action"`
@@ -380,19 +380,19 @@ type GeneratePresignedUploadURLPayload struct {
 // request
 type IssueLifecycleIDInput struct {
 	ExpiresAt              time.Time                           `json:"expiresAt"`
-	Feedback               string                              `json:"feedback"`
+	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
 	Lcid                   *string                             `json:"lcid"`
-	NextSteps              *string                             `json:"nextSteps"`
-	Scope                  string                              `json:"scope"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
+	Scope                  models.HTML                         `json:"scope"`
 	CostBaseline           *string                             `json:"costBaseline"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // The most recent note added by an admin to a system request
 type LastAdminNote struct {
-	Content   *string    `json:"content"`
-	CreatedAt *time.Time `json:"createdAt"`
+	Content   *models.HTML `json:"content"`
+	CreatedAt *time.Time   `json:"createdAt"`
 }
 
 // The current user's Launch Darkly key
@@ -403,19 +403,19 @@ type LaunchDarklySettings struct {
 
 // Input data for rejection of a system's IT governance request
 type RejectIntakeInput struct {
-	Feedback               string                              `json:"feedback"`
+	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
-	NextSteps              *string                             `json:"nextSteps"`
-	Reason                 string                              `json:"reason"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
+	Reason                 models.HTML                         `json:"reason"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 }
 
 // The data needed to reopen a TRB request
 type ReopenTRBRequestInput struct {
-	TrbRequestID   uuid.UUID `json:"trbRequestId"`
-	ReasonReopened string    `json:"reasonReopened"`
-	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
-	NotifyEuaIds   []string  `json:"notifyEuaIds"`
+	TrbRequestID   uuid.UUID   `json:"trbRequestId"`
+	ReasonReopened models.HTML `json:"reasonReopened"`
+	CopyTrbMailbox bool        `json:"copyTrbMailbox"`
+	NotifyEuaIds   []string    `json:"notifyEuaIds"`
 }
 
 // Represents a request being made with the EASi system
@@ -497,7 +497,7 @@ type SystemIntakeAction struct {
 	SystemIntake         *models.SystemIntake              `json:"systemIntake"`
 	Type                 SystemIntakeActionType            `json:"type"`
 	Actor                *SystemIntakeActionActor          `json:"actor"`
-	Feedback             *string                           `json:"feedback"`
+	Feedback             *models.HTML                      `json:"feedback"`
 	LcidExpirationChange *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange"`
 	CreatedAt            time.Time                         `json:"createdAt"`
 }
@@ -635,14 +635,14 @@ type SystemIntakeISSOInput struct {
 // Contains the data needed to change the expiration date of a system request's
 // lifecycle ID
 type SystemIntakeLCIDExpirationChange struct {
-	PreviousDate         time.Time `json:"previousDate"`
-	NewDate              time.Time `json:"newDate"`
-	PreviousScope        *string   `json:"previousScope"`
-	NewScope             *string   `json:"newScope"`
-	PreviousNextSteps    *string   `json:"previousNextSteps"`
-	NewNextSteps         *string   `json:"newNextSteps"`
-	PreviousCostBaseline *string   `json:"previousCostBaseline"`
-	NewCostBaseline      *string   `json:"newCostBaseline"`
+	PreviousDate         time.Time    `json:"previousDate"`
+	NewDate              time.Time    `json:"newDate"`
+	PreviousScope        *models.HTML `json:"previousScope"`
+	NewScope             *models.HTML `json:"newScope"`
+	PreviousNextSteps    *models.HTML `json:"previousNextSteps"`
+	NewNextSteps         *models.HTML `json:"newNextSteps"`
+	PreviousCostBaseline *string      `json:"previousCostBaseline"`
+	NewCostBaseline      *string      `json:"newCostBaseline"`
 }
 
 // The author of a note added to a system request
@@ -669,10 +669,10 @@ type SystemIntakeProgressToNewStepsInput struct {
 	NewStep                SystemIntakeStepToProgressTo        `json:"newStep"`
 	MeetingDate            *time.Time                          `json:"meetingDate"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	Feedback               *string                             `json:"feedback"`
-	GrbRecommendations     *string                             `json:"grbRecommendations"`
-	AdditionalNote         *string                             `json:"additionalNote"`
-	AdminNote              *string                             `json:"adminNote"`
+	Feedback               *models.HTML                        `json:"feedback"`
+	GrbRecommendations     *models.HTML                        `json:"grbRecommendations"`
+	AdditionalNote         *models.HTML                        `json:"additionalNote"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
 // Input for creating a Request Edits Action in Admin Actions v2
@@ -680,9 +680,9 @@ type SystemIntakeRequestEditsInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
 	IntakeFormStep         SystemIntakeFormStep                `json:"intakeFormStep"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	EmailFeedback          string                              `json:"emailFeedback"`
-	AdditionalInfo         *string                             `json:"additionalInfo"`
-	AdminNotes             *string                             `json:"adminNotes"`
+	EmailFeedback          models.HTML                         `json:"emailFeedback"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	AdminNotes             *models.HTML                        `json:"adminNotes"`
 }
 
 // The contact who made an IT governance request for a system
@@ -788,9 +788,9 @@ type UpdateSystemIntakeLinkedContractInput struct {
 
 // Input data for updating an IT governance admin note
 type UpdateSystemIntakeNoteInput struct {
-	Content    string    `json:"content"`
-	IsArchived bool      `json:"isArchived"`
-	ID         uuid.UUID `json:"id"`
+	Content    models.HTML `json:"content"`
+	IsArchived bool        `json:"isArchived"`
+	ID         uuid.UUID   `json:"id"`
 }
 
 // The payload for updating a system's IT governance request

@@ -133,8 +133,8 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			// These fields should NOT be written during a create
 			LifecycleID:        null.StringFrom("ABCDEF"),
 			LifecycleExpiresAt: &now,
-			LifecycleScope:     null.StringFrom("ABCDEF"),
-			DecisionNextSteps:  null.StringFrom("ABCDEF"),
+			LifecycleScope:     models.HTMLPointer("ABCDEF"),
+			DecisionNextSteps:  models.HTMLPointer("ABCDEF"),
 		}
 		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
 		s.NoError(err)
@@ -148,12 +148,12 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 
 		// Update
 		lcid := "H200110" // historical first LCID issued on 2020-01-11
-		content1 := "ABC"
-		content2 := "XYZ"
+		content1 := models.HTMLPointer("ABC")
+		content2 := models.HTMLPointer("XYZ")
 		partial.LifecycleID = null.StringFrom(lcid)
 		partial.LifecycleExpiresAt = &now
-		partial.LifecycleScope = null.StringFrom(content1)
-		partial.DecisionNextSteps = null.StringFrom(content2)
+		partial.LifecycleScope = content1
+		partial.DecisionNextSteps = content2
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
 		s.NoError(err, "failed to update system intake")
@@ -163,8 +163,8 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 
 		s.Equal(lcid, updated.LifecycleID.String)
 		s.NotEmpty(updated.LifecycleExpiresAt)
-		s.Equal(content1, updated.LifecycleScope.String)
-		s.Equal(content2, updated.DecisionNextSteps.String)
+		s.Equal(content1, updated.LifecycleScope)
+		s.Equal(content2, updated.DecisionNextSteps)
 	})
 
 	s.Run("Rejection fields only upon update", func() {
@@ -175,8 +175,8 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			Requester:   "Test requester",
 
 			// These fields should NOT be written during a create
-			RejectionReason:   null.StringFrom("ABCDEF"),
-			DecisionNextSteps: null.StringFrom("ABCDEF"),
+			RejectionReason:   models.HTMLPointer("ABCDEF"),
+			DecisionNextSteps: models.HTMLPointer("ABCDEF"),
 		}
 		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
 		s.NoError(err)
@@ -187,10 +187,10 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 		s.Empty(partial.DecisionNextSteps)
 
 		// Update
-		content1 := "ABC"
-		content2 := "XYZ"
-		partial.RejectionReason = null.StringFrom(content1)
-		partial.DecisionNextSteps = null.StringFrom(content2)
+		content1 := models.HTMLPointer("ABC")
+		content2 := models.HTMLPointer("XYZ")
+		partial.RejectionReason = content1
+		partial.DecisionNextSteps = content2
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
 		s.NoError(err, "failed to update system intake")
@@ -198,8 +198,8 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
 		s.NoError(err)
 
-		s.Equal(content1, updated.RejectionReason.String)
-		s.Equal(content2, updated.DecisionNextSteps.String)
+		s.Equal(content1, updated.RejectionReason)
+		s.Equal(content2, updated.DecisionNextSteps)
 	})
 
 	s.Run("Update contract details information", func() {
@@ -647,7 +647,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 
 		_, err := s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithOneCommentID,
-			Content:        null.StringFrom("the only comment"),
+			Content:        models.HTMLPointer("the only comment"),
 			CreatedAt:      mustParseTime("2021-01-01"),
 			AuthorEUAID:    "ABCD",
 		})
@@ -655,21 +655,21 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 
 		_, err = s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
-			Content:        null.StringFrom("the first comment"),
+			Content:        models.HTMLPointer("the first comment"),
 			CreatedAt:      mustParseTime("2021-01-01"),
 			AuthorEUAID:    "ABCD",
 		})
 		s.NoError(err)
 		_, err = s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
-			Content:        null.StringFrom("the third comment"),
+			Content:        models.HTMLPointer("the third comment"),
 			CreatedAt:      mustParseTime("2021-01-03"),
 			AuthorEUAID:    "ABCD",
 		})
 		s.NoError(err)
 		_, err = s.store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intakeWithManyCommentsID,
-			Content:        null.StringFrom("the second comment"),
+			Content:        models.HTMLPointer("the second comment"),
 			CreatedAt:      mustParseTime("2021-01-02"),
 			AuthorEUAID:    "ABCD",
 		})
@@ -680,15 +680,15 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
 
 		for _, intake := range intakes {
 			if intake.ID == intakeWithNoCommentsID {
-				s.Nil(intake.LastAdminNoteContent.Ptr())
+				s.Nil(intake.LastAdminNoteContent)
 				s.Nil(intake.LastAdminNoteCreatedAt)
 			}
 			if intake.ID == intakeWithOneCommentID {
-				s.Equal("the only comment", intake.LastAdminNoteContent.String)
+				s.Equal("the only comment", intake.LastAdminNoteContent.ValueOrEmptyString())
 				s.Equal("2021-01-01", intake.LastAdminNoteCreatedAt.Format("2006-01-02"))
 			}
 			if intake.ID == intakeWithManyCommentsID {
-				s.Equal("the third comment", intake.LastAdminNoteContent.String)
+				s.Equal("the third comment", intake.LastAdminNoteContent.ValueOrEmptyString())
 				s.Equal("2021-01-03", intake.LastAdminNoteCreatedAt.Format("2006-01-02"))
 			}
 		}

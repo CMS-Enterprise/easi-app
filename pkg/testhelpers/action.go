@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -19,7 +18,7 @@ func NewAction() models.Action {
 		ActorName:      "Fake Name",
 		ActorEmail:     "fake@test.com",
 		ActorEUAUserID: "ABCD",
-		Feedback:       null.StringFrom("Test Feedback"),
+		Feedback:       models.HTMLPointer("Test Feedback"),
 		CreatedAt:      &now,
 	}
 }

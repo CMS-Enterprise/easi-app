@@ -25,9 +25,9 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 	projectName := "Test Request"
 	requesterName := "Test Requester"
 	lcid := "123456"
-	scope := "scope"
+	scope := models.HTML("scope")
 	lifecycleCostBaseline := "lifecycleCostBaseline"
-	nextSteps := "nextSteps"
+	nextSteps := models.HTML("nextSteps")
 	lcidExpiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
 	requesterTaskListLink := fmt.Sprintf(
 		"<a href=\"%s://%s/governance-task-list/%s\" style=\"font-weight: bold\">click here</a>",
@@ -91,9 +91,9 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<u>Current Lifecycle ID Summary</u>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
-			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
+			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
-			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + nextSteps + "</pre></p>\n"
+			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(nextSteps) + "</pre></p>\n"
 
 		err = client.SendLCIDExpirationAlertEmail(
 			ctx,
@@ -157,7 +157,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			"<u>Current Lifecycle ID Summary</u>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
-			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n\n\n"
+			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n\n\n"
 
 		err = client.SendLCIDExpirationAlertEmail(
 			ctx,

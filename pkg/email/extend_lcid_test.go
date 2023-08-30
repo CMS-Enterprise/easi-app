@@ -17,8 +17,8 @@ func (s *EmailTestSuite) TestSendExtendLCIDEmails() {
 	projectName := "TestProject"
 	newExpiresAt, err := time.Parse(time.RFC3339, "2050-01-02T01:02:03Z")
 	s.NoError(err)
-	newScope := "new scope"
-	newNextSteps := "new next steps"
+	newScope := models.HTML("new scope")
+	newNextSteps := models.HTML("new next steps")
 	newCostBaseline := "new cost baseline"
 
 	s.Run("successful call sends to the correct recipients", func() {

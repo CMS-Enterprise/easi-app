@@ -105,9 +105,9 @@ func TestLCIDExpirationAlert(t *testing.T) {
 		requesterName string,
 		lcid string,
 		lcidExpirationDate *time.Time,
-		scope string,
+		scope models.HTML,
 		lifecycleCostBaseline string,
-		nextSteps string) error {
+		nextSteps models.HTML) error {
 		lcidExpirationAlertCount++
 		return nil
 	}

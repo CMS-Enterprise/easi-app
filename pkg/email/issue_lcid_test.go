@@ -25,10 +25,10 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmails() {
 	}
 	lcid := "123456"
 	expiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
-	scope := "scope"
+	scope := models.HTML("scope")
 	lifecycleCostBaseline := "lifecycleCostBaseline"
-	nextSteps := "nextSteps"
-	feedback := "feedback"
+	nextSteps := models.HTML("nextSteps")
+	feedback := models.HTML("feedback")
 
 	decisionPathOpeningTag := fmt.Sprintf(
 		"<a href=\"%s://%s/governance-task-list/%s/request-decision\">",
@@ -47,10 +47,10 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmails() {
 			" or contact this request's original author, " + requester + ".</pre></p>\n" +
 			"<p>Lifecycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + expiresAt.Format("January 02, 2006") + "</p>\n" +
-			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
+			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
-			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + nextSteps + "</pre></p>\n" +
-			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>\n" +
+			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(nextSteps) + "</pre></p>\n" +
+			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(feedback) + "</pre></p>\n" +
 			"<p>If you are the original author of this request, you may use this link to " +
 			decisionPathOpeningTag +
 			"view the request in EASi.</a></p>"
@@ -70,12 +70,12 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmails() {
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
 			"If you have any questions, please contact the IT Governance team at " + string(s.config.GRTEmail) +
 			" or contact this request's original author, " + requester + ".</pre></p>\n" +
-			"<p>Lifecycle ID: " + lcid + "</p>\n" +
+			"<p>Lifecycle ID: " + string(lcid) + "</p>\n" +
 			"<p>Expiration Date: " + expiresAt.Format("January 02, 2006") + "</p>\n" +
-			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + scope + "</pre></p>\n" +
+			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
 			"\n" +
-			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + feedback + "</pre></p>\n" +
+			"<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(feedback) + "</pre></p>\n" +
 			"<p>If you are the original author of this request, you may use this link to " +
 			decisionPathOpeningTag +
 			"view the request in EASi.</a></p>"

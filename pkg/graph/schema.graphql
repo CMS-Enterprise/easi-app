@@ -945,7 +945,7 @@ A note added to a system request
 """
 type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
-  content: String!
+  content: HTML!
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
@@ -987,7 +987,7 @@ type SystemIntake {
   annualSpending: SystemIntakeAnnualSpending
   createdAt: Time!
   currentStage: String
-  decisionNextSteps: String
+  decisionNextSteps: HTML
   eaCollaborator: String
   eaCollaboratorName: String
   euaUserId: String!
@@ -1002,7 +1002,7 @@ type SystemIntake {
   isso: SystemIntakeISSO!
   lcid: String
   lcidExpiresAt: Time
-  lcidScope: String
+  lcidScope: HTML
   lcidCostBaseline: String
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
@@ -1010,7 +1010,7 @@ type SystemIntake {
   oitSecurityCollaboratorName: String
   productManager: SystemIntakeProductManager!
   projectAcronym: String
-  rejectionReason: String
+  rejectionReason: HTML
   requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
@@ -1255,8 +1255,8 @@ Input data for extending a system request's lifecycle ID
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
-  nextSteps: String
-  scope: String!
+  nextSteps: HTML
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1309,7 +1309,7 @@ type SystemIntakeAction {
   systemIntake: SystemIntake!
   type: SystemIntakeActionType!
   actor: SystemIntakeActionActor!
-  feedback: String
+  feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
   createdAt: Time!
 }
@@ -1321,10 +1321,10 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
-  previousScope: String
-  newScope: String
-  previousNextSteps: String
-  newNextSteps: String
+  previousScope: HTML
+  newScope: HTML
+  previousNextSteps: HTML
+  newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
  }
@@ -1342,8 +1342,8 @@ Feedback intended for a business owner before they proceed to writing a
 business case for a system request
 """
 input AddGRTFeedbackInput {
-  emailBody: String!
-  feedback: String!
+  emailBody: HTML!
+  feedback: HTML!
   intakeID: UUID!
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1362,11 +1362,11 @@ request
 """
 input IssueLifecycleIdInput {
   expiresAt: Time!
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
   lcid: String
-  nextSteps: String
-  scope: String!
+  nextSteps: HTML
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1375,10 +1375,10 @@ input IssueLifecycleIdInput {
 Input data for rejection of a system's IT governance request
 """
 input RejectIntakeInput {
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
-  nextSteps: String
-  reason: String!
+  nextSteps: HTML
+  reason: HTML!
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -1395,7 +1395,7 @@ input UpdateSystemIntakeAdminLeadInput {
 The most recent note added by an admin to a system request
 """
 type LastAdminNote {
-  content: String
+  content: HTML
   createdAt: Time
 }
 
@@ -1413,7 +1413,7 @@ Feedback from the GRT to a business owner or GRB
 type GRTFeedback {
   id: UUID
   createdAt: Time!
-  feedback: String
+  feedback: HTML
   feedbackType: GRTFeedbackType
 }
 
@@ -1430,7 +1430,7 @@ input UpdateSystemIntakeReviewDatesInput {
 Input data for adding a note to a system request
 """
 input CreateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   authorName: String!
   intakeId: UUID!
 }
@@ -1439,7 +1439,7 @@ input CreateSystemIntakeNoteInput {
 Input data for updating an IT governance admin note
 """
 input UpdateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   isArchived: Boolean!
   id: UUID!
 }
@@ -1471,10 +1471,10 @@ input SystemIntakeProgressToNewStepsInput {
   newStep: SystemIntakeStepToProgressTo!
   meetingDate: Time # optionally used when progressing to GRT or GRB meeting; ignored when progressing to other steps
   notificationRecipients: EmailNotificationRecipients
-  feedback: String
-  grbRecommendations: String
-  additionalNote: String
-  adminNote: String
+  feedback: HTML
+  grbRecommendations: HTML
+  additionalNote: HTML
+  adminNote: HTML
 }
 
 """
@@ -1484,9 +1484,9 @@ input SystemIntakeRequestEditsInput {
   systemIntakeID: UUID!
   intakeFormStep: SystemIntakeFormStep!
   notificationRecipients: EmailNotificationRecipients
-  emailFeedback: String!
-  additionalInfo: String
-  adminNotes: String
+  emailFeedback: HTML!
+  additionalInfo: HTML
+  adminNotes: HTML
 }
 
 """
@@ -1502,7 +1502,7 @@ enum SystemIntakeFormStep {
 Input to add feedback to a system request
 """
 input BasicActionInput {
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1880,7 +1880,7 @@ Feedback given to the requester on a governance request
 type GovernanceRequestFeedback {
   id: UUID!
   intakeId: UUID!
-  feedback: String!
+  feedback: HTML!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
   type: GovernanceRequestFeedbackType!
@@ -2099,7 +2099,7 @@ Represents feedback added to a TRB request
 type TRBRequestFeedback {
   id: UUID!
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -2115,7 +2115,7 @@ The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -2158,7 +2158,7 @@ type TRBAdminNote {
   id: UUID!
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
-  noteText: String!
+  noteText: HTML!
   author: UserInfo!
   isArchived: Boolean!
   createdBy: String!
@@ -2174,8 +2174,8 @@ type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
   author: UserInfo!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
@@ -2192,7 +2192,7 @@ The data needed to create a TRB admin note
 input CreateTRBAdminNoteInput {
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
-  noteText: String!
+  noteText: HTML!
 }
 
 """
@@ -2201,7 +2201,7 @@ The data needed for updating a TRB admin note
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   category: TRBAdminNoteCategory
-  noteText: String
+  noteText: HTML
 }
 
 """
@@ -2209,8 +2209,8 @@ The data needed to update a TRB advice letter
 """
 input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   followupPoint: String
 }
@@ -2231,7 +2231,7 @@ type TRBAdviceLetterRecommendation {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!
@@ -2246,7 +2246,7 @@ The input required to add a recommendation & links to a TRB advice letter
 input CreateTRBAdviceLetterRecommendationInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
 }
 
@@ -2256,7 +2256,7 @@ The input required to update a recommendation to a TRB advice letter
 input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: String
+  recommendation: HTML
   links: [String!]
 }
 
@@ -2265,7 +2265,7 @@ The input needed to close a TRB request
 """
 input CloseTRBRequestInput {
   id: UUID!
-  reasonClosed: String!
+  reasonClosed: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
@@ -2275,7 +2275,7 @@ The data needed to reopen a TRB request
 """
 input ReopenTRBRequestInput {
   trbRequestId: UUID!
-  reasonReopened: String!
+  reasonReopened: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
@@ -2510,6 +2510,12 @@ enum TRBRequestStatus {
 UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
 """
 scalar UUID
+
+"""
+HTML are represented using as strings,  <p><strong>Notification email</strong></p>
+"""
+scalar HTML
+
 
 """
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z

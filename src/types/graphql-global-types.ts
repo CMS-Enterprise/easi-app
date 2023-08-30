@@ -447,8 +447,8 @@ export enum TestDateTestType {
  * business case for a system request
  */
 export interface AddGRTFeedbackInput {
-  emailBody: string;
-  feedback: string;
+  emailBody: HTML;
+  feedback: HTML;
   intakeID: UUID;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
@@ -457,7 +457,7 @@ export interface AddGRTFeedbackInput {
  * Input to add feedback to a system request
  */
 export interface BasicActionInput {
-  feedback: string;
+  feedback: HTML;
   intakeId: UUID;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
@@ -467,7 +467,7 @@ export interface BasicActionInput {
  */
 export interface CloseTRBRequestInput {
   id: UUID;
-  reasonClosed: string;
+  reasonClosed: HTML;
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
 }
@@ -516,8 +516,8 @@ export interface CreateCedarSystemBookmarkInput {
 export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID;
   expirationDate?: Time | null;
-  nextSteps?: string | null;
-  scope: string;
+  nextSteps?: HTML | null;
+  scope: HTML;
   costBaseline?: string | null;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
@@ -554,7 +554,7 @@ export interface CreateSystemIntakeInput {
  * Input data for adding a note to a system request
  */
 export interface CreateSystemIntakeNoteInput {
-  content: string;
+  content: HTML;
   authorName: string;
   intakeId: UUID;
 }
@@ -565,7 +565,7 @@ export interface CreateSystemIntakeNoteInput {
 export interface CreateTRBAdminNoteInput {
   trbRequestId: UUID;
   category: TRBAdminNoteCategory;
-  noteText: string;
+  noteText: HTML;
 }
 
 /**
@@ -574,7 +574,7 @@ export interface CreateTRBAdminNoteInput {
 export interface CreateTRBAdviceLetterRecommendationInput {
   trbRequestId: UUID;
   title: string;
-  recommendation: string;
+  recommendation: HTML;
   links: string[];
 }
 
@@ -603,7 +603,7 @@ export interface CreateTRBRequestDocumentInput {
  */
 export interface CreateTRBRequestFeedbackInput {
   trbRequestId: UUID;
-  feedbackMessage: string;
+  feedbackMessage: HTML;
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
   action: TRBFeedbackAction;
@@ -674,11 +674,11 @@ export interface GeneratePresignedUploadURLInput {
  */
 export interface IssueLifecycleIdInput {
   expiresAt: Time;
-  feedback: string;
+  feedback: HTML;
   intakeId: UUID;
   lcid?: string | null;
-  nextSteps?: string | null;
-  scope: string;
+  nextSteps?: HTML | null;
+  scope: HTML;
   costBaseline?: string | null;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
@@ -687,10 +687,10 @@ export interface IssueLifecycleIdInput {
  * Input data for rejection of a system's IT governance request
  */
 export interface RejectIntakeInput {
-  feedback: string;
+  feedback: HTML;
   intakeId: UUID;
-  nextSteps?: string | null;
-  reason: string;
+  nextSteps?: HTML | null;
+  reason: HTML;
   notificationRecipients?: EmailNotificationRecipients | null;
 }
 
@@ -699,7 +699,7 @@ export interface RejectIntakeInput {
  */
 export interface ReopenTRBRequestInput {
   trbRequestId: UUID;
-  reasonReopened: string;
+  reasonReopened: HTML;
   copyTrbMailbox: boolean;
   notifyEuaIds: string[];
 }
@@ -928,7 +928,7 @@ export interface UpdateSystemIntakeContractDetailsInput {
  * Input data for updating an IT governance admin note
  */
 export interface UpdateSystemIntakeNoteInput {
-  content: string;
+  content: HTML;
   isArchived: boolean;
   id: UUID;
 }
@@ -961,8 +961,8 @@ export interface UpdateSystemIntakeReviewDatesInput {
  */
 export interface UpdateTRBAdviceLetterInput {
   trbRequestId: UUID;
-  meetingSummary?: string | null;
-  nextSteps?: string | null;
+  meetingSummary?: HTML | null;
+  nextSteps?: HTML | null;
   isFollowupRecommended?: boolean | null;
   followupPoint?: string | null;
 }
@@ -973,7 +973,7 @@ export interface UpdateTRBAdviceLetterInput {
 export interface UpdateTRBAdviceLetterRecommendationInput {
   id: UUID;
   title?: string | null;
-  recommendation?: string | null;
+  recommendation?: HTML | null;
   links?: string[] | null;
 }
 

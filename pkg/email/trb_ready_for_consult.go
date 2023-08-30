@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"html/template"
 	"path"
 
 	"github.com/google/uuid"
@@ -16,21 +17,22 @@ import (
 type readyForConsultEmailParameters struct {
 	RequestName         string
 	RequesterName       string
-	Feedback            string
+	Feedback            template.HTML // This allows unescaped HTML //TODO! make sure to sanitize it! // https://pkg.go.dev/html/template
 	TRBRequestLink      string
 	TRBAdminRequestLink string
 	TRBInboxAddress     string
 }
 
-func (c Client) trbReadyForConsultEmailBody(requestID uuid.UUID, requestName string, requesterName string, feedback string) (string, error) {
+func (c Client) trbReadyForConsultEmailBody(requestID uuid.UUID, requestName string, requesterName string, feedback models.HTML) (string, error) {
 	requestTaskListPath := path.Join("trb", "task-list", requestID.String())
 
 	requestAdminViewPath := path.Join("trb", requestID.String(), "request")
 
+	//TODO, should we use template.HTML earlier instead of converting here? We can use that instead of models.HTML potentially
 	data := readyForConsultEmailParameters{
 		RequestName:         requestName,
 		RequesterName:       requesterName,
-		Feedback:            feedback,
+		Feedback:            feedback.ToTemplate(),
 		TRBRequestLink:      c.urlFromPath(requestTaskListPath),
 		TRBAdminRequestLink: c.urlFromPath(requestAdminViewPath),
 		TRBInboxAddress:     c.config.TRBEmail.String(),
@@ -41,6 +43,7 @@ func (c Client) trbReadyForConsultEmailBody(requestID uuid.UUID, requestName str
 		return "", errors.New("TRB Ready for Consult template is nil")
 	}
 
+	// c.templates.trbReadyForConsult
 	err := c.templates.trbReadyForConsult.Execute(&b, data)
 	if err != nil {
 		return "", err
@@ -57,7 +60,7 @@ func (c Client) SendTRBReadyForConsultNotification(
 	requestID uuid.UUID,
 	requestName string,
 	requesterName string,
-	feedback string,
+	feedback models.HTML, //TODO make this accept rich text
 ) error {
 	subject := fmt.Sprintf("%v is ready for a consult session", requestName)
 	body, err := c.trbReadyForConsultEmailBody(requestID, requestName, requesterName, feedback)

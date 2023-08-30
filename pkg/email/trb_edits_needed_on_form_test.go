@@ -65,7 +65,7 @@ func (s *EmailTestSuite) TestSendTRBEditsNeededOnFormNotification() {
 			"<hr>\n\n" +
 			"<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>\n"
 
-		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, models.HTML(feedback))
 		s.NoError(err)
 		s.Equal(fmt.Sprintf("The TRB has requested edits for %v", requestName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
@@ -85,7 +85,7 @@ func (s *EmailTestSuite) TestSendTRBEditsNeededOnFormNotification() {
 		}
 		allRecipients := append(recipients, s.config.TRBEmail)
 
-		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, true, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, true, requestID, requestName, requesterName, models.HTML(feedback))
 		s.NoError(err)
 
 		s.ElementsMatch(sender.toAddresses, allRecipients)
@@ -104,7 +104,7 @@ func (s *EmailTestSuite) TestSendTRBEditsNeededOnFormNotification() {
 			models.NewEmailAddress("efgh@local.fake"),
 		}
 
-		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, models.HTML(feedback))
 		s.NoError(err)
 
 		s.ElementsMatch(sender.toAddresses, recipients)
@@ -125,7 +125,7 @@ func (s *EmailTestSuite) TestSendTRBEditsNeededOnFormNotification() {
 			models.NewEmailAddress("efgh@local.fake"),
 		}
 
-		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, models.HTML(feedback))
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -148,7 +148,7 @@ func (s *EmailTestSuite) TestSendTRBEditsNeededOnFormNotification() {
 			models.NewEmailAddress("efgh@local.fake"),
 		}
 
-		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, models.HTML(feedback))
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -172,7 +172,7 @@ func (s *EmailTestSuite) TestSendTRBEditsNeededOnFormNotification() {
 			models.NewEmailAddress("efgh@local.fake"),
 		}
 
-		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, feedback)
+		err = client.SendTRBEditsNeededOnFormNotification(ctx, recipients, false, requestID, requestName, requesterName, models.HTML(feedback))
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

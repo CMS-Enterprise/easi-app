@@ -76,7 +76,7 @@ func ProgressIntake(
 			Step:           &stepForAction,
 		}
 		if input.AdditionalNote != nil {
-			action.Feedback = null.StringFromPtr(input.AdditionalNote)
+			action.Feedback = input.AdditionalNote
 		}
 
 		_, errCreatingAction = store.CreateAction(ctx, &action)
@@ -141,7 +141,7 @@ func ProgressIntake(
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				Content:        null.StringFromPtr(input.AdminNote),
+				Content:        input.AdminNote,
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
@@ -206,7 +206,7 @@ func CreateSystemIntakeActionRequestEdits(
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
-		Feedback:       null.StringFrom(*input.AdditionalInfo),
+		Feedback:       input.AdditionalInfo,
 		Step:           &intake.Step,
 	})
 	if err != nil {
@@ -228,7 +228,7 @@ func CreateSystemIntakeActionRequestEdits(
 			SystemIntakeID: intake.ID,
 			AuthorEUAID:    adminTakingAction.EuaUserID,
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
-			Content:        null.StringFromPtr(input.AdminNotes),
+			Content:        input.AdminNotes,
 		})
 		if err != nil {
 			return nil, err

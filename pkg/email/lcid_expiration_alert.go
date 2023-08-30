@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"html/template"
 	"path"
 	"time"
 
@@ -19,9 +20,9 @@ type lcidExperationAlert struct {
 	RequesterName string
 	LifecycleID   string
 	ExpiresAt     string
-	Scope         string
+	Scope         template.HTML
 	CostBaseline  string
-	NextSteps     string
+	NextSteps     template.HTML
 	GRTEmail      string
 	RequesterLink string
 	GRTLink       string
@@ -34,9 +35,9 @@ func (c Client) lcidExpirationBody(
 	requesterName string,
 	lcid string,
 	lcidExpirationDate *time.Time,
-	scope string,
+	scope models.HTML,
 	lifecycleCostBaseline string,
-	nextSteps string,
+	nextSteps models.HTML,
 ) (string, error) {
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
 	grtPath := path.Join("governance-review-team", systemIntakeID.String(), "lcid")
@@ -45,9 +46,9 @@ func (c Client) lcidExpirationBody(
 		RequesterName: requesterName,
 		LifecycleID:   lcid,
 		ExpiresAt:     lcidExpirationDate.Format("January 2, 2006"),
-		Scope:         scope,
+		Scope:         scope.ToTemplate(),
 		CostBaseline:  lifecycleCostBaseline,
-		NextSteps:     nextSteps,
+		NextSteps:     nextSteps.ToTemplate(),
 		GRTEmail:      string(c.config.GRTEmail),
 		RequesterLink: c.urlFromPath(requesterPath),
 		GRTLink:       c.urlFromPath(grtPath),
@@ -75,9 +76,9 @@ func (c Client) SendLCIDExpirationAlertEmail(
 	requesterName string,
 	lcid string,
 	lcidExpirationDate *time.Time,
-	scope string,
+	scope models.HTML,
 	lifecycleCostBaseline string,
-	nextSteps string,
+	nextSteps models.HTML,
 ) error {
 	subject := fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName)
 	body, err := c.lcidExpirationBody(ctx, systemIntakeID, projectName, requesterName, lcid, lcidExpirationDate, scope, lifecycleCostBaseline, nextSteps)
