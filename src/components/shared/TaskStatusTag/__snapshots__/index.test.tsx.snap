@@ -44,7 +44,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"COMPLETED","classNam
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"DONE","className":"bg-success-dark text-white"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"DONE","className":"bg-success-dark text-white"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-success-dark text-white"
@@ -55,7 +55,7 @@ exports[`TaskStatusTag renders task status tag {"status":"DONE","className":"bg-
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"EDITS_REQUESTED","className":"bg-warning"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"EDITS_REQUESTED","className":"bg-warning"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-warning"
@@ -154,7 +154,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"SCHEDULED","classNam
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"SUBMITTED","className":"bg-success-dark text-white"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"SUBMITTED","className":"bg-success-dark text-white"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-success-dark text-white"
