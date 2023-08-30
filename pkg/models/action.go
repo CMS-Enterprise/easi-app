@@ -16,6 +16,12 @@ const (
 	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
 	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS
 	ActionTypeREQUESTEDITS ActionType = "REQUEST_EDITS"
+	// ActionTypeREQUESTEDITS captures enum value CLOSE_REQUEST
+	ActionTypeCLOSEREQUEST ActionType = "CLOSE_REQUEST"
+	// ActionTypeREQUESTEDITS captures enum value REOPEN_REQUEST
+	ActionTypeREOPENREQUEST ActionType = "REOPEN_REQUEST"
+	// ActionTypeREQUESTEDITS captures enum value NOT_IT_GOV_REQUEST
+	ActionTypeNOTITGOVREQUEST ActionType = "NOT_GOVERNANCE"
 )
 
 // v1 actions (before v2 revamp)

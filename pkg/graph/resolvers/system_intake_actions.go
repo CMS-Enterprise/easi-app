@@ -175,6 +175,7 @@ func CreateSystemIntakeActionRequestEdits(
 	if err != nil {
 		return nil, err
 	}
+
 	var targetForm models.GovernanceRequestFeedbackTargetForm
 	// Set the state of the requested form step and set the targeted feedback step
 	switch input.IntakeFormStep {
@@ -195,6 +196,7 @@ func CreateSystemIntakeActionRequestEdits(
 			Err: fmt.Errorf("cannot request edits on %s", input.IntakeFormStep),
 		}
 	}
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -212,6 +214,7 @@ func CreateSystemIntakeActionRequestEdits(
 	if err != nil {
 		return nil, err
 	}
+	// TODO: Send Notification Email (EASI-3109)
 	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
 	govReqFeedback.CreatedBy = adminTakingAction.EuaUserID
@@ -220,6 +223,178 @@ func CreateSystemIntakeActionRequestEdits(
 	govReqFeedback.Feedback = input.EmailFeedback
 	govReqFeedback.Type = models.GRFTRequester
 	_, err = store.CreateGovernanceRequestFeedback(ctx, govReqFeedback)
+	if err != nil {
+		return nil, err
+	}
+	if input.AdminNotes != nil {
+		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
+			SystemIntakeID: intake.ID,
+			AuthorEUAID:    adminTakingAction.EuaUserID,
+			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			Content:        null.StringFromPtr(input.AdminNotes),
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	return intake, nil
+}
+
+// CreateSystemIntakeActionReopenRequest reopens an intake request
+func CreateSystemIntakeActionReopenRequest(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeReopenRequestInput,
+) (*models.SystemIntake, error) {
+	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+	if err != nil {
+		return nil, err
+	}
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if intake.State == models.SystemIntakeStateOPEN {
+		return nil, &apperrors.BadRequestError{
+			Err: fmt.Errorf("request is already open"),
+		}
+	}
+	intake.State = models.SystemIntakeStateOPEN
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	intake, err = store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	// TODO: Send Notification Email (EASI-3109)
+	// input.Reason is currently not persisted and only sent in the notification email
+	_, err = store.CreateAction(ctx, &models.Action{
+		ActionType:     models.ActionTypeREOPENREQUEST,
+		ActorName:      adminTakingAction.CommonName,
+		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorEmail:     adminTakingAction.Email,
+		BusinessCaseID: intake.BusinessCaseID,
+		IntakeID:       &intake.ID,
+		Feedback:       null.StringFrom(*input.AdditionalInfo),
+		Step:           &intake.Step,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if input.AdminNotes != nil {
+		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
+			SystemIntakeID: intake.ID,
+			AuthorEUAID:    adminTakingAction.EuaUserID,
+			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			Content:        null.StringFromPtr(input.AdminNotes),
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	return intake, nil
+}
+
+// CreateSystemIntakeActionCloseRequest closes an intake request
+func CreateSystemIntakeActionCloseRequest(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeCloseRequestInput,
+) (*models.SystemIntake, error) {
+	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+	if err != nil {
+		return nil, err
+	}
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+	if intake.State == models.SystemIntakeStateCLOSED {
+		return nil, &apperrors.BadRequestError{
+			Err: fmt.Errorf("request is already closed"),
+		}
+	}
+	intake.State = models.SystemIntakeStateCLOSED
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	intake, err = store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	// TODO: Send Notification Email (EASI-3109)
+	// input.Reason is currently not persisted and only sent in the notification email
+	_, err = store.CreateAction(ctx, &models.Action{
+		ActionType:     models.ActionTypeCLOSEREQUEST,
+		ActorName:      adminTakingAction.CommonName,
+		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorEmail:     adminTakingAction.Email,
+		BusinessCaseID: intake.BusinessCaseID,
+		IntakeID:       &intake.ID,
+		Feedback:       null.StringFrom(*input.AdditionalInfo),
+		Step:           &intake.Step,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if input.AdminNotes != nil {
+		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
+			SystemIntakeID: intake.ID,
+			AuthorEUAID:    adminTakingAction.EuaUserID,
+			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			Content:        null.StringFromPtr(input.AdminNotes),
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	return intake, nil
+}
+
+// CreateSystemIntakeActionNotITGovRequest marks a request as closed, sets a decision of not an IT Gov req, and progress the step to decision
+func CreateSystemIntakeActionNotITGovRequest(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeNotITGovReqInput,
+) (*models.SystemIntake, error) {
+	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+	if err != nil {
+		return nil, err
+	}
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.DecisionState = models.SIDSNotGovernance
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	intake, err = store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	// TODO: Send Notification Email (EASI-3109)
+	// input.Reason is currently not persisted and only sent in the notification email
+	_, err = store.CreateAction(ctx, &models.Action{
+		ActionType:     models.ActionTypeNOTITGOVREQUEST,
+		ActorName:      adminTakingAction.CommonName,
+		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorEmail:     adminTakingAction.Email,
+		BusinessCaseID: intake.BusinessCaseID,
+		IntakeID:       &intake.ID,
+		Feedback:       null.StringFrom(*input.AdditionalInfo),
+		Step:           &intake.Step,
+	})
 	if err != nil {
 		return nil, err
 	}
