@@ -13,7 +13,7 @@ import (
 )
 
 // CreateTRBAdminNote creates a new TRB admin note in the database
-func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, category models.TRBAdminNoteCategory, noteText string) (*models.TRBAdminNote, error) {
+func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, category models.TRBAdminNoteCategory, noteText models.HTML) (*models.TRBAdminNote, error) {
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: trbRequestID,
 		Category:     category,

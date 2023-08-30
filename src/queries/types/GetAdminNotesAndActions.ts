@@ -24,7 +24,7 @@ export interface GetAdminNotesAndActions_systemIntake_notes {
   __typename: "SystemIntakeNote";
   id: UUID;
   createdAt: Time;
-  content: string;
+  content: HTML;
   editor: GetAdminNotesAndActions_systemIntake_notes_editor | null;
   modifiedBy: string | null;
   modifiedAt: Time | null;
@@ -36,10 +36,10 @@ export interface GetAdminNotesAndActions_systemIntake_actions_lcidExpirationChan
   __typename: "SystemIntakeLCIDExpirationChange";
   previousDate: Time;
   newDate: Time;
-  previousScope: string | null;
-  newScope: string | null;
-  previousNextSteps: string | null;
-  newNextSteps: string | null;
+  previousScope: HTML | null;
+  newScope: HTML | null;
+  previousNextSteps: HTML | null;
+  newNextSteps: HTML | null;
   previousCostBaseline: string | null;
   newCostBaseline: string | null;
 }
@@ -54,7 +54,7 @@ export interface GetAdminNotesAndActions_systemIntake_actions {
   __typename: "SystemIntakeAction";
   id: UUID;
   createdAt: Time;
-  feedback: string | null;
+  feedback: HTML | null;
   type: SystemIntakeActionType;
   lcidExpirationChange: GetAdminNotesAndActions_systemIntake_actions_lcidExpirationChange | null;
   actor: GetAdminNotesAndActions_systemIntake_actions_actor;

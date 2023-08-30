@@ -11,6 +11,6 @@ export interface TRBRecommendation {
   __typename: "TRBAdviceLetterRecommendation";
   id: UUID;
   title: string;
-  recommendation: string;
+  recommendation: HTML;
   links: string[];
 }

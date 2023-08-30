@@ -77,7 +77,7 @@ func ProgressIntake(
 			Step:           &stepForAction,
 		}
 		if input.AdditionalInfo != nil {
-			action.Feedback = null.StringFromPtr(input.AdditionalInfo)
+			action.Feedback = input.AdditionalInfo
 		}
 
 		_, errCreatingAction := store.CreateAction(ctx, &action)
@@ -137,7 +137,7 @@ func ProgressIntake(
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				Content:        null.StringFromPtr(input.AdminNote),
+				Content:        input.AdminNote,
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
@@ -206,7 +206,7 @@ func CreateSystemIntakeActionRequestEdits(
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
-		Feedback:       null.StringFrom(*input.AdditionalInfo),
+		Feedback:       input.AdditionalInfo,
 		Step:           &intake.Step,
 	})
 	if err != nil {
@@ -228,7 +228,7 @@ func CreateSystemIntakeActionRequestEdits(
 			SystemIntakeID: intake.ID,
 			AuthorEUAID:    adminTakingAction.EuaUserID,
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
-			Content:        null.StringFromPtr(input.AdminNotes),
+			Content:        input.AdminNotes,
 		})
 		if err != nil {
 			return nil, err
@@ -267,8 +267,9 @@ func RejectIntakeAsNotApproved(
 	intake.DecisionState = models.SIDSNotApproved
 
 	// update other fields
-	intake.RejectionReason = null.StringFrom(input.Reason)
-	intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
+	// TODO - update Reason and NextSteps in GQL input type to use HTML type (assuming that's applicable)
+	// intake.RejectionReason = null.StringFrom(input.Reason)
+	// intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 
 	updatedTime := time.Now()
@@ -303,9 +304,10 @@ func RejectIntakeAsNotApproved(
 			ActorEUAUserID: adminEUAID,
 			Step:           &intake.Step,
 		}
-		if input.AdditionalInfo != nil {
-			action.Feedback = null.StringFromPtr(input.AdditionalInfo)
-		}
+		// TODO - update Reason and NextSteps in GQL input type to use HTML type (assuming that's applicable)
+		// if input.AdditionalInfo != nil {
+		// 	action.Feedback = null.StringFromPtr(input.AdditionalInfo)
+		// }
 
 		_, errCreatingAction := store.CreateAction(ctx, &action)
 		if errCreatingAction != nil {
@@ -322,7 +324,8 @@ func RejectIntakeAsNotApproved(
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				Content:        null.StringFromPtr(input.AdminNote),
+				// TODO - update AdminNote in GQL input type to use HTML type (assuming that's applicable)
+				// Content:        null.StringFromPtr(input.AdminNote),
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
@@ -379,8 +382,9 @@ func IssueLCID(
 	// update LCID-related fields
 	intake.LifecycleID = null.StringFrom(newLCID)
 	intake.LifecycleExpiresAt = &input.ExpiresAt
-	intake.LifecycleScope = null.StringFrom(input.Scope)
-	intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
+	// TODO - update Scope and NextSteps in GQL input type to use HTML type (assuming that's applicable)
+	// intake.LifecycleScope = null.StringFrom(input.Scope)
+	// intake.DecisionNextSteps = null.StringFrom(input.NextSteps)
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 
@@ -418,9 +422,10 @@ func IssueLCID(
 			ActorEUAUserID: adminEUAID,
 			Step:           &intake.Step,
 		}
-		if input.AdditionalInfo != nil {
-			action.Feedback = null.StringFromPtr(input.AdditionalInfo)
-		}
+		// TODO - update AdditionalInfo in GQL input type to use HTML type (assuming that's applicable)
+		// if input.AdditionalInfo != nil {
+		// 	action.Feedback = null.StringFromPtr(input.AdditionalInfo)
+		// }
 
 		_, errCreatingAction := store.CreateAction(ctx, &action)
 		if errCreatingAction != nil {
@@ -437,7 +442,8 @@ func IssueLCID(
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				Content:        null.StringFromPtr(input.AdminNote),
+				// TODO - update AdminNote in GQL input type to use HTML type (assuming that's applicable)
+				// Content:        null.StringFromPtr(input.AdminNote),
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)

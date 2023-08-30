@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2211214a-8c5e-4d8e-9141-d477ac1d202b",
+		"_postman_id": "1ff19888-88d9-4cec-bde1-965dd0695de6",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28498683"
@@ -1158,6 +1158,59 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation {\n  createTRBRequestFeedback(input: {\n    trbRequestId: \"{{trbRequestID}}\",\n    feedbackMessage: \"This is TRB request is NICE!\",\n    copyTrbMailbox: true,\n    notifyEuaIds: [\"FAKE\", \"REAL\", \"LOLZ\"],\n    action: READY_FOR_CONSULT,\n  }) {\n    id\n    trbRequestId\n    feedbackMessage\n    copyTrbMailbox\n    notifyEuaIds\n    action\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TRB Rich Text",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation CreateTrbRequestFeedback($input: CreateTRBRequestFeedbackInput!) {\n  createTRBRequestFeedback(input: $input) {\n        id\n        trbRequestId\n        feedbackMessage\n        copyTrbMailbox\n        notifyEuaIds\n        action\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"copyTrbMailbox\": true,\n    \"feedbackMessage\": \"<p><strong>Notification email</strong></p><p>A <a href=\\\"asdasd\\\" target=\\\"_blank\\\">notification</a> email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.</p><p>Choose recipients</p><ol><li><p>asd</p></li><li><p>asd</p></li><li><p>asdewg</p></li></ol><ul><li><p>Hello</p></li><li><p><em>;l;lk;kl;</em></p></li></ul><script>This is a script that will be sanitized</script>\",\n    \"notifyEuaIds\": [\n      \"USR1\"\n    ],\n    \"trbRequestId\": \"{{trbRequestID}}\",\n    \"action\": \"READY_FOR_CONSULT\"\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TRBRequestFeedbackGetByID",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query TRBRequestGetByID{\n  \n  trbRequest(id: \"{{trbRequestID}}\"){\n    id\n    feedback {\n        id\n        trbRequestId\n        feedbackMessage\n        copyTrbMailbox\n        notifyEuaIds\n        action\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n    }\n    \n  }\n  \n  \n}",
 										"variables": ""
 									}
 								},

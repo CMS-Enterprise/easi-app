@@ -52,12 +52,14 @@ func countIgnoredErrors(errorList gqlerror.List) int {
 	numIgnored := 0
 	for _, err := range errorList {
 		if err != nil {
-			// Ignore errors of type apperrors.UnauthorizedError
-			if _, ok := err.Unwrap().(*apperrors.UnauthorizedError); ok {
+			// Ignore any errors that wrap an apperrors.UnauthorizedError somewhere in their chain
+			var unauthorizedError *apperrors.UnauthorizedError
+			if errors.As(err, &unauthorizedError) {
 				numIgnored++
 			}
 
-			// Ignore errors of type context.Canceled
+			// Ignore context.Canceled errors
+			// context.Canceled is a value, not a type, so use errors.Is() instead of errors.As()
 			if errors.Is(err, context.Canceled) {
 				numIgnored++
 			}

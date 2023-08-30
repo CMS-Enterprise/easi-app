@@ -765,7 +765,7 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 		},
 		&models.Action{
 			IntakeID:   &input.IntakeID,
-			Feedback:   null.StringFrom(input.EmailBody),
+			Feedback:   &input.EmailBody,
 			ActionType: models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES,
 		},
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
@@ -789,7 +789,7 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 		},
 		&models.Action{
 			IntakeID:   &input.IntakeID,
-			Feedback:   null.StringFrom(input.EmailBody),
+			Feedback:   &input.EmailBody,
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
 		models.SystemIntakeStatusBIZCASEFINALNEEDED,
@@ -813,7 +813,7 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 		},
 		&models.Action{
 			IntakeID:   &input.IntakeID,
-			Feedback:   null.StringFrom(input.EmailBody),
+			Feedback:   &input.EmailBody,
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
 		models.SystemIntakeStatusNEEDBIZCASE,
@@ -1186,7 +1186,7 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx contex
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			ActionType: models.ActionTypeNEEDBIZCASE,
-			Feedback:   null.StringFrom(input.Feedback),
+			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusNEEDBIZCASE,
@@ -1205,7 +1205,7 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx 
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			ActionType: models.ActionTypeBIZCASENEEDSCHANGES,
-			Feedback:   null.StringFrom(input.Feedback),
+			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
@@ -1224,7 +1224,7 @@ func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx conte
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			ActionType: models.ActionTypeGUIDERECEIVEDCLOSE,
-			Feedback:   null.StringFrom(input.Feedback),
+			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
@@ -1243,7 +1243,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx contex
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			ActionType: models.ActionTypeNOGOVERNANCENEEDED,
-			Feedback:   null.StringFrom(input.Feedback),
+			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
@@ -1262,7 +1262,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			ActionType: models.ActionTypeNOTITREQUEST,
-			Feedback:   null.StringFrom(input.Feedback),
+			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusNOTITREQUEST,
@@ -1281,7 +1281,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx contex
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			ActionType: models.ActionTypeNOTRESPONDINGCLOSE,
-			Feedback:   null.StringFrom(input.Feedback),
+			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusNOGOVERNANCE,
@@ -1300,7 +1300,7 @@ func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Conte
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			ActionType: models.ActionTypeREADYFORGRT,
-			Feedback:   null.StringFrom(input.Feedback),
+			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusREADYFORGRT,
@@ -1319,7 +1319,7 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			ActionType: models.ActionTypeSENDEMAIL,
-			Feedback:   null.StringFrom(input.Feedback),
+			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
@@ -1373,7 +1373,7 @@ func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input mod
 	systemIntakeNote := models.SystemIntakeNote{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),
 		AuthorName:     null.StringFrom(input.AuthorName),
-		Content:        null.StringFrom(input.Content),
+		Content:        &input.Content,
 		SystemIntakeID: input.IntakeID,
 	}
 
@@ -1389,7 +1389,7 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 	}
 
 	systemIntakeNote, err := r.store.UpdateSystemIntakeNote(ctx, &models.SystemIntakeNote{
-		Content:    null.StringFrom(input.Content),
+		Content:    &input.Content,
 		IsArchived: input.IsArchived,
 		ID:         input.ID,
 		ModifiedBy: &userInfo.EuaUserID,
@@ -1468,14 +1468,14 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 		&models.SystemIntake{
 			ID:                    input.IntakeID,
 			LifecycleExpiresAt:    &input.ExpiresAt,
-			LifecycleScope:        null.StringFrom(input.Scope),
-			DecisionNextSteps:     null.StringFrom(*input.NextSteps),
+			LifecycleScope:        &input.Scope,
+			DecisionNextSteps:     input.NextSteps,
 			LifecycleID:           null.StringFrom(*input.Lcid),
 			LifecycleCostBaseline: null.StringFromPtr(input.CostBaseline),
 		},
 		&models.Action{
 			IntakeID: &input.IntakeID,
-			Feedback: null.StringFrom(input.Feedback),
+			Feedback: &input.Feedback,
 		},
 		input.NotificationRecipients,
 	)
@@ -1495,7 +1495,7 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 		},
 		&models.Action{
 			IntakeID:   &input.IntakeID,
-			Feedback:   null.StringFrom(input.EmailBody),
+			Feedback:   &input.EmailBody,
 			ActionType: models.ActionTypeREADYFORGRB,
 		},
 		models.SystemIntakeStatusREADYFORGRB,
@@ -1514,12 +1514,12 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 		ctx,
 		&models.SystemIntake{
 			ID:                input.IntakeID,
-			DecisionNextSteps: null.StringFromPtr(input.NextSteps),
-			RejectionReason:   null.StringFrom(input.Reason),
+			DecisionNextSteps: input.NextSteps,
+			RejectionReason:   &input.Reason,
 		},
 		&models.Action{
 			IntakeID: &input.IntakeID,
-			Feedback: null.StringFrom(input.Feedback),
+			Feedback: &input.Feedback,
 		},
 		input.NotificationRecipients,
 	)
@@ -1976,7 +1976,7 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		r.service.FetchUserInfos,
 		&models.TRBRequestFeedback{
 			TRBRequestID:    input.TrbRequestID,
-			FeedbackMessage: input.FeedbackMessage,
+			FeedbackMessage: models.HTML(input.FeedbackMessage),
 			CopyTRBMailbox:  input.CopyTrbMailbox,
 			NotifyEUAIDs:    notifyEuas,
 			Action:          input.Action,
@@ -2523,7 +2523,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 				Name:  action.ActorName,
 				Email: action.ActorEmail.String(),
 			},
-			Feedback:  action.Feedback.Ptr(),
+			Feedback:  action.Feedback,
 			CreatedAt: *action.CreatedAt,
 		}
 
@@ -2531,10 +2531,10 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 			graphAction.LcidExpirationChange = &model.SystemIntakeLCIDExpirationChange{
 				NewDate:              *action.LCIDExpirationChangeNewDate,
 				PreviousDate:         *action.LCIDExpirationChangePreviousDate,
-				NewScope:             action.LCIDExpirationChangeNewScope.Ptr(),
-				PreviousScope:        action.LCIDExpirationChangePreviousScope.Ptr(),
-				NewNextSteps:         action.LCIDExpirationChangeNewNextSteps.Ptr(),
-				PreviousNextSteps:    action.LCIDExpirationChangePreviousNextSteps.Ptr(),
+				NewScope:             action.LCIDExpirationChangeNewScope,
+				PreviousScope:        action.LCIDExpirationChangePreviousScope,
+				NewNextSteps:         action.LCIDExpirationChangeNewNextSteps,
+				PreviousNextSteps:    action.LCIDExpirationChangePreviousNextSteps,
 				NewCostBaseline:      action.LCIDExpirationChangeNewCostBaseline.Ptr(),
 				PreviousCostBaseline: action.LCIDExpirationChangePreviousCostBaseline.Ptr(),
 			}
@@ -2652,11 +2652,6 @@ func (r *systemIntakeResolver) CurrentStage(ctx context.Context, obj *models.Sys
 	return obj.ProcessStatus.Ptr(), nil
 }
 
-// DecisionNextSteps is the resolver for the decisionNextSteps field.
-func (r *systemIntakeResolver) DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.DecisionNextSteps.Ptr(), nil
-}
-
 // EaCollaborator is the resolver for the eaCollaborator field.
 func (r *systemIntakeResolver) EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.EACollaborator.Ptr(), nil
@@ -2759,8 +2754,8 @@ func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntak
 }
 
 // LcidScope is the resolver for the lcidScope field.
-func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.LifecycleScope.Ptr(), nil
+func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error) {
+	return obj.LifecycleScope, nil
 }
 
 // LcidCostBaseline is the resolver for the lcidCostBaseline field.
@@ -2799,11 +2794,6 @@ func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.S
 // ProjectAcronym is the resolver for the projectAcronym field.
 func (r *systemIntakeResolver) ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.ProjectAcronym.Ptr(), nil
-}
-
-// RejectionReason is the resolver for the rejectionReason field.
-func (r *systemIntakeResolver) RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.RejectionReason.Ptr(), nil
 }
 
 // RequestName is the resolver for the requestName field.
@@ -2861,7 +2851,7 @@ func (r *systemIntakeResolver) GrtReviewEmailBody(ctx context.Context, obj *mode
 // LastAdminNote is the resolver for the lastAdminNote field.
 func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error) {
 	return &model.LastAdminNote{
-		Content:   obj.LastAdminNoteContent.Ptr(),
+		Content:   obj.LastAdminNoteContent,
 		CreatedAt: obj.LastAdminNoteCreatedAt,
 	}, nil
 }
@@ -2937,11 +2927,6 @@ func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.Syste
 		Eua:  obj.AuthorEUAID,
 		Name: obj.AuthorName.ValueOrZero(),
 	}, nil
-}
-
-// Content is the resolver for the content field.
-func (r *systemIntakeNoteResolver) Content(ctx context.Context, obj *models.SystemIntakeNote) (string, error) {
-	return obj.Content.ValueOrZero(), nil
 }
 
 // Editor is the resolver for the editor field.

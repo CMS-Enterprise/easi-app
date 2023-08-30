@@ -17,6 +17,6 @@ func NewNote() models.SystemIntakeNote {
 		CreatedAt:   &now,
 		AuthorEUAID: "ABCDE",
 		AuthorName:  null.StringFrom("Fake Name"),
-		Content:     null.StringFrom("Fake Content"),
+		Content:     models.HTMLPointer("Fake Content"),
 	}
 }

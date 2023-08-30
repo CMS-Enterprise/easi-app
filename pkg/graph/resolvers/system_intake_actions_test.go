@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guregu/null"
-
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -40,8 +38,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				Step:        models.SystemIntakeStepINITIALFORM,
 			})
 			s.NoError(err)
-			additionalInfo := "banana"
-			adminNotes := "apple"
+			additionalInfo := models.HTMLPointer("banana")
+			adminNotes := models.HTML("apple")
 			_, err = CreateSystemIntakeActionRequestEdits(
 				ctx,
 				s.testConfigs.Store,
@@ -55,7 +53,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 						ShouldNotifyITInvestment: false,
 					},
 					EmailFeedback:  "meatloaf",
-					AdditionalInfo: &additionalInfo,
+					AdditionalInfo: additionalInfo,
 					AdminNotes:     &adminNotes,
 				},
 			)
@@ -75,8 +73,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				}
 				intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
 				s.NoError(err)
-				additionalInfo := "banana"
-				adminNotes := "apple"
+				additionalInfo := models.HTMLPointer("banana")
+				adminNotes := models.HTMLPointer("apple")
 				actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 					ctx,
 					s.testConfigs.Store,
@@ -90,8 +88,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 							ShouldNotifyITInvestment: false,
 						},
 						EmailFeedback:  "meatloaf",
-						AdditionalInfo: &additionalInfo,
-						AdminNotes:     &adminNotes,
+						AdditionalInfo: additionalInfo,
+						AdminNotes:     adminNotes,
 					},
 				)
 				s.NoError(err)
@@ -123,8 +121,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
 		s.NoError(err)
-		additionalInfo := "banana"
-		adminNotes := "apple"
+		additionalInfo := models.HTMLPointer("banana")
+		adminNotes := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -138,8 +136,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 					ShouldNotifyITInvestment: false,
 				},
 				EmailFeedback:  "meatloaf",
-				AdditionalInfo: &additionalInfo,
-				AdminNotes:     &adminNotes,
+				AdditionalInfo: additionalInfo,
+				AdminNotes:     adminNotes,
 			},
 		)
 		s.NoError(err)
@@ -147,7 +145,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		allFeedback, err := s.testConfigs.Store.GetGovernanceRequestFeedbacksByIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdFeedback := allFeedback[0]
-		s.Equal("meatloaf", createdFeedback.Feedback)
+		s.Equal(models.HTML("meatloaf"), createdFeedback.Feedback)
 	})
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -156,8 +154,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
 		s.NoError(err)
-		additionalInfo := "banana"
-		adminNotes := "apple"
+		additionalInfo := models.HTMLPointer("banana")
+		adminNotes := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -171,8 +169,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 					ShouldNotifyITInvestment: false,
 				},
 				EmailFeedback:  "meatloaf",
-				AdditionalInfo: &additionalInfo,
-				AdminNotes:     &adminNotes,
+				AdditionalInfo: additionalInfo,
+				AdminNotes:     adminNotes,
 			},
 		)
 		s.NoError(err)
@@ -180,7 +178,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		allActions, err := s.testConfigs.Store.GetActionsByRequestID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdAction := allActions[0]
-		s.Equal(null.StringFrom(additionalInfo), createdAction.Feedback)
+		s.Equal(additionalInfo, createdAction.Feedback)
 		s.Equal(models.SystemIntakeStepINITIALFORM, *createdAction.Step)
 	})
 	s.Run("Should create admin note given input", func() {
@@ -190,8 +188,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
 		s.NoError(err)
-		additionalInfo := "banana"
-		adminNotes := "apple"
+		additionalInfo := models.HTMLPointer("banana")
+		adminNotes := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -205,8 +203,8 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 					ShouldNotifyITInvestment: false,
 				},
 				EmailFeedback:  "meatloaf",
-				AdditionalInfo: &additionalInfo,
-				AdminNotes:     &adminNotes,
+				AdditionalInfo: additionalInfo,
+				AdminNotes:     adminNotes,
 			},
 		)
 		s.NoError(err)
@@ -214,7 +212,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		allNotes, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(ctx, actionedIntake.ID)
 		s.NoError(err)
 		createdNote := allNotes[0]
-		s.Equal(null.StringFrom("apple"), createdNote.Content)
+		s.Equal(models.HTMLPointer("apple"), createdNote.Content)
 	})
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -223,7 +221,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
 		s.NoError(err)
-		additionalInfo := "banana"
+		additionalInfo := models.HTMLPointer("banana")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -237,7 +235,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 					ShouldNotifyITInvestment: false,
 				},
 				EmailFeedback:  "meatloaf",
-				AdditionalInfo: &additionalInfo,
+				AdditionalInfo: additionalInfo,
 				AdminNotes:     nil,
 			},
 		)

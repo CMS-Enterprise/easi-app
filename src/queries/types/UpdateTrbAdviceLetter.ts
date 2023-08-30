@@ -13,7 +13,7 @@ export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter_recommendations {
   __typename: "TRBAdviceLetterRecommendation";
   id: UUID;
   title: string;
-  recommendation: string;
+  recommendation: HTML;
   links: string[];
 }
 
@@ -26,8 +26,8 @@ export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter_author {
 export interface UpdateTrbAdviceLetter_updateTRBAdviceLetter {
   __typename: "TRBAdviceLetter";
   id: UUID;
-  meetingSummary: string | null;
-  nextSteps: string | null;
+  meetingSummary: HTML | null;
+  nextSteps: HTML | null;
   isFollowupRecommended: boolean | null;
   dateSent: Time | null;
   followupPoint: string | null;

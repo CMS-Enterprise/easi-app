@@ -53,7 +53,7 @@ func (s *EmailTestSuite) TestTRBRequestReopenedEmail() {
 
 <p>The Technical Review Board (TRB) has re-opened ` + input.TRBRequestName + `.</p>
 
-<p>Reason for re-opening: ` + input.ReasonReopened + `</p>
+<p>Reason for re-opening: ` + string(input.ReasonReopened) + `</p>
 
 <p>View this request in EASi:</p>
 <ul>

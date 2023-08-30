@@ -230,7 +230,7 @@ func NewUpdateLifecycleFields(
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
-	sendIssueLCIDEmails func(context.Context, models.EmailNotificationRecipients, uuid.UUID, string, string, string, *time.Time, string, string, string, string) error,
+	sendIssueLCIDEmails func(context.Context, models.EmailNotificationRecipients, uuid.UUID, string, string, string, *time.Time, models.HTML, string, models.HTML, models.HTML) error,
 	generateLCID func(context.Context) (string, error),
 ) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
@@ -304,10 +304,10 @@ func NewUpdateLifecycleFields(
 				updated.Requester,
 				updated.LifecycleID.String,
 				updated.LifecycleExpiresAt,
-				updated.LifecycleScope.String,
+				updated.LifecycleScope.ValueOrEmptyHTML(),
 				updated.LifecycleCostBaseline.String,
-				updated.DecisionNextSteps.String,
-				action.Feedback.String,
+				updated.DecisionNextSteps.ValueOrEmptyHTML(),
+				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
 				return nil, err
@@ -326,7 +326,7 @@ func NewUpdateRejectionFields(
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
-	sendRejectRequestEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, reason models.HTML, nextSteps models.HTML, feedback models.HTML) error,
 ) func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
@@ -367,9 +367,9 @@ func NewUpdateRejectionFields(
 				existing.ID,
 				existing.ProjectName.String,
 				existing.Requester,
-				existing.RejectionReason.String,
-				existing.DecisionNextSteps.String,
-				action.Feedback.String,
+				existing.RejectionReason.ValueOrEmptyHTML(),
+				existing.DecisionNextSteps.ValueOrEmptyHTML(),
+				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
 				return nil, err
@@ -387,7 +387,7 @@ func NewProvideGRTFeedback(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
-	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText string) error,
+	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText models.HTML) error,
 ) func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
 	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
@@ -418,7 +418,7 @@ func NewProvideGRTFeedback(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
-				action.Feedback.String,
+				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
 				return nil, err

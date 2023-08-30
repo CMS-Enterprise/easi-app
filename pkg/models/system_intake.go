@@ -155,13 +155,13 @@ type SystemIntake struct {
 	BusinessCaseID              *uuid.UUID                   `json:"businessCase" db:"business_case_id"`
 	LifecycleID                 null.String                  `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt          *time.Time                   `json:"lcidExpiresAt" db:"lcid_expires_at" gqlgen:"lcidExpiresAt"`
-	LifecycleScope              null.String                  `json:"lcidScope" db:"lcid_scope"`
+	LifecycleScope              *HTML                        `json:"lcidScope" db:"lcid_scope"`
 	LifecycleCostBaseline       null.String                  `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
 	LifecycleExpirationAlertTS  *time.Time                   `json:"lcidExpirationAlertTS" db:"lcid_expiration_alert_ts"`
-	DecisionNextSteps           null.String                  `json:"decisionNextSteps" db:"decision_next_steps"`
-	RejectionReason             null.String                  `json:"rejectionReason" db:"rejection_reason"`
+	DecisionNextSteps           *HTML                        `json:"decisionNextSteps" db:"decision_next_steps"`
+	RejectionReason             *HTML                        `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String                  `json:"adminLead" db:"admin_lead"`
-	LastAdminNoteContent        null.String                  `json:"lastAdminNoteContent" db:"last_admin_note_content"`      // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
+	LastAdminNoteContent        *HTML                        `json:"lastAdminNoteContent" db:"last_admin_note_content"`      // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
 	LastAdminNoteCreatedAt      *time.Time                   `json:"lastAdminNoteCreatedAt" db:"last_admin_note_created_at"` // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
 	CedarSystemID               null.String                  `json:"cedarSystemId" db:"cedar_system_id"`
 	ExistingFunding             null.Bool                    `json:"existingFunding" db:"existing_funding"`
