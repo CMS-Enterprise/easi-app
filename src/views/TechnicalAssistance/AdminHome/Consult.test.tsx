@@ -91,6 +91,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             updateTrbRequestConsultMeetingQuery,
             getTrbRequestQuery,
             getTRBRequestAttendeesQuery,
+            getTRBRequestAttendeesQuery,
             getTrbAdminNotesQuery,
             summaryQuery,
             summaryQuery,
@@ -179,6 +180,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       <VerboseMockedProvider
         mocks={[
           summaryQuery,
+          getTRBRequestAttendeesQuery,
           getTRBRequestAttendeesQuery,
           emptyConsultMeetingTime
         ]}
