@@ -11,13 +11,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/sanitization"
 )
 
-// HTML represents html code. It is sanitized to only allow specific tags
+// HTML represents html code. It is sanitized when unmarshaled from graphQL or when converted to HTML to only allow specific tags
 type HTML string
 
-// ToTemplate converts the HTML type to a template.HTML struct
+// ToTemplate converts and sanitizes the HTML type to a template.HTML struct
 func (html HTML) ToTemplate() template.HTML {
-	// Note, we sanitize when the data is Unmarshaled. However, if desired it could be sanitized at this entrypoint as well
-	return template.HTML(html) //nolint //the html is sanitized when it is Unmarshaled
+	sanitizedHTML := sanitization.SanitizeHTML(html)
+	return template.HTML(sanitizedHTML) //nolint //the html is sanitized again on the previous line so we can ignore the warning about
 }
 
 // ValueOrEmptyString returns either the value of the html or an empty string if nil
