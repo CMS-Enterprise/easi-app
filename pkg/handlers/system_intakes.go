@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"html"
 	"net/http"
 	"strings"
 
@@ -41,6 +42,15 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
+			}
+
+			// TODO: Hotfix to address escaped HTML in the Last Admin Note
+			for i := range systemIntakes {
+				eachIntake := &systemIntakes[i]
+				if eachIntake.LastAdminNoteContent != nil {
+					escapedNote := html.UnescapeString(eachIntake.LastAdminNoteContent.ValueOrEmptyString())
+					eachIntake.LastAdminNoteContent = models.HTMLPointer(escapedNote)
+				}
 			}
 
 			js, err := json.Marshal(systemIntakes)
