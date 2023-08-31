@@ -245,3 +245,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		s.Len(allNotes, 0)
 	})
 }
+
+func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
+
+}

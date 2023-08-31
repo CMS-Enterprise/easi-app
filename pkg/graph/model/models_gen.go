@@ -704,6 +704,19 @@ type SystemIntakeRequesterWithComponentInput struct {
 	Component string `json:"component"`
 }
 
+// Input for updating an intake's LCID in IT Gov v2
+type SystemIntakeUpdateLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	ExpiresAt              *time.Time                          `json:"expiresAt"`
+	Scope                  *models.HTML                        `json:"scope"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	Reason                 *models.HTML                        `json:"reason"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
+}
+
 // Denotes the type of a document attached to a TRB request,
 // which can be one of a number of common types, or a free-text user-specified type
 type TRBRequestDocumentType struct {

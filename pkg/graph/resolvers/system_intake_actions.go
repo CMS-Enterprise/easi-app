@@ -11,6 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -235,4 +236,106 @@ func CreateSystemIntakeActionRequestEdits(
 		}
 	}
 	return intake, nil
+}
+
+// UpdateLCID is used to update the LCID on a system intake.
+func UpdateLCID(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeUpdateLCIDInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+	// input.Reason //TODO: SW What to do with the reason field? It is stored in an email when we add the email
+
+	// save action (including additional info for email, if any)
+	//TODO, update these states
+	errGroup := new(errgroup.Group)
+	errGroup.Go(func() error {
+		action, err := lcidactions.SetUpdateLCIDAction(intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+		if err != nil {
+			return err
+		}
+		// action := models.Action{
+		// 	IntakeID:       &input.SystemIntakeID,
+		// 	ActionType:     models.ActionTypeUPDATELCID,
+		// 	ActorName:      adminUserInfo.CommonName,
+		// 	ActorEmail:     adminUserInfo.Email,
+		// 	ActorEUAUserID: adminEUAID,
+		// 	Step:           &intake.Step,
+		// }
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	// update workflow state
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.DecisionState = models.SIDSLcidIssued
+
+	// update LCID-related fields
+
+	intake.LifecycleExpiresAt = input.ExpiresAt
+	intake.LifecycleScope = input.Scope
+	intake.DecisionNextSteps = input.NextSteps
+	// intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
 }

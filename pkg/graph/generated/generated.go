@@ -561,6 +561,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionRequestEdits             func(childComplexity int, input model.SystemIntakeRequestEditsInput) int
 		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionUpdateLcid               func(childComplexity int, input *model.SystemIntakeUpdateLCIDInput) int
 		CreateSystemIntakeContact                        func(childComplexity int, input model.CreateSystemIntakeContactInput) int
 		CreateSystemIntakeDocument                       func(childComplexity int, input model.CreateSystemIntakeDocumentInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
@@ -1241,6 +1242,7 @@ type MutationResolver interface {
 	UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error)
 	CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionUpdateLcid(ctx context.Context, input *model.SystemIntakeUpdateLCIDInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -3900,6 +3902,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateSystemIntakeActionSendEmail(childComplexity, args["input"].(model.BasicActionInput)), true
+
+	case "Mutation.createSystemIntakeActionUpdateLCID":
+		if e.complexity.Mutation.CreateSystemIntakeActionUpdateLcid == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntakeActionUpdateLCID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntakeActionUpdateLcid(childComplexity, args["input"].(*model.SystemIntakeUpdateLCIDInput)), true
 
 	case "Mutation.createSystemIntakeContact":
 		if e.complexity.Mutation.CreateSystemIntakeContact == nil {
@@ -7009,6 +7023,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeRequestEditsInput,
 		ec.unmarshalInputSystemIntakeRequesterInput,
 		ec.unmarshalInputSystemIntakeRequesterWithComponentInput,
+		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
 		ec.unmarshalInputUpdateAccessibilityRequestCedarSystemInput,
 		ec.unmarshalInputUpdateAccessibilityRequestStatus,
 		ec.unmarshalInputUpdateSystemIntakeAdminLeadInput,
@@ -8563,6 +8578,22 @@ input SystemIntakeProgressToNewStepsInput {
   additionalNote: HTML
   adminNote: HTML
 }
+"""
+Input for updating an intake's LCID in IT Gov v2
+"""
+input SystemIntakeUpdateLCIDInput { 
+  systemIntakeID: UUID!
+  # lcid: String # This assumes just one LCID
+  expiresAt: Time
+  scope: HTML
+  nextSteps: HTML
+  costBaseline: String
+  reason: HTML # Why are you amending this LCID? Should this be called something
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
 
 """
 Input for creating a Request Edits Action in Admin Actions v2
@@ -9409,6 +9440,9 @@ type Mutation {
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionUpdateLCID(
+    input: SystemIntakeUpdateLCIDInput
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -10230,6 +10264,21 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionSendEmail_arg
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createSystemIntakeActionUpdateLCID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.SystemIntakeUpdateLCIDInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOSystemIntakeUpdateLCIDInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeUpdateLCIDInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -26455,6 +26504,87 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionReques
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createSystemIntakeActionRequestEdits_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createSystemIntakeActionUpdateLCID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSystemIntakeActionUpdateLCID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateSystemIntakeActionUpdateLcid(rctx, fc.Args["input"].(*model.SystemIntakeUpdateLCIDInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSystemIntakeActionUpdateLCID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSystemIntakeActionUpdateLCID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -52044,6 +52174,98 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequesterWithComponentInpu
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx context.Context, obj interface{}) (model.SystemIntakeUpdateLCIDInput, error) {
+	var it model.SystemIntakeUpdateLCIDInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "costBaseline", "reason", "additionalInfo", "notificationRecipients", "adminNote"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			it.SystemIntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "expiresAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expiresAt"))
+			it.ExpiresAt, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "scope":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scope"))
+			it.Scope, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "nextSteps":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
+			it.NextSteps, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "costBaseline":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("costBaseline"))
+			it.CostBaseline, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "reason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
+			it.Reason, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "additionalInfo":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
+			it.AdditionalInfo, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notificationRecipients":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notificationRecipients"))
+			it.NotificationRecipients, err = ec.unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "adminNote":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
+			it.AdminNote, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestCedarSystemInput(ctx context.Context, obj interface{}) (model.UpdateAccessibilityRequestCedarSystemInput, error) {
 	var it model.UpdateAccessibilityRequestCedarSystemInput
 	asMap := map[string]interface{}{}
@@ -56956,6 +57178,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSystemIntakeActionRequestEdits(ctx, field)
+			})
+
+		case "createSystemIntakeActionUpdateLCID":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSystemIntakeActionUpdateLCID(ctx, field)
 			})
 
 		case "createSystemIntakeActionBusinessCaseNeeded":
@@ -66225,6 +66453,14 @@ func (ec *executionContext) unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgit
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputSystemIntakeProgressToNewStepsInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeUpdateLCIDInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeUpdateLCIDInput(ctx context.Context, v interface{}) (*model.SystemIntakeUpdateLCIDInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeUpdateLCIDInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

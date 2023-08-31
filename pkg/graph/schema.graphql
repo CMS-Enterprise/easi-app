@@ -1476,6 +1476,22 @@ input SystemIntakeProgressToNewStepsInput {
   additionalNote: HTML
   adminNote: HTML
 }
+"""
+Input for updating an intake's LCID in IT Gov v2
+"""
+input SystemIntakeUpdateLCIDInput { 
+  systemIntakeID: UUID!
+  # lcid: String # This assumes just one LCID
+  expiresAt: Time
+  scope: HTML
+  nextSteps: HTML
+  costBaseline: String
+  reason: HTML # Why are you amending this LCID? Should this be called something
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
 
 """
 Input for creating a Request Edits Action in Admin Actions v2
@@ -2321,6 +2337,9 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionUpdateLCID(
+    input: SystemIntakeUpdateLCIDInput
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!

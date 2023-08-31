@@ -16,6 +16,8 @@ const (
 	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
 	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS
 	ActionTypeREQUESTEDITS ActionType = "REQUEST_EDITS"
+	// ActionTypeUPDATELCID captures enum value UPDATE_LCID
+	ActionTypeUPDATELCID ActionType = "UPDATE_LCID"
 )
 
 // v1 actions (before v2 revamp)
