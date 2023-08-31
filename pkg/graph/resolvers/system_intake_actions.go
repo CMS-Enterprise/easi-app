@@ -341,7 +341,7 @@ func RejectIntakeAsNotApproved(
 	return updatedIntake, nil
 }
 
-// IssueLCID handles a Not Approved by GRB action on an intake as part of Admin Actions v2
+// IssueLCID handles an Issue LCID action on an intake as part of Admin Actions v2
 func IssueLCID(
 	ctx context.Context,
 	store *storage.Store,
