@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
@@ -276,4 +277,109 @@ func (s *ResolverSuite) TestGenerateNewLCID() {
 		s.NoError(err)
 		s.NotEmpty(generatedLCID)
 	})
+}
+
+func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
+	// TODO - remove this commented block once I'm done
+	/*
+			// update workflow state
+		intake.Step = models.SystemIntakeStepDECISION
+		intake.State = models.SystemIntakeStateCLOSED
+		intake.DecisionState = models.SIDSNotApproved
+
+		// update other fields
+		intake.RejectionReason = &input.Reason
+		intake.DecisionNextSteps = &input.NextSteps
+		intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+	*/
+
+	// TODO - check workflow state (step, state, decision state)
+
+	// TODO - check fields from input (rejection reason, next steps, TRB follow up)
+	// don't need to check UpdatedAt - not deterministic
+
+	// TODO - should create action
+
+	// TODO - Should create admin note given input
+
+	// TODO - Should NOT create admin note without input
+
+	// TODO - check that rejecting the same intake twice is valid
+}
+
+func (s *ResolverSuite) TestIssueLCID() {
+	// TODO - remove this commented block once I'm done
+	/*
+		// update workflow state
+		intake.Step = models.SystemIntakeStepDECISION
+		intake.State = models.SystemIntakeStateCLOSED
+		intake.DecisionState = models.SIDSLcidIssued
+
+		// update LCID-related fields
+		intake.LifecycleID = null.StringFrom(newLCID)
+		intake.LifecycleExpiresAt = &input.ExpiresAt
+		intake.LifecycleScope = &input.Scope
+		intake.DecisionNextSteps = &input.NextSteps
+		intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+
+		// update other fields
+		updatedTime := time.Now()
+		intake.UpdatedAt = &updatedTime
+	*/
+
+	s.Run("When LCID is provided, that LCID is set on the intake", func() {
+		newIntake := s.createNewIntake()
+
+		providedLCID := "123456"
+
+		input := model.SystemIntakeIssueLCIDInput{
+			Lcid: &providedLCID,
+
+			// set required fields
+			SystemIntakeID: newIntake.ID,
+			ExpiresAt:      time.Now().AddDate(2, 0, 0),
+			Scope:          "test scope",
+			NextSteps:      "test next steps",
+			TrbFollowUp:    models.TRBFRStronglyRecommended,
+		}
+
+		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+		s.NoError(err)
+
+		s.EqualValues(providedLCID, updatedIntake.LifecycleID.ValueOrZero())
+	})
+
+	s.Run("When LCID is *not* provided, a new LCID is generated", func() {
+		newIntake := s.createNewIntake()
+
+		input := model.SystemIntakeIssueLCIDInput{
+			Lcid: nil,
+
+			// set required fields
+			SystemIntakeID: newIntake.ID,
+			ExpiresAt:      time.Now().AddDate(2, 0, 0),
+			Scope:          "test scope",
+			NextSteps:      "test next steps",
+			TrbFollowUp:    models.TRBFRStronglyRecommended,
+		}
+
+		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+		s.NoError(err)
+
+		s.NotEmpty(updatedIntake.LifecycleID.ValueOrZero())
+	})
+
+	// TODO - check workflow state (step, state, decision state)
+
+	// TODO - check fields from input (LifecycleExpiresAt, scope, next steps, TRB follow up, cost baseline)
+	// don't need to check UpdatedAt - not deterministic
+
+	// TODO - should create action
+
+	// TODO - Should create admin note given input
+
+	// TODO - Should NOT create admin note without input
+
+	// TODO - check that issuing an LCID twice is *not* valid
 }

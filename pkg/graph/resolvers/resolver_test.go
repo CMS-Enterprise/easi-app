@@ -117,3 +117,15 @@ func newS3Config() upload.Config {
 		Region:  config.GetString(appconfig.AWSRegion),
 	}
 }
+
+// utility method for creating a valid new system intake, checking for any errors
+func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
+	newIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, &models.SystemIntake{
+		// these fields are required by the SQL schema for system_intakes, and CreateSystemIntake() doesn't set them to defaults
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	suite.NoError(err)
+
+	return newIntake
+}
