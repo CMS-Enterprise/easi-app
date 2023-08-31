@@ -360,7 +360,7 @@ func IssueLCID(
 		return nil, err
 	}
 
-	err = lcidactions.IsIssueLCIDValid(intake)
+	err = lcidactions.IsIntakeValidToIssueLCID(intake)
 	if err != nil {
 		return nil, err
 	}

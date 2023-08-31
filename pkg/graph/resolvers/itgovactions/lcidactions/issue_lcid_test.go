@@ -9,11 +9,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func TestIsIssueLCIDValid(t *testing.T) {
+func TestIsIntakeValidToIssueLCID(t *testing.T) {
 	t.Run("Issuing an LCID for an intake without an LCID value already set and with its decision state not set to LCID issued is valid", func(t *testing.T) {
 		intake := models.SystemIntake{}
 
-		err := IsIssueLCIDValid(&intake)
+		err := IsIntakeValidToIssueLCID(&intake)
 
 		assert.NoError(t, err)
 	})
@@ -23,7 +23,7 @@ func TestIsIssueLCIDValid(t *testing.T) {
 			LifecycleID: null.StringFrom("123456"),
 		}
 
-		err := IsIssueLCIDValid(&intake)
+		err := IsIntakeValidToIssueLCID(&intake)
 
 		assert.Error(t, err)
 	})
@@ -33,7 +33,7 @@ func TestIsIssueLCIDValid(t *testing.T) {
 			DecisionState: models.SIDSLcidIssued,
 		}
 
-		err := IsIssueLCIDValid(&intake)
+		err := IsIntakeValidToIssueLCID(&intake)
 
 		assert.Error(t, err)
 	})
@@ -44,7 +44,7 @@ func TestIsIssueLCIDValid(t *testing.T) {
 			DecisionState: models.SIDSLcidIssued,
 		}
 
-		err := IsIssueLCIDValid(&intake)
+		err := IsIntakeValidToIssueLCID(&intake)
 
 		assert.Error(t, err)
 	})
