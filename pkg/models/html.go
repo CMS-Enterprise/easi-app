@@ -62,7 +62,7 @@ func (h *HTML) UnmarshalGQLContext(ctx context.Context, v interface{}) error {
 
 // MarshalGQLContext marshals the HTML type to JSON to return to graphQL
 func (h HTML) MarshalGQLContext(ctx context.Context, w io.Writer) error {
-	// TODO: Remove this hotfix taht was introduced as a result of entities being rendered as escaped HTML in non-rich-text views
+	// TODO: Remove this hotfix that was introduced as a result of entities being rendered as escaped HTML in non-rich-text views
 	// (Rich Text views handle this escaped data properly, so this hotfix is only needed until we implement rich text views across the board)
 	// Note: We only really need to do this here, instead of ALSO doing it in email code because the encoded HTML is handled cleanly by the html/template package
 	unescapedHTML := html.UnescapeString(string(h))
