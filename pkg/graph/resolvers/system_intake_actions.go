@@ -384,6 +384,7 @@ func IssueLCID(
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 
+	// update other fields
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
