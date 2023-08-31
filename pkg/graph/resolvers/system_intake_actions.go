@@ -384,7 +384,6 @@ func IssueLCID(
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 
-	// update other fields, including IT Gov v1 workflow status
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
