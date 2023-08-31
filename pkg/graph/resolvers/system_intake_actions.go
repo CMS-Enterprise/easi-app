@@ -387,7 +387,6 @@ func IssueLCID(
 	// update other fields, including IT Gov v1 workflow status
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
-	intake.Status = models.SystemIntakeStatusLCIDISSUED
 
 	// All the different database calls aren't in a single atomic transaction;
 	// in the case of a system failure, some data from the action might be saved, but not all.
