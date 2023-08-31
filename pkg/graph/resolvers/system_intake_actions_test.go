@@ -370,7 +370,39 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.NotEmpty(updatedIntake.LifecycleID.ValueOrZero())
 	})
 
-	// TODO - check workflow state (step, state, decision state)
+	s.Run("Issuing an LCID sets workflow state correctly", func() {
+		newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+			Status:      models.SystemIntakeStatusBIZCASECHANGESNEEDED, // edits requested on draft biz case
+			RequestType: models.SystemIntakeRequestTypeNEW,
+
+			State:         models.SystemIntakeStateOPEN, // default
+			DecisionState: models.SIDSNoDecision,        // default
+
+			// nontrivial existing workflow state
+			Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+			RequestFormState:       models.SIRFSSubmitted,
+			DraftBusinessCaseState: models.SIRFSEditsRequested,
+		})
+		s.NoError(err)
+
+		input := model.SystemIntakeIssueLCIDInput{
+			Lcid: nil,
+
+			// set required fields
+			SystemIntakeID: newIntake.ID,
+			ExpiresAt:      time.Now().AddDate(2, 0, 0),
+			Scope:          "test scope",
+			NextSteps:      "test next steps",
+			TrbFollowUp:    models.TRBFRStronglyRecommended,
+		}
+
+		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+		s.NoError(err)
+
+		s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
+		s.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
+		s.EqualValues(models.SIDSLcidIssued, updatedIntake.DecisionState)
+	})
 
 	// TODO - check fields from input (LifecycleExpiresAt, scope, next steps, TRB follow up, cost baseline)
 	// don't need to check UpdatedAt - not deterministic
