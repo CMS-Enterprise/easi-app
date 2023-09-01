@@ -112,11 +112,9 @@ PDF-UA
 Gotenberg
 UniDoc
 PDFKit
-EASI-983
 minio
 react-uswds
 GraphQL
-ES-255
 dev
 impl
 repurpose
@@ -175,8 +173,6 @@ base64
 jq
 yq
 Redis
-EASI-1505
-EASI-1447
 timestamp
 schemas
 jsonschema
@@ -201,8 +197,18 @@ Pronking
 DevSecOps
 devsecops
 deliverables
-EASI-1538
 Sprague
 Shoup
 TinyMCE
+
+# Jira ticket numbers
+# The underlying spellchecking package doesn't currently support patterns; see https://github.com/lukeapage/node-markdown-spellcheck/issues/49
+ES-255
+EASI-1538
 EASI-3121
+EASI-983
+EASI-1505
+EASI-1447
+EASI-3224
+EASI-2888
+EASI-3019
