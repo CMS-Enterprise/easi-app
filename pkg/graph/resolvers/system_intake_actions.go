@@ -258,7 +258,7 @@ func CreateSystemIntakeActionReopenRequest(
 
 	if intake.State == models.SystemIntakeStateOPEN {
 		return nil, &apperrors.BadRequestError{
-			Err: fmt.Errorf("request is already open"),
+			Err: fmt.Errorf("intake is already open"),
 		}
 	}
 	intake.State = models.SystemIntakeStateOPEN
@@ -316,7 +316,7 @@ func CreateSystemIntakeActionCloseRequest(
 	}
 	if intake.State == models.SystemIntakeStateCLOSED {
 		return nil, &apperrors.BadRequestError{
-			Err: fmt.Errorf("request is already closed"),
+			Err: fmt.Errorf("intake is already closed"),
 		}
 	}
 	intake.State = models.SystemIntakeStateCLOSED
