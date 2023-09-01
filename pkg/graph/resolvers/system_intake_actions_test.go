@@ -293,18 +293,13 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 		intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	*/
 
+	// TODO - main test:
 	// TODO - check workflow state (step, state, decision state)
-
-	// TODO - check fields from input (rejection reason, next steps, TRB follow up)
-	// don't need to check UpdatedAt - not deterministic
-
+	// TODO - check fields from input (rejection reason, next steps, TRB follow up); don't need to check UpdatedAt (not deterministic)
 	// TODO - should create action
+	// TODO - check that rejecting the same intake twice is valid
 
 	// TODO - Should create admin note given input
-
-	// TODO - Should NOT create admin note without input
-
-	// TODO - check that rejecting the same intake twice is valid
 }
 
 func (s *ResolverSuite) TestIssueLCID() {
@@ -401,13 +396,14 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(input.ExpiresAt.Year(), updatedIntake.LifecycleExpiresAt.Year())
 		s.EqualValues(input.ExpiresAt.Month(), updatedIntake.LifecycleExpiresAt.Month())
 		s.EqualValues(input.ExpiresAt.Day(), updatedIntake.LifecycleExpiresAt.Day())
+
+		// TODO - should create action
+
+		// check that issuing an LCID twice is not valid
+		input.NextSteps = "issuing again will work, right?" // input still refers to the same intake
+		_, err = IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+		s.Error(err)
 	})
 
-	// TODO - should create action
-
 	// TODO - Should create admin note given input
-
-	// TODO - Should NOT create admin note without input
-
-	// TODO - check that issuing an LCID twice is *not* valid
 }
