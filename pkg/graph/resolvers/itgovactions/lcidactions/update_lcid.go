@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// SetUpdateLCIDAction is a method to set all the relevant data fields for that are a result of an Update LCID action.
-func SetUpdateLCIDAction(
+// GetUpdateLCIDAction is a method to set all the relevant data fields for that are a result of an Update LCID action.
+func GetUpdateLCIDAction(
 	intake *models.SystemIntake,
 	expirationDate *time.Time,
 	nextSteps *models.HTML,
@@ -41,4 +42,17 @@ func SetUpdateLCIDAction(
 	}
 	return &action, nil
 
+}
+
+// IsLCIDValidToUpdate checks if you can update the LCID for an intake, if not, it will return an error
+func IsLCIDValidToUpdate(intake *models.SystemIntake) error {
+	if !intake.LifecycleID.Valid {
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeUPDATELCID,
+				Message:    "an LCID has not been issued for this intake, an LCID must be issued before it ban be updated",
+			},
+		}
+	}
+	return nil
 }

@@ -2339,7 +2339,7 @@ type Mutation {
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionUpdateLCID(
-    input: SystemIntakeUpdateLCIDInput
+    input: SystemIntakeUpdateLCIDInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!

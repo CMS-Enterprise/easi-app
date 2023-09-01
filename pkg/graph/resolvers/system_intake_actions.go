@@ -256,24 +256,20 @@ func UpdateLCID(
 	if err != nil {
 		return nil, err
 	}
+	err = lcidactions.IsLCIDValidToUpdate(intake)
+	if err != nil {
+		return nil, err
+	}
 	// input.Reason //TODO: SW What to do with the reason field? It is stored in an email when we add the email
 
 	// save action (including additional info for email, if any)
 	//TODO, update these states
 	errGroup := new(errgroup.Group)
 	errGroup.Go(func() error {
-		action, err := lcidactions.SetUpdateLCIDAction(intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+		action, err := lcidactions.GetUpdateLCIDAction(intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
 		if err != nil {
 			return err
 		}
-		// action := models.Action{
-		// 	IntakeID:       &input.SystemIntakeID,
-		// 	ActionType:     models.ActionTypeUPDATELCID,
-		// 	ActorName:      adminUserInfo.CommonName,
-		// 	ActorEmail:     adminUserInfo.Email,
-		// 	ActorEUAUserID: adminEUAID,
-		// 	Step:           &intake.Step,
-		// }
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
 		}

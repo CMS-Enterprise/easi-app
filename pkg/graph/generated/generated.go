@@ -561,7 +561,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionRequestEdits             func(childComplexity int, input model.SystemIntakeRequestEditsInput) int
 		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeActionUpdateLcid               func(childComplexity int, input *model.SystemIntakeUpdateLCIDInput) int
+		CreateSystemIntakeActionUpdateLcid               func(childComplexity int, input model.SystemIntakeUpdateLCIDInput) int
 		CreateSystemIntakeContact                        func(childComplexity int, input model.CreateSystemIntakeContactInput) int
 		CreateSystemIntakeDocument                       func(childComplexity int, input model.CreateSystemIntakeDocumentInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
@@ -1242,7 +1242,7 @@ type MutationResolver interface {
 	UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error)
 	CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionUpdateLcid(ctx context.Context, input *model.SystemIntakeUpdateLCIDInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionUpdateLcid(ctx context.Context, input model.SystemIntakeUpdateLCIDInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
@@ -3913,7 +3913,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionUpdateLcid(childComplexity, args["input"].(*model.SystemIntakeUpdateLCIDInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionUpdateLcid(childComplexity, args["input"].(model.SystemIntakeUpdateLCIDInput)), true
 
 	case "Mutation.createSystemIntakeContact":
 		if e.complexity.Mutation.CreateSystemIntakeContact == nil {
@@ -9441,7 +9441,7 @@ type Mutation {
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionUpdateLCID(
-    input: SystemIntakeUpdateLCIDInput
+    input: SystemIntakeUpdateLCIDInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
@@ -10275,10 +10275,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionSendEmail_arg
 func (ec *executionContext) field_Mutation_createSystemIntakeActionUpdateLCID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.SystemIntakeUpdateLCIDInput
+	var arg0 model.SystemIntakeUpdateLCIDInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOSystemIntakeUpdateLCIDInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeUpdateLCIDInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSystemIntakeUpdateLCIDInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeUpdateLCIDInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -26525,7 +26525,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionUpdateLCID(ctx con
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionUpdateLcid(rctx, fc.Args["input"].(*model.SystemIntakeUpdateLCIDInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionUpdateLcid(rctx, fc.Args["input"].(model.SystemIntakeUpdateLCIDInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -64469,6 +64469,11 @@ func (ec *executionContext) marshalNSystemIntakeStepToProgressTo2githubᚗcomᚋ
 	return v
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeUpdateLCIDInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeUpdateLCIDInput(ctx context.Context, v interface{}) (model.SystemIntakeUpdateLCIDInput, error) {
+	res, err := ec.unmarshalInputSystemIntakeUpdateLCIDInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNTRBAdminNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNote) graphql.Marshaler {
 	return ec._TRBAdminNote(ctx, sel, &v)
 }
@@ -66453,14 +66458,6 @@ func (ec *executionContext) unmarshalOSystemIntakeProgressToNewStepsInput2ᚖgit
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputSystemIntakeProgressToNewStepsInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOSystemIntakeUpdateLCIDInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeUpdateLCIDInput(ctx context.Context, v interface{}) (*model.SystemIntakeUpdateLCIDInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputSystemIntakeUpdateLCIDInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
