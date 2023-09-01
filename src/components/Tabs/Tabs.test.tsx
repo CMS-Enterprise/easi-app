@@ -5,12 +5,7 @@ import userEvent from '@testing-library/user-event';
 import TabPanel from './TabPanel';
 import Tabs from './Tabs';
 
-/**
- * TODO: Fix test
- *
- * Vitest stalls on this test, so skipping for now
- */
-describe.skip('The Tabs component', () => {
+describe('The Tabs component', () => {
   it('renders without errors', async () => {
     await act(async () => {
       const { getByTestId } = render(
@@ -41,9 +36,7 @@ describe.skip('The Tabs component', () => {
       </Tabs>
     );
 
-    expect(getByTestId('Tab1-tab').classList).toContain(
-      'easi-tabs__tab--selected'
-    );
+    expect(getByTestId('Tab1-tab')).toHaveClass('easi-tabs__tab--selected');
     expect(getByTestId('panel-1').textContent).toEqual(fixture);
   });
 
@@ -60,12 +53,8 @@ describe.skip('The Tabs component', () => {
         </Tabs>
       );
 
-      expect(getByTestId('Tab2-tab').classList).toContain(
-        'easi-tabs__tab--selected'
-      );
-      expect(getByTestId('Tab2-panel').classList).not.toContain(
-        'easi-print-only'
-      );
+      expect(getByTestId('Tab2-tab')).toHaveClass('easi-tabs__tab--selected');
+      expect(getByTestId('Tab2-panel')).not.toHaveClass('easi-print-only');
     });
   });
 
@@ -105,12 +94,8 @@ describe.skip('The Tabs component', () => {
     );
 
     userEvent.click(getByTestId('Tab3-tab-btn'));
-    expect(getByTestId('Tab3-tab').classList).toContain(
-      'easi-tabs__tab--selected'
-    );
-    expect(getByTestId('Tab3-panel').classList).not.toContain(
-      'easi-print-only'
-    );
+    expect(getByTestId('Tab3-tab')).toHaveClass('easi-tabs__tab--selected');
+    expect(getByTestId('Tab3-panel')).not.toHaveClass('easi-print-only');
   });
 
   describe('keyboard actions', () => {
@@ -134,12 +119,8 @@ describe.skip('The Tabs component', () => {
         userEvent.click(startingTab);
         userEvent.type(startingTab, '{arrowright}');
         expect(getByTestId('Tab2-tab-btn')).toHaveFocus();
-        expect(getByTestId('Tab2-tab').classList).toContain(
-          'easi-tabs__tab--selected'
-        );
-        expect(getByTestId('Tab2-panel').classList).not.toContain(
-          'easi-print-only'
-        );
+        expect(getByTestId('Tab2-tab')).toHaveClass('easi-tabs__tab--selected');
+        expect(getByTestId('Tab2-panel')).not.toHaveClass('easi-print-only');
       });
     });
     it('switches tabs on left right', async () => {
@@ -163,12 +144,8 @@ describe.skip('The Tabs component', () => {
         userEvent.type(startingTab, '{arrowleft}');
 
         expect(getByTestId('Tab2-tab-btn')).toHaveFocus();
-        expect(getByTestId('Tab2-tab').classList).toContain(
-          'easi-tabs__tab--selected'
-        );
-        expect(getByTestId('Tab2-panel').classList).not.toContain(
-          'easi-print-only'
-        );
+        expect(getByTestId('Tab2-tab')).toHaveClass('easi-tabs__tab--selected');
+        expect(getByTestId('Tab2-panel')).not.toHaveClass('easi-print-only');
       });
     });
     it('loops to last tab on left arrow click', async () => {
@@ -191,12 +168,8 @@ describe.skip('The Tabs component', () => {
         userEvent.click(startingTab);
         userEvent.type(startingTab, '{arrowleft}');
         expect(getByTestId('Tab3-tab-btn')).toHaveFocus();
-        expect(getByTestId('Tab3-tab').classList).toContain(
-          'easi-tabs__tab--selected'
-        );
-        expect(getByTestId('Tab3-panel').classList).not.toContain(
-          'easi-print-only'
-        );
+        expect(getByTestId('Tab3-tab')).toHaveClass('easi-tabs__tab--selected');
+        expect(getByTestId('Tab3-panel')).not.toHaveClass('easi-print-only');
       });
     });
     it('loops to first tab on right arrow click', async () => {
@@ -219,12 +192,8 @@ describe.skip('The Tabs component', () => {
         userEvent.click(startingTab);
         userEvent.type(startingTab, '{arrowright}');
         expect(getByTestId('Tab1-tab-btn')).toHaveFocus();
-        expect(getByTestId('Tab1-tab').classList).toContain(
-          'easi-tabs__tab--selected'
-        );
-        expect(getByTestId('Tab1-panel').classList).not.toContain(
-          'easi-print-only'
-        );
+        expect(getByTestId('Tab1-tab')).toHaveClass('easi-tabs__tab--selected');
+        expect(getByTestId('Tab1-panel')).not.toHaveClass('easi-print-only');
       });
     });
     it('focuses tab panel on tab', async () => {
@@ -247,9 +216,7 @@ describe.skip('The Tabs component', () => {
         userEvent.click(startingTab);
         userEvent.tab();
         expect(getByTestId('Tab1-panel')).toHaveFocus();
-        expect(getByTestId('Tab1-panel').classList).not.toContain(
-          'easi-print-only'
-        );
+        expect(getByTestId('Tab1-panel')).not.toHaveClass('easi-print-only');
       });
     });
     it('focuses first tab on home key press', async () => {
@@ -272,12 +239,8 @@ describe.skip('The Tabs component', () => {
         userEvent.click(startingTab);
         userEvent.type(startingTab, '{home}');
         expect(getByTestId('Tab1-tab-btn')).toHaveFocus();
-        expect(getByTestId('Tab1-tab').classList).toContain(
-          'easi-tabs__tab--selected'
-        );
-        expect(getByTestId('Tab1-panel').classList).not.toContain(
-          'easi-print-only'
-        );
+        expect(getByTestId('Tab1-tab')).toHaveClass('easi-tabs__tab--selected');
+        expect(getByTestId('Tab1-panel')).not.toHaveClass('easi-print-only');
       });
     });
     it('focuses last tab on end key press', async () => {
@@ -300,12 +263,8 @@ describe.skip('The Tabs component', () => {
         userEvent.click(startingTab);
         userEvent.type(startingTab, '{end}');
         expect(getByTestId('Tab3-tab-btn')).toHaveFocus();
-        expect(getByTestId('Tab3-tab').classList).toContain(
-          'easi-tabs__tab--selected'
-        );
-        expect(getByTestId('Tab3-panel').classList).not.toContain(
-          'easi-print-only'
-        );
+        expect(getByTestId('Tab3-tab')).toHaveClass('easi-tabs__tab--selected');
+        expect(getByTestId('Tab3-panel')).not.toHaveClass('easi-print-only');
       });
     });
   });
