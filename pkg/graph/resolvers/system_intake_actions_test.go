@@ -308,26 +308,6 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 }
 
 func (s *ResolverSuite) TestIssueLCID() {
-	// TODO - remove this commented block once I'm done
-	/*
-		// update workflow state
-		intake.Step = models.SystemIntakeStepDECISION
-		intake.State = models.SystemIntakeStateCLOSED
-		intake.DecisionState = models.SIDSLcidIssued
-
-		// update LCID-related fields
-		intake.LifecycleID = null.StringFrom(newLCID)
-		intake.LifecycleExpiresAt = &input.ExpiresAt
-		intake.LifecycleScope = &input.Scope
-		intake.DecisionNextSteps = &input.NextSteps
-		intake.TRBFollowUpRecommendation = &input.TrbFollowUp
-		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
-
-		// update other fields
-		updatedTime := time.Now()
-		intake.UpdatedAt = &updatedTime
-	*/
-
 	s.Run("When LCID is provided, that LCID is set on the intake", func() {
 		newIntake := s.createNewIntake()
 
@@ -370,42 +350,58 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.NotEmpty(updatedIntake.LifecycleID.ValueOrZero())
 	})
 
-	s.Run("Issuing an LCID sets workflow state correctly", func() {
+	s.Run("Issuing an LCID sets the correct fields, creates an action, and disallows further issuing on the intake", func() {
+		// create intake with nontrivial existing workflow state
 		newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+			// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 			Status:      models.SystemIntakeStatusBIZCASECHANGESNEEDED, // edits requested on draft biz case
 			RequestType: models.SystemIntakeRequestTypeNEW,
 
 			State:         models.SystemIntakeStateOPEN, // default
 			DecisionState: models.SIDSNoDecision,        // default
 
-			// nontrivial existing workflow state
 			Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 			RequestFormState:       models.SIRFSSubmitted,
 			DraftBusinessCaseState: models.SIRFSEditsRequested,
 		})
 		s.NoError(err)
 
+		costBaseline := "test cost baseline"
 		input := model.SystemIntakeIssueLCIDInput{
-			Lcid: nil,
-
 			// set required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      time.Now().AddDate(2, 0, 0),
 			Scope:          "test scope",
 			NextSteps:      "test next steps",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
+
+			// optional fields
+			CostBaseline: &costBaseline,
 		}
 
 		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
 		s.NoError(err)
 
+		// check workflow state
 		s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
 		s.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
 		s.EqualValues(models.SIDSLcidIssued, updatedIntake.DecisionState)
-	})
 
-	// TODO - check fields from input (LifecycleExpiresAt, scope, next steps, TRB follow up, cost baseline)
-	// don't need to check UpdatedAt - not deterministic
+		// check fields from input
+		s.EqualValues(input.Scope, *updatedIntake.LifecycleScope)
+		s.EqualValues(input.NextSteps, *updatedIntake.DecisionNextSteps)
+		s.EqualValues(input.TrbFollowUp, *updatedIntake.TRBFollowUpRecommendation)
+		s.EqualValues(*input.CostBaseline, updatedIntake.LifecycleCostBaseline.ValueOrZero())
+
+		// expiration date requires some special test code;
+		// - EqualValues() doesn't necessarily work, because the timezones might be different
+		// - using the .Equal() method from time.Time doesn't work, because input.ExpiresAt has more precision than updatedIntake.LifecycleExpiresAt
+		// - using EqualValues() with input.ExpiresAt.Date() and updatedIntake.LifecycleExpiresAt.Date() doesn't work, because those functions both return triples
+		// we just care about the date, so check that, and check year/month/day individually
+		s.EqualValues(input.ExpiresAt.Year(), updatedIntake.LifecycleExpiresAt.Year())
+		s.EqualValues(input.ExpiresAt.Month(), updatedIntake.LifecycleExpiresAt.Month())
+		s.EqualValues(input.ExpiresAt.Day(), updatedIntake.LifecycleExpiresAt.Day())
+	})
 
 	// TODO - should create action
 
