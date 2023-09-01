@@ -212,7 +212,7 @@ type BadRequestError struct {
 // Error provides the error as a string
 func (e *BadRequestError) Error() string {
 	return fmt.Sprintf(
-		"Request could not understood: %v",
+		"Invalid request: %v",
 		e.Err,
 	)
 }
