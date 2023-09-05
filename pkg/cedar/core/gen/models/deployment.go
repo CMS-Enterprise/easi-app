@@ -376,6 +376,11 @@ func (m *Deployment) ContextValidate(ctx context.Context, formats strfmt.Registr
 func (m *Deployment) contextValidateDataCenter(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DataCenter != nil {
+
+		if swag.IsZero(m.DataCenter) { // not required
+			return nil
+		}
+
 		if err := m.DataCenter.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("DataCenter")

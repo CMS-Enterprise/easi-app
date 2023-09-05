@@ -100,6 +100,11 @@ func (m *BudgetFindResponse) contextValidateBudgets(ctx context.Context, formats
 	for i := 0; i < len(m.Budgets); i++ {
 
 		if m.Budgets[i] != nil {
+
+			if swag.IsZero(m.Budgets[i]) { // not required
+				return nil
+			}
+
 			if err := m.Budgets[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Budgets" + "." + strconv.Itoa(i))

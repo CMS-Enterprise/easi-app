@@ -497,6 +497,7 @@ type SystemIntakeAction struct {
 	SystemIntake         *models.SystemIntake              `json:"systemIntake"`
 	Type                 SystemIntakeActionType            `json:"type"`
 	Actor                *SystemIntakeActionActor          `json:"actor"`
+	Step                 *models.SystemIntakeStep          `json:"step"`
 	Feedback             *models.HTML                      `json:"feedback"`
 	LcidExpirationChange *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange"`
 	CreatedAt            time.Time                         `json:"createdAt"`
@@ -530,6 +531,15 @@ type SystemIntakeBusinessOwner struct {
 type SystemIntakeBusinessOwnerInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Input for creating a Close Request Action in Admin Actions v2
+type SystemIntakeCloseRequestInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	Reason                 *models.HTML                        `json:"reason"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	AdminNotes             *models.HTML                        `json:"adminNotes"`
 }
 
 // Represents a contact in OIT who is collaborating with the user
@@ -659,6 +669,15 @@ type SystemIntakeLCIDExpirationChange struct {
 	NewCostBaseline      *string      `json:"newCostBaseline"`
 }
 
+// Input for creating a Not an IT Governance Request Action in Admin Actions v2
+type SystemIntakeNotITGovReqInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	Reason                 *models.HTML                        `json:"reason"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	AdminNotes             *models.HTML                        `json:"adminNotes"`
+}
+
 // The author of a note added to a system request
 type SystemIntakeNoteAuthor struct {
 	Eua  string `json:"eua"`
@@ -698,6 +717,15 @@ type SystemIntakeRejectIntakeInput struct {
 	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	AdminNote              *models.HTML                        `json:"adminNote"`
+}
+
+// Input for creating a Reopen Request Action in Admin Actions v2
+type SystemIntakeReopenRequestInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	Reason                 *models.HTML                        `json:"reason"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	AdminNotes             *models.HTML                        `json:"adminNotes"`
 }
 
 // Input for creating a Request Edits Action in Admin Actions v2
@@ -996,6 +1024,9 @@ type SystemIntakeActionType string
 const (
 	SystemIntakeActionTypeProgressToNewStep              SystemIntakeActionType = "PROGRESS_TO_NEW_STEP"
 	SystemIntakeActionTypeRequestEdits                   SystemIntakeActionType = "REQUEST_EDITS"
+	SystemIntakeActionTypeNotGovernance                  SystemIntakeActionType = "NOT_GOVERNANCE"
+	SystemIntakeActionTypeCloseRequest                   SystemIntakeActionType = "CLOSE_REQUEST"
+	SystemIntakeActionTypeReopenRequest                  SystemIntakeActionType = "REOPEN_REQUEST"
 	SystemIntakeActionTypeIssueLcid                      SystemIntakeActionType = "ISSUE_LCID"
 	SystemIntakeActionTypeBizCaseNeedsChanges            SystemIntakeActionType = "BIZ_CASE_NEEDS_CHANGES"
 	SystemIntakeActionTypeCreateBizCase                  SystemIntakeActionType = "CREATE_BIZ_CASE"
@@ -1020,6 +1051,9 @@ const (
 var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeProgressToNewStep,
 	SystemIntakeActionTypeRequestEdits,
+	SystemIntakeActionTypeNotGovernance,
+	SystemIntakeActionTypeCloseRequest,
+	SystemIntakeActionTypeReopenRequest,
 	SystemIntakeActionTypeIssueLcid,
 	SystemIntakeActionTypeBizCaseNeedsChanges,
 	SystemIntakeActionTypeCreateBizCase,
@@ -1043,7 +1077,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 
 func (e SystemIntakeActionType) IsValid() bool {
 	switch e {
-	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeReject, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase, SystemIntakeActionTypeSubmitIntake:
+	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeReject, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase, SystemIntakeActionTypeSubmitIntake:
 		return true
 	}
 	return false

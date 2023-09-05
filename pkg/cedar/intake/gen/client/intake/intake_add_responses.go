@@ -48,7 +48,7 @@ func (o *IntakeAddReader) ReadResponse(response runtime.ClientResponse, consumer
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /intake] intakeAdd", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewIntakeAddOK() *IntakeAddOK {
 	return &IntakeAddOK{}
 }
 
-/* IntakeAddOK describes a response with status code 200, with default header values.
+/*
+IntakeAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type IntakeAddOK struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this intake add o k response has a 2xx status code
+func (o *IntakeAddOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this intake add o k response has a 3xx status code
+func (o *IntakeAddOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this intake add o k response has a 4xx status code
+func (o *IntakeAddOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this intake add o k response has a 5xx status code
+func (o *IntakeAddOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this intake add o k response a status code equal to that given
+func (o *IntakeAddOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the intake add o k response
+func (o *IntakeAddOK) Code() int {
+	return 200
+}
+
 func (o *IntakeAddOK) Error() string {
 	return fmt.Sprintf("[POST /intake][%d] intakeAddOK  %+v", 200, o.Payload)
 }
+
+func (o *IntakeAddOK) String() string {
+	return fmt.Sprintf("[POST /intake][%d] intakeAddOK  %+v", 200, o.Payload)
+}
+
 func (o *IntakeAddOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewIntakeAddBadRequest() *IntakeAddBadRequest {
 	return &IntakeAddBadRequest{}
 }
 
-/* IntakeAddBadRequest describes a response with status code 400, with default header values.
+/*
+IntakeAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type IntakeAddBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this intake add bad request response has a 2xx status code
+func (o *IntakeAddBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this intake add bad request response has a 3xx status code
+func (o *IntakeAddBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this intake add bad request response has a 4xx status code
+func (o *IntakeAddBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this intake add bad request response has a 5xx status code
+func (o *IntakeAddBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this intake add bad request response a status code equal to that given
+func (o *IntakeAddBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the intake add bad request response
+func (o *IntakeAddBadRequest) Code() int {
+	return 400
+}
+
 func (o *IntakeAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /intake][%d] intakeAddBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *IntakeAddBadRequest) String() string {
+	return fmt.Sprintf("[POST /intake][%d] intakeAddBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *IntakeAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewIntakeAddUnauthorized() *IntakeAddUnauthorized {
 	return &IntakeAddUnauthorized{}
 }
 
-/* IntakeAddUnauthorized describes a response with status code 401, with default header values.
+/*
+IntakeAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type IntakeAddUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this intake add unauthorized response has a 2xx status code
+func (o *IntakeAddUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this intake add unauthorized response has a 3xx status code
+func (o *IntakeAddUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this intake add unauthorized response has a 4xx status code
+func (o *IntakeAddUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this intake add unauthorized response has a 5xx status code
+func (o *IntakeAddUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this intake add unauthorized response a status code equal to that given
+func (o *IntakeAddUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the intake add unauthorized response
+func (o *IntakeAddUnauthorized) Code() int {
+	return 401
+}
+
 func (o *IntakeAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /intake][%d] intakeAddUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *IntakeAddUnauthorized) String() string {
+	return fmt.Sprintf("[POST /intake][%d] intakeAddUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *IntakeAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewIntakeAddInternalServerError() *IntakeAddInternalServerError {
 	return &IntakeAddInternalServerError{}
 }
 
-/* IntakeAddInternalServerError describes a response with status code 500, with default header values.
+/*
+IntakeAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type IntakeAddInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this intake add internal server error response has a 2xx status code
+func (o *IntakeAddInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this intake add internal server error response has a 3xx status code
+func (o *IntakeAddInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this intake add internal server error response has a 4xx status code
+func (o *IntakeAddInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this intake add internal server error response has a 5xx status code
+func (o *IntakeAddInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this intake add internal server error response a status code equal to that given
+func (o *IntakeAddInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the intake add internal server error response
+func (o *IntakeAddInternalServerError) Code() int {
+	return 500
+}
+
 func (o *IntakeAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /intake][%d] intakeAddInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *IntakeAddInternalServerError) String() string {
+	return fmt.Sprintf("[POST /intake][%d] intakeAddInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *IntakeAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

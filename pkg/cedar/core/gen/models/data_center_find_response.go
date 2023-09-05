@@ -100,6 +100,11 @@ func (m *DataCenterFindResponse) contextValidateDataCenters(ctx context.Context,
 	for i := 0; i < len(m.DataCenters); i++ {
 
 		if m.DataCenters[i] != nil {
+
+			if swag.IsZero(m.DataCenters[i]) { // not required
+				return nil
+			}
+
 			if err := m.DataCenters[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("DataCenters" + "." + strconv.Itoa(i))

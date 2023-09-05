@@ -1179,6 +1179,45 @@ func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Cont
 	}, err
 }
 
+// CreateSystemIntakeActionReopenRequest is the resolver for the createSystemIntakeActionReopenRequest field.
+func (r *mutationResolver) CreateSystemIntakeActionReopenRequest(ctx context.Context, input model.SystemIntakeReopenRequestInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.CreateSystemIntakeActionReopenRequest(
+		ctx,
+		r.store,
+		r.service.FetchUserInfo,
+		input,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+// CreateSystemIntakeActionCloseRequest is the resolver for the createSystemIntakeActionCloseRequest field.
+func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Context, input model.SystemIntakeCloseRequestInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.CreateSystemIntakeActionCloseRequest(
+		ctx,
+		r.store,
+		r.service.FetchUserInfo,
+		input,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+// CreateSystemIntakeActionNotITGovRequest is the resolver for the createSystemIntakeActionNotITGovRequest field.
+func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.Context, input model.SystemIntakeNotITGovReqInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.CreateSystemIntakeActionNotITGovRequest(
+		ctx,
+		r.store,
+		r.service.FetchUserInfo,
+		input,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.service.CreateActionUpdateStatus(
@@ -2518,6 +2557,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 	for _, action := range actions {
 		graphAction := model.SystemIntakeAction{
 			ID:   action.ID,
+			Step: action.Step,
 			Type: model.SystemIntakeActionType(action.ActionType),
 			Actor: &model.SystemIntakeActionActor{
 				Name:  action.ActorName,

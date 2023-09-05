@@ -48,7 +48,7 @@ func (o *EnumerationFindListReader) ReadResponse(response runtime.ClientResponse
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /enumeration] enumerationFindList", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewEnumerationFindListOK() *EnumerationFindListOK {
 	return &EnumerationFindListOK{}
 }
 
-/* EnumerationFindListOK describes a response with status code 200, with default header values.
+/*
+EnumerationFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type EnumerationFindListOK struct {
 	Payload *models.EnumerationFindResponse
 }
 
+// IsSuccess returns true when this enumeration find list o k response has a 2xx status code
+func (o *EnumerationFindListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this enumeration find list o k response has a 3xx status code
+func (o *EnumerationFindListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this enumeration find list o k response has a 4xx status code
+func (o *EnumerationFindListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this enumeration find list o k response has a 5xx status code
+func (o *EnumerationFindListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this enumeration find list o k response a status code equal to that given
+func (o *EnumerationFindListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the enumeration find list o k response
+func (o *EnumerationFindListOK) Code() int {
+	return 200
+}
+
 func (o *EnumerationFindListOK) Error() string {
 	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListOK  %+v", 200, o.Payload)
 }
+
+func (o *EnumerationFindListOK) String() string {
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListOK  %+v", 200, o.Payload)
+}
+
 func (o *EnumerationFindListOK) GetPayload() *models.EnumerationFindResponse {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewEnumerationFindListBadRequest() *EnumerationFindListBadRequest {
 	return &EnumerationFindListBadRequest{}
 }
 
-/* EnumerationFindListBadRequest describes a response with status code 400, with default header values.
+/*
+EnumerationFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type EnumerationFindListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this enumeration find list bad request response has a 2xx status code
+func (o *EnumerationFindListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this enumeration find list bad request response has a 3xx status code
+func (o *EnumerationFindListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this enumeration find list bad request response has a 4xx status code
+func (o *EnumerationFindListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this enumeration find list bad request response has a 5xx status code
+func (o *EnumerationFindListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this enumeration find list bad request response a status code equal to that given
+func (o *EnumerationFindListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the enumeration find list bad request response
+func (o *EnumerationFindListBadRequest) Code() int {
+	return 400
+}
+
 func (o *EnumerationFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *EnumerationFindListBadRequest) String() string {
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *EnumerationFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewEnumerationFindListUnauthorized() *EnumerationFindListUnauthorized {
 	return &EnumerationFindListUnauthorized{}
 }
 
-/* EnumerationFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+EnumerationFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type EnumerationFindListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this enumeration find list unauthorized response has a 2xx status code
+func (o *EnumerationFindListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this enumeration find list unauthorized response has a 3xx status code
+func (o *EnumerationFindListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this enumeration find list unauthorized response has a 4xx status code
+func (o *EnumerationFindListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this enumeration find list unauthorized response has a 5xx status code
+func (o *EnumerationFindListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this enumeration find list unauthorized response a status code equal to that given
+func (o *EnumerationFindListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the enumeration find list unauthorized response
+func (o *EnumerationFindListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *EnumerationFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *EnumerationFindListUnauthorized) String() string {
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *EnumerationFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewEnumerationFindListInternalServerError() *EnumerationFindListInternalSer
 	return &EnumerationFindListInternalServerError{}
 }
 
-/* EnumerationFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+EnumerationFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type EnumerationFindListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this enumeration find list internal server error response has a 2xx status code
+func (o *EnumerationFindListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this enumeration find list internal server error response has a 3xx status code
+func (o *EnumerationFindListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this enumeration find list internal server error response has a 4xx status code
+func (o *EnumerationFindListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this enumeration find list internal server error response has a 5xx status code
+func (o *EnumerationFindListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this enumeration find list internal server error response a status code equal to that given
+func (o *EnumerationFindListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the enumeration find list internal server error response
+func (o *EnumerationFindListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *EnumerationFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *EnumerationFindListInternalServerError) String() string {
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *EnumerationFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

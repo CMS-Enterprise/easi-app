@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-  ThreatFindList retrieves a list of threats based on a comma delimited list of object i ds
+ThreatFindList retrieves a list of threats based on a comma delimited list of object i ds
 
-  Retrieve a list of threats (like a Plan of Actions and Milestones POA&M), for a specific object (like an ATO) using the object's unique ID.
+Retrieve a list of threats (like a Plan of Actions and Milestones POA&M), for a specific object (like an ATO) using the object's unique ID.
 */
 func (a *Client) ThreatFindList(params *ThreatFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ThreatFindListOK, error) {
 	// TODO: Validate the params before sending

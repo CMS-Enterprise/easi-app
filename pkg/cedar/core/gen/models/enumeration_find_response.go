@@ -100,6 +100,11 @@ func (m *EnumerationFindResponse) contextValidateEnumerations(ctx context.Contex
 	for i := 0; i < len(m.Enumerations); i++ {
 
 		if m.Enumerations[i] != nil {
+
+			if swag.IsZero(m.Enumerations[i]) { // not required
+				return nil
+			}
+
 			if err := m.Enumerations[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Enumerations" + "." + strconv.Itoa(i))

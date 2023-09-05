@@ -52,10 +52,12 @@ func NewSupportContactFindListParamsWithHTTPClient(client *http.Client) *Support
 	}
 }
 
-/* SupportContactFindListParams contains all the parameters to send to the API endpoint
-   for the support contact find list operation.
+/*
+SupportContactFindListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the support contact find list operation.
+
+	Typically these are written to a http.Request.
 */
 type SupportContactFindListParams struct {
 

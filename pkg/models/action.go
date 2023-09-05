@@ -14,6 +14,9 @@ type ActionType string
 const (
 	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
 	ActionTypeREQUESTEDITS      ActionType = "REQUEST_EDITS"
+	ActionTypeCLOSEREQUEST      ActionType = "CLOSE_REQUEST"
+	ActionTypeREOPENREQUEST     ActionType = "REOPEN_REQUEST"
+	ActionTypeNOTITGOVREQUEST   ActionType = "NOT_GOVERNANCE"
 )
 
 // v1/v2 actions - originally from v1, still used in IT Gov v2
