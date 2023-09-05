@@ -9,9 +9,14 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   const form = useForm<SystemIntakeActionFields>();
 
-  const { handleSubmit } = form;
+  const { handleSubmit, setError } = form;
 
-  const submit = handleSubmit(() => null);
+  const submit = handleSubmit(() => {
+    // Set root error from failed mutation
+    setError('root', { message: t('error') });
+
+    // mutate().catch(e => setError('root', , { message: t('error') }))
+  });
 
   return (
     <FormProvider<SystemIntakeActionFields> {...form}>
