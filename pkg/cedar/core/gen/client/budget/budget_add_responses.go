@@ -48,7 +48,7 @@ func (o *BudgetAddReader) ReadResponse(response runtime.ClientResponse, consumer
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /budget] budgetAdd", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewBudgetAddOK() *BudgetAddOK {
 	return &BudgetAddOK{}
 }
 
-/* BudgetAddOK describes a response with status code 200, with default header values.
+/*
+BudgetAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type BudgetAddOK struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this budget add o k response has a 2xx status code
+func (o *BudgetAddOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this budget add o k response has a 3xx status code
+func (o *BudgetAddOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this budget add o k response has a 4xx status code
+func (o *BudgetAddOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this budget add o k response has a 5xx status code
+func (o *BudgetAddOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this budget add o k response a status code equal to that given
+func (o *BudgetAddOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the budget add o k response
+func (o *BudgetAddOK) Code() int {
+	return 200
+}
+
 func (o *BudgetAddOK) Error() string {
 	return fmt.Sprintf("[POST /budget][%d] budgetAddOK  %+v", 200, o.Payload)
 }
+
+func (o *BudgetAddOK) String() string {
+	return fmt.Sprintf("[POST /budget][%d] budgetAddOK  %+v", 200, o.Payload)
+}
+
 func (o *BudgetAddOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewBudgetAddBadRequest() *BudgetAddBadRequest {
 	return &BudgetAddBadRequest{}
 }
 
-/* BudgetAddBadRequest describes a response with status code 400, with default header values.
+/*
+BudgetAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type BudgetAddBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this budget add bad request response has a 2xx status code
+func (o *BudgetAddBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this budget add bad request response has a 3xx status code
+func (o *BudgetAddBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this budget add bad request response has a 4xx status code
+func (o *BudgetAddBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this budget add bad request response has a 5xx status code
+func (o *BudgetAddBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this budget add bad request response a status code equal to that given
+func (o *BudgetAddBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the budget add bad request response
+func (o *BudgetAddBadRequest) Code() int {
+	return 400
+}
+
 func (o *BudgetAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /budget][%d] budgetAddBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *BudgetAddBadRequest) String() string {
+	return fmt.Sprintf("[POST /budget][%d] budgetAddBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *BudgetAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewBudgetAddUnauthorized() *BudgetAddUnauthorized {
 	return &BudgetAddUnauthorized{}
 }
 
-/* BudgetAddUnauthorized describes a response with status code 401, with default header values.
+/*
+BudgetAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type BudgetAddUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this budget add unauthorized response has a 2xx status code
+func (o *BudgetAddUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this budget add unauthorized response has a 3xx status code
+func (o *BudgetAddUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this budget add unauthorized response has a 4xx status code
+func (o *BudgetAddUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this budget add unauthorized response has a 5xx status code
+func (o *BudgetAddUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this budget add unauthorized response a status code equal to that given
+func (o *BudgetAddUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the budget add unauthorized response
+func (o *BudgetAddUnauthorized) Code() int {
+	return 401
+}
+
 func (o *BudgetAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /budget][%d] budgetAddUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *BudgetAddUnauthorized) String() string {
+	return fmt.Sprintf("[POST /budget][%d] budgetAddUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *BudgetAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewBudgetAddInternalServerError() *BudgetAddInternalServerError {
 	return &BudgetAddInternalServerError{}
 }
 
-/* BudgetAddInternalServerError describes a response with status code 500, with default header values.
+/*
+BudgetAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type BudgetAddInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this budget add internal server error response has a 2xx status code
+func (o *BudgetAddInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this budget add internal server error response has a 3xx status code
+func (o *BudgetAddInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this budget add internal server error response has a 4xx status code
+func (o *BudgetAddInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this budget add internal server error response has a 5xx status code
+func (o *BudgetAddInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this budget add internal server error response a status code equal to that given
+func (o *BudgetAddInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the budget add internal server error response
+func (o *BudgetAddInternalServerError) Code() int {
+	return 500
+}
+
 func (o *BudgetAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /budget][%d] budgetAddInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *BudgetAddInternalServerError) String() string {
+	return fmt.Sprintf("[POST /budget][%d] budgetAddInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *BudgetAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

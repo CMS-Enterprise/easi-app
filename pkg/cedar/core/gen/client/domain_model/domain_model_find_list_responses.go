@@ -48,7 +48,7 @@ func (o *DomainModelFindListReader) ReadResponse(response runtime.ClientResponse
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /domainModel] domainModelFindList", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewDomainModelFindListOK() *DomainModelFindListOK {
 	return &DomainModelFindListOK{}
 }
 
-/* DomainModelFindListOK describes a response with status code 200, with default header values.
+/*
+DomainModelFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type DomainModelFindListOK struct {
 	Payload models.DomainModelFindResponse
 }
 
+// IsSuccess returns true when this domain model find list o k response has a 2xx status code
+func (o *DomainModelFindListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this domain model find list o k response has a 3xx status code
+func (o *DomainModelFindListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this domain model find list o k response has a 4xx status code
+func (o *DomainModelFindListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this domain model find list o k response has a 5xx status code
+func (o *DomainModelFindListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this domain model find list o k response a status code equal to that given
+func (o *DomainModelFindListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the domain model find list o k response
+func (o *DomainModelFindListOK) Code() int {
+	return 200
+}
+
 func (o *DomainModelFindListOK) Error() string {
 	return fmt.Sprintf("[GET /domainModel][%d] domainModelFindListOK  %+v", 200, o.Payload)
 }
+
+func (o *DomainModelFindListOK) String() string {
+	return fmt.Sprintf("[GET /domainModel][%d] domainModelFindListOK  %+v", 200, o.Payload)
+}
+
 func (o *DomainModelFindListOK) GetPayload() models.DomainModelFindResponse {
 	return o.Payload
 }
@@ -87,7 +123,8 @@ func NewDomainModelFindListBadRequest() *DomainModelFindListBadRequest {
 	return &DomainModelFindListBadRequest{}
 }
 
-/* DomainModelFindListBadRequest describes a response with status code 400, with default header values.
+/*
+DomainModelFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -95,9 +132,44 @@ type DomainModelFindListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this domain model find list bad request response has a 2xx status code
+func (o *DomainModelFindListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this domain model find list bad request response has a 3xx status code
+func (o *DomainModelFindListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this domain model find list bad request response has a 4xx status code
+func (o *DomainModelFindListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this domain model find list bad request response has a 5xx status code
+func (o *DomainModelFindListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this domain model find list bad request response a status code equal to that given
+func (o *DomainModelFindListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the domain model find list bad request response
+func (o *DomainModelFindListBadRequest) Code() int {
+	return 400
+}
+
 func (o *DomainModelFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /domainModel][%d] domainModelFindListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *DomainModelFindListBadRequest) String() string {
+	return fmt.Sprintf("[GET /domainModel][%d] domainModelFindListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *DomainModelFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -119,7 +191,8 @@ func NewDomainModelFindListUnauthorized() *DomainModelFindListUnauthorized {
 	return &DomainModelFindListUnauthorized{}
 }
 
-/* DomainModelFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+DomainModelFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -127,9 +200,44 @@ type DomainModelFindListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this domain model find list unauthorized response has a 2xx status code
+func (o *DomainModelFindListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this domain model find list unauthorized response has a 3xx status code
+func (o *DomainModelFindListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this domain model find list unauthorized response has a 4xx status code
+func (o *DomainModelFindListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this domain model find list unauthorized response has a 5xx status code
+func (o *DomainModelFindListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this domain model find list unauthorized response a status code equal to that given
+func (o *DomainModelFindListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the domain model find list unauthorized response
+func (o *DomainModelFindListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *DomainModelFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /domainModel][%d] domainModelFindListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *DomainModelFindListUnauthorized) String() string {
+	return fmt.Sprintf("[GET /domainModel][%d] domainModelFindListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *DomainModelFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -151,7 +259,8 @@ func NewDomainModelFindListInternalServerError() *DomainModelFindListInternalSer
 	return &DomainModelFindListInternalServerError{}
 }
 
-/* DomainModelFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+DomainModelFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -159,9 +268,44 @@ type DomainModelFindListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this domain model find list internal server error response has a 2xx status code
+func (o *DomainModelFindListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this domain model find list internal server error response has a 3xx status code
+func (o *DomainModelFindListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this domain model find list internal server error response has a 4xx status code
+func (o *DomainModelFindListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this domain model find list internal server error response has a 5xx status code
+func (o *DomainModelFindListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this domain model find list internal server error response a status code equal to that given
+func (o *DomainModelFindListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the domain model find list internal server error response
+func (o *DomainModelFindListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *DomainModelFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /domainModel][%d] domainModelFindListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *DomainModelFindListInternalServerError) String() string {
+	return fmt.Sprintf("[GET /domainModel][%d] domainModelFindListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *DomainModelFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

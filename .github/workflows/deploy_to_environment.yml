@@ -38,7 +38,7 @@ jobs:
       APP_ENV: ${{ inputs.env }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials
@@ -86,7 +86,7 @@ jobs:
       APP_ENV: ${{ inputs.env }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials
@@ -124,7 +124,7 @@ jobs:
       APP_ENV: ${{ inputs.env }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials

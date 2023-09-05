@@ -53,10 +53,12 @@ func NewSupportContactDeleteListParamsWithHTTPClient(client *http.Client) *Suppo
 	}
 }
 
-/* SupportContactDeleteListParams contains all the parameters to send to the API endpoint
-   for the support contact delete list operation.
+/*
+SupportContactDeleteListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the support contact delete list operation.
+
+	Typically these are written to a http.Request.
 */
 type SupportContactDeleteListParams struct {
 

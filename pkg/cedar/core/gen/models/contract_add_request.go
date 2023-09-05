@@ -85,6 +85,11 @@ func (m *ContractAddRequest) contextValidateContracts(ctx context.Context, forma
 	for i := 0; i < len(m.Contracts); i++ {
 
 		if m.Contracts[i] != nil {
+
+			if swag.IsZero(m.Contracts[i]) { // not required
+				return nil
+			}
+
 			if err := m.Contracts[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Contracts" + "." + strconv.Itoa(i))
