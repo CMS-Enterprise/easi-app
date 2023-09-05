@@ -9591,9 +9591,7 @@ type Mutation {
   createSystemIntakeActionRejectIntake(
     input: SystemIntakeRejectIntakeInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  createSystemIntakeActionReopenRequest(
+   createSystemIntakeActionReopenRequest(
     input: SystemIntakeReopenRequestInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionCloseRequest(
@@ -9602,6 +9600,8 @@ type Mutation {
   createSystemIntakeActionNotITGovRequest(
     input: SystemIntakeNotITGovReqInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -9610,6 +9610,7 @@ type Mutation {
   createSystemIntakeActionBusinessCaseNeedsChanges(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  
   createSystemIntakeActionGuideReceievedClose(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
