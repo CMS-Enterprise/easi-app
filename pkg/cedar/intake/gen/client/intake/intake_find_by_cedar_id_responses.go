@@ -48,7 +48,7 @@ func (o *IntakeFindByCedarIDReader) ReadResponse(response runtime.ClientResponse
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /intake/cedar/{id}] intakeFindByCedarId", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewIntakeFindByCedarIDOK() *IntakeFindByCedarIDOK {
 	return &IntakeFindByCedarIDOK{}
 }
 
-/* IntakeFindByCedarIDOK describes a response with status code 200, with default header values.
+/*
+IntakeFindByCedarIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type IntakeFindByCedarIDOK struct {
 	Payload *models.Intake
 }
 
+// IsSuccess returns true when this intake find by cedar Id o k response has a 2xx status code
+func (o *IntakeFindByCedarIDOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this intake find by cedar Id o k response has a 3xx status code
+func (o *IntakeFindByCedarIDOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this intake find by cedar Id o k response has a 4xx status code
+func (o *IntakeFindByCedarIDOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this intake find by cedar Id o k response has a 5xx status code
+func (o *IntakeFindByCedarIDOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this intake find by cedar Id o k response a status code equal to that given
+func (o *IntakeFindByCedarIDOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the intake find by cedar Id o k response
+func (o *IntakeFindByCedarIDOK) Code() int {
+	return 200
+}
+
 func (o *IntakeFindByCedarIDOK) Error() string {
 	return fmt.Sprintf("[GET /intake/cedar/{id}][%d] intakeFindByCedarIdOK  %+v", 200, o.Payload)
 }
+
+func (o *IntakeFindByCedarIDOK) String() string {
+	return fmt.Sprintf("[GET /intake/cedar/{id}][%d] intakeFindByCedarIdOK  %+v", 200, o.Payload)
+}
+
 func (o *IntakeFindByCedarIDOK) GetPayload() *models.Intake {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewIntakeFindByCedarIDBadRequest() *IntakeFindByCedarIDBadRequest {
 	return &IntakeFindByCedarIDBadRequest{}
 }
 
-/* IntakeFindByCedarIDBadRequest describes a response with status code 400, with default header values.
+/*
+IntakeFindByCedarIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type IntakeFindByCedarIDBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this intake find by cedar Id bad request response has a 2xx status code
+func (o *IntakeFindByCedarIDBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this intake find by cedar Id bad request response has a 3xx status code
+func (o *IntakeFindByCedarIDBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this intake find by cedar Id bad request response has a 4xx status code
+func (o *IntakeFindByCedarIDBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this intake find by cedar Id bad request response has a 5xx status code
+func (o *IntakeFindByCedarIDBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this intake find by cedar Id bad request response a status code equal to that given
+func (o *IntakeFindByCedarIDBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the intake find by cedar Id bad request response
+func (o *IntakeFindByCedarIDBadRequest) Code() int {
+	return 400
+}
+
 func (o *IntakeFindByCedarIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /intake/cedar/{id}][%d] intakeFindByCedarIdBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *IntakeFindByCedarIDBadRequest) String() string {
+	return fmt.Sprintf("[GET /intake/cedar/{id}][%d] intakeFindByCedarIdBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *IntakeFindByCedarIDBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewIntakeFindByCedarIDUnauthorized() *IntakeFindByCedarIDUnauthorized {
 	return &IntakeFindByCedarIDUnauthorized{}
 }
 
-/* IntakeFindByCedarIDUnauthorized describes a response with status code 401, with default header values.
+/*
+IntakeFindByCedarIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type IntakeFindByCedarIDUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this intake find by cedar Id unauthorized response has a 2xx status code
+func (o *IntakeFindByCedarIDUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this intake find by cedar Id unauthorized response has a 3xx status code
+func (o *IntakeFindByCedarIDUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this intake find by cedar Id unauthorized response has a 4xx status code
+func (o *IntakeFindByCedarIDUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this intake find by cedar Id unauthorized response has a 5xx status code
+func (o *IntakeFindByCedarIDUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this intake find by cedar Id unauthorized response a status code equal to that given
+func (o *IntakeFindByCedarIDUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the intake find by cedar Id unauthorized response
+func (o *IntakeFindByCedarIDUnauthorized) Code() int {
+	return 401
+}
+
 func (o *IntakeFindByCedarIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /intake/cedar/{id}][%d] intakeFindByCedarIdUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *IntakeFindByCedarIDUnauthorized) String() string {
+	return fmt.Sprintf("[GET /intake/cedar/{id}][%d] intakeFindByCedarIdUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *IntakeFindByCedarIDUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewIntakeFindByCedarIDInternalServerError() *IntakeFindByCedarIDInternalSer
 	return &IntakeFindByCedarIDInternalServerError{}
 }
 
-/* IntakeFindByCedarIDInternalServerError describes a response with status code 500, with default header values.
+/*
+IntakeFindByCedarIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type IntakeFindByCedarIDInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this intake find by cedar Id internal server error response has a 2xx status code
+func (o *IntakeFindByCedarIDInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this intake find by cedar Id internal server error response has a 3xx status code
+func (o *IntakeFindByCedarIDInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this intake find by cedar Id internal server error response has a 4xx status code
+func (o *IntakeFindByCedarIDInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this intake find by cedar Id internal server error response has a 5xx status code
+func (o *IntakeFindByCedarIDInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this intake find by cedar Id internal server error response a status code equal to that given
+func (o *IntakeFindByCedarIDInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the intake find by cedar Id internal server error response
+func (o *IntakeFindByCedarIDInternalServerError) Code() int {
+	return 500
+}
+
 func (o *IntakeFindByCedarIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /intake/cedar/{id}][%d] intakeFindByCedarIdInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *IntakeFindByCedarIDInternalServerError) String() string {
+	return fmt.Sprintf("[GET /intake/cedar/{id}][%d] intakeFindByCedarIdInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *IntakeFindByCedarIDInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

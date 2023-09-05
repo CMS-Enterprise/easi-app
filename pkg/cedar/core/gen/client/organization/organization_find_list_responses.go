@@ -48,7 +48,7 @@ func (o *OrganizationFindListReader) ReadResponse(response runtime.ClientRespons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /organization] organizationFindList", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewOrganizationFindListOK() *OrganizationFindListOK {
 	return &OrganizationFindListOK{}
 }
 
-/* OrganizationFindListOK describes a response with status code 200, with default header values.
+/*
+OrganizationFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type OrganizationFindListOK struct {
 	Payload *models.OrganizationFindResponse
 }
 
+// IsSuccess returns true when this organization find list o k response has a 2xx status code
+func (o *OrganizationFindListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this organization find list o k response has a 3xx status code
+func (o *OrganizationFindListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this organization find list o k response has a 4xx status code
+func (o *OrganizationFindListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this organization find list o k response has a 5xx status code
+func (o *OrganizationFindListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this organization find list o k response a status code equal to that given
+func (o *OrganizationFindListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the organization find list o k response
+func (o *OrganizationFindListOK) Code() int {
+	return 200
+}
+
 func (o *OrganizationFindListOK) Error() string {
 	return fmt.Sprintf("[GET /organization][%d] organizationFindListOK  %+v", 200, o.Payload)
 }
+
+func (o *OrganizationFindListOK) String() string {
+	return fmt.Sprintf("[GET /organization][%d] organizationFindListOK  %+v", 200, o.Payload)
+}
+
 func (o *OrganizationFindListOK) GetPayload() *models.OrganizationFindResponse {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewOrganizationFindListBadRequest() *OrganizationFindListBadRequest {
 	return &OrganizationFindListBadRequest{}
 }
 
-/* OrganizationFindListBadRequest describes a response with status code 400, with default header values.
+/*
+OrganizationFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type OrganizationFindListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this organization find list bad request response has a 2xx status code
+func (o *OrganizationFindListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this organization find list bad request response has a 3xx status code
+func (o *OrganizationFindListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this organization find list bad request response has a 4xx status code
+func (o *OrganizationFindListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this organization find list bad request response has a 5xx status code
+func (o *OrganizationFindListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this organization find list bad request response a status code equal to that given
+func (o *OrganizationFindListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the organization find list bad request response
+func (o *OrganizationFindListBadRequest) Code() int {
+	return 400
+}
+
 func (o *OrganizationFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /organization][%d] organizationFindListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *OrganizationFindListBadRequest) String() string {
+	return fmt.Sprintf("[GET /organization][%d] organizationFindListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *OrganizationFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewOrganizationFindListUnauthorized() *OrganizationFindListUnauthorized {
 	return &OrganizationFindListUnauthorized{}
 }
 
-/* OrganizationFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+OrganizationFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type OrganizationFindListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this organization find list unauthorized response has a 2xx status code
+func (o *OrganizationFindListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this organization find list unauthorized response has a 3xx status code
+func (o *OrganizationFindListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this organization find list unauthorized response has a 4xx status code
+func (o *OrganizationFindListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this organization find list unauthorized response has a 5xx status code
+func (o *OrganizationFindListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this organization find list unauthorized response a status code equal to that given
+func (o *OrganizationFindListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the organization find list unauthorized response
+func (o *OrganizationFindListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *OrganizationFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /organization][%d] organizationFindListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *OrganizationFindListUnauthorized) String() string {
+	return fmt.Sprintf("[GET /organization][%d] organizationFindListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *OrganizationFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewOrganizationFindListInternalServerError() *OrganizationFindListInternalS
 	return &OrganizationFindListInternalServerError{}
 }
 
-/* OrganizationFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+OrganizationFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type OrganizationFindListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this organization find list internal server error response has a 2xx status code
+func (o *OrganizationFindListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this organization find list internal server error response has a 3xx status code
+func (o *OrganizationFindListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this organization find list internal server error response has a 4xx status code
+func (o *OrganizationFindListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this organization find list internal server error response has a 5xx status code
+func (o *OrganizationFindListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this organization find list internal server error response a status code equal to that given
+func (o *OrganizationFindListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the organization find list internal server error response
+func (o *OrganizationFindListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *OrganizationFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /organization][%d] organizationFindListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *OrganizationFindListInternalServerError) String() string {
+	return fmt.Sprintf("[GET /organization][%d] organizationFindListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *OrganizationFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

@@ -204,7 +204,7 @@ To install the frontend's dependencies, run `yarn install --frozen-lockfile`. Th
 
 [`go-swagger`](https://goswagger.io/) is used for generating code based on Swagger files that describe the CEDAR APIs.
 
-We currently use `v.0.28.0` of this tool, and the binaries for it [can be found here](https://github.com/go-swagger/go-swagger/releases/tag/v0.28.0). M1 Mac users should use the `arm64` binaries, while other Linux distros should be able to use the `amd64` binaries.
+We currently use `v.0.30.5` of this tool, and the binaries for it [can be found here](https://github.com/go-swagger/go-swagger/releases/tag/v0.30.5). M1 Mac users should use the `arm64` binaries, while other Linux distros should be able to use the `amd64` binaries.
 
 ## VSCode-specific tools
 

@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-  OrganizationFindList retrieves information about the official c m s organizational hierarchy
+OrganizationFindList retrieves information about the official c m s organizational hierarchy
 
-  Retrieves information about the official CMS organizational hierarchy as maintained and published by the Division of Performance and Organizational Programs (DPOP)
+Retrieves information about the official CMS organizational hierarchy as maintained and published by the Division of Performance and Organizational Programs (DPOP)
 */
 func (a *Client) OrganizationFindList(params *OrganizationFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*OrganizationFindListOK, error) {
 	// TODO: Validate the params before sending

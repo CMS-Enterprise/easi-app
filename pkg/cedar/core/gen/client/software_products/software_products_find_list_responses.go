@@ -54,7 +54,7 @@ func (o *SoftwareProductsFindListReader) ReadResponse(response runtime.ClientRes
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /softwareProducts] softwareProductsFindList", response, response.Code())
 	}
 }
 
@@ -63,7 +63,8 @@ func NewSoftwareProductsFindListOK() *SoftwareProductsFindListOK {
 	return &SoftwareProductsFindListOK{}
 }
 
-/* SoftwareProductsFindListOK describes a response with status code 200, with default header values.
+/*
+SoftwareProductsFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -71,9 +72,44 @@ type SoftwareProductsFindListOK struct {
 	Payload *models.SoftwareProductsFindResponse
 }
 
+// IsSuccess returns true when this software products find list o k response has a 2xx status code
+func (o *SoftwareProductsFindListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this software products find list o k response has a 3xx status code
+func (o *SoftwareProductsFindListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this software products find list o k response has a 4xx status code
+func (o *SoftwareProductsFindListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this software products find list o k response has a 5xx status code
+func (o *SoftwareProductsFindListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this software products find list o k response a status code equal to that given
+func (o *SoftwareProductsFindListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the software products find list o k response
+func (o *SoftwareProductsFindListOK) Code() int {
+	return 200
+}
+
 func (o *SoftwareProductsFindListOK) Error() string {
 	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListOK  %+v", 200, o.Payload)
 }
+
+func (o *SoftwareProductsFindListOK) String() string {
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListOK  %+v", 200, o.Payload)
+}
+
 func (o *SoftwareProductsFindListOK) GetPayload() *models.SoftwareProductsFindResponse {
 	return o.Payload
 }
@@ -95,7 +131,8 @@ func NewSoftwareProductsFindListBadRequest() *SoftwareProductsFindListBadRequest
 	return &SoftwareProductsFindListBadRequest{}
 }
 
-/* SoftwareProductsFindListBadRequest describes a response with status code 400, with default header values.
+/*
+SoftwareProductsFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -103,9 +140,44 @@ type SoftwareProductsFindListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this software products find list bad request response has a 2xx status code
+func (o *SoftwareProductsFindListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this software products find list bad request response has a 3xx status code
+func (o *SoftwareProductsFindListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this software products find list bad request response has a 4xx status code
+func (o *SoftwareProductsFindListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this software products find list bad request response has a 5xx status code
+func (o *SoftwareProductsFindListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this software products find list bad request response a status code equal to that given
+func (o *SoftwareProductsFindListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the software products find list bad request response
+func (o *SoftwareProductsFindListBadRequest) Code() int {
+	return 400
+}
+
 func (o *SoftwareProductsFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *SoftwareProductsFindListBadRequest) String() string {
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *SoftwareProductsFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -127,7 +199,8 @@ func NewSoftwareProductsFindListUnauthorized() *SoftwareProductsFindListUnauthor
 	return &SoftwareProductsFindListUnauthorized{}
 }
 
-/* SoftwareProductsFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+SoftwareProductsFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -135,9 +208,44 @@ type SoftwareProductsFindListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this software products find list unauthorized response has a 2xx status code
+func (o *SoftwareProductsFindListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this software products find list unauthorized response has a 3xx status code
+func (o *SoftwareProductsFindListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this software products find list unauthorized response has a 4xx status code
+func (o *SoftwareProductsFindListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this software products find list unauthorized response has a 5xx status code
+func (o *SoftwareProductsFindListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this software products find list unauthorized response a status code equal to that given
+func (o *SoftwareProductsFindListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the software products find list unauthorized response
+func (o *SoftwareProductsFindListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *SoftwareProductsFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *SoftwareProductsFindListUnauthorized) String() string {
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *SoftwareProductsFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -159,7 +267,8 @@ func NewSoftwareProductsFindListNotFound() *SoftwareProductsFindListNotFound {
 	return &SoftwareProductsFindListNotFound{}
 }
 
-/* SoftwareProductsFindListNotFound describes a response with status code 404, with default header values.
+/*
+SoftwareProductsFindListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -167,9 +276,44 @@ type SoftwareProductsFindListNotFound struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this software products find list not found response has a 2xx status code
+func (o *SoftwareProductsFindListNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this software products find list not found response has a 3xx status code
+func (o *SoftwareProductsFindListNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this software products find list not found response has a 4xx status code
+func (o *SoftwareProductsFindListNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this software products find list not found response has a 5xx status code
+func (o *SoftwareProductsFindListNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this software products find list not found response a status code equal to that given
+func (o *SoftwareProductsFindListNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
+// Code gets the status code for the software products find list not found response
+func (o *SoftwareProductsFindListNotFound) Code() int {
+	return 404
+}
+
 func (o *SoftwareProductsFindListNotFound) Error() string {
 	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListNotFound  %+v", 404, o.Payload)
 }
+
+func (o *SoftwareProductsFindListNotFound) String() string {
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListNotFound  %+v", 404, o.Payload)
+}
+
 func (o *SoftwareProductsFindListNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -191,7 +335,8 @@ func NewSoftwareProductsFindListInternalServerError() *SoftwareProductsFindListI
 	return &SoftwareProductsFindListInternalServerError{}
 }
 
-/* SoftwareProductsFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+SoftwareProductsFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -199,9 +344,44 @@ type SoftwareProductsFindListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this software products find list internal server error response has a 2xx status code
+func (o *SoftwareProductsFindListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this software products find list internal server error response has a 3xx status code
+func (o *SoftwareProductsFindListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this software products find list internal server error response has a 4xx status code
+func (o *SoftwareProductsFindListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this software products find list internal server error response has a 5xx status code
+func (o *SoftwareProductsFindListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this software products find list internal server error response a status code equal to that given
+func (o *SoftwareProductsFindListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the software products find list internal server error response
+func (o *SoftwareProductsFindListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *SoftwareProductsFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *SoftwareProductsFindListInternalServerError) String() string {
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *SoftwareProductsFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

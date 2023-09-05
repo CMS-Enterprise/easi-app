@@ -52,10 +52,12 @@ func NewDomainModelFindListParamsWithHTTPClient(client *http.Client) *DomainMode
 	}
 }
 
-/* DomainModelFindListParams contains all the parameters to send to the API endpoint
-   for the domain model find list operation.
+/*
+DomainModelFindListParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the domain model find list operation.
+
+	Typically these are written to a http.Request.
 */
 type DomainModelFindListParams struct {
 

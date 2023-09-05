@@ -54,10 +54,12 @@ func NewUserNameUpdateParamsWithHTTPClient(client *http.Client) *UserNameUpdateP
 	}
 }
 
-/* UserNameUpdateParams contains all the parameters to send to the API endpoint
-   for the user name update operation.
+/*
+UserNameUpdateParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the user name update operation.
+
+	Typically these are written to a http.Request.
 */
 type UserNameUpdateParams struct {
 

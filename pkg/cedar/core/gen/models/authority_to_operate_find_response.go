@@ -100,6 +100,11 @@ func (m *AuthorityToOperateFindResponse) contextValidateAuthorityToOperateList(c
 	for i := 0; i < len(m.AuthorityToOperateList); i++ {
 
 		if m.AuthorityToOperateList[i] != nil {
+
+			if swag.IsZero(m.AuthorityToOperateList[i]) { // not required
+				return nil
+			}
+
 			if err := m.AuthorityToOperateList[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("AuthorityToOperateList" + "." + strconv.Itoa(i))
