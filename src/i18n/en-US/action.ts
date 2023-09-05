@@ -70,6 +70,8 @@ const action = {
   completeAction: 'Complete action',
   completeActionWithoutEmail: 'Complete action without email',
   cancelAction: 'Cancel action and return to request',
+  error:
+    'There was a problem completing your action. Please try again. If the error persists, please try again at a later date.',
   requestEdits: {
     breadcrumb: 'Request edits',
     title: 'Action: request edits',
