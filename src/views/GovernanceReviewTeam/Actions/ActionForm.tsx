@@ -94,6 +94,16 @@ const ActionForm = ({
     }
   }, [requester, defaultValues, isLoading, reset]);
 
+  const hasErrors: boolean = Object.keys(errors).length > 0;
+
+  // Scroll to error message
+  useEffect(() => {
+    if (hasErrors) {
+      const err = document.querySelector('.action-error');
+      err?.scrollIntoView();
+    }
+  }, [errors, hasErrors]);
+
   if (isLoading) return null;
 
   const recipients = watch('notificationRecipients');
@@ -116,7 +126,9 @@ const ActionForm = ({
       />
 
       {errors?.root && (
-        <Alert type="error">{errors.root.message || t('error')}</Alert>
+        <Alert type="error" className="action-error">
+          {errors.root.message || t('error')}
+        </Alert>
       )}
 
       <PageHeading className="margin-bottom-0">{title}</PageHeading>
