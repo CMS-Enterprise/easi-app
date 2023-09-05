@@ -71,7 +71,7 @@ const ActionForm = ({
     setValue,
     watch,
     reset,
-    formState: { isSubmitting, defaultValues }
+    formState: { isSubmitting, defaultValues, errors }
   } = useFormContext<SystemIntakeActionFields>();
 
   // Set default form values
@@ -114,6 +114,10 @@ const ActionForm = ({
           { text: breadcrumb }
         ]}
       />
+
+      {errors?.root && (
+        <Alert type="error">{errors.root.message || t('error')}</Alert>
+      )}
 
       <PageHeading className="margin-bottom-0">{title}</PageHeading>
       <p className="line-height-body-5 font-body-lg text-light margin-0">
