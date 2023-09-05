@@ -280,26 +280,41 @@ func (s *ResolverSuite) TestGenerateNewLCID() {
 }
 
 func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
-	// TODO - remove this commented block once I'm done
-	/*
-			// update workflow state
-		intake.Step = models.SystemIntakeStepDECISION
-		intake.State = models.SystemIntakeStateCLOSED
-		intake.DecisionState = models.SIDSNotApproved
+	newIntake := s.createNewIntake()
 
-		// update other fields
-		intake.RejectionReason = &input.Reason
-		intake.DecisionNextSteps = &input.NextSteps
-		intake.TRBFollowUpRecommendation = &input.TrbFollowUp
-	*/
+	adminNote := models.HTML("test admin note for rejecting")
+	input := model.SystemIntakeRejectIntakeInput{
+		// required fields
+		SystemIntakeID: newIntake.ID,
+		Reason:         "test rejection reason",
+		NextSteps:      "test next steps after rejection",
+		TrbFollowUp:    models.TRBFRStronglyRecommended,
 
-	// TODO - main test:
-	// TODO - check workflow state (step, state, decision state)
-	// TODO - check fields from input (rejection reason, next steps, TRB follow up); don't need to check UpdatedAt (not deterministic)
+		// optional fields
+		AdminNote: &adminNote,
+	}
+
+	updatedIntake, err := RejectIntakeAsNotApproved(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+	s.NoError(err)
+
+	// check workflow state
+	s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
+	s.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
+	s.EqualValues(models.SIDSNotApproved, updatedIntake.DecisionState)
+
+	// check fields from input
+	s.EqualValues(input.Reason, *updatedIntake.RejectionReason)
+	s.EqualValues(input.NextSteps, *updatedIntake.DecisionNextSteps)
+	s.EqualValues(input.TrbFollowUp, *updatedIntake.TRBFollowUpRecommendation)
+
 	// TODO - should create action
-	// TODO - check that rejecting the same intake twice is valid
 
 	// TODO - Should create admin note given input
+
+	// check that rejecting the same intake twice is valid
+	input.Reason = "further rejection testing"
+	_, err = RejectIntakeAsNotApproved(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+	s.NoError(err)
 }
 
 func (s *ResolverSuite) TestIssueLCID() {
@@ -311,7 +326,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		input := model.SystemIntakeIssueLCIDInput{
 			Lcid: &providedLCID,
 
-			// set required fields
+			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      time.Now().AddDate(2, 0, 0),
 			Scope:          "test scope",
@@ -331,7 +346,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		input := model.SystemIntakeIssueLCIDInput{
 			Lcid: nil,
 
-			// set required fields
+			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      time.Now().AddDate(2, 0, 0),
 			Scope:          "test scope",
@@ -346,28 +361,15 @@ func (s *ResolverSuite) TestIssueLCID() {
 	})
 
 	s.Run("Issuing an LCID sets the correct fields, creates an action, and disallows further issuing on the intake", func() {
-		// create intake with nontrivial existing workflow state
-		newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
-			// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
-			Status:      models.SystemIntakeStatusBIZCASECHANGESNEEDED, // edits requested on draft biz case
-			RequestType: models.SystemIntakeRequestTypeNEW,
-
-			State:         models.SystemIntakeStateOPEN, // default
-			DecisionState: models.SIDSNoDecision,        // default
-
-			Step:                   models.SystemIntakeStepDRAFTBIZCASE,
-			RequestFormState:       models.SIRFSSubmitted,
-			DraftBusinessCaseState: models.SIRFSEditsRequested,
-		})
-		s.NoError(err)
+		newIntake := s.createNewIntake()
 
 		costBaseline := "test cost baseline"
 		input := model.SystemIntakeIssueLCIDInput{
-			// set required fields
+			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      time.Now().AddDate(2, 0, 0),
 			Scope:          "test scope",
-			NextSteps:      "test next steps",
+			NextSteps:      "test next steps after issuing LCID",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 
 			// optional fields
@@ -405,5 +407,5 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.Error(err)
 	})
 
-	// TODO - Should create admin note given input
+	// TODO - Should create admin note given input (need to add admin note to input)
 }
