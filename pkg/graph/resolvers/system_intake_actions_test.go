@@ -283,6 +283,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 	newIntake := s.createNewIntake()
 
 	adminNote := models.HTML("test admin note for rejecting")
+	additionalInfo := models.HTML("test additional info for rejecting")
 	input := model.SystemIntakeRejectIntakeInput{
 		// required fields
 		SystemIntakeID: newIntake.ID,
@@ -291,7 +292,8 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 		TrbFollowUp:    models.TRBFRStronglyRecommended,
 
 		// optional fields
-		AdminNote: &adminNote,
+		AdminNote:      &adminNote,
+		AdditionalInfo: &additionalInfo,
 	}
 
 	updatedIntake, err := RejectIntakeAsNotApproved(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
@@ -307,9 +309,21 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 	s.EqualValues(input.NextSteps, *updatedIntake.DecisionNextSteps)
 	s.EqualValues(input.TrbFollowUp, *updatedIntake.TRBFollowUpRecommendation)
 
-	// TODO - should create action
+	// should create action
+	allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntake.ID)
+	s.NoError(err)
+	s.NotEmpty(allActionsForIntake)
+	action := allActionsForIntake[0]
+	s.EqualValues(updatedIntake.ID, *action.IntakeID)
+	s.EqualValues(models.ActionTypeREJECT, action.ActionType)
+	s.EqualValues(additionalInfo, *action.Feedback)
+	s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
 
-	// TODO - Should create admin note given input
+	// should create admin note (since input included it)
+	allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
+	s.NoError(err)
+	s.NotEmpty(allNotesForIntake)
+	s.EqualValues(adminNote, *allNotesForIntake[0].Content)
 
 	// check that rejecting the same intake twice is valid
 	input.Reason = "further rejection testing"
@@ -364,6 +378,8 @@ func (s *ResolverSuite) TestIssueLCID() {
 		newIntake := s.createNewIntake()
 
 		costBaseline := "test cost baseline"
+		adminNote := models.HTML("test admin note for issuing LCID")
+		additionalInfo := models.HTML("test additional info for issuing LCID")
 		input := model.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
@@ -373,7 +389,9 @@ func (s *ResolverSuite) TestIssueLCID() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 
 			// optional fields
-			CostBaseline: &costBaseline,
+			CostBaseline:   &costBaseline,
+			AdminNote:      &adminNote,
+			AdditionalInfo: &additionalInfo,
 		}
 
 		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
@@ -399,13 +417,25 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(input.ExpiresAt.Month(), updatedIntake.LifecycleExpiresAt.Month())
 		s.EqualValues(input.ExpiresAt.Day(), updatedIntake.LifecycleExpiresAt.Day())
 
-		// TODO - should create action
+		// should create action
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntake.ID)
+		s.NoError(err)
+		s.NotEmpty(allActionsForIntake)
+		action := allActionsForIntake[0]
+		s.EqualValues(updatedIntake.ID, *action.IntakeID)
+		s.EqualValues(models.ActionTypeISSUELCID, action.ActionType)
+		s.EqualValues(additionalInfo, *action.Feedback)
+		s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
+
+		// should create admin note (since input included it)
+		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
+		s.NoError(err)
+		s.NotEmpty(allNotesForIntake)
+		s.EqualValues(adminNote, *allNotesForIntake[0].Content)
 
 		// check that issuing an LCID twice is not valid
 		input.NextSteps = "issuing again will work, right?" // input still refers to the same intake
 		_, err = IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
 		s.Error(err)
 	})
-
-	// TODO - Should create admin note given input (need to add admin note to input)
 }
