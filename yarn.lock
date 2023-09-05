@@ -1687,15 +1687,6 @@
     debug "^4.3.2"
     lodash "^4.17.20"
 
-"@cypress/webpack-preprocessor@^5.4.1":
-  version "5.4.1"
-  resolved "https://registry.npmjs.org/@cypress/webpack-preprocessor/-/webpack-preprocessor-5.4.1.tgz"
-  integrity sha512-1E2BdVVXQ4wDQ7f3mXCvS9xmfTVwEoT3oqKhjAr1iNlTJpBq10Z0VNBZd3VZ3nmCTFwTuUvs735QGnRE1gQ1BA==
-  dependencies:
-    bluebird "3.7.1"
-    debug "4.1.1"
-    lodash "4.17.15"
-
 "@cypress/xvfb@^1.2.4":
   version "1.2.4"
   resolved "https://registry.npmjs.org/@cypress/xvfb/-/xvfb-1.2.4.tgz"
@@ -5831,6 +5822,14 @@ cypress-otp@^1.0.2:
   dependencies:
     otplib "12.0.1"
 
+cypress-vite@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/cypress-vite/-/cypress-vite-1.4.2.tgz#56a93d1d6329306e27ce2f2ba30787fde0e51d1c"
+  integrity sha512-uKsCo6KC1KJgubDCs7PqqI0AVXaYDPLocNvZplw2kJ2Z8M1793oCcr9D2/dKxYllRkhfFuYPPNjme/Kr2YWojQ==
+  dependencies:
+    chokidar "^3.5.3"
+    debug "^4.3.4"
+
 cypress@^12.4.0:
   version "12.4.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.4.0.tgz#de695bc51aec9d995456077a9c3e0ddadfb105c6"
@@ -9132,7 +9131,7 @@ lodash.xorby@^4.7.0:
   resolved "https://registry.npmjs.org/lodash.xorby/-/lodash.xorby-4.7.0.tgz"
   integrity sha1-nBmm+fBjputT3QPBtocXmYAUY9c=
 
-lodash@4.17.15, lodash@4.17.21, lodash@^4.15.0, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.3.0, lodash@~4.17.10:
+lodash@4.17.21, lodash@^4.15.0, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.3.0, lodash@~4.17.10:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

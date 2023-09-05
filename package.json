@@ -118,7 +118,6 @@
   },
   "devDependencies": {
     "@apollo/react-testing": "^4.0.0",
-    "@cypress/webpack-preprocessor": "^5.4.1",
     "@storybook/addon-actions": "^7.0",
     "@storybook/addon-controls": "^7.0",
     "@storybook/addon-essentials": "^7.0",
@@ -136,6 +135,7 @@
     "babel-loader": "8.1.0",
     "cypress": "^12.4.0",
     "cypress-otp": "^1.0.2",
+    "cypress-vite": "^1.4.2",
     "enzyme": "^3.10.0",
     "eslint": "^7.11.0",
     "eslint-config-airbnb": "^18.0.1",
