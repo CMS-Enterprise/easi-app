@@ -133,7 +133,7 @@
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2",
     "autoprefixer": "^10.4.14",
     "babel-loader": "8.1.0",
-    "cypress": "^12.4.0",
+    "cypress": "^13.1.0",
     "cypress-otp": "^1.0.2",
     "cypress-vite": "^1.4.2",
     "enzyme": "^3.10.0",
