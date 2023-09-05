@@ -1170,6 +1170,15 @@ func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Contex
 	}, err
 }
 
+// CreateSystemIntakeActionConfirmLcid is the resolver for the createSystemIntakeActionConfirmLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Context, input model.SystemIntakeConfirmLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.ConfirmLCID(ctx, r.store, r.service.FetchUserInfo, input)
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 // CreateSystemIntakeActionBusinessCaseNeeded is the resolver for the createSystemIntakeActionBusinessCaseNeeded field.
 func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.service.CreateActionUpdateStatus(

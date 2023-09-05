@@ -1492,6 +1492,20 @@ input SystemIntakeUpdateLCIDInput {
   adminNote: HTML
 }
 
+"""
+Input for confirming an intake's decision to issue an LCID in IT Gov v2
+"""
+input SystemIntakeConfirmLCIDInput {
+  systemIntakeID: UUID!
+  expiresAt: Time!
+  scope: HTML!
+  nextSteps: HTML!
+  # trbFollowUp: SystemIntakeTRBFollowUp! # TODO: SW update to include this once EASI-3112 is merged as it introduces the type
+  costBaseline: String
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
 
 """
 Input for creating a Request Edits Action in Admin Actions v2
@@ -2340,6 +2354,9 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionUpdateLCID(
     input: SystemIntakeUpdateLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionConfirmLCID(
+    input: SystemIntakeConfirmLCIDInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!

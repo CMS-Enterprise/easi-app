@@ -31,14 +31,24 @@ func GetUpdateLCIDAction(
 		ActorEUAUserID: userInfo.EuaUserID,
 		Step:           &intake.Step,
 
-		LCIDExpirationChangeNewDate:      expirationDate,
+		LCIDExpirationChangeNewDate:      intake.LifecycleExpiresAt,
 		LCIDExpirationChangePreviousDate: intake.LifecycleExpiresAt,
 
-		LCIDExpirationChangeNewScope:      scope,
+		LCIDExpirationChangeNewScope:      intake.LifecycleScope,
 		LCIDExpirationChangePreviousScope: intake.LifecycleScope,
 
-		LCIDExpirationChangeNewNextSteps:      nextSteps,
+		LCIDExpirationChangeNewNextSteps:      intake.DecisionNextSteps,
 		LCIDExpirationChangePreviousNextSteps: intake.DecisionNextSteps,
+	}
+	//Action is set based on if the value was set or not. If not set, the new value and the old are the same
+	if expirationDate != nil {
+		action.LCIDExpirationChangeNewDate = expirationDate
+	}
+	if scope != nil {
+		action.LCIDExpirationChangeNewScope = scope
+	}
+	if nextSteps != nil {
+		action.LCIDExpirationChangeNewNextSteps = nextSteps
 	}
 	return &action, nil
 

@@ -290,13 +290,19 @@ func UpdateLCID(
 	intake.State = models.SystemIntakeStateCLOSED
 	intake.DecisionState = models.SIDSLcidIssued
 
-	// update LCID-related fields
-
-	intake.LifecycleExpiresAt = input.ExpiresAt
-	intake.LifecycleScope = input.Scope
-	intake.DecisionNextSteps = input.NextSteps
-	// intake.TRBFollowUpRecommendation = &input.TrbFollowUp
-	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+	// update LCID-related fields when they are set
+	if input.ExpiresAt != nil {
+		intake.LifecycleExpiresAt = input.ExpiresAt
+	}
+	if input.Scope != nil {
+		intake.LifecycleScope = input.Scope
+	}
+	if input.NextSteps != nil {
+		intake.DecisionNextSteps = input.NextSteps
+	}
+	if input.CostBaseline != nil {
+		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+	}
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
 
@@ -334,4 +340,15 @@ func UpdateLCID(
 	}
 
 	return updatedIntake, nil
+}
+
+// ConfirmLCID is used to confirm the choices of an already issued LCID. All fields are required, and should come back pre-populated by the front end with the previous answer
+func ConfirmLCID(ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeConfirmLCIDInput,
+) (*models.SystemIntake, error) {
+	//TODO: implement the check to get the TRB recommendation once EASI-3112 is merged
+	return nil, nil
+
 }

@@ -549,6 +549,18 @@ type SystemIntakeCollaboratorInput struct {
 	Key          string `json:"key"`
 }
 
+// Input for confirming an intake's decision to issue an LCID in IT Gov v2
+type SystemIntakeConfirmLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	ExpiresAt              time.Time                           `json:"expiresAt"`
+	Scope                  models.HTML                         `json:"scope"`
+	NextSteps              models.HTML                         `json:"nextSteps"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
+}
+
 // The payload when retrieving system intake contacts
 type SystemIntakeContactsPayload struct {
 	SystemIntakeContacts []*models.AugmentedSystemIntakeContact `json:"systemIntakeContacts"`
