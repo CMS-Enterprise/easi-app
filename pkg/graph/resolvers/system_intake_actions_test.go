@@ -248,4 +248,19 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 
 func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 
+	intake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		Step:        models.SystemIntakeStepINITIALFORM,
+	})
+	s.NoError(err)
+
+	s.Run("Can't update an LCID that wasn't issued", func() {
+		_, err2 := UpdateLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeUpdateLCIDInput{
+			SystemIntakeID: intake.ID,
+		})
+		s.Error(err2)
+
+	})
+
 }

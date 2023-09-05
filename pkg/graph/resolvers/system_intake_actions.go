@@ -263,7 +263,6 @@ func UpdateLCID(
 	// input.Reason //TODO: SW What to do with the reason field? It is stored in an email when we add the email
 
 	// save action (including additional info for email, if any)
-	//TODO, update these states
 	errGroup := new(errgroup.Group)
 	errGroup.Go(func() error {
 		action, err := lcidactions.GetUpdateLCIDAction(intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)

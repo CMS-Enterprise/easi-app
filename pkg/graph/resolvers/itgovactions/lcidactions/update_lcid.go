@@ -55,6 +55,7 @@ func GetUpdateLCIDAction(
 }
 
 // IsLCIDValidToUpdate checks if you can update the LCID for an intake, if not, it will return an error
+// An LCID must have already been issued in order to be updateable
 func IsLCIDValidToUpdate(intake *models.SystemIntake) error {
 	if !intake.LifecycleID.Valid {
 		return &apperrors.BadRequestError{
