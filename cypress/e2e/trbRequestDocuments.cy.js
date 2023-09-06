@@ -1,6 +1,6 @@
 describe.skip('Technical Assistance Request Documents', () => {
   it('can upload and then delete a document', () => {
-    cy.localLogin({ name: 'ABCD' });
+    cy.localLogin({ name: 'E2E1' });
 
     cy.contains('a', 'Technical Assistance').click();
     cy.contains('a', 'Start a new request').click();
