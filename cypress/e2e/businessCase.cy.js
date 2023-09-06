@@ -88,7 +88,7 @@ describe('The Business Case Form', () => {
       .should('deep.include', {
         requestName: 'Easy Access to System Information',
         requester: {
-          name: 'John Requester',
+          name: 'EndToEnd One',
           phoneNumber: '1234567890'
         },
         businessOwner: {

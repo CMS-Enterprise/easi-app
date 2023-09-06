@@ -339,7 +339,7 @@ func getMockUserData() []*models.UserInfo {
 		},
 		{
 			CommonName: "EndToEnd One",
-			Email:      "endtoend.two@local.fake",
+			Email:      "endtoend.one@local.fake",
 			EuaUserID:  "E2E1",
 		},
 		{
