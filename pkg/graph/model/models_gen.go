@@ -608,11 +608,11 @@ type SystemIntakeDocumentType struct {
 // Input for expiring an intake's LCID in IT Gov v2
 type SystemIntakeExpireLCIDInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	Reason                 string                              `json:"reason"`
-	NextSteps              *string                             `json:"nextSteps"`
+	Reason                 models.HTML                         `json:"reason"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdditionalInfo         *string                             `json:"additionalInfo"`
-	AdminNote              *string                             `json:"adminNote"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
 // Represents the source of funding for a system

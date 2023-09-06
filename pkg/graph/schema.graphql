@@ -1543,11 +1543,11 @@ Input for expiring an intake's LCID in IT Gov v2
 """
 input SystemIntakeExpireLCIDInput {
   systemIntakeID: UUID!
-  reason: String! # TODO - is this the right name for this field?
-  nextSteps: String # TODO - is this the right name for this field?
+  reason: HTML!
+  nextSteps: HTML
   notificationRecipients: EmailNotificationRecipients
-  additionalInfo: String
-  adminNote: String
+  additionalInfo: HTML
+  adminNote: HTML
 }
 
 """

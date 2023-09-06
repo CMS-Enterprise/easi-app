@@ -689,8 +689,7 @@ func ExpireLCID(
 			Step:           &intake.Step,
 		}
 		if input.AdditionalInfo != nil {
-			tempHTML := models.HTML(*input.AdditionalInfo)
-			action.Feedback = &tempHTML
+			action.Feedback = input.AdditionalInfo
 		}
 
 		_, errCreatingAction := store.CreateAction(ctx, &action)
@@ -704,12 +703,11 @@ func ExpireLCID(
 	// save admin note
 	if input.AdminNote != nil {
 		errGroup.Go(func() error {
-			tempHTML := models.HTML(*input.AdminNote)
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
 				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
-				Content:        &tempHTML,
+				Content:        input.AdminNote,
 			}
 
 			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)

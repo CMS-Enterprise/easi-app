@@ -8745,11 +8745,11 @@ Input for expiring an intake's LCID in IT Gov v2
 """
 input SystemIntakeExpireLCIDInput {
   systemIntakeID: UUID!
-  reason: String! # TODO - is this the right name for this field?
-  nextSteps: String # TODO - is this the right name for this field?
+  reason: HTML!
+  nextSteps: HTML
   notificationRecipients: EmailNotificationRecipients
-  additionalInfo: String
-  adminNote: String
+  additionalInfo: HTML
+  adminNote: HTML
 }
 
 """
@@ -52728,7 +52728,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeExpireLCIDInput(ctx contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
-			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			it.Reason, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52736,7 +52736,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeExpireLCIDInput(ctx contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
-			it.NextSteps, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.NextSteps, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52752,7 +52752,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeExpireLCIDInput(ctx contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
-			it.AdditionalInfo, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.AdditionalInfo, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52760,7 +52760,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeExpireLCIDInput(ctx contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
-			it.AdminNote, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.AdminNote, err = ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
