@@ -1280,9 +1280,13 @@ enum SystemIntakeActionType {
   NOT_GOVERNANCE
   CLOSE_REQUEST
   REOPEN_REQUEST
+  UPDATE_LCID
+  CONFIRM_LCID
 
   # v1/v2 actions - originally from v1, still used in v2
   ISSUE_LCID
+  SUBMIT_INTAKE
+  REJECT
 
   # v1 actions - no longer used in IT Gov v2 workflow
   BIZ_CASE_NEEDS_CHANGES
@@ -1298,11 +1302,11 @@ enum SystemIntakeActionType {
   PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
   READY_FOR_GRB
   READY_FOR_GRT
-  REJECT
+
   SEND_EMAIL
   SUBMIT_BIZ_CASE
   SUBMIT_FINAL_BIZ_CASE
-  SUBMIT_INTAKE
+
 }
 
 """
@@ -1486,7 +1490,7 @@ Input for updating an intake's LCID in IT Gov v2
 """
 input SystemIntakeUpdateLCIDInput { 
   systemIntakeID: UUID!
-  # lcid: String # This assumes just one LCID
+
   expiresAt: Time
   scope: HTML
   nextSteps: HTML
@@ -1505,7 +1509,7 @@ input SystemIntakeConfirmLCIDInput {
   expiresAt: Time!
   scope: HTML!
   nextSteps: HTML!
-  # trbFollowUp: SystemIntakeTRBFollowUp! # TODO: SW update to include this once EASI-3112 is merged as it introduces the type
+  trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients

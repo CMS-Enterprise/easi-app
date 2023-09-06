@@ -22,7 +22,6 @@ func GetUpdateLCIDAction(
 		return nil, fmt.Errorf("reference to the system intake is nil")
 	}
 
-	// TODO: SW should I only update these values if set? They aren't all required...
 	action := models.Action{
 		IntakeID:       &intake.ID,
 		ActionType:     models.ActionTypeUPDATELCID,
@@ -61,7 +60,7 @@ func IsLCIDValidToUpdate(intake *models.SystemIntake) error {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
 				ActionType: models.ActionTypeUPDATELCID,
-				Message:    "an LCID has not been issued for this intake, an LCID must be issued before it ban be updated",
+				Message:    "an LCID has not been issued for this intake, an LCID must be issued before it can be updated",
 			},
 		}
 	}

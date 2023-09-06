@@ -738,6 +738,42 @@ func ConfirmLCID(ctx context.Context,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeConfirmLCIDInput,
 ) (*models.SystemIntake, error) {
+
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+	err = lcidactions.IsLCIDValidToUpdate(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	// save action (including additional info for email, if any)
+	errGroup := new(errgroup.Group)
+	errGroup.Go(func() error {
+		action, err := lcidactions.GetUpdateLCIDAction(intake, &input.ExpiresAt, &input.NextSteps, &input.Scope, input.CostBaseline, *adminUserInfo)
+		if err != nil {
+			return err
+		}
+		action.ActionType = models.ActionTypeBIZCASENEEDSCHANGES
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
 	//TODO: implement the check to get the TRB recommendation once EASI-3112 is merged
 	return nil, nil
 

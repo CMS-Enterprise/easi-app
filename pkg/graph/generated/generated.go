@@ -8488,9 +8488,13 @@ enum SystemIntakeActionType {
   NOT_GOVERNANCE
   CLOSE_REQUEST
   REOPEN_REQUEST
+  UPDATE_LCID
+  CONFIRM_LCID
 
   # v1/v2 actions - originally from v1, still used in v2
   ISSUE_LCID
+  SUBMIT_INTAKE
+  REJECT
 
   # v1 actions - no longer used in IT Gov v2 workflow
   BIZ_CASE_NEEDS_CHANGES
@@ -8506,11 +8510,11 @@ enum SystemIntakeActionType {
   PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
   READY_FOR_GRB
   READY_FOR_GRT
-  REJECT
+
   SEND_EMAIL
   SUBMIT_BIZ_CASE
   SUBMIT_FINAL_BIZ_CASE
-  SUBMIT_INTAKE
+
 }
 
 """
@@ -8694,7 +8698,7 @@ Input for updating an intake's LCID in IT Gov v2
 """
 input SystemIntakeUpdateLCIDInput { 
   systemIntakeID: UUID!
-  # lcid: String # This assumes just one LCID
+
   expiresAt: Time
   scope: HTML
   nextSteps: HTML
@@ -8713,7 +8717,7 @@ input SystemIntakeConfirmLCIDInput {
   expiresAt: Time!
   scope: HTML!
   nextSteps: HTML!
-  # trbFollowUp: SystemIntakeTRBFollowUp! # TODO: SW update to include this once EASI-3112 is merged as it introduces the type
+  trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
@@ -52664,7 +52668,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeConfirmLCIDInput(ctx conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "costBaseline", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -52700,6 +52704,14 @@ func (ec *executionContext) unmarshalInputSystemIntakeConfirmLCIDInput(ctx conte
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
 			it.NextSteps, err = ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "trbFollowUp":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbFollowUp"))
+			it.TrbFollowUp, err = ec.unmarshalNSystemIntakeTRBFollowUp2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx, v)
 			if err != nil {
 				return it, err
 			}
