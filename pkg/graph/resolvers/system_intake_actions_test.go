@@ -1020,7 +1020,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		})
 		s.NoError(err)
 		s.EqualValues(scope, updatedIntakeLCID.LifecycleScope)
-		s.EqualValues(costBaseline, updatedIntakeLCID.LifecycleCostBaseline)
+		s.EqualValues(null.StringFrom(costBaseline), updatedIntakeLCID.LifecycleCostBaseline)
 
 		// assert acion is created
 		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntakeLCID.ID)
@@ -1029,7 +1029,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		action := allActionsForIntake[0]
 		s.EqualValues(updatedIntakeLCID.ID, *action.IntakeID)
 		s.EqualValues(models.ActionTypeUPDATELCID, action.ActionType)
-		s.EqualValues(additionalInfo, *action.Feedback)
+		s.EqualValues(additionalInfo, action.Feedback)
 
 		//assert there is not an admin note since not included
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntakeLCID.ID)
@@ -1049,15 +1049,15 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			})
 			s.NoError(err)
 			s.EqualValues(updatedScope, secondUpdateIntake.LifecycleScope)
-			s.EqualValues(costBaseline, secondUpdateIntake.LifecycleCostBaseline) // This should not be updated since it wasn't included
+			s.EqualValues(null.StringFrom(costBaseline), secondUpdateIntake.LifecycleCostBaseline) // This should not be updated since it wasn't included
 
 			allActionsForIntake2, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, secondUpdateIntake.ID)
 			s.NoError(err)
 			s.NotEmpty(allActionsForIntake2)
-			action := allActionsForIntake2[1] //should be the second action
+			action := allActionsForIntake2[0] //The first action is the most recent
 			s.EqualValues(secondUpdateIntake.ID, *action.IntakeID)
 			s.EqualValues(models.ActionTypeUPDATELCID, action.ActionType)
-			s.EqualValues(additionalInfoUpdate, *action.Feedback)
+			s.EqualValues(additionalInfoUpdate, action.Feedback)
 
 			//There should be one admin note
 			allNotesForIntake2, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, secondUpdateIntake.ID)
