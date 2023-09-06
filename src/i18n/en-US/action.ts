@@ -65,14 +65,14 @@ const action = {
     label: 'Resolution',
     summary: {
       title: 'Request resolutions',
-      issueLifecycleId: 'Issue a Life Cycle ID',
-      issueLifecycleIdDescription:
+      issueLcid: 'Issue a Life Cycle ID',
+      issueLcidDescription:
         'Choose this resolution if the project has been approved by the GRB or does not need GRB approval to issue an LCID. You will be asked to provide additional LCID details in the next step of this action (scope, expiration date, next steps, and project cost baseline).',
       notItRequest: 'Not an IT Governance request',
       notItRequestDescription:
         'Choose this resolution if this request does not need to go through the IT Governance process. You will be asked to provide any additional clarification on the next step of this action.',
-      notApprovedByGrb: 'Not approved by GRB',
-      notApprovedByGrbDescription:
+      notApproved: 'Not approved by GRB',
+      notApprovedDescription:
         'Choose this resolution if this request was not approved by the GRB. You will be asked to provide a reason for the decision and any next steps for the project team to take on the next step of this action.',
       closeRequest: 'Close request',
       closeRequestDescription:
