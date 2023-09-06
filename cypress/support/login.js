@@ -25,7 +25,7 @@ Cypress.Commands.add('login', () => {
       });
     }
   });
-  cy.url().should('eq', 'http://localhost:3000/');
+  cy.url({ timeout: 20000 }).should('eq', 'http://localhost:3000/');
 });
 
 Cypress.Commands.add('localLogin', ({ name, role }) => {
