@@ -3,6 +3,8 @@ package lcidactions
 import (
 	"time"
 
+	"github.com/guregu/null"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -62,6 +64,9 @@ func getBaseLCIDAction(intake models.SystemIntake,
 
 		LCIDExpirationChangeNewNextSteps:      intake.DecisionNextSteps,
 		LCIDExpirationChangePreviousNextSteps: intake.DecisionNextSteps,
+
+		LCIDExpirationChangeNewCostBaseline:      intake.LifecycleCostBaseline,
+		LCIDExpirationChangePreviousCostBaseline: intake.LifecycleCostBaseline,
 	}
 	//Action is set based on if the value was set or not. If not set, the new value and the old are the same
 	if expirationDate != nil {
@@ -72,6 +77,9 @@ func getBaseLCIDAction(intake models.SystemIntake,
 	}
 	if nextSteps != nil {
 		action.LCIDExpirationChangeNewNextSteps = nextSteps
+	}
+	if costBaseline != nil {
+		action.LCIDExpirationChangeNewCostBaseline = null.StringFromPtr(costBaseline)
 	}
 	return action
 }
