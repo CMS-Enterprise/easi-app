@@ -100,6 +100,11 @@ func (m *PersonFindResponse) contextValidatePersons(ctx context.Context, formats
 	for i := 0; i < len(m.Persons); i++ {
 
 		if m.Persons[i] != nil {
+
+			if swag.IsZero(m.Persons[i]) { // not required
+				return nil
+			}
+
 			if err := m.Persons[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Persons" + "." + strconv.Itoa(i))

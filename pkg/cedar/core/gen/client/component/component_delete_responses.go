@@ -54,7 +54,7 @@ func (o *ComponentDeleteReader) ReadResponse(response runtime.ClientResponse, co
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[DELETE /component] componentDelete", response, response.Code())
 	}
 }
 
@@ -63,7 +63,8 @@ func NewComponentDeleteOK() *ComponentDeleteOK {
 	return &ComponentDeleteOK{}
 }
 
-/* ComponentDeleteOK describes a response with status code 200, with default header values.
+/*
+ComponentDeleteOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -71,9 +72,44 @@ type ComponentDeleteOK struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this component delete o k response has a 2xx status code
+func (o *ComponentDeleteOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this component delete o k response has a 3xx status code
+func (o *ComponentDeleteOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component delete o k response has a 4xx status code
+func (o *ComponentDeleteOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this component delete o k response has a 5xx status code
+func (o *ComponentDeleteOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this component delete o k response a status code equal to that given
+func (o *ComponentDeleteOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the component delete o k response
+func (o *ComponentDeleteOK) Code() int {
+	return 200
+}
+
 func (o *ComponentDeleteOK) Error() string {
 	return fmt.Sprintf("[DELETE /component][%d] componentDeleteOK  %+v", 200, o.Payload)
 }
+
+func (o *ComponentDeleteOK) String() string {
+	return fmt.Sprintf("[DELETE /component][%d] componentDeleteOK  %+v", 200, o.Payload)
+}
+
 func (o *ComponentDeleteOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -95,7 +131,8 @@ func NewComponentDeleteBadRequest() *ComponentDeleteBadRequest {
 	return &ComponentDeleteBadRequest{}
 }
 
-/* ComponentDeleteBadRequest describes a response with status code 400, with default header values.
+/*
+ComponentDeleteBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -103,9 +140,44 @@ type ComponentDeleteBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this component delete bad request response has a 2xx status code
+func (o *ComponentDeleteBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this component delete bad request response has a 3xx status code
+func (o *ComponentDeleteBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component delete bad request response has a 4xx status code
+func (o *ComponentDeleteBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this component delete bad request response has a 5xx status code
+func (o *ComponentDeleteBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this component delete bad request response a status code equal to that given
+func (o *ComponentDeleteBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the component delete bad request response
+func (o *ComponentDeleteBadRequest) Code() int {
+	return 400
+}
+
 func (o *ComponentDeleteBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /component][%d] componentDeleteBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *ComponentDeleteBadRequest) String() string {
+	return fmt.Sprintf("[DELETE /component][%d] componentDeleteBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *ComponentDeleteBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -127,7 +199,8 @@ func NewComponentDeleteUnauthorized() *ComponentDeleteUnauthorized {
 	return &ComponentDeleteUnauthorized{}
 }
 
-/* ComponentDeleteUnauthorized describes a response with status code 401, with default header values.
+/*
+ComponentDeleteUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -135,9 +208,44 @@ type ComponentDeleteUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this component delete unauthorized response has a 2xx status code
+func (o *ComponentDeleteUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this component delete unauthorized response has a 3xx status code
+func (o *ComponentDeleteUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component delete unauthorized response has a 4xx status code
+func (o *ComponentDeleteUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this component delete unauthorized response has a 5xx status code
+func (o *ComponentDeleteUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this component delete unauthorized response a status code equal to that given
+func (o *ComponentDeleteUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the component delete unauthorized response
+func (o *ComponentDeleteUnauthorized) Code() int {
+	return 401
+}
+
 func (o *ComponentDeleteUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /component][%d] componentDeleteUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *ComponentDeleteUnauthorized) String() string {
+	return fmt.Sprintf("[DELETE /component][%d] componentDeleteUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *ComponentDeleteUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -159,7 +267,8 @@ func NewComponentDeleteNotFound() *ComponentDeleteNotFound {
 	return &ComponentDeleteNotFound{}
 }
 
-/* ComponentDeleteNotFound describes a response with status code 404, with default header values.
+/*
+ComponentDeleteNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -167,9 +276,44 @@ type ComponentDeleteNotFound struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this component delete not found response has a 2xx status code
+func (o *ComponentDeleteNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this component delete not found response has a 3xx status code
+func (o *ComponentDeleteNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component delete not found response has a 4xx status code
+func (o *ComponentDeleteNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this component delete not found response has a 5xx status code
+func (o *ComponentDeleteNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this component delete not found response a status code equal to that given
+func (o *ComponentDeleteNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
+// Code gets the status code for the component delete not found response
+func (o *ComponentDeleteNotFound) Code() int {
+	return 404
+}
+
 func (o *ComponentDeleteNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /component][%d] componentDeleteNotFound  %+v", 404, o.Payload)
 }
+
+func (o *ComponentDeleteNotFound) String() string {
+	return fmt.Sprintf("[DELETE /component][%d] componentDeleteNotFound  %+v", 404, o.Payload)
+}
+
 func (o *ComponentDeleteNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -191,7 +335,8 @@ func NewComponentDeleteInternalServerError() *ComponentDeleteInternalServerError
 	return &ComponentDeleteInternalServerError{}
 }
 
-/* ComponentDeleteInternalServerError describes a response with status code 500, with default header values.
+/*
+ComponentDeleteInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -199,9 +344,44 @@ type ComponentDeleteInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this component delete internal server error response has a 2xx status code
+func (o *ComponentDeleteInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this component delete internal server error response has a 3xx status code
+func (o *ComponentDeleteInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component delete internal server error response has a 4xx status code
+func (o *ComponentDeleteInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this component delete internal server error response has a 5xx status code
+func (o *ComponentDeleteInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this component delete internal server error response a status code equal to that given
+func (o *ComponentDeleteInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the component delete internal server error response
+func (o *ComponentDeleteInternalServerError) Code() int {
+	return 500
+}
+
 func (o *ComponentDeleteInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /component][%d] componentDeleteInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *ComponentDeleteInternalServerError) String() string {
+	return fmt.Sprintf("[DELETE /component][%d] componentDeleteInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *ComponentDeleteInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

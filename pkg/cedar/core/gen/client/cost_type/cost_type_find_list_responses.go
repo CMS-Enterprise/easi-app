@@ -48,7 +48,7 @@ func (o *CostTypeFindListReader) ReadResponse(response runtime.ClientResponse, c
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /costType] costTypeFindList", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewCostTypeFindListOK() *CostTypeFindListOK {
 	return &CostTypeFindListOK{}
 }
 
-/* CostTypeFindListOK describes a response with status code 200, with default header values.
+/*
+CostTypeFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type CostTypeFindListOK struct {
 	Payload *models.CostTypeFindResponse
 }
 
+// IsSuccess returns true when this cost type find list o k response has a 2xx status code
+func (o *CostTypeFindListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this cost type find list o k response has a 3xx status code
+func (o *CostTypeFindListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this cost type find list o k response has a 4xx status code
+func (o *CostTypeFindListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this cost type find list o k response has a 5xx status code
+func (o *CostTypeFindListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this cost type find list o k response a status code equal to that given
+func (o *CostTypeFindListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the cost type find list o k response
+func (o *CostTypeFindListOK) Code() int {
+	return 200
+}
+
 func (o *CostTypeFindListOK) Error() string {
 	return fmt.Sprintf("[GET /costType][%d] costTypeFindListOK  %+v", 200, o.Payload)
 }
+
+func (o *CostTypeFindListOK) String() string {
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListOK  %+v", 200, o.Payload)
+}
+
 func (o *CostTypeFindListOK) GetPayload() *models.CostTypeFindResponse {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewCostTypeFindListBadRequest() *CostTypeFindListBadRequest {
 	return &CostTypeFindListBadRequest{}
 }
 
-/* CostTypeFindListBadRequest describes a response with status code 400, with default header values.
+/*
+CostTypeFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type CostTypeFindListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this cost type find list bad request response has a 2xx status code
+func (o *CostTypeFindListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this cost type find list bad request response has a 3xx status code
+func (o *CostTypeFindListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this cost type find list bad request response has a 4xx status code
+func (o *CostTypeFindListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this cost type find list bad request response has a 5xx status code
+func (o *CostTypeFindListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this cost type find list bad request response a status code equal to that given
+func (o *CostTypeFindListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the cost type find list bad request response
+func (o *CostTypeFindListBadRequest) Code() int {
+	return 400
+}
+
 func (o *CostTypeFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /costType][%d] costTypeFindListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *CostTypeFindListBadRequest) String() string {
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *CostTypeFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewCostTypeFindListUnauthorized() *CostTypeFindListUnauthorized {
 	return &CostTypeFindListUnauthorized{}
 }
 
-/* CostTypeFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+CostTypeFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type CostTypeFindListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this cost type find list unauthorized response has a 2xx status code
+func (o *CostTypeFindListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this cost type find list unauthorized response has a 3xx status code
+func (o *CostTypeFindListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this cost type find list unauthorized response has a 4xx status code
+func (o *CostTypeFindListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this cost type find list unauthorized response has a 5xx status code
+func (o *CostTypeFindListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this cost type find list unauthorized response a status code equal to that given
+func (o *CostTypeFindListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the cost type find list unauthorized response
+func (o *CostTypeFindListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *CostTypeFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /costType][%d] costTypeFindListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *CostTypeFindListUnauthorized) String() string {
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *CostTypeFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewCostTypeFindListInternalServerError() *CostTypeFindListInternalServerErr
 	return &CostTypeFindListInternalServerError{}
 }
 
-/* CostTypeFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+CostTypeFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type CostTypeFindListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this cost type find list internal server error response has a 2xx status code
+func (o *CostTypeFindListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this cost type find list internal server error response has a 3xx status code
+func (o *CostTypeFindListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this cost type find list internal server error response has a 4xx status code
+func (o *CostTypeFindListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this cost type find list internal server error response has a 5xx status code
+func (o *CostTypeFindListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this cost type find list internal server error response a status code equal to that given
+func (o *CostTypeFindListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the cost type find list internal server error response
+func (o *CostTypeFindListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *CostTypeFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /costType][%d] costTypeFindListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *CostTypeFindListInternalServerError) String() string {
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *CostTypeFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

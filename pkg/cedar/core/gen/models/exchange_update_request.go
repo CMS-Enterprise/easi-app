@@ -85,6 +85,11 @@ func (m *ExchangeUpdateRequest) contextValidateExchanges(ctx context.Context, fo
 	for i := 0; i < len(m.Exchanges); i++ {
 
 		if m.Exchanges[i] != nil {
+
+			if swag.IsZero(m.Exchanges[i]) { // not required
+				return nil
+			}
+
 			if err := m.Exchanges[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Exchanges" + "." + strconv.Itoa(i))

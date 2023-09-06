@@ -54,7 +54,7 @@ func (o *SystemVersionFindByIDReader) ReadResponse(response runtime.ClientRespon
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /system/version] systemVersionFindById", response, response.Code())
 	}
 }
 
@@ -63,7 +63,8 @@ func NewSystemVersionFindByIDOK() *SystemVersionFindByIDOK {
 	return &SystemVersionFindByIDOK{}
 }
 
-/* SystemVersionFindByIDOK describes a response with status code 200, with default header values.
+/*
+SystemVersionFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -71,9 +72,44 @@ type SystemVersionFindByIDOK struct {
 	Payload *models.SystemVersionResponse
 }
 
+// IsSuccess returns true when this system version find by Id o k response has a 2xx status code
+func (o *SystemVersionFindByIDOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this system version find by Id o k response has a 3xx status code
+func (o *SystemVersionFindByIDOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this system version find by Id o k response has a 4xx status code
+func (o *SystemVersionFindByIDOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this system version find by Id o k response has a 5xx status code
+func (o *SystemVersionFindByIDOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this system version find by Id o k response a status code equal to that given
+func (o *SystemVersionFindByIDOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the system version find by Id o k response
+func (o *SystemVersionFindByIDOK) Code() int {
+	return 200
+}
+
 func (o *SystemVersionFindByIDOK) Error() string {
 	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdOK  %+v", 200, o.Payload)
 }
+
+func (o *SystemVersionFindByIDOK) String() string {
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdOK  %+v", 200, o.Payload)
+}
+
 func (o *SystemVersionFindByIDOK) GetPayload() *models.SystemVersionResponse {
 	return o.Payload
 }
@@ -95,7 +131,8 @@ func NewSystemVersionFindByIDBadRequest() *SystemVersionFindByIDBadRequest {
 	return &SystemVersionFindByIDBadRequest{}
 }
 
-/* SystemVersionFindByIDBadRequest describes a response with status code 400, with default header values.
+/*
+SystemVersionFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -103,9 +140,44 @@ type SystemVersionFindByIDBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this system version find by Id bad request response has a 2xx status code
+func (o *SystemVersionFindByIDBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this system version find by Id bad request response has a 3xx status code
+func (o *SystemVersionFindByIDBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this system version find by Id bad request response has a 4xx status code
+func (o *SystemVersionFindByIDBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this system version find by Id bad request response has a 5xx status code
+func (o *SystemVersionFindByIDBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this system version find by Id bad request response a status code equal to that given
+func (o *SystemVersionFindByIDBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the system version find by Id bad request response
+func (o *SystemVersionFindByIDBadRequest) Code() int {
+	return 400
+}
+
 func (o *SystemVersionFindByIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *SystemVersionFindByIDBadRequest) String() string {
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *SystemVersionFindByIDBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -127,7 +199,8 @@ func NewSystemVersionFindByIDUnauthorized() *SystemVersionFindByIDUnauthorized {
 	return &SystemVersionFindByIDUnauthorized{}
 }
 
-/* SystemVersionFindByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+SystemVersionFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -135,9 +208,44 @@ type SystemVersionFindByIDUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this system version find by Id unauthorized response has a 2xx status code
+func (o *SystemVersionFindByIDUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this system version find by Id unauthorized response has a 3xx status code
+func (o *SystemVersionFindByIDUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this system version find by Id unauthorized response has a 4xx status code
+func (o *SystemVersionFindByIDUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this system version find by Id unauthorized response has a 5xx status code
+func (o *SystemVersionFindByIDUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this system version find by Id unauthorized response a status code equal to that given
+func (o *SystemVersionFindByIDUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the system version find by Id unauthorized response
+func (o *SystemVersionFindByIDUnauthorized) Code() int {
+	return 401
+}
+
 func (o *SystemVersionFindByIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *SystemVersionFindByIDUnauthorized) String() string {
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *SystemVersionFindByIDUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -159,7 +267,8 @@ func NewSystemVersionFindByIDNotFound() *SystemVersionFindByIDNotFound {
 	return &SystemVersionFindByIDNotFound{}
 }
 
-/* SystemVersionFindByIDNotFound describes a response with status code 404, with default header values.
+/*
+SystemVersionFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -167,9 +276,44 @@ type SystemVersionFindByIDNotFound struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this system version find by Id not found response has a 2xx status code
+func (o *SystemVersionFindByIDNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this system version find by Id not found response has a 3xx status code
+func (o *SystemVersionFindByIDNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this system version find by Id not found response has a 4xx status code
+func (o *SystemVersionFindByIDNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this system version find by Id not found response has a 5xx status code
+func (o *SystemVersionFindByIDNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this system version find by Id not found response a status code equal to that given
+func (o *SystemVersionFindByIDNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
+// Code gets the status code for the system version find by Id not found response
+func (o *SystemVersionFindByIDNotFound) Code() int {
+	return 404
+}
+
 func (o *SystemVersionFindByIDNotFound) Error() string {
 	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdNotFound  %+v", 404, o.Payload)
 }
+
+func (o *SystemVersionFindByIDNotFound) String() string {
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdNotFound  %+v", 404, o.Payload)
+}
+
 func (o *SystemVersionFindByIDNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -191,7 +335,8 @@ func NewSystemVersionFindByIDInternalServerError() *SystemVersionFindByIDInterna
 	return &SystemVersionFindByIDInternalServerError{}
 }
 
-/* SystemVersionFindByIDInternalServerError describes a response with status code 500, with default header values.
+/*
+SystemVersionFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -199,9 +344,44 @@ type SystemVersionFindByIDInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this system version find by Id internal server error response has a 2xx status code
+func (o *SystemVersionFindByIDInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this system version find by Id internal server error response has a 3xx status code
+func (o *SystemVersionFindByIDInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this system version find by Id internal server error response has a 4xx status code
+func (o *SystemVersionFindByIDInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this system version find by Id internal server error response has a 5xx status code
+func (o *SystemVersionFindByIDInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this system version find by Id internal server error response a status code equal to that given
+func (o *SystemVersionFindByIDInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the system version find by Id internal server error response
+func (o *SystemVersionFindByIDInternalServerError) Code() int {
+	return 500
+}
+
 func (o *SystemVersionFindByIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *SystemVersionFindByIDInternalServerError) String() string {
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *SystemVersionFindByIDInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }
