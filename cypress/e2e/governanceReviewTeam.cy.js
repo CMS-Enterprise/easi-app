@@ -20,7 +20,7 @@ describe('Governance Review Team', () => {
       }
     });
 
-    cy.localLogin({ name: 'GRTB', role: 'EASI_D_GOVTEAM' });
+    cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
     cy.wait('@getOpenIntakes').its('response.statusCode').should('eq', 200);
   });
 
@@ -126,7 +126,7 @@ describe('Governance Review Team', () => {
 
       // .first() is the most recent note we just created
       cy.get('[data-testid="user-note"]').first().contains(noteFixture);
-      cy.get('[data-testid="user-note"]').first().contains('User GRTB');
+      cy.get('[data-testid="user-note"]').first().contains('User E2E2');
     });
   });
 
