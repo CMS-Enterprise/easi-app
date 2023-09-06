@@ -24,15 +24,16 @@ export interface SystemIntakeActionFields {
   notificationRecipients: EmailNotificationRecipients;
 }
 
-type ActionFormProps = {
+export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   systemIntakeId: string;
   title: string;
   description: string;
   breadcrumb: string;
   children?: React.ReactNode;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  /** Submit function runs after field validation passes */
+  onSubmit: (formData: TFieldValues) => Promise<void>;
   className?: string;
-} & JSX.IntrinsicElements['form'];
+} & Omit<JSX.IntrinsicElements['form'], 'onSubmit'>;
 
 /**
  * Form wrapper for IT Gov admin actions
@@ -42,7 +43,7 @@ type ActionFormProps = {
  * Common fields: additional information, notification recipients, and admin note
  *
  */
-const ActionForm = ({
+const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   systemIntakeId,
   title,
   description,
@@ -51,7 +52,7 @@ const ActionForm = ({
   onSubmit,
   className,
   ...formProps
-}: ActionFormProps) => {
+}: ActionFormProps<TFieldValues>) => {
   const { t } = useTranslation('action');
 
   const {
@@ -71,8 +72,19 @@ const ActionForm = ({
     setValue,
     watch,
     reset,
+    handleSubmit,
     formState: { isSubmitting, defaultValues, errors }
   } = useFormContext<SystemIntakeActionFields>();
+
+  const submitForm = handleSubmit(formData => {
+    onSubmit(formData as TFieldValues)
+      .then(() => {
+        // Display success message
+      })
+      .catch(() => {
+        // Display success message
+      });
+  });
 
   // Set default form values
   useEffect(() => {
@@ -145,7 +157,7 @@ const ActionForm = ({
 
       <Form
         {...formProps}
-        onSubmit={onSubmit}
+        onSubmit={submitForm}
         className="maxw-none margin-top-6 tablet:grid-col-6"
       >
         {children}

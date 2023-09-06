@@ -4,23 +4,31 @@ import { useTranslation } from 'react-i18next';
 
 import ActionForm, { SystemIntakeActionFields } from './ActionForm';
 
+interface NextStepFields extends SystemIntakeActionFields {}
+
 const NextStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
 
-  const form = useForm<SystemIntakeActionFields>();
+  const form = useForm<NextStepFields>();
 
-  const { handleSubmit } = form;
-
-  const submit = handleSubmit(() => null);
+  /**
+   * Submit handler containing mutation logic
+   *
+   * Error and success handling is done in `<ActionForm>`
+   */
+  const onSubmit = async (formData: NextStepFields) => {
+    // Execute mutation here
+    // mutate(formData);
+  };
 
   return (
-    <FormProvider<SystemIntakeActionFields> {...form}>
+    <FormProvider<NextStepFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
         title={t('nextStep.title')}
         description=""
         breadcrumb=""
-        onSubmit={submit}
+        onSubmit={onSubmit}
       >
         {/* Action fields here */}
       </ActionForm>
