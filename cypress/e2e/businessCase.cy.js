@@ -1,6 +1,6 @@
 describe('The Business Case Form', () => {
   beforeEach(() => {
-    cy.localLogin({ name: 'TEST' });
+    cy.localLogin({ name: 'E2E1' });
   });
 
   it('fills out all business case fields', () => {
@@ -19,10 +19,7 @@ describe('The Business Case Form', () => {
       'Easy Access to System Information'
     );
 
-    cy.get('#BusinessCase-RequesterName').should(
-      'have.value',
-      'John Requester'
-    );
+    cy.get('#BusinessCase-RequesterName').should('have.value', 'EndToEnd One');
 
     cy.get('#BusinessCase-BusinessOwnerName').should(
       'have.value',
@@ -91,7 +88,7 @@ describe('The Business Case Form', () => {
       .should('deep.include', {
         requestName: 'Easy Access to System Information',
         requester: {
-          name: 'John Requester',
+          name: 'EndToEnd One',
           phoneNumber: '1234567890'
         },
         businessOwner: {
