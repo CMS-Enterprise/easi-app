@@ -21,13 +21,6 @@ module.exports = (on, config) => {
     generateOTP: cypressOTP
   });
 
-  // on('file:preprocessor', file => {
-  //   console.log('===============');
-  //   console.log('file:preprocessor => ', file);
-  //   console.log('===============');
-  //   return vitePreprocessor()(file);
-  // });
-
   const options = {
     webpackOptions: {
       resolve: {
