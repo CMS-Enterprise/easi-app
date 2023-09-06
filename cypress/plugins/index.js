@@ -11,7 +11,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 const cypressOTP = require('cypress-otp');
-const vitePreprocessor = require('cypress-vite');
+// const vitePreprocessor = require('cypress-vite');
+const wp = require('@cypress/webpack-preprocessor');
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
@@ -20,12 +21,30 @@ module.exports = (on, config) => {
     generateOTP: cypressOTP
   });
 
-  on('file:preprocessor', file => {
-    console.log('===============');
-    console.log('file:preprocessor => ', file);
-    console.log('===============');
-    return vitePreprocessor()(file);
-  });
+  // on('file:preprocessor', file => {
+  //   console.log('===============');
+  //   console.log('file:preprocessor => ', file);
+  //   console.log('===============');
+  //   return vitePreprocessor()(file);
+  // });
+
+  const options = {
+    webpackOptions: {
+      resolve: {
+        extensions: ['.ts', '.js']
+      },
+      module: {
+        rules: [
+          {
+            test: /\.tsx?$/,
+            loader: 'ts-loader',
+            options: { transpileOnly: true }
+          }
+        ]
+      }
+    }
+  };
+  on('file:preprocessor', wp(options));
 
   const newConfig = config;
   newConfig.env.oktaDomain = process.env.OKTA_DOMAIN;
