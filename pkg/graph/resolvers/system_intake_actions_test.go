@@ -1080,7 +1080,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
 		s.NoError(err)
-		_, err2 := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{ //TODO: SW All fields required
+		_, err2 := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{
 			SystemIntakeID: intakeNoLCID.ID,
 		})
 		s.Error(err2)
