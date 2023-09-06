@@ -642,6 +642,20 @@ type SystemIntakeISSOInput struct {
 	Name      *string `json:"name"`
 }
 
+// Input for setting an intake's decision to issuing an LCID in IT Gov v2
+type SystemIntakeIssueLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	Lcid                   *string                             `json:"lcid"`
+	ExpiresAt              time.Time                           `json:"expiresAt"`
+	Scope                  models.HTML                         `json:"scope"`
+	NextSteps              models.HTML                         `json:"nextSteps"`
+	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
+}
+
 // Contains the data needed to change the expiration date of a system request's
 // lifecycle ID
 type SystemIntakeLCIDExpirationChange struct {
@@ -690,7 +704,18 @@ type SystemIntakeProgressToNewStepsInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	Feedback               *models.HTML                        `json:"feedback"`
 	GrbRecommendations     *models.HTML                        `json:"grbRecommendations"`
-	AdditionalNote         *models.HTML                        `json:"additionalNote"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
+}
+
+// Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
+type SystemIntakeRejectIntakeInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	Reason                 models.HTML                         `json:"reason"`
+	NextSteps              models.HTML                         `json:"nextSteps"`
+	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
 	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
