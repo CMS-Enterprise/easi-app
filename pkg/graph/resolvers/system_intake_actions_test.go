@@ -1100,10 +1100,16 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		scope := models.HTML("A really great new scope")
 		additionalInfo := models.HTMLPointer("My test info")
 		costBaseline := "the original costBaseline"
+		expiresAt := time.Now()
+		nextSteps := models.HTML("My next steps")
+		trbFollowUp := models.TRBFRNotRecommended
 
 		confirmedIntakeLCID, err := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{
 			SystemIntakeID: intakeWLCID.ID,
+			ExpiresAt:      expiresAt,
 			Scope:          scope,
+			NextSteps:      nextSteps,
+			TrbFollowUp:    trbFollowUp,
 			AdditionalInfo: additionalInfo,
 			CostBaseline:   &costBaseline,
 		})
@@ -1130,9 +1136,16 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 
 			confirmedScope := models.HTML("A really great new scope")
 			additionalInfoconfirm := models.HTMLPointer("My feedback for second confirm")
+			expiresAt := time.Now()
+			nextSteps := models.HTML("My next steps")
+			trbFollowUp := models.TRBFRNotRecommended
+
 			secondconfirmIntake, err := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{
 				SystemIntakeID: confirmedIntakeLCID.ID,
+				ExpiresAt:      expiresAt,
 				Scope:          confirmedScope,
+				NextSteps:      nextSteps,
+				TrbFollowUp:    trbFollowUp,
 				AdditionalInfo: additionalInfoconfirm,
 				AdminNote:      &adminNote,
 			})
