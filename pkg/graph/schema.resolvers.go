@@ -1140,7 +1140,7 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 }
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
-func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input *model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error) {
 	updatedIntake, err := resolvers.ProgressIntake(ctx, r.store, r.service.FetchUserInfo, input)
 
 	return &model.UpdateSystemIntakePayload{
@@ -1158,6 +1158,24 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 	)
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
+	}, err
+}
+
+// CreateSystemIntakeActionIssueLcid is the resolver for the createSystemIntakeActionIssueLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context, input model.SystemIntakeIssueLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+	updatedIntake, err := resolvers.IssueLCID(ctx, r.store, r.service.FetchUserInfo, input)
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, err
+}
+
+// CreateSystemIntakeActionRejectIntake is the resolver for the createSystemIntakeActionRejectIntake field.
+func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Context, input model.SystemIntakeRejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+	updatedIntake, err := resolvers.RejectIntakeAsNotApproved(ctx, r.store, r.service.FetchUserInfo, input)
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
 	}, err
 }
 

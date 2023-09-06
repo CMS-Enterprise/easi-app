@@ -11,19 +11,25 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-// ProgressIntake handles a Progress to New Step action on an intake
+// ProgressIntake handles a Progress to New Step action on an intake as part of Admin Actions v2
 func ProgressIntake(
 	ctx context.Context,
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input *model.SystemIntakeProgressToNewStepsInput,
+	input model.SystemIntakeProgressToNewStepsInput,
 ) (*models.SystemIntake, error) {
 	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
@@ -59,13 +65,8 @@ func ProgressIntake(
 		return nil
 	})
 
-	// save action (including additional notes for email, if any)
+	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
-		adminUserInfo, errCreatingAction := fetchUserInfo(ctx, adminEUAID)
-		if errCreatingAction != nil {
-			return errCreatingAction
-		}
-
 		stepForAction := models.SystemIntakeStep(input.NewStep)
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
@@ -75,11 +76,11 @@ func ProgressIntake(
 			ActorEUAUserID: adminEUAID,
 			Step:           &stepForAction,
 		}
-		if input.AdditionalNote != nil {
-			action.Feedback = input.AdditionalNote
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
 		}
 
-		_, errCreatingAction = store.CreateAction(ctx, &action)
+		_, errCreatingAction := store.CreateAction(ctx, &action)
 		if errCreatingAction != nil {
 			return errCreatingAction
 		}
@@ -132,11 +133,6 @@ func ProgressIntake(
 	// save admin note
 	if input.AdminNote != nil {
 		errGroup.Go(func() error {
-			adminUserInfo, errAdminUserInfo := fetchUserInfo(ctx, adminEUAID)
-			if errAdminUserInfo != nil {
-				return errAdminUserInfo
-			}
-
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
@@ -197,6 +193,9 @@ func CreateSystemIntakeActionRequestEdits(
 		}
 	}
 
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -238,6 +237,224 @@ func CreateSystemIntakeActionRequestEdits(
 		}
 	}
 	return intake, nil
+}
+
+// RejectIntakeAsNotApproved handles a Not Approved by GRB action on an intake as part of Admin Actions v2
+func RejectIntakeAsNotApproved(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeRejectIntakeInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// No validity check needed:
+	// * Issuing this decision is valid in all steps
+	// * Issuing this decision is valid both when an intake is open and when it's closed (in the latter case, it's changing the decision)
+	// * Even if a rejection decision has already been issued, an admin can confirm that decision on a reopened intake through this action
+
+	// update workflow state
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.DecisionState = models.SIDSNotApproved
+
+	// update other fields
+	intake.RejectionReason = &input.Reason
+	intake.DecisionNextSteps = &input.NextSteps
+	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	// All the different database calls aren't in a single atomic transaction;
+	// in the case of a system failure, some data from the action might be saved, but not all.
+	// As of this function's initial implementation, we're accepting that risk.
+	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional info for email, if any)
+	errGroup.Go(func() error {
+		action := models.Action{
+			IntakeID:       &input.SystemIntakeID,
+			ActionType:     models.ActionTypeREJECT,
+			ActorName:      adminUserInfo.CommonName,
+			ActorEmail:     adminUserInfo.Email,
+			ActorEUAUserID: adminEUAID,
+			Step:           &intake.Step,
+		}
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
+}
+
+// IssueLCID handles an Issue LCID action on an intake as part of Admin Actions v2
+func IssueLCID(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeIssueLCIDInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = lcidactions.IsIntakeValidToIssueLCID(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	// if a LCID wasn't passed in, we generate one
+	newLCID, err := lcidactions.GenerateNewLCID(ctx, store, input.Lcid)
+	if err != nil {
+		return nil, err
+	}
+
+	// update workflow state
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.DecisionState = models.SIDSLcidIssued
+
+	// update LCID-related fields
+	intake.LifecycleID = null.StringFrom(newLCID)
+	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleScope = &input.Scope
+	intake.DecisionNextSteps = &input.NextSteps
+	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+
+	// update other fields
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	// All the different database calls aren't in a single atomic transaction;
+	// in the case of a system failure, some data from the action might be saved, but not all.
+	// As of this function's initial implementation, we're accepting that risk.
+	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional info for email, if any)
+	errGroup.Go(func() error {
+		action := models.Action{
+			IntakeID:       &input.SystemIntakeID,
+			ActionType:     models.ActionTypeISSUELCID,
+			ActorName:      adminUserInfo.CommonName,
+			ActorEmail:     adminUserInfo.Email,
+			ActorEUAUserID: adminEUAID,
+			Step:           &intake.Step,
+		}
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
 }
 
 // CreateSystemIntakeActionReopenRequest reopens an intake request
