@@ -19,10 +19,7 @@ describe('The Business Case Form', () => {
       'Easy Access to System Information'
     );
 
-    cy.get('#BusinessCase-RequesterName').should(
-      'have.value',
-      'John Requester'
-    );
+    cy.get('#BusinessCase-RequesterName').should('have.value', 'EndToEnd One');
 
     cy.get('#BusinessCase-BusinessOwnerName').should(
       'have.value',

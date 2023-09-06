@@ -66,7 +66,7 @@ describe('The System Intake Form', () => {
     );
     cy.get('#IntakeForm-BusinessOwnerEmail').should(
       'have.value',
-      'adeline.aarons@local.fake'
+      'endtoend.one@local.fake'
     );
     cy.get('#IntakeForm-BusinessOwnerComponent').should(
       'have.value',

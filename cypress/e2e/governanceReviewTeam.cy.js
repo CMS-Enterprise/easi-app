@@ -126,7 +126,7 @@ describe('Governance Review Team', () => {
 
       // .first() is the most recent note we just created
       cy.get('[data-testid="user-note"]').first().contains(noteFixture);
-      cy.get('[data-testid="user-note"]').first().contains('User GRTB');
+      cy.get('[data-testid="user-note"]').first().contains('User E2E2');
     });
   });
 
