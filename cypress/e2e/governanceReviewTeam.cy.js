@@ -20,7 +20,7 @@ describe('Governance Review Team', () => {
       }
     });
 
-    cy.localLogin({ name: 'GRTB', role: 'EASI_D_GOVTEAM' });
+    cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
     cy.wait('@getOpenIntakes').its('response.statusCode').should('eq', 200);
   });
 

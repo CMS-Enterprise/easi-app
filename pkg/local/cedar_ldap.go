@@ -337,6 +337,16 @@ func getMockUserData() []*models.UserInfo {
 			Email:      "isidro.swaniawski@local.fake",
 			EuaUserID:  "SM7H",
 		},
+		{
+			CommonName: "EndToEnd One",
+			Email:      "endtoend.two@local.fake",
+			EuaUserID:  "E2E1",
+		},
+		{
+			CommonName: "EndToEnd Two",
+			Email:      "endtoend.two@local.fake",
+			EuaUserID:  "E2E2",
+		},
 	}
 }
 
