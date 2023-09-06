@@ -1070,3 +1070,92 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 	})
 
 }
+
+func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
+
+	s.Run("Can't confirm an LCID that wasn't issued", func() {
+		intakeNoLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Step:        models.SystemIntakeStepINITIALFORM,
+		})
+		s.NoError(err)
+		_, err2 := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{ //TODO: SW All fields required
+			SystemIntakeID: intakeNoLCID.ID,
+		})
+		s.Error(err2)
+
+	})
+
+	s.Run("Can confirm an LCID that was issued", func() {
+		intakeWLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Step:        models.SystemIntakeStepINITIALFORM,
+		})
+		s.NoError(err)
+		intakeWLCID.LifecycleID = null.StringFrom("123456")
+		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intakeWLCID)
+		s.NoError(err)
+		scope := models.HTML("A really great new scope")
+		additionalInfo := models.HTMLPointer("My test info")
+		costBaseline := "the original costBaseline"
+
+		confirmedIntakeLCID, err := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{
+			SystemIntakeID: intakeWLCID.ID,
+			Scope:          scope,
+			AdditionalInfo: additionalInfo,
+			CostBaseline:   &costBaseline,
+		})
+		s.NoError(err)
+		s.EqualValues(&scope, confirmedIntakeLCID.LifecycleScope)
+		s.EqualValues(null.StringFrom(costBaseline), confirmedIntakeLCID.LifecycleCostBaseline)
+
+		// assert acion is created
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, confirmedIntakeLCID.ID)
+		s.NoError(err)
+		s.NotEmpty(allActionsForIntake)
+		action := allActionsForIntake[0]
+		s.EqualValues(confirmedIntakeLCID.ID, *action.IntakeID)
+		s.EqualValues(models.ActionTypeCONFIRMLCID, action.ActionType)
+		s.EqualValues(additionalInfo, action.Feedback)
+
+		//assert there is not an admin note since not included
+		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, confirmedIntakeLCID.ID)
+		s.NoError(err)
+		s.Empty(allNotesForIntake)
+
+		s.Run("Can confirm an already confirmd LCID", func() {
+			adminNote := models.HTML("test admin note for updating LCID")
+
+			confirmedScope := models.HTML("A really great new scope")
+			additionalInfoconfirm := models.HTMLPointer("My feedback for second confirm")
+			secondconfirmIntake, err := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{
+				SystemIntakeID: confirmedIntakeLCID.ID,
+				Scope:          confirmedScope,
+				AdditionalInfo: additionalInfoconfirm,
+				AdminNote:      &adminNote,
+			})
+			s.NoError(err)
+			s.EqualValues(&confirmedScope, secondconfirmIntake.LifecycleScope)
+			s.EqualValues(null.StringFrom(costBaseline), secondconfirmIntake.LifecycleCostBaseline) // This should not be confirmd since it wasn't included
+
+			allActionsForIntake2, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, secondconfirmIntake.ID)
+			s.NoError(err)
+			s.NotEmpty(allActionsForIntake2)
+			action := allActionsForIntake2[0] //The first action is the most recent
+			s.EqualValues(secondconfirmIntake.ID, *action.IntakeID)
+			s.EqualValues(models.ActionTypeCONFIRMLCID, action.ActionType)
+			s.EqualValues(additionalInfoconfirm, action.Feedback)
+
+			//There should be one admin note
+			allNotesForIntake2, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, secondconfirmIntake.ID)
+			s.NoError(err)
+			s.NotEmpty(allNotesForIntake2)
+			note := allNotesForIntake2[0]
+			s.EqualValues(&adminNote, note.Content)
+		})
+
+	})
+
+}
