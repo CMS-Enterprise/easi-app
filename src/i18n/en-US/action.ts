@@ -53,6 +53,7 @@ const action = {
   resolutions: {
     title: 'Action: issue decision or close request',
     title_NO_DECISION: 'Action: change decision or close request',
+    requestDetails: 'Request details',
     description_NO_DECISION:
       'Issue a Life Cycle ID, mark that this request was not approved by the Governance Review Board (GRB), mark that this request is not an IT Governance request, or close this request for another reason.',
     description_LCID_ISSUED:
