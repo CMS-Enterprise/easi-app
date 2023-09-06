@@ -2,7 +2,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Form } from '@trussworks/react-uswds';
+import { Form, Grid, SummaryBox } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import Label from 'components/shared/Label';
@@ -64,76 +64,136 @@ const Resolutions = ({ systemIntakeId }: { systemIntakeId: string }) => {
         />
       </p>
 
-      <Form
-        onSubmit={handleSubmit(formData =>
-          history.push(`resolutions/${formData.resolution}`)
-        )}
-      >
-        <Controller
-          name="resolution"
-          control={control}
-          render={({ field, fieldState: { error } }) => {
-            return (
-              <RadioGroup>
-                <Label htmlFor="resolution" className="text-normal" required>
-                  {t('resolutions.label')}
-                </Label>
-                <RadioField
-                  {...field}
-                  value="issue-lcid"
-                  checked={field.value === 'issue-lcid'}
-                  label={t('resolutions.summary.issueLcid')}
-                  id="grt-resolution__issueLcid"
-                />
+      <Grid className="grid-row grid-gap margin-top-6">
+        <Form
+          onSubmit={handleSubmit(formData =>
+            history.push(`resolutions/${formData.resolution}`)
+          )}
+          className="maxw-none grid-col-6"
+        >
+          <Controller
+            name="resolution"
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <RadioGroup>
+                  <Label
+                    htmlFor="resolution"
+                    className="text-normal margin-top-0"
+                    required
+                  >
+                    {t('resolutions.label')}
+                  </Label>
+                  <RadioField
+                    {...field}
+                    value="issue-lcid"
+                    checked={field.value === 'issue-lcid'}
+                    label={t('resolutions.summary.issueLcid')}
+                    id="grt-resolution__issueLcid"
+                  />
 
-                <RadioField
-                  {...field}
-                  value="not-it-request"
-                  checked={field.value === 'not-it-request'}
-                  label={t('resolutions.summary.notItRequest')}
-                  id="grt-resolution__notItRequest"
-                />
+                  <RadioField
+                    {...field}
+                    value="not-it-request"
+                    checked={field.value === 'not-it-request'}
+                    label={t('resolutions.summary.notItRequest')}
+                    id="grt-resolution__notItRequest"
+                  />
 
-                <RadioField
-                  {...field}
-                  value="not-approved"
-                  checked={field.value === 'not-approved'}
-                  label={t('resolutions.summary.notApproved')}
-                  id="grt-resolution__notApproved"
-                />
+                  <RadioField
+                    {...field}
+                    value="not-approved"
+                    checked={field.value === 'not-approved'}
+                    label={t('resolutions.summary.notApproved')}
+                    id="grt-resolution__notApproved"
+                  />
 
-                <RadioField
-                  {...field}
-                  value="close-request"
-                  checked={field.value === 'close-request'}
-                  label={t('resolutions.summary.closeRequest')}
-                  id="grt-resolution__closeRequest"
-                />
+                  <RadioField
+                    {...field}
+                    value="close-request"
+                    checked={field.value === 'close-request'}
+                    label={t('resolutions.summary.closeRequest')}
+                    id="grt-resolution__closeRequest"
+                  />
 
-                <RadioField
-                  {...field}
-                  value="re-open-request"
-                  checked={field.value === 're-open-request'}
-                  label={t('resolutions.summary.reopenRequest')}
-                  id="grt-resolution__reopenRequest"
-                />
-              </RadioGroup>
-            );
-          }}
-        />
+                  <RadioField
+                    {...field}
+                    value="re-open-request"
+                    checked={field.value === 're-open-request'}
+                    label={t('resolutions.summary.reopenRequest')}
+                    id="grt-resolution__reopenRequest"
+                  />
+                </RadioGroup>
+              );
+            }}
+          />
 
-        <Pager
-          next={{
-            type: 'submit',
-            disabled: !isDirty
-          }}
-          saveExitText={t('cancelAction')}
-          taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
-          className="margin-top-6"
-          border={false}
-          submitDisabled
-        />
-      </Form>
+          <Pager
+            next={{
+              type: 'submit',
+              disabled: !isDirty
+            }}
+            saveExitText={t('cancelAction')}
+            taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
+            className="margin-top-6"
+            border={false}
+            submitDisabled
+          />
+        </Form>
+        <Grid className="grid-col-6">
+          <SummaryBox
+            className="grt-resolutions-summary"
+            heading={t('resolutions.summary.title')}
+          >
+            <dl title={t('resolutions.summary.title')} className="usa-list">
+              <div>
+                <dt className="display-inline text-bold margin-right-05">
+                  {t('resolutions.summary.issueLcid')}:
+                </dt>
+                <dd className="display-inline margin-0">
+                  {t('resolutions.summary.issueLcidDescription')}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="display-inline text-bold margin-right-05">
+                  {t('resolutions.summary.notItRequest')}:
+                </dt>
+                <dd className="display-inline margin-0">
+                  {t('resolutions.summary.notItRequestDescription')}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="display-inline text-bold margin-right-05">
+                  {t('resolutions.summary.notApproved')}:
+                </dt>
+                <dd className="display-inline margin-0">
+                  {t('resolutions.summary.notApprovedDescription')}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="display-inline text-bold margin-right-05">
+                  {t('resolutions.summary.closeRequest')}:
+                </dt>
+                <dd className="display-inline margin-0">
+                  {t('resolutions.summary.closeRequestDescription')}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="display-inline text-bold margin-right-05">
+                  {t('resolutions.summary.reopenRequest')}:
+                </dt>
+                <dd className="display-inline margin-0">
+                  {t('resolutions.summary.reopenRequestDescription')}
+                </dd>
+              </div>
+            </dl>
+          </SummaryBox>
+        </Grid>
+      </Grid>
     </div>
   );
 };
