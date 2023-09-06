@@ -10,6 +10,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
+import useMessage from 'hooks/useMessage';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
@@ -54,6 +55,8 @@ import './index.scss';
 const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const flags = useFlags();
+
+  const { Message } = useMessage();
 
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
@@ -124,6 +127,7 @@ const RequestOverview = () => {
           'margin-bottom-5 margin-top-7': !fullPageLayout
         })}
       >
+        <Message className="margin-bottom-5" />
         <Grid row gap>
           {!fullPageLayout && (
             <nav className="desktop:grid-col-3 desktop:display-block display-none">
@@ -169,13 +173,11 @@ const RequestOverview = () => {
               </ul>
             </nav>
           )}
-
           {loading && (
             <div className="margin-x-auto">
               <PageLoading />
             </div>
           )}
-
           {!loading && !!systemIntake && (
             <section
               className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}

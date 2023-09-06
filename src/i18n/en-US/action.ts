@@ -76,7 +76,8 @@ const action = {
     breadcrumb: 'Request edits',
     title: 'Action: request edits',
     description:
-      'Use this action if there are changes that need to be made to the Intake Request or Business Case form in order to proceed with the governance process. Specify the edits or additional information needed from the requester.'
+      'Use this action if there are changes that need to be made to the Intake Request or Business Case form in order to proceed with the governance process. Specify the edits or additional information needed from the requester.',
+    success: 'You have requested edits to the Draft Business Case.'
   },
   nextStep: {
     title: 'Action: next steps'
