@@ -12,7 +12,7 @@ import { UpdateSystemIntakeNoteInput } from "./../../types/graphql-global-types"
 export interface UpdateSystemIntakeNote_updateSystemIntakeNote {
   __typename: "SystemIntakeNote";
   id: UUID;
-  content: string;
+  content: HTML;
 }
 
 export interface UpdateSystemIntakeNote {

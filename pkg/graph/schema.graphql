@@ -945,7 +945,7 @@ A note added to a system request
 """
 type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
-  content: String!
+  content: HTML!
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
@@ -987,7 +987,7 @@ type SystemIntake {
   annualSpending: SystemIntakeAnnualSpending
   createdAt: Time!
   currentStage: String
-  decisionNextSteps: String
+  decisionNextSteps: HTML
   eaCollaborator: String
   eaCollaboratorName: String
   euaUserId: String!
@@ -1002,7 +1002,7 @@ type SystemIntake {
   isso: SystemIntakeISSO!
   lcid: String
   lcidExpiresAt: Time
-  lcidScope: String
+  lcidScope: HTML
   lcidCostBaseline: String
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
@@ -1010,7 +1010,7 @@ type SystemIntake {
   oitSecurityCollaboratorName: String
   productManager: SystemIntakeProductManager!
   projectAcronym: String
-  rejectionReason: String
+  rejectionReason: HTML
   requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
@@ -1044,6 +1044,7 @@ type SystemIntake {
   statusRequester: SystemIntakeStatusRequester!
   statusAdmin: SystemIntakeStatusAdmin!
   lcidStatus: SystemIntakeLCIDStatus
+  trbFollowUpRecommendation: SystemIntakeTRBFollowUp
 }
 
 """
@@ -1259,8 +1260,8 @@ Input data for extending a system request's lifecycle ID
 input CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID!
   expirationDate: Time
-  nextSteps: String
-  scope: String!
+  nextSteps: HTML
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1281,6 +1282,9 @@ enum SystemIntakeActionType {
   PROGRESS_TO_NEW_STEP
   REQUEST_EDITS
   EXPIRE_LCID
+  NOT_GOVERNANCE
+  CLOSE_REQUEST
+  REOPEN_REQUEST
 
   # v1/v2 actions - originally from v1, still used in v2
   ISSUE_LCID
@@ -1314,7 +1318,8 @@ type SystemIntakeAction {
   systemIntake: SystemIntake!
   type: SystemIntakeActionType!
   actor: SystemIntakeActionActor!
-  feedback: String
+  step: SystemIntakeStep
+  feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
   createdAt: Time!
 }
@@ -1326,10 +1331,10 @@ lifecycle ID
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
   newDate: Time!
-  previousScope: String
-  newScope: String
-  previousNextSteps: String
-  newNextSteps: String
+  previousScope: HTML
+  newScope: HTML
+  previousNextSteps: HTML
+  newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
  }
@@ -1347,8 +1352,8 @@ Feedback intended for a business owner before they proceed to writing a
 business case for a system request
 """
 input AddGRTFeedbackInput {
-  emailBody: String!
-  feedback: String!
+  emailBody: HTML!
+  feedback: HTML!
   intakeID: UUID!
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1367,11 +1372,11 @@ request
 """
 input IssueLifecycleIdInput {
   expiresAt: Time!
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
   lcid: String
-  nextSteps: String
-  scope: String!
+  nextSteps: HTML
+  scope: HTML!
   costBaseline: String
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1380,10 +1385,10 @@ input IssueLifecycleIdInput {
 Input data for rejection of a system's IT governance request
 """
 input RejectIntakeInput {
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
-  nextSteps: String
-  reason: String!
+  nextSteps: HTML
+  reason: HTML!
   notificationRecipients: EmailNotificationRecipients
 }
 
@@ -1400,7 +1405,7 @@ input UpdateSystemIntakeAdminLeadInput {
 The most recent note added by an admin to a system request
 """
 type LastAdminNote {
-  content: String
+  content: HTML
   createdAt: Time
 }
 
@@ -1418,7 +1423,7 @@ Feedback from the GRT to a business owner or GRB
 type GRTFeedback {
   id: UUID
   createdAt: Time!
-  feedback: String
+  feedback: HTML
   feedbackType: GRTFeedbackType
 }
 
@@ -1435,7 +1440,7 @@ input UpdateSystemIntakeReviewDatesInput {
 Input data for adding a note to a system request
 """
 input CreateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   authorName: String!
   intakeId: UUID!
 }
@@ -1444,7 +1449,7 @@ input CreateSystemIntakeNoteInput {
 Input data for updating an IT governance admin note
 """
 input UpdateSystemIntakeNoteInput {
-  content: String!
+  content: HTML!
   isArchived: Boolean!
   id: UUID!
 }
@@ -1476,10 +1481,10 @@ input SystemIntakeProgressToNewStepsInput {
   newStep: SystemIntakeStepToProgressTo!
   meetingDate: Time # optionally used when progressing to GRT or GRB meeting; ignored when progressing to other steps
   notificationRecipients: EmailNotificationRecipients
-  feedback: String
-  grbRecommendations: String
-  additionalNote: String
-  adminNote: String
+  feedback: HTML
+  grbRecommendations: HTML
+  additionalInfo: HTML
+  adminNote: HTML
 }
 
 """
@@ -1489,9 +1494,48 @@ input SystemIntakeRequestEditsInput {
   systemIntakeID: UUID!
   intakeFormStep: SystemIntakeFormStep!
   notificationRecipients: EmailNotificationRecipients
-  emailFeedback: String!
-  additionalInfo: String
-  adminNotes: String
+  emailFeedback: HTML!
+  additionalInfo: HTML
+  adminNotes: HTML
+}
+
+
+"""
+Different options for whether the Governance team believes a requester's team should consult with the TRB
+"""
+enum SystemIntakeTRBFollowUp {
+  STRONGLY_RECOMMENDED
+  RECOMMENDED_BUT_NOT_CRITICAL
+  NOT_RECOMMENDED
+}
+
+"""
+Input for setting an intake's decision to issuing an LCID in IT Gov v2
+"""
+input SystemIntakeIssueLCIDInput {
+  systemIntakeID: UUID!
+  lcid: String
+  expiresAt: Time!
+  scope: HTML!
+  nextSteps: HTML!
+  trbFollowUp: SystemIntakeTRBFollowUp!
+  costBaseline: String
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
+"""
+Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
+"""
+input SystemIntakeRejectIntakeInput {
+  systemIntakeID: UUID!
+  reason: HTML!
+  nextSteps: HTML!
+  trbFollowUp: SystemIntakeTRBFollowUp!
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
 }
 
 """
@@ -1516,10 +1560,43 @@ enum SystemIntakeFormStep {
 }
 
 """
+Input for creating a Not an IT Governance Request Action in Admin Actions v2
+"""
+input SystemIntakeNotITGovReqInput {
+  systemIntakeID: UUID!
+  notificationRecipients: EmailNotificationRecipients
+  reason: HTML
+  additionalInfo: HTML
+  adminNotes: HTML
+}
+
+"""
+Input for creating a Close Request Action in Admin Actions v2
+"""
+input SystemIntakeCloseRequestInput {
+  systemIntakeID: UUID!
+  notificationRecipients: EmailNotificationRecipients
+  reason: HTML
+  additionalInfo: HTML
+  adminNotes: HTML
+}
+
+"""
+Input for creating a Reopen Request Action in Admin Actions v2
+"""
+input SystemIntakeReopenRequestInput {
+  systemIntakeID: UUID!
+  notificationRecipients: EmailNotificationRecipients
+  reason: HTML
+  additionalInfo: HTML
+  adminNotes: HTML
+}
+
+"""
 Input to add feedback to a system request
 """
 input BasicActionInput {
-  feedback: String!
+  feedback: HTML!
   intakeId: UUID!
   notificationRecipients: EmailNotificationRecipients
 }
@@ -1897,7 +1974,7 @@ Feedback given to the requester on a governance request
 type GovernanceRequestFeedback {
   id: UUID!
   intakeId: UUID!
-  feedback: String!
+  feedback: HTML!
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
   type: GovernanceRequestFeedbackType!
@@ -2116,7 +2193,7 @@ Represents feedback added to a TRB request
 type TRBRequestFeedback {
   id: UUID!
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -2132,7 +2209,7 @@ The data needed to add feedback to a TRB request
 """
 input CreateTRBRequestFeedbackInput {
   trbRequestId: UUID!
-  feedbackMessage: String!
+  feedbackMessage: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
   action: TRBFeedbackAction!
@@ -2175,7 +2252,7 @@ type TRBAdminNote {
   id: UUID!
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
-  noteText: String!
+  noteText: HTML!
   author: UserInfo!
   isArchived: Boolean!
   createdBy: String!
@@ -2191,8 +2268,8 @@ type TRBAdviceLetter {
   id: UUID!
   trbRequestId: UUID!
   author: UserInfo!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
@@ -2209,7 +2286,7 @@ The data needed to create a TRB admin note
 input CreateTRBAdminNoteInput {
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
-  noteText: String!
+  noteText: HTML!
 }
 
 """
@@ -2218,7 +2295,7 @@ The data needed for updating a TRB admin note
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   category: TRBAdminNoteCategory
-  noteText: String
+  noteText: HTML
 }
 
 """
@@ -2226,8 +2303,8 @@ The data needed to update a TRB advice letter
 """
 input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
-  meetingSummary: String
-  nextSteps: String
+  meetingSummary: HTML
+  nextSteps: HTML
   isFollowupRecommended: Boolean
   followupPoint: String
 }
@@ -2248,7 +2325,7 @@ type TRBAdviceLetterRecommendation {
   id: UUID!
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
   author: UserInfo!
   createdBy: String!
@@ -2263,7 +2340,7 @@ The input required to add a recommendation & links to a TRB advice letter
 input CreateTRBAdviceLetterRecommendationInput {
   trbRequestId: UUID!
   title: String!
-  recommendation: String!
+  recommendation: HTML!
   links: [String!]!
 }
 
@@ -2273,7 +2350,7 @@ The input required to update a recommendation to a TRB advice letter
 input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
-  recommendation: String
+  recommendation: HTML
   links: [String!]
 }
 
@@ -2282,7 +2359,7 @@ The input needed to close a TRB request
 """
 input CloseTRBRequestInput {
   id: UUID!
-  reasonClosed: String!
+  reasonClosed: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
@@ -2292,7 +2369,7 @@ The data needed to reopen a TRB request
 """
 input ReopenTRBRequestInput {
   trbRequestId: UUID!
-  reasonReopened: String!
+  reasonReopened: HTML!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
@@ -2301,15 +2378,21 @@ input ReopenTRBRequestInput {
 Defines the mutations for the schema
 """
 type Mutation {
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
   addGRTFeedbackAndKeepBusinessCaseInDraft(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
   addGRTFeedbackAndProgressToFinalBusinessCase(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
   addGRTFeedbackAndRequestBusinessCase(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
@@ -2333,8 +2416,10 @@ type Mutation {
   updateAccessibilityRequestCedarSystem(
     input: UpdateAccessibilityRequestCedarSystemInput
   ): UpdateAccessibilityRequestCedarSystemPayload
+
+  # Mutations for IT Gov v2 workflow
   createSystemIntakeActionProgressToNewStep(
-    input: SystemIntakeProgressToNewStepsInput
+    input: SystemIntakeProgressToNewStepsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
@@ -2342,12 +2427,32 @@ type Mutation {
   createSystemIntakeActionExpireLCID(
     input: SystemIntakeExpireLCIDInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionIssueLCID(
+    input: SystemIntakeIssueLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionRejectIntake(
+    input: SystemIntakeRejectIntakeInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+   createSystemIntakeActionReopenRequest(
+    input: SystemIntakeReopenRequestInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionCloseRequest(
+    input: SystemIntakeCloseRequestInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotITGovRequest(
+    input: SystemIntakeNotITGovReqInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
   createSystemIntakeActionBusinessCaseNeeded(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
   createSystemIntakeActionBusinessCaseNeedsChanges(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+
   createSystemIntakeActionGuideReceievedClose(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -2360,6 +2465,8 @@ type Mutation {
   createSystemIntakeActionNotRespondingClose(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
   createSystemIntakeActionReadyForGRT(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -2384,13 +2491,20 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionIssueLCID
   issueLifecycleId(input: IssueLifecycleIdInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
   markSystemIntakeReadyForGRB(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+
+  # Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionRejectIntake
   rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
+
   submitIntake(
     input: SubmitIntakeInput!
   ): UpdateSystemIntakePayload
@@ -2530,6 +2644,12 @@ enum TRBRequestStatus {
 UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
 """
 scalar UUID
+
+"""
+HTML are represented using as strings,  <p><strong>Notification email</strong></p>
+"""
+scalar HTML
+
 
 """
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z

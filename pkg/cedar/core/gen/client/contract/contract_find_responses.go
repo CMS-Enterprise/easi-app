@@ -48,7 +48,7 @@ func (o *ContractFindReader) ReadResponse(response runtime.ClientResponse, consu
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /contract] contractFind", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewContractFindOK() *ContractFindOK {
 	return &ContractFindOK{}
 }
 
-/* ContractFindOK describes a response with status code 200, with default header values.
+/*
+ContractFindOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type ContractFindOK struct {
 	Payload *models.ContractFindResponse
 }
 
+// IsSuccess returns true when this contract find o k response has a 2xx status code
+func (o *ContractFindOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this contract find o k response has a 3xx status code
+func (o *ContractFindOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract find o k response has a 4xx status code
+func (o *ContractFindOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this contract find o k response has a 5xx status code
+func (o *ContractFindOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract find o k response a status code equal to that given
+func (o *ContractFindOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the contract find o k response
+func (o *ContractFindOK) Code() int {
+	return 200
+}
+
 func (o *ContractFindOK) Error() string {
 	return fmt.Sprintf("[GET /contract][%d] contractFindOK  %+v", 200, o.Payload)
 }
+
+func (o *ContractFindOK) String() string {
+	return fmt.Sprintf("[GET /contract][%d] contractFindOK  %+v", 200, o.Payload)
+}
+
 func (o *ContractFindOK) GetPayload() *models.ContractFindResponse {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewContractFindBadRequest() *ContractFindBadRequest {
 	return &ContractFindBadRequest{}
 }
 
-/* ContractFindBadRequest describes a response with status code 400, with default header values.
+/*
+ContractFindBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type ContractFindBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract find bad request response has a 2xx status code
+func (o *ContractFindBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract find bad request response has a 3xx status code
+func (o *ContractFindBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract find bad request response has a 4xx status code
+func (o *ContractFindBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this contract find bad request response has a 5xx status code
+func (o *ContractFindBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract find bad request response a status code equal to that given
+func (o *ContractFindBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the contract find bad request response
+func (o *ContractFindBadRequest) Code() int {
+	return 400
+}
+
 func (o *ContractFindBadRequest) Error() string {
 	return fmt.Sprintf("[GET /contract][%d] contractFindBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *ContractFindBadRequest) String() string {
+	return fmt.Sprintf("[GET /contract][%d] contractFindBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *ContractFindBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewContractFindUnauthorized() *ContractFindUnauthorized {
 	return &ContractFindUnauthorized{}
 }
 
-/* ContractFindUnauthorized describes a response with status code 401, with default header values.
+/*
+ContractFindUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type ContractFindUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract find unauthorized response has a 2xx status code
+func (o *ContractFindUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract find unauthorized response has a 3xx status code
+func (o *ContractFindUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract find unauthorized response has a 4xx status code
+func (o *ContractFindUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this contract find unauthorized response has a 5xx status code
+func (o *ContractFindUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract find unauthorized response a status code equal to that given
+func (o *ContractFindUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the contract find unauthorized response
+func (o *ContractFindUnauthorized) Code() int {
+	return 401
+}
+
 func (o *ContractFindUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /contract][%d] contractFindUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *ContractFindUnauthorized) String() string {
+	return fmt.Sprintf("[GET /contract][%d] contractFindUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *ContractFindUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewContractFindInternalServerError() *ContractFindInternalServerError {
 	return &ContractFindInternalServerError{}
 }
 
-/* ContractFindInternalServerError describes a response with status code 500, with default header values.
+/*
+ContractFindInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type ContractFindInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract find internal server error response has a 2xx status code
+func (o *ContractFindInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract find internal server error response has a 3xx status code
+func (o *ContractFindInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract find internal server error response has a 4xx status code
+func (o *ContractFindInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this contract find internal server error response has a 5xx status code
+func (o *ContractFindInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this contract find internal server error response a status code equal to that given
+func (o *ContractFindInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the contract find internal server error response
+func (o *ContractFindInternalServerError) Code() int {
+	return 500
+}
+
 func (o *ContractFindInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /contract][%d] contractFindInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *ContractFindInternalServerError) String() string {
+	return fmt.Sprintf("[GET /contract][%d] contractFindInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *ContractFindInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

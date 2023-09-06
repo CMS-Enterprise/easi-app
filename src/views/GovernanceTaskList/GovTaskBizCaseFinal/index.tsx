@@ -1,11 +1,12 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-// import { IT_GOV_EMAIL } from 'constants/externalUrls';
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import { ITGovFinalBusinessCaseStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
@@ -42,7 +43,8 @@ const GovTaskBizCaseFinal = ({
   // Submitted date
   if (
     !dateInfo &&
-    bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE &&
+    (bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.SUBMITTED ||
+      bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE) &&
     bizCaseFinalSubmittedAt
   )
     dateInfo = {
@@ -67,7 +69,7 @@ const GovTaskBizCaseFinal = ({
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
 
         {/* Final biz case submitted & waiting for feedback */}
-        {bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE && (
+        {bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.SUBMITTED && (
           <Alert slim type="info">
             {t(`taskList.step.${stepKey}.submittedInfo`)}
           </Alert>
@@ -79,6 +81,20 @@ const GovTaskBizCaseFinal = ({
             {t(`taskList.step.${stepKey}.editsRequestedWarning`)}
           </Alert>
         )}
+
+        {/* No feedback info */}
+        {bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE &&
+          !hasFeedback && (
+            <Alert slim type="info">
+              <Trans
+                i18nKey={`itGov:taskList.step.${stepKey}.noFeedbackInfo`}
+                components={{
+                  a: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>,
+                  email: IT_GOV_EMAIL
+                }}
+              />
+            </Alert>
+          )}
 
         {statusButtonText.has(bizCaseFinalStatus) && (
           <div className="margin-top-2">
@@ -96,7 +112,8 @@ const GovTaskBizCaseFinal = ({
         )}
 
         {/* Link to view submitted final biz case */}
-        {bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE && (
+        {(bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.SUBMITTED ||
+          bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE) && (
           <div className="margin-top-2">
             <UswdsReactLink to="./">
               {t(`taskList.step.${stepKey}.viewSubmittedFinalBusinessCase`)}

@@ -13,7 +13,7 @@ export interface GetGRTFeedback_systemIntake_grtFeedbacks {
   __typename: "GRTFeedback";
   id: UUID | null;
   feedbackType: GRTFeedbackType | null;
-  feedback: string | null;
+  feedback: HTML | null;
   createdAt: Time;
 }
 

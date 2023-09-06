@@ -85,7 +85,7 @@ func NewBackfill(
 		if intake.LifecycleExpiresAt != nil {
 			createdIntake.LifecycleExpiresAt = intake.LifecycleExpiresAt
 		}
-		if intake.LifecycleScope.ValueOrZero() != "" {
+		if intake.LifecycleScope != nil {
 			createdIntake.LifecycleScope = intake.LifecycleScope
 		}
 		if intake.SubmittedAt != nil {

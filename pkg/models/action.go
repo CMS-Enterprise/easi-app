@@ -12,14 +12,21 @@ type ActionType string
 
 // IT Gov v2 actions
 const (
-	// ActionTypePROGRESSTONEWSTEP captures enum value PROGRESS_TO_NEW_STEP
 	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
-	// ActionTypeREQUESTEDITS captures enum value REQUEST_EDITS
-	ActionTypeREQUESTEDITS ActionType = "REQUEST_EDITS"
-	ActionTypeEXPIRELCID   ActionType = "EXPIRE_LCID"
+	ActionTypeEXPIRELCID        ActionType = "EXPIRE_LCID"
+	ActionTypeREQUESTEDITS      ActionType = "REQUEST_EDITS"
+	ActionTypeCLOSEREQUEST      ActionType = "CLOSE_REQUEST"
+	ActionTypeREOPENREQUEST     ActionType = "REOPEN_REQUEST"
+	ActionTypeNOTITGOVREQUEST   ActionType = "NOT_GOVERNANCE"
 )
 
-// v1 actions (before v2 revamp)
+// v1/v2 actions - originally from v1, still used in IT Gov v2
+const (
+	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
+	ActionTypeREJECT    ActionType = "REJECT"
+)
+
+// v1 actions - no longer used in IT Gov v2 workflow
 const (
 	// ActionTypeSUBMITINTAKE captures enum value SUBMIT_INTAKE
 	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"
@@ -33,8 +40,6 @@ const (
 	ActionTypeREADYFORGRB ActionType = "READY_FOR_GRB"
 	// ActionTypePROVIDEFEEDBACKNEEDBIZCASE captures enum value PROVIDE_FEEDBACK_NEED_BIZ_CASE
 	ActionTypePROVIDEFEEDBACKNEEDBIZCASE ActionType = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
-	// ActionTypeISSUELCID captures enum value ISSUE_LCID
-	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
 	// ActionTypeEXTENDLCID captures enum value EXTEND_LCID
 	ActionTypeEXTENDLCID ActionType = "EXTEND_LCID"
 	// ActionTypeCREATEBIZCASE captures enum value CREATE_BIZ_CASE
@@ -51,8 +56,6 @@ const (
 	ActionTypePROVIDEFEEDBACKBIZCASEFINAL ActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
 	// ActionTypeNOGOVERNANCENEEDED captures enum value NO_GOVERNANCE_NEEDED
 	ActionTypeNOGOVERNANCENEEDED ActionType = "NO_GOVERNANCE_NEEDED"
-	// ActionTypeREJECT captures enum value REJECTED
-	ActionTypeREJECT ActionType = "REJECT"
 	// ActionTypeSENDEMAIL captures enum value SEND_EMAIL
 	ActionTypeSENDEMAIL ActionType = "SEND_EMAIL"
 	// ActionTypeGUIDERECEIVEDCLOSE captures enum value GUIDE_RECEIVED_CLOSE
@@ -70,15 +73,15 @@ type Action struct {
 	ActorName                                string            `json:"actorName" db:"actor_name"`
 	ActorEmail                               EmailAddress      `json:"actorEmail" db:"actor_email"`
 	ActorEUAUserID                           string            `json:"actorEuaUserId" db:"actor_eua_user_id"`
-	Feedback                                 null.String       `json:"feedback"`       // Feedback to requestor sent via email
+	Feedback                                 *HTML             `json:"feedback"`       // Feedback to requestor sent via email
 	Step                                     *SystemIntakeStep `json:"step" db:"step"` // optional to account for previous actions that didn't save Step information
 	CreatedAt                                *time.Time        `json:"createdAt" db:"created_at"`
 	LCIDExpirationChangeNewDate              *time.Time        `db:"lcid_expiration_change_new_date"`
 	LCIDExpirationChangePreviousDate         *time.Time        `db:"lcid_expiration_change_previous_date"`
-	LCIDExpirationChangeNewScope             null.String       `db:"lcid_expiration_change_new_scope"`
-	LCIDExpirationChangePreviousScope        null.String       `db:"lcid_expiration_change_previous_scope"`
-	LCIDExpirationChangeNewNextSteps         null.String       `db:"lcid_expiration_change_new_next_steps"`
-	LCIDExpirationChangePreviousNextSteps    null.String       `db:"lcid_expiration_change_previous_next_steps"`
+	LCIDExpirationChangeNewScope             *HTML             `db:"lcid_expiration_change_new_scope"`
+	LCIDExpirationChangePreviousScope        *HTML             `db:"lcid_expiration_change_previous_scope"`
+	LCIDExpirationChangeNewNextSteps         *HTML             `db:"lcid_expiration_change_new_next_steps"`
+	LCIDExpirationChangePreviousNextSteps    *HTML             `db:"lcid_expiration_change_previous_next_steps"`
 	LCIDExpirationChangeNewCostBaseline      null.String       `db:"lcid_expiration_change_new_cost_baseline"`
 	LCIDExpirationChangePreviousCostBaseline null.String       `db:"lcid_expiration_change_previous_cost_baseline"`
 }

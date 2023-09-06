@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"html/template"
 	"path"
 	"time"
 
@@ -18,21 +19,21 @@ type extendLCID struct {
 	GRTEmail        string
 	Requester       string
 	NewExpiresAt    string
-	NewScope        string
-	NewNextSteps    string
+	NewScope        template.HTML
+	NewNextSteps    template.HTML
 	NewCostBaseline string
 	DecisionLink    string
 }
 
-func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope string, newNextSteps string, newCostBaseline string) (string, error) {
+func (c Client) extendLCIDBody(systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope models.HTML, newNextSteps models.HTML, newCostBaseline string) (string, error) {
 	decisionPath := path.Join("governance-task-list", systemIntakeID.String(), "request-decision")
 	data := extendLCID{
 		ProjectName:     projectName,
 		GRTEmail:        string(c.config.GRTEmail),
 		Requester:       requester,
 		NewExpiresAt:    newExpiresAt.Format("January 2, 2006"),
-		NewScope:        newScope,
-		NewNextSteps:    newNextSteps,
+		NewScope:        newScope.ToTemplate(),
+		NewNextSteps:    newNextSteps.ToTemplate(),
 		NewCostBaseline: newCostBaseline,
 		DecisionLink:    c.urlFromPath(decisionPath),
 	}
@@ -56,8 +57,8 @@ func (c Client) SendExtendLCIDEmails(
 	projectName string,
 	requester string,
 	newExpiresAt *time.Time,
-	newScope string,
-	newNextSteps string,
+	newScope models.HTML,
+	newNextSteps models.HTML,
 	newCostBaseline string,
 ) error {
 	subject := "Lifecycle ID extended"

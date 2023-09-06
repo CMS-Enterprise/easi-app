@@ -69,7 +69,7 @@ export interface TrbRequestFormFields_feedback {
   __typename: "TRBRequestFeedback";
   id: UUID;
   action: TRBFeedbackAction;
-  feedbackMessage: string;
+  feedbackMessage: HTML;
   author: TrbRequestFormFields_feedback_author;
   createdAt: Time;
 }

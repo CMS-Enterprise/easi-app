@@ -14,7 +14,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
 		category := models.TRBAdminNoteCategoryAdviceLetter
-		noteText := "Creation test"
+		noteText := models.HTML("Creation test")
 		noteToCreate := models.TRBAdminNote{
 			Category: category,
 			NoteText: noteText,
@@ -34,7 +34,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	s.Run("Creating, then fetching a note by TRB request ID returns the created note", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 		category := models.TRBAdminNoteCategoryConsultSession
-		noteText := "Creation, then fetch by TRB request ID test"
+		noteText := models.HTML("Creation, then fetch by TRB request ID test")
 		noteToCreate := models.TRBAdminNote{
 			Category: category,
 			NoteText: noteText,
@@ -60,7 +60,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	s.Run("Creating, then fetching a note by note ID returns the created note", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 		category := models.TRBAdminNoteCategoryGeneralRequest
-		noteText := "Creation, then fetch by note ID test"
+		noteText := models.HTML("Creation, then fetch by note ID test")
 		noteToCreate := models.TRBAdminNote{
 			Category: category,
 			NoteText: noteText,
@@ -85,7 +85,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
 		category1 := models.TRBAdminNoteCategoryInitialRequestForm
-		noteText1 := "Creating two notes, then fetch by TRB request ID test (note 1)"
+		noteText1 := models.HTML("Creating two notes, then fetch by TRB request ID test (note 1)")
 		author1 := "ABCD"
 		noteToCreate1 := models.TRBAdminNote{
 			Category: category1,
@@ -96,7 +96,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 
 		// make sure category2, noteText2, author2 are all distinct from category1, noteText1, author1
 		category2 := models.TRBAdminNoteCategoryAdviceLetter
-		noteText2 := "Creating two notes, then fetch by TRB request ID test (note 2)"
+		noteText2 := models.HTML("Creating two notes, then fetch by TRB request ID test (note 2)")
 		author2 := "GRTB"
 		noteToCreate2 := models.TRBAdminNote{
 			Category: category2,
@@ -126,7 +126,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	s.Run("Updating a note returns a note with updated data and sets ModifiedBy, ModifiedAt", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 		initialCategory := models.TRBAdminNoteCategoryGeneralRequest
-		initialNoteText := "Update note test (initial)"
+		initialNoteText := models.HTML("Update note test (initial)")
 		noteToCreate := models.TRBAdminNote{
 			Category: initialCategory,
 			NoteText: initialNoteText,
@@ -138,7 +138,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		s.NoError(err)
 
 		updatedCategory := models.TRBAdminNoteCategoryAdviceLetter
-		updatedNoteText := "Update note test (updated)"
+		updatedNoteText := models.HTML("Update note test (updated)")
 		updatingUser := "USR1"
 
 		noteToUpdate.Category = updatedCategory

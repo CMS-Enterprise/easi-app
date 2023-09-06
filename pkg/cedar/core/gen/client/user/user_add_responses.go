@@ -48,7 +48,7 @@ func (o *UserAddReader) ReadResponse(response runtime.ClientResponse, consumer r
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /user] userAdd", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewUserAddOK() *UserAddOK {
 	return &UserAddOK{}
 }
 
-/* UserAddOK describes a response with status code 200, with default header values.
+/*
+UserAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type UserAddOK struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this user add o k response has a 2xx status code
+func (o *UserAddOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this user add o k response has a 3xx status code
+func (o *UserAddOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this user add o k response has a 4xx status code
+func (o *UserAddOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this user add o k response has a 5xx status code
+func (o *UserAddOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this user add o k response a status code equal to that given
+func (o *UserAddOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the user add o k response
+func (o *UserAddOK) Code() int {
+	return 200
+}
+
 func (o *UserAddOK) Error() string {
 	return fmt.Sprintf("[POST /user][%d] userAddOK  %+v", 200, o.Payload)
 }
+
+func (o *UserAddOK) String() string {
+	return fmt.Sprintf("[POST /user][%d] userAddOK  %+v", 200, o.Payload)
+}
+
 func (o *UserAddOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewUserAddBadRequest() *UserAddBadRequest {
 	return &UserAddBadRequest{}
 }
 
-/* UserAddBadRequest describes a response with status code 400, with default header values.
+/*
+UserAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type UserAddBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this user add bad request response has a 2xx status code
+func (o *UserAddBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this user add bad request response has a 3xx status code
+func (o *UserAddBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this user add bad request response has a 4xx status code
+func (o *UserAddBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this user add bad request response has a 5xx status code
+func (o *UserAddBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this user add bad request response a status code equal to that given
+func (o *UserAddBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the user add bad request response
+func (o *UserAddBadRequest) Code() int {
+	return 400
+}
+
 func (o *UserAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /user][%d] userAddBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *UserAddBadRequest) String() string {
+	return fmt.Sprintf("[POST /user][%d] userAddBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *UserAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewUserAddUnauthorized() *UserAddUnauthorized {
 	return &UserAddUnauthorized{}
 }
 
-/* UserAddUnauthorized describes a response with status code 401, with default header values.
+/*
+UserAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type UserAddUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this user add unauthorized response has a 2xx status code
+func (o *UserAddUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this user add unauthorized response has a 3xx status code
+func (o *UserAddUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this user add unauthorized response has a 4xx status code
+func (o *UserAddUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this user add unauthorized response has a 5xx status code
+func (o *UserAddUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this user add unauthorized response a status code equal to that given
+func (o *UserAddUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the user add unauthorized response
+func (o *UserAddUnauthorized) Code() int {
+	return 401
+}
+
 func (o *UserAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /user][%d] userAddUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *UserAddUnauthorized) String() string {
+	return fmt.Sprintf("[POST /user][%d] userAddUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *UserAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewUserAddInternalServerError() *UserAddInternalServerError {
 	return &UserAddInternalServerError{}
 }
 
-/* UserAddInternalServerError describes a response with status code 500, with default header values.
+/*
+UserAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type UserAddInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this user add internal server error response has a 2xx status code
+func (o *UserAddInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this user add internal server error response has a 3xx status code
+func (o *UserAddInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this user add internal server error response has a 4xx status code
+func (o *UserAddInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this user add internal server error response has a 5xx status code
+func (o *UserAddInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this user add internal server error response a status code equal to that given
+func (o *UserAddInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the user add internal server error response
+func (o *UserAddInternalServerError) Code() int {
+	return 500
+}
+
 func (o *UserAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /user][%d] userAddInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *UserAddInternalServerError) String() string {
+	return fmt.Sprintf("[POST /user][%d] userAddInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *UserAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

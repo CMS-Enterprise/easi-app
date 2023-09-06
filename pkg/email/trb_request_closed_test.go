@@ -53,7 +53,7 @@ func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
 
 <p>The Technical Review Board (TRB) has closed ` + input.TRBRequestName + `.</p>
 
-<p>Reason for closing: ` + input.ReasonClosed + `</p>
+<p>Reason for closing: ` + string(input.ReasonClosed) + `</p>
 
 <p>View this request in EASi:</p>
 <ul>

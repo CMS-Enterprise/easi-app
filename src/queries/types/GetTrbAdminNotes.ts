@@ -19,7 +19,7 @@ export interface GetTrbAdminNotes_trbRequest_adminNotes {
   id: UUID;
   isArchived: boolean;
   category: TRBAdminNoteCategory;
-  noteText: string;
+  noteText: HTML;
   author: GetTrbAdminNotes_trbRequest_adminNotes_author;
   createdAt: Time;
 }

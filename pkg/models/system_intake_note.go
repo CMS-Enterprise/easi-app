@@ -15,7 +15,7 @@ type SystemIntakeNote struct {
 	CreatedAt      *time.Time  `json:"createdAt" db:"created_at"`
 	AuthorEUAID    string      `json:"authorId" db:"eua_user_id"`
 	AuthorName     null.String `json:"authorName" db:"author_name"`
-	Content        null.String `json:"content" db:"content"`
+	Content        *HTML       `json:"content" db:"content"`
 	ModifiedAt     *time.Time  `json:"modifiedAt" db:"modified_at"`
 	ModifiedBy     *string     `json:"modifiedBy" db:"modified_by"`
 	IsArchived     bool        `json:"isArchived" db:"is_archived"`

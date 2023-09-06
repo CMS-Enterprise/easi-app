@@ -11,9 +11,9 @@ import { RejectIntakeInput } from "./../../types/graphql-global-types";
 
 export interface RejectIntake_rejectIntake_systemIntake {
   __typename: "SystemIntake";
-  decisionNextSteps: string | null;
+  decisionNextSteps: HTML | null;
   id: UUID;
-  rejectionReason: string | null;
+  rejectionReason: HTML | null;
 }
 
 export interface RejectIntake_rejectIntake {

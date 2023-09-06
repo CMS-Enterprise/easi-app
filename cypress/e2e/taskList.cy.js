@@ -1,6 +1,6 @@
 describe('The Task List', () => {
   beforeEach(() => {
-    cy.localLogin({ name: 'TEST' });
+    cy.localLogin({ name: 'E2E1' });
     cy.intercept('PUT', '/api/v1/system_intake').as('putSystemIntake');
 
     cy.intercept('POST', '/api/graph/query', req => {

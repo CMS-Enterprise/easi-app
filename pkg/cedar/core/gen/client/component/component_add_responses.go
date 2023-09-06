@@ -48,7 +48,7 @@ func (o *ComponentAddReader) ReadResponse(response runtime.ClientResponse, consu
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /component] componentAdd", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewComponentAddOK() *ComponentAddOK {
 	return &ComponentAddOK{}
 }
 
-/* ComponentAddOK describes a response with status code 200, with default header values.
+/*
+ComponentAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type ComponentAddOK struct {
 	Payload *models.ComponentAddResponse
 }
 
+// IsSuccess returns true when this component add o k response has a 2xx status code
+func (o *ComponentAddOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this component add o k response has a 3xx status code
+func (o *ComponentAddOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component add o k response has a 4xx status code
+func (o *ComponentAddOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this component add o k response has a 5xx status code
+func (o *ComponentAddOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this component add o k response a status code equal to that given
+func (o *ComponentAddOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the component add o k response
+func (o *ComponentAddOK) Code() int {
+	return 200
+}
+
 func (o *ComponentAddOK) Error() string {
 	return fmt.Sprintf("[POST /component][%d] componentAddOK  %+v", 200, o.Payload)
 }
+
+func (o *ComponentAddOK) String() string {
+	return fmt.Sprintf("[POST /component][%d] componentAddOK  %+v", 200, o.Payload)
+}
+
 func (o *ComponentAddOK) GetPayload() *models.ComponentAddResponse {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewComponentAddBadRequest() *ComponentAddBadRequest {
 	return &ComponentAddBadRequest{}
 }
 
-/* ComponentAddBadRequest describes a response with status code 400, with default header values.
+/*
+ComponentAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type ComponentAddBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this component add bad request response has a 2xx status code
+func (o *ComponentAddBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this component add bad request response has a 3xx status code
+func (o *ComponentAddBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component add bad request response has a 4xx status code
+func (o *ComponentAddBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this component add bad request response has a 5xx status code
+func (o *ComponentAddBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this component add bad request response a status code equal to that given
+func (o *ComponentAddBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the component add bad request response
+func (o *ComponentAddBadRequest) Code() int {
+	return 400
+}
+
 func (o *ComponentAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /component][%d] componentAddBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *ComponentAddBadRequest) String() string {
+	return fmt.Sprintf("[POST /component][%d] componentAddBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *ComponentAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewComponentAddUnauthorized() *ComponentAddUnauthorized {
 	return &ComponentAddUnauthorized{}
 }
 
-/* ComponentAddUnauthorized describes a response with status code 401, with default header values.
+/*
+ComponentAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type ComponentAddUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this component add unauthorized response has a 2xx status code
+func (o *ComponentAddUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this component add unauthorized response has a 3xx status code
+func (o *ComponentAddUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component add unauthorized response has a 4xx status code
+func (o *ComponentAddUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this component add unauthorized response has a 5xx status code
+func (o *ComponentAddUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this component add unauthorized response a status code equal to that given
+func (o *ComponentAddUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the component add unauthorized response
+func (o *ComponentAddUnauthorized) Code() int {
+	return 401
+}
+
 func (o *ComponentAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /component][%d] componentAddUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *ComponentAddUnauthorized) String() string {
+	return fmt.Sprintf("[POST /component][%d] componentAddUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *ComponentAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewComponentAddInternalServerError() *ComponentAddInternalServerError {
 	return &ComponentAddInternalServerError{}
 }
 
-/* ComponentAddInternalServerError describes a response with status code 500, with default header values.
+/*
+ComponentAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type ComponentAddInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this component add internal server error response has a 2xx status code
+func (o *ComponentAddInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this component add internal server error response has a 3xx status code
+func (o *ComponentAddInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this component add internal server error response has a 4xx status code
+func (o *ComponentAddInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this component add internal server error response has a 5xx status code
+func (o *ComponentAddInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this component add internal server error response a status code equal to that given
+func (o *ComponentAddInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the component add internal server error response
+func (o *ComponentAddInternalServerError) Code() int {
+	return 500
+}
+
 func (o *ComponentAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /component][%d] componentAddInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *ComponentAddInternalServerError) String() string {
+	return fmt.Sprintf("[POST /component][%d] componentAddInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *ComponentAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

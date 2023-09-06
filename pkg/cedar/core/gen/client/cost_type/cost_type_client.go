@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-  CostTypeFindList retrieves a list of cost types
+CostTypeFindList retrieves a list of cost types
 
-  Retrieve a list of cost types
+Retrieve a list of cost types
 */
 func (a *Client) CostTypeFindList(params *CostTypeFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CostTypeFindListOK, error) {
 	// TODO: Validate the params before sending

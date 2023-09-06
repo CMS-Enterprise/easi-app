@@ -18,7 +18,7 @@ export interface GetTrbRequestFeedback_trbRequest_feedback {
   __typename: "TRBRequestFeedback";
   id: UUID;
   action: TRBFeedbackAction;
-  feedbackMessage: string;
+  feedbackMessage: HTML;
   author: GetTrbRequestFeedback_trbRequest_feedback_author;
   createdAt: Time;
 }

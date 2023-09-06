@@ -54,7 +54,7 @@ func (o *ContractDeleteListReader) ReadResponse(response runtime.ClientResponse,
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[DELETE /contract] contractDeleteList", response, response.Code())
 	}
 }
 
@@ -63,7 +63,8 @@ func NewContractDeleteListOK() *ContractDeleteListOK {
 	return &ContractDeleteListOK{}
 }
 
-/* ContractDeleteListOK describes a response with status code 200, with default header values.
+/*
+ContractDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -71,9 +72,44 @@ type ContractDeleteListOK struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract delete list o k response has a 2xx status code
+func (o *ContractDeleteListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this contract delete list o k response has a 3xx status code
+func (o *ContractDeleteListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract delete list o k response has a 4xx status code
+func (o *ContractDeleteListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this contract delete list o k response has a 5xx status code
+func (o *ContractDeleteListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract delete list o k response a status code equal to that given
+func (o *ContractDeleteListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the contract delete list o k response
+func (o *ContractDeleteListOK) Code() int {
+	return 200
+}
+
 func (o *ContractDeleteListOK) Error() string {
 	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListOK  %+v", 200, o.Payload)
 }
+
+func (o *ContractDeleteListOK) String() string {
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListOK  %+v", 200, o.Payload)
+}
+
 func (o *ContractDeleteListOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -95,7 +131,8 @@ func NewContractDeleteListBadRequest() *ContractDeleteListBadRequest {
 	return &ContractDeleteListBadRequest{}
 }
 
-/* ContractDeleteListBadRequest describes a response with status code 400, with default header values.
+/*
+ContractDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -103,9 +140,44 @@ type ContractDeleteListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract delete list bad request response has a 2xx status code
+func (o *ContractDeleteListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract delete list bad request response has a 3xx status code
+func (o *ContractDeleteListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract delete list bad request response has a 4xx status code
+func (o *ContractDeleteListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this contract delete list bad request response has a 5xx status code
+func (o *ContractDeleteListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract delete list bad request response a status code equal to that given
+func (o *ContractDeleteListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the contract delete list bad request response
+func (o *ContractDeleteListBadRequest) Code() int {
+	return 400
+}
+
 func (o *ContractDeleteListBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *ContractDeleteListBadRequest) String() string {
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *ContractDeleteListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -127,7 +199,8 @@ func NewContractDeleteListUnauthorized() *ContractDeleteListUnauthorized {
 	return &ContractDeleteListUnauthorized{}
 }
 
-/* ContractDeleteListUnauthorized describes a response with status code 401, with default header values.
+/*
+ContractDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -135,9 +208,44 @@ type ContractDeleteListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract delete list unauthorized response has a 2xx status code
+func (o *ContractDeleteListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract delete list unauthorized response has a 3xx status code
+func (o *ContractDeleteListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract delete list unauthorized response has a 4xx status code
+func (o *ContractDeleteListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this contract delete list unauthorized response has a 5xx status code
+func (o *ContractDeleteListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract delete list unauthorized response a status code equal to that given
+func (o *ContractDeleteListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the contract delete list unauthorized response
+func (o *ContractDeleteListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *ContractDeleteListUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *ContractDeleteListUnauthorized) String() string {
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *ContractDeleteListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -159,7 +267,8 @@ func NewContractDeleteListNotFound() *ContractDeleteListNotFound {
 	return &ContractDeleteListNotFound{}
 }
 
-/* ContractDeleteListNotFound describes a response with status code 404, with default header values.
+/*
+ContractDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -167,9 +276,44 @@ type ContractDeleteListNotFound struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract delete list not found response has a 2xx status code
+func (o *ContractDeleteListNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract delete list not found response has a 3xx status code
+func (o *ContractDeleteListNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract delete list not found response has a 4xx status code
+func (o *ContractDeleteListNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this contract delete list not found response has a 5xx status code
+func (o *ContractDeleteListNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract delete list not found response a status code equal to that given
+func (o *ContractDeleteListNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
+// Code gets the status code for the contract delete list not found response
+func (o *ContractDeleteListNotFound) Code() int {
+	return 404
+}
+
 func (o *ContractDeleteListNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListNotFound  %+v", 404, o.Payload)
 }
+
+func (o *ContractDeleteListNotFound) String() string {
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListNotFound  %+v", 404, o.Payload)
+}
+
 func (o *ContractDeleteListNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -191,7 +335,8 @@ func NewContractDeleteListInternalServerError() *ContractDeleteListInternalServe
 	return &ContractDeleteListInternalServerError{}
 }
 
-/* ContractDeleteListInternalServerError describes a response with status code 500, with default header values.
+/*
+ContractDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -199,9 +344,44 @@ type ContractDeleteListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract delete list internal server error response has a 2xx status code
+func (o *ContractDeleteListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract delete list internal server error response has a 3xx status code
+func (o *ContractDeleteListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract delete list internal server error response has a 4xx status code
+func (o *ContractDeleteListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this contract delete list internal server error response has a 5xx status code
+func (o *ContractDeleteListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this contract delete list internal server error response a status code equal to that given
+func (o *ContractDeleteListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the contract delete list internal server error response
+func (o *ContractDeleteListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *ContractDeleteListInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *ContractDeleteListInternalServerError) String() string {
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *ContractDeleteListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }
