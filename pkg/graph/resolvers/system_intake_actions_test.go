@@ -1067,7 +1067,6 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			s.EqualValues(&adminNote, note.Content)
 		})
 
-		// assert admin note is created
 	})
 
 }

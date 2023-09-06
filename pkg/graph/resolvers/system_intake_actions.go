@@ -644,27 +644,24 @@ func UpdateLCID(
 	}
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
-	if err != nil {
+	if err != nil || intake == nil {
 		return nil, err
 	}
 	err = lcidactions.IsLCIDValidToUpdate(intake)
 	if err != nil {
 		return nil, err
 	}
-	// input.Reason //TODO: SW What to do with the reason field? It is stored in an email when we add the email
+	// input.Reason //TODO: The reason field will be retained in the DB in a future ticket
 
 	// save action (including additional info for email, if any)
 	errGroup := new(errgroup.Group)
+	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
 	errGroup.Go(func() error {
-		action, err := lcidactions.GetUpdateLCIDAction(intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
-		if err != nil {
-			return err
-		}
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
 		}
 
-		_, errCreatingAction := store.CreateAction(ctx, action)
+		_, errCreatingAction := store.CreateAction(ctx, &action)
 		if errCreatingAction != nil {
 			return errCreatingAction
 		}
@@ -747,34 +744,83 @@ func ConfirmLCID(ctx context.Context,
 	}
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
-	if err != nil {
+	if err != nil || intake == nil {
 		return nil, err
 	}
 	err = lcidactions.IsLCIDValidToUpdate(intake)
 	if err != nil {
 		return nil, err
 	}
-
+	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
 	// save action (including additional info for email, if any)
 	errGroup := new(errgroup.Group)
 	errGroup.Go(func() error {
-		action, err := lcidactions.GetUpdateLCIDAction(intake, &input.ExpiresAt, &input.NextSteps, &input.Scope, input.CostBaseline, *adminUserInfo)
-		if err != nil {
-			return err
-		}
-		action.ActionType = models.ActionTypeBIZCASENEEDSCHANGES
+
+		action.ActionType = models.ActionTypeCONFIRMLCID
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
 		}
 
-		_, errCreatingAction := store.CreateAction(ctx, action)
+		_, errCreatingAction := store.CreateAction(ctx, &action)
 		if errCreatingAction != nil {
 			return errCreatingAction
 		}
 
 		return nil
 	})
-	//TODO: implement the check to get the TRB recommendation once EASI-3112 is merged
-	return nil, nil
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	// update workflow state
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.DecisionState = models.SIDSLcidIssued
+
+	// update LCID-related fields
+	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleScope = &input.Scope
+	intake.DecisionNextSteps = &input.NextSteps
+	if input.CostBaseline != nil {
+		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+	}
+
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
 
 }
