@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Route, Switch, useHistory, useParams } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { Button, Radio } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
@@ -11,7 +11,7 @@ import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetS
 
 import NextStep from './NextStep';
 import RequestEdits from './RequestEdits';
-import SubmitDecision from './SubmitDecision';
+import Resolutions from './Resolutions';
 
 import './index.scss';
 
@@ -66,10 +66,6 @@ const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
-  const { subPage } = useParams<{
-    subPage?: string;
-  }>();
-
   const { state, decisionState } = systemIntake;
 
   const { control, watch, handleSubmit } = useForm<{ actionRoute: string }>();
@@ -77,101 +73,99 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
   return (
     <div className="grt-admin-actions">
-      {
-        /* Show form if action is selected */
-        subPage ? (
-          <Switch>
-            <Route
-              path="/governance-review-team/:systemId/actions/request-edits"
-              render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
-            />
-            <Route
-              path="/governance-review-team/:systemId/actions/next-step"
-              render={() => <NextStep systemIntakeId={systemIntake.id} />}
-            />
-            <Route
-              path="/governance-review-team/:systemId/actions/decision"
-              render={() => <SubmitDecision systemIntakeId={systemIntake.id} />}
-            />
-          </Switch>
-        ) : (
-          /* Select action page */
-          <>
-            <PageHeading
-              data-testid="grt-actions-view"
-              className="margin-top-0 margin-bottom-5"
-            >
-              {t('chooseAction.heading')}
-            </PageHeading>
+      <Switch>
+        <Route
+          path="/governance-review-team/:systemId/actions/request-edits"
+          render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
+        />
 
-            <form
-              onSubmit={handleSubmit(formData =>
-                history.push(`actions/${formData.actionRoute}`)
-              )}
-              className="margin-bottom-4"
-            >
-              <Controller
-                name="actionRoute"
-                control={control}
-                render={({ field: { ref, ...fieldProps } }) => {
-                  return (
-                    <RadioGroup className="grt-actions-radio-group grid-row grid-gap-md">
-                      {/* Request Edits */}
-                      <ActionRadioOption
-                        {...fieldProps}
-                        value="request-edits"
-                        label={t('chooseAction.requestEdits.title')}
-                        description={t('chooseAction.requestEdits.description')}
-                        accordionText={t('chooseAction.requestEdits.accordion')}
-                      />
-                      {/* Progress to new step */}
-                      <ActionRadioOption
-                        {...fieldProps}
-                        value="next-step"
-                        label={t('chooseAction.progressToNewStep.title')}
-                        description={t(
-                          'chooseAction.progressToNewStep.description'
-                        )}
-                        accordionText={t(
-                          'chooseAction.progressToNewStep.accordion'
-                        )}
-                      />
-                      {/* Decision action */}
-                      <ActionRadioOption
-                        {...fieldProps}
-                        value="decision"
-                        label={t(`chooseAction.decision${state}.title`, {
+        <Route
+          path="/governance-review-team/:systemId/actions/next-step"
+          render={() => <NextStep systemIntakeId={systemIntake.id} />}
+        />
+
+        {/* Select resolution page */}
+        <Route
+          path="/governance-review-team/:systemId/resolutions"
+          render={() => <Resolutions systemIntakeId={systemIntake.id} />}
+        />
+
+        {/* Select action main page */}
+        <Route path="/governance-review-team/:systemId/actions">
+          <PageHeading
+            data-testid="grt-actions-view"
+            className="margin-top-0 margin-bottom-5"
+          >
+            {t('chooseAction.heading')}
+          </PageHeading>
+
+          <form
+            onSubmit={handleSubmit(formData =>
+              history.push(formData.actionRoute)
+            )}
+            className="margin-bottom-4"
+          >
+            <Controller
+              name="actionRoute"
+              control={control}
+              render={({ field: { ref, ...fieldProps } }) => {
+                return (
+                  <RadioGroup className="grt-actions-radio-group grid-row grid-gap-md">
+                    {/* Request Edits */}
+                    <ActionRadioOption
+                      {...fieldProps}
+                      value="actions/request-edits"
+                      label={t('chooseAction.requestEdits.title')}
+                      description={t('chooseAction.requestEdits.description')}
+                      accordionText={t('chooseAction.requestEdits.accordion')}
+                    />
+                    {/* Progress to new step */}
+                    <ActionRadioOption
+                      {...fieldProps}
+                      value="actions/next-step"
+                      label={t('chooseAction.progressToNewStep.title')}
+                      description={t(
+                        'chooseAction.progressToNewStep.description'
+                      )}
+                      accordionText={t(
+                        'chooseAction.progressToNewStep.accordion'
+                      )}
+                    />
+                    {/* Decision action */}
+                    <ActionRadioOption
+                      {...fieldProps}
+                      value="resolutions"
+                      label={t(`chooseAction.decision${state}.title`, {
+                        context: decisionState
+                      })}
+                      description={t(
+                        `chooseAction.decision${state}.description`,
+                        {
                           context: decisionState
-                        })}
-                        description={t(
-                          `chooseAction.decision${state}.description`,
-                          {
-                            context: decisionState
-                          }
-                        )}
-                        accordionText={t(
-                          `chooseAction.decision${state}.accordion`,
-                          {
-                            context: decisionState
-                          }
-                        )}
-                      />
-                    </RadioGroup>
-                  );
-                }}
-              />
+                        }
+                      )}
+                      accordionText={t(
+                        `chooseAction.decision${state}.accordion`,
+                        {
+                          context: decisionState
+                        }
+                      )}
+                    />
+                  </RadioGroup>
+                );
+              }}
+            />
 
-              <Button
-                className="margin-top-3"
-                type="submit"
-                disabled={!actionRoute}
-              >
-                {t('submitAction.continue')}
-              </Button>
-            </form>
-          </>
-        )
-      }
+            <Button
+              className="margin-top-3"
+              type="submit"
+              disabled={!actionRoute}
+            >
+              {t('submitAction.continue')}
+            </Button>
+          </form>
+        </Route>
+      </Switch>
     </div>
   );
 };
