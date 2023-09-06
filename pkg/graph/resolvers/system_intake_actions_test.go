@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/guregu/null"
+
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -248,19 +250,90 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 
 func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 
-	intake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
-		Status:      models.SystemIntakeStatusINTAKEDRAFT,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-		Step:        models.SystemIntakeStepINITIALFORM,
-	})
-	s.NoError(err)
-
 	s.Run("Can't update an LCID that wasn't issued", func() {
+		intakeNoLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Step:        models.SystemIntakeStepINITIALFORM,
+		})
+		s.NoError(err)
 		_, err2 := UpdateLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeUpdateLCIDInput{
-			SystemIntakeID: intake.ID,
+			SystemIntakeID: intakeNoLCID.ID,
 		})
 		s.Error(err2)
 
+	})
+
+	s.Run("Can update an LCID that was issued", func() {
+		intakeWLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Step:        models.SystemIntakeStepINITIALFORM,
+		})
+		s.NoError(err)
+		intakeWLCID.LifecycleID = null.StringFrom("123456")
+		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intakeWLCID)
+		s.NoError(err)
+		scope := models.HTMLPointer("A really great new scope")
+		additionalInfo := models.HTMLPointer("My test info")
+		costBaseline := "the original costBaseline"
+
+		updatedIntakeLCID, err := UpdateLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeUpdateLCIDInput{
+			SystemIntakeID: intakeWLCID.ID,
+			Scope:          scope,
+			AdditionalInfo: additionalInfo,
+			CostBaseline:   &costBaseline,
+		})
+		s.NoError(err)
+		s.EqualValues(scope, updatedIntakeLCID.LifecycleScope)
+		s.EqualValues(costBaseline, updatedIntakeLCID.LifecycleCostBaseline)
+
+		// assert acion is created
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntakeLCID.ID)
+		s.NoError(err)
+		s.NotEmpty(allActionsForIntake)
+		action := allActionsForIntake[0]
+		s.EqualValues(updatedIntakeLCID.ID, *action.IntakeID)
+		s.EqualValues(models.ActionTypeUPDATELCID, action.ActionType)
+		s.EqualValues(additionalInfo, *action.Feedback)
+
+		//assert there is not an admin note since not included
+		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntakeLCID.ID)
+		s.NoError(err)
+		s.Empty(allNotesForIntake)
+
+		s.Run("Can update an already updated LCID", func() {
+			adminNote := models.HTML("test admin note for updating LCID")
+
+			updatedScope := models.HTMLPointer("A really great new scope")
+			additionalInfoUpdate := models.HTMLPointer("My feedback for second update")
+			secondUpdateIntake, err := UpdateLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeUpdateLCIDInput{
+				SystemIntakeID: updatedIntakeLCID.ID,
+				Scope:          updatedScope,
+				AdditionalInfo: additionalInfoUpdate,
+				AdminNote:      &adminNote,
+			})
+			s.NoError(err)
+			s.EqualValues(updatedScope, secondUpdateIntake.LifecycleScope)
+			s.EqualValues(costBaseline, secondUpdateIntake.LifecycleCostBaseline) // This should not be updated since it wasn't included
+
+			allActionsForIntake2, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, secondUpdateIntake.ID)
+			s.NoError(err)
+			s.NotEmpty(allActionsForIntake2)
+			action := allActionsForIntake2[1] //should be the second action
+			s.EqualValues(secondUpdateIntake.ID, *action.IntakeID)
+			s.EqualValues(models.ActionTypeUPDATELCID, action.ActionType)
+			s.EqualValues(additionalInfoUpdate, *action.Feedback)
+
+			//There should be one admin note
+			allNotesForIntake2, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, secondUpdateIntake.ID)
+			s.NoError(err)
+			s.NotEmpty(allNotesForIntake2)
+			note := allNotesForIntake2[0]
+			s.EqualValues(&adminNote, note.Content)
+		})
+
+		// assert admin note is created
 	})
 
 }
