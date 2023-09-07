@@ -49,6 +49,8 @@ func getBaseLCIDAction(intake models.SystemIntake,
 	userInfo models.UserInfo,
 ) models.Action {
 
+	// action field values are set based on if the value was set or not. If not set, the new value and the old are the same.
+	// this follows the existing paradigm for the legacy extend LCID action
 	action := models.Action{
 		IntakeID:       &intake.ID,
 		ActorName:      userInfo.CommonName,
@@ -68,7 +70,7 @@ func getBaseLCIDAction(intake models.SystemIntake,
 		LCIDExpirationChangeNewCostBaseline:      intake.LifecycleCostBaseline,
 		LCIDExpirationChangePreviousCostBaseline: intake.LifecycleCostBaseline,
 	}
-	//Action is set based on if the value was set or not. If not set, the new value and the old are the same
+
 	if expirationDate != nil {
 		action.LCIDExpirationChangeNewDate = expirationDate
 	}
