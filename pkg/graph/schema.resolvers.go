@@ -1607,6 +1607,7 @@ func (r *mutationResolver) SubmitIntake(ctx context.Context, input model.SubmitI
 			ActorEUAUserID: actorEUAID,
 			ActorName:      actorInfo.CommonName,
 			ActorEmail:     actorInfo.Email,
+			Step:           &intake.Step,
 		})
 	if err != nil {
 		return nil, err
