@@ -12,7 +12,7 @@
 
 // Vendor Styles
 @forward '../node_modules/font-awesome/css/font-awesome.min.css';
-@forward '../node_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
+@forward '@okta/okta-signin-widget/css/okta-sign-in.min.css';
 @forward '../node_modules/@trussworks/react-uswds/lib/index.css';
 
 // Custom USWDS
