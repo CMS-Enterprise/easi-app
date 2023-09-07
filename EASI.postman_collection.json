@@ -984,7 +984,39 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      type\n      author {\n          euaUserId\n          commonName\n          email\n      }\n    }\n    actions {\n        feedback\n        type\n    }\n    notes {\n        content\n        author {\n            eua\n            name\n        }\n    }\n  }\n}",
+								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      type\n      author {\n          euaUserId\n          commonName\n          email\n      }\n    }\n    actions {\n        feedback\n        type\n        step\n    }\n    notes {\n        content\n        author {\n            eua\n            name\n        }\n    }\n  }\n}",
+								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get (Feedback with LCID Change History)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      type\n      author {\n          euaUserId\n          commonName\n          email\n      }\n    }\n    actions {\n        feedback\n        type\n        step\n        lcidExpirationChange{\n            previousDate\n            newDate\n            previousScope\n            newScope\n            previousNextSteps\n            newNextSteps\n            previousCostBaseline\n            newCostBaseline\n        }\n    }\n    notes {\n        content\n        author {\n            eua\n            name\n        }\n    }\n  }\n}",
 								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
 							}
 						},
