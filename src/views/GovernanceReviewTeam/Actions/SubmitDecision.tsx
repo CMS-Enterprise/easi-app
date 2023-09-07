@@ -28,6 +28,7 @@ const SubmitDecision = ({ systemIntakeId }: { systemIntakeId: string }) => {
         title={t('decision.title')}
         description=""
         breadcrumb=""
+        successMessage=""
         onSubmit={onSubmit}
       >
         {/* Action fields here */}

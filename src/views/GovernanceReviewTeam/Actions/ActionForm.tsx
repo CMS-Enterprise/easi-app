@@ -31,6 +31,7 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   title: string;
   description: string;
   breadcrumb: string;
+  successMessage: string;
   children?: React.ReactNode;
   /** Submit function runs after field validation passes */
   onSubmit: (formData: TFieldValues) => Promise<void>;
@@ -49,8 +50,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   systemIntakeId,
   title,
   description,
-  children,
   breadcrumb,
+  successMessage,
+  children,
   onSubmit,
   className,
   ...formProps
@@ -85,7 +87,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     onSubmit(formData as TFieldValues)
       .then(() => {
         // Display success message
-        showMessageOnNextPage(t('requestEdits.success'), { type: 'success' });
+        showMessageOnNextPage(t(successMessage), { type: 'success' });
         history.push(`/governance-review-team/${systemIntakeId}/actions`);
       })
       .catch(() => {

@@ -31,6 +31,7 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
         title={t('requestEdits.title')}
         description={t('requestEdits.description')}
         breadcrumb={t('requestEdits.breadcrumb')}
+        successMessage={t('requestEdits.success')}
         onSubmit={onSubmit}
       >
         {/* Action fields here */}

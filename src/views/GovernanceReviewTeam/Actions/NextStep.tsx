@@ -28,6 +28,7 @@ const NextStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
         title={t('nextStep.title')}
         description=""
         breadcrumb=""
+        successMessage=""
         onSubmit={onSubmit}
       >
         {/* Action fields here */}
