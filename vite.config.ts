@@ -35,9 +35,10 @@ export default defineConfig({
     }
   },
   resolve: {
-    alias: {
-      '@okta/okta-auth-js': '@okta/okta-auth-js/dist/okta-auth-js.umd.js'
-    }
+    // TODO: Remove comments if okta-signin-widget upgrades make this truly not needed anymore
+    // alias: {
+    //   '@okta/okta-auth-js': '@okta/okta-auth-js/dist/okta-auth-js.umd.js'
+    // }
   },
   test: {
     globals: true,
