@@ -19,6 +19,9 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const onSubmit = async (formData: RequestEditsFields) => {
     // Execute mutation here
     // mutate(formData);
+    //
+    // Uncomment to test error message
+    // throw new Error();
   };
 
   return (

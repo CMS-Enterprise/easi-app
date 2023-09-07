@@ -77,6 +77,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     watch,
     reset,
     handleSubmit,
+    setError,
     formState: { isSubmitting, defaultValues, errors }
   } = useFormContext<SystemIntakeActionFields>();
 
@@ -88,7 +89,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         history.push(`/governance-review-team/${systemIntakeId}/actions`);
       })
       .catch(() => {
-        // Display success message
+        // Display error message
+        setError('root', { message: t('error') });
       });
   });
 
