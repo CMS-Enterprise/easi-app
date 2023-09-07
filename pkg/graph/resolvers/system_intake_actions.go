@@ -653,9 +653,11 @@ func UpdateLCID(
 	}
 	// input.Reason //TODO: The reason field will be retained in the DB in a future ticket
 
+	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
+	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
 	// save action (including additional info for email, if any)
 	errGroup := new(errgroup.Group)
-	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+
 	errGroup.Go(func() error {
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
@@ -751,6 +753,7 @@ func ConfirmLCID(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
 	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
 	// save action (including additional info for email, if any)
 	errGroup := new(errgroup.Group)
