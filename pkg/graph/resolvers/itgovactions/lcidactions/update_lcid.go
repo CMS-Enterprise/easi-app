@@ -29,7 +29,7 @@ func GetUpdateLCIDAction(
 // IsLCIDValidToUpdate checks if you can update the LCID for an intake, if not, it will return an error
 // An LCID must have already been issued in order to be updateable
 func IsLCIDValidToUpdate(intake *models.SystemIntake) error {
-	if !intake.LifecycleID.Valid {
+	if intake.LifecycleID.ValueOrZero() == "" {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
 				ActionType: models.ActionTypeUPDATELCID,
@@ -40,7 +40,7 @@ func IsLCIDValidToUpdate(intake *models.SystemIntake) error {
 	return nil
 }
 
-// getBaseLCIDAction returns the basic entries for an aciton. Action type is handled by the calling action
+// getBaseLCIDAction returns an action with basic entries related to LCID operations set. Action type is handled by the calling action
 func getBaseLCIDAction(intake models.SystemIntake,
 	expirationDate *time.Time,
 	nextSteps *models.HTML,

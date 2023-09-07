@@ -27,7 +27,7 @@ func GetConfirmLCIDAction(
 // IsLCIDValidToConfirm checks if you can confirm the LCID for an intake, if not, it will return an error
 // An LCID must have already been issued in order to be confirmable
 func IsLCIDValidToConfirm(intake *models.SystemIntake) error {
-	if !intake.LifecycleID.Valid {
+	if intake.LifecycleID.ValueOrZero() == "" {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
 				ActionType: models.ActionTypeUPDATELCID,
