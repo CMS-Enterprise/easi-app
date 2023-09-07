@@ -24,6 +24,9 @@ export interface CreateSystemIntakeActionExtendLifecycleId_createSystemIntakeAct
 }
 
 export interface CreateSystemIntakeActionExtendLifecycleId {
+  /**
+   * Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionUpdateLCID
+   */
   createSystemIntakeActionExtendLifecycleId: CreateSystemIntakeActionExtendLifecycleId_createSystemIntakeActionExtendLifecycleId | null;
 }
 
