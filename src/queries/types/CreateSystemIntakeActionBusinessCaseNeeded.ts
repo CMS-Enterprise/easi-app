@@ -21,6 +21,9 @@ export interface CreateSystemIntakeActionBusinessCaseNeeded_createSystemIntakeAc
 }
 
 export interface CreateSystemIntakeActionBusinessCaseNeeded {
+  /**
+   * Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
+   */
   createSystemIntakeActionBusinessCaseNeeded: CreateSystemIntakeActionBusinessCaseNeeded_createSystemIntakeActionBusinessCaseNeeded | null;
 }
 
