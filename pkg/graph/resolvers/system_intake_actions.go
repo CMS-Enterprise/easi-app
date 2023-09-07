@@ -650,14 +650,31 @@ func ExpireLCID(
 
 	// TODO - validation?
 
-	// TODO - update intake
+	// update intake
 
-	// TODO - change expiration date on intake
-	// TODO - where to store Reason, if at all?
-	// TODO - where to store NextSteps, if at all?
+	// TODO - see if issuing LCID in v2 is implemented (or is any different)
 
-	updatedTime := time.Now()
-	intake.UpdatedAt = &updatedTime
+	// set the expiration date's year/month/day based on current values, but leave the time as 00:00:00 (in UTC)
+	// matches the frontend logic for setting the expiration date:
+	// see src/views/GovernanceReviewTeam/ActionsV1/IssueLifecycleId.tsx, the definition of expiresAt
+	currentTime := time.Now()
+	currentTimeUTC := currentTime.UTC()
+	expirationTime := time.Date(
+		currentTimeUTC.Year(),
+		currentTimeUTC.Month(),
+		currentTimeUTC.Day(),
+		0,
+		0,
+		0,
+		0,
+		time.UTC,
+	)
+
+	intake.LifecycleExpiresAt = &expirationTime
+	intake.DecisionNextSteps = input.NextSteps
+	// not currently persisting input.Reason
+
+	intake.UpdatedAt = &currentTime
 
 	// All the different database calls aren't in a single atomic transaction;
 	// in the case of a system failure, some data from the action might be saved, but not all.
