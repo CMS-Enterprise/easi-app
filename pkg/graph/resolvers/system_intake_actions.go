@@ -10,6 +10,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
@@ -160,6 +161,7 @@ func ProgressIntake(
 func CreateSystemIntakeActionRequestEdits(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeRequestEditsInput,
 ) (*models.SystemIntake, error) {
@@ -236,6 +238,24 @@ func CreateSystemIntakeActionRequestEdits(
 			return nil, err
 		}
 	}
+	requester, err := fetchUserInfo(ctx, intake.Requester)
+	if err != nil {
+		return intake, err
+	}
+
+	if emailClient != nil {
+		err = emailClient.SystemIntake.SendRequestEditsNotification(ctx,
+			input.NotificationRecipients.RegularRecipientEmails,
+			input.NotificationRecipients.ShouldNotifyITGovernance,
+			intake.ID,
+			intake.ProjectName.ValueOrZero(),
+			requester.CommonName,
+			input.EmailFeedback)
+		if err != nil {
+			return intake, err
+		}
+	}
+	// email
 	return intake, nil
 }
 
