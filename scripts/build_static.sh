@@ -34,7 +34,6 @@ export VITE_OKTA_SERVER_ID="$OKTA_SERVER_ID"
 export VITE_LD_CLIENT_ID="$LD_CLIENT_ID"
 export VITE_APP_ENV="$APP_ENV"
 export VITE_OKTA_ISSUER="${VITE_OKTA_DOMAIN}/oauth2/${VITE_OKTA_SERVER_ID}"
-export VITE_OKTA_REDIRECT_URI="${EASI_URL}/implicit/callback"
 export VITE_API_ADDRESS="${EASI_URL}/api/v1"
 export VITE_GRAPHQL_ADDRESS="${EASI_URL}/api/graph/query"
 
