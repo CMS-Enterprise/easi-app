@@ -655,21 +655,6 @@ func UpdateLCID(
 
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
 	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
-	// save action (including additional info for email, if any)
-	errGroup := new(errgroup.Group)
-
-	errGroup.Go(func() error {
-		if input.AdditionalInfo != nil {
-			action.Feedback = input.AdditionalInfo
-		}
-
-		_, errCreatingAction := store.CreateAction(ctx, &action)
-		if errCreatingAction != nil {
-			return errCreatingAction
-		}
-
-		return nil
-	})
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -695,6 +680,21 @@ func UpdateLCID(
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
 
+	// save action (including additional info for email, if any)
+	errGroup := new(errgroup.Group)
+
+	errGroup.Go(func() error {
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
 	// save intake
 	errGroup.Go(func() error {
 		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
@@ -755,22 +755,6 @@ func ConfirmLCID(ctx context.Context,
 	}
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
 	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
-	// save action (including additional info for email, if any)
-	errGroup := new(errgroup.Group)
-	errGroup.Go(func() error {
-
-		action.ActionType = models.ActionTypeCONFIRMLCID
-		if input.AdditionalInfo != nil {
-			action.Feedback = input.AdditionalInfo
-		}
-
-		_, errCreatingAction := store.CreateAction(ctx, &action)
-		if errCreatingAction != nil {
-			return errCreatingAction
-		}
-
-		return nil
-	})
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -790,6 +774,23 @@ func ConfirmLCID(ctx context.Context,
 	}
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	errGroup := new(errgroup.Group)
+	// save action (including additional info for email, if any)
+	errGroup.Go(func() error {
+
+		action.ActionType = models.ActionTypeCONFIRMLCID
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
 
 	// save intake
 	errGroup.Go(func() error {
