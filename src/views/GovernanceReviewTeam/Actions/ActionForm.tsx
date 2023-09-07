@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { Form, FormGroup } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
@@ -9,6 +10,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
+import useMessage from 'hooks/useMessage';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
@@ -54,6 +56,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   ...formProps
 }: ActionFormProps<TFieldValues>) => {
   const { t } = useTranslation('action');
+  const history = useHistory();
+  const { showMessageOnNextPage } = useMessage();
 
   const {
     contacts: { data: contacts }
@@ -80,6 +84,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     onSubmit(formData as TFieldValues)
       .then(() => {
         // Display success message
+        showMessageOnNextPage(t('requestEdits.success'), { type: 'success' });
+        history.push(`/governance-review-team/${systemIntakeId}/actions`);
       })
       .catch(() => {
         // Display success message

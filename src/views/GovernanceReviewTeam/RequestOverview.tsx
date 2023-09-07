@@ -127,7 +127,7 @@ const RequestOverview = () => {
           'margin-bottom-5 margin-top-7': !fullPageLayout
         })}
       >
-        <Message className="margin-bottom-5" />
+        <Message className="margin-bottom-6 margin-top-neg-4" />
         <Grid row gap>
           {!fullPageLayout && (
             <nav className="desktop:grid-col-3 desktop:display-block display-none">
