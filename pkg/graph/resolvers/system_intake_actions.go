@@ -747,7 +747,7 @@ func ConfirmLCID(ctx context.Context,
 	if err != nil || intake == nil {
 		return nil, err
 	}
-	err = lcidactions.IsLCIDValidToUpdate(intake)
+	err = lcidactions.IsLCIDValidToConfirm(intake)
 	if err != nil {
 		return nil, err
 	}

@@ -1495,7 +1495,7 @@ input SystemIntakeUpdateLCIDInput {
   scope: HTML
   nextSteps: HTML
   costBaseline: String
-  reason: HTML # Why are you amending this LCID? Should this be called something
+  reason: HTML
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
