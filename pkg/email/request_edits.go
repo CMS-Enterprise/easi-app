@@ -21,6 +21,7 @@ type systemIntakeRequestEditsEmailParameters struct {
 	SystemIntakeRequestLink  string
 	SystemIntakeAdminLink    string
 	ITGovernanceInboxAddress string
+	AdditionalInfo           template.HTML // TODO: SW Should we make this a pointer?
 }
 
 func (sie systemIntakeEmails) requestEditsBody(
@@ -28,11 +29,10 @@ func (sie systemIntakeEmails) requestEditsBody(
 	requestName string,
 	requesterName string,
 	feedback models.HTML,
+	additionalInfo *models.HTML,
 ) (string, error) {
-	// taskListPath := path.Join("governance-task-list", systemIntakeID.String())
-
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
-	adminPath := path.Join("governance-review-team", systemIntakeID.String())
+	adminPath := path.Join("governance-review-team", systemIntakeID.String(), "intake-request")
 
 	data := systemIntakeRequestEditsEmailParameters{
 		RequestName:              requestName,
@@ -41,6 +41,7 @@ func (sie systemIntakeEmails) requestEditsBody(
 		SystemIntakeRequestLink:  sie.client.urlFromPath(requesterPath),
 		SystemIntakeAdminLink:    sie.client.urlFromPath(adminPath),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
+		AdditionalInfo:           additionalInfo.ToTemplate(),
 	}
 
 	var b bytes.Buffer
@@ -63,10 +64,14 @@ func (sie systemIntakeEmails) SendRequestEditsNotification(
 	requestName string,
 	requesterName string,
 	feedback models.HTML,
+	additionalInfo *models.HTML,
 ) error {
 
+	if requestName == "" {
+		requestName = "Draft System Intake"
+	}
 	subject := fmt.Sprintf("Updates requested for the %s for %s", formName, requestName) //TODO: SW implement this, perhaps as a subject template? Or just create it here?
-	body, err := sie.requestEditsBody(systemIntakeID, requestName, requesterName, feedback)
+	body, err := sie.requestEditsBody(systemIntakeID, requestName, requesterName, feedback, additionalInfo)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

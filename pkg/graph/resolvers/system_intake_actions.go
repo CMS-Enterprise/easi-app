@@ -215,7 +215,7 @@ func CreateSystemIntakeActionRequestEdits(
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Send Notification Email (EASI-3109)
+
 	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
 	govReqFeedback.CreatedBy = adminTakingAction.EuaUserID
@@ -238,19 +238,16 @@ func CreateSystemIntakeActionRequestEdits(
 			return nil, err
 		}
 	}
-	requester, err := fetchUserInfo(ctx, intake.Requester)
-	if err != nil {
-		return intake, err
-	}
-
 	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
 		err = emailClient.SystemIntake.SendRequestEditsNotification(ctx,
 			*input.NotificationRecipients,
 			intake.ID,
 			targetForm.Humanize(),
 			intake.ProjectName.ValueOrZero(),
-			requester.CommonName,
-			input.EmailFeedback)
+			intake.Requester,
+			input.EmailFeedback,
+			input.AdditionalInfo,
+		)
 		if err != nil {
 			return intake, err
 		}
