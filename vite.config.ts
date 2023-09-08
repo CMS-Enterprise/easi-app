@@ -9,6 +9,8 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   build: {
     outDir: 'build',
+    // Node modules that use `require` statements need to be transpiled to use `import`
+    // One of the problematic modules is (at time of writing) @okta/okta-signin-widget
     commonjsOptions: {
       transformMixedEsModules: true
     }
@@ -36,12 +38,6 @@ export default defineConfig({
     postcss: {
       plugins: [autoprefixer]
     }
-  },
-  resolve: {
-    // TODO: Remove comments if okta-signin-widget upgrades make this truly not needed anymore
-    // alias: {
-    //   '@okta/okta-auth-js': '@okta/okta-auth-js/dist/okta-auth-js.umd.js'
-    // }
   },
   test: {
     globals: true,
