@@ -63,6 +63,7 @@ type templates struct {
 	trbAdviceLetterSubmitted                   templateCaller
 	trbRequestClosed                           templateCaller
 	cedarRolesChanged                          templateCaller
+	systemIntakeRequestEdits                   templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -313,6 +314,7 @@ func NewClient(config Config, sender sender) (Client, error) {
 	if systemIntakeRequestEdits == nil {
 		return Client{}, templateError(systemIntakeRequestEditsTemplateName)
 	}
+	appTemplates.systemIntakeRequestEdits = systemIntakeRequestEdits
 
 	client := Client{
 		config:    config,

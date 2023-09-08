@@ -44,7 +44,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			_, err = CreateSystemIntakeActionRequestEdits(
 				ctx,
 				s.testConfigs.Store,
-				nil,
+				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
 				model.SystemIntakeRequestEditsInput{
 					SystemIntakeID: intake.ID,

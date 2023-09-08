@@ -243,11 +243,11 @@ func CreateSystemIntakeActionRequestEdits(
 		return intake, err
 	}
 
-	if emailClient != nil {
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
 		err = emailClient.SystemIntake.SendRequestEditsNotification(ctx,
-			input.NotificationRecipients.RegularRecipientEmails,
-			input.NotificationRecipients.ShouldNotifyITGovernance,
+			*input.NotificationRecipients,
 			intake.ID,
+			targetForm.Humanize(),
 			intake.ProjectName.ValueOrZero(),
 			requester.CommonName,
 			input.EmailFeedback)
@@ -255,7 +255,6 @@ func CreateSystemIntakeActionRequestEdits(
 			return intake, err
 		}
 	}
-	// email
 	return intake, nil
 }
 
