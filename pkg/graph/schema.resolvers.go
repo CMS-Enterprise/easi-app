@@ -1169,6 +1169,25 @@ func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Contex
 		r.service.FetchUserInfo,
 		input,
 	)
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+// CreateSystemIntakeActionUpdateLcid is the resolver for the createSystemIntakeActionUpdateLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Context, input model.SystemIntakeUpdateLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.UpdateLCID(ctx, r.store, r.service.FetchUserInfo, input)
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+// CreateSystemIntakeActionConfirmLcid is the resolver for the createSystemIntakeActionConfirmLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Context, input model.SystemIntakeConfirmLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.ConfirmLCID(ctx, r.store, r.service.FetchUserInfo, input)
+
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
@@ -1602,6 +1621,7 @@ func (r *mutationResolver) SubmitIntake(ctx context.Context, input model.SubmitI
 			ActorEUAUserID: actorEUAID,
 			ActorName:      actorInfo.CommonName,
 			ActorEmail:     actorInfo.Email,
+			Step:           &intake.Step,
 		})
 	if err != nil {
 		return nil, err

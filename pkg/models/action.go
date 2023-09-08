@@ -14,6 +14,8 @@ type ActionType string
 const (
 	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
 	ActionTypeEXPIRELCID        ActionType = "EXPIRE_LCID"
+	ActionTypeUPDATELCID        ActionType = "UPDATE_LCID"
+	ActionTypeCONFIRMLCID       ActionType = "CONFIRM_LCID"
 	ActionTypeREQUESTEDITS      ActionType = "REQUEST_EDITS"
 	ActionTypeCLOSEREQUEST      ActionType = "CLOSE_REQUEST"
 	ActionTypeREOPENREQUEST     ActionType = "REOPEN_REQUEST"
@@ -22,14 +24,13 @@ const (
 
 // v1/v2 actions - originally from v1, still used in IT Gov v2
 const (
-	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
-	ActionTypeREJECT    ActionType = "REJECT"
+	ActionTypeISSUELCID    ActionType = "ISSUE_LCID"
+	ActionTypeREJECT       ActionType = "REJECT"
+	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"
 )
 
 // v1 actions - no longer used in IT Gov v2 workflow
 const (
-	// ActionTypeSUBMITINTAKE captures enum value SUBMIT_INTAKE
-	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"
 	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST
 	ActionTypeNOTITREQUEST ActionType = "NOT_IT_REQUEST"
 	// ActionTypeNEEDBIZCASE captures enum value NEED_BIZ_CASE

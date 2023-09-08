@@ -1,4 +1,40 @@
 {
+    "go.testEnvVars": {
+        "APP_ENV": "local",
+        "OKTA_CLIENT_ID": "0oa2e913coDQeG19S297",
+        "PGHOST": "localhost",
+        "PGPORT": "5432",
+        "PGDATABASE": "postgres",
+        "PGUSER": "postgres",
+        "PGPASS": "mysecretpassword",
+        "PGPASSWORD": "mysecretpassword",
+        "PGSSLMODE": "disable",
+        "DB_MAX_CONNECTIONS": "20",
+        "AWS_REGION": "us-west-2",
+        "AWS_S3_FILE_UPLOAD_BUCKET": "easi-app-file-uploads",
+        "MINIO_ADDRESS": "http://localhost:9000",
+        "MINIO_ACCESS_KEY": "minioadmin",
+        "MINIO_SECRET_KEY": "minioadmin",
+        "EMAIL_TEMPLATE_DIR":"${workspaceFolder}/pkg/email/templates"
+      },
+      "go.toolsEnvVars": {
+        "APP_ENV": "local",
+        "OKTA_CLIENT_ID": "0oa2e913coDQeG19S297",
+        "PGHOST": "localhost",
+        "PGPORT": "5432",
+        "PGDATABASE": "postgres",
+        "PGUSER": "postgres",
+        "PGPASS": "mysecretpassword",
+        "PGPASSWORD": "mysecretpassword",
+        "PGSSLMODE": "disable",
+        "DB_MAX_CONNECTIONS": "20",
+        "AWS_REGION": "us-west-2",
+        "AWS_S3_FILE_UPLOAD_BUCKET": "easi-app-file-uploads",
+        "MINIO_ADDRESS": "http://localhost:9000",
+        "MINIO_ACCESS_KEY": "minioadmin",
+        "MINIO_SECRET_KEY": "minioadmin",
+        "EMAIL_TEMPLATE_DIR":"${workspaceFolder}/pkg/email/templates"
+      },
     "editor.formatOnSave": false,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
