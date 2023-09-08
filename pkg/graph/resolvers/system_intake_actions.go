@@ -798,7 +798,6 @@ func ConfirmLCID(ctx context.Context,
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
 
-		action.ActionType = models.ActionTypeCONFIRMLCID
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
 		}
