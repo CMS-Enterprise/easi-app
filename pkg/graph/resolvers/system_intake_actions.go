@@ -647,3 +647,204 @@ func CreateSystemIntakeActionNotITGovRequest(
 	}
 	return intake, nil
 }
+
+// UpdateLCID is used to update the LCID on a system intake.
+func UpdateLCID(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeUpdateLCIDInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil || intake == nil {
+		return nil, err
+	}
+	err = lcidactions.IsLCIDValidToUpdate(intake)
+	if err != nil {
+		return nil, err
+	}
+	// input.Reason //TODO: The reason field will be retained in the DB in a future ticket
+
+	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
+	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	// update workflow state
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.DecisionState = models.SIDSLcidIssued
+
+	// update LCID-related fields when they are set
+	if input.ExpiresAt != nil {
+		intake.LifecycleExpiresAt = input.ExpiresAt
+	}
+	if input.Scope != nil {
+		intake.LifecycleScope = input.Scope
+	}
+	if input.NextSteps != nil {
+		intake.DecisionNextSteps = input.NextSteps
+	}
+	if input.CostBaseline != nil {
+		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+	}
+
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save action (including additional info for email, if any)
+	errGroup := new(errgroup.Group)
+
+	errGroup.Go(func() error {
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+	// TODO: EASI-3109 will send an email from this mutation
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
+}
+
+// ConfirmLCID is used to confirm the choices of an already issued LCID. All fields are required, and should come back pre-populated by the front end with the previous answer
+func ConfirmLCID(ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeConfirmLCIDInput,
+) (*models.SystemIntake, error) {
+
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil || intake == nil {
+		return nil, err
+	}
+	err = lcidactions.IsLCIDValidToConfirm(intake)
+	if err != nil {
+		return nil, err
+	}
+	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
+	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+
+	updatedTime := time.Now()
+	intake.UpdatedAt = &updatedTime
+
+	// update workflow state
+	intake.Step = models.SystemIntakeStepDECISION
+	intake.State = models.SystemIntakeStateCLOSED
+	intake.DecisionState = models.SIDSLcidIssued
+
+	// update LCID-related fields
+	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
+	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleScope = &input.Scope
+	intake.DecisionNextSteps = &input.NextSteps
+	if input.CostBaseline != nil {
+		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+	}
+
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	errGroup := new(errgroup.Group)
+	// save action (including additional info for email, if any)
+	errGroup.Go(func() error {
+
+		action.ActionType = models.ActionTypeCONFIRMLCID
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+	// TODO: EASI-3109 will send an email from this mutation
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
+
+}

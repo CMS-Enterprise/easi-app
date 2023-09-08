@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "14a8f3b3-3f36-48db-a089-8bcb9729d449",
+		"_postman_id": "15ecafd0-6d20-4707-b8a8-4c14d80cf09c",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11253221"
+		"_exporter_id": "20320964"
 	},
 	"item": [
 		{
@@ -388,6 +388,58 @@
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionNotITGovRequest (\r\n    $input: SystemIntakeNotITGovReqInput!\r\n    ) {\r\n    createSystemIntakeActionNotITGovRequest(input: $input) {\r\n        systemIntake {\r\n            id\r\n            state\r\n            step\r\n            decisionNextSteps\r\n            decisionState\r\n            updatedAt\r\n        }\r\n    }\r\n}",
 												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"email reason goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Confirm LCID",
+							"item": [
+								{
+									"name": "Confirm LCID Action",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation CreateSystemIntakeActionConfirmLCID{\r\n        createSystemIntakeActionConfirmLCID(input:{\r\n            systemIntakeID: \"{{systemIntakeID}}\"\r\n            expiresAt: \"2024-04-02T15:04:05.999999999Z\"\r\n            scope: \"<strong>A really great scope </strong>\"\r\n            nextSteps: \"<li> look for new things to do </li>\"\r\n            costBaseline: \"$20\"\r\n            additionalInfo:\"<ul><li>1 Information piece</li> <li>2 Information piece</li></ul>\"\r\n            trbFollowUp: RECOMMENDED_BUT_NOT_CRITICAL\r\n            # notificationRecipients\r\n            # adminNote\r\n        })\r\n{\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            step\r\n            state\r\n            decisionState\r\n            lcid\r\n            lcidExpiresAt\r\n            lcidScope\r\n            lcidCostBaseline\r\n            decisionNextSteps\r\n            trbFollowUpRecommendation\r\n        }\r\n    }\r\n}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Update LCID",
+							"item": [
+								{
+									"name": "Update LCID Action",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation CreateSystemIntakeActionUpdateLCID{\r\n        createSystemIntakeActionUpdateLCID(input:{\r\n            systemIntakeID: \"{{systemIntakeID}}\"\r\n            expiresAt: \"2024-04-02T15:04:05.999999999Z\"\r\n            scope: \"<strong>A really great scope </strong>\"\r\n            nextSteps: \"<li> look for new things to do </li><li> look for another new things to do </li>\"\r\n            costBaseline: \"$30\"\r\n            reason: \"<p> the lcid needed to be updated </p>\"\r\n            additionalInfo:\"<ul><li>1 Information piece</li> <li>2 Information piece</li><li>new info </li></ul>\"\r\n            # notificationRecipients\r\n            adminNote: \"<strong>Wow! What a great LCID!</strong>\"\r\n        })\r\n{\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            step\r\n            state\r\n            decisionState\r\n            lcid\r\n            lcidExpiresAt\r\n            lcidScope\r\n            lcidCostBaseline\r\n            decisionNextSteps\r\n            trbFollowUpRecommendation\r\n        }\r\n    }\r\n}",
+												"variables": ""
 											}
 										},
 										"url": {
@@ -932,7 +984,39 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      type\n      author {\n          euaUserId\n          commonName\n          email\n      }\n    }\n    actions {\n        feedback\n        type\n    }\n    notes {\n        content\n        author {\n            eua\n            name\n        }\n    }\n  }\n}",
+								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      type\n      author {\n          euaUserId\n          commonName\n          email\n      }\n    }\n    actions {\n        feedback\n        type\n        step\n    }\n    notes {\n        content\n        author {\n            eua\n            name\n        }\n    }\n  }\n}",
+								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get (Feedback with LCID Change History)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      type\n      author {\n          euaUserId\n          commonName\n          email\n      }\n    }\n    actions {\n        feedback\n        type\n        step\n        lcidExpirationChange{\n            previousDate\n            newDate\n            previousScope\n            newScope\n            previousNextSteps\n            newNextSteps\n            previousCostBaseline\n            newCostBaseline\n        }\n    }\n    notes {\n        content\n        author {\n            eua\n            name\n        }\n    }\n  }\n}",
 								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
 							}
 						},

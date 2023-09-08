@@ -1280,9 +1280,13 @@ enum SystemIntakeActionType {
   NOT_GOVERNANCE
   CLOSE_REQUEST
   REOPEN_REQUEST
+  UPDATE_LCID
+  CONFIRM_LCID
 
   # v1/v2 actions - originally from v1, still used in v2
   ISSUE_LCID
+  SUBMIT_INTAKE
+  REJECT
 
   # v1 actions - no longer used in IT Gov v2 workflow
   BIZ_CASE_NEEDS_CHANGES
@@ -1298,11 +1302,11 @@ enum SystemIntakeActionType {
   PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
   READY_FOR_GRB
   READY_FOR_GRT
-  REJECT
+
   SEND_EMAIL
   SUBMIT_BIZ_CASE
   SUBMIT_FINAL_BIZ_CASE
-  SUBMIT_INTAKE
+
 }
 
 """
@@ -1479,6 +1483,36 @@ input SystemIntakeProgressToNewStepsInput {
   feedback: HTML
   grbRecommendations: HTML
   additionalInfo: HTML
+  adminNote: HTML
+}
+"""
+Input for updating an intake's LCID in IT Gov v2
+"""
+input SystemIntakeUpdateLCIDInput { 
+  systemIntakeID: UUID!
+
+  expiresAt: Time
+  scope: HTML
+  nextSteps: HTML
+  costBaseline: String
+  reason: HTML
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
+"""
+Input for confirming an intake's decision to issue an LCID in IT Gov v2
+"""
+input SystemIntakeConfirmLCIDInput {
+  systemIntakeID: UUID!
+  expiresAt: Time!
+  scope: HTML!
+  nextSteps: HTML!
+  trbFollowUp: SystemIntakeTRBFollowUp!
+  costBaseline: String
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
 }
 
@@ -2407,6 +2441,12 @@ type Mutation {
   createSystemIntakeActionRequestEdits(
     input: SystemIntakeRequestEditsInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionUpdateLCID(
+    input: SystemIntakeUpdateLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionConfirmLCID(
+    input: SystemIntakeConfirmLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionIssueLCID(
     input: SystemIntakeIssueLCIDInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
@@ -2453,6 +2493,9 @@ type Mutation {
   createSystemIntakeActionSendEmail(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  """
+   Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionUpdateLCID
+  """
   createSystemIntakeActionExtendLifecycleId(
     input: CreateSystemIntakeActionExtendLifecycleIdInput!
   ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
