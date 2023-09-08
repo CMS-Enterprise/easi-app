@@ -9758,12 +9758,14 @@ type Mutation {
   createSystemIntakeActionSendEmail(
     input: BasicActionInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+
   """
    Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionUpdateLCID
   """
   createSystemIntakeActionExtendLifecycleId(
     input: CreateSystemIntakeActionExtendLifecycleIdInput!
   ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
+
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
