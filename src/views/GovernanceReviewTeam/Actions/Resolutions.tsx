@@ -60,10 +60,7 @@ const Resolutions = ({
 
       <div className="desktop:display-flex desktop:flex-align-end">
         <PageHeading className="margin-bottom-0">
-          {
-            // TODO: Dynamic title
-            t('resolutions.title', { context: 'NO_DECISION' })
-          }
+          {t('resolutions.title', { context: decisionState })}
         </PageHeading>
         <p className="font-body-lg text-base margin-bottom-05 margin-y-1 desktop:margin-left-2 desktop:margin-bottom-05">
           {t('resolutions.step', { step: 1 })}
@@ -71,10 +68,7 @@ const Resolutions = ({
       </div>
 
       <p className="line-height-body-5 font-body-lg text-light margin-0">
-        {
-          // TODO: Dynamic description
-          t('resolutions.description', { context: 'NO_DECISION' })
-        }
+        {t('resolutions.description', { context: decisionState })}
       </p>
 
       <p className="margin-top-1 text-base">
