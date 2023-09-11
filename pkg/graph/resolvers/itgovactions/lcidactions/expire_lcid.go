@@ -50,7 +50,7 @@ func GetExpireLCIDAction(
 	newNextSteps models.HTML,
 	userInfo models.UserInfo,
 ) models.Action {
-	// pass in nil for nextSteps and scope because those aren't changed by this action
+	// pass in nil for scope and cost baseline because those aren't changed by this action
 	action := getBaseLCIDAction(intake, &newExpirationDate, &newNextSteps, nil, nil, userInfo)
 	action.ActionType = models.ActionTypeEXPIRELCID
 
