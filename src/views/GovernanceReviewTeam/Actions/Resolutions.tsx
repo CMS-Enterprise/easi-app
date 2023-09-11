@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { Form, Grid, SummaryBox } from '@trussworks/react-uswds';
 import { camelCase } from 'lodash';
 
@@ -15,6 +15,12 @@ import {
 } from 'types/graphql-global-types';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+import CloseRequest from './CloseRequest';
+import IssueLcid from './IssueLcid';
+import NotApproved from './NotApproved';
+import NotGovernance from './NotGovernance';
+import ReopenRequest from './ReopenRequest';
 
 type ResolutionOption =
   | 'not-it-request'
@@ -139,122 +145,142 @@ const Resolutions = ({
         </p>
       </div>
 
-      <p className="line-height-body-5 font-body-lg text-light margin-0">
-        {t('resolutions.description', {
-          context: decisionState,
-          descriptionAction: t('resolutions.descriptionAction', {
-            context: state
-          })
-        })}
-      </p>
+      <Switch>
+        <Route path="/governance-review-team/:systemId/resolutions/issue-lcid">
+          <IssueLcid systemIntakeId={systemIntakeId} />
+        </Route>
+        <Route path="/governance-review-team/:systemId/resolutions/not-it-gov">
+          <NotGovernance systemIntakeId={systemIntakeId} />
+        </Route>
+        <Route path="/governance-review-team/:systemId/resolutions/not-approved">
+          <NotApproved systemIntakeId={systemIntakeId} />
+        </Route>
+        <Route path="/governance-review-team/:systemId/resolutions/close-request">
+          <CloseRequest systemIntakeId={systemIntakeId} />
+        </Route>
+        <Route path="/governance-review-team/:systemId/resolutions/re-open-request">
+          <ReopenRequest systemIntakeId={systemIntakeId} />
+        </Route>
 
-      <p className="margin-top-1 text-base">
-        <Trans
-          i18nKey="action:fieldsMarkedRequired"
-          components={{ asterisk: <RequiredAsterisk /> }}
-        />
-      </p>
+        <Route path="/governance-review-team/:systemId/resolutions">
+          <p className="line-height-body-5 font-body-lg text-light margin-0">
+            {t('resolutions.description', {
+              context: decisionState,
+              descriptionAction: t('resolutions.descriptionAction', {
+                context: state
+              })
+            })}
+          </p>
 
-      <Grid className="grid-row grid-gap margin-top-6">
-        <Form
-          onSubmit={handleSubmit(formData =>
-            history.push(`resolutions/${formData.resolution}`)
-          )}
-          className="maxw-none margin-bottom-6 tablet:grid-col-6"
-        >
-          <Controller
-            name="resolution"
-            control={control}
-            render={({ field: { ref, ...field } }) => {
-              return (
-                <RadioGroup>
-                  <Label
-                    htmlFor="resolution"
-                    className="text-normal margin-top-0"
-                    required
-                  >
-                    {t('resolutions.label')}
-                  </Label>
+          <p className="margin-top-1 text-base">
+            <Trans
+              i18nKey="action:fieldsMarkedRequired"
+              components={{ asterisk: <RequiredAsterisk /> }}
+            />
+          </p>
 
-                  {decisionOptions.map(decisionKey => (
-                    <ResolutionField
-                      {...field}
-                      decision={decisionState}
-                      fieldKey={decisionKey}
-                      key={decisionKey}
-                    />
-                  ))}
-                </RadioGroup>
-              );
-            }}
-          />
+          <Grid className="grid-row grid-gap margin-top-6">
+            <Form
+              onSubmit={handleSubmit(formData =>
+                history.push(`resolutions/${formData.resolution}`)
+              )}
+              className="maxw-none margin-bottom-6 tablet:grid-col-6"
+            >
+              <Controller
+                name="resolution"
+                control={control}
+                render={({ field: { ref, ...field } }) => {
+                  return (
+                    <RadioGroup>
+                      <Label
+                        htmlFor="resolution"
+                        className="text-normal margin-top-0"
+                        required
+                      >
+                        {t('resolutions.label')}
+                      </Label>
 
-          <Pager
-            next={{
-              type: 'submit',
-              disabled: !isDirty
-            }}
-            saveExitText={t('cancelAction')}
-            taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
-            className="margin-top-6"
-            border={false}
-            submitDisabled
-          />
-        </Form>
-        <Grid className="tablet:grid-col-6">
-          <SummaryBox
-            className="grt-resolutions-summary"
-            heading={t('resolutions.summary.title')}
-          >
-            <dl title={t('resolutions.summary.title')} className="usa-list">
-              <div>
-                <dt className="display-inline text-bold margin-right-05">
-                  {t('resolutions.summary.issueLcid')}:
-                </dt>
-                <dd className="display-inline margin-0">
-                  {t('resolutions.summary.issueLcidDescription')}
-                </dd>
-              </div>
+                      {decisionOptions.map(decisionKey => (
+                        <ResolutionField
+                          {...field}
+                          decision={decisionState}
+                          fieldKey={decisionKey}
+                          key={decisionKey}
+                        />
+                      ))}
+                    </RadioGroup>
+                  );
+                }}
+              />
 
-              <div>
-                <dt className="display-inline text-bold margin-right-05">
-                  {t('resolutions.summary.notItRequest')}:
-                </dt>
-                <dd className="display-inline margin-0">
-                  {t('resolutions.summary.notItRequestDescription')}
-                </dd>
-              </div>
+              <Pager
+                next={{
+                  type: 'submit',
+                  disabled: !isDirty
+                }}
+                saveExitText={t('cancelAction')}
+                taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
+                className="margin-top-6"
+                border={false}
+                submitDisabled
+              />
+            </Form>
+            <Grid className="tablet:grid-col-6">
+              <SummaryBox
+                className="grt-resolutions-summary"
+                heading={t('resolutions.summary.title')}
+              >
+                <dl title={t('resolutions.summary.title')} className="usa-list">
+                  <div>
+                    <dt className="display-inline text-bold margin-right-05">
+                      {t('resolutions.summary.issueLcid')}:
+                    </dt>
+                    <dd className="display-inline margin-0">
+                      {t('resolutions.summary.issueLcidDescription')}
+                    </dd>
+                  </div>
 
-              <div>
-                <dt className="display-inline text-bold margin-right-05">
-                  {t('resolutions.summary.notApproved')}:
-                </dt>
-                <dd className="display-inline margin-0">
-                  {t('resolutions.summary.notApprovedDescription')}
-                </dd>
-              </div>
+                  <div>
+                    <dt className="display-inline text-bold margin-right-05">
+                      {t('resolutions.summary.notItRequest')}:
+                    </dt>
+                    <dd className="display-inline margin-0">
+                      {t('resolutions.summary.notItRequestDescription')}
+                    </dd>
+                  </div>
 
-              <div>
-                <dt className="display-inline text-bold margin-right-05">
-                  {t('resolutions.summary.closeRequest')}:
-                </dt>
-                <dd className="display-inline margin-0">
-                  {t('resolutions.summary.closeRequestDescription')}
-                </dd>
-              </div>
+                  <div>
+                    <dt className="display-inline text-bold margin-right-05">
+                      {t('resolutions.summary.notApproved')}:
+                    </dt>
+                    <dd className="display-inline margin-0">
+                      {t('resolutions.summary.notApprovedDescription')}
+                    </dd>
+                  </div>
 
-              <div>
-                <dt className="display-inline text-bold margin-right-05">
-                  {t('resolutions.summary.reOpenRequest')}:
-                </dt>
-                <dd className="display-inline margin-0">
-                  {t('resolutions.summary.reOpenRequestDescription')}
-                </dd>
-              </div>
-            </dl>
-          </SummaryBox>
-        </Grid>
-      </Grid>
+                  <div>
+                    <dt className="display-inline text-bold margin-right-05">
+                      {t('resolutions.summary.closeRequest')}:
+                    </dt>
+                    <dd className="display-inline margin-0">
+                      {t('resolutions.summary.closeRequestDescription')}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="display-inline text-bold margin-right-05">
+                      {t('resolutions.summary.reOpenRequest')}:
+                    </dt>
+                    <dd className="display-inline margin-0">
+                      {t('resolutions.summary.reOpenRequestDescription')}
+                    </dd>
+                  </div>
+                </dl>
+              </SummaryBox>
+            </Grid>
+          </Grid>
+        </Route>
+      </Switch>
     </div>
   );
 };

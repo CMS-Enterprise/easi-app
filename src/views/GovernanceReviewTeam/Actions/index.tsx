@@ -86,7 +86,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
         {/* Select resolution page */}
         <Route
-          path="/governance-review-team/:systemId/resolutions"
+          path="/governance-review-team/:systemId/resolutions/:subPage?"
           render={() => (
             <Resolutions
               systemIntakeId={systemIntake.id}
