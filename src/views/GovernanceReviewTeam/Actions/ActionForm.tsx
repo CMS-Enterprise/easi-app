@@ -40,9 +40,14 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   description: string;
   breadcrumb: string;
   successMessage: string;
-  children?: React.ReactNode;
   /** Submit function runs after field validation passes */
   onSubmit: (formData: TFieldValues) => Promise<void>;
+  children?: React.ReactNode;
+  /** Optional confirmation modal title and content */
+  modal?: {
+    title: string;
+    content: string | React.ReactNode;
+  };
   className?: string;
 } & Omit<JSX.IntrinsicElements['form'], 'onSubmit'>;
 
@@ -60,8 +65,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   description,
   breadcrumb,
   successMessage,
-  children,
   onSubmit,
+  children,
+  modal,
   className,
   ...formProps
 }: ActionFormProps<TFieldValues>) => {
@@ -69,7 +75,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const history = useHistory();
   const { showMessageOnNextPage } = useMessage();
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(true);
 
   const {
     contacts: { data: contacts }
@@ -157,24 +163,26 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         ]}
       />
 
-      <Modal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)}>
-        <ModalHeading>Hello world</ModalHeading>
-        Content here
-        <ModalFooter>
-          <ButtonGroup>
-            <Button type="submit" className="margin-right-1">
-              {t('completeAction')}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => setModalIsOpen(false)}
-              unstyled
-            >
-              Go back
-            </Button>
-          </ButtonGroup>
-        </ModalFooter>
-      </Modal>
+      {modal && (
+        <Modal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)}>
+          <ModalHeading>{t(modal.title)}</ModalHeading>
+          {typeof modal.content === 'string' ? t(modal.content) : modal.content}
+          <ModalFooter>
+            <ButtonGroup>
+              <Button type="submit" className="margin-right-1">
+                {t('completeAction')}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setModalIsOpen(false)}
+                unstyled
+              >
+                Go back
+              </Button>
+            </ButtonGroup>
+          </ModalFooter>
+        </Modal>
+      )}
 
       {errors?.root && (
         <Alert type="error" className="action-error">
