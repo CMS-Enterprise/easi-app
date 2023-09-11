@@ -19,8 +19,19 @@ func IsIntakeValidToExpireLCID(intake *models.SystemIntake, currentTime time.Tim
 		}
 	}
 
+	// this should never happen in practice; setting .LifecycleExpiresAt is always required when issuing an LCID
+	// but we should still handle this case gracefully to avoid panicking when calling intake.LifecycleExpiresAt.Before()
+	if intake.LifecycleExpiresAt == nil {
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeEXPIRELCID,
+				Message:    "Intake has an LCID issued without an expiration date",
+			},
+		}
+	}
+
 	// check that intake hasn't already expired
-	if intake.LifecycleExpiresAt != nil && intake.LifecycleExpiresAt.Before(currentTime) {
+	if intake.LifecycleExpiresAt.Before(currentTime) {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
 				ActionType: models.ActionTypeEXPIRELCID,
