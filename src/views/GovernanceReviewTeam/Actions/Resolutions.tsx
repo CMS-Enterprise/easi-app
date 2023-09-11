@@ -106,6 +106,7 @@ const Resolutions = ({
                   >
                     {t('resolutions.label')}
                   </Label>
+
                   <RadioField
                     {...field}
                     value="issue-lcid"
@@ -130,21 +131,23 @@ const Resolutions = ({
                     id="grt-resolution__notApproved"
                   />
 
-                  <RadioField
-                    {...field}
-                    value="close-request"
-                    checked={field.value === 'close-request'}
-                    label={t('resolutions.summary.closeRequest')}
-                    id="grt-resolution__closeRequest"
-                  />
-
-                  <RadioField
-                    {...field}
-                    value="re-open-request"
-                    checked={field.value === 're-open-request'}
-                    label={t('resolutions.summary.reopenRequest')}
-                    id="grt-resolution__reopenRequest"
-                  />
+                  {state === SystemIntakeState.OPEN ? (
+                    <RadioField
+                      {...field}
+                      value="close-request"
+                      checked={field.value === 'close-request'}
+                      label={t('resolutions.summary.closeRequest')}
+                      id="grt-resolution__closeRequest"
+                    />
+                  ) : (
+                    <RadioField
+                      {...field}
+                      value="re-open-request"
+                      checked={field.value === 're-open-request'}
+                      label={t('resolutions.summary.reopenRequest')}
+                      id="grt-resolution__reopenRequest"
+                    />
+                  )}
                 </RadioGroup>
               );
             }}
