@@ -76,7 +76,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const history = useHistory();
   const { showMessageOnNextPage } = useMessage();
 
-  const [modalIsOpen, setModalIsOpen] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const {
     contacts: { data: contacts }
@@ -100,8 +100,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     formState: { isSubmitting, defaultValues, errors }
   } = useFormContext<SystemIntakeActionFields>();
 
-  const submitForm = handleSubmit(formData => {
-    onSubmit(formData as TFieldValues)
+  /** Execute `onSubmit` prop with success and error handling */
+  const completeAction = (formData: TFieldValues) =>
+    onSubmit(formData)
       .then(() => {
         // Display success message
         showMessageOnNextPage(t(successMessage), { type: 'success' });
@@ -111,6 +112,15 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         // Display error message
         setError('root', { message: t('error') });
       });
+
+  /** Handles form validation and either completes action or triggers confirmation modal (if `modal` prop is defined) */
+  const submitForm = handleSubmit(formData => {
+    // If form validation passes, check for `modal` prop
+    if (modal) {
+      setModalIsOpen(true);
+    } else {
+      completeAction(formData as TFieldValues);
+    }
   });
 
   // Set default form values
@@ -163,27 +173,6 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           { text: breadcrumb }
         ]}
       />
-
-      {modal && (
-        <Modal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)}>
-          <ModalHeading>{t(modal.title)}</ModalHeading>
-          {typeof modal.content === 'string' ? t(modal.content) : modal.content}
-          <ModalFooter>
-            <ButtonGroup>
-              <Button type="submit" className="margin-right-1">
-                {t('completeAction')}
-              </Button>
-              <Button
-                type="button"
-                onClick={() => setModalIsOpen(false)}
-                unstyled
-              >
-                Go back
-              </Button>
-            </ButtonGroup>
-          </ModalFooter>
-        </Modal>
-      )}
 
       {errors?.root && (
         <Alert type="error" className="action-error">
@@ -279,12 +268,40 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           )}
         />
 
+        {modal && (
+          <Modal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)}>
+            <ModalHeading>{t(modal.title)}</ModalHeading>
+            {typeof modal.content === 'string'
+              ? t(modal.content)
+              : modal.content}
+            <ModalFooter>
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  onClick={() => completeAction(watch() as TFieldValues)}
+                  className="margin-right-1"
+                >
+                  {t('completeAction')}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => setModalIsOpen(false)}
+                  unstyled
+                >
+                  Go back
+                </Button>
+              </ButtonGroup>
+            </ModalFooter>
+          </Modal>
+        )}
+
         <Pager
           // Complete action
           back={{
             text: t('completeAction'),
             disabled: isSubmitting || !recipientsSelected || modalIsOpen,
-            outline: false
+            outline: false,
+            type: 'submit'
           }}
           // Complete action without sending email
           next={{
