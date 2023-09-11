@@ -7,7 +7,9 @@ import { postAction } from 'types/routines';
 
 export function postSystemIntakeActionRequest(formData: Action) {
   return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${formData.intakeId}/actions`,
+    `${import.meta.env.VITE_API_ADDRESS}/system_intake/${
+      formData.intakeId
+    }/actions`,
     formData
   );
 }

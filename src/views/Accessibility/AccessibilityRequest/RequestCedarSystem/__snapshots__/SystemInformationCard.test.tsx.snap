@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SystemInformationCard renders after request 1`] = `
+exports[`SystemInformationCard > renders after request 1`] = `
 <DocumentFragment>
   <ul
     class="usa-card-group"

@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Business owner task list rejected view matches the snapshot 1`] = `
-Array [
+exports[`Business owner task list rejected view > matches the snapshot 1`] = `
+[
   <h2
     className="margin-top-0"
     data-testid="grt-rejected"

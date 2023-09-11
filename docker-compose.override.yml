@@ -33,18 +33,18 @@ services:
       dockerfile: Dockerfile.client
       target: src
     environment:
-      - REACT_APP_APP_ENV
-      - REACT_APP_API_ADDRESS
-      - REACT_APP_GRAPHQL_ADDRESS
-      - REACT_APP_OKTA_CLIENT_ID
-      - REACT_APP_OKTA_DOMAIN
-      - REACT_APP_OKTA_ISSUER
-      - REACT_APP_OKTA_REDIRECT_URI
-      - REACT_APP_OKTA_SERVER_ID
-      - REACT_APP_LD_ENV_USER
-      - REACT_APP_LD_USER_HASH
-      - REACT_APP_LD_CLIENT_ID
-      - REACT_APP_LOCAL_AUTH_ENABLED
+      - VITE_APP_ENV
+      - VITE_API_ADDRESS
+      - VITE_GRAPHQL_ADDRESS
+      - VITE_OKTA_CLIENT_ID
+      - VITE_OKTA_DOMAIN
+      - VITE_OKTA_ISSUER
+      - VITE_OKTA_REDIRECT_URI
+      - VITE_OKTA_SERVER_ID
+      - VITE_LD_ENV_USER
+      - VITE_LD_USER_HASH
+      - VITE_LD_CLIENT_ID
+      - VITE_LOCAL_AUTH_ENABLED
       - CHOKIDAR_USEPOLLING=true
       - ESLINT_NO_DEV_ERRORS=true
     entrypoint: ['yarn', 'start']

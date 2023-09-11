@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Trb Admin Notes: View Notes renders successfully  1`] = `
+exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
 <DocumentFragment>
   <div
     class="trbAdmin__notes"

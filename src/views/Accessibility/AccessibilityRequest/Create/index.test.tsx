@@ -160,7 +160,7 @@ describe('Create 508 Request page', () => {
   });
 
   it('can create a 508 testing request', async () => {
-    window.scrollTo = jest.fn();
+    window.scrollTo = vi.fn;
 
     render(
       <MemoryRouter initialEntries={['/508/requests/new']}>

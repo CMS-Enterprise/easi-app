@@ -13,7 +13,7 @@ import { SystemIntakeForm } from 'types/systemIntake';
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
   const data = prepareSystemIntakeForApi(formData);
-  return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
+  return axios.put(`${import.meta.env.VITE_API_ADDRESS}/system_intake`, data);
 }
 
 function* putSystemIntake(
@@ -31,7 +31,7 @@ function* putSystemIntake(
 }
 
 function getSystemIntakeRequest(id: string) {
-  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`);
+  return axios.get(`${import.meta.env.VITE_API_ADDRESS}/system_intake/${id}`);
 }
 
 function* getSystemIntake(
@@ -50,7 +50,7 @@ function* getSystemIntake(
 
 function deleteSystemIntakeRequest(id: string) {
   return axios.delete(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`
+    `${import.meta.env.VITE_API_ADDRESS}/system_intake/${id}`
   );
 }
 

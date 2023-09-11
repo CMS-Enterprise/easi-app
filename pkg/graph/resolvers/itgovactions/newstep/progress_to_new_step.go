@@ -44,6 +44,8 @@ func IsIntakeValid(intake *models.SystemIntake, newStep model.SystemIntakeStepTo
 
 // UpdateIntake updates an intake based on a previously validated Progress to New Step action
 func UpdateIntake(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) error {
+	intake.UpdatedAt = &currentTime
+
 	switch newStep {
 	case model.SystemIntakeStepToProgressToDraftBusinessCase:
 		intake.Step = models.SystemIntakeStepDRAFTBIZCASE

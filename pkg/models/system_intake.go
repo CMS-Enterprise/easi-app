@@ -173,6 +173,7 @@ type SystemIntake struct {
 	DraftBusinessCaseState      SystemIntakeFormState        `json:"draftBusinessCaseState" db:"draft_business_case_state"`
 	FinalBusinessCaseState      SystemIntakeFormState        `json:"finalBusinessCaseState" db:"final_business_case_state"`
 	DecisionState               SystemIntakeDecisionState    `json:"decisionState" db:"decision_state"`
+	TRBFollowUpRecommendation   *SystemIntakeTRBFollowUp     `json:"trbFollowUpRecommendation" db:"trb_follow_up_recommendation"`
 }
 
 // SystemIntakes is a list of System Intakes
@@ -265,3 +266,13 @@ func isMeetingScheduled(date *time.Time) SystemIntakeMeetingState {
 	}
 	return SIMSScheduled
 }
+
+// SystemIntakeTRBFollowUp represents whether a requester is recommended to follow up by consulting the TRB
+type SystemIntakeTRBFollowUp string
+
+// These are the options for SystemIntakeTRBFollowUp
+const (
+	TRBFRStronglyRecommended       SystemIntakeTRBFollowUp = "STRONGLY_RECOMMENDED"
+	TRBFRRecommendedButNotCritical SystemIntakeTRBFollowUp = "RECOMMENDED_BUT_NOT_CRITICAL"
+	TRBFRNotRecommended            SystemIntakeTRBFollowUp = "NOT_RECOMMENDED"
+)

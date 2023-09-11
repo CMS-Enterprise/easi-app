@@ -13,16 +13,23 @@ type ActionType string
 // IT Gov v2 actions
 const (
 	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
+	ActionTypeUPDATELCID        ActionType = "UPDATE_LCID"
+	ActionTypeCONFIRMLCID       ActionType = "CONFIRM_LCID"
 	ActionTypeREQUESTEDITS      ActionType = "REQUEST_EDITS"
 	ActionTypeCLOSEREQUEST      ActionType = "CLOSE_REQUEST"
 	ActionTypeREOPENREQUEST     ActionType = "REOPEN_REQUEST"
 	ActionTypeNOTITGOVREQUEST   ActionType = "NOT_GOVERNANCE"
 )
 
-// v1 actions (before v2 revamp)
+// v1/v2 actions - originally from v1, still used in IT Gov v2
 const (
-	// ActionTypeSUBMITINTAKE captures enum value SUBMIT_INTAKE
+	ActionTypeISSUELCID    ActionType = "ISSUE_LCID"
+	ActionTypeREJECT       ActionType = "REJECT"
 	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"
+)
+
+// v1 actions - no longer used in IT Gov v2 workflow
+const (
 	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST
 	ActionTypeNOTITREQUEST ActionType = "NOT_IT_REQUEST"
 	// ActionTypeNEEDBIZCASE captures enum value NEED_BIZ_CASE
@@ -33,8 +40,6 @@ const (
 	ActionTypeREADYFORGRB ActionType = "READY_FOR_GRB"
 	// ActionTypePROVIDEFEEDBACKNEEDBIZCASE captures enum value PROVIDE_FEEDBACK_NEED_BIZ_CASE
 	ActionTypePROVIDEFEEDBACKNEEDBIZCASE ActionType = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
-	// ActionTypeISSUELCID captures enum value ISSUE_LCID
-	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
 	// ActionTypeEXTENDLCID captures enum value EXTEND_LCID
 	ActionTypeEXTENDLCID ActionType = "EXTEND_LCID"
 	// ActionTypeCREATEBIZCASE captures enum value CREATE_BIZ_CASE
@@ -51,8 +56,6 @@ const (
 	ActionTypePROVIDEFEEDBACKBIZCASEFINAL ActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
 	// ActionTypeNOGOVERNANCENEEDED captures enum value NO_GOVERNANCE_NEEDED
 	ActionTypeNOGOVERNANCENEEDED ActionType = "NO_GOVERNANCE_NEEDED"
-	// ActionTypeREJECT captures enum value REJECTED
-	ActionTypeREJECT ActionType = "REJECT"
 	// ActionTypeSENDEMAIL captures enum value SEND_EMAIL
 	ActionTypeSENDEMAIL ActionType = "SEND_EMAIL"
 	// ActionTypeGUIDERECEIVEDCLOSE captures enum value GUIDE_RECEIVED_CLOSE

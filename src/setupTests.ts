@@ -3,10 +3,12 @@ import { configure } from 'enzyme';
 
 import 'regenerator-runtime/runtime';
 import '@testing-library/jest-dom';
-import 'jest-canvas-mock';
 import './i18n';
 
 configure({ adapter: new Adapter() });
+
+// Fill in some missing functions that aren't shimmed by jsdom.
+window.URL.createObjectURL = vi.fn();
 
 // Fill in some missing functions for the Toast text editor.
 // These functions are triggered by typing interaction events on Toast's text field.

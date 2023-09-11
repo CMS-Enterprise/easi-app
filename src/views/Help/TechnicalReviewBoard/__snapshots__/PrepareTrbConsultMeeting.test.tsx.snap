@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Trb Help Prepare Consult Meeting renders 1`] = `
+exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content grid-container margin-bottom-7"

@@ -1,8 +1,8 @@
 // USWDS Settings
 
 @use "uswds-core" with (
-    $theme-font-path: '~@uswds/uswds/fonts',
-    $theme-image-path: '~@uswds/uswds/img',
+    $theme-font-path: '@uswds/uswds/fonts',
+    $theme-image-path: '@uswds/uswds/img',
     // $theme-hero-image: '~@uswds/uswds/img/hero.png',
 
     // Override defaultUSWDS maximum width settings
@@ -23,7 +23,7 @@
     $theme-font-role-heading: 'sans',
 
     // // Disable showing updates and notifications logs
-    $theme-show-notifications: 'false',
+    $theme-show-notifications: false,
 
     // // Flex responsive classes
     $align-items-settings: (

@@ -121,12 +121,12 @@ func main() {
 		i.Status = models.SystemIntakeStatusNEEDBIZCASE
 	})
 
-	makeSystemIntake("For business case integration test", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntake("For business case Cypress test", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
-		i.EUAUserID = null.StringFrom("TEST")
+		i.EUAUserID = null.StringFrom("E2E1")
 		i.Status = models.SystemIntakeStatusNEEDBIZCASE
 		i.RequestType = models.SystemIntakeRequestTypeNEW
-		i.Requester = "John Requester"
+		i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
 		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
 		i.BusinessOwner = null.StringFrom("John BusinessOwner")
 		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
@@ -218,7 +218,7 @@ func main() {
 		intakeID,
 		"Feedback to requester",
 		"Recommendations for GRB",
-		"additional notes",
+		"additional info",
 		"admin note",
 	)
 
@@ -230,7 +230,7 @@ func main() {
 		"USR1",
 		intakeID,
 		"intake request feedback",
-		models.HTMLPointer("additional notes on request form"),
+		models.HTMLPointer("additional info on request form"),
 		"administrative note about request form",
 		model.SystemIntakeFormStepInitialRequestForm,
 	)
@@ -243,7 +243,7 @@ func main() {
 		"USR1",
 		intakeID,
 		"draft biz case feedback",
-		models.HTMLPointer("additional notes on draft biz case"),
+		models.HTMLPointer("additional info on draft biz case"),
 		"administrative note about draft biz case",
 		model.SystemIntakeFormStepDraftBusinessCase,
 	)
@@ -256,7 +256,7 @@ func main() {
 		"USR1",
 		intakeID,
 		"final biz case feedback",
-		models.HTMLPointer("additional notes on final biz case"),
+		models.HTMLPointer("additional info on final biz case"),
 		"administrative note about final biz case",
 		model.SystemIntakeFormStepFinalBusinessCase,
 	)
@@ -373,12 +373,12 @@ func makeSystemIntakeWithProgressToNextStep(
 		i.RequestFormState = models.SIRFSSubmitted
 	})
 
-	input := &model.SystemIntakeProgressToNewStepsInput{
+	input := model.SystemIntakeProgressToNewStepsInput{
 		SystemIntakeID:     intakeID,
 		NewStep:            model.SystemIntakeStepToProgressToDraftBusinessCase, // arbitrary choice
 		Feedback:           &feedbackText,
 		GrbRecommendations: &grbRecommendations,
-		AdditionalNote:     &additionalInfo,
+		AdditionalInfo:     &additionalInfo,
 		AdminNote:          &adminNote,
 	}
 

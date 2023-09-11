@@ -2,7 +2,7 @@ import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 
 describe('The System Intake Form', () => {
   beforeEach(() => {
-    cy.localLogin({ name: 'ABCD' });
+    cy.localLogin({ name: 'E2E1' });
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
@@ -61,12 +61,12 @@ describe('The System Intake Form', () => {
     // Check that business owner fields updated to display requester values
     cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
       'have.value',
-      // Requester name shows as User ABCD instead of Adeline Aarons during testing
-      'User ABCD, ABCD'
+      // Requester name shows as User E2E1 instead of "EndToEnd One" (their actual name) during testing
+      'User E2E1, E2E1'
     );
     cy.get('#IntakeForm-BusinessOwnerEmail').should(
       'have.value',
-      'adeline.aarons@local.fake'
+      'endtoend.one@local.fake'
     );
     cy.get('#IntakeForm-BusinessOwnerComponent').should(
       'have.value',
@@ -305,7 +305,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', /^Requester$/)
       .siblings('dd')
-      .contains('Adeline Aarons');
+      .contains('EndToEnd One');
 
     cy.contains('.easi-review-row dt', 'Requester Component')
       .siblings('dd')
@@ -486,7 +486,7 @@ describe('The System Intake Form', () => {
 
 describe('users who got lost', () => {
   it('redirects to the system type page if somebody managed to skip it', () => {
-    cy.localLogin({ name: 'TEST' });
+    cy.localLogin({ name: 'E2E1' });
     cy.visit('/system/new');
     cy.location().should(loc => {
       expect(loc.pathname).to.equal('/system/request-type');

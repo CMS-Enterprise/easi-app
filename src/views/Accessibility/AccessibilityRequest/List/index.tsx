@@ -44,7 +44,7 @@ const List = () => {
   function fetchCSV() {
     axios
       .request({
-        url: `${process.env.REACT_APP_API_ADDRESS}/metrics/508`,
+        url: `${import.meta.env.VITE_API_ADDRESS}/metrics/508`,
         responseType: 'blob',
         method: 'GET'
       })

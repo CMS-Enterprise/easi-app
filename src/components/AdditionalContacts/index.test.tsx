@@ -8,7 +8,7 @@ import { SystemIntakeContactProps } from 'types/systemIntake';
 import AdditionalContacts from './index';
 
 // Mock logged in user
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`System List View when there are requests matches snapshot 1`] = `
+exports[`System List View > when there are requests > matches snapshot 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content grid-container margin-bottom-5"
