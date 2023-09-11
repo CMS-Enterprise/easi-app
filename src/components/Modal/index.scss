@@ -49,19 +49,6 @@
     transform: translate(0, -50%);
   }
 
-  &__x-button {
-    display: block;
-    margin: 1rem 1rem 1rem auto;
-    padding: 0;
-    background: none;
-    border: 0;
-    color: color('black');
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
   &__body {
     padding: 0 2rem 2rem;
   }
