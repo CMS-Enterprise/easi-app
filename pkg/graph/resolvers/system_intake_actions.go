@@ -888,7 +888,7 @@ func ExpireLCID(
 	// matches the (v1) frontend logic for setting the expiration date:
 	// see src/views/GovernanceReviewTeam/ActionsV1/IssueLifecycleId.tsx, the definition of expiresAt
 	currentTimeUTC := currentTime.UTC()
-	expirationTime := time.Date(
+	expirationDate := time.Date(
 		currentTimeUTC.Year(),
 		currentTimeUTC.Month(),
 		currentTimeUTC.Day(),
@@ -899,7 +899,10 @@ func ExpireLCID(
 		time.UTC,
 	)
 
-	intake.LifecycleExpiresAt = &expirationTime
+	// create action record before updating intake, while we still have access to intake's previous expiration date/next step
+	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, *input.NextSteps, *adminUserInfo)
+
+	intake.LifecycleExpiresAt = &expirationDate
 	intake.DecisionNextSteps = input.NextSteps
 	// not currently persisting input.Reason
 	intake.UpdatedAt = &currentTime
@@ -921,16 +924,8 @@ func ExpireLCID(
 		return nil
 	})
 
-	// save action (including additional info for email, if any)
+	// save action (including additional info for email, if any), using record returned from GetExpireLCIDAction()
 	errGroup.Go(func() error {
-		action := models.Action{
-			IntakeID:       &input.SystemIntakeID,
-			ActionType:     models.ActionTypeEXPIRELCID,
-			ActorName:      adminUserInfo.CommonName,
-			ActorEmail:     adminUserInfo.Email,
-			ActorEUAUserID: adminEUAID,
-			Step:           &intake.Step,
-		}
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
 		}
