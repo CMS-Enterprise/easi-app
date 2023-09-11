@@ -88,7 +88,7 @@ const Resolutions = ({
           <Controller
             name="resolution"
             control={control}
-            render={({ field, fieldState: { error } }) => {
+            render={({ field: { ref, ...field } }) => {
               return (
                 <RadioGroup>
                   <Label
