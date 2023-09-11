@@ -2,8 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Form, FormGroup } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  Form,
+  FormGroup,
+  ModalFooter,
+  ModalHeading
+} from '@trussworks/react-uswds';
 
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -146,6 +154,21 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           { text: breadcrumb }
         ]}
       />
+
+      <Modal isOpen closeModal={() => null}>
+        <ModalHeading>Hello world</ModalHeading>
+        Content here
+        <ModalFooter>
+          <ButtonGroup>
+            <Button type="submit" className="margin-right-1">
+              {t('completeAction')}
+            </Button>
+            <Button type="button" onClick={() => null} unstyled>
+              Go back
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </Modal>
 
       {errors?.root && (
         <Alert type="error" className="action-error">
