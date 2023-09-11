@@ -26,9 +26,9 @@ export interface SystemIntakeActionFields {
 
 type ActionFormProps = {
   systemIntakeId: string;
-  title: string;
-  description: string;
-  breadcrumb: string;
+  title?: string;
+  description?: string;
+  breadcrumb?: string;
   children?: React.ReactNode;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   className?: string;
@@ -104,21 +104,25 @@ const ActionForm = ({
 
   return (
     <div className="margin-bottom-10 padding-bottom-2">
-      <Breadcrumbs
-        items={[
-          { text: t('Home'), url: '/' },
-          {
-            text: t('breadcrumb', { systemIntakeId }),
-            url: `/governance-review-team/${systemIntakeId}/intake-request`
-          },
-          { text: breadcrumb }
-        ]}
-      />
+      {breadcrumb && (
+        <Breadcrumbs
+          items={[
+            { text: t('Home'), url: '/' },
+            {
+              text: t('breadcrumb', { systemIntakeId }),
+              url: `/governance-review-team/${systemIntakeId}/intake-request`
+            },
+            { text: breadcrumb }
+          ]}
+        />
+      )}
 
-      <PageHeading className="margin-bottom-0">{title}</PageHeading>
-      <p className="line-height-body-5 font-body-lg text-light margin-0">
-        {description}
-      </p>
+      {title && <PageHeading className="margin-bottom-0">{title}</PageHeading>}
+      {description && (
+        <p className="line-height-body-5 font-body-lg text-light margin-0">
+          {description}
+        </p>
+      )}
 
       <p className="margin-top-1 text-base">
         <Trans
