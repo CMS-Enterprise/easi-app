@@ -44,7 +44,7 @@ const Modal = ({
         },
         overlayClassName
       )}
-      className={classNames('easi-modal__content', {
+      className={classNames('easi-modal__content outline-0', {
         [`easi-modal__align-${alignment}`]: !!alignment,
         'radius-md': !alignment
       })}
