@@ -15,7 +15,7 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 	intakeID := uuid.MustParse("27883155-46ad-4c30-b3b0-30e8d093756e")
 	formName := "Cool Form Name"
 	requestName := "Test Request"
-	requester := "`+ requester +`"
+	requester := "Sir Requester"
 	additionalInfo := models.HTMLPointer("") // empty info is left out
 	// additionalInfo := models.HTMLPointer("additional info")
 
@@ -36,38 +36,25 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 	expectedSubject := fmt.Sprintf("Updates requested for the %s for %s", formName, requestName)
 	s.Equal(expectedSubject, sender.subject)
 
-	expectedEmail := `<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>
-	
-	<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>
-	
-	<p>The GRT has requested updates to the ` + formName + ` for ` + requestName + ` before the request can proceed further in the Governance Review process.</p>
-	
-	<p>Updates needed: ` + feedback.ValueOrEmptyString() + `</p>
+	expectedEmail := `<h1 style="margin-bottom: 0.5rem;">EASi</h1>` + "\n\n" +
 
-	
-	
-	<p>View this request in EASi:
-	
-<ul>
-<li>The person who initially submitted this request, ` + requester + `, may <a
-            href=\"governance-task-list/27883155-46ad-4c30-b3b0-30e8d093756e\">click here</a> to view the request task
-        list.</li>
-		<li>Governance Team members may <a
-            href=\"governance-review-team/27883155-46ad-4c30-b3b0-30e8d093756e/intake-request\">click here</a> to view
-        the request details.</li>
-		<li>Others should contact ` + requester + ` or the Governance Team for more information
-        about this request.</li>
-		</ul>
-</p>
+		`<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>` + "\n\n" +
 
-If you have questions about your request, please contact the Governance Team at <a href=\"mailto:` + s.config.GRTEmail.String() + `\">` + s.config.GRTEmail.String() + `</a>.
-	
-	
-	
-	
-<hr>
+		`<p>The GRT has requested updates to the ` + formName + ` for ` + requestName + ` before the request can proceed further in the Governance Review process.</p>` + "\n\n" +
 
-<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>`
+		`<p>Updates needed: ` + feedback.ValueOrEmptyString() + `</p>` + "\n\n\n" +
+		`<p>View this request in EASi:` + "\n" +
+		`<ul>
+<li>The person who initially submitted this request, ` + requester + `, may <a href="http://localhost:3000/governance-task-list/` + intakeID.String() + `">click here</a> to view the request task list.</li>` + "\n" +
+		`<li>Governance Team members may <a href="http://localhost:3000/governance-review-team/` + intakeID.String() + `/intake-request">click here</a> to view the request details.</li>` + "\n" +
+		`<li>Others should contact ` + requester + ` or the Governance Team for more information about this request.</li>` + "\n" +
+		`</ul>` +
+		`</p>` + "\n\n" +
+		`If you have questions about your request, please contact the Governance Team at <a href="mailto:` + s.config.GRTEmail.String() + `">` + s.config.GRTEmail.String() + `</a>.` + "\n\n\n\n" +
+
+		`<hr>` + "\n\n" +
+
+		`<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>`
 	s.Equal(expectedEmail, sender.body)
 
 }
