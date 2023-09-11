@@ -34,6 +34,8 @@ const Modal = ({
     }
   };
 
+  const root = document.getElementById('root');
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -52,7 +54,9 @@ const Modal = ({
       onAfterClose={noScroll.off}
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
-      appElement={document.getElementById('root')!}
+      appElement={root!}
+      // Fix for "App element is not defined" unit test error
+      {...(root ? {} : { ariaHideApp: false })}
     >
       <button
         type="button"
