@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import ActionForm, { SystemIntakeActionFields } from './ActionForm';
 
@@ -32,6 +32,16 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
         description={t('requestEdits.description')}
         breadcrumb={t('requestEdits.breadcrumb')}
         successMessage={t('requestEdits.success')}
+        modal={{
+          title: t('requestEdits.modal.title'),
+          content: (
+            <Trans
+              i18nKey="action:requestEdits.modal.content"
+              components={{ p: <p /> }}
+              values={{ formName: 'TEST' }}
+            />
+          )
+        }}
         onSubmit={onSubmit}
       >
         {/* Action fields here */}
