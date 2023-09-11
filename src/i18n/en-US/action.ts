@@ -74,7 +74,31 @@ const action = {
     breadcrumb: 'Request edits',
     title: 'Action: request edits',
     description:
-      'Use this action if there are changes that need to be made to the Intake Request or Business Case form in order to proceed with the governance process. Specify the edits or additional information needed from the requester.'
+      'Use this action if there are changes that need to be made to the Intake Request or Business Case form in order to proceed with the governance process. Specify the edits or additional information needed from the requester.',
+    label: {
+      intakeFormStep: 'Which form needs edits?',
+      emailFeedback: 'What changes are needed?'
+    },
+    hint: {
+      emailFeedback:
+        'Provide details about the changes that are needed to this form. This information will be sent to the requester in an email notification and via their request’s task list in EASi.'
+    },
+    option: {
+      intakeFormStep: {
+        INITIAL_REQUEST_FORM: 'Initial request form',
+        DRAFT_BUSINESS_CASE: 'Draft business case',
+        FINAL_BUSINESS_CASE: 'Final business case'
+      }
+    }
+    /* ,
+    confirm: {
+      head: 'Are you sure you want to complete this action to request edits?',
+      body:
+        '<p>If you request changes to the {{formName}}, the requester will be able to make updates to any field within that form. While they are completing those changes, they will be unable to work on any other part of the process. You will receive an email notification once the requester has resubmitted their form.</p><p> If you progress this request to a new step before they have resubmitted their form, they will lose the ability to make the requested changes.</p>',
+      complete: 'Complete action',
+      back: 'Go back'
+    }
+    */
   },
   nextStep: {
     title: 'Action: next steps'

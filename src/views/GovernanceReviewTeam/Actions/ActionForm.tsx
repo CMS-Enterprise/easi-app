@@ -19,7 +19,7 @@ import EmailRecipientsFields from './EmailRecipientsFields';
 
 // TODO: update fields to match schema when backend work is completed
 export interface SystemIntakeActionFields {
-  additionalNotes: string;
+  additionalInfo: string;
   adminNotes: string;
   notificationRecipients: EmailNotificationRecipients;
 }
@@ -80,7 +80,7 @@ const ActionForm = ({
       reset(
         {
           adminNotes: '',
-          additionalNotes: '',
+          additionalInfo: '',
           ...defaultValues,
           notificationRecipients: {
             shouldNotifyITGovernance: true,
@@ -146,7 +146,7 @@ const ActionForm = ({
 
         {/* Additional information */}
         <Controller
-          name="additionalNotes"
+          name="additionalInfo"
           render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label htmlFor={field.name} className="text-normal">
