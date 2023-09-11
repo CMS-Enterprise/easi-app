@@ -559,6 +559,19 @@ type SystemIntakeCollaboratorInput struct {
 	Key          string `json:"key"`
 }
 
+// Input for confirming an intake's decision to issue an LCID in IT Gov v2
+type SystemIntakeConfirmLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	ExpiresAt              time.Time                           `json:"expiresAt"`
+	Scope                  models.HTML                         `json:"scope"`
+	NextSteps              models.HTML                         `json:"nextSteps"`
+	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
+}
+
 // The payload when retrieving system intake contacts
 type SystemIntakeContactsPayload struct {
 	SystemIntakeContacts []*models.AugmentedSystemIntakeContact `json:"systemIntakeContacts"`
@@ -755,6 +768,19 @@ type SystemIntakeRequesterInput struct {
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Input for updating an intake's LCID in IT Gov v2
+type SystemIntakeUpdateLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	ExpiresAt              *time.Time                          `json:"expiresAt"`
+	Scope                  *models.HTML                        `json:"scope"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
+	CostBaseline           *string                             `json:"costBaseline"`
+	Reason                 *models.HTML                        `json:"reason"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
 // Denotes the type of a document attached to a TRB request,
@@ -1027,7 +1053,11 @@ const (
 	SystemIntakeActionTypeNotGovernance                  SystemIntakeActionType = "NOT_GOVERNANCE"
 	SystemIntakeActionTypeCloseRequest                   SystemIntakeActionType = "CLOSE_REQUEST"
 	SystemIntakeActionTypeReopenRequest                  SystemIntakeActionType = "REOPEN_REQUEST"
+	SystemIntakeActionTypeUpdateLcid                     SystemIntakeActionType = "UPDATE_LCID"
+	SystemIntakeActionTypeConfirmLcid                    SystemIntakeActionType = "CONFIRM_LCID"
 	SystemIntakeActionTypeIssueLcid                      SystemIntakeActionType = "ISSUE_LCID"
+	SystemIntakeActionTypeSubmitIntake                   SystemIntakeActionType = "SUBMIT_INTAKE"
+	SystemIntakeActionTypeReject                         SystemIntakeActionType = "REJECT"
 	SystemIntakeActionTypeBizCaseNeedsChanges            SystemIntakeActionType = "BIZ_CASE_NEEDS_CHANGES"
 	SystemIntakeActionTypeCreateBizCase                  SystemIntakeActionType = "CREATE_BIZ_CASE"
 	SystemIntakeActionTypeGUIDEReceivedClose             SystemIntakeActionType = "GUIDE_RECEIVED_CLOSE"
@@ -1041,11 +1071,9 @@ const (
 	SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal SystemIntakeActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
 	SystemIntakeActionTypeReadyForGrb                    SystemIntakeActionType = "READY_FOR_GRB"
 	SystemIntakeActionTypeReadyForGrt                    SystemIntakeActionType = "READY_FOR_GRT"
-	SystemIntakeActionTypeReject                         SystemIntakeActionType = "REJECT"
 	SystemIntakeActionTypeSendEmail                      SystemIntakeActionType = "SEND_EMAIL"
 	SystemIntakeActionTypeSubmitBizCase                  SystemIntakeActionType = "SUBMIT_BIZ_CASE"
 	SystemIntakeActionTypeSubmitFinalBizCase             SystemIntakeActionType = "SUBMIT_FINAL_BIZ_CASE"
-	SystemIntakeActionTypeSubmitIntake                   SystemIntakeActionType = "SUBMIT_INTAKE"
 )
 
 var AllSystemIntakeActionType = []SystemIntakeActionType{
@@ -1054,7 +1082,11 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeNotGovernance,
 	SystemIntakeActionTypeCloseRequest,
 	SystemIntakeActionTypeReopenRequest,
+	SystemIntakeActionTypeUpdateLcid,
+	SystemIntakeActionTypeConfirmLcid,
 	SystemIntakeActionTypeIssueLcid,
+	SystemIntakeActionTypeSubmitIntake,
+	SystemIntakeActionTypeReject,
 	SystemIntakeActionTypeBizCaseNeedsChanges,
 	SystemIntakeActionTypeCreateBizCase,
 	SystemIntakeActionTypeGUIDEReceivedClose,
@@ -1068,16 +1100,14 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal,
 	SystemIntakeActionTypeReadyForGrb,
 	SystemIntakeActionTypeReadyForGrt,
-	SystemIntakeActionTypeReject,
 	SystemIntakeActionTypeSendEmail,
 	SystemIntakeActionTypeSubmitBizCase,
 	SystemIntakeActionTypeSubmitFinalBizCase,
-	SystemIntakeActionTypeSubmitIntake,
 }
 
 func (e SystemIntakeActionType) IsValid() bool {
 	switch e {
-	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeReject, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase, SystemIntakeActionTypeSubmitIntake:
+	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
 		return true
 	}
 	return false
