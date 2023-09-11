@@ -87,7 +87,9 @@ const action = {
         'Choose this resolution if you need to re-open this request for any reason. You will be asked to provide any additional clarification on the next step of this action.'
     },
     confirmCurrentDecision: 'Confirm current decision ({{decision}})',
-    step: '(Step {{step}} of 2)'
+    step: '(Step {{step}} of 2)',
+    selectedResolution: 'Selected resolution',
+    changeResolution: 'Change resolution'
   },
   breadcrumb: 'Request {{systemIntakeId}}',
   fieldsMarkedRequired:

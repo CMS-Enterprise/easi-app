@@ -21,6 +21,7 @@ import IssueLcid from './IssueLcid';
 import NotApproved from './NotApproved';
 import NotGovernance from './NotGovernance';
 import ReopenRequest from './ReopenRequest';
+import ResolutionBox from './ResolutionBox';
 
 type ResolutionOption =
   | 'not-it-request'
@@ -148,6 +149,13 @@ const Resolutions = ({
           {t('resolutions.step', { step: subPage ? 2 : 1 })}
         </p>
       </div>
+
+      {subPage && (
+        <ResolutionBox
+          systemIntakeId={systemIntakeId}
+          title={t(`resolutions.summary.${camelCase(subPage)}`)}
+        />
+      )}
 
       <Switch>
         <Route path="/governance-review-team/:systemId/resolutions/issue-lcid">
