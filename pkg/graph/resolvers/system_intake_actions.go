@@ -860,16 +860,33 @@ func ExpireLCID(
 		return nil, err
 	}
 
-	// TODO - validation?
+	// check that intake has an LCID
+	if intake.LifecycleID.ValueOrZero() == "" {
+		return nil, &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeEXPIRELCID,
+				Message:    "Intake doesn't have an LCID to expire",
+			},
+		}
+	}
+
+	currentTime := time.Now()
+
+	// check that intake hasn't already been expired
+	if intake.LifecycleExpiresAt != nil && intake.LifecycleExpiresAt.Before(currentTime) {
+		return nil, &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeEXPIRELCID,
+				Message:    "Intake's LCID has already expired",
+			},
+		}
+	}
 
 	// update intake
 
-	// TODO - see if issuing LCID in v2 is implemented (or is any different)
-
 	// set the expiration date's year/month/day based on current values, but leave the time as 00:00:00 (in UTC)
-	// matches the frontend logic for setting the expiration date:
+	// matches the (v1) frontend logic for setting the expiration date:
 	// see src/views/GovernanceReviewTeam/ActionsV1/IssueLifecycleId.tsx, the definition of expiresAt
-	currentTime := time.Now()
 	currentTimeUTC := currentTime.UTC()
 	expirationTime := time.Date(
 		currentTimeUTC.Year(),
