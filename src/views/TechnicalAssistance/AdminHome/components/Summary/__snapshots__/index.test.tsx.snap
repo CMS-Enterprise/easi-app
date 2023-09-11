@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TRB Admin Home summary renders TRB request details 1`] = `
+exports[`TRB Admin Home summary > renders TRB request details 1`] = `
 <DocumentFragment>
   <div
     class="trb-admin-home__summary"

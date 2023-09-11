@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TRB Admin Note Renders correct note information 1`] = `
+exports[`TRB Admin Note > Renders correct note information 1`] = `
 <DocumentFragment>
   <div
     class="grid-row margin-bottom-4"

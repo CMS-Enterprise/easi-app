@@ -17,7 +17,7 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import RequestHome from './RequestHome';
 
 describe('Trb Admin Request Home', () => {
-  Element.prototype.scrollIntoView = jest.fn();
+  Element.prototype.scrollIntoView = vi.fn();
 
   const trbRequestId = trbRequestSummary.id;
   const modalRef = React.createRef<ModalRef>();

@@ -1,3 +1,3 @@
 // eslint-disable-next-line import/prefer-default-export
 export const isLocalAuthEnabled = () =>
-  process.env.REACT_APP_LOCAL_AUTH_ENABLED === 'true';
+  import.meta.env.VITE_LOCAL_AUTH_ENABLED === 'true';

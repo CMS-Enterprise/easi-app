@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`System Sub-systems subpage matches snapshot 1`] = `
+exports[`System Sub-systems subpage > matches snapshot 1`] = `
 <DocumentFragment>
   <h2
     class="margin-top-0 margin-bottom-4"

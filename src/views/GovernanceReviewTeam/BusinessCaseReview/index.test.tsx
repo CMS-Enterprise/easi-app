@@ -1,7 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import { businessCaseInitialData } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -148,19 +147,13 @@ describe('The GRT business case review', () => {
     }
   };
 
-  it('renders without crashing', () => {
-    shallow(<BusinessCaseReview businessCase={businessCaseInitialData} />);
-  });
-
   it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <BusinessCaseReview businessCase={mockBusinessCase} />
-        </MemoryRouter>
-      )
-      .toJSON();
+    const { asFragment } = render(
+      <MemoryRouter>
+        <BusinessCaseReview businessCase={mockBusinessCase} />
+      </MemoryRouter>
+    );
 
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

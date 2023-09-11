@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`New System matches the snapshot 1`] = `
+exports[`New System > matches the snapshot 1`] = `
 <DocumentFragment>
   <div
     class="grid-container"

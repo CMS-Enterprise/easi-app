@@ -13,6 +13,7 @@ import i18next from 'i18next';
 import {
   getTrbAdminNotesQuery,
   getTRBRequestAttendeesQuery,
+  getTrbRequestDocumentsQuery,
   getTrbRequestQuery,
   getTrbRequestSummary,
   getTrbRequestSummaryQuery,
@@ -53,7 +54,7 @@ const summaryQuery: MockedQuery<
 };
 
 describe('Trb Admin: Action: Schedule a TRB consult session', () => {
-  Element.prototype.scrollIntoView = jest.fn();
+  Element.prototype.scrollIntoView = vi.fn();
 
   const store = easiMockStore({ groups: ['EASI_TRB_ADMIN_D'] });
 
@@ -90,10 +91,12 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             updateTrbRequestConsultMeetingQuery,
             getTrbRequestQuery,
             getTRBRequestAttendeesQuery,
+            getTRBRequestAttendeesQuery,
             getTrbAdminNotesQuery,
             summaryQuery,
             summaryQuery,
-            emptyConsultMeetingTime
+            emptyConsultMeetingTime,
+            getTrbRequestDocumentsQuery
           ]}
         >
           <MemoryRouter
@@ -177,6 +180,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       <VerboseMockedProvider
         mocks={[
           summaryQuery,
+          getTRBRequestAttendeesQuery,
           getTRBRequestAttendeesQuery,
           emptyConsultMeetingTime
         ]}
