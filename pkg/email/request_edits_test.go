@@ -51,5 +51,11 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 		`<hr>` + "\n\n" +
 		`<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>`
 	s.Equal(expectedEmail, sender.body)
+	s.Run("Recipient is correct", func() {
+		allRecipients := []models.EmailAddress{
+			recipient,
+		}
+		s.ElementsMatch(sender.toAddresses, allRecipients)
+	})
 
 }
