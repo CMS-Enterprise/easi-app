@@ -8,6 +8,10 @@ import PageHeading from 'components/PageHeading';
 import Label from 'components/shared/Label';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import {
+  SystemIntakeDecisionState,
+  SystemIntakeState
+} from 'types/graphql-global-types';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
@@ -18,7 +22,17 @@ type ResolutionOption =
   | 'close-request'
   | 're-open-request';
 
-const Resolutions = ({ systemIntakeId }: { systemIntakeId: string }) => {
+type ResolutionsProps = {
+  systemIntakeId: string;
+  state: SystemIntakeState;
+  decisionState: SystemIntakeDecisionState;
+};
+
+const Resolutions = ({
+  systemIntakeId,
+  state,
+  decisionState
+}: ResolutionsProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
