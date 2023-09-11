@@ -81,7 +81,8 @@ const action = {
       reopenRequestDescription:
         'Choose this resolution if you need to re-open this request for any reason. You will be asked to provide any additional clarification on the next step of this action.'
     },
-    confirmCurrentDecision: 'Confirm current decision ({{decision}})'
+    confirmCurrentDecision: 'Confirm current decision ({{decision}})',
+    step: '(Step {{step}} of 2)'
   },
   breadcrumb: 'Request {{systemIntakeId}}',
   fieldsMarkedRequired:

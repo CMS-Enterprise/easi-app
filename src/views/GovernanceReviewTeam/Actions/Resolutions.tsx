@@ -44,12 +44,18 @@ const Resolutions = ({ systemIntakeId }: { systemIntakeId: string }) => {
         ]}
       />
 
-      <PageHeading className="margin-bottom-0">
-        {
-          // TODO: Dynamic title
-          t('resolutions.title', { context: 'NO_DECISION' })
-        }
-      </PageHeading>
+      <div className="desktop:display-flex desktop:flex-align-end">
+        <PageHeading className="margin-bottom-0">
+          {
+            // TODO: Dynamic title
+            t('resolutions.title', { context: 'NO_DECISION' })
+          }
+        </PageHeading>
+        <p className="font-body-lg text-base margin-bottom-05 margin-y-1 desktop:margin-left-2 desktop:margin-bottom-05">
+          {t('resolutions.step', { step: 1 })}
+        </p>
+      </div>
+
       <p className="line-height-body-5 font-body-lg text-light margin-0">
         {
           // TODO: Dynamic description
@@ -69,7 +75,7 @@ const Resolutions = ({ systemIntakeId }: { systemIntakeId: string }) => {
           onSubmit={handleSubmit(formData =>
             history.push(`resolutions/${formData.resolution}`)
           )}
-          className="maxw-none grid-col-6"
+          className="maxw-none margin-bottom-6 tablet:grid-col-6"
         >
           <Controller
             name="resolution"
@@ -140,7 +146,7 @@ const Resolutions = ({ systemIntakeId }: { systemIntakeId: string }) => {
             submitDisabled
           />
         </Form>
-        <Grid className="grid-col-6">
+        <Grid className="tablet:grid-col-6">
           <SummaryBox
             className="grt-resolutions-summary"
             heading={t('resolutions.summary.title')}
