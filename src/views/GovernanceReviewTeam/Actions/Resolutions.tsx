@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -22,6 +22,14 @@ type ResolutionOption =
   | 'not-approved'
   | 'close-request'
   | 're-open-request';
+
+const decisionsMap: Partial<
+  Record<SystemIntakeDecisionState, ResolutionOption>
+> = {
+  [SystemIntakeDecisionState.LCID_ISSUED]: 'issue-lcid',
+  [SystemIntakeDecisionState.NOT_GOVERNANCE]: 'not-it-request',
+  [SystemIntakeDecisionState.NOT_APPROVED]: 'not-approved'
+};
 
 type ResolutionsProps = {
   systemIntakeId: string;
@@ -67,6 +75,29 @@ const Resolutions = ({
   } = useForm<{
     resolution: ResolutionOption;
   }>();
+
+  /**
+   * List of resolution field keys
+   *
+   * If decision is set, moves that field to front of list
+   */
+  const decisionOptions: ResolutionOption[] = useMemo(() => {
+    const decision = decisionsMap[decisionState];
+
+    /** Default options if no decision */
+    const options = Object.values(decisionsMap);
+
+    // Add close or re-open request to list of options
+    options.push(
+      state === SystemIntakeState.OPEN ? 'close-request' : 're-open-request'
+    );
+
+    // If no decision, return options
+    if (!decision) return options;
+
+    // If decision is set, move to front of options
+    return [decision, ...options.filter(option => option !== decision)];
+  }, [decisionState, state]);
 
   return (
     <div className="margin-bottom-10 padding-bottom-2">
@@ -121,9 +152,6 @@ const Resolutions = ({
             name="resolution"
             control={control}
             render={({ field: { ref, ...field } }) => {
-              const stateResolution =
-                state === SystemIntakeState.OPEN ? 'close' : 're-open';
-
               return (
                 <RadioGroup>
                   <Label
@@ -134,15 +162,13 @@ const Resolutions = ({
                     {t('resolutions.label')}
                   </Label>
 
-                  <ResolutionField {...field} fieldKey="issue-lcid" />
-                  <ResolutionField {...field} fieldKey="not-it-request" />
-                  <ResolutionField {...field} fieldKey="not-approved" />
-
-                  {/* Re-open / close request option */}
-                  <ResolutionField
-                    {...field}
-                    fieldKey={`${stateResolution}-request`}
-                  />
+                  {decisionOptions.map(decision => (
+                    <ResolutionField
+                      {...field}
+                      fieldKey={decision}
+                      key={decision}
+                    />
+                  ))}
                 </RadioGroup>
               );
             }}
