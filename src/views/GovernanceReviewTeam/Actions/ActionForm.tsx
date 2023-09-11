@@ -59,6 +59,7 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
  *
  * Common fields: additional information, notification recipients, and admin note
  *
+ * Note: component cannot be used outside of React Hook Form's `FormProvider` component
  */
 const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   systemIntakeId,
@@ -174,11 +175,14 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         ]}
       />
 
-      {errors?.root && (
-        <Alert type="error" className="action-error">
-          {errors.root.message || t('error')}
-        </Alert>
-      )}
+      {
+        // Error message for server error
+        errors?.root?.message && (
+          <Alert type="error" className="action-error">
+            {errors.root.message}
+          </Alert>
+        )
+      }
 
       <PageHeading className="margin-bottom-0">{title}</PageHeading>
       <p className="line-height-body-5 font-body-lg text-light margin-0">
