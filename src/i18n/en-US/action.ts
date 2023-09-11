@@ -51,18 +51,22 @@ const action = {
     }
   },
   resolutions: {
-    title: 'Action: issue decision or close request',
-    title_NO_DECISION: 'Action: change decision or close request',
-    requestDetails: 'Request details',
+    title: 'Action: issue decision or {{action}} request',
+    title_NO_DECISION: 'Action: change decision or {{action}} request',
+    action_CLOSED: 're-open',
+    action_OPEN: 'close',
     description_NO_DECISION:
-      'Issue a Life Cycle ID, mark that this request was not approved by the Governance Review Board (GRB), mark that this request is not an IT Governance request, or close this request for another reason.',
+      'Issue a Life Cycle ID, mark that this request was not approved by the Governance Review Board (GRB), mark that this request is not an IT Governance request, or {{descriptionAction}}.',
     description_LCID_ISSUED:
-      'Mark that this request was not approved by the Governance Review Board (GRB), mark that this request is not an IT Governance request, or close this request for another reason.',
+      'Mark that this request was not approved by the Governance Review Board (GRB), mark that this request is not an IT Governance request, or {{descriptionAction}}.',
     description_NOT_APPROVED:
-      'Issue a Life Cycle ID, mark that this request is not an IT Governance request, or close this request for another reason.',
+      'Issue a Life Cycle ID, mark that this request is not an IT Governance request, or {{descriptionAction}}.',
     description_NO_GOVERNANCE:
-      'Issue a Life Cycle ID, mark that this request was not approved by the Governance Review Board (GRB), or close this request for another reason.',
+      'Issue a Life Cycle ID, mark that this request was not approved by the Governance Review Board (GRB), or {{descriptionAction}}.',
+    descriptionAction_CLOSED: 're-open this closed request',
+    descriptionAction_OPEN: 'close this request for another reason',
     label: 'Resolution',
+    requestDetails: 'Request details',
     summary: {
       title: 'Request resolutions',
       issueLcid: 'Issue a Life Cycle ID',
