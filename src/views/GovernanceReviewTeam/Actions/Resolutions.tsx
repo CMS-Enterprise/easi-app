@@ -39,6 +39,7 @@ type ResolutionsProps = {
 
 type ResolutionFieldProps = {
   fieldKey: ResolutionOption;
+  decision: SystemIntakeDecisionState;
 } & Omit<
   ControllerRenderProps<{
     resolution: ResolutionOption;
@@ -47,14 +48,27 @@ type ResolutionFieldProps = {
 >;
 
 /** Radio field for resolution options */
-const ResolutionField = ({ fieldKey, ...field }: ResolutionFieldProps) => {
+const ResolutionField = ({
+  fieldKey,
+  decision,
+  ...field
+}: ResolutionFieldProps) => {
   const { t } = useTranslation('action');
+
+  const currentDecision: boolean = fieldKey === decisionsMap[decision];
+
+  const label = t(`resolutions.summary.${camelCase(fieldKey)}`);
+
   return (
     <RadioField
       {...field}
       value={fieldKey}
       checked={field.value === fieldKey}
-      label={t(`resolutions.summary.${camelCase(fieldKey)}`)}
+      label={
+        currentDecision
+          ? t('resolutions.confirmDecision', { decision: label })
+          : label
+      }
       id={`grt-resolution__${fieldKey}`}
     />
   );
@@ -162,11 +176,12 @@ const Resolutions = ({
                     {t('resolutions.label')}
                   </Label>
 
-                  {decisionOptions.map(decision => (
+                  {decisionOptions.map(decisionKey => (
                     <ResolutionField
                       {...field}
-                      fieldKey={decision}
-                      key={decision}
+                      decision={decisionState}
+                      fieldKey={decisionKey}
+                      key={decisionKey}
                     />
                   ))}
                 </RadioGroup>

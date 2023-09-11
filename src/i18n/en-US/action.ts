@@ -67,6 +67,7 @@ const action = {
     descriptionAction_OPEN: 'close this request for another reason',
     label: 'Resolution',
     requestDetails: 'Request details',
+    confirmDecision: 'Confirm current decision ({{decision}})',
     summary: {
       title: 'Request resolutions',
       issueLcid: 'Issue a Life Cycle ID',
