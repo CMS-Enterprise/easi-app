@@ -14,7 +14,7 @@ import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import NotesModal from '.';
 
 describe('Trb Admin Notes: Modal Component', () => {
-  Element.prototype.scrollIntoView = jest.fn();
+  Element.prototype.scrollIntoView = vi.fn();
 
   const mockStore = configureMockStore();
   const store = mockStore({
@@ -28,11 +28,11 @@ describe('Trb Admin Notes: Modal Component', () => {
   const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
 
   it('renders Notes successfully on modal open', async () => {
-    Element.prototype.scrollIntoView = jest.fn();
+    Element.prototype.scrollIntoView = vi.fn();
 
     // ReactModel is throwing warning - App element is not defined. Please use `Modal.setAppElement(el)`.  The app is being set within the modal but RTL is not picking up on it
     // eslint-disable-next-line
-    console.error = jest.fn();
+    console.error = vi.fn();
 
     const { findByText } = render(
       <Provider store={store}>
@@ -115,11 +115,11 @@ describe('Trb Admin Notes: Modal Component', () => {
   });
 
   it('renders AddNote successfully on modal open', async () => {
-    Element.prototype.scrollIntoView = jest.fn();
+    Element.prototype.scrollIntoView = vi.fn();
 
     // ReactModel is throwing warning - App element is not defined. Please use `Modal.setAppElement(el)`.  The app is being set within the modal but RTL is not picking up on it
     // eslint-disable-next-line
-    console.error = jest.fn();
+    console.error = vi.fn();
 
     const { getByText } = render(
       <Provider store={store}>

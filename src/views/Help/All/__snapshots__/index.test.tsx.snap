@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`All help articles matches the snapshot 1`] = `
+exports[`All help articles > matches the snapshot 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content grid-container margin-bottom-10"

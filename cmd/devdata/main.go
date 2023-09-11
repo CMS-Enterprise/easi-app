@@ -121,12 +121,12 @@ func main() {
 		i.Status = models.SystemIntakeStatusNEEDBIZCASE
 	})
 
-	makeSystemIntake("For business case integration test", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntake("For business case Cypress test", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
-		i.EUAUserID = null.StringFrom("TEST")
+		i.EUAUserID = null.StringFrom("E2E1")
 		i.Status = models.SystemIntakeStatusNEEDBIZCASE
 		i.RequestType = models.SystemIntakeRequestTypeNEW
-		i.Requester = "John Requester"
+		i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
 		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
 		i.BusinessOwner = null.StringFrom("John BusinessOwner")
 		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")

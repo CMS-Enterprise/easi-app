@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Help forms submits the "Report A Problem" form successfully after a failed attempt 1`] = `
+exports[`Help forms > submits the "Report A Problem" form successfully after a failed attempt 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content grid-container help-send-feedback"
@@ -384,7 +384,7 @@ exports[`Help forms submits the "Report A Problem" form successfully after a fai
 </DocumentFragment>
 `;
 
-exports[`Help forms submits the "Report A Problem" form successfully after a failed attempt 2`] = `
+exports[`Help forms > submits the "Report A Problem" form successfully after a failed attempt 2`] = `
 <DocumentFragment>
   <main
     class="easi-main-content grid-container help-send-feedback"
@@ -472,7 +472,7 @@ exports[`Help forms submits the "Report A Problem" form successfully after a fai
 </DocumentFragment>
 `;
 
-exports[`Help forms submits the "Send Feedback" form successfully after a failed attempt 1`] = `
+exports[`Help forms > submits the "Send Feedback" form successfully after a failed attempt 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content grid-container help-send-feedback"
@@ -1213,7 +1213,7 @@ exports[`Help forms submits the "Send Feedback" form successfully after a failed
 </DocumentFragment>
 `;
 
-exports[`Help forms submits the "Send Feedback" form successfully after a failed attempt 2`] = `
+exports[`Help forms > submits the "Send Feedback" form successfully after a failed attempt 2`] = `
 <DocumentFragment>
   <main
     class="easi-main-content grid-container help-send-feedback"

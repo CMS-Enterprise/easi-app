@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`HelpTag matches the snapshot 1`] = `
+exports[`HelpTag > matches the snapshot 1`] = `
 <DocumentFragment>
   <a
     class="usa-link display-inline-block"

@@ -1,7 +1,8 @@
 {
   "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts",".storybook/**/*"],
   "globals" : {
-    "JSX" : "readonly"
+    "JSX" : "readonly",
+    "vi": true
   },
   "root": true,
   "extends": [

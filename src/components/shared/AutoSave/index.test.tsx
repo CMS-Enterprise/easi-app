@@ -9,13 +9,13 @@ describe('The Autosave component', () => {
   });
 
   it('does not fire onSave on initial load', () => {
-    const onSave = jest.fn();
+    const onSave = vi.fn();
     mount(<AutoSave values={{}} onSave={onSave} debounceDelay={0} />);
     expect(onSave).not.toHaveBeenCalled();
   });
 
   it('fires onSave when values changed', () => {
-    const onSave = jest.fn();
+    const onSave = vi.fn();
     const component = mount(
       <AutoSave
         values={{ name: 'fake name' }}

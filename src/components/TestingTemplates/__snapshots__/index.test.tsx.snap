@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Template for 508 Testing renders help mode without crashing 1`] = `
+exports[`Template for 508 Testing > renders help mode without crashing 1`] = `
 <DocumentFragment>
   <div
     class="templates-for-508-testing"
@@ -312,7 +312,7 @@ exports[`Template for 508 Testing renders help mode without crashing 1`] = `
           >
             <a
               class="usa-link usa-link--external"
-              href="/Section508TestPlanTemplate.pdf"
+              href="/src/assets/files/Section508TestPlanTemplate.pdf"
               target="_blank"
             >
               Download the Test Plan template as a PDF (opens in a new tab)
@@ -369,7 +369,7 @@ exports[`Template for 508 Testing renders help mode without crashing 1`] = `
           >
             <a
               class="usa-link usa-link--external"
-              href="/CMS508RemediationPlanTemplate.pdf"
+              href="/src/assets/files/CMS508RemediationPlanTemplate.pdf"
               target="_blank"
             >
               Download the Test Plan template as a PDF (opens in a new tab)
@@ -382,7 +382,7 @@ exports[`Template for 508 Testing renders help mode without crashing 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Template for 508 Testing renders without crashing 1`] = `
+exports[`Template for 508 Testing > renders without crashing 1`] = `
 <DocumentFragment>
   <div
     class="templates-for-508-testing"
@@ -701,7 +701,7 @@ exports[`Template for 508 Testing renders without crashing 1`] = `
           >
             <a
               class="usa-link usa-link--external"
-              href="/Section508TestPlanTemplate.pdf"
+              href="/src/assets/files/Section508TestPlanTemplate.pdf"
               target="_blank"
             >
               Download the Test Plan template as a PDF (opens in a new tab)
@@ -758,7 +758,7 @@ exports[`Template for 508 Testing renders without crashing 1`] = `
           >
             <a
               class="usa-link usa-link--external"
-              href="/CMS508RemediationPlanTemplate.pdf"
+              href="/src/assets/files/CMS508RemediationPlanTemplate.pdf"
               target="_blank"
             >
               Download the Test Plan template as a PDF (opens in a new tab)

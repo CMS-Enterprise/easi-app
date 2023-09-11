@@ -396,7 +396,7 @@ describe('Trb Request form: Supporting documents', () => {
   });
 
   it('handles file upload errors', async () => {
-    Element.prototype.scrollIntoView = jest.fn();
+    Element.prototype.scrollIntoView = vi.fn();
 
     const { getByRole, getByTestId, getByLabelText, findByText } = render(
       <MemoryRouter
@@ -522,7 +522,7 @@ describe('Trb Request form: Supporting documents', () => {
 
     // ReactModel is throwing warning - App element is not defined. Please use `Modal.setAppElement(el)`.  The app is being set within the modal but RTL is not picking up on it
     // eslint-disable-next-line
-    console.error = jest.fn();
+    console.error = vi.fn();
 
     // Opens modal
     userEvent.click(await findByRole('button', { name: 'Remove' }));
@@ -562,7 +562,7 @@ describe('Trb Request form: Supporting documents', () => {
   });
 
   it('handles invalid fields and error messages', async () => {
-    Element.prototype.scrollIntoView = jest.fn();
+    Element.prototype.scrollIntoView = vi.fn();
 
     const { getByRole, getByTestId, getByLabelText, findByText } = render(
       <MemoryRouter

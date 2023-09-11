@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`BookmarkCard matches the snapshot 1`] = `
+exports[`BookmarkCard > matches the snapshot 1`] = `
 <DocumentFragment>
   <li
     class="usa-card desktop:grid-col-6 grid-col-12"

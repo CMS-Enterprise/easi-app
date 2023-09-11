@@ -1,6 +1,6 @@
 describe.skip('Technical Assistance', () => {
   beforeEach(() => {
-    cy.localLogin({ name: 'ABCD' });
+    cy.localLogin({ name: 'E2E1' });
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'DeleteTRBRequestAttendee') {
@@ -143,8 +143,8 @@ describe.skip('Technical Assistance', () => {
     // Sets name and euaUserId to same as requester to trigger error
     cy.trbRequest.attendees.fillRequiredFields({
       userInfo: {
-        commonName: 'Adeline Aarons',
-        euaUserId: 'ABCD'
+        commonName: 'EndToEnd One',
+        euaUserId: 'E2E1'
       },
       component: 'Center for Medicare',
       role: 'PRIVACY_ADVISOR'

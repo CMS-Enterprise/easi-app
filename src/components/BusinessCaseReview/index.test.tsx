@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { shallow } from 'enzyme';
 
 import { BusinessCaseModel } from 'types/businessCase';
@@ -385,10 +385,8 @@ describe('The Business Case Review Component', () => {
   });
 
   it('matches the snapshot', () => {
-    const tree = renderer
-      .create(<BusinessCaseReview values={businessCase} />)
-      .toJSON();
+    const { asFragment } = render(<BusinessCaseReview values={businessCase} />);
 
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

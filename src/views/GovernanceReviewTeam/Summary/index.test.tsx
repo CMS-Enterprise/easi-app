@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 
 import Summary from '.';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {

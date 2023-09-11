@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 
 import Footer from './index';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {

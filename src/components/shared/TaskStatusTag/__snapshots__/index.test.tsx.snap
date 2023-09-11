@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TaskStatusTag renders task status tag {"status":"AWAITING_DECISION","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"AWAITING_DECISION","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
@@ -11,7 +11,7 @@ exports[`TaskStatusTag renders task status tag {"status":"AWAITING_DECISION","cl
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"CANNOT_START_YET","className":"border-2px text-base"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"CANNOT_START_YET","className":"border-2px text-base"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag border-2px text-base"
@@ -22,7 +22,7 @@ exports[`TaskStatusTag renders task status tag {"status":"CANNOT_START_YET","cla
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"CANT_START","className":"border-2px text-base"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"CANT_START","className":"border-2px text-base"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag border-2px text-base"
@@ -33,7 +33,7 @@ exports[`TaskStatusTag renders task status tag {"status":"CANT_START","className
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"COMPLETED","className":"bg-success-dark text-white"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"COMPLETED","className":"bg-success-dark text-white"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-success-dark text-white"
@@ -44,7 +44,7 @@ exports[`TaskStatusTag renders task status tag {"status":"COMPLETED","className"
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"DONE","className":"bg-success-dark text-white"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"DONE","className":"bg-success-dark text-white"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-success-dark text-white"
@@ -55,7 +55,7 @@ exports[`TaskStatusTag renders task status tag {"status":"DONE","className":"bg-
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"EDITS_REQUESTED","className":"bg-warning"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"EDITS_REQUESTED","className":"bg-warning"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-warning"
@@ -66,7 +66,7 @@ exports[`TaskStatusTag renders task status tag {"status":"EDITS_REQUESTED","clas
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"IN_PROGRESS","className":"bg-warning"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"IN_PROGRESS","className":"bg-warning"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-warning"
@@ -77,7 +77,7 @@ exports[`TaskStatusTag renders task status tag {"status":"IN_PROGRESS","classNam
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"IN_REVIEW","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"IN_REVIEW","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
@@ -88,7 +88,7 @@ exports[`TaskStatusTag renders task status tag {"status":"IN_REVIEW","className"
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"NOT_NEEDED","className":"border-2px text-base"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"NOT_NEEDED","className":"border-2px text-base"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag border-2px text-base"
@@ -99,7 +99,7 @@ exports[`TaskStatusTag renders task status tag {"status":"NOT_NEEDED","className
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"READY","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
@@ -110,7 +110,7 @@ exports[`TaskStatusTag renders task status tag {"status":"READY","className":"bg
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"READY_FOR_REVIEW","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
@@ -121,7 +121,7 @@ exports[`TaskStatusTag renders task status tag {"status":"READY_FOR_REVIEW","cla
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY_TO_SCHEDULE","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"READY_TO_SCHEDULE","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
@@ -132,7 +132,7 @@ exports[`TaskStatusTag renders task status tag {"status":"READY_TO_SCHEDULE","cl
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"READY_TO_START","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"READY_TO_START","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
@@ -143,7 +143,7 @@ exports[`TaskStatusTag renders task status tag {"status":"READY_TO_START","class
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"SCHEDULED","className":"bg-info-light"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"SCHEDULED","className":"bg-info-light"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
@@ -154,7 +154,7 @@ exports[`TaskStatusTag renders task status tag {"status":"SCHEDULED","className"
 </DocumentFragment>
 `;
 
-exports[`TaskStatusTag renders task status tag {"status":"SUBMITTED","className":"bg-success-dark text-white"} 1`] = `
+exports[`TaskStatusTag > renders task status tag {"status":"SUBMITTED","className":"bg-success-dark text-white"} 1`] = `
 <DocumentFragment>
   <span
     class="easi-tag easi-task-status-tag bg-success-dark text-white"
