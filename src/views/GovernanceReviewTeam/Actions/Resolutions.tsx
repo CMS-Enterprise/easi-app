@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Form, Grid, SummaryBox } from '@trussworks/react-uswds';
 import { camelCase } from 'lodash';
 
@@ -88,6 +88,10 @@ const Resolutions = ({
   const { t } = useTranslation('action');
   const history = useHistory();
 
+  const { subPage } = useParams<{
+    subPage?: string;
+  }>();
+
   const {
     control,
     handleSubmit,
@@ -141,7 +145,7 @@ const Resolutions = ({
           })}
         </PageHeading>
         <p className="font-body-lg text-base margin-bottom-05 margin-y-1 desktop:margin-left-2 desktop:margin-bottom-05">
-          {t('resolutions.step', { step: 1 })}
+          {t('resolutions.step', { step: subPage ? 2 : 1 })}
         </p>
       </div>
 
