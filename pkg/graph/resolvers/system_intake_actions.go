@@ -46,10 +46,8 @@ func ProgressIntake(
 		return nil, err
 	}
 
-	// All the different database calls aren't in a single atomic transaction;
-	// in the case of a system failure, some data from the action might be saved, but not all.
-	// As of this function's initial implementation, we're accepting that risk.
-	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+	// save intake, action, feedback, recommendations, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -196,6 +194,9 @@ func CreateSystemIntakeActionRequestEdits(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
+	// save intake, action, feedback, admin note
+	// see Note [Database calls from resolvers aren't atomic]
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -276,10 +277,8 @@ func RejectIntakeAsNotApproved(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
-	// All the different database calls aren't in a single atomic transaction;
-	// in the case of a system failure, some data from the action might be saved, but not all.
-	// As of this function's initial implementation, we're accepting that risk.
-	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+	// save intake, action, admin note
+	// See Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -390,10 +389,8 @@ func IssueLCID(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
-	// All the different database calls aren't in a single atomic transaction;
-	// in the case of a system failure, some data from the action might be saved, but not all.
-	// As of this function's initial implementation, we're accepting that risk.
-	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -483,6 +480,9 @@ func CreateSystemIntakeActionReopenRequest(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -541,6 +541,9 @@ func CreateSystemIntakeActionCloseRequest(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -595,6 +598,9 @@ func CreateSystemIntakeActionNotITGovRequest(
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
+
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
@@ -679,6 +685,9 @@ func UpdateLCID(
 	}
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	// save action (including additional info for email, if any)
 	errGroup := new(errgroup.Group)
@@ -774,6 +783,9 @@ func ConfirmLCID(ctx context.Context,
 	}
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
 	// save action (including additional info for email, if any)
@@ -873,13 +885,10 @@ func ExpireLCID(
 	intake.LifecycleExpiresAt = &expirationTime
 	intake.DecisionNextSteps = input.NextSteps
 	// not currently persisting input.Reason
-
 	intake.UpdatedAt = &currentTime
 
-	// All the different database calls aren't in a single atomic transaction;
-	// in the case of a system failure, some data from the action might be saved, but not all.
-	// As of this function's initial implementation, we're accepting that risk.
-	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+	// save intake, action, admin note
+	// See Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -942,3 +951,9 @@ func ExpireLCID(
 
 	return updatedIntake, nil
 }
+
+// Note [Database calls from resolvers aren't atomic]
+// All the different database calls in a resolver (saving the intake, action, admin note, etc.) aren't in a single atomic transaction;
+// in the case of a system failure, some data from the action might be saved, but not all.
+// We're currently accepting that risk, largely due to the difficulty of wrapping multiple store method calls in a single transaction.
+// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
