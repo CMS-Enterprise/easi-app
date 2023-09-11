@@ -81,8 +81,8 @@ const action = {
       closeRequest: 'Close request',
       closeRequestDescription:
         'Choose this resolution if you need to close this request for any other reason. You will be asked to provide any additional clarification on the next step of this action. This action does not affect a previously-generated Life Cycle ID. The project team will continue to receive automatic notifications about their Life Cycle ID. If you wish to update a Life Cycle ID, choose the “Manage Life Cycle ID” action.',
-      reopenRequest: 'Re-open request',
-      reopenRequestDescription:
+      reOpenRequest: 'Re-open request',
+      reOpenRequestDescription:
         'Choose this resolution if you need to re-open this request for any reason. You will be asked to provide any additional clarification on the next step of this action.'
     },
     confirmCurrentDecision: 'Confirm current decision ({{decision}})',

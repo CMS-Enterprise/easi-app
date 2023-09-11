@@ -1,8 +1,9 @@
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Form, Grid, SummaryBox } from '@trussworks/react-uswds';
+import { camelCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
 import Label from 'components/shared/Label';
@@ -26,6 +27,29 @@ type ResolutionsProps = {
   systemIntakeId: string;
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
+};
+
+type ResolutionFieldProps = {
+  fieldKey: ResolutionOption;
+} & Omit<
+  ControllerRenderProps<{
+    resolution: ResolutionOption;
+  }>,
+  'ref'
+>;
+
+/** Radio field for resolution options */
+const ResolutionField = ({ fieldKey, ...field }: ResolutionFieldProps) => {
+  const { t } = useTranslation('action');
+  return (
+    <RadioField
+      {...field}
+      value={fieldKey}
+      checked={field.value === fieldKey}
+      label={t(`resolutions.summary.${camelCase(fieldKey)}`)}
+      id={`grt-resolution__${fieldKey}`}
+    />
+  );
 };
 
 const Resolutions = ({
@@ -97,6 +121,9 @@ const Resolutions = ({
             name="resolution"
             control={control}
             render={({ field: { ref, ...field } }) => {
+              const stateResolution =
+                state === SystemIntakeState.OPEN ? 'close' : 're-open';
+
               return (
                 <RadioGroup>
                   <Label
@@ -107,47 +134,15 @@ const Resolutions = ({
                     {t('resolutions.label')}
                   </Label>
 
-                  <RadioField
-                    {...field}
-                    value="issue-lcid"
-                    checked={field.value === 'issue-lcid'}
-                    label={t('resolutions.summary.issueLcid')}
-                    id="grt-resolution__issueLcid"
-                  />
+                  <ResolutionField {...field} fieldKey="issue-lcid" />
+                  <ResolutionField {...field} fieldKey="not-it-request" />
+                  <ResolutionField {...field} fieldKey="not-approved" />
 
-                  <RadioField
+                  {/* Re-open / close request option */}
+                  <ResolutionField
                     {...field}
-                    value="not-it-request"
-                    checked={field.value === 'not-it-request'}
-                    label={t('resolutions.summary.notItRequest')}
-                    id="grt-resolution__notItRequest"
+                    fieldKey={`${stateResolution}-request`}
                   />
-
-                  <RadioField
-                    {...field}
-                    value="not-approved"
-                    checked={field.value === 'not-approved'}
-                    label={t('resolutions.summary.notApproved')}
-                    id="grt-resolution__notApproved"
-                  />
-
-                  {state === SystemIntakeState.OPEN ? (
-                    <RadioField
-                      {...field}
-                      value="close-request"
-                      checked={field.value === 'close-request'}
-                      label={t('resolutions.summary.closeRequest')}
-                      id="grt-resolution__closeRequest"
-                    />
-                  ) : (
-                    <RadioField
-                      {...field}
-                      value="re-open-request"
-                      checked={field.value === 're-open-request'}
-                      label={t('resolutions.summary.reopenRequest')}
-                      id="grt-resolution__reopenRequest"
-                    />
-                  )}
                 </RadioGroup>
               );
             }}
@@ -209,10 +204,10 @@ const Resolutions = ({
 
               <div>
                 <dt className="display-inline text-bold margin-right-05">
-                  {t('resolutions.summary.reopenRequest')}:
+                  {t('resolutions.summary.reOpenRequest')}:
                 </dt>
                 <dd className="display-inline margin-0">
-                  {t('resolutions.summary.reopenRequestDescription')}
+                  {t('resolutions.summary.reOpenRequestDescription')}
                 </dd>
               </div>
             </dl>
