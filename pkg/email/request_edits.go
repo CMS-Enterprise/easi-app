@@ -22,7 +22,7 @@ type systemIntakeRequestEditsEmailParameters struct {
 	SystemIntakeRequestLink  string
 	SystemIntakeAdminLink    string
 	ITGovernanceInboxAddress string
-	AdditionalInfo           template.HTML // TODO: SW Should we make this a pointer?
+	AdditionalInfo           template.HTML
 }
 
 func (sie systemIntakeEmails) requestEditsBody(
@@ -73,7 +73,7 @@ func (sie systemIntakeEmails) SendRequestEditsNotification(
 	if requestName == "" {
 		requestName = "Draft System Intake"
 	}
-	subject := fmt.Sprintf("Updates requested for the %s for %s", formName, requestName) //TODO: SW implement this, perhaps as a subject template? Or just create it here?
+	subject := fmt.Sprintf("Updates requested for the %s for %s", formName, requestName)
 	body, err := sie.requestEditsBody(systemIntakeID, requestName, formName, requesterName, feedback, additionalInfo)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
