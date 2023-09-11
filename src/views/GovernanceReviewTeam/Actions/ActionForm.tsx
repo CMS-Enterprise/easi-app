@@ -39,15 +39,16 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   title: string;
   description: string;
   breadcrumb: string;
+  /** Success message to display on admin actions page after submission */
   successMessage: string;
   /** Submit function runs after field validation passes */
   onSubmit: (formData: TFieldValues) => Promise<void>;
-  children?: React.ReactNode;
   /** Optional confirmation modal title and content */
   modal?: {
     title: string;
     content: string | React.ReactNode;
   };
+  children?: React.ReactNode;
   className?: string;
 } & Omit<JSX.IntrinsicElements['form'], 'onSubmit'>;
 
@@ -66,8 +67,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   breadcrumb,
   successMessage,
   onSubmit,
-  children,
   modal,
+  children,
   className,
   ...formProps
 }: ActionFormProps<TFieldValues>) => {
