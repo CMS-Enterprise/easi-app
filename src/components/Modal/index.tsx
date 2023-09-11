@@ -56,11 +56,11 @@ const Modal = ({
     >
       <button
         type="button"
-        className="easi-modal__x-button"
+        className="usa-button usa-modal__close margin-top-0"
         aria-label="Close Modal"
         onClick={closeModal}
       >
-        <IconClose size={3} />
+        <IconClose size={4} />
         {title && <h4 className="text-base margin-0 margin-left-1">{title}</h4>}
       </button>
       <div className="easi-modal__body">{children}</div>
