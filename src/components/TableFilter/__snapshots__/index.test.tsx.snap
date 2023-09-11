@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Table Filter Componenet matches snapshot 1`] = `
+exports[`Table Filter Componenet > matches snapshot 1`] = `
 <DocumentFragment>
   <form
     class="usa-form usa-search margin-bottom-5"

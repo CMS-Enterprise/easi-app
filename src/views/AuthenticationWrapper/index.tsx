@@ -16,9 +16,9 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   const history = useHistory();
 
   const authClient = new OktaAuth({
-    issuer: process.env.REACT_APP_OKTA_ISSUER,
-    clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
-    redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
+    issuer: import.meta.env.VITE_OKTA_ISSUER,
+    clientId: import.meta.env.VITE_OKTA_CLIENT_ID,
+    redirectUri: import.meta.env.VITE_OKTA_REDIRECT_URI,
     tokenManager: {
       autoRenew: false
     }

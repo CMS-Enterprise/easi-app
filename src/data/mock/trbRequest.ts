@@ -2,6 +2,7 @@ import GetRequestsQuery from 'queries/GetRequestsQuery';
 import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
 import GetTrbAdminTeamHomeQuery from 'queries/GetTrbAdminTeamHomeQuery';
 import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
+import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import GetTrbRequestQuery from 'queries/GetTrbRequestQuery';
 import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
@@ -31,6 +32,10 @@ import {
   GetTRBRequestAttendeesVariables
 } from 'queries/types/GetTRBRequestAttendees';
 import {
+  GetTrbRequestDocuments,
+  GetTrbRequestDocumentsVariables
+} from 'queries/types/GetTrbRequestDocuments';
+import {
   GetTrbRequestSummary,
   GetTrbRequestSummary_trbRequest as Summary,
   GetTrbRequestSummaryVariables
@@ -58,12 +63,13 @@ import {
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import MockTrbAttendees, {
-  MockTrbAttendee
+  MockTrbAttendee,
+  mockTrbRequestId
 } from 'utils/testing/MockTrbAttendees';
 
 import { MockUserInfo } from './users';
 
-const trbRequestId = 'd8ebedca-0031-4ccd-9690-37390726c50e';
+const trbRequestId = mockTrbRequestId;
 const users = new MockTrbAttendees({ trbRequestId });
 
 export const requester: MockTrbAttendee = users.findByEuaUserId('ABCD')!;
@@ -608,6 +614,25 @@ export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptions> = {
   result: {
     data: {
       trbLeadOptions
+    }
+  }
+};
+
+export const getTrbRequestDocumentsQuery: MockedQuery<
+  GetTrbRequestDocuments,
+  GetTrbRequestDocumentsVariables
+> = {
+  request: {
+    query: GetTrbRequestDocumentsQuery,
+    variables: { id: trbRequestId }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        id: trbRequestId,
+        documents: []
+      }
     }
   }
 };

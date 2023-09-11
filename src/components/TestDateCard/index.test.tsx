@@ -24,7 +24,7 @@ const renderComponent = (customProps?: any) => {
           requestId="Request ID"
           requestName="Initial Request"
           isEditableDeletable
-          handleDeleteTestDate={jest.fn()}
+          handleDeleteTestDate={vi.fn()}
           {...customProps}
         />
       </MockedProvider>
@@ -50,7 +50,7 @@ describe('The Test Date Card component', () => {
           requestId="Request ID"
           requestName="Initial Request"
           isEditableDeletable
-          handleDeleteTestDate={jest.fn()}
+          handleDeleteTestDate={vi.fn()}
         />
       </MockedProvider>
     );

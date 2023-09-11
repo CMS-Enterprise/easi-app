@@ -19,13 +19,13 @@ Cypress.Commands.add('login', () => {
           token => {
             cy.get('input[name="answer"]').type(token, { log: false });
             cy.get('input[name="rememberDevice"]').check({ force: true });
-            cy.get('input[value="Verify"').click();
+            cy.get('input[value="Verify"]').click();
           }
         );
       });
     }
   });
-  cy.url().should('eq', 'http://localhost:3000/');
+  cy.url({ timeout: 20000 }).should('eq', 'http://localhost:3000/');
 });
 
 Cypress.Commands.add('localLogin', ({ name, role }) => {

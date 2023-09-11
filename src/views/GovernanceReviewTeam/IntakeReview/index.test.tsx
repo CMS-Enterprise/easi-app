@@ -17,7 +17,7 @@ describe('The GRT intake review view', () => {
   let dateSpy: any;
   beforeAll(() => {
     // September 30, 2020
-    dateSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1601449200000);
+    dateSpy = vi.spyOn(Date, 'now').mockImplementation(() => 1601449200000);
   });
 
   afterAll(() => {
