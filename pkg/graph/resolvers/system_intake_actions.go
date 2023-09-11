@@ -860,26 +860,11 @@ func ExpireLCID(
 		return nil, err
 	}
 
-	// check that intake has an LCID
-	if intake.LifecycleID.ValueOrZero() == "" {
-		return nil, &apperrors.BadRequestError{
-			Err: &apperrors.InvalidActionError{
-				ActionType: models.ActionTypeEXPIRELCID,
-				Message:    "Intake doesn't have an LCID to expire",
-			},
-		}
-	}
-
 	currentTime := time.Now()
 
-	// check that intake hasn't already been expired
-	if intake.LifecycleExpiresAt != nil && intake.LifecycleExpiresAt.Before(currentTime) {
-		return nil, &apperrors.BadRequestError{
-			Err: &apperrors.InvalidActionError{
-				ActionType: models.ActionTypeEXPIRELCID,
-				Message:    "Intake's LCID has already expired",
-			},
-		}
+	err = lcidactions.IsIntakeValidToExpireLCID(intake, currentTime)
+	if err != nil {
+		return nil, err
 	}
 
 	// update intake

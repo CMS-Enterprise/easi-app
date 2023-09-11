@@ -3,8 +3,34 @@ package lcidactions
 import (
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
+
+// IsIntakeValidToExpireLCID checks if an intake is valid to have its LCID manually expired
+func IsIntakeValidToExpireLCID(intake *models.SystemIntake, currentTime time.Time) error {
+	// check that intake has an LCID
+	if intake.LifecycleID.ValueOrZero() == "" {
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeEXPIRELCID,
+				Message:    "Intake doesn't have an LCID to expire",
+			},
+		}
+	}
+
+	// check that intake hasn't already expired
+	if intake.LifecycleExpiresAt != nil && intake.LifecycleExpiresAt.Before(currentTime) {
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeEXPIRELCID,
+				Message:    "Intake's LCID has already expired",
+			},
+		}
+	}
+
+	return nil
+}
 
 // GetExpireLCIDAction is a method to create an action record with all the relevant data fields for an Expire LCID action.
 func GetExpireLCIDAction(
