@@ -69,6 +69,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const history = useHistory();
   const { showMessageOnNextPage } = useMessage();
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const {
     contacts: { data: contacts }
   } = useSystemIntakeContacts(systemIntakeId);
@@ -155,7 +157,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         ]}
       />
 
-      <Modal isOpen closeModal={() => null}>
+      <Modal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)}>
         <ModalHeading>Hello world</ModalHeading>
         Content here
         <ModalFooter>
@@ -163,7 +165,11 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             <Button type="submit" className="margin-right-1">
               {t('completeAction')}
             </Button>
-            <Button type="button" onClick={() => null} unstyled>
+            <Button
+              type="button"
+              onClick={() => setModalIsOpen(false)}
+              unstyled
+            >
               Go back
             </Button>
           </ButtonGroup>
@@ -268,14 +274,14 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           // Complete action
           back={{
             text: t('completeAction'),
-            disabled: isSubmitting || !recipientsSelected,
+            disabled: isSubmitting || !recipientsSelected || modalIsOpen,
             outline: false
           }}
           // Complete action without sending email
           next={{
             text: t('completeActionWithoutEmail'),
             outline: true,
-            disabled: isSubmitting,
+            disabled: isSubmitting || modalIsOpen,
             // Reset email recipients to prevent sending email
             onClick: () =>
               setValue('notificationRecipients', {
