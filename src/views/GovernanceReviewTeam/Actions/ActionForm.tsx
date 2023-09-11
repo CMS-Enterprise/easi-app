@@ -242,7 +242,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           contacts={contacts}
           recipients={recipients}
           setRecipients={values => setValue('notificationRecipients', values)}
-          error=""
+          error={errors.notificationRecipients?.message || ''}
         />
 
         {/* Admin note */}
