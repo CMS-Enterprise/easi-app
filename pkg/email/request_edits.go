@@ -16,6 +16,7 @@ import (
 
 type systemIntakeRequestEditsEmailParameters struct {
 	RequestName              string
+	FormName                 string
 	RequesterName            string
 	Feedback                 template.HTML
 	SystemIntakeRequestLink  string
@@ -27,6 +28,7 @@ type systemIntakeRequestEditsEmailParameters struct {
 func (sie systemIntakeEmails) requestEditsBody(
 	systemIntakeID uuid.UUID,
 	requestName string,
+	formName string,
 	requesterName string,
 	feedback models.HTML,
 	additionalInfo *models.HTML,
@@ -36,6 +38,7 @@ func (sie systemIntakeEmails) requestEditsBody(
 
 	data := systemIntakeRequestEditsEmailParameters{
 		RequestName:              requestName,
+		FormName:                 formName,
 		RequesterName:            requesterName,
 		Feedback:                 feedback.ToTemplate(),
 		SystemIntakeRequestLink:  sie.client.urlFromPath(requesterPath),
@@ -71,7 +74,7 @@ func (sie systemIntakeEmails) SendRequestEditsNotification(
 		requestName = "Draft System Intake"
 	}
 	subject := fmt.Sprintf("Updates requested for the %s for %s", formName, requestName) //TODO: SW implement this, perhaps as a subject template? Or just create it here?
-	body, err := sie.requestEditsBody(systemIntakeID, requestName, requesterName, feedback, additionalInfo)
+	body, err := sie.requestEditsBody(systemIntakeID, requestName, formName, requesterName, feedback, additionalInfo)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
