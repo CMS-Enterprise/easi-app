@@ -1153,6 +1153,7 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 	intake, err := resolvers.CreateSystemIntakeActionRequestEdits(
 		ctx,
 		r.store,
+		r.emailClient,
 		r.service.FetchUserInfo,
 		input,
 	)
