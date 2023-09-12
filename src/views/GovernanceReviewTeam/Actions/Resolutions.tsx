@@ -17,12 +17,12 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from './components/ActionsSummary';
+import ResolutionBox from './components/ResolutionBox';
 import CloseRequest from './CloseRequest';
 import IssueLcid from './IssueLcid';
 import NotApproved from './NotApproved';
 import NotGovernance from './NotGovernance';
 import ReopenRequest from './ReopenRequest';
-import ResolutionBox from './ResolutionBox';
 
 type ResolutionOption =
   | 'not-it-request'
