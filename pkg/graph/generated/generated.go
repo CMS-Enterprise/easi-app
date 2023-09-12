@@ -10280,6 +10280,7 @@ The possible statuses that an issued LCID can be in
 enum SystemIntakeLCIDStatus {
   ISSUED
   EXPIRED
+  RETIRED
 }
 `, BuiltIn: false},
 }
