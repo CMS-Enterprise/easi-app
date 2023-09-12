@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useParams } from 'react-router-dom';
-import { Form, Grid, SummaryBox } from '@trussworks/react-uswds';
+import { Form, Grid } from '@trussworks/react-uswds';
 import { camelCase } from 'lodash';
 
 import PageHeading from 'components/PageHeading';
@@ -16,6 +16,7 @@ import {
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
+import ActionsSummary from './components/ActionsSummary';
 import CloseRequest from './CloseRequest';
 import IssueLcid from './IssueLcid';
 import NotApproved from './NotApproved';
@@ -238,57 +239,18 @@ const Resolutions = ({
               />
             </Form>
             <Grid className="tablet:grid-col-6">
-              <SummaryBox
-                className="grt-resolutions-summary"
+              <ActionsSummary
                 heading={t('resolutions.summary.title')}
-              >
-                <dl title={t('resolutions.summary.title')} className="usa-list">
-                  <div>
-                    <dt className="display-inline text-bold margin-right-05">
-                      {t('resolutions.summary.issueLcid')}:
-                    </dt>
-                    <dd className="display-inline margin-0">
-                      {t('resolutions.summary.issueLcidDescription')}
-                    </dd>
-                  </div>
-
-                  <div>
-                    <dt className="display-inline text-bold margin-right-05">
-                      {t('resolutions.summary.notItRequest')}:
-                    </dt>
-                    <dd className="display-inline margin-0">
-                      {t('resolutions.summary.notItRequestDescription')}
-                    </dd>
-                  </div>
-
-                  <div>
-                    <dt className="display-inline text-bold margin-right-05">
-                      {t('resolutions.summary.notApproved')}:
-                    </dt>
-                    <dd className="display-inline margin-0">
-                      {t('resolutions.summary.notApprovedDescription')}
-                    </dd>
-                  </div>
-
-                  <div>
-                    <dt className="display-inline text-bold margin-right-05">
-                      {t('resolutions.summary.closeRequest')}:
-                    </dt>
-                    <dd className="display-inline margin-0">
-                      {t('resolutions.summary.closeRequestDescription')}
-                    </dd>
-                  </div>
-
-                  <div>
-                    <dt className="display-inline text-bold margin-right-05">
-                      {t('resolutions.summary.reOpenRequest')}:
-                    </dt>
-                    <dd className="display-inline margin-0">
-                      {t('resolutions.summary.reOpenRequestDescription')}
-                    </dd>
-                  </div>
-                </dl>
-              </SummaryBox>
+                items={decisionOptions.map(decisionKey => {
+                  const translationKey = camelCase(decisionKey);
+                  return {
+                    title: t(`action:resolutions.summary.${translationKey}`),
+                    description: t(
+                      `action:resolutions.summary.${translationKey}Description`
+                    )
+                  };
+                })}
+              />
             </Grid>
           </Grid>
         </Route>
