@@ -165,6 +165,15 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           }
                         )}
                       />
+
+                      {/* Manage LCID */}
+                      <ActionRadioOption
+                        {...fieldProps}
+                        value="manage-lcid"
+                        label={t('manageLcid.title')}
+                        description={t('manageLcid.description')}
+                        accordionText={t('manageLcid.accordion')}
+                      />
                     </RadioGroup>
                   );
                 }}
