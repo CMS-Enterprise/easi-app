@@ -13,7 +13,7 @@ import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 
 import RequestOverview from './RequestOverview';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {

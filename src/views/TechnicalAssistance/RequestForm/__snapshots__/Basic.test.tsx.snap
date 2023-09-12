@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Trb Request form: Basic submits the form successfully after a failed attempt 1`] = `
+exports[`Trb Request form: Basic > submits the form successfully after a failed attempt 1`] = `
 <DocumentFragment>
   <form
     class="usa-form trb-form-basic maxw-full"

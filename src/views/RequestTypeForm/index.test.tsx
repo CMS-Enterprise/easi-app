@@ -19,7 +19,7 @@ import SystemIntake from 'views/SystemIntake';
 
 import RequestTypeForm from './index';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {
@@ -38,7 +38,7 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
-window.scrollTo = jest.fn();
+window.scrollTo = vi.fn;
 const INTAKE_ID = '6aa61a37-d3b4-47ed-ad61-0b8f73151d74';
 const intakeQuery = (intakeData: any) => {
   return {

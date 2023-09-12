@@ -114,7 +114,7 @@ describe('Trb Request form: Basic', () => {
     // Snapshot of the form's initial state
     expect(asFragment()).toMatchSnapshot();
 
-    Element.prototype.scrollIntoView = jest.fn();
+    Element.prototype.scrollIntoView = vi.fn();
 
     // Submit validation error with incomplete form
     const submitButton = getByRole('button', { name: 'Next' });

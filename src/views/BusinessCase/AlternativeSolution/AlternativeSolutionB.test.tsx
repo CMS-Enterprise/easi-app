@@ -17,7 +17,7 @@ window.matchMedia = (): any => ({
   removeListener: () => {}
 });
 
-window.scrollTo = jest.fn();
+window.scrollTo = vi.fn;
 
 const renderPage = (store: any) =>
   render(
@@ -86,7 +86,7 @@ describe('Business case alternative b solution', () => {
   });
 
   it('removes alternative b', async () => {
-    window.confirm = jest.fn(() => true);
+    window.confirm = vi.fn(() => true);
     renderPage(defaultStore);
 
     screen.getByRole('button', { name: /remove alternative b/i }).click();

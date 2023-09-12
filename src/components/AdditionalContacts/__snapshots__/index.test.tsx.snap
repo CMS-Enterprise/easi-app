@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Additional contacts component displays form when editing contact 1`] = `
+exports[`Additional contacts component > displays form when editing contact 1`] = `
 <DocumentFragment>
   <div
     class="system-intake-contacts"
@@ -420,7 +420,7 @@ exports[`Additional contacts component displays form when editing contact 1`] = 
 </DocumentFragment>
 `;
 
-exports[`Additional contacts component renders without crashing 1`] = `
+exports[`Additional contacts component > renders without crashing 1`] = `
 <DocumentFragment>
   <div
     class="system-intake-contacts"

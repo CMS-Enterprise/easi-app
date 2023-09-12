@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Accessibility Testing Steps Overview renders default version without crashing 1`] = `
+exports[`Accessibility Testing Steps Overview > renders default version without crashing 1`] = `
 <DocumentFragment>
   <div
     class="508-steps-involved"
@@ -192,7 +192,7 @@ exports[`Accessibility Testing Steps Overview renders default version without cr
 </DocumentFragment>
 `;
 
-exports[`Accessibility Testing Steps Overview renders help section version without crashing 1`] = `
+exports[`Accessibility Testing Steps Overview > renders help section version without crashing 1`] = `
 <DocumentFragment>
   <div
     class="508-steps-involved"

@@ -6,7 +6,6 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mount, ReactWrapper, shallow } from 'enzyme';
-import { mockFlags, resetLDMocks } from 'jest-launchdarkly-mock';
 import configureMockStore from 'redux-mock-store';
 
 import {
@@ -17,14 +16,13 @@ import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
-import { Flags } from 'types/flags';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import Table from 'views/MyRequests/Table';
 
 import AdminHome from './AdminHome';
 import Home from './index';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {
@@ -40,14 +38,6 @@ jest.mock('@okta/okta-react', () => ({
     };
   }
 }));
-
-const defaultFlags: Flags = {
-  downgrade508Tester: false,
-  downgrade508User: false,
-  downgradeGovTeam: false,
-  downgradeTrbAdmin: false,
-  sandbox: true
-} as Flags;
 
 const mocks = [
   getRequestsQuery([], []),
@@ -96,9 +86,6 @@ const mockClosedIntakes = [
 ];
 
 describe('The home page', () => {
-  beforeEach(() => {
-    resetLDMocks();
-  });
   describe('not a grt review user', () => {
     const mockAuthReducer = {
       isUserSet: true,
@@ -123,7 +110,6 @@ describe('The home page', () => {
 
     describe('User is logged in', () => {
       it('displays process options', async () => {
-        mockFlags({ ...defaultFlags });
         const mockStore = configureMockStore();
         const store = mockStore({
           auth: mockAuthReducer,
@@ -211,7 +197,6 @@ describe('The home page', () => {
     });
 
     it('renders the open requests table', async () => {
-      mockFlags(defaultFlags);
       const homePage = mountComponent({
         auth: mockAuthReducer,
         systemIntakes: {
@@ -229,7 +214,6 @@ describe('The home page', () => {
     });
 
     it('renders the closed requests table', async () => {
-      mockFlags(defaultFlags);
       const homePage = mountComponent({
         auth: mockAuthReducer,
         systemIntakes: {

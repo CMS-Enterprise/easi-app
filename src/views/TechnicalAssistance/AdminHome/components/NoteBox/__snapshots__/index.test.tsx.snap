@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TRB Admin Note Box Renders correct note count information 1`] = `
+exports[`TRB Admin Note Box > Renders correct note count information 1`] = `
 <DocumentFragment>
   <div
     class="trb-admin-home__request-notes bg-base-lightest padding-x-2 padding-y-1 margin-bottom-3"
