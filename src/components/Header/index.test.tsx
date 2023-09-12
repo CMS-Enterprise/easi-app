@@ -1,11 +1,14 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { mount, shallow } from 'enzyme';
 
+import easiMockStore from 'utils/testing/easiMockStore';
+
 import { Header } from './index';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {
@@ -22,6 +25,8 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The Header component', () => {
+  const store = easiMockStore();
+
   it('renders without crashing', () => {
     shallow(<Header />);
   });
@@ -33,24 +38,25 @@ describe('The Header component', () => {
       expect(component.text().includes('Sign In')).toBe(false);
     });
 
-    xit('displays the users name', async done => {
+    it('displays the users name', async () => {
       let component: any;
       await act(async () => {
         component = mount(
-          <MemoryRouter>
-            <Header />
-          </MemoryRouter>
+          <Provider store={store}>
+            <MemoryRouter>
+              <Header />
+            </MemoryRouter>
+          </Provider>
         );
       });
       setImmediate(() => {
         component.update();
         expect(component.text().includes('John Doe')).toBe(true);
-        done();
       });
     });
   });
 
-  xit('displays children', () => {
+  it('displays children', () => {
     const component = shallow(
       <Header>
         <div className="test-class-name" />

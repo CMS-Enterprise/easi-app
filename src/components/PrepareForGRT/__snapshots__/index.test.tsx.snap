@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Prepare for GRT renders help mode without crashing 1`] = `
+exports[`Prepare for GRT > renders help mode without crashing 1`] = `
 <DocumentFragment>
   <div
     class="prepare-for-grt"
@@ -261,7 +261,7 @@ exports[`Prepare for GRT renders help mode without crashing 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Prepare for GRT renders without crashing 1`] = `
+exports[`Prepare for GRT > renders without crashing 1`] = `
 <DocumentFragment>
   <div
     class="prepare-for-grt"

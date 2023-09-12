@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Trb Request form: Subject areas checks subject area form elements 1`] = `
+exports[`Trb Request form: Subject areas > checks subject area form elements 1`] = `
 <DocumentFragment>
   <form
     class="usa-form trb-form-subject maxw-full"

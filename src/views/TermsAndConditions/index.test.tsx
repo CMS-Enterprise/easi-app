@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 
 import TermsAndConditions from './index';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {

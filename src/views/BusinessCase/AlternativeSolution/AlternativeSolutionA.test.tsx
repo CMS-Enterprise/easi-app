@@ -17,7 +17,7 @@ window.matchMedia = (): any => ({
   removeListener: () => {}
 });
 
-window.scrollTo = jest.fn();
+window.scrollTo = vi.fn;
 
 const renderPage = (store: any) =>
   render(

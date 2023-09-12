@@ -22,7 +22,7 @@ describe('The Text Field component', () => {
         value: 'Hello'
       }
     };
-    const mock = jest.fn();
+    const mock = vi.fn();
     const component = mount(<TextField {...requiredProps} onChange={mock} />);
 
     component.simulate('change', event);

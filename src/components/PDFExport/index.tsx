@@ -19,7 +19,7 @@ type PDFExportProps = {
 function generatePDF(filename: string, content: string) {
   axios
     .request({
-      url: `${process.env.REACT_APP_API_ADDRESS}/pdf/generate`,
+      url: `${import.meta.env.VITE_API_ADDRESS}/pdf/generate`,
       responseType: 'blob',
       method: 'POST',
       data: {

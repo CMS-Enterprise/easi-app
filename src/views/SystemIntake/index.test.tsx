@@ -20,7 +20,7 @@ import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
 
 import { SystemIntake } from './index';
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {

@@ -16,7 +16,7 @@ describe('The Search Bar component', () => {
   });
 
   it('prevents the default action of submitting a form', () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     const component = mount(
       <SearchBar name="test-name-attr" onSearch={() => {}} />
     );
@@ -32,7 +32,7 @@ describe('The Search Bar component', () => {
 
   describe('The default Search Bar w/o autocomplete', () => {
     it('triggers on onChange action', () => {
-      const fixture = jest.fn();
+      const fixture = vi.fn();
       const event = {
         target: {
           value: 'EASi'
@@ -48,7 +48,7 @@ describe('The Search Bar component', () => {
   });
 
   describe('The Search Bar with autocomplete', () => {
-    const onSearch = jest.fn();
+    const onSearch = vi.fn();
     const getSuggestionValue = (obj: any): string => obj.name;
     const renderSuggestion = (obj: any): string => obj.name;
 
@@ -58,8 +58,8 @@ describe('The Search Bar component', () => {
           name="test-name-attr"
           onSearch={onSearch}
           results={[]}
-          getSuggestionValue={jest.fn()}
-          renderSuggestion={jest.fn()}
+          getSuggestionValue={vi.fn()}
+          renderSuggestion={vi.fn()}
         />
       );
       expect(component.find(Autosuggest).exists()).toBe(true);

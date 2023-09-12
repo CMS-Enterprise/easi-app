@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`The making a request page matches the snapshot 1`] = `
+exports[`The making a request page > matches the snapshot 1`] = `
 <main
   className="easi-main-content grid-container line-height-body-5 margin-bottom-5"
   data-testid="making-a-system-request"

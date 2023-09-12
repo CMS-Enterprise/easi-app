@@ -112,7 +112,7 @@ describe('Trb Request form: Subject areas', () => {
 
     expect(asFragment()).toMatchSnapshot();
 
-    Element.prototype.scrollIntoView = jest.fn();
+    Element.prototype.scrollIntoView = vi.fn();
 
     // Check Next button with existing selected subject areas
     expect(getByRole('button', { name: 'Next' })).toBeInTheDocument();
