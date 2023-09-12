@@ -53,6 +53,8 @@ const action = {
   resolutions: {
     title: 'Action: issue decision or {{action}} request',
     title_NO_DECISION: 'Action: change decision or {{action}} request',
+    breadcrumb: 'Issue decision or {{action}} request',
+    breadcrumb_NO_DECISION: 'Change decision or {{action}} request',
     action_CLOSED: 're-open',
     action_OPEN: 'close',
     description_NO_DECISION:

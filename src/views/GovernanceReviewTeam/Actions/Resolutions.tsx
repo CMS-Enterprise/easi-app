@@ -134,8 +134,12 @@ const Resolutions = ({
             text: t('resolutions.requestDetails'),
             url: `/governance-review-team/${systemIntakeId}/intake-request`
           },
-          // TODO: Dynamic breadcrumb
-          { text: 'Issue decision or close request' }
+          {
+            text: t('resolutions.breadcrumb', {
+              context: decisionState,
+              action: t('resolutions.action', { context: state })
+            })
+          }
         ]}
       />
 
