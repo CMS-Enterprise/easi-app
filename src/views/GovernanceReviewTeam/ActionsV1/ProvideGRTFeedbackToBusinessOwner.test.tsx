@@ -12,6 +12,7 @@ import {
   requester,
   systemIntake
 } from 'data/mock/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
@@ -145,7 +146,9 @@ describe('Provide GRT Feedback to GRT Business Owner', () => {
                   `/governance-review-team/:systemId/actions/${slug}`
                 ]}
               >
-                <RequestOverview />
+                <MessageProvider>
+                  <RequestOverview />
+                </MessageProvider>
               </Route>
               <Route path="/governance-review-team/:systemId/notes">
                 <Notes />
