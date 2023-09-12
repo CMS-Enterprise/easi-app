@@ -466,6 +466,11 @@ task :lint do
   sh "pre-commit run -a"
 end
 
+desc "Send a test email of all the email templates"
+task :email do
+  sh "go run cmd/test_email_templates/*.go"
+end
+
 begin
   Rake.application.top_level
 rescue RuntimeError => e

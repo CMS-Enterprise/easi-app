@@ -417,7 +417,7 @@ func makeSystemIntakeWithEditsRequested(
 		AdditionalInfo: additionalInfo,
 		AdminNotes:     &adminNote,
 	}
-	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, mock.FetchUserInfoMock, *input))
+	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, nil, mock.FetchUserInfoMock, *input))
 }
 
 func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {
