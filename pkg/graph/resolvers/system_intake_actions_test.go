@@ -47,6 +47,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			_, err = CreateSystemIntakeActionRequestEdits(
 				ctx,
 				s.testConfigs.Store,
+				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
 				model.SystemIntakeRequestEditsInput{
 					SystemIntakeID: intake.ID,
@@ -82,6 +83,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 					ctx,
 					s.testConfigs.Store,
+					s.testConfigs.EmailClient,
 					s.fetchUserInfoStub,
 					model.SystemIntakeRequestEditsInput{
 						SystemIntakeID: intake.ID,
@@ -130,6 +132,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
@@ -163,6 +166,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
@@ -197,6 +201,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
@@ -229,6 +234,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,

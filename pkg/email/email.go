@@ -63,6 +63,7 @@ type templates struct {
 	trbAdviceLetterSubmitted                   templateCaller
 	trbRequestClosed                           templateCaller
 	cedarRolesChanged                          templateCaller
+	systemIntakeRequestEdits                   templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -72,9 +73,10 @@ type sender interface {
 
 // Client is an EASi SES client wrapper
 type Client struct {
-	config    Config
-	templates templates
-	sender    sender
+	config       Config
+	templates    templates
+	sender       sender
+	SystemIntake *systemIntakeEmails
 }
 
 // templateError is just a helper method for formatting errors
@@ -307,11 +309,22 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.cedarRolesChanged = cedarRolesChanged
 
+	systemIntakeRequestEditsTemplateName := "system_intake_request_edits_on_form.gohtml"
+	systemIntakeRequestEdits := rawTemplates.Lookup(systemIntakeRequestEditsTemplateName)
+	if systemIntakeRequestEdits == nil {
+		return Client{}, templateError(systemIntakeRequestEditsTemplateName)
+	}
+	appTemplates.systemIntakeRequestEdits = systemIntakeRequestEdits
+
 	client := Client{
 		config:    config,
 		templates: appTemplates,
 		sender:    sender,
 	}
+	intakeEmails := systemIntakeEmails{
+		client: &client,
+	}
+	client.SystemIntake = &intakeEmails
 	return client, nil
 }
 

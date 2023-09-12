@@ -1,6 +1,8 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 // GovernanceRequestFeedbackSourceAction is an eumeration of the possible actions that can provide feedback on a governance request
 type GovernanceRequestFeedbackSourceAction string
@@ -21,6 +23,25 @@ const (
 	GRFTFDraftBusinessCase GovernanceRequestFeedbackTargetForm = "DRAFT_BUSINESS_CASE"
 	GRFTFinalBusinessCase  GovernanceRequestFeedbackTargetForm = "FINAL_BUSINESS_CASE"
 )
+
+// Humanize translates a GovernanceRequestFeedbackTargetForm to human readable text
+func (tf GovernanceRequestFeedbackTargetForm) Humanize() string {
+	switch tf {
+
+	case GRFTFIntakeRequest:
+		return "Intake Request Form"
+	case GRFTFDraftBusinessCase:
+		return "Draft Business Case"
+	case GRFTFinalBusinessCase:
+		return "Final Business Case"
+	case GRFTFNoTargetProvided:
+		fallthrough
+	default:
+		return "No Form Selected"
+
+	}
+
+}
 
 // GovernanceRequestFeedbackType is an enumeration of the possible types of feedback on governance requests, based on who it's directed to
 type GovernanceRequestFeedbackType string

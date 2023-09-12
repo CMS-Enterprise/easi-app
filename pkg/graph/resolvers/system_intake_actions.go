@@ -10,6 +10,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
@@ -158,6 +159,7 @@ func ProgressIntake(
 func CreateSystemIntakeActionRequestEdits(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeRequestEditsInput,
 ) (*models.SystemIntake, error) {
@@ -214,7 +216,7 @@ func CreateSystemIntakeActionRequestEdits(
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Send Notification Email (EASI-3109)
+
 	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
 	govReqFeedback.CreatedBy = adminTakingAction.EuaUserID
@@ -235,6 +237,20 @@ func CreateSystemIntakeActionRequestEdits(
 		})
 		if err != nil {
 			return nil, err
+		}
+	}
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		err = emailClient.SystemIntake.SendRequestEditsNotification(ctx,
+			*input.NotificationRecipients,
+			intake.ID,
+			targetForm.Humanize(),
+			intake.ProjectName.ValueOrZero(),
+			intake.Requester,
+			input.EmailFeedback,
+			input.AdditionalInfo,
+		)
+		if err != nil {
+			return intake, err
 		}
 	}
 	return intake, nil
@@ -791,7 +807,6 @@ func ConfirmLCID(ctx context.Context,
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
 
-		action.ActionType = models.ActionTypeCONFIRMLCID
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
 		}
