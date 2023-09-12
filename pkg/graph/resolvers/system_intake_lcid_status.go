@@ -10,7 +10,7 @@ import (
 // CalculateSystemIntakeLCIDStatus calculates the current status of an intake's LCID, if present
 func CalculateSystemIntakeLCIDStatus(intake *models.SystemIntake, currentTime time.Time) *model.SystemIntakeLCIDStatus {
 	// copies of the constants, declared as local variables instead of constants so we can get pointers to them
-	// which we need to return the proper type
+	// which we need to return the type expected by gqlgen-generated code (*model.SystemIntakeLCIDStatus instead of model.SystemIntakeLCIDStatus)
 	issuedStatus := model.SystemIntakeLCIDStatusIssued
 	expiredStatus := model.SystemIntakeLCIDStatusExpired
 
