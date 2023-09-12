@@ -30,7 +30,6 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 	}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
-	// expectedEmail :=
 	err = client.SystemIntake.SendRequestEditsNotification(ctx, recipients, intakeID, formName, requestName, requester, feedback, additionalInfo)
 	s.NoError(err)
 	expectedSubject := fmt.Sprintf("Updates requested for the %s for %s", formName, requestName)
