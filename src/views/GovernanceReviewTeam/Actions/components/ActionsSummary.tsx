@@ -36,7 +36,11 @@ const ActionsSummary = ({ heading, items, className }: ActionsSummaryProps) => {
     >
       <dl title={t(heading)} className="usa-list">
         {items.map(item => (
-          <ListItem title={item.title} description={item.description} />
+          <ListItem
+            key={item.title}
+            title={item.title}
+            description={item.description}
+          />
         ))}
       </dl>
     </SummaryBox>
