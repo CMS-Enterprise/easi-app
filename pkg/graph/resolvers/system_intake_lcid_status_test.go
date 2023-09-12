@@ -11,7 +11,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// TODO - make this more table-driven?
 func TestCalculateSystemIntakeLCIDStatus(t *testing.T) {
 	mockCurrentTime := time.Unix(0, 0)
 	yesterday := mockCurrentTime.Add(time.Hour * -24)
