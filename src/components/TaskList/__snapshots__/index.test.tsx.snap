@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`The TaskListItem matches snapshot 1`] = `
+exports[`The TaskListItem > matches snapshot 1`] = `
 <DocumentFragment>
   <li
     class="task-list__item padding-bottom-4"

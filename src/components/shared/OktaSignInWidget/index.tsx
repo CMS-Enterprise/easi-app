@@ -2,7 +2,6 @@
 // okta-signin-widget has no typescript support yet.  If becomes available, install and remove disable
 
 import React, { useEffect, useRef } from 'react';
-// @ts-expect-error
 import OktaSignIn from '@okta/okta-signin-widget';
 
 import './index.scss';
@@ -19,21 +18,22 @@ const OktaSignInWidget = ({ onSuccess, onError }: OktaSignInWidgetProps) => {
     let signIn: any;
     if (widgetRef.current) {
       signIn = new OktaSignIn({
+        useClassicEngine: true, // needed since upgrading okta-signin-widget to 7.x: https://github.com/okta/okta-signin-widget/blob/master/MIGRATING.md#migrating-from-6x-to-7x
         el: widgetRef.current,
-        baseUrl: process.env.REACT_APP_OKTA_DOMAIN,
-        clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
+        baseUrl: import.meta.env.VITE_OKTA_DOMAIN,
+        clientId: import.meta.env.VITE_OKTA_CLIENT_ID,
         authParams: {
           pkce: true,
-          issuer: process.env.REACT_APP_OKTA_ISSUER,
+          issuer: import.meta.env.VITE_OKTA_ISSUER,
           responseMode: 'query'
         }
       });
 
       signIn
         .showSignInToGetTokens({
-          authorizationServerId: process.env.REACT_APP_OKTA_SERVER_ID,
-          clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
-          redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
+          authorizationServerId: import.meta.env.VITE_OKTA_SERVER_ID,
+          clientId: import.meta.env.VITE_OKTA_CLIENT_ID,
+          redirectUri: import.meta.env.VITE_OKTA_REDIRECT_URI,
           scopes: ['openid', 'profile', 'email']
         })
         .then(onSuccess)

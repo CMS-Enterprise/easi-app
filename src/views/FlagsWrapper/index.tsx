@@ -23,7 +23,7 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
     if (data) {
       (async () => {
         const provider = await asyncWithLDProvider({
-          clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string,
+          clientSideID: import.meta.env.VITE_LD_CLIENT_ID as string,
           context: {
             kind: 'user',
             key: data?.currentUser?.launchDarkly.userKey

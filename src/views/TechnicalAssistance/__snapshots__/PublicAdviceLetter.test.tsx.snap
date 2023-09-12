@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Trb Public Advice Letter renders from email link 1`] = `
+exports[`Trb Public Advice Letter > renders from email link 1`] = `
 <DocumentFragment>
   <div
     class="grid-container full-width"
@@ -323,7 +323,7 @@ exports[`Trb Public Advice Letter renders from email link 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Trb Public Advice Letter renders from task list link 1`] = `
+exports[`Trb Public Advice Letter > renders from task list link 1`] = `
 <DocumentFragment>
   <div
     class="grid-container full-width"

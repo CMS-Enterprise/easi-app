@@ -32,7 +32,7 @@ const waitForPageLoad = async () => {
   });
 };
 
-jest.mock('@okta/okta-react', () => ({
+vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
       authState: {
@@ -49,7 +49,7 @@ jest.mock('@okta/okta-react', () => ({
   }
 }));
 
-window.scrollTo = jest.fn();
+window.scrollTo = vi.fn;
 
 describe('Provide GRT Feedback to GRT Business Owner', () => {
   const intakeQuery = {

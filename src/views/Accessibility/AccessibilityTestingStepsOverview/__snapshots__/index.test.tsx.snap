@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`The accessibility testing overview matches the snapshot 1`] = `
+exports[`The accessibility testing overview > matches the snapshot 1`] = `
 <div
   className="grid-container"
 >

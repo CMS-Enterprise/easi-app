@@ -9,7 +9,7 @@ import { getFileS3, postFileUploadURL, putFileS3 } from 'types/routines';
 function postFileUploadURLRequest(formData: FileUploadForm) {
   const data = prepareFileUploadForApi(formData);
   return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/file_uploads/upload_url`,
+    `${import.meta.env.VITE_API_ADDRESS}/file_uploads/upload_url`,
     data
   );
 }
@@ -56,7 +56,9 @@ function* uploadFile(
 
 function postFileDownloadURLRequest(file: any) {
   return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/file_uploads/${file.filename}/download_url`
+    `${import.meta.env.VITE_API_ADDRESS}/file_uploads/${
+      file.filename
+    }/download_url`
   );
 }
 

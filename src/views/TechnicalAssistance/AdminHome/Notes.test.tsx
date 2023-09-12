@@ -17,7 +17,7 @@ import Notes from './Notes';
 import TRBRequestInfoWrapper from './RequestContext';
 
 describe('Trb Admin Notes: View Notes', () => {
-  Element.prototype.scrollIntoView = jest.fn();
+  Element.prototype.scrollIntoView = vi.fn();
 
   const mockStore = configureMockStore();
   const store = mockStore({

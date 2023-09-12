@@ -20,7 +20,7 @@ import store from './store';
 
 import './index.scss';
 
-const apiHost = new URL(process.env.REACT_APP_API_ADDRESS || '').host;
+const apiHost = new URL(import.meta.env.VITE_API_ADDRESS || '').host;
 
 // Initialize tracker for Google Analytics
 ReactGA.initialize([
@@ -62,11 +62,11 @@ function getAuthHeader(targetUrl: string) {
  * Setup client for GraphQL
  */
 const uploadLink = createUploadLink({
-  uri: process.env.REACT_APP_GRAPHQL_ADDRESS
+  uri: import.meta.env.VITE_GRAPHQL_ADDRESS
 });
 
 const authLink = setContext((request, { headers }) => {
-  const header = getAuthHeader(process.env.REACT_APP_GRAPHQL_ADDRESS as string);
+  const header = getAuthHeader(import.meta.env.VITE_GRAPHQL_ADDRESS as string);
   return {
     headers: {
       ...headers,

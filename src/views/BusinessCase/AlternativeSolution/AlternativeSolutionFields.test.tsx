@@ -16,7 +16,7 @@ describe('Alternative Solution Fields', () => {
         validateOnBlur={false}
         validateOnChange={false}
         validateOnMount={false}
-        innerRef={jest.fn()}
+        innerRef={vi.fn()}
       >
         {(formikProps: FormikProps<any>) => (
           <Form>

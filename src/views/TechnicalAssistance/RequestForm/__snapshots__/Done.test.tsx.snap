@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Trb Request form: Request Done renders error 1`] = `
+exports[`Trb Request form: Request Done > renders error 1`] = `
 <DocumentFragment>
   <div
     class="bg-error-lighter padding-bottom-6"
@@ -114,7 +114,7 @@ exports[`Trb Request form: Request Done renders error 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Trb Request form: Request Done renders success 1`] = `
+exports[`Trb Request form: Request Done > renders success 1`] = `
 <DocumentFragment>
   <div
     class="bg-success-lighter padding-bottom-6"

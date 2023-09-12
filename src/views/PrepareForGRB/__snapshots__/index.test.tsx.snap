@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`The prepare for GRB info page matches the snapshot 1`] = `
+exports[`The prepare for GRB info page > matches the snapshot 1`] = `
 <main
   className="easi-main-content easi-prepare-for-grb margin-bottom-5"
   id="main-content"

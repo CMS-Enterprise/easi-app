@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TRB Subview snapshots matches Process Flow 1`] = `
+exports[`TRB Subview snapshots > matches Process Flow 1`] = `
 <DocumentFragment>
   <div
     class="grid-container width-full"
@@ -228,7 +228,7 @@ exports[`TRB Subview snapshots matches Process Flow 1`] = `
 </DocumentFragment>
 `;
 
-exports[`TRB Subview snapshots matches Request Type 1`] = `
+exports[`TRB Subview snapshots > matches Request Type 1`] = `
 <DocumentFragment>
   <div
     class="grid-container width-full"
@@ -483,7 +483,7 @@ exports[`TRB Subview snapshots matches Request Type 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Technical Assistance (TRB) homepage renders the homepage with a list of trb requests 1`] = `
+exports[`Technical Assistance (TRB) homepage > renders the homepage with a list of trb requests 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content technical-assistance margin-bottom-5 desktop:margin-bottom-10"

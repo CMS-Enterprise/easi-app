@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TestingTemplates matches the snapshot 1`] = `
+exports[`TestingTemplates > matches the snapshot 1`] = `
 <div
   className="grid-container accessibility-testing-templates"
 >
@@ -358,7 +358,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
           >
             <a
               className="usa-link usa-link--external"
-              href="/Section508TestPlanTemplate.pdf"
+              href="/src/assets/files/Section508TestPlanTemplate.pdf"
               onClick={[Function]}
               target="_blank"
             >
@@ -416,7 +416,7 @@ exports[`TestingTemplates matches the snapshot 1`] = `
           >
             <a
               className="usa-link usa-link--external"
-              href="/CMS508RemediationPlanTemplate.pdf"
+              href="/src/assets/files/CMS508RemediationPlanTemplate.pdf"
               onClick={[Function]}
               target="_blank"
             >
