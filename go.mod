@@ -13,7 +13,7 @@ require (
 	github.com/go-openapi/swag v0.22.4
 	github.com/go-openapi/validate v0.22.1
 	github.com/google/uuid v1.3.0
-	github.com/gorilla/mux v1.7.4
+	github.com/gorilla/mux v1.8.0
 	github.com/graph-gophers/dataloader v5.0.0+incompatible
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/jmoiron/sqlx v1.3.5
