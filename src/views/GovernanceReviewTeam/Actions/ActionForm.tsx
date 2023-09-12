@@ -112,6 +112,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
       .catch(() => {
         // Display error message
         setError('root', { message: t('error') });
+        setModalIsOpen(false);
       });
 
   /** Handles form validation and either completes action or triggers confirmation modal (if `modal` prop is defined) */
