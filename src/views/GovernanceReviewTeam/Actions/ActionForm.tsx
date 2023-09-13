@@ -110,9 +110,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         history.push(`/governance-review-team/${systemIntakeId}/actions`);
       })
       .catch(() => {
-        // Display error message
-        setError('root', { message: t('error') });
         setModalIsOpen(false);
+        setError('root', { message: t('error') });
       });
 
   /** Handles form validation and either completes action or triggers confirmation modal (if `modal` prop is defined) */
