@@ -60,6 +60,7 @@ const action = {
     description_RETIRED:
       'Update the status or details of a retired Life Cycle ID by Changing the retirement date or updating it (change the expiration date, scope, next steps, or project cost baseline).',
     retire: 'Retire a Life Cycle ID',
+    retire_RETIRED: 'Change retirement date',
     update: 'Update a Life Cycle ID',
     expire: 'Expire a Life Cycle ID',
     summary: {

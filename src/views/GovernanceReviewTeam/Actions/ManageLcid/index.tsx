@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory, useParams } from 'react-router-dom';
@@ -43,7 +43,15 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
     resolution: LcidAction;
   }>();
 
-  const actionOptions = ['retire', 'update', 'expire'];
+  const actionOptions = useMemo(() => {
+    const options = ['retire', 'update'];
+
+    if (lcidStatus === SystemIntakeLCIDStatus.ISSUED) {
+      options.push('expire');
+    }
+
+    return options;
+  }, [lcidStatus]);
 
   // Show page not found if action is not available
   if (subPage && !actionOptions.includes(subPage)) {
@@ -77,7 +85,7 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
       {subPage && (
         <TitleBox
           systemIntakeId={systemIntakeId}
-          title={t(`manageLcid.${subPage}`)}
+          title={t(`manageLcid.${subPage}`, { context: lcidStatus })}
           type="action"
         />
       )}
@@ -134,7 +142,9 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
                           key={action}
                           value={action}
                           checked={field.value === action}
-                          label={t(`manageLcid.${action}`)}
+                          label={t(`manageLcid.${action}`, {
+                            context: lcidStatus
+                          })}
                           id={`grt-lcid-action__${action}`}
                         />
                       ))}
