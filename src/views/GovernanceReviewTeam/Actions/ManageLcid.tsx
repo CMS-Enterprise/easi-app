@@ -63,7 +63,9 @@ const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
 
       <p className="line-height-body-5 font-body-lg text-light margin-0">
         {/* TODO: dynamic description */}
-        {t('manageLcid.description')}
+        {t('manageLcid.description', {
+          // context: SystemIntakeLCIDStatus
+        })}
       </p>
 
       <p className="margin-top-1 text-base">
