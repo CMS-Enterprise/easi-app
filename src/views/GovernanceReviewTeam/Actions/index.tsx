@@ -8,6 +8,7 @@ import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioGroup } from 'components/shared/RadioField';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntakeState } from 'types/graphql-global-types';
 
 import NextStep from './NextStep';
 import RequestEdits from './RequestEdits';
@@ -66,7 +67,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
-  const { state, decisionState } = systemIntake;
+  const { state, decisionState, lcidStatus } = systemIntake;
 
   const { control, watch, handleSubmit } = useForm<{ actionRoute: string }>();
   const actionRoute = watch('actionRoute');
@@ -117,26 +118,35 @@ const Actions = ({ systemIntake }: ActionsProps) => {
               render={({ field: { ref, ...fieldProps } }) => {
                 return (
                   <RadioGroup className="grt-actions-radio-group grid-row grid-gap-md">
-                    {/* Request Edits */}
-                    <ActionRadioOption
-                      {...fieldProps}
-                      value="actions/request-edits"
-                      label={t('chooseAction.requestEdits.title')}
-                      description={t('chooseAction.requestEdits.description')}
-                      accordionText={t('chooseAction.requestEdits.accordion')}
-                    />
-                    {/* Progress to new step */}
-                    <ActionRadioOption
-                      {...fieldProps}
-                      value="actions/next-step"
-                      label={t('chooseAction.progressToNewStep.title')}
-                      description={t(
-                        'chooseAction.progressToNewStep.description'
-                      )}
-                      accordionText={t(
-                        'chooseAction.progressToNewStep.accordion'
-                      )}
-                    />
+                    {state === SystemIntakeState.OPEN && (
+                      <>
+                        {/* Request Edits */}
+                        <ActionRadioOption
+                          {...fieldProps}
+                          value="actions/request-edits"
+                          label={t('chooseAction.requestEdits.title')}
+                          description={t(
+                            'chooseAction.requestEdits.description'
+                          )}
+                          accordionText={t(
+                            'chooseAction.requestEdits.accordion'
+                          )}
+                        />
+                        {/* Progress to new step */}
+                        <ActionRadioOption
+                          {...fieldProps}
+                          value="actions/next-step"
+                          label={t('chooseAction.progressToNewStep.title')}
+                          description={t(
+                            'chooseAction.progressToNewStep.description'
+                          )}
+                          accordionText={t(
+                            'chooseAction.progressToNewStep.accordion'
+                          )}
+                        />
+                      </>
+                    )}
+
                     {/* Decision action */}
                     <ActionRadioOption
                       {...fieldProps}
@@ -157,6 +167,21 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                         }
                       )}
                     />
+
+                    {
+                      /* Manage LCID */
+                      lcidStatus && (
+                        <ActionRadioOption
+                          {...fieldProps}
+                          value="manage-lcid"
+                          label={t('manageLcid.title')}
+                          description={t('manageLcid.description')}
+                          accordionText={t('manageLcid.accordion', {
+                            context: lcidStatus
+                          })}
+                        />
+                      )
+                    }
                   </RadioGroup>
                 );
               }}

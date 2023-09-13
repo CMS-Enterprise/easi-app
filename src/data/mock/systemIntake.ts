@@ -204,6 +204,7 @@ export const systemIntake: SystemIntake = {
   lcidExpiresAt: null,
   lcidScope: null,
   lcidCostBaseline: null,
+  lcidStatus: null,
   rejectionReason: null,
   updatedAt: null,
   createdAt: '2022-10-21T14:55:47.88283Z',
