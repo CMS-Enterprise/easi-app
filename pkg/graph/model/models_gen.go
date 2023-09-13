@@ -618,6 +618,16 @@ type SystemIntakeDocumentType struct {
 	OtherTypeDescription *string                               `json:"otherTypeDescription"`
 }
 
+// Input for expiring an intake's LCID in IT Gov v2
+type SystemIntakeExpireLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	Reason                 models.HTML                         `json:"reason"`
+	NextSteps              *models.HTML                        `json:"nextSteps"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
+}
+
 // Represents the source of funding for a system
 type SystemIntakeFundingSourceInput struct {
 	FundingNumber *string `json:"fundingNumber"`
@@ -1050,6 +1060,7 @@ type SystemIntakeActionType string
 const (
 	SystemIntakeActionTypeProgressToNewStep              SystemIntakeActionType = "PROGRESS_TO_NEW_STEP"
 	SystemIntakeActionTypeRequestEdits                   SystemIntakeActionType = "REQUEST_EDITS"
+	SystemIntakeActionTypeExpireLcid                     SystemIntakeActionType = "EXPIRE_LCID"
 	SystemIntakeActionTypeNotGovernance                  SystemIntakeActionType = "NOT_GOVERNANCE"
 	SystemIntakeActionTypeCloseRequest                   SystemIntakeActionType = "CLOSE_REQUEST"
 	SystemIntakeActionTypeReopenRequest                  SystemIntakeActionType = "REOPEN_REQUEST"
@@ -1079,6 +1090,7 @@ const (
 var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeProgressToNewStep,
 	SystemIntakeActionTypeRequestEdits,
+	SystemIntakeActionTypeExpireLcid,
 	SystemIntakeActionTypeNotGovernance,
 	SystemIntakeActionTypeCloseRequest,
 	SystemIntakeActionTypeReopenRequest,
@@ -1107,7 +1119,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 
 func (e SystemIntakeActionType) IsValid() bool {
 	switch e {
-	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
+	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
 		return true
 	}
 	return false
@@ -1175,6 +1187,50 @@ func (e *SystemIntakeFormStep) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The possible statuses that an issued LCID can be in
+type SystemIntakeLCIDStatus string
+
+const (
+	SystemIntakeLCIDStatusIssued  SystemIntakeLCIDStatus = "ISSUED"
+	SystemIntakeLCIDStatusExpired SystemIntakeLCIDStatus = "EXPIRED"
+	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
+)
+
+var AllSystemIntakeLCIDStatus = []SystemIntakeLCIDStatus{
+	SystemIntakeLCIDStatusIssued,
+	SystemIntakeLCIDStatusExpired,
+	SystemIntakeLCIDStatusRetired,
+}
+
+func (e SystemIntakeLCIDStatus) IsValid() bool {
+	switch e {
+	case SystemIntakeLCIDStatusIssued, SystemIntakeLCIDStatusExpired, SystemIntakeLCIDStatusRetired:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeLCIDStatus) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeLCIDStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeLCIDStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeLCIDStatus", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeLCIDStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

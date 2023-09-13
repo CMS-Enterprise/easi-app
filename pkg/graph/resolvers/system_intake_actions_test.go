@@ -1174,7 +1174,69 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			note := allNotesForIntake2[0]
 			s.EqualValues(&adminNote, note.Content)
 		})
-
 	})
+}
 
+func (s *ResolverSuite) TestExpireLCID() {
+	s.Run("Expiring an LCID on an intake with an LCID issued sets it to expired, sets the correct fields, creates an action, and creates an admin note", func() {
+		currentTime := time.Now()
+
+		// create an intake, issue an LCID for it with an expiration date in the future
+		newIntake := s.createNewIntake()
+		issueLCIDInput := model.SystemIntakeIssueLCIDInput{
+			// required fields
+			SystemIntakeID: newIntake.ID,
+			ExpiresAt:      currentTime.AddDate(2, 0, 0),
+			Scope:          "test scope",
+			NextSteps:      "test next steps after issuing LCID, before expiring",
+			TrbFollowUp:    models.TRBFRStronglyRecommended,
+		}
+		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, issueLCIDInput)
+		s.NoError(err)
+
+		// expire the LCID
+		expireLCIDInput := model.SystemIntakeExpireLCIDInput{
+			// required fields
+			SystemIntakeID: updatedIntake.ID,
+			Reason:         "test reason for expiring LCID",
+
+			// optional fields
+			NextSteps:      models.HTMLPointer("test next steps after expiring LCID"),
+			AdminNote:      models.HTMLPointer("test admin note for expiring LCID"),
+			AdditionalInfo: models.HTMLPointer("test additional info for expiring LCID"),
+		}
+
+		expiredIntake, err := ExpireLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, expireLCIDInput)
+		s.NoError(err)
+
+		// check calculated LCID
+		lcidStatus := CalculateSystemIntakeLCIDStatus(expiredIntake, currentTime)
+		s.EqualValues(model.SystemIntakeLCIDStatusExpired, *lcidStatus)
+
+		// check decision next steps from input
+		s.EqualValues(expireLCIDInput.NextSteps, expiredIntake.DecisionNextSteps)
+
+		// check expiration date - should be set to today (UTC) at midnight
+		expectedExpirationDate := time.Date(currentTime.UTC().Year(), currentTime.UTC().Month(), currentTime.UTC().Day(), 0, 0, 0, 0, time.UTC)
+
+		// EqualValues() works here because we know expectedExpirationDate is UTC, and calling .UTC() on updatedIntake.LifecycleExpiresAt will return a UTC time
+		s.EqualValues(expectedExpirationDate, expiredIntake.LifecycleExpiresAt.UTC())
+
+		// should create action
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, expiredIntake.ID)
+		s.NoError(err)
+		s.NotEmpty(allActionsForIntake)
+		action := allActionsForIntake[0] // GetActionsByRequestID() orders actions by .CreatedAt in descending order, so most recent action is first in the slice
+		s.EqualValues(expiredIntake.ID, *action.IntakeID)
+		s.EqualValues(models.ActionTypeEXPIRELCID, action.ActionType)
+		s.EqualValues(expireLCIDInput.AdditionalInfo, action.Feedback)
+		s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
+
+		// should create admin note (since input included it)
+		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
+		s.NoError(err)
+		s.NotEmpty(allNotesForIntake)
+		adminNote := allNotesForIntake[0] // should be the only admin note on the intake, since we didn't include one when issuing the LCID
+		s.EqualValues(expireLCIDInput.AdminNote, adminNote.Content)
+	})
 }

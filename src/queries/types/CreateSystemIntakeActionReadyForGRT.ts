@@ -21,6 +21,9 @@ export interface CreateSystemIntakeActionReadyForGRT_createSystemIntakeActionRea
 }
 
 export interface CreateSystemIntakeActionReadyForGRT {
+  /**
+   * Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
+   */
   createSystemIntakeActionReadyForGRT: CreateSystemIntakeActionReadyForGRT_createSystemIntakeActionReadyForGRT | null;
 }
 
