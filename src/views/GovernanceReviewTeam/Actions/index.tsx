@@ -8,10 +8,7 @@ import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioGroup } from 'components/shared/RadioField';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeState
-} from 'types/graphql-global-types';
+import { SystemIntakeState } from 'types/graphql-global-types';
 
 import NextStep from './NextStep';
 import RequestEdits from './RequestEdits';
@@ -74,7 +71,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
     subPage?: string;
   }>();
 
-  const { state, decisionState } = systemIntake;
+  const { state, decisionState, lcidStatus } = systemIntake;
 
   const { control, watch, handleSubmit } = useForm<{ actionRoute: string }>();
   const actionRoute = watch('actionRoute');
@@ -171,14 +168,15 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
                       {
                         /* Manage LCID */
-                        decisionState ===
-                          SystemIntakeDecisionState.LCID_ISSUED && (
+                        lcidStatus && (
                           <ActionRadioOption
                             {...fieldProps}
                             value="manage-lcid"
                             label={t('manageLcid.title')}
                             description={t('manageLcid.description')}
-                            accordionText={t('manageLcid.accordion')}
+                            accordionText={t('manageLcid.accordion', {
+                              context: lcidStatus
+                            })}
                           />
                         )
                       }
