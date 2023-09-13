@@ -15,6 +15,9 @@ export interface AddGRTFeedbackProgressToFinal_addGRTFeedbackAndProgressToFinalB
 }
 
 export interface AddGRTFeedbackProgressToFinal {
+  /**
+   * Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
+   */
   addGRTFeedbackAndProgressToFinalBusinessCase: AddGRTFeedbackProgressToFinal_addGRTFeedbackAndProgressToFinalBusinessCase | null;
 }
 

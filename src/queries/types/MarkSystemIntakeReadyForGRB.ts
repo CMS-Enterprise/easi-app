@@ -15,6 +15,9 @@ export interface MarkSystemIntakeReadyForGRB_markSystemIntakeReadyForGRB {
 }
 
 export interface MarkSystemIntakeReadyForGRB {
+  /**
+   * Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
+   */
   markSystemIntakeReadyForGRB: MarkSystemIntakeReadyForGRB_markSystemIntakeReadyForGRB | null;
 }
 

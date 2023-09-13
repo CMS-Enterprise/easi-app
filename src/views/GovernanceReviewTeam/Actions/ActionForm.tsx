@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Form, FormGroup } from '@trussworks/react-uswds';
+import { useHistory } from 'react-router-dom';
+import {
+  Button,
+  ButtonGroup,
+  Form,
+  FormGroup,
+  ModalFooter,
+  ModalHeading
+} from '@trussworks/react-uswds';
 
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
+import useMessage from 'hooks/useMessage';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
@@ -24,15 +34,23 @@ export interface SystemIntakeActionFields {
   notificationRecipients: EmailNotificationRecipients;
 }
 
-type ActionFormProps = {
+export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   systemIntakeId: string;
   title?: string;
   description?: string;
   breadcrumb?: string;
+  /** Success message to display on admin actions page after submission */
+  successMessage: string;
+  /** Submit function runs after field validation passes */
+  onSubmit: (formData: TFieldValues) => Promise<void>;
+  /** Optional confirmation modal title and content */
+  modal?: {
+    title: string;
+    content: React.ReactNode;
+  };
   children?: React.ReactNode;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   className?: string;
-} & JSX.IntrinsicElements['form'];
+} & Omit<JSX.IntrinsicElements['form'], 'onSubmit'>;
 
 /**
  * Form wrapper for IT Gov admin actions
@@ -41,18 +59,25 @@ type ActionFormProps = {
  *
  * Common fields: additional information, notification recipients, and admin note
  *
+ * Note: component cannot be used outside of React Hook Form's `FormProvider` component
  */
-const ActionForm = ({
+const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   systemIntakeId,
   title,
   description,
-  children,
   breadcrumb,
+  successMessage,
   onSubmit,
+  modal,
+  children,
   className,
   ...formProps
-}: ActionFormProps) => {
+}: ActionFormProps<TFieldValues>) => {
   const { t } = useTranslation('action');
+  const history = useHistory();
+  const { showMessageOnNextPage } = useMessage();
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const {
     contacts: { data: contacts }
@@ -71,8 +96,33 @@ const ActionForm = ({
     setValue,
     watch,
     reset,
-    formState: { isSubmitting, defaultValues }
+    handleSubmit,
+    setError,
+    formState: { isSubmitting, defaultValues, errors }
   } = useFormContext<SystemIntakeActionFields>();
+
+  /** Execute `onSubmit` prop with success and error handling */
+  const completeAction = (formData: TFieldValues) =>
+    onSubmit(formData)
+      .then(() => {
+        // Display success message
+        showMessageOnNextPage(t(successMessage), { type: 'success' });
+        history.push(`/governance-review-team/${systemIntakeId}/actions`);
+      })
+      .catch(() => {
+        setModalIsOpen(false);
+        setError('root', { message: t('error') });
+      });
+
+  /** Handles form validation and either completes action or triggers confirmation modal (if `modal` prop is defined) */
+  const submitForm = handleSubmit(formData => {
+    // If form validation passes, check for `modal` prop
+    if (modal) {
+      setModalIsOpen(true);
+    } else {
+      completeAction(formData as TFieldValues);
+    }
+  });
 
   // Set default form values
   useEffect(() => {
@@ -93,6 +143,16 @@ const ActionForm = ({
       setIsLoading(false);
     }
   }, [requester, defaultValues, isLoading, reset]);
+
+  const hasErrors: boolean = Object.keys(errors).length > 0;
+
+  // Scroll to error message
+  useEffect(() => {
+    if (hasErrors) {
+      const err = document.querySelector('.action-error');
+      err?.scrollIntoView();
+    }
+  }, [errors, hasErrors]);
 
   if (isLoading) return null;
 
@@ -117,6 +177,15 @@ const ActionForm = ({
         />
       )}
 
+      {
+        // Error message for server error
+        errors?.root?.message && (
+          <Alert type="error" className="action-error">
+            {errors.root.message}
+          </Alert>
+        )
+      }
+
       {title && <PageHeading className="margin-bottom-0">{title}</PageHeading>}
       {description && (
         <p className="line-height-body-5 font-body-lg text-light margin-0">
@@ -133,7 +202,7 @@ const ActionForm = ({
 
       <Form
         {...formProps}
-        onSubmit={onSubmit}
+        onSubmit={submitForm}
         className="maxw-none margin-top-6 tablet:grid-col-6"
       >
         {children}
@@ -177,7 +246,7 @@ const ActionForm = ({
           contacts={contacts}
           recipients={recipients}
           setRecipients={values => setValue('notificationRecipients', values)}
-          error=""
+          error={errors.notificationRecipients?.message || ''}
         />
 
         {/* Admin note */}
@@ -207,18 +276,44 @@ const ActionForm = ({
           )}
         />
 
+        {modal && (
+          <Modal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)}>
+            <ModalHeading>{t(modal.title)}</ModalHeading>
+            {modal.content}
+            <ModalFooter>
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  onClick={() => completeAction(watch() as TFieldValues)}
+                  className="margin-right-1"
+                >
+                  {t('completeAction')}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => setModalIsOpen(false)}
+                  unstyled
+                >
+                  Go back
+                </Button>
+              </ButtonGroup>
+            </ModalFooter>
+          </Modal>
+        )}
+
         <Pager
           // Complete action
           back={{
             text: t('completeAction'),
-            disabled: isSubmitting || !recipientsSelected,
-            outline: false
+            disabled: isSubmitting || !recipientsSelected || modalIsOpen,
+            outline: false,
+            type: 'submit'
           }}
           // Complete action without sending email
           next={{
             text: t('completeActionWithoutEmail'),
             outline: true,
-            disabled: isSubmitting,
+            disabled: isSubmitting || modalIsOpen,
             // Reset email recipients to prevent sending email
             onClick: () =>
               setValue('notificationRecipients', {
