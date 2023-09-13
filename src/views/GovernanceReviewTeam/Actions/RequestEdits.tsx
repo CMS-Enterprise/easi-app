@@ -37,7 +37,6 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
           content: (
             <Trans
               i18nKey="action:requestEdits.modal.content"
-              components={{ p: <p /> }}
               // TODO: Replace formName with value from "Which form needs edits" field
               values={{ formName: 'Draft Business Case' }}
             />
