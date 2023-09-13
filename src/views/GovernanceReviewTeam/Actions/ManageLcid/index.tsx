@@ -94,7 +94,7 @@ const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
           <Grid className="grid-row grid-gap margin-top-6">
             <Form
               onSubmit={handleSubmit(formData =>
-                history.push(`resolutions/${formData.resolution}`)
+                history.push(`manage-lcid/${formData.resolution}`)
               )}
               className="maxw-none margin-bottom-6 tablet:grid-col-6"
             >
