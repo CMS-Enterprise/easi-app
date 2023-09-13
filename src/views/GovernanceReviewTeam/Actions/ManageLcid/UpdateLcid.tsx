@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import ActionForm, { SystemIntakeActionFields } from '../ActionForm';
 
-const ManageLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
+const UpdateLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const form = useForm<SystemIntakeActionFields>();
 
   const { handleSubmit } = form;
@@ -19,4 +19,4 @@ const ManageLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default ManageLcid;
+export default UpdateLcid;
