@@ -46,7 +46,7 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   /** Optional confirmation modal title and content */
   modal?: {
     title: string;
-    content: string | React.ReactNode;
+    content: React.ReactNode;
   };
   children?: React.ReactNode;
   className?: string;
@@ -275,9 +275,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         {modal && (
           <Modal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)}>
             <ModalHeading>{t(modal.title)}</ModalHeading>
-            {typeof modal.content === 'string'
-              ? t(modal.content)
-              : modal.content}
+            {modal.content}
             <ModalFooter>
               <ButtonGroup>
                 <Button
