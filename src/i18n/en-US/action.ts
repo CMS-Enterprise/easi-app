@@ -75,6 +75,10 @@ const action = {
         'LCIDs will automatically expire when they reach their expiration date. Manually expiring an LCID will update the expiration date and set the status to “Expired”. Expired LCIDs are usually unplanned or unintended, and result in the project being added to the CIO risk register. This project team will continue to receive automatic notifications about their Life Cycle ID.'
     }
   },
+  titleBox: {
+    selected: 'Selected {{type}}',
+    change: 'Change {{type}}'
+  },
   resolutions: {
     title: 'Action: change decision or {{action}} request',
     title_NO_DECISION: 'Action: issue decision or {{action}} request',
@@ -114,9 +118,7 @@ const action = {
         'Choose this resolution if you need to re-open this request for any reason. You will be asked to provide any additional clarification on the next step of this action.'
     },
     confirmCurrentDecision: 'Confirm current decision ({{decision}})',
-    step: '(Step {{step}} of 2)',
-    selectedResolution: 'Selected resolution',
-    changeResolution: 'Change resolution'
+    step: '(Step {{step}} of 2)'
   },
   breadcrumb: 'Request {{systemIntakeId}}',
   fieldsMarkedRequired:
