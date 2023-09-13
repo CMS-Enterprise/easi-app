@@ -13,6 +13,7 @@ import {
   SystemIntakeDecisionState,
   SystemIntakeState
 } from 'types/graphql-global-types';
+import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
@@ -124,6 +125,11 @@ const Resolutions = ({
     // If decision is set, move to front of options
     return [decision, ...options.filter(option => option !== decision)];
   }, [decisionState, state]);
+
+  // Show page not found if resolution is not available
+  if (subPage && !decisionOptions.includes(subPage as ResolutionOption)) {
+    return <NotFound />;
+  }
 
   return (
     <div className="margin-bottom-10 padding-bottom-2">
