@@ -12,6 +12,7 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';
+import TitleBox from '../components/TitleBox';
 
 import ExpireLcid from './ExpireLcid';
 import RetireLcid from './RetireLcid';
@@ -64,6 +65,14 @@ const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
           {t('resolutions.step', { step: subPage ? 2 : 1 })}
         </p>
       </div>
+
+      {subPage && (
+        <TitleBox
+          systemIntakeId={systemIntakeId}
+          title={t(`manageLcid.${subPage}`)}
+          type="action"
+        />
+      )}
 
       <Switch>
         <Route path="/governance-review-team/:sytemId/manage-lcid/retire">
