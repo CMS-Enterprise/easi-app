@@ -10,6 +10,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
@@ -46,10 +47,8 @@ func ProgressIntake(
 		return nil, err
 	}
 
-	// All the different database calls aren't in a single atomic transaction;
-	// in the case of a system failure, some data from the action might be saved, but not all.
-	// As of this function's initial implementation, we're accepting that risk.
-	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+	// save intake, action, feedback, recommendations, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -160,6 +159,7 @@ func ProgressIntake(
 func CreateSystemIntakeActionRequestEdits(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeRequestEditsInput,
 ) (*models.SystemIntake, error) {
@@ -196,6 +196,9 @@ func CreateSystemIntakeActionRequestEdits(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
+	// save intake, action, feedback, admin note
+	// see Note [Database calls from resolvers aren't atomic]
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -213,7 +216,7 @@ func CreateSystemIntakeActionRequestEdits(
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Send Notification Email (EASI-3109)
+
 	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
 	govReqFeedback.CreatedBy = adminTakingAction.EuaUserID
@@ -234,6 +237,20 @@ func CreateSystemIntakeActionRequestEdits(
 		})
 		if err != nil {
 			return nil, err
+		}
+	}
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		err = emailClient.SystemIntake.SendRequestEditsNotification(ctx,
+			*input.NotificationRecipients,
+			intake.ID,
+			targetForm.Humanize(),
+			intake.ProjectName.ValueOrZero(),
+			intake.Requester,
+			input.EmailFeedback,
+			input.AdditionalInfo,
+		)
+		if err != nil {
+			return intake, err
 		}
 	}
 	return intake, nil
@@ -276,10 +293,8 @@ func RejectIntakeAsNotApproved(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
-	// All the different database calls aren't in a single atomic transaction;
-	// in the case of a system failure, some data from the action might be saved, but not all.
-	// As of this function's initial implementation, we're accepting that risk.
-	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+	// save intake, action, admin note
+	// See Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -390,10 +405,8 @@ func IssueLCID(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
-	// All the different database calls aren't in a single atomic transaction;
-	// in the case of a system failure, some data from the action might be saved, but not all.
-	// As of this function's initial implementation, we're accepting that risk.
-	// If we create a general way to wrap several store methods calls in a transaction later, we can use that.
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	errGroup := new(errgroup.Group)
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -483,6 +496,9 @@ func CreateSystemIntakeActionReopenRequest(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -541,6 +557,9 @@ func CreateSystemIntakeActionCloseRequest(
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
 
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
+
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -595,6 +614,9 @@ func CreateSystemIntakeActionNotITGovRequest(
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
+
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	intake, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
@@ -679,6 +701,9 @@ func UpdateLCID(
 	}
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
 
 	// save action (including additional info for email, if any)
 	errGroup := new(errgroup.Group)
@@ -775,11 +800,13 @@ func ConfirmLCID(ctx context.Context,
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
 
+	// save intake, action, admin note
+	// see Note [Database calls from resolvers aren't atomic]
+
 	errGroup := new(errgroup.Group)
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
 
-		action.ActionType = models.ActionTypeCONFIRMLCID
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
 		}
@@ -827,5 +854,118 @@ func ConfirmLCID(ctx context.Context,
 	}
 
 	return updatedIntake, nil
-
 }
+
+// ExpireLCID handles an Expire LCID action on an intake as part of Admin Actions v2
+func ExpireLCID(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeExpireLCIDInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	currentTime := time.Now()
+
+	err = lcidactions.IsIntakeValidToExpireLCID(intake, currentTime)
+	if err != nil {
+		return nil, err
+	}
+
+	// update intake
+
+	// set the expiration date's year/month/day based on current values, but leave the time as 00:00:00 (in UTC)
+	// matches the (v1) frontend logic for setting the expiration date:
+	// see src/views/GovernanceReviewTeam/ActionsV1/IssueLifecycleId.tsx, the definition of expiresAt
+	currentTimeUTC := currentTime.UTC()
+	expirationDate := time.Date(
+		currentTimeUTC.Year(),
+		currentTimeUTC.Month(),
+		currentTimeUTC.Day(),
+		0,
+		0,
+		0,
+		0,
+		time.UTC,
+	)
+
+	// create action record before updating intake, while we still have access to intake's previous expiration date/next step
+	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, *input.NextSteps, *adminUserInfo)
+
+	intake.LifecycleExpiresAt = &expirationDate
+	intake.DecisionNextSteps = input.NextSteps
+	// not currently persisting input.Reason
+	intake.UpdatedAt = &currentTime
+
+	// save intake, action, admin note
+	// See Note [Database calls from resolvers aren't atomic]
+
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional info for email, if any), using record returned from GetExpireLCIDAction()
+	errGroup.Go(func() error {
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
+}
+
+// Note [Database calls from resolvers aren't atomic]
+// All the different database calls in a resolver (saving the intake, action, admin note, etc.) aren't in a single atomic transaction;
+// in the case of a system failure, some data from the action might be saved, but not all.
+// We're currently accepting that risk, largely due to the difficulty of wrapping multiple store method calls in a single transaction.
+// If we create a general way to wrap several store methods calls in a transaction later, we can use that.

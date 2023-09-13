@@ -16,8 +16,11 @@ import (
 type HTML string
 
 // ToTemplate converts and sanitizes the HTML type to a template.HTML struct
-func (h HTML) ToTemplate() template.HTML {
-	sanitizedHTML := sanitization.SanitizeHTML(h)
+func (h *HTML) ToTemplate() template.HTML {
+	if h == nil {
+		return template.HTML("")
+	}
+	sanitizedHTML := sanitization.SanitizeHTML(*h)
 	return template.HTML(sanitizedHTML) //nolint //the html is sanitized again on the previous line so we can ignore the warning about
 }
 

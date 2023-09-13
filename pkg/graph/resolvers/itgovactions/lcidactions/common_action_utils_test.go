@@ -10,7 +10,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func TestGetUpdateLCIDAction(t *testing.T) {
+func TestGetBaseLCIDAction(t *testing.T) {
+
 	lcid := null.StringFrom("123456")
 	oldCostBaseline := null.StringFrom("$3")
 	newCostBaseline := "$2"
@@ -27,7 +28,7 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 		LifecycleCostBaseline: oldCostBaseline,
 		LifecycleExpiresAt:    &expirationDate,
 	}
-	action := GetUpdateLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo)
+	action := getBaseLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo)
 	assert.EqualValues(t, oldCostBaseline, action.LCIDExpirationChangePreviousCostBaseline)
 	assert.EqualValues(t, null.StringFrom(newCostBaseline), action.LCIDExpirationChangeNewCostBaseline)
 
@@ -36,21 +37,4 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 
 	assert.EqualValues(t, &nextSteps, action.LCIDExpirationChangeNewNextSteps)
 	assert.EqualValues(t, &newScope, action.LCIDExpirationChangeNewScope)
-
-	assert.EqualValues(t, models.ActionTypeUPDATELCID, action.ActionType)
-
-}
-
-func TestIsLCIDValidToUpdate(t *testing.T) {
-	intakeWithoutLCID := models.SystemIntake{}
-
-	err := IsLCIDValidToUpdate(&intakeWithoutLCID)
-	assert.Error(t, err)
-
-	intakeWithLCID := models.SystemIntake{
-		LifecycleID: null.StringFrom("123456"),
-	}
-
-	err2 := IsLCIDValidToUpdate(&intakeWithLCID)
-	assert.NoError(t, err2)
 }

@@ -11,6 +11,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -48,14 +50,15 @@ func TestResolverSuite(t *testing.T) {
 
 // TestConfigs is a struct that contains all the dependencies needed to run a test
 type TestConfigs struct {
-	DBConfig  storage.DBConfig
-	LDClient  *ld.LDClient
-	S3Client  *upload.S3Client
-	Logger    *zap.Logger
-	UserInfo  *models.UserInfo
-	Store     *storage.Store
-	Principal *authentication.EUAPrincipal
-	Context   context.Context
+	DBConfig    storage.DBConfig
+	LDClient    *ld.LDClient
+	S3Client    *upload.S3Client
+	Logger      *zap.Logger
+	UserInfo    *models.UserInfo
+	Store       *storage.Store
+	Principal   *authentication.EUAPrincipal
+	Context     context.Context
+	EmailClient *email.Client
 }
 
 // GetDefaultTestConfigs returns a TestConfigs struct with all the dependencies needed to run a test
@@ -91,6 +94,28 @@ func (tc *TestConfigs) GetDefaults() {
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
 	ctx = appcontext.WithPrincipal(ctx, tc.Principal)
 	tc.Context = ctx
+
+	emailClient := NewEmailClient()
+	tc.EmailClient = emailClient
+
+}
+
+func NewEmailClient() *email.Client {
+	config := testhelpers.NewConfig()
+	emailConfig := email.Config{
+		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
+		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:                config.GetString(appconfig.ClientHostKey),
+		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+	localSender := local.NewSender()
+
+	emailClient, _ := email.NewClient(emailConfig, localSender)
+	return &emailClient
 
 }
 

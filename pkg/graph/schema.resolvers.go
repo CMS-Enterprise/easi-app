@@ -1153,9 +1153,24 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 	intake, err := resolvers.CreateSystemIntakeActionRequestEdits(
 		ctx,
 		r.store,
+		r.emailClient,
 		r.service.FetchUserInfo,
 		input,
 	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+// CreateSystemIntakeActionExpireLcid is the resolver for the createSystemIntakeActionExpireLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Context, input model.SystemIntakeExpireLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.ExpireLCID(
+		ctx,
+		r.store,
+		r.service.FetchUserInfo,
+		input,
+	)
+
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
@@ -2945,6 +2960,11 @@ func (r *systemIntakeResolver) StatusRequester(ctx context.Context, obj *models.
 // StatusAdmin is the resolver for the statusAdmin field.
 func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
 	return resolvers.CalculateSystemIntakeAdminStatus(obj)
+}
+
+// LcidStatus is the resolver for the lcidStatus field.
+func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeLCIDStatus, error) {
+	return resolvers.CalculateSystemIntakeLCIDStatus(obj, time.Now()), nil
 }
 
 // DocumentType is the resolver for the documentType field.
