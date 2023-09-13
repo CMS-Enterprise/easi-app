@@ -11,7 +11,7 @@ import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import ActionsSummary from './components/ActionsSummary';
+import ActionsSummary from '../components/ActionsSummary';
 
 type ManageLcidProps = {
   systemIntakeId: string;
