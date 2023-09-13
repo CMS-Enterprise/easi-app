@@ -8,7 +8,7 @@ import {
   SystemIntakeState
 } from 'types/graphql-global-types';
 
-import Resolutions from './Resolutions';
+import Resolutions from '.';
 
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
 

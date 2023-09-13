@@ -2,7 +2,7 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 
 interface NextStepFields extends SystemIntakeActionFields {}
 

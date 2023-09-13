@@ -1,25 +1,25 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-interface CloseRequestFields extends SystemIntakeActionFields {}
+interface NotGovernanceFields extends SystemIntakeActionFields {}
 
-const CloseRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const form = useForm<CloseRequestFields>();
+const NotGovernance = ({ systemIntakeId }: { systemIntakeId: string }) => {
+  const form = useForm<NotGovernanceFields>();
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: CloseRequestFields) => {
+  const onSubmit = async (formData: NotGovernanceFields) => {
     // Execute mutation here
     // mutate(formData);
   };
 
   return (
-    <FormProvider<CloseRequestFields> {...form}>
+    <FormProvider<NotGovernanceFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
         successMessage=""
@@ -31,4 +31,4 @@ const CloseRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default CloseRequest;
+export default NotGovernance;

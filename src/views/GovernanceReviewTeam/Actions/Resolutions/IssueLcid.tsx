@@ -1,25 +1,25 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-interface NotApprovedFields extends SystemIntakeActionFields {}
+interface IssueLcidFields extends SystemIntakeActionFields {}
 
-const NotApproved = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const form = useForm<NotApprovedFields>();
+const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
+  const form = useForm<IssueLcidFields>();
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: NotApprovedFields) => {
+  const onSubmit = async (formData: IssueLcidFields) => {
     // Execute mutation here
     // mutate(formData);
   };
 
   return (
-    <FormProvider<NotApprovedFields> {...form}>
+    <FormProvider<IssueLcidFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
         successMessage=""
@@ -31,4 +31,4 @@ const NotApproved = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default NotApproved;
+export default IssueLcid;

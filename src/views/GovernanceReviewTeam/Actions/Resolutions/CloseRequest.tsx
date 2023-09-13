@@ -1,25 +1,25 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-interface IssueLcidFields extends SystemIntakeActionFields {}
+interface CloseRequestFields extends SystemIntakeActionFields {}
 
-const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const form = useForm<IssueLcidFields>();
+const CloseRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
+  const form = useForm<CloseRequestFields>();
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: IssueLcidFields) => {
+  const onSubmit = async (formData: CloseRequestFields) => {
     // Execute mutation here
     // mutate(formData);
   };
 
   return (
-    <FormProvider<IssueLcidFields> {...form}>
+    <FormProvider<CloseRequestFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
         successMessage=""
@@ -31,4 +31,4 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default IssueLcid;
+export default CloseRequest;

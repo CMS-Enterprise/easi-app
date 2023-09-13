@@ -1,25 +1,25 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-interface ReopenRequestFields extends SystemIntakeActionFields {}
+interface NotApprovedFields extends SystemIntakeActionFields {}
 
-const ReopenRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const form = useForm<ReopenRequestFields>();
+const NotApproved = ({ systemIntakeId }: { systemIntakeId: string }) => {
+  const form = useForm<NotApprovedFields>();
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: ReopenRequestFields) => {
+  const onSubmit = async (formData: NotApprovedFields) => {
     // Execute mutation here
     // mutate(formData);
   };
 
   return (
-    <FormProvider<ReopenRequestFields> {...form}>
+    <FormProvider<NotApprovedFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
         successMessage=""
@@ -31,4 +31,4 @@ const ReopenRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default ReopenRequest;
+export default NotApproved;

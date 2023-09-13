@@ -17,8 +17,9 @@ import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import ActionsSummary from './components/ActionsSummary';
-import TitleBox from './components/TitleBox';
+import ActionsSummary from '../components/ActionsSummary';
+import TitleBox from '../components/TitleBox';
+
 import CloseRequest from './CloseRequest';
 import IssueLcid from './IssueLcid';
 import NotApproved from './NotApproved';
