@@ -8,6 +8,7 @@ import PageHeading from 'components/PageHeading';
 import Label from 'components/shared/Label';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
@@ -41,6 +42,11 @@ const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
   }>();
 
   const actionOptions = ['retire', 'update', 'expire'];
+
+  // Show page not found if action is not available
+  if (subPage && !actionOptions.includes(subPage)) {
+    return <NotFound />;
+  }
 
   return (
     <div className="margin-bottom-10 padding-bottom-2">
