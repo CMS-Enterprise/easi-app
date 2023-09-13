@@ -8,6 +8,7 @@ import PageHeading from 'components/PageHeading';
 import Label from 'components/shared/Label';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
@@ -21,11 +22,12 @@ import UpdateLcid from './UpdateLcid';
 
 type ManageLcidProps = {
   systemIntakeId: string;
+  lcidStatus: SystemIntakeLCIDStatus | null;
 };
 
 type LcidAction = 'update' | 'retire' | 'expire';
 
-const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
+const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
@@ -93,9 +95,8 @@ const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
 
         <Route path="/governance-review-team/:sytemId/manage-lcid">
           <p className="line-height-body-5 font-body-lg text-light margin-0">
-            {/* TODO: dynamic description */}
             {t('manageLcid.description', {
-              // context: SystemIntakeLCIDStatus
+              context: lcidStatus
             })}
           </p>
 
