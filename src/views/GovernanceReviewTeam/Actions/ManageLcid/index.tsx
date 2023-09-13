@@ -44,6 +44,8 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
   }>();
 
   const actionOptions = useMemo(() => {
+    if (!lcidStatus) return [];
+
     const options = ['retire', 'update'];
 
     if (lcidStatus === SystemIntakeLCIDStatus.ISSUED) {
@@ -53,8 +55,8 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
     return options;
   }, [lcidStatus]);
 
-  // Show page not found if action is not available
-  if (subPage && !actionOptions.includes(subPage)) {
+  // Show page not found if no LCID or action is not available
+  if (!lcidStatus || (subPage && !actionOptions.includes(subPage))) {
     return <NotFound />;
   }
 
