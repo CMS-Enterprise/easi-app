@@ -228,6 +228,15 @@ export enum SystemIntakeDocumentStatus {
 }
 
 /**
+ * The possible statuses that an issued LCID can be in
+ */
+export enum SystemIntakeLCIDStatus {
+  EXPIRED = "EXPIRED",
+  ISSUED = "ISSUED",
+  RETIRED = "RETIRED",
+}
+
+/**
  * The type of an IT governance (system) request
  */
 export enum SystemIntakeRequestType {

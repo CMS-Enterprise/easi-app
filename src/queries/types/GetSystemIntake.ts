@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GRTFeedbackType, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState } from "./../../types/graphql-global-types";
+import { GRTFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntake
@@ -143,6 +143,10 @@ export interface GetSystemIntake_systemIntake {
   lcidExpiresAt: Time | null;
   lcidScope: HTML | null;
   lcidCostBaseline: string | null;
+  /**
+   * Intentionally nullable - lcidStatus is null if (and only if) the intake doesn't have an LCID issued
+   */
+  lcidStatus: SystemIntakeLCIDStatus | null;
   needsEaSupport: boolean | null;
   productManager: GetSystemIntake_systemIntake_productManager;
   rejectionReason: HTML | null;
