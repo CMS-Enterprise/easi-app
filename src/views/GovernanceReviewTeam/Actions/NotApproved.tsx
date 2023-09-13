@@ -1,33 +1,27 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import ActionForm, { SystemIntakeActionFields } from './ActionForm';
 
-interface SubmitDecisionFields extends SystemIntakeActionFields {}
+interface NotApprovedFields extends SystemIntakeActionFields {}
 
-const SubmitDecision = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const { t } = useTranslation('action');
-
-  const form = useForm<SubmitDecisionFields>();
+const NotApproved = ({ systemIntakeId }: { systemIntakeId: string }) => {
+  const form = useForm<NotApprovedFields>();
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: SubmitDecisionFields) => {
+  const onSubmit = async (formData: NotApprovedFields) => {
     // Execute mutation here
     // mutate(formData);
   };
 
   return (
-    <FormProvider<SubmitDecisionFields> {...form}>
+    <FormProvider<NotApprovedFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        title={t('decision.title')}
-        description=""
-        breadcrumb=""
         successMessage=""
         onSubmit={onSubmit}
       >
@@ -37,4 +31,4 @@ const SubmitDecision = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default SubmitDecision;
+export default NotApproved;
