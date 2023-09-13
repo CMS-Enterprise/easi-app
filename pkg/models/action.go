@@ -13,6 +13,7 @@ type ActionType string
 // IT Gov v2 actions
 const (
 	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
+	ActionTypeEXPIRELCID        ActionType = "EXPIRE_LCID"
 	ActionTypeUPDATELCID        ActionType = "UPDATE_LCID"
 	ActionTypeCONFIRMLCID       ActionType = "CONFIRM_LCID"
 	ActionTypeREQUESTEDITS      ActionType = "REQUEST_EDITS"
