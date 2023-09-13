@@ -50,6 +50,27 @@ const action = {
         'Use this action if you want to change the decision for this request or if you would like to re-open it. You will be able to select the new resolution for this request.'
     }
   },
+  manageLcid: {
+    title: 'Manage a Life Cycle ID (LCID)',
+    breadcrumb: 'Manage a Life Cycle ID',
+    description:
+      'Update the status or details of a previously-issued Life Cycle ID by expiring it, retiring it, or updating it (update the expiration date, scope, next steps, or project cost baseline).',
+    retire: 'Retire a Life Cycle ID',
+    update: 'Update a Life Cycle ID',
+    expire: 'Expire a Life Cycle ID',
+    summary: {
+      title: 'Available LCID actions',
+      retire: 'Retire',
+      retireDescription:
+        'LCIDs should be retired if they are no longer in use for a planned reason, such as the issuance of a new LCID, the decommissioning of a system, or other known reason. Retired LCIDs do not need to be added to the CIO risk register. This project team will no longer receive automatic notifications about their Life Cycle ID.',
+      update: 'Update',
+      updateDescription:
+        'LCIDs may be updated if there is an approved change to the details, such as an extension of the expiration date, a change to the scope, or similar.',
+      expire: 'Expire',
+      expireDescription:
+        'LCIDs will automatically expire when they reach their expiration date. Manually expiring an LCID will update the expiration date and set the status to “Expired”. Expired LCIDs are usually unplanned or unintended, and result in the project being added to the CIO risk register. This project team will continue to receive automatic notifications about their Life Cycle ID.'
+    }
+  },
   resolutions: {
     title: 'Action: change decision or {{action}} request',
     title_NO_DECISION: 'Action: issue decision or {{action}} request',

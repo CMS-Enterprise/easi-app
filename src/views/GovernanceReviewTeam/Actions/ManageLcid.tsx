@@ -1,11 +1,140 @@
 import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Trans, useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router-dom';
+import { Form, Grid } from '@trussworks/react-uswds';
+
+import PageHeading from 'components/PageHeading';
+import Label from 'components/shared/Label';
+import { RadioField, RadioGroup } from 'components/shared/RadioField';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+import ActionsSummary from './components/ActionsSummary';
 
 type ManageLcidProps = {
   systemIntakeId: string;
 };
 
+type LcidAction = 'update' | 'retire' | 'expire';
+
 const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
-  return <div />;
+  const { t } = useTranslation('action');
+  const history = useHistory();
+
+  const { subPage } = useParams<{
+    subPage?: string;
+  }>();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isDirty }
+  } = useForm<{
+    resolution: LcidAction;
+  }>();
+
+  const actionOptions = ['retire', 'update', 'expire'];
+
+  return (
+    <div className="margin-bottom-10 padding-bottom-2">
+      <Breadcrumbs
+        items={[
+          { text: t('Home'), url: '/' },
+          {
+            text: t('resolutions.requestDetails'),
+            url: `/governance-review-team/${systemIntakeId}/intake-request`
+          },
+          {
+            text: t('manageLcid.breadcrumb')
+          }
+        ]}
+      />
+
+      <div className="desktop:display-flex desktop:flex-align-end">
+        <PageHeading className="margin-bottom-0">
+          {t('manageLcid.title')}
+        </PageHeading>
+        <p className="font-body-lg text-base margin-bottom-05 margin-y-1 desktop:margin-left-2 desktop:margin-bottom-05">
+          {t('resolutions.step', { step: subPage ? 2 : 1 })}
+        </p>
+      </div>
+
+      <p className="line-height-body-5 font-body-lg text-light margin-0">
+        {/* TODO: dynamic description */}
+        {t('manageLcid.description')}
+      </p>
+
+      <p className="margin-top-1 text-base">
+        <Trans
+          i18nKey="action:fieldsMarkedRequired"
+          components={{ asterisk: <RequiredAsterisk /> }}
+        />
+      </p>
+
+      <Grid className="grid-row grid-gap margin-top-6">
+        <Form
+          onSubmit={handleSubmit(formData =>
+            history.push(`resolutions/${formData.resolution}`)
+          )}
+          className="maxw-none margin-bottom-6 tablet:grid-col-6"
+        >
+          <Controller
+            name="resolution"
+            control={control}
+            render={({ field: { ref, ...field } }) => {
+              return (
+                <RadioGroup>
+                  <Label
+                    htmlFor="resolution"
+                    className="text-normal margin-top-0"
+                    required
+                  >
+                    {t('resolutions.label')}
+                  </Label>
+
+                  {actionOptions.map(action => (
+                    <RadioField
+                      {...field}
+                      value={action}
+                      checked={field.value === action}
+                      label={t(`manageLcid.${action}`)}
+                      id={`grt-lcid-action__${action}`}
+                    />
+                  ))}
+                </RadioGroup>
+              );
+            }}
+          />
+
+          <Pager
+            next={{
+              type: 'submit',
+              disabled: !isDirty
+            }}
+            saveExitText={t('cancelAction')}
+            taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
+            className="margin-top-6"
+            border={false}
+            submitDisabled
+          />
+        </Form>
+
+        <Grid className="tablet:grid-col-6">
+          <ActionsSummary
+            heading={t('manageLcid.summary.title')}
+            items={actionOptions.map(action => {
+              return {
+                title: t(`action:manageLcid.summary.${action}`),
+                description: t(`action:manageLcid.summary.${action}Description`)
+              };
+            })}
+          />
+        </Grid>
+      </Grid>
+    </div>
+  );
 };
 
 export default ManageLcid;
