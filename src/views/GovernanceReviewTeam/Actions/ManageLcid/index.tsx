@@ -130,6 +130,7 @@ const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
                       {actionOptions.map(action => (
                         <RadioField
                           {...field}
+                          key={action}
                           value={action}
                           checked={field.value === action}
                           label={t(`manageLcid.${action}`)}
