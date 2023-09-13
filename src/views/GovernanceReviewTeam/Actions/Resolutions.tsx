@@ -166,7 +166,7 @@ const Resolutions = ({
         <Route path="/governance-review-team/:systemId/resolutions/issue-lcid">
           <IssueLcid systemIntakeId={systemIntakeId} />
         </Route>
-        <Route path="/governance-review-team/:systemId/resolutions/not-it-gov">
+        <Route path="/governance-review-team/:systemId/resolutions/not-it-request">
           <NotGovernance systemIntakeId={systemIntakeId} />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/not-approved">
