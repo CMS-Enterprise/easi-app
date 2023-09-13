@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SystemDetails subpage for System Profile matches snapshot 1`] = `
+exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="easi-section easi-section__border-bottom padding-bottom-4"

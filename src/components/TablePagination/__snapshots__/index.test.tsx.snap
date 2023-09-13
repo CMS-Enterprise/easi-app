@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TablePagination render previous and next buttons 1`] = `
+exports[`TablePagination > render previous and next buttons 1`] = `
 <DocumentFragment>
   <nav
     aria-label="Pagination"

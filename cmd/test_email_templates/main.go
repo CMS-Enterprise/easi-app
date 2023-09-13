@@ -155,4 +155,20 @@ func main() {
 	client := createEmailClient()
 
 	sendTRBEmails(ctx, &client)
+
+	sendITGovEmails(ctx, &client)
+}
+
+func sendITGovEmails(ctx context.Context, client *email.Client) {
+	intakeID := uuid.New()
+	requesterEmail := models.NewEmailAddress("TEST@local.fake")
+	emailNotificationRecipients := models.EmailNotificationRecipients{
+		RegularRecipientEmails:   []models.EmailAddress{requesterEmail},
+		ShouldNotifyITGovernance: false,
+		ShouldNotifyITInvestment: false,
+	}
+	additionalInfo := models.HTMLPointer("Here is additional info <ul><li>fill out the form again</li><li>fill it out better than the first time</li></ul>")
+
+	err := client.SystemIntake.SendRequestEditsNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Form Update Initiative", "Mr. Good Bar", " <strong> Great Job! </strong>", additionalInfo)
+	noErr(err)
 }

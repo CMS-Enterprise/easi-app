@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Submit Action renders additional contacts 1`] = `
+exports[`Submit Action > renders additional contacts 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content easi-grt"

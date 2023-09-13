@@ -29,7 +29,11 @@ export default function CsvDownloadLink({
   ...props
 }: CsvLinkProps) {
   return (
-    <CSVLink className={classnames('usa-link', className)} {...props}>
+    <CSVLink
+      className={classnames('usa-link', className)}
+      role="link"
+      {...props}
+    >
       <IconFileDownload className="text-middle margin-right-1" />
       {children}
     </CSVLink>

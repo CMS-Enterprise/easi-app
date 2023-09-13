@@ -59,7 +59,7 @@ const createTrbAdminNoteQuery: MockedQuery<
 };
 
 describe('Trb Admin Notes: Add Note', () => {
-  Element.prototype.scrollIntoView = jest.fn();
+  Element.prototype.scrollIntoView = vi.fn();
 
   const store = easiMockStore();
 

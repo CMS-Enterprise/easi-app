@@ -5,7 +5,7 @@ import { call, put, StrictEffect, takeLatest } from 'redux-saga/effects';
 import { fetchSystemIntakes } from 'types/routines';
 
 function getSystemIntakesRequest(status: string | null) {
-  let route = `${process.env.REACT_APP_API_ADDRESS}/system_intakes`;
+  let route = `${import.meta.env.VITE_API_ADDRESS}/system_intakes`;
   if (status) {
     route = `${route}?status=${status}`;
   }

@@ -11,7 +11,7 @@ import {
 } from 'types/routines';
 
 function getBusinessCaseRequest(id: string) {
-  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/business_case/${id}`);
+  return axios.get(`${import.meta.env.VITE_API_ADDRESS}/business_case/${id}`);
 }
 
 function* getBusinessCase(
@@ -30,7 +30,7 @@ function* getBusinessCase(
 
 function postBusinessCaseRequest(formData: BusinessCaseModel) {
   const data = prepareBusinessCaseForApi(formData);
-  return axios.post(`${process.env.REACT_APP_API_ADDRESS}/business_case`, data);
+  return axios.post(`${import.meta.env.VITE_API_ADDRESS}/business_case`, data);
 }
 
 function* createBusinessCase(
@@ -50,7 +50,7 @@ function* createBusinessCase(
 function putBusinessCaseRequest(formData: BusinessCaseModel) {
   const data = prepareBusinessCaseForApi(formData);
   return axios.put(
-    `${process.env.REACT_APP_API_ADDRESS}/business_case/${data.id}`,
+    `${import.meta.env.VITE_API_ADDRESS}/business_case/${data.id}`,
     data
   );
 }

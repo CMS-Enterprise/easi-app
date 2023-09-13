@@ -435,12 +435,12 @@ namespace :test do
 
   desc "Run JS tests (pass path to scope to that location)"
   task :js => :consume_args do |t, args|
-    sh "yarn", "run", "craco", "test", "--watchAll=false", *args
+    sh "yarn", "run", "test", *args
   end
   namespace :js do
     desc "Run JS tests with a matching name (pass needle as additional option)"
     task :named => :consume_args do |t, args|
-      sh "yarn", "run", "craco", "test", "--watchAll=false", "-t", *args
+      sh "yarn", "run", "test", "-t", *args
     end
   end
 end
@@ -464,6 +464,11 @@ end
 desc "Run all linters and checks managed by pre-commit"
 task :lint do
   sh "pre-commit run -a"
+end
+
+desc "Send a test email of all the email templates"
+task :email do
+  sh "go run cmd/test_email_templates/*.go"
 end
 
 begin

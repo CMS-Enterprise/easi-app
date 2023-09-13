@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
+exports[`The governance overview page > matches the snapshot (w/ id param) 1`] = `
 <main
   className="easi-main-content easi-governance-overview grid-container margin-bottom-2"
   data-testid="governance-overview"
@@ -314,7 +314,7 @@ exports[`The governance overview page matches the snapshot (w/ id param) 1`] = `
 </main>
 `;
 
-exports[`The governance overview page matches the snapshot (w/o id param) 1`] = `
+exports[`The governance overview page > matches the snapshot (w/o id param) 1`] = `
 <main
   className="easi-main-content easi-governance-overview grid-container margin-bottom-2"
   data-testid="governance-overview"
