@@ -8275,6 +8275,9 @@ type SystemIntake {
   decisionState: SystemIntakeDecisionState!
   statusRequester: SystemIntakeStatusRequester!
   statusAdmin: SystemIntakeStatusAdmin!
+  """
+  Intentionally nullable - lcidStatus is null if (and only if) the intake doesn't have an LCID issued
+  """
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
 }
