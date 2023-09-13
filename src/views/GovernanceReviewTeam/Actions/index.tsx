@@ -187,10 +187,13 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           {...fieldProps}
                           value="manage-lcid"
                           label={t('manageLcid.title')}
-                          description={t('manageLcid.description')}
-                          accordionText={t('manageLcid.accordion', {
-                            context: lcidStatus
-                          })}
+                          description={t('chooseAction.manageLcid.description')}
+                          accordionText={t(
+                            'chooseAction.manageLcid.accordion',
+                            {
+                              context: lcidStatus
+                            }
+                          )}
                         />
                       )
                     }
