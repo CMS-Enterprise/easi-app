@@ -3,16 +3,28 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import ActionForm, { SystemIntakeActionFields } from '../ActionForm';
 
+interface UpdateLcidFields extends SystemIntakeActionFields {}
+
 const UpdateLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const form = useForm<SystemIntakeActionFields>();
+  const form = useForm<UpdateLcidFields>();
 
-  const { handleSubmit } = form;
-
-  const submit = handleSubmit(() => null);
+  /**
+   * Submit handler containing mutation logic
+   *
+   * Error and success handling is done in `<ActionForm>`
+   */
+  const onSubmit = async (formData: UpdateLcidFields) => {
+    // Execute mutation here
+    // mutate(formData);
+  };
 
   return (
-    <FormProvider<SystemIntakeActionFields> {...form}>
-      <ActionForm systemIntakeId={systemIntakeId} onSubmit={submit}>
+    <FormProvider<UpdateLcidFields> {...form}>
+      <ActionForm
+        systemIntakeId={systemIntakeId}
+        successMessage=""
+        onSubmit={onSubmit}
+      >
         {/* Action fields here */}
       </ActionForm>
     </FormProvider>
