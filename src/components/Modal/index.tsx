@@ -34,6 +34,8 @@ const Modal = ({
     }
   };
 
+  const root = document.getElementById('root');
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -44,7 +46,7 @@ const Modal = ({
         },
         overlayClassName
       )}
-      className={classNames('easi-modal__content', {
+      className={classNames('easi-modal__content outline-0', {
         [`easi-modal__align-${alignment}`]: !!alignment,
         'radius-md': !alignment
       })}
@@ -52,15 +54,17 @@ const Modal = ({
       onAfterClose={noScroll.off}
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
-      appElement={document.getElementById('root')!}
+      appElement={root!}
+      // Fix for "App element is not defined" unit test error
+      {...(root ? {} : { ariaHideApp: false })}
     >
       <button
         type="button"
-        className="easi-modal__x-button"
+        className="usa-button usa-modal__close margin-top-0"
         aria-label="Close Modal"
         onClick={closeModal}
       >
-        <IconClose size={3} />
+        <IconClose size={4} />
         {title && <h4 className="text-base margin-0 margin-left-1">{title}</h4>}
       </button>
       <div className="easi-modal__body">{children}</div>

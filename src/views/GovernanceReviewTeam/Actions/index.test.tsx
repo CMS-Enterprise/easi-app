@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import {
   getSystemIntakeContactsQuery,
@@ -8,6 +9,7 @@ import {
   requester,
   systemIntake
 } from 'data/mock/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
@@ -28,7 +30,9 @@ const renderActionPage = ({
         ]}
       >
         <Route path={[`/governance-review-team/:systemId/actions/:subPage?`]}>
-          <Actions systemIntake={systemIntake} />
+          <MessageProvider>
+            <Actions systemIntake={systemIntake} />
+          </MessageProvider>
         </Route>
       </MemoryRouter>
     </VerboseMockedProvider>
@@ -42,7 +46,9 @@ describe('IT Gov Actions', () => {
         initialEntries={[`/governance-review-team/${systemIntake.id}/actions`]}
       >
         <Route path={[`/governance-review-team/:systemId/actions/:action?`]}>
-          <Actions systemIntake={systemIntake} />
+          <MessageProvider>
+            <Actions systemIntake={systemIntake} />
+          </MessageProvider>
         </Route>
       </MemoryRouter>
     );
@@ -84,5 +90,13 @@ describe('IT Gov Actions', () => {
         name: `${requester.commonName}, ${requester.component} (Requester)`
       })
     ).toBeChecked();
+
+    // Modal should trigger on submit
+    userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
+    expect(
+      await screen.findByText(
+        'Are you sure you want to complete this action to request edits?'
+      )
+    ).toBeInTheDocument();
   });
 });

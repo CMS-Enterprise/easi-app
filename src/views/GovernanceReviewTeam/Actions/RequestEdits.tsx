@@ -1,26 +1,48 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+
+interface RequestEditsFields extends SystemIntakeActionFields {}
 
 const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
 
-  const form = useForm<SystemIntakeActionFields>();
+  const form = useForm<RequestEditsFields>();
 
-  const { handleSubmit } = form;
-
-  const submit = handleSubmit(() => null);
+  /**
+   * Submit handler containing mutation logic
+   *
+   * Error and success handling is done in `<ActionForm>`
+   */
+  const onSubmit = async (formData: RequestEditsFields) => {
+    // Execute mutation here
+    // mutate(formData);
+    //
+    // Uncomment to test error message
+    // throw new Error();
+  };
 
   return (
-    <FormProvider<SystemIntakeActionFields> {...form}>
+    <FormProvider<RequestEditsFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
         title={t('requestEdits.title')}
         description={t('requestEdits.description')}
         breadcrumb={t('requestEdits.breadcrumb')}
-        onSubmit={submit}
+        successMessage={t('requestEdits.success')}
+        modal={{
+          title: t('requestEdits.modal.title'),
+          content: (
+            <Trans
+              i18nKey="action:requestEdits.modal.content"
+              // TODO: Replace formName with value from "Which form needs edits" field
+              values={{ formName: 'Draft Business Case' }}
+            />
+          )
+        }}
+        onSubmit={onSubmit}
       >
         {/* Action fields here */}
       </ActionForm>

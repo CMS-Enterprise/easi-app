@@ -32,3 +32,5 @@ Range.prototype.getClientRects = () => ({
 });
 
 Document.prototype.elementFromPoint = (x: number, y: number) => null;
+
+window.scroll = vi.fn;

@@ -70,11 +70,19 @@ const action = {
   completeAction: 'Complete action',
   completeActionWithoutEmail: 'Complete action without email',
   cancelAction: 'Cancel action and return to request',
+  error:
+    'There was a problem completing your action. Please try again. If the error persists, please try again at a later date.',
   requestEdits: {
     breadcrumb: 'Request edits',
     title: 'Action: request edits',
     description:
-      'Use this action if there are changes that need to be made to the Intake Request or Business Case form in order to proceed with the governance process. Specify the edits or additional information needed from the requester.'
+      'Use this action if there are changes that need to be made to the Intake Request or Business Case form in order to proceed with the governance process. Specify the edits or additional information needed from the requester.',
+    success: 'You have requested edits to the Draft Business Case.',
+    modal: {
+      title: 'Are you sure you want to complete this action to request edits?',
+      content:
+        '<p>If you request changes to the {{formName}}, the requester will be able to make updates to any field within that form. While they are completing those changes, they will be unable to work on any other part of the process. You will receive an email notification once the requester has resubmitted their form.</p><p>If you progress this request to a new step before they have resubmitted their form, they will lose the ability to make the requested changes.</p>'
+    }
   },
   nextStep: {
     title: 'Action: next steps'
