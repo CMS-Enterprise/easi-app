@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Form, Grid } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
@@ -12,6 +12,10 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';
+
+import ExpireLcid from './ExpireLcid';
+import RetireLcid from './RetireLcid';
+import UpdateLcid from './UpdateLcid';
 
 type ManageLcidProps = {
   systemIntakeId: string;
@@ -61,80 +65,96 @@ const ManageLcid = ({ systemIntakeId }: ManageLcidProps) => {
         </p>
       </div>
 
-      <p className="line-height-body-5 font-body-lg text-light margin-0">
-        {/* TODO: dynamic description */}
-        {t('manageLcid.description', {
-          // context: SystemIntakeLCIDStatus
-        })}
-      </p>
+      <Switch>
+        <Route path="/governance-review-team/:sytemId/manage-lcid/retire">
+          <RetireLcid systemIntakeId={systemIntakeId} />
+        </Route>
+        <Route path="/governance-review-team/:sytemId/manage-lcid/update">
+          <UpdateLcid systemIntakeId={systemIntakeId} />
+        </Route>
+        <Route path="/governance-review-team/:sytemId/manage-lcid/expire">
+          <ExpireLcid systemIntakeId={systemIntakeId} />
+        </Route>
 
-      <p className="margin-top-1 text-base">
-        <Trans
-          i18nKey="action:fieldsMarkedRequired"
-          components={{ asterisk: <RequiredAsterisk /> }}
-        />
-      </p>
-
-      <Grid className="grid-row grid-gap margin-top-6">
-        <Form
-          onSubmit={handleSubmit(formData =>
-            history.push(`resolutions/${formData.resolution}`)
-          )}
-          className="maxw-none margin-bottom-6 tablet:grid-col-6"
-        >
-          <Controller
-            name="resolution"
-            control={control}
-            render={({ field: { ref, ...field } }) => {
-              return (
-                <RadioGroup>
-                  <Label
-                    htmlFor="resolution"
-                    className="text-normal margin-top-0"
-                    required
-                  >
-                    {t('resolutions.label')}
-                  </Label>
-
-                  {actionOptions.map(action => (
-                    <RadioField
-                      {...field}
-                      value={action}
-                      checked={field.value === action}
-                      label={t(`manageLcid.${action}`)}
-                      id={`grt-lcid-action__${action}`}
-                    />
-                  ))}
-                </RadioGroup>
-              );
-            }}
-          />
-
-          <Pager
-            next={{
-              type: 'submit',
-              disabled: !isDirty
-            }}
-            saveExitText={t('cancelAction')}
-            taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
-            className="margin-top-6"
-            border={false}
-            submitDisabled
-          />
-        </Form>
-
-        <Grid className="tablet:grid-col-6">
-          <ActionsSummary
-            heading={t('manageLcid.summary.title')}
-            items={actionOptions.map(action => {
-              return {
-                title: t(`action:manageLcid.summary.${action}`),
-                description: t(`action:manageLcid.summary.${action}Description`)
-              };
+        <Route path="/governance-review-team/:sytemId/manage-lcid">
+          <p className="line-height-body-5 font-body-lg text-light margin-0">
+            {/* TODO: dynamic description */}
+            {t('manageLcid.description', {
+              // context: SystemIntakeLCIDStatus
             })}
-          />
-        </Grid>
-      </Grid>
+          </p>
+
+          <p className="margin-top-1 text-base">
+            <Trans
+              i18nKey="action:fieldsMarkedRequired"
+              components={{ asterisk: <RequiredAsterisk /> }}
+            />
+          </p>
+
+          <Grid className="grid-row grid-gap margin-top-6">
+            <Form
+              onSubmit={handleSubmit(formData =>
+                history.push(`resolutions/${formData.resolution}`)
+              )}
+              className="maxw-none margin-bottom-6 tablet:grid-col-6"
+            >
+              <Controller
+                name="resolution"
+                control={control}
+                render={({ field: { ref, ...field } }) => {
+                  return (
+                    <RadioGroup>
+                      <Label
+                        htmlFor="resolution"
+                        className="text-normal margin-top-0"
+                        required
+                      >
+                        {t('resolutions.label')}
+                      </Label>
+
+                      {actionOptions.map(action => (
+                        <RadioField
+                          {...field}
+                          value={action}
+                          checked={field.value === action}
+                          label={t(`manageLcid.${action}`)}
+                          id={`grt-lcid-action__${action}`}
+                        />
+                      ))}
+                    </RadioGroup>
+                  );
+                }}
+              />
+
+              <Pager
+                next={{
+                  type: 'submit',
+                  disabled: !isDirty
+                }}
+                saveExitText={t('cancelAction')}
+                taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
+                className="margin-top-6"
+                border={false}
+                submitDisabled
+              />
+            </Form>
+
+            <Grid className="tablet:grid-col-6">
+              <ActionsSummary
+                heading={t('manageLcid.summary.title')}
+                items={actionOptions.map(action => {
+                  return {
+                    title: t(`action:manageLcid.summary.${action}`),
+                    description: t(
+                      `action:manageLcid.summary.${action}Description`
+                    )
+                  };
+                })}
+              />
+            </Grid>
+          </Grid>
+        </Route>
+      </Switch>
     </div>
   );
 };
