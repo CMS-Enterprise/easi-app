@@ -27,10 +27,9 @@ import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import EmailRecipientsFields from './EmailRecipientsFields';
 
-// TODO: update fields to match schema when backend work is completed
 export interface SystemIntakeActionFields {
-  additionalNotes: string;
-  adminNotes: string;
+  additionalInfo: string;
+  adminNote: string;
   notificationRecipients: EmailNotificationRecipients;
 }
 
@@ -129,8 +128,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     if (!!requester.euaUserId && isLoading) {
       reset(
         {
-          adminNotes: '',
-          additionalNotes: '',
+          adminNote: '',
+          additionalInfo: '',
           ...defaultValues,
           notificationRecipients: {
             shouldNotifyITGovernance: true,
