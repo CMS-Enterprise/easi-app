@@ -31,7 +31,6 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const form = useForm<RequestEditsFields>();
 
   const {
-    // handleSubmit,
     watch,
     control
     // formState: { errors }
@@ -103,7 +102,11 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
                   ref={null}
                 >
                   <option>- Select -</option>
-                  {Object.values(SystemIntakeFormStep).map(val => (
+                  {[
+                    SystemIntakeFormStep.INITIAL_REQUEST_FORM,
+                    SystemIntakeFormStep.DRAFT_BUSINESS_CASE,
+                    SystemIntakeFormStep.FINAL_BUSINESS_CASE
+                  ].map(val => (
                     <option key={val} value={val}>
                       {t(`requestEdits.option.intakeFormStep.${val}`)}
                     </option>
