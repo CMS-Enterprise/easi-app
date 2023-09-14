@@ -22,3 +22,8 @@
 .usa-alert__heading {
     line-height: 1.6rem !important;
 }
+
+// Fixes error alerts hidden by sticky nav bar when using scrollIntoView()
+.usa-alert--error {
+    scroll-margin: 4rem;
+}

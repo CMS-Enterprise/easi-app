@@ -22,6 +22,9 @@ export interface RejectIntake_rejectIntake {
 }
 
 export interface RejectIntake {
+  /**
+   * Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionRejectIntake
+   */
   rejectIntake: RejectIntake_rejectIntake | null;
 }
 

@@ -15,6 +15,9 @@ export interface AddGRTFeedbackRequestBizCase_addGRTFeedbackAndRequestBusinessCa
 }
 
 export interface AddGRTFeedbackRequestBizCase {
+  /**
+   * Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
+   */
   addGRTFeedbackAndRequestBusinessCase: AddGRTFeedbackRequestBizCase_addGRTFeedbackAndRequestBusinessCase | null;
 }
 

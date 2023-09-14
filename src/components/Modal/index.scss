@@ -12,7 +12,7 @@
     z-index: 400;
   }
 
-  &__has-title .easi-modal__x-button svg {
+  &__has-title svg {
     color: color('primary');
   }
 
@@ -47,19 +47,6 @@
     right: 0;
     left: auto;
     transform: translate(0, -50%);
-  }
-
-  &__x-button {
-    display: block;
-    margin: 1rem 1rem 1rem auto;
-    padding: 0;
-    background: none;
-    border: 0;
-    color: color('black');
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 
   &__body {

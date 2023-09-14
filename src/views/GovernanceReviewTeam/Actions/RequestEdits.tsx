@@ -1,6 +1,6 @@
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import {
   Dropdown,
@@ -16,14 +16,14 @@ import {
   CreateSystemIntakeActionRequestEdits,
   CreateSystemIntakeActionRequestEditsVariables
 } from 'queries/types/CreateSystemIntakeActionRequestEdits';
-import {
-  SystemIntakeFormStep,
-  SystemIntakeRequestEditsInput
-} from 'types/graphql-global-types';
+import { SystemIntakeFormStep } from 'types/graphql-global-types';
 
-import ActionForm from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from './ActionForm';
 
-type RequestEditsFields = Omit<SystemIntakeRequestEditsInput, 'systemIntakeID'>;
+interface RequestEditsFields extends SystemIntakeActionFields {
+  intakeFormStep: SystemIntakeFormStep;
+  emailFeedback: string;
+}
 
 const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
@@ -31,14 +31,14 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const form = useForm<RequestEditsFields>();
 
   const {
-    handleSubmit,
+    // handleSubmit,
     control
     // formState: { errors }
   } = form;
 
   // console.debug(errors);
 
-  const submit = handleSubmit(formData => {
+  const submit = async (formData: RequestEditsFields) => {
     // const checkEmptyFields: Array<keyof RequestEditsFields> = [
     //   'adminNotes',
     //   'additionalInfo'
@@ -48,16 +48,10 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
     //   if (formData[fieldKey] === '') delete formData[fieldKey];
     // });
 
-    mutate({
+    await mutate({
       variables: { input: { systemIntakeID: systemIntakeId, ...formData } }
-    })
-      .then(result => {
-        // console.debug('result', result);
-      })
-      .catch(error => {
-        // console.debug('error', error);
-      });
-  });
+    });
+  };
 
   const [mutate] = useMutation<
     CreateSystemIntakeActionRequestEdits,
@@ -72,6 +66,17 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
           title={t('requestEdits.title')}
           description={t('requestEdits.description')}
           breadcrumb={t('requestEdits.breadcrumb')}
+          successMessage={t('requestEdits.success')}
+          modal={{
+            title: t('requestEdits.modal.title'),
+            content: (
+              <Trans
+                i18nKey="action:requestEdits.modal.content"
+                // TODO: Replace formName with value from "Which form needs edits" field
+                values={{ formName: 'Draft Business Case' }}
+              />
+            )
+          }}
           onSubmit={submit}
         >
           <Controller

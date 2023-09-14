@@ -173,6 +173,7 @@ export enum SystemIntakeActionType {
   CLOSE_REQUEST = "CLOSE_REQUEST",
   CONFIRM_LCID = "CONFIRM_LCID",
   CREATE_BIZ_CASE = "CREATE_BIZ_CASE",
+  EXPIRE_LCID = "EXPIRE_LCID",
   EXTEND_LCID = "EXTEND_LCID",
   GUIDE_RECEIVED_CLOSE = "GUIDE_RECEIVED_CLOSE",
   ISSUE_LCID = "ISSUE_LCID",
@@ -233,6 +234,15 @@ export enum SystemIntakeFormStep {
   DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
   FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
+}
+
+/**
+ * The possible statuses that an issued LCID can be in
+ */
+export enum SystemIntakeLCIDStatus {
+  EXPIRED = "EXPIRED",
+  ISSUED = "ISSUED",
+  RETIRED = "RETIRED",
 }
 
 /**
@@ -803,7 +813,7 @@ export interface SystemIntakeContractInput {
 
 /**
  * Input data for estimated system cost increases associated with a system request
- * 
+ *
  * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
  */
 export interface SystemIntakeCostsInput {

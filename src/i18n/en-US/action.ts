@@ -70,6 +70,8 @@ const action = {
   completeAction: 'Complete action',
   completeActionWithoutEmail: 'Complete action without email',
   cancelAction: 'Cancel action and return to request',
+  error:
+    'There was a problem completing your action. Please try again. If the error persists, please try again at a later date.',
   requestEdits: {
     breadcrumb: 'Request edits',
     title: 'Action: request edits',
@@ -89,22 +91,37 @@ const action = {
         DRAFT_BUSINESS_CASE: 'Draft business case',
         FINAL_BUSINESS_CASE: 'Final business case'
       }
-    }
-    /* ,
+    },
     confirm: {
       head: 'Are you sure you want to complete this action to request edits?',
       body:
         '<p>If you request changes to the {{formName}}, the requester will be able to make updates to any field within that form. While they are completing those changes, they will be unable to work on any other part of the process. You will receive an email notification once the requester has resubmitted their form.</p><p> If you progress this request to a new step before they have resubmitted their form, they will lose the ability to make the requested changes.</p>',
       complete: 'Complete action',
       back: 'Go back'
+    },
+    success: 'You have requested edits to the Draft Business Case.',
+    modal: {
+      title: 'Are you sure you want to complete this action to request edits?',
+      content:
+        '<p>If you request changes to the {{formName}}, the requester will be able to make updates to any field within that form. While they are completing those changes, they will be unable to work on any other part of the process. You will receive an email notification once the requester has resubmitted their form.</p><p>If you progress this request to a new step before they have resubmitted their form, they will lose the ability to make the requested changes.</p>'
     }
-    */
   },
   nextStep: {
     title: 'Action: next steps'
   },
   decision: {
     title: 'Action: issue decision'
+  },
+  manageLcid: {
+    title: 'Manage a Life Cycle ID (LCID)',
+    description:
+      'Expire, retire, or update (change the expiration date, scope, next steps, or project cost baseline) a previously-issued LCID.',
+    accordion:
+      'Use this action to modify a previously-issued Life Cycle ID in any way, including manually expiring or retiring it.',
+    accordion_EXPIRED:
+      'Use this action to modify an expired Life Cycle ID by amending or retiring it.',
+    accordion_RETIRED:
+      'Use this action if you want to modify a retired Life Cycle ID in any way. You will have the option to maintain its retired status or reinstate it.'
   },
   actions: {
     notItRequest: 'Not an IT governance request',
