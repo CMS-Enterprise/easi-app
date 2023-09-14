@@ -8522,6 +8522,8 @@ enum SystemIntakeActionType {
   REOPEN_REQUEST
   UPDATE_LCID
   CONFIRM_LCID
+  RETIRE_LCID
+  CHANGE_LCID_RETIREMENT_DATE
 
   # v1/v2 actions - originally from v1, still used in v2
   ISSUE_LCID
