@@ -25,7 +25,7 @@ import { SystemIntakeContactProps } from 'types/systemIntake';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import EmailRecipientsFields from './components/EmailRecipientsFields';
+import EmailRecipientsFields from './EmailRecipientsFields';
 
 // TODO: update fields to match schema when backend work is completed
 export interface SystemIntakeActionFields {

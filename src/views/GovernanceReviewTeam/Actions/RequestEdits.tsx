@@ -18,7 +18,7 @@ import {
 } from 'queries/types/CreateSystemIntakeActionRequestEdits';
 import { SystemIntakeFormStep } from 'types/graphql-global-types';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 
 interface RequestEditsFields extends SystemIntakeActionFields {
   intakeFormStep: SystemIntakeFormStep;
