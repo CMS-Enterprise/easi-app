@@ -2,13 +2,12 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
-import { FormGroup } from '@trussworks/react-uswds';
+import { FormGroup, Radio, TextInput } from '@trussworks/react-uswds';
 
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionIssueLcidQuery from 'queries/CreateSystemIntakeActionIssueLcidQuery';
 import {
@@ -26,7 +25,7 @@ import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 type IssueLcidFields = NonNullableProps<
   Omit<SystemIntakeIssueLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 > & {
-  useExistingLcid: boolean | null;
+  useExistingLcid: boolean;
 };
 
 const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
@@ -75,7 +74,10 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
         <Controller
           name="useExistingLcid"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => {
+          render={({
+            field: { ref, value: useExistingLcid, ...field },
+            fieldState: { error }
+          }) => {
             return (
               <FormGroup error={!!error}>
                 <Label htmlFor={field.name} className="text-normal" required>
@@ -85,22 +87,35 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
                   {t('issueLCID.lcid.helpText')}
                 </HelpText>
                 {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                <RadioField
-                  name="new"
-                  id="new"
-                  value=""
-                  checked={field.value === false}
+                <Radio
+                  {...field}
+                  value="false"
+                  id="useExistingLcid_false"
                   label={t('issueLCID.lcid.new')}
                   onChange={() => setValue('useExistingLcid', false)}
                 />
-                <RadioField
-                  name="existing"
-                  id="existing"
-                  value=""
-                  checked={!!field.value}
+                <Radio
+                  {...field}
+                  value="true"
+                  id="useExistingLcid_true"
                   label={t('issueLCID.lcid.existing')}
                   onChange={() => setValue('useExistingLcid', true)}
                 />
+                {useExistingLcid && (
+                  <Controller
+                    name="lcid"
+                    control={control}
+                    render={({ field: lcidField }) => (
+                      <TextInput
+                        {...lcidField}
+                        ref={null}
+                        id={field.name}
+                        type="text"
+                        className="margin-left-4"
+                      />
+                    )}
+                  />
+                )}
               </FormGroup>
             );
           }}
@@ -174,32 +189,22 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
                 {t('issueLCID.trbFollowup.label')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <RadioField
+              <Radio
                 {...field}
                 id="stronglyRecommended"
                 value={SystemIntakeTRBFollowUp.STRONGLY_RECOMMENDED}
-                checked={
-                  field.value === SystemIntakeTRBFollowUp.STRONGLY_RECOMMENDED
-                }
                 label={t('issueLCID.trbFollowup.stronglyRecommended')}
               />
-              <RadioField
+              <Radio
                 {...field}
                 id="recommendedNotCritical"
                 value={SystemIntakeTRBFollowUp.RECOMMENDED_BUT_NOT_CRITICAL}
-                checked={
-                  field.value ===
-                  SystemIntakeTRBFollowUp.RECOMMENDED_BUT_NOT_CRITICAL
-                }
                 label={t('issueLCID.trbFollowup.recommendedNotCritical')}
               />
-              <RadioField
+              <Radio
                 {...field}
                 id="notRecommended"
                 value={SystemIntakeTRBFollowUp.NOT_RECOMMENDED}
-                checked={
-                  field.value === SystemIntakeTRBFollowUp.NOT_RECOMMENDED
-                }
                 label={t('issueLCID.trbFollowup.notRecommended')}
               />
             </FormGroup>
