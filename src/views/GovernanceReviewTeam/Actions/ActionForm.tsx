@@ -134,6 +134,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           ...defaultValues,
           notificationRecipients: {
             shouldNotifyITGovernance: true,
+            shouldNotifyITInvestment: false,
             ...defaultValues?.notificationRecipients,
             regularRecipientEmails: requester.email ? [requester.email] : []
           }
