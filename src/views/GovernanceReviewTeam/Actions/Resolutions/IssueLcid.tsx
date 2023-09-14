@@ -1,9 +1,14 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { SystemIntakeIssueLCIDInput } from 'types/graphql-global-types';
+import { NonNullableProps } from 'types/util';
+
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-interface IssueLcidFields extends SystemIntakeActionFields {}
+type IssueLcidFields = NonNullableProps<
+  Omit<SystemIntakeIssueLCIDInput, 'systemIntakeId'> & SystemIntakeActionFields
+>;
 
 const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const form = useForm<IssueLcidFields>();
