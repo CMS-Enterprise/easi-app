@@ -25,10 +25,13 @@ import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
 type IssueLcidFields = NonNullableProps<
   Omit<SystemIntakeIssueLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
->;
+> & {
+  useExistingLcid: boolean | null;
+};
 
 const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
+
   const form = useForm<IssueLcidFields>({
     defaultValues: {
       costBaseline: ''
@@ -40,19 +43,23 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery);
 
-  const { control } = form;
+  const { control, setValue } = form;
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: IssueLcidFields) => {
+  const onSubmit = async ({
+    useExistingLcid,
+    ...formData
+  }: IssueLcidFields) => {
     mutate({
       variables: {
         input: {
           systemIntakeID: systemIntakeId,
-          ...formData
+          ...formData,
+          lcid: useExistingLcid ? formData.lcid : ''
         }
       }
     });
@@ -66,33 +73,37 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
         onSubmit={onSubmit}
       >
         <Controller
-          name="lcid"
+          name="useExistingLcid"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal" required>
-                {t('issueLCID.lcid.label')}
-              </Label>
-              <HelpText className="margin-top-1">
-                {t('issueLCID.lcid.helpText')}
-              </HelpText>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <RadioField
-                {...field}
-                id="new"
-                value="new"
-                checked={false}
-                label={t('issueLCID.lcid.new')}
-              />
-              <RadioField
-                {...field}
-                id="existing"
-                value="existing"
-                checked={false}
-                label={t('issueLCID.lcid.existing')}
-              />
-            </FormGroup>
-          )}
+          render={({ field: { ref, ...field }, fieldState: { error } }) => {
+            return (
+              <FormGroup error={!!error}>
+                <Label htmlFor={field.name} className="text-normal" required>
+                  {t('issueLCID.lcid.label')}
+                </Label>
+                <HelpText className="margin-top-1">
+                  {t('issueLCID.lcid.helpText')}
+                </HelpText>
+                {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                <RadioField
+                  name="new"
+                  id="new"
+                  value=""
+                  checked={field.value === false}
+                  label={t('issueLCID.lcid.new')}
+                  onChange={() => setValue('useExistingLcid', false)}
+                />
+                <RadioField
+                  name="existing"
+                  id="existing"
+                  value=""
+                  checked={!!field.value}
+                  label={t('issueLCID.lcid.existing')}
+                  onChange={() => setValue('useExistingLcid', true)}
+                />
+              </FormGroup>
+            );
+          }}
         />
 
         <Controller
