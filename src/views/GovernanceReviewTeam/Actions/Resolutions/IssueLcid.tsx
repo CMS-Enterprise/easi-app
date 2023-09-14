@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup, Radio, TextInput } from '@trussworks/react-uswds';
 
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
@@ -19,6 +20,7 @@ import {
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
+import { issueLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
@@ -32,6 +34,7 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
 
   const form = useForm<IssueLcidFields>({
+    resolver: yupResolver(issueLcidSchema),
     defaultValues: {
       lcid: '',
       costBaseline: ''
@@ -43,7 +46,11 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery);
 
-  const { control, setValue } = form;
+  const {
+    control,
+    setValue,
+    formState: { errors }
+  } = form;
 
   /**
    * Submit handler containing mutation logic
@@ -80,14 +87,16 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
             fieldState: { error }
           }) => {
             return (
-              <FormGroup error={!!error}>
+              <FormGroup error={!!error || !!errors.lcid}>
                 <Label htmlFor={field.name} className="text-normal" required>
                   {t('issueLCID.lcid.label')}
                 </Label>
                 <HelpText className="margin-top-1">
                   {t('issueLCID.lcid.helpText')}
                 </HelpText>
-                {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                {!!error?.message && (
+                  <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+                )}
                 <Radio
                   {...field}
                   value="false"
@@ -107,13 +116,19 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
                     name="lcid"
                     control={control}
                     render={({ field: lcidField }) => (
-                      <TextInput
-                        {...lcidField}
-                        ref={null}
-                        id={field.name}
-                        type="text"
-                        className="margin-left-4"
-                      />
+                      <div className="margin-left-4">
+                        {!!errors.lcid?.message && (
+                          <FieldErrorMsg>
+                            {t(errors.lcid?.message)}
+                          </FieldErrorMsg>
+                        )}
+                        <TextInput
+                          {...lcidField}
+                          ref={null}
+                          id={field.name}
+                          type="text"
+                        />
+                      </div>
                     )}
                   />
                 )}
@@ -131,7 +146,9 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
                 {t('issueLCID.expirationDate.label')}
               </Label>
               <HelpText className="margin-top-1">{t('mm/dd/yyyy')}</HelpText>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
               <DatePickerFormatted {...field} id={field.name} />
             </FormGroup>
           )}
@@ -148,7 +165,9 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
               <HelpText className="margin-top-1">
                 {t('issueLCID.scopeHelpText')}
               </HelpText>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
               <TextAreaField
                 {...field}
                 id={field.name}
@@ -170,7 +189,9 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
               <HelpText className="margin-top-1">
                 {t('issueLCID.nextStepsHelpText')}
               </HelpText>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
               <TextAreaField
                 {...field}
                 id={field.name}
@@ -189,7 +210,9 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
               <Label htmlFor={field.name} className="text-normal" required>
                 {t('issueLCID.trbFollowup.label')}
               </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
               <Radio
                 {...field}
                 id="stronglyRecommended"
@@ -223,7 +246,6 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
               <HelpText className="margin-top-1">
                 {t('issueLCID.costBaselineHelpText')}
               </HelpText>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
               <TextAreaField
                 {...field}
                 value={field.value || ''}
