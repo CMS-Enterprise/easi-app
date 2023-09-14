@@ -144,11 +144,11 @@ export const issueLcidSchema = Yup.object().shape({
     is: true,
     then: Yup.string()
       .trim()
+      .required('Please enter the existing Lifecycle ID')
       .matches(
         /^[A-Za-z]?[0-9]{6}$/,
         'Life Cycle ID must be 6 digits with optional preceding letter'
       )
-      .required('Please enter the existing Lifecycle ID')
   }),
   // TODO: Fix date picker validation
   expiresAt: Yup.string().required('Pelase enter a valid expiration date'),

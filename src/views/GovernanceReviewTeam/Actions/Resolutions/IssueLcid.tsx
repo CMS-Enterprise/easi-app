@@ -46,11 +46,7 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery);
 
-  const {
-    control,
-    setValue,
-    formState: { errors }
-  } = form;
+  const { control, setValue } = form;
 
   /**
    * Submit handler containing mutation logic
@@ -84,7 +80,8 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
           control={control}
           render={({
             field: { ref, value: useExistingLcid, ...field },
-            fieldState: { error }
+            fieldState: { error },
+            formState: { errors }
           }) => {
             return (
               <FormGroup error={!!error || !!errors.lcid}>
@@ -111,27 +108,33 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
                   label={t('issueLCID.lcid.existing')}
                   onChange={() => setValue('useExistingLcid', true)}
                 />
-                {useExistingLcid && (
-                  <Controller
-                    name="lcid"
-                    control={control}
-                    render={({ field: lcidField }) => (
-                      <div className="margin-left-4">
-                        {!!errors.lcid?.message && (
-                          <FieldErrorMsg>
-                            {t(errors.lcid?.message)}
-                          </FieldErrorMsg>
-                        )}
-                        <TextInput
-                          {...lcidField}
-                          ref={null}
-                          id={field.name}
-                          type="text"
-                        />
-                      </div>
-                    )}
-                  />
-                )}
+
+                {
+                  // Existing LCID text field
+                  useExistingLcid && (
+                    <Controller
+                      name="lcid"
+                      control={control}
+                      render={({ field: lcidField }) => {
+                        return (
+                          <div className="margin-left-4">
+                            {!!errors.lcid?.message && (
+                              <FieldErrorMsg>
+                                {t(errors.lcid?.message)}
+                              </FieldErrorMsg>
+                            )}
+                            <TextInput
+                              {...lcidField}
+                              ref={null}
+                              id={field.name}
+                              type="text"
+                            />
+                          </div>
+                        );
+                      }}
+                    />
+                  )
+                }
               </FormGroup>
             );
           }}
