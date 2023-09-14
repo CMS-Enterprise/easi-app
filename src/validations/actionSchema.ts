@@ -138,6 +138,16 @@ export const provideGRTFeedbackSchema = Yup.object().shape({
   emailBody: skippableEmail
 });
 
+/** Checks that expiration date is valid and in the future */
+const validExpirationDate = () =>
+  Yup.string()
+    .required('Please enter a valid date')
+    .nullable()
+    .test('expiresAt', 'Date cannot be in the past', value => {
+      if (!value) return true;
+      return DateTime.fromISO(value) >= DateTime.local().startOf('day');
+    });
+
 export const issueLcidSchema = Yup.object().shape({
   useExistingLcid: Yup.boolean().required('Please make a selection'),
   lcid: Yup.string().when('useExistingLcid', {
@@ -150,8 +160,7 @@ export const issueLcidSchema = Yup.object().shape({
         'Life Cycle ID must be 6 digits with optional preceding letter'
       )
   }),
-  // TODO: Fix date picker validation
-  expiresAt: Yup.string().required('Pelase enter a valid expiration date'),
+  expiresAt: validExpirationDate(),
   scope: Yup.string().required('Please fill in the blank'),
   nextSteps: Yup.string().required('Please fill in the blank'),
   trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()
