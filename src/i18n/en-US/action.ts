@@ -50,6 +50,49 @@ const action = {
         'Use this action if you want to change the decision for this request or if you would like to re-open it. You will be able to select the new resolution for this request.'
     }
   },
+  resolutions: {
+    title: 'Action: change decision or {{action}} request',
+    title_NO_DECISION: 'Action: issue decision or {{action}} request',
+    breadcrumb: 'Change decision or {{action}} request',
+    breadcrumb_NO_DECISION: 'Issue decision or {{action}} request',
+    action_CLOSED: 're-open',
+    action_OPEN: 'close',
+    description_NO_DECISION:
+      'Issue a Life Cycle ID, mark that this request was not approved by the Governance Review Board (GRB), mark that this request is not an IT Governance request, or {{descriptionAction}}.',
+    description_LCID_ISSUED:
+      'Mark that this request was not approved by the Governance Review Board (GRB), mark that this request is not an IT Governance request, or {{descriptionAction}}.',
+    description_NOT_APPROVED:
+      'Issue a Life Cycle ID, mark that this request is not an IT Governance request, or {{descriptionAction}}.',
+    description_NO_GOVERNANCE:
+      'Issue a Life Cycle ID, mark that this request was not approved by the Governance Review Board (GRB), or {{descriptionAction}}.',
+    descriptionAction_CLOSED: 're-open this closed request',
+    descriptionAction_OPEN: 'close this request for another reason',
+    label: 'Resolution',
+    requestDetails: 'Request details',
+    confirmDecision: 'Confirm current decision ({{decision}})',
+    summary: {
+      title: 'Request resolutions',
+      issueLcid: 'Issue a Life Cycle ID',
+      issueLcidDescription:
+        'Choose this resolution if the project has been approved by the GRB or does not need GRB approval to issue an LCID. You will be asked to provide additional LCID details in the next step of this action (scope, expiration date, next steps, and project cost baseline).',
+      notItRequest: 'Not an IT Governance request',
+      notItRequestDescription:
+        'Choose this resolution if this request does not need to go through the IT Governance process. You will be asked to provide any additional clarification on the next step of this action.',
+      notApproved: 'Not approved by GRB',
+      notApprovedDescription:
+        'Choose this resolution if this request was not approved by the GRB. You will be asked to provide a reason for the decision and any next steps for the project team to take on the next step of this action.',
+      closeRequest: 'Close request',
+      closeRequestDescription:
+        'Choose this resolution if you need to close this request for any other reason. You will be asked to provide any additional clarification on the next step of this action. This action does not affect a previously-generated Life Cycle ID. The project team will continue to receive automatic notifications about their Life Cycle ID. If you wish to update a Life Cycle ID, choose the “Manage Life Cycle ID” action.',
+      reOpenRequest: 'Re-open request',
+      reOpenRequestDescription:
+        'Choose this resolution if you need to re-open this request for any reason. You will be asked to provide any additional clarification on the next step of this action.'
+    },
+    confirmCurrentDecision: 'Confirm current decision ({{decision}})',
+    step: '(Step {{step}} of 2)',
+    selectedResolution: 'Selected resolution',
+    changeResolution: 'Change resolution'
+  },
   breadcrumb: 'Request {{systemIntakeId}}',
   fieldsMarkedRequired:
     'Fields marked with an asterisk (<asterisk />) are required.',

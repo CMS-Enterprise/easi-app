@@ -25,7 +25,7 @@ import { SystemIntakeContactProps } from 'types/systemIntake';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
-import EmailRecipientsFields from './EmailRecipientsFields';
+import EmailRecipientsFields from './components/EmailRecipientsFields';
 
 // TODO: update fields to match schema when backend work is completed
 export interface SystemIntakeActionFields {
@@ -36,9 +36,9 @@ export interface SystemIntakeActionFields {
 
 export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   systemIntakeId: string;
-  title: string;
-  description: string;
-  breadcrumb: string;
+  title?: string;
+  description?: string;
+  breadcrumb?: string;
   /** Success message to display on admin actions page after submission */
   successMessage: string;
   /** Submit function runs after field validation passes */
@@ -164,16 +164,18 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   return (
     <div className="margin-bottom-10 padding-bottom-2">
-      <Breadcrumbs
-        items={[
-          { text: t('Home'), url: '/' },
-          {
-            text: t('breadcrumb', { systemIntakeId }),
-            url: `/governance-review-team/${systemIntakeId}/intake-request`
-          },
-          { text: breadcrumb }
-        ]}
-      />
+      {breadcrumb && (
+        <Breadcrumbs
+          items={[
+            { text: t('Home'), url: '/' },
+            {
+              text: t('breadcrumb', { systemIntakeId }),
+              url: `/governance-review-team/${systemIntakeId}/intake-request`
+            },
+            { text: breadcrumb }
+          ]}
+        />
+      )}
 
       {
         // Error message for server error
@@ -184,10 +186,12 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         )
       }
 
-      <PageHeading className="margin-bottom-0">{title}</PageHeading>
-      <p className="line-height-body-5 font-body-lg text-light margin-0">
-        {description}
-      </p>
+      {title && <PageHeading className="margin-bottom-0">{title}</PageHeading>}
+      {description && (
+        <p className="line-height-body-5 font-body-lg text-light margin-0">
+          {description}
+        </p>
+      )}
 
       <p className="margin-top-1 text-base">
         <Trans
