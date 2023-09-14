@@ -1,6 +1,7 @@
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
 
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
@@ -9,6 +10,11 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
+import CreateSystemIntakeActionIssueLcidQuery from 'queries/CreateSystemIntakeActionIssueLcidQuery';
+import {
+  CreateSystemIntakeActionIssueLcid,
+  CreateSystemIntakeActionIssueLcidVariables
+} from 'queries/types/CreateSystemIntakeActionIssueLcid';
 import {
   SystemIntakeIssueLCIDInput,
   SystemIntakeTRBFollowUp
@@ -18,12 +24,21 @@ import { NonNullableProps } from 'types/util';
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
 type IssueLcidFields = NonNullableProps<
-  Omit<SystemIntakeIssueLCIDInput, 'systemIntakeId'> & SystemIntakeActionFields
+  Omit<SystemIntakeIssueLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
 
 const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
-  const form = useForm<IssueLcidFields>();
+  const form = useForm<IssueLcidFields>({
+    defaultValues: {
+      costBaseline: ''
+    }
+  });
+
+  const [mutate] = useMutation<
+    CreateSystemIntakeActionIssueLcid,
+    CreateSystemIntakeActionIssueLcidVariables
+  >(CreateSystemIntakeActionIssueLcidQuery);
 
   const { control } = form;
 
@@ -33,8 +48,14 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
    * Error and success handling is done in `<ActionForm>`
    */
   const onSubmit = async (formData: IssueLcidFields) => {
-    // Execute mutation here
-    // mutate(formData);
+    mutate({
+      variables: {
+        input: {
+          systemIntakeID: systemIntakeId,
+          ...formData
+        }
+      }
+    });
   };
 
   return (
