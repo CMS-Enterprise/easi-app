@@ -32,11 +32,10 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   const {
     // handleSubmit,
+    watch,
     control
     // formState: { errors }
   } = form;
-
-  // console.debug(errors);
 
   const submit = async (formData: RequestEditsFields) => {
     // const checkEmptyFields: Array<keyof RequestEditsFields> = [
@@ -72,8 +71,13 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
             content: (
               <Trans
                 i18nKey="action:requestEdits.modal.content"
-                // TODO: Replace formName with value from "Which form needs edits" field
-                values={{ formName: 'Draft Business Case' }}
+                values={{
+                  formName: t(
+                    `requestEdits.option.intakeFormStep.${watch(
+                      'intakeFormStep'
+                    )}`
+                  )
+                }}
               />
             )
           }}
