@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
+import { SystemIntakeTRBFollowUp } from 'types/graphql-global-types';
+
 const skippableEmail = Yup.string().when('shouldSendEmail', {
   is: false,
   then: schema => schema.optional(),
@@ -134,4 +136,25 @@ export const provideGRTFeedbackSchema = Yup.object().shape({
     .trim()
     .required('Please include feedback for the business owner'),
   emailBody: skippableEmail
+});
+
+export const issueLcidSchema = Yup.object().shape({
+  useExistingLcid: Yup.boolean().required('Please make a selection'),
+  lcid: Yup.string().when('useExistingLcid', {
+    is: true,
+    then: Yup.string()
+      .trim()
+      .matches(
+        /^[A-Za-z]?[0-9]{6}$/,
+        'Life Cycle ID must be 6 digits with optional preceding letter'
+      )
+      .required('Please enter the existing Lifecycle ID')
+  }),
+  // TODO: Fix date picker validation
+  expiresAt: Yup.string().required('Pelase enter a valid expiration date'),
+  scope: Yup.string().required('Please fill in the blank'),
+  nextSteps: Yup.string().required('Please fill in the blank'),
+  trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()
+    .oneOf(Object.values(SystemIntakeTRBFollowUp))
+    .required('Please make a selection')
 });
