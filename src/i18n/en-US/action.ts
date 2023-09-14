@@ -197,19 +197,19 @@ const action = {
     feedbackLabel: 'This email will be sent to recipients',
     nextStepsLabel: 'Next Steps',
     nextStepsHelpText:
-      'Provide the requester with some recommendations on how to continue their process. For example, “begin your ATO” or “update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID.',
-    scopeLabel: 'Scope of Lifecycle ID',
+      'Provide the team with recommendations on how best to continue the process and stay on track with their project. For example “start your ATO” or “complete acquisition planning”.',
+    scopeLabel: 'Scope of Life Cycle ID',
     scopeHelpText:
       'Tell the requester what is covered by this Lifecycle ID and what work it limits the project team to.',
-    costBaselineLabel: 'Project Cost Baseline (Optional)',
+    costBaselineLabel: 'Project cost baseline',
     costBaselineHelpText:
-      'Enter the current cost baseline for the project for the first two planned fiscal years of the project',
+      'Include the cost baseline for the first two planned fiscal years of the project.',
     lcid: {
-      new: 'Generate a new Lifecycle ID',
+      new: 'Generate a new Life Cycle ID',
       helpText:
-        'If you choose to generate a new Lifecycle ID, one will be generated when you submit this page',
-      existing: 'Use an existing Lifecycle ID',
-      label: 'Lifecycle ID'
+        'If you choose to generate a new Life Cycle ID, it will be generated when you complete this action.',
+      existing: 'Use an existing Life Cycle ID',
+      label: 'Life Cycle ID'
     },
     expirationDate: {
       label: 'Expiration Date',
@@ -217,6 +217,14 @@ const action = {
       month: 'Month',
       day: 'Day',
       year: 'Year'
+    },
+    trbFollowup: {
+      label:
+        'Should this team consult with the Technical Review Board (TRB) as a part of their next steps?',
+      stronglyRecommended: 'Yes, strongly recommend',
+      recommendedNotCritical:
+        'Yes, it’s not critical but the TRB could provide useful feedback',
+      notRecommended: 'No, they may if they wish but it’s not necessary'
     }
   },
   extendLcid: {
