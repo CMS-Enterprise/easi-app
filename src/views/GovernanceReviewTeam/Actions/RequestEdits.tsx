@@ -56,6 +56,10 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
     CreateSystemIntakeActionRequestEditsVariables
   >(CreateSystemIntakeActionRequestEditsQuery);
 
+  const intakeFormStepName = t(
+    `requestEdits.option.intakeFormStep.${watch('intakeFormStep')}`
+  );
+
   return (
     <>
       <FormProvider<RequestEditsFields> {...form}>
@@ -64,18 +68,16 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
           title={t('requestEdits.title')}
           description={t('requestEdits.description')}
           breadcrumb={t('requestEdits.breadcrumb')}
-          successMessage={t('requestEdits.success')}
+          successMessage={t('requestEdits.success', {
+            formName: intakeFormStepName
+          })}
           modal={{
             title: t('requestEdits.modal.title'),
             content: (
               <Trans
                 i18nKey="action:requestEdits.modal.content"
                 values={{
-                  formName: t(
-                    `requestEdits.option.intakeFormStep.${watch(
-                      'intakeFormStep'
-                    )}`
-                  )
+                  formName: intakeFormStepName
                 }}
               />
             )

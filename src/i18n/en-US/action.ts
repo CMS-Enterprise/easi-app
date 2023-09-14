@@ -142,7 +142,7 @@ const action = {
       complete: 'Complete action',
       back: 'Go back'
     },
-    success: 'You have requested edits to the Draft Business Case.',
+    success: 'You have requested edits to the {{formName}}.',
     modal: {
       title: 'Are you sure you want to complete this action to request edits?',
       content:
