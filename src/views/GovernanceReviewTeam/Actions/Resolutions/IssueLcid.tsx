@@ -33,6 +33,7 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   const form = useForm<IssueLcidFields>({
     defaultValues: {
+      lcid: '',
       costBaseline: ''
     }
   });
