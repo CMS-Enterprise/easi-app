@@ -10,6 +10,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import useMessage from 'hooks/useMessage';
 import CreateSystemIntakeActionIssueLcidQuery from 'queries/CreateSystemIntakeActionIssueLcidQuery';
 import {
   CreateSystemIntakeActionIssueLcid,
@@ -49,6 +50,7 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   });
 
   const { control, setValue } = form;
+  const { showMessage } = useMessage();
 
   /**
    * Submit handler containing mutation logic
@@ -67,16 +69,18 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
           lcid: useExistingLcid ? formData.lcid : ''
         }
       }
+    }).then(response => {
+      const lcid =
+        response?.data?.createSystemIntakeActionIssueLCID?.systemIntake?.lcid;
+
+      // Show success message with LCID
+      showMessage(t('manageLcid.success', { lcid }), { type: 'success' });
     });
   };
 
   return (
     <FormProvider<IssueLcidFields> {...form}>
-      <ActionForm
-        systemIntakeId={systemIntakeId}
-        successMessage={t('manageLcid.success', { lcid: '12345' })}
-        onSubmit={onSubmit}
-      >
+      <ActionForm systemIntakeId={systemIntakeId} onSubmit={onSubmit}>
         <Controller
           name="useExistingLcid"
           control={control}

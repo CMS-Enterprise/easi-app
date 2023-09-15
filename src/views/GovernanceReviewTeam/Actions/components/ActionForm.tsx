@@ -40,7 +40,7 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   description?: string;
   breadcrumb?: string;
   /** Success message to display on admin actions page after submission */
-  successMessage: string;
+  successMessage?: string;
   /** Submit function runs after field validation passes */
   onSubmit: (formData: TFieldValues) => Promise<void>;
   /** Optional confirmation modal title and content */
@@ -106,7 +106,10 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     onSubmit(formData)
       .then(() => {
         // Display success message
-        showMessageOnNextPage(t(successMessage), { type: 'success' });
+        if (successMessage) {
+          showMessageOnNextPage(t(successMessage), { type: 'success' });
+        }
+
         history.push(`/governance-review-team/${systemIntakeId}/actions`);
       })
       .catch(() => {
