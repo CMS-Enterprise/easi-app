@@ -94,7 +94,7 @@ const action = {
         'LCIDs will automatically expire when they reach their expiration date. Manually expiring an LCID will update the expiration date and set the status to “Expired”. Expired LCIDs are usually unplanned or unintended, and result in the project being added to the CIO risk register. This project team will continue to receive automatic notifications about their Life Cycle ID.'
     },
     success:
-      'Life Cycle ID {{lcid}} is issued for this request. This request is now closed. You may continue to manage this Life Cycle ID from the Life Cycle IDs tab on the Admin Home page.'
+      'Life Cycle ID {{lcid}} is issued for this request. This request is now closed. You may continue to manage this Life Cycle ID using the "Manage a Life Cycle ID" action.'
   },
   titleBox: {
     selected: 'Selected {{type}}',
