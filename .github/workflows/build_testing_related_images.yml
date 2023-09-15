@@ -1,0 +1,92 @@
+name: Build Testing Related Docker Images
+
+on:
+  workflow_call:
+    inputs:
+      skip_tests:
+        required: false
+        type: boolean
+        default: false
+
+env:
+  GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  skip_tests:
+    environment: test
+    if: ${{ inputs.skip_tests == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skipping tests
+        run: |
+            echo "Skipping tests!"
+  build_easi-client:
+    environment: test
+    if: ${{ inputs.skip_tests == false }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Build easi_client Docker image
+        run: docker build -t easi_client:latest -f Dockerfile.client_ci .
+      - name: Save Docker images
+        run: |
+          docker save easi_client:latest > easi_client.tar
+      - name: Upload Docker images as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: easi_client.tar
+          path: easi_client.tar
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch     
+  build_db_seed:
+    environment: test
+    if: ${{ inputs.skip_tests == false }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Build db_seed Docker image
+        run: docker build -t db_seed:latest} -f Dockerfile.db_seed .
+      - name: Save Docker images
+        run: |
+          docker save db_seed:latest > db_seed.tar
+      - name: Upload Docker images as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: db_seed.tar
+          path: db_seed.tar 
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch 
+  build_easi_cypress:
+    environment: test
+    if: ${{ inputs.skip_tests == false }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_HASH }}
+      - name: Build easi_cypress Docker image
+        run: docker build -t easi_cypress:latest -f Dockerfile.cypress .
+      - name: Save Docker images
+        run: |
+          docker save easi_cypress:latest > cypress.tar
+      - name: Upload Docker images as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: easi_cypress.tar
+          path: easi_cypress.tar
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch

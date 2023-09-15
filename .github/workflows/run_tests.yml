@@ -131,6 +131,23 @@ jobs:
         with:
           name: test-frontend-assets
           path: build/
+      - name: Download easi_client image
+        uses: actions/download-artifact@v3
+        with:
+          name: easi_client.tar
+      - name: Download db_seed image
+        uses: actions/download-artifact@v3
+        with:
+          name: db_seed.tar
+      - name: Download easi_cypress image
+        uses: actions/download-artifact@v3
+        with:
+          name: easi_cypress.tar
+      - name: Load Docker images
+        run: |
+          docker load < easi_client.tar
+          docker load < db_seed.tar
+          docker load < easi_cypress.tar
       - name: Run e2e cypress tests
         env:
           APP_ENV: test
