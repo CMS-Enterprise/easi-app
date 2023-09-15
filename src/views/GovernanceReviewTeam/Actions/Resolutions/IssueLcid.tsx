@@ -74,7 +74,7 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
     <FormProvider<IssueLcidFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage=""
+        successMessage={t('manageLcid.success', { lcid: '12345' })}
         onSubmit={onSubmit}
       >
         <Controller
