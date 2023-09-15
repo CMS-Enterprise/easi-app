@@ -679,8 +679,7 @@ type SystemIntakeIssueLCIDInput struct {
 	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
-// Contains the data needed to change the expiration date of a system request's
-// lifecycle ID
+// Contains the data about a change to the expiration date of a system request's lifecycle ID
 type SystemIntakeLCIDExpirationChange struct {
 	PreviousDate         time.Time    `json:"previousDate"`
 	NewDate              time.Time    `json:"newDate"`
