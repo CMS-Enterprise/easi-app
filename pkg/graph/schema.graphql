@@ -1004,6 +1004,7 @@ type SystemIntake {
   lcidExpiresAt: Time
   lcidScope: HTML
   lcidCostBaseline: String
+  lcidRetiresAt: Time
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String

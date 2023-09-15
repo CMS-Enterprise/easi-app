@@ -735,6 +735,7 @@ type ComplexityRoot struct {
 		LcidScope                   func(childComplexity int) int
 		LcidStatus                  func(childComplexity int) int
 		LifecycleExpiresAt          func(childComplexity int) int
+		LifecycleRetiresAt          func(childComplexity int) int
 		NeedsEaSupport              func(childComplexity int) int
 		Notes                       func(childComplexity int) int
 		OitSecurityCollaborator     func(childComplexity int) int
@@ -1383,6 +1384,7 @@ type SystemIntakeResolver interface {
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error)
 	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
+
 	NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error)
 	OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -5396,6 +5398,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.LifecycleExpiresAt(childComplexity), true
 
+	case "SystemIntake.lcidRetiresAt":
+		if e.complexity.SystemIntake.LifecycleRetiresAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LifecycleRetiresAt(childComplexity), true
+
 	case "SystemIntake.needsEaSupport":
 		if e.complexity.SystemIntake.NeedsEaSupport == nil {
 			break
@@ -8236,6 +8245,7 @@ type SystemIntake {
   lcidExpiresAt: Time
   lcidScope: HTML
   lcidCostBaseline: String
+  lcidRetiresAt: Time
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
@@ -14875,6 +14885,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -23755,6 +23767,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -28628,6 +28642,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -33224,6 +33240,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -33463,6 +33481,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -34649,6 +34669,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -37442,6 +37464,47 @@ func (ec *executionContext) fieldContext_SystemIntake_lcidCostBaseline(ctx conte
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_lcidRetiresAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LifecycleRetiresAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_lcidRetiresAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_needsEaSupport(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 	if err != nil {
@@ -39140,6 +39203,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -47617,6 +47682,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -48850,6 +48917,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
 			case "lcidCostBaseline":
 				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "notes":
@@ -60510,6 +60579,10 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
+		case "lcidRetiresAt":
+
+			out.Values[i] = ec._SystemIntake_lcidRetiresAt(ctx, field, obj)
+
 		case "needsEaSupport":
 			field := field
 
