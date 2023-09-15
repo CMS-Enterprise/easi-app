@@ -39,12 +39,12 @@ jobs:
         run: docker build -t easi_client:latest -f Dockerfile.client_ci .
       - name: Save Docker images
         run: |
-          docker save easi_client:latest > easi_client.tar
+          docker save easi_client:latest | gzip > easi_client.tar.gz
       - name: Upload Docker images as artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: easi_client.tar
-          path: easi_client.tar
+          name: easi_client.tar.gz
+          path: easi_client.tar.gz
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -62,12 +62,12 @@ jobs:
         run: docker build -t db_seed:latest -f Dockerfile.db_seed .
       - name: Save Docker images
         run: |
-          docker save db_seed:latest > db_seed.tar
+          docker save db_seed:latest | gzip > db_seed.tar.gz
       - name: Upload Docker images as artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: db_seed.tar
-          path: db_seed.tar 
+          name: db_seed.tar.gz
+          path: db_seed.tar.gz
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -85,12 +85,12 @@ jobs:
         run: docker build -t easi_cypress:latest -f Dockerfile.cypress .
       - name: Save Docker images
         run: |
-          docker save easi_cypress:latest > cypress.tar
+          docker save easi_cypress:latest | gzip > easi_cypress.tar.gz
       - name: Upload Docker images as artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: easi_cypress.tar
-          path: easi_cypress.tar
+          name: easi_cypress.tar.gz
+          path: easi_cypress.tar.gz
       - name: Announce failure
         if: ${{ failure() }}
         run: |

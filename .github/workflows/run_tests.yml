@@ -134,15 +134,15 @@ jobs:
       - name: Download easi_client image
         uses: actions/download-artifact@v3
         with:
-          name: easi_client.tar
+          name: easi_client.tar.gz
       - name: Download db_seed image
         uses: actions/download-artifact@v3
         with:
-          name: db_seed.tar
+          name: db_seed.tar.gz
       - name: Download easi_cypress image
         uses: actions/download-artifact@v3
         with:
-          name: easi_cypress.tar
+          name: easi_cypress.tar.gz
       - name: Load Docker images
         run: |
           docker load < easi_client.tar
