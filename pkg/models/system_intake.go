@@ -158,6 +158,7 @@ type SystemIntake struct {
 	LifecycleScope              *HTML                        `json:"lcidScope" db:"lcid_scope"`
 	LifecycleCostBaseline       null.String                  `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
 	LifecycleExpirationAlertTS  *time.Time                   `json:"lcidExpirationAlertTS" db:"lcid_expiration_alert_ts"`
+	LifecycleRetiresAt          *time.Time                   `json:"lcidRetiresAt" db:"lcid_retires_at"`
 	DecisionNextSteps           *HTML                        `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason             *HTML                        `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String                  `json:"adminLead" db:"admin_lead"`

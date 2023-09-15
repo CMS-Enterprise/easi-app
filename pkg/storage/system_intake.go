@@ -236,6 +236,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			decision_next_steps = :decision_next_steps,
 			lcid_cost_baseline = :lcid_cost_baseline,
 			lcid_expiration_alert_ts = :lcid_expiration_alert_ts,
+			lcid_retires_at = :lcid_retires_at,
 			rejection_reason = :rejection_reason,
 			admin_lead = :admin_lead,
 			cedar_system_id = :cedar_system_id,
