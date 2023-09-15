@@ -60,6 +60,14 @@ const action = {
         'Use this action if you want to modify a retired Life Cycle ID in any way. You will have the option to maintain its retired status or reinstate it.'
     }
   },
+  errorLabels: {
+    useExistingLcid: 'Life Cycle ID',
+    lcid: 'Life Cycle ID',
+    expiresAt: 'Expiration date',
+    scope: 'Scope of Life Cycle ID',
+    nextSteps: 'Next steps',
+    trbFollowUp: 'TRB follow-up'
+  },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
     breadcrumb: 'Manage a Life Cycle ID',
