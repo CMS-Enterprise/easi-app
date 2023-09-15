@@ -48,6 +48,7 @@ jobs:
     name: Build Testing Related Docker Images
     uses: ./.github/workflows/build_testing_related_images.yml
     secrets: inherit
+    needs: [Build_Test_Frontend_Assets]
     with:
       skip_tests: ${{ inputs.skip_tests }}
 

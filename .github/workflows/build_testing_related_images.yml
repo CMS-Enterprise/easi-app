@@ -30,6 +30,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ env.GIT_HASH }}
+      - name: Download Frontend assets
+        uses: actions/download-artifact@v3
+        with:
+          name: test-frontend-assets
+          path: build/
       - name: Build easi_client Docker image
         run: docker build -t easi_client:latest -f Dockerfile.client_ci .
       - name: Save Docker images
@@ -54,7 +59,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Build db_seed Docker image
-        run: docker build -t db_seed:latest} -f Dockerfile.db_seed .
+        run: docker build -t db_seed:latest -f Dockerfile.db_seed .
       - name: Save Docker images
         run: |
           docker save db_seed:latest > db_seed.tar
