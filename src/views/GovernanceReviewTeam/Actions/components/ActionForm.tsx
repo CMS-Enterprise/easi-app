@@ -14,6 +14,7 @@ import {
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
@@ -144,6 +145,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [requester, defaultValues, isLoading, reset]);
 
+  const fieldErrorKeys = Object.keys(errors).filter(key => key !== 'root');
   const hasErrors: boolean = Object.keys(errors).length > 0;
 
   // Scroll to error message
@@ -199,6 +201,33 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           components={{ asterisk: <RequiredAsterisk /> }}
         />
       </p>
+
+      {
+        /** Display field errors */
+        fieldErrorKeys.length > 0 && (
+          <Alert
+            heading={t('technicalAssistance:errors.checkFix')}
+            type="error"
+            className="action-error"
+            slim={false}
+          >
+            {fieldErrorKeys.map(fieldName => {
+              const label = t(`errorLabels.${fieldName}`);
+              const error = errors[fieldName as keyof typeof errors]?.message;
+
+              const message = `${label}: ${t(error || '')}`;
+
+              return (
+                <ErrorAlertMessage
+                  key={fieldName}
+                  errorKey={fieldName}
+                  message={message}
+                />
+              );
+            })}
+          </Alert>
+        )
+      }
 
       <Form
         {...formProps}
