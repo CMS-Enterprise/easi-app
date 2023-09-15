@@ -12,6 +12,7 @@ import { SystemIntakeIssueLCIDInput } from "./../../types/graphql-global-types";
 export interface CreateSystemIntakeActionIssueLcid_createSystemIntakeActionIssueLCID_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
+  lcid: string | null;
 }
 
 export interface CreateSystemIntakeActionIssueLcid_createSystemIntakeActionIssueLCID {

@@ -7,6 +7,7 @@ export default gql`
     createSystemIntakeActionIssueLCID(input: $input) {
       systemIntake {
         id
+        lcid
       }
     }
   }
