@@ -87,4 +87,6 @@ type Action struct {
 	LCIDExpirationChangePreviousNextSteps    *HTML             `db:"lcid_expiration_change_previous_next_steps"`
 	LCIDExpirationChangeNewCostBaseline      null.String       `db:"lcid_expiration_change_new_cost_baseline"`
 	LCIDExpirationChangePreviousCostBaseline null.String       `db:"lcid_expiration_change_previous_cost_baseline"`
+	LCIDRetirementChangeNewDate              *time.Time        `json:"lcidRetirementChangeNewDate" db:"lcid_retirement_change_new_date"`
+	LCIDRetirementChangePreviousDate         *time.Time        `json:"lcidRetirementChangePreviousDate" db:"lcid_retirement_change_previous_date"`
 }
