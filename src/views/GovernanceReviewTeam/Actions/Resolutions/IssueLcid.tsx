@@ -44,7 +44,9 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const [mutate] = useMutation<
     CreateSystemIntakeActionIssueLcid,
     CreateSystemIntakeActionIssueLcidVariables
-  >(CreateSystemIntakeActionIssueLcidQuery);
+  >(CreateSystemIntakeActionIssueLcidQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
 
   const { control, setValue } = form;
 
