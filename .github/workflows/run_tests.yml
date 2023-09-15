@@ -145,9 +145,9 @@ jobs:
           name: easi_cypress.tar.gz
       - name: Load Docker images
         run: |
-          docker load < easi_client.tar
-          docker load < db_seed.tar
-          docker load < easi_cypress.tar
+          docker load < easi_client.tar.gz
+          docker load < db_seed.tar.gz
+          docker load < easi_cypress.tar.gz
       - name: Run e2e cypress tests
         env:
           APP_ENV: test
