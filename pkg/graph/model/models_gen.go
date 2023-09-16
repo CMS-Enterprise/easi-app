@@ -493,14 +493,16 @@ type SystemEdge struct {
 
 // An action taken on a system intake, often resulting in a change in status.
 type SystemIntakeAction struct {
-	ID                   uuid.UUID                         `json:"id"`
-	SystemIntake         *models.SystemIntake              `json:"systemIntake"`
-	Type                 SystemIntakeActionType            `json:"type"`
-	Actor                *SystemIntakeActionActor          `json:"actor"`
-	Step                 *models.SystemIntakeStep          `json:"step"`
-	Feedback             *models.HTML                      `json:"feedback"`
-	LcidExpirationChange *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange"`
-	CreatedAt            time.Time                         `json:"createdAt"`
+	ID                     uuid.UUID                         `json:"id"`
+	SystemIntake           *models.SystemIntake              `json:"systemIntake"`
+	Type                   SystemIntakeActionType            `json:"type"`
+	Actor                  *SystemIntakeActionActor          `json:"actor"`
+	Step                   *models.SystemIntakeStep          `json:"step"`
+	Feedback               *models.HTML                      `json:"feedback"`
+	LcidExpirationChange   *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange"`
+	PreviousRetirementDate *time.Time                        `json:"previousRetirementDate"`
+	NewRetirementDate      *time.Time                        `json:"newRetirementDate"`
+	CreatedAt              time.Time                         `json:"createdAt"`
 }
 
 // The contact who is associated with an action being done to a system request

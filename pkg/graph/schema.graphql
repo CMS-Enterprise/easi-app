@@ -1331,6 +1331,8 @@ type SystemIntakeAction {
   step: SystemIntakeStep
   feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
+  previousRetirementDate: Time
+  newRetirementDate: Time
   createdAt: Time!
 }
 

@@ -760,14 +760,16 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeAction struct {
-		Actor                func(childComplexity int) int
-		CreatedAt            func(childComplexity int) int
-		Feedback             func(childComplexity int) int
-		ID                   func(childComplexity int) int
-		LcidExpirationChange func(childComplexity int) int
-		Step                 func(childComplexity int) int
-		SystemIntake         func(childComplexity int) int
-		Type                 func(childComplexity int) int
+		Actor                  func(childComplexity int) int
+		CreatedAt              func(childComplexity int) int
+		Feedback               func(childComplexity int) int
+		ID                     func(childComplexity int) int
+		LcidExpirationChange   func(childComplexity int) int
+		NewRetirementDate      func(childComplexity int) int
+		PreviousRetirementDate func(childComplexity int) int
+		Step                   func(childComplexity int) int
+		SystemIntake           func(childComplexity int) int
+		Type                   func(childComplexity int) int
 	}
 
 	SystemIntakeActionActor struct {
@@ -5587,6 +5589,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeAction.LcidExpirationChange(childComplexity), true
 
+	case "SystemIntakeAction.newRetirementDate":
+		if e.complexity.SystemIntakeAction.NewRetirementDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.NewRetirementDate(childComplexity), true
+
+	case "SystemIntakeAction.previousRetirementDate":
+		if e.complexity.SystemIntakeAction.PreviousRetirementDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.PreviousRetirementDate(childComplexity), true
+
 	case "SystemIntakeAction.step":
 		if e.complexity.SystemIntakeAction.Step == nil {
 			break
@@ -8572,6 +8588,8 @@ type SystemIntakeAction {
   step: SystemIntakeStep
   feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
+  previousRetirementDate: Time
+  newRetirementDate: Time
   createdAt: Time!
 }
 
@@ -36151,6 +36169,10 @@ func (ec *executionContext) fieldContext_SystemIntake_actions(ctx context.Contex
 				return ec.fieldContext_SystemIntakeAction_feedback(ctx, field)
 			case "lcidExpirationChange":
 				return ec.fieldContext_SystemIntakeAction_lcidExpirationChange(ctx, field)
+			case "previousRetirementDate":
+				return ec.fieldContext_SystemIntakeAction_previousRetirementDate(ctx, field)
+			case "newRetirementDate":
+				return ec.fieldContext_SystemIntakeAction_newRetirementDate(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntakeAction_createdAt(ctx, field)
 			}
@@ -39512,6 +39534,88 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_lcidExpirationChange
 				return ec.fieldContext_SystemIntakeLCIDExpirationChange_newCostBaseline(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeLCIDExpirationChange", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeAction_previousRetirementDate(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeAction_previousRetirementDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PreviousRetirementDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeAction_previousRetirementDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeAction_newRetirementDate(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeAction_newRetirementDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NewRetirementDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeAction_newRetirementDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -61084,6 +61188,14 @@ func (ec *executionContext) _SystemIntakeAction(ctx context.Context, sel ast.Sel
 		case "lcidExpirationChange":
 
 			out.Values[i] = ec._SystemIntakeAction_lcidExpirationChange(ctx, field, obj)
+
+		case "previousRetirementDate":
+
+			out.Values[i] = ec._SystemIntakeAction_previousRetirementDate(ctx, field, obj)
+
+		case "newRetirementDate":
+
+			out.Values[i] = ec._SystemIntakeAction_newRetirementDate(ctx, field, obj)
 
 		case "createdAt":
 
