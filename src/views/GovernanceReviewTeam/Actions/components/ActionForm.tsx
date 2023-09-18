@@ -13,6 +13,7 @@ import {
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -159,7 +160,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [errors, hasErrors]);
 
-  if (isLoading) return null;
+  if (isLoading) return <PageLoading />;
 
   const recipients = watch('notificationRecipients');
   const recipientsSelected: boolean =
