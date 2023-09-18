@@ -1214,50 +1214,6 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// The possible statuses that an issued LCID can be in
-type SystemIntakeLCIDStatus string
-
-const (
-	SystemIntakeLCIDStatusIssued  SystemIntakeLCIDStatus = "ISSUED"
-	SystemIntakeLCIDStatusExpired SystemIntakeLCIDStatus = "EXPIRED"
-	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
-)
-
-var AllSystemIntakeLCIDStatus = []SystemIntakeLCIDStatus{
-	SystemIntakeLCIDStatusIssued,
-	SystemIntakeLCIDStatusExpired,
-	SystemIntakeLCIDStatusRetired,
-}
-
-func (e SystemIntakeLCIDStatus) IsValid() bool {
-	switch e {
-	case SystemIntakeLCIDStatusIssued, SystemIntakeLCIDStatusExpired, SystemIntakeLCIDStatusRetired:
-		return true
-	}
-	return false
-}
-
-func (e SystemIntakeLCIDStatus) String() string {
-	return string(e)
-}
-
-func (e *SystemIntakeLCIDStatus) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = SystemIntakeLCIDStatus(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeLCIDStatus", str)
-	}
-	return nil
-}
-
-func (e SystemIntakeLCIDStatus) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 

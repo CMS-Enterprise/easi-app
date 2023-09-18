@@ -1415,7 +1415,7 @@ type SystemIntakeResolver interface {
 
 	StatusRequester(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusRequester, error)
 	StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error)
-	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeLCIDStatus, error)
+	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error)
@@ -39276,9 +39276,9 @@ func (ec *executionContext) _SystemIntake_lcidStatus(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.SystemIntakeLCIDStatus)
+	res := resTmp.(*models.SystemIntakeLCIDStatus)
 	fc.Result = res
-	return ec.marshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeLCIDStatus(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_lcidStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -68826,20 +68826,21 @@ func (ec *executionContext) marshalOSystemIntakeLCIDExpirationChange2ᚖgithub�
 	return ec._SystemIntakeLCIDExpirationChange(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeLCIDStatus(ctx context.Context, v interface{}) (*model.SystemIntakeLCIDStatus, error) {
+func (ec *executionContext) unmarshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDStatus(ctx context.Context, v interface{}) (*models.SystemIntakeLCIDStatus, error) {
 	if v == nil {
 		return nil, nil
 	}
-	var res = new(model.SystemIntakeLCIDStatus)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeLCIDStatus(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeLCIDStatus(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeLCIDStatus) graphql.Marshaler {
+func (ec *executionContext) marshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDStatus(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeLCIDStatus) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return v
+	res := graphql.MarshalString(string(*v))
+	return res
 }
 
 func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeNote(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeNote) graphql.Marshaler {

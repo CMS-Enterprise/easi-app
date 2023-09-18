@@ -1210,8 +1210,8 @@ func (s *ResolverSuite) TestExpireLCID() {
 		s.NoError(err)
 
 		// check calculated LCID
-		lcidStatus := CalculateSystemIntakeLCIDStatus(expiredIntake, currentTime)
-		s.EqualValues(model.SystemIntakeLCIDStatusExpired, *lcidStatus)
+		lcidStatus := expiredIntake.LCIDStatus(currentTime)
+		s.EqualValues(models.SystemIntakeLCIDStatusExpired, *lcidStatus)
 
 		// check decision next steps from input
 		s.EqualValues(expireLCIDInput.NextSteps, expiredIntake.DecisionNextSteps)

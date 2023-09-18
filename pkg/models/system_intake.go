@@ -100,6 +100,16 @@ const (
 	SystemIntakeStepDECISION SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
 )
 
+// SystemIntakeLCIDStatus represents the possible statuses that an issued LCID can be in
+type SystemIntakeLCIDStatus string
+
+// possible values of SystemIntakeLCIDStatus - corresponds to SystemIntakeLCIDStatus enum in GraphQL schema
+const (
+	SystemIntakeLCIDStatusIssued  SystemIntakeLCIDStatus = "ISSUED"
+	SystemIntakeLCIDStatusExpired SystemIntakeLCIDStatus = "EXPIRED"
+	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
+)
+
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
 	ID                          uuid.UUID                    `json:"id"`
@@ -277,3 +287,22 @@ const (
 	TRBFRRecommendedButNotCritical SystemIntakeTRBFollowUp = "RECOMMENDED_BUT_NOT_CRITICAL"
 	TRBFRNotRecommended            SystemIntakeTRBFollowUp = "NOT_RECOMMENDED"
 )
+
+// LCIDStatus returns the status of this intake's LCID, if present
+func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatus {
+	// copies of the constants, declared as local variables instead of constants so we can get pointers to them,
+	// which we need so we can return a *SystemIntakeLCIDStatus that can be nil
+	issuedStatus := SystemIntakeLCIDStatusIssued
+	expiredStatus := SystemIntakeLCIDStatusExpired
+
+	if si == nil || si.LifecycleID.ValueOrZero() == "" {
+		return nil
+	}
+
+	// LifecycleExpiresAt should always be non-nil if an LCID has been issued; check just to avoid a panic if there's inconsistent data
+	if si.LifecycleExpiresAt != nil && si.LifecycleExpiresAt.Before(currentTime) {
+		return &expiredStatus
+	}
+
+	return &issuedStatus
+}
