@@ -1,25 +1,25 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-interface ReopenRequestFields extends SystemIntakeActionFields {}
+interface IssueLcidFields extends SystemIntakeActionFields {}
 
-const ReopenRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const form = useForm<ReopenRequestFields>();
+const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
+  const form = useForm<IssueLcidFields>();
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: ReopenRequestFields) => {
+  const onSubmit = async (formData: IssueLcidFields) => {
     // Execute mutation here
     // mutate(formData);
   };
 
   return (
-    <FormProvider<ReopenRequestFields> {...form}>
+    <FormProvider<IssueLcidFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
         successMessage=""
@@ -31,4 +31,4 @@ const ReopenRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default ReopenRequest;
+export default IssueLcid;

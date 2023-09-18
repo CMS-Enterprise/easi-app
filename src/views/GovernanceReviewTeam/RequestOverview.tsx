@@ -69,7 +69,9 @@ const RequestOverview = () => {
   /** If true, hides summary and side navigation for full width layout */
   const fullPageLayout: boolean =
     flags.itGovV2Enabled &&
-    (activePage === 'resolutions' || (activePage === 'actions' && !!subPage));
+    (activePage === 'resolutions' ||
+      activePage === 'manage-lcid' ||
+      (activePage === 'actions' && !!subPage));
 
   const { loading, data, refetch } = useQuery<
     GetSystemIntake,
@@ -227,7 +229,7 @@ const RequestOverview = () => {
                 // TODO: remove conditional statement and v1 action routes after flag is deprecated
                 flags.itGovV2Enabled ? (
                   <Route
-                    path="/governance-review-team/:systemId/(actions|resolutions)/:subPage?"
+                    path="/governance-review-team/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
                     render={() => <Actions systemIntake={systemIntake} />}
                   />
                 ) : (
