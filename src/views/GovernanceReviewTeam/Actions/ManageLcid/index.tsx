@@ -39,7 +39,7 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
     handleSubmit,
     formState: { isDirty }
   } = useForm<{
-    resolution: LcidAction;
+    action: LcidAction;
   }>();
 
   const actionOptions = useMemo(() => {
@@ -111,22 +111,22 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
           <Grid className="grid-row grid-gap margin-top-6">
             <Form
               onSubmit={handleSubmit(formData =>
-                history.push(`manage-lcid/${formData.resolution}`)
+                history.push(`manage-lcid/${formData.action}`)
               )}
               className="maxw-none margin-bottom-6 tablet:grid-col-6"
             >
               <Controller
-                name="resolution"
+                name="action"
                 control={control}
                 render={({ field: { ref, ...field } }) => {
                   return (
                     <RadioGroup>
                       <Label
-                        htmlFor="resolution"
+                        htmlFor="action"
                         className="text-normal margin-top-0"
                         required
                       >
-                        {t('resolutions.label')}
+                        {t('manageLcid.label')}
                       </Label>
 
                       {actionOptions.map(action => (

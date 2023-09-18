@@ -71,6 +71,7 @@ const action = {
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
     breadcrumb: 'Manage a Life Cycle ID',
+    label: 'Action',
     description:
       'Update the status or details of a previously-issued Life Cycle ID by expiring it, retiring it, or updating it (Change the expiration date, scope, next steps, or project cost baseline).',
     description_EXPIRED:
