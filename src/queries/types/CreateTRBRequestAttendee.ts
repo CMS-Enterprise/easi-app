@@ -12,7 +12,7 @@ import { CreateTRBRequestAttendeeInput, PersonRole } from "./../../types/graphql
 export interface CreateTRBRequestAttendee_createTRBRequestAttendee_userInfo {
   __typename: "UserInfo";
   commonName: string;
-  email: string;
+  email: EmailAddress;
   euaUserId: string;
 }
 

@@ -17,7 +17,7 @@ import (
 // which can be one of a number of common types, or another user-specified type
 type AccessibilityRequestDocumentType struct {
 	CommonType           models.AccessibilityRequestDocumentCommonType `json:"commonType"`
-	OtherTypeDescription *string                                       `json:"otherTypeDescription"`
+	OtherTypeDescription *string                                       `json:"otherTypeDescription,omitempty"`
 }
 
 type AccessibilityRequestEdge struct {
@@ -34,81 +34,81 @@ type AddGRTFeedbackInput struct {
 	EmailBody              models.HTML                         `json:"emailBody"`
 	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeID"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 }
 
 // Payload for adding GRT feedback to a system request (contains the system
 // request ID)
 type AddGRTFeedbackPayload struct {
-	ID *uuid.UUID `json:"id"`
+	ID *uuid.UUID `json:"id,omitempty"`
 }
 
 // Input to add feedback to a system request
 type BasicActionInput struct {
 	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 }
 
 // A solution proposal within a business case
 type BusinessCaseSolution struct {
-	AcquisitionApproach     *string `json:"acquisitionApproach"`
-	Cons                    *string `json:"cons"`
-	CostSavings             *string `json:"costSavings"`
-	HasUI                   *string `json:"hasUi"`
-	HostingCloudServiceType *string `json:"hostingCloudServiceType"`
-	HostingLocation         *string `json:"hostingLocation"`
-	HostingType             *string `json:"hostingType"`
-	Pros                    *string `json:"pros"`
-	SecurityIsApproved      *bool   `json:"securityIsApproved"`
-	SecurityIsBeingReviewed *string `json:"securityIsBeingReviewed"`
-	Summary                 *string `json:"summary"`
-	Title                   *string `json:"title"`
+	AcquisitionApproach     *string `json:"acquisitionApproach,omitempty"`
+	Cons                    *string `json:"cons,omitempty"`
+	CostSavings             *string `json:"costSavings,omitempty"`
+	HasUI                   *string `json:"hasUi,omitempty"`
+	HostingCloudServiceType *string `json:"hostingCloudServiceType,omitempty"`
+	HostingLocation         *string `json:"hostingLocation,omitempty"`
+	HostingType             *string `json:"hostingType,omitempty"`
+	Pros                    *string `json:"pros,omitempty"`
+	SecurityIsApproved      *bool   `json:"securityIsApproved,omitempty"`
+	SecurityIsBeingReviewed *string `json:"securityIsBeingReviewed,omitempty"`
+	Summary                 *string `json:"summary,omitempty"`
+	Title                   *string `json:"title,omitempty"`
 }
 
 // BusinessOwnerInformation contains information about the business owner for a CEDAR system
 type CedarBusinessOwnerInformation struct {
 	BeneficiaryAddressPurpose      []string `json:"beneficiaryAddressPurpose"`
-	BeneficiaryAddressPurposeOther *string  `json:"beneficiaryAddressPurposeOther"`
+	BeneficiaryAddressPurposeOther *string  `json:"beneficiaryAddressPurposeOther,omitempty"`
 	BeneficiaryAddressSource       []string `json:"beneficiaryAddressSource"`
-	BeneficiaryAddressSourceOther  *string  `json:"beneficiaryAddressSourceOther"`
-	CostPerYear                    *string  `json:"costPerYear"`
-	IsCmsOwned                     *bool    `json:"isCmsOwned"`
-	NumberOfContractorFte          *string  `json:"numberOfContractorFte"`
-	NumberOfFederalFte             *string  `json:"numberOfFederalFte"`
-	NumberOfSupportedUsersPerMonth *string  `json:"numberOfSupportedUsersPerMonth"`
-	StoresBankingData              *bool    `json:"storesBankingData"`
-	StoresBeneficiaryAddress       *bool    `json:"storesBeneficiaryAddress"`
+	BeneficiaryAddressSourceOther  *string  `json:"beneficiaryAddressSourceOther,omitempty"`
+	CostPerYear                    *string  `json:"costPerYear,omitempty"`
+	IsCmsOwned                     *bool    `json:"isCmsOwned,omitempty"`
+	NumberOfContractorFte          *string  `json:"numberOfContractorFte,omitempty"`
+	NumberOfFederalFte             *string  `json:"numberOfFederalFte,omitempty"`
+	NumberOfSupportedUsersPerMonth *string  `json:"numberOfSupportedUsersPerMonth,omitempty"`
+	StoresBankingData              *bool    `json:"storesBankingData,omitempty"`
+	StoresBeneficiaryAddress       *bool    `json:"storesBeneficiaryAddress,omitempty"`
 }
 
 // SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 type CedarSystemMaintainerInformation struct {
-	AgileUsed                  *bool    `json:"agileUsed"`
-	BusinessArtifactsOnDemand  *bool    `json:"businessArtifactsOnDemand"`
-	DeploymentFrequency        *string  `json:"deploymentFrequency"`
-	DevCompletionPercent       *string  `json:"devCompletionPercent"`
-	DevWorkDescription         *string  `json:"devWorkDescription"`
-	EcapParticipation          *bool    `json:"ecapParticipation"`
-	FrontendAccessType         *string  `json:"frontendAccessType"`
-	HardCodedIPAddress         *bool    `json:"hardCodedIPAddress"`
-	IP6EnabledAssetPercent     *string  `json:"ip6EnabledAssetPercent"`
-	IP6TransitionPlan          *string  `json:"ip6TransitionPlan"`
-	IPEnabledAssetCount        *int     `json:"ipEnabledAssetCount"`
-	MajorRefreshDate           *string  `json:"majorRefreshDate"`
-	NetAccessibility           *string  `json:"netAccessibility"`
-	OmDocumentationOnDemand    *bool    `json:"omDocumentationOnDemand"`
-	PlansToRetireReplace       *string  `json:"plansToRetireReplace"`
-	QuarterToRetireReplace     *string  `json:"quarterToRetireReplace"`
+	AgileUsed                  *bool    `json:"agileUsed,omitempty"`
+	BusinessArtifactsOnDemand  *bool    `json:"businessArtifactsOnDemand,omitempty"`
+	DeploymentFrequency        *string  `json:"deploymentFrequency,omitempty"`
+	DevCompletionPercent       *string  `json:"devCompletionPercent,omitempty"`
+	DevWorkDescription         *string  `json:"devWorkDescription,omitempty"`
+	EcapParticipation          *bool    `json:"ecapParticipation,omitempty"`
+	FrontendAccessType         *string  `json:"frontendAccessType,omitempty"`
+	HardCodedIPAddress         *bool    `json:"hardCodedIPAddress,omitempty"`
+	IP6EnabledAssetPercent     *string  `json:"ip6EnabledAssetPercent,omitempty"`
+	IP6TransitionPlan          *string  `json:"ip6TransitionPlan,omitempty"`
+	IPEnabledAssetCount        *int     `json:"ipEnabledAssetCount,omitempty"`
+	MajorRefreshDate           *string  `json:"majorRefreshDate,omitempty"`
+	NetAccessibility           *string  `json:"netAccessibility,omitempty"`
+	OmDocumentationOnDemand    *bool    `json:"omDocumentationOnDemand,omitempty"`
+	PlansToRetireReplace       *string  `json:"plansToRetireReplace,omitempty"`
+	QuarterToRetireReplace     *string  `json:"quarterToRetireReplace,omitempty"`
 	RecordsManagementBucket    []string `json:"recordsManagementBucket"`
-	SourceCodeOnDemand         *bool    `json:"sourceCodeOnDemand"`
-	SystemCustomization        *string  `json:"systemCustomization"`
-	SystemDesignOnDemand       *bool    `json:"systemDesignOnDemand"`
-	SystemProductionDate       *string  `json:"systemProductionDate"`
-	SystemRequirementsOnDemand *bool    `json:"systemRequirementsOnDemand"`
-	TestPlanOnDemand           *bool    `json:"testPlanOnDemand"`
-	TestReportsOnDemand        *bool    `json:"testReportsOnDemand"`
-	TestScriptsOnDemand        *bool    `json:"testScriptsOnDemand"`
-	YearToRetireReplace        *string  `json:"yearToRetireReplace"`
+	SourceCodeOnDemand         *bool    `json:"sourceCodeOnDemand,omitempty"`
+	SystemCustomization        *string  `json:"systemCustomization,omitempty"`
+	SystemDesignOnDemand       *bool    `json:"systemDesignOnDemand,omitempty"`
+	SystemProductionDate       *string  `json:"systemProductionDate,omitempty"`
+	SystemRequirementsOnDemand *bool    `json:"systemRequirementsOnDemand,omitempty"`
+	TestPlanOnDemand           *bool    `json:"testPlanOnDemand,omitempty"`
+	TestReportsOnDemand        *bool    `json:"testReportsOnDemand,omitempty"`
+	TestScriptsOnDemand        *bool    `json:"testScriptsOnDemand,omitempty"`
+	YearToRetireReplace        *string  `json:"yearToRetireReplace,omitempty"`
 }
 
 // The input needed to close a TRB request
@@ -121,9 +121,9 @@ type CloseTRBRequestInput struct {
 
 // Represents a date used for start and end dates on a contract
 type ContractDate struct {
-	Day   *string `json:"day"`
-	Month *string `json:"month"`
-	Year  *string `json:"year"`
+	Day   *string `json:"day,omitempty"`
+	Month *string `json:"month,omitempty"`
+	Year  *string `json:"year,omitempty"`
 }
 
 // The input data used for adding a document to a 508/accessibility request
@@ -131,7 +131,7 @@ type CreateAccessibilityRequestDocumentInput struct {
 	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
 	MimeType                     string                                        `json:"mimeType"`
 	Name                         string                                        `json:"name"`
-	OtherDocumentTypeDescription *string                                       `json:"otherDocumentTypeDescription"`
+	OtherDocumentTypeDescription *string                                       `json:"otherDocumentTypeDescription,omitempty"`
 	RequestID                    uuid.UUID                                     `json:"requestID"`
 	Size                         int                                           `json:"size"`
 	URL                          string                                        `json:"url"`
@@ -140,15 +140,15 @@ type CreateAccessibilityRequestDocumentInput struct {
 // The payload containing the input data used for adding a document to a
 // 508/accessibility request
 type CreateAccessibilityRequestDocumentPayload struct {
-	AccessibilityRequestDocument *models.AccessibilityRequestDocument `json:"accessibilityRequestDocument"`
-	UserErrors                   []*UserError                         `json:"userErrors"`
+	AccessibilityRequestDocument *models.AccessibilityRequestDocument `json:"accessibilityRequestDocument,omitempty"`
+	UserErrors                   []*UserError                         `json:"userErrors,omitempty"`
 }
 
 // The data needed to initialize a 508/accessibility request
 type CreateAccessibilityRequestInput struct {
-	IntakeID      *uuid.UUID `json:"intakeID"`
+	IntakeID      *uuid.UUID `json:"intakeID,omitempty"`
 	Name          string     `json:"name"`
-	CedarSystemID *string    `json:"cedarSystemId"`
+	CedarSystemID *string    `json:"cedarSystemId,omitempty"`
 }
 
 // The data used when adding a note to a 508/accessibility request
@@ -161,13 +161,13 @@ type CreateAccessibilityRequestNoteInput struct {
 // The payload for adding a note to a 508/accessibility request
 type CreateAccessibilityRequestNotePayload struct {
 	AccessibilityRequestNote *models.AccessibilityRequestNote `json:"accessibilityRequestNote"`
-	UserErrors               []*UserError                     `json:"userErrors"`
+	UserErrors               []*UserError                     `json:"userErrors,omitempty"`
 }
 
 // The payload containing the data needed to initialize an AccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
-	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
-	UserErrors           []*UserError                 `json:"userErrors"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest,omitempty"`
+	UserErrors           []*UserError                 `json:"userErrors,omitempty"`
 }
 
 // The data needed to bookmark a cedar system
@@ -177,23 +177,23 @@ type CreateCedarSystemBookmarkInput struct {
 
 // The payload when bookmarking a cedar system
 type CreateCedarSystemBookmarkPayload struct {
-	CedarSystemBookmark *models.CedarSystemBookmark `json:"cedarSystemBookmark"`
+	CedarSystemBookmark *models.CedarSystemBookmark `json:"cedarSystemBookmark,omitempty"`
 }
 
 // Input data for extending a system request's lifecycle ID
 type CreateSystemIntakeActionExtendLifecycleIDInput struct {
 	ID                     uuid.UUID                           `json:"id"`
-	ExpirationDate         *time.Time                          `json:"expirationDate"`
-	NextSteps              *models.HTML                        `json:"nextSteps"`
+	ExpirationDate         *time.Time                          `json:"expirationDate,omitempty"`
+	NextSteps              *models.HTML                        `json:"nextSteps,omitempty"`
 	Scope                  models.HTML                         `json:"scope"`
-	CostBaseline           *string                             `json:"costBaseline"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	CostBaseline           *string                             `json:"costBaseline,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 }
 
 // Payload data for extending a system request's lifecycle ID
 type CreateSystemIntakeActionExtendLifecycleIDPayload struct {
-	SystemIntake *models.SystemIntake `json:"systemIntake"`
-	UserErrors   []*UserError         `json:"userErrors"`
+	SystemIntake *models.SystemIntake `json:"systemIntake,omitempty"`
+	UserErrors   []*UserError         `json:"userErrors,omitempty"`
 }
 
 // The data needed to associate a contact with a system intake
@@ -206,7 +206,7 @@ type CreateSystemIntakeContactInput struct {
 
 // The payload when creating a system intake contact
 type CreateSystemIntakeContactPayload struct {
-	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
+	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact,omitempty"`
 }
 
 // The data needed to upload a System Intake document and attach it to a request with metadata
@@ -214,12 +214,12 @@ type CreateSystemIntakeDocumentInput struct {
 	RequestID            uuid.UUID                             `json:"requestID"`
 	FileData             graphql.Upload                        `json:"fileData"`
 	DocumentType         models.SystemIntakeDocumentCommonType `json:"documentType"`
-	OtherTypeDescription *string                               `json:"otherTypeDescription"`
+	OtherTypeDescription *string                               `json:"otherTypeDescription,omitempty"`
 }
 
 // Data returned after uploading a document to a System Intake
 type CreateSystemIntakeDocumentPayload struct {
-	Document *models.SystemIntakeDocument `json:"document"`
+	Document *models.SystemIntakeDocument `json:"document,omitempty"`
 }
 
 // The input data used to initialize an IT governance request for a system
@@ -263,12 +263,12 @@ type CreateTRBRequestDocumentInput struct {
 	RequestID            uuid.UUID                    `json:"requestID"`
 	FileData             graphql.Upload               `json:"fileData"`
 	DocumentType         models.TRBDocumentCommonType `json:"documentType"`
-	OtherTypeDescription *string                      `json:"otherTypeDescription"`
+	OtherTypeDescription *string                      `json:"otherTypeDescription,omitempty"`
 }
 
 // Data returned after uploading a document to a TRB request
 type CreateTRBRequestDocumentPayload struct {
-	Document *models.TRBRequestDocument `json:"document"`
+	Document *models.TRBRequestDocument `json:"document,omitempty"`
 }
 
 // The data needed to add feedback to a TRB request
@@ -284,15 +284,15 @@ type CreateTRBRequestFeedbackInput struct {
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
 	RequestID uuid.UUID               `json:"requestID"`
-	Score     *int                    `json:"score"`
+	Score     *int                    `json:"score,omitempty"`
 	TestType  models.TestDateTestType `json:"testType"`
 }
 
 // The payload for the input required to add a test date/score to a
 // 508/accessibility request
 type CreateTestDatePayload struct {
-	TestDate   *models.TestDate `json:"testDate"`
-	UserErrors []*UserError     `json:"userErrors"`
+	TestDate   *models.TestDate `json:"testDate,omitempty"`
+	UserErrors []*UserError     `json:"userErrors,omitempty"`
 }
 
 // The current user of the application
@@ -307,7 +307,7 @@ type DeleteAccessibilityRequestDocumentInput struct {
 
 // The payload used to delete a document from a 508/accessibility request
 type DeleteAccessibilityRequestDocumentPayload struct {
-	ID *uuid.UUID `json:"id"`
+	ID *uuid.UUID `json:"id,omitempty"`
 }
 
 // The input data needed to delete a 508/accessibility request
@@ -318,8 +318,8 @@ type DeleteAccessibilityRequestInput struct {
 
 // The payload data sent when deleting a 508/accessibility request
 type DeleteAccessibilityRequestPayload struct {
-	ID         *uuid.UUID   `json:"id"`
-	UserErrors []*UserError `json:"userErrors"`
+	ID         *uuid.UUID   `json:"id,omitempty"`
+	UserErrors []*UserError `json:"userErrors,omitempty"`
 }
 
 // The payload when deleting a bookmark for a cedar system
@@ -334,17 +334,17 @@ type DeleteSystemIntakeContactInput struct {
 
 // The payload when deleting a system intake contact
 type DeleteSystemIntakeContactPayload struct {
-	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact"`
+	SystemIntakeContact *models.SystemIntakeContact `json:"systemIntakeContact,omitempty"`
 }
 
 // Data returned after deleting a document attached to a System Intake
 type DeleteSystemIntakeDocumentPayload struct {
-	Document *models.SystemIntakeDocument `json:"document"`
+	Document *models.SystemIntakeDocument `json:"document,omitempty"`
 }
 
 // Data returned after deleting a document attached to a TRB request
 type DeleteTRBRequestDocumentPayload struct {
-	Document *models.TRBRequestDocument `json:"document"`
+	Document *models.TRBRequestDocument `json:"document,omitempty"`
 }
 
 type DeleteTRBRequestFundingSourcesInput struct {
@@ -359,8 +359,8 @@ type DeleteTestDateInput struct {
 
 // The payload for the input required to delete a test date/score
 type DeleteTestDatePayload struct {
-	TestDate   *models.TestDate `json:"testDate"`
-	UserErrors []*UserError     `json:"userErrors"`
+	TestDate   *models.TestDate `json:"testDate,omitempty"`
+	UserErrors []*UserError     `json:"userErrors,omitempty"`
 }
 
 // Input associated with a document to be uploaded to a 508/accessibility request
@@ -372,8 +372,8 @@ type GeneratePresignedUploadURLInput struct {
 
 // URL generated for a document to be uploaded to a 508/accessibility request
 type GeneratePresignedUploadURLPayload struct {
-	URL        *string      `json:"url"`
-	UserErrors []*UserError `json:"userErrors"`
+	URL        *string      `json:"url,omitempty"`
+	UserErrors []*UserError `json:"userErrors,omitempty"`
 }
 
 // The input data required to issue a lifecycle ID for a system's IT governance
@@ -382,17 +382,17 @@ type IssueLifecycleIDInput struct {
 	ExpiresAt              time.Time                           `json:"expiresAt"`
 	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
-	Lcid                   *string                             `json:"lcid"`
-	NextSteps              *models.HTML                        `json:"nextSteps"`
+	Lcid                   *string                             `json:"lcid,omitempty"`
+	NextSteps              *models.HTML                        `json:"nextSteps,omitempty"`
 	Scope                  models.HTML                         `json:"scope"`
-	CostBaseline           *string                             `json:"costBaseline"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	CostBaseline           *string                             `json:"costBaseline,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 }
 
 // The most recent note added by an admin to a system request
 type LastAdminNote struct {
-	Content   *models.HTML `json:"content"`
-	CreatedAt *time.Time   `json:"createdAt"`
+	Content   *models.HTML `json:"content,omitempty"`
+	CreatedAt *time.Time   `json:"createdAt,omitempty"`
 }
 
 // The current user's Launch Darkly key
@@ -405,9 +405,9 @@ type LaunchDarklySettings struct {
 type RejectIntakeInput struct {
 	Feedback               models.HTML                         `json:"feedback"`
 	IntakeID               uuid.UUID                           `json:"intakeId"`
-	NextSteps              *models.HTML                        `json:"nextSteps"`
+	NextSteps              *models.HTML                        `json:"nextSteps,omitempty"`
 	Reason                 models.HTML                         `json:"reason"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 }
 
 // The data needed to reopen a TRB request
@@ -421,13 +421,13 @@ type ReopenTRBRequestInput struct {
 // Represents a request being made with the EASi system
 type Request struct {
 	ID              uuid.UUID   `json:"id"`
-	Name            *string     `json:"name"`
-	SubmittedAt     *time.Time  `json:"submittedAt"`
+	Name            *string     `json:"name,omitempty"`
+	SubmittedAt     *time.Time  `json:"submittedAt,omitempty"`
 	Type            RequestType `json:"type"`
 	Status          string      `json:"status"`
-	StatusCreatedAt *time.Time  `json:"statusCreatedAt"`
-	Lcid            *string     `json:"lcid"`
-	NextMeetingDate *time.Time  `json:"nextMeetingDate"`
+	StatusCreatedAt *time.Time  `json:"statusCreatedAt,omitempty"`
+	Lcid            *string     `json:"lcid,omitempty"`
+	NextMeetingDate *time.Time  `json:"nextMeetingDate,omitempty"`
 }
 
 type RequestEdge struct {
@@ -497,9 +497,9 @@ type SystemIntakeAction struct {
 	SystemIntake         *models.SystemIntake              `json:"systemIntake"`
 	Type                 SystemIntakeActionType            `json:"type"`
 	Actor                *SystemIntakeActionActor          `json:"actor"`
-	Step                 *models.SystemIntakeStep          `json:"step"`
-	Feedback             *models.HTML                      `json:"feedback"`
-	LcidExpirationChange *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange"`
+	Step                 *models.SystemIntakeStep          `json:"step,omitempty"`
+	Feedback             *models.HTML                      `json:"feedback,omitempty"`
+	LcidExpirationChange *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange,omitempty"`
 	CreatedAt            time.Time                         `json:"createdAt"`
 }
 
@@ -511,20 +511,20 @@ type SystemIntakeActionActor struct {
 
 // Represents current and planned annual costs for a system
 type SystemIntakeAnnualSpending struct {
-	CurrentAnnualSpending  *string `json:"currentAnnualSpending"`
-	PlannedYearOneSpending *string `json:"plannedYearOneSpending"`
+	CurrentAnnualSpending  *string `json:"currentAnnualSpending,omitempty"`
+	PlannedYearOneSpending *string `json:"plannedYearOneSpending,omitempty"`
 }
 
 // Input data for current and planned year one annual costs associated with a system request
 type SystemIntakeAnnualSpendingInput struct {
-	CurrentAnnualSpending  *string `json:"currentAnnualSpending"`
-	PlannedYearOneSpending *string `json:"plannedYearOneSpending"`
+	CurrentAnnualSpending  *string `json:"currentAnnualSpending,omitempty"`
+	PlannedYearOneSpending *string `json:"plannedYearOneSpending,omitempty"`
 }
 
 // Represents the OIT business owner of a system
 type SystemIntakeBusinessOwner struct {
-	Component *string `json:"component"`
-	Name      *string `json:"name"`
+	Component *string `json:"component,omitempty"`
+	Name      *string `json:"name,omitempty"`
 }
 
 // The input data used to set the CMS business owner of a system
@@ -536,10 +536,10 @@ type SystemIntakeBusinessOwnerInput struct {
 // Input for creating a Close Request Action in Admin Actions v2
 type SystemIntakeCloseRequestInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	Reason                 *models.HTML                        `json:"reason"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	AdminNotes             *models.HTML                        `json:"adminNotes"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	Reason                 *models.HTML                        `json:"reason,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	AdminNotes             *models.HTML                        `json:"adminNotes,omitempty"`
 }
 
 // Represents a contact in OIT who is collaborating with the user
@@ -566,10 +566,10 @@ type SystemIntakeConfirmLCIDInput struct {
 	Scope                  models.HTML                         `json:"scope"`
 	NextSteps              models.HTML                         `json:"nextSteps"`
 	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
-	CostBaseline           *string                             `json:"costBaseline"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdminNote              *models.HTML                        `json:"adminNote"`
+	CostBaseline           *string                             `json:"costBaseline,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // The payload when retrieving system intake contacts
@@ -580,103 +580,103 @@ type SystemIntakeContactsPayload struct {
 
 // Represents a contract for work on a system
 type SystemIntakeContract struct {
-	Contractor  *string       `json:"contractor"`
+	Contractor  *string       `json:"contractor,omitempty"`
 	EndDate     *ContractDate `json:"endDate"`
-	HasContract *string       `json:"hasContract"`
+	HasContract *string       `json:"hasContract,omitempty"`
 	StartDate   *ContractDate `json:"startDate"`
-	Vehicle     *string       `json:"vehicle"`
-	Number      *string       `json:"number"`
+	Vehicle     *string       `json:"vehicle,omitempty"`
+	Number      *string       `json:"number,omitempty"`
 }
 
 // Input data containing information about a contract related to a system request
 type SystemIntakeContractInput struct {
-	Contractor  *string    `json:"contractor"`
-	EndDate     *time.Time `json:"endDate"`
-	HasContract *string    `json:"hasContract"`
-	StartDate   *time.Time `json:"startDate"`
-	Number      *string    `json:"number"`
+	Contractor  *string    `json:"contractor,omitempty"`
+	EndDate     *time.Time `json:"endDate,omitempty"`
+	HasContract *string    `json:"hasContract,omitempty"`
+	StartDate   *time.Time `json:"startDate,omitempty"`
+	Number      *string    `json:"number,omitempty"`
 }
 
 // Represents expectations about a system's additional costs
 type SystemIntakeCosts struct {
-	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
-	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
+	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount,omitempty"`
+	IsExpectingIncrease    *string `json:"isExpectingIncrease,omitempty"`
 }
 
 // Input data for estimated system cost increases associated with a system request
 //
 // NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
 type SystemIntakeCostsInput struct {
-	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
-	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
+	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount,omitempty"`
+	IsExpectingIncrease    *string `json:"isExpectingIncrease,omitempty"`
 }
 
 // Denotes the type of a document attached to a System Intake,
 // which can be one of a number of common types, or a free-text user-specified type
 type SystemIntakeDocumentType struct {
 	CommonType           models.SystemIntakeDocumentCommonType `json:"commonType"`
-	OtherTypeDescription *string                               `json:"otherTypeDescription"`
+	OtherTypeDescription *string                               `json:"otherTypeDescription,omitempty"`
 }
 
 // Input for expiring an intake's LCID in IT Gov v2
 type SystemIntakeExpireLCIDInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
 	Reason                 models.HTML                         `json:"reason"`
-	NextSteps              *models.HTML                        `json:"nextSteps"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	AdminNote              *models.HTML                        `json:"adminNote"`
+	NextSteps              *models.HTML                        `json:"nextSteps,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Represents the source of funding for a system
 type SystemIntakeFundingSourceInput struct {
-	FundingNumber *string `json:"fundingNumber"`
-	Source        *string `json:"source"`
+	FundingNumber *string `json:"fundingNumber,omitempty"`
+	Source        *string `json:"source,omitempty"`
 }
 
 // The input required to specify the funding source(s) for a system intake
 type SystemIntakeFundingSourcesInput struct {
-	ExistingFunding *bool                             `json:"existingFunding"`
+	ExistingFunding *bool                             `json:"existingFunding,omitempty"`
 	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
 }
 
 // Contains multiple system request collaborators, if any
 type SystemIntakeGovernanceTeam struct {
-	IsPresent *bool                       `json:"isPresent"`
-	Teams     []*SystemIntakeCollaborator `json:"teams"`
+	IsPresent *bool                       `json:"isPresent,omitempty"`
+	Teams     []*SystemIntakeCollaborator `json:"teams,omitempty"`
 }
 
 // The input data used to set the list of OIT collaborators for a system request
 type SystemIntakeGovernanceTeamInput struct {
-	IsPresent *bool                            `json:"isPresent"`
-	Teams     []*SystemIntakeCollaboratorInput `json:"teams"`
+	IsPresent *bool                            `json:"isPresent,omitempty"`
+	Teams     []*SystemIntakeCollaboratorInput `json:"teams,omitempty"`
 }
 
 // The Information System Security Officer (ISSO) that is
 // assicuated with a system request, if any
 type SystemIntakeIsso struct {
-	IsPresent *bool   `json:"isPresent"`
-	Name      *string `json:"name"`
+	IsPresent *bool   `json:"isPresent,omitempty"`
+	Name      *string `json:"name,omitempty"`
 }
 
 // The input data used to set the ISSO associated with a system request, if any
 type SystemIntakeISSOInput struct {
-	IsPresent *bool   `json:"isPresent"`
-	Name      *string `json:"name"`
+	IsPresent *bool   `json:"isPresent,omitempty"`
+	Name      *string `json:"name,omitempty"`
 }
 
 // Input for setting an intake's decision to issuing an LCID in IT Gov v2
 type SystemIntakeIssueLCIDInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	Lcid                   *string                             `json:"lcid"`
+	Lcid                   *string                             `json:"lcid,omitempty"`
 	ExpiresAt              time.Time                           `json:"expiresAt"`
 	Scope                  models.HTML                         `json:"scope"`
 	NextSteps              models.HTML                         `json:"nextSteps"`
 	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
-	CostBaseline           *string                             `json:"costBaseline"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdminNote              *models.HTML                        `json:"adminNote"`
+	CostBaseline           *string                             `json:"costBaseline,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Contains the data needed to change the expiration date of a system request's
@@ -684,21 +684,21 @@ type SystemIntakeIssueLCIDInput struct {
 type SystemIntakeLCIDExpirationChange struct {
 	PreviousDate         time.Time    `json:"previousDate"`
 	NewDate              time.Time    `json:"newDate"`
-	PreviousScope        *models.HTML `json:"previousScope"`
-	NewScope             *models.HTML `json:"newScope"`
-	PreviousNextSteps    *models.HTML `json:"previousNextSteps"`
-	NewNextSteps         *models.HTML `json:"newNextSteps"`
-	PreviousCostBaseline *string      `json:"previousCostBaseline"`
-	NewCostBaseline      *string      `json:"newCostBaseline"`
+	PreviousScope        *models.HTML `json:"previousScope,omitempty"`
+	NewScope             *models.HTML `json:"newScope,omitempty"`
+	PreviousNextSteps    *models.HTML `json:"previousNextSteps,omitempty"`
+	NewNextSteps         *models.HTML `json:"newNextSteps,omitempty"`
+	PreviousCostBaseline *string      `json:"previousCostBaseline,omitempty"`
+	NewCostBaseline      *string      `json:"newCostBaseline,omitempty"`
 }
 
 // Input for creating a Not an IT Governance Request Action in Admin Actions v2
 type SystemIntakeNotITGovReqInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	Reason                 *models.HTML                        `json:"reason"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	AdminNotes             *models.HTML                        `json:"adminNotes"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	Reason                 *models.HTML                        `json:"reason,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	AdminNotes             *models.HTML                        `json:"adminNotes,omitempty"`
 }
 
 // The author of a note added to a system request
@@ -709,8 +709,8 @@ type SystemIntakeNoteAuthor struct {
 
 // The product manager associated with a system
 type SystemIntakeProductManager struct {
-	Component *string `json:"component"`
-	Name      *string `json:"name"`
+	Component *string `json:"component,omitempty"`
+	Name      *string `json:"name,omitempty"`
 }
 
 // The input data used to set the CMS product manager/lead of a system
@@ -723,12 +723,12 @@ type SystemIntakeProductManagerInput struct {
 type SystemIntakeProgressToNewStepsInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
 	NewStep                SystemIntakeStepToProgressTo        `json:"newStep"`
-	MeetingDate            *time.Time                          `json:"meetingDate"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	Feedback               *models.HTML                        `json:"feedback"`
-	GrbRecommendations     *models.HTML                        `json:"grbRecommendations"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	AdminNote              *models.HTML                        `json:"adminNote"`
+	MeetingDate            *time.Time                          `json:"meetingDate,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	Feedback               *models.HTML                        `json:"feedback,omitempty"`
+	GrbRecommendations     *models.HTML                        `json:"grbRecommendations,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
@@ -737,34 +737,34 @@ type SystemIntakeRejectIntakeInput struct {
 	Reason                 models.HTML                         `json:"reason"`
 	NextSteps              models.HTML                         `json:"nextSteps"`
 	TrbFollowUp            models.SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdminNote              *models.HTML                        `json:"adminNote"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Input for creating a Reopen Request Action in Admin Actions v2
 type SystemIntakeReopenRequestInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	Reason                 *models.HTML                        `json:"reason"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	AdminNotes             *models.HTML                        `json:"adminNotes"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	Reason                 *models.HTML                        `json:"reason,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	AdminNotes             *models.HTML                        `json:"adminNotes,omitempty"`
 }
 
 // Input for creating a Request Edits Action in Admin Actions v2
 type SystemIntakeRequestEditsInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
 	IntakeFormStep         SystemIntakeFormStep                `json:"intakeFormStep"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	EmailFeedback          models.HTML                         `json:"emailFeedback"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	AdminNotes             *models.HTML                        `json:"adminNotes"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	AdminNotes             *models.HTML                        `json:"adminNotes,omitempty"`
 }
 
 // The contact who made an IT governance request for a system
 type SystemIntakeRequester struct {
-	Component *string `json:"component"`
-	Email     *string `json:"email"`
+	Component *string `json:"component,omitempty"`
+	Email     *string `json:"email,omitempty"`
 	Name      string  `json:"name"`
 }
 
@@ -783,21 +783,21 @@ type SystemIntakeRequesterWithComponentInput struct {
 // Input for updating an intake's LCID in IT Gov v2
 type SystemIntakeUpdateLCIDInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
-	ExpiresAt              *time.Time                          `json:"expiresAt"`
-	Scope                  *models.HTML                        `json:"scope"`
-	NextSteps              *models.HTML                        `json:"nextSteps"`
-	CostBaseline           *string                             `json:"costBaseline"`
-	Reason                 *models.HTML                        `json:"reason"`
-	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
-	AdminNote              *models.HTML                        `json:"adminNote"`
+	ExpiresAt              *time.Time                          `json:"expiresAt,omitempty"`
+	Scope                  *models.HTML                        `json:"scope,omitempty"`
+	NextSteps              *models.HTML                        `json:"nextSteps,omitempty"`
+	CostBaseline           *string                             `json:"costBaseline,omitempty"`
+	Reason                 *models.HTML                        `json:"reason,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Denotes the type of a document attached to a TRB request,
 // which can be one of a number of common types, or a free-text user-specified type
 type TRBRequestDocumentType struct {
 	CommonType           models.TRBDocumentCommonType `json:"commonType"`
-	OtherTypeDescription *string                      `json:"otherTypeDescription"`
+	OtherTypeDescription *string                      `json:"otherTypeDescription,omitempty"`
 }
 
 // Parameters for updating a 508/accessibility request's associated CEDAR system
@@ -809,7 +809,7 @@ type UpdateAccessibilityRequestCedarSystemInput struct {
 // Result of updating a 508/accessibility request's associated CEDAR system
 type UpdateAccessibilityRequestCedarSystemPayload struct {
 	ID                   uuid.UUID                    `json:"id"`
-	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest,omitempty"`
 }
 
 // Parameters for updating a 508/accessibility request's status
@@ -824,7 +824,7 @@ type UpdateAccessibilityRequestStatusPayload struct {
 	RequestID  uuid.UUID                         `json:"requestID"`
 	Status     models.AccessibilityRequestStatus `json:"status"`
 	EuaUserID  string                            `json:"euaUserId"`
-	UserErrors []*UserError                      `json:"userErrors"`
+	UserErrors []*UserError                      `json:"userErrors,omitempty"`
 }
 
 // Input data used to update the admin lead assigned to a system IT governance
@@ -857,22 +857,22 @@ type UpdateSystemIntakeContactInput struct {
 // Input data for updating contract details related to a system request
 type UpdateSystemIntakeContractDetailsInput struct {
 	ID             uuid.UUID                        `json:"id"`
-	FundingSources *SystemIntakeFundingSourcesInput `json:"fundingSources"`
-	Costs          *SystemIntakeCostsInput          `json:"costs"`
-	AnnualSpending *SystemIntakeAnnualSpendingInput `json:"annualSpending"`
-	Contract       *SystemIntakeContractInput       `json:"contract"`
+	FundingSources *SystemIntakeFundingSourcesInput `json:"fundingSources,omitempty"`
+	Costs          *SystemIntakeCostsInput          `json:"costs,omitempty"`
+	AnnualSpending *SystemIntakeAnnualSpendingInput `json:"annualSpending,omitempty"`
+	Contract       *SystemIntakeContractInput       `json:"contract,omitempty"`
 }
 
 // Input data for updating a system intake's relationship to a CEDAR system
 type UpdateSystemIntakeLinkedCedarSystemInput struct {
 	ID            uuid.UUID `json:"id"`
-	CedarSystemID *string   `json:"cedarSystemId"`
+	CedarSystemID *string   `json:"cedarSystemId,omitempty"`
 }
 
 // Input data for updating a system intake's relationship to a contract
 type UpdateSystemIntakeLinkedContractInput struct {
 	ID             uuid.UUID `json:"id"`
-	ContractNumber *string   `json:"contractNumber"`
+	ContractNumber *string   `json:"contractNumber,omitempty"`
 }
 
 // Input data for updating an IT governance admin note
@@ -884,26 +884,26 @@ type UpdateSystemIntakeNoteInput struct {
 
 // The payload for updating a system's IT governance request
 type UpdateSystemIntakePayload struct {
-	SystemIntake *models.SystemIntake `json:"systemIntake"`
-	UserErrors   []*UserError         `json:"userErrors"`
+	SystemIntake *models.SystemIntake `json:"systemIntake,omitempty"`
+	UserErrors   []*UserError         `json:"userErrors,omitempty"`
 }
 
 // Input to update some fields on a system request
 type UpdateSystemIntakeRequestDetailsInput struct {
 	ID               uuid.UUID `json:"id"`
-	RequestName      *string   `json:"requestName"`
-	BusinessNeed     *string   `json:"businessNeed"`
-	BusinessSolution *string   `json:"businessSolution"`
-	NeedsEaSupport   *bool     `json:"needsEaSupport"`
-	CurrentStage     *string   `json:"currentStage"`
-	CedarSystemID    *string   `json:"cedarSystemId"`
-	HasUIChanges     *bool     `json:"hasUiChanges"`
+	RequestName      *string   `json:"requestName,omitempty"`
+	BusinessNeed     *string   `json:"businessNeed,omitempty"`
+	BusinessSolution *string   `json:"businessSolution,omitempty"`
+	NeedsEaSupport   *bool     `json:"needsEaSupport,omitempty"`
+	CurrentStage     *string   `json:"currentStage,omitempty"`
+	CedarSystemID    *string   `json:"cedarSystemId,omitempty"`
+	HasUIChanges     *bool     `json:"hasUiChanges,omitempty"`
 }
 
 // Input data used to update GRT and GRB dates for a system request
 type UpdateSystemIntakeReviewDatesInput struct {
-	GrbDate *time.Time `json:"grbDate"`
-	GrtDate *time.Time `json:"grtDate"`
+	GrbDate *time.Time `json:"grbDate,omitempty"`
+	GrtDate *time.Time `json:"grtDate,omitempty"`
 	ID      uuid.UUID  `json:"id"`
 }
 
@@ -939,14 +939,14 @@ type UpdateTRBRequestTRBLeadInput struct {
 type UpdateTestDateInput struct {
 	Date     time.Time               `json:"date"`
 	ID       uuid.UUID               `json:"id"`
-	Score    *int                    `json:"score"`
+	Score    *int                    `json:"score,omitempty"`
 	TestType models.TestDateTestType `json:"testType"`
 }
 
 // The payload for the input required to update a test date/score
 type UpdateTestDatePayload struct {
-	TestDate   *models.TestDate `json:"testDate"`
-	UserErrors []*UserError     `json:"userErrors"`
+	TestDate   *models.TestDate `json:"testDate,omitempty"`
+	UserErrors []*UserError     `json:"userErrors,omitempty"`
 }
 
 // UserError represents application-level errors that are the result of
