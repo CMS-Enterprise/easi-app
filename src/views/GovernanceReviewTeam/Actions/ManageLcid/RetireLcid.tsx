@@ -1,25 +1,25 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import ActionForm, { SystemIntakeActionFields } from './ActionForm';
+import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-interface NotGovernanceFields extends SystemIntakeActionFields {}
+interface RetireLcidFields extends SystemIntakeActionFields {}
 
-const NotGovernance = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const form = useForm<NotGovernanceFields>();
+const RetireLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
+  const form = useForm<RetireLcidFields>();
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: NotGovernanceFields) => {
+  const onSubmit = async (formData: RetireLcidFields) => {
     // Execute mutation here
     // mutate(formData);
   };
 
   return (
-    <FormProvider<NotGovernanceFields> {...form}>
+    <FormProvider<RetireLcidFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
         successMessage=""
@@ -31,4 +31,4 @@ const NotGovernance = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default NotGovernance;
+export default RetireLcid;

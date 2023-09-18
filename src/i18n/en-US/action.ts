@@ -48,7 +48,47 @@ const action = {
         'Use this action when you are ready to issue a decision or if you would like to re-open this request. You will be able to select the resolution for this request.',
       accordion:
         'Use this action if you want to change the decision for this request or if you would like to re-open it. You will be able to select the new resolution for this request.'
+    },
+    manageLcid: {
+      description:
+        'Expire, retire, or update (change the expiration date, scope, next steps, or project cost baseline) a previously-issued LCID.',
+      accordion:
+        'Use this action to modify a previously-issued Life Cycle ID in any way, including manually expiring or retiring it.',
+      accordion_EXPIRED:
+        'Use this action to modify an expired Life Cycle ID by amending or retiring it.',
+      accordion_RETIRED:
+        'Use this action if you want to modify a retired Life Cycle ID in any way. You will have the option to maintain its retired status or reinstate it.'
     }
+  },
+  manageLcid: {
+    title: 'Manage a Life Cycle ID (LCID)',
+    breadcrumb: 'Manage a Life Cycle ID',
+    description:
+      'Update the status or details of a previously-issued Life Cycle ID by expiring it, retiring it, or updating it (Change the expiration date, scope, next steps, or project cost baseline).',
+    description_EXPIRED:
+      'Update the status or details of an expired Life Cycle ID by retiring it or updating it (change the expiration date, scope, next steps, or project cost baseline).',
+    description_RETIRED:
+      'Update the status or details of a retired Life Cycle ID by Changing the retirement date or updating it (change the expiration date, scope, next steps, or project cost baseline).',
+    retire: 'Retire a Life Cycle ID',
+    retire_RETIRED: 'Change retirement date',
+    update: 'Update a Life Cycle ID',
+    expire: 'Expire a Life Cycle ID',
+    summary: {
+      title: 'Available LCID actions',
+      retire: 'Retire',
+      retireDescription:
+        'LCIDs should be retired if they are no longer in use for a planned reason, such as the issuance of a new LCID, the decommissioning of a system, or other known reason. Retired LCIDs do not need to be added to the CIO risk register. This project team will no longer receive automatic notifications about their Life Cycle ID.',
+      update: 'Update',
+      updateDescription:
+        'LCIDs may be updated if there is an approved change to the details, such as an extension of the expiration date, a change to the scope, or similar.',
+      expire: 'Expire',
+      expireDescription:
+        'LCIDs will automatically expire when they reach their expiration date. Manually expiring an LCID will update the expiration date and set the status to “Expired”. Expired LCIDs are usually unplanned or unintended, and result in the project being added to the CIO risk register. This project team will continue to receive automatic notifications about their Life Cycle ID.'
+    }
+  },
+  titleBox: {
+    selected: 'Selected {{type}}',
+    change: 'Change {{type}}'
   },
   resolutions: {
     title: 'Action: change decision or {{action}} request',
@@ -89,9 +129,7 @@ const action = {
         'Choose this resolution if you need to re-open this request for any reason. You will be asked to provide any additional clarification on the next step of this action.'
     },
     confirmCurrentDecision: 'Confirm current decision ({{decision}})',
-    step: '(Step {{step}} of 2)',
-    selectedResolution: 'Selected resolution',
-    changeResolution: 'Change resolution'
+    step: '(Step {{step}} of 2)'
   },
   breadcrumb: 'Request {{systemIntakeId}}',
   fieldsMarkedRequired:
@@ -130,20 +168,7 @@ const action = {
   nextStep: {
     title: 'Action: next steps'
   },
-  decision: {
-    title: 'Action: issue decision'
-  },
-  manageLcid: {
-    title: 'Manage a Life Cycle ID (LCID)',
-    description:
-      'Expire, retire, or update (change the expiration date, scope, next steps, or project cost baseline) a previously-issued LCID.',
-    accordion:
-      'Use this action to modify a previously-issued Life Cycle ID in any way, including manually expiring or retiring it.',
-    accordion_EXPIRED:
-      'Use this action to modify an expired Life Cycle ID by amending or retiring it.',
-    accordion_RETIRED:
-      'Use this action if you want to modify a retired Life Cycle ID in any way. You will have the option to maintain its retired status or reinstate it.'
-  },
+
   actions: {
     notItRequest: 'Not an IT governance request',
     needBizCase: 'Request a draft business case',

@@ -10,6 +10,7 @@ import { RadioGroup } from 'components/shared/RadioField';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { SystemIntakeState } from 'types/graphql-global-types';
 
+import ManageLcid from './ManageLcid';
 import NextStep from './NextStep';
 import RequestEdits from './RequestEdits';
 import Resolutions from './Resolutions';
@@ -97,6 +98,17 @@ const Actions = ({ systemIntake }: ActionsProps) => {
           )}
         />
 
+        {/* Manage LCID page */}
+        <Route
+          path="/governance-review-team/:systemId/manage-lcid/:subPage?"
+          render={() => (
+            <ManageLcid
+              systemIntakeId={systemIntake.id}
+              lcidStatus={lcidStatus}
+            />
+          )}
+        />
+
         {/* Select action main page */}
         <Route path="/governance-review-team/:systemId/actions">
           <PageHeading
@@ -175,10 +187,13 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           {...fieldProps}
                           value="manage-lcid"
                           label={t('manageLcid.title')}
-                          description={t('manageLcid.description')}
-                          accordionText={t('manageLcid.accordion', {
-                            context: lcidStatus
-                          })}
+                          description={t('chooseAction.manageLcid.description')}
+                          accordionText={t(
+                            'chooseAction.manageLcid.accordion',
+                            {
+                              context: lcidStatus
+                            }
+                          )}
                         />
                       )
                     }
