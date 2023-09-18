@@ -14,16 +14,15 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';
-import TitleBox from '../components/TitleBox';
 
 import ExpireLcid from './ExpireLcid';
 import RetireLcid from './RetireLcid';
 import UpdateLcid from './UpdateLcid';
 
-type ManageLcidProps = {
+export interface ManageLcidProps {
   systemIntakeId: string;
   lcidStatus: SystemIntakeLCIDStatus | null;
-};
+}
 
 type LcidAction = 'update' | 'retire' | 'expire';
 
@@ -75,35 +74,27 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
         ]}
       />
 
-      <div className="desktop:display-flex desktop:flex-align-end">
-        <PageHeading className="margin-bottom-0">
-          {t('manageLcid.title')}
-        </PageHeading>
-        <p className="font-body-lg text-base margin-bottom-05 margin-y-1 desktop:margin-left-2 desktop:margin-bottom-05">
-          {t('resolutions.step', { step: subPage ? 2 : 1 })}
-        </p>
-      </div>
-
-      {subPage && (
-        <TitleBox
-          systemIntakeId={systemIntakeId}
-          title={t(`manageLcid.${subPage}`, { context: lcidStatus })}
-          type="action"
-        />
-      )}
-
       <Switch>
         <Route path="/governance-review-team/:sytemId/manage-lcid/retire">
-          <RetireLcid systemIntakeId={systemIntakeId} />
+          <RetireLcid systemIntakeId={systemIntakeId} lcidStatus={lcidStatus} />
         </Route>
         <Route path="/governance-review-team/:sytemId/manage-lcid/update">
-          <UpdateLcid systemIntakeId={systemIntakeId} />
+          <UpdateLcid systemIntakeId={systemIntakeId} lcidStatus={lcidStatus} />
         </Route>
         <Route path="/governance-review-team/:sytemId/manage-lcid/expire">
-          <ExpireLcid systemIntakeId={systemIntakeId} />
+          <ExpireLcid systemIntakeId={systemIntakeId} lcidStatus={lcidStatus} />
         </Route>
 
         <Route path="/governance-review-team/:sytemId/manage-lcid">
+          <div className="desktop:display-flex desktop:flex-align-end">
+            <PageHeading className="margin-bottom-0">
+              {t('manageLcid.title')}
+            </PageHeading>
+            <p className="font-body-lg text-base margin-bottom-05 margin-y-1 desktop:margin-left-2 desktop:margin-bottom-05">
+              {t('resolutions.step', { step: 1 })}
+            </p>
+          </div>
+
           <p className="line-height-body-5 font-body-lg text-light margin-0">
             {t('manageLcid.description', {
               context: lcidStatus
