@@ -26,7 +26,7 @@ interface RequestEditsFields extends SystemIntakeActionFields {
 }
 
 const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
-  const { t } = useTranslation('action');
+  const { t } = useTranslation(['action', 'form']);
 
   const form = useForm<RequestEditsFields>();
 
@@ -101,7 +101,9 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
                   <RequiredAsterisk />
                 </Label>
                 {error && (
-                  <ErrorMessage>{t('errors.makeSelection')}</ErrorMessage>
+                  <ErrorMessage>
+                    {t('form:inputError.makeSelection')}
+                  </ErrorMessage>
                 )}
                 <Dropdown
                   id="intakeFormStep"
@@ -133,7 +135,9 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
                   {t('requestEdits.label.emailFeedback')}
                   <RequiredAsterisk />
                 </Label>
-                {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+                {error && (
+                  <ErrorMessage>{t('form:inputError.fillBlank')}</ErrorMessage>
+                )}
                 <TextAreaField
                   {...field}
                   ref={null}
