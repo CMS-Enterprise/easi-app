@@ -152,13 +152,7 @@ export const issueLcidSchema = Yup.object().shape({
   useExistingLcid: Yup.boolean().required('Please make a selection'),
   lcid: Yup.string().when('useExistingLcid', {
     is: true,
-    then: Yup.string()
-      .trim()
-      .required('Please enter the existing Lifecycle ID')
-      .matches(
-        /^[A-Za-z]?[0-9]{6}$/,
-        'Life Cycle ID must be 6 digits with optional preceding letter'
-      )
+    then: Yup.string().required('Please select the existing Lifecycle ID')
   }),
   expiresAt: validExpirationDate(),
   scope: Yup.string().required('Please fill in the blank'),
