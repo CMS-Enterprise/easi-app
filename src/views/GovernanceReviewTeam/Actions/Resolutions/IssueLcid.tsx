@@ -120,6 +120,7 @@ const IssueLcid = ({
       setValue('expiresAt', selectedLcid.lcidExpiresAt || '');
       setValue('scope', selectedLcid.lcidScope || '');
       setValue('nextSteps', selectedLcid.decisionNextSteps || '');
+      setValue('costBaseline', selectedLcid.lcidCostBaseline || '');
 
       if (selectedLcid.trbFollowUpRecommendation) {
         setValue('trbFollowUp', selectedLcid.trbFollowUpRecommendation);
@@ -297,18 +298,28 @@ const IssueLcid = ({
                 id="stronglyRecommended"
                 value={SystemIntakeTRBFollowUp.STRONGLY_RECOMMENDED}
                 label={t('issueLCID.trbFollowup.stronglyRecommended')}
+                checked={
+                  field.value === SystemIntakeTRBFollowUp.STRONGLY_RECOMMENDED
+                }
               />
               <Radio
                 {...field}
                 id="recommendedNotCritical"
                 value={SystemIntakeTRBFollowUp.RECOMMENDED_BUT_NOT_CRITICAL}
                 label={t('issueLCID.trbFollowup.recommendedNotCritical')}
+                checked={
+                  field.value ===
+                  SystemIntakeTRBFollowUp.RECOMMENDED_BUT_NOT_CRITICAL
+                }
               />
               <Radio
                 {...field}
                 id="notRecommended"
                 value={SystemIntakeTRBFollowUp.NOT_RECOMMENDED}
                 label={t('issueLCID.trbFollowup.notRecommended')}
+                checked={
+                  field.value === SystemIntakeTRBFollowUp.NOT_RECOMMENDED
+                }
               />
             </FormGroup>
           )}
