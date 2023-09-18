@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
@@ -30,11 +30,17 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   const form = useForm<RequestEditsFields>();
 
-  const {
-    watch,
-    control
-    // formState: { errors }
-  } = form;
+  const { watch, control, formState } = form;
+
+  // Scroll to the first error field if the form is invalid
+  useEffect(() => {
+    const { errors } = formState;
+    const fields = Object.keys(errors);
+    if (fields.length) {
+      const err = document.querySelector(`label[for=${fields[0]}]`);
+      err?.scrollIntoView();
+    }
+  }, [formState]);
 
   const submit = async (formData: RequestEditsFields) => {
     // const checkEmptyFields: Array<keyof RequestEditsFields> = [
