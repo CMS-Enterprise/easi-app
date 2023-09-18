@@ -12,7 +12,7 @@ import { UpdateTRBRequestAttendeeInput, PersonRole } from "./../../types/graphql
 export interface UpdateTRBRequestAttendee_updateTRBRequestAttendee_userInfo {
   __typename: "UserInfo";
   commonName: string;
-  email: string;
+  email: EmailAddress;
   euaUserId: string;
 }
 
