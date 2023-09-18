@@ -535,6 +535,15 @@ type SystemIntakeBusinessOwnerInput struct {
 	Component string `json:"component"`
 }
 
+// Input for changing an intake's LCID retirement date in IT Gov v2
+type SystemIntakeChangeLCIDRetirementDateInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	RetiresAt              time.Time                           `json:"retiresAt"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
+}
+
 // Input for creating a Close Request Action in Admin Actions v2
 type SystemIntakeCloseRequestInput struct {
 	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
@@ -779,6 +788,16 @@ type SystemIntakeRequesterInput struct {
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Input for retiring an intake's LCID in IT Gov v2
+type SystemIntakeRetireLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	RetiresAt              time.Time                           `json:"retiresAt"`
+	Reason                 *models.HTML                        `json:"reason"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients"`
+	AdminNote              *models.HTML                        `json:"adminNote"`
 }
 
 // Input for updating an intake's LCID in IT Gov v2

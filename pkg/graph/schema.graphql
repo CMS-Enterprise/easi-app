@@ -1592,6 +1592,29 @@ input SystemIntakeExpireLCIDInput {
 }
 
 """
+Input for retiring an intake's LCID in IT Gov v2
+"""
+input SystemIntakeRetireLCIDInput {
+  systemIntakeID: UUID!
+  retiresAt: Time!
+  reason: HTML
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
+"""
+Input for changing an intake's LCID retirement date in IT Gov v2
+"""
+input SystemIntakeChangeLCIDRetirementDateInput {
+  systemIntakeID: UUID!
+  retiresAt: Time!
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
+"""
 SystemIntakeRequestEditsOptions represents the current step in the intake process
 """
 enum SystemIntakeFormStep {
@@ -2476,6 +2499,12 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionUpdateLCID(
     input: SystemIntakeUpdateLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionRetireLCID(
+    input: SystemIntakeRetireLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionChangeLCIDRetirementDate(
+    input: SystemIntakeChangeLCIDRetirementDateInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionConfirmLCID(
     input: SystemIntakeConfirmLCIDInput!

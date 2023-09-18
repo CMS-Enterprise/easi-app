@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1183,6 +1184,16 @@ func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Contex
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
+}
+
+// CreateSystemIntakeActionRetireLcid is the resolver for the createSystemIntakeActionRetireLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Context, input model.SystemIntakeRetireLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionRetireLcid - createSystemIntakeActionRetireLCID"))
+}
+
+// CreateSystemIntakeActionChangeLCIDRetirementDate is the resolver for the createSystemIntakeActionChangeLCIDRetirementDate field.
+func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx context.Context, input model.SystemIntakeChangeLCIDRetirementDateInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateSystemIntakeActionChangeLCIDRetirementDate - createSystemIntakeActionChangeLCIDRetirementDate"))
 }
 
 // CreateSystemIntakeActionConfirmLcid is the resolver for the createSystemIntakeActionConfirmLCID field.
