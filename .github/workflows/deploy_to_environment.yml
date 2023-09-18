@@ -42,7 +42,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3.0.2
+        uses: aws-actions/configure-aws-credentials@v4.0.0
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2   
@@ -90,7 +90,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3.0.2
+        uses: aws-actions/configure-aws-credentials@v4.0.0
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
@@ -128,7 +128,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3.0.2
+        uses: aws-actions/configure-aws-credentials@v4.0.0
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
