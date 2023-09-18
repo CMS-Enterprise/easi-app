@@ -10,7 +10,7 @@
 export interface GetCedarContacts_cedarPersonsByCommonName {
   __typename: "UserInfo";
   commonName: string;
-  email: string;
+  email: EmailAddress;
   euaUserId: string;
 }
 

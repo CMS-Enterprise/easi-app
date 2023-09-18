@@ -30,7 +30,7 @@ export interface GetTrbRequestHome_trbRequest_adviceLetter {
 export interface GetTrbRequestHome_trbRequest_trbLeadInfo {
   __typename: "UserInfo";
   commonName: string;
-  email: string;
+  email: EmailAddress;
 }
 
 export interface GetTrbRequestHome_trbRequest_documents {
