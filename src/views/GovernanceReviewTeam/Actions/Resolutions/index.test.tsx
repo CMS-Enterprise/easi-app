@@ -8,6 +8,7 @@ import {
   SystemIntakeState
 } from 'types/graphql-global-types';
 
+import ResolutionTitleBox from './ResolutionTitleBox';
 import Resolutions from '.';
 
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
@@ -73,5 +74,35 @@ describe('Resolutions page', () => {
       name: 'Confirm current decision (Not approved by GRB)'
     });
     expect(currentDecisionOption).toBeChecked();
+  });
+});
+
+describe('Resolution form', async () => {
+  it('Renders title box', async () => {
+    const action = 'Issue a life cycle ID';
+
+    render(
+      <MemoryRouter>
+        <ResolutionTitleBox
+          systemIntakeId={systemIntakeId}
+          title={action}
+          state={SystemIntakeState.OPEN}
+          decisionState={SystemIntakeDecisionState.NO_DECISION}
+        />
+      </MemoryRouter>
+    );
+
+    const title = await screen.findByText(
+      'Action: issue decision or close request'
+    );
+    expect(title).toBeInTheDocument();
+
+    expect(screen.getByText('Selected resolution')).toBeInTheDocument();
+
+    expect(screen.getByText(action)).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('link', { name: 'Change resolution' })
+    ).toBeInTheDocument();
   });
 });
