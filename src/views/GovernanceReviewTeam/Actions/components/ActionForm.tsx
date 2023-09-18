@@ -36,7 +36,7 @@ export interface SystemIntakeActionFields {
 
 export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   systemIntakeId: string;
-  title?: string;
+  title: React.ReactNode;
   description?: string;
   breadcrumb?: string;
   /** Success message to display on admin actions page after submission */
@@ -50,7 +50,7 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   };
   children?: React.ReactNode;
   className?: string;
-} & Omit<JSX.IntrinsicElements['form'], 'onSubmit'>;
+} & Omit<JSX.IntrinsicElements['form'], 'onSubmit' | 'title'>;
 
 /**
  * Form wrapper for IT Gov admin actions
@@ -185,13 +185,17 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
       {
         // Error message for server error
         errors?.root?.message && (
-          <Alert type="error" className="action-error">
+          <Alert type="error" className="action-error margin-top-2">
             {errors.root.message}
           </Alert>
         )
       }
 
-      {title && <PageHeading className="margin-bottom-0">{title}</PageHeading>}
+      {typeof title === 'string' ? (
+        <PageHeading className="margin-bottom-0">{title}</PageHeading>
+      ) : (
+        title
+      )}
       {description && (
         <p className="line-height-body-5 font-body-lg text-light margin-0">
           {description}

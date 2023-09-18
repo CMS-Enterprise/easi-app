@@ -24,6 +24,7 @@ const ExpireLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
         systemIntakeId={systemIntakeId}
         successMessage=""
         onSubmit={onSubmit}
+        title=""
       >
         {/* Action fields here */}
       </ActionForm>

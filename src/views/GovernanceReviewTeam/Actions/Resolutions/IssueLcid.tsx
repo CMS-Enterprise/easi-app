@@ -25,13 +25,20 @@ import { issueLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
+import ResolutionTitleBox from './ResolutionTitleBox';
+import { ResolutionProps } from '.';
+
 type IssueLcidFields = NonNullableProps<
   Omit<SystemIntakeIssueLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 > & {
   useExistingLcid: boolean;
 };
 
-const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
+const IssueLcid = ({
+  systemIntakeId,
+  state,
+  decisionState
+}: ResolutionProps) => {
   const { t } = useTranslation('action');
 
   const form = useForm<IssueLcidFields>({
@@ -61,7 +68,7 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
     useExistingLcid,
     ...formData
   }: IssueLcidFields) => {
-    mutate({
+    return mutate({
       variables: {
         input: {
           systemIntakeID: systemIntakeId,
@@ -80,7 +87,18 @@ const IssueLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   return (
     <FormProvider<IssueLcidFields> {...form}>
-      <ActionForm systemIntakeId={systemIntakeId} onSubmit={onSubmit}>
+      <ActionForm
+        systemIntakeId={systemIntakeId}
+        onSubmit={onSubmit}
+        title={
+          <ResolutionTitleBox
+            title={t('resolutions.summary.issueLcid')}
+            systemIntakeId={systemIntakeId}
+            state={state}
+            decisionState={decisionState}
+          />
+        }
+      >
         <Controller
           name="useExistingLcid"
           control={control}
