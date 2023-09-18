@@ -1,21 +1,28 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormGroup, Radio, TextInput } from '@trussworks/react-uswds';
+import { Dropdown, FormGroup, Radio } from '@trussworks/react-uswds';
 
+import PageLoading from 'components/PageLoading';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import CreateSystemIntakeActionIssueLcidQuery from 'queries/CreateSystemIntakeActionIssueLcidQuery';
+import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import {
   CreateSystemIntakeActionIssueLcid,
   CreateSystemIntakeActionIssueLcidVariables
 } from 'queries/types/CreateSystemIntakeActionIssueLcid';
+import {
+  GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
+  GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
+} from 'queries/types/GetSystemIntakesWithLCIDS';
 import {
   SystemIntakeIssueLCIDInput,
   SystemIntakeTRBFollowUp
@@ -41,6 +48,29 @@ const IssueLcid = ({
 }: ResolutionProps) => {
   const { t } = useTranslation('action');
 
+  const [mutate] = useMutation<
+    CreateSystemIntakeActionIssueLcid,
+    CreateSystemIntakeActionIssueLcidVariables
+  >(CreateSystemIntakeActionIssueLcidQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
+  const { data, loading } = useCacheQuery<GetSystemIntakesWithLCIDSType>(
+    GetSystemIntakesWithLCIDS
+  );
+
+  const systemIntakesWithLcids = useMemo(() => {
+    if (!data?.systemIntakesWithLcids) return undefined;
+
+    // Restructure intakes to {LCID: SystemIntake} object
+    return data?.systemIntakesWithLcids.reduce<
+      Record<string, SystemIntakeWithLcid>
+    >((acc, intake) => {
+      if (!intake?.lcid) return acc;
+      return { ...acc, [intake.lcid]: intake };
+    }, {});
+  }, [data]);
+
   const form = useForm<IssueLcidFields>({
     resolver: yupResolver(issueLcidSchema),
     defaultValues: {
@@ -49,14 +79,8 @@ const IssueLcid = ({
     }
   });
 
-  const [mutate] = useMutation<
-    CreateSystemIntakeActionIssueLcid,
-    CreateSystemIntakeActionIssueLcidVariables
-  >(CreateSystemIntakeActionIssueLcidQuery, {
-    refetchQueries: ['GetSystemIntake']
-  });
+  const { control, setValue, watch } = form;
 
-  const { control, setValue } = form;
   const { showMessage } = useMessage();
 
   /**
@@ -85,6 +109,26 @@ const IssueLcid = ({
     });
   };
 
+  const lcid = watch('lcid');
+  const useExistingLcid = watch('useExistingLcid');
+
+  // When existing LCID is selected, populate fields
+  useEffect(() => {
+    if (systemIntakesWithLcids && useExistingLcid && lcid) {
+      const selectedLcid = systemIntakesWithLcids[lcid];
+
+      setValue('expiresAt', selectedLcid.lcidExpiresAt || '');
+      setValue('scope', selectedLcid.lcidScope || '');
+      setValue('nextSteps', selectedLcid.decisionNextSteps || '');
+
+      if (selectedLcid.trbFollowUpRecommendation) {
+        setValue('trbFollowUp', selectedLcid.trbFollowUpRecommendation);
+      }
+    }
+  }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue]);
+
+  if (loading) return <PageLoading />;
+
   return (
     <FormProvider<IssueLcidFields> {...form}>
       <ActionForm
@@ -103,7 +147,7 @@ const IssueLcid = ({
           name="useExistingLcid"
           control={control}
           render={({
-            field: { ref, value: useExistingLcid, ...field },
+            field: { ref, value, ...field },
             fieldState: { error },
             formState: { errors }
           }) => {
@@ -135,25 +179,33 @@ const IssueLcid = ({
 
                 {
                   // Existing LCID text field
-                  useExistingLcid && (
+                  value && (
                     <Controller
                       name="lcid"
                       control={control}
                       render={({ field: lcidField }) => {
                         return (
-                          <div className="margin-left-4">
+                          <FormGroup className="margin-left-4">
+                            <Label htmlFor="lcid">
+                              {t('issueLCID.select.label')}
+                            </Label>
+                            <HelpText className="margin-top-1">
+                              {t('issueLCID.select.helpText')}
+                            </HelpText>
                             {!!errors.lcid?.message && (
                               <FieldErrorMsg>
                                 {t(errors.lcid?.message)}
                               </FieldErrorMsg>
                             )}
-                            <TextInput
-                              {...lcidField}
-                              ref={null}
-                              id={field.name}
-                              type="text"
-                            />
-                          </div>
+                            <Dropdown {...lcidField} ref={null} id={field.name}>
+                              <option>-{t('Select')}-</option>
+                              {Object.keys(systemIntakesWithLcids || {}).map(
+                                key => (
+                                  <option key={key}>{key}</option>
+                                )
+                              )}
+                            </Dropdown>
+                          </FormGroup>
                         );
                       }}
                     />

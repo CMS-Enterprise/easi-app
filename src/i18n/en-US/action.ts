@@ -222,6 +222,11 @@ const action = {
       existing: 'Use an existing Life Cycle ID',
       label: 'Life Cycle ID'
     },
+    select: {
+      label: 'Select the Life Cycle ID (LCID) for this request.',
+      helpText:
+        'Select an existing LCID from EASi. Selecting a LCID will pre-populate its information below, allowing you to edit it as needed.'
+    },
     expirationDate: {
       label: 'Expiration Date',
       helpText: 'For example 08 02 1776',
