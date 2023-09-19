@@ -84,6 +84,8 @@ jobs:
         with:
           context: .
           file: Dockerfile.db_migrations
+          build-args: |
+            TAG=9.10-alpine
           push: true
           cache-to: type=gha,mode=max,scope=${{ env.GIT_REF_NAME }}-easi-db-migrate
           cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi-db-migrate
