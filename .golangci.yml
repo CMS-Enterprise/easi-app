@@ -1,4 +1,9 @@
 linters-settings:
+  gosec:
+    # Currently excluding rule G602 due to issue slowing down execution
+    # https://github.com/securego/gosec/issues/1010
+    excludes:
+      - "G602"
   govet:
     check-shadowing: true
     settings:
@@ -21,10 +26,7 @@ linters:
      - gofmt
      - goimports
      - govet
-     - varcheck
      - typecheck
-     - structcheck
-     - deadcode
      - ineffassign
      - revive
      - staticcheck

@@ -44,11 +44,11 @@ repos:
           )$
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.51.0
+    rev: v1.54.2
     hooks:
       - id: golangci-lint
         name: Lint go files
-        args: ['--concurrency', '-1'] # Run with all CPUs
+        args: ['--concurrency', '-1', '-v'] # Run with all CPUs
 
   - repo: local
     hooks:
