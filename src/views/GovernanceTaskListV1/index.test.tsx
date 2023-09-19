@@ -149,6 +149,7 @@ describe('The Goveranance Task List', () => {
             state: 'OPEN',
             decisionState: 'NO_DECISION',
             lcidStatus: null,
+            trbFollowUpRecommendation: null,
             ...intakeData
           }
         }

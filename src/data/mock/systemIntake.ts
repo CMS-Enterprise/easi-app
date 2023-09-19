@@ -236,7 +236,8 @@ export const systemIntake: SystemIntake = {
   hasUiChanges: false,
   documents: [],
   state: SystemIntakeState.OPEN,
-  decisionState: SystemIntakeDecisionState.NO_DECISION
+  decisionState: SystemIntakeDecisionState.NO_DECISION,
+  trbFollowUpRecommendation: null
 };
 
 export const getSystemIntakeQuery: MockedQuery<

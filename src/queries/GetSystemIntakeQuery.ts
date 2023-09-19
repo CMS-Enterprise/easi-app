@@ -103,6 +103,7 @@ export default gql`
       }
       state
       decisionState
+      trbFollowUpRecommendation
     }
   }
 `;
