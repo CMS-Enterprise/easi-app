@@ -212,7 +212,7 @@ const IssueLcid = ({
                               </FieldErrorMsg>
                             )}
                             <Dropdown {...lcidField} ref={null} id={field.name}>
-                              <option>-{t('Select')}-</option>
+                              <option value="">-{t('Select')}-</option>
                               {Object.keys(systemIntakesWithLcids || {}).map(
                                 key => (
                                   <option key={key}>{key}</option>
