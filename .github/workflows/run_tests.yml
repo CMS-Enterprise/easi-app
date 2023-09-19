@@ -139,7 +139,7 @@ jobs:
         with:
           context: .
           file: Dockerfile.client_ci
-          push: false
+          load: true
           tags: easi_client:latest
           cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi_client
       - name: Build db_seed image
@@ -147,7 +147,7 @@ jobs:
         with:
           context: .
           file: Dockerfile.db_seed
-          push: false
+          load: true
           tags: db_seed:latest
           cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-db_seed
       - name: Build easi_cypress image
@@ -155,7 +155,7 @@ jobs:
         with:
           context: .
           file: Dockerfile.cypress
-          push: false
+          load: true
           tags: easi_cypress:latest
           cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi_cypress
       - name: Run e2e cypress tests
