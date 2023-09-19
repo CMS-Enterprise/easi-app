@@ -1,7 +1,12 @@
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
+import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
+import {
+  GetGovernanceTaskList,
+  GetGovernanceTaskListVariables
+} from 'queries/types/GetGovernanceTaskList';
 import {
   GetSystemIntake,
   GetSystemIntake_systemIntake as SystemIntake,
@@ -18,6 +23,13 @@ import {
 import { SystemIntakeContact } from 'queries/types/SystemIntakeContact';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import {
+  ITGovDecisionStatus,
+  ITGovDraftBusinessCaseStatus,
+  ITGovFeedbackStatus,
+  ITGovFinalBusinessCaseStatus,
+  ITGovGRBStatus,
+  ITGovGRTStatus,
+  ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
@@ -296,6 +308,41 @@ export const getSystemIntakeContactsQuery: MockedQuery<
       systemIntakeContacts: {
         __typename: 'SystemIntakeContactsPayload',
         systemIntakeContacts: [requester, businessOwner, isso]
+      }
+    }
+  }
+};
+
+export const getGovernanceTaskListQuery: MockedQuery<
+  GetGovernanceTaskList,
+  GetGovernanceTaskListVariables
+> = {
+  request: {
+    query: GetGovernanceTaskListQuery,
+    variables: {
+      id: systemIntakeId
+    }
+  },
+  result: {
+    data: {
+      systemIntake: {
+        __typename: 'SystemIntake',
+        id: systemIntakeId,
+        itGovTaskStatuses: {
+          __typename: 'ITGovTaskStatuses',
+          intakeFormStatus: ITGovIntakeFormStatus.READY,
+          feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
+          bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+          grtMeetingStatus: ITGovGRTStatus.CANT_START,
+          bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+          grbMeetingStatus: ITGovGRBStatus.CANT_START,
+          decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+        },
+        governanceRequestFeedbacks: [],
+        submittedAt: null,
+        updatedAt: null,
+        grtDate: null,
+        grbDate: null
       }
     }
   }
