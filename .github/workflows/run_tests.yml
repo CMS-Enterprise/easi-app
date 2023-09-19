@@ -138,7 +138,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: Dockerfile.easi_client
+          file: Dockerfile.client_ci
           push: false
           tags: easi_client:latest
           cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi_client
