@@ -12,7 +12,7 @@ import { PersonRole } from "./../../types/graphql-global-types";
 export interface TRBAttendee_userInfo {
   __typename: "UserInfo";
   commonName: string;
-  email: string;
+  email: EmailAddress;
   euaUserId: string;
 }
 

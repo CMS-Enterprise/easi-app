@@ -190,7 +190,7 @@ Represents a person response from CEDAR LDAP
 """
 type UserInfo {
   commonName: String!
-  email: String!
+  email: EmailAddress!
   euaUserId: String!
 }
 
@@ -1681,7 +1681,7 @@ type AugmentedSystemIntakeContact {
   component: String!
   role: String!
   commonName: String
-  email: String
+  email: EmailAddress
 }
 
 """

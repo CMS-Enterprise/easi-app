@@ -15,5 +15,5 @@ export interface SystemIntakeContact {
   component: string;
   role: string;
   commonName: string | null;
-  email: string | null;
+  email: EmailAddress | null;
 }
