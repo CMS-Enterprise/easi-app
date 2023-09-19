@@ -42,12 +42,21 @@ type IssueLcidFields = NonNullableProps<
   useExistingLcid: boolean;
 };
 
+interface IssueLcidProps extends ResolutionProps {
+  lcid?: string | null;
+  lcidExpiresAt?: string | null;
+  lcidScope?: string | null;
+  decisionNextSteps?: string | null;
+  trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
+  lcidCostBaseline?: string | null;
+}
+
 const IssueLcid = ({
   systemIntakeId,
   state,
   decisionState,
-  lcid
-}: ResolutionProps) => {
+  ...defaultValues
+}: IssueLcidProps) => {
   const { t } = useTranslation('action');
 
   /** Edits requested form key for confirmation modal */
@@ -119,13 +128,13 @@ const IssueLcid = ({
     });
   };
 
-  const existingLcid = watch('lcid');
+  const lcid = watch('lcid');
   const useExistingLcid = watch('useExistingLcid');
 
   // When existing LCID is selected, populate fields
   useEffect(() => {
-    if (systemIntakesWithLcids && useExistingLcid && existingLcid) {
-      const selectedLcidData = systemIntakesWithLcids[existingLcid];
+    if (systemIntakesWithLcids && useExistingLcid && lcid) {
+      const selectedLcidData = systemIntakesWithLcids[lcid];
 
       setValue('expiresAt', selectedLcidData.lcidExpiresAt || '');
       setValue('scope', selectedLcidData.lcidScope || '');
@@ -141,7 +150,7 @@ const IssueLcid = ({
     }
 
     // If user selects "Generate new life cycle ID", reset LCID fields
-    if (existingLcid && useExistingLcid === false) {
+    if (lcid && useExistingLcid === false) {
       resetField('lcid');
       resetField('expiresAt');
       resetField('scope');
@@ -149,13 +158,7 @@ const IssueLcid = ({
       resetField('costBaseline');
       resetField('trbFollowUp');
     }
-  }, [
-    existingLcid,
-    useExistingLcid,
-    systemIntakesWithLcids,
-    setValue,
-    resetField
-  ]);
+  }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue, resetField]);
 
   if (loading) return <PageLoading />;
 
@@ -182,7 +185,7 @@ const IssueLcid = ({
           }
         }
       >
-        {lcid ? (
+        {defaultValues.lcid ? (
           /* If confirming decision, display current LCID */
           <>
             <p className="margin-0">{t('issueLCID.lcid.label')}</p>

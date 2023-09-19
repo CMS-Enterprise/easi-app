@@ -72,7 +72,7 @@ const ActionRadioOption = ({
   );
 };
 
-type ActionsProps = {
+export type ActionsProps = {
   systemIntake: SystemIntake;
 };
 
@@ -95,7 +95,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
-  const { state, decisionState, lcidStatus, lcid } = systemIntake;
+  const { state, decisionState, lcidStatus } = systemIntake;
 
   const { data, loading } = useCacheQuery<
     GetGovernanceTaskList,
@@ -153,14 +153,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
           {/* Select resolution page */}
           <Route
             path="/governance-review-team/:systemId/resolutions/:subPage?"
-            render={() => (
-              <Resolutions
-                systemIntakeId={systemIntake.id}
-                state={state}
-                decisionState={decisionState}
-                lcid={lcid}
-              />
-            )}
+            render={() => <Resolutions systemIntake={systemIntake} />}
           />
 
           {/* Manage LCID page */}

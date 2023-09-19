@@ -3,6 +3,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { systemIntake } from 'data/mock/systemIntake';
 import {
   SystemIntakeDecisionState,
   SystemIntakeState
@@ -11,22 +12,16 @@ import {
 import ResolutionTitleBox from './ResolutionTitleBox';
 import Resolutions from '.';
 
-const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
-
 describe('Resolutions page', () => {
   it('Renders for open request with no decision', () => {
     render(
       <MemoryRouter
         initialEntries={[
-          `/governance-review-team/${systemIntakeId}/resolutions`
+          `/governance-review-team/${systemIntake.id}/resolutions`
         ]}
       >
         <Route path={[`/governance-review-team/:systemId/resolutions`]}>
-          <Resolutions
-            systemIntakeId={systemIntakeId}
-            state={SystemIntakeState.OPEN}
-            decisionState={SystemIntakeDecisionState.NO_DECISION}
-          />
+          <Resolutions systemIntake={systemIntake} />
         </Route>
       </MemoryRouter>
     );
@@ -46,14 +41,16 @@ describe('Resolutions page', () => {
     render(
       <MemoryRouter
         initialEntries={[
-          `/governance-review-team/${systemIntakeId}/resolutions`
+          `/governance-review-team/${systemIntake.id}/resolutions`
         ]}
       >
         <Route path={[`/governance-review-team/:systemId/resolutions`]}>
           <Resolutions
-            systemIntakeId={systemIntakeId}
-            state={SystemIntakeState.CLOSED}
-            decisionState={SystemIntakeDecisionState.NOT_APPROVED}
+            systemIntake={{
+              ...systemIntake,
+              state: SystemIntakeState.CLOSED,
+              decisionState: SystemIntakeDecisionState.NOT_APPROVED
+            }}
           />
         </Route>
       </MemoryRouter>
@@ -84,7 +81,7 @@ describe('Resolution form', async () => {
     render(
       <MemoryRouter>
         <ResolutionTitleBox
-          systemIntakeId={systemIntakeId}
+          systemIntakeId={systemIntake.id}
           title={action}
           state={SystemIntakeState.OPEN}
           decisionState={SystemIntakeDecisionState.NO_DECISION}

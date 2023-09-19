@@ -18,6 +18,7 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';
+import { ActionsProps } from '..';
 
 import CloseRequest from './CloseRequest';
 import IssueLcid from './IssueLcid';
@@ -44,7 +45,6 @@ export interface ResolutionProps {
   systemIntakeId: string;
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
-  lcid?: string | null;
 }
 
 type ResolutionFieldProps = {
@@ -84,14 +84,11 @@ const ResolutionField = ({
   );
 };
 
-const Resolutions = ({
-  systemIntakeId,
-  state,
-  decisionState,
-  lcid
-}: ResolutionProps) => {
+const Resolutions = ({ systemIntake }: ActionsProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
+
+  const { id: systemIntakeId, state, decisionState } = systemIntake;
 
   const { subPage } = useParams<{
     subPage?: string;
@@ -153,12 +150,7 @@ const Resolutions = ({
 
       <Switch>
         <Route path="/governance-review-team/:systemId/resolutions/issue-lcid">
-          <IssueLcid
-            systemIntakeId={systemIntakeId}
-            state={state}
-            decisionState={decisionState}
-            lcid={lcid}
-          />
+          <IssueLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/not-it-request">
           <NotGovernance
