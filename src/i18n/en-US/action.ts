@@ -241,7 +241,10 @@ const action = {
       recommendedNotCritical:
         'Yes, it’s not critical but the TRB could provide useful feedback',
       notRecommended: 'No, they may if they wish but it’s not necessary'
-    }
+    },
+    currentLcid: 'Current LCID: <span>{{lcid}}</span>',
+    currentLcidHelpText:
+      'You generated the Life Cycle ID (LCID) below as a part of a previous decision for this request. Its information is pre-populated its information below, allowing you to edit it as needed.'
   },
   decisionModal: {
     title: 'Are you sure you want to complete this action?',

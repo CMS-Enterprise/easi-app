@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Dropdown, FormGroup, Radio } from '@trussworks/react-uswds';
@@ -182,80 +182,101 @@ const IssueLcid = ({
           }
         }
       >
-        <Controller
-          name="useExistingLcid"
-          control={control}
-          render={({
-            field: { ref, value, ...field },
-            fieldState: { error },
-            formState: { errors }
-          }) => {
-            return (
-              <FormGroup error={!!error || !!errors.lcid}>
-                <Label htmlFor={field.name} className="text-normal" required>
-                  {t('issueLCID.lcid.label')}
-                </Label>
-                <HelpText className="margin-top-1">
-                  {t('issueLCID.lcid.helpText')}
-                </HelpText>
-                {!!error?.message && (
-                  <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-                )}
-                <Radio
-                  {...field}
-                  value="false"
-                  id="useExistingLcid_false"
-                  label={t('issueLCID.lcid.new')}
-                  onChange={() => setValue('useExistingLcid', false)}
-                />
-                <Radio
-                  {...field}
-                  value="true"
-                  id="useExistingLcid_true"
-                  label={t('issueLCID.lcid.existing')}
-                  onChange={() => setValue('useExistingLcid', true)}
-                />
+        {lcid ? (
+          /* If confirming decision, display current LCID */
+          <>
+            <p className="margin-0">{t('issueLCID.lcid.label')}</p>
+            <HelpText className="margin-top-1">
+              {t('issueLCID.currentLcidHelpText')}
+            </HelpText>
+            <p className="bg-base-lightest display-inline-block padding-105 margin-bottom-0">
+              <Trans
+                i18nKey="action:issueLCID.currentLcid"
+                values={{ lcid }}
+                components={{ span: <span className="text-bold" /> }}
+              />
+            </p>
+          </>
+        ) : (
+          /* New or existing LCID fields */
+          <Controller
+            name="useExistingLcid"
+            control={control}
+            render={({
+              field: { ref, value, ...field },
+              fieldState: { error },
+              formState: { errors }
+            }) => {
+              return (
+                <FormGroup error={!!error || !!errors.lcid}>
+                  <Label htmlFor={field.name} className="text-normal" required>
+                    {t('issueLCID.lcid.label')}
+                  </Label>
+                  <HelpText className="margin-top-1">
+                    {t('issueLCID.lcid.helpText')}
+                  </HelpText>
+                  {!!error?.message && (
+                    <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+                  )}
 
-                {
-                  // Existing LCID text field
-                  value && (
-                    <Controller
-                      name="lcid"
-                      control={control}
-                      render={({ field: lcidField }) => {
-                        return (
-                          <FormGroup className="margin-left-4">
-                            <Label htmlFor="lcid">
-                              {t('issueLCID.select.label')}
-                            </Label>
-                            <HelpText className="margin-top-1">
-                              {t('issueLCID.select.helpText')}
-                            </HelpText>
-                            {!!errors.lcid?.message && (
-                              <FieldErrorMsg>
-                                {t(errors.lcid?.message)}
-                              </FieldErrorMsg>
-                            )}
-                            <Dropdown {...lcidField} ref={null} id={field.name}>
-                              <option value="" disabled>
-                                -{t('Select')}-
-                              </option>
-                              {Object.keys(systemIntakesWithLcids || {}).map(
-                                key => (
-                                  <option key={key}>{key}</option>
-                                )
+                  <Radio
+                    {...field}
+                    value="false"
+                    id="useExistingLcid_false"
+                    label={t('issueLCID.lcid.new')}
+                    onChange={() => setValue('useExistingLcid', false)}
+                  />
+                  <Radio
+                    {...field}
+                    value="true"
+                    id="useExistingLcid_true"
+                    label={t('issueLCID.lcid.existing')}
+                    onChange={() => setValue('useExistingLcid', true)}
+                  />
+
+                  {
+                    // Select existing LCID field
+                    value && (
+                      <Controller
+                        name="lcid"
+                        control={control}
+                        render={({ field: lcidField }) => {
+                          return (
+                            <FormGroup className="margin-left-4">
+                              <Label htmlFor="lcid">
+                                {t('issueLCID.select.label')}
+                              </Label>
+                              <HelpText className="margin-top-1">
+                                {t('issueLCID.select.helpText')}
+                              </HelpText>
+                              {!!errors.lcid?.message && (
+                                <FieldErrorMsg>
+                                  {t(errors.lcid?.message)}
+                                </FieldErrorMsg>
                               )}
-                            </Dropdown>
-                          </FormGroup>
-                        );
-                      }}
-                    />
-                  )
-                }
-              </FormGroup>
-            );
-          }}
-        />
+                              <Dropdown
+                                {...lcidField}
+                                ref={null}
+                                id={field.name}
+                              >
+                                <option>-{t('Select')}-</option>
+                                {Object.keys(systemIntakesWithLcids || {}).map(
+                                  key => (
+                                    <option key={key}>{key}</option>
+                                  )
+                                )}
+                              </Dropdown>
+                            </FormGroup>
+                          );
+                        }}
+                      />
+                    )
+                  }
+                </FormGroup>
+              );
+            }}
+          />
+        )}
 
         <Controller
           name="expiresAt"
