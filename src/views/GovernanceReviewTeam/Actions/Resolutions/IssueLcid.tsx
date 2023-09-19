@@ -79,11 +79,14 @@ const IssueLcid = ({
     resolver: yupResolver(issueLcidSchema),
     defaultValues: {
       lcid: '',
+      scope: '',
+      expiresAt: '',
+      nextSteps: '',
       costBaseline: ''
     }
   });
 
-  const { control, setValue, watch } = form;
+  const { control, setValue, watch, resetField } = form;
 
   const { showMessageOnNextPage } = useMessage();
 
@@ -130,9 +133,22 @@ const IssueLcid = ({
 
       if (selectedLcid.trbFollowUpRecommendation) {
         setValue('trbFollowUp', selectedLcid.trbFollowUpRecommendation);
+      } else {
+        // If selected LCID has no trbFollowUp value, reset field
+        resetField('trbFollowUp');
       }
     }
-  }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue]);
+
+    // If user selects "Generate new life cycle ID", reset LCID fields
+    if (lcid && useExistingLcid === false) {
+      resetField('lcid');
+      resetField('expiresAt');
+      resetField('scope');
+      resetField('nextSteps');
+      resetField('costBaseline');
+      resetField('trbFollowUp');
+    }
+  }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue, resetField]);
 
   if (loading) return <PageLoading />;
 
@@ -214,7 +230,9 @@ const IssueLcid = ({
                               </FieldErrorMsg>
                             )}
                             <Dropdown {...lcidField} ref={null} id={field.name}>
-                              <option value="">-{t('Select')}-</option>
+                              <option value="" disabled>
+                                -{t('Select')}-
+                              </option>
                               {Object.keys(systemIntakesWithLcids || {}).map(
                                 key => (
                                   <option key={key}>{key}</option>
