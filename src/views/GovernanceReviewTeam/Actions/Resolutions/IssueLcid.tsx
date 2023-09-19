@@ -88,11 +88,12 @@ const IssueLcid = ({
   const form = useForm<IssueLcidFields>({
     resolver: yupResolver(issueLcidSchema),
     defaultValues: {
-      lcid: '',
-      scope: '',
-      expiresAt: '',
-      nextSteps: '',
-      costBaseline: ''
+      lcid: defaultValues.lcid || '',
+      expiresAt: defaultValues.lcidExpiresAt || '',
+      nextSteps: defaultValues.decisionNextSteps || '',
+      scope: defaultValues.lcidScope || '',
+      trbFollowUp: defaultValues.trbFollowUpRecommendation || undefined,
+      costBaseline: defaultValues.lcidCostBaseline || ''
     }
   });
 
