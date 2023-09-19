@@ -294,7 +294,11 @@ const IssueLcid = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <DatePickerFormatted {...field} id={field.name} />
+              <DatePickerFormatted
+                {...field}
+                id={field.name}
+                defaultValue={field.value}
+              />
             </FormGroup>
           )}
         />
