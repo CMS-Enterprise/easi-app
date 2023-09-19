@@ -14,6 +14,7 @@ env:
   GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   DOCKER_BUILDKIT: 1
+  GIT_REF_NAME: ${{ github.event.pull_request.head.ref || github.ref }}
 
 jobs:
   skip_tests:
@@ -126,11 +127,37 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Download Frontend assets
         uses: actions/download-artifact@v3
         with:
           name: test-frontend-assets
           path: build/
+      - name: Build easi_client image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile.easi_client
+          push: false
+          tags: easi_client:latest
+          cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi_client
+      - name: Build db_seed image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile.db_seed
+          push: false
+          tags: db_seed:latest
+          cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-db_seed
+      - name: Build easi_cypress image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile.cypress
+          push: false
+          tags: easi_cypress:latest
+          cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi_cypress
       - name: Run e2e cypress tests
         env:
           APP_ENV: test

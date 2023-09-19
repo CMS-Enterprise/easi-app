@@ -21,7 +21,13 @@ jobs:
     with:
       env: test
 
+  build_testing_related_images:
+    name: Build Testing Related Docker Images
+    uses: ./.github/workflows/build_testing_related_images.yml
+    needs: [Build_Test_Frontend_Assets]
+    secrets: inherit
+
   Run_Tests:
     uses: ./.github/workflows/run_tests.yml
-    needs: [Build_Application_Images,Build_Test_Frontend_Assets]
+    needs: [Build_Application_Images,Build_Test_Frontend_Assets,build_testing_related_images]
     secrets: inherit
