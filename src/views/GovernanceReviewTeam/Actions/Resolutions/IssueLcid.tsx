@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
@@ -31,6 +31,7 @@ import { NonNullableProps } from 'types/util';
 import { issueLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import { EditsRequestedContext } from '..';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
@@ -47,6 +48,9 @@ const IssueLcid = ({
   decisionState
 }: ResolutionProps) => {
   const { t } = useTranslation('action');
+
+  /** Edits requested form key for confirmation modal */
+  const editsRequestedKey = useContext(EditsRequestedContext);
 
   const [mutate] = useMutation<
     CreateSystemIntakeActionIssueLcid,
@@ -142,6 +146,15 @@ const IssueLcid = ({
             state={state}
             decisionState={decisionState}
           />
+        }
+        // Show confirmation modal if edits have been requested
+        modal={
+          editsRequestedKey && {
+            title: t('decisionModal.title'),
+            content: t('decisionModal.content', {
+              action: t(`decisionModal.${editsRequestedKey}`)
+            })
+          }
         }
       >
         <Controller

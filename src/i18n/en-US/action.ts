@@ -243,6 +243,14 @@ const action = {
       notRecommended: 'No, they may if they wish but it’s not necessary'
     }
   },
+  decisionModal: {
+    title: 'Are you sure you want to complete this action?',
+    content:
+      'You previously requested that the team make changes to their {{action}}. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.',
+    intakeRequest: 'intake request form',
+    draftBusinessCase: 'draft business case',
+    finalBusinessCase: 'final business case'
+  },
   extendLcid: {
     back: 'Change',
     heading: 'Actions on request',
