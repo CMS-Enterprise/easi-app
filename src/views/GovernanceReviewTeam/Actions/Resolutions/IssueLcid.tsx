@@ -85,7 +85,7 @@ const IssueLcid = ({
 
   const { control, setValue, watch } = form;
 
-  const { showMessage } = useMessage();
+  const { showMessageOnNextPage } = useMessage();
 
   /**
    * Submit handler containing mutation logic
@@ -109,7 +109,9 @@ const IssueLcid = ({
         response?.data?.createSystemIntakeActionIssueLCID?.systemIntake?.lcid;
 
       // Show success message with LCID
-      showMessage(t('manageLcid.success', { lcid }), { type: 'success' });
+      showMessageOnNextPage(t('manageLcid.success', { lcid }), {
+        type: 'success'
+      });
     });
   };
 
