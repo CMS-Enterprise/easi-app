@@ -45,7 +45,8 @@ type IssueLcidFields = NonNullableProps<
 const IssueLcid = ({
   systemIntakeId,
   state,
-  decisionState
+  decisionState,
+  lcid
 }: ResolutionProps) => {
   const { t } = useTranslation('action');
 
@@ -108,31 +109,31 @@ const IssueLcid = ({
         }
       }
     }).then(response => {
-      const lcid =
+      const newLcid =
         response?.data?.createSystemIntakeActionIssueLCID?.systemIntake?.lcid;
 
       // Show success message with LCID
-      showMessageOnNextPage(t('manageLcid.success', { lcid }), {
+      showMessageOnNextPage(t('manageLcid.success', { lcid: newLcid }), {
         type: 'success'
       });
     });
   };
 
-  const lcid = watch('lcid');
+  const existingLcid = watch('lcid');
   const useExistingLcid = watch('useExistingLcid');
 
   // When existing LCID is selected, populate fields
   useEffect(() => {
-    if (systemIntakesWithLcids && useExistingLcid && lcid) {
-      const selectedLcid = systemIntakesWithLcids[lcid];
+    if (systemIntakesWithLcids && useExistingLcid && existingLcid) {
+      const selectedLcidData = systemIntakesWithLcids[existingLcid];
 
-      setValue('expiresAt', selectedLcid.lcidExpiresAt || '');
-      setValue('scope', selectedLcid.lcidScope || '');
-      setValue('nextSteps', selectedLcid.decisionNextSteps || '');
-      setValue('costBaseline', selectedLcid.lcidCostBaseline || '');
+      setValue('expiresAt', selectedLcidData.lcidExpiresAt || '');
+      setValue('scope', selectedLcidData.lcidScope || '');
+      setValue('nextSteps', selectedLcidData.decisionNextSteps || '');
+      setValue('costBaseline', selectedLcidData.lcidCostBaseline || '');
 
-      if (selectedLcid.trbFollowUpRecommendation) {
-        setValue('trbFollowUp', selectedLcid.trbFollowUpRecommendation);
+      if (selectedLcidData.trbFollowUpRecommendation) {
+        setValue('trbFollowUp', selectedLcidData.trbFollowUpRecommendation);
       } else {
         // If selected LCID has no trbFollowUp value, reset field
         resetField('trbFollowUp');
@@ -140,7 +141,7 @@ const IssueLcid = ({
     }
 
     // If user selects "Generate new life cycle ID", reset LCID fields
-    if (lcid && useExistingLcid === false) {
+    if (existingLcid && useExistingLcid === false) {
       resetField('lcid');
       resetField('expiresAt');
       resetField('scope');
@@ -148,7 +149,13 @@ const IssueLcid = ({
       resetField('costBaseline');
       resetField('trbFollowUp');
     }
-  }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue, resetField]);
+  }, [
+    existingLcid,
+    useExistingLcid,
+    systemIntakesWithLcids,
+    setValue,
+    resetField
+  ]);
 
   if (loading) return <PageLoading />;
 

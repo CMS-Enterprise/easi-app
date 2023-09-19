@@ -44,6 +44,7 @@ export interface ResolutionProps {
   systemIntakeId: string;
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
+  lcid?: string | null;
 }
 
 type ResolutionFieldProps = {
@@ -86,7 +87,8 @@ const ResolutionField = ({
 const Resolutions = ({
   systemIntakeId,
   state,
-  decisionState
+  decisionState,
+  lcid
 }: ResolutionProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
@@ -155,6 +157,7 @@ const Resolutions = ({
             systemIntakeId={systemIntakeId}
             state={state}
             decisionState={decisionState}
+            lcid={lcid}
           />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/not-it-request">

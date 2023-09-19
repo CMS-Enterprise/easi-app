@@ -95,7 +95,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
-  const { state, decisionState, lcidStatus } = systemIntake;
+  const { state, decisionState, lcidStatus, lcid } = systemIntake;
 
   const { data, loading } = useCacheQuery<
     GetGovernanceTaskList,
@@ -158,6 +158,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                 systemIntakeId={systemIntake.id}
                 state={state}
                 decisionState={decisionState}
+                lcid={lcid}
               />
             )}
           />
