@@ -13,8 +13,13 @@ import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
+import CreateSystemIntakeActionConfirmLcidQuery from 'queries/CreateSystemIntakeActionConfirmLcidQuery';
 import CreateSystemIntakeActionIssueLcidQuery from 'queries/CreateSystemIntakeActionIssueLcidQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
+import {
+  CreateSystemIntakeActionConfirmLcid,
+  CreateSystemIntakeActionConfirmLcidVariables
+} from 'queries/types/CreateSystemIntakeActionConfirmLcid';
 import {
   CreateSystemIntakeActionIssueLcid,
   CreateSystemIntakeActionIssueLcidVariables
@@ -62,10 +67,17 @@ const IssueLcid = ({
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
 
-  const [mutate] = useMutation<
+  const [issueLcid] = useMutation<
     CreateSystemIntakeActionIssueLcid,
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
+  const [confirmLcid] = useMutation<
+    CreateSystemIntakeActionConfirmLcid,
+    CreateSystemIntakeActionConfirmLcidVariables
+  >(CreateSystemIntakeActionConfirmLcidQuery, {
     refetchQueries: ['GetSystemIntake']
   });
 
@@ -101,32 +113,53 @@ const IssueLcid = ({
 
   const { showMessageOnNextPage } = useMessage();
 
-  /**
-   * Submit handler containing mutation logic
-   *
-   * Error and success handling is done in `<ActionForm>`
-   */
+  /** Confirm or issue lcid on form submit */
   const onSubmit = async ({
     useExistingLcid,
+    lcid,
     ...formData
   }: IssueLcidFields) => {
-    return mutate({
-      variables: {
-        input: {
-          systemIntakeID: systemIntakeId,
-          ...formData,
-          lcid: useExistingLcid ? formData.lcid : ''
-        }
-      }
-    }).then(response => {
-      const newLcid =
-        response?.data?.createSystemIntakeActionIssueLCID?.systemIntake?.lcid;
+    /* Confirm or issue LCID */
+    const mutate = defaultValues.lcid ? confirmLcid : issueLcid;
 
-      // Show success message with LCID
-      showMessageOnNextPage(t('manageLcid.success', { lcid: newLcid }), {
-        type: 'success'
-      });
-    });
+    /* LCID input */
+    const input = {
+      systemIntakeID: systemIntakeId,
+      ...formData,
+      // If issuing LCID, add field to input
+      ...(defaultValues.lcid ? {} : { lcid: '' })
+    };
+
+    // Return mutation
+    return (
+      mutate({
+        variables: {
+          input
+        }
+      })
+        // On success, get LCID from mutation response and show success message
+        .then(({ data: responseData }) => {
+          let newLcid: string | null | undefined;
+
+          if (!responseData) return;
+
+          // Type check to get returned LCID
+          if ('createSystemIntakeActionConfirmLCID' in responseData) {
+            newLcid =
+              responseData?.createSystemIntakeActionConfirmLCID?.systemIntake
+                ?.lcid;
+          } else {
+            newLcid =
+              responseData?.createSystemIntakeActionIssueLCID?.systemIntake
+                ?.lcid;
+          }
+
+          // Show success message
+          showMessageOnNextPage(t('manageLcid.success', { newLcid }), {
+            type: 'success'
+          });
+        })
+    );
   };
 
   const lcid = watch('lcid');
