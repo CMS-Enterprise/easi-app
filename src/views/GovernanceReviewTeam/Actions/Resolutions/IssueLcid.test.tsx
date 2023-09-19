@@ -59,10 +59,14 @@ describe('Issue LCID form', async () => {
     expect(selectLcid).toHaveValue(systemIntakeWithLcid.lcid);
 
     expect(
+      screen.getByRole('textbox', { name: 'Expiration date *' })
+    ).toHaveValue('09/21/2024');
+
+    expect(
       screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' })
     ).toHaveValue(systemIntakeWithLcid.lcidScope);
 
-    expect(screen.getByRole('textbox', { name: 'Next Steps *' })).toHaveValue(
+    expect(screen.getByRole('textbox', { name: 'Next steps *' })).toHaveValue(
       systemIntakeWithLcid.decisionNextSteps
     );
 
@@ -109,7 +113,7 @@ describe('Issue LCID form', async () => {
     );
 
     userEvent.type(
-      screen.getByRole('textbox', { name: 'Expiration Date *' }),
+      screen.getByRole('textbox', { name: 'Expiration date *' }),
       '01/01/2025'
     );
 
@@ -119,7 +123,7 @@ describe('Issue LCID form', async () => {
     );
 
     userEvent.type(
-      screen.getByRole('textbox', { name: 'Next Steps *' }),
+      screen.getByRole('textbox', { name: 'Next steps *' }),
       'Test next steps'
     );
 

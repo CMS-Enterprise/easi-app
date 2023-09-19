@@ -206,7 +206,7 @@ const action = {
     subheading: 'How to proceed?',
     lifecycleId: 'Lifecycle ID',
     feedbackLabel: 'This email will be sent to recipients',
-    nextStepsLabel: 'Next Steps',
+    nextStepsLabel: 'Next steps',
     nextStepsHelpText:
       'Provide the team with recommendations on how best to continue the process and stay on track with their project. For example “start your ATO” or “complete acquisition planning”.',
     scopeLabel: 'Scope of Life Cycle ID',
@@ -228,7 +228,7 @@ const action = {
         'Select an existing LCID from EASi. Selecting a LCID will pre-populate its information below, allowing you to edit it as needed.'
     },
     expirationDate: {
-      label: 'Expiration Date',
+      label: 'Expiration date',
       helpText: 'For example 08 02 1776',
       month: 'Month',
       day: 'Day',
