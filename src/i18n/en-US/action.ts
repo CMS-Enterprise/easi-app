@@ -288,7 +288,13 @@ const action = {
       'Explain what is covered by this Life Cycle ID and what work it limits the project team to.',
     reasonLabel: 'Why are you updating this Life Cycle ID?',
     reasonHelpText: 'Include any additional context about this action.',
-    success: 'Life Cycle ID {{lcid}} has been updated.'
+    success: 'Life Cycle ID {{lcid}} has been updated.',
+    currentLcid: 'Current Life Cycle ID',
+    issueDate: 'Issue date',
+    currentExpirationDate: 'Current expiration date',
+    currentScope: 'Current scope',
+    currentCostBaseline: 'Current project cost baseline',
+    currentNextSteps: 'Current next steps'
   },
   extendLcid: {
     back: 'Change',
