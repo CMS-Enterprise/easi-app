@@ -279,6 +279,15 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * Different options for whether the Governance team believes a requester's team should consult with the TRB
+ */
+export enum SystemIntakeTRBFollowUp {
+  NOT_RECOMMENDED = "NOT_RECOMMENDED",
+  RECOMMENDED_BUT_NOT_CRITICAL = "RECOMMENDED_BUT_NOT_CRITICAL",
+  STRONGLY_RECOMMENDED = "STRONGLY_RECOMMENDED",
+}
+
+/**
  * Represents the category of a single TRB admin note
  */
 export enum TRBAdminNoteCategory {
@@ -842,6 +851,22 @@ export interface SystemIntakeGovernanceTeamInput {
 export interface SystemIntakeISSOInput {
   isPresent?: boolean | null;
   name?: string | null;
+}
+
+/**
+ * Input for setting an intake's decision to issuing an LCID in IT Gov v2
+ */
+export interface SystemIntakeIssueLCIDInput {
+  systemIntakeID: UUID;
+  lcid?: string | null;
+  expiresAt: Time;
+  scope: HTML;
+  nextSteps: HTML;
+  trbFollowUp: SystemIntakeTRBFollowUp;
+  costBaseline?: string | null;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
 }
 
 /**

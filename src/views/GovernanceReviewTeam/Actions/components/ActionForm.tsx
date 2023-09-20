@@ -13,7 +13,9 @@ import {
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
+import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
@@ -27,20 +29,19 @@ import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import EmailRecipientsFields from './EmailRecipientsFields';
 
-// TODO: update fields to match schema when backend work is completed
 export interface SystemIntakeActionFields {
-  additionalNotes: string;
-  adminNotes: string;
+  additionalInfo: string;
+  adminNote: string;
   notificationRecipients: EmailNotificationRecipients;
 }
 
 export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   systemIntakeId: string;
-  title?: string;
+  title: React.ReactNode;
   description?: string;
   breadcrumb?: string;
   /** Success message to display on admin actions page after submission */
-  successMessage: string;
+  successMessage?: string;
   /** Submit function runs after field validation passes */
   onSubmit: (formData: TFieldValues) => Promise<void>;
   /** Optional confirmation modal title and content */
@@ -50,7 +51,7 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   };
   children?: React.ReactNode;
   className?: string;
-} & Omit<JSX.IntrinsicElements['form'], 'onSubmit'>;
+} & Omit<JSX.IntrinsicElements['form'], 'onSubmit' | 'title'>;
 
 /**
  * Form wrapper for IT Gov admin actions
@@ -106,7 +107,10 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     onSubmit(formData)
       .then(() => {
         // Display success message
-        showMessageOnNextPage(t(successMessage), { type: 'success' });
+        if (successMessage) {
+          showMessageOnNextPage(t(successMessage), { type: 'success' });
+        }
+
         history.push(`/governance-review-team/${systemIntakeId}/actions`);
       })
       .catch(() => {
@@ -129,11 +133,12 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     if (!!requester.euaUserId && isLoading) {
       reset(
         {
-          adminNotes: '',
-          additionalNotes: '',
+          adminNote: '',
+          additionalInfo: '',
           ...defaultValues,
           notificationRecipients: {
             shouldNotifyITGovernance: true,
+            shouldNotifyITInvestment: false,
             ...defaultValues?.notificationRecipients,
             regularRecipientEmails: requester.email ? [requester.email] : []
           }
@@ -144,6 +149,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [requester, defaultValues, isLoading, reset]);
 
+  const fieldErrorKeys = Object.keys(errors).filter(key => key !== 'root');
   const hasErrors: boolean = Object.keys(errors).length > 0;
 
   // Scroll to error message
@@ -154,7 +160,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [errors, hasErrors]);
 
-  if (isLoading) return null;
+  if (isLoading) return <PageLoading />;
 
   const recipients = watch('notificationRecipients');
   const recipientsSelected: boolean =
@@ -180,13 +186,17 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
       {
         // Error message for server error
         errors?.root?.message && (
-          <Alert type="error" className="action-error">
+          <Alert type="error" className="action-error margin-top-2">
             {errors.root.message}
           </Alert>
         )
       }
 
-      {title && <PageHeading className="margin-bottom-0">{title}</PageHeading>}
+      {typeof title === 'string' ? (
+        <PageHeading className="margin-bottom-0">{title}</PageHeading>
+      ) : (
+        title
+      )}
       {description && (
         <p className="line-height-body-5 font-body-lg text-light margin-0">
           {description}
@@ -199,6 +209,33 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           components={{ asterisk: <RequiredAsterisk /> }}
         />
       </p>
+
+      {
+        /** Display field errors */
+        fieldErrorKeys.length > 0 && (
+          <Alert
+            heading={t('technicalAssistance:errors.checkFix')}
+            type="error"
+            className="action-error"
+            slim={false}
+          >
+            {fieldErrorKeys.map(fieldName => {
+              const label = t(`errorLabels.${fieldName}`);
+              const error = errors[fieldName as keyof typeof errors]?.message;
+
+              const message = `${label}: ${t(error || '')}`;
+
+              return (
+                <ErrorAlertMessage
+                  key={fieldName}
+                  errorKey={fieldName}
+                  message={message}
+                />
+              );
+            })}
+          </Alert>
+        )
+      }
 
       <Form
         {...formProps}
