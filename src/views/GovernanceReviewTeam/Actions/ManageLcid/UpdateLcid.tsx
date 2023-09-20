@@ -20,6 +20,7 @@ import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
+import LcidSummary from './LcidSummary';
 import LcidTitleBox from './LcidTitleBox';
 import { ManageLcidProps } from '.';
 
@@ -27,8 +28,8 @@ type UpdateLcidFields = NonNullableProps<
   Omit<SystemIntakeUpdateLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
 
-interface UpdateLcidProps extends ManageLcidProps {
-  lcid?: string | null;
+export interface UpdateLcidProps extends ManageLcidProps {
+  lcid: string;
   lcidExpiresAt?: string | null;
   lcidScope?: string | null;
   decisionNextSteps?: string | null;
@@ -80,7 +81,17 @@ const UpdateLcid = ({
           <LcidTitleBox
             systemIntakeId={systemIntakeId}
             title={t('manageLcid.update', { context: lcidStatus })}
-          />
+          >
+            <LcidSummary
+              lcid={lcid}
+              lcidStatus={lcidStatus}
+              lcidExpiresAt={defaultValues?.lcidExpiresAt || ''}
+              lcidScope={defaultValues?.lcidScope || ''}
+              decisionNextSteps={defaultValues?.decisionNextSteps || ''}
+              lcidCostBaseline={defaultValues?.lcidCostBaseline || ''}
+              className="margin-top-3 margin-bottom-6"
+            />
+          </LcidTitleBox>
         }
       >
         <h3 className="margin-bottom-1">{t('updateLcid.title')}</h3>

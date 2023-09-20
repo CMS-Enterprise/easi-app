@@ -31,7 +31,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
-  const { id: systemIntakeId, lcidStatus } = systemIntake;
+  const { id: systemIntakeId, lcidStatus, lcid } = systemIntake;
 
   const { subPage } = useParams<{
     subPage?: string;
@@ -58,7 +58,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
   }, [lcidStatus]);
 
   // Show page not found if no LCID or action is not available
-  if (!lcidStatus || (subPage && !actionOptions.includes(subPage))) {
+  if (!lcid || !lcidStatus || (subPage && !actionOptions.includes(subPage))) {
     return <NotFound />;
   }
 
@@ -82,7 +82,11 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
           <RetireLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
         <Route path="/governance-review-team/:sytemId/manage-lcid/update">
-          <UpdateLcid {...systemIntake} systemIntakeId={systemIntakeId} />
+          <UpdateLcid
+            {...systemIntake}
+            lcid={lcid}
+            systemIntakeId={systemIntakeId}
+          />
         </Route>
         <Route path="/governance-review-team/:sytemId/manage-lcid/expire">
           <ExpireLcid {...systemIntake} systemIntakeId={systemIntakeId} />
