@@ -232,7 +232,11 @@ const IssueLcid = ({
               <Trans
                 i18nKey="action:issueLCID.currentLcid"
                 values={{ lcid }}
-                components={{ span: <span className="text-bold" /> }}
+                components={{
+                  span: (
+                    <span className="text-bold" data-testid="current-lcid" />
+                  )
+                }}
               />
             </p>
             <Alert type="info" className="margin-top-1" slim>
