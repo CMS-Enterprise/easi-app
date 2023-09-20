@@ -244,7 +244,9 @@ const action = {
     },
     currentLcid: 'Current LCID: <span>{{lcid}}</span>',
     currentLcidHelpText:
-      'You generated the Life Cycle ID (LCID) below as a part of a previous decision for this request. Its information is pre-populated its information below, allowing you to edit it as needed.'
+      'You generated the Life Cycle ID (LCID) below as a part of a previous decision for this request. Its information is pre-populated its information below, allowing you to edit it as needed.',
+    confirmLcidAlert:
+      'After you confirm this decision, you may continue to modify this LCID using any of the “Manage a Life Cycle ID” actions.'
   },
   decisionModal: {
     title: 'Are you sure you want to complete this action?',

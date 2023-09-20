@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Dropdown, FormGroup, Radio } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
@@ -234,6 +235,9 @@ const IssueLcid = ({
                 components={{ span: <span className="text-bold" /> }}
               />
             </p>
+            <Alert type="info" className="margin-top-1" slim>
+              {t('issueLCID.confirmLcidAlert')}
+            </Alert>
           </>
         ) : (
           /* New or existing LCID fields */
