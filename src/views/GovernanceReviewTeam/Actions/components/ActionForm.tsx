@@ -49,6 +49,7 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
     title: string;
     content: React.ReactNode;
   };
+  requiredFields?: boolean;
   children?: React.ReactNode;
   className?: string;
 } & Omit<JSX.IntrinsicElements['form'], 'onSubmit' | 'title'>;
@@ -70,6 +71,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   successMessage,
   onSubmit,
   modal,
+  requiredFields = true,
   children,
   className,
   ...formProps
@@ -203,12 +205,14 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         </p>
       )}
 
-      <p className="margin-top-1 text-base">
-        <Trans
-          i18nKey="action:fieldsMarkedRequired"
-          components={{ asterisk: <RequiredAsterisk /> }}
-        />
-      </p>
+      {requiredFields && (
+        <p className="margin-top-1 text-base">
+          <Trans
+            i18nKey="action:fieldsMarkedRequired"
+            components={{ asterisk: <RequiredAsterisk /> }}
+          />
+        </p>
+      )}
 
       {
         /** Display field errors */

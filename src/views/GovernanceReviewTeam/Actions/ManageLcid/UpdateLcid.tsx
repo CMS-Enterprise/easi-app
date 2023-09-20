@@ -75,6 +75,7 @@ const UpdateLcid = ({
         systemIntakeId={systemIntakeId}
         successMessage={t('updateLcid.success', { lcid })}
         onSubmit={onSubmit}
+        requiredFields={false}
         title={
           <LcidTitleBox
             systemIntakeId={systemIntakeId}
