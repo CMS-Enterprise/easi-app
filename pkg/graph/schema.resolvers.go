@@ -2827,6 +2827,13 @@ func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntak
 	return obj.LifecycleID.Ptr(), nil
 }
 
+// LcidIssuedAt is the resolver for the lcidIssuedAt field.
+func (r *systemIntakeResolver) LcidIssuedAt(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
+	// TODO Implement in https://jiraent.cms.gov/browse/EASI-3319
+	mockDate := time.Date(1989, 8, 18, 12, 0, 0, 0, time.UTC) // this is when Technotronic's "Pump Up The Jam" was released. A very important date for all of humanity.
+	return &mockDate, nil
+}
+
 // LcidScope is the resolver for the lcidScope field.
 func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error) {
 	return obj.LifecycleScope, nil
