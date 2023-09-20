@@ -1,7 +1,13 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 
+import CreateSystemIntakeActionUpdateLcidQuery from 'queries/CreateSystemIntakeActionUpdateLcidQuery';
+import {
+  CreateSystemIntakeActionUpdateLcid,
+  CreateSystemIntakeActionUpdateLcidVariables
+} from 'queries/types/CreateSystemIntakeActionUpdateLcid';
 import { SystemIntakeUpdateLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
@@ -26,14 +32,27 @@ const UpdateLcid = ({ systemIntakeId, lcidStatus }: UpdateLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<UpdateLcidFields>();
 
+  const [updateLcid] = useMutation<
+    CreateSystemIntakeActionUpdateLcid,
+    CreateSystemIntakeActionUpdateLcidVariables
+  >(CreateSystemIntakeActionUpdateLcidQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
   const onSubmit = async (formData: UpdateLcidFields) => {
-    // Execute mutation here
-    // mutate(formData);
+    updateLcid({
+      variables: {
+        input: {
+          systemIntakeID: systemIntakeId,
+          ...formData
+        }
+      }
+    });
   };
 
   return (
