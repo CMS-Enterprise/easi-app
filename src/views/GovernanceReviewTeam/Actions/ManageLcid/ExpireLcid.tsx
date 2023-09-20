@@ -1,11 +1,16 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
+import LcidTitleBox from './LcidTitleBox';
+import { ManageLcidProps } from '.';
+
 interface ExpireLcidFields extends SystemIntakeActionFields {}
 
-const ExpireLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
+const ExpireLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
+  const { t } = useTranslation('action');
   const form = useForm<ExpireLcidFields>();
 
   /**
@@ -24,6 +29,12 @@ const ExpireLcid = ({ systemIntakeId }: { systemIntakeId: string }) => {
         systemIntakeId={systemIntakeId}
         successMessage=""
         onSubmit={onSubmit}
+        title={
+          <LcidTitleBox
+            systemIntakeId={systemIntakeId}
+            title={t('manageLcid.expire', { context: lcidStatus })}
+          />
+        }
       >
         {/* Action fields here */}
       </ActionForm>

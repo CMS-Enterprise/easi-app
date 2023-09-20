@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
+  getGovernanceTaskListQuery,
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
   requester,
@@ -42,19 +43,23 @@ const renderActionPage = ({
 describe('IT Gov Actions', () => {
   it('Renders options and selects action', async () => {
     render(
-      <MemoryRouter
-        initialEntries={[`/governance-review-team/${systemIntake.id}/actions`]}
-      >
-        <Route path={[`/governance-review-team/:systemId/actions/:action?`]}>
-          <MessageProvider>
-            <Actions systemIntake={systemIntake} />
-          </MessageProvider>
-        </Route>
-      </MemoryRouter>
+      <VerboseMockedProvider mocks={[getGovernanceTaskListQuery]}>
+        <MemoryRouter
+          initialEntries={[
+            `/governance-review-team/${systemIntake.id}/actions`
+          ]}
+        >
+          <Route path={[`/governance-review-team/:systemId/actions/:action?`]}>
+            <MessageProvider>
+              <Actions systemIntake={systemIntake} />
+            </MessageProvider>
+          </Route>
+        </MemoryRouter>
+      </VerboseMockedProvider>
     );
 
     expect(
-      screen.getByRole('heading', { name: 'Request edits to a form' })
+      await screen.findByRole('heading', { name: 'Request edits to a form' })
     ).toBeInTheDocument();
 
     expect(
@@ -77,7 +82,11 @@ describe('IT Gov Actions', () => {
   it('Renders request edits action', async () => {
     renderActionPage({
       action: 'request-edits',
-      mocks: [getSystemIntakeQuery, getSystemIntakeContactsQuery]
+      mocks: [
+        getSystemIntakeQuery,
+        getSystemIntakeContactsQuery,
+        getGovernanceTaskListQuery
+      ]
     });
 
     expect(
