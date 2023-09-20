@@ -33,14 +33,8 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { watch, control } = form;
 
   const submit = async (formData: RequestEditsFields) => {
-    // const checkEmptyFields: Array<keyof RequestEditsFields> = [
-    //   'adminNotes',
-    //   'additionalInfo'
-    // ];
-    // checkEmptyFields.forEach(fieldKey => {
-    //   // eslint-disable-next-line no-param-reassign
-    //   if (formData[fieldKey] === '') delete formData[fieldKey];
-    // });
+    // eslint-disable-next-line no-param-reassign
+    delete formData.adminNote;
 
     await mutate({
       variables: { input: { systemIntakeID: systemIntakeId, ...formData } }
