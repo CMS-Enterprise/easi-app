@@ -19,7 +19,22 @@ services:
       target: dev
     image: easi-backend:latest
     volumes:
-      - ./:/easi
+      # Volume mounting the entire './' directory is dangerous, as it mounts OS-specific folders (and things like .git)
+      # So instead, only volume mount things we need!
+      #
+      # Note, however, that MOST of the files that we care about are copied in the Dockerfile for us, we only really need to copy over the things that
+      # we want to be able to change on the fly in local developmement, like our ./pkg/ directory & Air configs.
+      # This means that editing things like your go.mod/go.sum and ./cmd/ directory WILL require a rebuild of the image, and won't hot reload with Air.
+      - ./pkg/:/easi/pkg/
+      - ./cmd/:/easi/cmd/ # Go build uses ./cmd as well
+      - ./.air.conf:/easi/.air.conf
+      - ./.airDebug.conf:/easi/.airDebug.conf
+      - ./.airDebugWait.conf:/easi/.airDebugWait.conf
+      - /easi/tmp/air/ # This should match .air.conf's tmp_dir. Note that this isn't a volume mount to a local file/folder, but just an empty volume for Air to use.
+      # The only reason we need to mount Cypress here is because the `flagdata.json` (used when FLAG_SOURCE=FILE) happens to live in the ./cypress/ directory.
+      # This is not ideal (perhaps it should be in the root directory?), but for now we just volume mount cypress as a workaround.
+      # NOTE: This is only really the case if you set FLAG_SOURCE=FILE locally, or (more importantly) in ./docker-compose-cypress_ci.yml
+      - ./cypress/:/easi/cypress/
     entrypoint: air ${AIR_CONFIG}
     ports:
       - 8080:8080
