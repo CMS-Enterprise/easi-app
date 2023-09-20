@@ -294,9 +294,15 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 	// which we need so we can return a *SystemIntakeLCIDStatus that can be nil
 	issuedStatus := SystemIntakeLCIDStatusIssued
 	expiredStatus := SystemIntakeLCIDStatusExpired
+	retiredStatus := SystemIntakeLCIDStatusRetired
 
 	if si == nil || si.LifecycleID.ValueOrZero() == "" {
 		return nil
+	}
+
+	// check retirement date first - that takes precedence over expiration date
+	if si.LifecycleRetiresAt != nil && si.LifecycleRetiresAt.Before(currentTime) {
+		return &retiredStatus
 	}
 
 	// LifecycleExpiresAt should always be non-nil if an LCID has been issued; check just to avoid a panic if there's inconsistent data

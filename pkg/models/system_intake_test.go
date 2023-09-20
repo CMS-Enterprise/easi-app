@@ -27,6 +27,7 @@ func TestLCIDStatus(t *testing.T) {
 		intake := &SystemIntake{
 			LifecycleID:        null.StringFrom("123456"),
 			LifecycleExpiresAt: &tomorrow,
+			LifecycleRetiresAt: nil,
 		}
 
 		lcidStatus := intake.LCIDStatus(mockCurrentTime)
@@ -39,11 +40,38 @@ func TestLCIDStatus(t *testing.T) {
 		intake := &SystemIntake{
 			LifecycleID:        null.StringFrom("234567"),
 			LifecycleExpiresAt: &yesterday,
+			LifecycleRetiresAt: nil,
 		}
 
 		lcidStatus := intake.LCIDStatus(mockCurrentTime)
 
 		assert.NotNil(t, lcidStatus)
 		assert.EqualValues(t, SystemIntakeLCIDStatusExpired, *lcidStatus)
+	})
+
+	t.Run("LCID status is RETIRED if LCID exists and has been retired and the expiration date hasn't been reached", func(t *testing.T) {
+		intake := &SystemIntake{
+			LifecycleID:        null.StringFrom("345678"),
+			LifecycleExpiresAt: &tomorrow,
+			LifecycleRetiresAt: &yesterday,
+		}
+
+		lcidStatus := intake.LCIDStatus(mockCurrentTime)
+
+		assert.NotNil(t, lcidStatus)
+		assert.EqualValues(t, SystemIntakeLCIDStatusRetired, *lcidStatus)
+	})
+
+	t.Run("LCID status is RETIRED if LCID exists and has been retired, even if expiration date has been reached", func(t *testing.T) {
+		intake := &SystemIntake{
+			LifecycleID:        null.StringFrom("456789"),
+			LifecycleExpiresAt: &yesterday,
+			LifecycleRetiresAt: &yesterday,
+		}
+
+		lcidStatus := intake.LCIDStatus(mockCurrentTime)
+
+		assert.NotNil(t, lcidStatus)
+		assert.EqualValues(t, SystemIntakeLCIDStatusRetired, *lcidStatus)
 	})
 }
