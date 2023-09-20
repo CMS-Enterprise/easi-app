@@ -16,21 +16,23 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
+const DateLayout = "2006-01-02"
+
 func TestLCIDExpirationAlert(t *testing.T) {
 	ctx := context.Background()
 	ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
 
 	// Build out test intakes with varying LCID expiration dates
-	testDate, _ := time.Parse("2006-01-02", "2023-02-20")
+	testDate, _ := time.Parse(DateLayout, "2023-02-20")
 
 	// mock expiration dates
-	sixtyDaysFromDate, _ := time.Parse("2006-01-02", "2023-04-21")
-	fiftyNineDaysFromDate, _ := time.Parse("2006-01-02", "2023-04-20")
-	fortySixDaysFromDate, _ := time.Parse("2006-01-02", "2023-04-06")
+	sixtyDaysFromDate, _ := time.Parse(DateLayout, "2023-04-21")
+	fiftyNineDaysFromDate, _ := time.Parse(DateLayout, "2023-04-20")
+	fortySixDaysFromDate, _ := time.Parse(DateLayout, "2023-04-06")
 
 	// mock retirement dates
-	twoDaysFromDate, _ := time.Parse("2006-01-02", "2023-02-22")
-	oneDayBeforeDate, _ := time.Parse("2006-01-02", "2023-02-19")
+	twoDaysFromDate, _ := time.Parse(DateLayout, "2023-02-22")
+	oneDayBeforeDate, _ := time.Parse(DateLayout, "2023-02-19")
 
 	var intakePtr *models.SystemIntake
 	intake := testhelpers.NewSystemIntake()
