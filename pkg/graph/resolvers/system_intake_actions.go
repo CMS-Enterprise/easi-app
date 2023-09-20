@@ -964,6 +964,26 @@ func ExpireLCID(
 	return updatedIntake, nil
 }
 
+// RetireLCID handles a Retire LCID action on an intake as part of Admin Actions v2
+func RetireLCID(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeRetireLCIDInput,
+) (*models.SystemIntake, error) {
+	panic("not yet implemented")
+}
+
+// ChangeLCIDRetirementDate handles a Change LCID Retirement Date action on an intake as part of Admin Actions v2
+func ChangeLCIDRetirementDate(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeChangeLCIDRetirementDateInput,
+) (*models.SystemIntake, error) {
+	panic("not yet implemented")
+}
+
 // Note [Database calls from resolvers aren't atomic]
 // All the different database calls in a resolver (saving the intake, action, admin note, etc.) aren't in a single atomic transaction;
 // in the case of a system failure, some data from the action might be saved, but not all.
