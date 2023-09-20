@@ -134,30 +134,6 @@ jobs:
         with:
           name: test-frontend-assets
           path: build/
-      # - name: Build easi_client image
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     context: .
-      #     file: Dockerfile.client_ci
-      #     load: true
-      #     tags: easi_client:latest
-      #     cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi_client
-      # - name: Build db_seed image
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     context: .
-      #     file: Dockerfile.db_seed
-      #     load: true
-      #     tags: db_seed:latest
-      #     cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-db_seed
-      # - name: Build easi_cypress image
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     context: .
-      #     file: Dockerfile.cypress
-      #     load: true
-      #     tags: easi_cypress:latest
-      #     cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi_cypress
       - name: Buildx Bake testing images
         uses: docker/bake-action@v4
         with:
@@ -166,8 +142,11 @@ jobs:
           targets: db_seed,easi_client,cypress
           set: |
             db_seed.cache-from=type=gha,scope=${{ env.GIT_REF_NAME }}-db_seed
+            db_seed.cache-to=type=gha,mode=max,scope=${{ env.GIT_REF_NAME }}-db_seed
             easi_client.cache-from=type=gha,scope=${{ env.GIT_REF_NAME }}-easi_client
+            easi_client.cache-to=type=gha,mode=max,scope=${{ env.GIT_REF_NAME }}-eaasi_client
             cypress.cache-from=type=gha,scope=${{ env.GIT_REF_NAME }}-easi_cypress
+            cypress.cache-to=type=gha,mode=max,scope=${{ env.GIT_REF_NAME }}-easi_cypress
       - name: Run e2e cypress tests
         env:
           APP_ENV: test
