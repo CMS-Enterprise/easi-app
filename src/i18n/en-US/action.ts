@@ -60,9 +60,18 @@ const action = {
         'Use this action if you want to modify a retired Life Cycle ID in any way. You will have the option to maintain its retired status or reinstate it.'
     }
   },
+  errorLabels: {
+    useExistingLcid: 'Life Cycle ID',
+    lcid: 'Life Cycle ID',
+    expiresAt: 'Expiration date',
+    scope: 'Scope of Life Cycle ID',
+    nextSteps: 'Next steps',
+    trbFollowUp: 'TRB follow-up'
+  },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
     breadcrumb: 'Manage a Life Cycle ID',
+    label: 'Action',
     description:
       'Update the status or details of a previously-issued Life Cycle ID by expiring it, retiring it, or updating it (Change the expiration date, scope, next steps, or project cost baseline).',
     description_EXPIRED:
@@ -84,7 +93,9 @@ const action = {
       expire: 'Expire',
       expireDescription:
         'LCIDs will automatically expire when they reach their expiration date. Manually expiring an LCID will update the expiration date and set the status to “Expired”. Expired LCIDs are usually unplanned or unintended, and result in the project being added to the CIO risk register. This project team will continue to receive automatic notifications about their Life Cycle ID.'
-    }
+    },
+    success:
+      'Life Cycle ID {{lcid}} is issued for this request. This request is now closed. You may continue to manage this Life Cycle ID using the "Manage a Life Cycle ID" action.'
   },
   titleBox: {
     selected: 'Selected {{type}}',
@@ -195,29 +206,50 @@ const action = {
     subheading: 'How to proceed?',
     lifecycleId: 'Lifecycle ID',
     feedbackLabel: 'This email will be sent to recipients',
-    nextStepsLabel: 'Next Steps',
+    nextStepsLabel: 'Next steps',
     nextStepsHelpText:
-      'Provide the requester with some recommendations on how to continue their process. For example, “begin your ATO” or “update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID.',
-    scopeLabel: 'Scope of Lifecycle ID',
+      'Provide the team with recommendations on how best to continue the process and stay on track with their project. For example “start your ATO” or “complete acquisition planning”.',
+    scopeLabel: 'Scope of Life Cycle ID',
     scopeHelpText:
       'Tell the requester what is covered by this Lifecycle ID and what work it limits the project team to.',
-    costBaselineLabel: 'Project Cost Baseline (Optional)',
+    costBaselineLabel: 'Project cost baseline',
     costBaselineHelpText:
-      'Enter the current cost baseline for the project for the first two planned fiscal years of the project',
+      'Include the cost baseline for the first two planned fiscal years of the project.',
     lcid: {
-      new: 'Generate a new Lifecycle ID',
+      new: 'Generate a new Life Cycle ID',
       helpText:
-        'If you choose to generate a new Lifecycle ID, one will be generated when you submit this page',
-      existing: 'Use an existing Lifecycle ID',
-      label: 'Lifecycle ID'
+        'If you choose to generate a new Life Cycle ID, it will be generated when you complete this action.',
+      existing: 'Use an existing Life Cycle ID',
+      label: 'Life Cycle ID'
+    },
+    select: {
+      label: 'Select the Life Cycle ID (LCID) for this request.',
+      helpText:
+        'Select an existing LCID from EASi. Selecting a LCID will pre-populate its information below, allowing you to edit it as needed.'
     },
     expirationDate: {
-      label: 'Expiration Date',
+      label: 'Expiration date',
       helpText: 'For example 08 02 1776',
       month: 'Month',
       day: 'Day',
       year: 'Year'
+    },
+    trbFollowup: {
+      label:
+        'Should this team consult with the Technical Review Board (TRB) as a part of their next steps?',
+      stronglyRecommended: 'Yes, strongly recommend',
+      recommendedNotCritical:
+        'Yes, it’s not critical but the TRB could provide useful feedback',
+      notRecommended: 'No, they may if they wish but it’s not necessary'
     }
+  },
+  decisionModal: {
+    title: 'Are you sure you want to complete this action?',
+    content:
+      'You previously requested that the team make changes to their {{action}}. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.',
+    intakeRequest: 'intake request form',
+    draftBusinessCase: 'draft business case',
+    finalBusinessCase: 'final business case'
   },
   extendLcid: {
     back: 'Change',

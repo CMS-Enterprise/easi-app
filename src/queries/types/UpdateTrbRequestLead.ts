@@ -12,7 +12,7 @@ import { UpdateTRBRequestTRBLeadInput } from "./../../types/graphql-global-types
 export interface UpdateTrbRequestLead_updateTRBRequestTRBLead_trbLeadInfo {
   __typename: "UserInfo";
   commonName: string;
-  email: string;
+  email: EmailAddress;
   euaUserId: string;
 }
 

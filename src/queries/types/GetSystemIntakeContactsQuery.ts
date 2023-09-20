@@ -15,7 +15,7 @@ export interface GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeC
   component: string;
   role: string;
   commonName: string | null;
-  email: string | null;
+  email: EmailAddress | null;
 }
 
 export interface GetSystemIntakeContactsQuery_systemIntakeContacts {

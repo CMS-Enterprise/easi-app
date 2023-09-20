@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
+import { SystemIntakeTRBFollowUp } from 'types/graphql-global-types';
+
 const skippableEmail = Yup.string().when('shouldSendEmail', {
   is: false,
   then: schema => schema.optional(),
@@ -134,4 +136,28 @@ export const provideGRTFeedbackSchema = Yup.object().shape({
     .trim()
     .required('Please include feedback for the business owner'),
   emailBody: skippableEmail
+});
+
+/** Checks that expiration date is valid and in the future */
+const validExpirationDate = () =>
+  Yup.string()
+    .required('Please enter a valid date')
+    .nullable()
+    .test('expiresAt', 'Date cannot be in the past', value => {
+      if (!value) return true;
+      return DateTime.fromISO(value) >= DateTime.local().startOf('day');
+    });
+
+export const issueLcidSchema = Yup.object().shape({
+  useExistingLcid: Yup.boolean().required('Please make a selection'),
+  lcid: Yup.string().when('useExistingLcid', {
+    is: true,
+    then: Yup.string().required('Please select the existing Lifecycle ID')
+  }),
+  expiresAt: validExpirationDate(),
+  scope: Yup.string().required('Please fill in the blank'),
+  nextSteps: Yup.string().required('Please fill in the blank'),
+  trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()
+    .oneOf(Object.values(SystemIntakeTRBFollowUp))
+    .required('Please make a selection')
 });

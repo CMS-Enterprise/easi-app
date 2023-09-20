@@ -12,7 +12,6 @@ on:
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
-  EASI_APP_GO_VERSION: "1.18.3"
   GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   ENV: ${{ inputs.env }}
@@ -42,7 +41,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3.0.2
+        uses: aws-actions/configure-aws-credentials@v4.0.0
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2   
@@ -90,7 +89,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3.0.2
+        uses: aws-actions/configure-aws-credentials@v4.0.0
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
@@ -128,7 +127,7 @@ jobs:
         with:
           ref: ${{ env.GIT_HASH }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3.0.2
+        uses: aws-actions/configure-aws-credentials@v4.0.0
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2

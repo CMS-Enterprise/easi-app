@@ -1,6 +1,12 @@
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
+import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
+import {
+  GetGovernanceTaskList,
+  GetGovernanceTaskListVariables
+} from 'queries/types/GetGovernanceTaskList';
 import {
   GetSystemIntake,
   GetSystemIntake_systemIntake as SystemIntake,
@@ -10,15 +16,27 @@ import {
   GetSystemIntakeContacts,
   GetSystemIntakeContactsVariables
 } from 'queries/types/GetSystemIntakeContacts';
+import {
+  GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
+  GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
+} from 'queries/types/GetSystemIntakesWithLCIDS';
 import { SystemIntakeContact } from 'queries/types/SystemIntakeContact';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import {
+  ITGovDecisionStatus,
+  ITGovDraftBusinessCaseStatus,
+  ITGovFeedbackStatus,
+  ITGovFinalBusinessCaseStatus,
+  ITGovGRBStatus,
+  ITGovGRTStatus,
+  ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
   SystemIntakeRequestType,
   SystemIntakeState,
-  SystemIntakeStatus
+  SystemIntakeStatus,
+  SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 
@@ -238,6 +256,43 @@ export const getSystemIntakeQuery: MockedQuery<
   }
 };
 
+export const systemIntakeWithLcid: SystemIntakeWithLcid = {
+  __typename: 'SystemIntake',
+  id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
+  lcid: '123456',
+  requestName: 'Test request name',
+  lcidExpiresAt: '2024-09-21T05:00:00.000Z',
+  lcidScope: 'Test scope',
+  decisionNextSteps: 'Test next steps',
+  trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
+  lcidCostBaseline: 'Text cost baseline'
+};
+
+export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSType> = {
+  request: {
+    query: GetSystemIntakesWithLCIDS,
+    variables: {}
+  },
+  result: {
+    data: {
+      systemIntakesWithLcids: [
+        systemIntakeWithLcid,
+        {
+          __typename: 'SystemIntake',
+          id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
+          lcid: '654321',
+          requestName: 'Test request name 2',
+          lcidExpiresAt: null,
+          lcidScope: null,
+          decisionNextSteps: null,
+          trbFollowUpRecommendation: null,
+          lcidCostBaseline: null
+        }
+      ]
+    }
+  }
+};
+
 export const getSystemIntakeContactsQuery: MockedQuery<
   GetSystemIntakeContacts,
   GetSystemIntakeContactsVariables
@@ -253,6 +308,41 @@ export const getSystemIntakeContactsQuery: MockedQuery<
       systemIntakeContacts: {
         __typename: 'SystemIntakeContactsPayload',
         systemIntakeContacts: [requester, businessOwner, isso]
+      }
+    }
+  }
+};
+
+export const getGovernanceTaskListQuery: MockedQuery<
+  GetGovernanceTaskList,
+  GetGovernanceTaskListVariables
+> = {
+  request: {
+    query: GetGovernanceTaskListQuery,
+    variables: {
+      id: systemIntakeId
+    }
+  },
+  result: {
+    data: {
+      systemIntake: {
+        __typename: 'SystemIntake',
+        id: systemIntakeId,
+        itGovTaskStatuses: {
+          __typename: 'ITGovTaskStatuses',
+          intakeFormStatus: ITGovIntakeFormStatus.READY,
+          feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
+          bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+          grtMeetingStatus: ITGovGRTStatus.CANT_START,
+          bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+          grbMeetingStatus: ITGovGRBStatus.CANT_START,
+          decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+        },
+        governanceRequestFeedbacks: [],
+        submittedAt: null,
+        updatedAt: null,
+        grtDate: null,
+        grbDate: null
       }
     }
   }
