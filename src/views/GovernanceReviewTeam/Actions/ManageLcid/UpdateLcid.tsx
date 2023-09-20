@@ -1,8 +1,15 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { FormGroup } from '@trussworks/react-uswds';
 
+import DatePickerFormatted from 'components/shared/DatePickerFormatted';
+import Divider from 'components/shared/Divider';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionUpdateLcidQuery from 'queries/CreateSystemIntakeActionUpdateLcidQuery';
 import {
   CreateSystemIntakeActionUpdateLcid,
@@ -44,6 +51,8 @@ const UpdateLcid = ({
     refetchQueries: ['GetSystemIntake']
   });
 
+  const { control } = form;
+
   /**
    * Submit handler containing mutation logic
    *
@@ -73,7 +82,122 @@ const UpdateLcid = ({
           />
         }
       >
-        {/* Action fields here */}
+        <Controller
+          name="expiresAt"
+          control={control}
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('issueLCID.expirationDate.label')}
+              </Label>
+              <HelpText className="margin-top-1">{t('mm/dd/yyyy')}</HelpText>
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
+              <DatePickerFormatted
+                {...field}
+                id={field.name}
+                defaultValue={field.value}
+              />
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          name="scope"
+          control={control}
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('issueLCID.scopeLabel')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('updateLcid.scopeHelpText')}
+              </HelpText>
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          name="nextSteps"
+          control={control}
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('issueLCID.nextStepsLabel')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('issueLCID.nextStepsHelpText')}
+              </HelpText>
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          name="costBaseline"
+          control={control}
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('issueLCID.costBaselineLabel')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('issueLCID.costBaselineHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                value={field.value || ''}
+                id={field.name}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
+
+        <Divider className="margin-top-3" />
+
+        <Controller
+          name="reason"
+          control={control}
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('updateLcid.reasonLabel')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('updateLcid.reasonHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                value={field.value || ''}
+                id={field.name}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
       </ActionForm>
     </FormProvider>
   );
