@@ -93,9 +93,7 @@ const action = {
       expire: 'Expire',
       expireDescription:
         'LCIDs will automatically expire when they reach their expiration date. Manually expiring an LCID will update the expiration date and set the status to “Expired”. Expired LCIDs are usually unplanned or unintended, and result in the project being added to the CIO risk register. This project team will continue to receive automatic notifications about their Life Cycle ID.'
-    },
-    success:
-      'Life Cycle ID {{lcid}} is issued for this request. This request is now closed. You may continue to manage this Life Cycle ID using the "Manage a Life Cycle ID" action.'
+    }
   },
   titleBox: {
     selected: 'Selected {{type}}',
@@ -242,6 +240,8 @@ const action = {
         'Yes, it’s not critical but the TRB could provide useful feedback',
       notRecommended: 'No, they may if they wish but it’s not necessary'
     },
+    success:
+      'Life Cycle ID {{lcid}} is issued for this request. This request is now closed. You may continue to manage this Life Cycle ID using the "Manage a Life Cycle ID" action.',
     currentLcid: 'Current LCID: <span>{{lcid}}</span>',
     currentLcidHelpText:
       'You generated the Life Cycle ID (LCID) below as a part of a previous decision for this request. Its information is pre-populated its information below, allowing you to edit it as needed.',

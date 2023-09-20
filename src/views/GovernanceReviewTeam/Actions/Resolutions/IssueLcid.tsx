@@ -157,7 +157,7 @@ const IssueLcid = ({
           }
 
           // Show success message
-          showMessageOnNextPage(t('manageLcid.success', { lcid: newLcid }), {
+          showMessageOnNextPage(t('issueLCID.success', { lcid: newLcid }), {
             type: 'success'
           });
         })
