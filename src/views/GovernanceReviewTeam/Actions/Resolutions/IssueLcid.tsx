@@ -105,7 +105,8 @@ const IssueLcid = ({
       nextSteps: defaultValues.decisionNextSteps || '',
       scope: defaultValues.lcidScope || '',
       trbFollowUp: defaultValues.trbFollowUpRecommendation || undefined,
-      costBaseline: defaultValues.lcidCostBaseline || ''
+      costBaseline: defaultValues.lcidCostBaseline || '',
+      useExistingLcid: defaultValues.lcid ? true : undefined
     }
   });
 
