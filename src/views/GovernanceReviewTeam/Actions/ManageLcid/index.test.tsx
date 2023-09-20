@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 
+import { systemIntake } from 'data/mock/systemIntake';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 
 import LcidTitleBox from './LcidTitleBox';
@@ -19,8 +20,10 @@ describe('Manage LCID selection page', () => {
       >
         <Route path={[`/governance-review-team/:systemId/manage-lcid`]}>
           <ManageLcid
-            systemIntakeId={systemIntakeId}
-            lcidStatus={SystemIntakeLCIDStatus.ISSUED}
+            systemIntake={{
+              ...systemIntake,
+              lcidStatus: SystemIntakeLCIDStatus.ISSUED
+            }}
           />
         </Route>
       </MemoryRouter>
@@ -54,8 +57,10 @@ describe('Manage LCID selection page', () => {
       >
         <Route path={[`/governance-review-team/:systemId/manage-lcid`]}>
           <ManageLcid
-            systemIntakeId={systemIntakeId}
-            lcidStatus={SystemIntakeLCIDStatus.RETIRED}
+            systemIntake={{
+              ...systemIntake,
+              lcidStatus: SystemIntakeLCIDStatus.ISSUED
+            }}
           />
         </Route>
       </MemoryRouter>

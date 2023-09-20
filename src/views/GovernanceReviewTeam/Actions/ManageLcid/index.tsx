@@ -14,6 +14,7 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';
+import { ActionsProps } from '..';
 
 import ExpireLcid from './ExpireLcid';
 import RetireLcid from './RetireLcid';
@@ -26,9 +27,11 @@ export interface ManageLcidProps {
 
 type LcidAction = 'update' | 'retire' | 'expire';
 
-const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
+const ManageLcid = ({ systemIntake }: ActionsProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
+
+  const { id: systemIntakeId, lcidStatus } = systemIntake;
 
   const { subPage } = useParams<{
     subPage?: string;
@@ -76,13 +79,13 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
 
       <Switch>
         <Route path="/governance-review-team/:sytemId/manage-lcid/retire">
-          <RetireLcid systemIntakeId={systemIntakeId} lcidStatus={lcidStatus} />
+          <RetireLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
         <Route path="/governance-review-team/:sytemId/manage-lcid/update">
-          <UpdateLcid systemIntakeId={systemIntakeId} lcidStatus={lcidStatus} />
+          <UpdateLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
         <Route path="/governance-review-team/:sytemId/manage-lcid/expire">
-          <ExpireLcid systemIntakeId={systemIntakeId} lcidStatus={lcidStatus} />
+          <ExpireLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
 
         <Route path="/governance-review-team/:sytemId/manage-lcid">
