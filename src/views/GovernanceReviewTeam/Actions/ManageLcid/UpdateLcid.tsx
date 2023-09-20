@@ -28,7 +28,12 @@ interface UpdateLcidProps extends ManageLcidProps {
   lcidCostBaseline?: string | null;
 }
 
-const UpdateLcid = ({ systemIntakeId, lcidStatus }: UpdateLcidProps) => {
+const UpdateLcid = ({
+  systemIntakeId,
+  lcidStatus,
+  lcid,
+  ...defaultValues
+}: UpdateLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<UpdateLcidFields>();
 
