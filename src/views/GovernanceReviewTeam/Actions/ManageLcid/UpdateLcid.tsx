@@ -64,7 +64,7 @@ const UpdateLcid = ({
     <FormProvider<UpdateLcidFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage=""
+        successMessage={t('updateLcid.success', { lcid })}
         onSubmit={onSubmit}
         title={
           <LcidTitleBox

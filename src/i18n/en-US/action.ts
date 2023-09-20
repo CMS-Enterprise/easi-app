@@ -280,6 +280,9 @@ const action = {
     draftBusinessCase: 'draft business case',
     finalBusinessCase: 'final business case'
   },
+  updateLcid: {
+    success: 'Life Cycle ID {{lcid}} has been updated.'
+  },
   extendLcid: {
     back: 'Change',
     heading: 'Actions on request',
