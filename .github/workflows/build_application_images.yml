@@ -5,7 +5,6 @@ on:
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
-  EASI_APP_GO_VERSION: "1.18.3"
   GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   GIT_REF_NAME: ${{ github.event.pull_request.head.ref || github.ref }}
@@ -30,7 +29,7 @@ jobs:
       - name: Set up go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ env.EASI_APP_GO_VERSION }}
+          go-version-file: 'go.mod'
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
       - name: Announce failure

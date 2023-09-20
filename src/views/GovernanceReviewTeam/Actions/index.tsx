@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { createContext, useMemo } from 'react';
 import { Controller, ControllerRenderProps, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { Button, Radio } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioGroup } from 'components/shared/RadioField';
+import useCacheQuery from 'hooks/useCacheQuery';
+import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+import {
+  GetGovernanceTaskList,
+  GetGovernanceTaskListVariables
+} from 'queries/types/GetGovernanceTaskList';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import { SystemIntakeState } from 'types/graphql-global-types';
+import {
+  ITGovDraftBusinessCaseStatus,
+  ITGovFinalBusinessCaseStatus,
+  ITGovIntakeFormStatus,
+  SystemIntakeState
+} from 'types/graphql-global-types';
 
 import ManageLcid from './ManageLcid';
 import NextStep from './NextStep';
@@ -64,155 +76,210 @@ type ActionsProps = {
   systemIntake: SystemIntake;
 };
 
+export type EditsRequestedKey =
+  | 'intakeRequest'
+  | 'draftBusinessCase'
+  | 'finalBusinessCase'
+  | undefined;
+
+/**
+ * Edits requested context - returns form key if edits have been requested on a form
+ *
+ * Used in form confirmation modal
+ */
+export const EditsRequestedContext = createContext<EditsRequestedKey>(
+  undefined
+);
+
 const Actions = ({ systemIntake }: ActionsProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
   const { state, decisionState, lcidStatus } = systemIntake;
 
+  const { data, loading } = useCacheQuery<
+    GetGovernanceTaskList,
+    GetGovernanceTaskListVariables
+  >(GetGovernanceTaskListQuery, {
+    variables: {
+      id: systemIntake.id
+    }
+  });
+  const taskStatuses = data?.systemIntake?.itGovTaskStatuses;
+
+  /**
+   * Translation key for edits requested form type - used in EditsRequestedContext
+   */
+  const editsRequestedKey: EditsRequestedKey = useMemo(() => {
+    if (
+      taskStatuses?.intakeFormStatus === ITGovIntakeFormStatus.EDITS_REQUESTED
+    ) {
+      return 'intakeRequest';
+    }
+    if (
+      taskStatuses?.bizCaseDraftStatus ===
+      ITGovDraftBusinessCaseStatus.EDITS_REQUESTED
+    ) {
+      return 'draftBusinessCase';
+    }
+    if (
+      taskStatuses?.bizCaseFinalStatus ===
+      ITGovFinalBusinessCaseStatus.EDITS_REQUESTED
+    ) {
+      return 'finalBusinessCase';
+    }
+    return undefined;
+  }, [taskStatuses]);
+
   const { control, watch, handleSubmit } = useForm<{ actionRoute: string }>();
   const actionRoute = watch('actionRoute');
 
+  if (loading) return <PageLoading />;
+
   return (
-    <div className="grt-admin-actions">
-      <Switch>
-        <Route
-          path="/governance-review-team/:systemId/actions/request-edits"
-          render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
-        />
+    <EditsRequestedContext.Provider value={editsRequestedKey}>
+      <div className="grt-admin-actions">
+        <Switch>
+          <Route
+            path="/governance-review-team/:systemId/actions/request-edits"
+            render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
+          />
 
-        <Route
-          path="/governance-review-team/:systemId/actions/next-step"
-          render={() => <NextStep systemIntakeId={systemIntake.id} />}
-        />
+          <Route
+            path="/governance-review-team/:systemId/actions/next-step"
+            render={() => <NextStep systemIntakeId={systemIntake.id} />}
+          />
 
-        {/* Select resolution page */}
-        <Route
-          path="/governance-review-team/:systemId/resolutions/:subPage?"
-          render={() => (
-            <Resolutions
-              systemIntakeId={systemIntake.id}
-              state={state}
-              decisionState={decisionState}
-            />
-          )}
-        />
-
-        {/* Manage LCID page */}
-        <Route
-          path="/governance-review-team/:systemId/manage-lcid/:subPage?"
-          render={() => (
-            <ManageLcid
-              systemIntakeId={systemIntake.id}
-              lcidStatus={lcidStatus}
-            />
-          )}
-        />
-
-        {/* Select action main page */}
-        <Route path="/governance-review-team/:systemId/actions">
-          <PageHeading
-            data-testid="grt-actions-view"
-            className="margin-top-0 margin-bottom-5"
-          >
-            {t('chooseAction.heading')}
-          </PageHeading>
-
-          <form
-            onSubmit={handleSubmit(formData =>
-              history.push(formData.actionRoute)
+          {/* Select resolution page */}
+          <Route
+            path="/governance-review-team/:systemId/resolutions/:subPage?"
+            render={() => (
+              <Resolutions
+                systemIntakeId={systemIntake.id}
+                state={state}
+                decisionState={decisionState}
+              />
             )}
-            className="margin-bottom-4"
-          >
-            <Controller
-              name="actionRoute"
-              control={control}
-              render={({ field: { ref, ...fieldProps } }) => {
-                return (
-                  <RadioGroup className="grt-actions-radio-group grid-row grid-gap-md">
-                    {state === SystemIntakeState.OPEN && (
-                      <>
-                        {/* Request Edits */}
-                        <ActionRadioOption
-                          {...fieldProps}
-                          value="actions/request-edits"
-                          label={t('chooseAction.requestEdits.title')}
-                          description={t(
-                            'chooseAction.requestEdits.description'
-                          )}
-                          accordionText={t(
-                            'chooseAction.requestEdits.accordion'
-                          )}
-                        />
-                        {/* Progress to new step */}
-                        <ActionRadioOption
-                          {...fieldProps}
-                          value="actions/next-step"
-                          label={t('chooseAction.progressToNewStep.title')}
-                          description={t(
-                            'chooseAction.progressToNewStep.description'
-                          )}
-                          accordionText={t(
-                            'chooseAction.progressToNewStep.accordion'
-                          )}
-                        />
-                      </>
-                    )}
+          />
 
-                    {/* Decision action */}
-                    <ActionRadioOption
-                      {...fieldProps}
-                      value="resolutions"
-                      label={t(`chooseAction.decision${state}.title`, {
-                        context: decisionState
-                      })}
-                      description={t(
-                        `chooseAction.decision${state}.description`,
-                        {
-                          context: decisionState
-                        }
-                      )}
-                      accordionText={t(
-                        `chooseAction.decision${state}.accordion`,
-                        {
-                          context: decisionState
-                        }
-                      )}
-                    />
+          {/* Manage LCID page */}
+          <Route
+            path="/governance-review-team/:systemId/manage-lcid/:subPage?"
+            render={() => (
+              <ManageLcid
+                systemIntakeId={systemIntake.id}
+                lcidStatus={lcidStatus}
+              />
+            )}
+          />
 
-                    {
-                      /* Manage LCID */
-                      lcidStatus && (
-                        <ActionRadioOption
-                          {...fieldProps}
-                          value="manage-lcid"
-                          label={t('manageLcid.title')}
-                          description={t('chooseAction.manageLcid.description')}
-                          accordionText={t(
-                            'chooseAction.manageLcid.accordion',
-                            {
-                              context: lcidStatus
-                            }
-                          )}
-                        />
-                      )
-                    }
-                  </RadioGroup>
-                );
-              }}
-            />
-
-            <Button
-              className="margin-top-3"
-              type="submit"
-              disabled={!actionRoute}
+          {/* Select action main page */}
+          <Route path="/governance-review-team/:systemId/actions">
+            <PageHeading
+              data-testid="grt-actions-view"
+              className="margin-top-0 margin-bottom-5"
             >
-              {t('submitAction.continue')}
-            </Button>
-          </form>
-        </Route>
-      </Switch>
-    </div>
+              {t('chooseAction.heading')}
+            </PageHeading>
+
+            <form
+              onSubmit={handleSubmit(formData =>
+                history.push(formData.actionRoute)
+              )}
+              className="margin-bottom-4"
+            >
+              <Controller
+                name="actionRoute"
+                control={control}
+                render={({ field: { ref, ...fieldProps } }) => {
+                  return (
+                    <RadioGroup className="grt-actions-radio-group grid-row grid-gap-md">
+                      {state === SystemIntakeState.OPEN && (
+                        <>
+                          {/* Request Edits */}
+                          <ActionRadioOption
+                            {...fieldProps}
+                            value="actions/request-edits"
+                            label={t('chooseAction.requestEdits.title')}
+                            description={t(
+                              'chooseAction.requestEdits.description'
+                            )}
+                            accordionText={t(
+                              'chooseAction.requestEdits.accordion'
+                            )}
+                          />
+                          {/* Progress to new step */}
+                          <ActionRadioOption
+                            {...fieldProps}
+                            value="actions/next-step"
+                            label={t('chooseAction.progressToNewStep.title')}
+                            description={t(
+                              'chooseAction.progressToNewStep.description'
+                            )}
+                            accordionText={t(
+                              'chooseAction.progressToNewStep.accordion'
+                            )}
+                          />
+                        </>
+                      )}
+
+                      {/* Decision action */}
+                      <ActionRadioOption
+                        {...fieldProps}
+                        value="resolutions"
+                        label={t(`chooseAction.decision${state}.title`, {
+                          context: decisionState
+                        })}
+                        description={t(
+                          `chooseAction.decision${state}.description`,
+                          {
+                            context: decisionState
+                          }
+                        )}
+                        accordionText={t(
+                          `chooseAction.decision${state}.accordion`,
+                          {
+                            context: decisionState
+                          }
+                        )}
+                      />
+
+                      {
+                        /* Manage LCID */
+                        lcidStatus && (
+                          <ActionRadioOption
+                            {...fieldProps}
+                            value="manage-lcid"
+                            label={t('manageLcid.title')}
+                            description={t(
+                              'chooseAction.manageLcid.description'
+                            )}
+                            accordionText={t(
+                              'chooseAction.manageLcid.accordion',
+                              {
+                                context: lcidStatus
+                              }
+                            )}
+                          />
+                        )
+                      }
+                    </RadioGroup>
+                  );
+                }}
+              />
+
+              <Button
+                className="margin-top-3"
+                type="submit"
+                disabled={!actionRoute}
+              >
+                {t('submitAction.continue')}
+              </Button>
+            </form>
+          </Route>
+        </Switch>
+      </div>
+    </EditsRequestedContext.Provider>
   );
 };
 

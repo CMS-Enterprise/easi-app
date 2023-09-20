@@ -18,7 +18,6 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';
-import TitleBox from '../components/TitleBox';
 
 import CloseRequest from './CloseRequest';
 import IssueLcid from './IssueLcid';
@@ -41,11 +40,11 @@ const decisionsMap: Partial<
   [SystemIntakeDecisionState.NOT_APPROVED]: 'not-approved'
 };
 
-type ResolutionsProps = {
+export interface ResolutionProps {
   systemIntakeId: string;
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
-};
+}
 
 type ResolutionFieldProps = {
   fieldKey: ResolutionOption;
@@ -88,7 +87,7 @@ const Resolutions = ({
   systemIntakeId,
   state,
   decisionState
-}: ResolutionsProps) => {
+}: ResolutionProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
@@ -150,44 +149,56 @@ const Resolutions = ({
         ]}
       />
 
-      <div className="desktop:display-flex desktop:flex-align-end">
-        <PageHeading className="margin-bottom-0">
-          {t('resolutions.title', {
-            context: decisionState,
-            action: t('resolutions.action', { context: state })
-          })}
-        </PageHeading>
-        <p className="font-body-lg text-base margin-bottom-05 margin-y-1 desktop:margin-left-2 desktop:margin-bottom-05">
-          {t('resolutions.step', { step: subPage ? 2 : 1 })}
-        </p>
-      </div>
-
-      {subPage && (
-        <TitleBox
-          systemIntakeId={systemIntakeId}
-          title={t(`resolutions.summary.${camelCase(subPage)}`)}
-          type="resolution"
-        />
-      )}
-
       <Switch>
         <Route path="/governance-review-team/:systemId/resolutions/issue-lcid">
-          <IssueLcid systemIntakeId={systemIntakeId} />
+          <IssueLcid
+            systemIntakeId={systemIntakeId}
+            state={state}
+            decisionState={decisionState}
+          />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/not-it-request">
-          <NotGovernance systemIntakeId={systemIntakeId} />
+          <NotGovernance
+            systemIntakeId={systemIntakeId}
+            state={state}
+            decisionState={decisionState}
+          />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/not-approved">
-          <NotApproved systemIntakeId={systemIntakeId} />
+          <NotApproved
+            systemIntakeId={systemIntakeId}
+            state={state}
+            decisionState={decisionState}
+          />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/close-request">
-          <CloseRequest systemIntakeId={systemIntakeId} />
+          <CloseRequest
+            systemIntakeId={systemIntakeId}
+            state={state}
+            decisionState={decisionState}
+          />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/re-open-request">
-          <ReopenRequest systemIntakeId={systemIntakeId} />
+          <ReopenRequest
+            systemIntakeId={systemIntakeId}
+            state={state}
+            decisionState={decisionState}
+          />
         </Route>
 
         <Route path="/governance-review-team/:systemId/resolutions">
+          <div className="desktop:display-flex desktop:flex-align-end">
+            <PageHeading className="margin-bottom-0">
+              {t('resolutions.title', {
+                context: decisionState,
+                action: t('resolutions.action', { context: state })
+              })}
+            </PageHeading>
+            <p className="font-body-lg text-base margin-bottom-05 margin-y-1 desktop:margin-left-2 desktop:margin-bottom-05">
+              {t('resolutions.step', { step: 1 })}
+            </p>
+          </div>
+
           <p className="line-height-body-5 font-body-lg text-light margin-0">
             {t('resolutions.description', {
               context: decisionState,

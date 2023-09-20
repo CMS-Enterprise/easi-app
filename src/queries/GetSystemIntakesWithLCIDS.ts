@@ -6,6 +6,11 @@ export default gql`
       id
       lcid
       requestName
+      lcidExpiresAt
+      lcidScope
+      decisionNextSteps
+      trbFollowUpRecommendation
+      lcidCostBaseline
     }
   }
 `;
