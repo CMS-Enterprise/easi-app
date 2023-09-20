@@ -84,7 +84,6 @@ func checkForLCIDExpiration(
 		nextSteps models.HTML,
 	) error,
 ) error {
-
 	// Fetch all system intakes
 	var result models.SystemIntakes
 	result, err := fetchSystemIntakes(ctx)
@@ -95,7 +94,6 @@ func checkForLCIDExpiration(
 	}
 
 	for _, currIntake := range result {
-
 		// Skip intake if it doesn't have an LCID or if it has a status of "NO GOVERNANCE"
 		if currIntake.LifecycleExpiresAt == nil || currIntake.Status == models.SystemIntakeStatusNOGOVERNANCE {
 			continue
@@ -103,6 +101,11 @@ func checkForLCIDExpiration(
 
 		// skip intake if it doesn't have an EUA User ID set (and thus we can't find recipients to send to)
 		if currIntake.EUAUserID.IsZero() {
+			continue
+		}
+
+		// skip intake if it has an LCID retirement date set, regardless of whether that date's been reached or not
+		if currIntake.LifecycleRetiresAt != nil {
 			continue
 		}
 

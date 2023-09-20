@@ -23,9 +23,14 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	// Build out test intakes with varying LCID expiration dates
 	testDate, _ := time.Parse("2006-01-02", "2023-02-20")
 
+	// mock expiration dates
 	sixtyDaysFromDate, _ := time.Parse("2006-01-02", "2023-04-21")
 	fiftyNineDaysFromDate, _ := time.Parse("2006-01-02", "2023-04-20")
 	fortySixDaysFromDate, _ := time.Parse("2006-01-02", "2023-04-06")
+
+	// mock retirement dates
+	twoDaysFromDate, _ := time.Parse("2006-01-02", "2023-02-22")
+	oneDayBeforeDate, _ := time.Parse("2006-01-02", "2023-02-19")
 
 	var intakePtr *models.SystemIntake
 	intake := testhelpers.NewSystemIntake()
@@ -47,7 +52,13 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	intakeWithLCIDExpiringIn46DaysPtr = &intakeWithLCIDExpiringIn46Days
 
 	var systemIntakes []*models.SystemIntake
-	systemIntakes = append(systemIntakes, intakePtr, intakeWithLCIDExpiringIn46DaysPtr, intakeWithLCIDExpiringIn59DaysPtr, intakeWithLCIDExpiringIn60DaysPtr)
+	systemIntakes = append(
+		systemIntakes,
+		intakePtr,
+		intakeWithLCIDExpiringIn46DaysPtr,
+		intakeWithLCIDExpiringIn59DaysPtr,
+		intakeWithLCIDExpiringIn60DaysPtr,
+	)
 
 	// Mock Functions
 	mockFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
@@ -107,7 +118,8 @@ func TestLCIDExpirationAlert(t *testing.T) {
 		lcidExpirationDate *time.Time,
 		scope models.HTML,
 		lifecycleCostBaseline string,
-		nextSteps models.HTML) error {
+		nextSteps models.HTML,
+	) error {
 		lcidExpirationAlertCount++
 		return nil
 	}
@@ -128,6 +140,7 @@ func TestLCIDExpirationAlert(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, 0, lcidExpirationAlertCount)
 	})
+
 	t.Run("does not send for \"no governance\" status", func(t *testing.T) {
 		clearAlerts(systemIntakes)
 
@@ -143,6 +156,30 @@ func TestLCIDExpirationAlert(t *testing.T) {
 		intakeWithLCIDExpiringIn60Days.Status = models.SystemIntakeStatusINTAKEDRAFT
 		assert.NoError(t, err)
 		assert.Equal(t, 0, lcidExpirationAlertCount)
+	})
+
+	t.Run("does not send alerts for retired intakes, even if their expiration date is upcoming", func(t *testing.T) {
+		clearAlerts(systemIntakes)
+
+		intakeWithLCIDRetiringSoonExpiringIn59Days := testhelpers.NewSystemIntake()
+		intakeWithLCIDRetiringSoonExpiringIn59Days.LifecycleExpiresAt = &fiftyNineDaysFromDate
+		intakeWithLCIDRetiringSoonExpiringIn59Days.LifecycleRetiresAt = &twoDaysFromDate
+
+		intakeWithLCIDAlreadyRetiredExpiringIn59Days := testhelpers.NewSystemIntake()
+		intakeWithLCIDAlreadyRetiredExpiringIn59Days.LifecycleExpiresAt = &fiftyNineDaysFromDate
+		intakeWithLCIDAlreadyRetiredExpiringIn59Days.LifecycleRetiresAt = &oneDayBeforeDate
+
+		mockFetchAllIntakesForRetiredIntakes := func(ctx context.Context) (models.SystemIntakes, error) {
+			return models.SystemIntakes{
+				intakeWithLCIDRetiringSoonExpiringIn59Days,
+				intakeWithLCIDAlreadyRetiredExpiringIn59Days,
+			}, nil
+		}
+
+		lcidExpirationAlertCount = 0
+		err := checkForLCIDExpiration(ctx, testDate, mockFetchUserInfo, mockFetchAllIntakesForRetiredIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
+		assert.NoError(t, err)
+		assert.EqualValues(t, 0, lcidExpirationAlertCount)
 	})
 
 	t.Run("does not resend alerts", func(t *testing.T) {
