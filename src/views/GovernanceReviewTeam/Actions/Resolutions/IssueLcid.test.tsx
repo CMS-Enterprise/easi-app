@@ -11,10 +11,6 @@ import {
   systemIntakeWithLcid
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeState
-} from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import { EditsRequestedContext } from '..';
@@ -33,11 +29,7 @@ describe('Issue LCID form', async () => {
       >
         <MemoryRouter>
           <MessageProvider>
-            <IssueLcid
-              systemIntakeId={systemIntake.id}
-              state={SystemIntakeState.OPEN}
-              decisionState={SystemIntakeDecisionState.NO_DECISION}
-            />
+            <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
           </MessageProvider>
         </MemoryRouter>
       </VerboseMockedProvider>
@@ -93,11 +85,7 @@ describe('Issue LCID form', async () => {
         <MemoryRouter>
           <MessageProvider>
             <EditsRequestedContext.Provider value="intakeRequest">
-              <IssueLcid
-                systemIntakeId={systemIntake.id}
-                state={SystemIntakeState.OPEN}
-                decisionState={SystemIntakeDecisionState.NO_DECISION}
-              />
+              <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
             </EditsRequestedContext.Provider>
           </MessageProvider>
         </MemoryRouter>
@@ -114,7 +102,7 @@ describe('Issue LCID form', async () => {
 
     userEvent.type(
       screen.getByRole('textbox', { name: 'Expiration date *' }),
-      '01/01/2025'
+      '01/01/2024'
     );
 
     userEvent.type(
