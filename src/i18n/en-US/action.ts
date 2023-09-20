@@ -282,7 +282,7 @@ const action = {
   },
   updateLcid: {
     title: 'Updated Life Cycle ID',
-    description:
+    helpText:
       'You must fill out at least one field below. If you choose to send a notification email, the selected recipients will be notified of the changes to this LCID.',
     scopeHelpText:
       'Explain what is covered by this Life Cycle ID and what work it limits the project team to.',
