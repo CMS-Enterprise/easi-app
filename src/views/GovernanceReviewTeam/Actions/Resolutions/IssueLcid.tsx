@@ -172,16 +172,18 @@ const IssueLcid = ({
     if (systemIntakesWithLcids && useExistingLcid && lcid) {
       const selectedLcidData = systemIntakesWithLcids[lcid];
 
-      setValue('expiresAt', selectedLcidData.lcidExpiresAt || '');
-      setValue('scope', selectedLcidData.lcidScope || '');
-      setValue('nextSteps', selectedLcidData.decisionNextSteps || '');
-      setValue('costBaseline', selectedLcidData.lcidCostBaseline || '');
+      if (selectedLcidData) {
+        setValue('expiresAt', selectedLcidData.lcidExpiresAt || '');
+        setValue('scope', selectedLcidData.lcidScope || '');
+        setValue('nextSteps', selectedLcidData.decisionNextSteps || '');
+        setValue('costBaseline', selectedLcidData.lcidCostBaseline || '');
 
-      if (selectedLcidData.trbFollowUpRecommendation) {
-        setValue('trbFollowUp', selectedLcidData.trbFollowUpRecommendation);
-      } else {
-        // If selected LCID has no trbFollowUp value, reset field
-        resetField('trbFollowUp');
+        if (selectedLcidData.trbFollowUpRecommendation) {
+          setValue('trbFollowUp', selectedLcidData.trbFollowUpRecommendation);
+        } else {
+          // If selected LCID has no trbFollowUp value, reset field
+          resetField('trbFollowUp');
+        }
       }
     }
 
