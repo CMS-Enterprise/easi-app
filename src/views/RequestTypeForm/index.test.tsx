@@ -132,6 +132,7 @@ const intakeQuery = (intakeData: any) => {
           documents: [],
           state: SystemIntakeState.OPEN,
           decisionState: SystemIntakeDecisionState.NO_DECISION,
+          lcidStatus: null,
           ...intakeData
         }
       }

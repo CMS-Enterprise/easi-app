@@ -1,11 +1,20 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
+import ResolutionTitleBox from './ResolutionTitleBox';
+import { ResolutionProps } from '.';
+
 interface ReopenRequestFields extends SystemIntakeActionFields {}
 
-const ReopenRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
+const ReopenRequest = ({
+  systemIntakeId,
+  state,
+  decisionState
+}: ResolutionProps) => {
+  const { t } = useTranslation('action');
   const form = useForm<ReopenRequestFields>();
 
   /**
@@ -24,6 +33,14 @@ const ReopenRequest = ({ systemIntakeId }: { systemIntakeId: string }) => {
         systemIntakeId={systemIntakeId}
         successMessage=""
         onSubmit={onSubmit}
+        title={
+          <ResolutionTitleBox
+            title={t('resolutions.summary.reOpenRequest')}
+            systemIntakeId={systemIntakeId}
+            state={state}
+            decisionState={decisionState}
+          />
+        }
       >
         {/* Action fields here */}
       </ActionForm>
