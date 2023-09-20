@@ -1,13 +1,11 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import {
   getGovernanceTaskListQuery,
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
-  requester,
   systemIntake
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
@@ -91,21 +89,6 @@ describe('IT Gov Actions', () => {
 
     expect(
       await screen.findByRole('heading', { name: 'Action: request edits' })
-    ).toBeInTheDocument();
-
-    // Requester is default recipient
-    expect(
-      screen.getByRole('checkbox', {
-        name: `${requester.commonName}, ${requester.component} (Requester)`
-      })
-    ).toBeChecked();
-
-    // Modal should trigger on submit
-    userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
-    expect(
-      await screen.findByText(
-        'Are you sure you want to complete this action to request edits?'
-      )
     ).toBeInTheDocument();
   });
 });

@@ -66,7 +66,9 @@ const action = {
     expiresAt: 'Expiration date',
     scope: 'Scope of Life Cycle ID',
     nextSteps: 'Next steps',
-    trbFollowUp: 'TRB follow-up'
+    trbFollowUp: 'TRB follow-up',
+    intakeFormStep: 'Which form needs edits?',
+    emailFeedback: 'What changes are needed?'
   },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
