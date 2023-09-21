@@ -83,21 +83,23 @@ const LcidSummary = ({
           {t('updateLcid.currentScope')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {lcidScope}
+          {lcidScope || t('governanceReviewTeam:notes.extendLcid.noScope')}
         </dd>
 
         <dt className="text-bold margin-top-2">
           {t('updateLcid.currentNextSteps')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {decisionNextSteps}
+          {decisionNextSteps ||
+            t('governanceReviewTeam:notes.extendLcid.noNextSteps')}
         </dd>
 
         <dt className="text-bold margin-top-2">
           {t('updateLcid.currentCostBaseline')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {lcidCostBaseline}
+          {lcidCostBaseline ||
+            t('governanceReviewTeam:notes.extendLcid.noCostBaseline')}
         </dd>
       </dl>
     </div>
