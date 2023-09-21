@@ -3,8 +3,33 @@ package lcidactions
 import (
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
+
+// IsLCIDValidToRetire checks if an intake is valid to have a retirement date issued for its LCID
+// just need to check intake; whether the retirement date is in the past or the future doesn't matter, both are valid
+func IsLCIDValidToRetire(intake *models.SystemIntake) error {
+	if intake.LifecycleID.ValueOrZero() == "" {
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeRETIRELCID,
+				Message:    "Intake doesn't have an LCID to retire",
+			},
+		}
+	}
+
+	if intake.LifecycleRetiresAt != nil {
+		return &apperrors.BadRequestError{
+			Err: &apperrors.InvalidActionError{
+				ActionType: models.ActionTypeRETIRELCID,
+				Message:    "Intake's LCID has already been retired",
+			},
+		}
+	}
+
+	return nil
+}
 
 // GetRetireLCIDAction is a method to create an action record with all the relevant data fields for a Retire LCID action.
 func GetRetireLCIDAction(

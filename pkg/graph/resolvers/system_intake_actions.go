@@ -983,7 +983,10 @@ func RetireLCID(
 		return nil, err
 	}
 
-	// TODO - check validity (if necessary)
+	err = lcidactions.IsLCIDValidToRetire(intake)
+	if err != nil {
+		return nil, err
+	}
 
 	// create action record before updating intake, while we still have access to intake's previous retirement date
 	action := lcidactions.GetRetireLCIDAction(*intake, input.RetiresAt, *adminUserInfo)
