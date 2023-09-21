@@ -84,7 +84,7 @@ const UpdateLcid = ({
           >
             <LcidSummary
               lcid={lcid}
-              lcidStatus={lcidStatus}
+              lcidStatus={lcidStatus!}
               lcidExpiresAt={defaultValues?.lcidExpiresAt || ''}
               lcidScope={defaultValues?.lcidScope || ''}
               decisionNextSteps={defaultValues?.decisionNextSteps || ''}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import LcidStatusTag from 'components/shared/LcidStatusTag';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
@@ -28,8 +29,20 @@ const LcidSummary = ({
   const { t } = useTranslation('action');
 
   return (
-    <div className={classNames('padding-3 bg-base-lightest', className)}>
-      <h3 className="margin-0">{t('updateLcid.currentLcid')}</h3>
+    <div
+      className={classNames(
+        'lcid-summary-box padding-3 bg-base-lightest',
+        className
+      )}
+    >
+      <Grid row gap className="lcid-summary-box--heading flex-align-center">
+        <h3 className="margin-0">{t('updateLcid.currentLcid')}</h3>
+        {lcidStatus && (
+          <div>
+            <LcidStatusTag status={lcidStatus} />
+          </div>
+        )}
+      </Grid>
 
       <dl className="margin-bottom-0">
         <dt className="text-bold margin-top-3">
