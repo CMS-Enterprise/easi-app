@@ -2615,8 +2615,10 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 				Name:  action.ActorName,
 				Email: action.ActorEmail.String(),
 			},
-			Feedback:  action.Feedback,
-			CreatedAt: *action.CreatedAt,
+			Feedback:               action.Feedback,
+			CreatedAt:              *action.CreatedAt,
+			NewRetirementDate:      action.LCIDRetirementChangeNewDate,
+			PreviousRetirementDate: action.LCIDRetirementChangePreviousDate,
 		}
 
 		if action.LCIDExpirationChangeNewDate != nil && action.LCIDExpirationChangePreviousDate != nil {

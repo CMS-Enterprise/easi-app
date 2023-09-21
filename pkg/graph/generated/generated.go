@@ -8655,8 +8655,8 @@ type SystemIntakeAction {
   step: SystemIntakeStep
   feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
-  previousRetirementDate: Time
-  newRetirementDate: Time
+  previousRetirementDate: Time # purposely nullable, unlike previousDate in lcidExpirationChange - not all intakes will have a retirement date
+  newRetirementDate: Time # purposely nullable, unlike newDate in lcidExpirationChange - not all intakes will have a retirement date
   createdAt: Time!
 }
 
