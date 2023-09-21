@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
@@ -17,6 +18,7 @@ import {
 } from 'queries/types/CreateSystemIntakeActionUpdateLcid';
 import { SystemIntakeUpdateLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
+import { updateLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
@@ -44,7 +46,9 @@ const UpdateLcid = ({
   ...defaultValues
 }: UpdateLcidProps) => {
   const { t } = useTranslation('action');
-  const form = useForm<UpdateLcidFields>();
+  const form = useForm<UpdateLcidFields>({
+    resolver: yupResolver(updateLcidSchema)
+  });
 
   const [updateLcid] = useMutation<
     CreateSystemIntakeActionUpdateLcid,

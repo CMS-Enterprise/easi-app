@@ -141,7 +141,6 @@ export const provideGRTFeedbackSchema = Yup.object().shape({
 /** Checks that expiration date is valid and in the future */
 const validExpirationDate = () =>
   Yup.string()
-    .required('Please enter a valid date')
     .nullable()
     .test('expiresAt', 'Date cannot be in the past', value => {
       if (!value) return true;
@@ -154,10 +153,14 @@ export const issueLcidSchema = Yup.object().shape({
     is: true,
     then: Yup.string().required('Please select the existing Lifecycle ID')
   }),
-  expiresAt: validExpirationDate(),
+  expiresAt: validExpirationDate().required('Please enter a valid date'),
   scope: Yup.string().required('Please fill in the blank'),
   nextSteps: Yup.string().required('Please fill in the blank'),
   trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()
     .oneOf(Object.values(SystemIntakeTRBFollowUp))
     .required('Please make a selection')
+});
+
+export const updateLcidSchema = Yup.object().shape({
+  expiresAt: validExpirationDate()
 });
