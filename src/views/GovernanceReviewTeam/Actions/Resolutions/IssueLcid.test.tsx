@@ -11,15 +11,36 @@ import {
   systemIntakeWithLcid
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeState
-} from 'types/graphql-global-types';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import { EditsRequestedContext } from '..';
 
 import IssueLcid from './IssueLcid';
+
+/** Checks field default values when lcid is selected */
+const checkFieldDefaults = () => {
+  expect(
+    screen.getByRole('textbox', { name: 'Expiration date *' })
+  ).toHaveValue('09/21/2024');
+
+  expect(
+    screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' })
+  ).toHaveValue(systemIntakeWithLcid.lcidScope);
+
+  expect(screen.getByRole('textbox', { name: 'Next steps *' })).toHaveValue(
+    systemIntakeWithLcid.decisionNextSteps
+  );
+
+  expect(
+    screen.getByRole('radio', {
+      name: 'No, they may if they wish but it’s not necessary'
+    })
+  ).toBeChecked();
+
+  expect(
+    screen.getByRole('textbox', { name: 'Project cost baseline' })
+  ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline);
+};
 
 describe('Issue LCID form', async () => {
   it('Populates fields when existing LCID is selected', async () => {
@@ -33,11 +54,7 @@ describe('Issue LCID form', async () => {
       >
         <MemoryRouter>
           <MessageProvider>
-            <IssueLcid
-              systemIntakeId={systemIntake.id}
-              state={SystemIntakeState.OPEN}
-              decisionState={SystemIntakeDecisionState.NO_DECISION}
-            />
+            <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
           </MessageProvider>
         </MemoryRouter>
       </VerboseMockedProvider>
@@ -58,27 +75,7 @@ describe('Issue LCID form', async () => {
     userEvent.selectOptions(selectLcid, [systemIntakeWithLcid.lcid!]);
     expect(selectLcid).toHaveValue(systemIntakeWithLcid.lcid);
 
-    expect(
-      screen.getByRole('textbox', { name: 'Expiration date *' })
-    ).toHaveValue('09/21/2024');
-
-    expect(
-      screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' })
-    ).toHaveValue(systemIntakeWithLcid.lcidScope);
-
-    expect(screen.getByRole('textbox', { name: 'Next steps *' })).toHaveValue(
-      systemIntakeWithLcid.decisionNextSteps
-    );
-
-    expect(
-      screen.getByRole('radio', {
-        name: 'No, they may if they wish but it’s not necessary'
-      })
-    ).toBeChecked();
-
-    expect(
-      screen.getByRole('textbox', { name: 'Project cost baseline' })
-    ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline);
+    checkFieldDefaults();
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
@@ -93,11 +90,7 @@ describe('Issue LCID form', async () => {
         <MemoryRouter>
           <MessageProvider>
             <EditsRequestedContext.Provider value="intakeRequest">
-              <IssueLcid
-                systemIntakeId={systemIntake.id}
-                state={SystemIntakeState.OPEN}
-                decisionState={SystemIntakeDecisionState.NO_DECISION}
-              />
+              <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
             </EditsRequestedContext.Provider>
           </MessageProvider>
         </MemoryRouter>
@@ -114,7 +107,7 @@ describe('Issue LCID form', async () => {
 
     userEvent.type(
       screen.getByRole('textbox', { name: 'Expiration date *' }),
-      '01/01/2025'
+      '01/01/2024'
     );
 
     userEvent.type(
@@ -148,5 +141,40 @@ describe('Issue LCID form', async () => {
       'You previously requested that the team make changes to their intake request form. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.'
     );
     expect(modalText).toBeInTheDocument();
+  });
+
+  it('renders form for Confirm LCID', async () => {
+    render(
+      <VerboseMockedProvider
+        mocks={[
+          getSystemIntakeContactsQuery,
+          getSystemIntakeQuery,
+          getSystemIntakesWithLcidsQuery
+        ]}
+      >
+        <MemoryRouter>
+          <MessageProvider>
+            <IssueLcid
+              {...systemIntake}
+              {...systemIntakeWithLcid}
+              systemIntakeId={systemIntake.id}
+            />
+          </MessageProvider>
+        </MemoryRouter>
+      </VerboseMockedProvider>
+    );
+
+    // Current LCID is displayed
+    const testId = await screen.findByTestId('current-lcid');
+    expect(testId).toHaveTextContent(systemIntakeWithLcid.lcid!);
+
+    // Confirm LCID alert
+    expect(
+      screen.getByText(
+        'After you confirm this decision, you may continue to modify this LCID using any of the “Manage a Life Cycle ID” actions.'
+      )
+    ).toBeInTheDocument();
+
+    checkFieldDefaults();
   });
 });

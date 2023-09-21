@@ -133,6 +133,7 @@ const intakeQuery = (intakeData: any) => {
           state: SystemIntakeState.OPEN,
           decisionState: SystemIntakeDecisionState.NO_DECISION,
           lcidStatus: null,
+          trbFollowUpRecommendation: null,
           ...intakeData
         }
       }
