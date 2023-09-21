@@ -11,6 +11,7 @@ type LcidSummaryProps = {
   lcid: string | null;
   lcidStatus: SystemIntakeLCIDStatus | null;
   lcidExpiresAt: string | null;
+  lcidRetiresAt: string | null;
   lcidScope: string | null;
   decisionNextSteps: string | null;
   lcidCostBaseline: string | null;
@@ -21,6 +22,7 @@ const LcidSummary = ({
   lcidStatus,
   lcid,
   lcidExpiresAt,
+  lcidRetiresAt,
   lcidScope,
   decisionNextSteps,
   lcidCostBaseline,

@@ -31,6 +31,7 @@ type UpdateLcidFields = NonNullableProps<
 export interface UpdateLcidProps extends ManageLcidProps {
   lcid: string;
   lcidExpiresAt?: string | null;
+  lcidRetiresAt?: string | null;
   lcidScope?: string | null;
   decisionNextSteps?: string | null;
   lcidCostBaseline?: string | null;
@@ -84,8 +85,9 @@ const UpdateLcid = ({
           >
             <LcidSummary
               lcid={lcid}
-              lcidStatus={lcidStatus!}
+              lcidStatus={lcidStatus}
               lcidExpiresAt={defaultValues?.lcidExpiresAt || ''}
+              lcidRetiresAt={defaultValues?.lcidRetiresAt || ''}
               lcidScope={defaultValues?.lcidScope || ''}
               decisionNextSteps={defaultValues?.decisionNextSteps || ''}
               lcidCostBaseline={defaultValues?.lcidCostBaseline || ''}
