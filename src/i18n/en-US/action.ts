@@ -280,6 +280,11 @@ const action = {
     draftBusinessCase: 'draft business case',
     finalBusinessCase: 'final business case'
   },
+  lcidStatusTag: {
+    ISSUED: 'Active',
+    EXPIRED: 'Inactive',
+    RETIRED: 'Inactive'
+  },
   updateLcid: {
     title: 'Updated Life Cycle ID',
     helpText:
