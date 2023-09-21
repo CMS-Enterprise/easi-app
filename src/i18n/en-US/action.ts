@@ -282,8 +282,10 @@ const action = {
   },
   lcidStatusTag: {
     ISSUED: 'Active',
-    EXPIRED: 'Inactive',
-    RETIRED: 'Inactive'
+    EXPIRED: 'Expired',
+    EXPIRING_SOON: 'Expiring soon',
+    RETIRED: 'Retired',
+    RETIRING_SOON: 'Retiring soon'
   },
   updateLcid: {
     title: 'Updated Life Cycle ID',

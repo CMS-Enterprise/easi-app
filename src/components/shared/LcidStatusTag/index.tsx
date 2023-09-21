@@ -5,15 +5,21 @@ import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 
 import Tag from '../Tag';
 
-export const lcidStatusClassName: Record<SystemIntakeLCIDStatus, string> = {
+export type LcidTagStatus =
+  | SystemIntakeLCIDStatus
+  | 'EXPIRING_SOON'
+  | 'RETIRING_SOON';
+
+export const lcidStatusClassName: Record<LcidTagStatus, string> = {
   ISSUED: 'bg-success-dark text-white',
-  // TODO: Update retired/expired status colors
-  RETIRED: 'bg-success-dark text-white',
-  EXPIRED: 'bg-success-dark text-white'
+  RETIRED: 'bg-base-lighter',
+  RETIRING_SOON: 'bg-warning',
+  EXPIRED: 'bg-secondary-dark text-white',
+  EXPIRING_SOON: 'bg-warning'
 };
 
 type LcidStatusTagProps = {
-  status: SystemIntakeLCIDStatus;
+  status: LcidTagStatus;
 };
 
 const LcidStatusTag = ({ status }: LcidStatusTagProps) => {
