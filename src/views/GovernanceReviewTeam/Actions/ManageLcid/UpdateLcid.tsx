@@ -30,11 +30,11 @@ type UpdateLcidFields = NonNullableProps<
 
 export interface UpdateLcidProps extends ManageLcidProps {
   lcid: string;
-  lcidExpiresAt?: string | null;
-  lcidRetiresAt?: string | null;
-  lcidScope?: string | null;
-  decisionNextSteps?: string | null;
-  lcidCostBaseline?: string | null;
+  lcidExpiresAt: string | null;
+  lcidRetiresAt: string | null;
+  lcidScope: string | null;
+  decisionNextSteps: string | null;
+  lcidCostBaseline: string | null;
 }
 
 const UpdateLcid = ({
@@ -88,9 +88,9 @@ const UpdateLcid = ({
               lcidStatus={lcidStatus}
               lcidExpiresAt={defaultValues?.lcidExpiresAt || ''}
               lcidRetiresAt={defaultValues?.lcidRetiresAt || ''}
-              lcidScope={defaultValues?.lcidScope || ''}
-              decisionNextSteps={defaultValues?.decisionNextSteps || ''}
-              lcidCostBaseline={defaultValues?.lcidCostBaseline || ''}
+              lcidScope={defaultValues?.lcidScope}
+              decisionNextSteps={defaultValues?.decisionNextSteps}
+              lcidCostBaseline={defaultValues?.lcidCostBaseline}
               className="margin-top-3 margin-bottom-6"
             />
           </LcidTitleBox>

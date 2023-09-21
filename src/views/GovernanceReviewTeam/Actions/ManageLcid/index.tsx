@@ -86,6 +86,8 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
             {...systemIntake}
             lcid={lcid}
             systemIntakeId={systemIntakeId}
+            // TODO EASI-3185: Remove to use actual value
+            lcidRetiresAt=""
           />
         </Route>
         <Route path="/governance-review-team/:sytemId/manage-lcid/expire">
