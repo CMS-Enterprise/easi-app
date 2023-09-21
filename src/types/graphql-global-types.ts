@@ -822,7 +822,7 @@ export interface SystemIntakeContractInput {
 
 /**
  * Input data for estimated system cost increases associated with a system request
- *
+ * 
  * NOTE: This field is no longer in intake form but data/query is preserved for existing intakes (EASI-2076)
  */
 export interface SystemIntakeCostsInput {
