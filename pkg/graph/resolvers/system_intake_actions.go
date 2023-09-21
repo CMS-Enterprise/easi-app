@@ -971,7 +971,84 @@ func RetireLCID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeRetireLCIDInput,
 ) (*models.SystemIntake, error) {
-	panic("not yet implemented")
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO - check validity (if necessary)
+
+	// create action record before updating intake, while we still have access to intake's previous retirement date
+	action := lcidactions.GetRetireLCIDAction(*intake, input.RetiresAt, *adminUserInfo)
+
+	// TODO - update intake
+
+	// not currently persisting input.Reason
+
+	// TODO: EASI-3109 will send an email from this mutation
+
+	// save intake, action, admin note
+	// See Note [Database calls from resolvers aren't atomic]
+
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional info for email, if any), using record returned from GetRetireLCIDAction()
+	errGroup.Go(func() error {
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
 }
 
 // ChangeLCIDRetirementDate handles a Change LCID Retirement Date action on an intake as part of Admin Actions v2
