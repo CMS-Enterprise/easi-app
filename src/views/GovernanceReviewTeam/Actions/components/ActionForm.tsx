@@ -49,7 +49,10 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
     title: string;
     content: React.ReactNode;
   };
+  /** Show required fields text */
   requiredFields?: boolean;
+  /** Disable form submit buttons */
+  disableSubmit?: boolean;
   children?: React.ReactNode;
   className?: string;
 } & Omit<JSX.IntrinsicElements['form'], 'onSubmit' | 'title'>;
@@ -72,6 +75,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   onSubmit,
   modal,
   requiredFields = true,
+  disableSubmit,
   children,
   className,
   ...formProps
@@ -346,7 +350,11 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           // Complete action
           back={{
             text: t('completeAction'),
-            disabled: isSubmitting || !recipientsSelected || modalIsOpen,
+            disabled:
+              disableSubmit ||
+              isSubmitting ||
+              !recipientsSelected ||
+              modalIsOpen,
             outline: false,
             type: 'submit'
           }}
@@ -354,7 +362,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           next={{
             text: t('completeActionWithoutEmail'),
             outline: true,
-            disabled: isSubmitting || modalIsOpen,
+            disabled: disableSubmit || isSubmitting || modalIsOpen,
             // Reset email recipients to prevent sending email
             onClick: () =>
               setValue('notificationRecipients', {
