@@ -10,8 +10,8 @@ import { formatDateLocal } from 'utils/date';
 type LcidSummaryProps = {
   lcid: string | null;
   lcidStatus: SystemIntakeLCIDStatus | null;
-  lcidExpiresAt: string | null;
-  lcidRetiresAt: string | null;
+  lcidExpiresAt: string;
+  lcidRetiresAt: string;
   lcidScope: string | null;
   decisionNextSteps: string | null;
   lcidCostBaseline: string | null;
@@ -41,7 +41,11 @@ const LcidSummary = ({
         <h3 className="margin-0">{t('updateLcid.currentLcid')}</h3>
         {lcidStatus && (
           <div>
-            <LcidStatusTag status={lcidStatus} />
+            <LcidStatusTag
+              lcidStatus={lcidStatus}
+              lcidExpiresAt={lcidExpiresAt}
+              lcidRetiresAt={lcidRetiresAt}
+            />
           </div>
         )}
       </Grid>
