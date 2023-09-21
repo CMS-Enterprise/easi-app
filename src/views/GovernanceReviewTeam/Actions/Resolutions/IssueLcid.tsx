@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Dropdown, FormGroup, Radio } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
@@ -13,8 +14,13 @@ import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
+import CreateSystemIntakeActionConfirmLcidQuery from 'queries/CreateSystemIntakeActionConfirmLcidQuery';
 import CreateSystemIntakeActionIssueLcidQuery from 'queries/CreateSystemIntakeActionIssueLcidQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
+import {
+  CreateSystemIntakeActionConfirmLcid,
+  CreateSystemIntakeActionConfirmLcidVariables
+} from 'queries/types/CreateSystemIntakeActionConfirmLcid';
 import {
   CreateSystemIntakeActionIssueLcid,
   CreateSystemIntakeActionIssueLcidVariables
@@ -42,20 +48,37 @@ type IssueLcidFields = NonNullableProps<
   useExistingLcid: boolean;
 };
 
+interface IssueLcidProps extends ResolutionProps {
+  lcid?: string | null;
+  lcidExpiresAt?: string | null;
+  lcidScope?: string | null;
+  decisionNextSteps?: string | null;
+  trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
+  lcidCostBaseline?: string | null;
+}
+
 const IssueLcid = ({
   systemIntakeId,
   state,
-  decisionState
-}: ResolutionProps) => {
+  decisionState,
+  ...defaultValues
+}: IssueLcidProps) => {
   const { t } = useTranslation('action');
 
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
 
-  const [mutate] = useMutation<
+  const [issueLcid] = useMutation<
     CreateSystemIntakeActionIssueLcid,
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
+  const [confirmLcid] = useMutation<
+    CreateSystemIntakeActionConfirmLcid,
+    CreateSystemIntakeActionConfirmLcidVariables
+  >(CreateSystemIntakeActionConfirmLcidQuery, {
     refetchQueries: ['GetSystemIntake']
   });
 
@@ -78,11 +101,13 @@ const IssueLcid = ({
   const form = useForm<IssueLcidFields>({
     resolver: yupResolver(issueLcidSchema),
     defaultValues: {
-      lcid: '',
-      scope: '',
-      expiresAt: '',
-      nextSteps: '',
-      costBaseline: ''
+      lcid: defaultValues.lcid || '',
+      expiresAt: defaultValues.lcidExpiresAt || '',
+      nextSteps: defaultValues.decisionNextSteps || '',
+      scope: defaultValues.lcidScope || '',
+      trbFollowUp: defaultValues.trbFollowUpRecommendation || undefined,
+      costBaseline: defaultValues.lcidCostBaseline || '',
+      useExistingLcid: defaultValues.lcid ? true : undefined
     }
   });
 
@@ -90,32 +115,53 @@ const IssueLcid = ({
 
   const { showMessageOnNextPage } = useMessage();
 
-  /**
-   * Submit handler containing mutation logic
-   *
-   * Error and success handling is done in `<ActionForm>`
-   */
+  /** Confirm or issue lcid on form submit */
   const onSubmit = async ({
     useExistingLcid,
+    lcid,
     ...formData
   }: IssueLcidFields) => {
-    return mutate({
-      variables: {
-        input: {
-          systemIntakeID: systemIntakeId,
-          ...formData,
-          lcid: useExistingLcid ? formData.lcid : ''
-        }
-      }
-    }).then(response => {
-      const lcid =
-        response?.data?.createSystemIntakeActionIssueLCID?.systemIntake?.lcid;
+    /* Confirm or issue LCID */
+    const mutate = defaultValues.lcid ? confirmLcid : issueLcid;
 
-      // Show success message with LCID
-      showMessageOnNextPage(t('manageLcid.success', { lcid }), {
-        type: 'success'
-      });
-    });
+    /* LCID input */
+    const input = {
+      systemIntakeID: systemIntakeId,
+      ...formData,
+      // If issuing LCID, add field to input
+      ...(defaultValues.lcid ? {} : { lcid: '' })
+    };
+
+    // Return mutation
+    return (
+      mutate({
+        variables: {
+          input
+        }
+      })
+        // On success, get LCID from mutation response and show success message
+        .then(({ data: responseData }) => {
+          let newLcid: string | null | undefined;
+
+          if (!responseData) return;
+
+          // Type check to get returned LCID
+          if ('createSystemIntakeActionConfirmLCID' in responseData) {
+            newLcid =
+              responseData?.createSystemIntakeActionConfirmLCID?.systemIntake
+                ?.lcid;
+          } else {
+            newLcid =
+              responseData?.createSystemIntakeActionIssueLCID?.systemIntake
+                ?.lcid;
+          }
+
+          // Show success message
+          showMessageOnNextPage(t('issueLCID.success', { lcid: newLcid }), {
+            type: 'success'
+          });
+        })
+    );
   };
 
   const lcid = watch('lcid');
@@ -124,18 +170,20 @@ const IssueLcid = ({
   // When existing LCID is selected, populate fields
   useEffect(() => {
     if (systemIntakesWithLcids && useExistingLcid && lcid) {
-      const selectedLcid = systemIntakesWithLcids[lcid];
+      const selectedLcidData = systemIntakesWithLcids[lcid];
 
-      setValue('expiresAt', selectedLcid.lcidExpiresAt || '');
-      setValue('scope', selectedLcid.lcidScope || '');
-      setValue('nextSteps', selectedLcid.decisionNextSteps || '');
-      setValue('costBaseline', selectedLcid.lcidCostBaseline || '');
+      if (selectedLcidData) {
+        setValue('expiresAt', selectedLcidData.lcidExpiresAt || '');
+        setValue('scope', selectedLcidData.lcidScope || '');
+        setValue('nextSteps', selectedLcidData.decisionNextSteps || '');
+        setValue('costBaseline', selectedLcidData.lcidCostBaseline || '');
 
-      if (selectedLcid.trbFollowUpRecommendation) {
-        setValue('trbFollowUp', selectedLcid.trbFollowUpRecommendation);
-      } else {
-        // If selected LCID has no trbFollowUp value, reset field
-        resetField('trbFollowUp');
+        if (selectedLcidData.trbFollowUpRecommendation) {
+          setValue('trbFollowUp', selectedLcidData.trbFollowUpRecommendation);
+        } else {
+          // If selected LCID has no trbFollowUp value, reset field
+          resetField('trbFollowUp');
+        }
       }
     }
 
@@ -175,80 +223,108 @@ const IssueLcid = ({
           }
         }
       >
-        <Controller
-          name="useExistingLcid"
-          control={control}
-          render={({
-            field: { ref, value, ...field },
-            fieldState: { error },
-            formState: { errors }
-          }) => {
-            return (
-              <FormGroup error={!!error || !!errors.lcid}>
-                <Label htmlFor={field.name} className="text-normal" required>
-                  {t('issueLCID.lcid.label')}
-                </Label>
-                <HelpText className="margin-top-1">
-                  {t('issueLCID.lcid.helpText')}
-                </HelpText>
-                {!!error?.message && (
-                  <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-                )}
-                <Radio
-                  {...field}
-                  value="false"
-                  id="useExistingLcid_false"
-                  label={t('issueLCID.lcid.new')}
-                  onChange={() => setValue('useExistingLcid', false)}
-                />
-                <Radio
-                  {...field}
-                  value="true"
-                  id="useExistingLcid_true"
-                  label={t('issueLCID.lcid.existing')}
-                  onChange={() => setValue('useExistingLcid', true)}
-                />
-
-                {
-                  // Existing LCID text field
-                  value && (
-                    <Controller
-                      name="lcid"
-                      control={control}
-                      render={({ field: lcidField }) => {
-                        return (
-                          <FormGroup className="margin-left-4">
-                            <Label htmlFor="lcid">
-                              {t('issueLCID.select.label')}
-                            </Label>
-                            <HelpText className="margin-top-1">
-                              {t('issueLCID.select.helpText')}
-                            </HelpText>
-                            {!!errors.lcid?.message && (
-                              <FieldErrorMsg>
-                                {t(errors.lcid?.message)}
-                              </FieldErrorMsg>
-                            )}
-                            <Dropdown {...lcidField} ref={null} id={field.name}>
-                              <option value="" disabled>
-                                -{t('Select')}-
-                              </option>
-                              {Object.keys(systemIntakesWithLcids || {}).map(
-                                key => (
-                                  <option key={key}>{key}</option>
-                                )
-                              )}
-                            </Dropdown>
-                          </FormGroup>
-                        );
-                      }}
-                    />
+        {defaultValues.lcid ? (
+          /* If confirming decision, display current LCID */
+          <>
+            <p className="margin-0">{t('issueLCID.lcid.label')}</p>
+            <HelpText className="margin-top-1">
+              {t('issueLCID.currentLcidHelpText')}
+            </HelpText>
+            <p className="bg-base-lightest display-inline-block padding-105 margin-bottom-0">
+              <Trans
+                i18nKey="action:issueLCID.currentLcid"
+                values={{ lcid }}
+                components={{
+                  span: (
+                    <span className="text-bold" data-testid="current-lcid" />
                   )
-                }
-              </FormGroup>
-            );
-          }}
-        />
+                }}
+              />
+            </p>
+            <Alert type="info" className="margin-top-1" slim>
+              {t('issueLCID.confirmLcidAlert')}
+            </Alert>
+          </>
+        ) : (
+          /* New or existing LCID fields */
+          <Controller
+            name="useExistingLcid"
+            control={control}
+            render={({
+              field: { ref, value, ...field },
+              fieldState: { error },
+              formState: { errors }
+            }) => {
+              return (
+                <FormGroup error={!!error || !!errors.lcid}>
+                  <Label htmlFor={field.name} className="text-normal" required>
+                    {t('issueLCID.lcid.label')}
+                  </Label>
+                  <HelpText className="margin-top-1">
+                    {t('issueLCID.lcid.helpText')}
+                  </HelpText>
+                  {!!error?.message && (
+                    <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+                  )}
+
+                  <Radio
+                    {...field}
+                    value="false"
+                    id="useExistingLcid_false"
+                    label={t('issueLCID.lcid.new')}
+                    onChange={() => setValue('useExistingLcid', false)}
+                  />
+                  <Radio
+                    {...field}
+                    value="true"
+                    id="useExistingLcid_true"
+                    label={t('issueLCID.lcid.existing')}
+                    onChange={() => setValue('useExistingLcid', true)}
+                  />
+
+                  {
+                    // Select existing LCID field
+                    value && (
+                      <Controller
+                        name="lcid"
+                        control={control}
+                        render={({ field: lcidField }) => {
+                          return (
+                            <FormGroup className="margin-left-4">
+                              <Label htmlFor="lcid">
+                                {t('issueLCID.select.label')}
+                              </Label>
+                              <HelpText className="margin-top-1">
+                                {t('issueLCID.select.helpText')}
+                              </HelpText>
+                              {!!errors.lcid?.message && (
+                                <FieldErrorMsg>
+                                  {t(errors.lcid?.message)}
+                                </FieldErrorMsg>
+                              )}
+                              <Dropdown
+                                {...lcidField}
+                                ref={null}
+                                id={field.name}
+                              >
+                                <option>-{t('Select')}-</option>
+                                {Object.keys(systemIntakesWithLcids || {}).map(
+                                  key => (
+                                    <option key={key}>{key}</option>
+                                  )
+                                )}
+                              </Dropdown>
+                            </FormGroup>
+                          );
+                        }}
+                      />
+                    )
+                  }
+                </FormGroup>
+              );
+            }}
+          />
+        )}
 
         <Controller
           name="expiresAt"
@@ -262,7 +338,11 @@ const IssueLcid = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <DatePickerFormatted {...field} id={field.name} />
+              <DatePickerFormatted
+                {...field}
+                id={field.name}
+                defaultValue={field.value}
+              />
             </FormGroup>
           )}
         />
