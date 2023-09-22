@@ -1209,7 +1209,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 		expiredIntake, err := ExpireLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, expireLCIDInput)
 		s.NoError(err)
 
-		// check calculated LCID
+		// check calculated LCID status
 		lcidStatus := expiredIntake.LCIDStatus(currentTime)
 		s.EqualValues(models.SystemIntakeLCIDStatusExpired, *lcidStatus)
 
@@ -1233,10 +1233,69 @@ func (s *ResolverSuite) TestExpireLCID() {
 		s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
 
 		// should create admin note (since input included it)
-		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
+		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, expiredIntake.ID)
 		s.NoError(err)
 		s.NotEmpty(allNotesForIntake)
 		adminNote := allNotesForIntake[0] // should be the only admin note on the intake, since we didn't include one when issuing the LCID
 		s.EqualValues(expireLCIDInput.AdminNote, adminNote.Content)
+	})
+}
+
+func (s *ResolverSuite) TestRetireLCID() {
+	s.Run("Retiring an LCID on an intake with an LCID issued (but not yet retired) sets it to retired if the retirement date is in the past,"+
+		" sets the retirement date field, creates an action, and creates an admin note", func() {
+		currentTime := time.Now()
+
+		// create an intake, issue an LCID for it
+		newIntake := s.createNewIntake()
+		issueLCIDInput := model.SystemIntakeIssueLCIDInput{
+			// required fields
+			SystemIntakeID: newIntake.ID,
+			ExpiresAt:      currentTime.AddDate(2, 0, 0),
+			Scope:          "test scope",
+			NextSteps:      "test next steps after issuing LCID, before expiring",
+			TrbFollowUp:    models.TRBFRStronglyRecommended,
+		}
+		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, issueLCIDInput)
+		s.NoError(err)
+
+		// retire the LCID
+		retirementDate := time.Unix(0, 0) // in the past, so LCID should be retired
+		retireLCIDInput := model.SystemIntakeRetireLCIDInput{
+			// required fields
+			SystemIntakeID: updatedIntake.ID,
+			RetiresAt:      retirementDate,
+
+			// optional fields
+			AdminNote:      models.HTMLPointer("test admin note for retiring LCID"),
+			AdditionalInfo: models.HTMLPointer("test additional info for retiring LCID"),
+		}
+
+		retiredIntake, err := RetireLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, retireLCIDInput)
+		s.NoError(err)
+
+		// check calculated LCID status
+		lcidStatus := retiredIntake.LCIDStatus(currentTime)
+		s.EqualValues(models.SystemIntakeLCIDStatusRetired, *lcidStatus)
+
+		// check retirement date
+		// call UTC() for consistency, that's what the database will return
+		s.EqualValues(retirementDate.UTC(), retiredIntake.LifecycleRetiresAt.UTC())
+
+		// should create action
+		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, retiredIntake.ID)
+		s.NoError(err)
+		s.NotEmpty(allActionsForIntake)
+		action := allActionsForIntake[0] // GetActionsByRequestID() orders actions by .CreatedAt in descending order, so most recent action is first in the slice
+		s.EqualValues(retiredIntake.ID, *action.IntakeID)
+		s.EqualValues(models.ActionTypeRETIRELCID, action.ActionType)
+		s.EqualValues(retireLCIDInput.AdditionalInfo, action.Feedback)
+
+		// should create admin note (since input included it)
+		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, retiredIntake.ID)
+		s.NoError(err)
+		s.NotEmpty(allNotesForIntake)
+		adminNote := allNotesForIntake[0] // should be the only admin note on the intake, since we didn't include one when issuing the LCID
+		s.EqualValues(retireLCIDInput.AdminNote, adminNote.Content)
 	})
 }
