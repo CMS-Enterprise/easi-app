@@ -60,7 +60,7 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
   }
 
   return (
-    <div className="margin-bottom-10 padding-bottom-2">
+    <>
       <Breadcrumbs
         items={[
           { text: t('Home'), url: '/' },
@@ -108,7 +108,7 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
             />
           </p>
 
-          <Grid className="grid-row grid-gap margin-top-6">
+          <Grid className="grid-row grid-gap margin-top-6 margin-bottom-10 padding-bottom-2">
             <Form
               onSubmit={handleSubmit(formData =>
                 history.push(`manage-lcid/${formData.action}`)
@@ -175,7 +175,7 @@ const ManageLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
           </Grid>
         </Route>
       </Switch>
-    </div>
+    </>
   );
 };
 
