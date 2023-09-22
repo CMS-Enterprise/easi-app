@@ -18,6 +18,7 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ActionsSummary from '../components/ActionsSummary';
+import { ActionsProps } from '..';
 
 import CloseRequest from './CloseRequest';
 import IssueLcid from './IssueLcid';
@@ -83,13 +84,11 @@ const ResolutionField = ({
   );
 };
 
-const Resolutions = ({
-  systemIntakeId,
-  state,
-  decisionState
-}: ResolutionProps) => {
+const Resolutions = ({ systemIntake }: ActionsProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
+
+  const { id: systemIntakeId, state, decisionState } = systemIntake;
 
   const { subPage } = useParams<{
     subPage?: string;
@@ -132,7 +131,7 @@ const Resolutions = ({
   }
 
   return (
-    <div className="margin-bottom-10 padding-bottom-2">
+    <>
       <Breadcrumbs
         items={[
           { text: t('Home'), url: '/' },
@@ -151,11 +150,7 @@ const Resolutions = ({
 
       <Switch>
         <Route path="/governance-review-team/:systemId/resolutions/issue-lcid">
-          <IssueLcid
-            systemIntakeId={systemIntakeId}
-            state={state}
-            decisionState={decisionState}
-          />
+          <IssueLcid {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/not-it-request">
           <NotGovernance
@@ -215,7 +210,7 @@ const Resolutions = ({
             />
           </p>
 
-          <Grid className="grid-row grid-gap margin-top-6">
+          <Grid className="grid-row grid-gap margin-top-6 margin-bottom-10 padding-bottom-2">
             <Form
               onSubmit={handleSubmit(formData =>
                 history.push(`resolutions/${formData.resolution}`)
@@ -278,7 +273,7 @@ const Resolutions = ({
           </Grid>
         </Route>
       </Switch>
-    </div>
+    </>
   );
 };
 

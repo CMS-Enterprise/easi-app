@@ -26,7 +26,7 @@ const DatePickerFormatted = ({
       return props.value;
     }
 
-    return props.defaultValue;
+    return props.defaultValue || '';
   }, [props.defaultValue, props.value]);
 
   /**

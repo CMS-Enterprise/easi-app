@@ -72,7 +72,7 @@ const ActionRadioOption = ({
   );
 };
 
-type ActionsProps = {
+export type ActionsProps = {
   systemIntake: SystemIntake;
 };
 
@@ -153,13 +153,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
           {/* Select resolution page */}
           <Route
             path="/governance-review-team/:systemId/resolutions/:subPage?"
-            render={() => (
-              <Resolutions
-                systemIntakeId={systemIntake.id}
-                state={state}
-                decisionState={decisionState}
-              />
-            )}
+            render={() => <Resolutions systemIntake={systemIntake} />}
           />
 
           {/* Manage LCID page */}

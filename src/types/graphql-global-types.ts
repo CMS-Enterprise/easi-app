@@ -810,6 +810,21 @@ export interface SystemIntakeCollaboratorInput {
 }
 
 /**
+ * Input for confirming an intake's decision to issue an LCID in IT Gov v2
+ */
+export interface SystemIntakeConfirmLCIDInput {
+  systemIntakeID: UUID;
+  expiresAt: Time;
+  scope: HTML;
+  nextSteps: HTML;
+  trbFollowUp: SystemIntakeTRBFollowUp;
+  costBaseline?: string | null;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * Input data containing information about a contract related to a system request
  */
 export interface SystemIntakeContractInput {
