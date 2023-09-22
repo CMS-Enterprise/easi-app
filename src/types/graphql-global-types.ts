@@ -910,7 +910,7 @@ export interface SystemIntakeRequestEditsInput {
   notificationRecipients?: EmailNotificationRecipients | null;
   emailFeedback: HTML;
   additionalInfo?: HTML | null;
-  adminNotes?: HTML | null;
+  adminNote?: HTML | null;
 }
 
 /**

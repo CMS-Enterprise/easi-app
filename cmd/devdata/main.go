@@ -415,7 +415,7 @@ func makeSystemIntakeWithEditsRequested(
 		},
 		EmailFeedback:  feedbackText,
 		AdditionalInfo: additionalInfo,
-		AdminNotes:     &adminNote,
+		AdminNote:      &adminNote,
 	}
 	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, nil, mock.FetchUserInfoMock, *input))
 }
