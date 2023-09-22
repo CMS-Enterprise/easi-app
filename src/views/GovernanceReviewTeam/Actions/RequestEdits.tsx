@@ -33,9 +33,6 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { watch, control } = form;
 
   const submit = async (formData: RequestEditsFields) => {
-    // eslint-disable-next-line no-param-reassign
-    delete formData.adminNote;
-
     await mutate({
       variables: { input: { systemIntakeID: systemIntakeId, ...formData } }
     });

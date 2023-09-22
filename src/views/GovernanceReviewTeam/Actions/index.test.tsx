@@ -125,7 +125,7 @@ describe('IT Gov Actions', () => {
             variables: {
               input: {
                 systemIntakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
-                adminNotes: '',
+                adminNote: '',
                 additionalInfo: '',
                 notificationRecipients: {
                   shouldNotifyITGovernance: true,

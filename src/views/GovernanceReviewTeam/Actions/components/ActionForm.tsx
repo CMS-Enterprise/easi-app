@@ -31,8 +31,7 @@ import EmailRecipientsFields from './EmailRecipientsFields';
 
 export interface SystemIntakeActionFields {
   additionalInfo: string;
-  adminNote?: string;
-  adminNotes?: string;
+  adminNote: string;
   notificationRecipients: EmailNotificationRecipients;
 }
 
@@ -135,7 +134,6 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
       reset(
         {
           adminNote: '',
-          adminNotes: '',
           additionalInfo: '',
           ...defaultValues,
           notificationRecipients: {
