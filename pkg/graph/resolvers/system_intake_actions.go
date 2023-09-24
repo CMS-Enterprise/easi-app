@@ -474,6 +474,7 @@ func IssueLCID(
 func CreateSystemIntakeActionReopenRequest(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeReopenRequestInput,
 ) (*models.SystemIntake, error) {
@@ -529,6 +530,20 @@ func CreateSystemIntakeActionReopenRequest(
 			return nil, err
 		}
 	}
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		err = emailClient.SystemIntake.SendReopenRequestNotification(ctx,
+			*input.NotificationRecipients,
+			intake.ID,
+			intake.ProjectName.ValueOrZero(),
+			intake.Requester,
+			*input.Reason,
+			intake.SubmittedAt,
+			input.AdditionalInfo,
+		)
+		if err != nil {
+			return intake, err
+		}
+	}
 	return intake, nil
 }
 
@@ -536,6 +551,7 @@ func CreateSystemIntakeActionReopenRequest(
 func CreateSystemIntakeActionCloseRequest(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeCloseRequestInput,
 ) (*models.SystemIntake, error) {
@@ -588,6 +604,20 @@ func CreateSystemIntakeActionCloseRequest(
 		})
 		if err != nil {
 			return nil, err
+		}
+	}
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		err = emailClient.SystemIntake.SendCloseRequestNotification(ctx,
+			*input.NotificationRecipients,
+			intake.ID,
+			intake.ProjectName.ValueOrZero(),
+			intake.Requester,
+			*input.Reason,
+			intake.SubmittedAt,
+			input.AdditionalInfo,
+		)
+		if err != nil {
+			return intake, err
 		}
 	}
 	return intake, nil

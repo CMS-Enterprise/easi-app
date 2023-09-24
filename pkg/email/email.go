@@ -64,6 +64,8 @@ type templates struct {
 	trbRequestClosed                           templateCaller
 	cedarRolesChanged                          templateCaller
 	systemIntakeRequestEdits                   templateCaller
+	systemIntakeCloseRequest                   templateCaller
+	systemIntakeReopenRequest                  templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -315,6 +317,20 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeRequestEditsTemplateName)
 	}
 	appTemplates.systemIntakeRequestEdits = systemIntakeRequestEdits
+
+	systemIntakeCloseRequestTemplateName := "system_intake_close_request.gohtml"
+	systemIntakeCloseRequest := rawTemplates.Lookup(systemIntakeCloseRequestTemplateName)
+	if systemIntakeCloseRequest == nil {
+		return Client{}, templateError(systemIntakeCloseRequestTemplateName)
+	}
+	appTemplates.systemIntakeCloseRequest = systemIntakeCloseRequest
+
+	systemIntakeReopenRequestTemplateName := "system_intake_reopen_request.gohtml"
+	systemIntakeReopenRequest := rawTemplates.Lookup(systemIntakeReopenRequestTemplateName)
+	if systemIntakeReopenRequest == nil {
+		return Client{}, templateError(systemIntakeReopenRequestTemplateName)
+	}
+	appTemplates.systemIntakeReopenRequest = systemIntakeReopenRequest
 
 	client := Client{
 		config:    config,
