@@ -79,7 +79,7 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build, tag, and push image to Amazon ECR
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile.db_migrations
@@ -125,7 +125,7 @@ jobs:
           echo "APPLICATION_DATETIME=${APPLICATION_DATETIME}" >> $GITHUB_OUTPUT
           echo "APPLICATION_TS=${APPLICATION_TS}" >> $GITHUB_OUTPUT
       - name: Build, tag, and push image to Amazon ECR
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
