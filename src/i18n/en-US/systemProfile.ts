@@ -191,7 +191,12 @@ const systemProfile = {
     editPage: {
       heading: 'Need to edit something on this page?',
       lastUpdated: 'Last updated: {{lastUpdatedText}}',
-      buttonLabel: 'Edit {{page}}'
+      buttonLabel: 'Edit {{page}}',
+      tempEditBanner: {
+        heading: 'See something incorrect on this page?',
+        content:
+          'To request edits to the information on this page, please email EnterpriseArchitecture@cms.hhs.gov'
+      }
     },
     toolsAndSoftware: {
       header: 'Tools and Software',

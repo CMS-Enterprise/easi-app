@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
+  Alert,
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
@@ -310,6 +311,19 @@ export function showVal(
   return val;
 }
 
+/**
+ * Determine whether a particular sub page is editable based on sub page key.
+ */
+export function subPageIsEditable(componentID: SubpageKey): boolean {
+  // TODO: Add sub pages as they become editable (this will remove the temporary edit system profile banner from that sub page)
+  const editableComponentIDs = ['home', 'team']; // NOTE: this list is based off of the SubpageKey list in types/systemProfile
+
+  if (!editableComponentIDs.includes(componentID)) {
+    return true;
+  }
+  return false;
+}
+
 type SystemProfileProps = {
   id?: string;
   modal?: boolean;
@@ -604,6 +618,18 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
             </Grid>
           </div>
         </SummaryBox>
+
+        {/* Only display temporary edit system profile banner if sub page does not have full edit functionality */}
+        {subPageIsEditable(subpageKey) && (
+          <GridContainer className="margin-bottom-4 margin-top-2">
+            <Alert
+              type="info"
+              heading={t('singleSystem.editPage.tempEditBanner.heading')}
+            >
+              {t('singleSystem.editPage.tempEditBanner.content')}
+            </Alert>
+          </GridContainer>
+        )}
 
         <SystemSubNav
           subinfo={subpageKey}
