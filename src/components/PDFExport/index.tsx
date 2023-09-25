@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { IconFileDownload } from '@trussworks/react-uswds';
 import axios from 'axios';
 import classNames from 'classnames';
@@ -37,6 +38,7 @@ function generatePDF(filename: string, content: string) {
     });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const downloadRefAsPDF = (
   title: string,
   filename: string,
@@ -96,17 +98,29 @@ const PDFExport = ({
   linkPosition = 'bottom',
   disabled
 }: PDFExportProps) => {
-  const divEl = useRef<HTMLDivElement>(null);
+  const printRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    documentTitle: filename,
+    content: () => printRef.current,
+    // The lib default is to have no margin, which hides window.prints()'s built in pagination
+    // Set auto margins back to show everything the browser renders
+    pageStyle: `
+      @page {
+        margin: auto;
+      }
+    `
+  });
 
-  const IntakeContent: JSX.Element = (
-    <div className="easi-pdf-export" ref={divEl}>
+  const PrintContent: JSX.Element = (
+    <div className="easi-pdf-export" ref={printRef}>
+      <h1 className="easi-only-print">{title}</h1>
       {children}
     </div>
   );
 
   return (
     <>
-      {linkPosition === 'bottom' && IntakeContent}
+      {linkPosition === 'bottom' && PrintContent}
 
       <div
         className={classNames('easi-pdf-export__controls', {
@@ -116,7 +130,7 @@ const PDFExport = ({
         <button
           className="usa-button usa-button--unstyled easi-no-print display-flex flex-align-center"
           type="button"
-          onClick={() => downloadRefAsPDF(title, filename, divEl)}
+          onClick={handlePrint}
           disabled={disabled}
         >
           <IconFileDownload className="margin-right-05" />
@@ -124,7 +138,7 @@ const PDFExport = ({
         </button>
       </div>
 
-      {linkPosition === 'top' && IntakeContent}
+      {linkPosition === 'top' && PrintContent}
     </>
   );
 };
