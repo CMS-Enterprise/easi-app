@@ -76,7 +76,7 @@ services:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully
   easi_client:
-    image: easi-frontend:latest
+    image: easi_client:latest
   minio:
     restart: always
     image: minio/minio:latest
