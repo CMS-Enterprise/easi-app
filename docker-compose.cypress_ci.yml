@@ -7,6 +7,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db_seed
+    image: db_seed:latest
     environment:
       - PGHOST=db
       - PGPORT=5432
@@ -38,6 +39,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.client_ci
+    image: easi_client:latest
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
     entrypoint: ['serve', '-s', '-l', '3000']
@@ -45,7 +47,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.cypress
-    image: easi-cypress:latest
+    image: easi_cypress:latest
     environment:
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD

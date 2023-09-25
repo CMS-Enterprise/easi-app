@@ -8,9 +8,7 @@ EASI_CONTAINER="${PROJECT_NAME}"_easi_1
 
 # Running in CI
 if [[ -n "${CI+x}" ]]; then
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml pull db_migrate easi
-
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml build --parallel
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml pull --quiet db_migrate easi
 
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up -d db
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_ci.yml up --exit-code-from db_migrate db_migrate

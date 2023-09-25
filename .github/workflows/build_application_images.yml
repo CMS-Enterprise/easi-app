@@ -7,6 +7,7 @@ env:
   EASI_APP_NODE_VERSION: "16.14.0"
   GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  GIT_REF_NAME: ${{ github.event.pull_request.head.ref || github.ref }}
 
 permissions:
   id-token: write
@@ -75,18 +76,19 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: easi-db-migrate
-        run: |
-          IMAGE_FOUND=$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})
-          if [[ $IMAGE_FOUND == 1 ]]; then
-            echo "Image found, skipping build"
-          else
-            docker image build --quiet --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" --build-arg TAG=9.10-alpine --file Dockerfile.db_migrations .
-            docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
-          fi
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile.db_migrations
+          build-args: |
+            TAG=9.10-alpine
+          push: true
+          cache-to: type=gha,mode=max,scope=${{ env.GIT_REF_NAME }}-easi-db-migrate
+          cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi-db-migrate
+          tags: ${{ steps.login-ecr.outputs.registry }}/easi-db-migrate:${{ env.GIT_HASH }}
       - name: Announce failure
         if: ${{ failure() }}
         run: |
@@ -113,20 +115,28 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: easi-backend
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Calculate build args
+        id: calculate-build-args
         run: |
-          IMAGE_FOUND=$(./scripts/find_ecr_image.sh ${{ env.ECR_REPOSITORY }} ${{ env.GIT_HASH }})
-          if [[ $IMAGE_FOUND == 1 ]]; then
-            echo "Image found, skipping build"
-          else
-            APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
-            APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
-            docker image build --quiet --build-arg ARG_APPLICATION_VERSION="$GIT_HASH" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH" .
-            docker image push "$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_HASH"
-          fi
+          APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
+          APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
+          echo "APPLICATION_DATETIME=${APPLICATION_DATETIME}" >> $GITHUB_OUTPUT
+          echo "APPLICATION_TS=${APPLICATION_TS}" >> $GITHUB_OUTPUT
+      - name: Build, tag, and push image to Amazon ECR
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/easi-backend:${{ env.GIT_HASH }}
+          cache-from: type=gha,scope=${{ env.GIT_REF_NAME }}-easi-backend
+          cache-to: type=gha,mode=max,scope=${{ env.GIT_REF_NAME }}-easi-backend
+          build-args: |
+            ARG_APPLICATION_VERSION=${{ env.GIT_HASH }}
+            ARG_APPLICATION_DATETIME=${{ steps.calculate-build-args.outputs.APPLICATION_DATETIME }}
+            ARG_APPLICATION_TS=${{ steps.calculate-build-args.outputs.APPLICATION_TS }}
       - name: Check for vulnerability scan findings
         run: |
           ./scripts/check_ecr_findings "easi-backend" "$GIT_HASH" "7"
