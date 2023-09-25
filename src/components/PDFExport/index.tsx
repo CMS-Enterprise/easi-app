@@ -1,12 +1,7 @@
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { IconFileDownload } from '@trussworks/react-uswds';
-import axios from 'axios';
 import classNames from 'classnames';
-import { Base64 } from 'js-base64';
-import escape from 'lodash';
-
-import { downloadBlob } from 'utils/downloadFile';
 
 type PDFExportProps = {
   filename: string;
@@ -15,76 +10,6 @@ type PDFExportProps = {
   label?: string;
   linkPosition?: 'top' | 'bottom';
   disabled?: boolean;
-};
-
-function generatePDF(filename: string, content: string) {
-  axios
-    .request({
-      url: `${import.meta.env.VITE_API_ADDRESS}/pdf/generate`,
-      responseType: 'blob',
-      method: 'POST',
-      data: {
-        html: Base64.encode(content),
-        filename: 'input.html'
-      }
-    })
-    .then(response => {
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      downloadBlob(filename, blob);
-    })
-    .catch(e => {
-      // TODO add error handling: display a modal if things fail?
-      console.error(e); // eslint-disable-line
-    });
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const downloadRefAsPDF = (
-  title: string,
-  filename: string,
-  ref: React.RefObject<HTMLDivElement>
-): void => {
-  // Collect any stylesheets that are linked to. These are used in production.
-  const { origin } = document.location;
-  const stylesheetRequests = Array.prototype.slice
-    .apply(document.styleSheets)
-    .filter(
-      // don't load google fonts stylesheets
-      stylesheet => stylesheet.href && stylesheet.href.startsWith(origin)
-    )
-    .map(stylesheet => axios.get(stylesheet.href));
-
-  // Also grab any inline styles, used predominantly in development.
-  const styleBlocks = Array.prototype.slice
-    .apply(document.querySelectorAll('style'))
-    .map(node => node.innerText);
-
-  // Combine external and inline styles
-  Promise.all(stylesheetRequests)
-    .then(stylesheets => {
-      stylesheets.forEach(response => styleBlocks.push(response.data));
-
-      const markupToRender = `<html lang="en">
-        <head>
-          <title>${escape(title)}</title>
-          <style>
-            ${styleBlocks.join('\n\n')}
-          </style>
-        </head>
-        <body>
-          <h1>
-            ${escape(title)}
-          </h1>
-          ${ref && ref.current && ref.current.outerHTML}
-        </body>
-      </html>`;
-
-      generatePDF(filename, markupToRender);
-    })
-    .catch(e => {
-      console.error(e); // eslint-disable-line
-      // TODO add error handling: display a modal if things fail?
-    });
 };
 
 // PDFExport adds a "Download PDF" button to the screen. When this button is clicked,
