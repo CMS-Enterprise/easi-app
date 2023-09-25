@@ -97,7 +97,7 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
                   {...field}
                   ref={null}
                 >
-                  <option>- Select -</option>
+                  <option value="">{t('form:dropdownInitialSelect')}</option>
                   {[
                     SystemIntakeFormStep.INITIAL_REQUEST_FORM,
                     SystemIntakeFormStep.DRAFT_BUSINESS_CASE,
