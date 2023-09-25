@@ -71,6 +71,9 @@
 .usa-label {
   margin-top: 2rem;
   font-weight: bold;
+  // Fixes error alerts hidden by sticky nav bar when using scrollIntoView()
+  // Some form error handlers will scroll to field labels
+  scroll-margin: 3rem;
 }
 
 // <Card> components (which have .usa-card) are <li> elements, and render a bullet point without this.

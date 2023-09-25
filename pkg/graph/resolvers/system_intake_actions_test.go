@@ -59,7 +59,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 					},
 					EmailFeedback:  "meatloaf",
 					AdditionalInfo: additionalInfo,
-					AdminNotes:     &adminNotes,
+					AdminNote:      &adminNotes,
 				},
 			)
 			s.Error(err)
@@ -79,7 +79,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
 				s.NoError(err)
 				additionalInfo := models.HTMLPointer("banana")
-				adminNotes := models.HTMLPointer("apple")
+				adminNote := models.HTMLPointer("apple")
 				actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 					ctx,
 					s.testConfigs.Store,
@@ -95,7 +95,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 						},
 						EmailFeedback:  "meatloaf",
 						AdditionalInfo: additionalInfo,
-						AdminNotes:     adminNotes,
+						AdminNote:      adminNote,
 					},
 				)
 				s.NoError(err)
@@ -128,7 +128,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -144,7 +144,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				},
 				EmailFeedback:  "meatloaf",
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -162,7 +162,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -178,7 +178,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				},
 				EmailFeedback:  "meatloaf",
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -197,7 +197,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionRequestEdits(
 			ctx,
 			s.testConfigs.Store,
@@ -213,7 +213,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				},
 				EmailFeedback:  "meatloaf",
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -246,7 +246,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				},
 				EmailFeedback:  "meatloaf",
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     nil,
+				AdminNote:      nil,
 			},
 		)
 		s.NoError(err)
@@ -474,7 +474,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
 			s.NoError(err)
 			additionalInfo := models.HTMLPointer("banana")
-			adminNotes := models.HTMLPointer("apple")
+			adminNote := models.HTMLPointer("apple")
 			actionedIntake, err := CreateSystemIntakeActionCloseRequest(
 				ctx,
 				s.testConfigs.Store,
@@ -488,7 +488,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 					},
 					Reason:         models.HTMLPointer("meatloaf"),
 					AdditionalInfo: additionalInfo,
-					AdminNotes:     adminNotes,
+					AdminNote:      adminNote,
 				},
 			)
 			s.NoError(err)
@@ -516,7 +516,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
 			s.NoError(err)
 			additionalInfo := models.HTMLPointer("banana")
-			adminNotes := models.HTMLPointer("apple")
+			adminNote := models.HTMLPointer("apple")
 			_, err = CreateSystemIntakeActionCloseRequest(
 				ctx,
 				s.testConfigs.Store,
@@ -530,7 +530,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 					},
 					Reason:         models.HTMLPointer("meatloaf"),
 					AdditionalInfo: additionalInfo,
-					AdminNotes:     adminNotes,
+					AdminNote:      adminNote,
 				},
 			)
 			s.Error(err)
@@ -549,7 +549,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionCloseRequest(
 			ctx,
 			s.testConfigs.Store,
@@ -563,7 +563,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -582,7 +582,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionCloseRequest(
 			ctx,
 			s.testConfigs.Store,
@@ -596,7 +596,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -627,7 +627,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     nil,
+				AdminNote:      nil,
 			},
 		)
 		s.NoError(err)
@@ -663,7 +663,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
 			s.NoError(err)
 			additionalInfo := models.HTMLPointer("banana")
-			adminNotes := models.HTMLPointer("apple")
+			adminNote := models.HTMLPointer("apple")
 			actionedIntake, err := CreateSystemIntakeActionReopenRequest(
 				ctx,
 				s.testConfigs.Store,
@@ -677,7 +677,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 					},
 					Reason:         models.HTMLPointer("meatloaf"),
 					AdditionalInfo: additionalInfo,
-					AdminNotes:     adminNotes,
+					AdminNote:      adminNote,
 				},
 			)
 			s.NoError(err)
@@ -705,7 +705,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
 			s.NoError(err)
 			additionalInfo := models.HTMLPointer("banana")
-			adminNotes := models.HTMLPointer("apple")
+			adminNote := models.HTMLPointer("apple")
 			_, err = CreateSystemIntakeActionReopenRequest(
 				ctx,
 				s.testConfigs.Store,
@@ -719,7 +719,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 					},
 					Reason:         models.HTMLPointer("meatloaf"),
 					AdditionalInfo: additionalInfo,
-					AdminNotes:     adminNotes,
+					AdminNote:      adminNote,
 				},
 			)
 			s.Error(err)
@@ -738,7 +738,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionReopenRequest(
 			ctx,
 			s.testConfigs.Store,
@@ -752,7 +752,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -772,7 +772,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionReopenRequest(
 			ctx,
 			s.testConfigs.Store,
@@ -786,7 +786,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -818,7 +818,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     nil,
+				AdminNote:      nil,
 			},
 		)
 		s.NoError(err)
@@ -859,7 +859,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
 				s.NoError(err)
 				additionalInfo := models.HTMLPointer("banana")
-				adminNotes := models.HTMLPointer("apple")
+				adminNote := models.HTMLPointer("apple")
 				actionedIntake, err := CreateSystemIntakeActionNotITGovRequest(
 					ctx,
 					s.testConfigs.Store,
@@ -873,7 +873,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 						},
 						Reason:         models.HTMLPointer("meatloaf"),
 						AdditionalInfo: additionalInfo,
-						AdminNotes:     adminNotes,
+						AdminNote:      adminNote,
 					},
 				)
 				s.NoError(err)
@@ -897,7 +897,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionNotITGovRequest(
 			ctx,
 			s.testConfigs.Store,
@@ -911,7 +911,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -931,7 +931,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
-		adminNotes := models.HTMLPointer("apple")
+		adminNote := models.HTMLPointer("apple")
 		actionedIntake, err := CreateSystemIntakeActionNotITGovRequest(
 			ctx,
 			s.testConfigs.Store,
@@ -945,7 +945,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     adminNotes,
+				AdminNote:      adminNote,
 			},
 		)
 		s.NoError(err)
@@ -977,7 +977,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				},
 				Reason:         models.HTMLPointer("meatloaf"),
 				AdditionalInfo: additionalInfo,
-				AdminNotes:     nil,
+				AdminNote:      nil,
 			},
 		)
 		s.NoError(err)
