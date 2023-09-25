@@ -1,6 +1,10 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -10,11 +14,17 @@ import {
   requester,
   systemIntake
 } from 'data/mock/systemIntake';
-import { MessageProvider } from 'hooks/useMessage';
+import useMessage, { MessageProvider } from 'hooks/useMessage';
+import CreateSystemIntakeActionRequestEditsQuery from 'queries/CreateSystemIntakeActionRequestEditsQuery';
 import { MockedQuery } from 'types/util';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Actions from '.';
+
+const MockMessage = () => {
+  const { Message } = useMessage();
+  return <Message />;
+};
 
 const renderActionPage = ({
   mocks,
@@ -32,6 +42,7 @@ const renderActionPage = ({
       >
         <Route path={[`/governance-review-team/:systemId/actions/:subPage?`]}>
           <MessageProvider>
+            <MockMessage />
             <Actions systemIntake={systemIntake} />
           </MessageProvider>
         </Route>
@@ -99,13 +110,98 @@ describe('IT Gov Actions', () => {
         name: `${requester.commonName}, ${requester.component} (Requester)`
       })
     ).toBeChecked();
+  });
 
-    // Modal should trigger on submit
+  it('Submits a request edits successfully', async () => {
+    renderActionPage({
+      action: 'request-edits',
+      mocks: [
+        getSystemIntakeQuery,
+        getSystemIntakeContactsQuery,
+        getGovernanceTaskListQuery,
+        {
+          request: {
+            query: CreateSystemIntakeActionRequestEditsQuery,
+            variables: {
+              input: {
+                systemIntakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                adminNote: '',
+                additionalInfo: '',
+                notificationRecipients: {
+                  shouldNotifyITGovernance: true,
+                  shouldNotifyITInvestment: false,
+                  regularRecipientEmails: ['ally.anderson@local.fake']
+                },
+                intakeFormStep: 'INITIAL_REQUEST_FORM',
+                emailFeedback: 'Ch-ch-changes'
+              }
+            }
+          },
+          result: {
+            data: {
+              createSystemIntakeActionRequestEdits: {
+                systemIntake: {
+                  id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+                  __typename: 'SystemIntake'
+                },
+                __typename: 'UpdateSystemIntakePayload'
+              }
+            }
+          }
+        }
+      ]
+    });
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    // Fill in required fields
+
+    userEvent.selectOptions(screen.getByTestId('intakeFormStep'), [
+      'Initial request form'
+    ]);
+
+    userEvent.type(
+      screen.getByLabelText(/What changes are needed?/),
+      'Ch-ch-changes'
+    );
+
     userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
+
     expect(
       await screen.findByText(
         'Are you sure you want to complete this action to request edits?'
       )
     ).toBeInTheDocument();
+
+    // Continue through confirmation
+    userEvent.click(
+      screen.getAllByRole('button', { name: 'Complete action' })[1]
+    );
+
+    // Success alert message
+    await screen.findByText(
+      'You have requested edits to the Initial request form.'
+    );
+  });
+
+  it('Handles field errors for request edits', async () => {
+    renderActionPage({
+      action: 'request-edits',
+      mocks: [
+        getSystemIntakeQuery,
+        getSystemIntakeContactsQuery,
+        getGovernanceTaskListQuery
+      ]
+    });
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
+
+    await screen.findByText('Please check and fix the following');
+    await screen.findByText('Which form needs edits?: Please make a selection');
+    await screen.findByText(
+      'What changes are needed?: Please fill in the blank'
+    );
   });
 });

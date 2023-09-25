@@ -256,7 +256,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
         {/* Additional information */}
         <Controller
-          name="additionalNotes"
+          name="additionalInfo"
           render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label htmlFor={field.name} className="text-normal">
