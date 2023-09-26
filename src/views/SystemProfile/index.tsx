@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
@@ -626,7 +626,13 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
               type="info"
               heading={t('singleSystem.editPage.tempEditBanner.heading')}
             >
-              {t('singleSystem.editPage.tempEditBanner.content')}
+              <Trans i18nKey="systemProfile:singleSystem.editPage.tempEditBanner.content">
+                indexOne
+                <Link href="mailto:EnterpriseArchitecture@cms.hhs.gov">
+                  email
+                </Link>
+                indexTwo
+              </Trans>
             </Alert>
           </GridContainer>
         )}
