@@ -97,7 +97,9 @@ export const Header = ({ children }: HeaderProps) => {
 
   return (
     <>
-      {!authState?.isAuthenticated && <ServiceAlert landing />}
+      {!authState?.isAuthenticated && (
+        <ServiceAlert nameSpace="govShutdown" landing />
+      )}
       <header
         className={classnames('usa-header easi-header', {
           'sticky sticky-nav-header display-block navigation__content': isMobile

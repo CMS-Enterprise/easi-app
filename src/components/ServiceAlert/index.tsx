@@ -17,28 +17,13 @@ const alertPaths = [
 ];
 
 type ServiceAlertType = {
+  nameSpace: string;
   landing?: boolean;
   className?: string;
 };
 
-const EmergencyBanner = () => {
+const ServiceAlert = ({ nameSpace, landing, className }: ServiceAlertType) => {
   const { t } = useTranslation('serviceAlert');
-
-  return (
-    <div className="bg-emergency display-flex text-white padding-y-2 line-height-mono-4">
-      <div className="margin-right-2 width-4 service-alert__icon">
-        <IconError size={4} />
-      </div>
-      <div>
-        <h3 className="margin-0">{t('govShutdown.heading')}</h3>
-
-        <p className="margin-y-0">{t('govShutdown.content')}</p>
-      </div>
-    </div>
-  );
-};
-
-const ServiceAlert = ({ landing, className }: ServiceAlertType) => {
   const { pathname } = useLocation();
 
   if (!alertPaths.includes(pathname)) {
@@ -53,7 +38,16 @@ const ServiceAlert = ({ landing, className }: ServiceAlertType) => {
         })}
       >
         <Grid desktop={{ col: 12 }}>
-          <EmergencyBanner />
+          <div className="bg-emergency display-flex text-white padding-y-2 line-height-mono-4">
+            <div className="margin-right-2 width-4 service-alert__icon">
+              <IconError size={4} />
+            </div>
+            <div>
+              <h3 className="margin-0">{t(`${nameSpace}.heading`)}</h3>
+
+              <p className="margin-y-0">{t(`${nameSpace}.content`)}</p>
+            </div>
+          </div>
         </Grid>
       </GridContainer>
     </MainContent>
