@@ -16,6 +16,7 @@ import businessCase from './businessCase';
 import cookies from './cookies';
 import error from './error';
 import footer from './footer';
+import form from './form';
 import general from './general';
 import governanceOverview from './governanceOverview';
 import header from './header';
@@ -39,6 +40,7 @@ const enUS = {
   cookies,
   error,
   footer,
+  form,
   general,
   governanceReviewBoard,
   governanceReviewTeam,
