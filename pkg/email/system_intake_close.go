@@ -30,7 +30,7 @@ func (sie systemIntakeEmails) closeRequestBody(
 	systemIntakeID uuid.UUID,
 	requestName string,
 	requesterName string,
-	reason models.HTML,
+	reason *models.HTML,
 	submittedAt *time.Time,
 	additionalInfo *models.HTML,
 ) (string, error) {
@@ -71,7 +71,7 @@ func (sie systemIntakeEmails) SendCloseRequestNotification(
 	systemIntakeID uuid.UUID,
 	requestName string,
 	requesterName string,
-	reason models.HTML,
+	reason *models.HTML,
 	submittedAt *time.Time,
 	additionalInfo *models.HTML,
 ) error {

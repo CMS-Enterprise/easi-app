@@ -536,7 +536,7 @@ func CreateSystemIntakeActionReopenRequest(
 			intake.ID,
 			intake.ProjectName.ValueOrZero(),
 			intake.Requester,
-			*input.Reason,
+			input.Reason,
 			intake.SubmittedAt,
 			input.AdditionalInfo,
 		)
@@ -612,7 +612,7 @@ func CreateSystemIntakeActionCloseRequest(
 			intake.ID,
 			intake.ProjectName.ValueOrZero(),
 			intake.Requester,
-			*input.Reason,
+			input.Reason,
 			intake.SubmittedAt,
 			input.AdditionalInfo,
 		)

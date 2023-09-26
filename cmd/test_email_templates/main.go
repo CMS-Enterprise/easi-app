@@ -168,14 +168,15 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		ShouldNotifyITGovernance: false,
 		ShouldNotifyITInvestment: false,
 	}
+	reason := models.HTMLPointer("<strong>Reasons</strong>")
 	additionalInfo := models.HTMLPointer("Here is additional info <ul><li>fill out the form again</li><li>fill it out better than the first time</li></ul>")
 
 	err := client.SystemIntake.SendRequestEditsNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Form Update Initiative", "Mr. Good Bar", " <strong> Great Job! </strong>", additionalInfo)
 	noErr(err)
 
-	err = client.SystemIntake.SendCloseRequestNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Snickers", "<strong>Reasons</strong>", &submittedAt, additionalInfo)
+	err = client.SystemIntake.SendCloseRequestNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Snickers", reason, &submittedAt, additionalInfo)
 	noErr(err)
 
-	err = client.SystemIntake.SendReopenRequestNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Heath Bar", "<strong>Reasons</strong>", &submittedAt, additionalInfo)
+	err = client.SystemIntake.SendReopenRequestNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Heath Bar", reason, &submittedAt, additionalInfo)
 	noErr(err)
 }
