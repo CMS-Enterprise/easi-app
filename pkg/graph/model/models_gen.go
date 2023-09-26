@@ -550,7 +550,7 @@ type SystemIntakeCloseRequestInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	Reason                 *models.HTML                        `json:"reason,omitempty"`
 	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
-	AdminNotes             *models.HTML                        `json:"adminNotes,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Represents a contact in OIT who is collaborating with the user
@@ -708,7 +708,7 @@ type SystemIntakeNotITGovReqInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	Reason                 *models.HTML                        `json:"reason,omitempty"`
 	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
-	AdminNotes             *models.HTML                        `json:"adminNotes,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // The author of a note added to a system request
@@ -758,7 +758,7 @@ type SystemIntakeReopenRequestInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	Reason                 *models.HTML                        `json:"reason,omitempty"`
 	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
-	AdminNotes             *models.HTML                        `json:"adminNotes,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Input for creating a Request Edits Action in Admin Actions v2
@@ -768,7 +768,7 @@ type SystemIntakeRequestEditsInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	EmailFeedback          models.HTML                         `json:"emailFeedback"`
 	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
-	AdminNotes             *models.HTML                        `json:"adminNotes,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // The contact who made an IT governance request for a system

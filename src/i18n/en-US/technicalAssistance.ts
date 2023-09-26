@@ -338,12 +338,15 @@ const technicalAssistance = {
   },
   // Higher level errors
   errors: {
+    // Some of these genrealized translation keys are copied to error.ts file
+    // todo remove this and use form.ts
     checkFix: 'Please check and fix the following',
     fillBlank: 'Please fill in the blank',
     fillDate: 'Please fill in the date',
     includeExplanation: 'Please include an explanation',
     makeSelection: 'Please make a selection',
     selectFile: 'Please select a file',
+
     somethingWrong: 'Something went wrong.'
   },
   requestType: {

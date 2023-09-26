@@ -243,7 +243,9 @@ const governanceReviewTeam = {
       'Ashley Marks',
       'Leah Nguyen',
       'Emily Hill',
-      'Savannah Huttenberger'
+      'Savannah Huttenberger',
+      'Valerie Hartz',
+      'Nicholas Downey'
     ]
   }
 };

@@ -1538,7 +1538,7 @@ input SystemIntakeRequestEditsInput {
   notificationRecipients: EmailNotificationRecipients
   emailFeedback: HTML!
   additionalInfo: HTML
-  adminNotes: HTML
+  adminNote: HTML
 }
 
 
@@ -1632,7 +1632,7 @@ input SystemIntakeNotITGovReqInput {
   notificationRecipients: EmailNotificationRecipients
   reason: HTML
   additionalInfo: HTML
-  adminNotes: HTML
+  adminNote: HTML
 }
 
 """
@@ -1643,7 +1643,7 @@ input SystemIntakeCloseRequestInput {
   notificationRecipients: EmailNotificationRecipients
   reason: HTML
   additionalInfo: HTML
-  adminNotes: HTML
+  adminNote: HTML
 }
 
 """
@@ -1654,7 +1654,7 @@ input SystemIntakeReopenRequestInput {
   notificationRecipients: EmailNotificationRecipients
   reason: HTML
   additionalInfo: HTML
-  adminNotes: HTML
+  adminNote: HTML
 }
 
 """

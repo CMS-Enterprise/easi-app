@@ -44,7 +44,6 @@ jobs:
     with:
       env: test
 
-
   Run_Tests:
     uses: ./.github/workflows/run_tests.yml
     needs: [Build_Application_Images, Build_Test_Frontend_Assets]

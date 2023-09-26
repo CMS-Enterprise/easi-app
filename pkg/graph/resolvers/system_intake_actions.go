@@ -228,12 +228,12 @@ func CreateSystemIntakeActionRequestEdits(
 	if err != nil {
 		return nil, err
 	}
-	if input.AdminNotes != nil {
+	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
 			AuthorEUAID:    adminTakingAction.EuaUserID,
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
-			Content:        input.AdminNotes,
+			Content:        input.AdminNote,
 		})
 		if err != nil {
 			return nil, err
@@ -518,12 +518,12 @@ func CreateSystemIntakeActionReopenRequest(
 	if err != nil {
 		return nil, err
 	}
-	if input.AdminNotes != nil {
+	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
 			AuthorEUAID:    adminTakingAction.EuaUserID,
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
-			Content:        input.AdminNotes,
+			Content:        input.AdminNote,
 		})
 		if err != nil {
 			return nil, err
@@ -579,12 +579,12 @@ func CreateSystemIntakeActionCloseRequest(
 	if err != nil {
 		return nil, err
 	}
-	if input.AdminNotes != nil {
+	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
 			AuthorEUAID:    adminTakingAction.EuaUserID,
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
-			Content:        input.AdminNotes,
+			Content:        input.AdminNote,
 		})
 		if err != nil {
 			return nil, err
@@ -637,12 +637,12 @@ func CreateSystemIntakeActionNotITGovRequest(
 	if err != nil {
 		return nil, err
 	}
-	if input.AdminNotes != nil {
+	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
 			AuthorEUAID:    adminTakingAction.EuaUserID,
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
-			Content:        input.AdminNotes,
+			Content:        input.AdminNote,
 		})
 		if err != nil {
 			return nil, err

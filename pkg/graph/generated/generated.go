@@ -8871,7 +8871,7 @@ input SystemIntakeRequestEditsInput {
   notificationRecipients: EmailNotificationRecipients
   emailFeedback: HTML!
   additionalInfo: HTML
-  adminNotes: HTML
+  adminNote: HTML
 }
 
 
@@ -8965,7 +8965,7 @@ input SystemIntakeNotITGovReqInput {
   notificationRecipients: EmailNotificationRecipients
   reason: HTML
   additionalInfo: HTML
-  adminNotes: HTML
+  adminNote: HTML
 }
 
 """
@@ -8976,7 +8976,7 @@ input SystemIntakeCloseRequestInput {
   notificationRecipients: EmailNotificationRecipients
   reason: HTML
   additionalInfo: HTML
-  adminNotes: HTML
+  adminNote: HTML
 }
 
 """
@@ -8987,7 +8987,7 @@ input SystemIntakeReopenRequestInput {
   notificationRecipients: EmailNotificationRecipients
   reason: HTML
   additionalInfo: HTML
-  adminNotes: HTML
+  adminNote: HTML
 }
 
 """
@@ -53636,7 +53636,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeCloseRequestInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "notificationRecipients", "reason", "additionalInfo", "adminNotes"}
+	fieldsInOrder := [...]string{"systemIntakeID", "notificationRecipients", "reason", "additionalInfo", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -53679,15 +53679,15 @@ func (ec *executionContext) unmarshalInputSystemIntakeCloseRequestInput(ctx cont
 				return it, err
 			}
 			it.AdditionalInfo = data
-		case "adminNotes":
+		case "adminNote":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNotes"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.AdminNotes = data
+			it.AdminNote = data
 		}
 	}
 
@@ -54288,7 +54288,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeNotITGovReqInput(ctx conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "notificationRecipients", "reason", "additionalInfo", "adminNotes"}
+	fieldsInOrder := [...]string{"systemIntakeID", "notificationRecipients", "reason", "additionalInfo", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -54331,15 +54331,15 @@ func (ec *executionContext) unmarshalInputSystemIntakeNotITGovReqInput(ctx conte
 				return it, err
 			}
 			it.AdditionalInfo = data
-		case "adminNotes":
+		case "adminNote":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNotes"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.AdminNotes = data
+			it.AdminNote = data
 		}
 	}
 
@@ -54566,7 +54566,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeReopenRequestInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "notificationRecipients", "reason", "additionalInfo", "adminNotes"}
+	fieldsInOrder := [...]string{"systemIntakeID", "notificationRecipients", "reason", "additionalInfo", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -54609,15 +54609,15 @@ func (ec *executionContext) unmarshalInputSystemIntakeReopenRequestInput(ctx con
 				return it, err
 			}
 			it.AdditionalInfo = data
-		case "adminNotes":
+		case "adminNote":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNotes"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.AdminNotes = data
+			it.AdminNote = data
 		}
 	}
 
@@ -54631,7 +54631,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients", "emailFeedback", "additionalInfo", "adminNotes"}
+	fieldsInOrder := [...]string{"systemIntakeID", "intakeFormStep", "notificationRecipients", "emailFeedback", "additionalInfo", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -54683,15 +54683,15 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 				return it, err
 			}
 			it.AdditionalInfo = data
-		case "adminNotes":
+		case "adminNote":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNotes"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminNote"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.AdminNotes = data
+			it.AdminNote = data
 		}
 	}
 
