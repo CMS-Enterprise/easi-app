@@ -9,50 +9,37 @@ exports[`ServiceAlert banner > matches snapshot 1`] = `
     tabindex="-1"
   >
     <div
-      class="grid-container"
+      class="grid-container padding-x-0"
       data-testid="gridContainer"
     >
       <div
-        class="desktop:grid-col-12"
+        class="desktop:grid-col-12 padding-y-1"
         data-testid="grid"
       >
-        <div
-          class="bg-emergency display-flex text-white padding-y-2 line-height-mono-4"
+        <section
+          aria-label="Site alert"
+          class="usa-site-alert usa-site-alert--emergency usa-site-alert--slim"
+          data-testid="siteAlert"
         >
           <div
-            class="margin-right-2 width-4 service-alert__icon"
+            class="usa-alert"
           >
-            <svg
-              class="usa-icon usa-icon--size-4"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              class="usa-alert__body"
             >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-              />
-            </svg>
+              <h3
+                class="usa-alert__heading"
+              >
+                EASi service alert
+              </h3>
+              <p
+                class="margin-y-0"
+              >
+                EASi services and response times are affected by the US government shutdown. Most IT Governance and TRB requests will not receive a response until the shutdown is resolved.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3
-              class="margin-0"
-            >
-              EASi service alert
-            </h3>
-            <p
-              class="margin-y-0"
-            >
-              EASi services and response times are affected by the US government shutdown. Most IT Governance and TRB requests will not receive a response until the shutdown is resolved.
-            </p>
-          </div>
-        </div>
+        </section>
       </div>
     </div>
   </main>
