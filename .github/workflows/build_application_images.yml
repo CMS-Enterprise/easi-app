@@ -79,7 +79,7 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build, tag, and push image to Amazon ECR
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile.db_migrations
@@ -125,7 +125,7 @@ jobs:
           echo "APPLICATION_DATETIME=${APPLICATION_DATETIME}" >> $GITHUB_OUTPUT
           echo "APPLICATION_TS=${APPLICATION_TS}" >> $GITHUB_OUTPUT
       - name: Build, tag, and push image to Amazon ECR
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
@@ -137,6 +137,11 @@ jobs:
             ARG_APPLICATION_VERSION=${{ env.GIT_HASH }}
             ARG_APPLICATION_DATETIME=${{ steps.calculate-build-args.outputs.APPLICATION_DATETIME }}
             ARG_APPLICATION_TS=${{ steps.calculate-build-args.outputs.APPLICATION_TS }}
+          # As of Buildx verion 0.10, image are build with provenance by default.
+          # Lambda currently does not support functions that use multi-architecture container images (https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-reqs)
+          # As such, the Lambda for vulnerability scanning will fail if the image is built with provenance.
+          # More information can be found here: https://github.com/docker/buildx/issues/1533
+          provenance: false
       - name: Check for vulnerability scan findings
         run: |
           ./scripts/check_ecr_findings "easi-backend" "$GIT_HASH" "7"
