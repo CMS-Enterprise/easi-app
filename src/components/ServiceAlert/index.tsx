@@ -8,7 +8,8 @@ import MainContent from 'components/MainContent';
 
 import './index.scss';
 
-const alertPaths = [
+// Authenticated paths to render the <ServiceAlert /> banner
+const alertPaths: string[] = [
   '/',
   '/systems',
   '/system/making-a-request',
@@ -17,12 +18,16 @@ const alertPaths = [
 ];
 
 type ServiceAlertType = {
-  nameSpace: string;
-  landing?: boolean;
+  translationKey: string; // Translation file key for accessing banner heading and content
+  landing?: boolean; // Styling adjustment for landing page
   className?: string;
 };
 
-const ServiceAlert = ({ nameSpace, landing, className }: ServiceAlertType) => {
+const ServiceAlert = ({
+  translationKey,
+  landing,
+  className
+}: ServiceAlertType) => {
   const { t } = useTranslation('serviceAlert');
   const { pathname } = useLocation();
 
@@ -43,9 +48,9 @@ const ServiceAlert = ({ nameSpace, landing, className }: ServiceAlertType) => {
               <IconError size={4} />
             </div>
             <div>
-              <h3 className="margin-0">{t(`${nameSpace}.heading`)}</h3>
+              <h3 className="margin-0">{t(`${translationKey}.heading`)}</h3>
 
-              <p className="margin-y-0">{t(`${nameSpace}.content`)}</p>
+              <p className="margin-y-0">{t(`${translationKey}.content`)}</p>
             </div>
           </div>
         </Grid>

@@ -98,7 +98,7 @@ export const Header = ({ children }: HeaderProps) => {
   return (
     <>
       {!authState?.isAuthenticated && (
-        <ServiceAlert nameSpace="govShutdown" landing />
+        <ServiceAlert translationKey="govShutdown" landing />
       )}
       <header
         className={classnames('usa-header easi-header', {

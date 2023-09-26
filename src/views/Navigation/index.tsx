@@ -93,7 +93,7 @@ export const Navigation = ({ children }: NavigationProps) => {
             signout={signout}
             userName={userName}
           />
-          <ServiceAlert nameSpace="govShutdown" />
+          <ServiceAlert translationKey="govShutdown" />
         </Grid>
       )}
 

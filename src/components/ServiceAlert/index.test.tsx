@@ -9,7 +9,7 @@ describe('ServiceAlert banner', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/trb/start']}>
         <Route path="/trb/start">
-          <ServiceAlert nameSpace="govShutdown" />
+          <ServiceAlert translationKey="govShutdown" />
         </Route>
       </MemoryRouter>
     );
@@ -20,7 +20,7 @@ describe('ServiceAlert banner', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={['/help']}>
         <Route path="/help">
-          <ServiceAlert nameSpace="govShutdown" />
+          <ServiceAlert translationKey="govShutdown" />
         </Route>
       </MemoryRouter>
     );
