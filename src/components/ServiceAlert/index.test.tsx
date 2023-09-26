@@ -5,6 +5,17 @@ import { render } from '@testing-library/react';
 import ServiceAlert from '.';
 
 describe('ServiceAlert banner', () => {
+  it('does not render on non-designated route', async () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/trb/start']}>
+        <Route path="/trb/start">
+          <ServiceAlert />
+        </Route>
+      </MemoryRouter>
+    );
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it('matches snapshot', async () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={['/help']}>
