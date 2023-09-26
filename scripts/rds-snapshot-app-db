@@ -10,6 +10,28 @@ readonly db_instance_identifier=easi$environment
 db_snapshot_identifier=$db_instance_identifier-$(date +%s)
 readonly db_snapshot_identifier
 readonly tags=("Key=Environment,Value=$environment" "Key=Tool,Value=$(basename "$0")")
+manual_retention_count=10
+
+# Get the manual snapshots for the DB sorted by creation time
+snapshots=$(aws rds describe-db-snapshots \
+            --db-instance-identifier "$db_instance_identifier" \
+            --snapshot-type manual \
+            --query 'sort_by(DBSnapshots, &SnapshotCreateTime)[].DBSnapshotIdentifier' \
+            --no-paginate | jq -r '.[]')
+# Count how many snapshots exist
+snapshot_count=$(echo "$snapshots" | wc -l)
+# Calculate the number of snapshots to delete
+snapshots_to_delete=$((snapshot_count - manual_retention_count))
+echo "$snapshots_to_delete snapshots to delete!"
+
+# Only delete if we have more than our threshold
+if [[ $snapshots_to_delete -gt 0 ]]; then
+  # Delete the oldest snapshots until we're under our threshold
+  for snapshot in $(echo "$snapshots" | head -n $snapshots_to_delete); do
+      echo "Deleting snapshot: $snapshot"
+      aws rds delete-db-snapshot --no-cli-pager --db-snapshot-identifier "$snapshot" --no-paginate
+  done
+fi
 
 echo
 echo "Wait for concurrent database snapshots for ${db_instance_identifier} to complete before continuing ..."
