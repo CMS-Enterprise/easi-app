@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { CSVLink } from 'react-csv';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -90,6 +91,8 @@ const RequestRepository = () => {
   }>({
     resolver: yupResolver(dateRangeSchema)
   });
+  const dateRangeStart = watch('dateStart');
+  const dateRangeEnd = watch('dateEnd');
 
   const defaultPageSize: number = window.localStorage['request-table-page-size']
     ? Number(window.localStorage['request-table-page-size'])
@@ -439,14 +442,18 @@ const RequestRepository = () => {
           />
 
           <ButtonGroup>
-            <Button
-              type="submit"
+            <CSVLink
+              data={convertIntakesToCSV(data)}
+              filename="EASi-Portfolio-Update-Report.csv"
+              headers={csvHeaders}
               onClick={() => setConfigReportModalOpen(false)}
-              className="margin-right-1"
-              disabled={!watch('dateStart') || !watch('dateEnd')}
+              className={classnames(
+                'usa-button margin-right-1 text-white text-no-underline',
+                { 'usa-button--disabled': !dateRangeStart || !dateRangeEnd }
+              )}
             >
               {t('home:adminHome.GRT.configureReport.download')}
-            </Button>
+            </CSVLink>
 
             <Button
               type="button"
