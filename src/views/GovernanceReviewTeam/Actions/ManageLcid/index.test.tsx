@@ -1,30 +1,33 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import { DateTime } from 'luxon';
 
-import { systemIntake } from 'data/mock/systemIntake';
+import { systemIntake as mockSystemIntake } from 'data/mock/systemIntake';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 
 import LcidTitleBox from './LcidTitleBox';
 import ManageLcid from '.';
 
-const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
+const lcidExpiresAt = DateTime.local().plus({ year: 1 }).toISO();
+
+const systemIntake = {
+  ...mockSystemIntake,
+  lcid: '123456',
+  lcidStatus: SystemIntakeLCIDStatus.ISSUED,
+  lcidExpiresAt
+};
 
 describe('Manage LCID selection page', () => {
   it('Renders options for issued LCID', () => {
     render(
       <MemoryRouter
         initialEntries={[
-          `/governance-review-team/${systemIntakeId}/manage-lcid`
+          `/governance-review-team/${systemIntake.id}/manage-lcid`
         ]}
       >
         <Route path={[`/governance-review-team/:systemId/manage-lcid`]}>
-          <ManageLcid
-            systemIntake={{
-              ...systemIntake,
-              lcidStatus: SystemIntakeLCIDStatus.ISSUED
-            }}
-          />
+          <ManageLcid systemIntake={systemIntake} />
         </Route>
       </MemoryRouter>
     );
@@ -52,14 +55,14 @@ describe('Manage LCID selection page', () => {
     render(
       <MemoryRouter
         initialEntries={[
-          `/governance-review-team/${systemIntakeId}/manage-lcid`
+          `/governance-review-team/${systemIntake.id}/manage-lcid`
         ]}
       >
         <Route path={[`/governance-review-team/:systemId/manage-lcid`]}>
           <ManageLcid
             systemIntake={{
               ...systemIntake,
-              lcidStatus: SystemIntakeLCIDStatus.ISSUED
+              lcidStatus: SystemIntakeLCIDStatus.RETIRED
             }}
           />
         </Route>
@@ -80,7 +83,7 @@ describe('Manage LCID form', async () => {
 
     render(
       <MemoryRouter>
-        <LcidTitleBox systemIntakeId={systemIntakeId} title={action} />
+        <LcidTitleBox systemIntakeId={systemIntake.id} title={action} />
       </MemoryRouter>
     );
 
