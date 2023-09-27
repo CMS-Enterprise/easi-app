@@ -1021,7 +1021,7 @@ func RetireLCID(
 	}
 
 	// create action record before updating intake, while we still have access to intake's previous retirement date
-	action := lcidactions.GetChangeLCIDRetirementDateAction(*intake, input.RetiresAt, *adminUserInfo)
+	action := lcidactions.GetRetireLCIDAction(*intake, input.RetiresAt, *adminUserInfo)
 
 	// update intake
 	// not currently persisting input.Reason
