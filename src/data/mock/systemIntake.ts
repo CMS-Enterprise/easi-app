@@ -219,6 +219,7 @@ export const systemIntake: SystemIntake = {
   grtDate: null,
   grtFeedbacks: [],
   lcid: null,
+  lcidIssuedAt: null,
   lcidExpiresAt: null,
   lcidScope: null,
   lcidCostBaseline: null,
