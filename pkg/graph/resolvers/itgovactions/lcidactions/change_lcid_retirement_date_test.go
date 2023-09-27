@@ -10,6 +10,43 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+func TestIsLCIDValidToChangeRetirementDate(t *testing.T) {
+	t.Run("Intake without an LCID issued is invalid (even if it somehow has a retirement date set)", func(t *testing.T) {
+		mockRetirementDate := time.Unix(0, 0)
+		intake := models.SystemIntake{
+			LifecycleID:        null.StringFromPtr(nil),
+			LifecycleRetiresAt: &mockRetirementDate,
+		}
+
+		err := IsLCIDValidToChangeRetirementDate(&intake)
+
+		assert.Error(t, err)
+	})
+
+	t.Run("Intake with an LCID issued, but with no retirement date set, is invalid", func(t *testing.T) {
+		intake := models.SystemIntake{
+			LifecycleID:        null.StringFrom("234567"),
+			LifecycleRetiresAt: nil,
+		}
+
+		err := IsLCIDValidToChangeRetirementDate(&intake)
+
+		assert.Error(t, err)
+	})
+
+	t.Run("Intake with an LCID issued and with a retirement date set is valid", func(t *testing.T) {
+		mockRetirementDate := time.Unix(0, 0)
+		intake := models.SystemIntake{
+			LifecycleID:        null.StringFrom("123456"),
+			LifecycleRetiresAt: &mockRetirementDate,
+		}
+
+		err := IsLCIDValidToChangeRetirementDate(&intake)
+
+		assert.NoError(t, err)
+	})
+}
+
 func TestGetChangeLCIDRetirementDateAction(t *testing.T) {
 	mockCurrentTime := time.Unix(0, 0)
 	mockExpirationDate := mockCurrentTime.Add(time.Hour * 24 * 1)
