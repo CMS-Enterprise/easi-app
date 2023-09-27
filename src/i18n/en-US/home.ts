@@ -145,7 +145,8 @@ const home = {
         rangeStart: 'Start of range',
         rangeEnd: 'End of range',
         download: 'Download',
-        close: "Don't download and return to EASi"
+        close: "Don't download and return to EASi",
+        error: 'Please enter a valid date'
       }
     }
   }

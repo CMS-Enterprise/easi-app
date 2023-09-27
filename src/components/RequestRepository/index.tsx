@@ -12,6 +12,7 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ButtonGroup,
@@ -53,6 +54,7 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import dateRangeSchema from 'validations/dateRangeSchema';
 import { ActiveStateType, TableStateContext } from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
@@ -82,10 +84,12 @@ const RequestRepository = () => {
   );
 
   /* Date range for Portfolio Update Report */
-  const { control } = useForm<{
+  const { control, handleSubmit, watch } = useForm<{
     dateStart: string;
     dateEnd: string;
-  }>();
+  }>({
+    resolver: yupResolver(dateRangeSchema)
+  });
 
   const defaultPageSize: number = window.localStorage['request-table-page-size']
     ? Number(window.localStorage['request-table-page-size'])
@@ -396,7 +400,7 @@ const RequestRepository = () => {
 
         <p>{t('home:adminHome.GRT.configureReport.content')}</p>
 
-        <Form onSubmit={() => null} className="maxw-none">
+        <Form onSubmit={handleSubmit(formData => null)} className="maxw-none">
           <Controller
             name="dateStart"
             control={control}
@@ -407,7 +411,9 @@ const RequestRepository = () => {
                 </Label>
                 <HelpText className="margin-top-05">mm/dd/yyyy</HelpText>
                 {error?.message && (
-                  <FieldErrorMsg>{t(error?.message)}</FieldErrorMsg>
+                  <FieldErrorMsg>
+                    {t('home:adminHome.GRT.configureReport.error')}
+                  </FieldErrorMsg>
                 )}
                 <DatePickerFormatted {...field} id={field.name} />
               </FormGroup>
@@ -423,7 +429,9 @@ const RequestRepository = () => {
                 </Label>
                 <HelpText className="margin-top-05">mm/dd/yyyy</HelpText>
                 {error?.message && (
-                  <FieldErrorMsg>{t(error?.message)}</FieldErrorMsg>
+                  <FieldErrorMsg>
+                    {t('home:adminHome.GRT.configureReport.error')}
+                  </FieldErrorMsg>
                 )}
                 <DatePickerFormatted {...field} id={field.name} />
               </FormGroup>
@@ -435,6 +443,7 @@ const RequestRepository = () => {
               type="submit"
               onClick={() => setConfigReportModalOpen(false)}
               className="margin-right-1"
+              disabled={!watch('dateStart') || !watch('dateEnd')}
             >
               {t('home:adminHome.GRT.configureReport.download')}
             </Button>
