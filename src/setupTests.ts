@@ -28,7 +28,7 @@ Range.prototype.getBoundingClientRect = () => ({
 Range.prototype.getClientRects = () => ({
   item: () => null,
   length: 0,
-  [Symbol.iterator]: jest.fn()
+  [Symbol.iterator]: vi.fn()
 });
 
 Document.prototype.elementFromPoint = (x: number, y: number) => null;
