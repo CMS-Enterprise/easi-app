@@ -301,7 +301,8 @@ const action = {
     currentExpirationDate: 'Current expiration date',
     currentScope: 'Current scope',
     currentCostBaseline: 'Current project cost baseline',
-    currentNextSteps: 'Current next steps'
+    currentNextSteps: 'Current next steps',
+    emptyForm: 'Please fill out at least one field below'
   },
   extendLcid: {
     back: 'Change',
