@@ -76,7 +76,7 @@ const UpdateLcid = ({
   const onSubmit = async (formData: UpdateLcidFields) => {
     // Check if at least one LCID field has been filled
     if (formIsValid) {
-      updateLcid({
+      return updateLcid({
         variables: {
           input: {
             systemIntakeID: systemIntakeId,
@@ -84,10 +84,9 @@ const UpdateLcid = ({
           }
         }
       });
-    } else {
-      // Set general form error if form is invalid
-      throw new Error(t('updateLcid.emptyForm'));
     }
+    // Set general form error if form is invalid
+    throw new Error(t('updateLcid.emptyForm'));
   };
 
   return (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError } from '@apollo/client';
+import { ApolloError, FetchResult } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -44,7 +44,7 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   /** Success message to display on admin actions page after submission */
   successMessage?: string;
   /** Submit function runs after field validation passes */
-  onSubmit: (formData: TFieldValues) => Promise<void>;
+  onSubmit: (formData: TFieldValues) => Promise<FetchResult | void>;
   /** Optional confirmation modal title and content */
   modal?: {
     title: string;
