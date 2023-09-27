@@ -15,6 +15,11 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
     <div
       class="easi-pdf-export"
     >
+      <h1
+        class="easi-only-print"
+      >
+        System Intake
+      </h1>
       <div>
         <dl
           title="System Request"
