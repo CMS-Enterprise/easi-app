@@ -300,7 +300,7 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 		return nil
 	}
 
-	// check retirement date first - that takes precedence over expiration date
+	// check retirement date first - if both retirement date and expiration date have passed, retirement takes precedence
 	if si.LifecycleRetiresAt != nil && si.LifecycleRetiresAt.Before(currentTime) {
 		return &retiredStatus
 	}
