@@ -262,7 +262,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         {children}
 
         {/* Notification email */}
-        <h3 className=" margin-bottom-0">{t('notification.heading')}</h3>
+        <h3 className="margin-bottom-0 margin-top-6">
+          {t('notification.heading')}
+        </h3>
         <Alert type="info" slim>
           {t('notification.alert')}
         </Alert>
