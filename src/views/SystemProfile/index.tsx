@@ -1,8 +1,9 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
+  Alert,
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
@@ -310,6 +311,19 @@ export function showVal(
   return val;
 }
 
+/**
+ * Determine whether a particular sub page is editable based on sub page key.
+ */
+export function subPageIsEditable(componentID: SubpageKey): boolean {
+  // TODO: Add sub pages as they become editable (this will remove the temporary edit system profile banner from that sub page)
+  const editableComponentIDs: SubpageKey[] = ['home', 'team'];
+
+  if (!editableComponentIDs.includes(componentID)) {
+    return true;
+  }
+  return false;
+}
+
 type SystemProfileProps = {
   id?: string;
   modal?: boolean;
@@ -604,6 +618,24 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
             </Grid>
           </div>
         </SummaryBox>
+
+        {/* Only display temporary edit system profile banner if sub page does not have full edit functionality */}
+        {subPageIsEditable(subpageKey) && (
+          <GridContainer className="margin-bottom-3 margin-top-2 desktop:margin-bottom-3">
+            <Alert
+              type="info"
+              heading={t('singleSystem.editPage.tempEditBanner.heading')}
+            >
+              <Trans i18nKey="systemProfile:singleSystem.editPage.tempEditBanner.content">
+                indexOne
+                <Link href="mailto:EnterpriseArchitecture@cms.hhs.gov">
+                  email
+                </Link>
+                indexTwo
+              </Trans>
+            </Alert>
+          </GridContainer>
+        )}
 
         <SystemSubNav
           subinfo={subpageKey}
