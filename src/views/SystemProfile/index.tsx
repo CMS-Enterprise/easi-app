@@ -316,7 +316,7 @@ export function showVal(
  */
 export function subPageIsEditable(componentID: SubpageKey): boolean {
   // TODO: Add sub pages as they become editable (this will remove the temporary edit system profile banner from that sub page)
-  const editableComponentIDs = ['home', 'team']; // NOTE: this list is based off of the SubpageKey list in types/systemProfile
+  const editableComponentIDs: SubpageKey[] = ['home', 'team'];
 
   if (!editableComponentIDs.includes(componentID)) {
     return true;
@@ -621,7 +621,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
 
         {/* Only display temporary edit system profile banner if sub page does not have full edit functionality */}
         {subPageIsEditable(subpageKey) && (
-          <GridContainer className="margin-bottom-4 margin-top-2">
+          <GridContainer className="margin-bottom-3 margin-top-2 desktop:margin-bottom-3">
             <Alert
               type="info"
               heading={t('singleSystem.editPage.tempEditBanner.heading')}
