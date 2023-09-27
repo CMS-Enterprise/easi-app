@@ -12,12 +12,14 @@ import {
   useTable
 } from 'react-table';
 import {
+  Button,
   ButtonGroup,
   GridContainer,
   IconError,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -52,6 +54,8 @@ const RequestRepository = () => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
+
+  const flags = useFlags();
 
   const { itGovAdmin } = useContext(TableStateContext);
 
@@ -359,13 +363,19 @@ const RequestRepository = () => {
     <div className="padding-x-4 margin-bottom-5">
       <GridContainer>
         <ButtonGroup className="trb-admin-team-home-actions margin-bottom-2 margin-top-1 line-height-body-5">
-          <CsvDownloadLink
-            data={convertIntakesToCSV(data)}
-            filename="request-repository.csv"
-            headers={csvHeaders}
-          >
-            {t('home:adminHome.GRT.csvDownloadLabel')}
-          </CsvDownloadLink>
+          {flags.portfolioUpdateReport ? (
+            <Button type="button" unstyled>
+              {t('home:adminHome.GRT.whatsIncluded')}
+            </Button>
+          ) : (
+            <CsvDownloadLink
+              data={convertIntakesToCSV(data)}
+              filename="request-repository.csv"
+              headers={csvHeaders}
+            >
+              {t('home:adminHome.GRT.csvDownloadLabel')}
+            </CsvDownloadLink>
+          )}
         </ButtonGroup>
       </GridContainer>
 
