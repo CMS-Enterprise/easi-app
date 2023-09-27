@@ -388,7 +388,14 @@ const RequestRepository = () => {
 
       <GridContainer>
         <ButtonGroup className="trb-admin-team-home-actions margin-bottom-2 margin-top-1 line-height-body-5">
-          {flags.portfolioUpdateReport ? (
+          {flags.portfolioUpdateReport && (
+            /* Configure Portfolio Update Report button */
+            <Button type="button" className="margin-right-1">
+              {t('home:adminHome.GRT.configureReport.button')}
+            </Button>
+          )}
+
+          {flags.portfolioUpdateReport && (
             /* Portfolio Update Report info modal trigger button */
             <Button
               type="button"
@@ -397,15 +404,20 @@ const RequestRepository = () => {
             >
               {t('home:adminHome.GRT.infoModal.link')}
             </Button>
-          ) : (
-            <CsvDownloadLink
-              data={convertIntakesToCSV(data)}
-              filename="request-repository.csv"
-              headers={csvHeaders}
-            >
-              {t('home:adminHome.GRT.csvDownloadLabel')}
-            </CsvDownloadLink>
           )}
+
+          {
+            // TODO EASI-3021: remove with feature flag
+            !flags.portfolioUpdateReport && (
+              <CsvDownloadLink
+                data={convertIntakesToCSV(data)}
+                filename="request-repository.csv"
+                headers={csvHeaders}
+              >
+                {t('home:adminHome.GRT.csvDownloadLabel')}
+              </CsvDownloadLink>
+            )
+          }
         </ButtonGroup>
       </GridContainer>
 
