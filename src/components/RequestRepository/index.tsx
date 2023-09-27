@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -14,6 +15,8 @@ import {
 import {
   Button,
   ButtonGroup,
+  Form,
+  FormGroup,
   GridContainer,
   IconError,
   ModalFooter,
@@ -27,6 +30,10 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import CsvDownloadLink from 'components/shared/CsvDownloadLink';
+import DatePickerFormatted from 'components/shared/DatePickerFormatted';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
 import TruncatedText from 'components/shared/TruncatedText';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
@@ -73,6 +80,12 @@ const RequestRepository = () => {
   const [configReportModalOpen, setConfigReportModalOpen] = useState<boolean>(
     false
   );
+
+  /* Date range for Portfolio Update Report */
+  const { control } = useForm<{
+    dateStart: string;
+    dateEnd: string;
+  }>();
 
   const defaultPageSize: number = window.localStorage['request-table-page-size']
     ? Number(window.localStorage['request-table-page-size'])
@@ -383,10 +396,43 @@ const RequestRepository = () => {
 
         <p>{t('home:adminHome.GRT.configureReport.content')}</p>
 
-        <ModalFooter>
+        <Form onSubmit={() => null} className="maxw-none">
+          <Controller
+            name="dateStart"
+            control={control}
+            render={({ field: { ref, ...field }, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label htmlFor={field.name}>
+                  {t('home:adminHome.GRT.configureReport.rangeStart')}
+                </Label>
+                <HelpText className="margin-top-05">mm/dd/yyyy</HelpText>
+                {error?.message && (
+                  <FieldErrorMsg>{t(error?.message)}</FieldErrorMsg>
+                )}
+                <DatePickerFormatted {...field} id={field.name} />
+              </FormGroup>
+            )}
+          />
+          <Controller
+            name="dateEnd"
+            control={control}
+            render={({ field: { ref, ...field }, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label htmlFor={field.name}>
+                  {t('home:adminHome.GRT.configureReport.rangeEnd')}
+                </Label>
+                <HelpText className="margin-top-05">mm/dd/yyyy</HelpText>
+                {error?.message && (
+                  <FieldErrorMsg>{t(error?.message)}</FieldErrorMsg>
+                )}
+                <DatePickerFormatted {...field} id={field.name} />
+              </FormGroup>
+            )}
+          />
+
           <ButtonGroup>
             <Button
-              type="button"
+              type="submit"
               onClick={() => setConfigReportModalOpen(false)}
               className="margin-right-1"
             >
@@ -401,7 +447,7 @@ const RequestRepository = () => {
               {t('home:adminHome.GRT.configureReport.close')}
             </Button>
           </ButtonGroup>
-        </ModalFooter>
+        </Form>
       </Modal>
 
       {/* Portfolio Update Report info modal */}
