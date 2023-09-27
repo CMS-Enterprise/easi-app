@@ -504,8 +504,9 @@ func CreateSystemIntakeActionReopenRequest(
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Send Notification Email (EASI-3109)
+
 	// input.Reason is currently not persisted and only sent in the notification email
+
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeREOPENREQUEST,
 		ActorName:      adminTakingAction.CommonName,
@@ -580,8 +581,9 @@ func CreateSystemIntakeActionCloseRequest(
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Send Notification Email (EASI-3109)
+
 	// input.Reason is currently not persisted and only sent in the notification email
+
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeCLOSEREQUEST,
 		ActorName:      adminTakingAction.CommonName,
