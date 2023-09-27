@@ -69,6 +69,11 @@ const RequestRepository = () => {
   /* Controls Portfolio Update Report info modal */
   const [infoModalOpen, setInfoModalOpen] = useState<boolean>(false);
 
+  /* Controls Configure Portfolio Update Report modal */
+  const [configReportModalOpen, setConfigReportModalOpen] = useState<boolean>(
+    false
+  );
+
   const defaultPageSize: number = window.localStorage['request-table-page-size']
     ? Number(window.localStorage['request-table-page-size'])
     : 50;
@@ -367,6 +372,38 @@ const RequestRepository = () => {
 
   return (
     <div className="padding-x-4 margin-bottom-5">
+      {/* Configure Portfolio Update Report modal */}
+      <Modal
+        isOpen={configReportModalOpen}
+        closeModal={() => setConfigReportModalOpen(false)}
+      >
+        <ModalHeading>
+          {t('home:adminHome.GRT.configureReport.heading')}
+        </ModalHeading>
+
+        <p>{t('home:adminHome.GRT.configureReport.content')}</p>
+
+        <ModalFooter>
+          <ButtonGroup>
+            <Button
+              type="button"
+              onClick={() => setConfigReportModalOpen(false)}
+              className="margin-right-1"
+            >
+              {t('home:adminHome.GRT.configureReport.download')}
+            </Button>
+
+            <Button
+              type="button"
+              onClick={() => setConfigReportModalOpen(false)}
+              unstyled
+            >
+              {t('home:adminHome.GRT.configureReport.close')}
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </Modal>
+
       {/* Portfolio Update Report info modal */}
       <Modal isOpen={infoModalOpen} closeModal={() => setInfoModalOpen(false)}>
         <ModalHeading>{t('home:adminHome.GRT.infoModal.heading')}</ModalHeading>
@@ -390,7 +427,11 @@ const RequestRepository = () => {
         <ButtonGroup className="trb-admin-team-home-actions margin-bottom-2 margin-top-1 line-height-body-5">
           {flags.portfolioUpdateReport && (
             /* Configure Portfolio Update Report button */
-            <Button type="button" className="margin-right-1">
+            <Button
+              type="button"
+              onClick={() => setConfigReportModalOpen(true)}
+              className="margin-right-1"
+            >
               {t('home:adminHome.GRT.configureReport.button')}
             </Button>
           )}
