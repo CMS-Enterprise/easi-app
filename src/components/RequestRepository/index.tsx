@@ -323,6 +323,30 @@ const RequestRepository = () => {
     return [];
   }, [systemIntakes, t]);
 
+  /** Portfolio Update Report data for CSV based on selected date range */
+  const portfolioUpdateReport = useMemo(() => {
+    // If no intakes or selected dates, return empty array
+    if (systemIntakes.length === 0 || !dateRangeStart || !dateRangeStart) {
+      return [];
+    }
+
+    /** System intakes filtered by date of last admin note */
+    const filteredIntakes = systemIntakes.filter(({ lastAdminNote }) => {
+      if (!lastAdminNote) return false;
+
+      const { createdAt } = lastAdminNote;
+
+      return createdAt > dateRangeStart && createdAt < dateRangeEnd;
+    });
+
+    // If filter returns intakes, return formatted data
+    if (filteredIntakes.length > 0) {
+      return tableMap(filteredIntakes, t);
+    }
+
+    return [];
+  }, [systemIntakes, dateRangeStart, dateRangeEnd, t]);
+
   useEffect(() => {
     dispatch(fetchSystemIntakes({ status: activeTable }));
   }, [dispatch, activeTable]);
@@ -443,7 +467,7 @@ const RequestRepository = () => {
 
           <ButtonGroup>
             <CSVLink
-              data={convertIntakesToCSV(data)}
+              data={convertIntakesToCSV(portfolioUpdateReport)}
               filename="EASi-Portfolio-Update-Report.csv"
               headers={csvHeaders}
               onClick={() => setConfigReportModalOpen(false)}
