@@ -10,6 +10,7 @@ import {
 } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
+import { systemIntake } from 'data/mock/systemIntake';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
@@ -67,6 +68,7 @@ describe('The Goveranance Task List', () => {
       result: {
         data: {
           systemIntake: {
+            ...systemIntake,
             id: INTAKE_ID,
             adminLead: '',
             businessNeed: '',
