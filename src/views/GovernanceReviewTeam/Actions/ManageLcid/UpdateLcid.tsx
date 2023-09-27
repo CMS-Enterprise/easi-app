@@ -23,7 +23,7 @@ import { updateLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-import LcidSummary from './LcidSummary';
+import LcidSummary, { LcidSummaryProps } from './LcidSummary';
 import LcidTitleBox from './LcidTitleBox';
 import { ManageLcidProps } from '.';
 
@@ -31,14 +31,7 @@ type UpdateLcidFields = NonNullableProps<
   Omit<SystemIntakeUpdateLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
 
-export interface UpdateLcidProps extends ManageLcidProps {
-  lcid: string;
-  lcidExpiresAt: string | null;
-  lcidRetiresAt: string | null;
-  lcidScope: string | null;
-  decisionNextSteps: string | null;
-  lcidCostBaseline: string | null;
-}
+type UpdateLcidProps = ManageLcidProps & LcidSummaryProps;
 
 const UpdateLcid = ({
   systemIntakeId,
@@ -105,6 +98,7 @@ const UpdateLcid = ({
             <LcidSummary
               lcid={lcid}
               lcidStatus={lcidStatus}
+              lcidIssuedAt={defaultValues?.lcidIssuedAt || ''}
               lcidExpiresAt={defaultValues?.lcidExpiresAt || ''}
               lcidRetiresAt={defaultValues?.lcidRetiresAt || ''}
               lcidScope={defaultValues?.lcidScope}

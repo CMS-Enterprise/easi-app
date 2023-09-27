@@ -7,27 +7,28 @@ import LcidStatusTag from 'components/shared/LcidStatusTag';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
-type LcidSummaryProps = {
+export type LcidSummaryProps = {
   lcid: string | null;
-  lcidStatus: SystemIntakeLCIDStatus | null;
-  lcidExpiresAt: string;
-  lcidRetiresAt: string;
+  lcidIssuedAt: string | null;
+  lcidExpiresAt: string | null;
+  lcidRetiresAt: string | null;
   lcidScope: string | null;
   decisionNextSteps: string | null;
   lcidCostBaseline: string | null;
-  className?: string;
+  lcidStatus: SystemIntakeLCIDStatus | null;
 };
 
 const LcidSummary = ({
   lcidStatus,
   lcid,
+  lcidIssuedAt,
   lcidExpiresAt,
   lcidRetiresAt,
   lcidScope,
   decisionNextSteps,
   lcidCostBaseline,
   className
-}: LcidSummaryProps) => {
+}: LcidSummaryProps & { className?: string }) => {
   const { t } = useTranslation('action');
 
   return (
@@ -63,9 +64,8 @@ const LcidSummary = ({
             <dt className="text-bold margin-top-2">
               {t('updateLcid.issueDate')}
             </dt>
-            {/* TODO: Update issue date when added to schema */}
             <dd className="margin-left-0 font-body-md line-height-body-5">
-              {formatDateLocal(lcidExpiresAt || '', 'MM/dd/yyyy')}
+              {formatDateLocal(lcidIssuedAt || '', 'MM/dd/yyyy')}
             </dd>
           </Grid>
 

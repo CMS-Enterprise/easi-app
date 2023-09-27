@@ -18,8 +18,8 @@ export const lcidStatusClassName: Record<LcidTagStatus, string> = {
 
 type LcidStatusTagProps = {
   lcidStatus: SystemIntakeLCIDStatus;
-  lcidExpiresAt: string;
-  lcidRetiresAt: string;
+  lcidExpiresAt: string | null;
+  lcidRetiresAt: string | null;
 };
 
 const LcidStatusTag = ({
