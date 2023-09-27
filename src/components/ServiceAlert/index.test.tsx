@@ -4,6 +4,14 @@ import { render } from '@testing-library/react';
 
 import ServiceAlert from '.';
 
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => {
+    return {
+      serviceAlertEnabled: true
+    };
+  }
+}));
+
 describe('ServiceAlert banner', () => {
   it('does not render on non-designated route', async () => {
     const { container } = render(
