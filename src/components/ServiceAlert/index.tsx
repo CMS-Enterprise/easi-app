@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Grid, GridContainer, SiteAlert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 
@@ -30,8 +31,9 @@ const ServiceAlert = ({
 }: ServiceAlertType) => {
   const { t } = useTranslation('serviceAlert');
   const { pathname } = useLocation();
+  const { serviceAlertEnabled } = useFlags();
 
-  if (!alertPaths.includes(pathname)) {
+  if (!alertPaths.includes(pathname) || !serviceAlertEnabled) {
     return null;
   }
 
