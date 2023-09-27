@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { CSVLink } from 'react-csv';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -115,9 +121,29 @@ const RequestRepository = () => {
     setSortBy(lastSort[nextActiveTable]);
   }
 
-  const systemIntakes = useSelector(
+  const systemIntakesData = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
+
+  const systemIntakesByStatus = useCallback(
+    (status: 'open' | 'closed') => {
+      if (status === 'closed') {
+        return systemIntakesData.filter(
+          intake => intake.status === 'LCID_ISSUED'
+        );
+      }
+      return systemIntakesData.filter(
+        intake => intake.status !== 'LCID_ISSUED'
+      );
+    },
+    [systemIntakesData]
+  );
+
+  /** System intakes filtered by active table (open or closed) */
+  const systemIntakes = useMemo(() => systemIntakesByStatus(activeTable), [
+    activeTable,
+    systemIntakesByStatus
+  ]);
 
   // Character limit for length of free text (Admin Note, LCID Scope, etc.), any
   // text longer then this limit will be displayed with a button to allow users
@@ -325,13 +351,16 @@ const RequestRepository = () => {
 
   /** Portfolio Update Report data for CSV based on selected date range */
   const portfolioUpdateReport = useMemo(() => {
+    /** Closed system intakes */
+    const intakes = systemIntakesByStatus('closed');
+
     // If no intakes or selected dates, return empty array
-    if (systemIntakes.length === 0 || !dateRangeStart || !dateRangeStart) {
+    if (intakes.length === 0 || !dateRangeStart || !dateRangeStart) {
       return [];
     }
 
     /** System intakes filtered by date of last admin note */
-    const filteredIntakes = systemIntakes.filter(({ lastAdminNote }) => {
+    const filteredIntakes = intakes.filter(({ lastAdminNote }) => {
       if (!lastAdminNote) return false;
 
       const { createdAt } = lastAdminNote;
@@ -345,11 +374,11 @@ const RequestRepository = () => {
     }
 
     return [];
-  }, [systemIntakes, dateRangeStart, dateRangeEnd, t]);
+  }, [systemIntakesByStatus, dateRangeStart, dateRangeEnd, t]);
 
   useEffect(() => {
-    dispatch(fetchSystemIntakes({ status: activeTable }));
-  }, [dispatch, activeTable]);
+    dispatch(fetchSystemIntakes());
+  }, [dispatch]);
 
   const {
     getTableProps,
