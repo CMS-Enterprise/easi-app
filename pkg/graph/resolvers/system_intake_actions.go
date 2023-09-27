@@ -1105,11 +1105,13 @@ func ChangeLCIDRetirementDate(
 		return nil, err
 	}
 
-	// TODO - validate, if necessary
+	err = lcidactions.IsLCIDValidToChangeRetirementDate(intake)
+	if err != nil {
+		return nil, err
+	}
 
 	// create action record before updating intake, while we still have access to intake's previous retirement date
-	// TODO - use new function to create action record
-	action := lcidactions.GetRetireLCIDAction(*intake, input.RetiresAt, *adminUserInfo)
+	action := lcidactions.GetChangeLCIDRetirementDateAction(*intake, input.RetiresAt, *adminUserInfo)
 
 	// update intake
 	intake.LifecycleRetiresAt = &input.RetiresAt

@@ -1309,3 +1309,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 		s.EqualValues(retireLCIDInput.AdminNote, adminNote.Content)
 	})
 }
+
+func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
+
+}
