@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
@@ -16,12 +16,15 @@ import {
   ButtonGroup,
   GridContainer,
   IconError,
+  ModalFooter,
+  ModalHeading,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import CsvDownloadLink from 'components/shared/CsvDownloadLink';
 import TruncatedText from 'components/shared/TruncatedText';
@@ -62,6 +65,9 @@ const RequestRepository = () => {
   const [activeTable, setActiveTable] = useState<ActiveStateType>(
     itGovAdmin.current.activeTableState
   );
+
+  /* Controls Portfolio Update Report info modal */
+  const [infoModalOpen, setInfoModalOpen] = useState<boolean>(false);
 
   const defaultPageSize: number = window.localStorage['request-table-page-size']
     ? Number(window.localStorage['request-table-page-size'])
@@ -361,11 +367,35 @@ const RequestRepository = () => {
 
   return (
     <div className="padding-x-4 margin-bottom-5">
+      {/* Portfolio Update Report info modal */}
+      <Modal isOpen={infoModalOpen} closeModal={() => setInfoModalOpen(false)}>
+        <ModalHeading>{t('home:adminHome.GRT.infoModal.heading')}</ModalHeading>
+        <Trans
+          i18nKey="home:adminHome.GRT.infoModal.content"
+          components={{ p: <p className="font-body-sm" /> }}
+        />
+
+        <ModalFooter>
+          <Button
+            type="button"
+            onClick={() => setInfoModalOpen(false)}
+            unstyled
+          >
+            {t('Close')}
+          </Button>
+        </ModalFooter>
+      </Modal>
+
       <GridContainer>
         <ButtonGroup className="trb-admin-team-home-actions margin-bottom-2 margin-top-1 line-height-body-5">
           {flags.portfolioUpdateReport ? (
-            <Button type="button" unstyled>
-              {t('home:adminHome.GRT.whatsIncluded')}
+            /* Portfolio Update Report info modal trigger button */
+            <Button
+              type="button"
+              onClick={() => setInfoModalOpen(true)}
+              unstyled
+            >
+              {t('home:adminHome.GRT.infoModal.link')}
             </Button>
           ) : (
             <CsvDownloadLink
