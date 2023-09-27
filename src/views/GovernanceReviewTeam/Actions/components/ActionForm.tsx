@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { ApolloError } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -109,7 +110,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   } = useFormContext<SystemIntakeActionFields>();
 
   /** Execute `onSubmit` prop with success and error handling */
-  const completeAction = (formData: TFieldValues) =>
+  const completeAction = (formData: TFieldValues) => {
     onSubmit(formData)
       .then(() => {
         // Display success message
@@ -119,10 +120,18 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
         history.push(`/governance-review-team/${systemIntakeId}/actions`);
       })
-      .catch(() => {
+      .catch(e => {
         setModalIsOpen(false);
-        setError('root', { message: t('error') });
+
+        // If mutation fails, set root server error
+        if (e instanceof ApolloError) {
+          setError('root.server', { message: t('error') });
+        } else {
+          // If error is not ApolloError, set as general form error
+          setError('root.form', { message: e.message });
+        }
       });
+  };
 
   /** Handles form validation and either completes action or triggers confirmation modal (if `modal` prop is defined) */
   const submitForm = handleSubmit(formData => {
@@ -191,9 +200,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
       {
         // Error message for server error
-        errors?.root?.message && (
+        errors?.root?.server?.message && (
           <Alert type="error" className="action-error margin-top-2">
-            {errors.root.message}
+            {errors.root.server.message}
           </Alert>
         )
       }

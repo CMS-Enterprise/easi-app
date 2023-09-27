@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -57,22 +58,36 @@ const UpdateLcid = ({
     refetchQueries: ['GetSystemIntake']
   });
 
-  const { control } = form;
+  const {
+    control,
+    watch,
+    formState: { errors }
+  } = form;
 
-  /**
-   * Submit handler containing mutation logic
-   *
-   * Error and success handling is done in `<ActionForm>`
-   */
+  /** Array of LCID field values */
+  const lcidFields = watch(['expiresAt', 'scope', 'nextSteps', 'costBaseline']);
+
+  /** Whether or not at least one LCID field is filled out */
+  const formIsValid: boolean = useMemo(() => {
+    return lcidFields.filter(value => !!value).length > 0;
+  }, [lcidFields]);
+
+  /** Update LCID mutation on form submit */
   const onSubmit = async (formData: UpdateLcidFields) => {
-    updateLcid({
-      variables: {
-        input: {
-          systemIntakeID: systemIntakeId,
-          ...formData
+    // Check if at least one LCID field has been filled
+    if (formIsValid) {
+      updateLcid({
+        variables: {
+          input: {
+            systemIntakeID: systemIntakeId,
+            ...formData
+          }
         }
-      }
-    });
+      });
+    } else {
+      // Set general form error if form is invalid
+      throw new Error(t('updateLcid.emptyForm'));
+    }
   };
 
   return (
@@ -104,6 +119,15 @@ const UpdateLcid = ({
         <HelpText className="line-height-body-5">
           {t('updateLcid.helpText')}
         </HelpText>
+
+        {
+          // Alert for general form error
+          errors?.root?.form?.message && (
+            <Alert type="error" className="action-error margin-top-2">
+              {errors.root.form.message}
+            </Alert>
+          )
+        }
 
         <Controller
           name="expiresAt"
