@@ -33,6 +33,7 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
+import { startCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
@@ -634,13 +635,25 @@ const RequestRepository = () => {
         })}
       </PageHeading>
 
-      <GlobalClientFilter
-        setGlobalFilter={setGlobalFilter}
-        initialFilter={itGovAdmin.current.state.globalFilter}
-        tableID={t('requestRepository.id')}
-        tableName={t('requestRepository.title')}
-        className="margin-bottom-4"
-      />
+      <div className="margin-bottom-4 desktop:display-flex flex-align-center flex-justify">
+        <GlobalClientFilter
+          setGlobalFilter={setGlobalFilter}
+          initialFilter={itGovAdmin.current.state.globalFilter}
+          tableID={t('requestRepository.id')}
+          tableName={t('requestRepository.title')}
+          className="maxw-tablet margin-bottom-4 desktop:margin-bottom-0 desktop:grid-col-5 tablet:padding-right-6"
+        />
+
+        {flags.portfolioUpdateReport && (
+          <CsvDownloadLink
+            data={convertIntakesToCSV(data)}
+            filename={`EASi-${startCase(activeTable)}-ITGO-Requests.csv`}
+            headers={csvHeaders}
+          >
+            {t('home:adminHome.GRT.downloadLabel', { status: activeTable })}
+          </CsvDownloadLink>
+        )}
+      </div>
 
       <TableResults
         globalFilter={state.globalFilter}

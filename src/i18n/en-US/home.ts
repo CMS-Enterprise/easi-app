@@ -131,6 +131,7 @@ const home = {
       description:
         "From EASi's IT Governance home, you can review, assign, and manage incoming and existing IT Governance requests, as well as manage previously-issued Life Cycle IDs (LCIDs).",
       csvDownloadLabel: 'Download all IT Governance requests (csv)',
+      downloadLabel: 'Download all {{status}} IT Governance requests (csv)',
       infoModal: {
         link: "What's included in the Portfolio Update Report?",
         heading: 'About the Portfolio Update Report',
