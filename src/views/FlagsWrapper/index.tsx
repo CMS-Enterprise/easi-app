@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
+import { useOktaAuth } from '@okta/okta-react';
 import {
   AsyncProviderConfig,
   asyncWithLDProvider
@@ -61,7 +62,10 @@ const LDWrapper = ({ children }: WrapperProps) => {
 };
 
 const FlagsWrapper = ({ children }: WrapperProps) => {
-  return <LDWrapper>{children}</LDWrapper>;
+  const { authState } = useOktaAuth();
+  const Container = authState?.isAuthenticated ? LDWrapper : LDWrapper;
+
+  return <Container>{children}</Container>;
 };
 
 export default FlagsWrapper;
