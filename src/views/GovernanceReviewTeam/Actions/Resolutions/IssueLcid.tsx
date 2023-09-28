@@ -34,7 +34,7 @@ import {
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
-import { issueLcidSchema } from 'validations/actionSchema';
+import { lcidActionSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 import { EditsRequestedContext } from '..';
@@ -57,6 +57,11 @@ interface IssueLcidProps extends ResolutionProps {
   lcidCostBaseline?: string | null;
 }
 
+/**
+ * Handles both Issue LCID and Confirm LCID
+ *
+ * Form will have default values loaded if confirming LCID
+ */
 const IssueLcid = ({
   systemIntakeId,
   state,
@@ -65,17 +70,20 @@ const IssueLcid = ({
 }: IssueLcidProps) => {
   const { t } = useTranslation('action');
 
+  /** Type of LCID action */
+  const actionType = defaultValues.lcid ? 'confirm' : 'issue';
+
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
 
-  const [issueLcid] = useMutation<
+  const [mutateIssueLcid] = useMutation<
     CreateSystemIntakeActionIssueLcid,
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery, {
     refetchQueries: ['GetSystemIntake']
   });
 
-  const [confirmLcid] = useMutation<
+  const [mutateConfirmLcid] = useMutation<
     CreateSystemIntakeActionConfirmLcid,
     CreateSystemIntakeActionConfirmLcidVariables
   >(CreateSystemIntakeActionConfirmLcidQuery, {
@@ -86,6 +94,7 @@ const IssueLcid = ({
     GetSystemIntakesWithLCIDS
   );
 
+  /** System intakes with LCIDs, formatted for Use Existing LCID dropdown */
   const systemIntakesWithLcids = useMemo(() => {
     if (!data?.systemIntakesWithLcids) return undefined;
 
@@ -99,15 +108,14 @@ const IssueLcid = ({
   }, [data]);
 
   const form = useForm<IssueLcidFields>({
-    resolver: yupResolver(issueLcidSchema),
+    resolver: yupResolver(lcidActionSchema(actionType)),
     defaultValues: {
       lcid: defaultValues.lcid || '',
       expiresAt: defaultValues.lcidExpiresAt || '',
       nextSteps: defaultValues.decisionNextSteps || '',
       scope: defaultValues.lcidScope || '',
       trbFollowUp: defaultValues.trbFollowUpRecommendation || undefined,
-      costBaseline: defaultValues.lcidCostBaseline || '',
-      useExistingLcid: defaultValues.lcid ? true : undefined
+      costBaseline: defaultValues.lcidCostBaseline || ''
     }
   });
 
@@ -115,53 +123,58 @@ const IssueLcid = ({
 
   const { showMessageOnNextPage } = useMessage();
 
-  /** Confirm or issue lcid on form submit */
+  /** Issue LCID mutation - return LCID value from response */
+  const issueLcid = async (
+    input: CreateSystemIntakeActionIssueLcidVariables['input']
+  ) =>
+    mutateIssueLcid({
+      variables: {
+        input
+      }
+    }).then(
+      response =>
+        response?.data?.createSystemIntakeActionIssueLCID?.systemIntake?.lcid
+    );
+
+  /** Confirm LCID mutation - returns LCID value */
+  const confirmLcid = async (
+    input: CreateSystemIntakeActionConfirmLcidVariables['input']
+  ) =>
+    mutateConfirmLcid({
+      variables: {
+        input
+      }
+    }).then(
+      response =>
+        response?.data?.createSystemIntakeActionConfirmLCID?.systemIntake?.lcid
+    );
+
+  /** Issue or confirm LCID on form submit */
   const onSubmit = async ({
     useExistingLcid,
-    lcid,
     ...formData
   }: IssueLcidFields) => {
-    /* Confirm or issue LCID */
-    const mutate = defaultValues.lcid ? confirmLcid : issueLcid;
-
-    /* LCID input */
+    /** Mutation input */
     const input = {
       systemIntakeID: systemIntakeId,
-      ...formData,
-      // If issuing LCID, add field to input
-      ...(defaultValues.lcid ? {} : { lcid: '' })
+      ...formData
     };
 
-    // Return mutation
-    return (
-      mutate({
-        variables: {
-          input
-        }
-      })
-        // On success, get LCID from mutation response and show success message
-        .then(({ data: responseData }) => {
-          let newLcid: string | null | undefined;
+    /** Returns `confirmLcid` or `issueLcid` mutation based on form action type */
+    const mutation = actionType === 'confirm' ? confirmLcid : issueLcid;
 
-          if (!responseData) return;
+    // If confirming LCID, remove LCID from mutation input
+    if (actionType === 'confirm') {
+      delete input.lcid;
+    }
 
-          // Type check to get returned LCID
-          if ('createSystemIntakeActionConfirmLCID' in responseData) {
-            newLcid =
-              responseData?.createSystemIntakeActionConfirmLCID?.systemIntake
-                ?.lcid;
-          } else {
-            newLcid =
-              responseData?.createSystemIntakeActionIssueLCID?.systemIntake
-                ?.lcid;
-          }
+    /** LCID value for success message from mutation response */
+    const lcid = await mutation(input);
 
-          // Show success message
-          showMessageOnNextPage(t('issueLCID.success', { lcid: newLcid }), {
-            type: 'success'
-          });
-        })
-    );
+    // On success, set message on next page with updated LCID value
+    return showMessageOnNextPage(t('issueLCID.success', { lcid }), {
+      type: 'success'
+    });
   };
 
   const lcid = watch('lcid');
