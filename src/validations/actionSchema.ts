@@ -147,12 +147,7 @@ const validExpirationDate = () =>
       return DateTime.fromISO(value) >= DateTime.local().startOf('day');
     });
 
-export const issueLcidSchema = Yup.object().shape({
-  useExistingLcid: Yup.boolean().required('Please make a selection'),
-  lcid: Yup.string().when('useExistingLcid', {
-    is: true,
-    then: Yup.string().required('Please select the existing Lifecycle ID')
-  }),
+export const confirmLcidSchema = Yup.object().shape({
   expiresAt: validExpirationDate().required('Please enter a valid date'),
   scope: Yup.string().required('Please fill in the blank'),
   nextSteps: Yup.string().required('Please fill in the blank'),
@@ -160,6 +155,21 @@ export const issueLcidSchema = Yup.object().shape({
     .oneOf(Object.values(SystemIntakeTRBFollowUp))
     .required('Please make a selection')
 });
+
+export const issueLcidSchema = confirmLcidSchema.shape({
+  useExistingLcid: Yup.boolean().required('Please make a selection'),
+  lcid: Yup.string().when('useExistingLcid', {
+    is: true,
+    then: Yup.string().required('Please select the existing Lifecycle ID')
+  })
+});
+
+export const lcidActionSchema = (type: 'issue' | 'confirm') => {
+  if (type === 'issue') {
+    return issueLcidSchema;
+  }
+  return confirmLcidSchema;
+};
 
 export const updateLcidSchema = Yup.object().shape({
   expiresAt: validExpirationDate()
