@@ -539,10 +539,10 @@ const RequestRepository = () => {
         </ModalFooter>
       </Modal>
 
-      <GridContainer>
-        <ButtonGroup className="trb-admin-team-home-actions margin-bottom-2 margin-top-1 line-height-body-5">
-          {flags.portfolioUpdateReport && (
-            /* Configure Portfolio Update Report button */
+      <GridContainer className="margin-top-1 margin-bottom-2">
+        {flags.portfolioUpdateReport ? (
+          <ButtonGroup className="trb-admin-team-home-actions">
+            {/* Configure Portfolio Update Report button */}
             <Button
               type="button"
               onClick={() => setConfigReportModalOpen(true)}
@@ -550,10 +550,7 @@ const RequestRepository = () => {
             >
               {t('home:adminHome.GRT.configureReport.button')}
             </Button>
-          )}
-
-          {flags.portfolioUpdateReport && (
-            /* Portfolio Update Report info modal trigger button */
+            {/* Portfolio Update Report info modal trigger button */}
             <Button
               type="button"
               onClick={() => setInfoModalOpen(true)}
@@ -561,21 +558,17 @@ const RequestRepository = () => {
             >
               {t('home:adminHome.GRT.infoModal.link')}
             </Button>
-          )}
-
-          {
-            // TODO EASI-3021: remove with feature flag
-            !flags.portfolioUpdateReport && (
-              <CsvDownloadLink
-                data={convertIntakesToCSV(data)}
-                filename="request-repository.csv"
-                headers={csvHeaders}
-              >
-                {t('home:adminHome.GRT.csvDownloadLabel')}
-              </CsvDownloadLink>
-            )
-          }
-        </ButtonGroup>
+          </ButtonGroup>
+        ) : (
+          <CsvDownloadLink
+            data={convertIntakesToCSV(data)}
+            filename="request-repository.csv"
+            headers={csvHeaders}
+            className="line-height-body-5"
+          >
+            {t('home:adminHome.GRT.csvDownloadLabel')}
+          </CsvDownloadLink>
+        )}
       </GridContainer>
 
       <nav
