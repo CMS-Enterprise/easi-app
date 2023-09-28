@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { useOktaAuth } from '@okta/okta-react';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 
 import GetCurrentUserQuery from 'queries/GetCurrentUserQuery';
@@ -49,6 +48,8 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
 
         setLDProvider(() => () => provider({ children }));
       })();
+    } else {
+      setLDProvider(() => () => <div>{children}</div>);
     }
   }, [data, children]);
 
@@ -56,12 +57,7 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
 };
 
 const FlagsWrapper = ({ children }: WrapperProps) => {
-  const { authState } = useOktaAuth();
-  const Container = authState?.isAuthenticated
-    ? UserTargetingWrapper
-    : React.Fragment;
-
-  return <Container>{children}</Container>;
+  return <UserTargetingWrapper>{children}</UserTargetingWrapper>;
 };
 
 export default FlagsWrapper;
