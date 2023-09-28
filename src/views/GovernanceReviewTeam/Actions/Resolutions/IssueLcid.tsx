@@ -34,7 +34,7 @@ import {
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
-import { issueLcidSchema } from 'validations/actionSchema';
+import { lcidActionSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 import { EditsRequestedContext } from '..';
@@ -69,6 +69,9 @@ const IssueLcid = ({
   ...defaultValues
 }: IssueLcidProps) => {
   const { t } = useTranslation('action');
+
+  /** Type of LCID action */
+  const actionType = defaultValues.lcid ? 'confirm' : 'issue';
 
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
@@ -105,16 +108,14 @@ const IssueLcid = ({
   }, [data]);
 
   const form = useForm<IssueLcidFields>({
-    resolver: yupResolver(issueLcidSchema),
+    resolver: yupResolver(lcidActionSchema(actionType)),
     defaultValues: {
       lcid: defaultValues.lcid || '',
       expiresAt: defaultValues.lcidExpiresAt || '',
       nextSteps: defaultValues.decisionNextSteps || '',
       scope: defaultValues.lcidScope || '',
       trbFollowUp: defaultValues.trbFollowUpRecommendation || undefined,
-      costBaseline: defaultValues.lcidCostBaseline || '',
-      // If confirming LCID, set useExistingLcid to true
-      useExistingLcid: defaultValues.lcid ? true : undefined
+      costBaseline: defaultValues.lcidCostBaseline || ''
     }
   });
 
@@ -159,14 +160,11 @@ const IssueLcid = ({
       ...formData
     };
 
-    /**
-     * If default LCID field value is set, returns `confirmLcid`.
-     * Otherwise, returns `issueLcid`.
-     */
-    const mutation = defaultValues.lcid ? confirmLcid : issueLcid;
+    /** Returns `confirmLcid` or `issueLcid` mutation based on form action type */
+    const mutation = actionType === 'confirm' ? confirmLcid : issueLcid;
 
     // If confirming LCID, remove LCID from mutation input
-    if (mutation === confirmLcid) {
+    if (actionType === 'confirm') {
       delete input.lcid;
     }
 
