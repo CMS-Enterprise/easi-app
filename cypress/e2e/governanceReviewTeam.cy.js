@@ -22,8 +22,6 @@ describe('Governance Review Team', () => {
 
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
     cy.wait('@getOpenIntakes').its('response.statusCode').should('eq', 200);
-
-    cy.wait(250);
   });
 
   it('can assign Admin Lead', () => {
@@ -257,8 +255,6 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-status"]').contains('Closed');
 
     cy.visit('/');
-
-    cy.wait(500);
 
     cy.get('[data-testid="view-closed-intakes-btn"]').click().click();
 

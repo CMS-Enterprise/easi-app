@@ -31,8 +31,6 @@ cy.governanceReviewTeam = {
       cy.wait('@getSystemIntakeContacts')
         .its('response.statusCode')
         .should('eq', 200);
-
-      cy.wait(250);
     }
   }
 };
