@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1c1ef8d3-e96f-4dc3-a12a-3001cdd3823a",
+		"_postman_id": "e52f7cb3-8387-49f3-9e0a-c791e5ace993",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28498683"
+		"_exporter_id": "11253221"
 	},
 	"item": [
 		{
@@ -246,7 +246,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
-												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"INITIAL_REQUEST_FORM\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
+												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"INITIAL_REQUEST_FORM\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
 											}
 										},
 										"url": {
@@ -267,7 +267,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
-												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"DRAFT_BUSINESS_CASE\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
+												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"DRAFT_BUSINESS_CASE\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
 											}
 										},
 										"url": {
@@ -288,7 +288,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
-												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"FINAL_BUSINESS_CASE\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
+												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"FINAL_BUSINESS_CASE\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
 											}
 										},
 										"url": {
@@ -309,7 +309,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
-												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"GRT_MEETING\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
+												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"intakeFormStep\": \"GRT_MEETING\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"emailFeedback\": \"email feedback goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
 											}
 										},
 										"url": {
@@ -335,7 +335,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionCloseRequest (\r\n    $input: SystemIntakeCloseRequestInput!\r\n    ) {\r\n    createSystemIntakeActionCloseRequest(input: $input) {\r\n        systemIntake {\r\n            id\r\n            state\r\n            step\r\n            decisionNextSteps\r\n            decisionState\r\n            updatedAt\r\n        }\r\n    }\r\n}",
-												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"email reason goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
+												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"email reason goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
 											}
 										},
 										"url": {
@@ -361,7 +361,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionReopenRequest (\r\n    $input: SystemIntakeReopenRequestInput!\r\n    ) {\r\n    createSystemIntakeActionReopenRequest(input: $input) {\r\n        systemIntake {\r\n            id\r\n            state\r\n            step\r\n            decisionNextSteps\r\n            decisionState\r\n            updatedAt\r\n        }\r\n    }\r\n}",
-												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"email reason goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
+												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"email reason goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
 											}
 										},
 										"url": {
@@ -387,7 +387,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionNotITGovRequest (\r\n    $input: SystemIntakeNotITGovReqInput!\r\n    ) {\r\n    createSystemIntakeActionNotITGovRequest(input: $input) {\r\n        systemIntake {\r\n            id\r\n            state\r\n            step\r\n            decisionNextSteps\r\n            decisionState\r\n            updatedAt\r\n        }\r\n    }\r\n}",
-												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"email reason goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNotes\": \"my admin note\"\r\n  }\r\n}"
+												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"email reason goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
 											}
 										},
 										"url": {
@@ -1664,7 +1664,7 @@
 		"apikey": [
 			{
 				"key": "value",
-				"value": "Local {\"EUAID\":\"{{EUAID}}\",\"jobCodes\":{{jobCodes}},\"favorLocalAuth\":true}",
+				"value": "{{authHeader}}",
 				"type": "string"
 			},
 			{
@@ -1706,6 +1706,11 @@
 			"type": "string"
 		},
 		{
+			"key": "authHeader",
+			"value": "Local {\"EUAID\":\"{{EUAID}}\",\"jobCodes\":{{jobCodes}},\"favorLocalAuth\":true}",
+			"type": "string"
+		},
+		{
 			"key": "trbAttendeeID",
 			"value": ""
 		},
@@ -1718,8 +1723,13 @@
 			"value": ""
 		},
 		{
+			"key": "host",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
 			"key": "url",
-			"value": "http://localhost:8080/api/graph/query",
+			"value": "{{host}}/api/graph/query",
 			"type": "string"
 		},
 		{
@@ -1732,7 +1742,7 @@
 		},
 		{
 			"key": "apiURL",
-			"value": "http://localhost:8080/api/v1",
+			"value": "{{host}}/api/v1",
 			"type": "string"
 		},
 		{

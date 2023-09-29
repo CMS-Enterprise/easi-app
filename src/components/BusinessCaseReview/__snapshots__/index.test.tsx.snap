@@ -8,6 +8,11 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
     <div
       class="easi-pdf-export"
     >
+      <h1
+        class="easi-only-print"
+      >
+        Business Case
+      </h1>
       <div
         class="grid-container"
       >

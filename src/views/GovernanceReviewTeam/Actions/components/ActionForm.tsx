@@ -94,6 +94,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   ] = useState<SystemIntakeContactProps | null>(null);
 
   const {
+    control,
     setValue,
     watch,
     reset,
@@ -256,6 +257,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
         {/* Additional information */}
         <Controller
+          control={control}
           name="additionalInfo"
           render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
@@ -288,7 +290,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
         {/* Admin note */}
         <Controller
-          name="adminNotes"
+          control={control}
+          name="adminNote"
           render={({ field, fieldState: { error } }) => (
             <FormGroup
               error={!!error}

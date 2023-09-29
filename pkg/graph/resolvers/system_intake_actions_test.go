@@ -478,6 +478,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			actionedIntake, err := CreateSystemIntakeActionCloseRequest(
 				ctx,
 				s.testConfigs.Store,
+				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
 				model.SystemIntakeCloseRequestInput{
 					SystemIntakeID: intake.ID,
@@ -520,6 +521,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			_, err = CreateSystemIntakeActionCloseRequest(
 				ctx,
 				s.testConfigs.Store,
+				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
 				model.SystemIntakeCloseRequestInput{
 					SystemIntakeID: intake.ID,
@@ -553,6 +555,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionCloseRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
@@ -586,6 +589,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionCloseRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
@@ -617,6 +621,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionCloseRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
@@ -667,6 +672,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			actionedIntake, err := CreateSystemIntakeActionReopenRequest(
 				ctx,
 				s.testConfigs.Store,
+				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
 				model.SystemIntakeReopenRequestInput{
 					SystemIntakeID: intake.ID,
@@ -709,6 +715,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			_, err = CreateSystemIntakeActionReopenRequest(
 				ctx,
 				s.testConfigs.Store,
+				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
 				model.SystemIntakeReopenRequestInput{
 					SystemIntakeID: intake.ID,
@@ -742,6 +749,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionReopenRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,
@@ -776,6 +784,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionReopenRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,
@@ -808,6 +817,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionReopenRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,

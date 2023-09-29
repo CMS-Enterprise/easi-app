@@ -1217,6 +1217,7 @@ func (r *mutationResolver) CreateSystemIntakeActionReopenRequest(ctx context.Con
 	intake, err := resolvers.CreateSystemIntakeActionReopenRequest(
 		ctx,
 		r.store,
+		r.emailClient,
 		r.service.FetchUserInfo,
 		input,
 	)
@@ -1230,6 +1231,7 @@ func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Cont
 	intake, err := resolvers.CreateSystemIntakeActionCloseRequest(
 		ctx,
 		r.store,
+		r.emailClient,
 		r.service.FetchUserInfo,
 		input,
 	)
