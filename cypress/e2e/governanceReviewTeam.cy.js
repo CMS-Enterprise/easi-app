@@ -22,6 +22,8 @@ describe('Governance Review Team', () => {
 
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
     cy.wait('@getOpenIntakes').its('response.statusCode').should('eq', 200);
+
+    cy.wait(250);
   });
 
   it('can assign Admin Lead', () => {
@@ -255,7 +257,11 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-status"]').contains('Closed');
 
     cy.visit('/');
-    cy.get('[data-testid="view-closed-intakes-btn"]').click();
+
+    cy.wait(250);
+
+    cy.get('[data-testid="view-closed-intakes-btn"]').click().click();
+
     cy.get('[data-testid="20cbcfbf-6459-4c96-943b-e76b83122dbf-row"]').contains(
       'td',
       'Closed'
