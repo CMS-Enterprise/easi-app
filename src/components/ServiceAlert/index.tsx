@@ -33,7 +33,7 @@ const ServiceAlert = ({
   const { pathname } = useLocation();
   const { serviceAlertEnabled } = useFlags();
 
-  if (!alertPaths.includes(pathname) || !serviceAlertEnabled) {
+  if (!landing && (!alertPaths.includes(pathname) || !serviceAlertEnabled)) {
     return null;
   }
 
