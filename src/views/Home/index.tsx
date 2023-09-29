@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import { useOktaAuth } from '@okta/okta-react';
 import { Grid } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -29,7 +30,8 @@ import WelcomePage from './WelcomePage';
 
 const Home = () => {
   const { t } = useTranslation();
-  const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
+  const { groups } = useSelector((state: AppState) => state.auth);
+  const { authState } = useOktaAuth();
   const flags = useFlags();
 
   const { Message } = useMessage();
@@ -58,7 +60,7 @@ const Home = () => {
     systemsBookmarks?.cedarSystemBookmarks ?? [];
 
   const renderView = () => {
-    if (isUserSet) {
+    if (authState?.isAuthenticated) {
       if (user.isGrtReviewer(groups, flags) || user.isTrbAdmin(groups, flags)) {
         return (
           <AdminHome
