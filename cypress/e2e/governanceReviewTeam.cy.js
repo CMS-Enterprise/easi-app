@@ -258,7 +258,7 @@ describe('Governance Review Team', () => {
 
     cy.visit('/');
 
-    cy.wait(250);
+    cy.wait(500);
 
     cy.get('[data-testid="view-closed-intakes-btn"]').click().click();
 
