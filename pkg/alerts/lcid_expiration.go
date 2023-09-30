@@ -229,7 +229,7 @@ func checkForLCIDExpiration(
 
 			// If intake's LCID doesn't expire in the 60 day window and its alert has been set, reset alert timestamp to nil
 			// NOTE: this is to handle the case where an alert is sent, then the LCID expiration is extended more than 60 days into the future
-			// NOTE: by clearing the alert timestamp, we make sure it will be set when the LCID re-enters the 60 day window
+			// NOTE: by clearing the alert timestamp, we make sure it will be re-checked and have an alert sent when the LCID re-enters the 60 day window
 		} else if currIntake.LifecycleExpirationAlertTS != nil {
 			updatedIntake := currIntake
 			updatedIntake.LifecycleExpirationAlertTS = nil

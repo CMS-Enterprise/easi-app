@@ -23,7 +23,7 @@ func IsLCIDValidToChangeRetirementDate(intake *models.SystemIntake) error {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
 				ActionType: models.ActionTypeCHANGELCIDRETIREMENTDATE,
-				Message:    "Intake's LCID is not yet retired",
+				Message:    "Intake's LCID doesn't have a retirement date set",
 			},
 		}
 	}
