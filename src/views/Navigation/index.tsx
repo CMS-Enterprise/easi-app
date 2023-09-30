@@ -4,6 +4,7 @@ import { Grid } from '@trussworks/react-uswds';
 
 import { NavContext } from 'components/Header/navContext';
 import NavigationBar from 'components/NavigationBar';
+import ServiceAlert from 'components/ServiceAlert';
 import { localAuthStorageKey } from 'constants/localAuth';
 
 import '../../components/Header/index.scss';
@@ -86,12 +87,13 @@ export const Navigation = ({ children }: NavigationProps) => {
   return (
     <div className="navigation" role="banner" ref={navbarRef}>
       {authState?.isAuthenticated && (
-        <Grid className="sticky sticky-nav-header navigation__content">
+        <Grid className="sticky sticky-nav-header navigation__content flex-wrap">
           <NavigationBar
             toggle={setIsMobileSideNavExpanded}
             signout={signout}
             userName={userName}
           />
+          <ServiceAlert translationKey="govShutdown" />
         </Grid>
       )}
 

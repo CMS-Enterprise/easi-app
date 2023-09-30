@@ -10,6 +10,7 @@ export type Flags = {
   cedar508Requests: boolean;
   technicalAssistance: boolean;
   hide508Workflow: boolean;
+  serviceAlertEnabled: boolean;
 };
 
 export type FlagsState = {

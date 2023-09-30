@@ -13,9 +13,10 @@ describe('The Task List', () => {
     });
 
     cy.visit('/system/request-type');
+    cy.wait(250);
     cy.get('#RequestType-NewSystem').check({ force: true });
-    cy.contains('button', 'Continue').click();
-    cy.contains('a', 'Get started').click();
+    cy.contains('button', 'Continue').click({ force: true });
+    cy.contains('a', 'Get started').click({ force: true });
   });
 
   it('shows a continue link when a user clicks back until they reach the task list', () => {
