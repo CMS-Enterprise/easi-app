@@ -52,8 +52,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 			zap.String("id", businessCaseID.String()),
 		)
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
-			// return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
 		}
 		return nil, err
 	}
@@ -86,7 +85,6 @@ func (s *Store) FetchBusinessCaseBySystemIntakeID(ctx context.Context, systemInt
 		)
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
-			// return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
 		}
 		return nil, err
 	}
