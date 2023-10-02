@@ -60,8 +60,6 @@ services:
       - LD_SDK_KEY
       - LD_TIMEOUT_SECONDS=30
       - LD_ENV_USER
-      - LAMBDA_FUNCTION_PRINCE=handler
-      - LAMBDA_ENDPOINT=http://prince:9001
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_ADDRESS
