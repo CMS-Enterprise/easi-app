@@ -31,6 +31,7 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 			title,
 			recommendation,
 			links,
+			order_in_letter,
 			created_by,
 			modified_by
 		)
@@ -40,6 +41,7 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 			:title,
 			:recommendation,
 			:links,
+			:order_in_letter,
 			:created_by,
 			:modified_by
 		)
@@ -114,6 +116,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Cont
 }
 
 // UpdateTRBAdviceLetterRecommendation updates an existing TRB advice letter recommendation record in the database
+// TODO - purposely does not update order_in_letter - will do that separately
 func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recommendation *models.TRBAdviceLetterRecommendation) (*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
@@ -185,4 +188,8 @@ func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid
 	}
 
 	return &deleted, err
+}
+
+func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, trbAdviceLetterID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
+	panic("not yet implemented")
 }

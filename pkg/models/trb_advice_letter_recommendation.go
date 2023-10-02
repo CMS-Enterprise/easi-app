@@ -12,4 +12,5 @@ type TRBAdviceLetterRecommendation struct {
 	Title          string         `json:"title" db:"title"`
 	Recommendation HTML           `json:"recommendation" db:"recommendation"`
 	Links          pq.StringArray `json:"links" db:"links"`
+	OrderInLetter  int            `json:"orderInLetter" db:"order_in_letter"`
 }
