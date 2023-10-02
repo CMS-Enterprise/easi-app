@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
