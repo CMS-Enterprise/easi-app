@@ -26,7 +26,6 @@ import intake from './intake';
 import itGov from './itGov';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
-import serviceAlert from './serviceAlert';
 import systemProfile from './systemProfile';
 import tableAndPagination from './tableAndPagination';
 import technicalAssistance from './technicalAssistance';
@@ -58,7 +57,6 @@ const enUS = {
   newSystem,
   prepareTrbConsultMeeting,
   privacyPolicy,
-  serviceAlert,
   stepsInTRBProcess,
   systemProfile,
   tableAndPagination,
