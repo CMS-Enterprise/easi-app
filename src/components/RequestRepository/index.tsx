@@ -51,7 +51,6 @@ import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useTableState from 'hooks/useTableState';
-import { GetSystemIntake_systemIntake_lastAdminNote as LastAdminNote } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -285,37 +284,41 @@ const RequestRepository = () => {
     }
   };
 
-  const lastAdminNoteColumn = {
-    Header: t('intake:fields.lastAdminNote'),
-    accessor: 'lastAdminNote',
-    Cell: ({ value }: { value: LastAdminNote }) => {
-      if (value !== null) {
-        return (
-          // Display admin note using truncated text field that
-          // will display note with expandable extra text (if applicable)
-          <>
-            {formatDateLocal(value.createdAt!, 'MM/dd/yyyy')}
+  /**
+   * TODO: Fix last admin note column
+   */
 
-            <TruncatedText
-              id="last-admin-note"
-              label="less"
-              closeLabel="more"
-              text={value.content!}
-              charLimit={freeFormTextCharLimit}
-            />
-          </>
-        );
-      }
+  // const lastAdminNoteColumn = {
+  //   Header: t('intake:fields.lastAdminNote'),
+  //   accessor: 'lastAdminNote',
+  //   Cell: ({ value }: { value: LastAdminNote }) => {
+  //     if (value !== null) {
+  //       return (
+  //         // Display admin note using truncated text field that
+  //         // will display note with expandable extra text (if applicable)
+  //         <>
+  //           {/* {formatDateLocal(value.createdAt!, 'MM/dd/yyyy')} */}
 
-      // If no admin note exits, display 'No Admin Notes'
-      return 'No Admin Notes';
-    },
-    sortType: (a: Row<LastAdminNote>, b: Row<LastAdminNote>) =>
-      (a.values.lastAdminNote?.createdAt ?? '') >
-      (b.values.lastAdminNote?.createdAt ?? '')
-        ? 1
-        : -1
-  };
+  //           <TruncatedText
+  //             id="last-admin-note"
+  //             label="less"
+  //             closeLabel="more"
+  //             text={value.content!}
+  //             charLimit={freeFormTextCharLimit}
+  //           />
+  //         </>
+  //       );
+  //     }
+
+  //     // If no admin note exits, display 'No Admin Notes'
+  //     return 'No Admin Notes';
+  //   },
+  //   sortType: (a: Row<LastAdminNote>, b: Row<LastAdminNote>) =>
+  //     (a.values.lastAdminNote?.createdAt ?? '') >
+  //     (b.values.lastAdminNote?.createdAt ?? '')
+  //       ? 1
+  //       : -1
+  // };
 
   const columns: any = useMemo(() => {
     if (activeTable === 'open') {
@@ -335,8 +338,8 @@ const RequestRepository = () => {
         requestNameColumn,
         requesterNameAndComponentColumn,
         lcidExpirationDateColumn,
-        statusColumn,
-        lastAdminNoteColumn
+        statusColumn
+        // lastAdminNoteColumn
       ];
     }
     return [];
@@ -357,18 +360,23 @@ const RequestRepository = () => {
     const intakes = systemIntakesByStatus('closed');
 
     // If no intakes or selected dates, return empty array
-    if (intakes.length === 0 || !dateRangeStart || !dateRangeStart) {
+    if (intakes.length === 0 || !dateRangeStart || !dateRangeEnd) {
       return [];
     }
 
+    /**
+     * TODO: Filter by last admin note
+     */
+
     /** System intakes filtered by date of last admin note */
-    const filteredIntakes = intakes.filter(({ lastAdminNote }) => {
-      if (!lastAdminNote) return false;
+    // const filteredIntakes = intakes.filter(({ lastAdminNote }) => {
+    //   if (!lastAdminNote) return false;
 
-      const { createdAt } = lastAdminNote;
+    //   const { createdAt } = lastAdminNote;
 
-      return createdAt > dateRangeStart && createdAt < dateRangeEnd;
-    });
+    //   return createdAt > dateRangeStart && createdAt < dateRangeEnd;
+    // });
+    const filteredIntakes = intakes;
 
     // If filter returns intakes, return formatted data
     if (filteredIntakes.length > 0) {
