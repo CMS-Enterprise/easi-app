@@ -46,7 +46,6 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
 	// see https://jiraent.cms.gov/browse/EASI-1693
 	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, businessCaseID)
-	fmt.Println("CASES", businessCase)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
@@ -61,7 +60,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 	return &businessCase, nil
 }
 
-// FetchBusinessCaseByID queries the DB for a business case matching the given ID of the System Intake
+// FetchBusinessCaseBySystemIntakeID queries the DB for a business case matching the given ID of the System Intake
 func (s *Store) FetchBusinessCaseBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
 	const fetchBusinessCaseSQL = `
@@ -80,11 +79,10 @@ func (s *Store) FetchBusinessCaseBySystemIntakeID(ctx context.Context, systemInt
 	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
 	// see https://jiraent.cms.gov/browse/EASI-1693
 	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, systemIntakeID)
-	fmt.Println("CASES", businessCase)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case %s", err),
-			zap.String("id", systemIntakeID.String()),
+			fmt.Sprintf("Failed to fetch business case by SystemIntakeID %s", err),
+			zap.String("systemIntakeId", systemIntakeID.String()),
 		)
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
