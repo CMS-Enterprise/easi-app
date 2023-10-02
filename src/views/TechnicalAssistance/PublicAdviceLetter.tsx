@@ -23,7 +23,7 @@ import {
 } from 'queries/types/GetTrbPublicAdviceLetter';
 import { TRBAdviceLetterStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
-import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
+import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import NotFound from 'views/NotFound';
 
 import ReviewAdviceLetter from './AdminHome/components/ReviewAdviceLetter';

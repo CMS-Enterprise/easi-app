@@ -20,7 +20,7 @@ import Spinner from 'components/Spinner';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
-import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
+import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
