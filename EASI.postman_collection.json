@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "da6146ac-dee1-4e23-a9d3-042ca132620b",
+		"_postman_id": "e52f7cb3-8387-49f3-9e0a-c791e5ace993",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11253221"
@@ -1664,7 +1664,7 @@
 		"apikey": [
 			{
 				"key": "value",
-				"value": "Local {\"EUAID\":\"{{EUAID}}\",\"jobCodes\":{{jobCodes}},\"favorLocalAuth\":true}",
+				"value": "{{authHeader}}",
 				"type": "string"
 			},
 			{
@@ -1706,6 +1706,11 @@
 			"type": "string"
 		},
 		{
+			"key": "authHeader",
+			"value": "Local {\"EUAID\":\"{{EUAID}}\",\"jobCodes\":{{jobCodes}},\"favorLocalAuth\":true}",
+			"type": "string"
+		},
+		{
 			"key": "trbAttendeeID",
 			"value": ""
 		},
@@ -1718,8 +1723,13 @@
 			"value": ""
 		},
 		{
+			"key": "host",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
 			"key": "url",
-			"value": "http://localhost:8080/api/graph/query",
+			"value": "{{host}}/api/graph/query",
 			"type": "string"
 		},
 		{
@@ -1732,7 +1742,7 @@
 		},
 		{
 			"key": "apiURL",
-			"value": "http://localhost:8080/api/v1",
+			"value": "{{host}}/api/v1",
 			"type": "string"
 		},
 		{
