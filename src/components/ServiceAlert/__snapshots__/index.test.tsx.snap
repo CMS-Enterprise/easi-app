@@ -1,0 +1,47 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ServiceAlert banner > matches snapshot 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content bg-emergency"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <div
+      class="grid-container padding-x-0"
+      data-testid="gridContainer"
+    >
+      <div
+        class="desktop:grid-col-12 padding-y-1"
+        data-testid="grid"
+      >
+        <section
+          aria-label="Site alert"
+          class="usa-site-alert usa-site-alert--emergency usa-site-alert--slim"
+          data-testid="siteAlert"
+        >
+          <div
+            class="usa-alert"
+          >
+            <div
+              class="usa-alert__body"
+            >
+              <h3
+                class="usa-alert__heading"
+              >
+                EASi service alert
+              </h3>
+              <p
+                class="margin-y-0"
+              >
+                EASi services and response times are affected by the US government shutdown. Most IT Governance and TRB requests will not receive a response until the shutdown is resolved.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;

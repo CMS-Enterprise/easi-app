@@ -255,7 +255,9 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-status"]').contains('Closed');
 
     cy.visit('/');
-    cy.get('[data-testid="view-closed-intakes-btn"]').click();
+
+    cy.get('[data-testid="view-closed-intakes-btn"]').click().click();
+
     cy.get('[data-testid="20cbcfbf-6459-4c96-943b-e76b83122dbf-row"]').contains(
       'td',
       'Closed'

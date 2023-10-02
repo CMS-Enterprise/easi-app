@@ -8,6 +8,7 @@ import classnames from 'classnames';
 import { NavContext } from 'components/Header/navContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import NavigationBar from 'components/NavigationBar';
+import ServiceAlert from 'components/ServiceAlert';
 import { localAuthStorageKey } from 'constants/localAuth';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 
@@ -95,76 +96,85 @@ export const Header = ({ children }: HeaderProps) => {
   };
 
   return (
-    <header
-      className={classnames('usa-header easi-header', {
-        'sticky sticky-nav-header display-block navigation__content': isMobile
-      })}
-      role="banner"
-      ref={navbarRef}
-    >
-      <div className="grid-container easi-header__basic">
-        <div className="usa-logo site-logo" id="logo">
-          <Link to="/">
-            <em className="usa-logo__text" aria-label={t('header:returnHome')}>
-              {t('general:appName')}
-            </em>
-          </Link>
-        </div>
-        {authState?.isAuthenticated ? (
-          <div>
-            <div className="navbar--container easi-nav__user">
-              <div className="easi-header__user">{userName}</div>
-              <div>&nbsp; | &nbsp;</div>
+    <>
+      {!authState?.isAuthenticated && (
+        <ServiceAlert translationKey="govShutdown" landing />
+      )}
+      <header
+        className={classnames('usa-header easi-header', {
+          'sticky sticky-nav-header display-block navigation__content': isMobile
+        })}
+        role="banner"
+        ref={navbarRef}
+      >
+        <div className="grid-container easi-header__basic">
+          <div className="usa-logo site-logo" id="logo">
+            <Link to="/">
+              <em
+                className="usa-logo__text"
+                aria-label={t('header:returnHome')}
+              >
+                {t('general:appName')}
+              </em>
+            </Link>
+          </div>
+          {authState?.isAuthenticated ? (
+            <div>
+              <div className="navbar--container easi-nav__user">
+                <div className="easi-header__user">{userName}</div>
+                <div>&nbsp; | &nbsp;</div>
+                <button
+                  type="button"
+                  className="usa-button usa-button--unstyled"
+                  data-testid="signout-link"
+                  aria-expanded="false"
+                  aria-controls="sign-out"
+                  onClick={signout}
+                >
+                  {t('header:signOut')}
+                </button>
+              </div>
               <button
                 type="button"
-                className="usa-button usa-button--unstyled"
-                data-testid="signout-link"
-                aria-expanded="false"
-                aria-controls="sign-out"
-                onClick={signout}
+                className="usa-menu-btn"
+                onClick={() => setIsMobileSideNavExpanded(true)}
               >
-                {t('header:signOut')}
+                <IconMenu size={3} />
               </button>
             </div>
-            <button
-              type="button"
-              className="usa-menu-btn"
-              onClick={() => setIsMobileSideNavExpanded(true)}
-            >
-              <IconMenu size={3} />
-            </button>
-          </div>
-        ) : (
-          <Link className="easi-header__nav-link" to="/signin">
-            {t('header:signIn')}
-          </Link>
-        )}
-      </div>
-
-      <div
-        className={classnames('usa-overlay', {
-          'is-visible': isMobileSideNavExpanded
-        })}
-      />
-      {/* Mobile Display */}
-      <div ref={mobileSideNav} className={mobileSideNavClasses}>
-        <div className="usa-nav__inner">
-          {children}
-          {authState?.isAuthenticated ? (
-            <NavigationBar
-              mobile
-              toggle={setIsMobileSideNavExpanded}
-              signout={signout}
-              userName={userName}
-            />
           ) : (
-            <UswdsReactLink className="easi-header__nav-link" to="/signin">
+            <Link className="easi-header__nav-link" to="/signin">
               {t('header:signIn')}
-            </UswdsReactLink>
+            </Link>
           )}
         </div>
-      </div>
-    </header>
+
+        <div
+          className={classnames('usa-overlay', {
+            'is-visible': isMobileSideNavExpanded
+          })}
+        />
+
+        {/* Mobile Display */}
+        <div ref={mobileSideNav} className={mobileSideNavClasses}>
+          <div className="usa-nav__inner">
+            {children}
+            {authState?.isAuthenticated ? (
+              <NavigationBar
+                mobile
+                toggle={setIsMobileSideNavExpanded}
+                signout={signout}
+                userName={userName}
+              />
+            ) : (
+              <UswdsReactLink className="easi-header__nav-link" to="/signin">
+                {t('header:signIn')}
+              </UswdsReactLink>
+            )}
+          </div>
+        </div>
+      </header>
+    </>
   );
 };
 
