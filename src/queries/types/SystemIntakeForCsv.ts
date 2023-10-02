@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeStatus } from "./../../types/graphql-global-types";
+import { SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: SystemIntakeForCsv
@@ -12,6 +12,7 @@ import { SystemIntakeStatus } from "./../../types/graphql-global-types";
 export interface SystemIntakeForCsv_requester {
   __typename: "SystemIntakeRequester";
   name: string;
+  component: string | null;
 }
 
 export interface SystemIntakeForCsv_businessOwner {
@@ -29,6 +30,17 @@ export interface SystemIntakeForCsv_productManager {
 export interface SystemIntakeForCsv_isso {
   __typename: "SystemIntakeISSO";
   name: string | null;
+}
+
+export interface SystemIntakeForCsv_governanceTeams_teams {
+  __typename: "SystemIntakeCollaborator";
+  collaborator: string;
+}
+
+export interface SystemIntakeForCsv_governanceTeams {
+  __typename: "SystemIntakeGovernanceTeam";
+  isPresent: boolean | null;
+  teams: SystemIntakeForCsv_governanceTeams_teams[] | null;
 }
 
 export interface SystemIntakeForCsv_fundingSources {
@@ -77,11 +89,13 @@ export interface SystemIntakeForCsv {
   id: UUID;
   euaUserId: string;
   requestName: string | null;
+  requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
   requester: SystemIntakeForCsv_requester;
   businessOwner: SystemIntakeForCsv_businessOwner;
   productManager: SystemIntakeForCsv_productManager;
   isso: SystemIntakeForCsv_isso;
+  governanceTeams: SystemIntakeForCsv_governanceTeams;
   existingFunding: boolean | null;
   fundingSources: SystemIntakeForCsv_fundingSources[];
   contract: SystemIntakeForCsv_contract;
@@ -89,6 +103,7 @@ export interface SystemIntakeForCsv {
   businessSolution: string | null;
   currentStage: string | null;
   needsEaSupport: boolean | null;
+  lcid: string | null;
   lcidScope: HTML | null;
   adminLead: string | null;
   notes: SystemIntakeForCsv_notes[];

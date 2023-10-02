@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeStatus } from "./../../types/graphql-global-types";
+import { SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntakesTable
@@ -12,6 +12,7 @@ import { SystemIntakeStatus } from "./../../types/graphql-global-types";
 export interface GetSystemIntakesTable_systemIntakes_requester {
   __typename: "SystemIntakeRequester";
   name: string;
+  component: string | null;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_businessOwner {
@@ -29,6 +30,17 @@ export interface GetSystemIntakesTable_systemIntakes_productManager {
 export interface GetSystemIntakesTable_systemIntakes_isso {
   __typename: "SystemIntakeISSO";
   name: string | null;
+}
+
+export interface GetSystemIntakesTable_systemIntakes_governanceTeams_teams {
+  __typename: "SystemIntakeCollaborator";
+  collaborator: string;
+}
+
+export interface GetSystemIntakesTable_systemIntakes_governanceTeams {
+  __typename: "SystemIntakeGovernanceTeam";
+  isPresent: boolean | null;
+  teams: GetSystemIntakesTable_systemIntakes_governanceTeams_teams[] | null;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_fundingSources {
@@ -77,11 +89,13 @@ export interface GetSystemIntakesTable_systemIntakes {
   id: UUID;
   euaUserId: string;
   requestName: string | null;
+  requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
   requester: GetSystemIntakesTable_systemIntakes_requester;
   businessOwner: GetSystemIntakesTable_systemIntakes_businessOwner;
   productManager: GetSystemIntakesTable_systemIntakes_productManager;
   isso: GetSystemIntakesTable_systemIntakes_isso;
+  governanceTeams: GetSystemIntakesTable_systemIntakes_governanceTeams;
   existingFunding: boolean | null;
   fundingSources: GetSystemIntakesTable_systemIntakes_fundingSources[];
   contract: GetSystemIntakesTable_systemIntakes_contract;
@@ -89,6 +103,7 @@ export interface GetSystemIntakesTable_systemIntakes {
   businessSolution: string | null;
   currentStage: string | null;
   needsEaSupport: boolean | null;
+  lcid: string | null;
   lcidScope: HTML | null;
   adminLead: string | null;
   notes: GetSystemIntakesTable_systemIntakes_notes[];

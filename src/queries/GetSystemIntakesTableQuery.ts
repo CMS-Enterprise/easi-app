@@ -5,10 +5,12 @@ const SystemIntakeForCsv = gql`
     id
     euaUserId
     requestName
+    requestType
     status
 
     requester {
       name
+      component
     }
     businessOwner {
       name
@@ -20,6 +22,13 @@ const SystemIntakeForCsv = gql`
     }
     isso {
       name
+    }
+
+    governanceTeams {
+      isPresent
+      teams {
+        collaborator
+      }
     }
 
     existingFunding
@@ -48,7 +57,10 @@ const SystemIntakeForCsv = gql`
     businessSolution
     currentStage
     needsEaSupport
+
+    lcid
     lcidScope
+
     adminLead
 
     notes {
