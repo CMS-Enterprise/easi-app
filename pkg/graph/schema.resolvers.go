@@ -2632,10 +2632,7 @@ func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.System
 
 // BusinessCase is the resolver for the businessCase field.
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
-	// if obj.BusinessCaseID == nil {
-	// 	return nil, nil
-	// }
-	return r.store.FetchBusinessCaseByID(ctx, obj.ID)
+	return r.store.FetchBusinessCaseBySystemIntakeID(ctx, obj.ID)
 }
 
 // BusinessNeed is the resolver for the businessNeed field.
