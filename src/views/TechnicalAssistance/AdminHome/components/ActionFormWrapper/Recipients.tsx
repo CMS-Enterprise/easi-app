@@ -23,7 +23,7 @@ import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import isExternalEmail from 'utils/externalEmail';
-import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
+import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
