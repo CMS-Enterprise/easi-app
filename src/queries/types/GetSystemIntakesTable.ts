@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graphql-global-types";
+import { SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntakesTable
@@ -91,6 +91,7 @@ export interface GetSystemIntakesTable_systemIntakes {
   requestName: string | null;
   requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
+  state: SystemIntakeState;
   requester: GetSystemIntakesTable_systemIntakes_requester;
   businessOwner: GetSystemIntakesTable_systemIntakes_businessOwner;
   productManager: GetSystemIntakesTable_systemIntakes_productManager;
