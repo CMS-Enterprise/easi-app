@@ -27,13 +27,11 @@ describe('The System Intake Form', () => {
     });
 
     cy.visit('/system/request-type');
-    cy.wait(250);
     cy.get('#RequestType-NewSystem').check({ force: true });
-    cy.contains('button', 'Continue').click({ force: true });
-    cy.wait(250);
-    cy.contains('a', 'Get started').click({ force: true });
+    cy.contains('button', 'Continue').click();
+    cy.contains('a', 'Get started').click();
     cy.wait(1000);
-    cy.contains('a', 'Start').click({ force: true });
+    cy.contains('a', 'Start').click();
     cy.location().should(loc => {
       expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/);
     });
