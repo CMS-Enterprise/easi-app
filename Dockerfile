@@ -19,7 +19,8 @@ RUN go install github.com/go-delve/delve/cmd/dlv@latest && \
 
 FROM base AS build
 
-COPY cmd/ pkg/ ./
+COPY cmd/ ./cmd/
+COPY pkg/ ./pkg/
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
 FROM scratch
