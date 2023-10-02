@@ -1,5 +1,3 @@
-import { DateTime } from 'luxon';
-
 import {
   convertIntakeToCSV,
   initialSystemIntakeForm,
@@ -51,7 +49,6 @@ describe('The system intake data modifiers', () => {
         decidedAt: null,
         archivedAt: null,
         adminLead: '',
-        lastAdminNote: null,
         lcidScope: '',
         hasUiChanges: null
       });
@@ -133,17 +130,6 @@ describe('The system intake data modifiers', () => {
         updatedAt: '2020-06-23T20:22:04Z',
         archivedAt: '2020-06-28T20:22:04Z',
         adminLead: 'Test Admin Lead',
-        lastAdminNote: {
-          content: 'last admin note',
-          createdAt: DateTime.fromObject(
-            {
-              year: 2020,
-              month: 6,
-              day: 22
-            },
-            { zone: 'America/Los_Angeles' }
-          ).toISO()
-        },
         lcidScope: '',
         requesterNameAndComponent: '',
         hasUiChanges: true
@@ -199,7 +185,6 @@ describe('The system intake data modifiers', () => {
         updatedAt: '2020-06-23T20:22:04Z',
         archivedAt: '2020-06-28T20:22:04Z',
         adminLead: 'Test Admin Lead',
-        lastAdminNote: 'last admin note (June 22, 2020)',
         lcidScope: '',
         hasUiChanges: true
       });

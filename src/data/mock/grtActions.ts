@@ -117,7 +117,6 @@ const systemIntake = {
   archivedAt: null,
   decidedAt: null,
   businessCaseId: null,
-  lastAdminNote: null,
   grtReviewEmailBody: '',
   hasUiChanges: true,
   documents: []

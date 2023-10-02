@@ -7,7 +7,7 @@ import {
   SystemIntakeForm
 } from 'types/systemIntake';
 import { cleanCSVData } from 'utils/csv';
-import { formatContractDate, formatDateLocal, parseAsUTC } from 'utils/date';
+import { formatContractDate, parseAsUTC } from 'utils/date';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
@@ -77,7 +77,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   grtDate: null,
   grbDate: null,
   adminLead: '',
-  lastAdminNote: null,
   lcidCostBaseline: '',
   requesterNameAndComponent: '',
   hasUiChanges: null
@@ -237,12 +236,7 @@ export const prepareSystemIntakeForApp = (
     grtDate: systemIntake.grtDate,
     grbDate: systemIntake.grbDate,
     adminLead: systemIntake.adminLead || '',
-    lastAdminNote: systemIntake.lastAdminNoteContent
-      ? {
-          content: systemIntake.lastAdminNoteContent,
-          createdAt: systemIntake.lastAdminNoteCreatedAt
-        }
-      : null,
+
     lcidCostBaseline: '',
     requesterNameAndComponent: '',
     hasUiChanges:
@@ -275,12 +269,6 @@ export const convertIntakeToCSV = (
   return cleanCSVData({
     ...intake,
     ...collaboratorTeams,
-    lastAdminNote: intake.lastAdminNote
-      ? `${intake.lastAdminNote.content} (${formatDateLocal(
-          intake.lastAdminNote.createdAt,
-          'MMMM d, yyyy'
-        )})`
-      : null,
     lcidScope: intake.lcidScope,
     contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
       intake.contract.hasContract

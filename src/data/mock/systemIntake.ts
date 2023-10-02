@@ -228,11 +228,6 @@ export const systemIntake: SystemIntake = {
   createdAt: '2022-10-21T14:55:47.88283Z',
   businessCaseId: null,
   archivedAt: null,
-  lastAdminNote: {
-    __typename: 'LastAdminNote',
-    content: null,
-    createdAt: null
-  },
   hasUiChanges: false,
   documents: [],
   state: SystemIntakeState.OPEN,

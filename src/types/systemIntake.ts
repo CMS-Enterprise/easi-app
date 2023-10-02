@@ -90,10 +90,6 @@ export type SystemIntakeForm = {
   grtDate: string | null;
   grbDate: string | null;
   adminLead: string;
-  lastAdminNote: {
-    content: string;
-    createdAt: string;
-  } | null;
   requesterNameAndComponent: string;
   hasUiChanges: boolean | null;
 } & ContractDetailsForm;

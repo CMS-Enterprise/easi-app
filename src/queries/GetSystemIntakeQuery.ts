@@ -93,10 +93,6 @@ export default gql`
       createdAt
       archivedAt
       euaUserId
-      # lastAdminNote {
-      #   content
-      #   createdAt
-      # }
       hasUiChanges
       documents {
         ...SystemIntakeDocument
