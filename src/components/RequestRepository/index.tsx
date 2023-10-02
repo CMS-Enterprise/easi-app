@@ -1,14 +1,8 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   Row,
@@ -19,6 +13,7 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
+import { useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -51,7 +46,13 @@ import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useTableState from 'hooks/useTableState';
-import { AppState } from 'reducers/rootReducer';
+import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
+import { GetSystemIntakesTable } from 'queries/types/GetSystemIntakesTable';
+import { SystemIntakeForCsv } from 'queries/types/SystemIntakeForCsv';
+import {
+  SystemIntakeState,
+  SystemIntakeStatus
+} from 'types/graphql-global-types';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
@@ -70,12 +71,42 @@ import tableMap from './tableMap';
 
 import './index.scss';
 
+type SystemIntakesData = {
+  open: SystemIntakeForCsv[];
+  closed: SystemIntakeForCsv[];
+};
+
 const RequestRepository = () => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
 
   const flags = useFlags();
+
+  const { data: queryData } = useQuery<GetSystemIntakesTable>(
+    GetSystemIntakesTableQuery
+  );
+
+  /** Object containing system intakes split by `open` and `closed` status */
+  const systemIntakes: SystemIntakesData = useMemo(() => {
+    const intakes: SystemIntakesData = { open: [], closed: [] };
+
+    if (!queryData?.systemIntakes) return intakes;
+
+    return queryData.systemIntakes.reduce<SystemIntakesData>((acc, intake) => {
+      // Checks both state and status to account for both IT Gov v1 and v2 fields
+      if (
+        intake.state === SystemIntakeState.CLOSED ||
+        intake.status === SystemIntakeStatus.LCID_ISSUED
+      ) {
+        acc.closed = [...acc.closed, intake];
+      } else {
+        acc.open = [...acc.open, intake];
+      }
+
+      return acc;
+    }, intakes);
+  }, [queryData]);
 
   const { itGovAdmin } = useContext(TableStateContext);
 
@@ -121,30 +152,6 @@ const RequestRepository = () => {
     setActiveTable(nextActiveTable);
     setSortBy(lastSort[nextActiveTable]);
   }
-
-  const systemIntakesData = useSelector(
-    (state: AppState) => state.systemIntakes.systemIntakes
-  );
-
-  const systemIntakesByStatus = useCallback(
-    (status: 'open' | 'closed') => {
-      if (status === 'closed') {
-        return systemIntakesData.filter(
-          intake => intake.status === 'LCID_ISSUED'
-        );
-      }
-      return systemIntakesData.filter(
-        intake => intake.status !== 'LCID_ISSUED'
-      );
-    },
-    [systemIntakesData]
-  );
-
-  /** System intakes filtered by active table (open or closed) */
-  const systemIntakes = useMemo(() => systemIntakesByStatus(activeTable), [
-    activeTable,
-    systemIntakesByStatus
-  ]);
 
   // Character limit for length of free text (Admin Note, LCID Scope, etc.), any
   // text longer then this limit will be displayed with a button to allow users
@@ -348,19 +355,16 @@ const RequestRepository = () => {
 
   // Modifying data for table sorting and prepping for Cell configuration
   const data = useMemo(() => {
-    if (systemIntakes) {
-      return tableMap(systemIntakes, t);
+    if (systemIntakes[activeTable]) {
+      return tableMap(systemIntakes[activeTable], t);
     }
     return [];
-  }, [systemIntakes, t]);
+  }, [systemIntakes, activeTable, t]);
 
   /** Portfolio Update Report data for CSV based on selected date range */
   const portfolioUpdateReport = useMemo(() => {
-    /** Closed system intakes */
-    const intakes = systemIntakesByStatus('closed');
-
     // If no intakes or selected dates, return empty array
-    if (intakes.length === 0 || !dateRangeStart || !dateRangeEnd) {
+    if (systemIntakes.closed.length === 0 || !dateRangeStart || !dateRangeEnd) {
       return [];
     }
 
@@ -376,7 +380,7 @@ const RequestRepository = () => {
 
     //   return createdAt > dateRangeStart && createdAt < dateRangeEnd;
     // });
-    const filteredIntakes = intakes;
+    const filteredIntakes = systemIntakes.closed;
 
     // If filter returns intakes, return formatted data
     if (filteredIntakes.length > 0) {
@@ -384,7 +388,7 @@ const RequestRepository = () => {
     }
 
     return [];
-  }, [systemIntakesByStatus, dateRangeStart, dateRangeEnd, t]);
+  }, [systemIntakes.closed, dateRangeStart, dateRangeEnd, t]);
 
   useEffect(() => {
     dispatch(fetchSystemIntakes());
